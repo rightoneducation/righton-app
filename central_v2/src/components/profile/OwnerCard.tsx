@@ -51,7 +51,15 @@ export default function OwnerCard({
 
   const gamesMade = draftUserProfile.gamesMade || 0;
   const questionsMade = draftUserProfile.questionsMade || 0;
-  const gamesUsed = draftUserProfile.favoriteGameTemplateIds?.length || 0;
+  const gamesUsed = draftUserProfile.gamesUsed || 0;
+  const createdAt = draftUserProfile.createdAt || '';
+
+  const date = new Date(createdAt);
+  const formatted = date.toLocaleDateString('en-US', {
+    year:   'numeric',
+    month:  '2-digit',
+    day:    '2-digit',
+  });
 
   return (
     screenSize === ScreenSize.LARGE ? (
@@ -73,7 +81,7 @@ export default function OwnerCard({
                         Account Created
                     </LeftAccountCreatedInfo>
                     <LeftDateText>
-                        11/18/2023
+                        {formatted}
                     </LeftDateText>
                 </LeftAccountCreatedContainer>
             </AtUserNameContainerAndAccount>

@@ -46,28 +46,31 @@ export default function ViewGame({
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [draftGame, setDraftGame] = useState<IGameTemplate | null>(null);
-  const questions = centralData.selectedGame?.questionTemplates;
+  const questions = centralData.selectedGame?.game?.questionTemplates;
 
   useEffect(() => {
     setIsLoading(false);
-    if (centralData.selectedGame) {
-      setDraftGame(centralData.selectedGame);
+    if (centralData?.selectedGame?.game) {
+      setDraftGame(centralData.selectedGame.game);
     }
-    const id = route?.params.gameId;
-    if (!centralData.selectedGame && id){
+    let id = '';
+    if (route) 
+      id = route?.params.gameId ?? '';
+    else if (libRoute)
+      id = libRoute?.params.gameId ?? '';
+    if (!centralData.selectedGame || !centralData.selectedGame.game && id){
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, id);
     }
-
   }, [centralData.selectedGame, route ]); // eslint-disable-line 
 
   const handleLaunchGame = () => {
-    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/Public/${centralData.selectedGame?.id}`;
+    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/Public/${centralData.selectedGame?.game?.id}`;
     window.location.href = LAUNCH_GAME_URL;
   };
 
   const handleCloneGame = () => {
-    navigate(`/clone/game/${centralData.selectedGame?.id}`);
+    navigate(`/clone/game/${centralData.selectedGame?.game?.id}`);
   };
 
   // game questions index handlers
@@ -144,7 +147,7 @@ export default function ViewGame({
               >
                   <DetailedGameCardBase 
                     screenSize={screenSize}
-                    game={centralData.selectedGame}
+                    game={centralData.selectedGame.game}
                     dropShadow
                   />
                 </CreateGameCardGridItem>

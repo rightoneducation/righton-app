@@ -24,8 +24,7 @@ export default function AuthGuard ({
   
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  console.log(centralData.userStatus);
-
+  
   // switch to render content based on Auth status of User
   // auth status is determined by the validateUser function in CentralDataManager
   switch (centralData.userStatus) {

@@ -3,6 +3,7 @@ import { Box, Typography, Grid, TextField, Paper, Button, styled } from '@mui/ma
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
+  position: 'relative',
   width: '100%',
   height: '100%',
   overflow: 'auto',
@@ -11,29 +12,51 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
     display: 'none',
   },
   scrollbarWidth: 'none', // Firefox
-  msOverflowStyle: 'none',
+  msOverflowStyle: 'none', 
   boxSizing: 'border-box',
+  display: 'flex'
 }));
 
 export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '100%',
   position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  opacity: 0.1,
+  display: 'flex',
   zIndex: 0,
   backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    inset: 0,
-    backgroundImage: `
+  backgroundImage: `
     linear-gradient(180deg, rgb(254, 251, 247) 0%, rgba(254, 251, 247, 0) 100%),
     url(${mathSymbolsBackground})
   `,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    opacity: 0.1,
+  backgroundSize: 'cover, contain',
+  overflow: 'hidden'
+}));
+
+
+export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  gap: `${theme.sizing.lgPadding}px`,
+  zIndex: 1,
+  position: 'relative',
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
+  boxSizing: 'border-box',
+  flexGrow: 1,
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
   },
- 
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE and Edge
 }));
 
 interface BaseCardStyledProps {

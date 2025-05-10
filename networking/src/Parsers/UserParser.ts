@@ -4,7 +4,6 @@ import { AWSUser } from '../Models/AWS/AWSUser';
 
 export class UserParser {
   static parseIUserfromAWSUser(user: AWSUser): IUser {
-    console.log('Parsing user:', user);
     const parsedUser: IUser = {
       id: user.id ?? '',
       userName: user.userName,
@@ -16,12 +15,14 @@ export class UserParser {
       email: user.email,
       password: user.password ?? '',
       gamesMade: user.gamesMade ?? 0,
+      gamesUsed: user.gamesUsed ?? 0,
       questionsMade: user.questionsMade ?? 0,
       frontIdPath: user.frontIdPath ?? '',
       backIdPath: user.backIdPath ?? '',
       profilePicPath: user.profilePicPath ?? '',
       favoriteGameTemplateIds: user.favoriteGameTemplateIds ? JSON.parse(user.favoriteGameTemplateIds) : [],
-      favoriteQuestionTemplateIds: user.favoriteQuestionTemplateIds ? JSON.parse(user.favoriteQuestionTemplateIds) : []
+      favoriteQuestionTemplateIds: user.favoriteQuestionTemplateIds ? JSON.parse(user.favoriteQuestionTemplateIds) : [],
+      createdAt: user.createdAt ?? '',
     }
     return parsedUser;
   }
