@@ -276,9 +276,11 @@ export default function CreateQuestionCardBase({
                 ...(isCreateGamePage && { height: '196px' })
               },
               '& .MuiInputBase-input': {
+                color: '#384466',
+                opacity: isCardErrored ? 1 : 0.5,
                 '&::placeholder': {
-                  color: '#384466',
-                  opacity: 0.5
+                  color: isCardErrored ? '#D0254D': '#384466',
+                  opacity: isCardErrored ? 1 : 0.5,
                 },
                 '&:focus': {
                   color: '#384466',

@@ -39,7 +39,6 @@ interface ICreateGameComponent {
   selectedIndex: number;
   setSelectedIndex: (index: number) => void;
   addMoreQuestions: () => void;
-  isGameCardErrored: boolean;
 }
 
 const qt: IQuestionTemplate = {
@@ -77,7 +76,6 @@ export default function CreateGameComponent({
   selectedIndex,
   setSelectedIndex,
   addMoreQuestions,
-  isGameCardErrored,
 }: ICreateGameComponent) {
   const [enabled, setEnabled] = useState<boolean>(true)
   console.log(isCloneImageChanged);
@@ -174,7 +172,7 @@ questionTemplate: qt,
               onGameDescription={onGameDescription}
               onGameTitle={onGameTitle}
               isCardSubmitted={draftGame.isGameCardSubmitted}
-              isCardErrored={isGameCardErrored}
+              isCardErrored={draftGame.isGameCardErrored}
               phaseTime={phaseTime}
               gameTitle={draftGame.gameTemplate.title}
               gameDescription={draftGame.gameTemplate.description}
