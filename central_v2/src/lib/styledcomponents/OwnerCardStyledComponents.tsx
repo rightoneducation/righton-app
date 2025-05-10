@@ -21,7 +21,6 @@ export const LeftProfileTopContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: '16px',
-  width: '191px',
   alignItems: 'center',
 }));
 
@@ -38,7 +37,7 @@ export const LeftNameText = styled(Typography)(({ theme }) => ({
 export const AtUserNameContainerAndAccount = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  width: '139px',
+  minwidth: '139px',
   gap: '8px',
   alignItems: 'center',
 
