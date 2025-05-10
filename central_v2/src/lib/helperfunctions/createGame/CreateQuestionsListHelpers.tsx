@@ -38,13 +38,13 @@ export const checkDQsAreValid = (
     if (
       dq.question.questionCard.ccss.length > 0 && 
       dq.question.questionCard.ccss !== 'CCSS' &&
-      dq.question.questionCard.title.length > 0 &&
+      dq.question.questionCard.title.trim().length > 0 &&
       ((dq.question.questionCard.imageUrl && dq.question.questionCard.imageUrl?.length > 0) || dq.question.questionCard.image ) &&
-      dq.question.correctCard.answer.length > 0 &&
+      dq.question.correctCard.answer.trim().length > 0 &&
       dq.question.correctCard.answerSteps.length > 0 &&
-      dq.question.correctCard.answerSteps.every((step) => step.length > 0) &&
+      dq.question.correctCard.answerSteps.every((step) => step.trim().length > 0) &&
       dq.question.incorrectCards.length > 0 &&
-      dq.question.incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)
+      dq.question.incorrectCards.every((card) => card.answer.trim().length > 0 && card.explanation.trim().length > 0)
     )
       return true;
     return false;

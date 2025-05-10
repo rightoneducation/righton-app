@@ -135,8 +135,8 @@ export default function CreateGame({
   const openModal = openModalAtIndex(draftGame, draftQuestionsList, selectedQuestionIndex);
   const gameFormIsValid = checkGameFormIsValid(draftGame);
   const allDQAreValid = checkDQsAreValid(draftQuestionsList);
-  const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid) 
-  || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
+  // const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid) 
+  // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
 
   /** CREATE GAME HANDLERS START HERE */
   const handleGameTitle = (val: string) => {
@@ -171,7 +171,7 @@ export default function CreateGame({
         ...prev, 
         publicPrivateGame: value, 
         questionCount: newDraft.length,
-        isGameCardErrored: false, 
+       // isGameCardErrored: false, 
       }));
       return;
     }
@@ -180,8 +180,7 @@ export default function CreateGame({
   };
 
   const handleDiscardGame = () => {
-    window.localStorage.setItem(StorageKey, '');
-    navigate('/');
+    setIsDiscardModalOpen(true);
   };
 
   const handleDiscardClick = (value: boolean) => {
@@ -209,6 +208,7 @@ export default function CreateGame({
   const handleGameImageChange = async (inputImage?: File, inputUrl?: string,) => {
    setDraftGame((prev) => updateGameImageChange(prev, inputImage, inputUrl))
   };
+  
   const handleSaveGame = async () => {
     try {
       setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true, isCreatingTemplate: true }));
@@ -271,12 +271,14 @@ export default function CreateGame({
           setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
           navigate('/');
       } else {
-        setDraftGame((prev) => ({ ...prev, isGameCardErrored: true, isCreatingTemplate: false }));
+          setDraftGame((prev) => ({ ...prev, ...(!gameFormIsValid && { isGameCardErrored: true }), isCreatingTemplate: false }));
         if(!allDQAreValid) {
           setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
+          // then find first errored card and set index to that question
         }
       }
     } catch (err) {
+      setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, }))
       console.log(`HandleSaveGame - error: `, err);
     }
   };
@@ -544,7 +546,6 @@ export default function CreateGame({
     setDraftGame((prev) => ({
       ...prev,
       questionCount: prev.questionCount + 1,
-      isGameCardErrored: false,
       isGameCardSubmitted: false,
     }));
     setIconButtons((prev) => [...prev, prev.length + 1]);
@@ -554,14 +555,6 @@ export default function CreateGame({
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
-
-  useEffect(() => {
-    console.log("Can Create Game: ", (gameFormIsValid && allDQAreValid))
-    console.log("Draft Game:", draftGame);
-    console.log("Questions List:", draftQuestionsList);
-    console.log("Selected Index:", selectedQuestionIndex);
-    console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
-  }, [draftQuestionsList, selectedQuestionIndex, draftGame, gameFormIsValid, allDQAreValid]);
 
   return (
     <CreateGameMainContainer>
@@ -631,7 +624,6 @@ export default function CreateGame({
           isClone={isClone}
           isCloneImageChanged={draftGame.isCloneGameImageChanged}
           screenSize={screenSize}
-          isGameCardErrored={hasGameError}
           handleSaveGame={handleSaveGame}
           handleSaveDraftGame={handleSaveDraftGame}
           handleDiscard={handleDiscardGame}
