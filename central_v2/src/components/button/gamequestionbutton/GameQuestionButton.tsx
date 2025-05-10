@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useCentralDataDispatch } from '../../../hooks/context/useCentralDataContext';
 import { ScreenSize, GameQuestionType } from '../../../lib/CentralModels';
 
 interface GameQuestionContainerProps {
@@ -91,7 +92,9 @@ export default function GameQuestionButton({
 }: GameQuestionButtonInterface) {
   const { t } = useTranslation();
   const isPublic = gameQuestion === GameQuestionType.GAME;
+  const centralDataDispatch = useCentralDataDispatch();
   const handleGameQuestionSwitch = () =>{
+    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     if (setGameQuestion)
       setGameQuestion(gameQuestion === GameQuestionType.GAME ? GameQuestionType.QUESTION : GameQuestionType.GAME);
   }

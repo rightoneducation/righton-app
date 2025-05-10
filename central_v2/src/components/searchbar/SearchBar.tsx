@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   InputAdornment,
@@ -94,6 +94,11 @@ function SearchBar({
     setSearchBarText(value);
     handleSearchChange(value);
   };
+  // TODO: replace by moving searchbartext state 
+  useEffect(() => {
+    setSearchBarText(searchTerms);
+  }, [searchTerms]); 
+
   return (
     <SearchAndFilterContainer screenSize={screenSize}>
       <Box style={{ display: 'flex', width: '100%' }}>

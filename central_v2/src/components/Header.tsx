@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Button, Typography, Collapse, Fade, IconButton, Paper } from '@mui/material';
+import { Box, Button, Typography, Collapse, Fade, IconButton, Paper, getFormControlLabelUtilityClasses } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { CloudFrontDistributionUrl } from '@righton/networking';
 import rightonlogo from '../images/rightOnLogoHeader.svg';
@@ -15,7 +15,7 @@ import libPink from '../images/libPink.svg';
 import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
-import { useCentralDataState } from '../hooks/context/useCentralDataContext';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import createDropdownGame from '../images/createDropdownGame.svg';
 import createDropdownQuestion from '../images/createDropdownQuestion.svg'
 import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
@@ -171,6 +171,7 @@ export default function Header({
   const navigate = useNavigate();
   const theme = useTheme();
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const isScreenLgst = useMediaQuery('(min-width:1300px)');
   const profilePicPath = centralData.userProfile?.profilePicPath;
@@ -180,6 +181,7 @@ export default function Header({
   };
 
   const handleButtonClick = (screen: ScreenType) => {
+    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     switch (screen) {
       case ScreenType.QUESTIONS:
         navigate('/questions');

@@ -30,7 +30,7 @@ interface MyLibraryProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  fetchElements: (libraryTab: LibraryTabEnum) => void;
+  fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
 }
 
 export default function MyLibrary({ 
