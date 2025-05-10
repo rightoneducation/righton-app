@@ -92,6 +92,15 @@ export default function UserProfile({
 
   const handleImageSave = async (image?: File, inputUrl?: string) => {
     setIsModalOpen(false);
+    try{
+        const response = await apiClients.centralDataManager?.userProfileImageUpdate(draftUserProfile, newProfilePic);
+        if (response?.updatedUser){
+            centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
+        } 
+    } catch(error){
+        console.error(error);
+    }
+
   }
 
   const handleImageChange = async (inputImage?: File | null, inputUrl?: string) => {
@@ -121,7 +130,7 @@ export default function UserProfile({
       setSaveInformationHighlight(false)
       try {
         const updatedUser = { ...draftUserProfile };
-        const response = await apiClients.centralDataManager?.userProfileImageUpdate(updatedUser, centralData.userProfile, newProfilePic, frontImage ?? null, backImage ?? null);
+        const response = await apiClients.centralDataManager?.userProfileInformationUpdate(updatedUser, centralData.userProfile, frontImage ?? null, backImage ?? null);
         if (response?.updatedUser){
             centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
         } 
