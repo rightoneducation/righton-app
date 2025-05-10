@@ -36,7 +36,6 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
       gameCode:  Math.floor(Math.random() * 9000) + 1000,
       questionTemplates,
       id: uuidv4(),
-      owner
   };
   return gameTemplate;
 };
@@ -305,7 +304,7 @@ const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     __typename
   }
 }
-`
+`;
 
 const updateUser = /* GraphQL */ `mutation UpdateUser(
   $input: UpdateUserInput!
@@ -351,7 +350,6 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
     const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
-    console.log(gameSessionJson);
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
 
     // update gameTemplate timesPlayed
