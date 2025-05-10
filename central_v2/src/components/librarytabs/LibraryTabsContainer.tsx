@@ -21,7 +21,7 @@ interface TabContainerProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  fetchElements: (libraryTab: LibraryTabEnum) => void;
+  fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {

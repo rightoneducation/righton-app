@@ -43,7 +43,7 @@ interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  fetchElements: (libraryTab: LibraryTabEnum) => void;
+  fetchElements: (libraryTab: LibraryTabEnum, searchTerms: string) => void;
   handleGameView: (element: IGameTemplate, elements: IGameTemplate[]) => void;
   handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
 }
@@ -88,15 +88,16 @@ const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBL
 const elements = gameQuestion === GameQuestionType.GAME ?
   getGameElements(openTab, isSearchResults, centralData)
   : getQuestionElements(openTab, isSearchResults, centralData);
-console.log(centralData.isLibraryInit);
+
 if (centralData.isLibraryInit) {
   centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
-  fetchElements(openTab);
+  fetchElements(openTab, '');
 }
 
 const handleChange = (event: React.SyntheticEvent, newTab: LibraryTabEnum) => {
+  centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
   setOpenTab(newTab);
-  fetchElements(newTab);
+  fetchElements(newTab, '');
 };
 
 return (

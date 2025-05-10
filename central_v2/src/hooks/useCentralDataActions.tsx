@@ -23,7 +23,7 @@ interface UseCentralDataManagerReturnProps {
   setIsTabsOpen: (isOpen: boolean) => void;
   handleLibraryInit: (isInit: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => Promise<ISelectedGame | ISelectedQuestion>;
-  fetchElements: (libraryTab?: LibraryTabEnum) => void;
+  fetchElements: (libraryTab?: LibraryTabEnum, searchTerms?: string) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -225,7 +225,7 @@ export default function useCentralDataManager({
     );
   };
 
-  const getPublicPrivateElements = (newPublicPrivate: PublicPrivateType) => {
+  const getPublicPrivateElements = (newPublicPrivate: PublicPrivateType, searchTerms?: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({ type: 'SET_PUBLIC_PRIVATE', payload: newPublicPrivate });
@@ -237,7 +237,7 @@ export default function useCentralDataManager({
               newPublicPrivate,
               null,
               null,
-              centralData.searchTerms,
+              searchTerms ?? centralData.searchTerms,
               centralData.sort.direction ?? SortDirection.ASC,
               centralData.sort.field,
               centralData.selectedGrades ?? [],
@@ -265,7 +265,7 @@ export default function useCentralDataManager({
             newPublicPrivate,
             null,
             null,
-            centralData.searchTerms,
+            searchTerms ?? centralData.searchTerms,
             centralData.sort.direction ?? SortDirection.ASC,
             centralData.sort.field,
             centralData.selectedGrades ?? [],
@@ -343,7 +343,7 @@ export default function useCentralDataManager({
     }
   };
 
-  const getDrafts = async () => {
+  const getDrafts = async (libraryTab?: LibraryTabEnum, searchTerms?: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
@@ -351,7 +351,7 @@ export default function useCentralDataManager({
           PublicPrivateType.DRAFT,
           null,
           null,
-          centralData.searchTerms,
+          searchTerms ?? centralData.searchTerms,
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
@@ -368,7 +368,7 @@ export default function useCentralDataManager({
           PublicPrivateType.DRAFT,
           null,
           null,
-          centralData.searchTerms,
+          libraryTab ? '' : centralData.searchTerms,
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
@@ -382,7 +382,7 @@ export default function useCentralDataManager({
     }
   };
 
-  const getFav = async (user: IUserProfile) => {
+  const getFav = async (user: IUserProfile, searchTerms?: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
@@ -390,7 +390,7 @@ export default function useCentralDataManager({
           PublicPrivateType.PUBLIC,
           null,
           null,
-          centralData.searchTerms,
+          searchTerms ?? centralData.searchTerms,
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
@@ -407,7 +407,7 @@ export default function useCentralDataManager({
           PublicPrivateType.PUBLIC,
           null,
           null,
-          centralData.searchTerms,
+          searchTerms ?? centralData.searchTerms,
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
@@ -486,7 +486,7 @@ export default function useCentralDataManager({
     };
   };
   
-  const fetchElements = async (libraryTab?: LibraryTabEnum) => {
+  const fetchElements = async (libraryTab?: LibraryTabEnum, searchTerms?: string) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
       if ((isLibrary || isCreateGame) && tab !== undefined) {
         switch(tab){
@@ -511,19 +511,19 @@ export default function useCentralDataManager({
     switch (fetchType) {
       case FetchType.PUBLIC_GAMES:
       case FetchType.PUBLIC_QUESTIONS:
-        getPublicPrivateElements(PublicPrivateType.PUBLIC);
+        getPublicPrivateElements(PublicPrivateType.PUBLIC, searchTerms);
         break;
       case FetchType.PRIVATE_QUESTIONS:
       case FetchType.PRIVATE_GAMES:
-        getPublicPrivateElements(PublicPrivateType.PRIVATE);
+        getPublicPrivateElements(PublicPrivateType.PRIVATE, searchTerms);
         break;
       case FetchType.DRAFT_QUESTIONS:
       case FetchType.DRAFT_GAMES: 
-        getDrafts();
+        getDrafts(libraryTab, searchTerms);
         break;
       case FetchType.FAVORITE_QUESTIONS:
       case FetchType.FAVORITE_GAMES:
-        getFav(centralData.userProfile);
+        getFav(centralData.userProfile, searchTerms);
         break;
       case FetchType.EXPLORE_QUESTIONS:
         apiClients?.centralDataManager?.initQuestions().then((response) => {
