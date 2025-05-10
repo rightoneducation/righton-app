@@ -1,7 +1,7 @@
 ---
 name: Central_v2  - Bug Report
 about: QA Bug Report
-title: "[Central_v2] - Bug Report - # "
+title: "[Central_v2] - Bug Report - # - Priority - #"
 labels: bug
 assignees: drewjhart
 
