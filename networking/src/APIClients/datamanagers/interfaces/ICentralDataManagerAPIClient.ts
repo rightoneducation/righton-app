@@ -35,7 +35,7 @@ export interface ICentralDataManagerAPIClient {
   favoriteQuestionTemplate: (questionId: string, isFavourite: boolean) => Promise<void>;
   signUpSendConfirmationCode(user: IUserProfile): Promise<void>;
   signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
   signUpGoogleBuildBackendUser(user: IUserProfile, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
   userProfileInformationUpdate(user: IUserProfile, oldUser: IUserProfile, frontImage?: File | null,
     backImage?: File | null): Promise<{updatedUser: any}>;

@@ -9,6 +9,7 @@ import { IChoice } from "../Models/IQuestion";
 export class QuestionTemplateParser {
     static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
         imageUrl: string,
+        userId: string,
         createQuestionTemplateInput: CentralQuestionTemplateInput
     ): QuestionTemplateType<T>['create']['input']{
         const {title, ccss } = createQuestionTemplateInput.questionCard;
@@ -31,6 +32,7 @@ export class QuestionTemplateParser {
         const answerSettings = JSON.stringify(createQuestionTemplateInput.correctCard.answerSettings);
         const questionTemplate: QuestionTemplateType<T>['create']['input'] = {
             title,
+            userId,
             lowerCaseTitle,
             version: 0,
             choices,
@@ -43,9 +45,9 @@ export class QuestionTemplateParser {
             gradeFilter: grade,
             standard,
             imageUrl,
+            timesPlayed: 0,
             gameTemplatesCount: 0,
         }
-        console.log(questionTemplate);
         return questionTemplate
     }
 
@@ -97,6 +99,7 @@ export class QuestionTemplateParser {
        
       const {
           id,
+          userId,
           title,
           lowerCaseTitle,
           owner,
@@ -109,12 +112,12 @@ export class QuestionTemplateParser {
           gradeFilter,
           standard,
           imageUrl,
+          timesPlayed,
           gameTemplatesCount
       } = awsQuestionTemplate || {}
       const awsAnswerSettings = !isNullOrUndefined(answerSettings) ? JSON.parse(answerSettings) : null;
       if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
-          isNullOrUndefined(owner) ||
           isNullOrUndefined(version)) {
           throw new Error(
               "Question Template has null field for the attributes that are not nullable"
@@ -125,9 +128,10 @@ export class QuestionTemplateParser {
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
       const questionTemplate: IQuestionTemplate = {
           id,
+          userId,
           title,
           lowerCaseTitle: lowerCaseTitle ?? '',
-          owner,
+          owner: owner ?? '',
           version,
           choices,
           instructions,
@@ -139,6 +143,7 @@ export class QuestionTemplateParser {
           gradeFilter: gradeFilter ?? '',
           standard: standard ?? '',
           imageUrl,
+          timesPlayed,
           gameTemplates,
           gameTemplatesCount,
           createdAt,

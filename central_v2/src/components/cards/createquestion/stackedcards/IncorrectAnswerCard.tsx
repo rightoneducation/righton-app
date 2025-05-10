@@ -198,9 +198,11 @@ export default function IncorrectAnswerCard({
               fontFamily: 'Rubik'
             },
          '& .MuiInputBase-input': {
+              color: '#47366C',
+              opacity: isCardSubmitted && cardData.explanation.length === 0 ? 1 : 0.5,
               '&::placeholder': {
-                color: '#47366C',
-                opacity: 0.5
+                color: isCardSubmitted && cardData.explanation.length === 0 ? '#D0254D':'#47366C',
+                opacity: isCardSubmitted && cardData.explanation.length === 0 ? 1 : 0.5
               },
               '&:focus': {
                 color: '#47366C',
@@ -259,9 +261,11 @@ export default function IncorrectAnswerCard({
               fontFamily: 'Rubik',
             },
             '& .MuiInputBase-input': {
+              color: '#47366C',
+              opacity: isCardSubmitted && cardData.explanation.length === 0 ? 1 : 0.5,
               '&::placeholder': {
-                color: '#47366C',
-                opacity: 0.5
+                color: isCardSubmitted && cardData.explanation.length === 0 ? '#D0254D':'#47366C',
+                opacity: isCardSubmitted && cardData.explanation.length === 0 ? 1 : 0.5,
               },
               '&:focus': {
                 color: '#47366C',

@@ -53,6 +53,7 @@ export class GameTemplateParser {
         const sortedQuestionTemplates = sortQuestionTemplatesByOrder(questionTemplates, questionTemplatesOrder);
        const {
           id,
+          userId,
           title,
           lowerCaseTitle,
           owner,
@@ -65,6 +66,7 @@ export class GameTemplateParser {
           standard,
           ccss,
           imageUrl,
+          timesPlayed,
           questionTemplatesCount
       } = awsGameTemplate || {}
         const createdAt = awsGameTemplate.createdAt ? new Date(awsGameTemplate.createdAt) : new Date();
@@ -74,6 +76,7 @@ export class GameTemplateParser {
 
       const gameTemplate: IGameTemplate = {
           id,
+          userId,
           title,
           lowerCaseTitle,
           owner,
@@ -88,6 +91,7 @@ export class GameTemplateParser {
           phaseOneTime,
           phaseTwoTime,
           imageUrl,
+          timesPlayed,
           questionTemplates: sortedQuestionTemplates,
           questionTemplatesCount,
           questionTemplatesOrder,
