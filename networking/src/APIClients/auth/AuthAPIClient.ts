@@ -7,7 +7,7 @@ import {
   confirmSignUp, 
   signIn, 
   signInWithRedirect, 
-  signOut, 
+  signOut as amplifySignOut, 
   fetchAuthSession,
   getCurrentUser,
   resetPassword, 
@@ -24,7 +24,7 @@ import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
-import { userCleaner, userByEmail } from "../../graphql";
+import { userCleaner } from "../../graphql";
 import { IUserProfile } from "../../Models/IUserProfile";
 
 export class AuthAPIClient
@@ -96,37 +96,6 @@ export class AuthAPIClient
     const variables = { input };
     const client = generateClient({});
     client.graphql({query: userCleaner, variables, authMode: authMode });
-  }
-
-  async getUserByEmailDB(email: string): Promise<boolean> {
-      // Determine auth mode
-      // const authSession = await fetchAuthSession(); // Can still keep this if needed
-      const authMode = "userPool";
-  
-      // 🔑 Correct way to pass variables
-      const variables = { email };
-  
-      // Generate client
-      const client = generateClient({});
-  
-      // Run query
-      const response = await client.graphql({
-        query: userByEmail, // Make sure userByEmail is imported/generated properly
-        variables,
-        authMode
-      });
-  
-      // Handle response
-      if ("data" in response) {
-        if (response.data.userByEmail.items?.length > 0) {
-          return true
-        } else {
-          return false
-        }
-      } else {
-        console.error("Unexpected result from GraphQL query:", response);
-        return false
-      }
   }
   
   async updateCognitoUsername(newUsername: string): Promise<void> {
@@ -217,7 +186,7 @@ export class AuthAPIClient
   }
 
   async awsSignOut(): Promise<void> {
-    await signOut();
+    await amplifySignOut();   
   }
 
   async awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {

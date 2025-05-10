@@ -24,6 +24,7 @@ interface ICreateGameComponent {
   isClone: boolean;
   isCloneImageChanged: boolean;
   handleSaveGame: () => Promise<void>;
+  handleSaveDraftGame: () => Promise<void>;
   draftGame: TGameTemplateProps;
   handleDiscard: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
@@ -38,11 +39,11 @@ interface ICreateGameComponent {
   selectedIndex: number;
   setSelectedIndex: (index: number) => void;
   addMoreQuestions: () => void;
-  isGameCardErrored: boolean;
 }
 
 const qt: IQuestionTemplate = {
   id: '',
+  userId: '',
   title: '',
   lowerCaseTitle: '',
   version: 0,
@@ -61,6 +62,7 @@ export default function CreateGameComponent({
   isCloneImageChanged,
   screenSize,
   handleSaveGame,
+  handleSaveDraftGame,
   handleDiscard,
   handlePublicPrivateChange,
   handleImageUploadClick,
@@ -74,7 +76,6 @@ export default function CreateGameComponent({
   selectedIndex,
   setSelectedIndex,
   addMoreQuestions,
-  isGameCardErrored,
 }: ICreateGameComponent) {
   const [enabled, setEnabled] = useState<boolean>(true)
   console.log(isCloneImageChanged);
@@ -108,6 +109,12 @@ questionTemplate: qt,
             buttonWidthOverride="105px"
             onClick={handleSaveGame}
           />
+          <CentralButton 
+            buttonType={ButtonType.SAVEDRAFT} 
+            isEnabled 
+            smallScreenOverride 
+            onClick={handleSaveDraftGame} 
+          />
           <CentralButton
             buttonType={ButtonType.DISCARDBLUE}
             isEnabled
@@ -129,6 +136,13 @@ questionTemplate: qt,
                   isEnabled
                   buttonWidthOverride="160px"
                   onClick={handleSaveGame}
+                />
+                <CentralButton 
+                  buttonType={ButtonType.SAVEDRAFT} 
+                  isEnabled 
+                  smallScreenOverride 
+                  buttonWidthOverride="160px"
+                  onClick={handleSaveDraftGame} 
                 />
                 <CentralButton
                   buttonType={ButtonType.DISCARDBLUE}
@@ -158,7 +172,7 @@ questionTemplate: qt,
               onGameDescription={onGameDescription}
               onGameTitle={onGameTitle}
               isCardSubmitted={draftGame.isGameCardSubmitted}
-              isCardErrored={isGameCardErrored}
+              isCardErrored={draftGame.isGameCardErrored}
               phaseTime={phaseTime}
               gameTitle={draftGame.gameTemplate.title}
               gameDescription={draftGame.gameTemplate.description}

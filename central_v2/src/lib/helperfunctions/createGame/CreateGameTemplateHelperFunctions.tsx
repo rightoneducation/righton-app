@@ -27,8 +27,8 @@ export const checkGameFormIsValid = (
   draftGame: TGameTemplateProps,
 ): boolean => {
   return (
-    draftGame.gameTemplate.title !== '' &&
-    draftGame.gameTemplate.description !== '' &&
+    draftGame.gameTemplate.title.trim().length > 0  &&
+    draftGame.gameTemplate.description.trim().length > 0 &&
     draftGame.gameTemplate.phaseOneTime !== 0 &&
     draftGame.gameTemplate.phaseTwoTime !== 0
   );
@@ -191,6 +191,7 @@ export const createGameImagePath = async (
 
 export const buildGameTemplate = (
   draftGame: TGameTemplateProps,
+  userId: string,
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
 ): GameTemplate => {
@@ -199,6 +200,7 @@ export const buildGameTemplate = (
   })
   return {
     title: draftGame.gameTemplate.title,
+    userId,
     lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
     description: draftGame.gameTemplate.description,
     lowerCaseDescription: draftGame.gameTemplate.description.toLowerCase(),
@@ -218,6 +220,7 @@ export const buildGameTemplate = (
     standard:
       draftQuestionsList[0].question.questionCard.ccss.split('.')[3] ?? '',
     imageUrl: gameImgUrl,
+    timesPlayed: 0,
   };
 };
 

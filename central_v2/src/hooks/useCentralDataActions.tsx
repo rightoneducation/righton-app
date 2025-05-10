@@ -13,7 +13,7 @@ import {
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
 import { useCentralDataState, useCentralDataDispatch } from './context/useCentralDataContext';
-import { UserStatusType, GameQuestionType, FetchType, LibraryTabEnum } from '../lib/CentralModels';
+import { UserStatusType, GameQuestionType, FetchType, LibraryTabEnum, ISelectedGame, ISelectedQuestion } from '../lib/CentralModels';
 
 interface UseCentralDataManagerProps {
   gameQuestion: GameQuestionType;
@@ -22,7 +22,7 @@ interface UseCentralDataManagerProps {
 interface UseCentralDataManagerReturnProps {
   setIsTabsOpen: (isOpen: boolean) => void;
   handleLibraryInit: (isInit: boolean) => void;
-  fetchElement: (type: GameQuestionType, id: string) => void;
+  fetchElement: (type: GameQuestionType, id: string) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (libraryTab?: LibraryTabEnum) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -432,20 +432,58 @@ export default function useCentralDataManager({
   const fetchElement = async (type: GameQuestionType, id: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (type){
-      case GameQuestionType.QUESTION:
-        apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id).then((response) => {
-          centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: response });
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-        });
-      break;
+      case GameQuestionType.QUESTION:{
+       const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id);
+          if (responseQuestion) {
+            const userResponse = await apiClients?.user.getUser(responseQuestion.userId);
+              if (userResponse) {
+                const title = (userResponse.title) && userResponse.title !== 'Title...' ? userResponse.title : '';
+                const firstName = userResponse?.firstName?.split("")[0] ?? '';
+                const selectedQuestion = {
+                  question: responseQuestion,
+                  profilePic: userResponse.profilePicPath ?? '',
+                  createdName: `${title} ${firstName.toUpperCase()}. ${userResponse.lastName}`,
+                  lastModified: responseQuestion.updatedAt ?? new Date(),
+                  timesPlayed: responseQuestion.timesPlayed ?? 0,
+                }
+                centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: selectedQuestion });
+                centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+              return selectedQuestion;
+            }
+          }
+        break;
+      }
       case GameQuestionType.GAME:
-      default:
-        apiClients?.gameTemplate.getGameTemplate(PublicPrivateType.PUBLIC, id).then((response) => {
-          centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: response });
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-        });
-      break;
+      default:{
+       const responseGame = await apiClients?.gameTemplate.getGameTemplate(PublicPrivateType.PUBLIC, id);
+          if (responseGame) {
+            const userResponse = await apiClients?.user.getUser(responseGame.userId);
+              if (userResponse) {
+                const title = (userResponse.title) && userResponse.title !== 'Title...' ? userResponse.title : '';
+                const firstName = userResponse?.firstName?.split("")[0] ?? '';
+                const selectedGame = {
+                  game: responseGame,
+                  profilePic: userResponse.profilePicPath ?? '',
+                  createdName: `${title} ${firstName.toUpperCase()}. ${userResponse.lastName}`,
+                  lastModified: responseGame.updatedAt ?? new Date(),
+                  timesPlayed: responseGame.timesPlayed ?? 0,
+                }
+                centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: selectedGame });
+                centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+                return selectedGame;
+              }
+            }
+        break;
+      }
     }
+    centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+    return {
+      question: null,
+      profilePic: '',
+      createdName: '',
+      lastModified: new Date(),
+      timesPlayed: 0,
+    };
   };
   
   const fetchElements = async (libraryTab?: LibraryTabEnum) => {
@@ -513,8 +551,9 @@ export default function useCentralDataManager({
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
-  const handleLogOut = () => {
-    apiClients.centralDataManager?.signOut();
+  const handleLogOut = async () => {
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
+    await apiClients.centralDataManager?.signOut();
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   }

@@ -297,6 +297,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const randomIndex = Math.floor(Math.random() * 5) + 1;
 
       updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg` };
+      console.log(updatedUser);
       await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
@@ -376,7 +377,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public signOut = async () => {
-    this.authAPIClient.awsSignOut();
+    await this.authAPIClient.awsSignOut();
     this.authAPIClient.isUserAuth = false;
     this.clearLocalUserProfile();
   };

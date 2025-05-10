@@ -1,6 +1,6 @@
 import { IGameTemplate, IQuestionTemplate, IUserProfile, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
 import { ICentralDataState } from '../context/ICentralDataState';
-import { UserStatusType } from '../CentralModels';
+import { ISelectedGame, ISelectedQuestion, UserStatusType } from '../CentralModels';
 
 export type CentralDataAction =
   | { type: 'SET_USER_STATUS'; payload: UserStatusType }
@@ -12,7 +12,8 @@ export type CentralDataAction =
   | { type: 'SET_PRIVATE_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_DRAFT_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_FAV_GAMES'; payload: IGameTemplate[] }
-  | { type: 'SET_SELECTED_GAME'; payload: IGameTemplate }
+  | { type: 'SET_SELECTED_GAME'; payload: ISelectedGame | null }
+  | { type: 'SET_SELECTED_GAME_PROFILE_PIC'; payload: string | null }
   | { type: 'SET_RECOMMENDED_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_MOST_POPULAR_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_SEARCHED_QUESTIONS'; payload: IQuestionTemplate[] }
@@ -20,7 +21,7 @@ export type CentralDataAction =
   | { type: 'SET_PRIVATE_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_DRAFT_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_FAV_QUESTIONS'; payload: IQuestionTemplate[] }
-  | { type: 'SET_SELECTED_QUESTION'; payload: IQuestionTemplate }
+  | { type: 'SET_SELECTED_QUESTION'; payload: ISelectedQuestion | null }
   | { type: 'SET_IS_LOADING'; payload: boolean }
   | { type: 'SET_IS_LOADING_INFINITE_SCROLL'; payload: boolean }
   | { type: 'SET_NEXT_TOKEN'; payload: string | null}

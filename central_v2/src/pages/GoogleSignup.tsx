@@ -173,6 +173,7 @@ export default function GoogleSignup({
       userName: '',
       email: '',
       password: '',
+      gamesUsed: 0
     }
 
     const handleGetStarted = async () => {
@@ -185,6 +186,7 @@ export default function GoogleSignup({
             lastName,
             userName,
             title,
+            gamesUsed: 0,
           };
           const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(updatedProfile, frontImage, backImage);
           // need if statement for response
