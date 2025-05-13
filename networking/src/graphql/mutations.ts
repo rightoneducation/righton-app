@@ -15,19 +15,15 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
   createUser(input: $input, condition: $condition) {
     id
     userName
-    dynamoId
-    cognitoId
     title
     firstName
     lastName
     email
     password
     gamesMade
-    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
-    profilePicPath
     favoriteGameTemplateIds
     favoriteQuestionTemplateIds
     createdAt
@@ -47,19 +43,15 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
   updateUser(input: $input, condition: $condition) {
     id
     userName
-    dynamoId
-    cognitoId
     title
     firstName
     lastName
     email
     password
     gamesMade
-    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
-    profilePicPath
     favoriteGameTemplateIds
     favoriteQuestionTemplateIds
     createdAt
@@ -79,19 +71,15 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
   deleteUser(input: $input, condition: $condition) {
     id
     userName
-    dynamoId
-    cognitoId
     title
     firstName
     lastName
     email
     password
     gamesMade
-    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
-    profilePicPath
     favoriteGameTemplateIds
     favoriteQuestionTemplateIds
     createdAt
@@ -110,7 +98,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
 ) {
   createPublicGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -125,7 +112,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
     phaseOneTime
     phaseTwoTime
     imageUrl
-    timesPlayed
     questionTemplates {
       items {
         id
@@ -133,7 +119,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
         publicQuestionTemplateID
         publicGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -148,7 +133,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -156,7 +140,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -171,7 +154,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -186,7 +168,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -200,7 +181,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -230,7 +210,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
         }
         publicQuestionTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -244,7 +223,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -252,7 +230,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -267,7 +244,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -282,7 +258,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -296,7 +271,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -350,7 +324,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
 ) {
   updatePublicGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -365,7 +338,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
     phaseOneTime
     phaseTwoTime
     imageUrl
-    timesPlayed
     questionTemplates {
       items {
         id
@@ -373,7 +345,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
         publicQuestionTemplateID
         publicGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -388,7 +359,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -396,7 +366,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -411,7 +380,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -426,7 +394,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -440,7 +407,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -470,7 +436,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
         }
         publicQuestionTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -484,7 +449,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -492,7 +456,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -507,7 +470,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -522,7 +484,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -536,7 +497,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -590,7 +550,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
 ) {
   deletePublicGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -605,7 +564,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
     phaseOneTime
     phaseTwoTime
     imageUrl
-    timesPlayed
     questionTemplates {
       items {
         id
@@ -613,7 +571,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
         publicQuestionTemplateID
         publicGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -628,7 +585,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -636,7 +592,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -651,7 +606,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -666,7 +620,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -680,7 +633,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -710,7 +662,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
         }
         publicQuestionTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -724,7 +675,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -732,7 +682,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -747,7 +696,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -762,7 +710,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -776,7 +723,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -830,7 +776,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
 ) {
   createPrivateGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -845,7 +790,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
     phaseOneTime
     phaseTwoTime
     imageUrl
-    timesPlayed
     questionTemplates {
       items {
         id
@@ -853,7 +797,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -868,7 +811,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -876,7 +818,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -891,7 +832,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -906,7 +846,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -920,7 +860,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -929,7 +868,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -950,7 +888,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
         }
         privateQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -964,7 +902,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -972,7 +909,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -987,7 +923,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1002,7 +937,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1016,7 +951,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1025,7 +959,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1040,7 +973,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -1070,7 +1002,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
 ) {
   updatePrivateGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -1085,7 +1016,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
     phaseOneTime
     phaseTwoTime
     imageUrl
-    timesPlayed
     questionTemplates {
       items {
         id
@@ -1093,7 +1023,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -1108,7 +1037,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -1116,7 +1044,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -1131,7 +1058,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1146,7 +1072,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1160,7 +1086,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1169,7 +1094,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1190,7 +1114,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
         }
         privateQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -1204,7 +1128,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -1212,7 +1135,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -1227,7 +1149,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1242,7 +1163,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1256,7 +1177,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1265,7 +1185,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1280,7 +1199,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -1310,7 +1228,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
 ) {
   deletePrivateGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -1325,7 +1242,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
     phaseOneTime
     phaseTwoTime
     imageUrl
-    timesPlayed
     questionTemplates {
       items {
         id
@@ -1333,7 +1249,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -1348,7 +1263,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -1356,7 +1270,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -1371,7 +1284,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1386,7 +1298,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1400,7 +1312,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1409,7 +1320,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1430,7 +1340,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
         }
         privateQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -1444,7 +1354,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -1452,7 +1361,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -1467,7 +1375,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1482,7 +1389,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1496,7 +1403,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1505,7 +1411,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1520,7 +1425,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -1550,7 +1454,6 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
 ) {
   createDraftGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -1572,7 +1475,6 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
         draftQuestionTemplateID
         draftGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -1594,7 +1496,6 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -1623,7 +1524,7 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1645,7 +1546,6 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1666,7 +1566,7 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
         }
         draftQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -1687,7 +1587,6 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -1716,7 +1615,7 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1738,7 +1637,6 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1753,7 +1651,6 @@ export const createDraftGameTemplate = /* GraphQL */ `mutation CreateDraftGameTe
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -1783,7 +1680,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
 ) {
   updateDraftGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -1805,7 +1701,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
         draftQuestionTemplateID
         draftGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -1827,7 +1722,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -1856,7 +1750,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1878,7 +1772,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1899,7 +1792,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
         }
         draftQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -1920,7 +1813,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -1949,7 +1841,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -1971,7 +1863,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -1986,7 +1877,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `mutation UpdateDraftGameTe
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -2016,7 +1906,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
 ) {
   deleteDraftGameTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -2038,7 +1927,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
         draftQuestionTemplateID
         draftGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -2060,7 +1948,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2089,7 +1976,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -2111,7 +1998,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -2132,7 +2018,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
         }
         draftQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -2153,7 +2039,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2182,7 +2067,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -2204,7 +2089,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -2219,7 +2103,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `mutation DeleteDraftGameTe
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -2249,7 +2132,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
 ) {
   createPublicQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -2263,7 +2145,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
     gradeFilter
     standard
     imageUrl
-    timesPlayed
     gameTemplates {
       items {
         id
@@ -2271,7 +2152,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
         publicQuestionTemplateID
         publicGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -2286,7 +2166,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -2294,7 +2173,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2309,7 +2187,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2324,7 +2201,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2338,7 +2214,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2368,7 +2243,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
         }
         publicQuestionTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -2382,7 +2256,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -2390,7 +2263,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2405,7 +2277,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2420,7 +2291,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2434,7 +2304,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2487,7 +2356,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
 ) {
   updatePublicQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -2501,7 +2369,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
     gradeFilter
     standard
     imageUrl
-    timesPlayed
     gameTemplates {
       items {
         id
@@ -2509,7 +2376,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
         publicQuestionTemplateID
         publicGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -2524,7 +2390,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -2532,7 +2397,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2547,7 +2411,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2562,7 +2425,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2576,7 +2438,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2606,7 +2467,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
         }
         publicQuestionTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -2620,7 +2480,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -2628,7 +2487,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2643,7 +2501,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2658,7 +2515,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2672,7 +2528,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2725,7 +2580,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
 ) {
   deletePublicQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
     title
     lowerCaseTitle
     version
@@ -2739,7 +2593,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
     gradeFilter
     standard
     imageUrl
-    timesPlayed
     gameTemplates {
       items {
         id
@@ -2747,7 +2600,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
         publicQuestionTemplateID
         publicGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -2762,7 +2614,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -2770,7 +2621,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2785,7 +2635,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2800,7 +2649,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2814,7 +2662,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2844,7 +2691,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
         }
         publicQuestionTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -2858,7 +2704,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -2866,7 +2711,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
               publicQuestionTemplateID
               publicGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2881,7 +2725,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2896,7 +2739,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
               }
               publicQuestionTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -2910,7 +2752,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2963,7 +2804,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
 ) {
   createPrivateQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
+    owner
     title
     lowerCaseTitle
     version
@@ -2977,7 +2818,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
     gradeFilter
     standard
     imageUrl
-    timesPlayed
     gameTemplates {
       items {
         id
@@ -2985,7 +2825,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -3000,7 +2839,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -3008,7 +2846,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3023,7 +2860,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3038,7 +2874,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -3052,7 +2888,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3061,7 +2896,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -3082,7 +2916,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
         }
         privateQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -3096,7 +2930,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -3104,7 +2937,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3119,7 +2951,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3134,7 +2965,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -3148,7 +2979,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3157,7 +2987,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -3172,7 +3001,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -3187,7 +3015,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
     createdAt
     updatedAt
     type
-    owner
     __typename
   }
 }
@@ -3201,7 +3028,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
 ) {
   updatePrivateQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
+    owner
     title
     lowerCaseTitle
     version
@@ -3215,7 +3042,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
     gradeFilter
     standard
     imageUrl
-    timesPlayed
     gameTemplates {
       items {
         id
@@ -3223,7 +3049,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -3238,7 +3063,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -3246,7 +3070,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3261,7 +3084,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3276,7 +3098,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -3290,7 +3112,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3299,7 +3120,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -3320,7 +3140,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
         }
         privateQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -3334,7 +3154,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -3342,7 +3161,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3357,7 +3175,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3372,7 +3189,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -3386,7 +3203,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3395,7 +3211,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -3410,7 +3225,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -3425,7 +3239,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
     createdAt
     updatedAt
     type
-    owner
     __typename
   }
 }
@@ -3439,7 +3252,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
 ) {
   deletePrivateQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
+    owner
     title
     lowerCaseTitle
     version
@@ -3453,7 +3266,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
     gradeFilter
     standard
     imageUrl
-    timesPlayed
     gameTemplates {
       items {
         id
@@ -3461,7 +3273,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -3476,7 +3287,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           phaseOneTime
           phaseTwoTime
           imageUrl
-          timesPlayed
           questionTemplates {
             items {
               id
@@ -3484,7 +3294,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3499,7 +3308,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3514,7 +3322,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -3528,7 +3336,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3537,7 +3344,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -3558,7 +3364,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
         }
         privateQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -3572,7 +3378,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           gradeFilter
           standard
           imageUrl
-          timesPlayed
           gameTemplates {
             items {
               id
@@ -3580,7 +3385,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3595,7 +3399,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3610,7 +3413,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
               }
               privateQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -3624,7 +3427,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 gradeFilter
                 standard
                 imageUrl
-                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3633,7 +3435,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -3648,7 +3449,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -3663,7 +3463,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
     createdAt
     updatedAt
     type
-    owner
     __typename
   }
 }
@@ -3677,7 +3476,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
 ) {
   createDraftQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
+    owner
     title
     lowerCaseTitle
     version
@@ -3698,7 +3497,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
         draftQuestionTemplateID
         draftGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -3720,7 +3518,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3749,7 +3546,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -3771,7 +3568,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -3792,7 +3588,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
         }
         draftQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -3813,7 +3609,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3842,7 +3637,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -3864,7 +3659,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -3879,7 +3673,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -3894,7 +3687,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `mutation CreateDraftQu
     createdAt
     updatedAt
     type
-    owner
     __typename
   }
 }
@@ -3908,7 +3700,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
 ) {
   updateDraftQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
+    owner
     title
     lowerCaseTitle
     version
@@ -3929,7 +3721,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
         draftQuestionTemplateID
         draftGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -3951,7 +3742,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -3980,7 +3770,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -4002,7 +3792,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -4023,7 +3812,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
         }
         draftQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -4044,7 +3833,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -4073,7 +3861,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -4095,7 +3883,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -4110,7 +3897,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -4125,7 +3911,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `mutation UpdateDraftQu
     createdAt
     updatedAt
     type
-    owner
     __typename
   }
 }
@@ -4139,7 +3924,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
 ) {
   deleteDraftQuestionTemplate(input: $input, condition: $condition) {
     id
-    userId
+    owner
     title
     lowerCaseTitle
     version
@@ -4160,7 +3945,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
         draftQuestionTemplateID
         draftGameTemplate {
           id
-          userId
           title
           lowerCaseTitle
           version
@@ -4182,7 +3966,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -4211,7 +3994,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -4233,7 +4016,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -4254,7 +4036,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
         }
         draftQuestionTemplate {
           id
-          userId
+          owner
           title
           lowerCaseTitle
           version
@@ -4275,7 +4057,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
               draftQuestionTemplateID
               draftGameTemplate {
                 id
-                userId
                 title
                 lowerCaseTitle
                 version
@@ -4304,7 +4085,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
               }
               draftQuestionTemplate {
                 id
-                userId
+                owner
                 title
                 lowerCaseTitle
                 version
@@ -4326,7 +4107,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
                 createdAt
                 updatedAt
                 type
-                owner
                 __typename
               }
               createdAt
@@ -4341,7 +4121,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
           createdAt
           updatedAt
           type
-          owner
           __typename
         }
         createdAt
@@ -4356,7 +4135,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `mutation DeleteDraftQu
     createdAt
     updatedAt
     type
-    owner
     __typename
   }
 }
@@ -5277,7 +5055,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
     publicQuestionTemplateID
     publicGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -5292,7 +5069,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       phaseOneTime
       phaseTwoTime
       imageUrl
-      timesPlayed
       questionTemplates {
         items {
           id
@@ -5300,7 +5076,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
           publicQuestionTemplateID
           publicGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -5315,7 +5090,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5323,7 +5097,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5338,7 +5111,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5349,7 +5121,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5363,7 +5134,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5389,7 +5159,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
           }
           publicQuestionTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -5403,7 +5172,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5411,7 +5179,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5426,7 +5193,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5437,7 +5203,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5451,7 +5216,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5492,7 +5256,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
     }
     publicQuestionTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -5506,7 +5269,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       gradeFilter
       standard
       imageUrl
-      timesPlayed
       gameTemplates {
         items {
           id
@@ -5514,7 +5276,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
           publicQuestionTemplateID
           publicGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -5529,7 +5290,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5537,7 +5297,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5552,7 +5311,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5563,7 +5321,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5577,7 +5334,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5603,7 +5359,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
           }
           publicQuestionTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -5617,7 +5372,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5625,7 +5379,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5640,7 +5393,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5651,7 +5403,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5665,7 +5416,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5723,7 +5473,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
     publicQuestionTemplateID
     publicGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -5738,7 +5487,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       phaseOneTime
       phaseTwoTime
       imageUrl
-      timesPlayed
       questionTemplates {
         items {
           id
@@ -5746,7 +5494,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
           publicQuestionTemplateID
           publicGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -5761,7 +5508,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5769,7 +5515,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5784,7 +5529,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5795,7 +5539,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5809,7 +5552,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5835,7 +5577,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
           }
           publicQuestionTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -5849,7 +5590,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5857,7 +5597,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5872,7 +5611,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5883,7 +5621,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5897,7 +5634,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5938,7 +5674,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
     }
     publicQuestionTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -5952,7 +5687,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       gradeFilter
       standard
       imageUrl
-      timesPlayed
       gameTemplates {
         items {
           id
@@ -5960,7 +5694,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
           publicQuestionTemplateID
           publicGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -5975,7 +5708,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5983,7 +5715,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5998,7 +5729,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6009,7 +5739,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6023,7 +5752,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6049,7 +5777,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
           }
           publicQuestionTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -6063,7 +5790,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6071,7 +5797,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6086,7 +5811,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6097,7 +5821,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6111,7 +5834,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6169,7 +5891,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
     publicQuestionTemplateID
     publicGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -6184,7 +5905,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       phaseOneTime
       phaseTwoTime
       imageUrl
-      timesPlayed
       questionTemplates {
         items {
           id
@@ -6192,7 +5912,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
           publicQuestionTemplateID
           publicGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -6207,7 +5926,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6215,7 +5933,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6230,7 +5947,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6241,7 +5957,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6255,7 +5970,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6281,7 +5995,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
           }
           publicQuestionTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -6295,7 +6008,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6303,7 +6015,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6318,7 +6029,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6329,7 +6039,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6343,7 +6052,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6384,7 +6092,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
     }
     publicQuestionTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -6398,7 +6105,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       gradeFilter
       standard
       imageUrl
-      timesPlayed
       gameTemplates {
         items {
           id
@@ -6406,7 +6112,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
           publicQuestionTemplateID
           publicGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -6421,7 +6126,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6429,7 +6133,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6444,7 +6147,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6455,7 +6157,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6469,7 +6170,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6495,7 +6195,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
           }
           publicQuestionTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -6509,7 +6208,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6517,7 +6215,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6532,7 +6229,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6543,7 +6239,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 }
                 publicQuestionTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6557,7 +6252,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6615,7 +6309,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
     privateQuestionTemplateID
     privateGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -6630,7 +6323,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       phaseOneTime
       phaseTwoTime
       imageUrl
-      timesPlayed
       questionTemplates {
         items {
           id
@@ -6638,7 +6330,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -6653,7 +6344,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6661,7 +6351,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6676,7 +6365,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6687,7 +6375,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -6701,12 +6389,10 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -6727,7 +6413,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
           }
           privateQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -6741,7 +6427,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6749,7 +6434,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6764,7 +6448,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6775,7 +6458,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -6789,12 +6472,10 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -6809,7 +6490,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -6830,7 +6510,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
     }
     privateQuestionTemplate {
       id
-      userId
+      owner
       title
       lowerCaseTitle
       version
@@ -6844,7 +6524,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       gradeFilter
       standard
       imageUrl
-      timesPlayed
       gameTemplates {
         items {
           id
@@ -6852,7 +6531,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -6867,7 +6545,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6875,7 +6552,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6890,7 +6566,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6901,7 +6576,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -6915,12 +6590,10 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -6941,7 +6614,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
           }
           privateQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -6955,7 +6628,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6963,7 +6635,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6978,7 +6649,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6989,7 +6659,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7003,12 +6673,10 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7023,7 +6691,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -7038,7 +6705,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
     createdAt
@@ -7061,7 +6727,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
     privateQuestionTemplateID
     privateGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -7076,7 +6741,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       phaseOneTime
       phaseTwoTime
       imageUrl
-      timesPlayed
       questionTemplates {
         items {
           id
@@ -7084,7 +6748,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -7099,7 +6762,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7107,7 +6769,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7122,7 +6783,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7133,7 +6793,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7147,12 +6807,10 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7173,7 +6831,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
           }
           privateQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -7187,7 +6845,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7195,7 +6852,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7210,7 +6866,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7221,7 +6876,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7235,12 +6890,10 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7255,7 +6908,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -7276,7 +6928,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
     }
     privateQuestionTemplate {
       id
-      userId
+      owner
       title
       lowerCaseTitle
       version
@@ -7290,7 +6942,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       gradeFilter
       standard
       imageUrl
-      timesPlayed
       gameTemplates {
         items {
           id
@@ -7298,7 +6949,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -7313,7 +6963,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7321,7 +6970,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7336,7 +6984,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7347,7 +6994,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7361,12 +7008,10 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7387,7 +7032,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
           }
           privateQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -7401,7 +7046,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7409,7 +7053,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7424,7 +7067,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7435,7 +7077,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7449,12 +7091,10 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7469,7 +7109,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -7484,7 +7123,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
     createdAt
@@ -7507,7 +7145,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
     privateQuestionTemplateID
     privateGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -7522,7 +7159,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       phaseOneTime
       phaseTwoTime
       imageUrl
-      timesPlayed
       questionTemplates {
         items {
           id
@@ -7530,7 +7166,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -7545,7 +7180,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7553,7 +7187,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7568,7 +7201,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7579,7 +7211,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7593,12 +7225,10 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7619,7 +7249,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
           }
           privateQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -7633,7 +7263,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7641,7 +7270,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7656,7 +7284,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7667,7 +7294,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7681,12 +7308,10 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7701,7 +7326,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -7722,7 +7346,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
     }
     privateQuestionTemplate {
       id
-      userId
+      owner
       title
       lowerCaseTitle
       version
@@ -7736,7 +7360,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       gradeFilter
       standard
       imageUrl
-      timesPlayed
       gameTemplates {
         items {
           id
@@ -7744,7 +7367,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -7759,7 +7381,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
-            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7767,7 +7388,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7782,7 +7402,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7793,7 +7412,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7807,12 +7426,10 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7833,7 +7450,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
           }
           privateQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -7847,7 +7464,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             gradeFilter
             standard
             imageUrl
-            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7855,7 +7471,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7870,7 +7485,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7881,7 +7495,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 }
                 privateQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -7895,12 +7509,10 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   gradeFilter
                   standard
                   imageUrl
-                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -7915,7 +7527,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -7930,7 +7541,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
     createdAt
@@ -7953,7 +7563,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
     draftQuestionTemplateID
     draftGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -7975,7 +7584,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
           draftQuestionTemplateID
           draftGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -7997,7 +7605,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8022,7 +7629,7 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8040,7 +7647,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8061,7 +7667,7 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
           }
           draftQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -8082,7 +7688,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8107,7 +7712,7 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8125,7 +7730,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8140,7 +7744,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -8161,7 +7764,7 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
     }
     draftQuestionTemplate {
       id
-      userId
+      owner
       title
       lowerCaseTitle
       version
@@ -8182,7 +7785,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
           draftQuestionTemplateID
           draftGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -8204,7 +7806,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8229,7 +7830,7 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8247,7 +7848,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8268,7 +7868,7 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
           }
           draftQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -8289,7 +7889,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8314,7 +7913,7 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8332,7 +7931,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8347,7 +7945,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -8362,7 +7959,6 @@ export const createDraftGameQuestions = /* GraphQL */ `mutation CreateDraftGameQ
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
     createdAt
@@ -8385,7 +7981,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
     draftQuestionTemplateID
     draftGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -8407,7 +8002,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
           draftQuestionTemplateID
           draftGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -8429,7 +8023,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8454,7 +8047,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8472,7 +8065,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8493,7 +8085,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
           }
           draftQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -8514,7 +8106,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8539,7 +8130,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8557,7 +8148,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8572,7 +8162,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -8593,7 +8182,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
     }
     draftQuestionTemplate {
       id
-      userId
+      owner
       title
       lowerCaseTitle
       version
@@ -8614,7 +8203,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
           draftQuestionTemplateID
           draftGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -8636,7 +8224,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8661,7 +8248,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8679,7 +8266,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8700,7 +8286,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
           }
           draftQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -8721,7 +8307,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8746,7 +8331,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8764,7 +8349,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8779,7 +8363,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -8794,7 +8377,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `mutation UpdateDraftGameQ
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
     createdAt
@@ -8817,7 +8399,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
     draftQuestionTemplateID
     draftGameTemplate {
       id
-      userId
       title
       lowerCaseTitle
       version
@@ -8839,7 +8420,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
           draftQuestionTemplateID
           draftGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -8861,7 +8441,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8886,7 +8465,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8904,7 +8483,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -8925,7 +8503,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
           }
           draftQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -8946,7 +8524,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8971,7 +8548,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -8989,7 +8566,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -9004,7 +8580,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -9025,7 +8600,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
     }
     draftQuestionTemplate {
       id
-      userId
+      owner
       title
       lowerCaseTitle
       version
@@ -9046,7 +8621,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
           draftQuestionTemplateID
           draftGameTemplate {
             id
-            userId
             title
             lowerCaseTitle
             version
@@ -9068,7 +8642,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9093,7 +8666,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -9111,7 +8684,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -9132,7 +8704,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
           }
           draftQuestionTemplate {
             id
-            userId
+            owner
             title
             lowerCaseTitle
             version
@@ -9153,7 +8725,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
-                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9178,7 +8749,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                 }
                 draftQuestionTemplate {
                   id
-                  userId
+                  owner
                   title
                   lowerCaseTitle
                   version
@@ -9196,7 +8767,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
                   createdAt
                   updatedAt
                   type
-                  owner
                   __typename
                 }
                 createdAt
@@ -9211,7 +8781,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
             createdAt
             updatedAt
             type
-            owner
             __typename
           }
           createdAt
@@ -9226,7 +8795,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `mutation DeleteDraftGameQ
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
     createdAt
