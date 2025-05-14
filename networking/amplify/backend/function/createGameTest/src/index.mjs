@@ -13,14 +13,10 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
   let questionTemplates = [];
   const queryName = publicPrivate === 'Public' ? 'getPublicGameTemplate' : 'getPrivateGameTemplate';
   const questionName = publicPrivate === 'Public' ? 'publicQuestionTemplate' : 'privateQuestionTemplate';
-  console.log(awsGameTemplate);
   try {
       if (awsGameTemplate && awsGameTemplate.data && awsGameTemplate.data[queryName]) {
           const { questionTemplates: fetchedQuestionTemplates } = awsGameTemplate.data[queryName];
-          console.log(fetchedQuestionTemplates)
           questionTemplates = fetchedQuestionTemplates.items.map((item) => {
-            console.log("Here");
-            console.log(item); 
               return item[questionName];
           });
       } else {
@@ -29,8 +25,7 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
   } catch (e) {
       console.error('Error processing question templates:', e);
   }
-  console.log(questionTemplates);
-  const { owner, version, domain, grade, cluster, standard, __typename, createdAt, updatedAt, ...trimmedGameTemplate } = awsGameTemplate.data[queryName];
+  const { version, domain, grade, cluster, standard, __typename, createdAt, updatedAt, ...trimmedGameTemplate } = awsGameTemplate.data[queryName];
   const gameTemplate = {
       ...trimmedGameTemplate, 
       currentQuestionIndex: null, 
@@ -47,7 +42,6 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
 
 async function createAndSignRequest(query, variables) {
   const credentials = await defaultProvider()();
-  console.log(credentials);
   const endpoint = new URL(GRAPHQL_ENDPOINT ?? '');
   const signer = new SignatureV4({
     credentials: defaultProvider(),
@@ -77,7 +71,7 @@ async function createAndSignRequest(query, variables) {
     getPrivateGameTemplate(id: $id) {
       id
       title
-      owner
+      userId
       version
       description
       domain
@@ -87,12 +81,13 @@ async function createAndSignRequest(query, variables) {
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           privateQuestionTemplate {
             id
             title
-            owner
+            userId
             version
             choices
             instructions
@@ -102,6 +97,7 @@ async function createAndSignRequest(query, variables) {
             grade
             standard
             imageUrl
+            timesPlayed
             createdAt
             updatedAt
             __typename
@@ -119,12 +115,38 @@ async function createAndSignRequest(query, variables) {
     }
   }
 `;
+
+  const updatePrivateGameTemplate = /* GraphQL */ 
+    `mutation UpdatePrivateGameTemplate(
+        $input: UpdatePrivateGameTemplateInput!
+        $condition: ModelPrivateGameTemplateConditionInput
+      ) {
+        updatePrivateGameTemplate(input: $input, condition: $condition) {
+          id
+          timesPlayed
+        }
+      } 
+    `;
+
+  const updatePublicGameTemplate = /* GraphQL */ 
+  `mutation UpdatePublicGameTemplate(
+      $input: UpdatePublicGameTemplateInput!
+      $condition: ModelPublicGameTemplateConditionInput
+    ) {
+      updatePublicGameTemplate(input: $input, condition: $condition) {
+        id
+        timesPlayed
+      }
+    } 
+  `;
+
+
   const getPublicGameTemplate = /* GraphQL */ `
   query GetPublicGameTemplate($id: ID!) {
     getPublicGameTemplate(id: $id) {
       id
       title
-      owner
+      userId
       version
       description
       domain
@@ -134,12 +156,13 @@ async function createAndSignRequest(query, variables) {
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           publicQuestionTemplate {
             id
             title
-            owner
+            userId
             version
             choices
             instructions
@@ -149,6 +172,7 @@ async function createAndSignRequest(query, variables) {
             grade
             standard
             imageUrl
+            timesPlayed
             createdAt
             updatedAt
             __typename
@@ -166,6 +190,31 @@ async function createAndSignRequest(query, variables) {
     }
   }
 `;
+
+const updatePublicQuestionTemplate = /* GraphQL */ 
+  `mutation UpdatePublicQuestionTemplate(
+    $input: UpdatePublicQuestionTemplateInput!
+    $condition: ModelPublicQuestionTemplateConditionInput
+  ) {
+    updatePublicQuestionTemplate(input: $input, condition: $condition) {
+      id
+      timesPlayed
+    }
+  }
+  `;
+
+
+  const updatePrivateQuestionTemplate = /* GraphQL */ 
+  `mutation UpdatePrivateQuestionTemplate(
+    $input: UpdatePrivateQuestionTemplateInput!
+    $condition: ModelPrivateQuestionTemplateConditionInput
+  ) {
+    updatePrivateQuestionTemplate(input: $input, condition: $condition) {
+      id
+      timesPlayed
+    }
+  }
+  `;
 
 const createGameSession = /* GraphQL */ `
 mutation CreateGameSession(
@@ -217,6 +266,7 @@ mutation CreateQuestion(
     instructions
     standard
     cluster
+    choices
     domain
     grade
     order
@@ -228,40 +278,90 @@ mutation CreateQuestion(
   }
 }
 `;
+
+const getUser = /* GraphQL */ `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    id
+    userName
+    dynamoId
+    cognitoId
+    title
+    firstName
+    lastName
+    email
+    owner
+    password
+    gamesMade
+    gamesUsed
+    questionsMade
+    frontIdPath
+    backIdPath
+    profilePicPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+`;
+
+const updateUser = /* GraphQL */ `mutation UpdateUser(
+  $input: UpdateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  updateUser(input: $input, condition: $condition) {
+    id
+    userName
+    dynamoId
+    cognitoId
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    gamesUsed
+    questionsMade
+    frontIdPath
+    backIdPath
+    profilePicPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+`;
+
   let statusCode = 200;
   let responseBody ={};
   try {
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
     const publicPrivate = event.arguments.input.publicPrivate;
-    console.log(publicPrivate);
     const gameTemplateRequest = await createAndSignRequest( publicPrivate === 'Public' ? getPublicGameTemplate : getPrivateGameTemplate, { id: gameTemplateId });
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json(), publicPrivate);
-    console.log(gameTemplateParsed);
-    const { questionTemplates, ...game } = gameTemplateParsed;
+    const { questionTemplates, userId, owner, timesPlayed, ...game } = gameTemplateParsed;
 
     // createGameSession
     const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
+
+    // update gameTemplate timesPlayed
+    const newTimesPlayed = timesPlayed + 1;
+    const timesPlayedGameRequest = await createAndSignRequest(publicPrivate === 'Public' ? updatePublicGameTemplate : updatePrivateGameTemplate, {input: { id: gameTemplateId, timesPlayed: newTimesPlayed }});
+    const timesPlayedGameResponse = await fetch(timesPlayedGameRequest);
+
     // createQuestions
     const promises = questionTemplates.map(async (question) => {
-      const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
-      console.log(
-        {
-          ...trimmedQuestion,
-          id: uuidv4(),
-          text: title,
-          answerSettings: question.answerSettings,
-          gameSessionId: gameSessionParsed.id,
-          isConfidenceEnabled: false,
-          isShortAnswerEnabled: false,
-          isHintEnabled: true,
-          order: 0
-        }
-      )
+      const {choices, owner, userId, version, createdAt, title, updatedAt, gameId, timesPlayed, __typename, ...trimmedQuestion} = question;
+      const shuffledChoices = JSON.parse(choices).sort(() => Math.random() - 0.5);
+      
       const questionRequest = await createAndSignRequest(createQuestion, {
         input: {    
           ...trimmedQuestion,
@@ -272,16 +372,34 @@ mutation CreateQuestion(
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,
           isHintEnabled: true,
+          choices: JSON.stringify(shuffledChoices),
           order: 0
         }
       });
       const questionResponse = await fetch(questionRequest);
       const questionJson = await questionResponse.json();
-      console.log(questionJson);
       const questionParsed = questionJson.data.createQuestion;
+
+      // update gameTemplate timesPlayed
+      const newTimesPlayedQuestion = timesPlayed + 1;
+      
+      const timesPlayedQuestionsRequest = await createAndSignRequest(publicPrivate === 'Public' ? updatePublicQuestionTemplate : updatePrivateQuestionTemplate, {input: { id: question.id, timesPlayed: newTimesPlayedQuestion }});
+      const timesPlayedQuestionsResponse = await fetch(timesPlayedQuestionsRequest);
       return questionParsed;
     });
     const questionsParsed = await Promise.all(promises);
+
+    // update Owner to increment gamesUsed
+    const gameTemplateUserId = gameTemplateParsed.userId;
+    const userRequest = await createAndSignRequest(getUser, { id: gameTemplateUserId });
+    const userResponse = await fetch(userRequest);
+    const userJson = await userResponse.json();
+    const userParsed = userJson.data.getUser;
+    const gamesUsed = userParsed.gamesUsed + 1;
+    const userUpdateRequest = await createAndSignRequest(updateUser, { input: { id: gameTemplateUserId, gamesUsed } });
+    const userUpdateResponse = await fetch(userUpdateRequest);
+    const userUpdateJson = await userUpdateResponse.json();
+    const userUpdateParsed = userUpdateJson.data.updateUser;
     responseBody = gameSessionParsed.id;
   } catch (error) {
     console.error("Error occurred:", error);

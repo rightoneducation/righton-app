@@ -11,15 +11,19 @@ type User @model
 {
   id: ID! @primaryKey
   userName: String! @index(name: "userNameIndex", queryField: "userByUserName")
+  dynamoId: String
+  cognitoId: String! @index(name: "cognitoIndex", queryField: "userByCognitoId") 
   title: String
   firstName: String
   lastName: String
   email: String! @index(name: "emailIndex", queryField: "userByEmail")
   password: String
   gamesMade: Int
+  gamesUsed: Int
   questionsMade: Int
   frontIdPath: String
   backIdPath: String
+  profilePicPath: String
   favoriteGameTemplateIds: AWSJSON
   favoriteQuestionTemplateIds: AWSJSON
 }
@@ -115,6 +119,7 @@ type PublicGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -129,6 +134,7 @@ type PublicGameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
+  timesPlayed: Int
   questionTemplates: [PublicQuestionTemplate] @manyToMany(relationName: "PublicGameQuestions") 
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
@@ -154,6 +160,7 @@ type PrivateGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -168,6 +175,7 @@ type PrivateGameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
+  timesPlayed: Int
   questionTemplates: [PrivateQuestionTemplate] @manyToMany(relationName: "PrivateGameQuestions")
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
@@ -192,6 +200,7 @@ type DraftGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -232,6 +241,7 @@ type PublicQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -245,6 +255,7 @@ type PublicQuestionTemplate @model
   gradeFilter: String
   standard: String
   imageUrl: String
+  timesPlayed: Int
   gameTemplates: [PublicGameTemplate] @manyToMany(relationName: "PublicGameQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
@@ -268,7 +279,7 @@ type PrivateQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -282,6 +293,7 @@ type PrivateQuestionTemplate @model
   gradeFilter: String
   standard: String
   imageUrl: String
+  timesPlayed: Int
   gameTemplates: [PrivateGameTemplate] @manyToMany(relationName: "PrivateGameQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
@@ -305,7 +317,7 @@ type DraftQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID
-  owner: String
+  userId: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -508,5 +520,3 @@ type Subscription {
       ]
     )
 }
-
-
