@@ -113,25 +113,23 @@ export default function QOTDCardBase({
         {(screenSize === ScreenSize.SMALL) && (
         <RadioContainerStyled>
           <RadioGroup
-            row
-            value="multiple"
+            value={answer}
             onChange={handleAnswerSelect}
             style={{overflow: 'hidden', flexWrap: 'nowrap'}}
           >
+           {Object.entries(currentQuestion.answers).map(([key, value]) => {
+        if (!value) return null;
+        return (
             <RadioLabelStyled
-              value="multiple"
-              control={<RadioStyled style={{cursor: 'pointer'}}/>}
-              label="Multiple Choice"
-              isSelected={cardIsComplete}
-              style={{cursor: 'pointer'}}
+            key={key}
+            value={value}
+            control={<RadioStyled style={{cursor: 'pointer'}} />}
+            label={value}
+            isSelected={answer === value}
+            style={{cursor: 'pointer'}}
             />
-            <RadioLabelStyled
-              value="short"
-              control={<RadioStyled style={{cursor: 'pointer'}}/>}
-              label="Short Answer"
-              isSelected={cardIsComplete}
-              style={{cursor: 'pointer'}}
-            />
+        );
+        })}
           </RadioGroup>
         </RadioContainerStyled>
           )}
