@@ -9,7 +9,6 @@ export type AmplifyDependentResourcesAttributes = {
     "mobile6060603c": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
-      "GoogleWebClient": "string",
       "HostedUIDomain": "string",
       "IdentityPoolId": "string",
       "IdentityPoolName": "string",
@@ -23,7 +22,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "UserCleaner": {
+    "S3Trigger04eb3a91": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
@@ -58,6 +57,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "userCleaner": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "waegen": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -74,7 +80,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "gamequestionimages": {
+    "rightoncentralstorage": {
       "BucketName": "string",
       "Region": "string"
     }

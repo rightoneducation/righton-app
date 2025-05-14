@@ -84,7 +84,7 @@
     }
   },
   "function": {
-    "UserCleaner": {
+    "S3Trigger04eb3a91": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -119,6 +119,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "userCleaner": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "waegen": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -131,27 +136,19 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile6060603c_googleClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile6060603c"
-        }
-      ]
-    },
-    "AMPLIFY_function_UserCleaner_deploymentBucketName": {
+    "AMPLIFY_function_S3Trigger04eb3a91_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "UserCleaner"
+          "resourceName": "S3Trigger04eb3a91"
         }
       ]
     },
-    "AMPLIFY_function_UserCleaner_s3Key": {
+    "AMPLIFY_function_S3Trigger04eb3a91_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "UserCleaner"
+          "resourceName": "S3Trigger04eb3a91"
         }
       ]
     },
@@ -227,6 +224,22 @@
         }
       ]
     },
+    "AMPLIFY_function_userCleaner_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_userCleaner_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userCleaner"
+        }
+      ]
+    },
     "AMPLIFY_function_waegen_deploymentBucketName": {
       "usedBy": [
         {
@@ -261,8 +274,18 @@
     }
   },
   "storage": {
-    "gamequestionimages": {
-      "dependsOn": [],
+    "rightoncentralstorage": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ],
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "S3"
     }
