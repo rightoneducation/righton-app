@@ -40,10 +40,10 @@ export default function SelectGradesMenu({
     '3rd Grade': GradeTarget.GRADETHREE,
     '2nd Grade': GradeTarget.GRADETWO,
     '1st Grade': GradeTarget.GRADEONE,
-    Kindergarten: GradeTarget.KINDERGARTEN,
+    'Kindergarten': GradeTarget.KINDERGARTEN,
   };
   const selectedGradeMap = {
-    HS: GradeTarget.HIGHSCHOOL,
+    'HS': GradeTarget.HIGHSCHOOL,
     '8': GradeTarget.GRADEEIGHT,
     '7': GradeTarget.GRADESEVEN,
     '6': GradeTarget.GRADESIX,
@@ -52,7 +52,7 @@ export default function SelectGradesMenu({
     '3': GradeTarget.GRADETHREE,
     '2': GradeTarget.GRADETWO,
     '1': GradeTarget.GRADEONE,
-    K: GradeTarget.KINDERGARTEN,
+    'K': GradeTarget.KINDERGARTEN,
   };
   // updates copy of array that will be sent to parent component on click of choose button
   const handleGradesChange = (grade: string) => {
