@@ -182,6 +182,9 @@ export default function Header({
 
   const handleButtonClick = (screen: ScreenType) => {
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+    centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
     switch (screen) {
       case ScreenType.QUESTIONS:
         navigate('/questions');

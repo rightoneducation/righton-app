@@ -9,9 +9,9 @@ import {
   SelectArrowContainer,
   SelectMenu,
   SelectMenuItem,
-  SelectButton,
   SelectButtonBox,
 } from '../../lib/styledcomponents/SelectGrade';
+import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 import SelectArrow from '../../images/SelectArrow.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
@@ -27,7 +27,9 @@ export default function SelectGradesMenu({
 }: SelectGradesMenuProps) {
   const theme = useTheme();
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
-  const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
+  const { selectedGrades } = centralData;
   const gradeMap = {
     'High School': GradeTarget.HIGHSCHOOL,
     '8th Grade': GradeTarget.GRADEEIGHT,
@@ -55,17 +57,14 @@ export default function SelectGradesMenu({
   // updates copy of array that will be sent to parent component on click of choose button
   const handleGradesChange = (grade: string) => {
     if (!selectedGrades.includes(gradeMap[grade as keyof typeof gradeMap])) {
-      setSelectedGrades((prev: GradeTarget[]) => [
-        ...prev,
-        gradeMap[grade as keyof typeof gradeMap],
-      ]);
+      centralDataDispatch({type: 'SET_SELECTED_GRADES', payload: gradeMap[grade as keyof typeof gradeMap]});
     } else {
-      setSelectedGrades((prev: GradeTarget[]) =>
-        prev.filter(
-          (g) =>
-            g !== (gradeMap[grade as keyof typeof gradeMap] as GradeTarget),
-        ),
-      );
+      centralDataDispatch({
+        type: 'SET_SELECTED_GRADES', 
+        payload: centralData.selectedGrades.filter((g) =>
+            g !== (gradeMap[grade as keyof typeof gradeMap] as GradeTarget)
+        )
+      });
     }
   };
   const getSelectLabel = () => {
@@ -105,7 +104,12 @@ export default function SelectGradesMenu({
     return `${selectedGrades.length} Grades Selected`;
   };
   return (
-    <ClickAwayListener onClickAway={() => setIsSelectOpen(false)}>
+    <ClickAwayListener onClickAway={() => {
+      if (isSelectOpen) {
+        setIsSelectOpen(false);
+        handleChooseGrades(selectedGrades);
+      }
+    }}>
       <SelectContainer>
         <SelectGrade
           screenSize={screenSize ?? ScreenSize.SMALL}

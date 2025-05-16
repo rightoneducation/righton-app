@@ -61,7 +61,11 @@ export default function SortSearchMenu({
     handleSortChange({ field: selectSort.field, direction: newDirection });
   };
   return (
-    <ClickAwayListener onClickAway={() => setIsSortOpen(false)}>
+    <ClickAwayListener onClickAway={() => {
+      if (isSortOpen) {
+        setIsSortOpen(false)
+      }
+    }}>
       <SortContainer>
         <SortButton
           screenSize={screenSize ?? ScreenSize.SMALL}
