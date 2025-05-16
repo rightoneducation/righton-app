@@ -59,7 +59,7 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
 };
 
 export const ButtonStyled = styled(Button, {
-  shouldForwardProp: (prop) => (prop !== 'buttonColor' && prop !== 'isOnQuestionTab'),
+  shouldForwardProp: (prop) => (prop !== 'buttonColor' && prop !== 'isOnQuestionTab' && prop !== 'buttonType'),
 })<ButtonStyledProps>(({ theme, buttonColor, buttonType, isOnQuestionTab }) => ({
   width: '100%',
   height: isOnQuestionTab ? '100%' : '38px',

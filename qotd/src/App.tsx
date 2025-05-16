@@ -21,7 +21,7 @@ function App() {
     <MathBackground />
     <QOTDMainContainer>
       <QOTDBoxContainer>
-          <QuestionTitleStyled align='center' sx={{ fontSize: '32px', color: "#384466"}}>
+          <QuestionTitleStyled align='center' sx={{ fontSize: "32px", color: "#384466" }}>
           Question of The Day
           </QuestionTitleStyled>
         <QOTDCardBase screenSize={screenSize} />
