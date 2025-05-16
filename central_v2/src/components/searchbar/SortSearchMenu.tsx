@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, useTheme, styled, Select } from '@mui/material';
+import { Box, Typography, useTheme, styled, Select, ClickAwayListener } from '@mui/material';
 import { GradeTarget, SortType, SortDirection } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
@@ -30,6 +30,7 @@ export default function SortSearchMenu({
   screenSize,
   handleSortChange,
 }: SortSearchMenuProps) {
+
   const theme = useTheme();
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [selectedSort, setSelectedSort] = useState<{
@@ -60,55 +61,57 @@ export default function SortSearchMenu({
     handleSortChange({ field: selectSort.field, direction: newDirection });
   };
   return (
-    <SortContainer>
-      <SortButton
-        screenSize={screenSize ?? ScreenSize.SMALL}
-        onClick={(prev) => setIsSortOpen(!isSortOpen)}
-      >
-        <SortArrowContainer isSortOpen={isSortOpen}>
-          <img src={SortArrows} alt="Sort Arrow" />
-        </SortArrowContainer>
-        {screenSize !== ScreenSize.SMALL && <SortLabel>Sort</SortLabel>}
-      </SortButton>
-      <SortMenu isSortOpen={isSortOpen}>
-        {Object.keys(sortTypeMap).map((sortType) => (
-          <SortMenuItem
-            key={sortType}
-            isSelected={selectedSort.field ===
-              sortTypeMap[sortType as keyof typeof sortTypeMap]}
-            onClick={() =>
-              preSortChange({
-                field: sortTypeMap[sortType as keyof typeof sortTypeMap],
-                direction: selectedSort.direction,
-              })
-            }
-          >
-            <Typography
-              fontSize="16px"
-              color={
-                selectedSort.field ===
-                  sortTypeMap[sortType as keyof typeof sortTypeMap] &&
-                selectedSort.direction
-                  ? 'white'
-                  : `${theme.palette.primary.sortText}`
+    <ClickAwayListener onClickAway={() => setIsSortOpen(false)}>
+      <SortContainer>
+        <SortButton
+          screenSize={screenSize ?? ScreenSize.SMALL}
+          onClick={(prev) => setIsSortOpen(!isSortOpen)}
+        >
+          <SortArrowContainer isSortOpen={isSortOpen}>
+            <img src={SortArrows} alt="Sort Arrow" />
+          </SortArrowContainer>
+          {screenSize !== ScreenSize.SMALL && <SortLabel>Sort</SortLabel>}
+        </SortButton>
+        <SortMenu isSortOpen={isSortOpen}>
+          {Object.keys(sortTypeMap).map((sortType) => (
+            <SortMenuItem
+              key={sortType}
+              isSelected={selectedSort.field ===
+                sortTypeMap[sortType as keyof typeof sortTypeMap]}
+              onClick={() =>
+                preSortChange({
+                  field: sortTypeMap[sortType as keyof typeof sortTypeMap],
+                  direction: selectedSort.direction,
+                })
               }
             >
-              {sortType}
-            </Typography>
-            <SortMenuArrowContainer
-              isSortOpen
-              selectedSort={selectedSort}
-              currentSort={sortTypeMap[sortType as keyof typeof sortTypeMap]}
-            >
-              { (selectedSort.field ===
-                  sortTypeMap[sortType as keyof typeof sortTypeMap])
-              ? <SelectedIcon src={SortArrow} alt="Sort Direction Icon" />
-              : <img src={SortArrow} alt="Sort Direction Icon" />
-              }
-            </SortMenuArrowContainer>
-          </SortMenuItem>
-        ))}
-      </SortMenu>
-    </SortContainer>
+              <Typography
+                fontSize="16px"
+                color={
+                  selectedSort.field ===
+                    sortTypeMap[sortType as keyof typeof sortTypeMap] &&
+                  selectedSort.direction
+                    ? 'white'
+                    : `${theme.palette.primary.sortText}`
+                }
+              >
+                {sortType}
+              </Typography>
+              <SortMenuArrowContainer
+                isSortOpen
+                selectedSort={selectedSort}
+                currentSort={sortTypeMap[sortType as keyof typeof sortTypeMap]}
+              >
+                { (selectedSort.field ===
+                    sortTypeMap[sortType as keyof typeof sortTypeMap])
+                ? <SelectedIcon src={SortArrow} alt="Sort Direction Icon" />
+                : <img src={SortArrow} alt="Sort Direction Icon" />
+                }
+              </SortMenuArrowContainer>
+            </SortMenuItem>
+          ))}
+        </SortMenu>
+      </SortContainer>
+    </ClickAwayListener>
   );
 }

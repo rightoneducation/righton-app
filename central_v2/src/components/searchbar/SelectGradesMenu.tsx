@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox, Typography, Collapse, useTheme, Button } from '@mui/material';
+import { Checkbox, Typography, Collapse, useTheme, ClickAwayListener } from '@mui/material';
 import { GradeTarget } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
@@ -105,54 +105,56 @@ export default function SelectGradesMenu({
     return `${selectedGrades.length} Grades Selected`;
   };
   return (
-    <SelectContainer>
-      <SelectGrade
-        screenSize={screenSize ?? ScreenSize.SMALL}
-        onClick={(prev) => setIsSelectOpen(!isSelectOpen)}
-      >
-        {screenSize !== ScreenSize.SMALL && (
-          <SelectLabel>{getSelectLabel()}</SelectLabel>
-        )}
-        <SelectArrowContainer isSelectOpen={isSelectOpen}>
-          <img src={SelectArrow} alt="Select Arrow" />
-        </SelectArrowContainer>
-      </SelectGrade>
-      <Collapse in={isSelectOpen} timeout={1000}>
-        <SelectMenu isSelectOpen={isSelectOpen} screenSize={screenSize}>
-          {Object.keys(gradeMap).map((grade) => (
-            <SelectMenuItem onClick={() => handleGradesChange(grade)} key={grade}>
-              <Checkbox
-                checked={selectedGrades.includes(
-                  gradeMap[grade as keyof typeof gradeMap],
-                )}
-                color="default"
-                style={{padding: 0}}
-              />
-              <Typography
-                style={{
-                  fontFamily: 'Poppins',
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 500,
-                  color: `${theme.palette.primary.extraDarkBlue}`,
+    <ClickAwayListener onClickAway={() => setIsSelectOpen(false)}>
+      <SelectContainer>
+        <SelectGrade
+          screenSize={screenSize ?? ScreenSize.SMALL}
+          onClick={(prev) => setIsSelectOpen(!isSelectOpen)}
+        >
+          {screenSize !== ScreenSize.SMALL && (
+            <SelectLabel>{getSelectLabel()}</SelectLabel>
+          )}
+          <SelectArrowContainer isSelectOpen={isSelectOpen}>
+            <img src={SelectArrow} alt="Select Arrow" />
+          </SelectArrowContainer>
+        </SelectGrade>
+        <Collapse in={isSelectOpen} timeout={1000}>
+          <SelectMenu isSelectOpen={isSelectOpen} screenSize={screenSize}>
+            {Object.keys(gradeMap).map((grade) => (
+              <SelectMenuItem onClick={() => handleGradesChange(grade)} key={grade}>
+                <Checkbox
+                  checked={selectedGrades.includes(
+                    gradeMap[grade as keyof typeof gradeMap],
+                  )}
+                  color="default"
+                  style={{padding: 0}}
+                />
+                <Typography
+                  style={{
+                    fontFamily: 'Poppins',
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    fontWeight: 500,
+                    color: `${theme.palette.primary.extraDarkBlue}`,
+                  }}
+                >
+                  {grade}
+                </Typography>
+              </SelectMenuItem>
+            ))}
+            <SelectButtonBox>
+              <CentralButton
+                buttonType={ButtonType.CHOOSE}
+                isEnabled
+                onClick={() => {
+                  setIsSelectOpen(false);
+                  handleChooseGrades(selectedGrades);
                 }}
-              >
-                {grade}
-              </Typography>
-            </SelectMenuItem>
-          ))}
-          <SelectButtonBox>
-            <CentralButton
-              buttonType={ButtonType.CHOOSE}
-              isEnabled
-              onClick={() => {
-                setIsSelectOpen(false);
-                handleChooseGrades(selectedGrades);
-              }}
-            />
-          </SelectButtonBox>
-        </SelectMenu>
-      </Collapse>
-    </SelectContainer>
+              />
+            </SelectButtonBox>
+          </SelectMenu>
+        </Collapse>
+      </SelectContainer>
+    </ClickAwayListener>
   );
 }
