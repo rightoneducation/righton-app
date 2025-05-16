@@ -7,5 +7,6 @@ export * from './auth';
 export * from './datamanagers';
 export * from './gamesession';
 export * from './interfaces';
+export * from './qotdAPI';
 export * from './templates';
 export * from './user';

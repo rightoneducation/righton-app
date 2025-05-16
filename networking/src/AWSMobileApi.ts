@@ -2,46 +2,34 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateUserInput = {
+export type CreateQuestionOfTheDayInput = {
   id?: string | null,
-  userName: string,
-  dynamoId?: string | null,
-  cognitoId: string,
-  title?: string | null,
-  firstName?: string | null,
-  lastName?: string | null,
-  email: string,
-  password?: string | null,
-  gamesMade?: number | null,
-  gamesUsed?: number | null,
-  questionsMade?: number | null,
-  frontIdPath?: string | null,
-  backIdPath?: string | null,
-  profilePicPath?: string | null,
-  favoriteGameTemplateIds?: string | null,
-  favoriteQuestionTemplateIds?: string | null,
+  questionText: string,
+  date: string,
+  explanation?: string | null,
+  options: Array< QuestionOptionInput >,
+  createdBy: string,
+  createdAt?: string | null,
+  updatedAt?: string | null,
 };
 
-export type ModelUserConditionInput = {
-  userName?: ModelStringInput | null,
-  dynamoId?: ModelStringInput | null,
-  cognitoId?: ModelStringInput | null,
-  title?: ModelStringInput | null,
-  firstName?: ModelStringInput | null,
-  lastName?: ModelStringInput | null,
-  email?: ModelStringInput | null,
-  password?: ModelStringInput | null,
-  gamesMade?: ModelIntInput | null,
-  gamesUsed?: ModelIntInput | null,
-  questionsMade?: ModelIntInput | null,
-  frontIdPath?: ModelStringInput | null,
-  backIdPath?: ModelStringInput | null,
-  profilePicPath?: ModelStringInput | null,
-  favoriteGameTemplateIds?: ModelStringInput | null,
-  favoriteQuestionTemplateIds?: ModelStringInput | null,
-  and?: Array< ModelUserConditionInput | null > | null,
-  or?: Array< ModelUserConditionInput | null > | null,
-  not?: ModelUserConditionInput | null,
+export type QuestionOptionInput = {
+  id: string,
+  text: string,
+  isCorrect: boolean,
+};
+
+export type ModelQuestionOfTheDayConditionInput = {
+  questionText?: ModelStringInput | null,
+  date?: ModelStringInput | null,
+  explanation?: ModelStringInput | null,
+  createdBy?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelQuestionOfTheDayConditionInput | null > | null,
+  or?: Array< ModelQuestionOfTheDayConditionInput | null > | null,
+  not?: ModelQuestionOfTheDayConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelStringInput = {
@@ -82,6 +70,102 @@ export type ModelSizeInput = {
   ge?: number | null,
   gt?: number | null,
   between?: Array< number | null > | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type QuestionOfTheDay = {
+  __typename: "QuestionOfTheDay",
+  id: string,
+  questionText: string,
+  date: string,
+  explanation?: string | null,
+  options:  Array<QuestionOption >,
+  createdBy: string,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type QuestionOption = {
+  __typename: "QuestionOption",
+  id: string,
+  text: string,
+  isCorrect: boolean,
+};
+
+export type UpdateQuestionOfTheDayInput = {
+  id: string,
+  questionText?: string | null,
+  date?: string | null,
+  explanation?: string | null,
+  options?: Array< QuestionOptionInput > | null,
+  createdBy?: string | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type DeleteQuestionOfTheDayInput = {
+  id: string,
+};
+
+export type CreateUserInput = {
+  id?: string | null,
+  userName: string,
+  dynamoId?: string | null,
+  cognitoId: string,
+  title?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
+  email: string,
+  password?: string | null,
+  gamesMade?: number | null,
+  gamesUsed?: number | null,
+  questionsMade?: number | null,
+  frontIdPath?: string | null,
+  backIdPath?: string | null,
+  profilePicPath?: string | null,
+  favoriteGameTemplateIds?: string | null,
+  favoriteQuestionTemplateIds?: string | null,
+};
+
+export type ModelUserConditionInput = {
+  userName?: ModelStringInput | null,
+  dynamoId?: ModelStringInput | null,
+  cognitoId?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  firstName?: ModelStringInput | null,
+  lastName?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  password?: ModelStringInput | null,
+  gamesMade?: ModelIntInput | null,
+  gamesUsed?: ModelIntInput | null,
+  questionsMade?: ModelIntInput | null,
+  frontIdPath?: ModelStringInput | null,
+  backIdPath?: ModelStringInput | null,
+  profilePicPath?: ModelStringInput | null,
+  favoriteGameTemplateIds?: ModelStringInput | null,
+  favoriteQuestionTemplateIds?: ModelStringInput | null,
+  and?: Array< ModelUserConditionInput | null > | null,
+  or?: Array< ModelUserConditionInput | null > | null,
+  not?: ModelUserConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelIntInput = {
@@ -194,6 +278,7 @@ export type ModelPublicGameTemplateConditionInput = {
   and?: Array< ModelPublicGameTemplateConditionInput | null > | null,
   or?: Array< ModelPublicGameTemplateConditionInput | null > | null,
   not?: ModelPublicGameTemplateConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type PublicGameTemplate = {
@@ -347,6 +432,7 @@ export type ModelPrivateGameTemplateConditionInput = {
   and?: Array< ModelPrivateGameTemplateConditionInput | null > | null,
   or?: Array< ModelPrivateGameTemplateConditionInput | null > | null,
   not?: ModelPrivateGameTemplateConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type PrivateGameTemplate = {
@@ -498,6 +584,7 @@ export type ModelDraftGameTemplateConditionInput = {
   and?: Array< ModelDraftGameTemplateConditionInput | null > | null,
   or?: Array< ModelDraftGameTemplateConditionInput | null > | null,
   not?: ModelDraftGameTemplateConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type DraftGameTemplate = {
@@ -644,6 +731,7 @@ export type ModelPublicQuestionTemplateConditionInput = {
   and?: Array< ModelPublicQuestionTemplateConditionInput | null > | null,
   or?: Array< ModelPublicQuestionTemplateConditionInput | null > | null,
   not?: ModelPublicQuestionTemplateConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type UpdatePublicQuestionTemplateInput = {
@@ -719,6 +807,7 @@ export type ModelPrivateQuestionTemplateConditionInput = {
   and?: Array< ModelPrivateQuestionTemplateConditionInput | null > | null,
   or?: Array< ModelPrivateQuestionTemplateConditionInput | null > | null,
   not?: ModelPrivateQuestionTemplateConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type UpdatePrivateQuestionTemplateInput = {
@@ -792,6 +881,7 @@ export type ModelDraftQuestionTemplateConditionInput = {
   and?: Array< ModelDraftQuestionTemplateConditionInput | null > | null,
   or?: Array< ModelDraftQuestionTemplateConditionInput | null > | null,
   not?: ModelDraftQuestionTemplateConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type UpdateDraftQuestionTemplateInput = {
@@ -867,22 +957,8 @@ export type ModelGameSessionConditionInput = {
   and?: Array< ModelGameSessionConditionInput | null > | null,
   or?: Array< ModelGameSessionConditionInput | null > | null,
   not?: ModelGameSessionConditionInput | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
 };
 
 export type ModelGameSessionStateInput = {
@@ -1126,6 +1202,8 @@ export type ModelTeamConditionInput = {
   and?: Array< ModelTeamConditionInput | null > | null,
   or?: Array< ModelTeamConditionInput | null > | null,
   not?: ModelTeamConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   gameSessionTeamsId?: ModelIDInput | null,
   teamQuestionId?: ModelIDInput | null,
   teamQuestionOrder?: ModelIntInput | null,
@@ -1160,6 +1238,8 @@ export type ModelTeamMemberConditionInput = {
   and?: Array< ModelTeamMemberConditionInput | null > | null,
   or?: Array< ModelTeamMemberConditionInput | null > | null,
   not?: ModelTeamMemberConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   teamTeamMembersId?: ModelIDInput | null,
 };
 
@@ -1208,6 +1288,8 @@ export type ModelTeamAnswerConditionInput = {
   and?: Array< ModelTeamAnswerConditionInput | null > | null,
   or?: Array< ModelTeamAnswerConditionInput | null > | null,
   not?: ModelTeamAnswerConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
 };
 
 export type ModelConfidenceLevelInput = {
@@ -1248,6 +1330,9 @@ export type ModelPublicGameQuestionsConditionInput = {
   and?: Array< ModelPublicGameQuestionsConditionInput | null > | null,
   or?: Array< ModelPublicGameQuestionsConditionInput | null > | null,
   not?: ModelPublicGameQuestionsConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type UpdatePublicGameQuestionsInput = {
@@ -1272,6 +1357,9 @@ export type ModelPrivateGameQuestionsConditionInput = {
   and?: Array< ModelPrivateGameQuestionsConditionInput | null > | null,
   or?: Array< ModelPrivateGameQuestionsConditionInput | null > | null,
   not?: ModelPrivateGameQuestionsConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type UpdatePrivateGameQuestionsInput = {
@@ -1296,6 +1384,9 @@ export type ModelDraftGameQuestionsConditionInput = {
   and?: Array< ModelDraftGameQuestionsConditionInput | null > | null,
   or?: Array< ModelDraftGameQuestionsConditionInput | null > | null,
   not?: ModelDraftGameQuestionsConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type UpdateDraftGameQuestionsInput = {
@@ -1342,6 +1433,32 @@ export type WaeRegenInput = {
   discardedExplanations?: string | null,
 };
 
+export type ModelQuestionOfTheDayFilterInput = {
+  id?: ModelIDInput | null,
+  questionText?: ModelStringInput | null,
+  date?: ModelStringInput | null,
+  explanation?: ModelStringInput | null,
+  createdBy?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelQuestionOfTheDayFilterInput | null > | null,
+  or?: Array< ModelQuestionOfTheDayFilterInput | null > | null,
+  not?: ModelQuestionOfTheDayFilterInput | null,
+  owner?: ModelStringInput | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
+export type ModelQuestionOfTheDayConnection = {
+  __typename: "ModelQuestionOfTheDayConnection",
+  items:  Array<QuestionOfTheDay | null >,
+  nextToken?: string | null,
+};
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   userName?: ModelStringInput | null,
@@ -1360,16 +1477,13 @@ export type ModelUserFilterInput = {
   profilePicPath?: ModelStringInput | null,
   favoriteGameTemplateIds?: ModelStringInput | null,
   favoriteQuestionTemplateIds?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
   or?: Array< ModelUserFilterInput | null > | null,
   not?: ModelUserFilterInput | null,
+  owner?: ModelStringInput | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelUserConnection = {
   __typename: "ModelUserConnection",
@@ -1403,6 +1517,7 @@ export type ModelPublicGameTemplateFilterInput = {
   and?: Array< ModelPublicGameTemplateFilterInput | null > | null,
   or?: Array< ModelPublicGameTemplateFilterInput | null > | null,
   not?: ModelPublicGameTemplateFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelPublicGameTemplateConnection = {
@@ -1456,6 +1571,7 @@ export type ModelPrivateGameTemplateFilterInput = {
   and?: Array< ModelPrivateGameTemplateFilterInput | null > | null,
   or?: Array< ModelPrivateGameTemplateFilterInput | null > | null,
   not?: ModelPrivateGameTemplateFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelPrivateGameTemplateConnection = {
@@ -1489,6 +1605,7 @@ export type ModelDraftGameTemplateFilterInput = {
   and?: Array< ModelDraftGameTemplateFilterInput | null > | null,
   or?: Array< ModelDraftGameTemplateFilterInput | null > | null,
   not?: ModelDraftGameTemplateFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelDraftGameTemplateConnection = {
@@ -1521,6 +1638,7 @@ export type ModelPublicQuestionTemplateFilterInput = {
   and?: Array< ModelPublicQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelPublicQuestionTemplateFilterInput | null > | null,
   not?: ModelPublicQuestionTemplateFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelPublicQuestionTemplateConnection = {
@@ -1553,6 +1671,7 @@ export type ModelPrivateQuestionTemplateFilterInput = {
   and?: Array< ModelPrivateQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelPrivateQuestionTemplateFilterInput | null > | null,
   not?: ModelPrivateQuestionTemplateFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelPrivateQuestionTemplateConnection = {
@@ -1584,6 +1703,7 @@ export type ModelDraftQuestionTemplateFilterInput = {
   and?: Array< ModelDraftQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelDraftQuestionTemplateFilterInput | null > | null,
   not?: ModelDraftQuestionTemplateFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelDraftQuestionTemplateConnection = {
@@ -1607,6 +1727,8 @@ export type ModelGameSessionFilterInput = {
   title?: ModelStringInput | null,
   currentTimer?: ModelIntInput | null,
   sessionData?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelGameSessionFilterInput | null > | null,
   or?: Array< ModelGameSessionFilterInput | null > | null,
   not?: ModelGameSessionFilterInput | null,
@@ -1661,6 +1783,8 @@ export type ModelTeamFilterInput = {
   name?: ModelStringInput | null,
   score?: ModelIntInput | null,
   selectedAvatarIndex?: ModelIntInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelTeamFilterInput | null > | null,
   or?: Array< ModelTeamFilterInput | null > | null,
   not?: ModelTeamFilterInput | null,
@@ -1674,6 +1798,8 @@ export type ModelTeamMemberFilterInput = {
   id?: ModelIDInput | null,
   isFacilitator?: ModelBooleanInput | null,
   deviceId?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelTeamMemberFilterInput | null > | null,
   or?: Array< ModelTeamMemberFilterInput | null > | null,
   not?: ModelTeamMemberFilterInput | null,
@@ -1695,6 +1821,8 @@ export type ModelTeamAnswerFilterInput = {
   answer?: ModelStringInput | null,
   confidenceLevel?: ModelConfidenceLevelInput | null,
   hint?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelTeamAnswerFilterInput | null > | null,
   or?: Array< ModelTeamAnswerFilterInput | null > | null,
   not?: ModelTeamAnswerFilterInput | null,
@@ -1704,49 +1832,49 @@ export type ModelPublicGameQuestionsFilterInput = {
   id?: ModelIDInput | null,
   publicGameTemplateID?: ModelIDInput | null,
   publicQuestionTemplateID?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelPublicGameQuestionsFilterInput | null > | null,
   or?: Array< ModelPublicGameQuestionsFilterInput | null > | null,
   not?: ModelPublicGameQuestionsFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelPrivateGameQuestionsFilterInput = {
   id?: ModelIDInput | null,
   privateGameTemplateID?: ModelIDInput | null,
   privateQuestionTemplateID?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelPrivateGameQuestionsFilterInput | null > | null,
   or?: Array< ModelPrivateGameQuestionsFilterInput | null > | null,
   not?: ModelPrivateGameQuestionsFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelDraftGameQuestionsFilterInput = {
   id?: ModelIDInput | null,
   draftGameTemplateID?: ModelIDInput | null,
   draftQuestionTemplateID?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelDraftGameQuestionsFilterInput | null > | null,
   or?: Array< ModelDraftGameQuestionsFilterInput | null > | null,
   not?: ModelDraftGameQuestionsFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
-export type ModelSubscriptionUserFilterInput = {
+export type ModelSubscriptionQuestionOfTheDayFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  userName?: ModelSubscriptionStringInput | null,
-  dynamoId?: ModelSubscriptionStringInput | null,
-  cognitoId?: ModelSubscriptionStringInput | null,
-  title?: ModelSubscriptionStringInput | null,
-  firstName?: ModelSubscriptionStringInput | null,
-  lastName?: ModelSubscriptionStringInput | null,
-  email?: ModelSubscriptionStringInput | null,
-  password?: ModelSubscriptionStringInput | null,
-  gamesMade?: ModelSubscriptionIntInput | null,
-  gamesUsed?: ModelSubscriptionIntInput | null,
-  questionsMade?: ModelSubscriptionIntInput | null,
-  frontIdPath?: ModelSubscriptionStringInput | null,
-  backIdPath?: ModelSubscriptionStringInput | null,
-  profilePicPath?: ModelSubscriptionStringInput | null,
-  favoriteGameTemplateIds?: ModelSubscriptionStringInput | null,
-  favoriteQuestionTemplateIds?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUserFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUserFilterInput | null > | null,
+  questionText?: ModelSubscriptionStringInput | null,
+  date?: ModelSubscriptionStringInput | null,
+  explanation?: ModelSubscriptionStringInput | null,
+  createdBy?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionQuestionOfTheDayFilterInput | null > | null,
+  or?: Array< ModelSubscriptionQuestionOfTheDayFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -1777,6 +1905,31 @@ export type ModelSubscriptionStringInput = {
   beginsWith?: string | null,
   in?: Array< string | null > | null,
   notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionUserFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  userName?: ModelSubscriptionStringInput | null,
+  dynamoId?: ModelSubscriptionStringInput | null,
+  cognitoId?: ModelSubscriptionStringInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  firstName?: ModelSubscriptionStringInput | null,
+  lastName?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  password?: ModelSubscriptionStringInput | null,
+  gamesMade?: ModelSubscriptionIntInput | null,
+  gamesUsed?: ModelSubscriptionIntInput | null,
+  questionsMade?: ModelSubscriptionIntInput | null,
+  frontIdPath?: ModelSubscriptionStringInput | null,
+  backIdPath?: ModelSubscriptionStringInput | null,
+  profilePicPath?: ModelSubscriptionStringInput | null,
+  favoriteGameTemplateIds?: ModelSubscriptionStringInput | null,
+  favoriteQuestionTemplateIds?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionUserFilterInput | null > | null,
+  or?: Array< ModelSubscriptionUserFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionIntInput = {
@@ -1816,6 +1969,7 @@ export type ModelSubscriptionPublicGameTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPublicGameTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionPublicGameTemplateFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPrivateGameTemplateFilterInput = {
@@ -1843,6 +1997,7 @@ export type ModelSubscriptionPrivateGameTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPrivateGameTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionPrivateGameTemplateFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionDraftGameTemplateFilterInput = {
@@ -1869,6 +2024,7 @@ export type ModelSubscriptionDraftGameTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionDraftGameTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionDraftGameTemplateFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPublicQuestionTemplateFilterInput = {
@@ -1894,6 +2050,7 @@ export type ModelSubscriptionPublicQuestionTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPublicQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionPublicQuestionTemplateFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPrivateQuestionTemplateFilterInput = {
@@ -1919,6 +2076,7 @@ export type ModelSubscriptionPrivateQuestionTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPrivateQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionPrivateQuestionTemplateFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionDraftQuestionTemplateFilterInput = {
@@ -1943,6 +2101,7 @@ export type ModelSubscriptionDraftQuestionTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionDraftQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionDraftQuestionTemplateFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionGameSessionFilterInput = {
@@ -1960,8 +2119,11 @@ export type ModelSubscriptionGameSessionFilterInput = {
   title?: ModelSubscriptionStringInput | null,
   currentTimer?: ModelSubscriptionIntInput | null,
   sessionData?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionGameSessionFilterInput | null > | null,
   or?: Array< ModelSubscriptionGameSessionFilterInput | null > | null,
+  gameSessionTeamsId?: ModelSubscriptionIDInput | null,
 };
 
 export type ModelSubscriptionBooleanInput = {
@@ -1974,16 +2136,25 @@ export type ModelSubscriptionTeamFilterInput = {
   name?: ModelSubscriptionStringInput | null,
   score?: ModelSubscriptionIntInput | null,
   selectedAvatarIndex?: ModelSubscriptionIntInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionTeamFilterInput | null > | null,
   or?: Array< ModelSubscriptionTeamFilterInput | null > | null,
+  teamTeamMembersId?: ModelSubscriptionIDInput | null,
+  teamQuestionId?: ModelSubscriptionIDInput | null,
+  teamQuestionOrder?: ModelSubscriptionIntInput | null,
+  teamQuestionGameSessionId?: ModelSubscriptionIDInput | null,
 };
 
 export type ModelSubscriptionTeamMemberFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   isFacilitator?: ModelSubscriptionBooleanInput | null,
   deviceId?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionTeamMemberFilterInput | null > | null,
   or?: Array< ModelSubscriptionTeamMemberFilterInput | null > | null,
+  teamMemberAnswersId?: ModelSubscriptionIDInput | null,
 };
 
 export type ModelSubscriptionTeamAnswerFilterInput = {
@@ -2001,6 +2172,8 @@ export type ModelSubscriptionTeamAnswerFilterInput = {
   answer?: ModelSubscriptionStringInput | null,
   confidenceLevel?: ModelSubscriptionStringInput | null,
   hint?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionTeamAnswerFilterInput | null > | null,
   or?: Array< ModelSubscriptionTeamAnswerFilterInput | null > | null,
 };
@@ -2009,24 +2182,108 @@ export type ModelSubscriptionPublicGameQuestionsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   publicGameTemplateID?: ModelSubscriptionIDInput | null,
   publicQuestionTemplateID?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPublicGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionPublicGameQuestionsFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPrivateGameQuestionsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   privateGameTemplateID?: ModelSubscriptionIDInput | null,
   privateQuestionTemplateID?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPrivateGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionPrivateGameQuestionsFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionDraftGameQuestionsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   draftGameTemplateID?: ModelSubscriptionIDInput | null,
   draftQuestionTemplateID?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionDraftGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionDraftGameQuestionsFilterInput | null > | null,
+  owner?: ModelStringInput | null,
+};
+
+export type CreateQuestionOfTheDayMutationVariables = {
+  input: CreateQuestionOfTheDayInput,
+  condition?: ModelQuestionOfTheDayConditionInput | null,
+};
+
+export type CreateQuestionOfTheDayMutation = {
+  createQuestionOfTheDay?:  {
+    __typename: "QuestionOfTheDay",
+    id: string,
+    questionText: string,
+    date: string,
+    explanation?: string | null,
+    options:  Array< {
+      __typename: "QuestionOption",
+      id: string,
+      text: string,
+      isCorrect: boolean,
+    } >,
+    createdBy: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateQuestionOfTheDayMutationVariables = {
+  input: UpdateQuestionOfTheDayInput,
+  condition?: ModelQuestionOfTheDayConditionInput | null,
+};
+
+export type UpdateQuestionOfTheDayMutation = {
+  updateQuestionOfTheDay?:  {
+    __typename: "QuestionOfTheDay",
+    id: string,
+    questionText: string,
+    date: string,
+    explanation?: string | null,
+    options:  Array< {
+      __typename: "QuestionOption",
+      id: string,
+      text: string,
+      isCorrect: boolean,
+    } >,
+    createdBy: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteQuestionOfTheDayMutationVariables = {
+  input: DeleteQuestionOfTheDayInput,
+  condition?: ModelQuestionOfTheDayConditionInput | null,
+};
+
+export type DeleteQuestionOfTheDayMutation = {
+  deleteQuestionOfTheDay?:  {
+    __typename: "QuestionOfTheDay",
+    id: string,
+    questionText: string,
+    date: string,
+    explanation?: string | null,
+    options:  Array< {
+      __typename: "QuestionOption",
+      id: string,
+      text: string,
+      isCorrect: boolean,
+    } >,
+    createdBy: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
 };
 
 export type CreateUserMutationVariables = {
@@ -11261,6 +11518,126 @@ export type WaeregenMutationVariables = {
 
 export type WaeregenMutation = {
   waeregen?: string | null,
+};
+
+export type GetQuestionOfTheDayQueryVariables = {
+  id: string,
+};
+
+export type GetQuestionOfTheDayQuery = {
+  getQuestionOfTheDay?:  {
+    __typename: "QuestionOfTheDay",
+    id: string,
+    questionText: string,
+    date: string,
+    explanation?: string | null,
+    options:  Array< {
+      __typename: "QuestionOption",
+      id: string,
+      text: string,
+      isCorrect: boolean,
+    } >,
+    createdBy: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListQuestionOfTheDaysQueryVariables = {
+  id?: string | null,
+  filter?: ModelQuestionOfTheDayFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListQuestionOfTheDaysQuery = {
+  listQuestionOfTheDays?:  {
+    __typename: "ModelQuestionOfTheDayConnection",
+    items:  Array< {
+      __typename: "QuestionOfTheDay",
+      id: string,
+      questionText: string,
+      date: string,
+      explanation?: string | null,
+      options:  Array< {
+        __typename: "QuestionOption",
+        id: string,
+        text: string,
+        isCorrect: boolean,
+      } >,
+      createdBy: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type QuestionByDateQueryVariables = {
+  date: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelQuestionOfTheDayFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QuestionByDateQuery = {
+  questionByDate?:  {
+    __typename: "ModelQuestionOfTheDayConnection",
+    items:  Array< {
+      __typename: "QuestionOfTheDay",
+      id: string,
+      questionText: string,
+      date: string,
+      explanation?: string | null,
+      options:  Array< {
+        __typename: "QuestionOption",
+        id: string,
+        text: string,
+        isCorrect: boolean,
+      } >,
+      createdBy: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type QuestionsByCreatorQueryVariables = {
+  createdBy: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelQuestionOfTheDayFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QuestionsByCreatorQuery = {
+  questionsByCreator?:  {
+    __typename: "ModelQuestionOfTheDayConnection",
+    items:  Array< {
+      __typename: "QuestionOfTheDay",
+      id: string,
+      questionText: string,
+      date: string,
+      explanation?: string | null,
+      options:  Array< {
+        __typename: "QuestionOption",
+        id: string,
+        text: string,
+        isCorrect: boolean,
+      } >,
+      createdBy: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
 };
 
 export type GetUserQueryVariables = {
@@ -21237,6 +21614,81 @@ export type ListDraftGameQuestionsQuery = {
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type OnCreateQuestionOfTheDaySubscriptionVariables = {
+  filter?: ModelSubscriptionQuestionOfTheDayFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateQuestionOfTheDaySubscription = {
+  onCreateQuestionOfTheDay?:  {
+    __typename: "QuestionOfTheDay",
+    id: string,
+    questionText: string,
+    date: string,
+    explanation?: string | null,
+    options:  Array< {
+      __typename: "QuestionOption",
+      id: string,
+      text: string,
+      isCorrect: boolean,
+    } >,
+    createdBy: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateQuestionOfTheDaySubscriptionVariables = {
+  filter?: ModelSubscriptionQuestionOfTheDayFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateQuestionOfTheDaySubscription = {
+  onUpdateQuestionOfTheDay?:  {
+    __typename: "QuestionOfTheDay",
+    id: string,
+    questionText: string,
+    date: string,
+    explanation?: string | null,
+    options:  Array< {
+      __typename: "QuestionOption",
+      id: string,
+      text: string,
+      isCorrect: boolean,
+    } >,
+    createdBy: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteQuestionOfTheDaySubscriptionVariables = {
+  filter?: ModelSubscriptionQuestionOfTheDayFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteQuestionOfTheDaySubscription = {
+  onDeleteQuestionOfTheDay?:  {
+    __typename: "QuestionOfTheDay",
+    id: string,
+    questionText: string,
+    date: string,
+    explanation?: string | null,
+    options:  Array< {
+      __typename: "QuestionOption",
+      id: string,
+      text: string,
+      isCorrect: boolean,
+    } >,
+    createdBy: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 

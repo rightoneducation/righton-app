@@ -1,3 +1,30 @@
+type QuestionOfTheDay @model
+@auth(
+  rules: [
+    { allow: public, provider: iam, operations: [read] },
+    { allow: owner, provider: userPools },
+    { allow: private, operations: [read], provider: userPools },
+    { allow: groups, groups: ["Admin"], operations: [create, update, delete] }
+  ]
+)
+@aws_iam
+@aws_cognito_user_pools {
+  id: ID! @primaryKey
+  questionText: String!
+  date: AWSDate! @index(name: "byDate", queryField: "questionByDate")
+  explanation: String
+  options: [QuestionOption!]!
+  createdBy: ID! @index(name: "byCreator", queryField: "questionsByCreator")
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type QuestionOption {
+  id: ID!
+  text: String!
+  isCorrect: Boolean!
+}
+
 type User @model
 @auth(
   rules:  [

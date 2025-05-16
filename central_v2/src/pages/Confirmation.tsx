@@ -148,6 +148,8 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
         try {
             const response = await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(centralData.userProfile, fullCode, frontImage, backImage);
             centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
+
+            
             setIsVerifying(false);
             navigate('/');
         } catch (error: any) {
@@ -168,6 +170,7 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
     const handleResendCodeClick = async () => {
         try {
             await apiClients.auth.awsResendConfirmationCode(centralData.userProfile.email);
+
         } catch (error) {
             console.error('Error resending confirmation code:', error);
         }
