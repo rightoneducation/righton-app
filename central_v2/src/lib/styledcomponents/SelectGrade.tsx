@@ -117,6 +117,10 @@ export const SelectMenuItem = styled(Box)(({ theme }) => ({
   paddingBottom: `${theme.sizing.xSmPadding}px`,
   paddingLeft: `${theme.sizing.xSmPadding}px`,
   borderSizing: 'border-box',
+  cursor: 'pointer',
+  '&:hover': {
+    background: `${theme.palette.primary.sortHover}`,
+  },
 }));
 
 export const SelectButtonBox = styled(Box)(({ theme }) => ({
