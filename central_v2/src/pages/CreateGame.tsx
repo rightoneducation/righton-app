@@ -603,7 +603,7 @@ export default function CreateGame({
       }
     }
     const id = route?.params.gameId;
-    if (!centralData.selectedGame && id){
+    if (!centralData.selectedGame?.game && id){
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, id);
     }
