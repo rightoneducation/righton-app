@@ -1,0 +1,61 @@
+{
+  "button": {
+    "login": "Login",
+    "loginheader": "Login",
+    "signup": "Sign Up",
+    "view": "View",
+    "launch": "Launch",
+    "upload": "Upload",
+    "uploadimage": "Upload Image",
+    "nextstep": "Next Step",
+    "verify": "Verify",
+    "getstarted": "Get Started!",
+    "resetlink": "Send Reset Link",
+    "reset": "Reset",
+    "create": "Create",
+    "previousquestion": "Previous Question",
+    "backtoexplore": "Back to Explore Questions",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "cloneandedit": "Clone and Edit",
+    "nextquestion": "Next Question",
+    "save": "Save",
+    "savepassword": "Save Password",
+    "savedraft": "Save Draft",
+    "discard": "Discard",
+    "discardblue": "Discard",
+    "addstep": "Add Step",
+    "browsefiles": "Browse Files",
+    "changeimage": "Change Image",
+    "nextcard": "Next Card",
+    "launchgame": "Launch Game",
+    "logout": "Log out",
+    "createquestion": "Create Question",
+    "questionbank": "Question Bank",
+    "back": "Back",
+    "editpicture": "Edit Picture",
+    "editinformation": "Edit Information",
+    "changepassword": "Change Password",
+    "choose": "Choose",
+    "clone": "Clone",
+    "signout": "Debug Sign Out",
+    "test": "Test",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "addtogame": "Add to Game",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "imageButton": {
+    "imageupload": "Upload Image",
+    "imageurl": "Image URL"
+  },
+  "publicPrivateButton": {
+    "public": "Public",
+    "private": "Private"
+  },
+  "gameQuestionButton":{
+    "games": "Games",
+    "questions": "Questions"
+  }
+}
