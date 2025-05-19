@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Typography, CircularProgress, Button } from '@mui/material';
+import { Box, Typography, CircularProgress, Button, InputAdornment, IconButton,  } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom'; 
 import { useGoogleLogin } from '@react-oauth/google';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
@@ -18,7 +20,6 @@ import LoginErrorModal from '../components/modal/LoginErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import { UserStatusType } from '../lib/CentralModels';
 import { useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
-
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -157,7 +158,18 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
   const buttonTypeSignup = ButtonType.SIGNUP;
   const [isSignupEnabled, setIsSignupEnabled] = useState(true);
 
+  // password input field 
   const [password, setPassword] = useState('');
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const handleClickShowPassword = () => setIsShowPassword((show) => !show);
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+  const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -229,10 +241,28 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
                 onChange={(event) => setUserName(event.target.value)}
           />
           <TextContainerStyled
-                variant="outlined"
-                placeholder="Password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
+              variant="outlined"
+              placeholder="Password"
+              type={isShowPassword ? "text" : "password"}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        isShowPassword ? 'hide the password' : 'display the password'
+                      }
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge="end"
+                    >
+                      {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
           />
           <ForgotPasswordButton onClick={handleForgotPasswordClick}>
             Forgot your password?
