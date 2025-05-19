@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox, Typography, Collapse, useTheme, Button } from '@mui/material';
+import { Checkbox, Typography, Collapse, useTheme, ClickAwayListener } from '@mui/material';
 import { GradeTarget } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
@@ -9,9 +9,9 @@ import {
   SelectArrowContainer,
   SelectMenu,
   SelectMenuItem,
-  SelectButton,
   SelectButtonBox,
 } from '../../lib/styledcomponents/SelectGrade';
+import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 import SelectArrow from '../../images/SelectArrow.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
@@ -27,7 +27,9 @@ export default function SelectGradesMenu({
 }: SelectGradesMenuProps) {
   const theme = useTheme();
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
-  const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
+  const { selectedGrades } = centralData;
   const gradeMap = {
     'High School': GradeTarget.HIGHSCHOOL,
     '8th Grade': GradeTarget.GRADEEIGHT,
@@ -38,10 +40,10 @@ export default function SelectGradesMenu({
     '3rd Grade': GradeTarget.GRADETHREE,
     '2nd Grade': GradeTarget.GRADETWO,
     '1st Grade': GradeTarget.GRADEONE,
-    Kindergarten: GradeTarget.KINDERGARTEN,
+    'Kindergarten': GradeTarget.KINDERGARTEN,
   };
   const selectedGradeMap = {
-    HS: GradeTarget.HIGHSCHOOL,
+    'HS': GradeTarget.HIGHSCHOOL,
     '8': GradeTarget.GRADEEIGHT,
     '7': GradeTarget.GRADESEVEN,
     '6': GradeTarget.GRADESIX,
@@ -50,22 +52,19 @@ export default function SelectGradesMenu({
     '3': GradeTarget.GRADETHREE,
     '2': GradeTarget.GRADETWO,
     '1': GradeTarget.GRADEONE,
-    K: GradeTarget.KINDERGARTEN,
+    'K': GradeTarget.KINDERGARTEN,
   };
   // updates copy of array that will be sent to parent component on click of choose button
   const handleGradesChange = (grade: string) => {
     if (!selectedGrades.includes(gradeMap[grade as keyof typeof gradeMap])) {
-      setSelectedGrades((prev: GradeTarget[]) => [
-        ...prev,
-        gradeMap[grade as keyof typeof gradeMap],
-      ]);
+      centralDataDispatch({type: 'SET_SELECTED_GRADES', payload: gradeMap[grade as keyof typeof gradeMap]});
     } else {
-      setSelectedGrades((prev: GradeTarget[]) =>
-        prev.filter(
-          (g) =>
-            g !== (gradeMap[grade as keyof typeof gradeMap] as GradeTarget),
-        ),
-      );
+      centralDataDispatch({
+        type: 'SET_SELECTED_GRADES', 
+        payload: centralData.selectedGrades.filter((g) =>
+            g !== (gradeMap[grade as keyof typeof gradeMap] as GradeTarget)
+        )
+      });
     }
   };
   const getSelectLabel = () => {
@@ -105,57 +104,61 @@ export default function SelectGradesMenu({
     return `${selectedGrades.length} Grades Selected`;
   };
   return (
-    <SelectContainer>
-      <SelectGrade
-        screenSize={screenSize ?? ScreenSize.SMALL}
-        onClick={(prev) => setIsSelectOpen(!isSelectOpen)}
-      >
-        {screenSize !== ScreenSize.SMALL && (
-          <SelectLabel>{getSelectLabel()}</SelectLabel>
-        )}
-        <SelectArrowContainer isSelectOpen={isSelectOpen}>
-          <img src={SelectArrow} alt="Select Arrow" />
-        </SelectArrowContainer>
-      </SelectGrade>
-      <Collapse in={isSelectOpen} timeout={1000}>
-        <SelectMenu isSelectOpen={isSelectOpen} screenSize={screenSize}>
-          {Object.keys(gradeMap).map((grade) => (
-            <SelectMenuItem 
-              onClick={() => handleGradesChange(grade)}
-              key={grade}
-            >
-              <Checkbox
-                checked={selectedGrades.includes(
-                  gradeMap[grade as keyof typeof gradeMap],
-                )}
-                color="default"
-                style={{padding: 0}}
-              />
-              <Typography
-                style={{
-                  fontFamily: 'Poppins',
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 500,
-                  color: `${theme.palette.primary.extraDarkBlue}`,
+    <ClickAwayListener onClickAway={() => {
+      if (isSelectOpen) {
+        setIsSelectOpen(false);
+        handleChooseGrades(selectedGrades);
+      }
+    }}>
+      <SelectContainer>
+        <SelectGrade
+          screenSize={screenSize ?? ScreenSize.SMALL}
+          onClick={(prev) => setIsSelectOpen(!isSelectOpen)}
+        >
+          {screenSize !== ScreenSize.SMALL && (
+            <SelectLabel>{getSelectLabel()}</SelectLabel>
+          )}
+          <SelectArrowContainer isSelectOpen={isSelectOpen}>
+            <img src={SelectArrow} alt="Select Arrow" />
+          </SelectArrowContainer>
+        </SelectGrade>
+        <Collapse in={isSelectOpen} timeout={1000}>
+          <SelectMenu isSelectOpen={isSelectOpen} screenSize={screenSize}>
+            {Object.keys(gradeMap).map((grade) => (
+              <SelectMenuItem onClick={() => handleGradesChange(grade)} key={grade}>
+                <Checkbox
+                  checked={selectedGrades.includes(
+                    gradeMap[grade as keyof typeof gradeMap],
+                  )}
+                  color="default"
+                  style={{padding: 0}}
+                />
+                <Typography
+                  style={{
+                    fontFamily: 'Poppins',
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    fontWeight: 500,
+                    color: `${theme.palette.primary.extraDarkBlue}`,
+                  }}
+                >
+                  {grade}
+                </Typography>
+              </SelectMenuItem>
+            ))}
+            <SelectButtonBox>
+              <CentralButton
+                buttonType={ButtonType.CHOOSE}
+                isEnabled
+                onClick={() => {
+                  setIsSelectOpen(false);
+                  handleChooseGrades(selectedGrades);
                 }}
-              >
-                {grade}
-              </Typography>
-            </SelectMenuItem>
-          ))}
-          <SelectButtonBox>
-            <CentralButton
-              buttonType={ButtonType.CHOOSE}
-              isEnabled
-              onClick={() => {
-                setIsSelectOpen(false);
-                handleChooseGrades(selectedGrades);
-              }}
-            />
-          </SelectButtonBox>
-        </SelectMenu>
-      </Collapse>
-    </SelectContainer>
+              />
+            </SelectButtonBox>
+          </SelectMenu>
+        </Collapse>
+      </SelectContainer>
+    </ClickAwayListener>
   );
 }
