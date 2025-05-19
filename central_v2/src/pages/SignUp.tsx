@@ -389,29 +389,7 @@ export default function SignUp({
       userName,
       password
     }
-    if (password && password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long.");
-      setLoading(false);
-      return;
-    }
-
-    if (!/[A-Za-z]/.test(password ?? '')) {
-      setPasswordError("Password must include at least one letter.");
-      setLoading(false);
-      return;
-    }
-
-    if (!/\d/.test(password ?? '')) {
-      setPasswordError("Password must include at least one number.");
-      setLoading(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setPasswordConfirmError("Passwords don't match");
-      setLoading(false);
-      return;
-    }
+    // removed checks from here to real time for password. All of them are on onChange.
 
     try {
       await apiClients.centralDataManager?.signUpSendConfirmationCode(newProfile);
@@ -635,13 +613,28 @@ export default function SignUp({
             placeholder="Password..."
             value={localSignUp.password}
             type={isShowPassword ? "text" : "password"}
-            onChange={(event) => setLocalSignUp((prev) => ({
-              ...prev,
-              password: event.target.value,
-            }))}
-            error={!!passwordError}
-            sx={{
-              backgroundColor: 'white',
+            onChange={(event) => {
+              const newPassword = event.target.value;
+              setLocalSignUp((prev) => ({
+                ...prev,
+                password: newPassword,
+              }));
+        
+              // Real-time validation checks
+              if (newPassword.length > 0 && newPassword.length < 8) {
+                setPasswordError("Password must be at least 8 characters long.");
+              } else if (!/[A-Za-z]/.test(newPassword)) {
+                setPasswordError("Password must include at least one letter.");
+              } else if (!/\d/.test(newPassword)) {
+                setPasswordError("Password must include at least one number.");
+              } else {
+                setPasswordError(""); // Clear error if all checks pass
+              }
+        
+              // Clear confirm password error if passwords match
+              if (newPassword === confirmPassword) {
+                setPasswordConfirmError("");
+              }
             }}
             InputProps={{
               endAdornment: (
@@ -712,7 +705,17 @@ export default function SignUp({
               variant="outlined"
               placeholder="Confirm Password..."
               value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
+              onChange={(event) => {
+                const newConfirmPassword = event.target.value;
+                setConfirmPassword(newConfirmPassword);
+          
+                // Real-time match check
+                if (newConfirmPassword !== localSignUp.password) {
+                  setPasswordConfirmError("Passwords don't match");
+                } else {
+                  setPasswordConfirmError(""); // Clear error if matched
+                }
+              }}
               type={isShowConfirmPassword ? "text" : "password"}
               error={!!passwordError}
               sx={{
