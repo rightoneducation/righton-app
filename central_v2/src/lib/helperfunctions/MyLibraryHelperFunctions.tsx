@@ -1,5 +1,4 @@
-import { LibraryTabEnum, ScreenSize } from '../CentralModels';
-import { ICentralDataState } from '../context/ICentralDataState';
+import { ICentralDataState, LibraryTabEnum, ScreenSize } from '../CentralModels';
 
 export const getTabLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE)
