@@ -123,6 +123,7 @@ export default function SelectPhaseButton({
             padding: 0,
             top: 'auto',
             left: 0,
+            gap: 0,
             minWidth: isPhaseError ? "110px": '96px',
             width: isPhaseError ? "110px":'96px',
             borderRadius: '0 0 4px 4px',
@@ -137,14 +138,14 @@ export default function SelectPhaseButton({
           {times.map((time, i) => (
             <Box
               onClick={() => selectPhase(time.label)}
-              sx={{ cursor: 'pointer', width: '100%' }}
+              sx={{ cursor: 'pointer', width: '100%', }}
             >
-              <SelectMenuItem sx={{ height: '23px', padding: '4px 8px' }}>
+              <SelectMenuItem sx={{  height: '23px', padding: '4px 8px', width: 'auto', }}>
                 <Typography
                   fontWeight="normal"
                   fontSize="14px"
                   fontFamily="Rubik"
-                  sx={{ color: '#02215f' }}
+                  sx={{ color: '#02215f'}}
                 >
                   {time.label}
                 </Typography>
