@@ -187,7 +187,7 @@ export abstract class BaseAPIClient {
         searchFilter = { 
           or: [
             { lowerCaseTitle: { contains: filterStringLowerCase } },
-            { ccss: { contains: filterStringLowerCase } }
+            { ccss: { contains: filterString } }
           ]
         };
         if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate")
