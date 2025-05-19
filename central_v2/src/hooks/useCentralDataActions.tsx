@@ -446,6 +446,7 @@ export default function useCentralDataManager({
                   lastModified: responseQuestion.updatedAt ?? new Date(),
                   timesPlayed: responseQuestion.timesPlayed ?? 0,
                 }
+                console.log('selectedQuestion', selectedQuestion);
                 centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: selectedQuestion });
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
               return selectedQuestion;

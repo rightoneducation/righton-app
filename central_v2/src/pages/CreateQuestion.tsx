@@ -479,10 +479,11 @@ export default function CreateQuestion({
   }
 
   useEffect(() => {
-    setIsLoading(false);
+    setIsLoading(false); 
     const selected = centralData?.selectedQuestion?.question;
+    console.log(selected);
     const title = selected?.title;
-    if (selected) {
+    if (selected && isClone) {
       // regex to detect (clone of) in title
       const regex = /\(Clone of\)/i;
       if (title && !regex.test(title))
@@ -497,7 +498,7 @@ export default function CreateQuestion({
       setIncompleteIncorrectAnswers(draft.incorrectCards.filter((card) => !card.isCardComplete));
     }
     const id = route?.params.questionId;
-    if (!centralData.selectedQuestion && id){
+    if (!centralData.selectedQuestion?.question && id){
       setIsLoading(true);
       fetchElement(GameQuestionType.QUESTION, id);
     }

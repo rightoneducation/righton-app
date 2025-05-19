@@ -137,6 +137,7 @@ function AppSwitch({
           <CreateGame 
           screenSize={screenSize}
           setIsTabsOpen={setIsTabsOpen}
+          fetchElement={fetchElement}
           fetchElements={fetchElements}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
@@ -152,6 +153,7 @@ function AppSwitch({
           <CreateGame 
             screenSize={screenSize}  
             setIsTabsOpen={setIsTabsOpen}
+            fetchElement={fetchElement}
             fetchElements={fetchElements}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}

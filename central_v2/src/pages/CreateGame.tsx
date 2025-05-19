@@ -10,6 +10,7 @@ import {
   SortDirection,
   AnswerType,
   AnswerPrecision,
+  IGameTemplate
 } from '@righton/networking';
 import { Box, Fade } from '@mui/material';
 import {
@@ -24,7 +25,9 @@ import {
   ScreenSize,
   StorageKey,
   TemplateType,
+  GameQuestionType
 } from '../lib/CentralModels';
+import { timeLookup } from '../components/cards/creategamecard/time';
 import { 
   TGameTemplateProps, 
   TDraftQuestionsList, 
@@ -44,6 +47,7 @@ import CreateGameImageUploadModal from '../components/cards/creategamecard/Creat
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { 
+  assembleQuestionTemplate,
   updateGameTitle, 
   updateGameDescription, 
   updateGameTemplatePhaseTime, 
@@ -90,6 +94,7 @@ import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 interface CreateGameProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
+  fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: (libraryTab?: LibraryTabEnum) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -105,6 +110,7 @@ interface CreateGameProps {
 export default function CreateGame({ 
   screenSize,
   setIsTabsOpen,
+  fetchElement,
   fetchElements,
   handleChooseGrades,
   handleSearchChange,
@@ -555,6 +561,53 @@ export default function CreateGame({
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
+
+   useEffect(() => {
+    setIsLoading(false);
+    const selected = centralData.selectedGame;
+    const title = selected?.game?.title;
+    if (selected !== null && isClone) {
+      // regex to detect (clone of) in title
+      const regex = /\(Clone of\)/i;
+      if (selected?.game && title && !regex.test(title))
+        selected.game.title = `(Clone of) ${title}`;
+      if (selected.game){
+        setDraftGame(prev => ({
+          ...prev,
+          gameTemplate: selected.game as IGameTemplate,
+          openCreateQuestion: true,
+          imageUrl: selected?.game?.imageUrl ?? '',
+        }));
+      }
+      setOriginalGameImageUrl(selected.game?.imageUrl ?? '');
+      setPhaseTime({
+        phaseOne: timeLookup(selected.game?.phaseOneTime ?? 0),
+        phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
+      });
+      const originals = selected?.game?.questionTemplates;
+      const assembled = originals?.map(q =>
+        assembleQuestionTemplate(q.questionTemplate)
+      );
+    
+      if (originals && assembled && assembled.length > 0) {
+        setDraftQuestionsList(() =>
+          originals.map((orig, i) => {
+            setOriginalQuestionImageUrls((prev) => [...prev, orig.questionTemplate.imageUrl ?? '']);
+            return {
+              ...draftTemplate,
+              question: assembled[i],
+              questionTemplate: orig.questionTemplate,
+            }
+          })
+        );
+      }
+    }
+    const id = route?.params.gameId;
+    if (!centralData.selectedGame?.game && id){
+      setIsLoading(true);
+      fetchElement(GameQuestionType.GAME, id);
+    }
+  }, [centralData.selectedGame, route ]); // eslint-disable-line 
 
   return (
     <CreateGameMainContainer>
