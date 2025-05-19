@@ -1,4 +1,4 @@
-import { CentralQuestionTemplateInput, IGameTemplate, IQuestionTemplate, IncorrectCard } from "@righton/networking";
+import { CentralQuestionTemplateInput, IGameTemplate, IQuestionTemplate, IncorrectCard, PublicPrivateType, SortDirection, SortType, GradeTarget, IUserProfile } from "@righton/networking";
 
 export enum UserStatusType {
   LOGGEDIN,
@@ -119,4 +119,96 @@ export enum LibraryTabEnum {
   PRIVATE,
   DRAFTS,
   FAVORITES
+}
+
+export const userProfileInit = {
+    title: 'Title...',
+    firstName: '',
+    lastName: '',
+    userName: '',
+    email: '',
+    password: '',
+    gamesUsed: 0,
+}
+
+// initialize centralDataState
+export const initCentralDataState: ICentralDataState = {
+  userProfile: userProfileInit,
+  userStatus: UserStatusType.LOADING,
+  recommendedGames: [],
+  mostPopularGames: [],
+  searchedGames: [],
+  publicGames: [],
+  privateGames: [],
+  draftGames: [],
+  favGames: [],
+  selectedGame: {
+    game: null,
+    profilePic: '',
+    createdName: '',
+    lastModified: new Date(),
+    timesPlayed: 0
+  },
+  recommendedQuestions: [],
+  mostPopularQuestions: [],
+  searchedQuestions: [],
+  publicQuestions: [],
+  privateQuestions: [],
+  draftQuestions: [],
+  favQuestions: [],
+  selectedQuestion: {
+    question: null,
+    profilePic: '',
+    createdName: '',
+    lastModified: new Date(),
+    timesPlayed: 0
+  },
+  nextToken: null,
+  isLoading: false,
+  isLoadingInfiniteScroll: false,
+  searchTerms: '',
+  selectedGrades: [],
+  isLibraryInit: true,
+  isTabsOpen: false,
+  isFavTabOpen: false,
+  publicPrivate: PublicPrivateType.PUBLIC,
+  sort: {
+    field: SortType.listGameTemplates,
+    direction: SortDirection.ASC,
+  }
+}
+
+
+export interface ICentralDataState {
+  userProfile: IUserProfile;
+  userStatus: UserStatusType;
+  recommendedGames: IGameTemplate[];
+  mostPopularGames: IGameTemplate[];
+  searchedGames: IGameTemplate[];
+  publicGames: IGameTemplate[];
+  privateGames: IGameTemplate[];
+  draftGames: IGameTemplate[];
+  favGames: IGameTemplate[];
+  selectedGame: ISelectedGame | null; // this is state that holds a game that has been selected from any of the above lists
+  recommendedQuestions: IQuestionTemplate[];
+  mostPopularQuestions: IQuestionTemplate[];
+  publicQuestions: IQuestionTemplate[];
+  privateQuestions: IQuestionTemplate[];
+  searchedQuestions: IQuestionTemplate[];
+  draftQuestions: IQuestionTemplate[];
+  favQuestions: IQuestionTemplate[];
+  selectedQuestion: ISelectedQuestion | null; // this is state that holds a question that has been selected from any of the above lists
+  nextToken: string | null;
+  isLoading: boolean;
+  isLoadingInfiniteScroll: boolean;
+  searchTerms: string;
+  selectedGrades: GradeTarget[];
+  isLibraryInit: boolean;
+  isTabsOpen: boolean;
+  isFavTabOpen: boolean;
+  publicPrivate: PublicPrivateType;
+  sort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }
 }

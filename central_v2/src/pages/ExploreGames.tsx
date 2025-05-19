@@ -60,7 +60,9 @@ export default function ExploreGames({
   
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
-  const isSearchResults = centralData.searchTerms.length > 0;
+  const isSearchResults = centralData.searchedGames.length > 0;
+  console.log('isSearchResults', isSearchResults);
+  console.log(centralData.searchedGames);
   const [hasInitialized, setHasInitialized] = useState(false);
     
   if (!hasInitialized) {
@@ -76,7 +78,7 @@ export default function ExploreGames({
     setGameSet(games);
     navigate(`/games/${game.id}`);
   };
-
+  
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <ExploreGamesUpperContainer screenSize={screenSize}>
