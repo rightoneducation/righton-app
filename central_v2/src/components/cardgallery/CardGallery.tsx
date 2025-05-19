@@ -238,7 +238,7 @@ export default function CardGallery<
 
   const handleViewButtonClick = (element: T) => {
     console.log('sup');
-    // handleView(element, galleryElements as T[]);
+    handleView(element, galleryElements as T[]);
   };
 
   console.log('galleryElements', galleryElements);
