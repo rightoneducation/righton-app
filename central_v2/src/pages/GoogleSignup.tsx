@@ -3,7 +3,6 @@ import { useTheme, styled,} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
-import { ICentralDataState } from '../lib/context/ICentralDataState';
 
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import RightOnLogo from "../images/RightOnUserLogo.svg";
@@ -17,7 +16,7 @@ import {
 
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
-import { UserStatusType } from '../lib/CentralModels';
+import { UserStatusType, ICentralDataState } from '../lib/CentralModels';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
