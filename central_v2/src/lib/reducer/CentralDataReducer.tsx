@@ -1,10 +1,10 @@
 import { IGameTemplate, IQuestionTemplate, IUserProfile, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
-import { ICentralDataState } from '../context/ICentralDataState';
-import { ISelectedGame, ISelectedQuestion, UserStatusType } from '../CentralModels';
+import { ICentralDataState, initCentralDataState, ISelectedGame, ISelectedQuestion, UserStatusType } from '../CentralModels';
 
 export type CentralDataAction =
   | { type: 'SET_USER_STATUS'; payload: UserStatusType }
   | { type: 'SET_USER_PROFILE'; payload: IUserProfile }
+  | { type: 'CLEAR_USER_PROFILE'}
   | { type: 'SET_RECOMMENDED_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_MOST_POPULAR_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_SEARCHED_GAMES'; payload: IGameTemplate[] }
@@ -40,6 +40,8 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
       return { ...state, userStatus: action.payload };
     case 'SET_USER_PROFILE':
       return { ...state, userProfile: {...state.userProfile, ...action.payload},};
+    case 'CLEAR_USER_PROFILE':
+      return { ...state, userProfile: {...initCentralDataState.userProfile} };
     case 'SET_RECOMMENDED_GAMES':
       return { ...state, recommendedGames: action.payload };
     case 'SET_SEARCHED_GAMES':

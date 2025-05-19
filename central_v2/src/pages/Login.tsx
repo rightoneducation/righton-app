@@ -210,7 +210,6 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
   });
 
   const handleGoogleClick = async () => {
-    setIsLoggingIn(true);
     googleLogin();
   }
 

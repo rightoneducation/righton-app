@@ -555,6 +555,7 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     await apiClients.centralDataManager?.signOut();
     apiClients.centralDataManager?.clearLocalUserProfile();
+    centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   }
 

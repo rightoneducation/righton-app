@@ -456,7 +456,6 @@ export default function SignUp({
   });
 
   const handleGoogleClick = async () => {
-    setLoading(true);
     googleLogin();
   }
 
