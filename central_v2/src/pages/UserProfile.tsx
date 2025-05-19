@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles';
-import { Box, Grid, MenuItem, useTheme } from '@mui/material';
+import { Box, Grid, MenuItem, useTheme, InputAdornment, IconButton } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IUserProfile, CloudFrontDistributionUrl } from '@righton/networking';
 import Adpic from "../images/@.svg"
 import OwnerCard from '../components/profile/OwnerCard';
@@ -50,6 +52,18 @@ export default function UserProfile({
 
   const buttonChangePassword = ButtonType.CHANGEPASSWORD;
   const [isChangePassword , setIsChangePassword ] = useState(true);
+
+   // password input field 
+    const [password, setPassword] = useState('');
+    const [isShowPassword, setIsShowPassword] = useState(false);
+    const handleClickShowPassword = () => setIsShowPassword((show) => !show);
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
+    const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
+  
 
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
@@ -406,7 +420,26 @@ export default function UserProfile({
                     <TextContainerStyled
                         variant="outlined"
                         placeholder="Password..."
-                        value="********"
+                        type={isShowPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label={
+                                  isShowPassword ? 'hide the password' : 'display the password'
+                                }
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                onMouseUp={handleMouseUpPassword}
+                                edge="end"
+                              >
+                                {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          )
+                        }}
                     />
                     <CentralButton buttonType={ButtonType.SAVE} isEnabled={isSaveInformationHighlight} smallScreenOverride onClick={handleGetStarted}/>
                 </UserProfileGridItem>

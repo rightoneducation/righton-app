@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
-import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button, CircularProgress} from '@mui/material';
+import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button, CircularProgress, IconButton} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IAPIClients, IUserProfile } from '@righton/networking';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
@@ -317,8 +319,31 @@ export default function SignUp({
   const theme = useTheme();
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
+  
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
+
+    // password input field 
+    const [isShowPassword, setIsShowPassword] = useState(false);
+    const handleClickShowPassword = () => setIsShowPassword((show) => !show);
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
+    const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
+
+     const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+    const handleClickShowConfirmPassword = () => setIsShowConfirmPassword((show) => !show);
+    const handleMouseDownConfirmPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
+    const handleMouseUpConfirmPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
+
+
+
   const [localSignUp, setLocalSignUp] = useState({
     title: centralData.userProfile.title ?? 'Title...',
     firstName: centralData.userProfile.firstName ?? '',
@@ -609,6 +634,7 @@ export default function SignUp({
             variant="outlined"
             placeholder="Password..."
             value={localSignUp.password}
+            type={isShowPassword ? "text" : "password"}
             onChange={(event) => setLocalSignUp((prev) => ({
               ...prev,
               password: event.target.value,
@@ -619,7 +645,18 @@ export default function SignUp({
             }}
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end">
+                <InputAdornment position="end" style={{gap: `${theme.sizing.xSmPadding}px`}}>
+                  <IconButton
+                    aria-label={
+                      isShowPassword ? 'hide the password' : 'display the password'
+                    }
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    onMouseUp={handleMouseUpPassword}
+                    edge="end"
+                  >
+                    {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
                   {passwordError && (
                     <CustomTooltip
                       title={
@@ -676,49 +713,61 @@ export default function SignUp({
               placeholder="Confirm Password..."
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
+              type={isShowConfirmPassword ? "text" : "password"}
               error={!!passwordError}
               sx={{
                 backgroundColor: 'white'
               }}
               InputProps={{
                 endAdornment: 
-                  <InputAdornment position="end">
-                  {passwordConfirmError && (
-                    <CustomTooltip
-                      title={
-                        <Box>
-                          <Typography sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
-                            Passwords do not match.
-                          </Typography>
-                        </Box>
+                  <InputAdornment position="end" style={{gap: `${theme.sizing.xSmPadding}px`}}>
+                    <IconButton
+                      aria-label={
+                        isShowConfirmPassword ? 'hide the password' : 'display the password'
                       }
-                      componentsProps={{
-                        tooltip: {
-                          sx: {
-                            bgcolor: `${theme.palette.primary.extraDarkBlue}`,
-                            color: '#FFFFFF !important', // Ensures text remains white
-                            fontSize: '14px',
-                            padding: '10px 15px',
-                            borderRadius: '8px',
-                            maxWidth: '250px', 
-                            boxSizing: 'border-box',
-                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
-                            '& .MuiTooltip-arrow': {
-                              color: `${theme.palette.primary.extraDarkBlue}`,
+                      onClick={handleClickShowConfirmPassword}
+                      onMouseDown={handleMouseDownConfirmPassword}
+                      onMouseUp={handleMouseUpConfirmPassword}
+                      edge="end"
+                    >
+                      {isShowConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                    {passwordConfirmError && (
+                      <CustomTooltip
+                        title={
+                          <Box>
+                            <Typography sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
+                              Passwords do not match.
+                            </Typography>
+                          </Box>
+                        }
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              bgcolor: `${theme.palette.primary.extraDarkBlue}`,
+                              color: '#FFFFFF !important', // Ensures text remains white
+                              fontSize: '14px',
+                              padding: '10px 15px',
+                              borderRadius: '8px',
+                              maxWidth: '250px', 
+                              boxSizing: 'border-box',
+                              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                              '& .MuiTooltip-arrow': {
+                                color: `${theme.palette.primary.extraDarkBlue}`,
+                              },
                             },
                           },
-                        },
-                      }}
-                      arrow
-                      placement="top"
-                    >
-                      <img
-                        src={errorIcon}
-                        alt="Error"
-                        style={{ cursor: 'pointer' }}
-                      />
-                    </CustomTooltip>
-                  )}
+                        }}
+                        arrow
+                        placement="top"
+                      >
+                        <img
+                          src={errorIcon}
+                          alt="Error"
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </CustomTooltip>
+                    )}
                 </InputAdornment>
               }}
             />
