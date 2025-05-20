@@ -69,7 +69,7 @@ function MostPopularGamesComponent({
   isCreateGame,
 }: MostPopularGamesComponentProps) {
   const centralData = useCentralDataState();
-  const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
+  const favoriteGameTemplateIds = isMyLibraryQuestion ? centralData.userProfile?.favoriteQuestionTemplateIds : centralData.userProfile?.favoriteGameTemplateIds;
   return (
     <Grid container spacing={4} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: isMyLibrary ? '5000px' : '2000px'}}>
       {( isLoading)
@@ -237,11 +237,8 @@ export default function CardGallery<
   };
 
   const handleViewButtonClick = (element: T) => {
-    console.log('sup');
-    // handleView(element, galleryElements as T[]);
+    handleView(element, galleryElements as T[]);
   };
-
-  console.log('galleryElements', galleryElements);
 
   return (
     <MostPopularContainer screenSize={screenSize} isMyLibrary={isMyLibrary}>

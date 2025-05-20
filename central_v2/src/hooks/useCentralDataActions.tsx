@@ -387,6 +387,7 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
+        console.log(user.favoriteQuestionTemplateIds);
         apiClients?.centralDataManager?.searchForQuestionTemplates(
           PublicPrivateType.PUBLIC,
           null,
@@ -395,8 +396,9 @@ export default function useCentralDataManager({
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
-          user.favoriteGameTemplateIds ?? null,
+          user.favoriteQuestionTemplateIds ?? null,
         ).then((response) => {
+          console.log('response', response);
           centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: response.questions });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });

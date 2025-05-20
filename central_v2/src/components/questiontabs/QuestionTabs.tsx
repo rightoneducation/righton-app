@@ -102,7 +102,7 @@ export default function QuestionTabs({
 
   const handleFavoriteButtonClick = async () => {
     setIsLoading(true);
-    const response = await apiClients.centralDataManager?.favoriteGameTemplate(question.id, centralData.userProfile);
+    const response = await apiClients.centralDataManager?.favoriteQuestionTemplate(question.id, centralData.userProfile);
     if (response) {
       centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
       setIsLoading(false);

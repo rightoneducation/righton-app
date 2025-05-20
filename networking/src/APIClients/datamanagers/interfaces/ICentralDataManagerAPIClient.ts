@@ -32,7 +32,7 @@ export interface ICentralDataManagerAPIClient {
   getUser: (cognitoId: string) => Promise<IUserProfile | null>;
   loginUserAndRetrieveUserProfile: (username: string, password: string) => Promise<IUserProfile | null>;
   favoriteGameTemplate: (gameId: string, user: IUserProfile) => Promise<IUserProfile | null>;
-  favoriteQuestionTemplate: (questionId: string, isFavourite: boolean) => Promise<void>;
+  favoriteQuestionTemplate: (questionId: string, user: IUserProfile) => Promise<IUserProfile | null>;
   signUpSendConfirmationCode(user: IUserProfile): Promise<void>;
   signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
   signOut: () => Promise<void>;
