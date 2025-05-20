@@ -56,6 +56,7 @@ export default function useCentralDataManager({
   const isQuestions = useMatch('/questions');
   const isCreateGame = useMatch('/create/game');
   const isLibrary = useMatch('/library') !== null;
+  const navigate = useNavigate(); 
 
   const debounceInterval = 800;
 
@@ -558,6 +559,7 @@ export default function useCentralDataManager({
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    navigate("/")
   }
 
   const validateUser = async () => {
