@@ -32,6 +32,7 @@ interface ExploreQuestionsProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => Promise<ISelectedGame | ISelectedQuestion>;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -49,6 +50,7 @@ export default function ExploreQuestions({
   setIsTabsOpen,
   fetchElement,
   fetchElements,
+  handlePublicPrivateChange,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
@@ -107,9 +109,10 @@ export default function ExploreQuestions({
       setSelectedQuestion(questionSet[0]);
     }
   };
+  
 
   const handleBackToExplore = () => {
-    setIsTabsOpen(false);
+     setSelectedQuestion(null);
   };
 
   const handleCloneButtonClick = () => {
@@ -123,7 +126,7 @@ export default function ExploreQuestions({
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      {selectedQuestion && (
+      {centralData.isTabsOpen && (
         <>
           <QuestionTabsModalBackground
             isTabsOpen={centralData.isTabsOpen}
@@ -134,11 +137,17 @@ export default function ExploreQuestions({
             isTabsOpen={centralData.isTabsOpen}
             question={selectedQuestion}
             questions={questionSet}
+            setIsTabsOpen={setIsTabsOpen}
             fetchElements={fetchElements}
             handleBackToExplore={handleBackToExplore}
             handlePrevQuestion={handlePrevQuestion}
             handleNextQuestion={handleNextQuestion}
             handleCloneButtonClick={handleCloneButtonClick}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            handleQuestionView={handleView}
           />
         </>
       )}

@@ -87,7 +87,6 @@ const tabIconMap: { [key in LibraryTabEnum]: string } = {
 
 const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBLIC);
 
-
 if (centralData.isLibraryInit) {
   centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
   fetchElements(openTab, '');

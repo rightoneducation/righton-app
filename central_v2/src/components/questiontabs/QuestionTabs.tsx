@@ -7,14 +7,22 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import { IQuestionTemplate } from '@righton/networking';
+import { 
+  IQuestionTemplate,
+  IGameTemplate,
+  PublicPrivateType,
+  GradeTarget,
+  SortType,
+  SortDirection, 
+} from '@righton/networking';
 import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import { ScreenSize, LibraryTabEnum } from '../../lib/CentralModels';
+import { ScreenSize, LibraryTabEnum, GameQuestionType } from '../../lib/CentralModels';
 import { 
   TabContainer, 
+  ContentContainer,
   ContentFrame, 
   TabContent, 
   StyledTab, 
@@ -23,23 +31,35 @@ import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
 import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 import QuestionTabsSelectedQuestion from './QuestionTabsSelectedQuestion';
+import LibraryTabsContent from '../librarytabs/LibraryTabsContent';
 
 interface TabContainerProps {
   isTabsOpen: boolean;
-  question: IQuestionTemplate;
+  question: IQuestionTemplate | null;
   questions: IQuestionTemplate[];
 }
 
 interface TabContainerProps {
   screenSize: ScreenSize;
   isTabsOpen: boolean;
-  question: IQuestionTemplate;
+  question: IQuestionTemplate | null;
   questions: IQuestionTemplate[];
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
   handleBackToExplore: () => void;
   handlePrevQuestion: () => void;
   handleNextQuestion: () => void;
   handleCloneButtonClick: () => void;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (
+    newSort: {
+      field: SortType;
+      direction: SortDirection | null;
+    }
+  ) => void;
+  handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
 }
 
 export default function QuestionTabs({
@@ -47,24 +67,33 @@ export default function QuestionTabs({
   isTabsOpen,
   question,
   questions,
+  setIsTabsOpen,
   fetchElements,
   handleBackToExplore,
   handlePrevQuestion,
   handleNextQuestion,
-  handleCloneButtonClick
+  handleCloneButtonClick,
+  handleChooseGrades,
+  handleSortChange,
+  handleSearchChange,
+  handlePublicPrivateChange,
+  handleQuestionView
 }: TabContainerProps) {
   const theme = useTheme();
-  const [openTab, setOpenTab] = React.useState(0);
+  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBLIC);
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setOpenTab(newValue);
-    fetchElements(newValue);
+  const handleChange = (event: React.SyntheticEvent, newTab: LibraryTabEnum) => {
+    centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: null });
+    setOpenTab(newTab);
+    fetchElements(newTab, '');
   };
   const [isLoading, setIsLoading] = React.useState(false);
-  const isFavorite = centralData.userProfile?.favoriteGameTemplateIds?.includes(question.id) ?? false;
+  const isFavorite =  question
+    ? (centralData.userProfile?.favoriteGameTemplateIds?.includes(question.id) ?? false)
+    : false;
 
   const tabMap: { [key: number]: string } = {
     0: 'Explore Questions',
@@ -89,6 +118,7 @@ export default function QuestionTabs({
 
   const handleFavoriteButtonClick = async () => {
     setIsLoading(true);
+    if (!question) return;
     const response = await apiClients.centralDataManager?.favoriteQuestionTemplate(question.id, centralData.userProfile);
     if (response) {
       centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
@@ -150,7 +180,17 @@ export default function QuestionTabs({
                     handleFavoriteButtonClick={handleFavoriteButtonClick}
                     isFavorite={isFavorite}
                   />
-                : <div style={{ padding: '20px', color: theme.palette.text.primary }}>No question selected</div>
+                : 
+                <LibraryTabsContent
+                  openTab={openTab}
+                  gameQuestion={GameQuestionType.QUESTION}
+                  screenSize={screenSize}
+                  setIsTabsOpen={setIsTabsOpen}
+                  handleChooseGrades={handleChooseGrades}
+                  handleSortChange={handleSortChange}
+                  handleSearchChange={handleSearchChange}
+                  handleQuestionView={handleQuestionView}
+                />
               }
             </TabContent>
           </ContentFrame>

@@ -492,7 +492,7 @@ export default function useCentralDataManager({
   
   const fetchElements = async (libraryTab?: LibraryTabEnum, searchTerms?: string) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
-      if ((isLibrary || isCreateGame) && tab !== undefined) {
+      if ((isLibrary || isCreateGame || isQuestions) && tab !== undefined) {
         switch(tab){
           case LibraryTabEnum.FAVORITES: 
             return gameQuestion === GameQuestionType.GAME ? FetchType.FAVORITE_GAMES : FetchType.FAVORITE_QUESTIONS;
@@ -508,8 +508,10 @@ export default function useCentralDataManager({
       if (isQuestions) return FetchType.EXPLORE_QUESTIONS;
       return FetchType.EXPLORE_GAMES;
     }
-
+    console.log('libraryTab', libraryTab);
+    console.log('gameQuestion', gameQuestion);
     const fetchType = getFetchType(libraryTab ?? null);
+    console.log('fetchType', fetchType);
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
 
     switch (fetchType) {

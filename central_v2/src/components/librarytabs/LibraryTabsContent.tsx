@@ -31,7 +31,7 @@ interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
     }
   ) => void;
   handleSearchChange: (searchString: string) => void;
-  handleGameView: (element: IGameTemplate, elements: IGameTemplate[]) => void;
+  handleGameView?: (element: IGameTemplate, elements: IGameTemplate[]) => void;
   handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
 }
 
@@ -47,11 +47,12 @@ export default function LibraryTabsContent({
   handleQuestionView
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
   const centralData = useCentralDataState();
+  console.log(centralData);
   const isSearchResults = centralData.searchTerms.length > 0 || centralData.selectedGrades.length > 0 || (centralData.sort.field !== SortType.listGameTemplates && centralData.sort.direction !== SortDirection.ASC);
   const elements = gameQuestion === GameQuestionType.GAME ?
     getGameElements(openTab, isSearchResults, centralData)
     : getQuestionElements(openTab, isSearchResults, centralData);
-
+  
   return (
      <ContentContainer>
       <SearchBar

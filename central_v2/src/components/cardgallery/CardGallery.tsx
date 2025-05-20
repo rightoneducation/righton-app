@@ -27,7 +27,7 @@ interface CardGalleryProps<T> {
   elementType: ElementType;
   galleryType: GalleryType;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleView: (element: T, elements: T[]) => void;
+  handleView?: (element: T, elements: T[]) => void;
   isMyLibrary?: boolean;
   isMyLibraryQuestion?: boolean;
   isCreateGame?: boolean;
@@ -39,7 +39,7 @@ interface MostPopularComponentProps<T> {
   isLoading: boolean;
   numColumns: number;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleViewButtonClick: (element: T) => void;
+  handleViewButtonClick?: (element: T) => void;
   isCreateGame?: boolean;
 }
 
@@ -52,7 +52,7 @@ interface MostPopularGamesComponentProps {
   isMyLibrary?: boolean;
   isMyLibraryQuestion?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleViewButtonClick: (element: IGameTemplate) => void;
+  handleViewButtonClick?: (element: IGameTemplate) => void;
   isCreateGame?: boolean;
 }
 
@@ -237,7 +237,8 @@ export default function CardGallery<
   };
 
   const handleViewButtonClick = (element: T) => {
-    handleView(element, galleryElements as T[]);
+    if (handleView)
+      handleView(element, galleryElements as T[]);
   };
 
   return (

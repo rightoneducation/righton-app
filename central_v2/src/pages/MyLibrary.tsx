@@ -8,6 +8,7 @@ import {
   GradeTarget,
   SortType,
   SortDirection,
+  IGameTemplate,
   IQuestionTemplate
 } from '@righton/networking';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
@@ -60,6 +61,11 @@ export default function MyLibrary({
     setIsTabsOpen(true);
   };
 
+  const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
+    centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
+    navigate(`/library/games/${element.id}`);
+  };
+
   const handleBackToExplore = () => {
     setSelectedQuestion(null);
     setIsTabsOpen(false);
@@ -110,11 +116,17 @@ export default function MyLibrary({
                 isTabsOpen={centralData.isTabsOpen}
                 question={selectedQuestion}
                 questions={questionSet}
+                setIsTabsOpen={setIsTabsOpen}
                 fetchElements={fetchElements}
                 handleBackToExplore={handleBackToExplore}
                 handlePrevQuestion={handlePrevQuestion}
                 handleNextQuestion={handleNextQuestion}
                 handleCloneButtonClick={handleCloneButtonClick}
+                handleChooseGrades={handleChooseGrades}
+                handleSortChange={handleSortChange}
+                handleSearchChange={handleSearchChange}
+                handlePublicPrivateChange={handlePublicPrivateChange}
+                handleQuestionView={handleQuestionView}
               />
             </>
           )}
