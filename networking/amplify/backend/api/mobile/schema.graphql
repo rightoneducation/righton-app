@@ -215,6 +215,7 @@ type DraftGameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
+  timesPlayed: Int
   questionTemplates: [DraftQuestionTemplate] @manyToMany(relationName: "DraftGameQuestions")
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
@@ -331,6 +332,7 @@ type DraftQuestionTemplate @model
   gradeFilter: String
   standard: String
   imageUrl: String
+  timesPlayed: Int
   gameTemplates: [DraftGameTemplate] @manyToMany(relationName: "DraftGameQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
