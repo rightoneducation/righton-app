@@ -395,7 +395,7 @@ export default function useCentralDataManager({
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
-          user.favoriteGameTemplateIds ?? null,
+          user.favoriteQuestionTemplateIds ?? null,
         ).then((response) => {
           centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: response.questions });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
@@ -435,62 +435,69 @@ export default function useCentralDataManager({
     switch (type){
       case GameQuestionType.QUESTION:{
        const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id);
+          let selectedQuestion: ISelectedQuestion = {
+            question: responseQuestion,
+            profilePic: '',
+            createdName: '',
+            lastModified: new Date(),
+            timesPlayed: 0, 
+          }
           if (responseQuestion) {
             const userResponse = await apiClients?.user.getUser(responseQuestion.userId);
               if (userResponse) {
                 const title = (userResponse.title) && userResponse.title !== 'Title...' ? userResponse.title : '';
                 const firstName = userResponse?.firstName?.split("")[0] ?? '';
-                const selectedQuestion = {
+                selectedQuestion = {
                   question: responseQuestion,
                   profilePic: userResponse.profilePicPath ?? '',
                   createdName: `${title} ${firstName.toUpperCase()}. ${userResponse.lastName}`,
                   lastModified: responseQuestion.updatedAt ?? new Date(),
                   timesPlayed: responseQuestion.timesPlayed ?? 0,
                 }
-                console.log('selectedQuestion', selectedQuestion);
-                centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: selectedQuestion });
-                centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-              return selectedQuestion;
+              
             }
           }
-        break;
+        centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: selectedQuestion });
+        centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+        return selectedQuestion;
       }
       case GameQuestionType.GAME:
       default:{
        const responseGame = await apiClients?.gameTemplate.getGameTemplate(PublicPrivateType.PUBLIC, id);
+          let selectedGame: ISelectedGame = {
+            game: responseGame,
+            profilePic: '',
+            createdName: '',
+            lastModified: new Date(),
+            timesPlayed: 0, 
+          }
           if (responseGame) {
             const userResponse = await apiClients?.user.getUser(responseGame.userId);
-              if (userResponse) {
-                const title = (userResponse.title) && userResponse.title !== 'Title...' ? userResponse.title : '';
-                const firstName = userResponse?.firstName?.split("")[0] ?? '';
-                const selectedGame = {
-                  game: responseGame,
-                  profilePic: userResponse.profilePicPath ?? '',
-                  createdName: `${title} ${firstName.toUpperCase()}. ${userResponse.lastName}`,
-                  lastModified: responseGame.updatedAt ?? new Date(),
-                  timesPlayed: responseGame.timesPlayed ?? 0,
-                }
-                centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: selectedGame });
-                centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-                return selectedGame;
+            if (userResponse) {
+              console.log('userResponse', userResponse);
+              const title = (userResponse.title) && userResponse.title !== 'Title...' ? userResponse.title : '';
+              const firstName = userResponse?.firstName?.split("")[0] ?? '';
+              selectedGame = {
+                game: responseGame,
+                profilePic: userResponse.profilePicPath ?? '',
+                createdName: `${title} ${firstName.toUpperCase()}. ${userResponse.lastName}`,
+                lastModified: responseGame.updatedAt ?? new Date(),
+                timesPlayed: responseGame.timesPlayed ?? 0,
               }
+          
             }
-        break;
+          }
+        centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: selectedGame });
+        centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+        return selectedGame;
       }
     }
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-    return {
-      question: null,
-      profilePic: '',
-      createdName: '',
-      lastModified: new Date(),
-      timesPlayed: 0,
-    };
   };
   
   const fetchElements = async (libraryTab?: LibraryTabEnum, searchTerms?: string) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
-      if ((isLibrary || isCreateGame) && tab !== undefined) {
+      console.log(centralData.isTabsOpen, tab);
+      if ((isLibrary || isCreateGame || centralData.isTabsOpen) && tab !== undefined) {
         switch(tab){
           case LibraryTabEnum.FAVORITES: 
             return gameQuestion === GameQuestionType.GAME ? FetchType.FAVORITE_GAMES : FetchType.FAVORITE_QUESTIONS;
@@ -506,8 +513,8 @@ export default function useCentralDataManager({
       if (isQuestions) return FetchType.EXPLORE_QUESTIONS;
       return FetchType.EXPLORE_GAMES;
     }
-
     const fetchType = getFetchType(libraryTab ?? null);
+    console.log('fetchType', fetchType);
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
 
     switch (fetchType) {

@@ -9,11 +9,13 @@ import heartFilled from '../../../images/heartFilled.svg';
 
 interface FavouriteButtonProps {
   isEnabled: boolean;
+  isGame: boolean;
   id: string;
 }
 
 export default function FavouriteButton({
   isEnabled,
+  isGame,
   id
 }: FavouriteButtonProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,13 +23,18 @@ export default function FavouriteButton({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   
-  const isFavorite = centralData.userProfile?.favoriteGameTemplateIds?.includes(id) ?? false;
+  const isFavorite = isGame ? centralData.userProfile?.favoriteGameTemplateIds?.includes(id) : centralData.userProfile?.favoriteQuestionTemplateIds?.includes(id);
+
   const handleButtonClick = async () => {
     setIsLoading(true);
-    console.log(centralData.userProfile)
-    const response = await apiClients.centralDataManager?.favoriteGameTemplate(id, centralData.userProfile);
+    let response;
+    if (isGame)
+      response = await apiClients.centralDataManager?.favoriteGameTemplate(id, centralData.userProfile);
+    else
+      response = await apiClients.centralDataManager?.favoriteQuestionTemplate(id, centralData.userProfile);
     if (response) {
-      console.log(response);
+      if (!isGame)
+        console.log(response.favoriteQuestionTemplateIds);
       centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
     }
     setIsLoading(false);

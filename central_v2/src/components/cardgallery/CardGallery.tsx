@@ -27,7 +27,7 @@ interface CardGalleryProps<T> {
   elementType: ElementType;
   galleryType: GalleryType;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleView: (element: T, elements: T[]) => void;
+  handleView?: (element: T, elements: T[]) => void;
   isMyLibrary?: boolean;
   isMyLibraryQuestion?: boolean;
   isCreateGame?: boolean;
@@ -39,7 +39,7 @@ interface MostPopularComponentProps<T> {
   isLoading: boolean;
   numColumns: number;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleViewButtonClick: (element: T) => void;
+  handleViewButtonClick?: (element: T) => void;
   isCreateGame?: boolean;
 }
 
@@ -52,7 +52,7 @@ interface MostPopularGamesComponentProps {
   isMyLibrary?: boolean;
   isMyLibraryQuestion?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleViewButtonClick: (element: IGameTemplate) => void;
+  handleViewButtonClick?: (element: IGameTemplate) => void;
   isCreateGame?: boolean;
 }
 
@@ -69,7 +69,7 @@ function MostPopularGamesComponent({
   isCreateGame,
 }: MostPopularGamesComponentProps) {
   const centralData = useCentralDataState();
-  const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
+  const favoriteGameTemplateIds = isMyLibraryQuestion ? centralData.userProfile?.favoriteQuestionTemplateIds : centralData.userProfile?.favoriteGameTemplateIds;
   return (
     <Grid container spacing={4} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: isMyLibrary ? '5000px' : '2000px'}}>
       {( isLoading)
@@ -237,11 +237,9 @@ export default function CardGallery<
   };
 
   const handleViewButtonClick = (element: T) => {
-    console.log('sup');
-    // handleView(element, galleryElements as T[]);
+    if (handleView)
+      handleView(element, galleryElements as T[]);
   };
-
-  console.log('galleryElements', galleryElements);
 
   return (
     <MostPopularContainer screenSize={screenSize} isMyLibrary={isMyLibrary}>

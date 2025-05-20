@@ -48,6 +48,6 @@ export const getQuestionElements = (openTab: LibraryTabEnum, isSearchResults: bo
     default:
       if (isSearchResults)
         return centralData.searchedQuestions.filter((question) => centralData.publicQuestions.map((publicQuestion) => publicQuestion.id).includes(question.id));
-      return centralData.publicQuestions;
+      return centralData.recommendedQuestions;
   }
 }
