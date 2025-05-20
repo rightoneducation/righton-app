@@ -110,10 +110,16 @@ export default function ExploreQuestions({
     }
   };
   
-
   const handleBackToExplore = () => {
      setSelectedQuestion(null);
   };
+
+  const handleCloseQuestionTabs = () => {
+    centralDataDispatch({
+      type: 'SET_IS_TABS_OPEN',
+      payload: false,
+    });
+  }
 
   const handleCloneButtonClick = () => {
     setIsTabsOpen(false);
@@ -126,7 +132,7 @@ export default function ExploreQuestions({
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      {centralData.isTabsOpen && (
+      
         <>
           <QuestionTabsModalBackground
             isTabsOpen={centralData.isTabsOpen}
@@ -139,6 +145,8 @@ export default function ExploreQuestions({
             questions={questionSet}
             setIsTabsOpen={setIsTabsOpen}
             fetchElements={fetchElements}
+            setSelectedQuestion={setSelectedQuestion}
+            handleCloseQuestionTabs={handleCloseQuestionTabs}
             handleBackToExplore={handleBackToExplore}
             handlePrevQuestion={handlePrevQuestion}
             handleNextQuestion={handleNextQuestion}
@@ -150,7 +158,7 @@ export default function ExploreQuestions({
             handleQuestionView={handleView}
           />
         </>
-      )}
+  
       <ExploreGamesUpperContainer screenSize={screenSize}>
         {!isSearchResults && 
           <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />

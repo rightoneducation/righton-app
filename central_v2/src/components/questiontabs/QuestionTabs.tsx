@@ -45,6 +45,7 @@ interface TabContainerProps {
   question: IQuestionTemplate | null;
   questions: IQuestionTemplate[];
   setIsTabsOpen: (isTabsOpen: boolean) => void;
+  setSelectedQuestion: (question: IQuestionTemplate | null) => void;
   fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
   handleBackToExplore: () => void;
   handlePrevQuestion: () => void;
@@ -60,6 +61,7 @@ interface TabContainerProps {
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
+  handleCloseQuestionTabs: () => void;
 }
 
 export default function QuestionTabs({
@@ -69,6 +71,7 @@ export default function QuestionTabs({
   questions,
   setIsTabsOpen,
   fetchElements,
+  setSelectedQuestion,
   handleBackToExplore,
   handlePrevQuestion,
   handleNextQuestion,
@@ -77,7 +80,8 @@ export default function QuestionTabs({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  handleQuestionView
+  handleQuestionView,
+  handleCloseQuestionTabs
 }: TabContainerProps) {
   const theme = useTheme();
   const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBLIC);
@@ -88,6 +92,7 @@ export default function QuestionTabs({
   const handleChange = (event: React.SyntheticEvent, newTab: LibraryTabEnum) => {
     centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: null });
     setOpenTab(newTab);
+    setSelectedQuestion(null);
     fetchElements(newTab, '');
   };
   const [isLoading, setIsLoading] = React.useState(false);
@@ -130,7 +135,7 @@ export default function QuestionTabs({
     <Modal
       disableAutoFocus
       open={isTabsOpen}
-      onClose={handleBackToExplore}
+      onClose={handleCloseQuestionTabs}
       closeAfterTransition
       disableScrollLock 
     >

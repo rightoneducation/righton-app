@@ -67,8 +67,14 @@ export default function MyLibrary({
   };
 
   const handleBackToExplore = () => {
-    setSelectedQuestion(null);
-    setIsTabsOpen(false);
+     setSelectedQuestion(null);
+  };
+
+  const handleCloseQuestionTabs = () => {
+    centralDataDispatch({
+      type: 'SET_IS_TABS_OPEN',
+      payload: false,
+    });
   }
 
   const handlePrevQuestion = () => {
@@ -105,31 +111,31 @@ export default function MyLibrary({
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
-      {selectedQuestion && (
-            <>
-              <QuestionTabsModalBackground
-                isTabsOpen={centralData.isTabsOpen}
-                handleBackToExplore={handleBackToExplore}
-              />
-              <QuestionTabs
-                screenSize={screenSize}
-                isTabsOpen={centralData.isTabsOpen}
-                question={selectedQuestion}
-                questions={questionSet}
-                setIsTabsOpen={setIsTabsOpen}
-                fetchElements={fetchElements}
-                handleBackToExplore={handleBackToExplore}
-                handlePrevQuestion={handlePrevQuestion}
-                handleNextQuestion={handleNextQuestion}
-                handleCloneButtonClick={handleCloneButtonClick}
-                handleChooseGrades={handleChooseGrades}
-                handleSortChange={handleSortChange}
-                handleSearchChange={handleSearchChange}
-                handlePublicPrivateChange={handlePublicPrivateChange}
-                handleQuestionView={handleQuestionView}
-              />
-            </>
-          )}
+      <>
+        <QuestionTabsModalBackground
+          isTabsOpen={centralData.isTabsOpen}
+          handleBackToExplore={handleBackToExplore}
+        />
+        <QuestionTabs
+          screenSize={screenSize}
+          isTabsOpen={centralData.isTabsOpen}
+          question={selectedQuestion}
+          questions={questionSet}
+          setIsTabsOpen={setIsTabsOpen}
+          fetchElements={fetchElements}
+          setSelectedQuestion={setSelectedQuestion}
+          handleCloseQuestionTabs={handleCloseQuestionTabs}
+          handleBackToExplore={handleBackToExplore}
+          handlePrevQuestion={handlePrevQuestion}
+          handleNextQuestion={handleNextQuestion}
+          handleCloneButtonClick={handleCloneButtonClick}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+          handleSearchChange={handleSearchChange}
+          handlePublicPrivateChange={handlePublicPrivateChange}
+          handleQuestionView={handleQuestionView}
+        />
+      </>
       {centralData.userStatus === UserStatusType.LOADING
         ? <CircularProgress style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',   color: theme.palette.primary.darkBlueCardColor, zIndex: 1}}/>
         : <LibraryTabsContainer 

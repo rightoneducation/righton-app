@@ -47,7 +47,6 @@ export default function LibraryTabsContent({
   handleQuestionView
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
   const centralData = useCentralDataState();
-  console.log(centralData);
   const isSearchResults = centralData.searchTerms.length > 0 || centralData.selectedGrades.length > 0 || (centralData.sort.field !== SortType.listGameTemplates && centralData.sort.direction !== SortDirection.ASC);
   const elements = gameQuestion === GameQuestionType.GAME ?
     getGameElements(openTab, isSearchResults, centralData)
