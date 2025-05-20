@@ -1,12 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
-  Box,
   Slide,
   Tabs,
-  Grid,
   Modal,
-  CircularProgress,
   useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -16,29 +12,17 @@ import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestionCardBase';
-import CentralButton from '../button/Button';
-import { ButtonType } from '../button/ButtonModels';
-import DetailedQuestionSubCard from '../cards/detailedquestion/DetailedQuestionSubCard';
-import { CardType, ScreenSize, UserStatusType } from '../../lib/CentralModels';
-import OwnerTag from '../profile/OwnerTag';
+import { ScreenSize, LibraryTabEnum } from '../../lib/CentralModels';
 import { 
   TabContainer, 
   ContentFrame, 
   TabContent, 
   StyledTab, 
-  DetailedQuestionContainer, 
-  ContentContainer, 
-  ButtonContainer,
-  ButtonContainerLeft,
-  ButtonContainerRight,
-  CardContainer,
-  SubCardGridItem,
-  GridItem
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
 import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
+import QuestionTabsSelectedQuestion from './QuestionTabsSelectedQuestion';
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -51,6 +35,7 @@ interface TabContainerProps {
   isTabsOpen: boolean;
   question: IQuestionTemplate;
   questions: IQuestionTemplate[];
+  fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
   handleBackToExplore: () => void;
   handlePrevQuestion: () => void;
   handleNextQuestion: () => void;
@@ -62,6 +47,7 @@ export default function QuestionTabs({
   isTabsOpen,
   question,
   questions,
+  fetchElements,
   handleBackToExplore,
   handlePrevQuestion,
   handleNextQuestion,
@@ -75,6 +61,7 @@ export default function QuestionTabs({
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setOpenTab(newValue);
+    fetchElements(newValue);
   };
   const [isLoading, setIsLoading] = React.useState(false);
   const isFavorite = centralData.userProfile?.favoriteGameTemplateIds?.includes(question.id) ?? false;
@@ -151,160 +138,20 @@ export default function QuestionTabs({
                   );
                 })}
               </Tabs>
-              <ContentContainer>
-                <ButtonContainer>
-                  <ButtonContainerLeft>
-                    <CentralButton
-                      buttonType={ButtonType.PREVIOUSQUESTION}
-                      isEnabled
-                      isOnQuestionTab
-                      iconOnlyOverride={!isScreenLgst}
-                      onClick={handlePrevQuestion}
-                    />
-                    <CentralButton
-                      buttonType={ButtonType.BACKTOEXPLORE}
-                      isEnabled
-                      isOnQuestionTab
-                      iconOnlyOverride={!isScreenLgst}
-                      onClick={handleBackToExplore}
-                    />
-                  </ButtonContainerLeft>
-                  <ButtonContainerLeft>
-                    <ButtonContainerRight>
-                      {screenSize !== ScreenSize.SMALL &&
-                      <>
-                        {centralData.userStatus === UserStatusType.LOGGEDIN &&
-                          <Box>
-                            {!isLoading ? 
-                              <CentralButton 
-                                buttonType={!isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE} 
-                                isEnabled 
-                                isOnQuestionTab
-                                iconOnlyOverride={!isScreenLgst}
-                                onClick={handleFavoriteButtonClick}
-                              />
-                              : <Box><CircularProgress style={{ color: '#FFF' }}/></Box>
-                            }
-                          </Box>
-                        }
-                      <Box>
-                        <CentralButton
-                          buttonType={ButtonType.CLONEANDEDIT}
-                          isEnabled
-                          isOnQuestionTab
-                          iconOnlyOverride={!isScreenLgst}
-                          onClick={handleCloneButtonClick}
-                        />
-                      </Box>
-                      </>
-                      }
-                      <CentralButton
-                        buttonType={ButtonType.NEXTQUESTION}
-                        isEnabled
-                        isOnQuestionTab
-                        iconOnlyOverride={!isScreenLgst}
-                        onClick={handleNextQuestion}
-                      />
-                    </ButtonContainerRight>
-                    <ButtonContainerRight>
-                    {screenSize === ScreenSize.SMALL &&
-                      <>
-                        {centralData.userStatus === UserStatusType.LOGGEDIN &&
-                          <Box>
-                            {!isLoading ? 
-                              <CentralButton 
-                                buttonType={!isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE} 
-                                isEnabled 
-                                isOnQuestionTab
-                                iconOnlyOverride={!isScreenLgst}
-                                onClick={handleFavoriteButtonClick}
-                              />
-                              : <Box><CircularProgress style={{ color: '#FFF' }}/></Box>
-                            }
-                          </Box>
-                        }
-                      <Box>
-                        <CentralButton
-                          buttonType={ButtonType.CLONEANDEDIT}
-                          isEnabled
-                          isOnQuestionTab
-                          iconOnlyOverride={!isScreenLgst}
-                          onClick={handleCloneButtonClick}
-                        />
-                      </Box>
-                      </>
-                      
-                      }
-                      </ButtonContainerRight>
-                  </ButtonContainerLeft>
-                </ButtonContainer>
-                <CardContainer style={{paddingBottom: '50px'}}>
-                  {screenSize !== ScreenSize.LARGE &&
-                    <OwnerTag screenSize={screenSize}/>
-                  }
-                  <DetailedQuestionContainer
-                    container
-                  >
-                    <Grid
-                      sm
-                      md
-                      item
-                      style={{ display: 'flex', justifyContent: 'flex-end' }}
-                    >
-                      {screenSize === ScreenSize.LARGE &&
-                        <OwnerTag screenSize={screenSize}/>
-                      }
-                    </Grid>
-                    <GridItem
-                      sm={10}
-                      md={12}
-                      item
-                      style={{
-                        maxWidth: '672px',
-                      }}
-                    >
-                      <DetailedQuestionCardBase screenSize={screenSize} question={question} />
-                      <Grid
-                        container
-                        spacing={`${theme.sizing.smPadding}px`}
-                      >
-                        <SubCardGridItem 
-                          item
-                          sm={12}
-                          md={6}
-                        >
-                          <DetailedQuestionSubCard
-                            cardType={CardType.CORRECT}
-                            answer={
-                              question?.choices?.find((answer) => answer.isAnswer)
-                                ?.text ?? ''
-                            }
-                            instructions={question?.instructions ?? []}
-                          />
-                        </SubCardGridItem>
-                        <SubCardGridItem
-                          item
-                          sm={12}
-                          md={6}
-                        >
-                          {question &&
-                            question.choices
-                              ?.filter((choice) => !choice.isAnswer)
-                              .map((choice, index) => (
-                                <DetailedQuestionSubCard
-                                  key={uuidv4()}
-                                  cardType={CardType.INCORRECT}
-                                  answer={choice.text}
-                                  answerReason={choice.reason}
-                                />
-                              ))}
-                        </SubCardGridItem>
-                      </Grid>
-                    </GridItem>
-                    <Grid sm md item />
-                  </DetailedQuestionContainer>
-                </CardContainer>
-              </ContentContainer>
+              { question 
+                ? <QuestionTabsSelectedQuestion
+                    screenSize={screenSize}
+                    question={question}
+                    isLoading={isLoading}
+                    handleBackToExplore={handleBackToExplore}
+                    handlePrevQuestion={handlePrevQuestion}
+                    handleNextQuestion={handleNextQuestion}
+                    handleCloneButtonClick={handleCloneButtonClick}
+                    handleFavoriteButtonClick={handleFavoriteButtonClick}
+                    isFavorite={isFavorite}
+                  />
+                : <div style={{ padding: '20px', color: theme.palette.text.primary }}>No question selected</div>
+              }
             </TabContent>
           </ContentFrame>
         </TabContainer>

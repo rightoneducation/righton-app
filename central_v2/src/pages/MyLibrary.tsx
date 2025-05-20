@@ -110,6 +110,7 @@ export default function MyLibrary({
                 isTabsOpen={centralData.isTabsOpen}
                 question={selectedQuestion}
                 questions={questionSet}
+                fetchElements={fetchElements}
                 handleBackToExplore={handleBackToExplore}
                 handlePrevQuestion={handlePrevQuestion}
                 handleNextQuestion={handleNextQuestion}

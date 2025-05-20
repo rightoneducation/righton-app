@@ -134,6 +134,7 @@ export default function ExploreQuestions({
             isTabsOpen={centralData.isTabsOpen}
             question={selectedQuestion}
             questions={questionSet}
+            fetchElements={fetchElements}
             handleBackToExplore={handleBackToExplore}
             handlePrevQuestion={handlePrevQuestion}
             handleNextQuestion={handleNextQuestion}
