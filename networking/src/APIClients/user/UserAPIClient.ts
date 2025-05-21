@@ -15,11 +15,13 @@ import {
   UpdateUserMutation,
   UpdateUserMutationVariables,
   UserByUserNameQuery,
+  UserByEmailQuery,
   GetUserQuery
 } from "../../AWSMobileApi";
 import {
   getUser,
   userByCognitoId,
+  userByEmail,
   createUser,
   deleteUser,
   updateUser, 
@@ -103,7 +105,19 @@ export class UserAPIClient
       return UserParser.parseIUserfromAWSUser(user.data.userByUserName.items[0]) as IUser;
     return null;
   }
-  
+
+  async getUserByEmail(
+    email: string
+  ): Promise<IUser | null> {
+    const user = await this.callGraphQL<UserByEmailQuery>(
+        userByEmail,
+        {email} as unknown as GraphQLOptions
+    )
+    if (user.data.userByEmail?.items[0])
+      return UserParser.parseIUserfromAWSUser(user.data.userByEmail.items[0]) as IUser;
+    return null;
+  }
+
 
   async updateUser( 
     updateUserInput: UpdateUserInput

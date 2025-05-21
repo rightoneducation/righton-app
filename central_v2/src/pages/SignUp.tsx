@@ -293,6 +293,7 @@ interface SignUpProps {
   setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
   confirmPassword: string;
   setConfirmPassword: (value: string) => void;
+  checkForUniqueEmail: (email: string) => Promise<boolean>;
 }
 export default function SignUp({ 
   apiClients, 
@@ -303,6 +304,7 @@ export default function SignUp({
   setBackImage,
   confirmPassword,
   setConfirmPassword,
+  checkForUniqueEmail,
 }: SignUpProps ) {
   const theme = useTheme();
   const centralData = useCentralDataState();
@@ -350,6 +352,7 @@ export default function SignUp({
   const [isEnabled, setIsEnabled] = useState(true);
 
   const buttonTypeUpload = ButtonType.UPLOAD;
+  const [errorMessage, setErrorMessage] = useState('');
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
@@ -364,6 +367,19 @@ export default function SignUp({
 
   const handleSubmit = async () => {
     setLoading(true);
+    setErrorMessage('');
+    const isUniqueEmail = await checkForUniqueEmail(localSignUp.email);
+    if (!isUniqueEmail) {
+      setErrorMessage('Email already exists. Please use a different email.');
+      setLocalSignUp((prev) => ({
+        ...prev,
+        email: '',
+      }));
+      setIsModalOpen(true);
+      setLoading(false);
+      return;
+    }
+    
     const { title, firstName, lastName, email, userName, password } = localSignUp;
     const newProfile = {
       ...centralData.userProfile,
@@ -430,7 +446,7 @@ export default function SignUp({
 
   return (
     <SignUpMainContainer>
-      <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} errorMessage={errorMessage}/>
       <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
       <InnerBodyContainer>
         <UpperSignup>
@@ -769,21 +785,22 @@ export default function SignUp({
             />
           </PasswordContainer>
         </UploadImagesAndPassword>
-
         <LowerLogin>
-              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} onClick={handleSubmit} smallScreenOverride/>
-              <LowestContainer>
-                <HaveAnAccountText>
-                  Already have an account?
-                </HaveAnAccountText>
-                <CentralButton buttonType={buttonType} isEnabled={isEnabled}  onClick={() => navigate('/login')}/>
-              </LowestContainer>
+          { loading 
+            ? <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
+              </Box> 
+            : <>
+                <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} onClick={handleSubmit} smallScreenOverride/>
+                <LowestContainer>
+                  <HaveAnAccountText>
+                    Already have an account?
+                  </HaveAnAccountText>
+                  <CentralButton buttonType={buttonType} isEnabled={isEnabled}  onClick={() => navigate('/login')}/>
+                </LowestContainer>
+              </>
+          } 
         </LowerLogin>
-        {loading && 
-          <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-              <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
-          </Box>
-        } 
       </InnerBodyContainer>
     </SignUpMainContainer>
   );

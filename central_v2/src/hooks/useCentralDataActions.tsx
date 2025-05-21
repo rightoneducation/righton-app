@@ -36,6 +36,7 @@ interface UseCentralDataManagerReturnProps {
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
   handleLogOut: () => void;
+  checkForUniqueEmail: (email: string) => Promise<boolean>;
 }
 
 /* 
@@ -553,6 +554,13 @@ export default function useCentralDataManager({
         break;
     }
   };
+
+  const checkForUniqueEmail = async (email: string) => {
+    const response = await apiClients?.user.getUserByEmail(email); 
+    if (response)
+      return false;
+    return true;
+  };
   
   // useEffect for monitoring changes to auth status of Cognito User
   useEffect(() => {
@@ -637,6 +645,7 @@ export default function useCentralDataManager({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
-    handleLogOut
+    handleLogOut,
+    checkForUniqueEmail
   };
 }

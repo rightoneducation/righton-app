@@ -40,6 +40,13 @@ const DragText = styled(Typography)(({ theme }) => ({
   textAlign: 'center'
 }));
 
+const SubText = styled(Typography)(({ theme }) => ({
+  width: '100%',
+  fontSize: '16px',
+  fontWeight: 400,
+  textAlign: 'center'
+}));
+
 const CloseButton = styled('img')(({ theme }) => ({
   width: '30px',
   height: '30px',
@@ -48,11 +55,13 @@ const CloseButton = styled('img')(({ theme }) => ({
 
 interface CreatingTemplateModalProps {
   isModalOpen: boolean;
+  errorMessage?: string;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SignUpErrorModal({
   isModalOpen,
+  errorMessage,
   setIsModalOpen,
 }: CreatingTemplateModalProps) {
   const theme = useTheme();
@@ -67,6 +76,9 @@ export default function SignUpErrorModal({
           gap: '16px', padding: '24px'
         }}> 
           <DragText> Error Signing Up </DragText>
+          {errorMessage && errorMessage.length > 0 && (
+            <SubText> {errorMessage} </SubText>
+          )}
           <Box style={{display: 'flex', gap: '16px'}}>
               <CentralButton 
                 buttonType={ButtonType.RETRY} 
