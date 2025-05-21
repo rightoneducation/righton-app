@@ -1,4 +1,5 @@
 import { Box, Grid, styled, Tab } from '@mui/material';
+import { ScreenSize } from '../CentralModels';
 
 export const TabContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -131,9 +132,18 @@ export const SubCardGridItem = styled(Grid)(({ theme }) => ({
   gap: `${theme.sizing.smPadding}px`,
 }));
 
-export const GridItem = styled(Grid)(({ theme }) => ({
+
+interface IGridItem {
+  screenSize?: ScreenSize;
+}
+export const GridItem = styled(Grid, {
+  shouldForwardProp: (prop) => prop !== "screenSize",
+})<IGridItem>(({ theme, screenSize }) => ({
   height: '100%',
+  alignItems: screenSize === ScreenSize.SMALL ? 'center' : 'normal',
+  ...(screenSize !== ScreenSize.SMALL && {
   overflowY: 'auto',
+  }),                      
   width: '100%',
   maxWidth: '672px',
   display: 'flex',

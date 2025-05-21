@@ -26,7 +26,7 @@ const OwnerTagFlexContainer = styled(Box)<OwnerTagProps>(({ theme, screenSize, i
   gap: `${theme.sizing.xSmPadding}px`,
 }));
 
-const OwnerTagGridContainer = styled(Grid)<OwnerTagProps>(({ theme, isViewGame }) => ({
+const OwnerTagGridContainer = styled(Grid)<OwnerTagProps>(({ theme, isViewGame, screenSize }) => ({
   width: 'fit-content',
   height: '100%',
   borderRadius: '8px',
@@ -143,7 +143,7 @@ export default function OwnerTag({
         }
       </OwnerTagFlexContainer>
     :
-      <OwnerTagGridContainer isViewGame={isViewGame}  container>
+      <OwnerTagGridContainer screenSize={screenSize} isViewGame={isViewGame}  container>
           { isOwnerLoaded ?
             <>
               <OwnerTagSubGridContainer item xs={6}>
