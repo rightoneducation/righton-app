@@ -377,8 +377,8 @@ export default function SignUp({
   const handleSubmit = async () => {
     // setPressedGoogle(true)
     setLoading(true);
-    setPasswordError(""); // Reset error before validation
-    setPasswordConfirmError("")
+    // setPasswordError(""); // Reset error before validation
+    // setPasswordConfirmError("")
     const { title, firstName, lastName, email, userName, password } = localSignUp;
     const newProfile = {
       ...centralData.userProfile,
@@ -389,7 +389,13 @@ export default function SignUp({
       userName,
       password
     }
-    // removed checks from here to real time for password. All of them are on onChange.
+
+    if(passwordError || passwordConfirmError){
+      setLoading(false);
+      return
+    }
+
+    // Cleared all the checks from here. All checks are being done in real time.
 
     try {
       await apiClients.centralDataManager?.signUpSendConfirmationCode(newProfile);
@@ -619,7 +625,7 @@ export default function SignUp({
                 ...prev,
                 password: newPassword,
               }));
-        
+
               // Real-time validation checks
               if (newPassword.length > 0 && newPassword.length < 8) {
                 setPasswordError("Password must be at least 8 characters long.");
@@ -631,8 +637,10 @@ export default function SignUp({
                 setPasswordError(""); // Clear error if all checks pass
               }
         
-              // Clear confirm password error if passwords match
-              if (newPassword === confirmPassword) {
+              // Populate the state when password dont match else elear confirm password error if passwords match
+              if (newPassword !== confirmPassword) {
+                setPasswordConfirmError("Passwords don't match");
+              } else {
                 setPasswordConfirmError("");
               }
             }}
@@ -708,7 +716,7 @@ export default function SignUp({
               onChange={(event) => {
                 const newConfirmPassword = event.target.value;
                 setConfirmPassword(newConfirmPassword);
-          
+
                 // Real-time match check
                 if (newConfirmPassword !== localSignUp.password) {
                   setPasswordConfirmError("Passwords don't match");
