@@ -1,5 +1,5 @@
 import { Amplify } from "aws-amplify";
-import { generateClient } from "aws-amplify/api";
+import { generateClient, GraphQLResult } from "aws-amplify/api";
 import { CookieStorage  } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { 
@@ -25,6 +25,8 @@ import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { userCleaner } from "../../graphql";
+import { userByUserName } from "../../graphql";
+
 import { IUserProfile } from "../../Models/IUserProfile";
 
 export class AuthAPIClient
@@ -111,6 +113,7 @@ export class AuthAPIClient
     }
   }
 
+  
   async getUserNickname(): Promise<string | null> {
     try {
       const attributes = await fetchUserAttributes();
@@ -139,6 +142,27 @@ export class AuthAPIClient
       return null;
     }
   }
+
+    async isUsernameUnique(username: string): Promise<boolean>{
+        try {
+            const client = generateClient();
+            const result = await client.graphql({
+                query: userByUserName,
+                variables: {
+                    userName: username,
+                    limit: 1
+                },
+                authMode: "iam"
+            })as GraphQLResult<{ userByUserName: { items: any[] } }>;
+            
+            // If any items returned, username is not unique
+            return result.data?.userByUserName?.items?.length === 0;
+        } catch (error) {
+            console.error("Error checking username uniqueness:", error);
+            throw error; // or return false based on your error handling needs
+        }
+    }
+
 
   async awsSignUp(username: string, email: string, password: string) {
     await signUp({

@@ -375,10 +375,18 @@ export default function SignUp({
       password
     }
 
-    if(passwordError || passwordConfirmError){
-      setLoading(false);
-      return
-    }
+    // try {
+    //   const response = await apiClients.auth.isUsernameUnique(localSignUp.userName);
+    //   console.log("Duplicate user: ", response)
+    // } catch (error) {
+    //   console.log("inside error")
+    //   console.log(error)
+    // }
+
+    // if(passwordError || passwordConfirmError){
+    //   setLoading(false);
+    //   return
+    // }
 
     // Cleared all the checks from here. All checks are being done in real time.
 

@@ -35,4 +35,5 @@ export interface IAuthAPIClient {
   awsDownloadImagePublic(): Promise<string>;
   awsDownloadImagePrivate(): Promise<string>;
   getUserEmail(): Promise<string | null>;
+  isUsernameUnique(username: string): Promise<boolean>;
 }
