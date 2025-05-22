@@ -35,12 +35,15 @@ export default function ViewQuestionCards({
   const theme = useTheme();
  
   return (
-    <CardContainer>
+    <CardContainer sx={{ overflowY: 'visible' }}>
     {!isCreateGame && screenSize !== ScreenSize.LARGE &&
       <OwnerTag isViewGame={isViewGame} screenSize={screenSize}/>
     }
     <DetailedQuestionContainer
-    sx={{ gap: isCreateGame && screenSize === ScreenSize.SMALL ? 0 : `${theme.sizing.mdPadding}px` }}
+    sx={{ 
+      overflowY: 'visible',
+      gap: isCreateGame && screenSize === ScreenSize.SMALL ? 0 : `${theme.sizing.mdPadding}px` 
+    }}
       container
     >
       <Grid
