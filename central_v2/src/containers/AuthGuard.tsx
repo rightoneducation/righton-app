@@ -38,6 +38,9 @@ export default function AuthGuard ({
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
       return <Navigate to="/" replace />;
 
+    case UserStatusType.GOOGLE_ERROR:
+      return <Navigate to="/signup" replace />;
+
     // if a user missing either cognito or local credentials, their account is broken and they need to sign up again
     case UserStatusType.INCOMPLETE:
       handleLogOut();

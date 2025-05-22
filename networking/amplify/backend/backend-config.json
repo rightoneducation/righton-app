@@ -41,6 +41,15 @@
           "category": "function",
           "resourceName": "mobile6060603cPostConfirmation",
           "triggerProvider": "Cognito"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "mobile6060603cPreSignup",
+          "triggerProvider": "Cognito"
         }
       ],
       "frontendAuthConfig": {
@@ -105,6 +114,11 @@
       "service": "Lambda"
     },
     "mobile6060603cPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "mobile6060603cPreSignup": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -189,6 +203,22 @@
         {
           "category": "function",
           "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPreSignup"
         }
       ]
     },

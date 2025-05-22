@@ -425,7 +425,6 @@ export default function SignUp({
     onSuccess: async (credentialResponse) => {
       try {
         const idToken = credentialResponse.access_token; // Use `access_token` for OAuth login
-
         if (idToken) {
           const response = await apiClients.auth.awsSignInFederated();
         } else {

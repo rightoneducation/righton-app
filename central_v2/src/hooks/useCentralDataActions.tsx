@@ -475,7 +475,6 @@ export default function useCentralDataManager({
           if (responseGame) {
             const userResponse = await apiClients?.user.getUser(responseGame.userId);
             if (userResponse) {
-              console.log('userResponse', userResponse);
               const title = (userResponse.title) && userResponse.title !== 'Title...' ? userResponse.title : '';
               const firstName = userResponse?.firstName?.split("")[0] ?? '';
               selectedGame = {
@@ -581,6 +580,7 @@ export default function useCentralDataManager({
     const status = await apiClients.auth.verifyAuth();
     if (status) {
       const currentSession = await apiClients.auth.getCurrentSession();
+      console.log('currentSession', currentSession);
       const cognitoId = currentSession?.userSub;
       if (!cognitoId) {
         handleLogOut();

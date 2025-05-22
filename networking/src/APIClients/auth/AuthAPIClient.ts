@@ -1,7 +1,4 @@
-import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
-import { CookieStorage  } from 'aws-amplify/utils';
-import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { 
   signUp, 
   confirmSignUp, 
@@ -21,11 +18,11 @@ import {
   updateUserAttributes
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
-import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { userCleaner } from "../../graphql";
 import { IUserProfile } from "../../Models/IUserProfile";
+import { GraphQLAuthMode } from './interfaces/IAuthAPIClient';
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -34,13 +31,6 @@ export class AuthAPIClient
 
   constructor(){
     this.isUserAuth = false;
-    this.configAmplify(amplifyconfig);
-  }
-
-  configAmplify(awsconfig: any): void {
-    Amplify.configure(awsconfig);
-    // change userPools auth storage to cookies so that auth persists across central/host apps for signed-in teachers
-    cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
   }
 
   async verifyAuth(): Promise<boolean> {
@@ -89,9 +79,10 @@ export class AuthAPIClient
     return session;
   }
 
-  async awsUserCleaner(user: IUserProfile): Promise<void> {
+  async awsUserCleaner(user: IUserProfile, authOverride?: GraphQLAuthMode): Promise<void> {
     const authSession = await fetchAuthSession();
-    const authMode = this.isUserAuth ? "userPool" : "iam"
+    const authMode: GraphQLAuthMode =
+      authOverride ?? (this.isUserAuth ? "userPool" : "iam");
     const input = JSON.stringify({user: user, authSession: authSession});
     const variables = { input };
     const client = generateClient({});
