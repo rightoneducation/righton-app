@@ -224,6 +224,7 @@ export default function QuestionTabs({
                 >
                   <DetailedQuestionContainer
                     container
+                    sx={{ gap: screenSize === ScreenSize.SMALL ? "0px" : `${theme.sizing.mdPadding}`}}
                   >
                     <Grid
                       sm
