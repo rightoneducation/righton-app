@@ -82,15 +82,11 @@ export class UserAPIClient
     cognitoId: string
   ): Promise<IUser | null> {
     if (!cognitoId) return null;
-    console.log('userAPIClient');
-    console.log('variables', cognitoId);
     const variables: UserByCognitoIdQueryVariables = { cognitoId }
-    console.log(variables);
     const user = await this.callGraphQL<UserByCognitoIdQuery>(
         userByCognitoId,
         variables as unknown as GraphQLOptions
     )
-    console.log(user);
     if (user.data.userByCognitoId?.items[0])
       return UserParser.parseIUserfromAWSUser(user.data.userByCognitoId.items[0]) as IUser;
     return null;

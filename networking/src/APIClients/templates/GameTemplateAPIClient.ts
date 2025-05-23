@@ -140,7 +140,6 @@ export class GameTemplateAPIClient
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.default;
     const awsType = `${type}GameTemplate`;
     const queryName = `list${type}GameTemplates`;
-    console.log(filterString);
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets, favIds); 
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }

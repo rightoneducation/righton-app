@@ -111,7 +111,7 @@ export default function StyledQuestionCard({
         : <QuestionImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />       
       }
       { centralData.userStatus === UserStatusType.LOGGEDIN &&
-        <FavouriteButton isEnabled id={id}/>
+        <FavouriteButton isEnabled isGame={false} id={id}/>
       }
       <ContentContainer>
         <TitleContainer>

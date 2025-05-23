@@ -32,6 +32,7 @@ interface ExploreQuestionsProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => Promise<ISelectedGame | ISelectedQuestion>;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -49,6 +50,7 @@ export default function ExploreQuestions({
   setIsTabsOpen,
   fetchElement,
   fetchElements,
+  handlePublicPrivateChange,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
@@ -107,10 +109,17 @@ export default function ExploreQuestions({
       setSelectedQuestion(questionSet[0]);
     }
   };
-
+  
   const handleBackToExplore = () => {
-    setIsTabsOpen(false);
+     setSelectedQuestion(null);
   };
+
+  const handleCloseQuestionTabs = () => {
+    centralDataDispatch({
+      type: 'SET_IS_TABS_OPEN',
+      payload: false,
+    });
+  }
 
   const handleCloneButtonClick = () => {
     setIsTabsOpen(false);
@@ -123,7 +132,7 @@ export default function ExploreQuestions({
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      {selectedQuestion && (
+      
         <>
           <QuestionTabsModalBackground
             isTabsOpen={centralData.isTabsOpen}
@@ -134,13 +143,22 @@ export default function ExploreQuestions({
             isTabsOpen={centralData.isTabsOpen}
             question={selectedQuestion}
             questions={questionSet}
+            setIsTabsOpen={setIsTabsOpen}
+            fetchElements={fetchElements}
+            setSelectedQuestion={setSelectedQuestion}
+            handleCloseQuestionTabs={handleCloseQuestionTabs}
             handleBackToExplore={handleBackToExplore}
             handlePrevQuestion={handlePrevQuestion}
             handleNextQuestion={handleNextQuestion}
             handleCloneButtonClick={handleCloneButtonClick}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            handleQuestionView={handleView}
           />
         </>
-      )}
+  
       <ExploreGamesUpperContainer screenSize={screenSize}>
         {!isSearchResults && 
           <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />
