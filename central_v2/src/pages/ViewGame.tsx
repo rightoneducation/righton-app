@@ -63,7 +63,7 @@ export default function ViewGame({
       fetchElement(GameQuestionType.GAME, id);
     }
   }, [centralData.selectedGame, route ]); // eslint-disable-line 
-
+  
   const handleLaunchGame = () => {
     const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/Public/${centralData.selectedGame?.game?.id}`;
     window.location.href = LAUNCH_GAME_URL;

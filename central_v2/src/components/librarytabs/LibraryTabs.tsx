@@ -29,6 +29,7 @@ import tabPublicIcon from '../../images/tabPublic.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import tabPrivateIcon from '../../images/tabPrivate.svg';
+import LibraryTabsContent from './LibraryTabsContent';
 
 interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
   gameQuestion: GameQuestionType;
@@ -85,9 +86,6 @@ const tabIconMap: { [key in LibraryTabEnum]: string } = {
 };
 
 const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBLIC);
-const elements = gameQuestion === GameQuestionType.GAME ?
-  getGameElements(openTab, isSearchResults, centralData)
-  : getQuestionElements(openTab, isSearchResults, centralData);
 
 if (centralData.isLibraryInit) {
   centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
@@ -142,43 +140,17 @@ return (
         );
       })}
     </Tabs>
-    <ContentContainer>
-      <SearchBar
-        screenSize={screenSize}
-        searchTerms={centralData.searchTerms}
-        handleSearchChange={handleSearchChange}
-        handleChooseGrades={handleChooseGrades}
-        handleSortChange={handleSortChange}
-      />
-      { gameQuestion === GameQuestionType.GAME ?
-        <CardGallery<IGameTemplate>
-          screenSize={screenSize}
-          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-          grades={isSearchResults ? centralData.selectedGrades : undefined}
-          galleryElements={elements as IGameTemplate[]} 
-          elementType={ElementType.GAME}
-          galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
-          setIsTabsOpen={setIsTabsOpen}
-          handleView={handleGameView}
-          isLoading={centralData.isLoading}
-          isMyLibrary
-        />
-        : 
-        <CardGallery<IQuestionTemplate>
-          screenSize={screenSize}
-          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-          grades={isSearchResults ? centralData.selectedGrades : undefined}
-          galleryElements={elements as IQuestionTemplate[]} 
-          elementType={ElementType.GAME}
-          galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
-          setIsTabsOpen={setIsTabsOpen}
-          handleView={handleQuestionView}
-          isLoading={centralData.isLoading}
-          isMyLibrary
-          isMyLibraryQuestion
-        />
-      }
-    </ContentContainer>
+    <LibraryTabsContent
+      gameQuestion={gameQuestion}
+      screenSize={screenSize}
+      openTab={openTab}
+      setIsTabsOpen={setIsTabsOpen}
+      handleChooseGrades={handleChooseGrades}
+      handleSortChange={handleSortChange}
+      handleSearchChange={handleSearchChange}
+      handleGameView={handleGameView}
+      handleQuestionView={handleQuestionView}
+    />
   </TabContent>
 );
 }

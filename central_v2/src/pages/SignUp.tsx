@@ -97,7 +97,6 @@ const OrText = styled(Typography)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   color: '#384466', 
-  // border: '1px solid yellow',
   fontFamily: 'Poppins, sans-serif', 
   fontWeight: 600, 
   fontSize: '16px', 
@@ -113,7 +112,6 @@ const MiddleText = styled(Box)(({ theme }) => ({
 
 const MiddleTextFirstRow = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid green',
   gap: '12px',
 }));
 
@@ -162,14 +160,12 @@ const StyledSelect = styled(Select)(({ theme }) => ({
 
 const MiddleTextSecondRow = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid green',
   gap: '3.5px',
   alignItems: 'stretch'
 }));
 
 const MiddleTextFourthRow = styled(Typography)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid green',
   color: '#384466', 
   fontFamily: 'Rubik, sans-serif', 
   fontWeight: 400, 
@@ -180,14 +176,12 @@ const MiddleTextFourthRow = styled(Typography)(({ theme }) => ({
 
 const UploadImagesAndPassword = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid yellow',
   flexDirection: 'column',
   gap: '12px'
 }));
 
 const PasswordContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid black',
   gap: '12px'
   
 }));
@@ -262,7 +256,6 @@ const LowerLogin = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  // border: '1px solid yellow',
   marginTop: '4px',
   gap: '24px'
 }));
@@ -271,7 +264,6 @@ const LowerLogin = styled(Box)(({ theme }) => ({
 const LowestContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  // border: '1px solid red',
   marginTop: '4px',
 
   gap: '16px'
@@ -279,7 +271,6 @@ const LowestContainer = styled(Box)(({ theme }) => ({
 
 const HaveAnAccountText = styled(Typography)(({ theme }) => ({
   color: '#02215F', 
-  // border: '1px solid blue',
   fontFamily: 'Rubik, sans-serif', 
   fontWeight: 400, 
   fontSize: '16px', 
@@ -296,14 +287,12 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 interface SignUpProps {
   apiClients: IAPIClients;
   handleUserCreate: () => void;
-  // handleGoogleUserCreate: () => void;
   frontImage: File | null;
   setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
   backImage: File | null;
   setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
   confirmPassword: string;
   setConfirmPassword: (value: string) => void;
-  // setPressedGoogle: (value: boolean) => void
 }
 export default function SignUp({ 
   apiClients, 
@@ -314,7 +303,6 @@ export default function SignUp({
   setBackImage,
   confirmPassword,
   setConfirmPassword,
-  // handleGoogleUserCreate
 }: SignUpProps ) {
   const theme = useTheme();
   const centralData = useCentralDataState();
@@ -375,10 +363,7 @@ export default function SignUp({
 
 
   const handleSubmit = async () => {
-    // setPressedGoogle(true)
     setLoading(true);
-    setPasswordError(""); // Reset error before validation
-    setPasswordConfirmError("")
     const { title, firstName, lastName, email, userName, password } = localSignUp;
     const newProfile = {
       ...centralData.userProfile,
@@ -389,29 +374,13 @@ export default function SignUp({
       userName,
       password
     }
-    if (password && password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long.");
+
+    if(passwordError || passwordConfirmError){
       setLoading(false);
-      return;
+      return
     }
 
-    if (!/[A-Za-z]/.test(password ?? '')) {
-      setPasswordError("Password must include at least one letter.");
-      setLoading(false);
-      return;
-    }
-
-    if (!/\d/.test(password ?? '')) {
-      setPasswordError("Password must include at least one number.");
-      setLoading(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setPasswordConfirmError("Passwords don't match");
-      setLoading(false);
-      return;
-    }
+    // Cleared all the checks from here. All checks are being done in real time.
 
     try {
       await apiClients.centralDataManager?.signUpSendConfirmationCode(newProfile);
@@ -635,13 +604,30 @@ export default function SignUp({
             placeholder="Password..."
             value={localSignUp.password}
             type={isShowPassword ? "text" : "password"}
-            onChange={(event) => setLocalSignUp((prev) => ({
-              ...prev,
-              password: event.target.value,
-            }))}
-            error={!!passwordError}
-            sx={{
-              backgroundColor: 'white',
+            onChange={(event) => {
+              const newPassword = event.target.value;
+              setLocalSignUp((prev) => ({
+                ...prev,
+                password: newPassword,
+              }));
+
+              // Real-time validation checks
+              if (newPassword.length > 0 && newPassword.length < 8) {
+                setPasswordError("Password must be at least 8 characters long.");
+              } else if (!/[A-Za-z]/.test(newPassword)) {
+                setPasswordError("Password must include at least one letter.");
+              } else if (!/\d/.test(newPassword)) {
+                setPasswordError("Password must include at least one number.");
+              } else {
+                setPasswordError(""); // Clear error if all checks pass
+              }
+        
+              // Populate the state when password dont match else elear confirm password error if passwords match
+              if (newPassword !== confirmPassword) {
+                setPasswordConfirmError("Passwords don't match");
+              } else {
+                setPasswordConfirmError("");
+              }
             }}
             InputProps={{
               endAdornment: (
@@ -712,7 +698,17 @@ export default function SignUp({
               variant="outlined"
               placeholder="Confirm Password..."
               value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
+              onChange={(event) => {
+                const newConfirmPassword = event.target.value;
+                setConfirmPassword(newConfirmPassword);
+
+                // Real-time match check
+                if (newConfirmPassword !== localSignUp.password) {
+                  setPasswordConfirmError("Passwords don't match");
+                } else {
+                  setPasswordConfirmError(""); // Clear error if matched
+                }
+              }}
               type={isShowConfirmPassword ? "text" : "password"}
               error={!!passwordError}
               sx={{

@@ -74,6 +74,7 @@ function AppSwitch({
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             loadMore={loadMore}
+            handlePublicPrivateChange={getPublicPrivateElements}
           />
         </AuthGuard>
       );
