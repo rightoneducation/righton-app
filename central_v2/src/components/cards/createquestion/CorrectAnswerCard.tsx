@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { Typography, Box, InputAdornment } from '@mui/material';
+import { Typography, Box, InputAdornment, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { Close } from '@mui/icons-material';
 import { Answer, CentralQuestionTemplateInput, AnswerType, AnswerPrecision } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -11,7 +12,8 @@ import {
   BaseCardStyled 
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import {
-  ErrorIcon
+  ErrorIcon,
+  RemoveQuestionIcon
 } from '../../../lib/styledcomponents/CentralStyledComponents';
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
@@ -67,6 +69,11 @@ export default function DetailedQuestionSubCard({
     handleAnswerSettingsChange(draftQuestion, AnswerType.NUMBER, answerPrecision);
   };
 
+  const handleDeleteStep = (index: number): void => {
+    const newSteps = draftQuestion.correctCard.answerSteps.filter((step,i) => i !== index);
+    handleCorrectAnswerStepsChange(newSteps, draftQuestion);
+  }
+
   const answerStepsComponent = (step: string, index: number) => {
     return (
       <Box
@@ -119,18 +126,33 @@ export default function DetailedQuestionSubCard({
             placeholder={`Enter step ${index + 1}...`}
             error={(isCardErrored) && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0)}
             InputProps={{
-              startAdornment: 
-              isCardErrored && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0) &&
+              startAdornment: (
+                isCardErrored && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0) &&
+                  <InputAdornment
+                    position="start" 
+                    sx={{ 
+                      alignSelf: 'flex-start',
+                      mt: '10px',
+                    }}
+                  >
+                    <ErrorIcon src={errorIcon} alt='error icon'/>
+                  </InputAdornment>
+              ),
+
+              endAdornment: index !== 0 && (
                 <InputAdornment
-                  position="start" 
-                  sx={{ 
-                    alignSelf: 'flex-start',
-                    mt: '10px',
-                  }}
+                position='end'
+                sx={{ 
+                  alignSelf: 'flex-start',
+                  mt: '10px',
+                }}
                 >
-                  <ErrorIcon src={errorIcon} alt='error icon'/>
+                   <IconButton onClick={() => handleDeleteStep(index)}>
+                <Close sx={{ color: "#999", width: 15, height: 15, }} />
+                   </IconButton>
                 </InputAdornment>
-            }}
+              )
+              }}
           />
       </Box>
     );
