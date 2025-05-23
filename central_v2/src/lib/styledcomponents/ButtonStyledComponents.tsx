@@ -111,7 +111,7 @@ export const ButtonTypography = styled(Typography, {
   fontWeight: '600',
   textTransform: 'none',
   padding: 0,
-  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER || buttonColor === ButtonColor.NULL ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER || buttonType === ButtonType.SAVEDRAFT ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
   whiteSpace: 'nowrap',
 }));
 
