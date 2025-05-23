@@ -115,12 +115,18 @@ export const ButtonTypography = styled(Typography, {
   whiteSpace: 'nowrap',
 }));
 
-export const ButtonCCSS = styled(Box)(({ theme }) => ({
+interface IButtonCCSS {
+ CCSSIsErrored?: boolean;
+}
+
+export const ButtonCCSS = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'CCSSIsErrored',
+})<IButtonCCSS>(({ theme, CCSSIsErrored }) => ({
   width: 'auto',
   height: '24px',
   padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding + theme.sizing.xxSmPadding}px`,
   borderRadius: '12px',
-  backgroundColor: `${theme.palette.primary.buttonCCSSDefault}`,
+  backgroundColor: CCSSIsErrored ? `${theme.palette.primary.errorColor}` : `${theme.palette.primary.buttonCCSSDefault}`,
   color: '#FFFFFF',
   textTransform: 'none',
   fontFamily: 'Rubik',
