@@ -3,7 +3,8 @@ import {
   Slide,
   Tabs,
   Modal,
-  useMediaQuery
+  CircularProgress,
+  useMediaQuery,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,18 +21,21 @@ import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import { ScreenSize, LibraryTabEnum, GameQuestionType } from '../../lib/CentralModels';
-import { 
-  TabContainer, 
-  ContentContainer,
-  ContentFrame, 
-  TabContent, 
-  StyledTab, 
+import {
+  TabContainer,
+  ContentFrame,
+  TabContent,
+  StyledTab,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
-import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
+import {
+  useCentralDataState,
+  useCentralDataDispatch,
+} from '../../hooks/context/useCentralDataContext';
 import QuestionTabsSelectedQuestion from './QuestionTabsSelectedQuestion';
 import LibraryTabsContent from '../librarytabs/LibraryTabsContent';
+
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -114,12 +118,10 @@ export default function QuestionTabs({
     3: tabFavoritesIcon,
   };
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
-    if (screen === ScreenSize.LARGE)
-      return value;
-    if (screen === ScreenSize.MEDIUM && isSelected)
-     return value;
+    if (screen === ScreenSize.LARGE) return value;
+    if (screen === ScreenSize.MEDIUM && isSelected) return value;
     return '';
-  }
+  };
 
   const handleFavoriteButtonClick = async () => {
     setIsLoading(true);
@@ -137,7 +139,7 @@ export default function QuestionTabs({
       open={isTabsOpen}
       onClose={handleCloseQuestionTabs}
       closeAfterTransition
-      disableScrollLock 
+      disableScrollLock
     >
     <Slide direction="up" in={isTabsOpen} timeout={1000} mountOnEnter unmountOnExit>
         <TabContainer>
@@ -201,6 +203,6 @@ export default function QuestionTabs({
           </ContentFrame>
         </TabContainer>
       </Slide>
-      </Modal>
+    </Modal>
   );
 }
