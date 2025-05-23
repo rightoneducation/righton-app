@@ -123,6 +123,7 @@ export const CardContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none', // IE and Edge
+  paddingTop: '24px'
 }));
 
 export const SubCardGridItem = styled(Grid)(({ theme }) => ({

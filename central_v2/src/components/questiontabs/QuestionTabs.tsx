@@ -20,7 +20,7 @@ import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import { ScreenSize } from '../../lib/CentralModels';
+import { ScreenSize, LibraryTabEnum, GameQuestionType } from '../../lib/CentralModels';
 import {
   TabContainer,
   ContentFrame,
@@ -33,7 +33,6 @@ import {
   useCentralDataState,
   useCentralDataDispatch,
 } from '../../hooks/context/useCentralDataContext';
-import { LibraryTabEnum, GameQuestionType } from '../../lib/CentralModels';
 import QuestionTabsSelectedQuestion from './QuestionTabsSelectedQuestion';
 import LibraryTabsContent from '../librarytabs/LibraryTabsContent';
 
