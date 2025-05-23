@@ -539,11 +539,11 @@ export default function CreateQuestion({
           />
         ) : (
           <>
-          {(screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) && 
+          {(screenSize === ScreenSize.MEDIUM) && 
               <Box style={{
-                width: '100%', 
-                maxWidth: '672px',
+                width: 'fit-content', 
                 display: 'flex',
+                
                 justifyContent: 'center', 
                 alignItems: 'center', 
                 gap: `${theme.sizing.xSmPadding}px`, 
@@ -552,6 +552,22 @@ export default function CreateQuestion({
                 <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
                 <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
+              </Box>
+            }
+             {(screenSize === ScreenSize.SMALL) && 
+              <Box style={{
+                width: '100%', 
+                maxWidth: '672px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                gap: `${theme.sizing.xSmPadding}px`, 
+                paddingBottom: '16px',
+              }}>
+                <CentralButton buttonType={ButtonType.SAVE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSaveQuestion} />
+                <CentralButton buttonType={ButtonType.SAVEDRAFT} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                <CentralButton buttonType={ButtonType.DISCARDBLUE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
             }
             <CreateQuestionGridContainer container  wrap="nowrap" >
