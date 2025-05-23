@@ -28,8 +28,11 @@ const getHoverColor = (theme: any, buttonColor: ButtonColor, buttonType: ButtonT
     case ButtonColor.RED:
       return `${theme.palette.primary.buttonActionHover}`;
     case ButtonColor.NULL:
-      if (buttonType === ButtonType.LOGOUT || ButtonType.EDITPROFILEPICTURE) {
-        return `rgba(255, 255, 255, 0.25)`;
+      if (buttonType === ButtonType.LOGOUT || 
+          buttonType === ButtonType.EDITPROFILEPICTURE || 
+          buttonType === ButtonType.CHANGEIMAGE || 
+          buttonType === ButtonType.SAVEDRAFT ) {
+        return `rgba(0,0,0, 0.1)`;
       }
       return 'transparent';
     case ButtonColor.WHITE:
@@ -69,7 +72,7 @@ export const ButtonStyled = styled(Button, {
   boxShadow: (isOnQuestionTab || buttonType === ButtonType.LOGOUT || ButtonType.EDITPROFILEPICTURE) ? 'none' : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
   borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
   borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
-  borderColor: buttonColor === ButtonColor.NULL ? (buttonType === ButtonType.CHANGEIMAGE ? `${theme.palette.primary.buttonPrimaryDefault}` : `#FFF` ) : 'none', // eslint-disable-line no-nested-ternary
+  borderColor: buttonColor === ButtonColor.NULL ? (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT ? `${theme.palette.primary.buttonPrimaryDefault}` : `#FFF` ) : 'none', // eslint-disable-line no-nested-ternary
   backgroundColor: getBackgroundColor(theme, buttonColor),
   ':hover': {
     backgroundColor: getHoverColor(theme, buttonColor, buttonType),
@@ -108,7 +111,7 @@ export const ButtonTypography = styled(Typography, {
   fontWeight: '600',
   textTransform: 'none',
   padding: 0,
-  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER || buttonType === ButtonType.SAVEDRAFT ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
   whiteSpace: 'nowrap',
 }));
 

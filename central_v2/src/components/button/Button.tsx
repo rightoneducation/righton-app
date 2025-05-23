@@ -74,7 +74,7 @@ export default function CentralButton({
       <ButtonContent>
         {buttonObj.icon && (
           <ButtonIconContainer>
-            { ( buttonColor === ButtonColor.NULL && buttonType === ButtonType.CHANGEIMAGE )
+            { ( buttonColor === ButtonColor.NULL && (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT) )
               ? <ButtonIconBlue src={buttonObj.icon}/>
               : <img src={buttonObj.icon} alt={`${buttonText}`} />
             }

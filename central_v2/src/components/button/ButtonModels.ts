@@ -170,7 +170,7 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: save,
     textKey: ButtonType.SAVEDRAFT,
     width: '200px',
-    color: ButtonColor.LIGHTBLUE
+    color: ButtonColor.NULL
   },
   [ButtonType.DISCARD]: {
     icon: discard,
@@ -179,7 +179,8 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.DISCARDBLUE]: {
     icon: discard,
-    textKey: ButtonType.DISCARD
+    textKey: ButtonType.DISCARD,
+    width: '200px',
   },
   [ButtonType.ADDSTEP]: {
     icon: add,
