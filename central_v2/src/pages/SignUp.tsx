@@ -354,6 +354,7 @@ export default function SignUp({
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userDuplicate, setUserDuplicate] = useState(false);
 
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
   const navigate = useNavigate();
@@ -377,9 +378,14 @@ export default function SignUp({
 
     try {
       const response = await apiClients.auth.isUsernameUnique(localSignUp.userName);
-      console.log("Duplicate user: ", response)
+      console.log("User is not duplicated: ", response)
+      if (response === false){
+        setIsModalOpen(true)
+        setUserDuplicate(true)
+        return
+      }
+
     } catch (error) {
-      console.log("inside error")
       console.log(error)
     }
 
@@ -406,6 +412,7 @@ export default function SignUp({
       });
       handleUserCreate(); // Trigger switch to confirmation
     } catch (error) {
+      setUserDuplicate(false)
       setIsModalOpen(true);
       setLoading(false);
       console.error(error);
@@ -438,7 +445,7 @@ export default function SignUp({
 
   return (
     <SignUpMainContainer>
-      <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userDuplicate={userDuplicate} setUserDuplicate={setUserDuplicate}/>
       <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
       <InnerBodyContainer>
         <UpperSignup>

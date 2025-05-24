@@ -49,11 +49,16 @@ const CloseButton = styled('img')(({ theme }) => ({
 interface CreatingTemplateModalProps {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userDuplicate: boolean;
+  setUserDuplicate: React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
 export default function SignUpErrorModal({
   isModalOpen,
   setIsModalOpen,
+  userDuplicate,
+  setUserDuplicate
 }: CreatingTemplateModalProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -66,7 +71,9 @@ export default function SignUpErrorModal({
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'column',
           gap: '16px', padding: '24px'
         }}> 
-          <DragText> Error Signing Up </DragText>
+          <DragText>
+            {userDuplicate ? 'Duplicated Username' : 'Error Signing Up'}
+          </DragText>
           <Box style={{display: 'flex', gap: '16px'}}>
               <CentralButton 
                 buttonType={ButtonType.RETRY} 
