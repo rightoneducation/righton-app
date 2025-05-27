@@ -402,10 +402,11 @@ export default function SignUp({
         },
       });
       handleUserCreate(); // Trigger switch to confirmation
-    } catch (error) {
+    } catch (error: any) {
       setIsModalOpen(true);
       setLoading(false);
-      console.error(error);
+      console.log(error)
+      setErrorMessage(error.message || 'An error occurred during sign up');
     }
     setLoading(false);
   };

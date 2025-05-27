@@ -132,16 +132,22 @@ export class AuthAPIClient
   }
 
   async awsSignUp(username: string, email: string, password: string) {
-    await signUp({
-      username: email,
-      password: password,
-      options: {
-        userAttributes: {
-          nickname: username,
-          email: email,
-        },
-      }
-    });
+    try {
+      await signUp({
+        username: email,
+        password: password,
+        options: {
+          userAttributes: {
+            nickname: username,
+            email: email,
+          },
+        }
+      });
+    }catch (e: any) {
+      // aws sets some generic error messages, so we add our own code in
+      const [ _, msg ] = e.message.split('|', 2); 
+      throw new Error(`${msg}`);
+    }
   }
 
   // not using a hub listener here and elsewhere as we need more fine-grained control over

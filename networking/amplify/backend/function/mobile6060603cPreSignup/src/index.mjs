@@ -59,7 +59,7 @@ export const handler = async (event) => {
     }`;
 
   const [r1, r2] = await Promise.all([
-    signedGraphQL(Q1, { userName: event.userName }),
+    signedGraphQL(Q1, { userName: event.request.userAttributes.nickname }),
     signedGraphQL(Q2, { email: event.request.userAttributes.email })
   ]);
 
@@ -67,10 +67,10 @@ export const handler = async (event) => {
   const existsEmail = r2.userByEmail.items.length > 0;
 
   if (existsName) {
-    throw new Error('Username already exists');
+    throw new Error('USERNAME_EXISTS|Username already exists');
   }
   if (existsEmail) {
-    throw new Error('Email already exists');
+    throw new Error('EMAIL_EXISTS|Email already exists');
   }
 
   return event;
