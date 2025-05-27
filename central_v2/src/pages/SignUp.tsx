@@ -368,6 +368,10 @@ export default function SignUp({
   const handleSubmit = async () => {
     setLoading(true);
     setErrorMessage('');
+    const userCheck = await apiClients.user.getUserByEmail(localSignUp.email);
+    const userNameCheck = await apiClients.user.getUserByUserName(localSignUp.userName);
+    console.log('userCheck', userCheck);
+    console.log('userNameCheck', userNameCheck);
     const isUniqueEmail = await checkForUniqueEmail(localSignUp.email);
     if (!isUniqueEmail) {
       setErrorMessage('Email already exists. Please use a different email.');

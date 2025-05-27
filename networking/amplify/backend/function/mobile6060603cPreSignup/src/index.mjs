@@ -102,28 +102,28 @@ async function createAndSignRequest(query, variables) {
   try {
     const userName = event.userName;
     const email = event.request.userAttributes.email;
-    // const userNameRequest = await createAndSignRequest(userByUserName, { userName });
-    // const userNameResponse = await fetch(userNameRequest);
-    // const userNameParsed = await userNameResponse.json();
-    // const emailRequest = await createAndSignRequest(userByEmail, { email });
-    // const emailResponse = await fetch(emailRequest);
-    // const emailParsed = await emailResponse.json();
-    // console.log('userNameParsed', userNameParsed);
-    // console.log('emailParsed', emailParsed);
-    // const userNameExists = userNameParsed.data.userByUserName.items.length > 0;
-    // const emailExists = emailParsed.data.userByEmail.items.length > 0;
+    const userNameRequest = await createAndSignRequest(userByUserName, { userName });
+    const userNameResponse = await fetch(userNameRequest);
+    const userNameParsed = await userNameResponse.json();
+    const emailRequest = await createAndSignRequest(userByEmail, { email });
+    const emailResponse = await fetch(emailRequest);
+    const emailParsed = await emailResponse.json();
+    console.log('userNameParsed', userNameParsed);
+    console.log('emailParsed', emailParsed);
+    const userNameExists = userNameParsed.data.userByUserName.items.length > 0;
+    const emailExists = emailParsed.data.userByEmail.items.length > 0;
 
-    // if (userNameExists || emailExists) {
-    //   console.log('User already exists');
-    //   return {
-    //     statusCode: 400,
-    //     body: JSON.stringify({
-    //       message: 'User already exists',
-    //       userNameExists,
-    //       emailExists,
-    //     }),
-    //   }
-    // };
+    if (userNameExists || emailExists) {
+      console.log('User already exists');
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          message: 'User already exists',
+          userNameExists,
+          emailExists,
+        }),
+      }
+    };
     return {
       statusCode,
       body: JSON.stringify({

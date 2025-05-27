@@ -17,9 +17,11 @@ export const createUser = /* GraphQL */ `
       email
       password
       gamesMade
+      gamesUsed
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
@@ -45,9 +47,11 @@ export const updateUser = /* GraphQL */ `
       email
       password
       gamesMade
+      gamesUsed
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
@@ -73,9 +77,11 @@ export const deleteUser = /* GraphQL */ `
       email
       password
       gamesMade
+      gamesUsed
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
@@ -92,6 +98,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
   ) {
     createPublicGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -106,6 +113,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -136,6 +144,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
   ) {
     updatePublicGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -150,6 +159,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -180,6 +190,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
   ) {
     deletePublicGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -194,6 +205,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -224,6 +236,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
   ) {
     createPrivateGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -238,6 +251,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -268,6 +282,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
   ) {
     updatePrivateGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -282,6 +297,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -312,6 +328,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
   ) {
     deletePrivateGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -326,6 +343,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -356,6 +374,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
   ) {
     createDraftGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -370,6 +389,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -400,6 +420,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
   ) {
     updateDraftGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -414,6 +435,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -444,6 +466,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
   ) {
     deleteDraftGameTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -458,6 +481,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -488,6 +512,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
   ) {
     createPublicQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -501,6 +526,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -530,6 +556,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
   ) {
     updatePublicQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -543,6 +570,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -572,6 +600,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
   ) {
     deletePublicQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -585,6 +614,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -614,6 +644,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
   ) {
     createPrivateQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -627,6 +658,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -656,6 +688,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
   ) {
     updatePrivateQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -669,6 +702,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -698,6 +732,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
   ) {
     deletePrivateQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -711,6 +746,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -740,6 +776,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
   ) {
     createDraftQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -753,6 +790,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -782,6 +820,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
   ) {
     updateDraftQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -795,6 +834,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -824,6 +864,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
   ) {
     deleteDraftQuestionTemplate(input: $input, condition: $condition) {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -837,6 +878,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -1506,6 +1548,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1520,6 +1563,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -1534,6 +1578,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1547,6 +1592,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
@@ -1576,6 +1622,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1590,6 +1637,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -1604,6 +1652,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1617,6 +1666,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
@@ -1646,6 +1696,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1660,6 +1711,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -1674,6 +1726,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1687,6 +1740,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
@@ -1716,6 +1770,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1730,6 +1785,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -1744,6 +1800,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1757,6 +1814,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
@@ -1786,6 +1844,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1800,6 +1859,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -1814,6 +1874,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1827,6 +1888,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
@@ -1856,6 +1918,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1870,6 +1933,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -1884,6 +1948,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1897,6 +1962,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
@@ -1926,6 +1992,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
       draftQuestionTemplateID
       draftGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1940,6 +2007,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -1954,6 +2022,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
       }
       draftQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -1967,6 +2036,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
@@ -1996,6 +2066,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
       draftQuestionTemplateID
       draftGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -2010,6 +2081,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -2024,6 +2096,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
       }
       draftQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -2037,6 +2110,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
@@ -2066,6 +2140,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
       draftQuestionTemplateID
       draftGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -2080,6 +2155,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           nextToken
           __typename
@@ -2094,6 +2170,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
       }
       draftQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -2107,6 +2184,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           nextToken
           __typename
