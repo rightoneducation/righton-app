@@ -22,7 +22,7 @@ export default function SignUpSwitch({
 
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
-  const [step, setStep] = useState<'signup' | 'confirmation' | 'googlesignup'>('signup');
+  const [step, setStep] = useState<'signup' | 'confirmation' | 'googlesignup'>('confirmation');
   const googlenextstep = useMatch('/nextstep') !== null;
   
   // Override step dynamically if googlenextstep is true

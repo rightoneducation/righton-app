@@ -14,6 +14,12 @@ import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
 import ModalBackground from '../components/modal/ModalBackground';
 
+
+
+interface UserCodeTextBoxesProps {
+  $isPink?: boolean;
+}
+
 // Styled components
 const OuterBody = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -71,14 +77,60 @@ const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
     gap: '8px',
 }));
 
-const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
-    width: '40px',
-    height: '54px',
-    textAlign: 'center',
-    input: {
-        textAlign: 'center',
-    },
+// const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
+//     width: '40px',
+//     height: '54px',
+//     textAlign: 'center',
+//     input: {
+//         textAlign: 'center',
+//     },
+// }));
+
+const GradientWrapper = styled('div')<{ hasError?: boolean }>(({ hasError }) => ({
+  border: hasError ? '2px solid transparent' : '2px solid #ccc',
+  borderImage: hasError ? 'linear-gradient(to right, #F60E44, #E31C5E) 1' : 'none',
+  borderRadius: '8px', // adjust based on theme
+  padding: '2px', // ensures space for the border
+  display: 'inline-block',
 }));
+
+
+const UserCodeTextBoxes = styled(TextContainerStyled, {
+  shouldForwardProp: (prop) => prop !== 'hasError',
+})<{ hasError?: boolean }>(({ theme, hasError }) => ({
+  width: '40px',
+  height: '54px',
+  textAlign: 'center',
+
+  '& .MuiOutlinedInput-root': {
+    borderRadius: theme.sizing.xSmPadding,
+    ...(hasError && {
+      '& fieldset': {
+        border: '2px solid transparent',
+        borderRadius: theme.sizing.xSmPadding,
+        backgroundOrigin: 'border-box',
+        backgroundClip: 'padding-box, border-box',
+        backgroundImage: `linear-gradient(to right, #fff, #fff), linear-gradient(to right, #F60E44, #E31C5E)`,
+      },
+      '&:hover fieldset': {
+        border: '2px solid transparent',
+        backgroundImage: `linear-gradient(to right, #fff, #fff), linear-gradient(to right, #F60E44, #E31C5E)`,
+      },
+      '&.Mui-focused fieldset': {
+        border: '2px solid transparent',
+        backgroundImage: `linear-gradient(to right, #fff, #fff), linear-gradient(to right, #F60E44, #E31C5E)`,
+      },
+    }),
+  },
+
+  // Ensure text is visible and centered
+  input: {
+    textAlign: 'center',
+    zIndex: 1,
+  },
+}));
+
+
 
 const ResendCodeText = styled(Typography)(({ theme }) => ({
     fontFamily: 'Rubik, sans-serif',
@@ -113,6 +165,9 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
     const centralData = useCentralDataState();
     const centralDataDispatch = useCentralDataDispatch();
     const navigate = useNavigate(); // Initialize useNavigate
+
+    const [hasError, setHasError] = useState(true);
+
 
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
 
@@ -194,6 +249,7 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
                     <UserCodeTextBoxesContainer>
                         {code.map((value, index) => (
                             <UserCodeTextBoxes
+                                hasError={hasError}
                                 variant="outlined"
                                 key={`code-${uniqueKeys[index]}`}
                                 inputRef={(el) => setInputRef(index, el)}

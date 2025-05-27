@@ -11,7 +11,9 @@ export const handler = async (event) => {
         frontId: false,
         backId: false
     };
+    
     const response = JSON.parse(event.arguments.input);
+    console.log(response);
     const {user, authSession} = response;
     if (!user && !authSession) {
         return {
@@ -22,7 +24,7 @@ export const handler = async (event) => {
     const cognito = new AWS.CognitoIdentityServiceProvider();
     const cognitoDelete = await cognito.adminDeleteUser({
         UserPoolId: process.env.USER_POOL_ID,
-        Username: user.email
+        Id: user.cognitoId
     }).promise();
     returnMessage.cognito = true;
     if (user.dynamoId) {
