@@ -1,7 +1,7 @@
 type User @model
 @auth(
   rules:  [
-    { allow: public, provider: iam  },
+    { allow: public, operations: [read], provider: iam  },
     { allow: owner, provider: userPools },
     { allow: private, operations: [read], provider: userPools },  
   ]
@@ -45,9 +45,10 @@ type Mutation {
     ]
   )
   userCleaner(input: String!): String 
-  @function(name: "UserCleaner-${env}") 
+  @function(name: "userCleaner-${env}") 
   @auth(
     rules: [
+      { allow: public, provider: iam  },
       { allow: private, provider: userPools }
     ]
   )

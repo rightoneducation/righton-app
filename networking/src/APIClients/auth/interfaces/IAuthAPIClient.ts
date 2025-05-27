@@ -7,9 +7,18 @@ import {
 } from 'aws-amplify/auth';
 import { IUserProfile } from "../../../Models/IUserProfile";
 
+// GraphQLAuthMode isn't exposed in Amplify, so we need to define it ourselves
+export type GraphQLAuthMode =
+  | 'apiKey'
+  | 'oidc'
+  | 'userPool'
+  | 'iam'
+  | 'identityPool'
+  | 'lambda'
+  | 'none';
+
 export interface IAuthAPIClient {
   isUserAuth: boolean;
-  configAmplify(awsconfig: any): void;
   verifyAuth(): Promise<boolean>;
   verifyGameOwner(gameOwner: string): Promise<boolean>;
   verifyQuestionOwner(questionOwner: string): Promise<boolean>;
@@ -18,7 +27,7 @@ export interface IAuthAPIClient {
   getCurrentSession(): Promise<AuthSession>;
   updateCognitoUsername(newUsername: string): Promise<void>;
   getUserNickname(): Promise<string | null>;
-  awsUserCleaner(userProfile: IUserProfile): Promise<void>;
+  awsUserCleaner(userProfile: IUserProfile, authOverride?: GraphQLAuthMode): Promise<void>;
   awsSignUp(username: string, email: string, password: string): void;
   awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput>;
   awsSignIn(email: string, password: string): Promise<SignInOutput>;

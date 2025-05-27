@@ -22,6 +22,10 @@ export interface IUserAPIClient {
     userName: string
   ): Promise<IUser | null>;
 
+  getUserByEmail( 
+    email: string
+  ): Promise<IUser | null>;
+
   getUser(
     id: string
   ): Promise<IUser | null>;

@@ -70,6 +70,15 @@
           "Arn",
           "Name"
         ]
+      },
+      {
+        "category": "function",
+        "resourceName": "mobile6060603cPreSignup",
+        "triggerProvider": "Cognito",
+        "attributes": [
+          "Arn",
+          "Name"
+        ]
       }
     ],
     "userPoolGroups": false,
@@ -77,6 +86,9 @@
     "triggers": {
       "PostConfirmation": [
         "add-to-group"
+      ],
+      "PreSignup": [
+        "custom"
       ]
     },
     "parentStack": {
@@ -90,7 +102,7 @@
       "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mobile6060603cPostConfirmation\"\n  }\n]",
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mobile6060603cPostConfirmation\"\n  },\n  {\n    \"triggerType\": \"PreSignUp\",\n    \"lambdaFunctionName\": \"mobile6060603cPreSignup\"\n  }\n]",
     "authProviders": [],
     "thirdPartyAuth": false,
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://dev-central.rightoneducation.com/auth/\"],\"LogoutURLs\":[\"http://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://dev-central.rightoneducation.com/\"]}"
