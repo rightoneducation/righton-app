@@ -12,10 +12,12 @@ import { UserStatusType } from '../lib/CentralModels';
 
 interface SignUpSwitchProps{
   setIsTabsOpen: (isOpen: boolean) => void;
+  checkForUniqueEmail: (email: string) => Promise<boolean>;
 }
 
 export default function SignUpSwitch({
-  setIsTabsOpen
+  setIsTabsOpen,
+  checkForUniqueEmail,
 }:SignUpSwitchProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -67,6 +69,7 @@ export default function SignUpSwitch({
           setBackImage={setBackImage}
           confirmPassword={confirmPassword}
           setConfirmPassword={setConfirmPassword}
+          checkForUniqueEmail={checkForUniqueEmail}
         />
       );
   }
