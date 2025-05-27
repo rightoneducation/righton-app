@@ -126,11 +126,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.RESETLINK]: {
     textKey: ButtonType.RESETLINK,
-    color: ButtonColor.RED,
   },
   [ButtonType.RESET]: {
     textKey: ButtonType.RESET,
-    color: ButtonColor.RED,
+    color: ButtonColor.BLUE,
   },
   [ButtonType.PREVIOUSQUESTION]: {
     icon: previous,

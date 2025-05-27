@@ -24,7 +24,8 @@ export enum ScreenType {
   CONFIRMATION,
   NEXTSTEP,
   USERPROFILE,
-  AUTH
+  AUTH,
+  PASSWORDRESET
 }
 
 export enum ScreenSize {

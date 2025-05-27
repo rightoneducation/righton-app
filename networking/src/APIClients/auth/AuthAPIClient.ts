@@ -10,12 +10,14 @@ import {
   resetPassword, 
   SignInOutput,
   resendSignUpCode,
+  confirmResetPassword,
   type ResetPasswordOutput,
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
   AuthSession,
   decodeJWT,
-  updateUserAttributes
+  updateUserAttributes,
+  ConfirmResetPasswordInput
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
@@ -181,6 +183,11 @@ export class AuthAPIClient
     const output = await resetPassword({ username });
     return output
   }
+
+
+  async awsConfirmResetPassword(input: ConfirmResetPasswordInput): Promise<void> {
+    await confirmResetPassword(input);
+  };
 
   async awsSignOut(): Promise<void> {
     await amplifySignOut();   
