@@ -49,7 +49,7 @@
         },
         "mobile6060603cPreSignup": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPreSignup-6f383535713537767755-build.zip"
+          "s3Key": "amplify-builds/mobile6060603cPreSignup-79704349484235656e4b-build.zip"
         }
       },
       "auth": {
