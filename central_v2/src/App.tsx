@@ -46,7 +46,6 @@ function App() {
             <Route path="/library" element={<AppSwitch currentScreen={ScreenType.LIBRARY} />} />
             <Route path="/userprofile" element={<AppSwitch currentScreen={ScreenType.USERPROFILE} />} />
             <Route path="/auth" element={<AppSwitch currentScreen={ScreenType.AUTH} />} />
-
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />
