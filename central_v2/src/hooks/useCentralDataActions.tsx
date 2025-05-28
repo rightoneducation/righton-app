@@ -573,11 +573,12 @@ export default function useCentralDataManager({
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-    navigate("/")
+    navigate('/');
   }
 
   const validateUser = async () => {
     const status = await apiClients.auth.verifyAuth();
+    console.log('validateUser status', status);
     if (status) {
       const currentSession = await apiClients.auth.getCurrentSession();
       console.log('currentSession', currentSession);
@@ -616,7 +617,11 @@ export default function useCentralDataManager({
         return;
       }
     }
-    handleLogOut();
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
+    await apiClients.centralDataManager?.signOut();
+    apiClients.centralDataManager?.clearLocalUserProfile();
+    centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   };
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid

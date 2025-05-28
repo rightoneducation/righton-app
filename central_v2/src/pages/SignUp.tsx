@@ -22,6 +22,7 @@ import {
 import errorIcon from '../images/errorIcon.svg';
 import SignUpErrorModal from '../components/modal/SignUpErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
+import { centralDataReducer } from '../lib/reducer/CentralDataReducer';
 
 
 
@@ -352,18 +353,17 @@ export default function SignUp({
   const [isEnabled, setIsEnabled] = useState(true);
 
   const buttonTypeUpload = ButtonType.UPLOAD;
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(centralData.userErrorString || '');
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(centralData.userErrorString.length > 0);
 
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
   const navigate = useNavigate();
   const togglePasswordRequirements = () => {
     setShowPasswordRequirements(!showPasswordRequirements);
   };
-
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -433,10 +433,15 @@ export default function SignUp({
     googleLogin();
   }
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    centralDataDispatch({ type: 'SET_USER_ERROR_STRING', payload: '' });
+  }
+
   return (
     <SignUpMainContainer>
       <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} errorMessage={errorMessage}/>
-      <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
+      <ModalBackground isModalOpen={isModalOpen} handleCloseModal={handleCloseModal}/>
       <InnerBodyContainer>
         <UpperSignup>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />

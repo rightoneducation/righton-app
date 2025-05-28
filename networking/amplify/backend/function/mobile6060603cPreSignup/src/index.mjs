@@ -57,15 +57,22 @@ export const handler = async (event) => {
         items { id }
       }
     }`;
-
-  const [r1, r2] = await Promise.all([
-    signedGraphQL(Q1, { userName: event.request.userAttributes.nickname }),
-    signedGraphQL(Q2, { email: event.request.userAttributes.email })
-  ]);
-
-  const existsName  = r1.userByUserName.items.length > 0;
-  const existsEmail = r2.userByEmail.items.length > 0;
-
+  const queries = [];
+  console.log('event:', event);
+  if (event.request.userAttributes.nickname)
+    queries.push(signedGraphQL(Q1, { userName: event.request.userAttributes.nickname }));
+  if (event.request.userAttributes.email)
+    queries.push(signedGraphQL(Q2, { email: event.request.userAttributes.email }));
+  console.log('queries:', queries);
+  const response = await Promise.all(queries);
+  let existsName = false;
+  let existsEmail = false;
+  console.log('response:', response);
+  if (response && response.find((query) => query.userByUserName)?.userByUserName?.items?.length > 0)
+    existsName  = true;
+  if (response && response.find((query) => query.userByEmail)?.userByEmail?.items?.length > 0)
+    existsEmail = true
+  console.log('existsName:', existsName, 'existsEmail:', existsEmail);
   if (existsName) {
     throw new Error('USERNAME_EXISTS|Username already exists');
   }
