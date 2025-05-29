@@ -224,7 +224,18 @@ questionTemplate: qt,
         <Grid sm md={1} lg={4} item />
       </CreateGameGridContainer>
       {/* Question Count & Add Button */}
-      <GameCreateButtonStack>
+      {/* Adds scroll functionality */}
+      <GameCreateButtonStack sx={{
+        maxWidth: '100%',
+        overflow: 'scroll',
+        minHeight: '40px',
+         '&::-webkit-scrollbar': {
+        // Chrome and Safari
+        display: 'none',
+        },
+        scrollbarWidth: 'none', // Firefox
+        msOverflowStyle: 'none',
+      }}>
         <ManageQuestionsButtons 
           questions={questions}
           iconButtons={iconButtons}

@@ -39,6 +39,8 @@ export default function ManageQuestionsButtons({
                   ...(iconButtons.length > 1 && selectedIndex === questions.length && {
                       backgroundColor: (theme) => theme.palette.primary.mediumBlue
                   }),
+                  minWidth: 'fit-content',
+                  whiteSpace: 'nowrap'
                 }}
                 isDisabled={false}
               >
