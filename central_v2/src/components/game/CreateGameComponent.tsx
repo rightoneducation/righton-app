@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {  IQuestionTemplate, PublicPrivateType } from '@righton/networking';
-
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, useTheme } from '@mui/material';
 import {
   ScreenSize,
 } from '../../lib/CentralModels';
@@ -79,6 +78,7 @@ export default function CreateGameComponent({
   addMoreQuestions,
   handleDeleteQuestion
 }: ICreateGameComponent) {
+  const theme = useTheme();
   const [enabled, setEnabled] = useState<boolean>(true)
   const handleCreateQuestion = () => {
     onCreateQuestion();
@@ -100,32 +100,72 @@ questionTemplate: qt,
       {isClone ? 'Clone' : 'Create'} Game
       </TitleText>
       {/* Save & Discard Button for Small & Medium Screen Size */}
-      {(screenSize === ScreenSize.SMALL ||
-        screenSize === ScreenSize.MEDIUM) && (
-        <CreateGameSaveDiscardBoxContainer screenSize={screenSize}>
-          <CentralButton
-            buttonType={ButtonType.SAVE}
-            isEnabled
-            smallScreenOverride
-            buttonWidthOverride="105px"
-            onClick={handleSaveGame}
-          />
-          <CentralButton 
-            buttonType={ButtonType.SAVEDRAFT} 
-            isEnabled 
-            smallScreenOverride 
-            onClick={handleSaveDraftGame} 
-          />
-          <CentralButton
-            buttonType={ButtonType.DISCARDBLUE}
-            isEnabled
-            smallScreenOverride
-            buttonWidthOverride="134px"
-            onClick={handleDiscard}
-          />
-        </CreateGameSaveDiscardBoxContainer>
-      )}
-
+        {(screenSize === ScreenSize.MEDIUM) && 
+          <Box style={{
+            width: 'fit-content', 
+            display: 'flex',
+            
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            gap: `${theme.sizing.xSmPadding}px`, 
+            paddingBottom: '16px',
+          }}>
+            <CentralButton
+              buttonType={ButtonType.SAVE}
+              isEnabled
+              smallScreenOverride
+              buttonWidthOverride="105px"
+              onClick={handleSaveGame}
+            />
+            <CentralButton 
+              buttonType={ButtonType.SAVEDRAFT} 
+              isEnabled 
+              smallScreenOverride 
+              onClick={handleSaveDraftGame} 
+            />
+            <CentralButton
+              buttonType={ButtonType.DISCARDBLUE}
+              isEnabled
+              smallScreenOverride
+              buttonWidthOverride="134px"
+              onClick={handleDiscard}
+            />
+          </Box>
+        }
+        {(screenSize === ScreenSize.SMALL) && 
+          <Box style={{
+            width: '100%', 
+            maxWidth: '672px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            gap: `${theme.sizing.xSmPadding}px`, 
+            paddingBottom: '16px',
+          }}>
+            <CentralButton
+              buttonType={ButtonType.SAVE}
+              isEnabled
+              smallScreenOverride
+              buttonWidthOverride="275px"
+              onClick={handleSaveGame}
+            />
+            <CentralButton 
+              buttonType={ButtonType.SAVEDRAFT} 
+              isEnabled 
+              smallScreenOverride 
+              buttonWidthOverride="275px"
+              onClick={handleSaveDraftGame} 
+            />
+            <CentralButton
+              buttonType={ButtonType.DISCARDBLUE}
+              isEnabled
+              smallScreenOverride
+              buttonWidthOverride="275px"
+              onClick={handleDiscard}
+            />
+          </Box>
+        }
       <CreateGameGridContainer container wrap="nowrap">
         {/* Grid item for Save & Discard Buttons for Large Screen Size */}
         <CreateGameSaveDiscardGridItem item sm md={1} lg={4}>
