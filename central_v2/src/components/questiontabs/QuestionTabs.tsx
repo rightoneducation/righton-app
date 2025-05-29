@@ -20,7 +20,7 @@ import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import { ScreenSize, LibraryTabEnum, GameQuestionType } from '../../lib/CentralModels';
+import { ScreenSize, LibraryTabEnum, GameQuestionType, UserStatusType } from '../../lib/CentralModels';
 import {
   TabContainer,
   ContentFrame,
@@ -35,7 +35,6 @@ import {
 } from '../../hooks/context/useCentralDataContext';
 import QuestionTabsSelectedQuestion from './QuestionTabsSelectedQuestion';
 import LibraryTabsContent from '../librarytabs/LibraryTabsContent';
-
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -154,7 +153,8 @@ export default function QuestionTabs({
                   },
                 }}
               >
-                {Object.entries(tabMap).map(([key, value], index) => {
+                { centralData.userStatus === UserStatusType.LOGGEDIN ?
+                Object.entries(tabMap).map(([key, value], index) => {
                   const numericKey = Number(key);
                   const isSelected = openTab === numericKey;
                   return (
@@ -173,7 +173,23 @@ export default function QuestionTabs({
                       style={{ marginRight: '8px' }}
                     />
                   );
-                })}
+                })
+                :  
+                  <StyledTab
+                      key={uuidv4()}
+                      icon={
+                        <img
+                          src={tabIconMap[0]}
+                          alt={tabMap[0]}
+                          style={{padding: 0 }}
+                        />
+                      }
+                      iconPosition="start"
+                      label={getLabel(screenSize, true, tabMap[0])}
+                      isSelected
+                      style={{ marginRight: '8px' }}
+                    />
+                }
               </Tabs>
               { question 
                 ? <QuestionTabsSelectedQuestion

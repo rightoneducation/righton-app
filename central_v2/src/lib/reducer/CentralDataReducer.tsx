@@ -4,6 +4,7 @@ import { ICentralDataState, initCentralDataState, ISelectedGame, ISelectedQuesti
 export type CentralDataAction =
   | { type: 'SET_USER_STATUS'; payload: UserStatusType }
   | { type: 'SET_USER_PROFILE'; payload: IUserProfile }
+  | { type: 'SET_USER_ERROR_STRING'; payload: string }
   | { type: 'CLEAR_USER_PROFILE'}
   | { type: 'SET_RECOMMENDED_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_MOST_POPULAR_GAMES'; payload: IGameTemplate[] }
@@ -42,6 +43,8 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
       return { ...state, userProfile: {...state.userProfile, ...action.payload},};
     case 'CLEAR_USER_PROFILE':
       return { ...state, userProfile: {...initCentralDataState.userProfile} };
+    case 'SET_USER_ERROR_STRING':
+      return { ...state, userErrorString: action.payload };
     case 'SET_RECOMMENDED_GAMES':
       return { ...state, recommendedGames: action.payload };
     case 'SET_SEARCHED_GAMES':

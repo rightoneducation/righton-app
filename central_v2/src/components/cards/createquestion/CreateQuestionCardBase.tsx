@@ -125,6 +125,9 @@ export default function CreateQuestionCardBase({
   isCreateGame && screenSize === ScreenSize.MEDIUM ||
   isCreateGame && screenSize === ScreenSize.SMALL;
 
+  const CCSSIsErrored =
+  (isCardErrored && draftQuestion.questionCard.ccss === "CCSS") || (isCardErrored && draftQuestion.questionCard.ccss === "");
+
  let imageLink: string | null = null;
   if (imageUrl){
     imageLink = imageUrl;
@@ -188,11 +191,13 @@ export default function CreateQuestionCardBase({
           <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
           <Box>
 
-          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} sx={{ 
+          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} 
+          CCSSIsErrored={CCSSIsErrored}
+          sx={{ 
             gap: "3px",
             boxShadow: screenSize === ScreenSize.SMALL ? 
             "0px 2px 9px 0px rgb(149, 0, 35, 30%)" 
-            : 'none'
+            : 'none',
             }}>
             {draftQuestion.questionCard.ccss}
             <Box>

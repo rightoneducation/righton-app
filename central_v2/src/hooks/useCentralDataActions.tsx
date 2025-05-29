@@ -36,6 +36,7 @@ interface UseCentralDataManagerReturnProps {
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
   handleLogOut: () => void;
+  checkForUniqueEmail: (email: string) => Promise<boolean>;
 }
 
 /* 
@@ -474,7 +475,6 @@ export default function useCentralDataManager({
           if (responseGame) {
             const userResponse = await apiClients?.user.getUser(responseGame.userId);
             if (userResponse) {
-              console.log('userResponse', userResponse);
               const title = (userResponse.title) && userResponse.title !== 'Title...' ? userResponse.title : '';
               const firstName = userResponse?.firstName?.split("")[0] ?? '';
               selectedGame = {
@@ -553,6 +553,13 @@ export default function useCentralDataManager({
         break;
     }
   };
+
+  const checkForUniqueEmail = async (email: string) => {
+    const response = await apiClients?.user.getUserByEmail(email); 
+    if (response)
+      return false;
+    return true;
+  };
   
   // useEffect for monitoring changes to auth status of Cognito User
   useEffect(() => {
@@ -566,13 +573,15 @@ export default function useCentralDataManager({
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-    navigate("/")
+    navigate('/');
   }
 
   const validateUser = async () => {
     const status = await apiClients.auth.verifyAuth();
+    console.log('validateUser status', status);
     if (status) {
       const currentSession = await apiClients.auth.getCurrentSession();
+      console.log('currentSession', currentSession);
       const cognitoId = currentSession?.userSub;
       if (!cognitoId) {
         handleLogOut();
@@ -608,7 +617,11 @@ export default function useCentralDataManager({
         return;
       }
     }
-    handleLogOut();
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
+    await apiClients.centralDataManager?.signOut();
+    apiClients.centralDataManager?.clearLocalUserProfile();
+    centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   };
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
@@ -637,6 +650,7 @@ export default function useCentralDataManager({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
-    handleLogOut
+    handleLogOut,
+    checkForUniqueEmail
   };
 }

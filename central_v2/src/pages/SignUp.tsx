@@ -22,6 +22,7 @@ import {
 import errorIcon from '../images/errorIcon.svg';
 import SignUpErrorModal from '../components/modal/SignUpErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
+import { centralDataReducer } from '../lib/reducer/CentralDataReducer';
 
 
 
@@ -293,6 +294,7 @@ interface SignUpProps {
   setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
   confirmPassword: string;
   setConfirmPassword: (value: string) => void;
+  checkForUniqueEmail: (email: string) => Promise<boolean>;
 }
 export default function SignUp({ 
   apiClients, 
@@ -303,6 +305,7 @@ export default function SignUp({
   setBackImage,
   confirmPassword,
   setConfirmPassword,
+  checkForUniqueEmail,
 }: SignUpProps ) {
   const theme = useTheme();
   const centralData = useCentralDataState();
@@ -350,10 +353,11 @@ export default function SignUp({
   const [isEnabled, setIsEnabled] = useState(true);
 
   const buttonTypeUpload = ButtonType.UPLOAD;
+  const [errorMessage, setErrorMessage] = useState(centralData.userErrorString || '');
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(centralData.userErrorString.length > 0);
 
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
   const navigate = useNavigate();
@@ -361,9 +365,10 @@ export default function SignUp({
     setShowPasswordRequirements(!showPasswordRequirements);
   };
 
-
   const handleSubmit = async () => {
     setLoading(true);
+    setErrorMessage('');
+    
     const { title, firstName, lastName, email, userName, password } = localSignUp;
     const newProfile = {
       ...centralData.userProfile,
@@ -397,10 +402,11 @@ export default function SignUp({
         },
       });
       handleUserCreate(); // Trigger switch to confirmation
-    } catch (error) {
+    } catch (error: any) {
       setIsModalOpen(true);
       setLoading(false);
-      console.error(error);
+      console.log(error)
+      setErrorMessage(error.message || 'An error occurred during sign up');
     }
     setLoading(false);
   };
@@ -409,7 +415,6 @@ export default function SignUp({
     onSuccess: async (credentialResponse) => {
       try {
         const idToken = credentialResponse.access_token; // Use `access_token` for OAuth login
-
         if (idToken) {
           const response = await apiClients.auth.awsSignInFederated();
         } else {
@@ -428,10 +433,15 @@ export default function SignUp({
     googleLogin();
   }
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    centralDataDispatch({ type: 'SET_USER_ERROR_STRING', payload: '' });
+  }
+
   return (
     <SignUpMainContainer>
-      <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-      <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
+      <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} errorMessage={errorMessage}/>
+      <ModalBackground isModalOpen={isModalOpen} handleCloseModal={handleCloseModal}/>
       <InnerBodyContainer>
         <UpperSignup>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
@@ -769,21 +779,22 @@ export default function SignUp({
             />
           </PasswordContainer>
         </UploadImagesAndPassword>
-
         <LowerLogin>
-              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} onClick={handleSubmit} smallScreenOverride/>
-              <LowestContainer>
-                <HaveAnAccountText>
-                  Already have an account?
-                </HaveAnAccountText>
-                <CentralButton buttonType={buttonType} isEnabled={isEnabled}  onClick={() => navigate('/login')}/>
-              </LowestContainer>
+          { loading 
+            ? <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
+              </Box> 
+            : <>
+                <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} onClick={handleSubmit} smallScreenOverride/>
+                <LowestContainer>
+                  <HaveAnAccountText>
+                    Already have an account?
+                  </HaveAnAccountText>
+                  <CentralButton buttonType={buttonType} isEnabled={isEnabled}  onClick={() => navigate('/login')}/>
+                </LowestContainer>
+              </>
+          } 
         </LowerLogin>
-        {loading && 
-          <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-              <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
-          </Box>
-        } 
       </InnerBodyContainer>
     </SignUpMainContainer>
   );

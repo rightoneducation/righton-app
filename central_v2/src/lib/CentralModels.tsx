@@ -7,6 +7,7 @@ export enum UserStatusType {
   LOADING,
   GOOGLE_SIGNIN,
   GOOGLE_SIGNUP,
+  GOOGLE_ERROR
 }
 
 export enum ScreenType {
@@ -135,6 +136,7 @@ export const userProfileInit = {
 export const initCentralDataState: ICentralDataState = {
   userProfile: userProfileInit,
   userStatus: UserStatusType.LOADING,
+  userErrorString: '',
   recommendedGames: [],
   mostPopularGames: [],
   searchedGames: [],
@@ -182,6 +184,7 @@ export const initCentralDataState: ICentralDataState = {
 export interface ICentralDataState {
   userProfile: IUserProfile;
   userStatus: UserStatusType;
+  userErrorString: string;
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];

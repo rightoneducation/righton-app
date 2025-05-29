@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, useMatch } from 'react-router-dom';
+import { Navigate, useMatch, useSearchParams} from 'react-router-dom';
 import { useTheme, CircularProgress } from '@mui/material';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { UserStatusType } from '../lib/CentralModels';
@@ -21,10 +21,22 @@ export default function AuthGuard ({
   const isSignupPage = useMatch('/signup');
   const isLoginPage = useMatch('/login');
   const isNextStep = useMatch('/nextstep');
+  const [search] = useSearchParams();
+  const err = search.get('error_description');
   
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  
+ 
+  // this specifically catches Google OAuth sign up errors for duplicate accounts
+  // we need to check the routing params for the error string off /auth?error_description=...
+  // we can then redirect back to the signup page with the error message
+  if (err) { 
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    const [ , msg ] = err.split('|', 2); 
+    centralDataDispatch({ type: 'SET_USER_ERROR_STRING', payload: msg });
+    return <Navigate to='/signup' replace />;
+  }
+
   // switch to render content based on Auth status of User
   // auth status is determined by the validateUser function in CentralDataManager
   switch (centralData.userStatus) {
@@ -37,6 +49,9 @@ export default function AuthGuard ({
     case UserStatusType.GOOGLE_SIGNIN:
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
       return <Navigate to="/" replace />;
+
+    case UserStatusType.GOOGLE_ERROR:
+      return <Navigate to="/signup" replace />;
 
     // if a user missing either cognito or local credentials, their account is broken and they need to sign up again
     case UserStatusType.INCOMPLETE:

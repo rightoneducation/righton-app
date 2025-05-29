@@ -1,154 +1,80 @@
-import crypto from '@aws-crypto/sha256-js';
-import { defaultProvider } from '@aws-sdk/credential-provider-node';
-import { SignatureV4 } from '@aws-sdk/signature-v4';
-import { HttpRequest } from '@aws-sdk/protocol-http';
-import { v4 as uuidv4 } from 'uuid';
-import { default as fetch, Request } from 'node-fetch';
-import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts";
+import AWS from 'aws-sdk';
+import https from 'https';
 
 const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
-const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
+const REGION = process.env.AWS_REGION || 'us-east-1';
 
+async function signedGraphQL(query, variables) {
+  const endpoint = new AWS.Endpoint(GRAPHQL_ENDPOINT);
+  const req = new AWS.HttpRequest(endpoint, REGION);
+  req.method = 'POST';
+  req.path = endpoint.path;
+  req.headers['Content-Type'] = 'application/json';
+  req.headers['Host'] = endpoint.hostname;
+  req.body = JSON.stringify({ query, variables });
 
-async function createAndSignRequest(query, variables) {
-  const credentials = await defaultProvider()();
-  const sts = new STSClient({ credentials, region: AWS_REGION });
-  const id = await sts.send(new GetCallerIdentityCommand({}));
-  const endpoint = new URL(GRAPHQL_ENDPOINT);
-  const body = JSON.stringify({ query, variables });
-  const path = endpoint.pathname + (endpoint.search || "");
-  const headers = {
-    "Content-Type": "application/json",
-    host: endpoint.host,
-    "content-length": Buffer.byteLength(body).toString(),
+  const signer = new AWS.Signers.V4(req, 'appsync', true);
+  signer.addAuthorization(AWS.config.credentials, AWS.util.date.getDate());
+
+  const options = {
+    host: endpoint.hostname,
+    port: endpoint.port || 443,
+    method: req.method,
+    path: req.path,
+    headers: req.headers,
   };
-  const signer = new SignatureV4({
-    credentials,
-    region: AWS_REGION,
-    service: "appsync",
-    sha256: crypto.Sha256,
-  });
 
-  const requestToSign = new HttpRequest({
-    method: "POST",
-    hostname: endpoint.host,
-    path,
-    headers,
-    body,
-  });
-
-  const signed = await signer.sign(requestToSign);
-  return new Request(endpoint.toString(), {
-    method: signed.method,
-    headers: signed.headers,
-    body, 
+  return new Promise((resolve, reject) => {
+    const clientReq = https.request(options, res => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        let payload;
+        try { payload = JSON.parse(data); }
+        catch (e) { return reject(e); }
+        if (payload.errors && payload.errors.length) {
+          return reject(new Error(payload.errors.map(e => e.message).join('; ')));
+        }
+        resolve(payload.data);
+      });
+    });
+    clientReq.on('error', reject);
+    clientReq.write(req.body);
+    clientReq.end();
   });
 }
 
-/**
- * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
- */
- export const handler = async (event) => {
- // return event;
-    const userByUserName = /* GraphQL */ `
-      query UserByUserName(
-        $userName: String!
-        $sortDirection: ModelSortDirection
-        $filter: ModelUserFilterInput
-        $limit: Int
-        $nextToken: String
-      ) {
-        userByUserName(
-          userName: $userName
-          sortDirection: $sortDirection
-          filter: $filter
-          limit: $limit
-          nextToken: $nextToken
-        ) {
-          items {
-            id
-            __typename
-          }
-          nextToken
-          __typename
-        }
+export const handler = async (event) => {
+  const Q1 = `
+    query UserByUserName($userName: String!) {
+      userByUserName(userName: $userName) {
+        items { id }
       }
-    `;
-
-    const userByEmail = /* GraphQL */ `
-      query UserByEmail(
-        $email: String!
-        $sortDirection: ModelSortDirection
-        $filter: ModelUserFilterInput
-        $limit: Int
-        $nextToken: String
-      ) {
-        userByEmail(
-          email: $email
-          sortDirection: $sortDirection
-          filter: $filter
-          limit: $limit
-          nextToken: $nextToken
-        ) {
-          items {
-            id
-            __typename
-          }
-          nextToken
-          __typename
-        }
+    }`;
+  const Q2 = `
+    query UserByEmail($email: String!) {
+      userByEmail(email: $email) {
+        items { id }
       }
-    `;
-
-  let statusCode = 200;
-  let responseBody ={};
-  try {
-    const userName = event.userName;
-    const email = event.request.userAttributes.email;
-    const userNameRequest = await createAndSignRequest(userByUserName, { userName });
-    const userNameResponse = await fetch(userNameRequest);
-    const userNameParsed = await userNameResponse.json();
-    const emailRequest = await createAndSignRequest(userByEmail, { email });
-    const emailResponse = await fetch(emailRequest);
-    const emailParsed = await emailResponse.json();
-    const userNameExists = userNameParsed.data.userByUserName.items.length > 0;
-    const emailExists = emailParsed.data.userByEmail.items.length > 0;
-
-    if (userNameExists) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: 'An account with this username already exists',
-          userNameExists,
-          emailExists,
-        }),
-      }
-    };
-    if (emailExists) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: 'An account with this email already exists',
-          userNameExists,
-          emailExists,
-        }),
-      }
-    }
-    return {
-      statusCode,
-      body: JSON.stringify({
-        message: 'User does not exist',
-        userNameExists,
-        emailExists,
-      }),
-    }
-
-  } catch (error) {
-    console.error('Error:', error);
-    statusCode = 500;
-    responseBody = {
-      message: 'Internal Server Error',
-      error: error.message,
-    };
+    }`;
+  const queries = [];
+  if (event.request.userAttributes.nickname)
+    queries.push(signedGraphQL(Q1, { userName: event.request.userAttributes.nickname }));
+  if (event.request.userAttributes.email)
+    queries.push(signedGraphQL(Q2, { email: event.request.userAttributes.email }));
+  const response = await Promise.all(queries);
+  let existsName = false;
+  let existsEmail = false;
+  if (response && response.find((query) => query.userByUserName)?.userByUserName?.items?.length > 0)
+    existsName  = true;
+  if (response && response.find((query) => query.userByEmail)?.userByEmail?.items?.length > 0)
+    existsEmail = true
+  if (existsName) {
+    throw new Error('USERNAME_EXISTS|Username already exists');
   }
- }
+  if (existsEmail) {
+    throw new Error('EMAIL_EXISTS|Email already exists');
+  }
+
+  return event;
+};

@@ -4,7 +4,6 @@
 import AWS from 'aws-sdk';
 
 export const handler = async (event) => {
-    console.log(event)
     let returnMessage = {
         cognito: false,
         dynamo: false,
@@ -13,7 +12,6 @@ export const handler = async (event) => {
     };
     
     const response = JSON.parse(event.arguments.input);
-    console.log(response);
     const {user, authSession} = response;
     if (!user && !authSession) {
         return {
