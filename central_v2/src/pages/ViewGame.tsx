@@ -21,6 +21,7 @@ import {
 import {
   GameQuestionType,
   ScreenSize,
+  UserStatusType,
 } from '../lib/CentralModels';
 import ViewQuestionCards from '../components/question/ViewQuestionCards';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -112,7 +113,9 @@ export default function ViewGame({
                 paddingBottom: '16px',
               }}>
                  <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick} smallScreenOverride/>
-                 <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
+                 {centralData.userStatus === UserStatusType.LOGGEDIN &&
+                  <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
+                 }
               </Box>
             }
             <CreateGameGridContainer container wrap="nowrap">
@@ -126,7 +129,9 @@ export default function ViewGame({
                   { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
                     <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
                       <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick}/>
-                      <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame}/>
+                      { centralData.userStatus === UserStatusType.LOGGEDIN &&
+                        <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
+                      }
                     </Box>
                   }
                 </Grid>

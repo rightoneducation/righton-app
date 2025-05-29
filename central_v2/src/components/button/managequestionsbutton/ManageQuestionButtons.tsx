@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { IQuestionTemplate } from '@righton/networking';
+import { Box } from '@mui/material';
 import { AddMoreIconButton, QuestionCountButton } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 import VerticalMoreImg from '../../../images/buttonIconVerticalMore.svg';
+import DeleteIcon from '../../../images/buttonIconDelete.svg';
 import { buttonContentMap, ButtonType } from '../ButtonModels';
 
 interface IManageButtonQuestions {
@@ -14,6 +16,7 @@ interface IManageButtonQuestions {
   isCreate: boolean;
   setSelectedIndex: (index: number) => void;
   addMoreQuestions?: () => void;
+  handleDeleteQuestion?: (index: number) => void;
 }
 
 // vertical ellipsis image for button
@@ -24,7 +27,8 @@ export default function ManageQuestionsButtons({
   selectedIndex,
   isCreate,
   setSelectedIndex,
-  addMoreQuestions
+  addMoreQuestions,
+  handleDeleteQuestion
 }: IManageButtonQuestions) {
     return (
       <>          
@@ -35,12 +39,21 @@ export default function ManageQuestionsButtons({
                   ...(iconButtons.length > 1 && selectedIndex === questions.length && {
                       backgroundColor: (theme) => theme.palette.primary.mediumBlue
                   }),
+                  minWidth: 'fit-content',
+                  whiteSpace: 'nowrap'
                 }}
-                onClick={ () => setSelectedIndex(index)}
                 isDisabled={false}
               >
-                { index === selectedIndex && 'Question' } {index + 1}
-                { index === selectedIndex && verticalEllipsis}
+                <Box style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', minWidth: '40px', minHeight: '40px'}}onClick={ () => {console.log('here'); setSelectedIndex(index)}}>
+                  { index === selectedIndex && 'Question' } {index + 1}
+                  { index === selectedIndex && verticalEllipsis}
+                </Box>
+                { index === selectedIndex && isCreate && handleDeleteQuestion && (
+                    <Box style={{display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px'}} onClick={() => handleDeleteQuestion(index)}>
+                      <img src={DeleteIcon} style={{height: '20px', width: '20px'}} alt="delete-question" />
+                    </Box>
+                  )
+                }
               </QuestionCountButton>
             )
           })
