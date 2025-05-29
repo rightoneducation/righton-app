@@ -19,6 +19,7 @@ interface CentralButtonProps {
   buttonWidthOverride?: string;
   iconOnlyOverride?: boolean;
   type?: string;
+  isReset?: boolean;
   onClick?: () => void;
   handleFileChange?: (file: File) => void;
 }
@@ -31,6 +32,7 @@ export default function CentralButton({
   buttonWidthOverride,
   iconOnlyOverride,
   type,
+  isReset,
   onClick,
   handleFileChange,
 }: CentralButtonProps) {
@@ -64,23 +66,24 @@ export default function CentralButton({
 
   return (
     <ButtonStyled
-      buttonColor={buttonColor}
+      buttonColor={isReset ? ButtonColor.NULL : buttonColor}
       buttonType={buttonType}
       disabled={!isEnabled}
       isOnQuestionTab={isOnQuestionTab ?? false}
       onClick={handleButtonClick}
+      isReset={isReset}
       style={{width: buttonWidthOverride ?? buttonWidth}}
     >
       <ButtonContent>
         {buttonObj.icon && (
           <ButtonIconContainer>
-            { ( buttonColor === ButtonColor.NULL && (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT) )
+            { ( buttonColor === ButtonColor.NULL && (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT) || (buttonType === ButtonType.SIGNUP && isReset))
               ? <ButtonIconBlue src={buttonObj.icon}/>
               : <img src={buttonObj.icon} alt={`${buttonText}`} />
             }
           </ButtonIconContainer>
         )}
-        {buttonText && !isSmallScreen && !iconOnlyOverride && <ButtonTypography buttonColor={buttonColor} buttonType={buttonType}> {buttonText} </ButtonTypography>}
+        {buttonText && !isSmallScreen && !iconOnlyOverride && <ButtonTypography isReset={isReset} buttonColor={buttonColor} buttonType={buttonType}> {buttonText} </ButtonTypography>}
         {buttonObj.rightIcon && (
           <ButtonIconContainer>
             { ( buttonColor === ButtonColor.NULL && buttonType === ButtonType.CHANGEIMAGE )

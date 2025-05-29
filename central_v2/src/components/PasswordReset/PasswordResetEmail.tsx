@@ -44,6 +44,7 @@ const UserTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
     '& .MuiInputBase-root': {
       borderRadius: '8px', // Ensure border radius is applied to the input field
+      height: '43px',
     },
     '& .MuiInputBase-input': {
       color: '#384466', // Set text color of the input
@@ -74,61 +75,41 @@ const NoAccountText = styled(Typography)(({ theme }) => ({
   }));
 
   interface IResetLink {
-    handleNextStep: () => void;
+    handleResetLink: () => Promise<void>;
+    onUserName: (username: string) => void;
+    userName: string;
   }
-export default function PassWordResetEmailInput({ handleNextStep }: IResetLink) {
-
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
-
-  const [userName, setUserName] = useState('');
-  const [isSuccess, setIsSuccess] = useState<boolean>(false)
-
-  const buttonTypeResetLink = ButtonType.RESETLINK;
-  const [isResetLinkEnabled, setIsResetLinkEnabled] = useState(true);
-  
-  const buttonTypeSignup = ButtonType.SIGNUP;
-  const [isSignupEnabled, setIsSignupEnabled] = useState(true);
-  
+export default function PassWordResetEmailInput({ handleResetLink, onUserName, userName }: IResetLink) {
   const navigate = useNavigate(); // Initialize useNavigate
-  
+  const [isSignupEnabled, setIsSignupEnabled] = useState(true);
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const isValidEmail = emailRegex.test(userName);
+
   const handleSignupClick = () => {
     navigate('/Signup'); // Navigate to the Signup page
   };
 
-  const handleResetLink = async () => {
-    try {
-      // const response = await apiClients.auth.awsResetPassword(userName);
-      // console.log("reset password response", response);
-      handleNextStep(); // increments step index to confirmation component
-    } catch (error) {
-      console.error('Error during login:', error);
-      // You can also display an error message to the user if needed
-    }
+  const handleSendResetLink = async () => {
+    await handleResetLink();
   };
 
- const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
- const isValidEmail = emailRegex.test(userName);
-
   return (
-    <SignUpMainContainer>
-        <InnerBodyContainer>
-            <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
+        <>
             <ResetPasswordText>
                 Reset Password
             </ResetPasswordText>
             <UserTextField
+            sx={{ maxWidth: '350px'}}
                 variant="outlined"
                 placeholder="Email"
                 value={userName}
-                onChange={(event) => setUserName(event.target.value)}
+                onChange={(event) => onUserName(event.target.value)}
             />
-            <CentralButton buttonWidthOverride='183px' buttonType={buttonTypeResetLink} isEnabled={isValidEmail} onClick={handleResetLink}/>
+            <CentralButton buttonWidthOverride='183px' buttonType={ButtonType.RESETLINK} isEnabled={isValidEmail} onClick={handleSendResetLink}/>
             <SignupContainer>
                 <NoAccountText>Don&rsquo;t have an account?</NoAccountText>
-                <CentralButton buttonWidthOverride='160px' buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} onClick={handleSignupClick}/>
+                <CentralButton isReset buttonWidthOverride='160px' buttonType={ButtonType.SIGNUP} isEnabled={isSignupEnabled} onClick={handleSignupClick}/>
             </SignupContainer>
-        </InnerBodyContainer>
-
-    </SignUpMainContainer>
+        </>
   )
 }
