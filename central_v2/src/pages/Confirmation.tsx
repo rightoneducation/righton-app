@@ -78,12 +78,14 @@ const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
 
 const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
     width: '40px',
-    height: '54px',
     textAlign: 'center',
     input: {
         textAlign: 'center',
     },
      "& .MuiOutlinedInput-root": {
+        fontWeight: 700,
+        fontFamily: 'Poppins, sans-serif',
+        fontSize: '20px',
         '&.Mui-error fieldset': {
             borderWidth: '3px',
             borderColor: '#F2184B'
