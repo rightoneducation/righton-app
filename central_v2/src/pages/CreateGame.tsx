@@ -555,6 +555,30 @@ export default function CreateGame({
     setIconButtons((prev) => [...prev, prev.length + 1]);
   };
 
+  const handleDeleteQuestion = (index: number) => {
+    if (index === 0 && draftQuestionsList.length === 1) {
+      setDraftQuestionsList([draftTemplate]);
+      setDraftGame((prev) => ({
+        ...prev,
+        questionCount: 1,
+        isGameCardSubmitted: false,
+      }));
+      setIconButtons([1]);
+      setSelectedQuestionIndex(0);
+      return;
+    }
+    setDraftQuestionsList((prev) => {
+      return prev.filter((_, i) => i !== index); 
+    });
+    setDraftGame((prev) => ({
+      ...prev,
+      questionCount: prev.questionCount - 1,
+      isGameCardSubmitted: false,
+    }));
+    setIconButtons((prev) => prev.filter((_, i) => i !== index));
+    setSelectedQuestionIndex(0);
+  };
+
   const handleDiscard = () => {
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
@@ -690,6 +714,7 @@ export default function CreateGame({
           iconButtons={iconButtons}
           setSelectedIndex={handleQuestionIndexChange}
           addMoreQuestions={handleAddMoreQuestions}
+          handleDeleteQuestion={handleDeleteQuestion}
         />
 
         {/* Create Question Form(s)  */}

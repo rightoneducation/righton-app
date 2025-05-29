@@ -39,6 +39,7 @@ interface ICreateGameComponent {
   selectedIndex: number;
   setSelectedIndex: (index: number) => void;
   addMoreQuestions: () => void;
+  handleDeleteQuestion: (index: number) => void;
 }
 
 const qt: IQuestionTemplate = {
@@ -76,6 +77,7 @@ export default function CreateGameComponent({
   selectedIndex,
   setSelectedIndex,
   addMoreQuestions,
+  handleDeleteQuestion
 }: ICreateGameComponent) {
   const [enabled, setEnabled] = useState<boolean>(true)
   const handleCreateQuestion = () => {
@@ -190,6 +192,7 @@ questionTemplate: qt,
           isCreate
           setSelectedIndex={setSelectedIndex}
           addMoreQuestions={addMoreQuestions}
+          handleDeleteQuestion={handleDeleteQuestion}
         />
       </GameCreateButtonStack>
       {/* Create Question & Question Bank */}
