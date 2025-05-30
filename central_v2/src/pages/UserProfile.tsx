@@ -46,7 +46,7 @@ export default function UserProfile({
 }: UserProfileProps) {
   const theme = useTheme();
   const [isEditInformationHighlight, setEditInformationHighlight] = useState(true);
-  const [isSaveInformationHighlight, setSaveInformationHighlight] = useState(false);
+  // const [isSaveInformationHighlight, setSaveInformationHighlight] = useState(false);
 
   const [isEditInformation, setIsEditInformation] = useState(false);
 
@@ -97,7 +97,6 @@ export default function UserProfile({
   const handleEditInformation = () => {
     setIsEditInformation(true);
     setEditInformationHighlight(false)
-    setSaveInformationHighlight(true)
   }
 
   const handleImageUploadClick = () => {
@@ -141,7 +140,7 @@ export default function UserProfile({
 
     const handleGetStarted = async () => {
       setEditInformationHighlight(true)
-      setSaveInformationHighlight(false)
+      setIsEditInformation(false)
       try {
         const updatedUser = { ...draftUserProfile };
         const response = await apiClients.centralDataManager?.userProfileInformationUpdate(updatedUser, centralData.userProfile, frontImage ?? null, backImage ?? null);
@@ -413,7 +412,10 @@ export default function UserProfile({
                             </ImageContainer>
                         </UploadImagesContainer>
                     </UserInfoContainer>
-                   <CentralButton buttonType={ButtonType.EDITINFORMATION} isEnabled={isEditInformationHighlight} smallScreenOverride onClick={handleEditInformation}/>
+                   {isEditInformationHighlight ? 
+                   <CentralButton buttonType={ButtonType.EDITINFORMATION} isEnabled smallScreenOverride onClick={handleEditInformation}/>
+                    : <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleGetStarted}/>}
+
                     <SubHeadingText>
                         Password
                     </SubHeadingText>
@@ -441,7 +443,7 @@ export default function UserProfile({
                           )
                         }}
                     />
-                    <CentralButton buttonType={ButtonType.SAVE} isEnabled={isSaveInformationHighlight} smallScreenOverride onClick={handleGetStarted}/>
+                    <CentralButton buttonType={ButtonType.CHANGEPASSWORD} isEnabled smallScreenOverride/>
                 </UserProfileGridItem>
                 <Grid  
                     sm
