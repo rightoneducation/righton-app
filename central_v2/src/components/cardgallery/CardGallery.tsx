@@ -83,7 +83,7 @@ function MostPopularGamesComponent({
         : mostPopularElements.map((game) => {
           const isFavorite = favoriteGameTemplateIds?.includes(game.id) || false;
             return (
-              <Grid item key={game.id}>
+              <Grid item key={`${uuidv4()}${game.id}`}>
                 <StyledGameCard
                   screenSize={screenSize}
                   game={game}
