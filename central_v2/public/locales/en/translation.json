@@ -44,7 +44,8 @@
     "retry": "Retry",
     "addtogame": "Add to Game",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "edit": "Edit"
   },
   "imageButton": {
     "imageupload": "Upload Image",

@@ -27,6 +27,9 @@ import ViewQuestionCards from '../components/question/ViewQuestionCards';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useCentralDataState } from '../hooks/context/useCentralDataContext';
+import EditModal from '../components/modal/EditModal';  
+import ModalBackground from '../components/modal/ModalBackground';
+import EditToolTip from '../components/tooltips/EditToolTip';
 
 interface ViewGameProps {
   screenSize: ScreenSize;
@@ -46,8 +49,11 @@ export default function ViewGame({
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
+  const [isModalOpen, setIsModalOpenl] = useState<boolean>(false);
   const [draftGame, setDraftGame] = useState<IGameTemplate | null>(null);
   const questions = centralData.selectedGame?.game?.questionTemplates;
+
+  const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
 
   useEffect(() => {
     setIsLoading(false);
@@ -74,14 +80,30 @@ export default function ViewGame({
     navigate(`/clone/game/${centralData.selectedGame?.game?.id}`);
   };
 
+  const handleEditGame = () => {
+    // if (centralData.selectedGame?.game?.publicPrivate === PublicPrivateType.PUBLIC) {
+    //   setDraftGame(centralData.selectedGame?.game);
+    //   setIsModalOpenl(true);
+    // } else {
+    //   navigate(`/edit/game/${centralData.selectedGame?.game?.id}`);
+    // }
+    setIsModalOpenl(true);
+  };
+
+  const handleProceedToEdit = () => {
+    navigate(`/edit/game/${centralData.selectedGame?.game?.id}`); 
+  };
+
+  const handleCloseEditModal = () => {
+    setIsModalOpenl(false);
+  };
+
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
   };
 
   const handleBackClick = () => {
-    console.log('handleBackClick');
-    console.log(libRoute);
     if (libRoute) {
       navigate('/library');
     } else {
@@ -92,6 +114,16 @@ export default function ViewGame({
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
+      <ModalBackground
+        isModalOpen={isModalOpen}
+        handleCloseModal={handleCloseEditModal}
+      />
+      <EditModal
+        isModalOpen={isModalOpen}
+        gameQuestion={GameQuestionType.GAME}
+        setIsModalOpen={setIsModalOpenl}
+        handleProceedToEdit={handleProceedToEdit}
+      />
       { isLoading ?
           <Box style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <CircularProgress
@@ -114,7 +146,26 @@ export default function ViewGame({
               }}>
                  <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick} smallScreenOverride/>
                  {centralData.userStatus === UserStatusType.LOGGEDIN &&
-                  <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
+                  <>
+                    <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
+                    { isEditEnabled ?
+                      <CentralButton 
+                        buttonType={ButtonType.EDIT} 
+                        isEnabled
+                        onClick={handleEditGame} 
+                        smallScreenOverride
+                      />
+                      :
+                      <EditToolTip>
+                        <CentralButton 
+                          buttonType={ButtonType.EDIT} 
+                          isEnabled={false}
+                          onClick={handleEditGame} 
+                          smallScreenOverride
+                        />
+                      </EditToolTip>
+                    }
+                  </>
                  }
               </Box>
             }
@@ -130,7 +181,28 @@ export default function ViewGame({
                     <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
                       <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick}/>
                       { centralData.userStatus === UserStatusType.LOGGEDIN &&
-                        <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
+                        <>
+                          <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
+                           { isEditEnabled ?
+                              <CentralButton 
+                                buttonType={ButtonType.EDIT} 
+                                isEnabled
+                                onClick={handleEditGame} 
+                                smallScreenOverride
+                              />
+                              :
+                              <EditToolTip>
+                                <Box style={{width: '100%'}}>
+                                  <CentralButton 
+                                    buttonType={ButtonType.EDIT} 
+                                    isEnabled={false}
+                                    onClick={handleEditGame} 
+                                    smallScreenOverride
+                                  />
+                                </Box>
+                              </EditToolTip>
+                            }
+                        </>
                       }
                     </Box>
                   }
