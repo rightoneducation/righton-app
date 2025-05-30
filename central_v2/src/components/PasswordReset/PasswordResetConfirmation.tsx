@@ -74,6 +74,9 @@ const VerifyText = styled(Typography)(({ theme }) => ({
     textDecoration: 'underline',
     textAlign: 'center',
     cursor: 'pointer',
+    "&:hover": {
+        opacity: 0.8
+    }
   }));
   
   const VerifyBox = styled(Box)(({ theme }) => ({
@@ -86,12 +89,16 @@ interface PasswordResetProps {
   handleNextStep: () => void;
   onCodeChange: (code: string[]) => void;
   code: string[];
+  isForgotPassword: boolean;
+  userName: string;
 }
 
 function PasswordResetConfirmation({
   handleNextStep,
   onCodeChange,
   code,
+  isForgotPassword,
+  userName,
 }: PasswordResetProps) {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isCodeError, setIsCodeError] = useState(false);
@@ -128,10 +135,14 @@ function PasswordResetConfirmation({
   };
 
   const handleResendCodeClick = async () => {
-    try {
-      await apiClients.auth.awsResendConfirmationCode(
-        centralData.userProfile.email,
-      );
+      try {
+    if(isForgotPassword && userName) {
+        await apiClients.auth.awsResetPassword(userName);
+    } else if(centralData.userProfile.email){
+        await apiClients.auth.awsResetPassword(
+          centralData.userProfile.email,
+        );
+    }
     } catch (error) {
       console.error('Error resending confirmation code:', error);
     }

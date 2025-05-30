@@ -47,31 +47,36 @@ const CloseButton = styled('img')(({ theme }) => ({
 }))
 
 interface CreatingTemplateModalProps {
-  userProfile: IUserProfile;
+  userProfile?: IUserProfile;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTabsOpen: (isOpen: boolean) => void;
+  userName?: string;
+  isForgotPassword?: boolean;
 }
 
 export default function ConfirmationErrorModal({
   userProfile,
   isModalOpen,
   setIsModalOpen,
-  setIsTabsOpen
+  setIsTabsOpen,
+  userName,
+  isForgotPassword
 }: CreatingTemplateModalProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
 
 
-  const handleRetry = () => {
-    apiClients.auth.awsResendConfirmationCode(userProfile.email);
+  const handleRetry = async () => {
     setIsModalOpen(false);
     setIsTabsOpen(false);
   }
 
-  const handleCancel = () => {
-    const session = apiClients.auth.awsUserCleaner(userProfile);
+  const handleCancel = async() => {
+    if(!isForgotPassword) {
+     await apiClients.auth.awsUserCleaner(userProfile as IUserProfile);
+    }
     setIsModalOpen(false);
     setIsTabsOpen(false);
     navigate('/');

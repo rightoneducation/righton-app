@@ -1,32 +1,10 @@
-import { useNavigate, } from 'react-router-dom';
-
 import React, { useState } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { useNavigate, } from 'react-router-dom';
+import { Box, TextField, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
-import { SignUpMainContainer } from '../../lib/styledcomponents/SignUpStyledComponents';
-import RightOnLogo from '../../images/RightOnUserLogo.svg';
 import CentralButton from "../button/Button";
-import { ButtonColor, ButtonType } from '../button/ButtonModels';
-import { APIClientsContext } from '../../lib/context/APIClientsContext';
-import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
-import { ButtonContent, ButtonIconContainer, ButtonStyled, ButtonTypography } from '../../lib/styledcomponents/ButtonStyledComponents';
-import signup from '../../images/buttonIconSignup.svg';
+import { ButtonType } from '../button/ButtonModels';
 
-const InnerBodyContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  // border: '1px solid blue',
-  alignItems: 'center',
-  flexDirection: 'column',
-  gap: '20px',
-  height: '100%',
-  width: '100%',
-  maxWidth: '500px',
-  paddingTop: '40px',
-  paddingBottom: '40px',
-  paddingLeft: '40px',
-  paddingRight: '40px',
-  boxSizing: 'border-box',
-}));
 
 const ResetPasswordText = styled(Typography)(({ theme }) => ({
     fontFamily: 'Poppins, sans-serif',
@@ -38,13 +16,28 @@ const ResetPasswordText = styled(Typography)(({ theme }) => ({
   }));
 
 const UserTextField = styled(TextField)(({ theme }) => ({
-    border: '2px solid #CCCCCC', // Set border to 2px
     borderRadius: '8px', // Set border radius to 8px
     backgroundColor: '#FFFFFF', // Set background color to white
     width: '100%',
     '& .MuiInputBase-root': {
-      borderRadius: '8px', // Ensure border radius is applied to the input field
-      height: '43px',
+        height: '43px',
+    '& fieldset': {
+      borderWidth: `2px`,
+      borderColor: `${theme.palette.primary.grey}`,
+      borderRadius: `${theme.sizing.xSmPadding}px`,
+    },
+    '&.Mui-focused fieldset': {
+      borderWidth: `2px`,
+      borderColor:`${theme.palette.primary.grey}`,
+    },
+    '&:hover fieldset': {
+      borderWidth: `2px`,
+      borderColor:`${theme.palette.primary.extraDarkGrey}`,
+    },
+    '&.Mui-error fieldset': {
+      borderWidth: '2px',
+      borderColor: theme.palette.primary.errorBorder,
+    },
     },
     '& .MuiInputBase-input': {
       color: '#384466', // Set text color of the input
@@ -79,6 +72,7 @@ const NoAccountText = styled(Typography)(({ theme }) => ({
     onUserName: (username: string) => void;
     userName: string;
   }
+
 export default function PassWordResetEmailInput({ handleResetLink, onUserName, userName }: IResetLink) {
   const navigate = useNavigate(); // Initialize useNavigate
   const [isSignupEnabled, setIsSignupEnabled] = useState(true);

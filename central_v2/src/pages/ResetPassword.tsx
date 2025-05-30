@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Box } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
-import CentralButton from '../components/button/Button';
-import { ButtonColor, ButtonType } from '../components/button/ButtonModels';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import {
-  ButtonContent,
-  ButtonIconContainer,
-  ButtonStyled,
-  ButtonTypography,
-} from '../lib/styledcomponents/ButtonStyledComponents';
-import signup from '../images/buttonIconSignup.svg';
 import PasswordCodeConfirmation from '../components/PasswordReset/PasswordResetConfirmation';
 import PassWordResetEmailConfirmation from '../components/PasswordReset/PasswordResetEmail';
 import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
@@ -50,11 +41,13 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const action = queryParams.get('action');
   const [code, setCode] = useState(Array(6).fill(''));
   const [userName, setUserName] = useState('');
-  const [step, setStep] = useState<number>(0);
+  const [step, setStep] = useState<number>(action === 'update' ? 1 : 0);
   const [verifying, setIsVerifying] = useState<boolean>(false);
-  const [passwordError, setPasswordError] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [password, setPassword] = useState<{
     newPassword: string;
@@ -68,6 +61,10 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
   const handleNextStep = () => {
     setStep((prev) => prev + 1);
   };
+
+  const handlePrevStep = () => {
+    setStep((prev) => prev - 1);
+  }
 
   // STEP 0: send reset link to registered e-mail
   const handleResetLink = async () => {
@@ -93,6 +90,7 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
   };
 
   const handleConfirmationError = () => {
+    handlePrevStep();
     setIsTabsOpen(true);
     setIsModalOpen(true);
   };
@@ -106,15 +104,19 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
       handleConfirmationError();
       return;
     }
+
     try {
       await apiClients.auth.awsConfirmResetPassword({
-        username: userName,
+        username: action === 'update' ? centralData.userProfile.email : userName,
         newPassword: confirmPassword,
         confirmationCode: fullCode,
       });
-
       setIsVerifying(false);
-      navigate('/');
+      if(action === 'update') {
+        navigate("/userprofile")
+      } else {
+        navigate('/login');
+      }
     } catch (error: any) {
       setIsVerifying(false);
       console.log(error);
@@ -141,6 +143,8 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
           handleNextStep={handleNextStep}
           code={code}
           onCodeChange={setCode}
+          isForgotPassword={action !== 'update'}
+          userName={userName}
         />
       );
       break;
@@ -164,21 +168,15 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
       );
   }
 
-  useEffect(() => {
-    console.log("final data: ", {
-      username: userName,
-      code: code.join(""),
-      password: confirmPassword,
-    })
-  }, [userName, code, confirmPassword])
-
   return (
     <SignUpMainContainer>
       <ConfirmationErrorModal
+        userProfile={centralData.userProfile}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        userProfile={centralData.userProfile}
+        userName={userName}
         setIsTabsOpen={setIsTabsOpen}
+        isForgotPassword={action !== 'update'}
       />
       <ModalBackground
         isModalOpen={isModalOpen}
