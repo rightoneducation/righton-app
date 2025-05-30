@@ -157,12 +157,14 @@ export default function ViewGame({
                       />
                       :
                       <EditToolTip>
-                        <CentralButton 
-                          buttonType={ButtonType.EDIT} 
-                          isEnabled={false}
-                          onClick={handleEditGame} 
-                          smallScreenOverride
-                        />
+                        <Box style={{width: '100%'}}>
+                          <CentralButton 
+                            buttonType={ButtonType.EDIT} 
+                            isEnabled={false}
+                            onClick={handleEditGame} 
+                            smallScreenOverride
+                          />
+                        </Box>
                       </EditToolTip>
                     }
                   </>
