@@ -285,16 +285,12 @@ export default function useCentralDataManager({
                   centralDataDispatch({ type: 'SET_PRIVATE_GAMES', payload: [...centralData.privateGames, ...response.games] });
                   centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
                   centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
-                  console.log(response.nextToken);
-                  console.log(response.games);
                   break;
                 case PublicPrivateType.PUBLIC:
                 default:
                   centralDataDispatch({ type: 'SET_PUBLIC_GAMES', payload: [...centralData.publicGames, ...response.games] });
                   centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
                   centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
-                  console.log(response.nextToken);
-                  console.log(response.games);
                   break;
               }
           });
@@ -513,7 +509,6 @@ export default function useCentralDataManager({
   };
   
   const fetchElements = async (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null, isFromLibray?: boolean) => {
-    console.log(nextToken);
     const getFetchType = (tab: LibraryTabEnum | null) => {
       if ((isLibrary || isCreateGame || centralData.isTabsOpen) && tab !== undefined) {
         switch(tab){
@@ -605,7 +600,6 @@ export default function useCentralDataManager({
     const status = await apiClients.auth.verifyAuth();
     if (status) {
       const currentSession = await apiClients.auth.getCurrentSession();
-      console.log('currentSession', currentSession);
       const cognitoId = currentSession?.userSub;
       if (!cognitoId) {
         handleLogOut();
