@@ -235,7 +235,7 @@ export default function ViewGame({
                           md={1}
                           lg={4} item />
             </CreateGameGridContainer>
-            <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
+            <Box style={{ maxWidth: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
               <GameCreateButtonStack sx={{ 
                 ...(screenSize === ScreenSize.SMALL && { flexDirection: 'column'})
               }}>
@@ -247,7 +247,17 @@ export default function ViewGame({
                   onClick={handleLaunchGame}
                 />
               </GameCreateButtonStack>
-              <GameCreateButtonStack>
+              <GameCreateButtonStack sx={{
+                maxWidth: '100%',
+                overflow: 'scroll',
+                minHeight: '40px',
+                '&::-webkit-scrollbar': {
+                // Chrome and Safari
+                display: 'none',
+                },
+                scrollbarWidth: 'none', // Firefox
+                msOverflowStyle: 'none',
+              }}>
                 <ManageQuestionsButtons 
                   questions={questions ?? []}
                   iconButtons={iconButtons}
