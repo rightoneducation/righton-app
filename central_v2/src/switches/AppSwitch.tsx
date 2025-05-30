@@ -47,6 +47,7 @@ function AppSwitch({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
+    loadMoreLibrary,
     fetchElement,
     fetchElements,
     handleLogOut,
@@ -93,6 +94,7 @@ function AppSwitch({
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={getPublicPrivateElements}
             fetchElements={fetchElements}
+            loadMoreLibrary={loadMoreLibrary}
           />
         </AuthGuard>
       );
