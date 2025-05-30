@@ -23,7 +23,7 @@ interface UseCentralDataManagerReturnProps {
   setIsTabsOpen: (isOpen: boolean) => void;
   handleLibraryInit: (isInit: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => Promise<ISelectedGame | ISelectedQuestion>;
-  fetchElements: (libraryTab?: LibraryTabEnum, searchTerms?: string) => void;
+  fetchElements: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null,isFromLibrary?: boolean) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -35,6 +35,7 @@ interface UseCentralDataManagerReturnProps {
   handleSearchChange: (searchString: string) => void;
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
+  loadMoreLibrary: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null) => void;
   handleLogOut: () => void;
   checkForUniqueEmail: (email: string) => Promise<boolean>;
 }
@@ -227,18 +228,17 @@ export default function useCentralDataManager({
     );
   };
 
-  const getPublicPrivateElements = (newPublicPrivate: PublicPrivateType, searchTerms?: string) => {
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+  const getPublicPrivateElements = (newPublicPrivate: PublicPrivateType, searchTerms?: string, nextToken?: string | null, isFromLibrary?: boolean) => {
+    if (!isFromLibrary)
+      centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_PUBLIC_PRIVATE', payload: newPublicPrivate });
-    const limit = newPublicPrivate === PublicPrivateType.PUBLIC ? 12 : null;
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
           apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
               newPublicPrivate,
-              null,
-              null,
+              12,
+              nextToken ?? null,
               searchTerms ?? centralData.searchTerms,
               centralData.sort.direction ?? SortDirection.ASC,
               centralData.sort.field,
@@ -250,11 +250,15 @@ export default function useCentralDataManager({
               if (response){
                 switch (newPublicPrivate){
                   case PublicPrivateType.PRIVATE:
-                    centralDataDispatch({ type: 'SET_PRIVATE_QUESTIONS', payload: response.questions });
+                    centralDataDispatch({ type: 'SET_PRIVATE_QUESTIONS', payload: [...centralData.privateQuestions, ...response.questions] });
+                    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+                    centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
                     break;
                   case PublicPrivateType.PUBLIC:
                   default:
-                    centralDataDispatch({ type: 'SET_PUBLIC_QUESTIONS', payload: response.questions });
+                    centralDataDispatch({ type: 'SET_PUBLIC_QUESTIONS', payload: [...centralData.publicQuestions, ...response.questions] });
+                    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+                    centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
                     break;
                 }
               }
@@ -265,8 +269,8 @@ export default function useCentralDataManager({
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             newPublicPrivate,
-            null,
-            null,
+            12,
+            nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
             centralData.sort.direction ?? SortDirection.ASC,
             centralData.sort.field,
@@ -278,11 +282,15 @@ export default function useCentralDataManager({
             if (response)
               switch (newPublicPrivate){
                 case PublicPrivateType.PRIVATE:
-                  centralDataDispatch({ type: 'SET_PRIVATE_GAMES', payload: response.games});
+                  centralDataDispatch({ type: 'SET_PRIVATE_GAMES', payload: [...centralData.privateGames, ...response.games] });
+                  centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+                  centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
                   break;
                 case PublicPrivateType.PUBLIC:
                 default:
-                  centralDataDispatch({ type: 'SET_PUBLIC_GAMES', payload: response.games });
+                  centralDataDispatch({ type: 'SET_PUBLIC_GAMES', payload: [...centralData.publicGames, ...response.games] });
+                  centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+                  centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
                   break;
               }
           });
@@ -345,79 +353,85 @@ export default function useCentralDataManager({
     }
   };
 
-  const getDrafts = async (libraryTab?: LibraryTabEnum, searchTerms?: string) => {
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+  const getDrafts = async (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null, isFromLibrary?: boolean) => {
+    if (!isFromLibrary)
+      centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
           PublicPrivateType.DRAFT,
-          null,
-          null,
+          12,
+          nextToken ?? null,
           searchTerms ?? centralData.searchTerms,
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
           null
         ).then((response) => {
-          centralDataDispatch({ type: 'SET_DRAFT_QUESTIONS', payload: response.questions });
+          centralDataDispatch({ type: 'SET_DRAFT_QUESTIONS', payload: [...centralData.draftQuestions, ...response.questions] });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
         });
       break;
       case GameQuestionType.GAME:
       default:
         apiClients?.centralDataManager?.searchForGameTemplates(
           PublicPrivateType.DRAFT,
-          null,
-          null,
+          12,
+          nextToken ?? null,
           libraryTab ? '' : centralData.searchTerms,
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
           null
         ).then((response) => {
-          centralDataDispatch({ type: 'SET_DRAFT_GAMES', payload: response.games });
+          centralDataDispatch({ type: 'SET_DRAFT_GAMES', payload: [...centralData.draftGames, ...response.games] });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
         });
       break;
     }
   };
 
-  const getFav = async (user: IUserProfile, searchTerms?: string) => {
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+  const getFav = async (user: IUserProfile, searchTerms?: string, nextToken?: string | null, isFromLibrary?: boolean) => {
+    if (!isFromLibrary)
+      centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
           PublicPrivateType.PUBLIC,
-          null,
-          null,
+          12,
+          nextToken ?? null,
           searchTerms ?? centralData.searchTerms,
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
           user.favoriteQuestionTemplateIds ?? null,
         ).then((response) => {
-          centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: response.questions });
+          centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: [...centralData.favQuestions, ...response.questions] });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
         });
       break;
       case GameQuestionType.GAME:
       default:
         apiClients?.centralDataManager?.searchForGameTemplates(
           PublicPrivateType.PUBLIC,
-          null,
-          null,
+          12,
+          nextToken ?? null,
           searchTerms ?? centralData.searchTerms,
           centralData.sort.direction ?? SortDirection.ASC,
           centralData.sort.field,
           [...centralData.selectedGrades],
           user.favoriteGameTemplateIds ?? null,
         ).then((response) => {
-          centralDataDispatch({ type: 'SET_FAV_GAMES', payload: response.games });
+          centralDataDispatch({ type: 'SET_FAV_GAMES', payload: [...centralData.favGames, ...response.games] });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
         });
       break;
     }
@@ -494,9 +508,8 @@ export default function useCentralDataManager({
     }
   };
   
-  const fetchElements = async (libraryTab?: LibraryTabEnum, searchTerms?: string) => {
+  const fetchElements = async (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null, isFromLibray?: boolean) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
-      console.log(centralData.isTabsOpen, tab);
       if ((isLibrary || isCreateGame || centralData.isTabsOpen) && tab !== undefined) {
         switch(tab){
           case LibraryTabEnum.FAVORITES: 
@@ -514,29 +527,28 @@ export default function useCentralDataManager({
       return FetchType.EXPLORE_GAMES;
     }
     const fetchType = getFetchType(libraryTab ?? null);
-    console.log('fetchType', fetchType);
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
 
     switch (fetchType) {
       case FetchType.PUBLIC_GAMES:
       case FetchType.PUBLIC_QUESTIONS:
-        getPublicPrivateElements(PublicPrivateType.PUBLIC, searchTerms);
+        getPublicPrivateElements(PublicPrivateType.PUBLIC, searchTerms, nextToken, isFromLibray ?? false);
         break;
       case FetchType.PRIVATE_QUESTIONS:
       case FetchType.PRIVATE_GAMES:
-        getPublicPrivateElements(PublicPrivateType.PRIVATE, searchTerms);
+        getPublicPrivateElements(PublicPrivateType.PRIVATE, searchTerms, nextToken, isFromLibray ?? false);
         break;
       case FetchType.DRAFT_QUESTIONS:
       case FetchType.DRAFT_GAMES: 
-        getDrafts(libraryTab, searchTerms);
+        getDrafts(libraryTab, searchTerms, nextToken, isFromLibray ?? false);
         break;
       case FetchType.FAVORITE_QUESTIONS:
       case FetchType.FAVORITE_GAMES:
-        getFav(centralData.userProfile, searchTerms);
+        getFav(centralData.userProfile, searchTerms, nextToken, isFromLibray ?? false);
         break;
       case FetchType.EXPLORE_QUESTIONS:
         apiClients?.centralDataManager?.initQuestions().then((response) => {
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
           centralDataDispatch({ type: 'SET_RECOMMENDED_QUESTIONS', payload: response.questions });
           centralDataDispatch({ type: 'SET_MOST_POPULAR_QUESTIONS', payload: response.questions });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
@@ -546,6 +558,7 @@ export default function useCentralDataManager({
       default:
         apiClients?.centralDataManager?.initGames().then((response) => {
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
           centralDataDispatch({ type: 'SET_RECOMMENDED_GAMES', payload: response.games });
           centralDataDispatch({ type: 'SET_MOST_POPULAR_GAMES', payload: response.games });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
@@ -553,6 +566,13 @@ export default function useCentralDataManager({
         break;
     }
   };
+  
+  const loadMoreLibrary = (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null) => {
+    if (nextToken && !centralData.isLoadingInfiniteScroll) {
+      centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: true });
+      fetchElements(libraryTab, searchTerms, nextToken, true);
+    }
+  }
 
   const checkForUniqueEmail = async (email: string) => {
     const response = await apiClients?.user.getUserByEmail(email); 
@@ -578,10 +598,8 @@ export default function useCentralDataManager({
 
   const validateUser = async () => {
     const status = await apiClients.auth.verifyAuth();
-    console.log('validateUser status', status);
     if (status) {
       const currentSession = await apiClients.auth.getCurrentSession();
-      console.log('currentSession', currentSession);
       const cognitoId = currentSession?.userSub;
       if (!cognitoId) {
         handleLogOut();
@@ -622,6 +640,7 @@ export default function useCentralDataManager({
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    
   };
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
@@ -650,6 +669,7 @@ export default function useCentralDataManager({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
+    loadMoreLibrary,
     handleLogOut,
     checkForUniqueEmail
   };

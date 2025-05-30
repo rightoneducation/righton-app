@@ -44,9 +44,10 @@ interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  fetchElements: (libraryTab: LibraryTabEnum, searchTerms: string) => void;
+  fetchElements: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null, isFromLibrary?: boolean) => void;
   handleGameView: (element: IGameTemplate, elements: IGameTemplate[]) => void;
   handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
+  loadMoreLibrary: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null) => void;
 }
 
 export default function LibraryTabs({
@@ -59,7 +60,8 @@ export default function LibraryTabs({
   handleSearchChange,
   fetchElements,
   handleGameView,
-  handleQuestionView
+  handleQuestionView,
+  loadMoreLibrary
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
 const centralData = useCentralDataState();
 const centralDataDispatch = useCentralDataDispatch();
@@ -89,13 +91,16 @@ const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBL
 
 if (centralData.isLibraryInit) {
   centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
-  fetchElements(openTab, '');
+  centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+  centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+  fetchElements(openTab, '', null, false);
 }
 
 const handleChange = (event: React.SyntheticEvent, newTab: LibraryTabEnum) => {
+  centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
   centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
   setOpenTab(newTab);
-  fetchElements(newTab, '');
+  fetchElements(newTab, '', null, false);
 };
 
 return (
@@ -150,6 +155,7 @@ return (
       handleSearchChange={handleSearchChange}
       handleGameView={handleGameView}
       handleQuestionView={handleQuestionView}
+      loadMoreLibrary={loadMoreLibrary}
     />
   </TabContent>
 );

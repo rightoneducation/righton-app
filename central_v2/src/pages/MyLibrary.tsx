@@ -31,7 +31,8 @@ interface MyLibraryProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
+  fetchElements: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null,isFromLibrary?: boolean) => void;
+  loadMoreLibrary: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null) => void;
 }
 
 export default function MyLibrary({ 
@@ -42,7 +43,8 @@ export default function MyLibrary({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  fetchElements
+  fetchElements,
+  loadMoreLibrary
 }: MyLibraryProps) {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -148,6 +150,7 @@ export default function MyLibrary({
             handlePublicPrivateChange={handlePublicPrivateChange}
             fetchElements={fetchElements}
             handleQuestionView={handleQuestionView}
+            loadMoreLibrary={loadMoreLibrary}
           />
       }
     </MyLibraryMainContainer>

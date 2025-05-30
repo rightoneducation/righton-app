@@ -88,6 +88,17 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
+export const ScrollContainer = styled(Box)(({ theme }) => ({
+  height: '100%',
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE and Edge
+}));
+
 export const ButtonContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
