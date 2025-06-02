@@ -121,7 +121,9 @@ export default function CreateGame({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const route = useMatch('/clone/game/:gameId');
+  const editRoute = useMatch('/edit/game/:gameId');
   const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
+  const isEdit = editRoute?.params.gameId !== null && editRoute?.params.gameId !== undefined && editRoute?.params.gameId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -143,6 +145,22 @@ export default function CreateGame({
   const allDQAreValid = checkDQsAreValid(draftQuestionsList);
   // const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid) 
   // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
+
+  let label = 'Create';
+  let selectedGameId = ''
+  switch (true){
+    case (isEdit):
+      label = 'Edit';
+      selectedGameId = editRoute?.params.gameId || '';
+      break;
+    case (isClone):
+      label = 'Clone';
+      selectedGameId = route?.params.gameId || '';
+      break;
+    default:
+      label = 'Create';
+      break;
+  }
 
   /** CREATE GAME HANDLERS START HERE */
   const handleGameTitle = (val: string) => {
@@ -588,10 +606,10 @@ export default function CreateGame({
     setIsLoading(false);
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;
-    if (selected !== null && isClone) {
+    if (selected !== null && (isClone || isEdit)) {
       // regex to detect (clone of) in title
       const regex = /\(Clone of\)/i;
-      if (selected?.game && title && !regex.test(title))
+      if (selected?.game && title && !regex.test(title) && isClone)
         selected.game.title = `(Clone of) ${title}`;
       if (selected.game){
         setDraftGame(prev => ({
@@ -624,12 +642,11 @@ export default function CreateGame({
         );
       }
     }
-    const id = route?.params.gameId;
-    if (!centralData.selectedGame?.game && id){
+    if (!centralData.selectedGame?.game && selectedGameId){
       setIsLoading(true);
-      fetchElement(GameQuestionType.GAME, id);
+      fetchElement(GameQuestionType.GAME, selectedGameId);
     }
-  }, [centralData.selectedGame, route ]); // eslint-disable-line 
+  }, [centralData.selectedGame, route, selectedGameId ]); // eslint-disable-line 
 
   return (
     <CreateGameMainContainer>
@@ -697,7 +714,9 @@ export default function CreateGame({
         <CreateGameComponent
           draftGame={draftGame}
           isClone={isClone}
+          isEdit={isEdit}
           isCloneImageChanged={draftGame.isCloneGameImageChanged}
+          label={label}
           screenSize={screenSize}
           handleSaveGame={handleSaveGame}
           handleSaveDraftGame={handleSaveDraftGame}
@@ -740,9 +759,11 @@ export default function CreateGame({
                   <QuestionElements
                     screenSize={screenSize}
                     isClone={isClone}
+                    isEdit={isEdit}
                     isCloneImageChanged={
                       draftQuestionItem.isCloneQuestionImageChanged
                     }
+                    label={label}
                     draftQuestion={draftQuestionItem.question}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,

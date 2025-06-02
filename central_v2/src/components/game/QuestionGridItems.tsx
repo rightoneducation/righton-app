@@ -29,7 +29,9 @@ import { AISwitch } from '../../lib/styledcomponents/AISwitchStyledComponent';
 interface IQuestionElements {
   screenSize: ScreenSize;
   isClone: boolean;
+  isEdit: boolean;
   isCloneImageChanged: boolean;
+  label: string;
   draftQuestion: CentralQuestionTemplateInput;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
@@ -66,7 +68,9 @@ interface IQuestionElements {
 export default function QuestionElements({
   screenSize,
   isClone,
+  isEdit,
   isCloneImageChanged,
+  label,
   draftQuestion,
   isCardSubmitted,
   isCardErrored,
@@ -123,6 +127,8 @@ export default function QuestionElements({
             isCreateGame
             screenSize={screenSize}
             isClone={isClone}
+            isEdit={isEdit}
+            label={label}
             isCloneImageChanged={isCloneImageChanged}
             draftQuestion={draftQuestion}
             handleTitleChange={handleDebouncedTitleChange}

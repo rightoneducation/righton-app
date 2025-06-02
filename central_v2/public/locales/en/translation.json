@@ -45,7 +45,8 @@
     "addtogame": "Add to Game",
     "yes": "Yes",
     "no": "No",
-    "edit": "Edit"
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "imageButton": {
     "imageupload": "Upload Image",

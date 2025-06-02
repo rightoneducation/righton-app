@@ -21,7 +21,9 @@ import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuesti
 interface ICreateGameComponent {
   screenSize: ScreenSize;
   isClone: boolean;
+  isEdit: boolean;
   isCloneImageChanged: boolean;
+  label: string;
   handleSaveGame: () => Promise<void>;
   handleSaveDraftGame: () => Promise<void>;
   draftGame: TGameTemplateProps;
@@ -59,7 +61,9 @@ const qt: IQuestionTemplate = {
 export default function CreateGameComponent({
   draftGame,
   isClone,
+  isEdit,
   isCloneImageChanged,
+  label,
   screenSize,
   handleSaveGame,
   handleSaveDraftGame,
@@ -94,10 +98,12 @@ questionTemplate: qt,
   })
   const questions = Array.from({ length: draftGame.questionCount }).map(() => createDraftQuestion());
 
+
+
   return (
     <>
       <TitleText screenSize={screenSize}> 
-      {isClone ? 'Clone' : 'Create'} Game
+        {label} Game
       </TitleText>
       {/* Save & Discard Button for Small & Medium Screen Size */}
         {(screenSize === ScreenSize.MEDIUM) && 
@@ -117,12 +123,14 @@ questionTemplate: qt,
               buttonWidthOverride="105px"
               onClick={handleSaveGame}
             />
-            <CentralButton 
-              buttonType={ButtonType.SAVEDRAFT} 
-              isEnabled 
-              smallScreenOverride 
-              onClick={handleSaveDraftGame} 
-            />
+            { !isEdit &&
+              <CentralButton 
+                buttonType={ButtonType.SAVEDRAFT} 
+                isEnabled 
+                smallScreenOverride 
+                onClick={handleSaveDraftGame} 
+              />
+            }
             <CentralButton
               buttonType={ButtonType.DISCARDBLUE}
               isEnabled
@@ -150,13 +158,15 @@ questionTemplate: qt,
               buttonWidthOverride="275px"
               onClick={handleSaveGame}
             />
-            <CentralButton 
-              buttonType={ButtonType.SAVEDRAFT} 
-              isEnabled 
-              smallScreenOverride 
-              buttonWidthOverride="275px"
-              onClick={handleSaveDraftGame} 
-            />
+            { !isEdit &&
+              <CentralButton 
+                buttonType={ButtonType.SAVEDRAFT} 
+                isEnabled 
+                smallScreenOverride 
+                buttonWidthOverride="275px"
+                onClick={handleSaveDraftGame} 
+              />
+            }
             <CentralButton
               buttonType={ButtonType.DISCARDBLUE}
               isEnabled
@@ -178,13 +188,15 @@ questionTemplate: qt,
                   buttonWidthOverride="160px"
                   onClick={handleSaveGame}
                 />
-                <CentralButton 
-                  buttonType={ButtonType.SAVEDRAFT} 
-                  isEnabled 
-                  smallScreenOverride 
-                  buttonWidthOverride="160px"
-                  onClick={handleSaveDraftGame} 
-                />
+                {!isEdit &&
+                  <CentralButton 
+                    buttonType={ButtonType.SAVEDRAFT} 
+                    isEnabled 
+                    smallScreenOverride 
+                    buttonWidthOverride="160px"
+                    onClick={handleSaveDraftGame} 
+                  />
+                }
                 <CentralButton
                   buttonType={ButtonType.DISCARDBLUE}
                   isEnabled
@@ -205,7 +217,9 @@ questionTemplate: qt,
             <CreateGameCardBase
               draftGame={draftGame}
               isClone={isClone}
+              isEdit={isEdit}
               isCloneImageChanged={isCloneImageChanged}
+              label={label}
               screenSize={screenSize}
               handleImageUploadClick={handleImageUploadClick}
               handlePublicPrivateChange={handlePublicPrivateChange}

@@ -80,18 +80,20 @@ export default function ViewGame({
     navigate(`/clone/game/${centralData.selectedGame?.game?.id}`);
   };
 
+  const handleProceedToEdit = () => {
+    navigate(`/edit/game/${centralData.selectedGame?.game?.id}`); 
+  };
+
   const handleEditGame = () => {
+    // TODO: check for public/private game and pop modal
     // if (centralData.selectedGame?.game?.publicPrivate === PublicPrivateType.PUBLIC) {
     //   setDraftGame(centralData.selectedGame?.game);
     //   setIsModalOpenl(true);
     // } else {
     //   navigate(`/edit/game/${centralData.selectedGame?.game?.id}`);
     // }
-    setIsModalOpenl(true);
-  };
-
-  const handleProceedToEdit = () => {
-    navigate(`/edit/game/${centralData.selectedGame?.game?.id}`); 
+    // setIsModalOpenl(true);
+    handleProceedToEdit();
   };
 
   const handleCloseEditModal = () => {
@@ -139,34 +141,34 @@ export default function ViewGame({
                 width: '100%', 
                 maxWidth: '672px',
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center', 
                 alignItems: 'center', 
                 gap: `${theme.sizing.xSmPadding}px`, 
                 paddingBottom: '16px',
               }}>
-                 <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick} smallScreenOverride/>
+                 <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick} smallScreenOverride buttonWidthOverride='275px'/>
                  {centralData.userStatus === UserStatusType.LOGGEDIN &&
                   <>
-                    <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
-                    { isEditEnabled ?
+                    <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride buttonWidthOverride='275px'/>
+                    <EditToolTip isEditEnabled={isEditEnabled}>
                       <CentralButton 
                         buttonType={ButtonType.EDIT} 
-                        isEnabled
+                        isEnabled={isEditEnabled}
                         onClick={handleEditGame} 
                         smallScreenOverride
+                        buttonWidthOverride='275px'
                       />
-                      :
-                      <EditToolTip>
-                        <Box style={{width: '100%'}}>
-                          <CentralButton 
-                            buttonType={ButtonType.EDIT} 
-                            isEnabled={false}
-                            onClick={handleEditGame} 
-                            smallScreenOverride
-                          />
-                        </Box>
-                      </EditToolTip>
-                    }
+                    </EditToolTip>
+                    <EditToolTip isEditEnabled={isEditEnabled}>
+                      <CentralButton 
+                        buttonType={ButtonType.DELETE} 
+                        isEnabled={isEditEnabled}
+                        onClick={handleEditGame} 
+                        smallScreenOverride
+                        buttonWidthOverride='275px'
+                      />
+                    </EditToolTip>
                   </>
                  }
               </Box>
@@ -185,25 +187,28 @@ export default function ViewGame({
                       { centralData.userStatus === UserStatusType.LOGGEDIN &&
                         <>
                           <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
-                           { isEditEnabled ?
-                              <CentralButton 
-                                buttonType={ButtonType.EDIT} 
-                                isEnabled
-                                onClick={handleEditGame} 
-                                smallScreenOverride
-                              />
-                              :
-                              <EditToolTip>
-                                <Box style={{width: '100%'}}>
-                                  <CentralButton 
-                                    buttonType={ButtonType.EDIT} 
-                                    isEnabled={false}
-                                    onClick={handleEditGame} 
-                                    smallScreenOverride
-                                  />
-                                </Box>
-                              </EditToolTip>
-                            }
+                            <EditToolTip isEditEnabled={isEditEnabled}>
+                              <Box style={{width: '100%'}}>
+                                <CentralButton 
+                                  buttonType={ButtonType.EDIT} 
+                                  isEnabled={isEditEnabled}
+                                  onClick={handleEditGame} 
+                                  smallScreenOverride
+                                  buttonWidthOverride='275px'
+                                />
+                              </Box>
+                            </EditToolTip>
+                            <EditToolTip isEditEnabled={isEditEnabled}>
+                              <Box style={{width: '100%'}}>
+                                <CentralButton 
+                                  buttonType={ButtonType.DELETE} 
+                                  isEnabled={isEditEnabled}
+                                  onClick={handleEditGame} 
+                                  smallScreenOverride
+                                  buttonWidthOverride='275px'
+                                />
+                              </Box>
+                            </EditToolTip> 
                         </>
                       }
                     </Box>

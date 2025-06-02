@@ -155,7 +155,8 @@ function AppSwitch({
       );
       break;
     }
-    case ScreenType.CLONEGAME: {
+    case ScreenType.CLONEGAME: 
+    case ScreenType.EDITGAME: {
       screenComponent = (
           <CreateGame 
             screenSize={screenSize}  

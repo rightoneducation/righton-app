@@ -78,7 +78,9 @@ export default function CreateQuestion({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const route = useMatch('/clone/question/:questionId');
+  const editRoute = useMatch('/edit/question/:questionId');
   const isClone = route?.params.questionId !== null && route?.params.questionId !== undefined && route?.params.questionId.length > 0;
+  const isEdit = editRoute?.params.questionId !== null && editRoute?.params.questionId !== undefined && editRoute?.params.questionId.length > 0;
   const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
@@ -154,6 +156,20 @@ export default function CreateQuestion({
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
+
+  let label = 'Create';
+  switch (true){
+    case (isEdit):
+      label = 'Edit';
+      break;
+    case (isClone):
+      label = 'Clone';
+      break;
+    default:
+      label = 'Create';
+      break;
+  }
+
   // QuestionCardBase handler functions
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
     setIsCloneImageChanged(true);
@@ -604,7 +620,9 @@ export default function CreateQuestion({
                   <CreateQuestionCardBase
                     screenSize={screenSize}
                     isClone={isClone}
+                    isEdit={isEdit}
                     isCloneImageChanged={isCloneImageChanged}
+                    label={label}
                     draftQuestion={draftQuestion}
                     handleTitleChange={handleTitleChange}
                     handleCCSSClick={handleCCSSClick}
