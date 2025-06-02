@@ -57,6 +57,7 @@ import {
   updateGameImageChange,
   updateGameImageSave,
   buildGameTemplate,
+  buildEditedGameTemplate,
   checkGameFormIsValid,
   buildGameQuestionPromises,
   createGameImagePath
@@ -64,6 +65,7 @@ import {
   import { 
     checkDQsAreValid, 
     buildQuestionTemplatePromises,
+    buildEditedQuestionTemplatePromises,
     updatePublicPrivateAtIndex,
     updateAIIsEnabledAtIndex,
     updateQuestionImageChangeAtIndex,
@@ -232,6 +234,42 @@ export default function CreateGame({
   const handleGameImageChange = async (inputImage?: File, inputUrl?: string,) => {
    setDraftGame((prev) => updateGameImageChange(prev, inputImage, inputUrl))
   };
+
+  const handleSaveEditedGame = async () => {
+    try {
+      setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true, isCreatingTemplate: true }));
+      if (gameFormIsValid && allDQAreValid) {
+
+        // check if game img has been changed
+        let gameImgUrl: string | null = null;
+        if (draftGame.imageUrl !== originalGameImageUrl || draftGame.isCloneGameImageChanged) {
+          gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        } else {
+          gameImgUrl = draftGame.imageUrl || null;
+        }
+        const userId = centralData.userProfile?.id || '';
+        let updatedGame = buildEditedGameTemplate(draftGame, userId, draftQuestionsList, gameImgUrl);
+        const gameTemplateResponse = await apiClients.gameTemplate.updateGameTemplate(
+          draftGame.publicPrivateGame,
+          updatedGame,
+        );
+
+        const updatedQuestionTemplates = buildEditedQuestionTemplatePromises(draftQuestionsList, originalQuestionImageUrls, userId, apiClients);
+
+      } else {
+        setDraftGame((prev) => ({ ...prev, ...(!gameFormIsValid && { isGameCardErrored: true }), isCreatingTemplate: false }));
+        if(!allDQAreValid) {
+          setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
+          // then find first errored card and set index to that question
+        }
+      }
+
+    } catch (err) {
+      setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, }))
+      console.log(`HandleSaveGame - error: `, err);
+    }
+
+  }
   
   const handleSaveGame = async () => {
     try {

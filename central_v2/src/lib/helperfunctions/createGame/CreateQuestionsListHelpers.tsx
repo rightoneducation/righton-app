@@ -3,7 +3,8 @@ import {
   IncorrectCard,
   IQuestionTemplate,
   PublicPrivateType,
-  AnswerType
+  AnswerType,
+  CentralQuestionTemplateInput
 } from '@righton/networking';
 import {
   draftTemplate,
@@ -48,6 +49,75 @@ export const checkDQsAreValid = (
     )
       return true;
     return false;
+  });
+};
+
+export const buildEditedQuestionTemplatePromises = (
+  draftQuestionsList: TDraftQuestionsList[],
+  originalQuestionImageUrls: string[],
+  userId: string,
+  apiClients: IAPIClients,
+) => {
+  return draftQuestionsList.map(async (dq, i) => {
+    const dqCopy = { ...dq };
+    let result = null;
+    let url = null;
+    dqCopy.questionTemplate.userId = userId;
+    dqCopy.questionTemplate.timesPlayed = 0;
+
+    // if existing question return its ID for Game Creation
+    if (dqCopy.questionTemplate.id) {
+      return { id: dqCopy.questionTemplate.id } as IQuestionTemplate;
+    }
+
+    // image file case
+    if (dqCopy.question.questionCard.image) {
+      try {
+        const img = await apiClients.questionTemplate.storeImageInS3(
+          dqCopy.question.questionCard.image,
+        );
+        result = await img.result;
+        if (result && result.path && result.path.length > 0) {
+          url = result.path;
+        }
+      } catch (err) {
+        console.error('Error storing image:', err);
+        throw new Error('Failed to store image.');
+      }
+    }
+
+    // image url case
+    else if (dqCopy.question.questionCard.imageUrl && dqCopy.question.questionCard.imageUrl !== originalQuestionImageUrls[i]) {
+      try {
+        url = await apiClients.questionTemplate.storeImageUrlInS3(
+          dqCopy.question.questionCard.imageUrl,
+        );
+      } catch (err) {
+        console.error('Error storing image URL:', err);
+        throw new Error('Failed to store image URL.');
+      }
+    } else {
+      url = originalQuestionImageUrls[i];
+    }
+    dqCopy.questionTemplate.imageUrl = url;
+    let newQuestionResponse: IQuestionTemplate | undefined;
+
+    // if an image url is available, we can create a question template
+    if (url) {
+      try {
+        // newQuestionResponse =
+        //   await apiClients.questionTemplate.updateQuestionTemplate(
+        //     dqCopy.publicPrivate,
+        //     dqCopy.question,
+        //   );
+      } catch (err) {
+        console.error('Error creating question template:', err);
+        throw new Error('Failed to create question template.');
+      }
+    }
+
+    // return updated question with POST response
+    return newQuestionResponse;
   });
 };
 
