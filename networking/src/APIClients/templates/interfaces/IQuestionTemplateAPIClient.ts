@@ -241,7 +241,10 @@ export interface IQuestionTemplateAPIClient {
 
   updateQuestionTemplate<T extends PublicPrivateType>(
     type: T,
-    updateQuestionTemplateInput: QuestionTemplateType<T>['update']['input'] | IQuestionTemplate
+    imageUrl: string,
+    userId: string,
+    updateQuestionTemplateInput: CentralQuestionTemplateInput,
+    questionId: string
   ): Promise<IQuestionTemplate>;
 
   deleteQuestionTemplate<T extends PublicPrivateType>(

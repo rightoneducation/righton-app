@@ -100,21 +100,25 @@ export class QuestionTemplateAPIClient
 
   async updateQuestionTemplate<T extends PublicPrivateType>(
     type: T,
-    updateQuestionTemplateInput: QuestionTemplateType<T>['update']['input']
+    imageUrl: string,
+    userId: string,
+    updateQuestionTemplateInput: CentralQuestionTemplateInput,
+    questionId: string
   ): Promise<IQuestionTemplate> {
+    const parsedInput = QuestionTemplateParser.centralQuestionTemplateInputToIQuestionTemplate<T>(imageUrl, userId, updateQuestionTemplateInput, questionId);
+    const variables: GraphQLOptions = { input: parsedInput as QuestionTemplateType<T>['update']['input'] };
     const queryFunction = questionTemplateRuntimeMap[type].update.queryFunction;
-    const variables: QuestionTemplateType<T>['update']['variables'] = { input: updateQuestionTemplateInput };
+    const updateType = `update${type}QuestionTemplate`;
     const questionTemplate = await this.callGraphQL<QuestionTemplateType<T>['update']['query']>(
         queryFunction,
         variables
     ) as { data: any };
     if (
-        isNullOrUndefined(questionTemplate?.data) ||
-        isNullOrUndefined(questionTemplate?.data.updateQuestionTemplate)
+        isNullOrUndefined(questionTemplate?.data) 
     ) {
         throw new Error(`Failed to update question template`);
     }
-    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.updateQuestionTemplate as AWSQuestionTemplate, type);
+    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data[updateType] as AWSQuestionTemplate, type);
   }
 
   async deleteQuestionTemplate<T extends PublicPrivateType>(

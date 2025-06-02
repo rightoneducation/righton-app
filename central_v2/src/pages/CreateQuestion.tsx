@@ -26,7 +26,6 @@ import { ButtonType } from '../components/button/ButtonModels';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackground';
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
-import ModalBackground from '../components/modal/ModalBackground';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import DiscardModal from '../components/modal/DiscardModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
@@ -38,7 +37,6 @@ import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
-import EditModal from '../components/modal/EditModal';  
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -90,7 +88,6 @@ export default function CreateQuestion({
   const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState<boolean>(false);
-  const [isEditModalOpen, setIsEditModalOpenl] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
@@ -259,7 +256,6 @@ export default function CreateQuestion({
     setIsImageURLVisible(false);
     setIsCreatingTemplate(false);
     setIsCCSSVisible(false);
-    setIsEditModalOpenl(false);
   }
 
   const handleCorrectAnswerChange = (correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
@@ -412,6 +408,43 @@ export default function CreateQuestion({
   }
 
   const handleSaveEditedQuestion = async () => {
+    try {
+      setIsCardSubmitted(true);
+      const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
+      if (isQuestionTemplateComplete){
+        if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
+          setIsCreatingTemplate(true);
+          let result = null;
+          let url = null;
+          // if the question is a clone/edit and the image hasn't been changed, we can use the original imageUrl
+          if ((!isClone && !isEdit) || draftQuestion.questionCard.imageUrl !== originalImageURl){
+            if (draftQuestion.questionCard.image){
+              const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+              // have to do a nested await here because aws-storage returns a nested promise object
+              result = await img.result;
+              if (result && result.path && result.path.length > 0)
+                url = result.path;
+            } else if (draftQuestion.questionCard.imageUrl){
+              url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+            }
+          } else {
+            url = draftQuestion.questionCard.imageUrl;
+          }
+          window.localStorage.setItem(StorageKey, '');
+          console.log(draftQuestion.questionCard.imageUrl);
+          if (url){
+            apiClients.questionTemplate.updateQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion, selectedQuestionId);
+          }
+          setIsCreatingTemplate(false);
+          fetchElements();
+          navigate('/questions');
+        }   
+      } else {
+        setIsCardErrored(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   const handleSaveQuestion = async () => {
@@ -468,13 +501,10 @@ export default function CreateQuestion({
 
   const handleSave = () => {
     if (isEdit){
-      // if (gametype === public)
-      setIsEditModalOpenl(true);
-      // handleSaveEditedQuestion();
+      handleSaveEditedQuestion();
+      return;
     }
-    else {
-      handleSaveQuestion();
-    }
+    handleSaveQuestion();
   }
 
   const handleSaveDraftQuestion = async () => {
@@ -541,13 +571,6 @@ export default function CreateQuestion({
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
-       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible || isDiscardModalOpen || isEditModalOpen} handleCloseModal={handleCloseModal}/>
-        <EditModal
-          isModalOpen={isEditModalOpen}
-          gameQuestion={GameQuestionType.QUESTION}
-          setIsModalOpen={setIsEditModalOpenl}
-          handleProceedToEdit={handleSaveEditedQuestion}
-        />
        <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={isCCSSVisible}

@@ -39,6 +39,7 @@ interface TabContainerProps {
   handleCloneButtonClick: () => void;
   handleEditButtonClick: () => void;
   handleFavoriteButtonClick: () => void;
+  handleDeleteButtonClick: () => void;
 }
 
 export default function QuestionTabsSelectedQuestion({
@@ -50,16 +51,13 @@ export default function QuestionTabsSelectedQuestion({
   handleNextQuestion,
   handleCloneButtonClick,
   handleEditButtonClick,
-  handleFavoriteButtonClick
+  handleFavoriteButtonClick,
+  handleDeleteButtonClick 
 }: TabContainerProps) {
   const theme = useTheme();
   const centralData = useCentralDataState();
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
   const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === question?.userId;
-
-  const handleDeleteButtonClick = () => {
-    // TODO: pop modal
-  };
 
   return (
      <ContentContainer>

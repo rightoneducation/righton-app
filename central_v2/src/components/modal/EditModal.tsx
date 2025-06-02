@@ -26,7 +26,7 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   paddingBottom: '16px',
   paddingLeft: '24px',
   paddingRight: '24px',
-  zIndex: 7,
+  zIndex: 1310,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -89,7 +89,7 @@ export default function EditModal({
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'column',
           gap: '16px', padding: '24px'
         }}> 
-          <DragText>{`Warning: You are about to edit a public ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'}.`} </DragText>
+          <DragText>{`Warning: You are about to alter a public ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'}.`} </DragText>
           <SubText> {`This will change the ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'} for everyone that uses it!`} </SubText>
           <SubText> Do you want to continue? </SubText>
           <Box style={{display: 'flex', gap: '16px'}}>

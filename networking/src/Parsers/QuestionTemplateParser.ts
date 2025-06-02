@@ -10,7 +10,8 @@ export class QuestionTemplateParser {
     static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
         imageUrl: string,
         userId: string,
-        createQuestionTemplateInput: CentralQuestionTemplateInput
+        createQuestionTemplateInput: CentralQuestionTemplateInput,
+        id?: string
     ): QuestionTemplateType<T>['create']['input']{
         const {title, ccss } = createQuestionTemplateInput.questionCard;
         const lowerCaseTitle = title.toLowerCase();
@@ -31,6 +32,7 @@ export class QuestionTemplateParser {
         const choices = JSON.stringify([choicesCorrect, ...choicesIncorrect]);
         const answerSettings = JSON.stringify(createQuestionTemplateInput.correctCard.answerSettings);
         const questionTemplate: QuestionTemplateType<T>['create']['input'] = {
+            id: id ?? '',
             title,
             userId,
             lowerCaseTitle,
