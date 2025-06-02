@@ -77,58 +77,62 @@ export default function EditMenu({
           </SortArrowContainer>
         </SortButton>
         {/* Submenu */}
-        <SortMenu isSortOpen={isEditOpen} style={{gap: '8px'}}>
-        {(Object.keys(editTypeMap) as Array<keyof typeof editTypeMap>).map((editLabel, i) => {
-            const editValue = editTypeMap[editLabel]; // this is the EditType enum value
-
-            return i === 0 ? (
-                <SortMenuItem
-                  key={editLabel}
-                  isSelected={selectedEdit.field === editValue}
-                  onClick={handleCloneButtonClick}
-                >
-                  <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                    <Typography
-                      fontSize="16px"
-                      color={
-                        selectedEdit.field === editValue
-                          ? "white"
-                          : `${theme.palette.primary.sortText}`
-                      }
-                      style={{fontWeight: 600}}
-                    >
-                      {editLabel}
-                    </Typography>
-                    <img src={editIconMap[editValue]} alt="Clone Icon" />
-                  </Box>
-                </SortMenuItem>
-              ) : (
-                <SortMenuItem
-                  key={editLabel}
-                  isSelected={selectedEdit.field === editValue}
-                >
-                  <EditToolTip isEditEnabled={isEditEnabled} isOnQuestionTab>
-                    <Box component="span" display="inline-flex">
-                      <Button disabled={!isEditEnabled} onClick={editHandlerMap[editValue]} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textTransform: 'none', padding: 0 }}>
-                        <Typography
-                          fontSize="16px"
-                          color={
-                            selectedEdit.field === editValue
-                              ? "white"
-                              : `${theme.palette.primary.sortText}`
-                          }
-                          style={{fontWeight: isEditEnabled ? 600 : 400}}
-                        >
-                          {editLabel}
-                        </Typography>
-                        <img src={editIconMap[editValue]} alt={`${editLabel} Icon`} />
-                      </Button>
+        {isEditOpen &&
+          <SortMenu isSortOpen={isEditOpen} style={{gap: '8px'}}>
+          {(Object.keys(editTypeMap) as Array<keyof typeof editTypeMap>).map((editLabel, i) => {
+            console.log('editLabel', editLabel);
+              const editValue = editTypeMap[editLabel]; // this is the EditType enum value
+              console.log(i);
+              console.log(editValue);
+              return i === 0 ? (
+                  <SortMenuItem
+                    key={editLabel}
+                    isSelected={selectedEdit.field === editValue}
+                    onClick={handleCloneButtonClick}
+                  >
+                    <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                      <Typography
+                        fontSize="16px"
+                        color={
+                          selectedEdit.field === editValue
+                            ? "white"
+                            : `${theme.palette.primary.sortText}`
+                        }
+                        style={{fontWeight: 600}}
+                      >
+                        {editLabel}
+                      </Typography>
+                      <img src={editIconMap[editValue]} alt="Clone Icon" />
                     </Box>
-                  </EditToolTip>
-                </SortMenuItem>
-              );
-            })}
-        </SortMenu>
+                  </SortMenuItem>
+                ) : (
+                  <SortMenuItem
+                    key={editLabel}
+                    isSelected={selectedEdit.field === editValue}
+                  >
+                    <EditToolTip isEditEnabled={isEditEnabled} isOnQuestionTab>
+                      <Box component="span" display="inline-flex">
+                        <Button disabled={!isEditEnabled} onClick={editHandlerMap[editValue]} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textTransform: 'none', padding: 0 }}>
+                          <Typography
+                            fontSize="16px"
+                            color={
+                              selectedEdit.field === editValue
+                                ? "white"
+                                : `${theme.palette.primary.sortText}`
+                            }
+                            style={{fontWeight: isEditEnabled ? 600 : 400}}
+                          >
+                            {editLabel}
+                          </Typography>
+                          <img src={editIconMap[editValue]} alt={`${editLabel} Icon`} />
+                        </Button>
+                      </Box>
+                    </EditToolTip>
+                  </SortMenuItem>
+                );
+              })}
+          </SortMenu>
+        }
       </SortContainer>
     </ClickAwayListener>
   );

@@ -38,6 +38,7 @@ import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
+import EditModal from '../components/modal/EditModal';  
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -89,6 +90,7 @@ export default function CreateQuestion({
   const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpenl] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
@@ -158,12 +160,15 @@ export default function CreateQuestion({
   const [isAIError, setIsAIError] = useState<boolean>(false);
 
   let label = 'Create';
+  let selectedQuestionId = ''
   switch (true){
     case (isEdit):
       label = 'Edit';
+      selectedQuestionId = editRoute?.params.questionId || '';
       break;
     case (isClone):
       label = 'Clone';
+      selectedQuestionId = editRoute?.params.questionId || '';
       break;
     default:
       label = 'Create';
@@ -254,6 +259,7 @@ export default function CreateQuestion({
     setIsImageURLVisible(false);
     setIsCreatingTemplate(false);
     setIsCCSSVisible(false);
+    setIsEditModalOpenl(false);
   }
 
   const handleCorrectAnswerChange = (correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
@@ -405,6 +411,9 @@ export default function CreateQuestion({
     return false;
   }
 
+  const handleSaveEditedQuestion = async () => {
+  }
+
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
@@ -457,6 +466,17 @@ export default function CreateQuestion({
     }
   }
 
+  const handleSave = () => {
+    if (isEdit){
+      // if (gametype === public)
+      setIsEditModalOpenl(true);
+      // handleSaveEditedQuestion();
+    }
+    else {
+      handleSaveQuestion();
+    }
+  }
+
   const handleSaveDraftQuestion = async () => {
     try {
       setIsCardSubmitted(true);
@@ -497,12 +517,11 @@ export default function CreateQuestion({
   useEffect(() => {
     setIsLoading(false); 
     const selected = centralData?.selectedQuestion?.question;
-    console.log(selected);
     const title = selected?.title;
-    if (selected && isClone) {
+    if (selected && (isClone || isEdit)) {
       // regex to detect (clone of) in title
       const regex = /\(Clone of\)/i;
-      if (title && !regex.test(title))
+      if (title && !regex.test(title) && isClone)
         selected.title = `(Clone of) ${title}`;
       const draft = assembleQuestionTemplate(selected);
       setDraftQuestion(prev => ({
@@ -513,17 +532,22 @@ export default function CreateQuestion({
       setCompleteIncorrectAnswers(draft.incorrectCards.filter((card) => card.isCardComplete));
       setIncompleteIncorrectAnswers(draft.incorrectCards.filter((card) => !card.isCardComplete));
     }
-    const id = route?.params.questionId;
-    if (!centralData.selectedQuestion?.question && id){
+    if (!centralData.selectedQuestion?.question && selectedQuestionId && (isClone || isEdit)) {
       setIsLoading(true);
-      fetchElement(GameQuestionType.QUESTION, id);
+      fetchElement(GameQuestionType.QUESTION, selectedQuestionId);
     }
-  }, [centralData.selectedQuestion, route ]); // eslint-disable-line 
+  }, [centralData.selectedQuestion, route, selectedQuestionId ]); // eslint-disable-line 
 
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
-       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible || isDiscardModalOpen} handleCloseModal={handleCloseModal}/>
+       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible || isDiscardModalOpen || isEditModalOpen} handleCloseModal={handleCloseModal}/>
+        <EditModal
+          isModalOpen={isEditModalOpen}
+          gameQuestion={GameQuestionType.QUESTION}
+          setIsModalOpen={setIsEditModalOpenl}
+          handleProceedToEdit={handleSaveEditedQuestion}
+        />
        <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={isCCSSVisible}
@@ -565,8 +589,10 @@ export default function CreateQuestion({
                 gap: `${theme.sizing.xSmPadding}px`, 
                 paddingBottom: '16px',
               }}>
-                <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
-                <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSave} />
+                {!isClone && !isEdit && 
+                  <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                }
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
             }
@@ -581,7 +607,7 @@ export default function CreateQuestion({
                 gap: `${theme.sizing.xSmPadding}px`, 
                 paddingBottom: '16px',
               }}>
-                <CentralButton buttonType={ButtonType.SAVE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSaveQuestion} />
+                <CentralButton buttonType={ButtonType.SAVE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSave} />
                 <CentralButton buttonType={ButtonType.SAVEDRAFT} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
@@ -596,8 +622,10 @@ export default function CreateQuestion({
               >
                 { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
                   <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
-                    <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
-                    <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                    <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSave} />
+                    {!isClone && !isEdit && 
+                      <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                    }
                     <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
                   </Box>
                 }

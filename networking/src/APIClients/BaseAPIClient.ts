@@ -47,8 +47,8 @@ export enum SortType {
 }
 
 export enum EditType {
-  EDIT,
   CLONE,
+  EDIT,
   DELETE
 }
 export enum SortDirection {

@@ -103,7 +103,7 @@ export default function QuestionTabsSelectedQuestion({
                 screenSize={screenSize}
                 isEditEnabled={isEditEnabled}
                 handleCloneButtonClick={handleCloneButtonClick}
-                handleEditButtonClick={handleCloneButtonClick}
+                handleEditButtonClick={handleEditButtonClick}
                 handleDeleteButtonClick={handleDeleteButtonClick}
               />
             </Box>

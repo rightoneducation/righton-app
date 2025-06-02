@@ -130,7 +130,8 @@ function AppSwitch({
       );
       break;
     }
-    case ScreenType.CLONEQUESTION: {
+    case ScreenType.CLONEQUESTION: 
+    case ScreenType.EDITQUESTION: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
           <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>

@@ -149,7 +149,7 @@ export default function CreateGame({
   // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
 
   let label = 'Create';
-  let selectedGameId = ''
+  let selectedGameId = '';
   switch (true){
     case (isEdit):
       label = 'Edit';
@@ -680,7 +680,7 @@ export default function CreateGame({
         );
       }
     }
-    if (!centralData.selectedGame?.game && selectedGameId){
+    if (!centralData.selectedGame?.game && selectedGameId && (isClone || isEdit)){
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }

@@ -42,6 +42,7 @@ function App() {
             <Route path="/library/games/:gameId" element={<AppSwitch currentScreen={ScreenType.VIEWGAME} />} />
             <Route path="/create/question" element={<AppSwitch currentScreen={ScreenType.CREATEQUESTION} />} loader={CreateQuestionLoader}/>
             <Route path="/clone/question/:questionId" element={<AppSwitch currentScreen={ScreenType.CLONEQUESTION} />} />
+            <Route path="/edit/question/:questionId" element={<AppSwitch currentScreen={ScreenType.EDITQUESTION} />} />
             <Route path="/confirmation" element={<AppSwitch currentScreen={ScreenType.CONFIRMATION} />} />
             <Route path="/nextstep" element={<AppSwitch currentScreen={ScreenType.NEXTSTEP} />} />
             <Route path="/library" element={<AppSwitch currentScreen={ScreenType.LIBRARY} />} />
