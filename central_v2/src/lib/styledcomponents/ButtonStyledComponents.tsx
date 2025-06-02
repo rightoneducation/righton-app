@@ -73,7 +73,7 @@ export const ButtonStyled = styled(Button, {
   boxShadow: (isOnQuestionTab || buttonType === ButtonType.LOGOUT || ButtonType.EDITPROFILEPICTURE) ? 'none' : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
   borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
   borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
-  borderColor: buttonColor === ButtonColor.NULL ? (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT || (buttonType === ButtonType.SIGNUP && isReset) ? `${theme.palette.primary.buttonPrimaryDefault}` : `#FFF` ) : 'none', // eslint-disable-line no-nested-ternary
+  borderColor: buttonColor === ButtonColor.NULL ? (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT || (buttonType === ButtonType.SIGNUP && isReset) || (buttonType === ButtonType.BACK && isReset) ? `${theme.palette.primary.buttonPrimaryDefault}` : `#FFF` ) : 'none', // eslint-disable-line no-nested-ternary
   backgroundColor: getBackgroundColor(theme, buttonColor),
   ':hover': {
     backgroundColor: getHoverColor(theme, buttonColor, buttonType),
@@ -112,7 +112,7 @@ export const ButtonTypography = styled(Typography, {
   fontWeight: '600',
   textTransform: 'none',
   padding: 0,
-  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER || buttonType === ButtonType.SAVEDRAFT || (buttonType === ButtonType.SIGNUP && isReset) ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER || buttonType === ButtonType.SAVEDRAFT || (buttonType === ButtonType.SIGNUP && isReset) || (buttonType === ButtonType.BACK && isReset) ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
   whiteSpace: 'nowrap',
 }));
 

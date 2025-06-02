@@ -20,6 +20,7 @@ interface CentralButtonProps {
   iconOnlyOverride?: boolean;
   type?: string;
   isReset?: boolean;
+  hideIcon?: boolean;
   onClick?: () => void;
   handleFileChange?: (file: File) => void;
 }
@@ -33,6 +34,7 @@ export default function CentralButton({
   iconOnlyOverride,
   type,
   isReset,
+  hideIcon,
   onClick,
   handleFileChange,
 }: CentralButtonProps) {

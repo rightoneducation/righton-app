@@ -136,9 +136,12 @@ function PasswordResetConfirmation({
 
   const handleResendCodeClick = async () => {
       try {
+    // user is logged out
     if(isForgotPassword && userName) {
         await apiClients.auth.awsResetPassword(userName);
-    } else if(centralData.userProfile.email){
+    } 
+    // user is logged in
+    else if(centralData.userProfile.email){
         await apiClients.auth.awsResetPassword(
           centralData.userProfile.email,
         );

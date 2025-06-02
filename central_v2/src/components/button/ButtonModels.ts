@@ -52,6 +52,7 @@ export enum ButtonType {
   EDITPROFILEPICTURE = 'editprofilepicture',
   EDITINFORMATION = 'editinformation',
   CHANGEPASSWORD = 'changepassword',
+  CONFIRMSENDCODE = 'confirmsendcode',
   CREATE = 'create',
   CHOOSE = 'choose',
   CLONE = 'clone',
@@ -239,6 +240,9 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CHANGEPASSWORD]: {
     textKey: ButtonType.CHANGEPASSWORD,
+  },
+  [ButtonType.CONFIRMSENDCODE]: {
+    textKey: ButtonType.CONFIRMSENDCODE,
   },
   [ButtonType.CREATE]: {
     icon: add,

@@ -142,6 +142,12 @@ export default function NewPasswordInputs({
           setPasswordError(''); // Clear error if all checks pass
           setPasswordMisMatch(false);
         }
+        // Make sure passwords always match in case new password is modified.
+        if(confirmPassword.length > 0 && confirmPassword !== passwordInput) {
+            setPasswordConfirmError("Password do not match")
+        } else {
+            setPasswordConfirmError("");
+        }
       };
 
     return (

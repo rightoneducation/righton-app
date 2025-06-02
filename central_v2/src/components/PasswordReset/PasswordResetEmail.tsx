@@ -41,7 +41,7 @@ const UserTextField = styled(TextField)(({ theme }) => ({
     },
     '& .MuiInputBase-input': {
       color: '#384466', // Set text color of the input
-  
+      height: '10px',
     },
     '& .MuiInputBase-input::placeholder': {
       color: '#384466', // Set the placeholder text color
