@@ -55,6 +55,7 @@ interface TabContainerProps {
   handlePrevQuestion: () => void;
   handleNextQuestion: () => void;
   handleCloneButtonClick: () => void;
+  handleEditButtonClick: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -80,6 +81,7 @@ export default function QuestionTabs({
   handlePrevQuestion,
   handleNextQuestion,
   handleCloneButtonClick,
+  handleEditButtonClick,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
@@ -204,6 +206,7 @@ export default function QuestionTabs({
                 handlePrevQuestion={handlePrevQuestion}
                 handleNextQuestion={handleNextQuestion}
                 handleCloneButtonClick={handleCloneButtonClick}
+                handleEditButtonClick={handleEditButtonClick}
                 handleFavoriteButtonClick={handleFavoriteButtonClick}
                 isFavorite={isFavorite}
               />

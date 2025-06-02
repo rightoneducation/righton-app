@@ -130,6 +130,15 @@ export default function ExploreQuestions({
     navigate(`/clone/question/${selectedQuestion?.id}`);
   };
 
+  const handleEditButtonClick = () => {
+    setIsTabsOpen(false);
+    centralDataDispatch({
+      type: 'SET_SELECTED_QUESTION',
+      payload: selectedQuestion,
+    });
+    navigate(`/edit/question/${selectedQuestion?.id}`);
+  };
+
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       
@@ -151,6 +160,7 @@ export default function ExploreQuestions({
             handlePrevQuestion={handlePrevQuestion}
             handleNextQuestion={handleNextQuestion}
             handleCloneButtonClick={handleCloneButtonClick}
+            handleEditButtonClick={handleEditButtonClick}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}

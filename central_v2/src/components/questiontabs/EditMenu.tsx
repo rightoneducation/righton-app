@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, useTheme, styled, Select, ClickAwayListener } from '@mui/material';
+import { Box, Button, Typography, useTheme, styled, Select, ClickAwayListener } from '@mui/material';
 import { GradeTarget, SortType, SortDirection, EditType } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
@@ -54,6 +54,12 @@ export default function EditMenu({
     [EditType.DELETE]: deleteIcon
   };
 
+  const editHandlerMap: { [editType in EditType]: () => void } = {
+    [EditType.CLONE]: handleCloneButtonClick,
+    [EditType.EDIT]: handleEditButtonClick,
+    [EditType.DELETE]: handleDeleteButtonClick,
+  };
+
   return (
     <ClickAwayListener onClickAway={() => {
       if (isEditOpen) {
@@ -71,7 +77,7 @@ export default function EditMenu({
           </SortArrowContainer>
         </SortButton>
         {/* Submenu */}
-        <SortMenu isSortOpen={isEditOpen}>
+        <SortMenu isSortOpen={isEditOpen} style={{gap: '8px'}}>
         {(Object.keys(editTypeMap) as Array<keyof typeof editTypeMap>).map((editLabel, i) => {
             const editValue = editTypeMap[editLabel]; // this is the EditType enum value
 
@@ -79,7 +85,7 @@ export default function EditMenu({
                 <SortMenuItem
                   key={editLabel}
                   isSelected={selectedEdit.field === editValue}
-                  onClick={() => {}}
+                  onClick={handleCloneButtonClick}
                 >
                   <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                     <Typography
@@ -100,22 +106,23 @@ export default function EditMenu({
                 <SortMenuItem
                   key={editLabel}
                   isSelected={selectedEdit.field === editValue}
-                  onClick={() => {}}
                 >
                   <EditToolTip isEditEnabled={isEditEnabled} isOnQuestionTab>
-                    <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                      <Typography
-                        fontSize="16px"
-                        color={
-                          selectedEdit.field === editValue
-                            ? "white"
-                            : `${theme.palette.primary.sortText}`
-                        }
-                        style={{fontWeight: isEditEnabled ? 600 : 400}}
-                      >
-                        {editLabel}
-                      </Typography>
-                      <img src={editIconMap[editValue]} alt={`${editLabel} Icon`} />
+                    <Box component="span" display="inline-flex">
+                      <Button disabled={!isEditEnabled} onClick={editHandlerMap[editValue]} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textTransform: 'none', padding: 0 }}>
+                        <Typography
+                          fontSize="16px"
+                          color={
+                            selectedEdit.field === editValue
+                              ? "white"
+                              : `${theme.palette.primary.sortText}`
+                          }
+                          style={{fontWeight: isEditEnabled ? 600 : 400}}
+                        >
+                          {editLabel}
+                        </Typography>
+                        <img src={editIconMap[editValue]} alt={`${editLabel} Icon`} />
+                      </Button>
                     </Box>
                   </EditToolTip>
                 </SortMenuItem>

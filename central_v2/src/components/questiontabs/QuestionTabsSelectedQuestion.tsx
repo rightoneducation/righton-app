@@ -37,6 +37,7 @@ interface TabContainerProps {
   handlePrevQuestion: () => void;
   handleNextQuestion: () => void;
   handleCloneButtonClick: () => void;
+  handleEditButtonClick: () => void;
   handleFavoriteButtonClick: () => void;
 }
 
@@ -48,12 +49,17 @@ export default function QuestionTabsSelectedQuestion({
   handlePrevQuestion,
   handleNextQuestion,
   handleCloneButtonClick,
+  handleEditButtonClick,
   handleFavoriteButtonClick
 }: TabContainerProps) {
   const theme = useTheme();
   const centralData = useCentralDataState();
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
-  const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
+  const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === question?.userId;
+
+  const handleDeleteButtonClick = () => {
+    // TODO: pop modal
+  };
 
   return (
      <ContentContainer>
@@ -96,9 +102,9 @@ export default function QuestionTabsSelectedQuestion({
               <EditMenu 
                 screenSize={screenSize}
                 isEditEnabled={isEditEnabled}
-                handleCloneButtonClick={() => {}}
-                handleEditButtonClick={() => {}}
-                handleDeleteButtonClick={() => {}}
+                handleCloneButtonClick={handleCloneButtonClick}
+                handleEditButtonClick={handleCloneButtonClick}
+                handleDeleteButtonClick={handleDeleteButtonClick}
               />
             </Box>
             <CentralButton
