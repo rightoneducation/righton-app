@@ -71,7 +71,6 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
     if (userName) {
       try {
         const response = await apiClients.auth.awsResetPassword(userName);
-        console.log("email submit response", response)
         if(response.nextStep.resetPasswordStep === 'CONFIRM_RESET_PASSWORD_WITH_CODE'){
           handleNextStep();
         }
@@ -101,7 +100,6 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
     const fullCode = code.join('');
 
     if (newPassword !== confirmPassword || fullCode.length < 6) {
-      handleConfirmationError();
       return;
     }
 
