@@ -547,7 +547,7 @@ export default function CreateQuestion({
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
       <CreateQuestionBoxContainer>
         <TitleText screenSize={ScreenSize.LARGE}> 
-          {isClone ? 'Clone' : 'Create'} Question
+          {label} Question
         </TitleText>
         {isLoading ? (
           <CircularProgress

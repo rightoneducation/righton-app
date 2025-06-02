@@ -45,6 +45,12 @@ export enum SortType {
   listQuestionTemplatesByGrade,
   listQuestionTemplatesByGameCount,
 }
+
+export enum EditType {
+  EDIT,
+  CLONE,
+  DELETE
+}
 export enum SortDirection {
   ASC = "ASC",
   DESC = "DESC",

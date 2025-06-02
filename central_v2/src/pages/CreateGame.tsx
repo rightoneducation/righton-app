@@ -248,7 +248,7 @@ export default function CreateGame({
           gameImgUrl = draftGame.imageUrl || null;
         }
         const userId = centralData.userProfile?.id || '';
-        let updatedGame = buildEditedGameTemplate(draftGame, userId, draftQuestionsList, gameImgUrl);
+        const updatedGame = buildEditedGameTemplate(draftGame, userId, draftQuestionsList, gameImgUrl);
         const gameTemplateResponse = await apiClients.gameTemplate.updateGameTemplate(
           draftGame.publicPrivateGame,
           updatedGame,

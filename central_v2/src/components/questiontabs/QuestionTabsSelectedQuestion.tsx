@@ -12,6 +12,7 @@ import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestion
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import DetailedQuestionSubCard from '../cards/detailedquestion/DetailedQuestionSubCard';
+import EditMenu from './EditMenu';
 import { CardType, ScreenSize, UserStatusType, LibraryTabEnum } from '../../lib/CentralModels';
 import OwnerTag from '../profile/OwnerTag';
 import { 
@@ -52,7 +53,7 @@ export default function QuestionTabsSelectedQuestion({
   const theme = useTheme();
   const centralData = useCentralDataState();
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
-
+  const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
 
   return (
      <ContentContainer>
@@ -92,12 +93,12 @@ export default function QuestionTabsSelectedQuestion({
               </Box>
             )}
             <Box>
-              <CentralButton
-                buttonType={ButtonType.CLONEANDEDIT}
-                isEnabled
-                isOnQuestionTab
-                iconOnlyOverride={screenSize === ScreenSize.SMALL}
-                onClick={handleCloneButtonClick}
+              <EditMenu 
+                screenSize={screenSize}
+                isEditEnabled={isEditEnabled}
+                handleCloneButtonClick={() => {}}
+                handleEditButtonClick={() => {}}
+                handleDeleteButtonClick={() => {}}
               />
             </Box>
             <CentralButton

@@ -151,7 +151,7 @@ export default function ViewGame({
                  {centralData.userStatus === UserStatusType.LOGGEDIN &&
                   <>
                     <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride buttonWidthOverride='275px'/>
-                    <EditToolTip isEditEnabled={isEditEnabled}>
+                    <EditToolTip isEditEnabled={isEditEnabled} isOnQuestionTab={false}>
                       <CentralButton 
                         buttonType={ButtonType.EDIT} 
                         isEnabled={isEditEnabled}
@@ -160,7 +160,7 @@ export default function ViewGame({
                         buttonWidthOverride='275px'
                       />
                     </EditToolTip>
-                    <EditToolTip isEditEnabled={isEditEnabled}>
+                    <EditToolTip isEditEnabled={isEditEnabled} isOnQuestionTab={false}>
                       <CentralButton 
                         buttonType={ButtonType.DELETE} 
                         isEnabled={isEditEnabled}
@@ -187,7 +187,7 @@ export default function ViewGame({
                       { centralData.userStatus === UserStatusType.LOGGEDIN &&
                         <>
                           <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
-                            <EditToolTip isEditEnabled={isEditEnabled}>
+                            <EditToolTip isEditEnabled={isEditEnabled} isOnQuestionTab={false}>
                               <Box style={{width: '100%'}}>
                                 <CentralButton 
                                   buttonType={ButtonType.EDIT} 
@@ -198,7 +198,7 @@ export default function ViewGame({
                                 />
                               </Box>
                             </EditToolTip>
-                            <EditToolTip isEditEnabled={isEditEnabled}>
+                            <EditToolTip isEditEnabled={isEditEnabled} isOnQuestionTab={false}>
                               <Box style={{width: '100%'}}>
                                 <CentralButton 
                                   buttonType={ButtonType.DELETE} 
