@@ -11,7 +11,8 @@ import {
   IQuestionTemplate,
   IUserProfile,
   PublicPrivateType,
-  GradeTarget
+  GradeTarget,
+  deleteQuestion
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -45,6 +46,7 @@ interface ExploreQuestionsProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   loadMore: () => void;
+  deleteQuestionTemplate: (questionId: string, type: PublicPrivateType) => Promise<void>;
 }
 
 export default function ExploreQuestions({
@@ -57,6 +59,7 @@ export default function ExploreQuestions({
   handleSortChange,
   handleSearchChange,
   loadMore,
+  deleteQuestionTemplate
 }:ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -152,6 +155,25 @@ export default function ExploreQuestions({
   };
 
   const handleDeleteQuestion = async () => {
+    try {
+      if (selectedQuestion) {
+        await deleteQuestionTemplate(selectedQuestion.id, PublicPrivateType.PUBLIC);
+        setIsDeleteModalOpen(false);
+        setSelectedQuestion(null);
+        centralDataDispatch({type: 'SET_SELECTED_QUESTION', payload: null});
+        centralDataDispatch({
+          type: 'SET_IS_TABS_OPEN',
+          payload: false,
+        });
+        centralDataDispatch({
+          type: 'SET_SEARCH_TERMS',
+          payload: '',
+        });
+        navigate('/questions');
+      }
+    } catch (error) {
+      console.error('Error deleting question:', error);
+    }
   };
 
   const handleCloseModal = () => {

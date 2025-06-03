@@ -1,6 +1,6 @@
 import { Environment } from '../interfaces/IBaseAPIClient';
 import { ICentralDataManagerAPIClient } from './interfaces/ICentralDataManagerAPIClient';
-import { IGameTemplateAPIClient, IQuestionTemplateAPIClient } from '../templates';
+import { IGameTemplateAPIClient, IQuestionTemplateAPIClient, IGameQuestionsAPIClient } from '../templates';
 import { PublicPrivateType, SortDirection, GradeTarget, SortType } from "../BaseAPIClient";
 import { IUserProfile } from '../../Models/IUserProfile';
 import { IAuthAPIClient } from '../auth';
@@ -19,6 +19,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   protected authAPIClient: IAuthAPIClient;
   protected userAPIClient: IUserAPIClient;
   protected gameTemplateAPIClient: IGameTemplateAPIClient;
+  protected gameQuestionsAPIClient: IGameQuestionsAPIClient;
   protected questionTemplateAPIClient: IQuestionTemplateAPIClient;
 
   constructor (
@@ -26,12 +27,14 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     authAPIClient: IAuthAPIClient,
     userAPIClient: IUserAPIClient,
     gameTemplateAPIClient: IGameTemplateAPIClient,
+    gameQuestionsAPIClient: IGameQuestionsAPIClient,
     questionTemplateAPIClient: IQuestionTemplateAPIClient,
   ) {
     this.env = env;
     this.authAPIClient = authAPIClient;
     this.userAPIClient = userAPIClient;
     this.gameTemplateAPIClient = gameTemplateAPIClient;
+    this.gameQuestionsAPIClient = gameQuestionsAPIClient;
     this.questionTemplateAPIClient = questionTemplateAPIClient;
   } 
   
@@ -138,6 +141,37 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
     }
     return {nextToken: null, questions: []};
+  };
+
+  public deleteQuestionTemplate = async (type: PublicPrivateType, questionId: string) => {
+    try {
+      // need to delete the question template from the join table first
+      const gameQuestionIds = await this.questionTemplateAPIClient.getQuestionTemplateJoinTableIds( type, questionId);
+      console.log('gameQuestionIds', gameQuestionIds);
+      if (gameQuestionIds && gameQuestionIds.length > 0) {
+        console.log('here');
+        const deletedGameQuestions = gameQuestionIds.map(async (gameQuestionId) => {
+          await this.gameQuestionsAPIClient.deleteGameQuestions(type, gameQuestionId);
+        });
+        console.log(deletedGameQuestions);
+        Promise.all(deletedGameQuestions).then(() =>{
+          // Now delete the question template itself
+          const response = this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
+          return response;
+        })
+        .catch((error) => {
+          throw new Error(`Failed to delete game questions associated with question template: ${error.message}`);
+        });
+      } else {
+        // If there are no game questions associated with the question template, delete the question template directly
+        const response = this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
+        console.log('response', response);
+        return response;
+      }
+      return;
+    } catch (error: any) {
+        throw new Error(`Failed to delete question template: ${error.message}`);
+    }
   };
 
   public refreshLocalUserProfile = async () => {

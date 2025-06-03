@@ -357,6 +357,7 @@ export default function CreateGame({
          gameImgUrl = await createGameImagePath(draftGame, apiClients);
         }
           const userId = centralData.userProfile?.id || '';
+          console.log(draftQuestionsList, 'draftQuestionsList in handleSaveDraftGame');
           // create & store game template in variable to retrieve id after response
           const createGame = buildGameTemplate(draftGameCopy, userId, draftQuestionsList, gameImgUrl);
           const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(

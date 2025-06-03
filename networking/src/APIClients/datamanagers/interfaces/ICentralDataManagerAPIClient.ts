@@ -40,4 +40,5 @@ export interface ICentralDataManagerAPIClient {
   userProfileInformationUpdate(user: IUserProfile, oldUser: IUserProfile, frontImage?: File | null,
     backImage?: File | null): Promise<{updatedUser: any}>;
   userProfileImageUpdate(user: IUserProfile, newProfilePic: File | null): Promise<{updatedUser: any}>;
+  deleteQuestionTemplate:(type: PublicPrivateType, questionId: string, ) => void;
 }

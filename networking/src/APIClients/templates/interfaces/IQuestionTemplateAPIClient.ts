@@ -239,6 +239,11 @@ export interface IQuestionTemplateAPIClient {
     id: string
   ): Promise<IQuestionTemplate>;
 
+  getQuestionTemplateJoinTableIds<T extends PublicPrivateType>(
+    type: T,
+    id: string
+  ): Promise<string[]>;
+
   updateQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     imageUrl: string,

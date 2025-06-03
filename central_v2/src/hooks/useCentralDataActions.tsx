@@ -38,6 +38,7 @@ interface UseCentralDataManagerReturnProps {
   loadMoreLibrary: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null) => void;
   handleLogOut: () => void;
   checkForUniqueEmail: (email: string) => Promise<boolean>;
+  deleteQuestionTemplate: (questionId: string, type: PublicPrivateType) => Promise<void>;
 }
 
 /* 
@@ -179,7 +180,7 @@ export default function useCentralDataManager({
             apiClients?.centralDataManager
               ?.searchForQuestionTemplates(
                 PublicPrivateType.PUBLIC,
-                null,
+                500,
                 null,
                 search,
                 sortDirection,
@@ -198,7 +199,7 @@ export default function useCentralDataManager({
             apiClients?.centralDataManager
               ?.searchForGameTemplates(
                 PublicPrivateType.PUBLIC,
-                null,
+                500,
                 null,
                 search,
                 sortDirection,
@@ -643,6 +644,15 @@ export default function useCentralDataManager({
     
   };
 
+  const deleteQuestionTemplate = async (questionId: string, type: PublicPrivateType) => {
+    try {
+      const response = await apiClients.centralDataManager?.deleteQuestionTemplate(type, questionId);
+    } catch (err) {
+      console.error('Error deleting question template:', err);
+      throw new Error('Failed to delete question template');
+    }
+  };
+
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
@@ -671,6 +681,7 @@ export default function useCentralDataManager({
     loadMore,
     loadMoreLibrary,
     handleLogOut,
-    checkForUniqueEmail
+    checkForUniqueEmail,
+    deleteQuestionTemplate
   };
 }

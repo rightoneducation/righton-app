@@ -51,9 +51,9 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
             queryFunction,
             variables
         ) as {data: any};
+        console.log(result);
         if (
-            isNullOrUndefined(result.data) ||
-            isNullOrUndefined(result.data.deleteGameQuestions)
+            isNullOrUndefined(result.data)
         ) {
             throw new Error(`Failed to delete gameQuestions.`)
         }

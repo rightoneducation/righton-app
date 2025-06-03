@@ -32,7 +32,7 @@ export class QuestionTemplateParser {
         const choices = JSON.stringify([choicesCorrect, ...choicesIncorrect]);
         const answerSettings = JSON.stringify(createQuestionTemplateInput.correctCard.answerSettings);
         const questionTemplate: QuestionTemplateType<T>['create']['input'] = {
-            id: id ?? '',
+            ...(id && id.length > 0 ? { id } : {}),
             title,
             userId,
             lowerCaseTitle,
@@ -50,6 +50,7 @@ export class QuestionTemplateParser {
             timesPlayed: 0,
             gameTemplatesCount: 0,
         }
+        console.log(questionTemplate);
         return questionTemplate
     }
 

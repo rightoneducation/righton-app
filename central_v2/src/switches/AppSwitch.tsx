@@ -52,6 +52,7 @@ function AppSwitch({
     fetchElements,
     handleLogOut,
     checkForUniqueEmail,
+    deleteQuestionTemplate
   } = useCentralDataManager({gameQuestion});
   
   const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
@@ -77,6 +78,7 @@ function AppSwitch({
             handleSearchChange={handleSearchChange}
             loadMore={loadMore}
             handlePublicPrivateChange={getPublicPrivateElements}
+            deleteQuestionTemplate={deleteQuestionTemplate}
           />
         </AuthGuard>
       );

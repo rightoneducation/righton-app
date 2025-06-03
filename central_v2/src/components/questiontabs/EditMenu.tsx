@@ -80,10 +80,7 @@ export default function EditMenu({
         {isEditOpen &&
           <SortMenu isSortOpen={isEditOpen} style={{gap: '8px'}}>
           {(Object.keys(editTypeMap) as Array<keyof typeof editTypeMap>).map((editLabel, i) => {
-            console.log('editLabel', editLabel);
               const editValue = editTypeMap[editLabel]; // this is the EditType enum value
-              console.log(i);
-              console.log(editValue);
               return i === 0 ? (
                   <SortMenuItem
                     key={editLabel}

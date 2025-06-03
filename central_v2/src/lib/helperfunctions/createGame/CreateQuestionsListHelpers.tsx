@@ -126,6 +126,7 @@ export const buildQuestionTemplatePromises = (
   userId: string,
   apiClients: IAPIClients,
 ) => {
+  console.log('buildQuestionTemplatePromises', draftQuestionsList);
   return draftQuestionsList.map(async (dq, i) => {
     const dqCopy = { ...dq };
     let result = null;
@@ -170,6 +171,7 @@ export const buildQuestionTemplatePromises = (
     // if an image url is available, we can create a question template
     if (url) {
       try {
+        console.log(dqCopy.question);
         newQuestionResponse =
           await apiClients.questionTemplate.createQuestionTemplate(
             dqCopy.publicPrivate,
