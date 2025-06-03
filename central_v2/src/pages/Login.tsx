@@ -20,6 +20,7 @@ import LoginErrorModal from '../components/modal/LoginErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import { UserStatusType } from '../lib/CentralModels';
 import { useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
+import NotVerifiedModal from '../components/modal/NotVerifiedModal';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -174,6 +175,9 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   
+  const [isNonVerifiedModalOpen, setIsNonVerifiedModalOpen] = useState(false);
+
+
   const centralDataDispatch = useCentralDataDispatch();
 
   const handleLoginClick = async () => {
@@ -185,9 +189,13 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
       setIsLoggingIn(false);
       navigate('/');
     } catch (error) {
-      setIsModalOpen(true);
+      if (error instanceof Error && error.message.includes("UserUnAuthenticatedException: User needs to be authenticated to call this API")){
+        setIsNonVerifiedModalOpen(true)
+      } else{
+        setIsModalOpen(true);
+      }
       setIsLoggingIn(false);
-      console.error('Error during login:', error);
+      console.error(error);
     }
   };
 
@@ -222,6 +230,7 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
     <SignUpMainContainer>
       <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleLogOut={handleLogOut}/>
       <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
+      <NotVerifiedModal isNonVerifiedModalOpen={isNonVerifiedModalOpen} setIsNonVerifiedModalOpen={setIsNonVerifiedModalOpen}/>
       <InnerBodyContainer>
         <UpperLogin>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
