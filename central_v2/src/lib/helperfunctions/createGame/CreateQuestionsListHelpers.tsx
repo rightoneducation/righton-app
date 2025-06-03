@@ -4,6 +4,7 @@ import {
   IQuestionTemplate,
   PublicPrivateType,
   AnswerType,
+  IGameTemplate,
   CentralQuestionTemplateInput
 } from '@righton/networking';
 import {
@@ -52,73 +53,33 @@ export const checkDQsAreValid = (
   });
 };
 
-export const buildEditedQuestionTemplatePromises = (
-  draftQuestionsList: TDraftQuestionsList[],
-  originalQuestionImageUrls: string[],
+export const buildRemoveQuestionTemplatePromises = (
+  removeQuestionTemplateIds: string[],
+  gameTemplate: IGameTemplate,
   userId: string,
   apiClients: IAPIClients,
 ) => {
-  return draftQuestionsList.map(async (dq, i) => {
-    const dqCopy = { ...dq };
-    let result = null;
-    let url = null;
-    dqCopy.questionTemplate.userId = userId;
-    dqCopy.questionTemplate.timesPlayed = 0;
 
-    // if existing question return its ID for Game Creation
-    if (dqCopy.questionTemplate.id) {
-      return { id: dqCopy.questionTemplate.id } as IQuestionTemplate;
-    }
+  const questionTemplatesToRemove = gameTemplate.questionTemplates?.filter(
+    (qt) => removeQuestionTemplateIds.includes(qt.questionTemplate.id),
+  ) ?? [];
 
-    // image file case
-    if (dqCopy.question.questionCard.image) {
-      try {
-        const img = await apiClients.questionTemplate.storeImageInS3(
-          dqCopy.question.questionCard.image,
-        );
-        result = await img.result;
-        if (result && result.path && result.path.length > 0) {
-          url = result.path;
-        }
-      } catch (err) {
-        console.error('Error storing image:', err);
-        throw new Error('Failed to store image.');
-      }
-    }
+  const gameQuestionIds =
+    questionTemplatesToRemove?.map(
+      (qt) => qt.gameQuestionId,
+    ) ?? [];
 
-    // image url case
-    else if (dqCopy.question.questionCard.imageUrl && dqCopy.question.questionCard.imageUrl !== originalQuestionImageUrls[i]) {
-      try {
-        url = await apiClients.questionTemplate.storeImageUrlInS3(
-          dqCopy.question.questionCard.imageUrl,
-        );
-      } catch (err) {
-        console.error('Error storing image URL:', err);
-        throw new Error('Failed to store image URL.');
-      }
-    } else {
-      url = originalQuestionImageUrls[i];
-    }
-    dqCopy.questionTemplate.imageUrl = url;
-    let newQuestionResponse: IQuestionTemplate | undefined;
-
-    // if an image url is available, we can create a question template
-    if (url) {
-      try {
-        // newQuestionResponse =
-        //   await apiClients.questionTemplate.updateQuestionTemplate(
-        //     dqCopy.publicPrivate,
-        //     dqCopy.question,
-        //   );
-      } catch (err) {
-        console.error('Error creating question template:', err);
-        throw new Error('Failed to create question template.');
-      }
-    }
-
-    // return updated question with POST response
-    return newQuestionResponse;
-  });
+  // TODO: handle publicprivate type in gametemplate object
+  try {
+    return gameQuestionIds.map((gameQuestionId) => {
+      return apiClients.gameQuestions.deleteGameQuestions(
+        PublicPrivateType.PUBLIC,
+        gameQuestionId,
+      );
+    });
+  } catch (err: any) {
+    throw new Error('Failed to update game template or delete question templates.', err);
+  }
 };
 
 export const buildQuestionTemplatePromises = (
@@ -126,7 +87,6 @@ export const buildQuestionTemplatePromises = (
   userId: string,
   apiClients: IAPIClients,
 ) => {
-  console.log('buildQuestionTemplatePromises', draftQuestionsList);
   return draftQuestionsList.map(async (dq, i) => {
     const dqCopy = { ...dq };
     let result = null;
@@ -171,7 +131,6 @@ export const buildQuestionTemplatePromises = (
     // if an image url is available, we can create a question template
     if (url) {
       try {
-        console.log(dqCopy.question);
         newQuestionResponse =
           await apiClients.questionTemplate.createQuestionTemplate(
             dqCopy.publicPrivate,

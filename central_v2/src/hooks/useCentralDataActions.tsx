@@ -644,6 +644,18 @@ export default function useCentralDataManager({
     
   };
 
+  const removeQuestionFromGameTemplate = async (type: PublicPrivateType, questionId: string, gameId: string) => {
+    try {
+      const response = await apiClients.centralDataManager?.removeQuestionTemplateFromGameTemplate(type, questionId, gameId);
+      if (response) 
+        return true;
+      return false;
+    } catch (err) {
+      console.error('Error removing question from game template:', err);
+      throw new Error('Failed to remove question from game template');
+    }
+  };
+
   const deleteQuestionTemplate = async (questionId: string, type: PublicPrivateType) => {
     try {
       const response = await apiClients.centralDataManager?.deleteQuestionTemplate(type, questionId);

@@ -99,18 +99,18 @@ export class GameTemplateAPIClient
     updateGameTemplateInput: GameTemplateType<T>['update']['input']
   ): Promise<IGameTemplate> {
     const queryFunction = gameTemplateRuntimeMap[type].update.queryFunction;
+    const updateType = `update${type}GameTemplate`;
     const variables: GameTemplateType<T>['update']['variables'] = { input: updateGameTemplateInput };
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['update']['query']>(
         queryFunction,
         variables
     ) as {data: any};
     if (
-        isNullOrUndefined(gameTemplate?.data) ||
-        isNullOrUndefined(gameTemplate?.data.updateGameTemplate)
+        isNullOrUndefined(gameTemplate?.data)
     ) {
         throw new Error(`Failed to update game template`);
     }
-    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.updateGameTemplate as AWSGameTemplate, type);
+    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data[updateType] as AWSGameTemplate, type);
   }
 
   async deleteGameTemplate<T extends PublicPrivateType>(

@@ -431,7 +431,6 @@ export default function CreateQuestion({
             url = draftQuestion.questionCard.imageUrl;
           }
           window.localStorage.setItem(StorageKey, '');
-          console.log(draftQuestion.questionCard.imageUrl);
           if (url){
             apiClients.questionTemplate.updateQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion, selectedQuestionId);
           }
@@ -450,9 +449,7 @@ export default function CreateQuestion({
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      console.log(draftQuestion);
       const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
-      console.log(isQuestionTemplateComplete);
       if (isQuestionTemplateComplete){
         if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
           setIsCreatingTemplate(true);
@@ -473,7 +470,6 @@ export default function CreateQuestion({
             url = draftQuestion.questionCard.imageUrl;
           }
           window.localStorage.setItem(StorageKey, '');
-          console.log(draftQuestion.questionCard.imageUrl);
           if (url){
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion);
           }

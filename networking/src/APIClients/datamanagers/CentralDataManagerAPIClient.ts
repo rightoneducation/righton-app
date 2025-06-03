@@ -143,17 +143,29 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, questions: []};
   };
 
+  public removeQuestionTemplateFromGameTemplate = async (type: PublicPrivateType, questionId: string, gameId: string) => {
+    const gameQuestionIds = await this.questionTemplateAPIClient.getQuestionTemplateJoinTableIds(type, questionId);
+    const gameQuestionId = gameQuestionIds.find((id) => id === gameId);
+
+    if (gameQuestionId) {
+      try {
+        await this.gameQuestionsAPIClient.deleteGameQuestions(type, gameQuestionId);
+        return true;
+      } catch (error: any) {
+        throw new Error(`Failed to delete game question associated with question template: ${error.message}`);
+      }
+    }
+    return false;
+  };
+
   public deleteQuestionTemplate = async (type: PublicPrivateType, questionId: string) => {
     try {
       // need to delete the question template from the join table first
       const gameQuestionIds = await this.questionTemplateAPIClient.getQuestionTemplateJoinTableIds( type, questionId);
-      console.log('gameQuestionIds', gameQuestionIds);
       if (gameQuestionIds && gameQuestionIds.length > 0) {
-        console.log('here');
         const deletedGameQuestions = gameQuestionIds.map(async (gameQuestionId) => {
           await this.gameQuestionsAPIClient.deleteGameQuestions(type, gameQuestionId);
         });
-        console.log(deletedGameQuestions);
         Promise.all(deletedGameQuestions).then(() =>{
           // Now delete the question template itself
           const response = this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
@@ -165,7 +177,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       } else {
         // If there are no game questions associated with the question template, delete the question template directly
         const response = this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
-        console.log('response', response);
         return response;
       }
       return;

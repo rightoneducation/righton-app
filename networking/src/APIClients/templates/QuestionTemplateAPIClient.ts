@@ -151,7 +151,6 @@ export class QuestionTemplateAPIClient
     type: T,
     id: string
   ): Promise<boolean> {
-    console.log('here');
     const queryFunction = questionTemplateRuntimeMap[type].delete.queryFunction;
     const input: QuestionTemplateType<T>['delete']['input'] = { id };
     const variables: QuestionTemplateType<T>['delete']['variables'] = { input };
@@ -159,7 +158,6 @@ export class QuestionTemplateAPIClient
         queryFunction,
         variables
     ) as { data: any };
-    console.log(result);
     // if return is true, the delete was successful
     return (!isNullOrUndefined(result));
   }

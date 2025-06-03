@@ -15,7 +15,7 @@ import {
 import CentralButton from '../button/Button';
 import { ButtonType, buttonContentMap } from '../button/ButtonModels';
 import CreateGameCardBase from '../cards/creategamecard/CreateGameCardBase';
-import { TGameTemplateProps, TPhaseTime } from '../../lib/CreateGameModels';
+import { TGameTemplateProps, TPhaseTime, TDraftQuestionsList } from '../../lib/CreateGameModels';
 import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuestionButtons';
 
 interface ICreateGameComponent {
@@ -27,6 +27,7 @@ interface ICreateGameComponent {
   handleSaveGame: () => Promise<void>;
   handleSaveDraftGame: () => Promise<void>;
   draftGame: TGameTemplateProps;
+  draftQuestionsList?: TDraftQuestionsList[];
   handleDiscard: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   handleImageUploadClick: () => void;
@@ -60,6 +61,7 @@ const qt: IQuestionTemplate = {
 
 export default function CreateGameComponent({
   draftGame,
+  draftQuestionsList,
   isClone,
   isEdit,
   isCloneImageChanged,
@@ -97,8 +99,6 @@ gameQuestionId: "",
 questionTemplate: qt,
   })
   const questions = Array.from({ length: draftGame.questionCount }).map(() => createDraftQuestion());
-
-
 
   return (
     <>
@@ -251,7 +251,7 @@ questionTemplate: qt,
         msOverflowStyle: 'none',
       }}>
         <ManageQuestionsButtons 
-          questions={questions}
+          questions={draftQuestionsList ?? questions}
           iconButtons={iconButtons}
           selectedIndex={selectedIndex}
           isCreate

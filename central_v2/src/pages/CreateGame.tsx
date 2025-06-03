@@ -64,8 +64,8 @@ import {
   } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
   import { 
     checkDQsAreValid, 
+    buildRemoveQuestionTemplatePromises,
     buildQuestionTemplatePromises,
-    buildEditedQuestionTemplatePromises,
     updatePublicPrivateAtIndex,
     updateAIIsEnabledAtIndex,
     updateQuestionImageChangeAtIndex,
@@ -90,8 +90,7 @@ import {
   import {
     updateDQwithAnswerSettings,
   } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
-import { useCentralDataState } from '../hooks/context/useCentralDataContext';
-
+import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -122,6 +121,7 @@ export default function CreateGame({
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const route = useMatch('/clone/game/:gameId');
   const editRoute = useMatch('/edit/game/:gameId');
   const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
@@ -131,6 +131,7 @@ export default function CreateGame({
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
   const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
+  const [removedQuestionTemplateIds, setRemovesQuestionTemplateIds] = useState<string[]>([]);
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
   >([draftTemplate]);
@@ -248,14 +249,54 @@ export default function CreateGame({
           gameImgUrl = draftGame.imageUrl || null;
         }
         const userId = centralData.userProfile?.id || '';
-        const updatedGame = buildEditedGameTemplate(draftGame, userId, draftQuestionsList, gameImgUrl);
+        
+     
+        // need to generate two arrays of promises, one for questions removed from game, one for new questions created for game
+        // newly created questions are handled just like in regular Create Game flow
+        const newQuestions = draftQuestionsList.filter((dq) => !dq.questionTemplate.id);
+        const newQuestionPromises = buildQuestionTemplatePromises(newQuestions, userId, apiClients);
+        const newQuestionPromisesResponse = await Promise.all(newQuestionPromises);
+
+        const questionTemplateIds = newQuestionPromisesResponse.map(
+          (question) => String(question?.id),
+        );
+
+        // make sure we have a gameTemplate id as well as question template ids before creating a game question
+        if (draftGame.gameTemplate.id && questionTemplateIds.length > 0) {
+          try {
+            const createGameQuestions = buildGameQuestionPromises(
+              draftGame, 
+              draftGame.gameTemplate.id, 
+              questionTemplateIds, 
+              apiClients
+            );
+            // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+              await Promise.all(createGameQuestions);
+          } catch (err) {
+            setDraftGame(prev => ({ ...prev, isCreatingTemplate: false }));
+            console.error(`Failed to create one or more game questions:`, err);
+          }
+        }
+
+        // removed questions are handled by removing deleting the associated gameQuestions object
+        const removedQuestionPromises = buildRemoveQuestionTemplatePromises(removedQuestionTemplateIds, draftGame.gameTemplate, userId, apiClients);
+        await Promise.all(removedQuestionPromises)
+
+     
+
+        // update questionTemplateCount in gameTemplate
+        const newQuestionTemplateCount = draftGame.gameTemplate.questionTemplatesCount + newQuestions.length - removedQuestionTemplateIds.length;
+        const updatedDraftGame = {...draftGame, gameTemplate: {...draftGame.gameTemplate, questionTemplatesCount: newQuestionTemplateCount}};
+        const updatedGame = buildEditedGameTemplate(updatedDraftGame, userId, draftQuestionsList, gameImgUrl);
         const gameTemplateResponse = await apiClients.gameTemplate.updateGameTemplate(
           draftGame.publicPrivateGame,
           updatedGame,
         );
 
-        const updatedQuestionTemplates = buildEditedQuestionTemplatePromises(draftQuestionsList, originalQuestionImageUrls, userId, apiClients);
 
+        setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
+        centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+        navigate('/');
       } else {
         setDraftGame((prev) => ({ ...prev, ...(!gameFormIsValid && { isGameCardErrored: true }), isCreatingTemplate: false }));
         if(!allDQAreValid) {
@@ -266,7 +307,6 @@ export default function CreateGame({
 
     } catch (err) {
       setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, }))
-      console.log(`HandleSaveGame - error: `, err);
     }
 
   }
@@ -340,31 +380,30 @@ export default function CreateGame({
       }
     } catch (err) {
       setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, }))
-      console.log(`HandleSaveGame - error: `, err);
     }
+  };
+
+  const handleSave = async () => {
+    return isEdit ? handleSaveEditedGame() : handleSaveGame();
   };
 
   const handleSaveDraftGame = async () => {
     try {
       const draftGameCopy = {...draftGame, publicPrivateGame: PublicPrivateType.DRAFT, isGameCardSubmitted: true, isCreatingTemplate: true};
       setDraftGame(draftGameCopy);
-      
-      
-
         // check for images on draft game 
         let gameImgUrl: string | null = null;
         if(draftGame.image || draftGame.imageUrl) {
          gameImgUrl = await createGameImagePath(draftGame, apiClients);
         }
           const userId = centralData.userProfile?.id || '';
-          console.log(draftQuestionsList, 'draftQuestionsList in handleSaveDraftGame');
           // create & store game template in variable to retrieve id after response
           const createGame = buildGameTemplate(draftGameCopy, userId, draftQuestionsList, gameImgUrl);
           const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
               draftGameCopy.publicPrivateGame,
               createGame,
             );
-
+            
           // convert questions to array of promises & write to db
           const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
           const questionTemplateResponse = await Promise.all(newQuestionTemplates);
@@ -394,7 +433,7 @@ export default function CreateGame({
           setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
           navigate('/');
     } catch (err) {
-      console.log(`HandleSaveGame - error: `, err);
+      console.error(`HandleSaveGame - error: `, err);
     }
   };
   /** END OF CREATE GAME HANDLERS  */
@@ -624,6 +663,14 @@ export default function CreateGame({
       setSelectedQuestionIndex(0);
       return;
     }
+    setRemovesQuestionTemplateIds((prev) => {
+      const questionId = draftQuestionsList[index].questionTemplate.id;
+      if (questionId && questionId.length > 0) {
+        return [...prev, questionId];
+      }
+      return prev;
+    });
+    
     setDraftQuestionsList((prev) => {
       return prev.filter((_, i) => i !== index); 
     });
@@ -676,6 +723,7 @@ export default function CreateGame({
               ...draftTemplate,
               question: assembled[i],
               questionTemplate: orig.questionTemplate,
+              isLibraryViewOnly: true
             }
           })
         );
@@ -686,7 +734,7 @@ export default function CreateGame({
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }
   }, [centralData.selectedGame, route, selectedGameId ]); // eslint-disable-line 
-
+  
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
@@ -752,12 +800,13 @@ export default function CreateGame({
       <CreateGameBoxContainer>
         <CreateGameComponent
           draftGame={draftGame}
+          draftQuestionsList={draftQuestionsList}
           isClone={isClone}
           isEdit={isEdit}
           isCloneImageChanged={draftGame.isCloneGameImageChanged}
           label={label}
           screenSize={screenSize}
-          handleSaveGame={handleSaveGame}
+          handleSaveGame={handleSave}
           handleSaveDraftGame={handleSaveDraftGame}
           handleDiscard={handleDiscardGame}
           handlePublicPrivateChange={handlePublicPrivateGameChange}
@@ -777,8 +826,8 @@ export default function CreateGame({
 
         {/* Create Question Form(s)  */}
         {draftQuestionsList.map(
-          (draftQuestionItem, index) =>
-            index === selectedQuestionIndex && (
+          (draftQuestionItem, index) => {
+            return (index === selectedQuestionIndex && (
               <Fade
                 timeout={500}
                 in={draftGame.openCreateQuestion}
@@ -844,7 +893,8 @@ export default function CreateGame({
                   )}
                 </Box>
               </Fade>
-            ),
+            ));
+          }
         )}
 
         {/* Question Bank */}
