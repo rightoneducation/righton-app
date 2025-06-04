@@ -93,6 +93,7 @@ export default function UserProfile({
 
   }, [centralData.userProfile]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  console.log("CentralData: ", centralData)
 
   const handleEditPicture = () => {
     setIsModalOpen(true);
@@ -437,7 +438,7 @@ export default function UserProfile({
                         variant="outlined"
                         placeholder="Password..."
                         type={isShowPassword ? "text" : "password"}
-                        value={password}
+                        value={centralData.userProfile.password}
                         onChange={(event) => setPassword(event.target.value)}
                         InputProps={{
                           endAdornment: (

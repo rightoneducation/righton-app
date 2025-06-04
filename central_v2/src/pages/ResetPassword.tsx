@@ -4,13 +4,13 @@ import { Box } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
+import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import PasswordCodeConfirmation from '../components/PasswordReset/PasswordResetConfirmation';
 import PassWordResetEmailConfirmation from '../components/PasswordReset/PasswordResetEmail';
 import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
-import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import NewPasswordInputs from '../components/PasswordReset/NewPasswordInputs';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
@@ -40,6 +40,7 @@ interface ResetLinkProps {
 export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -71,7 +72,6 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
     if (userName) {
       try {
         const response = await apiClients.auth.awsResetPassword(userName);
-        console.log("email submit response", response)
         if(response.nextStep.resetPasswordStep === 'CONFIRM_RESET_PASSWORD_WITH_CODE'){
           handleNextStep();
         }
@@ -101,7 +101,6 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
     const fullCode = code.join('');
 
     if (newPassword !== confirmPassword || fullCode.length < 6) {
-      handleConfirmationError();
       return;
     }
 
@@ -112,8 +111,16 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
         confirmationCode: fullCode,
       });
       setIsVerifying(false);
+      
+      // update local user profile if it's a password update
       if(action === 'update') {
-        navigate("/userprofile")
+        const newUser = {
+          ...centralData.userProfile,
+          password: confirmPassword,
+        }
+        const localProfile = await apiClients.centralDataManager?.userProfileInformationUpdate(newUser, centralData.userProfile);
+        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile?.updatedUser });
+        navigate("/userprofile");
       } else {
         navigate('/login');
       }
@@ -195,3 +202,4 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
     </SignUpMainContainer>
   );
 }
+

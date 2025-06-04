@@ -150,6 +150,8 @@ export default function NewPasswordInputs({
         }
       };
 
+      const isValidPassword = newPassword.length > 0 && !passwordConfirmError && !passwordError && newPassword === confirmPassword;
+
     return (
         <>
         <VerifyText>Step 2: Reset Password</VerifyText>
@@ -178,7 +180,10 @@ export default function NewPasswordInputs({
                       fontFamily: 'Rubik',
                       height: '43px',
                     },
-                    '::-ms-reveal': {
+                    '& input::-ms-reveal': {
+                        display: 'none'
+                    },
+                    '& input::-ms-clear': {
                         display: 'none',
                     }
                   }}
@@ -270,6 +275,12 @@ export default function NewPasswordInputs({
                       fontFamily: 'Rubik',
                       height: '43px',
                     },
+                    '& input::-ms-reveal': {
+                        display: 'none'
+                    },
+                    '& input::-ms-clear': {
+                        display: 'none',
+                    }
                   }}
                   InputProps={{
                     endAdornment: (
@@ -343,7 +354,7 @@ export default function NewPasswordInputs({
                     <CentralButton
                       buttonWidthOverride="160px"
                       buttonType={ButtonType.RESET}
-                      isEnabled={!passwordConfirmError && !passwordError && newPassword === confirmPassword}
+                      isEnabled={isValidPassword}
                       smallScreenOverride
                       onClick={onSubmitNewPassword}
                     />
