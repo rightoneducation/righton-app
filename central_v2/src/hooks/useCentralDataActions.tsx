@@ -14,7 +14,7 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
 import { useCentralDataState, useCentralDataDispatch } from './context/useCentralDataContext';
 import { UserStatusType, GameQuestionType, FetchType, LibraryTabEnum, ISelectedGame, ISelectedQuestion, CallType } from '../lib/CentralModels';
-import useCallType from './useCallType';
+import getCallType from '../lib/helperfunctions/getCallType';
 
 interface UseCentralDataManagerProps {
   gameQuestion: GameQuestionType;
@@ -60,11 +60,16 @@ export default function useCentralDataManager({
   const isQuestions = useMatch('/questions');
   const isCreateGame = useMatch('/create/game');
   const isLibrary = useMatch('/library') !== null;
-  const navigate = useNavigate(); 
+  const callTypeMatches = {
+    matchViewGame: useMatch('/games/:type/:gameId'),
+    matchLibViewGame: useMatch('/library/games/:type/:gameId'),
+    matchCloneGame: useMatch('/clone/:type/:gameId'),
+    matchEditGame: useMatch('/edit/:type/:gameId'),
+    matchCloneQuestion: useMatch('/clone/question/:type/:questionId'),
+    matchEditQuestion: useMatch('/edit/question/:type/:questionId'),
+  }
 
-  // useCallType is important as it is a custom hook that determines the type of api call required based on the route.
-  // affects view, clone, edit, where it is difficult to ascertain the type of an element (public, private, draft)
-  const callType = useCallType();
+  const navigate = useNavigate(); 
 
   const debounceInterval = 800;
 
@@ -454,6 +459,7 @@ export default function useCentralDataManager({
 
   const fetchElement = async (type: GameQuestionType, id: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+    const callType = getCallType({callTypeMatches});
     switch (type){
       case GameQuestionType.QUESTION:{
        const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(callType.publicPrivateType,id);
