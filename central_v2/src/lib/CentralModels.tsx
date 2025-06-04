@@ -189,6 +189,7 @@ export const initCentralDataState: ICentralDataState = {
   selectedGrades: [],
   isLibraryInit: true,
   isTabsOpen: false,
+  openTab: LibraryTabEnum.PUBLIC,
   isFavTabOpen: false,
   publicPrivate: PublicPrivateType.PUBLIC,
   sort: {
@@ -225,6 +226,7 @@ export interface ICentralDataState {
   selectedGrades: GradeTarget[];
   isLibraryInit: boolean;
   isTabsOpen: boolean;
+  openTab: LibraryTabEnum;
   isFavTabOpen: boolean;
   publicPrivate: PublicPrivateType;
   sort: {

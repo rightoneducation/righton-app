@@ -67,6 +67,7 @@ export default function useCentralDataManager({
     matchEditGame: useMatch('/edit/:type/:gameId'),
     matchCloneQuestion: useMatch('/clone/question/:type/:questionId'),
     matchEditQuestion: useMatch('/edit/question/:type/:questionId'),
+    matchLibraryTab: useMatch('/library'),
   }
 
   const navigate = useNavigate(); 
@@ -85,11 +86,13 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: grades });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+    const libraryTab = centralData.openTab;
+    const callType = getCallType({...callTypeMatches, libraryTab, gameQuestion});
     switch (gameQuestion) {
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager
         ?.searchForQuestionTemplates(
-          PublicPrivateType.PUBLIC,
+          callType.publicPrivateType,
           null,
           null,
           centralData.searchTerms,
@@ -107,7 +110,7 @@ export default function useCentralDataManager({
       default:
         apiClients?.centralDataManager
         ?.searchForGameTemplates(
-          PublicPrivateType.PUBLIC,
+          callType.publicPrivateType,
           null,
           null,
           centralData.searchTerms,
@@ -131,11 +134,13 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'SET_SORT', payload: newSort });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+    const libraryTab = centralData.openTab;
+    const callType = getCallType({...callTypeMatches, libraryTab, gameQuestion});
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
-            centralData.publicPrivate,
+            callType.publicPrivateType,
             null,
             null,
             centralData.searchTerms,
@@ -153,7 +158,7 @@ export default function useCentralDataManager({
       default:
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
-            centralData.publicPrivate,
+            callType.publicPrivateType,
             null,
             null,
             centralData.searchTerms,
@@ -179,17 +184,19 @@ export default function useCentralDataManager({
         sortDirection: SortDirection,
         gradeTargets: GradeTarget[],
         sortType: SortType,
-        searchGameQuestion: GameQuestionType
+        searchGameQuestion: GameQuestionType,
+        libraryTab: LibraryTabEnum, 
       ) => {
         centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: search });
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+        const callType = getCallType({...callTypeMatches, libraryTab, gameQuestion: searchGameQuestion});
         switch(searchGameQuestion){
           case GameQuestionType.QUESTION:
             centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
             apiClients?.centralDataManager
               ?.searchForQuestionTemplates(
-                PublicPrivateType.PUBLIC,
+                callType.publicPrivateType,
                 500,
                 null,
                 search,
@@ -208,7 +215,7 @@ export default function useCentralDataManager({
             centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
             apiClients?.centralDataManager
               ?.searchForGameTemplates(
-                PublicPrivateType.PUBLIC,
+                callType.publicPrivateType,
                 500,
                 null,
                 search,
@@ -235,7 +242,8 @@ export default function useCentralDataManager({
       centralData.sort.direction ?? SortDirection.ASC,
       centralData.selectedGrades,
       centralData.sort.field,
-      gameQuestion
+      gameQuestion,
+      centralData.openTab,
     );
   };
 
@@ -459,7 +467,7 @@ export default function useCentralDataManager({
 
   const fetchElement = async (type: GameQuestionType, id: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    const callType = getCallType({callTypeMatches});
+    const callType = getCallType({...callTypeMatches});
     switch (type){
       case GameQuestionType.QUESTION:{
        const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(callType.publicPrivateType,id);

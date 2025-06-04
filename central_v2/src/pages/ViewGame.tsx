@@ -103,18 +103,19 @@ export default function ViewGame({
 
   const handleProceedToDelete = async () => {
     try{
-      if (centralData.selectedGame?.game) {
+      if (centralData && centralData.selectedGame && centralData.selectedGame.game) {
         const gameQuestions = centralData?.selectedGame?.game?.questionTemplates?.map((item) => item.gameQuestionId) ?? [];
-        if (gameQuestions.length > 0) {
+        const {game} = centralData.selectedGame;
+        if (gameQuestions.length > 0 && game && game.publicPrivateType) {
           const gameQuestionPromises = gameQuestions.map(async (questionId) => {
             apiClients.gameQuestions.deleteGameQuestions(
-              PublicPrivateType.PUBLIC,
+              game.publicPrivateType,
               questionId
             );
           });
           await Promise.all(gameQuestionPromises);
         }
-        await apiClients.gameTemplate.deleteGameTemplate(PublicPrivateType.PUBLIC, centralData.selectedGame.game.id);
+        await apiClients.gameTemplate.deleteGameTemplate(game.publicPrivateType, centralData.selectedGame.game.id);
       }
     } catch (error) {
       console.error('Error deleting game:', error);
