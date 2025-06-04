@@ -121,6 +121,7 @@ type PublicGameTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -162,6 +163,7 @@ type PrivateGameTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -202,6 +204,7 @@ type DraftGameTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -244,6 +247,7 @@ type PublicQuestionTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -282,6 +286,7 @@ type PrivateQuestionTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -320,6 +325,7 @@ type DraftQuestionTemplate @model
 {
   id: ID
   userId: String
+  publicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int

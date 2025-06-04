@@ -327,7 +327,7 @@ export default function CreateQuestionCardBase({
             { isCardErrored &&
               <ErrorBox/>
             }
-              {!isCreateGame && <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              {(!isCreateGame && !isEdit) && <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
                 <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
               </Box>}
           </>

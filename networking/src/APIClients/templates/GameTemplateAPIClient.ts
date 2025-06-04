@@ -22,7 +22,8 @@ export class GameTemplateAPIClient
     type: T,
     createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate> {
-    const variables: GraphQLOptions = { input: createGameTemplateInput as GameTemplateType<T>['create']['input']};
+    const gameTemplateInput = {...createGameTemplateInput, publicPrivateType: type} as GameTemplateType<T>['create']['input'];
+    const variables: GraphQLOptions = { input: gameTemplateInput };
     const queryFunction = gameTemplateRuntimeMap[type].create.queryFunction;
     const createType = `create${type}GameTemplate`;
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['create']['query']>(

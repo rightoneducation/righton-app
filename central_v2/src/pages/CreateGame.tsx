@@ -122,8 +122,8 @@ export default function CreateGame({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const route = useMatch('/clone/game/:gameId');
-  const editRoute = useMatch('/edit/game/:gameId');
+  const route = useMatch('/clone/game/:type/:gameId');
+  const editRoute = useMatch('/edit/game/:type/:gameId');
   const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
   const isEdit = editRoute?.params.gameId !== null && editRoute?.params.gameId !== undefined && editRoute?.params.gameId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
@@ -803,6 +803,7 @@ export default function CreateGame({
           draftQuestionsList={draftQuestionsList}
           isClone={isClone}
           isEdit={isEdit}
+          isLoading={centralData.isLoading || isLoading}
           isCloneImageChanged={draftGame.isCloneGameImageChanged}
           label={label}
           screenSize={screenSize}

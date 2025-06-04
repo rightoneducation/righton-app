@@ -50,7 +50,6 @@ export class QuestionTemplateParser {
             timesPlayed: 0,
             gameTemplatesCount: 0,
         }
-        console.log(questionTemplate);
         return questionTemplate
     }
 
@@ -103,6 +102,7 @@ export class QuestionTemplateParser {
       const {
           id,
           userId,
+          publicPrivateType,
           title,
           lowerCaseTitle,
           owner,
@@ -127,11 +127,18 @@ export class QuestionTemplateParser {
           )
       }
 
+      const isPublicPrivateValid = (x: any): x is PublicPrivateType => {
+        return Object.values(PublicPrivateType).includes(x);
+      }
+
+      const parsedPublicPrivate = isPublicPrivateValid(publicPrivateType) ? publicPrivateType : PublicPrivateType.PUBLIC;
+
       const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
       const questionTemplate: IQuestionTemplate = {
           id,
           userId,
+          publicPrivateType: parsedPublicPrivate,
           title,
           lowerCaseTitle: lowerCaseTitle ?? '',
           owner: owner ?? '',

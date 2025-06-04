@@ -74,7 +74,7 @@ export default function ExploreGames({
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
     setGameSet(games);
-    navigate(`/games/${game.id}`);
+    navigate(`/games/${game.publicPrivateType}/${game.id}`);
   };
   
   return (

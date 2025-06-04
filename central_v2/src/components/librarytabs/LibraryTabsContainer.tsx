@@ -51,8 +51,8 @@ export default function LibraryTabsContainer({
   const navigate = useNavigate();
   const centralDataDispatch = useCentralDataDispatch();
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
-    centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
-    navigate(`/library/games/${element.id}`);
+    centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: element });
+    navigate(`/library/games/${element.publicPrivateType}/${element.id}`);
   };
   return (
     <LibraryTabsStyledContainer>

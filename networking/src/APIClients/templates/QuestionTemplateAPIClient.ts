@@ -25,7 +25,8 @@ export class QuestionTemplateAPIClient
     createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate> {
     const parsedInput = QuestionTemplateParser.centralQuestionTemplateInputToIQuestionTemplate<T>(imageUrl, userId, createQuestionTemplateInput);
-    const variables: GraphQLOptions = { input: parsedInput as QuestionTemplateType<T>['create']['input'] };
+    const questionTemplateInput = {...parsedInput, publicPrivateType: type} as QuestionTemplateType<T>['create']['input'];
+    const variables: GraphQLOptions = { input: questionTemplateInput };
     const queryFunction = questionTemplateRuntimeMap[type].create.queryFunction;
     const createType = `create${type}QuestionTemplate`;
     const questionTemplate = await this.callGraphQL<QuestionTemplateType<T>['create']['query']>(

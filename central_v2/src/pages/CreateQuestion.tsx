@@ -76,8 +76,8 @@ export default function CreateQuestion({
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
-  const route = useMatch('/clone/question/:questionId');
-  const editRoute = useMatch('/edit/question/:questionId');
+  const route = useMatch('/clone/question/:type/:questionId');
+  const editRoute = useMatch('/edit/question/:type/:questionId');
   const isClone = route?.params.questionId !== null && route?.params.questionId !== undefined && route?.params.questionId.length > 0;
   const isEdit = editRoute?.params.questionId !== null && editRoute?.params.questionId !== undefined && editRoute?.params.questionId.length > 0;
   const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
@@ -165,7 +165,7 @@ export default function CreateQuestion({
       break;
     case (isClone):
       label = 'Clone';
-      selectedQuestionId = editRoute?.params.questionId || '';
+      selectedQuestionId = route?.params.questionId || '';
       break;
     default:
       label = 'Create';
@@ -473,7 +473,7 @@ export default function CreateQuestion({
           if (url){
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion);
           }
-
+          console.log(centralData.userProfile);
           // update user stats
           const existingNumQuestions = centralData.userProfile?.questionsMade || 0;
           const newNumQuestions = existingNumQuestions + 1;
@@ -543,6 +543,7 @@ export default function CreateQuestion({
   useEffect(() => {
     setIsLoading(false); 
     const selected = centralData?.selectedQuestion?.question;
+    console.log('selected question', selected);
     const title = selected?.title;
     if (selected && (isClone || isEdit)) {
       // regex to detect (clone of) in title

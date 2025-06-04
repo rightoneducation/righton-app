@@ -1,6 +1,7 @@
 import { IGameTemplate } from './IGameTemplate';
 import { IChoice } from "../Models/IQuestion";
 import {AnswerType, AnswerPrecision} from "../Models/AnswerClasses";
+import { PublicPrivateType } from "../APIClients";
 
 export interface IQuestionTemplateOrder {
   questionTemplateId: string,
@@ -10,6 +11,7 @@ export interface IQuestionTemplateOrder {
 export interface IQuestionTemplate {
   id: string,
   userId: string,
+  publicPrivateType: PublicPrivateType,
   title: string,
   lowerCaseTitle: string,
   owner?: string,
