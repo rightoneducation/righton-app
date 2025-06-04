@@ -37,7 +37,7 @@
         },
         "userCleaner": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/userCleaner-614346664c646363756f-build.zip"
+          "s3Key": "amplify-builds/userCleaner-4153673861457a2f5945-build.zip"
         },
         "waegen": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
@@ -49,7 +49,7 @@
         },
         "mobile6060603cPreSignup": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPreSignup-79704349484235656e4b-build.zip"
+          "s3Key": "amplify-builds/mobile6060603cPreSignup-306b6c6c4c5265507571-build.zip"
         }
       },
       "auth": {
