@@ -7,7 +7,8 @@ export enum UserStatusType {
   LOADING,
   GOOGLE_SIGNIN,
   GOOGLE_SIGNUP,
-  GOOGLE_ERROR
+  GOOGLE_ERROR,
+  NONVERIFIED,
 }
 
 export enum ScreenType {

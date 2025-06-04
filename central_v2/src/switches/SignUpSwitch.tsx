@@ -29,7 +29,21 @@ export default function SignUpSwitch({
   
   // Override step dynamically if googlenextstep is true
   const centralData = useCentralDataState();
-  const currentStep = centralData.userStatus === UserStatusType.GOOGLE_SIGNUP ? 'googlesignup' : step;
+
+  console.log("central data signup switch: ", centralData)
+  const getCurrentStep = () => {
+    switch (centralData.userStatus) {
+      case UserStatusType.GOOGLE_SIGNUP:
+        return 'googlesignup';
+      case UserStatusType.NONVERIFIED:
+        return 'confirmation';
+      default:
+        return step;
+    }
+  };
+
+  const currentStep = getCurrentStep();
+  console.log("Currentstep: ", currentStep)
 
   const handlerImageUpload = async (file: File) => {
     const fileName = file.name;

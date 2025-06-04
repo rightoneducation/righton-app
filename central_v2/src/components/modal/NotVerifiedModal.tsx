@@ -7,6 +7,7 @@ import { ButtonType } from '../button/ButtonModels';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
 import { useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
+import { UserStatusType} from '../../lib/CentralModels';
 
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
@@ -37,7 +38,7 @@ const ContentContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     gap: '24px',
     width: '100%',
-    border: '1px solid red',
+    // border: '1px solid red',
     alignItems: 'center',
     maxWidth: '320px'
 }));
@@ -58,7 +59,7 @@ const SubText = styled(Typography)(({ theme }) => ({
   fontSize: '16px',
   fontWeight: 400,
   textAlign: 'center', 
-  border: '1px solid yellow',
+//   border: '1px solid yellow',
   maxWidth: '300px'
 }));
 
@@ -67,7 +68,7 @@ const ButtonsContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     gap: '12px',
     width: '100%',
-    border: '1px solid brown',
+    // border: '1px solid brown',
     // alignItems: 'center',
     // maxWidth: '320px'
 }));
@@ -91,10 +92,15 @@ export default function NotVerifiedModal({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralDataDispatch = useCentralDataDispatch();
   const message = "It seems like you've already started an account, please do one of the following:";
+  const navigate = useNavigate(); // Initialize useNavigate
   
-  const handleCloseModalClick = () => {
+  const handleCloseModalClickResend = () => {
     setIsNonVerifiedModalOpen(false);
-    centralDataDispatch({ type: 'SET_USER_ERROR_STRING', payload: '' });
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.NONVERIFIED});
+  }
+
+  const handleCloseModalClickCancel = () => {
+    setIsNonVerifiedModalOpen(false);
   }
 
   return (
@@ -113,13 +119,13 @@ export default function NotVerifiedModal({
                     buttonType={ButtonType.RETRY} 
                     isEnabled 
                     smallScreenOverride
-                    onClick={handleCloseModalClick}
+                    onClick={handleCloseModalClickResend}
                 />
                 <CentralButton 
                     buttonType={ButtonType.CANCEL} 
                     isEnabled 
                     smallScreenOverride
-                    onClick={handleCloseModalClick}
+                    onClick={handleCloseModalClickCancel}
                 />
             </ButtonsContainer>
           </ContentContainer>
