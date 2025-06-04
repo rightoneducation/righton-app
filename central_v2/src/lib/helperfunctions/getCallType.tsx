@@ -11,7 +11,7 @@ interface CallTypeProps {
     matchEditGame: ReturnType<typeof useMatch>;
     matchCloneQuestion: ReturnType<typeof useMatch>;
     matchEditQuestion: ReturnType<typeof useMatch>;
-    matchLibrary?: ReturnType<typeof useMatch>;
+    matchLibraryTab?: ReturnType<typeof useMatch>;
     libraryTab?: LibraryTabEnum;
     gameQuestion?: GameQuestionType;
 }
@@ -34,7 +34,7 @@ export default function getCallType({
     matchEditGame,
     matchCloneQuestion,
     matchEditQuestion,
-    matchLibrary,
+    matchLibraryTab,
     libraryTab,
     gameQuestion
   }: CallTypeProps): CallType {
@@ -43,8 +43,8 @@ export default function getCallType({
 
   // if we are on the library tab, we need to determine the public/private type
   // this is used for the search bar, sort and filter functions
-  
-  if (matchLibrary && (libraryTab !== undefined || libraryTab !== null)) {
+  console.log(matchLibraryTab);
+  if (matchLibraryTab && (libraryTab !== undefined || libraryTab !== null)) {
     switch (libraryTab) {
       case LibraryTabEnum.PUBLIC:
         publicPrivateType = PublicPrivateType.PUBLIC;

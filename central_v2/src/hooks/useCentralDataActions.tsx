@@ -190,7 +190,9 @@ export default function useCentralDataManager({
         centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: search });
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+        console.log(libraryTab);
         const callType = getCallType({...callTypeMatches, libraryTab, gameQuestion: searchGameQuestion});
+        console.log(callType);
         switch(searchGameQuestion){
           case GameQuestionType.QUESTION:
             centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
@@ -420,39 +422,51 @@ export default function useCentralDataManager({
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
-        apiClients?.centralDataManager?.searchForQuestionTemplates(
-          PublicPrivateType.PUBLIC,
-          12,
-          nextToken ?? null,
-          searchTerms ?? centralData.searchTerms,
-          centralData.sort.direction ?? SortDirection.ASC,
-          centralData.sort.field,
-          [...centralData.selectedGrades],
-          user.favoriteQuestionTemplateIds ?? null,
-        ).then((response) => {
-          centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: [...centralData.favQuestions, ...response.questions] });
-          centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
-        });
+        if (user.favoriteQuestionTemplateIds && user.favoriteQuestionTemplateIds.length > 0){
+          apiClients?.centralDataManager?.searchForQuestionTemplates(
+            PublicPrivateType.PUBLIC,
+            12,
+            nextToken ?? null,
+            searchTerms ?? centralData.searchTerms,
+            centralData.sort.direction ?? SortDirection.ASC,
+            centralData.sort.field,
+            [...centralData.selectedGrades],
+            user.favoriteQuestionTemplateIds,
+          ).then((response) => {
+            centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: [...response.questions] });
+            centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
+          });
+        } else {
+            centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: [] });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
+        }
       break;
       case GameQuestionType.GAME:
       default:
-        apiClients?.centralDataManager?.searchForGameTemplates(
-          PublicPrivateType.PUBLIC,
-          12,
-          nextToken ?? null,
-          searchTerms ?? centralData.searchTerms,
-          centralData.sort.direction ?? SortDirection.ASC,
-          centralData.sort.field,
-          [...centralData.selectedGrades],
-          user.favoriteGameTemplateIds ?? null,
-        ).then((response) => {
-          centralDataDispatch({ type: 'SET_FAV_GAMES', payload: [...centralData.favGames, ...response.games] });
-          centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
-        });
+        if (user.favoriteGameTemplateIds && user.favoriteGameTemplateIds.length > 0){
+          apiClients?.centralDataManager?.searchForGameTemplates(
+            PublicPrivateType.PUBLIC,
+            12,
+            nextToken ?? null,
+            searchTerms ?? centralData.searchTerms,
+            centralData.sort.direction ?? SortDirection.ASC,
+            centralData.sort.field,
+            [...centralData.selectedGrades],
+            user.favoriteGameTemplateIds,
+          ).then((response) => {
+            centralDataDispatch({ type: 'SET_FAV_GAMES', payload: [...response.games] });
+            centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
+          });
+        } else {
+            centralDataDispatch({ type: 'SET_FAV_GAMES', payload: [] });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
+        }
       break;
     }
   };
