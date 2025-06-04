@@ -130,7 +130,7 @@ function MostPopularQuestionsComponent({
       type: 'SET_SELECTED_QUESTION',
       payload: element,
     });
-    navigate(`/clone/question/${element.id}`);
+    navigate(`/clone/question/${element.publicPrivateType}/${element.id}`);
   }
 
   return (

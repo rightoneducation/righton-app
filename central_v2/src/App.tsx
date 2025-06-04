@@ -36,13 +36,13 @@ function App() {
             <Route path="/signup" element={<AppSwitch currentScreen={ScreenType.SIGNUP} />} />
             <Route path="/login" element={<AppSwitch currentScreen={ScreenType.LOGIN} />} />
             <Route path="/create/game" element={<AppSwitch currentScreen={ScreenType.CREATEGAME} />} />
-            <Route path="/clone/game/:gameId" element={<AppSwitch currentScreen={ScreenType.CLONEGAME} />} />
-            <Route path="/edit/game/:gameId" element={<AppSwitch currentScreen={ScreenType.EDITGAME} />} />
-            <Route path="/games/:gameId" element={<AppSwitch currentScreen={ScreenType.VIEWGAME} />} />
-            <Route path="/library/games/:gameId" element={<AppSwitch currentScreen={ScreenType.VIEWGAME} />} />
+            <Route path="/clone/game/:type/:gameId" element={<AppSwitch currentScreen={ScreenType.CLONEGAME} />} />
+            <Route path="/edit/game/:type/:gameId" element={<AppSwitch currentScreen={ScreenType.EDITGAME} />} />
+            <Route path="/games/:type/:gameId" element={<AppSwitch currentScreen={ScreenType.VIEWGAME} />} />
+            <Route path="/library/games/:type/:gameId" element={<AppSwitch currentScreen={ScreenType.VIEWGAME} />} />
             <Route path="/create/question" element={<AppSwitch currentScreen={ScreenType.CREATEQUESTION} />} loader={CreateQuestionLoader}/>
-            <Route path="/clone/question/:questionId" element={<AppSwitch currentScreen={ScreenType.CLONEQUESTION} />} />
-            <Route path="/edit/question/:questionId" element={<AppSwitch currentScreen={ScreenType.EDITQUESTION} />} />
+            <Route path="/clone/question/:type/:questionId" element={<AppSwitch currentScreen={ScreenType.CLONEQUESTION} />} />
+            <Route path="/edit/question/:type/:questionId" element={<AppSwitch currentScreen={ScreenType.EDITQUESTION} />} />
             <Route path="/confirmation" element={<AppSwitch currentScreen={ScreenType.CONFIRMATION} />} />
             <Route path="/nextstep" element={<AppSwitch currentScreen={ScreenType.NEXTSTEP} />} />
             <Route path="/library" element={<AppSwitch currentScreen={ScreenType.LIBRARY} />} />

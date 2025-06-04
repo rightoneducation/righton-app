@@ -134,7 +134,7 @@ export default function ExploreQuestions({
       type: 'SET_SELECTED_QUESTION',
       payload: selectedQuestion,
     });
-    navigate(`/clone/question/${selectedQuestion?.id}`);
+    navigate(`/clone/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   };
 
   const handleEditButtonClick = () => {
@@ -147,7 +147,7 @@ export default function ExploreQuestions({
       type: 'SET_SELECTED_QUESTION',
       payload: selectedQuestion,
     });
-    navigate(`/edit/question/${selectedQuestion?.id}`);
+    navigate(`/edit/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   }
 
   const handleDeleteButtonClick = async () => {
@@ -157,7 +157,7 @@ export default function ExploreQuestions({
   const handleDeleteQuestion = async () => {
     try {
       if (selectedQuestion) {
-        await deleteQuestionTemplate(selectedQuestion.id, PublicPrivateType.PUBLIC);
+        await deleteQuestionTemplate(selectedQuestion.id, selectedQuestion.publicPrivateType);
         setIsDeleteModalOpen(false);
         setSelectedQuestion(null);
         centralDataDispatch({type: 'SET_SELECTED_QUESTION', payload: null});

@@ -13,7 +13,8 @@ import {
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
 import { useCentralDataState, useCentralDataDispatch } from './context/useCentralDataContext';
-import { UserStatusType, GameQuestionType, FetchType, LibraryTabEnum, ISelectedGame, ISelectedQuestion } from '../lib/CentralModels';
+import { UserStatusType, GameQuestionType, FetchType, LibraryTabEnum, ISelectedGame, ISelectedQuestion, CallType } from '../lib/CentralModels';
+import useCallType from './useCallType';
 
 interface UseCentralDataManagerProps {
   gameQuestion: GameQuestionType;
@@ -60,6 +61,10 @@ export default function useCentralDataManager({
   const isCreateGame = useMatch('/create/game');
   const isLibrary = useMatch('/library') !== null;
   const navigate = useNavigate(); 
+
+  // useCallType is important as it is a custom hook that determines the type of api call required based on the route.
+  // affects view, clone, edit, where it is difficult to ascertain the type of an element (public, private, draft)
+  const callType = useCallType();
 
   const debounceInterval = 800;
 
@@ -299,6 +304,7 @@ export default function useCentralDataManager({
     }
   };
 
+  // loadMore on explore pages 
   const loadMore = () => {
     if (centralData.nextToken && !centralData.isLoadingInfiniteScroll) {
       centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: true })
@@ -450,7 +456,7 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (type){
       case GameQuestionType.QUESTION:{
-       const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id);
+       const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(callType.publicPrivateType,id);
           let selectedQuestion: ISelectedQuestion = {
             question: responseQuestion,
             profilePic: '',
@@ -479,7 +485,7 @@ export default function useCentralDataManager({
       }
       case GameQuestionType.GAME:
       default:{
-       const responseGame = await apiClients?.gameTemplate.getGameTemplate(PublicPrivateType.PUBLIC, id);
+       const responseGame = await apiClients?.gameTemplate.getGameTemplate(callType.publicPrivateType, id);
           let selectedGame: ISelectedGame = {
             game: responseGame,
             profilePic: '',
@@ -642,18 +648,6 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
     
-  };
-
-  const removeQuestionFromGameTemplate = async (type: PublicPrivateType, questionId: string, gameId: string) => {
-    try {
-      const response = await apiClients.centralDataManager?.removeQuestionTemplateFromGameTemplate(type, questionId, gameId);
-      if (response) 
-        return true;
-      return false;
-    } catch (err) {
-      console.error('Error removing question from game template:', err);
-      throw new Error('Failed to remove question from game template');
-    }
   };
 
   const deleteQuestionTemplate = async (questionId: string, type: PublicPrivateType) => {

@@ -1,4 +1,14 @@
-import { CentralQuestionTemplateInput, IGameTemplate, IQuestionTemplate, IncorrectCard, PublicPrivateType, SortDirection, SortType, GradeTarget, IUserProfile } from "@righton/networking";
+import { 
+  CentralQuestionTemplateInput, 
+  IGameTemplate, 
+  IQuestionTemplate, 
+  IncorrectCard, 
+  PublicPrivateType, 
+  SortDirection, 
+  SortType, 
+  GradeTarget, 
+  IUserProfile 
+} from "@righton/networking";
 
 export enum UserStatusType {
   LOGGEDIN,
@@ -54,7 +64,12 @@ export enum BorderStyle {
 
 export enum GameQuestionType {
   GAME,
-  QUESTION
+  QUESTION,
+}
+
+export type CallType = {
+  gameQuestionType: GameQuestionType;
+  publicPrivateType: PublicPrivateType;
 }
 
 // enum to track the highlight card in the create question flow

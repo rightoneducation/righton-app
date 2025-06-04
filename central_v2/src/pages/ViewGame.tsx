@@ -48,8 +48,8 @@ export default function ViewGame({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const route = useMatch('/games/:gameId');
-  const libRoute = useMatch('/library/games/:gameId');
+  const route = useMatch('/games/:type/:gameId');
+  const libRoute = useMatch('/library/games/:type/:gameId');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -59,7 +59,7 @@ export default function ViewGame({
   const questions = centralData.selectedGame?.game?.questionTemplates;
 
   const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
-
+  
   useEffect(() => {
     setIsLoading(false);
     if (centralData?.selectedGame?.game) {
@@ -82,23 +82,19 @@ export default function ViewGame({
   };
 
   const handleCloneGame = () => {
-    navigate(`/clone/game/${centralData.selectedGame?.game?.id}`);
+    navigate(`/clone/game/${centralData.selectedGame?.game?.publicPrivateType}/${centralData.selectedGame?.game?.id}`);
   };
 
   const handleProceedToEdit = () => {
-    navigate(`/edit/game/${centralData.selectedGame?.game?.id}`); 
+    navigate(`/edit/game/${centralData.selectedGame?.game?.publicPrivateType}/${centralData.selectedGame?.game?.id}`); 
   };
 
   const handleEditGame = () => {
-    // TODO: check for public/private game and pop modal
-    // if (centralData.selectedGame?.game?.publicPrivate === PublicPrivateType.PUBLIC) {
-    //   setDraftGame(centralData.selectedGame?.game);
-    //   setIsModalOpen(true);
-    // } else {
-    //   navigate(`/edit/game/${centralData.selectedGame?.game?.id}`);
-    // }
-    // setIsModalOpen(true);
-    handleProceedToEdit();
+    if (centralData.selectedGame?.game?.publicPrivateType === PublicPrivateType.PUBLIC) {
+      setIsModalOpen(true);
+    } else {
+      handleProceedToEdit();
+    }
   };
 
   const handleDeleteGame = () => {
@@ -109,9 +105,6 @@ export default function ViewGame({
     try{
       if (centralData.selectedGame?.game) {
         const gameQuestions = centralData?.selectedGame?.game?.questionTemplates?.map((item) => item.gameQuestionId) ?? [];
-        
-        console.log(centralData.selectedGame);
-        console.log(gameQuestions);
         if (gameQuestions.length > 0) {
           const gameQuestionPromises = gameQuestions.map(async (questionId) => {
             apiClients.gameQuestions.deleteGameQuestions(

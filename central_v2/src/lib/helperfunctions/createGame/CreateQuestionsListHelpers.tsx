@@ -69,11 +69,10 @@ export const buildRemoveQuestionTemplatePromises = (
       (qt) => qt.gameQuestionId,
     ) ?? [];
 
-  // TODO: handle publicprivate type in gametemplate object
   try {
     return gameQuestionIds.map((gameQuestionId) => {
       return apiClients.gameQuestions.deleteGameQuestions(
-        PublicPrivateType.PUBLIC,
+        gameTemplate.publicPrivateType,
         gameQuestionId,
       );
     });

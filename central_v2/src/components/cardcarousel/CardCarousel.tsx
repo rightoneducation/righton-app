@@ -54,7 +54,7 @@ export default function CardCarousel<
       type: 'SET_SELECTED_QUESTION',
       payload: element,
     });
-    navigate(`/clone/question/${element.id}`);
+    navigate(`/clone/question/${element.publicPrivateType}/${element.id}`);
   }
   return (
     <Swiper

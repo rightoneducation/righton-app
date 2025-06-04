@@ -69,7 +69,7 @@ export default function MyLibrary({
 
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
-    navigate(`/library/games/${element.id}`);
+    navigate(`/library/games/${element.publicPrivateType}/${element.id}`);
   };
 
   const handleBackToExplore = () => {
@@ -111,7 +111,7 @@ export default function MyLibrary({
       type: 'SET_SELECTED_QUESTION',
       payload: selectedQuestion,
     });
-    navigate(`/clone/question/${selectedQuestion?.id}`);
+    navigate(`/clone/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   };
 
  const handleEditButtonClick = () => {
@@ -124,7 +124,7 @@ export default function MyLibrary({
       type: 'SET_SELECTED_QUESTION',
       payload: selectedQuestion,
     });
-    navigate(`/edit/question/${selectedQuestion?.id}`);
+    navigate(`/edit/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   }
 
   const handleDeleteButtonClick = async () => {
