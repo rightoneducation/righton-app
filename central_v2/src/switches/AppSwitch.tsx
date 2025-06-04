@@ -177,7 +177,7 @@ function AppSwitch({
     case ScreenType.VIEWGAME: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
-          <ViewGame screenSize={screenSize} fetchElement={fetchElement} />
+          <ViewGame screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
         </AuthGuard>
       );
       break;
