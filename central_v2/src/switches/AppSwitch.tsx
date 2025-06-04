@@ -52,6 +52,7 @@ function AppSwitch({
     fetchElements,
     handleLogOut,
     checkForUniqueEmail,
+    deleteQuestionTemplate
   } = useCentralDataManager({gameQuestion});
   
   const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
@@ -77,6 +78,7 @@ function AppSwitch({
             handleSearchChange={handleSearchChange}
             loadMore={loadMore}
             handlePublicPrivateChange={getPublicPrivateElements}
+            deleteQuestionTemplate={deleteQuestionTemplate}
           />
         </AuthGuard>
       );
@@ -130,7 +132,8 @@ function AppSwitch({
       );
       break;
     }
-    case ScreenType.CLONEQUESTION: {
+    case ScreenType.CLONEQUESTION: 
+    case ScreenType.EDITQUESTION: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
           <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
@@ -155,7 +158,8 @@ function AppSwitch({
       );
       break;
     }
-    case ScreenType.CLONEGAME: {
+    case ScreenType.CLONEGAME: 
+    case ScreenType.EDITGAME: {
       screenComponent = (
           <CreateGame 
             screenSize={screenSize}  
@@ -173,7 +177,7 @@ function AppSwitch({
     case ScreenType.VIEWGAME: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
-          <ViewGame screenSize={screenSize} fetchElement={fetchElement} />
+          <ViewGame screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
         </AuthGuard>
       );
       break;

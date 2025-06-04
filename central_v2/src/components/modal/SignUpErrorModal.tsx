@@ -25,7 +25,7 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   paddingBottom: '16px',
   paddingLeft: '24px',
   paddingRight: '24px',
-  zIndex: 7,
+  zIndex: 1310,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',

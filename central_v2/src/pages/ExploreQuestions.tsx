@@ -11,7 +11,8 @@ import {
   IQuestionTemplate,
   IUserProfile,
   PublicPrivateType,
-  GradeTarget
+  GradeTarget,
+  deleteQuestion
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -27,6 +28,8 @@ import SearchBar from '../components/searchbar/SearchBar';
 import QuestionTabs from '../components/questiontabs/QuestionTabs';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
+import EditModal from '../components/modal/EditModal';
+import ModalBackground from '../components/modal/ModalBackground';
 
 interface ExploreQuestionsProps {
   screenSize: ScreenSize;
@@ -43,6 +46,7 @@ interface ExploreQuestionsProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   loadMore: () => void;
+  deleteQuestionTemplate: (questionId: string, type: PublicPrivateType) => Promise<void>;
 }
 
 export default function ExploreQuestions({
@@ -55,6 +59,7 @@ export default function ExploreQuestions({
   handleSortChange,
   handleSearchChange,
   loadMore,
+  deleteQuestionTemplate
 }:ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -62,6 +67,8 @@ export default function ExploreQuestions({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   
   if (!hasInitialized) {
     const needsFetch = centralData.recommendedQuestions.length === 0 || centralData.mostPopularQuestions.length === 0; 
@@ -130,9 +137,65 @@ export default function ExploreQuestions({
     navigate(`/clone/question/${selectedQuestion?.id}`);
   };
 
+  const handleEditButtonClick = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditQuestion = () => {
+    setIsTabsOpen(false);
+    centralDataDispatch({
+      type: 'SET_SELECTED_QUESTION',
+      payload: selectedQuestion,
+    });
+    navigate(`/edit/question/${selectedQuestion?.id}`);
+  }
+
+  const handleDeleteButtonClick = async () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteQuestion = async () => {
+    try {
+      if (selectedQuestion) {
+        await deleteQuestionTemplate(selectedQuestion.id, PublicPrivateType.PUBLIC);
+        setIsDeleteModalOpen(false);
+        setSelectedQuestion(null);
+        centralDataDispatch({type: 'SET_SELECTED_QUESTION', payload: null});
+        centralDataDispatch({
+          type: 'SET_IS_TABS_OPEN',
+          payload: false,
+        });
+        centralDataDispatch({
+          type: 'SET_SEARCH_TERMS',
+          payload: '',
+        });
+        navigate('/questions');
+      }
+    } catch (error) {
+      console.error('Error deleting question:', error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
+  }
+
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      
+        <ModalBackground isModalOpen={isEditModalOpen} handleCloseModal={handleCloseModal}/>
+        <EditModal
+          isModalOpen={isEditModalOpen}
+          gameQuestion={GameQuestionType.QUESTION}
+          setIsModalOpen={setIsEditModalOpen}
+          handleProceedToEdit={handleEditQuestion}
+        />
+        <EditModal
+          isModalOpen={isDeleteModalOpen}
+          gameQuestion={GameQuestionType.QUESTION}
+          setIsModalOpen={setIsDeleteModalOpen}
+          handleProceedToEdit={handleDeleteQuestion}
+        />
         <>
           <QuestionTabsModalBackground
             isTabsOpen={centralData.isTabsOpen}
@@ -151,6 +214,8 @@ export default function ExploreQuestions({
             handlePrevQuestion={handlePrevQuestion}
             handleNextQuestion={handleNextQuestion}
             handleCloneButtonClick={handleCloneButtonClick}
+            handleEditButtonClick={handleEditButtonClick}
+            handleDeleteButtonClick={handleDeleteButtonClick}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}

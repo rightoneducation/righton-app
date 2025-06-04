@@ -37,7 +37,9 @@ import SelectArrow from '../../../images/SelectArrow.svg';
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
   isClone: boolean;
+  isEdit: boolean;
   isCloneImageChanged: boolean;
+  label: string;
   draftQuestion: CentralQuestionTemplateInput;
   handleTitleChange: (title: string) => void;
   handleCCSSClick: () => void;
@@ -99,7 +101,9 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function CreateQuestionCardBase({
   screenSize,
   isClone,
+  isEdit,
   isCloneImageChanged,
+  label,
   draftQuestion,
   handleTitleChange,
   handleCCSSClick,
@@ -131,7 +135,7 @@ export default function CreateQuestionCardBase({
  let imageLink: string | null = null;
   if (imageUrl){
     imageLink = imageUrl;
-    if (isClone && !isCloneImageChanged)
+    if ((isClone || isEdit) && !isCloneImageChanged)
       imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   }
   else if (image && image instanceof File)
@@ -188,7 +192,7 @@ export default function CreateQuestionCardBase({
         })}} elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete} isClone={isClone}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
-          <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
+          <QuestionTitleStyled sx={{ color: "#384466"}}>{label} Question</QuestionTitleStyled>
           <Box>
 
           <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} 

@@ -40,4 +40,6 @@ export interface ICentralDataManagerAPIClient {
   userProfileInformationUpdate(user: IUserProfile, oldUser: IUserProfile, frontImage?: File | null,
     backImage?: File | null): Promise<{updatedUser: any}>;
   userProfileImageUpdate(user: IUserProfile, newProfilePic: File | null): Promise<{updatedUser: any}>;
+  removeQuestionTemplateFromGameTemplate(type: PublicPrivateType, questionId: string, gameId: string): Promise<boolean>;
+  deleteQuestionTemplate:(type: PublicPrivateType, questionId: string, ) => void;
 }

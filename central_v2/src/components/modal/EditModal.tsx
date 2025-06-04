@@ -4,6 +4,7 @@ import React from 'react';
 import { Box, Paper, Fade, Typography, styled, CircularProgress, useTheme, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { IUserProfile } from '@righton/networking';
+import { GameQuestionType } from '../../lib/CentralModels';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
@@ -11,12 +12,13 @@ import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext
 
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
-  position: 'absolute',
+  position: 'fixed',
   borderRadius: '16px',
   width: 'calc(90%)',
   height: 'auto',
   top: '50%',
-  transform: 'translateY(-50%)',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   maxHeight: '100%',
   maxWidth: '400px',
   background: '#FFF',
@@ -36,7 +38,16 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
 const DragText = styled(Typography)(({ theme }) => ({
   width: '100%',
   fontSize: '24px',
+  lineHeight: '32px',
   fontWeight: 700,
+  textAlign: 'center'
+}));
+
+const SubText = styled(Typography)(({ theme }) => ({
+  width: '100%',
+  fontSize: '24px',
+  lineHeight: '32px',
+  fontWeight: 400,
   textAlign: 'center'
 }));
 
@@ -46,40 +57,53 @@ const CloseButton = styled('img')(({ theme }) => ({
   cursor: 'pointer'
 }))
 
-interface CreatingTemplateModalProps {
+interface EditModalProps {
   isModalOpen: boolean;
+  gameQuestion: GameQuestionType;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleLogOut: () => void;
+  handleProceedToEdit: () => void;
 }
 
-export default function LoginErrorModal({
+export default function EditModal({
   isModalOpen,
+  gameQuestion,
   setIsModalOpen,
-  handleLogOut,
-}: CreatingTemplateModalProps) {
-  const theme = useTheme();
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  handleProceedToEdit
+}: EditModalProps) {
 
-  const handleRetry = async () => {
-    handleLogOut();
+  const handleEdit = () => {
+    setIsModalOpen(false);
+    handleProceedToEdit();
+  }
+
+  const handleCancel = () => {
     setIsModalOpen(false);
   }
 
+
   return (
-    <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}  style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%)'}}>
+    <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000} >
       <IntegratedContainer elevation={12}>
         <Box style={{
           width: '100%',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'column',
           gap: '16px', padding: '24px'
         }}> 
-          <DragText> Error Logging In </DragText>
+          <DragText>{`Warning: You are about to alter a public ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'}.`} </DragText>
+          <SubText> {`This will change the ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'} for everyone that uses it!`} </SubText>
+          <SubText> Do you want to continue? </SubText>
           <Box style={{display: 'flex', gap: '16px'}}>
               <CentralButton 
-                buttonType={ButtonType.RETRY} 
+                buttonType={ButtonType.YES} 
                 isEnabled 
                 smallScreenOverride
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleEdit}
+              />
+              <CentralButton 
+                buttonType={ButtonType.NO} 
+                isEnabled 
+                smallScreenOverride
+                onClick={handleCancel}
               />
           </Box>
         </Box>

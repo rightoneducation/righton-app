@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { IQuestionTemplate } from '@righton/networking';
 import { Box } from '@mui/material';
+import { TDraftQuestionsList } from '../../../lib/CreateGameModels';
 import { AddMoreIconButton, QuestionCountButton } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 import VerticalMoreImg from '../../../images/buttonIconVerticalMore.svg';
 import DeleteIcon from '../../../images/buttonIconDelete.svg';
@@ -10,7 +11,7 @@ interface IManageButtonQuestions {
   questions: {
     questionTemplate: IQuestionTemplate;
     gameQuestionId: string;
-  }[];
+  }[] | TDraftQuestionsList[];
   iconButtons: number[];
   selectedIndex: number;
   isCreate: boolean;
@@ -44,7 +45,7 @@ export default function ManageQuestionsButtons({
                 }}
                 isDisabled={false}
               >
-                <Box style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', minWidth: '40px', minHeight: '40px'}}onClick={ () => {console.log('here'); setSelectedIndex(index)}}>
+                <Box style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', minWidth: '40px', minHeight: '40px'}}onClick={ () => {setSelectedIndex(index)}}>
                   { index === selectedIndex && 'Question' } {index + 1}
                   { index === selectedIndex && verticalEllipsis}
                 </Box>
