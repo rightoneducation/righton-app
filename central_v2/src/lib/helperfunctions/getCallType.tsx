@@ -3,15 +3,6 @@ import { useMatch } from 'react-router-dom';
 import { PublicPrivateType } from '@righton/networking';
 import { GameQuestionType, CallType } from '../CentralModels';
 
-//  const callTypeMatches = {
-//     matchViewGame: useMatch('/games/:type/:gameId'),
-//     matchLibViewGame: useMatch('/library/games/:type/:gameId');
-//     matchCloneGame: useMatch('/clone/:type/:gameId'),
-//     matchEditGame: useMatch('/edit/:type/:gameId'),
-//     matchCloneQuestion: useMatch('/clone/question/:type/:questionId'),
-//     matchEditQuestion: useMatch('/edit/question/:type/:questionId'),
-//   }
-
 interface CallTypeProps {
   callTypeMatches: {
     matchViewGame: ReturnType<typeof useMatch>;
