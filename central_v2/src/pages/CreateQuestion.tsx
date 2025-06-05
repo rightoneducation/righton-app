@@ -26,7 +26,6 @@ import { ButtonType } from '../components/button/ButtonModels';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackground';
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
-import ModalBackground from '../components/modal/ModalBackground';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import DiscardModal from '../components/modal/DiscardModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
@@ -77,8 +76,10 @@ export default function CreateQuestion({
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
-  const route = useMatch('/clone/question/:questionId');
+  const route = useMatch('/clone/question/:type/:questionId');
+  const editRoute = useMatch('/edit/question/:type/:questionId');
   const isClone = route?.params.questionId !== null && route?.params.questionId !== undefined && route?.params.questionId.length > 0;
+  const isEdit = editRoute?.params.questionId !== null && editRoute?.params.questionId !== undefined && editRoute?.params.questionId.length > 0;
   const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
@@ -154,6 +155,23 @@ export default function CreateQuestion({
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
+
+  let label = 'Create';
+  let selectedQuestionId = ''
+  switch (true){
+    case (isEdit):
+      label = 'Edit';
+      selectedQuestionId = editRoute?.params.questionId || '';
+      break;
+    case (isClone):
+      label = 'Clone';
+      selectedQuestionId = route?.params.questionId || '';
+      break;
+    default:
+      label = 'Create';
+      break;
+  }
+
   // QuestionCardBase handler functions
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
     setIsCloneImageChanged(true);
@@ -389,12 +407,49 @@ export default function CreateQuestion({
     return false;
   }
 
+  const handleSaveEditedQuestion = async () => {
+    try {
+      setIsCardSubmitted(true);
+      const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
+      if (isQuestionTemplateComplete){
+        if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
+          setIsCreatingTemplate(true);
+          let result = null;
+          let url = null;
+          // if the question is a clone/edit and the image hasn't been changed, we can use the original imageUrl
+          if ((!isClone && !isEdit) || draftQuestion.questionCard.imageUrl !== originalImageURl){
+            if (draftQuestion.questionCard.image){
+              const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+              // have to do a nested await here because aws-storage returns a nested promise object
+              result = await img.result;
+              if (result && result.path && result.path.length > 0)
+                url = result.path;
+            } else if (draftQuestion.questionCard.imageUrl){
+              url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+            }
+          } else {
+            url = draftQuestion.questionCard.imageUrl;
+          }
+          window.localStorage.setItem(StorageKey, '');
+          if (url){
+            apiClients.questionTemplate.updateQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion, selectedQuestionId);
+          }
+          setIsCreatingTemplate(false);
+          fetchElements();
+          navigate('/questions');
+        }   
+      } else {
+        setIsCardErrored(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      console.log(draftQuestion);
       const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
-      console.log(isQuestionTemplateComplete);
       if (isQuestionTemplateComplete){
         if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
           setIsCreatingTemplate(true);
@@ -415,11 +470,10 @@ export default function CreateQuestion({
             url = draftQuestion.questionCard.imageUrl;
           }
           window.localStorage.setItem(StorageKey, '');
-          console.log(draftQuestion.questionCard.imageUrl);
           if (url){
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion);
           }
-
+          console.log(centralData.userProfile);
           // update user stats
           const existingNumQuestions = centralData.userProfile?.questionsMade || 0;
           const newNumQuestions = existingNumQuestions + 1;
@@ -439,6 +493,14 @@ export default function CreateQuestion({
     } catch (e) {
       console.log(e);
     }
+  }
+
+  const handleSave = () => {
+    if (isEdit){
+      handleSaveEditedQuestion();
+      return;
+    }
+    handleSaveQuestion();
   }
 
   const handleSaveDraftQuestion = async () => {
@@ -481,12 +543,12 @@ export default function CreateQuestion({
   useEffect(() => {
     setIsLoading(false); 
     const selected = centralData?.selectedQuestion?.question;
-    console.log(selected);
+    console.log('selected question', selected);
     const title = selected?.title;
-    if (selected && isClone) {
+    if (selected && (isClone || isEdit)) {
       // regex to detect (clone of) in title
       const regex = /\(Clone of\)/i;
-      if (title && !regex.test(title))
+      if (title && !regex.test(title) && isClone)
         selected.title = `(Clone of) ${title}`;
       const draft = assembleQuestionTemplate(selected);
       setDraftQuestion(prev => ({
@@ -497,17 +559,15 @@ export default function CreateQuestion({
       setCompleteIncorrectAnswers(draft.incorrectCards.filter((card) => card.isCardComplete));
       setIncompleteIncorrectAnswers(draft.incorrectCards.filter((card) => !card.isCardComplete));
     }
-    const id = route?.params.questionId;
-    if (!centralData.selectedQuestion?.question && id){
+    if (!centralData.selectedQuestion?.question && selectedQuestionId && (isClone || isEdit)) {
       setIsLoading(true);
-      fetchElement(GameQuestionType.QUESTION, id);
+      fetchElement(GameQuestionType.QUESTION, selectedQuestionId);
     }
-  }, [centralData.selectedQuestion, route ]); // eslint-disable-line 
+  }, [centralData.selectedQuestion, route, selectedQuestionId ]); // eslint-disable-line 
 
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
-       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible || isDiscardModalOpen} handleCloseModal={handleCloseModal}/>
        <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={isCCSSVisible}
@@ -531,7 +591,7 @@ export default function CreateQuestion({
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
       <CreateQuestionBoxContainer>
         <TitleText screenSize={ScreenSize.LARGE}> 
-          {isClone ? 'Clone' : 'Create'} Question
+          {label} Question
         </TitleText>
         {isLoading ? (
           <CircularProgress
@@ -549,8 +609,10 @@ export default function CreateQuestion({
                 gap: `${theme.sizing.xSmPadding}px`, 
                 paddingBottom: '16px',
               }}>
-                <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
-                <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSave} />
+                {!isClone && !isEdit && 
+                  <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                }
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
             }
@@ -565,7 +627,7 @@ export default function CreateQuestion({
                 gap: `${theme.sizing.xSmPadding}px`, 
                 paddingBottom: '16px',
               }}>
-                <CentralButton buttonType={ButtonType.SAVE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSaveQuestion} />
+                <CentralButton buttonType={ButtonType.SAVE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSave} />
                 <CentralButton buttonType={ButtonType.SAVEDRAFT} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
@@ -580,8 +642,10 @@ export default function CreateQuestion({
               >
                 { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
                   <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
-                    <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
-                    <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                    <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSave} />
+                    {!isClone && !isEdit && 
+                      <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                    }
                     <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
                   </Box>
                 }
@@ -604,7 +668,9 @@ export default function CreateQuestion({
                   <CreateQuestionCardBase
                     screenSize={screenSize}
                     isClone={isClone}
+                    isEdit={isEdit}
                     isCloneImageChanged={isCloneImageChanged}
+                    label={label}
                     draftQuestion={draftQuestion}
                     handleTitleChange={handleTitleChange}
                     handleCCSSClick={handleCCSSClick}

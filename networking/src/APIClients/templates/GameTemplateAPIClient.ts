@@ -22,7 +22,8 @@ export class GameTemplateAPIClient
     type: T,
     createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate> {
-    const variables: GraphQLOptions = { input: createGameTemplateInput as GameTemplateType<T>['create']['input']};
+    const gameTemplateInput = {...createGameTemplateInput, publicPrivateType: type} as GameTemplateType<T>['create']['input'];
+    const variables: GraphQLOptions = { input: gameTemplateInput };
     const queryFunction = gameTemplateRuntimeMap[type].create.queryFunction;
     const createType = `create${type}GameTemplate`;
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['create']['query']>(
@@ -99,18 +100,18 @@ export class GameTemplateAPIClient
     updateGameTemplateInput: GameTemplateType<T>['update']['input']
   ): Promise<IGameTemplate> {
     const queryFunction = gameTemplateRuntimeMap[type].update.queryFunction;
+    const updateType = `update${type}GameTemplate`;
     const variables: GameTemplateType<T>['update']['variables'] = { input: updateGameTemplateInput };
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['update']['query']>(
         queryFunction,
         variables
     ) as {data: any};
     if (
-        isNullOrUndefined(gameTemplate?.data) ||
-        isNullOrUndefined(gameTemplate?.data.updateGameTemplate)
+        isNullOrUndefined(gameTemplate?.data)
     ) {
         throw new Error(`Failed to update game template`);
     }
-    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.updateGameTemplate as AWSGameTemplate, type);
+    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data[updateType] as AWSGameTemplate, type);
   }
 
   async deleteGameTemplate<T extends PublicPrivateType>(

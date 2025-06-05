@@ -14,7 +14,7 @@ export const CCSSTabContainer = styled(Box, {
   height: '100',
   maxHeight: '100dvh',
   width: '100dvw',
-  zIndex: 20,
+  zIndex: 1310,
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',

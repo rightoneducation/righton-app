@@ -250,7 +250,8 @@ export default function Header({
             width: '100%', 
             zIndex: 7,
             position: 'absolute',
-            background: `linear-gradient(180deg, rgb(2, 33, 95, 85) 60%, rgba(2, 33, 95, 0) 100%)`,
+            paddingBottom: '34px',
+            background: menuOpen ? `linear-gradient(180deg, rgb(2, 33, 95, 1) 0%, rgba(2, 33, 95, 1) 48%, rgba(2, 33, 95, 0.84) 93%, rgba(2, 33, 95, 0) 100%)` : '',
           }}
         > 
           <Box

@@ -3,7 +3,9 @@ import {
   IncorrectCard,
   IQuestionTemplate,
   PublicPrivateType,
-  AnswerType
+  AnswerType,
+  IGameTemplate,
+  CentralQuestionTemplateInput
 } from '@righton/networking';
 import {
   draftTemplate,
@@ -49,6 +51,34 @@ export const checkDQsAreValid = (
       return true;
     return false;
   });
+};
+
+export const buildRemoveQuestionTemplatePromises = (
+  removeQuestionTemplateIds: string[],
+  gameTemplate: IGameTemplate,
+  userId: string,
+  apiClients: IAPIClients,
+) => {
+
+  const questionTemplatesToRemove = gameTemplate.questionTemplates?.filter(
+    (qt) => removeQuestionTemplateIds.includes(qt.questionTemplate.id),
+  ) ?? [];
+
+  const gameQuestionIds =
+    questionTemplatesToRemove?.map(
+      (qt) => qt.gameQuestionId,
+    ) ?? [];
+
+  try {
+    return gameQuestionIds.map((gameQuestionId) => {
+      return apiClients.gameQuestions.deleteGameQuestions(
+        gameTemplate.publicPrivateType,
+        gameQuestionId,
+      );
+    });
+  } catch (err: any) {
+    throw new Error('Failed to update game template or delete question templates.', err);
+  }
 };
 
 export const buildQuestionTemplatePromises = (

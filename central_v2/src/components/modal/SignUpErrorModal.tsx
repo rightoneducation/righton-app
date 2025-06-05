@@ -8,6 +8,7 @@ import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
+import { useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
@@ -24,7 +25,7 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   paddingBottom: '16px',
   paddingLeft: '24px',
   paddingRight: '24px',
-  zIndex: 7,
+  zIndex: 1310,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -66,6 +67,12 @@ export default function SignUpErrorModal({
 }: CreatingTemplateModalProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const centralDataDispatch = useCentralDataDispatch();
+
+  const handleCloseModalClick = () => {
+    setIsModalOpen(false);
+    centralDataDispatch({ type: 'SET_USER_ERROR_STRING', payload: '' });
+  }
 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}  style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%)'}}>
@@ -84,7 +91,7 @@ export default function SignUpErrorModal({
                 buttonType={ButtonType.RETRY} 
                 isEnabled 
                 smallScreenOverride
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModalClick}
               />
           </Box>
         </Box>

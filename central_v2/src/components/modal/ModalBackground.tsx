@@ -16,7 +16,7 @@ const TabContainer = styled(Box)(({ theme }) => ({
   top: 0,
   height: '100%',
   width: '100dvw',
-  zIndex: 5,
+  zIndex: 1305,
   overflow: 'hidden',
 }));
 
@@ -26,7 +26,7 @@ const ModalBackgroundContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   width: '100%',
   background: 'rgba(0,0,0,0.5)',
-  zIndex: 5,
+  zIndex: 1308,
 }));
 
 interface ModalBackgroundProps {
@@ -38,6 +38,7 @@ export default function ModalBackground({
   isModalOpen,
   handleCloseModal,
 }: ModalBackgroundProps) {
+
   return (
     <Fade
       in={isModalOpen}

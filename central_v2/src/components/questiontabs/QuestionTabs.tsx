@@ -3,8 +3,9 @@ import {
   Slide,
   Tabs,
   Modal,
-  CircularProgress,
+  Typography,
   useMediaQuery,
+  Box
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,7 +21,7 @@ import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import { ScreenSize, LibraryTabEnum, GameQuestionType } from '../../lib/CentralModels';
+import { ScreenSize, LibraryTabEnum, GameQuestionType, UserStatusType } from '../../lib/CentralModels';
 import {
   TabContainer,
   ContentFrame,
@@ -35,7 +36,6 @@ import {
 } from '../../hooks/context/useCentralDataContext';
 import QuestionTabsSelectedQuestion from './QuestionTabsSelectedQuestion';
 import LibraryTabsContent from '../librarytabs/LibraryTabsContent';
-
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -55,6 +55,8 @@ interface TabContainerProps {
   handlePrevQuestion: () => void;
   handleNextQuestion: () => void;
   handleCloneButtonClick: () => void;
+  handleEditButtonClick: () => void;
+  handleDeleteButtonClick: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -80,6 +82,8 @@ export default function QuestionTabs({
   handlePrevQuestion,
   handleNextQuestion,
   handleCloneButtonClick,
+  handleEditButtonClick,
+  handleDeleteButtonClick,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
@@ -145,60 +149,70 @@ export default function QuestionTabs({
         <TabContainer>
           <ContentFrame>
             <TabContent>
-              <Tabs
-                value={openTab}
-                onChange={handleChange}
-                TabIndicatorProps={{
-                  style: {
-                    display: 'none',
-                  },
-                }}
-              >
-                {Object.entries(tabMap).map(([key, value], index) => {
-                  const numericKey = Number(key);
-                  const isSelected = openTab === numericKey;
-                  return (
+              <Box style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                <Tabs
+                  value={openTab}
+                  onChange={handleChange}
+                  TabIndicatorProps={{
+                    style: {
+                      display: 'none',
+                    },
+                  }}
+                >
+                  { centralData.userStatus === UserStatusType.LOGGEDIN ?
+                  Object.entries(tabMap).map(([key, value], index) => {
+                    const numericKey = Number(key);
+                    const isSelected = openTab === numericKey;
+                    return (
+                      <StyledTab
+                        key={uuidv4()}
+                        icon={
+                          <img
+                            src={tabIconMap[numericKey]}
+                            alt={value}
+                            style={{ opacity: openTab === numericKey ? 1 : 0.5, padding: 0 }}
+                          />
+                        }
+                        iconPosition="start"
+                        label={getLabel(screenSize, isSelected, value)}
+                        isSelected={isSelected}
+                        style={{ marginRight: screenSize === ScreenSize.SMALL ? '0px' : '8px' }}
+                      />
+                    );
+                  })
+                  :  
                     <StyledTab
                       key={uuidv4()}
                       icon={
                         <img
-                          src={tabIconMap[numericKey]}
-                          alt={value}
-                          style={{ opacity: openTab === numericKey ? 1 : 0.5, padding: 0 }}
+                          src={tabIconMap[0]}
+                          alt={tabMap[0]}
+                          style={{padding: 0 }}
                         />
                       }
                       iconPosition="start"
-                      label={getLabel(screenSize, isSelected, value)}
-                      isSelected={isSelected}
+                      label={getLabel(screenSize, true, tabMap[0])}
+                      isSelected
                       style={{ marginRight: '8px' }}
                     />
-                  );
-                })}
-              </Tabs>
-              { question 
-                ? <QuestionTabsSelectedQuestion
-                    screenSize={screenSize}
-                    question={question}
-                    isLoading={isLoading}
-                    handleBackToExplore={handleBackToExplore}
-                    handlePrevQuestion={handlePrevQuestion}
-                    handleNextQuestion={handleNextQuestion}
-                    handleCloneButtonClick={handleCloneButtonClick}
-                    handleFavoriteButtonClick={handleFavoriteButtonClick}
-                    isFavorite={isFavorite}
-                  />
-                : 
-                <LibraryTabsContent
-                  openTab={openTab}
-                  gameQuestion={GameQuestionType.QUESTION}
-                  screenSize={screenSize}
-                  setIsTabsOpen={setIsTabsOpen}
-                  handleChooseGrades={handleChooseGrades}
-                  handleSortChange={handleSortChange}
-                  handleSearchChange={handleSearchChange}
-                  handleQuestionView={handleQuestionView}
-                />
-              }
+                  }
+                </Tabs>
+                <Typography style={{fontSize: '16px', textDecoration: 'underline', color: '#FFF', paddingBottom: '8px', cursor: 'pointer'}} onClick={handleCloseQuestionTabs}>
+                  Close
+                </Typography>
+              </Box>
+              <QuestionTabsSelectedQuestion
+                screenSize={screenSize}
+                question={question}
+                isLoading={isLoading}
+                handlePrevQuestion={handlePrevQuestion}
+                handleNextQuestion={handleNextQuestion}
+                handleCloneButtonClick={handleCloneButtonClick}
+                handleEditButtonClick={handleEditButtonClick}
+                handleFavoriteButtonClick={handleFavoriteButtonClick}
+                handleDeleteButtonClick={handleDeleteButtonClick}
+                isFavorite={isFavorite}
+              />
             </TabContent>
           </ContentFrame>
         </TabContainer>
