@@ -73,9 +73,7 @@ export default function AuthGuard ({
       break;
     case UserStatusType.NONVERIFIED:
        // if logged out user tries to access pages that require authentication
-        console.log("IM in non verified.", centralData)
         if (!isSignupPage) {
-          console.log("Redirecting non-verified user to signup", centralData);
           return <Navigate to="/signup" replace />;
         }
 

@@ -30,7 +30,6 @@ export default function SignUpSwitch({
   // Override step dynamically if googlenextstep is true
   const centralData = useCentralDataState();
 
-  console.log("central data signup switch: ", centralData)
   const getCurrentStep = () => {
     switch (centralData.userStatus) {
       case UserStatusType.GOOGLE_SIGNUP:
@@ -43,7 +42,6 @@ export default function SignUpSwitch({
   };
 
   const currentStep = getCurrentStep();
-  console.log("Currentstep: ", currentStep)
 
   const handlerImageUpload = async (file: File) => {
     const fileName = file.name;

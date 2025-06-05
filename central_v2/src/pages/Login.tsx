@@ -230,7 +230,7 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
     <SignUpMainContainer>
       <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleLogOut={handleLogOut}/>
       <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
-      <NotVerifiedModal isNonVerifiedModalOpen={isNonVerifiedModalOpen} setIsNonVerifiedModalOpen={setIsNonVerifiedModalOpen}/>
+      <NotVerifiedModal isNonVerifiedModalOpen={isNonVerifiedModalOpen} setIsNonVerifiedModalOpen={setIsNonVerifiedModalOpen} email={userName}/>
       <InnerBodyContainer>
         <UpperLogin>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />

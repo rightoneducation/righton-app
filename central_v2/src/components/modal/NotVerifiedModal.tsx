@@ -82,11 +82,13 @@ const CloseButton = styled('img')(({ theme }) => ({
 interface CreatingTemplateModalProps {
   isNonVerifiedModalOpen: boolean;
   setIsNonVerifiedModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  email: string
 }
 
 export default function NotVerifiedModal({
   isNonVerifiedModalOpen,
   setIsNonVerifiedModalOpen,
+  email,
 }: CreatingTemplateModalProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -94,9 +96,12 @@ export default function NotVerifiedModal({
   const message = "It seems like you've already started an account, please do one of the following:";
   const navigate = useNavigate(); // Initialize useNavigate
   
-  const handleCloseModalClickResend = () => {
+  const handleCloseModalClickResend = async () => {
+    console.log("Email: ", email)
     setIsNonVerifiedModalOpen(false);
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.NONVERIFIED});
+    const response = await apiClients.auth.awsResendConfirmationCode(email)
+    console.log(response)
   }
 
   const handleCloseModalClickCancel = () => {
