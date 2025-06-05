@@ -634,6 +634,8 @@ export default function useCentralDataManager({
     executeValidate();
   }, []); // eslint-disable-line
 
+  console.log("CentralData: ", centralData)
+
   return {
     setIsTabsOpen,
     handleLibraryInit,

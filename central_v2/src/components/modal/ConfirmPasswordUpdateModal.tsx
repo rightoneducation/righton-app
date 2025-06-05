@@ -98,6 +98,7 @@ export default function ConfirmPasswordUpdateModal({
           <Box style={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
               <CentralButton isEnabled buttonType={ButtonType.CONFIRMSENDCODE} onClick={handleContinue} />
               <BackButton
+              disableTouchRipple
               onClick={handleCancel}
               variant="outlined">
                 Back

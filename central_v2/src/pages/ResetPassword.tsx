@@ -111,7 +111,7 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
         confirmationCode: fullCode,
       });
       setIsVerifying(false);
-      
+
       // update local user profile if it's a password update
       if(action === 'update') {
         const newUser = {
@@ -122,6 +122,7 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
         centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile?.updatedUser });
         navigate("/userprofile");
       } else {
+        // Do something here?
         navigate('/login');
       }
     } catch (error: any) {

@@ -93,8 +93,6 @@ export default function UserProfile({
 
   }, [centralData.userProfile]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  console.log("CentralData: ", centralData)
-
   const handleEditPicture = () => {
     setIsModalOpen(true);
   };
