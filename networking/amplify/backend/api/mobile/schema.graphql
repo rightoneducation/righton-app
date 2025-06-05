@@ -78,6 +78,35 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+
+  deleteUnverifiedUser(input: DeleteUnverifiedUserInput): String
+  @function(name: "unverifiedDelete-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools },
+      { allow: owner, provider: userPools }
+    ]
+  )
+
+  updateUserPass(input: UpdateUserPassInput): String
+  @function(name: "updateUserPass-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools },
+      { allow: owner, provider: userPools }
+    ]
+  )
+}
+
+input DeleteUnverifiedUserInput {
+  email: String!
+}
+
+input UpdateUserPassInput {
+  email: String!,
+  pass: String!
 }
 
 input TeacherIdAuthInput {

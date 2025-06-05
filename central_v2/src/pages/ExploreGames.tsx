@@ -76,6 +76,12 @@ export default function ExploreGames({
     setGameSet(games);
     navigate(`/games/${game.publicPrivateType}/${game.id}`);
   };
+
+  // TEMP CODE TO TRIGGER LAMBDA FUNCTIONS
+  useEffect(() => {
+    const response = apiClients.user.updateUserPass('testEmail ','testPass');
+    const response2 = apiClients.user.deleteUnverifiedUser('testEmail');
+  },[]); // eslint-disable-line
   
   return (
     <ExploreGamesMainContainer id="scrollableDiv">

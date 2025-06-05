@@ -1374,6 +1374,15 @@ export type WaeRegenInput = {
   discardedExplanations?: string | null,
 };
 
+export type DeleteUnverifiedUserInput = {
+  email: string,
+};
+
+export type UpdateUserPassInput = {
+  email: string,
+  pass: string,
+};
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   userName?: ModelStringInput | null,
@@ -11645,6 +11654,22 @@ export type WaeregenMutationVariables = {
 
 export type WaeregenMutation = {
   waeregen?: string | null,
+};
+
+export type DeleteUnverifiedUserMutationVariables = {
+  input?: DeleteUnverifiedUserInput | null,
+};
+
+export type DeleteUnverifiedUserMutation = {
+  deleteUnverifiedUser?: string | null,
+};
+
+export type UpdateUserPassMutationVariables = {
+  input?: UpdateUserPassInput | null,
+};
+
+export type UpdateUserPassMutation = {
+  updateUserPass?: string | null,
 };
 
 export type GetUserQueryVariables = {
