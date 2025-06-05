@@ -9511,3 +9511,13 @@ export const waeregen = /* GraphQL */ `
     waeregen(input: $input)
   }
 `;
+export const deleteUnverifiedUser = /* GraphQL */ `
+  mutation DeleteUnverifiedUser($input: DeleteUnverifiedUserInput) {
+    deleteUnverifiedUser(input: $input)
+  }
+`;
+export const updateUserPass = /* GraphQL */ `
+  mutation UpdateUserPass($input: UpdateUserPassInput) {
+    updateUserPass(input: $input)
+  }
+`;
