@@ -48,7 +48,9 @@ import { TPhaseTime, TGameTemplateProps } from '../../../lib/CreateGameModels';
 interface CreateGameCardBaseProps {
   draftGame: TGameTemplateProps;
   isClone: boolean;
+  isEdit: boolean;
   isCloneImageChanged: boolean;
+  label: string;
   screenSize: ScreenSize;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
@@ -67,7 +69,9 @@ interface CreateGameCardBaseProps {
 export default function CreateGameCardBase({
   draftGame,
   isClone,
+  isEdit,
   isCloneImageChanged,
+  label,
   screenSize,
   handleImageUploadClick,
   handlePublicPrivateChange,
@@ -93,7 +97,7 @@ export default function CreateGameCardBase({
   let imageLink: string | null = null;
   if (imageUrl){
     imageLink = imageUrl;
-    if (isClone && !isCloneImageChanged)
+    if ((isClone || isEdit) && !isCloneImageChanged)
       imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   }
   else if (image && image instanceof File)
@@ -221,7 +225,7 @@ export default function CreateGameCardBase({
             align={screenSize === ScreenSize.SMALL ? 'left' : 'inherit'}
             sx={{ color: '#384466' }}
           >
-            Create Game
+            {label} Game
           </CreateGameTitleText>
           <Stack
             direction="row"
@@ -268,7 +272,7 @@ export default function CreateGameCardBase({
             <PublicPrivateButton
             isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
             onHandlePublicPrivateChange={handlePublicPrivateChange}  
-            isDisabled={openCreateQuestion || openQuestionBank} />
+            isDisabled={openCreateQuestion || openQuestionBank || isEdit} />
           </Box>
             </TooltipStyled>
         )}

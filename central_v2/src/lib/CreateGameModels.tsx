@@ -91,6 +91,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
   export const emptyQuestionTemplate: IQuestionTemplate = {
     id: '',
     userId: '',
+    publicPrivateType: PublicPrivateType.PUBLIC,
     title: '',
     lowerCaseTitle: '',
     version: 0,
@@ -131,6 +132,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
   export const newGameTemplate: IGameTemplate = {
     id: '',
     userId: '',
+    publicPrivateType: PublicPrivateType.PUBLIC,
     title: '',
     lowerCaseTitle: '',
     owner: '',

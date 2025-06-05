@@ -17,6 +17,8 @@ import { ScreenSize, GameQuestionType, LibraryTabEnum, UserStatusType } from '..
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 import QuestionTabs from '../components/questiontabs/QuestionTabs';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
+import EditModal from '../components/modal/EditModal';
+import ModalBackground from '../components/modal/ModalBackground';
 
 interface MyLibraryProps {
   gameQuestion: GameQuestionType;
@@ -53,6 +55,8 @@ export default function MyLibrary({
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleQuestionView = (
     question: IQuestionTemplate,
@@ -65,7 +69,7 @@ export default function MyLibrary({
 
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
-    navigate(`/library/games/${element.id}`);
+    navigate(`/library/games/${element.publicPrivateType}/${element.id}`);
   };
 
   const handleBackToExplore = () => {
@@ -107,12 +111,50 @@ export default function MyLibrary({
       type: 'SET_SELECTED_QUESTION',
       payload: selectedQuestion,
     });
-    navigate(`/clone/question/${selectedQuestion?.id}`);
+    navigate(`/clone/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   };
+
+ const handleEditButtonClick = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditQuestion = () => {
+    setIsTabsOpen(false);
+    centralDataDispatch({
+      type: 'SET_SELECTED_QUESTION',
+      payload: selectedQuestion,
+    });
+    navigate(`/edit/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
+  }
+
+  const handleDeleteButtonClick = async () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteQuestion = async () => {
+  };
+
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
+  }
 
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
+      <ModalBackground isModalOpen={isEditModalOpen} handleCloseModal={handleCloseModal}/>
+      <EditModal
+        isModalOpen={isEditModalOpen}
+        gameQuestion={GameQuestionType.QUESTION}
+        setIsModalOpen={setIsEditModalOpen}
+        handleProceedToEdit={handleEditQuestion}
+      />
+      <EditModal
+        isModalOpen={isDeleteModalOpen}
+        gameQuestion={GameQuestionType.QUESTION}
+        setIsModalOpen={setIsDeleteModalOpen}
+        handleProceedToEdit={handleDeleteQuestion}
+      />
       <>
         <QuestionTabsModalBackground
           isTabsOpen={centralData.isTabsOpen}
@@ -131,6 +173,8 @@ export default function MyLibrary({
           handlePrevQuestion={handlePrevQuestion}
           handleNextQuestion={handleNextQuestion}
           handleCloneButtonClick={handleCloneButtonClick}
+          handleEditButtonClick={handleEditButtonClick}
+          handleDeleteButtonClick={handleDeleteButtonClick}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}

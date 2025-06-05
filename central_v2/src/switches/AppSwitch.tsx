@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useMatch } from 'react-router-dom';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { SortType, SortDirection } from '@righton/networking';
+import { SortType, SortDirection, PublicPrivateType } from '@righton/networking';
 import useCentralDataManager from '../hooks/useCentralDataActions';
 import AppContainer from '../containers/AppContainer';
 import AuthGuard from '../containers/AuthGuard';
@@ -15,9 +14,7 @@ import CreateGame from '../pages/CreateGame';
 import ViewGame from '../pages/ViewGame';
 import MyLibrary from '../pages/MyLibrary';
 import UserProfile from '../pages/UserProfile';
-
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
-// import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 
 interface AppSwitchProps {
   currentScreen: ScreenType;
@@ -36,9 +33,11 @@ function AppSwitch({
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
   let screenComponent;
-  
+
   const gameQuestion: GameQuestionType = 
     (currentScreen === ScreenType.GAMES|| (currentScreen === ScreenType.LIBRARY && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
+  
+  
   const {
     setIsTabsOpen,
     handleLibraryInit,
@@ -52,6 +51,7 @@ function AppSwitch({
     fetchElements,
     handleLogOut,
     checkForUniqueEmail,
+    deleteQuestionTemplate
   } = useCentralDataManager({gameQuestion});
   
   const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
@@ -77,6 +77,7 @@ function AppSwitch({
             handleSearchChange={handleSearchChange}
             loadMore={loadMore}
             handlePublicPrivateChange={getPublicPrivateElements}
+            deleteQuestionTemplate={deleteQuestionTemplate}
           />
         </AuthGuard>
       );
@@ -130,7 +131,8 @@ function AppSwitch({
       );
       break;
     }
-    case ScreenType.CLONEQUESTION: {
+    case ScreenType.CLONEQUESTION: 
+    case ScreenType.EDITQUESTION: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
           <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
@@ -155,7 +157,8 @@ function AppSwitch({
       );
       break;
     }
-    case ScreenType.CLONEGAME: {
+    case ScreenType.CLONEGAME: 
+    case ScreenType.EDITGAME: {
       screenComponent = (
           <CreateGame 
             screenSize={screenSize}  
@@ -173,7 +176,7 @@ function AppSwitch({
     case ScreenType.VIEWGAME: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
-          <ViewGame screenSize={screenSize} fetchElement={fetchElement} />
+          <ViewGame screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
         </AuthGuard>
       );
       break;

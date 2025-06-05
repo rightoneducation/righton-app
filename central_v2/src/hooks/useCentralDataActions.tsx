@@ -13,7 +13,8 @@ import {
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
 import { useCentralDataState, useCentralDataDispatch } from './context/useCentralDataContext';
-import { UserStatusType, GameQuestionType, FetchType, LibraryTabEnum, ISelectedGame, ISelectedQuestion } from '../lib/CentralModels';
+import { UserStatusType, GameQuestionType, FetchType, LibraryTabEnum, ISelectedGame, ISelectedQuestion, CallType } from '../lib/CentralModels';
+import getCallType from '../lib/helperfunctions/getCallType';
 
 interface UseCentralDataManagerProps {
   gameQuestion: GameQuestionType;
@@ -38,6 +39,7 @@ interface UseCentralDataManagerReturnProps {
   loadMoreLibrary: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null) => void;
   handleLogOut: () => void;
   checkForUniqueEmail: (email: string) => Promise<boolean>;
+  deleteQuestionTemplate: (questionId: string, type: PublicPrivateType) => Promise<void>;
 }
 
 /* 
@@ -58,6 +60,16 @@ export default function useCentralDataManager({
   const isQuestions = useMatch('/questions');
   const isCreateGame = useMatch('/create/game');
   const isLibrary = useMatch('/library') !== null;
+  const callTypeMatches = {
+    matchViewGame: useMatch('/games/:type/:gameId'),
+    matchLibViewGame: useMatch('/library/games/:type/:gameId'),
+    matchCloneGame: useMatch('/clone/:type/:gameId'),
+    matchEditGame: useMatch('/edit/:type/:gameId'),
+    matchCloneQuestion: useMatch('/clone/question/:type/:questionId'),
+    matchEditQuestion: useMatch('/edit/question/:type/:questionId'),
+    matchLibraryTab: useMatch('/library'),
+  }
+
   const navigate = useNavigate(); 
 
   const debounceInterval = 800;
@@ -74,11 +86,13 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: grades });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+    const libraryTab = centralData.openTab;
+    const callType = getCallType({...callTypeMatches, libraryTab, gameQuestion});
     switch (gameQuestion) {
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager
         ?.searchForQuestionTemplates(
-          PublicPrivateType.PUBLIC,
+          callType.publicPrivateType,
           null,
           null,
           centralData.searchTerms,
@@ -96,7 +110,7 @@ export default function useCentralDataManager({
       default:
         apiClients?.centralDataManager
         ?.searchForGameTemplates(
-          PublicPrivateType.PUBLIC,
+          callType.publicPrivateType,
           null,
           null,
           centralData.searchTerms,
@@ -120,11 +134,13 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'SET_SORT', payload: newSort });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+    const libraryTab = centralData.openTab;
+    const callType = getCallType({...callTypeMatches, libraryTab, gameQuestion});
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
-            centralData.publicPrivate,
+            callType.publicPrivateType,
             null,
             null,
             centralData.searchTerms,
@@ -142,7 +158,7 @@ export default function useCentralDataManager({
       default:
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
-            centralData.publicPrivate,
+            callType.publicPrivateType,
             null,
             null,
             centralData.searchTerms,
@@ -168,18 +184,22 @@ export default function useCentralDataManager({
         sortDirection: SortDirection,
         gradeTargets: GradeTarget[],
         sortType: SortType,
-        searchGameQuestion: GameQuestionType
+        searchGameQuestion: GameQuestionType,
+        libraryTab: LibraryTabEnum, 
       ) => {
         centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: search });
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+        console.log(libraryTab);
+        const callType = getCallType({...callTypeMatches, libraryTab, gameQuestion: searchGameQuestion});
+        console.log(callType);
         switch(searchGameQuestion){
           case GameQuestionType.QUESTION:
             centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
             apiClients?.centralDataManager
               ?.searchForQuestionTemplates(
-                PublicPrivateType.PUBLIC,
-                null,
+                callType.publicPrivateType,
+                500,
                 null,
                 search,
                 sortDirection,
@@ -197,8 +217,8 @@ export default function useCentralDataManager({
             centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
             apiClients?.centralDataManager
               ?.searchForGameTemplates(
-                PublicPrivateType.PUBLIC,
-                null,
+                callType.publicPrivateType,
+                500,
                 null,
                 search,
                 sortDirection,
@@ -224,7 +244,8 @@ export default function useCentralDataManager({
       centralData.sort.direction ?? SortDirection.ASC,
       centralData.selectedGrades,
       centralData.sort.field,
-      gameQuestion
+      gameQuestion,
+      centralData.openTab,
     );
   };
 
@@ -298,6 +319,7 @@ export default function useCentralDataManager({
     }
   };
 
+  // loadMore on explore pages 
   const loadMore = () => {
     if (centralData.nextToken && !centralData.isLoadingInfiniteScroll) {
       centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: true })
@@ -400,39 +422,51 @@ export default function useCentralDataManager({
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
-        apiClients?.centralDataManager?.searchForQuestionTemplates(
-          PublicPrivateType.PUBLIC,
-          12,
-          nextToken ?? null,
-          searchTerms ?? centralData.searchTerms,
-          centralData.sort.direction ?? SortDirection.ASC,
-          centralData.sort.field,
-          [...centralData.selectedGrades],
-          user.favoriteQuestionTemplateIds ?? null,
-        ).then((response) => {
-          centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: [...centralData.favQuestions, ...response.questions] });
-          centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
-        });
+        if (user.favoriteQuestionTemplateIds && user.favoriteQuestionTemplateIds.length > 0){
+          apiClients?.centralDataManager?.searchForQuestionTemplates(
+            PublicPrivateType.PUBLIC,
+            12,
+            nextToken ?? null,
+            searchTerms ?? centralData.searchTerms,
+            centralData.sort.direction ?? SortDirection.ASC,
+            centralData.sort.field,
+            [...centralData.selectedGrades],
+            user.favoriteQuestionTemplateIds,
+          ).then((response) => {
+            centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: [...response.questions] });
+            centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
+          });
+        } else {
+            centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: [] });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
+        }
       break;
       case GameQuestionType.GAME:
       default:
-        apiClients?.centralDataManager?.searchForGameTemplates(
-          PublicPrivateType.PUBLIC,
-          12,
-          nextToken ?? null,
-          searchTerms ?? centralData.searchTerms,
-          centralData.sort.direction ?? SortDirection.ASC,
-          centralData.sort.field,
-          [...centralData.selectedGrades],
-          user.favoriteGameTemplateIds ?? null,
-        ).then((response) => {
-          centralDataDispatch({ type: 'SET_FAV_GAMES', payload: [...centralData.favGames, ...response.games] });
-          centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-          centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
-        });
+        if (user.favoriteGameTemplateIds && user.favoriteGameTemplateIds.length > 0){
+          apiClients?.centralDataManager?.searchForGameTemplates(
+            PublicPrivateType.PUBLIC,
+            12,
+            nextToken ?? null,
+            searchTerms ?? centralData.searchTerms,
+            centralData.sort.direction ?? SortDirection.ASC,
+            centralData.sort.field,
+            [...centralData.selectedGrades],
+            user.favoriteGameTemplateIds,
+          ).then((response) => {
+            centralDataDispatch({ type: 'SET_FAV_GAMES', payload: [...response.games] });
+            centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
+          });
+        } else {
+            centralDataDispatch({ type: 'SET_FAV_GAMES', payload: [] });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({ type: 'SET_IS_LOADING_INFINITE_SCROLL', payload: false });
+        }
       break;
     }
   };
@@ -447,9 +481,10 @@ export default function useCentralDataManager({
 
   const fetchElement = async (type: GameQuestionType, id: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+    const callType = getCallType({...callTypeMatches});
     switch (type){
       case GameQuestionType.QUESTION:{
-       const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id);
+       const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(callType.publicPrivateType,id);
           let selectedQuestion: ISelectedQuestion = {
             question: responseQuestion,
             profilePic: '',
@@ -478,7 +513,7 @@ export default function useCentralDataManager({
       }
       case GameQuestionType.GAME:
       default:{
-       const responseGame = await apiClients?.gameTemplate.getGameTemplate(PublicPrivateType.PUBLIC, id);
+       const responseGame = await apiClients?.gameTemplate.getGameTemplate(callType.publicPrivateType, id);
           let selectedGame: ISelectedGame = {
             game: responseGame,
             profilePic: '',
@@ -643,6 +678,15 @@ export default function useCentralDataManager({
     
   };
 
+  const deleteQuestionTemplate = async (questionId: string, type: PublicPrivateType) => {
+    try {
+      const response = await apiClients.centralDataManager?.deleteQuestionTemplate(type, questionId);
+    } catch (err) {
+      console.error('Error deleting question template:', err);
+      throw new Error('Failed to delete question template');
+    }
+  };
+
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
@@ -671,6 +715,7 @@ export default function useCentralDataManager({
     loadMore,
     loadMoreLibrary,
     handleLogOut,
-    checkForUniqueEmail
+    checkForUniqueEmail,
+    deleteQuestionTemplate
   };
 }

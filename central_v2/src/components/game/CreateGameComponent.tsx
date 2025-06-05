@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {  IQuestionTemplate, PublicPrivateType } from '@righton/networking';
-import { Box, Grid, useTheme } from '@mui/material';
+import { Box, CircularProgress, Grid, useTheme } from '@mui/material';
 import {
   ScreenSize,
 } from '../../lib/CentralModels';
@@ -15,16 +15,20 @@ import {
 import CentralButton from '../button/Button';
 import { ButtonType, buttonContentMap } from '../button/ButtonModels';
 import CreateGameCardBase from '../cards/creategamecard/CreateGameCardBase';
-import { TGameTemplateProps, TPhaseTime } from '../../lib/CreateGameModels';
+import { TGameTemplateProps, TPhaseTime, TDraftQuestionsList } from '../../lib/CreateGameModels';
 import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuestionButtons';
 
 interface ICreateGameComponent {
   screenSize: ScreenSize;
   isClone: boolean;
+  isEdit: boolean;
+  isLoading: boolean;
   isCloneImageChanged: boolean;
+  label: string;
   handleSaveGame: () => Promise<void>;
   handleSaveDraftGame: () => Promise<void>;
   draftGame: TGameTemplateProps;
+  draftQuestionsList?: TDraftQuestionsList[];
   handleDiscard: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   handleImageUploadClick: () => void;
@@ -44,6 +48,7 @@ interface ICreateGameComponent {
 const qt: IQuestionTemplate = {
   id: '',
   userId: '',
+  publicPrivateType: PublicPrivateType.PUBLIC,
   title: '',
   lowerCaseTitle: '',
   version: 0,
@@ -58,8 +63,12 @@ const qt: IQuestionTemplate = {
 
 export default function CreateGameComponent({
   draftGame,
+  draftQuestionsList,
   isClone,
+  isEdit,
+  isLoading,
   isCloneImageChanged,
+  label,
   screenSize,
   handleSaveGame,
   handleSaveDraftGame,
@@ -89,184 +98,222 @@ export default function CreateGameComponent({
   };
 
   const createDraftQuestion = (): { gameQuestionId: string, questionTemplate: IQuestionTemplate} => ({
-gameQuestionId: "",
-questionTemplate: qt,
+    gameQuestionId: "",
+    questionTemplate: qt,
   })
   const questions = Array.from({ length: draftGame.questionCount }).map(() => createDraftQuestion());
 
   return (
     <>
-      <TitleText screenSize={screenSize}> 
-      {isClone ? 'Clone' : 'Create'} Game
+      <TitleText screenSize={screenSize}>
+        {label} Game
       </TitleText>
-      {/* Save & Discard Button for Small & Medium Screen Size */}
-        {(screenSize === ScreenSize.MEDIUM) && 
-          <Box style={{
-            width: 'fit-content', 
-            display: 'flex',
-            
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            gap: `${theme.sizing.xSmPadding}px`, 
-            paddingBottom: '16px',
-          }}>
-            <CentralButton
-              buttonType={ButtonType.SAVE}
-              isEnabled
-              smallScreenOverride
-              buttonWidthOverride="105px"
-              onClick={handleSaveGame}
-            />
-            <CentralButton 
-              buttonType={ButtonType.SAVEDRAFT} 
-              isEnabled 
-              smallScreenOverride 
-              onClick={handleSaveDraftGame} 
-            />
-            <CentralButton
-              buttonType={ButtonType.DISCARDBLUE}
-              isEnabled
-              smallScreenOverride
-              buttonWidthOverride="134px"
-              onClick={handleDiscard}
-            />
-          </Box>
-        }
-        {(screenSize === ScreenSize.SMALL) && 
-          <Box style={{
-            width: '100%', 
-            maxWidth: '672px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            gap: `${theme.sizing.xSmPadding}px`, 
-            paddingBottom: '16px',
-          }}>
-            <CentralButton
-              buttonType={ButtonType.SAVE}
-              isEnabled
-              smallScreenOverride
-              buttonWidthOverride="275px"
-              onClick={handleSaveGame}
-            />
-            <CentralButton 
-              buttonType={ButtonType.SAVEDRAFT} 
-              isEnabled 
-              smallScreenOverride 
-              buttonWidthOverride="275px"
-              onClick={handleSaveDraftGame} 
-            />
-            <CentralButton
-              buttonType={ButtonType.DISCARDBLUE}
-              isEnabled
-              smallScreenOverride
-              buttonWidthOverride="275px"
-              onClick={handleDiscard}
-            />
-          </Box>
-        }
-      <CreateGameGridContainer container wrap="nowrap">
-        {/* Grid item for Save & Discard Buttons for Large Screen Size */}
-        <CreateGameSaveDiscardGridItem item sm md={1} lg={4}>
-          {screenSize !== ScreenSize.SMALL &&
-            screenSize !== ScreenSize.MEDIUM && (
-              <CreateGameSaveDiscardBoxContainer screenSize={screenSize}>
+
+      {!isLoading ? (
+        <>
+          {/* Save & Discard Button for Small & Medium Screen Size */}
+          {screenSize === ScreenSize.MEDIUM && (
+            <Box
+              style={{
+                width: 'fit-content',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: `${theme.sizing.xSmPadding}px`,
+                paddingBottom: '16px',
+              }}
+            >
+              <CentralButton
+                buttonType={ButtonType.SAVE}
+                isEnabled
+                smallScreenOverride
+                buttonWidthOverride="105px"
+                onClick={handleSaveGame}
+              />
+              {!isEdit && (
                 <CentralButton
-                  buttonType={ButtonType.SAVE}
+                  buttonType={ButtonType.SAVEDRAFT}
                   isEnabled
-                  buttonWidthOverride="160px"
-                  onClick={handleSaveGame}
+                  smallScreenOverride
+                  onClick={handleSaveDraftGame}
                 />
-                <CentralButton 
-                  buttonType={ButtonType.SAVEDRAFT} 
-                  isEnabled 
-                  smallScreenOverride 
-                  buttonWidthOverride="160px"
-                  onClick={handleSaveDraftGame} 
-                />
+              )}
+              <CentralButton
+                buttonType={ButtonType.DISCARDBLUE}
+                isEnabled
+                smallScreenOverride
+                buttonWidthOverride="134px"
+                onClick={handleDiscard}
+              />
+            </Box>
+          )}
+
+          {screenSize === ScreenSize.SMALL && (
+            <Box
+              style={{
+                width: '100%',
+                maxWidth: '672px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: `${theme.sizing.xSmPadding}px`,
+                paddingBottom: '16px',
+              }}
+            >
+              <CentralButton
+                buttonType={ButtonType.SAVE}
+                isEnabled
+                smallScreenOverride
+                buttonWidthOverride="275px"
+                onClick={handleSaveGame}
+              />
+              {!isEdit && (
                 <CentralButton
-                  buttonType={ButtonType.DISCARDBLUE}
+                  buttonType={ButtonType.SAVEDRAFT}
                   isEnabled
-                  buttonWidthOverride="160px"
-                  onClick={handleDiscard}
+                  smallScreenOverride
+                  buttonWidthOverride="275px"
+                  onClick={handleSaveDraftGame}
                 />
-              </CreateGameSaveDiscardBoxContainer>
-            )}
-        </CreateGameSaveDiscardGridItem>
-        {/* Grid Item for Create Game Card */}
-        <CreateGameCardGridItem
-          item
-          sm={12}
-          md={10}
-          lg={4}
-          screenSize={screenSize}
-        >
-            <CreateGameCardBase
-              draftGame={draftGame}
-              isClone={isClone}
-              isCloneImageChanged={isCloneImageChanged}
+              )}
+              <CentralButton
+                buttonType={ButtonType.DISCARDBLUE}
+                isEnabled
+                smallScreenOverride
+                buttonWidthOverride="275px"
+                onClick={handleDiscard}
+              />
+            </Box>
+          )}
+
+          <CreateGameGridContainer container wrap="nowrap">
+            {/* Grid item for Save & Discard Buttons for Large Screen Size */}
+            <CreateGameSaveDiscardGridItem item sm md={1} lg={4}>
+              {screenSize !== ScreenSize.SMALL &&
+                screenSize !== ScreenSize.MEDIUM && (
+                  <CreateGameSaveDiscardBoxContainer screenSize={screenSize}>
+                    <CentralButton
+                      buttonType={ButtonType.SAVE}
+                      isEnabled
+                      buttonWidthOverride="160px"
+                      onClick={handleSaveGame}
+                    />
+                    {!isEdit && (
+                      <CentralButton
+                        buttonType={ButtonType.SAVEDRAFT}
+                        isEnabled
+                        smallScreenOverride
+                        buttonWidthOverride="160px"
+                        onClick={handleSaveDraftGame}
+                      />
+                    )}
+                    <CentralButton
+                      buttonType={ButtonType.DISCARDBLUE}
+                      isEnabled
+                      buttonWidthOverride="160px"
+                      onClick={handleDiscard}
+                    />
+                  </CreateGameSaveDiscardBoxContainer>
+                )}
+            </CreateGameSaveDiscardGridItem>
+
+            {/* Grid Item for Create Game Card */}
+            <CreateGameCardGridItem
+              item
+              sm={12}
+              md={10}
+              lg={4}
               screenSize={screenSize}
-              handleImageUploadClick={handleImageUploadClick}
-              handlePublicPrivateChange={handlePublicPrivateChange}
-              handlePhaseTime={handlePhaseTime}
-              onGameDescription={onGameDescription}
-              onGameTitle={onGameTitle}
-              isCardSubmitted={draftGame.isGameCardSubmitted}
-              isCardErrored={draftGame.isGameCardErrored}
-              phaseTime={phaseTime}
-              gameTitle={draftGame.gameTemplate.title}
-              gameDescription={draftGame.gameTemplate.description}
-              openCreateQuestion={draftGame.openCreateQuestion}
-              openQuestionBank={draftGame.openQuestionBank}
+            >
+              <CreateGameCardBase
+                draftGame={draftGame}
+                isClone={isClone}
+                isEdit={isEdit}
+                isCloneImageChanged={isCloneImageChanged}
+                label={label}
+                screenSize={screenSize}
+                handleImageUploadClick={handleImageUploadClick}
+                handlePublicPrivateChange={handlePublicPrivateChange}
+                handlePhaseTime={handlePhaseTime}
+                onGameDescription={onGameDescription}
+                onGameTitle={onGameTitle}
+                isCardSubmitted={draftGame.isGameCardSubmitted}
+                isCardErrored={draftGame.isGameCardErrored}
+                phaseTime={phaseTime}
+                gameTitle={draftGame.gameTemplate.title}
+                gameDescription={draftGame.gameTemplate.description}
+                openCreateQuestion={draftGame.openCreateQuestion}
+                openQuestionBank={draftGame.openQuestionBank}
+              />
+            </CreateGameCardGridItem>
+
+            <Grid sm md={1} lg={4} item />
+          </CreateGameGridContainer>
+
+          {/* Question Count & Add Button */}
+          {/* Adds scroll functionality */}
+          <GameCreateButtonStack
+            sx={{
+              maxWidth: '100%',
+              overflow: 'scroll',
+              minHeight: '40px',
+              '&::-webkit-scrollbar': {
+                display: 'none',
+              },
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
+          >
+            <ManageQuestionsButtons
+              questions={draftQuestionsList ?? questions}
+              iconButtons={iconButtons}
+              selectedIndex={selectedIndex}
+              isCreate
+              setSelectedIndex={setSelectedIndex}
+              addMoreQuestions={addMoreQuestions}
+              handleDeleteQuestion={handleDeleteQuestion}
             />
-        </CreateGameCardGridItem>
-        <Grid sm md={1} lg={4} item />
-      </CreateGameGridContainer>
-      {/* Question Count & Add Button */}
-      {/* Adds scroll functionality */}
-      <GameCreateButtonStack sx={{
-        maxWidth: '100%',
-        overflow: 'scroll',
-        minHeight: '40px',
-         '&::-webkit-scrollbar': {
-        // Chrome and Safari
-        display: 'none',
-        },
-        scrollbarWidth: 'none', // Firefox
-        msOverflowStyle: 'none',
-      }}>
-        <ManageQuestionsButtons 
-          questions={questions}
-          iconButtons={iconButtons}
-          selectedIndex={selectedIndex}
-          isCreate
-          setSelectedIndex={setSelectedIndex}
-          addMoreQuestions={addMoreQuestions}
-          handleDeleteQuestion={handleDeleteQuestion}
-        />
-      </GameCreateButtonStack>
-      {/* Create Question & Question Bank */}
-      <GameCreateButtonStack sx={{ 
-        ...(screenSize === ScreenSize.SMALL && { flexDirection: 'column'})
-      }}>
-        <CentralButton
-        smallScreenOverride
-        buttonWidthOverride={(screenSize === ScreenSize.SMALL ||
-          screenSize === ScreenSize.MEDIUM) ? '222px': '100%'}
-          buttonType={ButtonType.CREATEQUESTION}
-         isEnabled={enabled}
-          onClick={handleCreateQuestion}
-        />
-        <CentralButton
-        smallScreenOverride
-        buttonWidthOverride={(screenSize === ScreenSize.SMALL ||
-          screenSize === ScreenSize.MEDIUM) ? '200px': '100%'}
-          buttonType={ButtonType.QUESTIONBANK}
-          isEnabled={enabled}
-          onClick={handleOpenQuestionBank}
-        />
-      </GameCreateButtonStack>
+          </GameCreateButtonStack>
+
+          {/* Create Question & Question Bank */}
+          <GameCreateButtonStack
+            sx={{
+              ...(screenSize === ScreenSize.SMALL && {
+                flexDirection: 'column',
+              }),
+            }}
+          >
+            <CentralButton
+              smallScreenOverride
+              buttonWidthOverride={
+                screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM
+                  ? '222px'
+                  : '100%'
+              }
+              buttonType={ButtonType.CREATEQUESTION}
+              isEnabled={enabled}
+              onClick={handleCreateQuestion}
+            />
+            <CentralButton
+              smallScreenOverride
+              buttonWidthOverride={
+                screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM
+                  ? '200px'
+                  : '100%'
+              }
+              buttonType={ButtonType.QUESTIONBANK}
+              isEnabled={enabled}
+              onClick={handleOpenQuestionBank}
+            />
+          </GameCreateButtonStack>
+        </>
+      ) : (
+          <CircularProgress
+            style={{ color: `${theme.palette.primary.circularProgress}` }}
+          />
+      )
+    }
     </>
-  );
+  )
 }
