@@ -169,8 +169,9 @@ export default function StyledGameCard({
   handleViewButtonClick,
 }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
+  const isGameLaunchable = (game && game.questionTemplates && game?.questionTemplates?.length > 0) ?? false;
   const handleLaunchGame = () => {
-    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/Public/${game.id}`;
+    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.publicPrivateType}/${game.id}`;
     window.location.href = LAUNCH_GAME_URL;
   }
   const centralData = useCentralDataState();
@@ -206,7 +207,7 @@ export default function StyledGameCard({
          />
         {!isCreateGame && !isMyLibraryQuestion && <CentralButton
            buttonType={ButtonType.LAUNCH}
-           isEnabled={game.questionTemplatesCount > 0}
+           isEnabled={isGameLaunchable}
            onClick={handleLaunchGame}
          />}
         </ButtonContainer>

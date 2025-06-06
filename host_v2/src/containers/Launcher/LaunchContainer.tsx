@@ -7,11 +7,11 @@ import LoadingPage from '../../pages/LoadingPage';
 interface LaunchContainerProps {
   apiClients: IAPIClients;
   gameId: string;
+  publicPrivate: PublicPrivateType;
 }
 
-export default function LaunchContainer({apiClients, gameId}: LaunchContainerProps) {
+export default function LaunchContainer({apiClients, gameId, publicPrivate}: LaunchContainerProps) {
   const theme = useTheme();
-  const publicPrivate = PublicPrivateType.PUBLIC;
   
   
   useEffect(() => {

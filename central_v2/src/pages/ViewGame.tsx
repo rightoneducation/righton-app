@@ -59,7 +59,8 @@ export default function ViewGame({
   const questions = centralData.selectedGame?.game?.questionTemplates;
 
   const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
-  
+  const isGameLaunchable = (centralData.selectedGame && centralData.selectedGame.game && centralData.selectedGame.game.questionTemplates && centralData.selectedGame.game.questionTemplates?.length > 0) ?? false;
+
   useEffect(() => {
     setIsLoading(false);
     if (centralData?.selectedGame?.game) {
@@ -285,7 +286,7 @@ export default function ViewGame({
                   smallScreenOverride
                   buttonWidthOverride='100%'
                   buttonType={ButtonType.LAUNCHGAME}
-                  isEnabled={questions !== null && questions !== undefined && questions.length > 0}
+                  isEnabled={isGameLaunchable}
                   onClick={handleLaunchGame}
                 />
               </GameCreateButtonStack>
