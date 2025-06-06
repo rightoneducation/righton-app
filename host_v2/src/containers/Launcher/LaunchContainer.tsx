@@ -15,7 +15,6 @@ export default function LaunchContainer({apiClients, gameId, publicPrivate}: Lau
   
   
   useEffect(() => {
-    console.log('here');
     apiClients.gameSession.createGameSessionFromTemplate(gameId, publicPrivate).then((response) => {
       if (!response) {
         return;
