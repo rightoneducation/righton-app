@@ -285,7 +285,7 @@ export default function ViewGame({
                   smallScreenOverride
                   buttonWidthOverride='100%'
                   buttonType={ButtonType.LAUNCHGAME}
-                  isEnabled
+                  isEnabled={questions !== null && questions !== undefined && questions.length > 0}
                   onClick={handleLaunchGame}
                 />
               </GameCreateButtonStack>
