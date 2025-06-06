@@ -80,6 +80,8 @@ export class QuestionTemplateAPIClient
     id: string
   ): Promise<IQuestionTemplate> {
     try {
+      console.log(type);
+      console.log(id);
       const queryFunction = questionTemplateRuntimeMap[type].get.queryFunction;
       const getType = `get${type}QuestionTemplate`;
       const result = await this.callGraphQL<QuestionTemplateType<T>['get']['query']>(

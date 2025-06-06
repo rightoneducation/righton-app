@@ -98,10 +98,6 @@ export default function ViewGame({
     }
   };
 
-  const handleDeleteGame = () => {
-    setIsDeleteModalOpen(true);
-  }
-
   const handleProceedToDelete = async () => {
     try{
       if (centralData && centralData.selectedGame && centralData.selectedGame.game) {
@@ -126,6 +122,14 @@ export default function ViewGame({
     fetchElements();
     centralDataDispatch({type: 'SET_SEARCH_TERMS', payload: null})
     navigate('/');
+  }
+
+  const handleDeleteGame = () => {
+    if (centralData.selectedGame?.game?.publicPrivateType === PublicPrivateType.PUBLIC) {
+      setIsDeleteModalOpen(true);
+    } else {
+      handleProceedToDelete();
+    }
   }
 
   const handleCloseEditModal = () => {
