@@ -845,7 +845,7 @@ export default function CreateGame({
               >
                 <Box sx={{ width: draftQuestionItem.isLibraryViewOnly ? '100%' : 'auto' }}>
                   {draftQuestionItem.isLibraryViewOnly ? (
-                    <ViewQuestionCards 
+                  <ViewQuestionCards 
                     screenSize={screenSize}
                     question={draftQuestionItem.questionTemplate}
                     isViewGame

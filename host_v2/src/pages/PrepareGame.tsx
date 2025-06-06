@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion'; 
+import { AnswerType } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
@@ -29,13 +30,14 @@ export default function PrepareGame( {
   setIsTimerVisible
 }: PrepareGameProps) {
     const theme = useTheme();
-    const [isShortAnswerEnabled, setIsShortAnswerEnabled] = React.useState<boolean>(false);
     const [isConfidenceEnabled, setIsConfidenceEnabled] = React.useState<boolean>(true);
     const [isHintEnabled, setIsHintEnabled] = React.useState<boolean>(false);
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
     const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
     const localGameSession = useTSGameSessionContext(GameSessionContext); 
+    const isGameSettingMultiChoice = localGameSession.questions[0]?.answerSettings?.answerType === AnswerType.MULTICHOICE;
+    const [isShortAnswerEnabled, setIsShortAnswerEnabled] = React.useState<boolean>(!isGameSettingMultiChoice);
     const currentQuestion = localGameSession.questions[0];
     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -45,12 +47,9 @@ export default function PrepareGame( {
           ? ScreenSize.MEDIUM 
           : ScreenSize.SMALL;
     const handleButtonClick = () => {
-      console.log('handleButtonClick');
       const currentTimeMillis = Date.now().toString(); 
       const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
       const hostTeamAnswers = apiClients.hostDataManager?.initHostTeamAnswers(localGameSession);
-      console.log('here now');
-      console.log(hostTeamAnswers);
       if (hostTeamAnswers)
         dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {...hostTeamAnswers}});
       console.log('nextState', nextState);
@@ -102,6 +101,7 @@ export default function PrepareGame( {
             currentQuestion={currentQuestion}
             localGameSession={localGameSession}
             screenSize={screenSize}
+            isGameSettingMultiChoice={isGameSettingMultiChoice}
             isShortAnswerEnabled={isShortAnswerEnabled}
             setIsShortAnswerEnabled={setIsShortAnswerEnabled}
             isConfidenceEnabled={isConfidenceEnabled}
