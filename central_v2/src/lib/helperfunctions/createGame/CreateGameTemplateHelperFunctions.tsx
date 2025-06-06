@@ -208,7 +208,7 @@ export const buildGameTemplate = (
   if (draftQuestionsList.length > 0) {
     questionTemplatesOrder = draftQuestionsList.map((question, index) => {
       return { questionTemplateId: question.questionTemplate.id, index };
-    })
+    });
   }
   let gameTemplate: GameTemplate | null = null;
     gameTemplate = {

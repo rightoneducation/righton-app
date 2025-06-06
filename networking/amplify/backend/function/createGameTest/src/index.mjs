@@ -9,6 +9,23 @@ const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
 const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const { Sha256 } = crypto;
 
+const sortQuestionTemplatesByOrder = (questionTemplates, order) => {
+    if (order === null || order === undefined) return questionTemplates;
+    const orderMap = new Map();
+    order.map((orderItem) => {
+      orderMap.set(orderItem.questionTemplateId, orderItem.index);
+    });
+  
+    return questionTemplates.sort((a, b) => {
+      const indexA = orderMap.get(a.id);
+      const indexB = orderMap.get(b.id);
+      if (indexA === undefined) return 1;
+      if (indexB === undefined) return -1;
+      return indexA - indexB;
+    });
+  }
+
+
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
   let questionTemplates = [];
   const queryName = publicPrivate === 'Public' ? 'getPublicGameTemplate' : 'getPrivateGameTemplate';
@@ -25,7 +42,8 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
   } catch (e) {
       console.error('Error processing question templates:', e);
   }
-  const { version, domain, grade, cluster, standard, __typename, createdAt, updatedAt, ...trimmedGameTemplate } = awsGameTemplate.data[queryName];
+
+  const { publicPrivateType, lowerCaseTitle, lowerCaseDescription, version, ccss, domain, grade, cluster, gradeFilter, standard, questionTemplatesCount,  __typename, createdAt, updatedAt, ...trimmedGameTemplate } = awsGameTemplate.data[queryName];
   const gameTemplate = {
       ...trimmedGameTemplate, 
       currentQuestionIndex: null, 
@@ -66,17 +84,37 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
+  const listGameSessions = /* GraphQL */ `query ListGameSessions(
+    $filter: ModelGameSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        gameCode
+      }
+      nextToken
+      __typename
+    }
+  }
+  `;
   const getPrivateGameTemplate = /* GraphQL */ `
   query GetPrivateGameTemplate($id: ID!) {
     getPrivateGameTemplate(id: $id) {
       id
-      title
       userId
+      publicPrivateType
+      title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -109,6 +147,8 @@ async function createAndSignRequest(query, variables) {
         nextToken
         __typename
       }
+      questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       __typename
@@ -144,14 +184,19 @@ async function createAndSignRequest(query, variables) {
   const getPublicGameTemplate = /* GraphQL */ `
   query GetPublicGameTemplate($id: ID!) {
     getPublicGameTemplate(id: $id) {
-      id
-      title
+     id
       userId
+      publicPrivateType
+      title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -184,6 +229,8 @@ async function createAndSignRequest(query, variables) {
         nextToken
         __typename
       }
+      questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       __typename
@@ -202,7 +249,6 @@ const updatePublicQuestionTemplate = /* GraphQL */
     }
   }
   `;
-
 
   const updatePrivateQuestionTemplate = /* GraphQL */ 
   `mutation UpdatePrivateQuestionTemplate(
@@ -337,6 +383,23 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
 
   let statusCode = 200;
   let responseBody ={};
+
+  const generateUniqueGameCode = async () => {
+    let gameCodeIsUnique = false;
+    let gameCode = 0;
+    while (!gameCodeIsUnique){
+      gameCode = Math.floor(Math.random() * 9000) + 1000;
+      const matchingGameSessionsRequest = await createAndSignRequest(listGameSessions, { filter: { gameCode: { eq: gameCode } } });
+      const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
+      const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
+      const numOfMatches = matchingGameSessionsResponseParsed.data.listGameSessions.items.length;
+      if (numOfMatches === 0)
+        gameCodeIsUnique = true;
+    }
+    return gameCode;
+  };
+
+
   try {
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
@@ -344,10 +407,14 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
     const gameTemplateRequest = await createAndSignRequest( publicPrivate === 'Public' ? getPublicGameTemplate : getPrivateGameTemplate, { id: gameTemplateId });
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json(), publicPrivate);
-    const { questionTemplates, userId, owner, timesPlayed, ...game } = gameTemplateParsed;
+    const { questionTemplates, questionTemplatesOrder, userId, owner, timesPlayed, ...game } = gameTemplateParsed;
+    const uniqueGameCode = await generateUniqueGameCode();
+
+    const questionTemplatesOrderParsed = questionTemplatesOrder ? JSON.parse(questionTemplatesOrder) : null;
+    const sortedQuestionTemplates = sortQuestionTemplatesByOrder(questionTemplates, questionTemplatesOrderParsed);
 
     // createGameSession
-    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
+    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game, gameCode: uniqueGameCode }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
@@ -356,9 +423,9 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
     const newTimesPlayed = timesPlayed + 1;
     const timesPlayedGameRequest = await createAndSignRequest(publicPrivate === 'Public' ? updatePublicGameTemplate : updatePrivateGameTemplate, {input: { id: gameTemplateId, timesPlayed: newTimesPlayed }});
     const timesPlayedGameResponse = await fetch(timesPlayedGameRequest);
-
+    
     // createQuestions
-    const promises = questionTemplates.map(async (question) => {
+    const promises = sortedQuestionTemplates.map(async (question, index) => {
       const {choices, owner, userId, version, createdAt, title, updatedAt, gameId, timesPlayed, __typename, ...trimmedQuestion} = question;
       const shuffledChoices = JSON.parse(choices).sort(() => Math.random() - 0.5);
       
@@ -373,7 +440,7 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
           isShortAnswerEnabled: false,
           isHintEnabled: true,
           choices: JSON.stringify(shuffledChoices),
-          order: 0
+          order: index
         }
       });
       const questionResponse = await fetch(questionRequest);
