@@ -36,6 +36,9 @@ import {
 export const checkDQsAreValid = (
   draftQuestionsList: TDraftQuestionsList[],
 ): boolean => {
+  if (draftQuestionsList.length === 0) {
+    return true;
+  }
   return draftQuestionsList.every((dq, index) => {
     if (
       dq.question.questionCard.ccss.length > 0 && 

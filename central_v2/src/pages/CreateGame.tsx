@@ -134,7 +134,7 @@ export default function CreateGame({
   const [removedQuestionTemplateIds, setRemovesQuestionTemplateIds] = useState<string[]>([]);
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
-  >([draftTemplate]);
+  >([]);
   const [originalQuestionImageUrls, setOriginalQuestionImageUrls] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -316,7 +316,6 @@ export default function CreateGame({
       setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true, isCreatingTemplate: true }));
       // confirm game & question form validity
       if (gameFormIsValid && allDQAreValid) {
-
         // check for images on draft game 
         let gameImgUrl: string | null = null;
         if(draftGame.image || draftGame.imageUrl) {
@@ -324,38 +323,44 @@ export default function CreateGame({
         }
           const userId = centralData.userProfile?.id || '';
           // create & store game template in variable to retrieve id after response
+          
           const createGame = buildGameTemplate(draftGame, userId, draftQuestionsList, gameImgUrl);
-          const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
-              draftGame.publicPrivateGame,
-              createGame,
-            );
-
-          // convert questions to array of promises & write to db
-          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
-          const questionTemplateResponse = await Promise.all(newQuestionTemplates);
-
-          // create an array of all the ids from the response 
-          const questionTemplateIds = questionTemplateResponse.map(
-            (question) => String(question?.id),
-          );
-
-          // make sure we have a gameTemplate id as well as question template ids before creating a game question
-          if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
-            try {
-              const createGameQuestions = buildGameQuestionPromises(
-                draftGame, 
-                gameTemplateResponse.id, 
-                questionTemplateIds, 
-                apiClients
+          try {
+            const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
+                draftGame.publicPrivateGame,
+                createGame,
               );
-              // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
-                await Promise.all(createGameQuestions);
-            } catch (err) {
-              setDraftGame(prev => ({ ...prev, isCreatingTemplate: false }));
-              console.error(`Failed to create one or more game questions:`, err);
-            }
-          }
+            
+            if (draftQuestionsList.length > 0) {
+              // convert questions to array of promises & write to db
+              const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
+              const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
+              // create an array of all the ids from the response 
+              const questionTemplateIds = questionTemplateResponse.map(
+                (question) => String(question?.id),
+              );
+
+              // make sure we have a gameTemplate id as well as question template ids before creating a game question
+              if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+                try {
+                  const createGameQuestions = buildGameQuestionPromises(
+                    draftGame, 
+                    gameTemplateResponse.id, 
+                    questionTemplateIds, 
+                    apiClients
+                  );
+                  // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+                    await Promise.all(createGameQuestions);
+                } catch (err) {
+                  setDraftGame(prev => ({ ...prev, isCreatingTemplate: false }));
+                  console.error(`Failed to create one or more game questions:`, err);
+                }
+              }
+            }
+          } catch (err) {
+            console.error('Error creating game template:', err);
+          }
            // update user stats
            const existingNumGames = centralData.userProfile?.gamesMade || 0;
            const existingNumQuestions = centralData.userProfile?.questionsMade || 0;
@@ -754,7 +759,7 @@ export default function CreateGame({
       />
 
       {/* tracks ccss state according to index */}
-      {draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
+      {draftQuestionsList.length > 0 && draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
         <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={
@@ -769,20 +774,22 @@ export default function CreateGame({
       )}
 
       {/* open modals according to correct index */}
-      <ImageUploadModal
-        draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
-        screenSize={screenSize}
-        isClone={isClone}
-        isCloneImageChanged={
-          draftQuestionsList[selectedQuestionIndex].isCloneQuestionImageChanged
-        }
-        isModalOpen={
-          draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
-        }
-        handleImageChange={handleImageChange}
-        handleImageSave={handleImageSave}
-        handleCloseModal={handleCloseQuestionModal}
-      />
+      {draftQuestionsList.length > 0 && (
+        <ImageUploadModal
+          draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
+          screenSize={screenSize}
+          isClone={isClone}
+          isCloneImageChanged={
+            draftQuestionsList[selectedQuestionIndex].isCloneQuestionImageChanged
+          }
+          isModalOpen={
+            draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
+          }
+          handleImageChange={handleImageChange}
+          handleImageSave={handleImageSave}
+          handleCloseModal={handleCloseQuestionModal}
+        />
+      )}
 
       {/* Create Game Image Upload Modal */}
       <CreateGameImageUploadModal

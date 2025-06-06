@@ -206,7 +206,7 @@ export default function StyledGameCard({
          />
         {!isCreateGame && !isMyLibraryQuestion && <CentralButton
            buttonType={ButtonType.LAUNCH}
-           isEnabled
+           isEnabled={game.questionTemplatesCount > 0}
            onClick={handleLaunchGame}
          />}
         </ButtonContainer>
