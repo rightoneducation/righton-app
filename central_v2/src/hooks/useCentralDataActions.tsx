@@ -208,6 +208,8 @@ export default function useCentralDataManager({
                 null
               )
               .then((response) => {
+                console.log('Searched Questions');
+                console.log(response);
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
                 centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: response.questions });
               });
@@ -479,9 +481,9 @@ export default function useCentralDataManager({
   };
   
 
-  const fetchElement = async (type: GameQuestionType, id: string) => {
+  const fetchElement = async (type: GameQuestionType, id: string, isPrivateQuestion?: boolean) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    const callType = getCallType({...callTypeMatches});
+    const callType = isPrivateQuestion ? { gameQuestionType: GameQuestionType.QUESTION, publicPrivateType: PublicPrivateType.PRIVATE } : getCallType({...callTypeMatches});
     switch (type){
       case GameQuestionType.QUESTION:{
        const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(callType.publicPrivateType,id);

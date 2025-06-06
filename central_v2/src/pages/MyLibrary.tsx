@@ -33,8 +33,10 @@ interface MyLibraryProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  fetchElement: (type: GameQuestionType, id: string, isPrivateQuestion: boolean) => void;
   fetchElements: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null,isFromLibrary?: boolean) => void;
   loadMoreLibrary: (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null) => void;
+  deleteQuestionTemplate: (questionId: string, type: PublicPrivateType) => Promise<void>;
 }
 
 export default function MyLibrary({ 
@@ -45,8 +47,10 @@ export default function MyLibrary({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
+  fetchElement,
   fetchElements,
-  loadMoreLibrary
+  loadMoreLibrary,
+  deleteQuestionTemplate
 }: MyLibraryProps) {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -62,13 +66,15 @@ export default function MyLibrary({
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
+    const isPrivate = question.publicPrivateType === PublicPrivateType.PRIVATE;
+    fetchElement(GameQuestionType.QUESTION, question.id, isPrivate);
     setSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
   };
 
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
-    centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
+ centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: element });
     navigate(`/library/games/${element.publicPrivateType}/${element.id}`);
   };
 
@@ -114,10 +120,6 @@ export default function MyLibrary({
     navigate(`/clone/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   };
 
- const handleEditButtonClick = () => {
-    setIsEditModalOpen(true);
-  };
-
   const handleEditQuestion = () => {
     setIsTabsOpen(false);
     centralDataDispatch({
@@ -127,11 +129,42 @@ export default function MyLibrary({
     navigate(`/edit/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   }
 
-  const handleDeleteButtonClick = async () => {
-    setIsDeleteModalOpen(true);
+  const handleEditButtonClick = () => {
+    if (selectedQuestion?.publicPrivateType === PublicPrivateType.PUBLIC) {
+      setIsEditModalOpen(true);
+    } else {
+      handleEditQuestion();
+    }
   };
 
-  const handleDeleteQuestion = async () => {
+    const handleDeleteQuestion = async () => {
+    try {
+      if (selectedQuestion) {
+        await deleteQuestionTemplate(selectedQuestion.id, selectedQuestion.publicPrivateType);
+        setIsDeleteModalOpen(false);
+        setSelectedQuestion(null);
+        centralDataDispatch({type: 'SET_SELECTED_QUESTION', payload: null});
+        centralDataDispatch({
+          type: 'SET_IS_TABS_OPEN',
+          payload: false,
+        });
+        centralDataDispatch({
+          type: 'SET_SEARCH_TERMS',
+          payload: '',
+        });
+        navigate('/questions');
+      }
+    } catch (error) {
+      console.error('Error deleting question:', error);
+    }
+  };
+
+  const handleDeleteButtonClick = async () => {
+    if (selectedQuestion?.publicPrivateType === PublicPrivateType.PUBLIC) {
+      setIsDeleteModalOpen(true);
+    } else {
+      handleDeleteQuestion();
+    }
   };
 
   const handleCloseModal = () => {
@@ -142,7 +175,7 @@ export default function MyLibrary({
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
-      <ModalBackground isModalOpen={isEditModalOpen} handleCloseModal={handleCloseModal}/>
+      <ModalBackground isModalOpen={isEditModalOpen || isDeleteModalOpen} handleCloseModal={handleCloseModal}/>
       <EditModal
         isModalOpen={isEditModalOpen}
         gameQuestion={GameQuestionType.QUESTION}

@@ -94,8 +94,10 @@ function AppSwitch({
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={getPublicPrivateElements}
+            fetchElement={fetchElement}
             fetchElements={fetchElements}
             loadMoreLibrary={loadMoreLibrary}
+            deleteQuestionTemplate={deleteQuestionTemplate}
           />
         </AuthGuard>
       );

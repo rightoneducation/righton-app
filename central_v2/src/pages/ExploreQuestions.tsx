@@ -137,10 +137,6 @@ export default function ExploreQuestions({
     navigate(`/clone/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   };
 
-  const handleEditButtonClick = () => {
-    setIsEditModalOpen(true);
-  };
-
   const handleEditQuestion = () => {
     setIsTabsOpen(false);
     centralDataDispatch({
@@ -150,8 +146,12 @@ export default function ExploreQuestions({
     navigate(`/edit/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
   }
 
-  const handleDeleteButtonClick = async () => {
-    setIsDeleteModalOpen(true);
+  const handleEditButtonClick = () => {
+    if (selectedQuestion?.publicPrivateType === PublicPrivateType.PUBLIC) {
+      setIsEditModalOpen(true);
+    } else {
+      handleEditQuestion();
+    }
   };
 
   const handleDeleteQuestion = async () => {
@@ -173,6 +173,14 @@ export default function ExploreQuestions({
       }
     } catch (error) {
       console.error('Error deleting question:', error);
+    }
+  };
+
+  const handleDeleteButtonClick = async () => {
+    if (selectedQuestion?.publicPrivateType === PublicPrivateType.PUBLIC) {
+      setIsDeleteModalOpen(true);
+    } else {
+      handleDeleteQuestion();
     }
   };
 
