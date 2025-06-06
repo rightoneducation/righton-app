@@ -67,6 +67,7 @@ export class APIClients {
     this.AI = new AIAPIClient(env, this.auth);
     this.user = new UserAPIClient(env, this.auth);
     this.gameTemplate = new GameTemplateAPIClient(env, this.auth);
+    this.gameQuestions = new GameQuestionsAPIClient(env, this.auth);
     this.questionTemplate = new QuestionTemplateAPIClient(env, this.auth);
     this.gameQuestions = new GameQuestionsAPIClient(env, this.auth);
     this.gameSession = new GameSessionAPIClient(env, this.auth);
@@ -81,7 +82,7 @@ export class APIClients {
     } else if (appType ===AppType.HOST) {
       this.hostDataManager = new HostDataManagerAPIClient(env, this.gameSession, this.question, this.team, this.teamMember, this.teamAnswer);
     } else {
-      this.centralDataManager = new CentralDataManagerAPIClient(env, this.auth, this.user, this.gameTemplate, this.questionTemplate);
+      this.centralDataManager = new CentralDataManagerAPIClient(env, this.auth, this.user, this.gameTemplate, this.gameQuestions, this.questionTemplate);
     }
   }
   static async create(env: Environment, appType: AppType): Promise<APIClients> {

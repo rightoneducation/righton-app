@@ -13,6 +13,11 @@ import {
 import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
 import ModalBackground from '../components/modal/ModalBackground';
+import errorIcon from '../images/errorIcon.svg'
+
+interface UserCodeTextBoxesProps {
+  $isPink?: boolean;
+}
 
 // Styled components
 const OuterBody = styled(Box)(({ theme }) => ({
@@ -73,11 +78,20 @@ const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
 
 const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
     width: '40px',
-    height: '54px',
     textAlign: 'center',
     input: {
         textAlign: 'center',
     },
+     "& .MuiOutlinedInput-root": {
+        fontWeight: 700,
+        fontFamily: 'Poppins, sans-serif',
+        fontSize: '20px',
+        '&.Mui-error fieldset': {
+            borderWidth: '3px',
+            borderColor: '#F2184B'
+        }, 
+    
+    }
 }));
 
 const ResendCodeText = styled(Typography)(({ theme }) => ({
@@ -113,6 +127,8 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
     const centralData = useCentralDataState();
     const centralDataDispatch = useCentralDataDispatch();
     const navigate = useNavigate(); // Initialize useNavigate
+    const [hasError, setHasError] = useState(false);
+
 
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
 
@@ -134,11 +150,6 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
         }
     };
 
-    const handleConfirmationError = () => {
-        setIsTabsOpen(true);
-        setIsModalOpen(true);
-    };
-
     const handleSubmit = async () => {
         setIsVerifying(true);
         const fullCode = code.join('');
@@ -147,9 +158,14 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
         }
         try {
             const response = await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(centralData.userProfile, fullCode, frontImage, backImage);
-            centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
-            setIsVerifying(false);
-            navigate('/');
+            if(response?.updatedUser){
+                setHasError(false)
+                centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
+                setIsVerifying(false);
+                navigate('/');
+            }
+            
+            
         } catch (error: any) {
             setIsVerifying(false);
             console.log(error);
@@ -160,8 +176,8 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
               
               console.log(errorInfo); // now includes message, stack, etc.
            
-            if (error.message === 'CodeMismatchException: Invalid verification code provided, please try again.') {
-                handleConfirmationError();
+            if (error.message === 'Error: CodeMismatchException: Invalid verification code provided, please try again.') {
+                setHasError(true)
             }
         }
     };
@@ -194,6 +210,7 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
                     <UserCodeTextBoxesContainer>
                         {code.map((value, index) => (
                             <UserCodeTextBoxes
+                                error={hasError}
                                 variant="outlined"
                                 key={`code-${uniqueKeys[index]}`}
                                 inputRef={(el) => setInputRef(index, el)}
@@ -203,6 +220,8 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
                                 inputProps={{ maxLength: 1 }}
                             />
                         ))}
+                        {hasError ? <img src={errorIcon} alt="Error Icon"/> : null}
+                        
                     </UserCodeTextBoxesContainer>
                     <ResendCodeText onClick={handleResendCodeClick}>Resend Code</ResendCodeText>
                 </CodeandResendContainer>

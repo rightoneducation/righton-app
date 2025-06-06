@@ -45,19 +45,61 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         type: T,
         id: string
     ): Promise<boolean> {
+
+        // unfortunately, we need to use abridged versions of the mutations here
+        // otherwise we get null errors from the API when it tries to return deleted elements
+
+        const customDeletePublicGameQuestions = /* GraphQL */ `
+            mutation DeletePublicGameQuestions(
+                $input: DeletePublicGameQuestionsInput!
+                $condition: ModelPublicGameQuestionsConditionInput
+            ) {
+                deletePublicGameQuestions(input: $input, condition: $condition) {
+                id
+                }
+            }
+        `;
+
+        const customDeletePrivateGameQuestions = /* GraphQL */ `
+            mutation DeletePrivateGameQuestions(
+                $input: DeletePrivateGameQuestionsInput!
+                $condition: ModelPrivateGameQuestionsConditionInput
+            ) {
+                deletePrivateGameQuestions(input: $input, condition: $condition) {
+                id
+                }
+            }
+        `;
+
+        const customDeleteDraftGameQuestions = /* GraphQL */ `
+            mutation DeleteDraftGameQuestions(
+                $input: DeleteDraftGameQuestionsInput!
+                $condition: ModelDraftGameQuestionsConditionInput
+            ) {
+                deleteDraftGameQuestions(input: $input, condition: $condition) {
+                id
+                }
+            }
+        `;
+
+        const deleteFunctionMap = {
+            [PublicPrivateType.PUBLIC]: customDeletePublicGameQuestions,
+            [PublicPrivateType.PRIVATE]: customDeletePrivateGameQuestions,
+            [PublicPrivateType.DRAFT]: customDeleteDraftGameQuestions,
+        };
+
         const variables: GameQuestionType<T>['delete']['variables'] = {input: {id}};
-        const { queryFunction } = gameQuestionRuntimeMap[type]['delete'];
+        const queryFunction = deleteFunctionMap[type];
         const result = await this.callGraphQL<GameQuestionType<T>['delete']['query']>(
             queryFunction,
             variables
         ) as {data: any};
         if (
-            isNullOrUndefined(result.data) ||
-            isNullOrUndefined(result.data.deleteGameQuestions)
+            isNullOrUndefined(result)
         ) {
             throw new Error(`Failed to delete gameQuestions.`)
         }
-        return (!isNullOrUndefined(result));
+        return true;
     }
 
     async listGameQuestions<T extends PublicPrivateType>(

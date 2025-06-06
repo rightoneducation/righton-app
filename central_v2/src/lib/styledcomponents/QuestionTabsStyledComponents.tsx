@@ -88,21 +88,29 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
+export const ScrollContainer = styled(Box)(({ theme }) => ({
+  height: '100%',
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE and Edge
+}));
+
 export const ButtonContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
   paddingTop: `${theme.sizing.mdPadding}px`,
-  paddingLeft: `${theme.sizing.mdPadding}px`,
-  paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
 }));
 
 export const ButtonContainerLeft = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.smPadding}px`,
 }));
 
 export const ButtonContainerRight = styled(ButtonContainerLeft)(({ theme }) => ({

@@ -100,7 +100,6 @@ export default function UserProfile({
   const handleEditInformation = () => {
     setIsEditInformation(true);
     setEditInformationHighlight(false)
-    setSaveInformationHighlight(true)
   }
 
   const handleImageUploadClick = () => {
@@ -149,7 +148,7 @@ export default function UserProfile({
 
     const handleGetStarted = async () => {
       setEditInformationHighlight(true)
-      setSaveInformationHighlight(false)
+      setIsEditInformation(false)
       try {
         const updatedUser = { ...draftUserProfile };
         const response = await apiClients.centralDataManager?.userProfileInformationUpdate(updatedUser, centralData.userProfile, frontImage ?? null, backImage ?? null);

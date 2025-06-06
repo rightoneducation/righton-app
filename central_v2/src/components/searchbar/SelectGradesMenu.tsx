@@ -56,12 +56,14 @@ export default function SelectGradesMenu({
   };
   // updates copy of array that will be sent to parent component on click of choose button
   const handleGradesChange = (grade: string) => {
-    if (!selectedGrades.includes(gradeMap[grade as keyof typeof gradeMap])) {
-      centralDataDispatch({type: 'SET_SELECTED_GRADES', payload: gradeMap[grade as keyof typeof gradeMap]});
+    const selectedGradesCopy = [...selectedGrades];
+    if (!selectedGradesCopy.includes(gradeMap[grade as keyof typeof gradeMap])) {
+      selectedGradesCopy.push(gradeMap[grade as keyof typeof gradeMap])
+      centralDataDispatch({type: 'SET_SELECTED_GRADES', payload: selectedGradesCopy});
     } else {
       centralDataDispatch({
         type: 'SET_SELECTED_GRADES', 
-        payload: centralData.selectedGrades.filter((g) =>
+        payload: selectedGradesCopy.filter((g) =>
             g !== (gradeMap[grade as keyof typeof gradeMap] as GradeTarget)
         )
       });

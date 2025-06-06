@@ -62,6 +62,7 @@ const OwnerTagTextContainer = styled(Box)<OwnerTagProps>(({ theme, screenSize })
   flexDirection: screenSize === ScreenSize.MEDIUM ? 'row' : 'column',
   gap: `${theme.sizing.xSmPadding}px`,
   alignItems: 'flex-start',
+  textAlign: 'center',  
 }));
 
 const OwnerTagSubContainer = styled(Box)<OwnerTagProps>(({ theme, screenSize }) => ({
@@ -76,10 +77,12 @@ const OwnerTagHeader = styled(Typography)(({ theme }) => ({
   fontSize: '16px',
   fontWeight: 700,
   color: '#FFF',
+  textAlign: 'center',  
 }));
 
 const OwnerTagBody = styled(OwnerTagHeader)(({ theme }) => ({
   fontWeight: 300,
+  textAlign: 'center',  
 }));
 
 export default function OwnerTag({

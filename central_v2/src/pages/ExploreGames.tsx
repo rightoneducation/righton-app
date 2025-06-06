@@ -60,7 +60,7 @@ export default function ExploreGames({
   
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
-  const isSearchResults = centralData.searchedGames.length > 0;
+  const isSearchResults = centralData?.searchTerms?.length > 0;
   const [hasInitialized, setHasInitialized] = useState(false);
     
   if (!hasInitialized) {
@@ -74,9 +74,9 @@ export default function ExploreGames({
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
     setGameSet(games);
-    navigate(`/games/${game.id}`);
+    navigate(`/games/${game.publicPrivateType}/${game.id}`);
   };
-  
+
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <ExploreGamesUpperContainer screenSize={screenSize}>

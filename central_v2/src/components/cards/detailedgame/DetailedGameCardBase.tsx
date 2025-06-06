@@ -52,7 +52,7 @@ export default function DetailedGameCardBase({
   dropShadow
 }: DetailedGameCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
-  const [isPublic, setIsPublic] = React.useState<boolean>(false)
+  const [isPublic, setIsPublic] = React.useState<boolean>(game?.publicPrivateType === PublicPrivateType.PUBLIC);
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {

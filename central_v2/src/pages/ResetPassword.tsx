@@ -122,7 +122,7 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
         centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile?.updatedUser });
         navigate("/userprofile");
       } else {
-        // Do something here?
+        await apiClients.user.updateUserPass(userName, confirmPassword);
         navigate('/login');
       }
     } catch (error: any) {

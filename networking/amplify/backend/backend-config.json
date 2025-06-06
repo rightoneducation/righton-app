@@ -128,6 +128,16 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "unverifiedDelete": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "updateUserPass": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "uploadExternalImageToS3": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -235,6 +245,38 @@
         {
           "category": "function",
           "resourceName": "teacherIdAuth"
+        }
+      ]
+    },
+    "AMPLIFY_function_unverifiedDelete_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "unverifiedDelete"
+        }
+      ]
+    },
+    "AMPLIFY_function_unverifiedDelete_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "unverifiedDelete"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateUserPass_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateUserPass"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateUserPass_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateUserPass"
         }
       ]
     },

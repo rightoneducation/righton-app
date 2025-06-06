@@ -14,6 +14,8 @@ import discard from '../../images/buttonIconDiscard.svg';
 import add from '../../images/buttonIconAdd.svg';
 import create from '../../images/buttonIconCreate.svg';
 import bank from '../../images/buttonIconBank.svg';
+import edit from '../../images/buttonIconEdit.svg';
+import deleteIcon from '../../images/buttonIconDelete.svg';
 
 export enum ButtonType {
   LOGIN = 'login',
@@ -63,6 +65,8 @@ export enum ButtonType {
   ADDTOGAME = 'addtogame',
   YES = 'yes',
   NO = 'no',
+  EDIT = 'edit',
+  DELETE = 'delete',
 }
 
 export enum ButtonColor {
@@ -278,5 +282,13 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.NO]: {
     textKey: ButtonType.NO,
     color: ButtonColor.RED,
+  },
+  [ButtonType.EDIT]: {
+    icon: edit,
+    textKey: ButtonType.EDIT,
+  },
+   [ButtonType.DELETE]: {
+    icon: deleteIcon,
+    textKey: ButtonType.DELETE,
   },
 };

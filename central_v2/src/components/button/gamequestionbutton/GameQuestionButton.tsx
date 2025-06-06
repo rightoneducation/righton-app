@@ -94,6 +94,7 @@ export default function GameQuestionButton({
   const isPublic = gameQuestion === GameQuestionType.GAME;
   const centralDataDispatch = useCentralDataDispatch();
   const handleGameQuestionSwitch = () =>{
+    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     if (setGameQuestion)
       setGameQuestion(gameQuestion === GameQuestionType.GAME ? GameQuestionType.QUESTION : GameQuestionType.GAME);

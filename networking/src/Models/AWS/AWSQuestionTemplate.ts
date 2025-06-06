@@ -3,6 +3,7 @@ import { AWSModelGameQuestionConnection } from "./AWSModelGameQuestionConnection
 export type AWSQuestionTemplate = {
     id: string,
     userId: string,
+    publicPrivateType?: string | null,
     title?: string | null,
     lowerCaseTitle?: string | null,
     owner?: string | null,

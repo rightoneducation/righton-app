@@ -53,7 +53,7 @@ export default function DetailedQuestionCardBase({
   isCreateGame,
 }: DetailedQuestionCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
-  const [isPublic, setIsPublic] = React.useState<boolean>(false);
+  const [isPublic, setIsPublic] = React.useState<boolean>(question.publicPrivateType === PublicPrivateType.PUBLIC);
 
     const isCreateGamePage = 
     isCreateGame && screenSize === ScreenSize.LARGE ||
