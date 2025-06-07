@@ -631,23 +631,21 @@ export default function CreateGame({
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
-   setDraftQuestionsList((prev) => {
     const libraryQuestion = buildLibraryQuestionAtIndex(question, draftGame.gameTemplate.publicPrivateType);
     const { updatedList, addNew } = updateDraftListWithLibraryQuestion(
-      prev,
+      draftQuestionsList,
       selectedQuestionIndex,
       libraryQuestion,
     );
+    setDraftQuestionsList(updatedList);
     setDraftGame((prevGame) => ({
       ...prevGame,
       openQuestionBank: false,
       openCreateQuestion: true,
       ...(addNew && { questionCount: prevGame.questionCount + 1 })
     }));
-    setSelectedQuestionIndex((prevIndex) => addNew ? prevIndex + 1 : prevIndex)
+    setSelectedQuestionIndex((prevIndex) => (addNew && prevIndex !== 0) ? prevIndex + 1 : prevIndex)
     setIconButtons((prevButtons) => addNew ? [...prevButtons, prevButtons.length + 1] : prevButtons);
-    return updatedList;
-   })
   };
 
   /** LIBRARY HANDLER HELPERS */
@@ -759,7 +757,8 @@ export default function CreateGame({
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }
   }, [centralData.selectedGame, route, selectedGameId ]); // eslint-disable-line 
-  
+  console.log('draftQuestionsList', draftQuestionsList);
+  console.log(selectedQuestionIndex, 'selectedQuestionIndex');
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
@@ -779,7 +778,7 @@ export default function CreateGame({
       />
 
       {/* tracks ccss state according to index */}
-      {draftQuestionsList.length > 0 && draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
+      {draftQuestionsList.length > 0 && selectedQuestionIndex && draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
         <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={
@@ -924,8 +923,6 @@ export default function CreateGame({
             ));
           }
         )}
-
-        {/* Question Bank */}
         <Fade
           in={draftGame.openQuestionBank}
           mountOnEnter

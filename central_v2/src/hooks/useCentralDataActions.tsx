@@ -65,7 +65,7 @@ export default function useCentralDataManager({
     matchViewGame: useMatch('/games/:type/:gameId'),
     matchLibViewGame: useMatch('/library/games/:type/:gameId'),
     matchCloneGame: useMatch('/clone/:type/:gameId'),
-    matchEditGame: useMatch('/edit/:type/:gameId'),
+    matchEditGame: useMatch('/edit/game/:type/:gameId'),
     matchCloneQuestion: useMatch('/clone/question/:type/:questionId'),
     matchEditQuestion: useMatch('/edit/question/:type/:questionId'),
     matchLibraryTab: useMatch('/library'),
@@ -481,6 +481,7 @@ export default function useCentralDataManager({
   const fetchElement = async (type: GameQuestionType, id: string, isPrivateQuestion?: boolean) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     const callType = isPrivateQuestion ? { gameQuestionType: GameQuestionType.QUESTION, publicPrivateType: PublicPrivateType.PRIVATE } : getCallType({...callTypeMatches});
+    console.log(callType);
     switch (type){
       case GameQuestionType.QUESTION:{
        const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(callType.publicPrivateType,id);
