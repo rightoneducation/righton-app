@@ -15,7 +15,6 @@ export type TGameTemplateProps = {
   questionCount: number;
   openQuestionBank: boolean;
   openCreateQuestion: boolean;
-  publicPrivateGame: PublicPrivateType;
   isGameCardErrored: boolean;
   isGameImageUploadVisible: boolean;
   isGameURLUploadVisible: boolean;
@@ -155,7 +154,6 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     questionCount: 1,
     openCreateQuestion: false,
     openQuestionBank: false,
-    publicPrivateGame: PublicPrivateType.PUBLIC,
     isGameImageUploadVisible: false,
     isGameURLUploadVisible: false,
     isCloneGameImageChanged: false,
