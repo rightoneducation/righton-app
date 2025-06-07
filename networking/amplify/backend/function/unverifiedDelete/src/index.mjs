@@ -1,88 +1,45 @@
-import AWS from 'aws-sdk';
-import https from 'https';
+import { CognitoIdentityProviderClient, AdminDeleteUserCommand } from '@aws-sdk/client-cognito-identity-provider';
 
-// ENV VARIABLES HERE
-const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
-const REGION = process.env.AWS_REGION || 'us-east-1';
-
-async function signedGraphQL(query, variables) {
-  const endpoint = new AWS.Endpoint(GRAPHQL_ENDPOINT);
-  const req = new AWS.HttpRequest(endpoint, REGION);
-  req.method = 'POST';
-  req.path = endpoint.path;
-  req.headers['Content-Type'] = 'application/json';
-  req.headers['Host'] = endpoint.hostname;
-  req.body = JSON.stringify({ query, variables });
-
-  const signer = new AWS.Signers.V4(req, 'appsync', true);
-  signer.addAuthorization(AWS.config.credentials, AWS.util.date.getDate());
-
-  const options = {
-    host: endpoint.hostname,
-    port: endpoint.port || 443,
-    method: req.method,
-    path: req.path,
-    headers: req.headers,
-  };
-
-  return new Promise((resolve, reject) => {
-    const clientReq = https.request(options, res => {
-      let data = '';
-      res.on('data', chunk => { data += chunk; });
-      res.on('end', () => {
-        let payload;
-        try { payload = JSON.parse(data); }
-        catch (e) { return reject(e); }
-        if (payload.errors && payload.errors.length) {
-          return reject(new Error(payload.errors.map(e => e.message).join('; ')));
-        }
-        resolve(payload.data);
-      });
-    });
-    clientReq.on('error', reject);
-    clientReq.write(req.body);
-    clientReq.end();
-  });
-}
+const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.REGION || 'us-east-1' });
 
 export const handler = async (event) => {
+  try {
+    const { email } = event.arguments.input;
+    
+    if (!email) {
+      throw new Error('Email is required');
+    }
 
-  // GraphQL query references
-  const Q1 = `
-    query UserByUserName($userName: String!) {
-      userByUserName(userName: $userName) {
-        items { id }
-      }
-    }`;
-  const Q2 = `
-    query UserByEmail($email: String!) {
-      userByEmail(email: $email) {
-        items { id }
-      }
-    }`;
+    // Delete the user from Cognito
+    const deleteCommand = new AdminDeleteUserCommand({
+      UserPoolId: process.env.USER_POOL_ID, // We need to set this in our lambda function.
+      Username: email
+    });
 
-  console.log('event', event);
-  console.log('email', event.arguments.input.email);
+    await cognitoClient.send(deleteCommand);
 
-  // REFERENCE CODE BELOW FROM PRESIGNUP:
-//   const queries = [];
-//   if (event.request.userAttributes.nickname)
-//     queries.push(signedGraphQL(Q1, { userName: event.request.userAttributes.nickname }));
-//   if (event.request.userAttributes.email)
-//     queries.push(signedGraphQL(Q2, { email: event.request.userAttributes.email }));
-//   const response = await Promise.all(queries);
-//   let existsName = false;
-//   let existsEmail = false;
-//   if (response && response.find((query) => query.userByUserName)?.userByUserName?.items?.length > 0)
-//     existsName  = true;
-//   if (response && response.find((query) => query.userByEmail)?.userByEmail?.items?.length > 0)
-//     existsEmail = true
-//   if (existsName) {
-//     throw new Error('USERNAME_EXISTS|Username already exists');
-//   }
-//   if (existsEmail) {
-//     throw new Error('EMAIL_EXISTS|Email already exists');
-//   }
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `User ${email} deleted successfully`
+      }),
+    };
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    
+    let errorMessage = 'Failed to delete user';
+    if (error.name === 'UserNotFoundException') {
+      errorMessage = 'User not found';
+    } else if (error.name === 'NotAuthorizedException') {
+      errorMessage = 'Not authorized to delete users';
+    }
 
-  return event;
+    return {
+      statusCode: error.statusCode || 500,
+      body: JSON.stringify({
+        message: errorMessage,
+        error: error.message
+      }),
+    };
+  }
 };
