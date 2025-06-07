@@ -90,7 +90,12 @@ export default function DetailedQuestionCardBase({
         </Box>
       }
       {isCreateGame && (
-        <FormControl component="fieldset" disabled>
+        <FormControl component="div" disabled  sx={{
+    minWidth: 'unset',
+       '&&': {
+      minWidth: 'unset',
+    },
+  }}>
           <RadioContainerStyled>
           <RadioGroup
             row
@@ -101,7 +106,7 @@ export default function DetailedQuestionCardBase({
               disabled
               value='multiple'
               control={<RadioStyled style={{ cursor: 'pointer' }}/>}
-              label="Multiple Choicexx"
+              label="Multiple Choice"
               isSelected={isMultipleChoice}
               style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap'})}}
             />
@@ -109,7 +114,7 @@ export default function DetailedQuestionCardBase({
               disabled
               value='short'
               control={<RadioStyled style={{ cursor: 'pointer' }}/>}
-              label="Short Answerxx"
+              label="Short Answer"
               isSelected={!(isMultipleChoice)}
               style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap' })}}
             />

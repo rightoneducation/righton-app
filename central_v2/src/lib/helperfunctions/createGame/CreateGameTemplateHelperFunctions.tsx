@@ -254,17 +254,13 @@ export const buildEditedGameTemplate = (
     version: 0,
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
-    ccss: draftQuestionsList[0].question.questionCard.ccss,
+    ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
     questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
-    grade: draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
-    gradeFilter:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
-    domain:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[1] ?? '',
-    cluster:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[2] ?? '',
-    standard:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[3] ?? '',
+    grade: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] || '8',
+    gradeFilter: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] ?? '',
+    domain: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[1] ?? '',
+    cluster: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[2] ?? '',
+    standard: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[3] ?? '',
     imageUrl: gameImgUrl,
     timesPlayed: 0,
   };
@@ -277,7 +273,7 @@ export const buildGameQuestion = (
   questionTemplateId: string,
 ): GameQuestionTemplate => {
   return {
-    ...(draftGame.publicPrivateGame === PublicPrivateType.PUBLIC
+    ...(draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC
       ? {
           publicGameTemplateID: String(gameTemplateId),
           publicQuestionTemplateID: String(questionTemplateId),
@@ -302,11 +298,11 @@ export const buildGameQuestionPromises = (
       String(questionId),
     );
     const response = await apiClients.gameQuestions.createGameQuestions(
-      draftGame.publicPrivateGame,
+      draftGame.gameTemplate.publicPrivateType,
       gameQuestion,
     );
     console.log(
-      `${draftGame.publicPrivateGame}GameQuestion response`,
+      `${draftGame.gameTemplate.publicPrivateType}GameQuestion response`,
       response,
     );
   });

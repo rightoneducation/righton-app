@@ -61,6 +61,8 @@ export const handler = async (event) => {
       }
     }`;
 
+  // temp update to test amplify push 
+
   console.log('event', event);
   console.log('email', event.arguments.input.email);
   console.log('userPass', event.arguments.input.pass);
