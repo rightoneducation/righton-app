@@ -53,11 +53,11 @@
         },
         "unverifiedDelete": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/unverifiedDelete-3064726675694a645731-build.zip"
+          "s3Key": "amplify-builds/unverifiedDelete-706e4a46696c62466341-build.zip"
         },
         "updateUserPass": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/updateUserPass-687563344455364d5472-build.zip"
+          "s3Key": "amplify-builds/updateUserPass-326645534969324b4c51-build.zip"
         }
       },
       "auth": {

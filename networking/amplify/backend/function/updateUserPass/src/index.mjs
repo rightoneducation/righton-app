@@ -46,14 +46,11 @@ async function signedGraphQL(query, variables) {
 }
 
 export const handler = async (event) => {
+  const { email, pass } = event.arguments.input;
+  if (!email || !pass) {
+    throw new Error('Missing Input fields.');
+  }
 
-  // GraphQL query references
-  const Q1 = `
-    query UserByUserName($userName: String!) {
-      userByUserName(userName: $userName) {
-        items { id }
-      }
-    }`;
   const Q2 = `
     query UserByEmail($email: String!) {
       userByEmail(email: $email) {
@@ -61,31 +58,29 @@ export const handler = async (event) => {
       }
     }`;
 
-  // temp update to test amplify push 
+  const M1 = `
+    mutation UpdateUser($input: UpdateUserPassInput!) {
+      updateUser(input: $input) {
+        id
+      }
+    }`;
 
-  console.log('event', event);
-  console.log('email', event.arguments.input.email);
-  console.log('userPass', event.arguments.input.pass);
+  // console.log('event', event);
+  // console.log('email', email);
+  // console.log('password', pass);
 
-  // REFERENCE CODE BELOW FROM PRESIGNUP:
-  // const queries = [];
-  // if (event.request.userAttributes.nickname)
-  //   queries.push(signedGraphQL(Q1, { userName: event.request.userAttributes.nickname }));
-  // if (event.request.userAttributes.email)
-  //   queries.push(signedGraphQL(Q2, { email: event.request.userAttributes.email }));
-  // const response = await Promise.all(queries);
-  // let existsName = false;
-  // let existsEmail = false;
-  // if (response && response.find((query) => query.userByUserName)?.userByUserName?.items?.length > 0)
-  //   existsName  = true;
-  // if (response && response.find((query) => query.userByEmail)?.userByEmail?.items?.length > 0)
-  //   existsEmail = true
-  // if (existsName) {
-  //   throw new Error('USERNAME_EXISTS|Username already exists');
-  // }
-  // if (existsEmail) {
-  //   throw new Error('EMAIL_EXISTS|Email already exists');
-  // }
+  const response = await signedGraphQL(Q2, { email });
+  const user = response?.userByEmail?.items?.[0];
+  if (!user) {
+    throw new Error("EMAIL_NOT_FOUND");
+  }
 
-  return event;
+  await signedGraphQL(M1, {
+    input: {
+      id: user.id,
+      password: pass,
+    }
+  });
+
+  return 'Password updated successfully';
 };
