@@ -54,6 +54,7 @@ export enum ButtonType {
   EDITPROFILEPICTURE = 'editprofilepicture',
   EDITINFORMATION = 'editinformation',
   CHANGEPASSWORD = 'changepassword',
+  CONFIRMSENDCODE = 'confirmsendcode',
   CREATE = 'create',
   CHOOSE = 'choose',
   CLONE = 'clone',
@@ -130,11 +131,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.RESETLINK]: {
     textKey: ButtonType.RESETLINK,
-    color: ButtonColor.RED,
   },
   [ButtonType.RESET]: {
     textKey: ButtonType.RESET,
-    color: ButtonColor.RED,
+    color: ButtonColor.BLUE,
   },
   [ButtonType.PREVIOUSQUESTION]: {
     icon: previous,
@@ -244,6 +244,9 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CHANGEPASSWORD]: {
     textKey: ButtonType.CHANGEPASSWORD,
+  },
+  [ButtonType.CONFIRMSENDCODE]: {
+    textKey: ButtonType.CONFIRMSENDCODE,
   },
   [ButtonType.CREATE]: {
     icon: add,

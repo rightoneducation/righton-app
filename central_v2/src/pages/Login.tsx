@@ -22,6 +22,7 @@ import { UserStatusType } from '../lib/CentralModels';
 import { useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import NotVerifiedModal from '../components/modal/NotVerifiedModal';
 
+
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   // border: '1px solid blue',
@@ -144,11 +145,10 @@ const NoAccountText = styled(Typography)(({ theme }) => ({
 }));
 
 interface LoginProps{
-  handleForgotPasswordClick: () => void;
   handleLogOut: () => void;
 }
 
-function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
+export default function Login({ handleLogOut }:LoginProps) {
   const theme = useTheme();
   const navigate = useNavigate(); // Initialize useNavigate
   const [userName, setUserName] = useState('');
@@ -225,6 +225,10 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
   const handleSignupClick = () => {
     navigate('/Signup'); // Navigate to the Signup page
   };
+
+  const handleForgotPasswordClick = () => {
+    navigate("/password/reset");
+  };
   
   return (
     <SignUpMainContainer>
@@ -291,23 +295,4 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
       </InnerBodyContainer>
     </SignUpMainContainer>
   );
-}
-
-interface LoginSwitchProps {
-  handleLogOut: () => void;
-}
-
-export default function LoginSwitch({handleLogOut}: LoginSwitchProps) {
-  const [isPasswordForgot, setisPasswordForgot] = useState(false); // Track submission state
-
-  const handleForgotPasswordClick = () => {
-    setisPasswordForgot(true)
-  };
-
-  return isPasswordForgot? (
-    <ResetPassword />
-  ) : (
-    <Login handleForgotPasswordClick={handleForgotPasswordClick} handleLogOut={handleLogOut}/>
-  )
-
 }

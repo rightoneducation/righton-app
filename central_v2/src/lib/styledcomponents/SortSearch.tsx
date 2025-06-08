@@ -106,7 +106,7 @@ export const SortMenu = styled(Box, {
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'center',
-  zIndex: 3,
+  zIndex: 1300,
   background: 'white',
   borderRadius: '8px',
   padding: '20px',

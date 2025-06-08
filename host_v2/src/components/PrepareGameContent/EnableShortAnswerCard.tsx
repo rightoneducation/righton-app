@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, makeStyles, Paper, Box, Button, ButtonGroup } from '@mui/material';
+import { Typography, makeStyles, Paper, Box, Button, ButtonGroup, Tooltip } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 
 const StyledContainer = styled(Paper)(({theme})=>({
@@ -84,11 +84,13 @@ const BodyTypography = styled(Typography)({
 });
 
 interface EnableShortAnswerCardProps {
+  isGameSettingMultiChoice: boolean;
   isShortAnswerEnabled: boolean;
   setIsShortAnswerEnabled: (value: boolean) => void;
 }
 
 export default function EnableShortAnswerCard ({ 
+  isGameSettingMultiChoice,
   isShortAnswerEnabled,
   setIsShortAnswerEnabled
 } : EnableShortAnswerCardProps) {
@@ -101,27 +103,39 @@ export default function EnableShortAnswerCard ({
         </TitleTypography>
       </TitleContainer>
       <Box style={{width: '100%'}}>
-        <StyledButtonGroup
-          disableRipple
-          disableElevation 
-          variant="contained" 
-          color="primary"
+        <Tooltip 
+          title={isGameSettingMultiChoice ? "This game can only be played in Multiple Choice mode" : ""}
+          placement="top"
+          arrow
+          disableHoverListener={!isGameSettingMultiChoice}
+          disableFocusListener={!isGameSettingMultiChoice}
+          disableTouchListener={!isGameSettingMultiChoice}
         >
-          <StyledButton 
+          <StyledButtonGroup
             disableRipple
-            variant={isShortAnswerEnabled ? 'outlined' : 'contained'} 
-            onClick={() => setIsShortAnswerEnabled(false)}
-          > 
-            MULTIPLE CHOICE 
-          </StyledButton>
-          <StyledButton 
-            disableRipple
-            variant={isShortAnswerEnabled ? 'contained' : 'outlined'} 
-            onClick={() => setIsShortAnswerEnabled(true)}
+            disableElevation 
+            disabled={isGameSettingMultiChoice}
+            variant="contained" 
+            color="primary"
           >
-            SHORT ANSWER
-          </StyledButton>
-        </StyledButtonGroup>
+            <StyledButton 
+              disableRipple
+              disabled={isGameSettingMultiChoice}
+              variant={isShortAnswerEnabled ? 'outlined' : 'contained'} 
+              onClick={() => setIsShortAnswerEnabled(false)}
+            > 
+              MULTIPLE CHOICE 
+            </StyledButton>
+            <StyledButton 
+              disableRipple
+              disabled={isGameSettingMultiChoice}
+              variant={isShortAnswerEnabled ? 'contained' : 'outlined'} 
+              onClick={() => setIsShortAnswerEnabled(true)}
+            >
+              SHORT ANSWER
+            </StyledButton>
+          </StyledButtonGroup>
+        </Tooltip>
       </Box>
       <StyledAnswerContainer>
         <BodyTypography>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Grid, MenuItem, useTheme, InputAdornment, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
@@ -35,6 +36,7 @@ import CentralButton from "../components/button/Button";
 import { ScreenSize } from '../lib/CentralModels';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import ConfirmPasswordUpdateModal from '../components/modal/ConfirmPasswordUpdateModal';
 
 
 interface UserProfileProps {
@@ -45,8 +47,9 @@ export default function UserProfile({
     screenSize
 }: UserProfileProps) {
   const theme = useTheme();
+  const navigate = useNavigate()
   const [isEditInformationHighlight, setEditInformationHighlight] = useState(true);
-  // const [isSaveInformationHighlight, setSaveInformationHighlight] = useState(false);
+  const [isSaveInformationHighlight, setSaveInformationHighlight] = useState(false);
 
   const [isEditInformation, setIsEditInformation] = useState(false);
 
@@ -81,6 +84,7 @@ export default function UserProfile({
 
   const [frontImage, setFrontImage] = useState<File | null>(null); 
   const [backImage, setBackImage] = useState<File | null>(null); 
+  const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (centralData.userProfile) {
@@ -88,7 +92,6 @@ export default function UserProfile({
       }
 
   }, [centralData.userProfile]); // eslint-disable-line react-hooks/exhaustive-deps
-
 
   const handleEditPicture = () => {
     setIsModalOpen(true);
@@ -133,8 +136,13 @@ export default function UserProfile({
     }
   }
 
+  const handlePasswordModal = () => {
+    setOpenPasswordModal(true)
+  }
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setOpenPasswordModal(false)
   }
 
 
@@ -210,7 +218,7 @@ export default function UserProfile({
             />
           );
         }
-      
+
         return (
           <CentralButton
             buttonType={buttonTypeUpload}
@@ -232,10 +240,14 @@ export default function UserProfile({
           />
         );
       };
-      
 
   return (
         <UserProfileMainContainer>
+          <ConfirmPasswordUpdateModal
+          isModalOpen={openPasswordModal}
+          onClose={() => setOpenPasswordModal(false)}
+          userEmail={centralData.userProfile.email}
+          />
              <UserProfileImageUploadModal 
                 screenSize={screenSize}
                 draftUserProfile={draftUserProfile}
@@ -245,7 +257,7 @@ export default function UserProfile({
                 handleImageSave={handleImageSave} 
                 handleCloseModal={handleCloseModal}
             />
-            <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
+            <ModalBackground isModalOpen={isModalOpen || openPasswordModal} handleCloseModal={handleCloseModal}/>
             <TitleText>My Profile</TitleText>
             <UserProfileGridContainer container wrap="nowrap">
                 <Grid
@@ -412,10 +424,10 @@ export default function UserProfile({
                             </ImageContainer>
                         </UploadImagesContainer>
                     </UserInfoContainer>
-                   {isEditInformationHighlight ? 
-                   <CentralButton buttonType={ButtonType.EDITINFORMATION} isEnabled smallScreenOverride onClick={handleEditInformation}/>
-                    : <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleGetStarted}/>}
-
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '24px' }}>
+                   <CentralButton buttonType={ButtonType.EDITINFORMATION} isEnabled={isEditInformationHighlight} smallScreenOverride onClick={handleEditInformation}/>
+                   <CentralButton buttonWidthOverride='105px' buttonType={ButtonType.SAVE} isEnabled={isSaveInformationHighlight} smallScreenOverride onClick={handleGetStarted}/>
+                    </Box>
                     <SubHeadingText>
                         Password
                     </SubHeadingText>
@@ -423,7 +435,7 @@ export default function UserProfile({
                         variant="outlined"
                         placeholder="Password..."
                         type={isShowPassword ? "text" : "password"}
-                        value={password}
+                        value={centralData.userProfile.password}
                         onChange={(event) => setPassword(event.target.value)}
                         InputProps={{
                           endAdornment: (
@@ -443,7 +455,7 @@ export default function UserProfile({
                           )
                         }}
                     />
-                    <CentralButton buttonType={ButtonType.CHANGEPASSWORD} isEnabled smallScreenOverride/>
+                    <CentralButton buttonWidthOverride='211px' buttonType={ButtonType.CHANGEPASSWORD} isEnabled smallScreenOverride onClick={handlePasswordModal}/>
                 </UserProfileGridItem>
                 <Grid  
                     sm

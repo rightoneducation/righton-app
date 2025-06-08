@@ -5,6 +5,7 @@ type ButtonStyledProps = {
   buttonColor: ButtonColor;
   buttonType: ButtonType;
   isOnQuestionTab?: boolean;
+  isReset?: boolean;
 };
 
 const getBackgroundColor = (theme: any, buttonColor: ButtonColor) => {
@@ -62,8 +63,8 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
 };
 
 export const ButtonStyled = styled(Button, {
-  shouldForwardProp: (prop) => (prop !== 'buttonColor' && prop !== 'isOnQuestionTab'),
-})<ButtonStyledProps>(({ theme, buttonColor, buttonType, isOnQuestionTab }) => ({
+  shouldForwardProp: (prop) => (prop !== 'buttonColor' && prop !== 'isOnQuestionTab' && prop !== 'isReset'),
+})<ButtonStyledProps>(({ theme, buttonColor, buttonType, isOnQuestionTab, isReset }) => ({
   width: '100%',
   height: isOnQuestionTab ? '100%' : '38px',
   padding: isOnQuestionTab ? '8px' : 0,
@@ -72,7 +73,7 @@ export const ButtonStyled = styled(Button, {
   boxShadow: (isOnQuestionTab || buttonType === ButtonType.LOGOUT || ButtonType.EDITPROFILEPICTURE) ? 'none' : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
   borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
   borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
-  borderColor: buttonColor === ButtonColor.NULL ? (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT ? `${theme.palette.primary.buttonPrimaryDefault}` : `#FFF` ) : 'none', // eslint-disable-line no-nested-ternary
+  borderColor: buttonColor === ButtonColor.NULL ? (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT || (buttonType === ButtonType.SIGNUP && isReset) || (buttonType === ButtonType.BACK && isReset) ? `${theme.palette.primary.buttonPrimaryDefault}` : `#FFF` ) : 'none', // eslint-disable-line no-nested-ternary
   backgroundColor: getBackgroundColor(theme, buttonColor),
   ':hover': {
     backgroundColor: getHoverColor(theme, buttonColor, buttonType),
@@ -105,13 +106,13 @@ export const ButtonIconContainer = styled(Box)(({ theme }) => ({
 
 export const ButtonTypography = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'buttonColor',
-})<ButtonStyledProps>(({ theme, buttonColor, buttonType }) => ({
+})<ButtonStyledProps>(({ theme, buttonColor, buttonType, isReset }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
   fontWeight: '600',
   textTransform: 'none',
   padding: 0,
-  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER || buttonType === ButtonType.SAVEDRAFT ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER || buttonType === ButtonType.SAVEDRAFT || (buttonType === ButtonType.SIGNUP && isReset) || (buttonType === ButtonType.BACK && isReset) ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
   whiteSpace: 'nowrap',
 }));
 

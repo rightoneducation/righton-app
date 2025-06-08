@@ -270,7 +270,7 @@ export default function CreateGameCardBase({
             }}
           >
             <PublicPrivateButton
-            isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
+            isPublic={draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC} 
             onHandlePublicPrivateChange={handlePublicPrivateChange}  
             isDisabled={openCreateQuestion || openQuestionBank || isEdit} />
           </Box>
@@ -414,7 +414,7 @@ export default function CreateGameCardBase({
                 }}
               >
                 <PublicPrivateButton
-                isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
+                isPublic={draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC} 
                 onHandlePublicPrivateChange={handlePublicPrivateChange} 
                 isDisabled={openCreateQuestion || openQuestionBank} />
               </Box>

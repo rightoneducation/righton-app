@@ -118,7 +118,7 @@ export default function OwnerTag({
         day: '2-digit',
       });
   }
-  const isOwnerLoaded = displayCreatedName !== '' && displayLastModified !== '' && displayProfilePic !== '' && displayNumUsed !== undefined;
+  const isOwnerLoaded = displayCreatedName !== ''  && displayProfilePic !== '' && displayNumUsed !== undefined;
 
   return (
     screenSize !== ScreenSize.SMALL ? 
