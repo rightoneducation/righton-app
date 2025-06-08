@@ -1,86 +1,33 @@
-import AWS from 'aws-sdk';
-import https from 'https';
+import AWS from 'aws-sdk'
+const REGION = process.env.AWS_REGION || 'us-east-1'
+const USER_TABLE = process.env.USER_TABLE_NAME
+const EMAIL_INDEX = process.env.EMAIL_INDEX_NAME
+AWS.config.update({ region: REGION })
+const dynamo = new AWS.DynamoDB.DocumentClient()
 
-// ENV VARIABLES HERE
-const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
-const REGION = process.env.AWS_REGION || 'us-east-1';
+export const handler = async event => {
+  const { email, pass } = event.arguments.input || {}
+  if (!email || !pass) throw new Error('Missing input fields.')
 
-async function signedGraphQL(query, variables) {
-  const endpoint = new AWS.Endpoint(GRAPHQL_ENDPOINT);
-  const req = new AWS.HttpRequest(endpoint, REGION);
-  req.method = 'POST';
-  req.path = endpoint.path;
-  req.headers['Content-Type'] = 'application/json';
-  req.headers['Host'] = endpoint.hostname;
-  req.body = JSON.stringify({ query, variables });
+  const { Items } = await dynamo.query({
+    TableName: USER_TABLE,
+    IndexName: EMAIL_INDEX,
+    KeyConditionExpression: '#e = :e',
+    ExpressionAttributeNames: { '#e': 'email' },
+    ExpressionAttributeValues: { ':e': email },
+    Limit: 1
+  }).promise()
+  const user = Items[0]
+  if (!user) throw new Error('EMAIL_NOT_FOUND')
 
-  const signer = new AWS.Signers.V4(req, 'appsync', true);
-  signer.addAuthorization(AWS.config.credentials, AWS.util.date.getDate());
+  const now = new Date().toISOString()
+  await dynamo.update({
+    TableName: USER_TABLE,
+    Key: { id: user.id },
+    UpdateExpression: 'SET #p = :p, updatedAt = :u',
+    ExpressionAttributeNames: { '#p': 'password' },
+    ExpressionAttributeValues: { ':p': pass, ':u': now }
+  }).promise()
 
-  const options = {
-    host: endpoint.hostname,
-    port: endpoint.port || 443,
-    method: req.method,
-    path: req.path,
-    headers: req.headers,
-  };
-
-  return new Promise((resolve, reject) => {
-    const clientReq = https.request(options, res => {
-      let data = '';
-      res.on('data', chunk => { data += chunk; });
-      res.on('end', () => {
-        let payload;
-        try { payload = JSON.parse(data); }
-        catch (e) { return reject(e); }
-        if (payload.errors && payload.errors.length) {
-          return reject(new Error(payload.errors.map(e => e.message).join('; ')));
-        }
-        resolve(payload.data);
-      });
-    });
-    clientReq.on('error', reject);
-    clientReq.write(req.body);
-    clientReq.end();
-  });
+  return 'Password updated successfully'
 }
-
-export const handler = async (event) => {
-  const { email, pass } = event.arguments.input;
-  if (!email || !pass) {
-    throw new Error('Missing Input fields.');
-  }
-
-  const Q2 = `
-    query UserByEmail($email: String!) {
-      userByEmail(email: $email) {
-        items { id }
-      }
-    }`;
-
-  const M1 = `
-    mutation UpdateUser($input: UpdateUserPassInput!) {
-      updateUser(input: $input) {
-        id
-      }
-    }`;
-
-  // console.log('event', event);
-  // console.log('email', email);
-  // console.log('password', pass);
-
-  const response = await signedGraphQL(Q2, { email });
-  const user = response?.userByEmail?.items?.[0];
-  if (!user) {
-    throw new Error("EMAIL_NOT_FOUND");
-  }
-
-  await signedGraphQL(M1, {
-    input: {
-      id: user.id,
-      password: pass,
-    }
-  });
-
-  return 'Password updated successfully';
-};

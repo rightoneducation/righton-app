@@ -57,7 +57,7 @@
         },
         "updateUserPass": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/updateUserPass-326645534969324b4c51-build.zip"
+          "s3Key": "amplify-builds/updateUserPass-4273786673444c6f506d-build.zip"
         }
       },
       "auth": {

@@ -1,7 +1,7 @@
 type User @model
 @auth(
   rules:  [
-    { allow: public, operations: [read], provider: iam  },
+    { allow: public, operations: [read, update], provider: iam  },
     { allow: owner, provider: userPools },
     { allow: private, operations: [read], provider: userPools },  
   ]
