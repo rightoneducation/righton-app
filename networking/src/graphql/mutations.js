@@ -99,6 +99,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
     createPublicGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -145,6 +146,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
     updatePublicGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -191,6 +193,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
     deletePublicGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -237,6 +240,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
     createPrivateGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -283,6 +287,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
     updatePrivateGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -329,6 +334,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
     deletePrivateGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -375,6 +381,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
     createDraftGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -421,6 +428,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
     updateDraftGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -467,6 +475,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
     deleteDraftGameTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -513,6 +522,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
     createPublicQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -557,6 +567,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
     updatePublicQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -601,6 +612,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
     deletePublicQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -645,6 +657,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
     createPrivateQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -689,6 +702,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
     updatePrivateQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -733,6 +747,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
     deletePrivateQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -777,6 +792,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
     createDraftQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -821,6 +837,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
     updateDraftQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -865,6 +882,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
     deleteDraftQuestionTemplate(input: $input, condition: $condition) {
       id
       userId
+      publicPrivateType
       title
       lowerCaseTitle
       version
@@ -1549,6 +1567,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
       publicGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1579,6 +1598,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1623,6 +1643,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
       publicGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1653,6 +1674,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1697,6 +1719,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
       publicGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1727,6 +1750,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1771,6 +1795,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
       privateGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1801,6 +1826,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1845,6 +1871,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
       privateGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1875,6 +1902,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1919,6 +1947,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
       privateGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1949,6 +1978,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -1993,6 +2023,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
       draftGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -2023,6 +2054,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
       draftQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -2067,6 +2099,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
       draftGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -2097,6 +2130,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
       draftQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -2141,6 +2175,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
       draftGameTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -2171,6 +2206,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
       draftQuestionTemplate {
         id
         userId
+        publicPrivateType
         title
         lowerCaseTitle
         version
@@ -2233,5 +2269,15 @@ export const waegen = /* GraphQL */ `
 export const waeregen = /* GraphQL */ `
   mutation Waeregen($input: WaeRegenInput) {
     waeregen(input: $input)
+  }
+`;
+export const deleteUnverifiedUser = /* GraphQL */ `
+  mutation DeleteUnverifiedUser($input: DeleteUnverifiedUserInput) {
+    deleteUnverifiedUser(input: $input)
+  }
+`;
+export const updateUserPass = /* GraphQL */ `
+  mutation UpdateUserPass($input: UpdateUserPassInput) {
+    updateUserPass(input: $input)
   }
 `;

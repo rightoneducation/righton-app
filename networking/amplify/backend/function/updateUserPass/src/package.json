@@ -8,7 +8,9 @@
     "@types/aws-lambda": "^8.10.92"
   },
   "dependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
     "aws-sdk": "^2.1692.0",
-    "https": "^1.0.0"
+    "https": "^1.0.0",
+    "node-fetch": "^3.3.2"
   }
 }

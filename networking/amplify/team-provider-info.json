@@ -27,9 +27,21 @@
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/createGameTest-367277564c5457435a35-build.zip"
         },
+        "mobile6060603cPreSignup": {
+          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPreSignup-306b6c6c4c5265507571-build.zip"
+        },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/teacherIdAuth-554e525679703132595a-build.zip"
+        },
+        "unverifiedDelete": {
+          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
+          "s3Key": "amplify-builds/unverifiedDelete-706e4a46696c62466341-build.zip"
+        },
+        "updateUserPass": {
+          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
+          "s3Key": "amplify-builds/updateUserPass-4273786673444c6f506d-build.zip"
         },
         "uploadExternalImageToS3": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
@@ -46,18 +58,6 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
-        },
-        "mobile6060603cPreSignup": {
-          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPreSignup-306b6c6c4c5265507571-build.zip"
-        },
-        "unverifiedDelete": {
-          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/unverifiedDelete-706e4a46696c62466341-build.zip"
-        },
-        "updateUserPass": {
-          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/updateUserPass-326645534969324b4c51-build.zip"
         }
       },
       "auth": {

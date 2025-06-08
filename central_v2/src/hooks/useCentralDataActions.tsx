@@ -481,7 +481,6 @@ export default function useCentralDataManager({
   const fetchElement = async (type: GameQuestionType, id: string, isPrivateQuestion?: boolean) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     const callType = isPrivateQuestion ? { gameQuestionType: GameQuestionType.QUESTION, publicPrivateType: PublicPrivateType.PRIVATE } : getCallType({...callTypeMatches});
-    console.log(callType);
     switch (type){
       case GameQuestionType.QUESTION:{
        const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(callType.publicPrivateType,id);
@@ -714,8 +713,6 @@ export default function useCentralDataManager({
     // call it
     executeValidate();
   }, []); // eslint-disable-line
-
-  console.log("CentralData: ", centralData)
 
   return {
     setIsTabsOpen,
