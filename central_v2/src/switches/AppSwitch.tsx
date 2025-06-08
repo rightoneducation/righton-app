@@ -15,6 +15,9 @@ import ViewGame from '../pages/ViewGame';
 import MyLibrary from '../pages/MyLibrary';
 import UserProfile from '../pages/UserProfile';
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
+import ResetPassword from '../pages/ResetPassword';
+
+// import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 
 interface AppSwitchProps {
   currentScreen: ScreenType;
@@ -114,6 +117,13 @@ function AppSwitch({
             checkForUniqueEmail={checkForUniqueEmail}
           />
         </AuthGuard>
+      );
+      break;
+    }
+
+    case ScreenType.PASSWORDRESET: {
+      screenComponent = (
+        <ResetPassword setIsTabsOpen={setIsTabsOpen}/>
       );
       break;
     }

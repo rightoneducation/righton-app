@@ -4,6 +4,7 @@ import {
   ConfirmSignUpOutput,
   type ResetPasswordOutput,
   AuthSession,
+  ConfirmResetPasswordInput,
 } from 'aws-amplify/auth';
 import { IUserProfile } from "../../../Models/IUserProfile";
 
@@ -33,7 +34,8 @@ export interface IAuthAPIClient {
   awsSignIn(email: string, password: string): Promise<SignInOutput>;
   awsSignInFederated(): void;
   awsSignOut(): Promise<void>;
-  awsResetPassword (username: string): Promise<ResetPasswordOutput>
+  awsResetPassword (username: string): Promise<ResetPasswordOutput>;
+  awsConfirmResetPassword(input: ConfirmResetPasswordInput): Promise<void>;
   awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput>;
   awsUploadImagePublic<String>( 
     teacherIdImage: File,

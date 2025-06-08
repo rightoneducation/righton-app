@@ -48,6 +48,7 @@ function App() {
             <Route path="/library" element={<AppSwitch currentScreen={ScreenType.LIBRARY} />} />
             <Route path="/userprofile" element={<AppSwitch currentScreen={ScreenType.USERPROFILE} />} />
             <Route path="/auth" element={<AppSwitch currentScreen={ScreenType.AUTH} />} />
+            <Route path="/password/reset" element={<AppSwitch currentScreen={ScreenType.PASSWORDRESET} />} />
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />

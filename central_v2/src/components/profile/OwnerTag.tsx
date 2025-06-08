@@ -118,11 +118,6 @@ export default function OwnerTag({
         day: '2-digit',
       });
   }
-
-  console.log(displayCreatedName);
-  console.log(displayProfilePic);
-  console.log(displayLastModified);
-  console.log(displayNumUsed);
   const isOwnerLoaded = displayCreatedName !== ''  && displayProfilePic !== '' && displayNumUsed !== undefined;
 
   return (

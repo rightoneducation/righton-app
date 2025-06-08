@@ -9,6 +9,7 @@ import Confirmation from '../pages/Confirmation';
 import GoogleSignup from '../pages/GoogleSignup';
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import { UserStatusType } from '../lib/CentralModels';
+import ResetPassword from '../pages/ResetPassword';
 
 interface SignUpSwitchProps{
   setIsTabsOpen: (isOpen: boolean) => void;

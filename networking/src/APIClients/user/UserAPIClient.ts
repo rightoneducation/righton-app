@@ -15,6 +15,8 @@ import {
   UpdateUserInput,
   UpdateUserMutation,
   UpdateUserMutationVariables,
+  UpdateUserPassInput,
+  UpdateUserPassMutation,
   UpdateUserPassMutationVariables,
   UserByUserNameQuery,
   UserByEmailQuery,
@@ -159,11 +161,15 @@ export class UserAPIClient
     email: string,
     pass: string
   ): Promise<string | null> {
+    console.log("updateUserPass", email, pass);
+    const input: UpdateUserPassInput = {email, pass};
     let variables: UpdateUserPassMutationVariables = {
-      input: {email, pass},
+      input,
     };
+    console.log(variables);
+    console.log("▶️ Sending mutation:", updateUserPass);
     try {
-      const response = await this.mutateGraphQL<UpdateUserMutation>(
+      const response = await this.callGraphQL<UpdateUserPassMutation>(
         updateUserPass,
         variables as unknown as GraphQLOptions
       ) as {data: {updateUserPass: string}};
