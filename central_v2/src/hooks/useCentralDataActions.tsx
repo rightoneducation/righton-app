@@ -59,12 +59,13 @@ export default function useCentralDataManager({
 
   const isQuestions = useMatch('/questions');
   const isCreateGame = useMatch('/create/game');
+  const isEditGame = useMatch('/edit/game/:type/:gameId') !== null;
   const isLibrary = useMatch('/library') !== null;
   const callTypeMatches = {
     matchViewGame: useMatch('/games/:type/:gameId'),
     matchLibViewGame: useMatch('/library/games/:type/:gameId'),
     matchCloneGame: useMatch('/clone/:type/:gameId'),
-    matchEditGame: useMatch('/edit/:type/:gameId'),
+    matchEditGame: useMatch('/edit/game/:type/:gameId'),
     matchCloneQuestion: useMatch('/clone/question/:type/:questionId'),
     matchEditQuestion: useMatch('/edit/question/:type/:questionId'),
     matchLibraryTab: useMatch('/library'),
@@ -190,9 +191,7 @@ export default function useCentralDataManager({
         centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: search });
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
-        console.log(libraryTab);
         const callType = getCallType({...callTypeMatches, libraryTab, gameQuestion: searchGameQuestion});
-        console.log(callType);
         switch(searchGameQuestion){
           case GameQuestionType.QUESTION:
             centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
@@ -479,9 +478,10 @@ export default function useCentralDataManager({
   };
   
 
-  const fetchElement = async (type: GameQuestionType, id: string) => {
+  const fetchElement = async (type: GameQuestionType, id: string, isPrivateQuestion?: boolean) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    const callType = getCallType({...callTypeMatches});
+    const callType = isPrivateQuestion ? { gameQuestionType: GameQuestionType.QUESTION, publicPrivateType: PublicPrivateType.PRIVATE } : getCallType({...callTypeMatches});
+    console.log(callType);
     switch (type){
       case GameQuestionType.QUESTION:{
        const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(callType.publicPrivateType,id);
@@ -514,6 +514,7 @@ export default function useCentralDataManager({
       case GameQuestionType.GAME:
       default:{
        const responseGame = await apiClients?.gameTemplate.getGameTemplate(callType.publicPrivateType, id);
+       // TODO: check refresh condition on an empty game, as I think questionTEmplatesOrder is going to break stuff when its null
           let selectedGame: ISelectedGame = {
             game: responseGame,
             profilePic: '',
@@ -545,6 +546,19 @@ export default function useCentralDataManager({
   
   const fetchElements = async (libraryTab?: LibraryTabEnum, searchTerms?: string, nextToken?: string | null, isFromLibray?: boolean) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
+      if (isEditGame){
+         switch(tab){
+          case LibraryTabEnum.FAVORITES: 
+            return FetchType.FAVORITE_QUESTIONS;
+          case LibraryTabEnum.DRAFTS: 
+            return FetchType.DRAFT_QUESTIONS;
+          case LibraryTabEnum.PRIVATE:
+            return FetchType.PRIVATE_QUESTIONS;
+          case LibraryTabEnum.PUBLIC:
+          default:
+            return FetchType.PUBLIC_QUESTIONS;
+        }
+      }
       if ((isLibrary || isCreateGame || centralData.isTabsOpen) && tab !== undefined) {
         switch(tab){
           case LibraryTabEnum.FAVORITES: 
@@ -562,7 +576,6 @@ export default function useCentralDataManager({
       return FetchType.EXPLORE_GAMES;
     }
     const fetchType = getFetchType(libraryTab ?? null);
-
     switch (fetchType) {
       case FetchType.PUBLIC_GAMES:
       case FetchType.PUBLIC_QUESTIONS:

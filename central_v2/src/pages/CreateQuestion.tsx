@@ -432,6 +432,8 @@ export default function CreateQuestion({
           }
           window.localStorage.setItem(StorageKey, '');
           if (url){
+            if (isMultipleChoice)
+              draftQuestion.correctCard.answerSettings.answerType = AnswerType.MULTICHOICE;
             apiClients.questionTemplate.updateQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion, selectedQuestionId);
           }
           setIsCreatingTemplate(false);
@@ -471,9 +473,10 @@ export default function CreateQuestion({
           }
           window.localStorage.setItem(StorageKey, '');
           if (url){
+            if (isMultipleChoice)
+              draftQuestion.correctCard.answerSettings.answerType = AnswerType.MULTICHOICE;
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion);
           }
-          console.log(centralData.userProfile);
           // update user stats
           const existingNumQuestions = centralData.userProfile?.questionsMade || 0;
           const newNumQuestions = existingNumQuestions + 1;

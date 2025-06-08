@@ -108,8 +108,6 @@ export default function CreateGameComponent({
       <TitleText screenSize={screenSize}>
         {label} Game
       </TitleText>
-
-      {!isLoading ? (
         <>
           {/* Save & Discard Button for Small & Medium Screen Size */}
           {screenSize === ScreenSize.MEDIUM && (
@@ -308,12 +306,6 @@ export default function CreateGameComponent({
             />
           </GameCreateButtonStack>
         </>
-      ) : (
-          <CircularProgress
-            style={{ color: `${theme.palette.primary.circularProgress}` }}
-          />
-      )
-    }
     </>
   )
 }

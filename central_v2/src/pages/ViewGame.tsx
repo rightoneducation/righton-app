@@ -59,7 +59,8 @@ export default function ViewGame({
   const questions = centralData.selectedGame?.game?.questionTemplates;
 
   const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
-  
+  const isGameLaunchable = (centralData.selectedGame && centralData.selectedGame.game && centralData.selectedGame.game.questionTemplates && centralData.selectedGame.game.questionTemplates?.length > 0) ?? false;
+
   useEffect(() => {
     setIsLoading(false);
     if (centralData?.selectedGame?.game) {
@@ -97,10 +98,6 @@ export default function ViewGame({
     }
   };
 
-  const handleDeleteGame = () => {
-    setIsDeleteModalOpen(true);
-  }
-
   const handleProceedToDelete = async () => {
     try{
       if (centralData && centralData.selectedGame && centralData.selectedGame.game) {
@@ -125,6 +122,14 @@ export default function ViewGame({
     fetchElements();
     centralDataDispatch({type: 'SET_SEARCH_TERMS', payload: null})
     navigate('/');
+  }
+
+  const handleDeleteGame = () => {
+    if (centralData.selectedGame?.game?.publicPrivateType === PublicPrivateType.PUBLIC) {
+      setIsDeleteModalOpen(true);
+    } else {
+      handleProceedToDelete();
+    }
   }
 
   const handleCloseEditModal = () => {
@@ -285,7 +290,7 @@ export default function ViewGame({
                   smallScreenOverride
                   buttonWidthOverride='100%'
                   buttonType={ButtonType.LAUNCHGAME}
-                  isEnabled
+                  isEnabled={isGameLaunchable}
                   onClick={handleLaunchGame}
                 />
               </GameCreateButtonStack>

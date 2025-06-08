@@ -7,6 +7,7 @@ import {
   IAPIClients,
   CentralQuestionTemplateInput,
   IQuestionTemplate,
+  IGameTemplate,
   AnswerType,
   UpdateDraftGameTemplateInput,
   UpdatePrivateGameTemplateInput,
@@ -203,33 +204,34 @@ export const buildGameTemplate = (
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
 ): GameTemplate => {
-  const questionTemplatesOrder = draftQuestionsList.map((question, index) => {
-    return { questionTemplateId: question.questionTemplate.id, index };
-  })
-  return {
+  let questionTemplatesOrder: any[] = [];
+  if (draftQuestionsList.length > 0) {
+    questionTemplatesOrder = draftQuestionsList.map((question, index) => {
+      return { questionTemplateId: question.questionTemplate.id, index };
+    });
+  }
+  let gameTemplate: GameTemplate | null = null;
+    gameTemplate = {
     title: draftGame.gameTemplate.title,
     userId,
     lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
     description: draftGame.gameTemplate.description,
     lowerCaseDescription: draftGame.gameTemplate.description.toLowerCase(),
-    questionTemplatesCount: 0,
+    questionTemplatesCount: draftQuestionsList.length ?? 0,
     version: 0,
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
-    ccss: draftQuestionsList[0].question.questionCard.ccss,
+    ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
     questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
-    grade: draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
-    gradeFilter:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
-    domain:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[1] ?? '',
-    cluster:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[2] ?? '',
-    standard:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[3] ?? '',
+    grade: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] || '8',
+    gradeFilter: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] ?? '',
+    domain: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[1] ?? '',
+    cluster: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[2] ?? '',
+    standard: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[3] ?? '',
     imageUrl: gameImgUrl,
     timesPlayed: 0,
   };
+  return gameTemplate;
 };
 
 export const buildEditedGameTemplate = (
@@ -252,17 +254,13 @@ export const buildEditedGameTemplate = (
     version: 0,
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
-    ccss: draftQuestionsList[0].question.questionCard.ccss,
+    ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
     questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
-    grade: draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
-    gradeFilter:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
-    domain:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[1] ?? '',
-    cluster:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[2] ?? '',
-    standard:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[3] ?? '',
+    grade: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] || '8',
+    gradeFilter: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] ?? '',
+    domain: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[1] ?? '',
+    cluster: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[2] ?? '',
+    standard: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[3] ?? '',
     imageUrl: gameImgUrl,
     timesPlayed: 0,
   };
@@ -275,7 +273,7 @@ export const buildGameQuestion = (
   questionTemplateId: string,
 ): GameQuestionTemplate => {
   return {
-    ...(draftGame.publicPrivateGame === PublicPrivateType.PUBLIC
+    ...(draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC
       ? {
           publicGameTemplateID: String(gameTemplateId),
           publicQuestionTemplateID: String(questionTemplateId),
@@ -300,11 +298,11 @@ export const buildGameQuestionPromises = (
       String(questionId),
     );
     const response = await apiClients.gameQuestions.createGameQuestions(
-      draftGame.publicPrivateGame,
+      draftGame.gameTemplate.publicPrivateType,
       gameQuestion,
     );
     console.log(
-      `${draftGame.publicPrivateGame}GameQuestion response`,
+      `${draftGame.gameTemplate.publicPrivateType}GameQuestion response`,
       response,
     );
   });

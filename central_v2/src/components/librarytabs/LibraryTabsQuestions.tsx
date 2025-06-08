@@ -59,7 +59,7 @@ export default function LibraryTabsQuestions({
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
 const centralData = useCentralDataState();
   
-const isSearchResults = centralData.searchTerms.length > 0;
+const isSearchResults = centralData?.searchTerms?.length > 0;
 
 const tabMap: { [key: number]: string } = {
   [LibraryTabEnum.PUBLIC]: 'Public',
@@ -92,12 +92,11 @@ const tabs: LibraryTabEnum[] = isPublic ?
     fetchElements(openTab); 
     setHasInitialized(true);
   }
-
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-      const newTabEnum = tabIndexToEnum[newValue as number];
-      setOpenTab(newTabEnum);
-      fetchElements(newTabEnum);
-    };
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const newTabEnum = tabIndexToEnum[newValue as number];
+    setOpenTab(newTabEnum);
+    fetchElements(newTabEnum);
+  };
 
 const elements = getQuestionElements(openTab, isSearchResults, centralData);
 
