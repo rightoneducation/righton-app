@@ -24,8 +24,8 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
   return (
     <div className={classes.grow}>
       <Box className={classes.bar}>
-        <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Logo' to={'/'}>
-            <img src={betaLogo} alt="Logo" className={classes.logo} />
+        <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Logo' to={'/'} style={{paddingBottom: '10px'}}>
+            <img src={betaLogo} alt="Logo" className={classes.logo} style={{maxHeight: '60px', width: 'auto'}}/>
         </NavLink>
         <Box className={classes.container}> 
           {(isResolutionMobile && !match) || !isResolutionMobile ?

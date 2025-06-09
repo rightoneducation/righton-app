@@ -73,13 +73,10 @@ export default function Hints({
     let processedGPTHints;
     if (apiClients.hostDataManager)
       processedGPTHints = await apiClients.hostDataManager.processGPTHints(inputHints, currentQuestion.text, correctAnswer?.text ?? '');
-
-    if (processedGPTHints && processedGPTHints.gptHints && processedGPTHints.gptHints.content){
+    if (processedGPTHints && processedGPTHints.gptHints && processedGPTHints.gptHints.themes){
       setIsHintLoading(false);
-      console.log(processedGPTHints.gptHints.content);
-      setGPTHints(JSON.parse(processedGPTHints.gptHints.content));
+      setGPTHints(processedGPTHints.gptHints.themes);
       setIsHintEmpty(false);
-      console.log(JSON.parse(processedGPTHints.gptHints.content));
     } else {
       setIsHintLoading(false);
       setIsHintError(true);
@@ -96,8 +93,6 @@ export default function Hints({
       handleProcessHints(hints);
     }
   }, [localGameSession.currentState]); // eslint-disable-line
-  console.log(graphClickIndex);
-  console.log(localGameSession.currentState);
   return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
@@ -158,7 +153,7 @@ export default function Hints({
                     >
                       Retry
                     </ButtonStyled>
-                    <Typography variant='h4' color={`${theme.palette.primary}`}>
+                    <Typography variant='h4' color={`${theme.palette.primary.main}`}>
                         There was an error processing the hints. Please try again.
                     </Typography>
                   </>

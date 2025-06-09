@@ -64,11 +64,11 @@
         "mobile6060603c": {},
         "userPoolGroups": {}
       },
-      "storage": {
-        "rightoncentralstorage": {}
-      },
       "api": {
         "mobile": {}
+      },
+      "storage": {
+        "rightoncentralstorage": {}
       }
     }
   }
