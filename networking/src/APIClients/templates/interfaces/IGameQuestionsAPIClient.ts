@@ -157,8 +157,10 @@ export const gameQuestionRuntimeMap = {
   }
 };
 
-export type GameQuestionType<T extends PublicPrivateType> = 
-    T extends 'Public' ? IPublicGameQuestion : IPrivateGameQuestion;
+export type GameQuestionType<T extends PublicPrivateType> =
+  T extends "Public"  ? IPublicGameQuestion  :
+  T extends "Private" ? IPrivateGameQuestion :
+  IDraftGameQuestion;
 
 export interface IGameQuestionsAPIClient {
   createGameQuestions<T extends PublicPrivateType>(

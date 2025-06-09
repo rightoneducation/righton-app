@@ -28,6 +28,7 @@ import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackgro
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import DiscardModal from '../components/modal/DiscardModal';
+import ModalBackground from '../components/modal/ModalBackground';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
@@ -543,6 +544,14 @@ export default function CreateQuestion({
     setIsAIError(false);
   }
 
+  const handleCloseQuestionModal = () => {
+    setIsImageUploadVisible(false);
+    setIsImageURLVisible(false);
+    setIsCCSSVisible(false);
+    setIsDiscardModalOpen(false);
+    setIsCreatingTemplate(false);
+  }
+
   useEffect(() => {
     setIsLoading(false); 
     const selected = centralData?.selectedQuestion?.question;
@@ -571,6 +580,10 @@ export default function CreateQuestion({
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
+        <ModalBackground
+          isModalOpen={isCCSSVisible || isDiscardModalOpen || isImageUploadVisible || isCreatingTemplate}
+          handleCloseModal={handleCloseQuestionModal}
+        />
        <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={isCCSSVisible}

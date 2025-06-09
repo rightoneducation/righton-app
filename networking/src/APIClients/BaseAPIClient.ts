@@ -105,8 +105,6 @@ export abstract class BaseAPIClient {
     query: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    console.log(query);
-    console.log(options);
     const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
