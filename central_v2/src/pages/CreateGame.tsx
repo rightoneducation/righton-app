@@ -434,7 +434,6 @@ export default function CreateGame({
           // make sure we have a gameTemplate id as well as question template ids before creating a game question
           if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
             try {
-              console.log('here3');
               const createGameQuestions = buildGameQuestionPromises(
                 draftGameCopy, 
                 gameTemplateResponse.id, 
@@ -758,12 +757,6 @@ export default function CreateGame({
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }
   }, [centralData.selectedGame, route, selectedGameId ]); // eslint-disable-line 
-  console.log('selectedQuestionIndex');
-  console.log(selectedQuestionIndex);
-  console.log('draftQuestionsList length');
-  console.log((draftQuestionsList.length > 0));
-  console.log('draftQuestionList[selectedQuestionIndex]');
-  console.log(draftQuestionsList[selectedQuestionIndex]);
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
