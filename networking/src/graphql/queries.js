@@ -19,6 +19,15 @@ export const getPublicGameTemplate = /* GraphQL */ `
       phaseTwoTime
       imageUrl
       questionTemplates {
+        items {
+          id
+          publicGameTemplateID
+          publicQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
         nextToken
         __typename
       }
@@ -57,6 +66,10 @@ export const listPublicGameTemplates = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -101,6 +114,10 @@ export const publicGameTemplatesByOwner = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -145,6 +162,10 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -189,6 +210,10 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -233,6 +258,10 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -263,6 +292,15 @@ export const getPrivateGameTemplate = /* GraphQL */ `
       phaseTwoTime
       imageUrl
       questionTemplates {
+        items {
+          id
+          privateGameTemplateID
+          privateQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
         nextToken
         __typename
       }
@@ -301,6 +339,10 @@ export const listPrivateGameTemplates = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -345,6 +387,10 @@ export const privateGameTemplatesByOwner = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -389,6 +435,10 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -433,6 +483,10 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -477,6 +531,10 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -505,6 +563,15 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
       standard
       imageUrl
       gameTemplates {
+        items {
+          id
+          publicGameTemplateID
+          publicQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
         nextToken
         __typename
       }
@@ -540,6 +607,10 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -581,6 +652,10 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -622,6 +697,10 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -663,6 +742,10 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -690,6 +773,15 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
       standard
       imageUrl
       gameTemplates {
+        items {
+          id
+          privateGameTemplateID
+          privateQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
         nextToken
         __typename
       }
@@ -725,6 +817,10 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -766,6 +862,10 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -807,6 +907,10 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -848,6 +952,10 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -868,6 +976,19 @@ export const getGameSession = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       teams {
+        items {
+          id
+          name
+          score
+          selectedAvatarIndex
+          createdAt
+          updatedAt
+          gameSessionTeamsId
+          teamQuestionId
+          teamQuestionOrder
+          teamQuestionGameSessionId
+          __typename
+        }
         nextToken
         __typename
       }
@@ -881,6 +1002,26 @@ export const getGameSession = /* GraphQL */ `
       currentTimer
       sessionData
       questions {
+        items {
+          id
+          text
+          choices
+          answerSettings
+          answerData
+          hints
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          order
+          isConfidenceEnabled
+          isShortAnswerEnabled
+          isHintEnabled
+          gameSessionId
+          __typename
+        }
         nextToken
         __typename
       }
@@ -903,6 +1044,10 @@ export const listGameSessions = /* GraphQL */ `
         startTime
         phaseOneTime
         phaseTwoTime
+        teams {
+          nextToken
+          __typename
+        }
         currentQuestionIndex
         currentState
         gameCode
@@ -912,6 +1057,10 @@ export const listGameSessions = /* GraphQL */ `
         title
         currentTimer
         sessionData
+        questions {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -942,6 +1091,10 @@ export const gameSessionByState = /* GraphQL */ `
         startTime
         phaseOneTime
         phaseTwoTime
+        teams {
+          nextToken
+          __typename
+        }
         currentQuestionIndex
         currentState
         gameCode
@@ -951,6 +1104,10 @@ export const gameSessionByState = /* GraphQL */ `
         title
         currentTimer
         sessionData
+        questions {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -981,6 +1138,10 @@ export const gameSessionByCode = /* GraphQL */ `
         startTime
         phaseOneTime
         phaseTwoTime
+        teams {
+          nextToken
+          __typename
+        }
         currentQuestionIndex
         currentState
         gameCode
@@ -990,6 +1151,10 @@ export const gameSessionByCode = /* GraphQL */ `
         title
         currentTimer
         sessionData
+        questions {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -1091,6 +1256,15 @@ export const getTeam = /* GraphQL */ `
         __typename
       }
       teamMembers {
+        items {
+          id
+          isFacilitator
+          deviceId
+          createdAt
+          updatedAt
+          teamTeamMembersId
+          __typename
+        }
         nextToken
         __typename
       }
@@ -1116,6 +1290,30 @@ export const listTeams = /* GraphQL */ `
       items {
         id
         name
+        question {
+          id
+          text
+          choices
+          answerSettings
+          answerData
+          hints
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          order
+          isConfidenceEnabled
+          isShortAnswerEnabled
+          isHintEnabled
+          gameSessionId
+          __typename
+        }
+        teamMembers {
+          nextToken
+          __typename
+        }
         score
         selectedAvatarIndex
         createdAt
@@ -1137,6 +1335,25 @@ export const getTeamMember = /* GraphQL */ `
       id
       isFacilitator
       answers {
+        items {
+          id
+          isCorrect
+          isSubmitted
+          isShortAnswerEnabled
+          currentState
+          currentQuestionIndex
+          questionId
+          teamMemberAnswersId
+          teamAnswersId
+          teamName
+          text
+          answer
+          confidenceLevel
+          hint
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -1158,6 +1375,10 @@ export const listTeamMembers = /* GraphQL */ `
       items {
         id
         isFacilitator
+        answers {
+          nextToken
+          __typename
+        }
         deviceId
         createdAt
         updatedAt
@@ -1244,6 +1465,10 @@ export const getPublicGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -1264,6 +1489,10 @@ export const getPublicGameQuestions = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1292,6 +1521,47 @@ export const listPublicGameQuestions = /* GraphQL */ `
         id
         publicGameTemplateID
         publicQuestionTemplateID
+        publicGameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          ccss
+          domain
+          cluster
+          grade
+          gradeFilter
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
+          questionTemplatesCount
+          questionTemplatesOrder
+          createdAt
+          updatedAt
+          type
+          __typename
+        }
+        publicQuestionTemplate {
+          id
+          owner
+          title
+          version
+          choices
+          instructions
+          answerSettings
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
+          gameTemplatesCount
+          createdAt
+          updatedAt
+          type
+          __typename
+        }
         createdAt
         updatedAt
         owner
@@ -1323,6 +1593,10 @@ export const getPrivateGameQuestions = /* GraphQL */ `
         phaseOneTime
         phaseTwoTime
         imageUrl
+        questionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -1343,6 +1617,10 @@ export const getPrivateGameQuestions = /* GraphQL */ `
         grade
         standard
         imageUrl
+        gameTemplates {
+          nextToken
+          __typename
+        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1371,6 +1649,47 @@ export const listPrivateGameQuestions = /* GraphQL */ `
         id
         privateGameTemplateID
         privateQuestionTemplateID
+        privateGameTemplate {
+          id
+          owner
+          title
+          version
+          description
+          ccss
+          domain
+          cluster
+          grade
+          gradeFilter
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
+          questionTemplatesCount
+          questionTemplatesOrder
+          createdAt
+          updatedAt
+          type
+          __typename
+        }
+        privateQuestionTemplate {
+          id
+          owner
+          title
+          version
+          choices
+          instructions
+          answerSettings
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
+          gameTemplatesCount
+          createdAt
+          updatedAt
+          type
+          __typename
+        }
         createdAt
         updatedAt
         owner
