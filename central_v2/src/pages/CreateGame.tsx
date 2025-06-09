@@ -265,14 +265,13 @@ export default function CreateGame({
         const newQuestions = draftQuestionsList.filter((dq) => !dq.questionTemplate.id);
         const newQuestionPromises = buildQuestionTemplatePromises(newQuestions, userId, apiClients);
         const newQuestionPromisesResponse = await Promise.all(newQuestionPromises);
-
         const newQuestionTemplateIds = newQuestionPromisesResponse.map(
           (question) => String(question?.id),
         );
         // added questions are those added from question bank (they are already created so have ids)
         const addedQuestionTemplateIds = draftQuestionsList.filter((dq) => dq.questionTemplate.id).map((draftQuestion) => draftQuestion.questionTemplate.id);
-
-        const questionTemplateIds = [...newQuestionTemplateIds, ...addedQuestionTemplateIds];
+        const filteredQuestionTemplateIds = addedQuestionTemplateIds.filter((dq) => !originalQuestionTemplates.map((oq) => oq.id).includes(dq));
+        const questionTemplateIds = [...newQuestionTemplateIds, ...filteredQuestionTemplateIds];
         
         // make sure we have a gameTemplate id as well as question template ids before creating a game question
         if (draftGame.gameTemplate.id && questionTemplateIds.length > 0) {
@@ -659,6 +658,7 @@ export default function CreateGame({
   };
 
   const handleAddMoreQuestions = () => {
+    const numOfQuestions = draftQuestionsList.length;
     setDraftQuestionsList((prev) => [...prev, { ...draftTemplate, publicPrivate: draftGame.gameTemplate.publicPrivateType }]);
     setDraftGame((prev) => ({
       ...prev,
@@ -666,6 +666,7 @@ export default function CreateGame({
       isGameCardSubmitted: false,
     }));
     setIconButtons((prev) => [...prev, prev.length + 1]);
+    setSelectedQuestionIndex(numOfQuestions + 1);
   };
 
   const handleDeleteQuestion = (index: number) => {
@@ -734,6 +735,10 @@ export default function CreateGame({
         phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
       });
       const originals = selected?.game?.questionTemplates;
+      if (originals && originals.length > 0) {
+        const oqTemplates = originals.map(q => q.questionTemplate);
+        setOriginalQuestionTemplates(oqTemplates);
+      }
       const assembled = originals?.map(q =>
         assembleQuestionTemplate(q.questionTemplate)
       );
