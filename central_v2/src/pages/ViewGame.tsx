@@ -60,7 +60,7 @@ export default function ViewGame({
 
   const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
   const isGameLaunchable = (centralData.selectedGame && centralData.selectedGame.game && centralData.selectedGame.game.questionTemplates && centralData.selectedGame.game.questionTemplates?.length > 0) ?? false;
-
+  
   useEffect(() => {
     setIsLoading(false);
     if (centralData?.selectedGame?.game) {

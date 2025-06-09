@@ -419,12 +419,11 @@ export default function CreateGame({
           // create & store game template in variable to retrieve id after response
           const createGame = buildGameTemplate(draftGameCopy, userId, draftQuestionsList, gameImgUrl);
           const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
-              draftGameCopy.publicPrivateGame,
+              PublicPrivateType.DRAFT,
               createGame,
             );
-            
           // convert questions to array of promises & write to db
-          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
+          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients, PublicPrivateType.DRAFT);
           const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
           // create an array of all the ids from the response 
@@ -435,11 +434,13 @@ export default function CreateGame({
           // make sure we have a gameTemplate id as well as question template ids before creating a game question
           if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
             try {
+              console.log('here3');
               const createGameQuestions = buildGameQuestionPromises(
                 draftGameCopy, 
                 gameTemplateResponse.id, 
                 questionTemplateIds, 
-                apiClients
+                apiClients,
+                PublicPrivateType.DRAFT
               );
               // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
                 await Promise.all(createGameQuestions);
@@ -757,8 +758,12 @@ export default function CreateGame({
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }
   }, [centralData.selectedGame, route, selectedGameId ]); // eslint-disable-line 
-  console.log('draftQuestionsList', draftQuestionsList);
-  console.log(selectedQuestionIndex, 'selectedQuestionIndex');
+  console.log('selectedQuestionIndex');
+  console.log(selectedQuestionIndex);
+  console.log('draftQuestionsList length');
+  console.log((draftQuestionsList.length > 0));
+  console.log('draftQuestionList[selectedQuestionIndex]');
+  console.log(draftQuestionsList[selectedQuestionIndex]);
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
@@ -778,7 +783,7 @@ export default function CreateGame({
       />
 
       {/* tracks ccss state according to index */}
-      {draftQuestionsList.length > 0 && selectedQuestionIndex && draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
+      {(draftQuestionsList.length > 0 && selectedQuestionIndex !== null && draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal) && (
         <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={

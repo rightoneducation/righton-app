@@ -75,7 +75,7 @@ export default function ExploreGames({
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
     setGameSet(games);
     navigate(`/games/${game.publicPrivateType}/${game.id}`);
-  };
+  }; 
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">

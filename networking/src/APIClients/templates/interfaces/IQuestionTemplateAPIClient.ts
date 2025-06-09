@@ -216,7 +216,11 @@ export const questionTemplateRuntimeMap = {
   }
 }
 
-export type QuestionTemplateType<T extends PublicPrivateType> = T extends 'Public' ? IPublicQuestionTemplate : IPrivateQuestionTemplate;
+export type QuestionTemplateType<T extends PublicPrivateType> =
+  T extends "Public" ? IPublicQuestionTemplate :
+  T extends "Private" ? IPrivateQuestionTemplate :
+  IDraftQuestionTemplate;
+
 
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate<T extends PublicPrivateType>(

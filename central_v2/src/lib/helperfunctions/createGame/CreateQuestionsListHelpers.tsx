@@ -88,6 +88,7 @@ export const buildQuestionTemplatePromises = (
   draftQuestionsList: TDraftQuestionsList[],
   userId: string,
   apiClients: IAPIClients,
+  type?: PublicPrivateType
 ) => {
   return draftQuestionsList.map(async (dq, i) => {
     const dqCopy = { ...dq };
@@ -131,12 +132,12 @@ export const buildQuestionTemplatePromises = (
 
     let newQuestionResponse: IQuestionTemplate | undefined;
     // if an image url is available, we can create a question template
-    if (url) {
+    if (url || type === PublicPrivateType.DRAFT) {
       try {
         newQuestionResponse =
           await apiClients.questionTemplate.createQuestionTemplate(
-            dqCopy.publicPrivate,
-            url,
+            type === PublicPrivateType.DRAFT ? PublicPrivateType.DRAFT : dqCopy.publicPrivate,
+            url ?? '',
             userId,
             dqCopy.question,
           );

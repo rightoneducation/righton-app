@@ -217,7 +217,10 @@ export const gameTemplateRuntimeMap = {
   }
 }
 
-export type GameTemplateType<T extends PublicPrivateType> = T extends 'Public' ? IPublicGameTemplate : IPrivateGameTemplate;
+export type GameTemplateType<T extends PublicPrivateType> =
+  T extends "Public"? IPublicGameTemplate :
+  T extends "Private" ? IPrivateGameTemplate :
+  IDraftGameTemplate;
 
 export interface IGameTemplateAPIClient {
   createGameTemplate<T extends PublicPrivateType>(
