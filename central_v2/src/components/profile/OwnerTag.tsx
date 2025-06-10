@@ -99,7 +99,10 @@ export default function OwnerTag({
     if (centralData.selectedGame){
       const { profilePic, createdName, lastModified, timesPlayed } = centralData.selectedGame;
       displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
-      displayCreatedName = createdName ?? '';
+      if (createdName === ' .. RightOn')
+        displayCreatedName = 'RightOn';
+      else
+        displayCreatedName = createdName ?? '';
       displayNumUsed = timesPlayed ?? 0;
       displayLastModified = (lastModified ?? new Date()).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -110,7 +113,10 @@ export default function OwnerTag({
   } else if (centralData.selectedQuestion){ 
       const { profilePic, createdName, lastModified, timesPlayed } = centralData.selectedQuestion;
       displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
-      displayCreatedName = createdName ?? '';
+      if (createdName === ' .. RightOn')
+        displayCreatedName = 'RightOn';
+      else
+        displayCreatedName = createdName ?? '';
       displayNumUsed = timesPlayed ?? 0;
       displayLastModified = (lastModified ?? new Date()).toLocaleDateString('en-US', {
         year: 'numeric',
