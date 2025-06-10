@@ -652,6 +652,7 @@ export default function CreateGame({
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
+    console.log(`Selected question index changed to: ${index}`);
     if(draftGame.openQuestionBank) {
       setDraftGame((prev) => toggleCreateQuestion(draftGame, gameFormIsValid))
     }
@@ -666,7 +667,8 @@ export default function CreateGame({
       isGameCardSubmitted: false,
     }));
     setIconButtons((prev) => [...prev, prev.length + 1]);
-    setSelectedQuestionIndex(numOfQuestions + 1);
+    const newIndex = numOfQuestions;
+    setSelectedQuestionIndex(newIndex );
   };
 
   const handleDeleteQuestion = (index: number) => {
@@ -781,7 +783,7 @@ export default function CreateGame({
       />
 
       {/* tracks ccss state according to index */}
-      {(draftQuestionsList.length > 0 && selectedQuestionIndex !== null && draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal) && (
+      {(draftQuestionsList.length > 0 && selectedQuestionIndex !== null && draftQuestionsList[selectedQuestionIndex] != null && draftQuestionsList[selectedQuestionIndex]?.isCCSSVisibleModal) && (
         <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={
@@ -796,7 +798,7 @@ export default function CreateGame({
       )}
 
       {/* open modals according to correct index */}
-      {draftQuestionsList.length > 0 && (
+      {draftQuestionsList.length > 0 && selectedQuestionIndex !== null && draftQuestionsList[selectedQuestionIndex] != null &&(
         <ImageUploadModal
           draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
           screenSize={screenSize}
