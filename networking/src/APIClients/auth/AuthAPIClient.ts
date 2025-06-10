@@ -147,6 +147,7 @@ export class AuthAPIClient
       });
     }catch (e: any) {
       // aws sets some generic error messages, so we add our own code in
+      console.log(e);
       const [ _, msg ] = e.message.split('|', 2); 
       throw new Error(`${msg}`);
     }
@@ -157,6 +158,8 @@ export class AuthAPIClient
   async awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput> {
     try {
     const response = await confirmSignUp({username: email, confirmationCode: code});
+    console.log('here');
+    console.log(response);
     return response;
     } catch (e: any) {
       throw new Error (e);

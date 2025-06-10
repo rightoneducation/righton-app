@@ -22,15 +22,12 @@ export class AIAPIClient
     try{
       const input: WaeGenInput = waegenInput
       const variables: WaegenMutationVariables = { input }
-      console.log('sup3');
       const response = await this.callGraphQL<WaegenMutation>(
           waegen,
           variables as unknown as GraphQLOptions
       )
-      console.log('response', response);
       return response.data?.waegen || '';
     } catch (error) {
-      console.log(error);
       throw new Error(`Failed to generate question`)
     }
   }

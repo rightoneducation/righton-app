@@ -8,6 +8,5 @@
   "triggerDir": "/snapshot/repo/build/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/PreSignup",
   "triggerTemplate": "PreSignup.json.ejs",
   "triggerEventPath": "PreSignup.event.json",
-  "roleName": "mobile6060603cPreSignup",
-  "skipEdit": true
+  "roleName": "mobile6060603cPreSignup"
 }
