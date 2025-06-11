@@ -15,11 +15,11 @@ export class QuestionTemplateParser {
     ): QuestionTemplateType<T>['create']['input']{
         const {title, ccss } = createQuestionTemplateInput.questionCard;
         const lowerCaseTitle = title.toLowerCase();
-        const deconstructCCSS = (ccss: string): { domain: string, cluster: string, grade: string, standard: string } => {
-            const [domain, cluster, grade, standard] = ccss.split('.');
-            return { domain, cluster, grade, standard }
+        const deconstructCCSS = (ccss: string): { grade: string, domain: string, cluster: string, standard: string } => {
+            const [grade, domain, cluster, standard] = ccss.split('.');
+            return { grade, domain, cluster, standard }
         }
-        const {domain, cluster, grade, standard} = deconstructCCSS(ccss);
+        const {grade, domain, cluster, standard} = deconstructCCSS(ccss);
         const instructions = JSON.stringify(createQuestionTemplateInput.correctCard.answerSteps);
         const choicesIncorrect = createQuestionTemplateInput.incorrectCards.map(card => {
             return {

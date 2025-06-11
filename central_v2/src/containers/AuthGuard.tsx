@@ -71,6 +71,13 @@ export default function AuthGuard ({
         return <Navigate to="/" replace />;
       }
       break;
+    case UserStatusType.NONVERIFIED:
+       // if logged out user tries to access pages that require authentication
+        if (!isSignupPage) {
+          return <Navigate to="/signup" replace />;
+        }
+
+      break;
 
     // when a user successfull is logged in with aws and local credentials
     case UserStatusType.LOGGEDIN:

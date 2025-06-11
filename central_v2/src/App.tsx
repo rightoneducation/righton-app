@@ -17,7 +17,7 @@ import { ScreenType } from './lib/CentralModels';
 
 function App() {
   const { apiClients, loading } = useAPIClients(
-    Environment.Developing,
+    Environment.Staging,
     AppType.CENTRAL,
   );
 

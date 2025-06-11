@@ -151,6 +151,7 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
     };
 
     const handleSubmit = async () => {
+        console.log("UserStatus in here: ", centralData)
         setIsVerifying(true);
         const fullCode = code.join('');
         if (fullCode.length < 6) {

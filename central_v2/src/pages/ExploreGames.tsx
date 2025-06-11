@@ -57,7 +57,6 @@ export default function ExploreGames({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   
-  
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = centralData?.searchTerms?.length > 0;

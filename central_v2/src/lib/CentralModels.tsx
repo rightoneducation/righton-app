@@ -17,7 +17,8 @@ export enum UserStatusType {
   LOADING,
   GOOGLE_SIGNIN,
   GOOGLE_SIGNUP,
-  GOOGLE_ERROR
+  GOOGLE_ERROR,
+  NONVERIFIED,
 }
 
 export enum ScreenType {
@@ -235,3 +236,8 @@ export interface ICentralDataState {
     direction: SortDirection | null;
   }
 }
+
+export const userNameOverrides = [
+  { raw: ' .. RightOn', display: 'RightOn' },
+  { raw: ' .. BGCP', display: 'BGCP' },
+]

@@ -301,7 +301,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const randomIndex = Math.floor(Math.random() * 5) + 1;
       
       updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg`};
-      
       await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;

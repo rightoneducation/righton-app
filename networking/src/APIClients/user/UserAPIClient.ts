@@ -146,11 +146,12 @@ export class UserAPIClient
       input: { email},
     };
     try {
-      const response = await this.mutateGraphQL(
+      const response = await this.callGraphQL(
         deleteUnverifiedUser,
         variables as unknown as GraphQLOptions
       ) as {data: { deleteUnverifiedUser: string }};
       const result = response.data.deleteUnverifiedUser;
+      console.log("deleteUnverifiedUser result:", result);
       return result;
     } catch (e) {
       return null;
@@ -166,15 +167,12 @@ export class UserAPIClient
     let variables: UpdateUserPassMutationVariables = {
       input,
     };
-    console.log(variables);
-    console.log("▶️ Sending mutation:", updateUserPass);
     try {
       const response = await this.callGraphQL<UpdateUserPassMutation>(
         updateUserPass,
         variables as unknown as GraphQLOptions
       ) as {data: {updateUserPass: string}};
       const result = response.data.updateUserPass;
-      console.log(result);
       return result;
     } catch (e) {
       console.error(e);

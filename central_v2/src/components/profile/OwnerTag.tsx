@@ -5,7 +5,7 @@ import { CloudFrontDistributionUrl } from '@righton/networking';
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import placeHolderProfilePicture from '../../images/placeholderProfilePic.png';
 import OwnerNamePill from './OwnerNamePill';
-import { ScreenSize } from '../../lib/CentralModels';
+import { ScreenSize, userNameOverrides } from '../../lib/CentralModels';
 import rightOnLogo from '../../images/RightOnUserLogo.svg';
 
 interface OwnerTagProps {
@@ -99,7 +99,8 @@ export default function OwnerTag({
     if (centralData.selectedGame){
       const { profilePic, createdName, lastModified, timesPlayed } = centralData.selectedGame;
       displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
-      displayCreatedName = createdName ?? '';
+      const override = userNameOverrides.find(o => createdName.includes(o.raw));
+      displayCreatedName = override ? override.display : createdName;
       displayNumUsed = timesPlayed ?? 0;
       displayLastModified = (lastModified ?? new Date()).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -110,7 +111,8 @@ export default function OwnerTag({
   } else if (centralData.selectedQuestion){ 
       const { profilePic, createdName, lastModified, timesPlayed } = centralData.selectedQuestion;
       displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
-      displayCreatedName = createdName ?? '';
+      const override = userNameOverrides.find(o => createdName.includes(o.raw));
+      displayCreatedName = override ? override.display : createdName;
       displayNumUsed = timesPlayed ?? 0;
       displayLastModified = (lastModified ?? new Date()).toLocaleDateString('en-US', {
         year: 'numeric',
