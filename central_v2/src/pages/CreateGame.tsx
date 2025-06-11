@@ -265,14 +265,13 @@ export default function CreateGame({
         const newQuestions = draftQuestionsList.filter((dq) => !dq.questionTemplate.id);
         const newQuestionPromises = buildQuestionTemplatePromises(newQuestions, userId, apiClients);
         const newQuestionPromisesResponse = await Promise.all(newQuestionPromises);
-
         const newQuestionTemplateIds = newQuestionPromisesResponse.map(
           (question) => String(question?.id),
         );
         // added questions are those added from question bank (they are already created so have ids)
         const addedQuestionTemplateIds = draftQuestionsList.filter((dq) => dq.questionTemplate.id).map((draftQuestion) => draftQuestion.questionTemplate.id);
-
-        const questionTemplateIds = [...newQuestionTemplateIds, ...addedQuestionTemplateIds];
+        const filteredQuestionTemplateIds = addedQuestionTemplateIds.filter((dq) => !originalQuestionTemplates.map((oq) => oq.id).includes(dq));
+        const questionTemplateIds = [...newQuestionTemplateIds, ...filteredQuestionTemplateIds];
         
         // make sure we have a gameTemplate id as well as question template ids before creating a game question
         if (draftGame.gameTemplate.id && questionTemplateIds.length > 0) {
@@ -419,12 +418,11 @@ export default function CreateGame({
           // create & store game template in variable to retrieve id after response
           const createGame = buildGameTemplate(draftGameCopy, userId, draftQuestionsList, gameImgUrl);
           const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
-              draftGameCopy.publicPrivateGame,
+              PublicPrivateType.DRAFT,
               createGame,
             );
-            
           // convert questions to array of promises & write to db
-          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
+          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients, PublicPrivateType.DRAFT);
           const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
           // create an array of all the ids from the response 
@@ -439,7 +437,8 @@ export default function CreateGame({
                 draftGameCopy, 
                 gameTemplateResponse.id, 
                 questionTemplateIds, 
-                apiClients
+                apiClients,
+                PublicPrivateType.DRAFT
               );
               // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
                 await Promise.all(createGameQuestions);
@@ -653,12 +652,14 @@ export default function CreateGame({
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
+    console.log(`Selected question index changed to: ${index}`);
     if(draftGame.openQuestionBank) {
       setDraftGame((prev) => toggleCreateQuestion(draftGame, gameFormIsValid))
     }
   };
 
   const handleAddMoreQuestions = () => {
+    const numOfQuestions = draftQuestionsList.length;
     setDraftQuestionsList((prev) => [...prev, { ...draftTemplate, publicPrivate: draftGame.gameTemplate.publicPrivateType }]);
     setDraftGame((prev) => ({
       ...prev,
@@ -666,6 +667,8 @@ export default function CreateGame({
       isGameCardSubmitted: false,
     }));
     setIconButtons((prev) => [...prev, prev.length + 1]);
+    const newIndex = numOfQuestions;
+    setSelectedQuestionIndex(newIndex );
   };
 
   const handleDeleteQuestion = (index: number) => {
@@ -734,6 +737,10 @@ export default function CreateGame({
         phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
       });
       const originals = selected?.game?.questionTemplates;
+      if (originals && originals.length > 0) {
+        const oqTemplates = originals.map(q => q.questionTemplate);
+        setOriginalQuestionTemplates(oqTemplates);
+      }
       const assembled = originals?.map(q =>
         assembleQuestionTemplate(q.questionTemplate)
       );
@@ -757,8 +764,6 @@ export default function CreateGame({
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }
   }, [centralData.selectedGame, route, selectedGameId ]); // eslint-disable-line 
-  console.log('draftQuestionsList', draftQuestionsList);
-  console.log(selectedQuestionIndex, 'selectedQuestionIndex');
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
@@ -778,7 +783,7 @@ export default function CreateGame({
       />
 
       {/* tracks ccss state according to index */}
-      {draftQuestionsList.length > 0 && selectedQuestionIndex && draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
+      {(draftQuestionsList.length > 0 && selectedQuestionIndex !== null && draftQuestionsList[selectedQuestionIndex] != null && draftQuestionsList[selectedQuestionIndex]?.isCCSSVisibleModal) && (
         <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={
@@ -793,7 +798,7 @@ export default function CreateGame({
       )}
 
       {/* open modals according to correct index */}
-      {draftQuestionsList.length > 0 && (
+      {draftQuestionsList.length > 0 && selectedQuestionIndex !== null && draftQuestionsList[selectedQuestionIndex] != null &&(
         <ImageUploadModal
           draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
           screenSize={screenSize}

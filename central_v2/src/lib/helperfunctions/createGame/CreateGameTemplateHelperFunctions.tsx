@@ -1,6 +1,7 @@
 import {
   CreatePublicGameQuestionsInput,
   CreatePrivateGameQuestionsInput,
+  CreateDraftGameQuestionsInput,
   CreatePrivateGameTemplateInput,
   CreatePublicGameTemplateInput,
   PublicPrivateType,
@@ -12,6 +13,7 @@ import {
   UpdateDraftGameTemplateInput,
   UpdatePrivateGameTemplateInput,
   UpdatePublicGameTemplateInput,
+  CreateDraftGameTemplateInput,
 } from '@righton/networking';
 import {
   TDraftQuestionsList,
@@ -22,10 +24,13 @@ import { reverseTimesMap } from '../../../components/cards/creategamecard/time';
 
 type GameTemplate =
   | CreatePrivateGameTemplateInput
-  | CreatePublicGameTemplateInput;
+  | CreatePublicGameTemplateInput
+  | CreateDraftGameTemplateInput;
+
 type GameQuestionTemplate =
   | CreatePublicGameQuestionsInput
-  | CreatePrivateGameQuestionsInput;
+  | CreatePrivateGameQuestionsInput
+  | CreateDraftGameQuestionsInput;
 
 type EditedGameTemplate = 
   | UpdatePrivateGameTemplateInput
@@ -271,7 +276,14 @@ export const buildGameQuestion = (
   draftGame: TGameTemplateProps,
   gameTemplateId: string,
   questionTemplateId: string,
+  type?: PublicPrivateType,
 ): GameQuestionTemplate => {
+  if (type === PublicPrivateType.DRAFT) {
+    return {
+      draftGameTemplateID: String(gameTemplateId),
+      draftQuestionTemplateID: String(questionTemplateId),
+    }
+  }
   return {
     ...(draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC
       ? {
@@ -290,15 +302,17 @@ export const buildGameQuestionPromises = (
   gameTemplateId: string,
   questionTemplateIds: string[],
   apiClients: IAPIClients,
+  type?: PublicPrivateType,
 ) => {
   return questionTemplateIds.map(async (questionId, i) => {
     const gameQuestion = buildGameQuestion(
       draftGame,
       String(gameTemplateId),
       String(questionId),
+      type
     );
     const response = await apiClients.gameQuestions.createGameQuestions(
-      draftGame.gameTemplate.publicPrivateType,
+      type === PublicPrivateType.DRAFT ? PublicPrivateType.DRAFT : draftGame.gameTemplate.publicPrivateType,
       gameQuestion,
     );
     console.log(

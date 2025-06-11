@@ -35,6 +35,8 @@ export class GameTemplateParser {
                         template = item.publicQuestionTemplate;
                     } else if (publicPrivate === PublicPrivateType.PRIVATE && item.privateQuestionTemplate) {
                         template = item.privateQuestionTemplate;
+                    } else if (publicPrivate === PublicPrivateType.DRAFT && item.draftQuestionTemplate) {
+                        template = item.draftQuestionTemplate;
                     } else {
                         continue;
                     }

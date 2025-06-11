@@ -11,15 +11,20 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
     ): Promise<IGameQuestion> {
         const variables: GameQuestionType<T>['create']['variables'] = { input } as GameQuestionType<T>['create']['variables'];
         const { queryFunction } = gameQuestionRuntimeMap[type]['create'];
-        const gameQuestions = await this.callGraphQL<GameQuestionType<T>['create']['query']>(
-            queryFunction, variables
-        ) as { data: any };
-        const createType = `create${type}GameQuestions`;
+        try{
+            const gameQuestions = await this.callGraphQL<GameQuestionType<T>['create']['query']>(
+                queryFunction, variables
+            ) as { data: any };
         
-        if (isNullOrUndefined(gameQuestions?.data || gameQuestions?.data[createType])) {
-            throw new Error(`Failed to create gameQuestions.`);
+            const createType = `create${type}GameQuestions`;
+            if (isNullOrUndefined(gameQuestions?.data || gameQuestions?.data[createType])) {
+                throw new Error(`Failed to create gameQuestions.`);
+            }
+            return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions?.data[createType] as AWSGameQuestion, type) as IGameQuestion;
+          }catch (error) {
+            console.error('Error creating game questions:', error);
+            throw new Error(`Failed to create gameQuestions: ${error}`);
         }
-        return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions?.data[createType] as AWSGameQuestion, type) as IGameQuestion;
     }
 
     async getGameQuestions<T extends PublicPrivateType>(

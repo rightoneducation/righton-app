@@ -110,8 +110,7 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
         newPassword: confirmPassword,
         confirmationCode: fullCode,
       });
-      setIsVerifying(false);
-
+      
       // update local user profile if it's a password update
       if(action === 'update') {
         const newUser = {
@@ -120,9 +119,11 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
         }
         const localProfile = await apiClients.centralDataManager?.userProfileInformationUpdate(newUser, centralData.userProfile);
         centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile?.updatedUser });
+        setIsVerifying(false);
         navigate("/userprofile");
       } else {
         await apiClients.user.updateUserPass(userName, confirmPassword);
+        setIsVerifying(false);
         navigate('/login');
       }
     } catch (error: any) {

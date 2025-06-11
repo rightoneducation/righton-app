@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, Box} from '@material-ui/core';
 import Modal from 'react-modal';
-import OnboardingLogo from '../images/OnboardingLogo.png';
+import OnboardingLogo from '../images/OnboardingLogo.svg';
 import OnboardingPickAGame from '../images/OnboardingPickAGame.png';
 import OnboardingShareYourGame from '../images/OnboardingShareYourGame.png';
 import OnboardingPlayOnAnyDevice from '../images/OnboardingPlayOnAnyDevice.png';
