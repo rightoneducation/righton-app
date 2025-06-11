@@ -22,7 +22,7 @@ function App() {
   );
 
   function RedirectToCentralIfMissing() {
-    window.location.href = 'http://central.rightoneducation.com/';
+    window.location.href = 'http://dev-central.rightoneducation.com/';
     return null;
   }
 
