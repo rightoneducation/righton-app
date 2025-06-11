@@ -235,3 +235,8 @@ export interface ICentralDataState {
     direction: SortDirection | null;
   }
 }
+
+export const userNameOverrides = [
+  { raw: ' .. RightOn', display: 'RightOn' },
+  { raw: ' .. BGCP', display: 'BGCP' },
+]

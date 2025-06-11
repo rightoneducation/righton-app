@@ -66,7 +66,7 @@ export default function OwnerCard({
         <LeftProfileContainer>
         <LeftProfileTopContainer>
             <LeftNameText>
-            {`${draftUserProfile.title} ${draftUserProfile.lastName}`}
+            {`${(draftUserProfile.title !== 'Title...') ? draftUserProfile.title : ''} ${draftUserProfile.lastName}`}
             </LeftNameText>
             <img src={imageLink} alt="Right On Logo" style={{ width: '165px', height: '165px', borderRadius: '128px', objectFit: 'cover' }} />
             <Box style={{width: '140px'}}>
@@ -123,14 +123,14 @@ export default function OwnerCard({
         <TopProfileContainer>
             <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
                 <TopNameText>
-                    Ms. Clark
+                    {`${(draftUserProfile.title !== 'Title...') ? draftUserProfile.title : ''} ${draftUserProfile.lastName}`}
                 </TopNameText>
             </Box>
             <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
             <MobileUserNameContainer >
-                <img src={profilePic} alt="Right On Logo" style={{ width: '50px', height: '50px' }} />
+                <img src={imageLink} alt="Right On Logo" style={{ width: '50px', height: '50px' }} />
                 <AtUserNameText>
-                    @clarkinator27
+                    @{draftUserProfile.userName}
                 </AtUserNameText>
             </MobileUserNameContainer>
             </Box>
@@ -170,7 +170,7 @@ export default function OwnerCard({
                             Account Created
                         </LeftAccountCreatedInfo>
                         <LeftDateText>
-                            11/18/2023
+                            {formatted}
                         </LeftDateText>
                     </LeftAccountCreatedContainer>
                 </TopSubContainer>
