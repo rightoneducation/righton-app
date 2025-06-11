@@ -171,6 +171,7 @@ export class AuthAPIClient
     try{
       user = await signIn({username: username, password: password}); 
     } catch (e: any) {
+      console.log("E: ", e)
       throw new Error (e);
     }
     return user;

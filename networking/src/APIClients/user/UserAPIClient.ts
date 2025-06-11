@@ -146,11 +146,12 @@ export class UserAPIClient
       input: { email},
     };
     try {
-      const response = await this.mutateGraphQL(
+      const response = await this.callGraphQL(
         deleteUnverifiedUser,
         variables as unknown as GraphQLOptions
       ) as {data: { deleteUnverifiedUser: string }};
       const result = response.data.deleteUnverifiedUser;
+      console.log("deleteUnverifiedUser result:", result);
       return result;
     } catch (e) {
       return null;

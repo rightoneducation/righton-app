@@ -20,6 +20,7 @@ import LoginErrorModal from '../components/modal/LoginErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import { UserStatusType } from '../lib/CentralModels';
 import { useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
+import NotVerifiedModal from '../components/modal/NotVerifiedModal';
 
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
@@ -174,6 +175,9 @@ export default function Login({ handleLogOut }:LoginProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   
+  const [isNonVerifiedModalOpen, setIsNonVerifiedModalOpen] = useState(false);
+
+
   const centralDataDispatch = useCentralDataDispatch();
 
   const handleLoginClick = async () => {
@@ -185,9 +189,17 @@ export default function Login({ handleLogOut }:LoginProps) {
       setIsLoggingIn(false);
       navigate('/');
     } catch (error) {
-      setIsModalOpen(true);
+
+      // TODO: Needs to check for actual verification.
+      // Signin just returns bad requrest 400 instead of giving specific errors.
+      
+      if (error instanceof Error && error.message.includes("UserUnAuthenticatedException: User needs to be authenticated to call this API")){
+        const response = await apiClients.user.deleteUnverifiedUser(userName)
+      } else{
+        setIsModalOpen(true);
+      }
       setIsLoggingIn(false);
-      console.error('Error during login:', error);
+      console.error(error);
     }
   };
 
