@@ -405,7 +405,6 @@ export default function SignUp({
     } catch (error: any) {
       setIsModalOpen(true);
       setLoading(false);
-      console.log(error)
       setErrorMessage(error.message || 'An error occurred during sign up');
     }
     setLoading(false);

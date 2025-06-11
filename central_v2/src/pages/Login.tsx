@@ -189,8 +189,12 @@ export default function Login({ handleLogOut }:LoginProps) {
       setIsLoggingIn(false);
       navigate('/');
     } catch (error) {
+
+      // TODO: Needs to check for actual verification.
+      // Signin just returns bad requrest 400 instead of giving specific errors.
+      
       if (error instanceof Error && error.message.includes("UserUnAuthenticatedException: User needs to be authenticated to call this API")){
-        setIsNonVerifiedModalOpen(true)
+        const response = await apiClients.user.deleteUnverifiedUser(userName)
       } else{
         setIsModalOpen(true);
       }
@@ -234,7 +238,6 @@ export default function Login({ handleLogOut }:LoginProps) {
     <SignUpMainContainer>
       <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleLogOut={handleLogOut}/>
       <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
-      <NotVerifiedModal isNonVerifiedModalOpen={isNonVerifiedModalOpen} setIsNonVerifiedModalOpen={setIsNonVerifiedModalOpen} email={userName}/>
       <InnerBodyContainer>
         <UpperLogin>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
