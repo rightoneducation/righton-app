@@ -1,5 +1,13 @@
 import React from 'react';
-import { Box, Typography, Grid, TextField, Paper, Button, styled } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Grid,
+  TextField,
+  Paper,
+  Button,
+  styled,
+} from '@mui/material';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
@@ -12,9 +20,9 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
     display: 'none',
   },
   scrollbarWidth: 'none', // Firefox
-  msOverflowStyle: 'none', 
+  msOverflowStyle: 'none',
   boxSizing: 'border-box',
-  display: 'flex'
+  display: 'flex',
 }));
 
 export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
@@ -32,9 +40,8 @@ export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
     url(${mathSymbolsBackground})
   `,
   backgroundSize: 'cover, contain',
-  overflow: 'hidden'
+  overflow: 'hidden',
 }));
-
 
 export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -60,14 +67,18 @@ export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface BaseCardStyledProps {
-  isHighlight: boolean,
-  isCardComplete: boolean
-  isClone?: boolean,
-  dropShadow?: boolean
+  isHighlight: boolean;
+  isCardComplete: boolean;
+  isClone?: boolean;
+  dropShadow?: boolean;
 }
 
 export const BaseCardStyled = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete' && prop !== 'dropShadow' && prop !== 'isClone',
+  shouldForwardProp: (prop) =>
+    prop !== 'isHighlight' &&
+    prop !== 'isCardComplete' &&
+    prop !== 'dropShadow' &&
+    prop !== 'isClone',
 })<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete, isClone }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
@@ -78,7 +89,9 @@ export const BaseCardStyled = styled(Paper, {
   borderRadius: `8px`,
   boxSizing: 'border-box',
   height: 'fit-content',
-  boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
+  boxShadow: isHighlight
+    ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}`
+    : '',
   opacity: isCardComplete && !isClone ? 0.6 : 1,
   transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
@@ -92,22 +105,21 @@ export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({
 type SelectAnswerSettingProps = {
   error: boolean;
   isSelected: boolean;
-}
+};
 
 export const SelectAnswerSettingLabel = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== "error"
-})<SelectAnswerSettingProps>(({theme, error, isSelected}) => ({
-    color: error ? '#D0254D': theme.palette.primary.sliderBlue,
-    fontFamily: "Rubik",
-    fontSize: 14,
-    fontWeight: isSelected ? 'normal':'bold',
-    margin: 0,
-}))
+  shouldForwardProp: (prop) => prop !== 'error',
+})<SelectAnswerSettingProps>(({ theme, error, isSelected }) => ({
+  color: error ? '#D0254D' : theme.palette.primary.sliderBlue,
+  fontFamily: 'Rubik',
+  fontSize: 14,
+  fontWeight: isSelected ? 'normal' : 'bold',
+  margin: 0,
+}));
 
 interface TextContainerStyledProps {
-  isAIEnabled?: boolean,
+  isAIEnabled?: boolean;
 }
-
 
 export const TextContainerStyled = styled(TextField, {
   shouldForwardProp: (prop) => prop !== 'isAIEnabled',
@@ -118,19 +130,25 @@ export const TextContainerStyled = styled(TextField, {
   boxSizing: 'border-box',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   backgroundColor: '#FFFFFF', // Set background color to white
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
       borderWidth: `2px`,
-      borderColor: isAIEnabled ? `${theme.palette.primary.darkPurple}`: `${theme.palette.primary.grey}`,
+      borderColor: isAIEnabled
+        ? `${theme.palette.primary.darkPurple}`
+        : `${theme.palette.primary.grey}`,
       borderRadius: `${theme.sizing.xSmPadding}px`,
-     },
-    "&.Mui-focused fieldset": {
-      borderWidth: `2px`,
-      borderColor: isAIEnabled ? `${theme.palette.primary.darkPurple}`: `${theme.palette.primary.grey}`,
     },
-    "&:hover fieldset": {
+    '&.Mui-focused fieldset': {
       borderWidth: `2px`,
-      borderColor: isAIEnabled ? `${theme.palette.primary.extraDarkPurple}`: `${theme.palette.primary.extraDarkGrey}`,
+      borderColor: isAIEnabled
+        ? `${theme.palette.primary.darkPurple}`
+        : `${theme.palette.primary.grey}`,
+    },
+    '&:hover fieldset': {
+      borderWidth: `2px`,
+      borderColor: isAIEnabled
+        ? `${theme.palette.primary.extraDarkPurple}`
+        : `${theme.palette.primary.extraDarkGrey}`,
     },
     '&.Mui-error fieldset': {
       borderWidth: '2px',
@@ -139,23 +157,25 @@ export const TextContainerStyled = styled(TextField, {
   },
 }));
 
-export const ImageURLTextContainerStyled = styled(TextContainerStyled)(({ theme }) => ({
-  height: '60px',
-  input: {
-    color: "#000",
-    zIndex: 1
-  },
-  '& .MuiInputBase-input': {
-    width: `calc(100% - 130px)`,
-  },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      height: '60px',
-      backgroundColor: `${theme.palette.primary.uploadLightGrey}`,
-      zIndeX: 0
+export const ImageURLTextContainerStyled = styled(TextContainerStyled)(
+  ({ theme }) => ({
+    height: '60px',
+    input: {
+      color: '#000',
+      zIndex: 1,
     },
-  }
-}));
+    '& .MuiInputBase-input': {
+      width: `calc(100% - 130px)`,
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        height: '60px',
+        backgroundColor: `${theme.palette.primary.uploadLightGrey}`,
+        zIndeX: 0,
+      },
+    },
+  }),
+);
 
 export const ImageURLUploadButton = styled(Box)(({ theme }) => ({
   width: '100px',
@@ -164,15 +184,15 @@ export const ImageURLUploadButton = styled(Box)(({ theme }) => ({
   fontSize: '18px',
   backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  borderColor: `${theme.palette.primary.uploadDarkGrey}`, 
+  borderColor: `${theme.palette.primary.uploadDarkGrey}`,
   borderStyle: 'solid',
   borderWidth: '2px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   cursor: 'pointer',
-  "&:hover": {
-    backgroundColor: `${theme.palette.primary.uploadLightGrey}`
+  '&:hover': {
+    backgroundColor: `${theme.palette.primary.uploadLightGrey}`,
   },
   position: 'absolute',
   top: 0,
@@ -180,7 +200,7 @@ export const ImageURLUploadButton = styled(Box)(({ theme }) => ({
   zIndex: 2,
   boxSizing: 'border-box',
   marginTop: '8px',
-  marginRight: '10px'
+  marginRight: '10px',
 }));
 
 export const RegenTextContainerStyled = styled(TextField)(({ theme }) => ({
@@ -189,7 +209,7 @@ export const RegenTextContainerStyled = styled(TextField)(({ theme }) => ({
   padding: 0,
   boxSizing: 'border-box',
   borderRadius: `${theme.sizing.xSmPadding}px`,
-  "& .MuiOutlinedInput-root": {
+  '& .MuiOutlinedInput-root': {
     backgroundColor: `${theme.palette.primary.greyPurple}`,
   },
 }));

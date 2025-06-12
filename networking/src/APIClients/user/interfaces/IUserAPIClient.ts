@@ -22,6 +22,10 @@ export interface IUserAPIClient {
     userName: string
   ): Promise<IUser | null>;
 
+  getUserByEmail( 
+    email: string
+  ): Promise<IUser | null>;
+
   getUser(
     id: string
   ): Promise<IUser | null>;
@@ -29,4 +33,13 @@ export interface IUserAPIClient {
   updateUser( 
     updateUserInput: UpdateUserInput
   ): Promise<IUser | null>;
+
+  updateUserPass(
+    email: string,
+    pass: string
+  ): Promise<string | null>;
+
+  deleteUnverifiedUser(
+    id: string
+  ): Promise<string | null>;
 }

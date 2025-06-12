@@ -1,7 +1,4 @@
-import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
-import { CookieStorage  } from 'aws-amplify/utils';
-import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { 
   signUp, 
   confirmSignUp, 
@@ -13,19 +10,21 @@ import {
   resetPassword, 
   SignInOutput,
   resendSignUpCode,
+  confirmResetPassword,
   type ResetPasswordOutput,
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
   AuthSession,
   decodeJWT,
-  updateUserAttributes
+  updateUserAttributes,
+  ConfirmResetPasswordInput
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
-import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { userCleaner } from "../../graphql";
 import { IUserProfile } from "../../Models/IUserProfile";
+import { GraphQLAuthMode } from './interfaces/IAuthAPIClient';
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -34,13 +33,6 @@ export class AuthAPIClient
 
   constructor(){
     this.isUserAuth = false;
-    this.configAmplify(amplifyconfig);
-  }
-
-  configAmplify(awsconfig: any): void {
-    Amplify.configure(awsconfig);
-    // change userPools auth storage to cookies so that auth persists across central/host apps for signed-in teachers
-    cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
   }
 
   async verifyAuth(): Promise<boolean> {
@@ -89,9 +81,10 @@ export class AuthAPIClient
     return session;
   }
 
-  async awsUserCleaner(user: IUserProfile): Promise<void> {
+  async awsUserCleaner(user: IUserProfile, authOverride?: GraphQLAuthMode): Promise<void> {
     const authSession = await fetchAuthSession();
-    const authMode = this.isUserAuth ? "userPool" : "iam"
+    const authMode: GraphQLAuthMode =
+      authOverride ?? (this.isUserAuth ? "userPool" : "iam");
     const input = JSON.stringify({user: user, authSession: authSession});
     const variables = { input };
     const client = generateClient({});
@@ -141,16 +134,23 @@ export class AuthAPIClient
   }
 
   async awsSignUp(username: string, email: string, password: string) {
-    await signUp({
-      username: email,
-      password: password,
-      options: {
-        userAttributes: {
-          nickname: username,
-          email: email,
-        },
-      }
-    });
+    try {
+      await signUp({
+        username: email,
+        password: password,
+        options: {
+          userAttributes: {
+            nickname: username,
+            email: email,
+          },
+        }
+      });
+    }catch (e: any) {
+      // aws sets some generic error messages, so we add our own code in
+      console.log(e);
+      const [ _, msg ] = e.message.split('|', 2); 
+      throw new Error(`${msg}`);
+    }
   }
 
   // not using a hub listener here and elsewhere as we need more fine-grained control over
@@ -158,6 +158,8 @@ export class AuthAPIClient
   async awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput> {
     try {
     const response = await confirmSignUp({username: email, confirmationCode: code});
+    console.log('here');
+    console.log(response);
     return response;
     } catch (e: any) {
       throw new Error (e);
@@ -169,6 +171,7 @@ export class AuthAPIClient
     try{
       user = await signIn({username: username, password: password}); 
     } catch (e: any) {
+      console.log("E: ", e)
       throw new Error (e);
     }
     return user;
@@ -184,6 +187,11 @@ export class AuthAPIClient
     const output = await resetPassword({ username });
     return output
   }
+
+
+  async awsConfirmResetPassword(input: ConfirmResetPasswordInput): Promise<void> {
+    await confirmResetPassword(input);
+  };
 
   async awsSignOut(): Promise<void> {
     await amplifySignOut();   

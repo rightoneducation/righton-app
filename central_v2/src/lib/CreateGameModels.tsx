@@ -1,11 +1,11 @@
-import { 
-    PublicPrivateType, 
-    CentralQuestionTemplateInput, 
-    IQuestionTemplate, 
-    IGameTemplate,
-    AnswerType
-} from "@righton/networking";
-import { CreateQuestionHighlightCard } from "./CentralModels";
+import {
+  PublicPrivateType,
+  CentralQuestionTemplateInput,
+  IQuestionTemplate,
+  IGameTemplate,
+  AnswerType,
+} from '@righton/networking';
+import { CreateQuestionHighlightCard } from './CentralModels';
 
 // draft game type
 // Create Game
@@ -15,7 +15,6 @@ export type TGameTemplateProps = {
   questionCount: number;
   openQuestionBank: boolean;
   openCreateQuestion: boolean;
-  publicPrivateGame: PublicPrivateType;
   isGameCardErrored: boolean;
   isGameImageUploadVisible: boolean;
   isGameURLUploadVisible: boolean;
@@ -25,7 +24,7 @@ export type TGameTemplateProps = {
   imageUrl?: string | undefined;
 };
 
-// draft questions 
+// draft questions
 export type TDraftQuestionsList = {
   publicPrivate: PublicPrivateType;
   isAIEnabled: boolean;
@@ -47,117 +46,120 @@ export type TDraftQuestionsList = {
 
 // empty centralQuestionTemplate for creating question templates
 export const newEmptyTemplate: CentralQuestionTemplateInput = {
-    questionCard: {
-      title: '',
-      ccss: 'CCSS',
-      isFirstEdit: true,
-      isCardComplete: false,
+  questionCard: {
+    title: '',
+    ccss: 'CCSS',
+    isFirstEdit: true,
+    isCardComplete: false,
+  },
+  correctCard: {
+    answer: '',
+    answerSteps: ['', '', ''],
+    answerSettings: {
+      answerType: AnswerType.MULTICHOICE,
     },
-    correctCard: {
+    isFirstEdit: true,
+    isCardComplete: false,
+  },
+  incorrectCards: [
+    {
+      id: 'card-1',
       answer: '',
-      answerSteps: ['', '', ''],
-      answerSettings: {
-        answerType: AnswerType.MULTICHOICE,
-      },
+      explanation: '',
       isFirstEdit: true,
       isCardComplete: false,
     },
-    incorrectCards: [
-      {
-        id: 'card-1',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-      {
-        id: 'card-2',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-      {
-        id: 'card-3',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-    ],
-  };
+    {
+      id: 'card-2',
+      answer: '',
+      explanation: '',
+      isFirstEdit: true,
+      isCardComplete: false,
+    },
+    {
+      id: 'card-3',
+      answer: '',
+      explanation: '',
+      isFirstEdit: true,
+      isCardComplete: false,
+    },
+  ],
+};
 
-  // empty question template
-  export const emptyQuestionTemplate: IQuestionTemplate = {
-    id: '',
-    userId: '',
-    title: '',
-    lowerCaseTitle: '',
-    version: 0,
-    ccss: '',
-    domain: '',
-    cluster: '',
-    grade: '',
-    gradeFilter: '',
-    standard: '',
-    gameTemplatesCount: 0,
-    timesPlayed: 0,
-  };
+// empty question template
+export const emptyQuestionTemplate: IQuestionTemplate = {
+  id: '',
+  userId: '',
+  publicPrivateType: PublicPrivateType.PUBLIC,
+  title: '',
+  lowerCaseTitle: '',
+  version: 0,
+  ccss: '',
+  domain: '',
+  cluster: '',
+  grade: '',
+  gradeFilter: '',
+  standard: '',
+  gameTemplatesCount: 0,
+  timesPlayed: 0,
+};
 
-  export const draftTemplate: TDraftQuestionsList = {
-    publicPrivate: PublicPrivateType.PUBLIC,
-    isAIEnabled: false,
-    isAIError: false,
-    question: newEmptyTemplate,
-    questionImageModalIsOpen: false,
-    isCCSSVisibleModal: false,
-    isImageUploadVisible: false,
-    isImageURLVisible: false,
-    isCreatingTemplate: false,
-    isQuestionCardErrored: false,
-    isQuestionCardSubmitted: false,
-    isCloneQuestionImageChanged: false,
-    highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
-    isMultipleChoice: true,
-    isLibraryViewOnly: false,
-    questionTemplate: emptyQuestionTemplate,
-  };
+export const draftTemplate: TDraftQuestionsList = {
+  publicPrivate: PublicPrivateType.PUBLIC,
+  isAIEnabled: false,
+  isAIError: false,
+  question: newEmptyTemplate,
+  questionImageModalIsOpen: false,
+  isCCSSVisibleModal: false,
+  isImageUploadVisible: false,
+  isImageURLVisible: false,
+  isCreatingTemplate: false,
+  isQuestionCardErrored: false,
+  isQuestionCardSubmitted: false,
+  isCloneQuestionImageChanged: false,
+  highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
+  isMultipleChoice: true,
+  isLibraryViewOnly: false,
+  questionTemplate: emptyQuestionTemplate,
+};
 
-  export type TPhaseTime = {
-    phaseOne: string;
-    phaseTwo: string;
-  };
+export type TPhaseTime = {
+  phaseOne: string;
+  phaseTwo: string;
+};
 
-  export const newGameTemplate: IGameTemplate = {
-    id: '',
-    userId: '',
-    title: '',
-    lowerCaseTitle: '',
-    owner: '',
-    version: 0,
-    description: '',
-    lowerCaseDescription: '',
-    phaseOneTime: 0,
-    phaseTwoTime: 0,
-    questionTemplatesCount: 0,
-    questionTemplatesOrder: [],
-    imageUrl: null,
-    timesPlayed: 0,
-    questionTemplates: [{ gameQuestionId: String(0), questionTemplate: emptyQuestionTemplate }],
-  };
+export const newGameTemplate: IGameTemplate = {
+  id: '',
+  userId: '',
+  publicPrivateType: PublicPrivateType.PUBLIC,
+  title: '',
+  lowerCaseTitle: '',
+  owner: '',
+  version: 0,
+  description: '',
+  lowerCaseDescription: '',
+  phaseOneTime: 0,
+  phaseTwoTime: 0,
+  questionTemplatesCount: 0,
+  questionTemplatesOrder: [],
+  imageUrl: null,
+  timesPlayed: 0,
+  questionTemplates: [
+    { gameQuestionId: String(0), questionTemplate: emptyQuestionTemplate },
+  ],
+};
 
-  export const gameTemplate: TGameTemplateProps = {
-    gameTemplate: newGameTemplate,
-    isGameCardErrored: false,
-    isGameCardSubmitted: false,
-    questionCount: 1,
-    openCreateQuestion: false,
-    openQuestionBank: false,
-    publicPrivateGame: PublicPrivateType.PUBLIC,
-    isGameImageUploadVisible: false,
-    isGameURLUploadVisible: false,
-    isCloneGameImageChanged: false,
-    isCreatingTemplate: false,
-    image: null,
-    imageUrl: '',
-  };
+export const gameTemplate: TGameTemplateProps = {
+  gameTemplate: newGameTemplate,
+  isGameCardErrored: false,
+  isGameCardSubmitted: false,
+  questionCount: 1,
+  openCreateQuestion: false,
+  openQuestionBank: false,
+  isGameImageUploadVisible: false,
+  isGameURLUploadVisible: false,
+  isCloneGameImageChanged: false,
+  isCreatingTemplate: false,
+  image: null,
+  imageUrl: '',
+};

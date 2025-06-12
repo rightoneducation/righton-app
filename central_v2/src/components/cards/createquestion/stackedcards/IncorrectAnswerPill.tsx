@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, styled, useTheme } from '@mui/material';
 
-const StyledPill = styled(Box)(({theme}) => ({
+const StyledPill = styled(Box)(({ theme }) => ({
   width: 'fit-content',
   height: '22px',
   borderRadius: '20px',
@@ -11,7 +11,7 @@ const StyledPill = styled(Box)(({theme}) => ({
   minWidth: '30px',
   display: 'flex',
   justifyContent: 'center',
-  alignItems: 'center'
+  alignItems: 'center',
 }));
 
 interface IncorrectAnswerPillProps {
@@ -19,28 +19,27 @@ interface IncorrectAnswerPillProps {
   index: number;
 }
 
-export default function IncorrectAnswerPill({index, selectedIndex}: IncorrectAnswerPillProps){
+export default function IncorrectAnswerPill({
+  index,
+  selectedIndex,
+}: IncorrectAnswerPillProps) {
   const theme = useTheme();
   const style = () => {
-    switch (true){
+    switch (true) {
       case selectedIndex === index:
-        return { 
+        return {
           color: theme.palette.primary.main,
-          background: theme.palette.primary.darkBlue
+          background: theme.palette.primary.darkBlue,
         };
-      case (selectedIndex > index):
-        return { 
+      case selectedIndex > index:
+        return {
           color: theme.palette.primary.main,
           background: `${theme.palette.primary.darkBlue}65`,
           borderColor: `rgba(164, 173, 192)`,
-        } 
+        };
       default:
-        return {background: 'transparent'};
+        return { background: 'transparent' };
     }
   };
-  return (
-    <StyledPill style={style()}>
-      {index + 1}
-    </StyledPill>
-  )
+  return <StyledPill style={style()}>{index + 1}</StyledPill>;
 }

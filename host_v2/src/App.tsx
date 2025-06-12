@@ -19,6 +19,7 @@ function RedirectToCentralIfMissing() {
 
 function App() {
   const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.HOST);
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
@@ -28,7 +29,7 @@ function App() {
             <Route path="/host/:gameSessionId" element={<GameSessionWrapper apiClients={apiClients} />}/>
           </>
         }
-        <Route path="*" />
+        <Route path="*" element={(!loading && !apiClients) ? <RedirectToCentralIfMissing /> : null}  />
       </>
     ));
 

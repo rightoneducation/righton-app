@@ -19,7 +19,9 @@ interface SkeletonQuestionCardProps {
   index: number;
 }
 
-export default function SkeletonQuestionCard({ index }: SkeletonQuestionCardProps) {
+export default function SkeletonQuestionCard({
+  index,
+}: SkeletonQuestionCardProps) {
   const theme = useTheme();
   return (
     <Fade
@@ -32,42 +34,47 @@ export default function SkeletonQuestionCard({ index }: SkeletonQuestionCardProp
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
-          gap: '12px'
+          gap: '12px',
         }}
       >
-        <Skeleton animation="wave" variant="rounded" width="100%" height="186px"/>
+        <Skeleton
+          animation="wave"
+          variant="rounded"
+          width="100%"
+          height="186px"
+        />
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignContents: 'center',
             justifyContent: 'space-between',
-            paddingLeft:  `${theme.sizing.mdPadding}px`,
+            paddingLeft: `${theme.sizing.mdPadding}px`,
             paddingRight: `${theme.sizing.mdPadding}px`,
             paddingBottom: `${theme.sizing.mdPadding}px`,
-            gap: '12px'
+            gap: '12px',
           }}
         >
           <Box sx={{ display: 'flex', gap: 2 }}>
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={40}
-                height={15}
-              />
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={40}
-                height={15}
-              />
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={40}
-                height={15}
-              />
-            </Box>
+            <Skeleton
+              animation="wave"
+              variant="rounded"
+              width={40}
+              height={15}
+            />
+            <Skeleton
+              animation="wave"
+              variant="rounded"
+              width={40}
+              height={15}
+            />
+            <Skeleton
+              animation="wave"
+              variant="rounded"
+              width={40}
+              height={15}
+            />
+          </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Skeleton
               animation="wave"
@@ -98,14 +105,14 @@ export default function SkeletonQuestionCard({ index }: SkeletonQuestionCardProp
           <Skeleton
             animation="wave"
             variant="rounded"
-            width='100%'
-            height='38px'
+            width="100%"
+            height="38px"
           />
           <Skeleton
             animation="wave"
             variant="rounded"
-            width='100%'
-            height='38px'
+            width="100%"
+            height="38px"
           />
         </Box>
       </QuestionCard>

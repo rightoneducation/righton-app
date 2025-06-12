@@ -35,6 +35,8 @@ export class GameTemplateParser {
                         template = item.publicQuestionTemplate;
                     } else if (publicPrivate === PublicPrivateType.PRIVATE && item.privateQuestionTemplate) {
                         template = item.privateQuestionTemplate;
+                    } else if (publicPrivate === PublicPrivateType.DRAFT && item.draftQuestionTemplate) {
+                        template = item.draftQuestionTemplate;
                     } else {
                         continue;
                     }
@@ -54,6 +56,7 @@ export class GameTemplateParser {
        const {
           id,
           userId,
+          publicPrivateType,
           title,
           lowerCaseTitle,
           owner,
@@ -74,9 +77,18 @@ export class GameTemplateParser {
         const phaseOneTime = awsGameTemplate.phaseOneTime ?? 0;
         const phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 0;
 
+
+    
+      const isPublicPrivateValid = (x: any): x is PublicPrivateType => {
+        return Object.values(PublicPrivateType).includes(x);
+      }
+
+      const parsedPublicPrivate = isPublicPrivateValid(publicPrivateType) ? publicPrivateType : PublicPrivateType.PUBLIC;
+
       const gameTemplate: IGameTemplate = {
           id,
           userId,
+          publicPrivateType: parsedPublicPrivate,
           title,
           lowerCaseTitle,
           owner,

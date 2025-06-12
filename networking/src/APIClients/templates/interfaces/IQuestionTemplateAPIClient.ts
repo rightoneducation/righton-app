@@ -216,7 +216,11 @@ export const questionTemplateRuntimeMap = {
   }
 }
 
-export type QuestionTemplateType<T extends PublicPrivateType> = T extends 'Public' ? IPublicQuestionTemplate : IPrivateQuestionTemplate;
+export type QuestionTemplateType<T extends PublicPrivateType> =
+  T extends "Public" ? IPublicQuestionTemplate :
+  T extends "Private" ? IPrivateQuestionTemplate :
+  IDraftQuestionTemplate;
+
 
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate<T extends PublicPrivateType>(
@@ -239,9 +243,17 @@ export interface IQuestionTemplateAPIClient {
     id: string
   ): Promise<IQuestionTemplate>;
 
+  getQuestionTemplateJoinTableIds<T extends PublicPrivateType>(
+    type: T,
+    id: string
+  ): Promise<string[]>;
+
   updateQuestionTemplate<T extends PublicPrivateType>(
     type: T,
-    updateQuestionTemplateInput: QuestionTemplateType<T>['update']['input'] | IQuestionTemplate
+    imageUrl: string,
+    userId: string,
+    updateQuestionTemplateInput: CentralQuestionTemplateInput,
+    questionId: string
   ): Promise<IQuestionTemplate>;
 
   deleteQuestionTemplate<T extends PublicPrivateType>(

@@ -1,7 +1,7 @@
 type User @model
 @auth(
   rules:  [
-    { allow: public, provider: iam  },
+    { allow: public, operations: [read, update], provider: iam  },
     { allow: owner, provider: userPools },
     { allow: private, operations: [read], provider: userPools },  
   ]
@@ -45,9 +45,10 @@ type Mutation {
     ]
   )
   userCleaner(input: String!): String 
-  @function(name: "UserCleaner-${env}") 
+  @function(name: "userCleaner-${env}") 
   @auth(
     rules: [
+      { allow: public, provider: iam  },
       { allow: private, provider: userPools }
     ]
   )
@@ -77,6 +78,35 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+
+  deleteUnverifiedUser(input: DeleteUnverifiedUserInput): String
+  @function(name: "unverifiedDelete-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools },
+      { allow: owner, provider: userPools }
+    ]
+  )
+
+  updateUserPass(input: UpdateUserPassInput): String
+  @function(name: "updateUserPass-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools },
+      { allow: owner, provider: userPools }
+    ]
+  )
+}
+
+input DeleteUnverifiedUserInput {
+  email: String!
+}
+
+input UpdateUserPassInput {
+  email: String!,
+  pass: String!
 }
 
 input TeacherIdAuthInput {
@@ -120,6 +150,7 @@ type PublicGameTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -161,6 +192,7 @@ type PrivateGameTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -201,6 +233,7 @@ type DraftGameTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -215,6 +248,7 @@ type DraftGameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
+  timesPlayed: Int
   questionTemplates: [DraftQuestionTemplate] @manyToMany(relationName: "DraftGameQuestions")
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
@@ -242,6 +276,7 @@ type PublicQuestionTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -280,6 +315,7 @@ type PrivateQuestionTemplate @model
 {
   id: ID!
   userId: String
+  publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -318,6 +354,7 @@ type DraftQuestionTemplate @model
 {
   id: ID
   userId: String
+  publicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -331,6 +368,7 @@ type DraftQuestionTemplate @model
   gradeFilter: String
   standard: String
   imageUrl: String
+  timesPlayed: Int
   gameTemplates: [DraftGameTemplate] @manyToMany(relationName: "DraftGameQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime

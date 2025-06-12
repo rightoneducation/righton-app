@@ -1,6 +1,6 @@
 import { Environment } from '../interfaces/IBaseAPIClient';
 import { ICentralDataManagerAPIClient } from './interfaces/ICentralDataManagerAPIClient';
-import { IGameTemplateAPIClient, IQuestionTemplateAPIClient } from '../templates';
+import { IGameTemplateAPIClient, IQuestionTemplateAPIClient, IGameQuestionsAPIClient } from '../templates';
 import { PublicPrivateType, SortDirection, GradeTarget, SortType } from "../BaseAPIClient";
 import { IUserProfile } from '../../Models/IUserProfile';
 import { IAuthAPIClient } from '../auth';
@@ -19,6 +19,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   protected authAPIClient: IAuthAPIClient;
   protected userAPIClient: IUserAPIClient;
   protected gameTemplateAPIClient: IGameTemplateAPIClient;
+  protected gameQuestionsAPIClient: IGameQuestionsAPIClient;
   protected questionTemplateAPIClient: IQuestionTemplateAPIClient;
 
   constructor (
@@ -26,12 +27,14 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     authAPIClient: IAuthAPIClient,
     userAPIClient: IUserAPIClient,
     gameTemplateAPIClient: IGameTemplateAPIClient,
+    gameQuestionsAPIClient: IGameQuestionsAPIClient,
     questionTemplateAPIClient: IQuestionTemplateAPIClient,
   ) {
     this.env = env;
     this.authAPIClient = authAPIClient;
     this.userAPIClient = userAPIClient;
     this.gameTemplateAPIClient = gameTemplateAPIClient;
+    this.gameQuestionsAPIClient = gameQuestionsAPIClient;
     this.questionTemplateAPIClient = questionTemplateAPIClient;
   } 
   
@@ -57,14 +60,17 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       newFavoriteGameTemplateIds = newFavoriteGameTemplateIds.filter((id: string) => id !== gameId);
     else 
       newFavoriteGameTemplateIds.push(gameId);
-    console.log(newFavoriteGameTemplateIds);
-    console.log(user);
     return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
   };
 
-  public favoriteQuestionTemplate = async (questionId: string, favorite: boolean) => {
-    console.log(questionId);
-    console.log(favorite);
+  public favoriteQuestionTemplate = async (questionId: string, user: IUserProfile) => {
+    let newFavoriteQuestionTemplateIds = user.favoriteQuestionTemplateIds ? JSON.parse(JSON.stringify(user.favoriteQuestionTemplateIds)) : [];
+    const isFav = newFavoriteQuestionTemplateIds.includes(questionId);
+    if (isFav === true)
+      newFavoriteQuestionTemplateIds = newFavoriteQuestionTemplateIds.filter((id: string) => id !== questionId);
+    else 
+      newFavoriteQuestionTemplateIds.push(questionId);
+    return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteQuestionTemplateIds: JSON.stringify(newFavoriteQuestionTemplateIds) });
   };
 
   public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null) => {
@@ -137,6 +143,48 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, questions: []};
   };
 
+  public removeQuestionTemplateFromGameTemplate = async (type: PublicPrivateType, questionId: string, gameId: string) => {
+    const gameQuestionIds = await this.questionTemplateAPIClient.getQuestionTemplateJoinTableIds(type, questionId);
+    const gameQuestionId = gameQuestionIds.find((id) => id === gameId);
+
+    if (gameQuestionId) {
+      try {
+        await this.gameQuestionsAPIClient.deleteGameQuestions(type, gameQuestionId);
+        return true;
+      } catch (error: any) {
+        throw new Error(`Failed to delete game question associated with question template: ${error.message}`);
+      }
+    }
+    return false;
+  };
+
+  public deleteQuestionTemplate = async (type: PublicPrivateType, questionId: string) => {
+    try {
+      // need to delete the question template from the join table first
+      const gameQuestionIds = await this.questionTemplateAPIClient.getQuestionTemplateJoinTableIds( type, questionId);
+      if (gameQuestionIds && gameQuestionIds.length > 0) {
+        const deletedGameQuestions = gameQuestionIds.map(async (gameQuestionId) => {
+          await this.gameQuestionsAPIClient.deleteGameQuestions(type, gameQuestionId);
+        });
+        Promise.all(deletedGameQuestions).then(() =>{
+          // Now delete the question template itself
+          const response = this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
+          return response;
+        })
+        .catch((error) => {
+          throw new Error(`Failed to delete game questions associated with question template: ${error.message}`);
+        });
+      } else {
+        // If there are no game questions associated with the question template, delete the question template directly
+        const response = this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
+        return response;
+      }
+      return;
+    } catch (error: any) {
+        throw new Error(`Failed to delete question template: ${error.message}`);
+    }
+  };
+
   public refreshLocalUserProfile = async () => {
     const localUser = window.localStorage.getItem(userProfileLocalStorage);
     const parsedLocalUser = localUser ? JSON.parse(localUser) : null;
@@ -172,7 +220,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   }
 
   public getUser = async (cognitoId: string) => {
-    console.log('At GetUser');
     const userProfile = await this.userAPIClient.getUserByCognitoId(cognitoId);
     if (userProfile !== null){
       this.setLocalUserProfile(userProfile);
@@ -184,14 +231,9 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   public loginUserAndRetrieveUserProfile = async (userName: string, password: string) => {
     let userProfile = null;
     try {
-      const response = await this.authAPIClient.awsSignIn(userName, password);
-      console.log(response);
+      await this.authAPIClient.awsSignIn(userName, password);
       const currentCognitoUser = await getCurrentUser();
-      console.log(currentCognitoUser);
       const attributes = await fetchUserAttributes();
-      const session = await this.authAPIClient.getCurrentSession();
-      console.log(session);
-      console.log(attributes);
       if (!attributes || !attributes.nickname) 
         return null;
       const currentDynamoDBUser = await this.userAPIClient.getUserByUserName(attributes.nickname);
@@ -259,7 +301,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const randomIndex = Math.floor(Math.random() * 5) + 1;
       
       updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg`};
-      
       await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
@@ -278,8 +319,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     if(getEmail){
       user.email = getEmail;
     }
-    console.log(this.authAPIClient.verifyAuth());
-    console.log(this.authAPIClient.getCurrentSession());
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
     let updatedUser = JSON.parse(JSON.stringify(user));
     let firstName = createUserInput.firstName;
@@ -297,7 +336,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const randomIndex = Math.floor(Math.random() * 5) + 1;
 
       updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg` };
-      console.log(updatedUser);
       await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
@@ -320,7 +358,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
     if(updatedUser.userName != oldUserInput.userName){
       try {
-        console.log("Updating userName in Cognito!!")
         await this.authAPIClient.updateCognitoUsername(updatedUser.userName)
       }
       catch (error: any) {
@@ -335,7 +372,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
           this.authAPIClient.awsUploadImagePrivate(backImage) as any
         ]);
         updatedUser = {...updatedUser, frontIdPath: upadtingImages[0].path, backIdPath: upadtingImages[1].path}
-        console.log("Uploaded front image and back Image: ", upadtingImages)
       }
       catch (error: any) {
         throw new Error (JSON.stringify(error));
@@ -346,7 +382,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         try {
           const uploadedFront = await this.authAPIClient.awsUploadImagePrivate(frontImage) as any;
           updatedUser = { ...updatedUser, frontIdPath: uploadedFront.path };
-          console.log("Uploaded front image:", uploadedFront);
         } catch (error: any) {
           throw new Error(`Front image upload failed: ${JSON.stringify(error)}`);
         }
@@ -355,7 +390,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         try {
           const uploadedBack = await this.authAPIClient.awsUploadImagePrivate(backImage) as any;
           updatedUser = { ...updatedUser, backIdPath: uploadedBack.path };
-          console.log("Uploaded back image:", uploadedBack);
         } catch (error: any) {
           throw new Error(`Back image upload failed: ${JSON.stringify(error)}`);
         }

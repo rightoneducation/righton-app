@@ -23,6 +23,7 @@ interface PrepareGameContentProps {
   localGameSession: IGameSession;
   screenSize: ScreenSize;
   currentQuestion: IQuestion;
+  isGameSettingMultiChoice: boolean;
   isShortAnswerEnabled: boolean;
   setIsShortAnswerEnabled: (value: boolean) => void;
   isConfidenceEnabled: boolean;
@@ -35,6 +36,7 @@ export default function PrepareGameContent({
   localGameSession,
   screenSize,
   currentQuestion,
+  isGameSettingMultiChoice,
   isShortAnswerEnabled,
   setIsShortAnswerEnabled,
   isConfidenceEnabled,
@@ -47,6 +49,7 @@ export default function PrepareGameContent({
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
       <ScrollBoxStyled>
         <EnableShortAnswerCard
+          isGameSettingMultiChoice={isGameSettingMultiChoice}
           isShortAnswerEnabled={isShortAnswerEnabled}
           setIsShortAnswerEnabled={setIsShortAnswerEnabled}
         />

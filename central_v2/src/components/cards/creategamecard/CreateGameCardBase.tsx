@@ -11,7 +11,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
-  CloudFrontDistributionUrl 
+  CloudFrontDistributionUrl,
 } from '@righton/networking';
 import {
   ContentContainerStyled,
@@ -41,14 +41,16 @@ import {
   CreateGameTitleBarStyled,
   CreateGameTitleText,
   GameContentContainerStyled,
-  TooltipStyled
+  TooltipStyled,
 } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 import { TPhaseTime, TGameTemplateProps } from '../../../lib/CreateGameModels';
 
 interface CreateGameCardBaseProps {
   draftGame: TGameTemplateProps;
   isClone: boolean;
+  isEdit: boolean;
   isCloneImageChanged: boolean;
+  label: string;
   screenSize: ScreenSize;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
@@ -67,7 +69,9 @@ interface CreateGameCardBaseProps {
 export default function CreateGameCardBase({
   draftGame,
   isClone,
+  isEdit,
   isCloneImageChanged,
+  label,
   screenSize,
   handleImageUploadClick,
   handlePublicPrivateChange,
@@ -87,16 +91,17 @@ export default function CreateGameCardBase({
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
-  const [completedCardClicked, setCompletedCardClicked] = React.useState<boolean>(false);
-  const [publicPrivateWarning, setPublicPrivateWarning] = React.useState<boolean>(false);
-  
+  const [completedCardClicked, setCompletedCardClicked] =
+    React.useState<boolean>(false);
+  const [publicPrivateWarning, setPublicPrivateWarning] =
+    React.useState<boolean>(false);
+
   let imageLink: string | null = null;
-  if (imageUrl){
+  if (imageUrl) {
     imageLink = imageUrl;
-    if (isClone && !isCloneImageChanged)
+    if ((isClone || isEdit) && !isCloneImageChanged)
       imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
-  }
-  else if (image && image instanceof File)
+  } else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
 
   const imageContents = [
@@ -106,10 +111,10 @@ export default function CreateGameCardBase({
         onMouseLeave={() => setIsImageHovered(false)}
         style={{
           width: '100%',
-          height: screenSize === ScreenSize.LARGE ||
-          screenSize === ScreenSize.MEDIUM
-            ? '204px'
-            : '202px',
+          height:
+            screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM
+              ? '204px'
+              : '202px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -163,8 +168,8 @@ export default function CreateGameCardBase({
     (isCardSubmitted && (!gameDescription || gameDescription.length === 0)) ||
     (isCardErrored && (!gameDescription || gameDescription.length === 0));
 
-    // TODO: Add image to validation
-    const cardIsComplete = 
+  // TODO: Add image to validation
+  const cardIsComplete =
     Boolean(draftGame.image || draftGame.imageUrl) &&
     phaseTime.phaseOne !== '' &&
     phaseTime.phaseTwo !== '' &&
@@ -172,22 +177,22 @@ export default function CreateGameCardBase({
     gameTitle !== '' &&
     (openCreateQuestion || openQuestionBank);
 
-    const handleCardClick = () => {
-      if(cardIsComplete) {
-        // temp solution for now
-        setCompletedCardClicked(true)
-      }
-    };
-
-    const handleOpenPublicPrivateWarning = () => {
-      if(openCreateQuestion || openQuestionBank) {
-        setPublicPrivateWarning(true);
-      }
+  const handleCardClick = () => {
+    if (cardIsComplete) {
+      // temp solution for now
+      setCompletedCardClicked(true);
     }
+  };
 
-    const handleClosePublicPrivateWarning = () => {
-      setPublicPrivateWarning(false);
+  const handleOpenPublicPrivateWarning = () => {
+    if (openCreateQuestion || openQuestionBank) {
+      setPublicPrivateWarning(true);
     }
+  };
+
+  const handleClosePublicPrivateWarning = () => {
+    setPublicPrivateWarning(false);
+  };
 
   return (
     <BaseCardStyled
@@ -199,11 +204,11 @@ export default function CreateGameCardBase({
       sx={{
         height: responsiveHeight,
         gap: responsiveGap,
-        width: "100%",
+        width: '100%',
         maxWidth: '672px',
         padding: screenSize === ScreenSize.LARGE ? '28px' : '24px',
         borderRadius: '8px',
-         boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)",
+        boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
       }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>
@@ -221,7 +226,7 @@ export default function CreateGameCardBase({
             align={screenSize === ScreenSize.SMALL ? 'left' : 'inherit'}
             sx={{ color: '#384466' }}
           >
-            Create Game
+            {label} Game
           </CreateGameTitleText>
           <Stack
             direction="row"
@@ -250,27 +255,31 @@ export default function CreateGameCardBase({
 
         {screenSize !== ScreenSize.SMALL && (
           <TooltipStyled
-          placement="top" 
-          open={publicPrivateWarning} 
-          onOpen={handleOpenPublicPrivateWarning}
-          onClose={handleClosePublicPrivateWarning} 
-          title="Cannot edit while adding questions"
-          arrow
+            placement="top"
+            open={publicPrivateWarning}
+            onOpen={handleOpenPublicPrivateWarning}
+            onClose={handleClosePublicPrivateWarning}
+            title="Cannot edit while adding questions"
+            arrow
           >
-          <Box
-            sx={{
-              display: 'flex',
-              gap: '16px',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <PublicPrivateButton
-            isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
-            onHandlePublicPrivateChange={handlePublicPrivateChange}  
-            isDisabled={openCreateQuestion || openQuestionBank} />
-          </Box>
-            </TooltipStyled>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '16px',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <PublicPrivateButton
+                isPublic={
+                  draftGame.gameTemplate.publicPrivateType ===
+                  PublicPrivateType.PUBLIC
+                }
+                onHandlePublicPrivateChange={handlePublicPrivateChange}
+                isDisabled={openCreateQuestion || openQuestionBank || isEdit}
+              />
+            </Box>
+          </TooltipStyled>
         )}
       </CreateGameTitleBarStyled>
       <GameContentContainerStyled screenSize={screenSize}>
@@ -322,10 +331,10 @@ export default function CreateGameCardBase({
               '& .MuiInputBase-root': {
                 height: screenSize === ScreenSize.SMALL ? '138px' : '119px',
                 fontFamily: 'Rubik',
-                padding: '12px 10px'
+                padding: '12px 10px',
               },
               '& .MuiOutlinedInput-input': {
-                paddingBottom: screenSize === ScreenSize.SMALL ? 2:1,
+                paddingBottom: screenSize === ScreenSize.SMALL ? 2 : 1,
               },
             }}
             multiline
@@ -339,8 +348,8 @@ export default function CreateGameCardBase({
                 <InputAdornment
                   position="start"
                   sx={{
-                    alignSelf: "flex-start",
-                    mt: screenSize === ScreenSize.SMALL ? "12px" : "7px",
+                    alignSelf: 'flex-start',
+                    mt: screenSize === ScreenSize.SMALL ? '12px' : '7px',
                   }}
                 >
                   <ErrorIcon src={errorIcon} alt="error icon" />
@@ -394,27 +403,31 @@ export default function CreateGameCardBase({
             <>
               {isCardErrored && <CreateGameErrorBox screenSize={screenSize} />}
               <TooltipStyled
-                open={publicPrivateWarning} 
+                open={publicPrivateWarning}
                 onOpen={handleOpenPublicPrivateWarning}
-                onClose={handleClosePublicPrivateWarning} 
+                onClose={handleClosePublicPrivateWarning}
                 title="Cannot edit while adding questions"
                 arrow
-                >
-              <Box
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  gap: '8px',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
               >
-                <PublicPrivateButton
-                isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
-                onHandlePublicPrivateChange={handlePublicPrivateChange} 
-                isDisabled={openCreateQuestion || openQuestionBank} />
-              </Box>
-                </TooltipStyled>
+                <Box
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    gap: '8px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <PublicPrivateButton
+                    isPublic={
+                      draftGame.gameTemplate.publicPrivateType ===
+                      PublicPrivateType.PUBLIC
+                    }
+                    onHandlePublicPrivateChange={handlePublicPrivateChange}
+                    isDisabled={openCreateQuestion || openQuestionBank}
+                  />
+                </Box>
+              </TooltipStyled>
             </>
           )}
         </Box>

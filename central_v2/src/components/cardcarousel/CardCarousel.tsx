@@ -15,7 +15,10 @@ import placeHolder from '../../images/placeHolder.svg';
 import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import { ScreenSize } from '../../lib/CentralModels';
-import { useCentralDataDispatch, useCentralDataState } from '../../hooks/context/useCentralDataContext';
+import {
+  useCentralDataDispatch,
+  useCentralDataState,
+} from '../../hooks/context/useCentralDataContext';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './CardCarousel.css';
@@ -46,20 +49,22 @@ export default function CardCarousel<
   };
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const favoriteQuestionTemplateIds = centralData.userProfile?.favoriteQuestionTemplateIds;
-  const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
+  const favoriteQuestionTemplateIds =
+    centralData.userProfile?.favoriteQuestionTemplateIds;
+  const favoriteGameTemplateIds =
+    centralData.userProfile?.favoriteGameTemplateIds;
 
   const handleCloneButtonClick = (element: IQuestionTemplate) => {
     centralDataDispatch({
       type: 'SET_SELECTED_QUESTION',
       payload: element,
     });
-    navigate(`/clone/question/${element.id}`);
-  }
+    navigate(`/clone/question/${element.publicPrivateType}/${element.id}`);
+  };
   return (
     <Swiper
       style={{
-        width: '100%'
+        width: '100%',
       }}
       modules={[Pagination]}
       pagination={{
@@ -73,7 +78,7 @@ export default function CardCarousel<
       }}
       ref={swiperRef}
       spaceBetween={theme.sizing.smPadding}
-      slidesPerView='auto'
+      slidesPerView="auto"
       updateOnWindowResize
       navigation
       loop
@@ -87,7 +92,12 @@ export default function CardCarousel<
         if (elementType === ElementType.GAME) {
           const gameElement = element as IGameTemplate;
           return (
-            <SwiperSlide key={uuidv4()} style={{width: screenSize !== ScreenSize.LARGE ? '290px' : '385px'}}>
+            <SwiperSlide
+              key={uuidv4()}
+              style={{
+                width: screenSize !== ScreenSize.LARGE ? '290px' : '385px',
+              }}
+            >
               {gameElement ? (
                 <StyledGameCard
                   screenSize={screenSize}
@@ -96,14 +106,20 @@ export default function CardCarousel<
                   title={gameElement.title}
                   description={gameElement.description}
                   image={gameElement.imageUrl || placeHolder}
-                  isFavorite={favoriteGameTemplateIds?.includes(gameElement.id) || false}
+                  isFavorite={
+                    favoriteGameTemplateIds?.includes(gameElement.id) || false
+                  }
                   isCarousel
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
                   }
                 />
               ) : (
-                <SkeletonGameCard isCarousel screenSize={screenSize} index={index} />
+                <SkeletonGameCard
+                  isCarousel
+                  screenSize={screenSize}
+                  index={index}
+                />
               )}
             </SwiperSlide>
           );
@@ -118,7 +134,10 @@ export default function CardCarousel<
                 title={questionElement.title}
                 image={questionElement.imageUrl || placeHolder}
                 isCarousel
-                isFavorite={favoriteQuestionTemplateIds?.includes(questionElement.id) || false}
+                isFavorite={
+                  favoriteQuestionTemplateIds?.includes(questionElement.id) ||
+                  false
+                }
                 handleViewButtonClick={
                   handleViewButtonClick as (element: IQuestionTemplate) => void
                 }

@@ -10,15 +10,16 @@ export class QuestionTemplateParser {
     static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
         imageUrl: string,
         userId: string,
-        createQuestionTemplateInput: CentralQuestionTemplateInput
+        createQuestionTemplateInput: CentralQuestionTemplateInput,
+        id?: string
     ): QuestionTemplateType<T>['create']['input']{
         const {title, ccss } = createQuestionTemplateInput.questionCard;
         const lowerCaseTitle = title.toLowerCase();
-        const deconstructCCSS = (ccss: string): { domain: string, cluster: string, grade: string, standard: string } => {
-            const [domain, cluster, grade, standard] = ccss.split('.');
-            return { domain, cluster, grade, standard }
+        const deconstructCCSS = (ccss: string): { grade: string, domain: string, cluster: string, standard: string } => {
+            const [grade, domain, cluster, standard] = ccss.split('.');
+            return { grade, domain, cluster, standard }
         }
-        const {domain, cluster, grade, standard} = deconstructCCSS(ccss);
+        const {grade, domain, cluster, standard} = deconstructCCSS(ccss);
         const instructions = JSON.stringify(createQuestionTemplateInput.correctCard.answerSteps);
         const choicesIncorrect = createQuestionTemplateInput.incorrectCards.map(card => {
             return {
@@ -31,6 +32,7 @@ export class QuestionTemplateParser {
         const choices = JSON.stringify([choicesCorrect, ...choicesIncorrect]);
         const answerSettings = JSON.stringify(createQuestionTemplateInput.correctCard.answerSettings);
         const questionTemplate: QuestionTemplateType<T>['create']['input'] = {
+            ...(id && id.length > 0 ? { id } : {}),
             title,
             userId,
             lowerCaseTitle,
@@ -64,6 +66,8 @@ export class QuestionTemplateParser {
                         template = item.publicGameTemplate;
                     } else if (publicPrivate === PublicPrivateType.PRIVATE && item.privateGameTemplate) {
                         template = item.privateGameTemplate;
+                    } else if (publicPrivate === PublicPrivateType.DRAFT && item.draftGameTemplate) {
+                        template = item.draftGameTemplate;
                     } else {
                        continue;
                     }
@@ -100,6 +104,7 @@ export class QuestionTemplateParser {
       const {
           id,
           userId,
+          publicPrivateType,
           title,
           lowerCaseTitle,
           owner,
@@ -124,11 +129,18 @@ export class QuestionTemplateParser {
           )
       }
 
+      const isPublicPrivateValid = (x: any): x is PublicPrivateType => {
+        return Object.values(PublicPrivateType).includes(x);
+      }
+
+      const parsedPublicPrivate = isPublicPrivateValid(publicPrivateType) ? publicPrivateType : PublicPrivateType.PUBLIC;
+
       const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
       const questionTemplate: IQuestionTemplate = {
           id,
           userId,
+          publicPrivateType: parsedPublicPrivate,
           title,
           lowerCaseTitle: lowerCaseTitle ?? '',
           owner: owner ?? '',

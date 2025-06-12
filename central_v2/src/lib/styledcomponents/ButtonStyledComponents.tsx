@@ -5,6 +5,7 @@ type ButtonStyledProps = {
   buttonColor: ButtonColor;
   buttonType: ButtonType;
   isOnQuestionTab?: boolean;
+  isReset?: boolean;
 };
 
 const getBackgroundColor = (theme: any, buttonColor: ButtonColor) => {
@@ -23,13 +24,22 @@ const getBackgroundColor = (theme: any, buttonColor: ButtonColor) => {
   }
 };
 
-const getHoverColor = (theme: any, buttonColor: ButtonColor, buttonType: ButtonType) => {
+const getHoverColor = (
+  theme: any,
+  buttonColor: ButtonColor,
+  buttonType: ButtonType,
+) => {
   switch (buttonColor) {
     case ButtonColor.RED:
       return `${theme.palette.primary.buttonActionHover}`;
     case ButtonColor.NULL:
-      if (buttonType === ButtonType.LOGOUT || ButtonType.EDITPROFILEPICTURE) {
-        return `rgba(255, 255, 255, 0.25)`;
+      if (
+        buttonType === ButtonType.LOGOUT ||
+        buttonType === ButtonType.EDITPROFILEPICTURE ||
+        buttonType === ButtonType.CHANGEIMAGE ||
+        buttonType === ButtonType.SAVEDRAFT
+      ) {
+        return `rgba(0,0,0, 0.1)`;
       }
       return 'transparent';
     case ButtonColor.WHITE:
@@ -51,7 +61,7 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
     case ButtonColor.LIGHTBLUE:
       return `${theme.palette.primary.buttonDraftDisable}`;
     case ButtonColor.WHITE:
-        return `rgba(255, 255, 255,0.50)`;
+      return `rgba(255, 255, 255,0.50)`;
     case ButtonColor.BLUE:
     default:
       return `${theme.palette.primary.buttonPrimaryDisable}`;
@@ -59,27 +69,43 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
 };
 
 export const ButtonStyled = styled(Button, {
-  shouldForwardProp: (prop) => (prop !== 'buttonColor' && prop !== 'isOnQuestionTab'),
-})<ButtonStyledProps>(({ theme, buttonColor, buttonType, isOnQuestionTab }) => ({
-  width: '100%',
-  height: isOnQuestionTab ? '100%' : '38px',
-  padding: isOnQuestionTab ? '8px' : 0,
-  borderRadius: `${theme.sizing.xSmPadding}px`,
-  textTransform: 'none',
-  boxShadow: (isOnQuestionTab || buttonType === ButtonType.LOGOUT || ButtonType.EDITPROFILEPICTURE) ? 'none' : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
-  borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
-  borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
-  borderColor: buttonColor === ButtonColor.NULL ? (buttonType === ButtonType.CHANGEIMAGE ? `${theme.palette.primary.buttonPrimaryDefault}` : `#FFF` ) : 'none', // eslint-disable-line no-nested-ternary
-  backgroundColor: getBackgroundColor(theme, buttonColor),
-  ':hover': {
-    backgroundColor: getHoverColor(theme, buttonColor, buttonType),
-  },
-  '&:disabled': {
-    backgroundColor: getDisableColor(theme, buttonColor),
-  },
-  boxSizing: 'border-box',
-  pointerEvents: 'auto',
-}));
+  shouldForwardProp: (prop) =>
+    prop !== 'buttonColor' && prop !== 'isOnQuestionTab' && prop !== 'isReset',
+})<ButtonStyledProps>(
+  ({ theme, buttonColor, buttonType, isOnQuestionTab, isReset }) => ({
+    width: '100%',
+    height: isOnQuestionTab ? '100%' : '38px',
+    padding: isOnQuestionTab ? '8px' : 0,
+    borderRadius: `${theme.sizing.xSmPadding}px`,
+    textTransform: 'none',
+    boxShadow:
+      isOnQuestionTab ||
+      buttonType === ButtonType.LOGOUT ||
+      ButtonType.EDITPROFILEPICTURE
+        ? 'none'
+        : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
+    borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
+    borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
+    borderColor:
+      buttonColor === ButtonColor.NULL // eslint-disable-line no-nested-ternary
+        ? buttonType === ButtonType.CHANGEIMAGE ||
+          buttonType === ButtonType.SAVEDRAFT ||
+          (buttonType === ButtonType.SIGNUP && isReset) ||
+          (buttonType === ButtonType.BACK && isReset)
+          ? `${theme.palette.primary.buttonPrimaryDefault}`
+          : `#FFF`
+        : 'none',
+    backgroundColor: getBackgroundColor(theme, buttonColor),
+    ':hover': {
+      backgroundColor: getHoverColor(theme, buttonColor, buttonType),
+    },
+    '&:disabled': {
+      backgroundColor: getDisableColor(theme, buttonColor),
+    },
+    boxSizing: 'border-box',
+    pointerEvents: 'auto',
+  }),
+);
 
 export const ButtonContent = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -102,22 +128,37 @@ export const ButtonIconContainer = styled(Box)(({ theme }) => ({
 
 export const ButtonTypography = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'buttonColor',
-})<ButtonStyledProps>(({ theme, buttonColor, buttonType }) => ({
+})<ButtonStyledProps>(({ theme, buttonColor, buttonType, isReset }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
   fontWeight: '600',
   textTransform: 'none',
   padding: 0,
-  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  color:
+    buttonType === ButtonType.CHANGEIMAGE ||
+    buttonType === ButtonType.LOGINHEADER ||
+    buttonType === ButtonType.SAVEDRAFT ||
+    (buttonType === ButtonType.SIGNUP && isReset) ||
+    (buttonType === ButtonType.BACK && isReset)
+      ? `${theme.palette.primary.buttonPrimaryDefault}`
+      : '#FFFFFF',
   whiteSpace: 'nowrap',
 }));
 
-export const ButtonCCSS = styled(Box)(({ theme }) => ({
+interface IButtonCCSS {
+  CCSSIsErrored?: boolean;
+}
+
+export const ButtonCCSS = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'CCSSIsErrored',
+})<IButtonCCSS>(({ theme, CCSSIsErrored }) => ({
   width: 'auto',
   height: '24px',
   padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding + theme.sizing.xxSmPadding}px`,
   borderRadius: '12px',
-  backgroundColor: `${theme.palette.primary.buttonCCSSDefault}`,
+  backgroundColor: CCSSIsErrored
+    ? `${theme.palette.primary.errorColor}`
+    : `${theme.palette.primary.buttonCCSSDefault}`,
   color: '#FFFFFF',
   textTransform: 'none',
   fontFamily: 'Rubik',
@@ -135,9 +176,9 @@ export const ButtonCCSS = styled(Box)(({ theme }) => ({
   '&:hover': {
     backgroundColor: `${theme.palette.primary.buttonCCSSHover}`,
   },
-  "&:disabled": {
+  '&:disabled': {
     backgroundColor: `${theme.palette.primary.buttonCCSSDisable}`,
-  }
+  },
 }));
 
 export const ButtonFavourite = styled(Box)(({ theme }) => ({
@@ -154,7 +195,7 @@ export const ButtonFavourite = styled(Box)(({ theme }) => ({
   right: '4px',
 }));
 
-
 export const ButtonIconBlue = styled('img')(({ theme }) => ({
-  filter: 'brightness(0) saturate(100%) invert(14%) sepia(22%) saturate(7087%) hue-rotate(212deg) brightness(93%) contrast(86%)'
+  filter:
+    'brightness(0) saturate(100%) invert(14%) sepia(22%) saturate(7087%) hue-rotate(212deg) brightness(93%) contrast(86%)',
 }));

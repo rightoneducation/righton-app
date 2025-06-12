@@ -76,35 +76,41 @@ export const SelectArrowContainer = styled(Box, {
 
 export const SelectMenu = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSelectOpen' && prop !== 'screenSize',
-})<{ isSelectOpen: boolean, screenSize: ScreenSize }>(({ theme, isSelectOpen, screenSize }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-  zIndex: 3,
-  background: 'white',
-  gap: `${theme.sizing.xxSmPadding}px`,
-  borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
-  borderTopRightRadius: screenSize === ScreenSize.LARGE ? 0: `${theme.sizing.xSmPadding}px`,
-  borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
-  borderBottomRightRadius: `${theme.sizing.xSmPadding}px`,
-  paddingLeft: '36px',
-  paddingRight: '36px',
-  paddingTop: `${theme.sizing.xSmPadding}px`,
-  paddingBottom: `${theme.sizing.xSmPadding}px`,
-  position: 'absolute',
-  top: '44px',
-  left: 0,
-  width: screenSize === ScreenSize.LARGE ? '100%' : `calc(100vw - 16px - 44px - ${theme.sizing.lgPadding}px - ${theme.sizing.lgPadding}px)`,
-  minWidth: '240px',
-  boxSizing: 'border-box',
-  transition: isSelectOpen
-    ? 'opacity 300ms ease, transform 300ms ease-in-out'
-    : 'opacity 300ms ease, transform 150ms ease-in-out',
-  opacity: isSelectOpen ? 1 : 0,
-  transform: isSelectOpen ? 'translateY(0px)' : 'translateY(-20px)',
-  boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.15)',
-}));
+})<{ isSelectOpen: boolean; screenSize: ScreenSize }>(
+  ({ theme, isSelectOpen, screenSize }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    zIndex: 3,
+    background: 'white',
+    gap: `${theme.sizing.xxSmPadding}px`,
+    borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
+    borderTopRightRadius:
+      screenSize === ScreenSize.LARGE ? 0 : `${theme.sizing.xSmPadding}px`,
+    borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
+    borderBottomRightRadius: `${theme.sizing.xSmPadding}px`,
+    paddingLeft: '36px',
+    paddingRight: '36px',
+    paddingTop: `${theme.sizing.xSmPadding}px`,
+    paddingBottom: `${theme.sizing.xSmPadding}px`,
+    position: 'absolute',
+    top: '44px',
+    left: 0,
+    width:
+      screenSize === ScreenSize.LARGE
+        ? '100%'
+        : `calc(100vw - 16px - 44px - ${theme.sizing.lgPadding}px - ${theme.sizing.lgPadding}px)`,
+    minWidth: '240px',
+    boxSizing: 'border-box',
+    transition: isSelectOpen
+      ? 'opacity 300ms ease, transform 300ms ease-in-out'
+      : 'opacity 300ms ease, transform 150ms ease-in-out',
+    opacity: isSelectOpen ? 1 : 0,
+    transform: isSelectOpen ? 'translateY(0px)' : 'translateY(-20px)',
+    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.15)',
+  }),
+);
 
 export const SelectMenuItem = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -117,6 +123,10 @@ export const SelectMenuItem = styled(Box)(({ theme }) => ({
   paddingBottom: `${theme.sizing.xSmPadding}px`,
   paddingLeft: `${theme.sizing.xSmPadding}px`,
   borderSizing: 'border-box',
+  cursor: 'pointer',
+  '&:hover': {
+    background: `${theme.palette.primary.sortHover}`,
+  },
 }));
 
 export const SelectButtonBox = styled(Box)(({ theme }) => ({

@@ -12,5 +12,5 @@ export const RegenExplanationStyledCard = styled(Box)(({ theme }) => ({ // eslin
   display: 'flex',
   flexDirection: 'column',
   gap: `${theme.sizing.smPadding}px`,
-  position: 'relative'
+  position: 'relative',
 }));

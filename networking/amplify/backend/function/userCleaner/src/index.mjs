@@ -4,13 +4,13 @@
 import AWS from 'aws-sdk';
 
 export const handler = async (event) => {
-    console.log(event)
     let returnMessage = {
         cognito: false,
         dynamo: false,
         frontId: false,
         backId: false
     };
+    
     const response = JSON.parse(event.arguments.input);
     const {user, authSession} = response;
     if (!user && !authSession) {
@@ -22,7 +22,7 @@ export const handler = async (event) => {
     const cognito = new AWS.CognitoIdentityServiceProvider();
     const cognitoDelete = await cognito.adminDeleteUser({
         UserPoolId: process.env.USER_POOL_ID,
-        Username: user.email
+        Id: user.cognitoId
     }).promise();
     returnMessage.cognito = true;
     if (user.dynamoId) {

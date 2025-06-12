@@ -1,13 +1,19 @@
 import {
   CreatePublicGameQuestionsInput,
   CreatePrivateGameQuestionsInput,
+  CreateDraftGameQuestionsInput,
   CreatePrivateGameTemplateInput,
   CreatePublicGameTemplateInput,
   PublicPrivateType,
   IAPIClients,
   CentralQuestionTemplateInput,
   IQuestionTemplate,
-  AnswerType
+  IGameTemplate,
+  AnswerType,
+  UpdateDraftGameTemplateInput,
+  UpdatePrivateGameTemplateInput,
+  UpdatePublicGameTemplateInput,
+  CreateDraftGameTemplateInput,
 } from '@righton/networking';
 import {
   TDraftQuestionsList,
@@ -18,16 +24,24 @@ import { reverseTimesMap } from '../../../components/cards/creategamecard/time';
 
 type GameTemplate =
   | CreatePrivateGameTemplateInput
-  | CreatePublicGameTemplateInput;
+  | CreatePublicGameTemplateInput
+  | CreateDraftGameTemplateInput;
+
 type GameQuestionTemplate =
   | CreatePublicGameQuestionsInput
-  | CreatePrivateGameQuestionsInput;
+  | CreatePrivateGameQuestionsInput
+  | CreateDraftGameQuestionsInput;
+
+type EditedGameTemplate =
+  | UpdatePrivateGameTemplateInput
+  | UpdatePublicGameTemplateInput
+  | UpdateDraftGameTemplateInput;
 
 export const checkGameFormIsValid = (
   draftGame: TGameTemplateProps,
 ): boolean => {
   return (
-    draftGame.gameTemplate.title.trim().length > 0  &&
+    draftGame.gameTemplate.title.trim().length > 0 &&
     draftGame.gameTemplate.description.trim().length > 0 &&
     draftGame.gameTemplate.phaseOneTime !== 0 &&
     draftGame.gameTemplate.phaseTwoTime !== 0
@@ -195,10 +209,62 @@ export const buildGameTemplate = (
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
 ): GameTemplate => {
+  let questionTemplatesOrder: any[] = [];
+  if (draftQuestionsList.length > 0) {
+    questionTemplatesOrder = draftQuestionsList.map((question, index) => {
+      return { questionTemplateId: question.questionTemplate.id, index };
+    });
+  }
+  let gameTemplate: GameTemplate | null = null;
+  gameTemplate = {
+    title: draftGame.gameTemplate.title,
+    userId,
+    lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
+    description: draftGame.gameTemplate.description,
+    lowerCaseDescription: draftGame.gameTemplate.description.toLowerCase(),
+    questionTemplatesCount: draftQuestionsList.length ?? 0,
+    version: 0,
+    phaseOneTime: draftGame.gameTemplate.phaseOneTime,
+    phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
+    ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
+    questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
+    grade:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[0] || '8',
+    gradeFilter:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[0] ?? '',
+    domain:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[1] ?? '',
+    cluster:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[2] ?? '',
+    standard:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[3] ?? '',
+    imageUrl: gameImgUrl,
+    timesPlayed: 0,
+  };
+  return gameTemplate;
+};
+
+export const buildEditedGameTemplate = (
+  draftGame: TGameTemplateProps,
+  userId: string,
+  draftQuestionsList: TDraftQuestionsList[],
+  gameImgUrl?: string | null,
+): EditedGameTemplate => {
   const questionTemplatesOrder = draftQuestionsList.map((question, index) => {
     return { questionTemplateId: question.questionTemplate.id, index };
-  })
+  });
   return {
+    id: draftGame.gameTemplate.id,
     title: draftGame.gameTemplate.title,
     userId,
     lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
@@ -208,30 +274,47 @@ export const buildGameTemplate = (
     version: 0,
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
-    ccss: draftQuestionsList[0].question.questionCard.ccss,
+    ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
     questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
-    grade: draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
+    grade:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[0] || '8',
     gradeFilter:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[0] ?? '',
     domain:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[1] ?? '',
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[1] ?? '',
     cluster:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[2] ?? '',
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[2] ?? '',
     standard:
-      draftQuestionsList[0].question.questionCard.ccss.split('.')[3] ?? '',
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[3] ?? '',
     imageUrl: gameImgUrl,
     timesPlayed: 0,
   };
 };
 
-
 export const buildGameQuestion = (
   draftGame: TGameTemplateProps,
   gameTemplateId: string,
   questionTemplateId: string,
+  type?: PublicPrivateType,
 ): GameQuestionTemplate => {
+  if (type === PublicPrivateType.DRAFT) {
+    return {
+      draftGameTemplateID: String(gameTemplateId),
+      draftQuestionTemplateID: String(questionTemplateId),
+    };
+  }
   return {
-    ...(draftGame.publicPrivateGame === PublicPrivateType.PUBLIC
+    ...(draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC
       ? {
           publicGameTemplateID: String(gameTemplateId),
           publicQuestionTemplateID: String(questionTemplateId),
@@ -248,60 +331,69 @@ export const buildGameQuestionPromises = (
   gameTemplateId: string,
   questionTemplateIds: string[],
   apiClients: IAPIClients,
+  type?: PublicPrivateType,
 ) => {
   return questionTemplateIds.map(async (questionId, i) => {
     const gameQuestion = buildGameQuestion(
       draftGame,
       String(gameTemplateId),
       String(questionId),
+      type,
     );
     const response = await apiClients.gameQuestions.createGameQuestions(
-      draftGame.publicPrivateGame,
+      type === PublicPrivateType.DRAFT
+        ? PublicPrivateType.DRAFT
+        : draftGame.gameTemplate.publicPrivateType,
       gameQuestion,
     );
     console.log(
-      `${draftGame.publicPrivateGame}GameQuestion response`,
+      `${draftGame.gameTemplate.publicPrivateType}GameQuestion response`,
       response,
     );
   });
 };
 
-export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQuestionTemplateInput => {
-    const correctAnswer = template.choices?.find((choice) => choice.isAnswer);
-    const incorrectAnswers = template.choices?.filter((choice) => !choice.isAnswer);
-    const blankIncorrectAnswers = Array.from({ length: 3 }, (_, i) => ({
-        id: `card-${i + 1}`,
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: true
-    }));
-    const incorrectCards = incorrectAnswers?.map((answer, index) => ({
-        id: `card-${index + 1}`,
-        answer: answer.text,
-        explanation: answer.reason,
-        isFirstEdit: true,
-        isCardComplete: true
+export const assembleQuestionTemplate = (
+  template: IQuestionTemplate,
+): CentralQuestionTemplateInput => {
+  const correctAnswer = template.choices?.find((choice) => choice.isAnswer);
+  const incorrectAnswers = template.choices?.filter(
+    (choice) => !choice.isAnswer,
+  );
+  const blankIncorrectAnswers = Array.from({ length: 3 }, (_, i) => ({
+    id: `card-${i + 1}`,
+    answer: '',
+    explanation: '',
+    isFirstEdit: true,
+    isCardComplete: true,
+  }));
+  const incorrectCards =
+    incorrectAnswers?.map((answer, index) => ({
+      id: `card-${index + 1}`,
+      answer: answer.text,
+      explanation: answer.reason,
+      isFirstEdit: true,
+      isCardComplete: true,
     })) ?? blankIncorrectAnswers;
-    
-    return {
-       questionCard: {
-            title: template.title,
-            ccss: template.ccss,
-            isFirstEdit: true,
-            isCardComplete: true,
-            imageUrl: template.imageUrl ?? '',
-        },
-        correctCard: {
-            answer: correctAnswer?.text ?? '',
-            answerSteps: template.instructions ?? [],
-            answerSettings: {
-                answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
-                answerPrecision: template.answerSettings?.answerPrecision
-            },
-            isFirstEdit: true,
-            isCardComplete: true,
-        },
-        incorrectCards,
-    }
-}
+
+  return {
+    questionCard: {
+      title: template.title,
+      ccss: template.ccss,
+      isFirstEdit: true,
+      isCardComplete: true,
+      imageUrl: template.imageUrl ?? '',
+    },
+    correctCard: {
+      answer: correctAnswer?.text ?? '',
+      answerSteps: template.instructions ?? [],
+      answerSettings: {
+        answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
+        answerPrecision: template.answerSettings?.answerPrecision,
+      },
+      isFirstEdit: true,
+      isCardComplete: true,
+    },
+    incorrectCards,
+  };
+};

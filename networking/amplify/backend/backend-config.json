@@ -41,6 +41,15 @@
           "category": "function",
           "resourceName": "mobile6060603cPostConfirmation",
           "triggerProvider": "Cognito"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "mobile6060603cPreSignup",
+          "triggerProvider": "Cognito"
         }
       ],
       "frontendAuthConfig": {
@@ -109,7 +118,22 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "mobile6060603cPreSignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "teacherIdAuth": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "unverifiedDelete": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "updateUserPass": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -192,6 +216,22 @@
         }
       ]
     },
+    "AMPLIFY_function_mobile6060603cPreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPreSignup"
+        }
+      ]
+    },
     "AMPLIFY_function_teacherIdAuth_deploymentBucketName": {
       "usedBy": [
         {
@@ -205,6 +245,38 @@
         {
           "category": "function",
           "resourceName": "teacherIdAuth"
+        }
+      ]
+    },
+    "AMPLIFY_function_unverifiedDelete_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "unverifiedDelete"
+        }
+      ]
+    },
+    "AMPLIFY_function_unverifiedDelete_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "unverifiedDelete"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateUserPass_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateUserPass"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateUserPass_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateUserPass"
         }
       ]
     },

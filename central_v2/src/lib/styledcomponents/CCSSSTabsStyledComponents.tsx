@@ -14,7 +14,7 @@ export const CCSSTabContainer = styled(Box, {
   height: '100',
   maxHeight: '100dvh',
   width: '100dvw',
-  zIndex: 20,
+  zIndex: 1310,
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
@@ -43,16 +43,17 @@ export const CCSSContentContainer = styled(Box, {
   maxHeight: '50dvh',
   overflowY: 'auto',
   paddingTop: '32px',
-  paddingBottom: '32px'
+  paddingBottom: '32px',
 }));
 
 interface CCSSContentFrameProps {
-  screenSize: ScreenSize
+  screenSize: ScreenSize;
 }
 
 export const CCSSContentFrame = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<CCSSContentFrameProps>(({theme, screenSize}) => ({ // eslint-disable-line
+})<CCSSContentFrameProps>(({ theme, screenSize }) => ({
+  // eslint-disable-line
   boxSizing: 'border-box',
   height: 'fit-content',
   width: screenSize === ScreenSize.LARGE ? '672px' : '100%',
@@ -60,11 +61,10 @@ export const CCSSContentFrame = styled(Box, {
 }));
 
 export const CCSSTabsStyled = styled(Tabs)(({ theme }) => ({
-  '& .MuiTab-flexContainer':{
-    gap: '18px'
-  }
+  '& .MuiTab-flexContainer': {
+    gap: '18px',
+  },
 }));
-
 
 // this is taken from https://mui.com/material-ui/react-tabs/#customization
 // to be able to provide a gap between the tabs
@@ -77,16 +77,16 @@ interface CCSSStyledTabsProps {
 
 export const CCSSStyledTabs = styled((props: CCSSStyledTabsProps) => (
   <Tabs
-    variant={props.screenSize === ScreenSize.LARGE ? "fullWidth" : "standard"}
+    variant={props.screenSize === ScreenSize.LARGE ? 'fullWidth' : 'standard'}
     {...props}
   />
 ))({
   '& .MuiTabs-indicator': {
-    display: 'none'
+    display: 'none',
   },
-  '& .MuiTabs-flexContainer':{
-    gap: '8px'
-  }
+  '& .MuiTabs-flexContainer': {
+    gap: '8px',
+  },
 });
 
 export const CCSSPillContainer = styled(Grid)(({ theme }) => ({
@@ -131,7 +131,7 @@ export const GradeIndicator = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const CCSSIndicatorPillText = styled(Typography)(({theme}) => ({
+export const CCSSIndicatorPillText = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
   fontWeight: 600,
   color: '#FFF',
@@ -139,11 +139,11 @@ export const CCSSIndicatorPillText = styled(Typography)(({theme}) => ({
   display: 'flex',
 }));
 
-export const CCSSIndicatorDescText = styled(Typography)(({theme}) => ({
+export const CCSSIndicatorDescText = styled(Typography)(({ theme }) => ({
   fontSize: '16px',
   fontWeight: 400,
   color: '#FFF',
   width: 'fit-content',
   display: 'flex',
-  textAlign: 'left'
+  textAlign: 'left',
 }));

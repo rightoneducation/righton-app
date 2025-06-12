@@ -8,21 +8,29 @@ import {
   DeleteUserInput,
   DeleteUserMutation,
   DeleteUserMutationVariables,
+  DeleteUnverifiedUserMutationVariables,
   GetUserQueryVariables,
   UserByCognitoIdQuery,
   UserByCognitoIdQueryVariables,
   UpdateUserInput,
   UpdateUserMutation,
   UpdateUserMutationVariables,
+  UpdateUserPassInput,
+  UpdateUserPassMutation,
+  UpdateUserPassMutationVariables,
   UserByUserNameQuery,
+  UserByEmailQuery,
   GetUserQuery
 } from "../../AWSMobileApi";
 import {
   getUser,
   userByCognitoId,
+  userByEmail,
   createUser,
   deleteUser,
+  deleteUnverifiedUser,
   updateUser, 
+  updateUserPass,
   userByUserName
 } from "../../graphql";
 import { UserParser } from "../../Parsers/UserParser";
@@ -82,15 +90,11 @@ export class UserAPIClient
     cognitoId: string
   ): Promise<IUser | null> {
     if (!cognitoId) return null;
-    console.log('userAPIClient');
-    console.log('variables', cognitoId);
     const variables: UserByCognitoIdQueryVariables = { cognitoId }
-    console.log(variables);
     const user = await this.callGraphQL<UserByCognitoIdQuery>(
         userByCognitoId,
         variables as unknown as GraphQLOptions
     )
-    console.log(user);
     if (user.data.userByCognitoId?.items[0])
       return UserParser.parseIUserfromAWSUser(user.data.userByCognitoId.items[0]) as IUser;
     return null;
@@ -107,7 +111,19 @@ export class UserAPIClient
       return UserParser.parseIUserfromAWSUser(user.data.userByUserName.items[0]) as IUser;
     return null;
   }
-  
+
+  async getUserByEmail(
+    email: string
+  ): Promise<IUser | null> {
+    const user = await this.callGraphQL<UserByEmailQuery>(
+        userByEmail,
+        {email} as unknown as GraphQLOptions
+    )
+    if (user.data.userByEmail?.items[0])
+      return UserParser.parseIUserfromAWSUser(user.data.userByEmail.items[0]) as IUser;
+    return null;
+  }
+
 
   async updateUser( 
     updateUserInput: UpdateUserInput
@@ -121,5 +137,46 @@ export class UserAPIClient
     if (user.data.updateUser)
       return UserParser.parseIUserfromAWSUser(user.data.updateUser) as IUser;
     return null;
+  }
+
+  async deleteUnverifiedUser(
+    email: string
+  ): Promise<string | null> {
+    let variables: DeleteUnverifiedUserMutationVariables = {
+      input: { email},
+    };
+    try {
+      const response = await this.callGraphQL(
+        deleteUnverifiedUser,
+        variables as unknown as GraphQLOptions
+      ) as {data: { deleteUnverifiedUser: string }};
+      const result = response.data.deleteUnverifiedUser;
+      console.log("deleteUnverifiedUser result:", result);
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async updateUserPass(
+    email: string,
+    pass: string
+  ): Promise<string | null> {
+    console.log("updateUserPass", email, pass);
+    const input: UpdateUserPassInput = {email, pass};
+    let variables: UpdateUserPassMutationVariables = {
+      input,
+    };
+    try {
+      const response = await this.callGraphQL<UpdateUserPassMutation>(
+        updateUserPass,
+        variables as unknown as GraphQLOptions
+      ) as {data: {updateUserPass: string}};
+      const result = response.data.updateUserPass;
+      return result;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
   }
 }

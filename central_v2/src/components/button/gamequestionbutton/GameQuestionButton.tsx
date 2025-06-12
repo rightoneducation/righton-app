@@ -9,9 +9,9 @@ interface GameQuestionContainerProps {
   screenSize: ScreenSize;
 }
 
-const GameQuestionContainer = styled(Button,{
+const GameQuestionContainer = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'isDisabled' && prop !== 'screenSize',
-})<GameQuestionContainerProps>(({theme, isDisabled, screenSize}) => ({
+})<GameQuestionContainerProps>(({ theme, isDisabled, screenSize }) => ({
   width: screenSize === ScreenSize.SMALL ? ' 316px' : '416px',
   minHeight: '68px',
   borderRadius: '8px',
@@ -21,47 +21,55 @@ const GameQuestionContainer = styled(Button,{
   },
   padding: 0,
   position: 'relative',
-  cursor: isDisabled ? 'default' : 'pointer'
+  cursor: isDisabled ? 'default' : 'pointer',
 }));
 
 const GameQuestionSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic' && prop !== 'screenSize',
-})<{ isPublic: boolean, screenSize: ScreenSize }>(({ theme, isPublic, screenSize }) => ({
-  width: screenSize === ScreenSize.SMALL ? '154px' : '208px',
-  height: '52px',
-  borderRadius: '8px',
-  background: `${theme.palette.primary.sliderBlue}`,
-  ':hover': {
+})<{ isPublic: boolean; screenSize: ScreenSize }>(
+  ({ theme, isPublic, screenSize }) => ({
+    width: screenSize === ScreenSize.SMALL ? '154px' : '208px',
+    height: '52px',
+    borderRadius: '8px',
     background: `${theme.palette.primary.sliderBlue}`,
-  },
-  position: 'absolute',
-  left: isPublic ? '8px' : ( screenSize === ScreenSize.SMALL ? '154px' : '200px'), // eslint-disable-line
-  transition: 'left 0.3s ease-in-out',   
-  boxSizing: 'border-box',
-  zIndex: 3,
-}));
+    ':hover': {
+      background: `${theme.palette.primary.sliderBlue}`,
+    },
+    position: 'absolute',
+    left: isPublic // eslint-disable-line
+      ? '8px'
+      : screenSize === ScreenSize.SMALL
+        ? '154px'
+        : '200px', 
+    transition: 'left 0.3s ease-in-out',
+    boxSizing: 'border-box',
+    zIndex: 3,
+  }),
+);
 
-const LabelContainer = styled(Box)(({theme}) => ({
+const LabelContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'flex-start',
   paddingLeft: '8px',
   zIndex: 4,
-  position: 'relative'
-}))
+  position: 'relative',
+}));
 
 const SubContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'screenSize',
-})<{ isSelected: boolean, screenSize: ScreenSize }>(({ theme, isSelected, screenSize }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  position: 'relative',
-  width: screenSize === ScreenSize.SMALL ? '150px' : '200px',
-  opacity: isSelected ? 1 : 0.5,
-  transition: 'opacity 0.3 ease-in-out'
-}));
+})<{ isSelected: boolean; screenSize: ScreenSize }>(
+  ({ theme, isSelected, screenSize }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    width: screenSize === ScreenSize.SMALL ? '150px' : '200px',
+    opacity: isSelected ? 1 : 0.5,
+    transition: 'opacity 0.3 ease-in-out',
+  }),
+);
 
 interface GameQuestionTextProps {
   isSelected: boolean;
@@ -69,12 +77,14 @@ interface GameQuestionTextProps {
 
 const GameQuestionText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'isSelected',
-})<GameQuestionTextProps>(({isSelected, theme}) => ({
+})<GameQuestionTextProps>(({ isSelected, theme }) => ({
   fontSize: '24px',
   fontWeight: 700,
-  color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
+  color: isSelected
+    ? `${theme.palette.primary.main}`
+    : `${theme.palette.primary.sliderBlue}`,
   textTransform: 'none',
-  transition: 'color 0.3 ease-in-out'
+  transition: 'color 0.3 ease-in-out',
 }));
 
 interface GameQuestionButtonInterface {
@@ -88,21 +98,30 @@ export default function GameQuestionButton({
   isDisabled,
   gameQuestion,
   screenSize,
-  setGameQuestion
+  setGameQuestion,
 }: GameQuestionButtonInterface) {
   const { t } = useTranslation();
   const isPublic = gameQuestion === GameQuestionType.GAME;
   const centralDataDispatch = useCentralDataDispatch();
-  const handleGameQuestionSwitch = () =>{
+  const handleGameQuestionSwitch = () => {
+    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     if (setGameQuestion)
-      setGameQuestion(gameQuestion === GameQuestionType.GAME ? GameQuestionType.QUESTION : GameQuestionType.GAME);
-  }
+      setGameQuestion(
+        gameQuestion === GameQuestionType.GAME
+          ? GameQuestionType.QUESTION
+          : GameQuestionType.GAME,
+      );
+  };
   return (
-    <GameQuestionContainer screenSize={screenSize} isDisabled={isDisabled} onClick={!isDisabled ? handleGameQuestionSwitch : undefined}>
-      <GameQuestionSelectionPill screenSize={screenSize} isPublic={isPublic}/>
+    <GameQuestionContainer
+      screenSize={screenSize}
+      isDisabled={isDisabled}
+      onClick={!isDisabled ? handleGameQuestionSwitch : undefined}
+    >
+      <GameQuestionSelectionPill screenSize={screenSize} isPublic={isPublic} />
       <LabelContainer>
-        <SubContainer screenSize={screenSize} isSelected={isPublic}>     
+        <SubContainer screenSize={screenSize} isSelected={isPublic}>
           <GameQuestionText isSelected={isPublic}>
             {t(`gameQuestionButton.games`)}
           </GameQuestionText>

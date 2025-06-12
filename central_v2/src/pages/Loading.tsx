@@ -5,10 +5,17 @@ import { LoadingContainer } from '../lib/styledcomponents/LoadingStyledComponent
 export default function Loading() {
   const theme = useTheme();
   return (
-     <LoadingContainer>
-        <Box style={{paddingTop: `${theme.sizing.xLgPadding}px`, transform: 'translateX(-50%)'}}>
-          <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
-        </Box>
+    <LoadingContainer>
+      <Box
+        style={{
+          paddingTop: `${theme.sizing.xLgPadding}px`,
+          transform: 'translateX(-50%)',
+        }}
+      >
+        <CircularProgress
+          style={{ color: theme.palette.primary.darkBlueCardColor }}
+        />
+      </Box>
     </LoadingContainer>
   );
-} 
+}

@@ -8,7 +8,10 @@ import {
   ElementType,
   GalleryType,
 } from '@righton/networking';
-import { useCentralDataDispatch, useCentralDataState } from '../../hooks/context/useCentralDataContext';
+import {
+  useCentralDataDispatch,
+  useCentralDataState,
+} from '../../hooks/context/useCentralDataContext';
 import StyledGameCard from '../cards/GameCard';
 import StyledQuestionCard from '../cards/QuestionCard';
 import { ScreenSize } from '../../lib/CentralModels';
@@ -27,7 +30,7 @@ interface CardGalleryProps<T> {
   elementType: ElementType;
   galleryType: GalleryType;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleView: (element: T, elements: T[]) => void;
+  handleView?: (element: T, elements: T[]) => void;
   isMyLibrary?: boolean;
   isMyLibraryQuestion?: boolean;
   isCreateGame?: boolean;
@@ -39,12 +42,12 @@ interface MostPopularComponentProps<T> {
   isLoading: boolean;
   numColumns: number;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleViewButtonClick: (element: T) => void;
+  handleViewButtonClick?: (element: T) => void;
   isCreateGame?: boolean;
 }
 
 interface MostPopularGamesComponentProps {
-  screenSize: ScreenSize,
+  screenSize: ScreenSize;
   mostPopularElements: IGameTemplate[];
   maxCards: number;
   numColumns: number;
@@ -52,7 +55,7 @@ interface MostPopularGamesComponentProps {
   isMyLibrary?: boolean;
   isMyLibraryQuestion?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleViewButtonClick: (element: IGameTemplate) => void;
+  handleViewButtonClick?: (element: IGameTemplate) => void;
   isCreateGame?: boolean;
 }
 
@@ -69,21 +72,37 @@ function MostPopularGamesComponent({
   isCreateGame,
 }: MostPopularGamesComponentProps) {
   const centralData = useCentralDataState();
-  const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
+  const favoriteGameTemplateIds = isMyLibraryQuestion
+    ? centralData.userProfile?.favoriteQuestionTemplateIds
+    : centralData.userProfile?.favoriteGameTemplateIds;
   return (
-    <Grid container spacing={4} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: isMyLibrary ? '5000px' : '2000px'}}>
-      {(mostPopularElements.length === 0 && isLoading)
+    <Grid
+      container
+      spacing={4}
+      id="scrollableDiv"
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        maxWidth: isMyLibrary ? '5000px' : '2000px',
+      }}
+    >
+      {isLoading
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
               <Grid item key={index}> {/* eslint-disable-line */}
-                <SkeletonGameCard screenSize={screenSize} isCarousel={false} index={index} />
+                <SkeletonGameCard
+                  screenSize={screenSize}
+                  isCarousel={false}
+                  index={index}
+                />
               </Grid>
             );
           })
         : mostPopularElements.map((game) => {
-          const isFavorite = favoriteGameTemplateIds?.includes(game.id) || false;
+            const isFavorite =
+              favoriteGameTemplateIds?.includes(game.id) || false;
             return (
-              <Grid item key={game.id}>
+              <Grid item key={`${uuidv4()}${game.id}`}>
                 <StyledGameCard
                   screenSize={screenSize}
                   game={game}
@@ -123,19 +142,25 @@ function MostPopularQuestionsComponent({
   );
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const favoriteQuestionTemplateIds = centralData.userProfile?.favoriteQuestionTemplateIds;
+  const favoriteQuestionTemplateIds =
+    centralData.userProfile?.favoriteQuestionTemplateIds;
 
   const handleCloneButtonClick = (element: IQuestionTemplate) => {
     centralDataDispatch({
       type: 'SET_SELECTED_QUESTION',
       payload: element,
     });
-    navigate(`/clone/question/${element.id}`);
-  }
+    navigate(`/clone/question/${element.publicPrivateType}/${element.id}`);
+  };
 
   return (
-    <Grid container spacing={4}   columns={{ xs: 12, sm: 12, md: 12, lg: 7 }} id="scrollableDiv">
-      {(elementsLength === 0 && isLoading)
+    <Grid
+      container
+      spacing={4}
+      columns={{ xs: 12, sm: 12, md: 12, lg: 7 }}
+      id="scrollableDiv"
+    >
+      {elementsLength === 0 && isLoading
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
               <Grid item xs={12} md={4} lg={1} key={index}> {/* eslint-disable-line */}
@@ -156,7 +181,9 @@ function MostPopularQuestionsComponent({
                   {mostPopularElements[index] &&
                     mostPopularElements[index].length > 0 &&
                     mostPopularElements[index].map((question) => {
-                      const isFavorite = favoriteQuestionTemplateIds?.includes(question.id) || false;
+                      const isFavorite =
+                        favoriteQuestionTemplateIds?.includes(question.id) ||
+                        false;
                       return (
                         <StyledQuestionCard
                           question={question}
@@ -200,7 +227,7 @@ export default function CardGallery<
   handleView,
   isMyLibrary,
   isMyLibraryQuestion,
-  isCreateGame
+  isCreateGame,
 }: CardGalleryProps<T>) {
   const maxCards = 12;
   const getNumColumns = () => {
@@ -237,11 +264,12 @@ export default function CardGallery<
   };
 
   const handleViewButtonClick = (element: T) => {
-    handleView(element, galleryElements as T[]);
+    if (handleView) handleView(element, galleryElements as T[]);
   };
+
   return (
     <MostPopularContainer screenSize={screenSize} isMyLibrary={isMyLibrary}>
-      {!isMyLibrary &&
+      {!isMyLibrary && (
         <GalleryHeaderText<T>
           searchedElements={galleryElements}
           searchedTerm={searchTerm}
@@ -249,8 +277,8 @@ export default function CardGallery<
           isLoading={isLoading}
           screenSize={screenSize}
           galleryType={galleryType}
-        /> 
-      }
+        />
+      )}
       {elementType === ElementType.GAME ? (
         <MostPopularGamesComponent
           screenSize={screenSize}

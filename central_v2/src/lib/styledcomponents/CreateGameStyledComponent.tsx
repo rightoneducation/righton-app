@@ -11,12 +11,11 @@ import {
   Stack,
   keyframes,
   Tooltip,
-  TooltipProps, 
-  tooltipClasses
+  TooltipProps,
+  tooltipClasses,
 } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
-
 
 // Create Game Page Components
 export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
@@ -29,9 +28,9 @@ export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
     display: 'none',
   },
   scrollbarWidth: 'none', // Firefox
-  msOverflowStyle: 'none', 
+  msOverflowStyle: 'none',
   boxSizing: 'border-box',
-  display: 'flex'
+  display: 'flex',
 }));
 
 export const CreateGameBackground = styled(Box)(({ theme }) => ({
@@ -49,7 +48,7 @@ export const CreateGameBackground = styled(Box)(({ theme }) => ({
     url(${mathSymbolsBackground})
   `,
   backgroundSize: 'cover, contain',
-  overflow: 'hidden'
+  overflow: 'hidden',
 }));
 
 export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
@@ -170,12 +169,12 @@ export const CreateGameCardGridItem = styled(Grid, {
   gap: `${theme.sizing.xLgPadding}px`,
 }));
 
-export const GameCreateButtonStack = styled(Stack)(({theme}) => ({
+export const GameCreateButtonStack = styled(Stack)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  gap: '8px'
-}))
+  gap: '8px',
+}));
 
 // CardBase Styled Component
 type ImagePlaceholderProps = {
@@ -236,8 +235,7 @@ export const CreateGameContentLeftContainerStyled = styled(Box)(
 
 type GameTextFieldContainer = { isTitle?: boolean; isCardError: boolean };
 
-export const 
-CreateGameTextFieldContainer = styled(TextField, {
+export const CreateGameTextFieldContainer = styled(TextField, {
   shouldForwardProp: (prop) => prop !== 'isTitle',
 })<GameTextFieldContainer>(({ theme, isTitle, isCardError }) => ({
   width: '100%',
@@ -254,11 +252,11 @@ CreateGameTextFieldContainer = styled(TextField, {
     },
     '&.Mui-focused fieldset': {
       borderWidth: `2px`,
-      borderColor:`${theme.palette.primary.grey}`,
+      borderColor: `${theme.palette.primary.grey}`,
     },
     '&:hover fieldset': {
       borderWidth: `2px`,
-      borderColor:`${theme.palette.primary.extraDarkGrey}`,
+      borderColor: `${theme.palette.primary.extraDarkGrey}`,
     },
     '&.Mui-error fieldset': {
       borderWidth: '2px',
@@ -274,8 +272,8 @@ CreateGameTextFieldContainer = styled(TextField, {
     color: '#384466',
     opacity: isCardError ? 1 : 0.5,
     '&::placeholder': {
-        color: isCardError ? '#D0254D': '#384466',
-        opacity: isCardError ? 1 : 0.5
+      color: isCardError ? '#D0254D' : '#384466',
+      opacity: isCardError ? 1 : 0.5,
     },
     '&:focus': {
       color: '#384466',
@@ -300,31 +298,33 @@ export const AddMoreIconButton = styled(IconButton)(({ theme }) => ({
 interface ContentContainerProps {
   screenSize: ScreenSize;
 }
-export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(({ theme, screenSize }) => ({
-  width: '100%',
-  height: screenSize === ScreenSize.SMALL ? '100%' : '100%',
-  display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  gap: screenSize === ScreenSize.SMALL ? '12px': `${theme.sizing.smPadding}px`,
-}));
+export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(
+  ({ theme, screenSize }) => ({
+    width: '100%',
+    height: screenSize === ScreenSize.SMALL ? '100%' : '100%',
+    display: 'flex',
+    flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap:
+      screenSize === ScreenSize.SMALL ? '12px' : `${theme.sizing.smPadding}px`,
+  }),
+);
 
 type SelectLabelProps = {
   error: boolean;
   isSelected: boolean;
-}
+};
 
 export const SelectPhaseLabel = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== "error"
-})<SelectLabelProps>(({theme, error, isSelected}) => ({
-    color: error ? '#D0254D': theme.palette.primary.sliderBlue,
-    fontFamily: "Rubik",
-    fontSize: 14,
-    fontWeight: isSelected ? 'normal':'bold',
-    margin: 0,
-}))
-
+  shouldForwardProp: (prop) => prop !== 'error',
+})<SelectLabelProps>(({ theme, error, isSelected }) => ({
+  color: error ? '#D0254D' : theme.palette.primary.sliderBlue,
+  fontFamily: 'Rubik',
+  fontSize: 14,
+  fontWeight: isSelected ? 'normal' : 'bold',
+  margin: 0,
+}));
 
 const fadeIn = keyframes`
 from {
@@ -346,7 +346,7 @@ const fadeOut = keyframes`
     opacity: 0;
     transform: translateY(10px);
   }
-`
+`;
 
 interface FadeInProps {
   visible: boolean;
@@ -356,32 +356,34 @@ interface FadeInProps {
 
 export const StyledFadeIn = styled(Box, {
   shouldForwardProp: (prop) =>
-    prop !== "visible" && prop !== "delay" && prop !== "yAxis",
+    prop !== 'visible' && prop !== 'delay' && prop !== 'yAxis',
 })<FadeInProps>(({ visible, delay, yAxis }) => ({
   opacity: 0,
-  transform: `translateY(${yAxis ? `${yAxis}px` : "20px"})`,
+  transform: `translateY(${yAxis ? `${yAxis}px` : '20px'})`,
   transition: `opacity 0.5s ease-in-out ${delay}s, transform 0.5s ease-in-out ${delay}s`,
-  ...(visible ? {
-    animation: `${fadeIn} 0.5s ${delay}s forwards`,
-  }: {
-    animation: `${fadeOut} 0.5s ${delay}s forwards`,
-  }),
+  ...(visible
+    ? {
+        animation: `${fadeIn} 0.5s ${delay}s forwards`,
+      }
+    : {
+        animation: `${fadeOut} 0.5s ${delay}s forwards`,
+      }),
 }));
 
-export const TooltipStyled = styled(({ className, ...props}: TooltipProps) => (
+export const TooltipStyled = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
-))(({theme}) => ({
+))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: `${theme.palette.primary.sliderBlue} !important`, // Ensures the background applies
     color: `${theme.palette.primary.main} !important`, // Ensures text remains white
     fontSize: '12px',
     padding: '4px 8px',
     borderRadius: '8px',
-    maxWidth: '250px', 
+    maxWidth: '250px',
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
     marginRight: '23px !important',
     '& .MuiTooltip-arrow': {
-    color: `${theme.palette.primary.sliderBlue} !important`, // Ensures arrow color matches the tooltip
+      color: `${theme.palette.primary.sliderBlue} !important`, // Ensures arrow color matches the tooltip
+    },
   },
-  }
-}))
+}));

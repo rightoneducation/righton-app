@@ -14,6 +14,8 @@ import discard from '../../images/buttonIconDiscard.svg';
 import add from '../../images/buttonIconAdd.svg';
 import create from '../../images/buttonIconCreate.svg';
 import bank from '../../images/buttonIconBank.svg';
+import edit from '../../images/buttonIconEdit.svg';
+import deleteIcon from '../../images/buttonIconDelete.svg';
 
 export enum ButtonType {
   LOGIN = 'login',
@@ -52,6 +54,7 @@ export enum ButtonType {
   EDITPROFILEPICTURE = 'editprofilepicture',
   EDITINFORMATION = 'editinformation',
   CHANGEPASSWORD = 'changepassword',
+  CONFIRMSENDCODE = 'confirmsendcode',
   CREATE = 'create',
   CHOOSE = 'choose',
   CLONE = 'clone',
@@ -62,6 +65,9 @@ export enum ButtonType {
   ADDTOGAME = 'addtogame',
   YES = 'yes',
   NO = 'no',
+  EDIT = 'edit',
+  DELETE = 'delete',
+  OK = 'ok',
 }
 
 export enum ButtonColor {
@@ -69,7 +75,7 @@ export enum ButtonColor {
   BLUE,
   LIGHTBLUE,
   WHITE,
-  NULL
+  NULL,
 }
 
 type ButtonContentMapProps = {
@@ -113,7 +119,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.UPLOADIMAGE]: {
     icon: upload,
     textKey: ButtonType.UPLOADIMAGE,
-    width: '200px'
+    width: '200px',
   },
   [ButtonType.NEXTSTEP]: {
     textKey: ButtonType.NEXTSTEP,
@@ -126,11 +132,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.RESETLINK]: {
     textKey: ButtonType.RESETLINK,
-    color: ButtonColor.RED,
   },
   [ButtonType.RESET]: {
     textKey: ButtonType.RESET,
-    color: ButtonColor.RED,
+    color: ButtonColor.BLUE,
   },
   [ButtonType.PREVIOUSQUESTION]: {
     icon: previous,
@@ -159,18 +164,18 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.SAVE]: {
     icon: save,
     textKey: ButtonType.SAVE,
-    width: '200px'
+    width: '200px',
   },
   [ButtonType.SAVEPASSWORD]: {
     icon: save,
     textKey: ButtonType.SAVEPASSWORD,
-    width: '200px'
+    width: '200px',
   },
   [ButtonType.SAVEDRAFT]: {
     icon: save,
     textKey: ButtonType.SAVEDRAFT,
     width: '200px',
-    color: ButtonColor.LIGHTBLUE
+    color: ButtonColor.NULL,
   },
   [ButtonType.DISCARD]: {
     icon: discard,
@@ -179,7 +184,8 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.DISCARDBLUE]: {
     icon: discard,
-    textKey: ButtonType.DISCARD
+    textKey: ButtonType.DISCARD,
+    width: '200px',
   },
   [ButtonType.ADDSTEP]: {
     icon: add,
@@ -192,18 +198,18 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.BROWSEFILES]: {
     icon: upload,
     textKey: ButtonType.BROWSEFILES,
-    width: '200px'
+    width: '200px',
   },
   [ButtonType.CHANGEIMAGE]: {
     icon: upload,
     textKey: ButtonType.CHANGEIMAGE,
     width: '220px',
-    color: ButtonColor.NULL
+    color: ButtonColor.NULL,
   },
   [ButtonType.NEXTCARD]: {
     icon: next,
     textKey: ButtonType.NEXTCARD,
-    width: '200px'
+    width: '200px',
   },
   [ButtonType.LAUNCHGAME]: {
     icon: launch,
@@ -235,10 +241,13 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.EDITINFORMATION]: {
     textKey: ButtonType.EDITINFORMATION,
-    width: '200px'
+    width: '200px',
   },
   [ButtonType.CHANGEPASSWORD]: {
     textKey: ButtonType.CHANGEPASSWORD,
+  },
+  [ButtonType.CONFIRMSENDCODE]: {
+    textKey: ButtonType.CONFIRMSENDCODE,
   },
   [ButtonType.CREATE]: {
     icon: add,
@@ -246,11 +255,11 @@ export const buttonContentMap: ButtonContentMapProps = {
     color: ButtonColor.RED,
   },
   [ButtonType.CHOOSE]: {
-    icon: add, 
+    icon: add,
     textKey: ButtonType.CHOOSE,
   },
   [ButtonType.CLONE]: {
-    icon: clone, 
+    icon: clone,
     textKey: ButtonType.CLONE,
   },
   [ButtonType.SIGNOUT]: {
@@ -262,7 +271,7 @@ export const buttonContentMap: ButtonContentMapProps = {
     color: ButtonColor.RED,
   },
   [ButtonType.RETRY]: {
-    textKey: ButtonType.RETRY
+    textKey: ButtonType.RETRY,
   },
   [ButtonType.CANCEL]: {
     textKey: ButtonType.CANCEL,
@@ -274,5 +283,16 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.NO]: {
     textKey: ButtonType.NO,
     color: ButtonColor.RED,
+  },
+  [ButtonType.EDIT]: {
+    icon: edit,
+    textKey: ButtonType.EDIT,
+  },
+  [ButtonType.DELETE]: {
+    icon: deleteIcon,
+    textKey: ButtonType.DELETE,
+  },
+  [ButtonType.OK]: {
+    textKey: ButtonType.OK,
   },
 };

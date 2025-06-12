@@ -1,4 +1,5 @@
 import { Box, Grid, styled, Tab } from '@mui/material';
+import { ScreenSize } from '../CentralModels';
 
 export const TabContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -87,26 +88,36 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
+export const ScrollContainer = styled(Box)(({ theme }) => ({
+  height: '100%',
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE and Edge
+}));
+
 export const ButtonContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
   paddingTop: `${theme.sizing.mdPadding}px`,
-  paddingLeft: `${theme.sizing.mdPadding}px`,
-  paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
 }));
 
 export const ButtonContainerLeft = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.smPadding}px`,
 }));
 
-export const ButtonContainerRight = styled(ButtonContainerLeft)(({ theme }) => ({
-  flexDirection: 'row',
-}));
+export const ButtonContainerRight = styled(ButtonContainerLeft)(
+  ({ theme }) => ({
+    flexDirection: 'row',
+  }),
+);
 
 export const CardContainer = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -122,6 +133,7 @@ export const CardContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none', // IE and Edge
+  paddingTop: '24px',
 }));
 
 export const SubCardGridItem = styled(Grid)(({ theme }) => ({
@@ -131,9 +143,17 @@ export const SubCardGridItem = styled(Grid)(({ theme }) => ({
   gap: `${theme.sizing.smPadding}px`,
 }));
 
-export const GridItem = styled(Grid)(({ theme }) => ({
+interface IGridItem {
+  screenSize?: ScreenSize;
+}
+export const GridItem = styled(Grid, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<IGridItem>(({ theme, screenSize }) => ({
   height: '100%',
-  overflowY: 'auto',
+  alignItems: screenSize === ScreenSize.SMALL ? 'center' : 'normal',
+  ...(screenSize !== ScreenSize.SMALL && {
+    overflowY: 'auto',
+  }),
   width: '100%',
   maxWidth: '672px',
   display: 'flex',

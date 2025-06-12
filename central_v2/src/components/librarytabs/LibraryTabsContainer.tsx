@@ -1,18 +1,22 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import { 
+import {
   PublicPrivateType,
   GradeTarget,
   SortType,
   SortDirection,
   IGameTemplate,
-  IQuestionTemplate
+  IQuestionTemplate,
 } from '@righton/networking';
-import { ScreenSize, GameQuestionType, LibraryTabEnum } from '../../lib/CentralModels';
-import { 
+import {
+  ScreenSize,
+  GameQuestionType,
+  LibraryTabEnum,
+} from '../../lib/CentralModels';
+import {
   LibraryTabsStyledContainer,
-  ContentFrame
+  ContentFrame,
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 import LibraryTabs from './LibraryTabs';
 import { useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
@@ -21,17 +25,28 @@ interface TabContainerProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
-  handleChooseGrades: (grades: GradeTarget[]) => void;
-  handleSortChange: (
-    newSort: {
-      field: SortType;
-      direction: SortDirection | null;
-    }
+  fetchElements: (
+    libraryTab?: LibraryTabEnum,
+    searchTerms?: string,
+    nextToken?: string | null,
+    isFromLibrary?: boolean,
   ) => void;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => void;
   handleSearchChange: (searchString: string) => void;
-  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
+  handleQuestionView: (
+    element: IQuestionTemplate,
+    elements: IQuestionTemplate[],
+  ) => void;
+  loadMoreLibrary: (
+    libraryTab?: LibraryTabEnum,
+    searchTerms?: string,
+    nextToken?: string | null,
+  ) => void;
 }
 
 export default function LibraryTabsContainer({
@@ -43,16 +58,15 @@ export default function LibraryTabsContainer({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  handleQuestionView
+  handleQuestionView,
+  loadMoreLibrary,
 }: TabContainerProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const centralDataDispatch = useCentralDataDispatch();
-
-
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
-    centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
-    navigate(`/library/games/${element.id}`);
+    centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: element });
+    navigate(`/library/games/${element.publicPrivateType}/${element.id}`);
   };
   return (
     <LibraryTabsStyledContainer>
@@ -68,6 +82,7 @@ export default function LibraryTabsContainer({
           fetchElements={fetchElements}
           handleGameView={handleGameView}
           handleQuestionView={handleQuestionView}
+          loadMoreLibrary={loadMoreLibrary}
         />
       </ContentFrame>
     </LibraryTabsStyledContainer>

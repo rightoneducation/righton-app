@@ -42,6 +42,7 @@ export class UserParser {
       email: user.email,
       password: user.password ?? '',
       gamesMade: user.gamesMade ?? 0,
+      gamesUsed: user.gamesUsed ?? 0,
       questionsMade: user.questionsMade ?? 0,
     }
     return parsedUser;

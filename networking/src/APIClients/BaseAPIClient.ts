@@ -33,7 +33,7 @@ export enum GradeTarget {
   GRADESIX = "6",
   GRADESEVEN = "7",
   GRADEEIGHT = "8",
-  HIGHSCHOOL = "H"
+  HIGHSCHOOL = "HS"
 }
 export enum SortType {
   listGameTemplates,
@@ -44,6 +44,12 @@ export enum SortType {
   listQuestionTemplatesByDate,
   listQuestionTemplatesByGrade,
   listQuestionTemplatesByGameCount,
+}
+
+export enum EditType {
+  CLONE,
+  EDIT,
+  DELETE
 }
 export enum SortDirection {
   ASC = "ASC",
@@ -155,80 +161,117 @@ export abstract class BaseAPIClient {
   /* given that GameTemplate and QuestionTemplate are structured in the same way, 
   this function can be used to query both without duplicating a done of code */
   protected async executeQuery(
-      limit: number | null, 
-      nextToken: string | null, 
-      sortDirection: string | null,
-      filterString: string | null,
-      awsType: string,
-      queryName: string,
-      query: any,
-      type: PublicPrivateType,
-      gradeTargets?: GradeTarget[] | null,
-      favIds?: string[] | null
-    ): Promise<QueryResult | null> {
-      let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
-      if (!queryParameters.filter) {
-        queryParameters.filter = { and: [] };
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    awsType: string,
+    queryName: string,
+    query: any,
+    type: PublicPrivateType,
+    gradeTargets?: GradeTarget[] | null,
+    favIds?: string[] | null
+  ): Promise<QueryResult | null> {
+    let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
+    if (!queryParameters.filter) {
+      queryParameters.filter = { and: [] };
+    }
+    if (favIds?.length) {
+      queryParameters.filter.and.push({
+        or: favIds.map(id => ({ id: { eq: id } }))
+      });
+    }
+    if (filterString != null) {
+      const lower = filterString.toLowerCase();
+      const search: any = {
+        or: [
+          { lowerCaseTitle: { contains: lower } },
+          { ccss: { contains: filterString } }
+        ]
+      };
+      if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+        search.or.push({ lowerCaseDescription: { contains: lower } });
       }
-      let searchFilter: any = {};
-      let gradeFilter: any = {};
-      let favFilter: any = {};
-      const filterStringLowerCase = filterString?.toLowerCase();
-      if (favIds && favIds.length > 0) {
-        favFilter = {
-          or: 
-            favIds.map((id) => {
-              return { id: { eq: id }}
-            })
-        }
-        queryParameters.filter.and.push(favFilter);
-      }
-      if (filterStringLowerCase != null) {
-        searchFilter = { 
-          or: [
-            { lowerCaseTitle: { contains: filterStringLowerCase } },
-            { ccss: { contains: filterStringLowerCase } }
-          ]
-        };
-        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate")
-          searchFilter.or.push({ lowerCaseDescription: { contains: filterStringLowerCase }});
-        queryParameters.filter.and.push(searchFilter);
-      }
-      if (gradeTargets && gradeTargets.length > 0) {
-        gradeFilter = { 
-          or: 
-            gradeTargets.map((target) => {
-              return { gradeFilter: { eq: target } };
-            })
-          }
-          queryParameters.filter.and.push(gradeFilter);
-      }
-      
-      if (sortDirection != null) {
-        queryParameters.sortDirection = sortDirection;
-      }
-      const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
-      let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode })) as { data: any };
-      if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {
-        const operationResult = result.data[queryName];
-        const parsedNextToken = operationResult.nextToken;
-        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate" || awsType === "DraftGameTemplate" || awsType === "FavGameTemplate") {
-          const gameTemplates = operationResult.items.map((item: any) => 
-              GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
-          );
-          return { gameTemplates, nextToken: parsedNextToken };
-        } else {
-          const questionTemplates = operationResult.items.map((item: any) => 
-              QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
-          );
-          return { questionTemplates, nextToken: parsedNextToken };
-        }
-      }
-      if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate" || awsType === "DraftGameTemplate" || awsType === "FavGameTemplate") {
+      queryParameters.filter.and.push(search);
+    }
+    if (gradeTargets?.length) {
+      queryParameters.filter.and.push({
+        or: gradeTargets.map(target => ({ gradeFilter: { eq: target } }))
+      });
+    }
+    if (sortDirection != null) {
+      queryParameters.sortDirection = sortDirection;
+    }
+
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
+    let raw;
+    try{ 
+      raw = await client.graphql({
+        query,
+        variables: queryParameters,
+        authMode: authMode as GraphQLAuthMode
+      }) as { data?: any; errors?: Array<{ message: string; path?: any[] }> };
+    } catch (e) {
+      raw = e as { data?: any; errors?: Array<{ message: string; path?: any[] }> };
+    }
+
+    const recoverable = (raw.errors || []).filter(err =>
+      err.message.startsWith("Cannot return null for non-nullable type:")
+    );
+    const unrecoverable = (raw.errors || []).filter(err =>
+      !err.message.startsWith("Cannot return null for non-nullable type:")
+    );
+
+    if (unrecoverable.length) {
+      throw new Error(
+        `GraphQL error${unrecoverable.length > 1 ? "s" : ""}: ` +
+        unrecoverable.map(e => e.message).join("; ")
+      );
+    }
+
+    if (recoverable.length) {
+      console.warn(
+        `Warning: ${queryName} had ${recoverable.length} nullable-field errors, dropping those fields & proceeding`,
+        recoverable
+      );
+    }
+
+    if (!raw.data || !raw.data[queryName]) {
+      if (awsType.endsWith("GameTemplate")) {
         return { gameTemplates: [], nextToken: null };
       } else {
         return { questionTemplates: [], nextToken: null };
       }
+    }
+    
+    const operation = raw.data[queryName];
+    const parsedNextToken = operation.nextToken;
+
+    if (awsType.endsWith("GameTemplate")) {
+      const gameTemplates: IGameTemplate[] = [];
+      for (const item of operation.items || []) {
+        try {
+          gameTemplates.push(
+            GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
+          );
+        } catch (e) {
+          console.warn(`skipping broken GameTemplate ${item.id}`, e);
+        }
+      }
+      return { gameTemplates, nextToken: parsedNextToken };
+    } else {
+      const questionTemplates: IQuestionTemplate[] = [];
+      for (const item of operation.items || []) {
+        try {
+          questionTemplates.push(
+            QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
+          );
+        } catch (e) {
+          console.warn(`skipping broken QuestionTemplate ${item.id}`, e);
+        }
+      }
+      return { questionTemplates, nextToken: parsedNextToken };
+    }
   }
 }
 export {Environment};

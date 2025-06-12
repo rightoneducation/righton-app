@@ -1,5 +1,5 @@
 import React from 'react';
-import {Paper, Typography, styled} from '@mui/material';
+import { Paper, Typography, styled } from '@mui/material';
 import errorCardIcon from '../../images/errorCardIcon.svg';
 
 const ErrorCardContainer = styled(Paper)(({ theme }) => ({
@@ -14,7 +14,7 @@ const ErrorCardContainer = styled(Paper)(({ theme }) => ({
   borderRadius: '16px',
   boxSizing: 'border-box',
   border: `2px ${theme.palette.primary.errorColor} solid`,
-  gap: '16px'
+  gap: '16px',
 }));
 
 const ErrorText = styled(Typography)(({ theme }) => ({
@@ -28,19 +28,19 @@ const ErrorSVG = styled('img')(({ theme }) => ({
   width: '35px',
   position: 'absolute',
   top: '24px',
-  right: '10px'
+  right: '10px',
 }));
 
-export default function ErrorCard(){
+export default function ErrorCard() {
   return (
     <ErrorCardContainer elevation={6}>
-      <ErrorText style={{width: '75%'}}>
+      <ErrorText style={{ width: '75%' }}>
         Looks like you missed something.
       </ErrorText>
       <ErrorText>
-        Please fill in all required fields with valid information. 
+        Please fill in all required fields with valid information.
       </ErrorText>
-      <ErrorSVG src={errorCardIcon} alt='Error card icon' />
+      <ErrorSVG src={errorCardIcon} alt="Error card icon" />
     </ErrorCardContainer>
-  )
+  );
 }

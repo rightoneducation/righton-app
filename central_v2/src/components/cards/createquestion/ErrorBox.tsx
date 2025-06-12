@@ -14,7 +14,7 @@ const ErrorContainer = styled(Box)(({ theme }) => ({
   borderRadius: '8px',
   border: `2px solid ${theme.palette.primary.errorBorder}`,
   background: `${theme.palette.primary.uploadLightGrey}`,
-  borderBox: 'box-sizing'
+  borderBox: 'box-sizing',
 }));
 
 const ErrorTextContainer = styled(Box)(({ theme }) => ({
@@ -39,19 +39,16 @@ const ErrorSVG = styled('img')(({ theme }) => ({
   width: '35px',
 }));
 
-export default function ErrorBox(){
+export default function ErrorBox() {
   return (
     <ErrorContainer>
-      <ErrorSVG src={errorCardIcon} alt="errorimage"/>
+      <ErrorSVG src={errorCardIcon} alt="errorimage" />
       <ErrorTextContainer>
-        <ErrorHeader>
-          Looks like you missed something!
-        </ErrorHeader>
+        <ErrorHeader>Looks like you missed something!</ErrorHeader>
         <ErrorText>
-          Please fill in all required fields with valid information. 
+          Please fill in all required fields with valid information.
         </ErrorText>
       </ErrorTextContainer>
     </ErrorContainer>
   );
-
 }

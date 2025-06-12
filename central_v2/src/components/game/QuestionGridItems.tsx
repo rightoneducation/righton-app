@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Grid,
-  Box,
-  Typography,
-  useTheme,
-
-  Switch,
-} from '@mui/material';
+import { Grid, Box, Typography, useTheme, Switch } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
   AnswerType,
@@ -29,7 +22,9 @@ import { AISwitch } from '../../lib/styledcomponents/AISwitchStyledComponent';
 interface IQuestionElements {
   screenSize: ScreenSize;
   isClone: boolean;
+  isEdit: boolean;
   isCloneImageChanged: boolean;
+  label: string;
   draftQuestion: CentralQuestionTemplateInput;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
@@ -46,7 +41,7 @@ interface IQuestionElements {
   handleSaveQuestion: () => Promise<void>;
   handleDiscardQuestion: () => void;
   handleAIError: () => void;
-  handleClick: (cardType: CreateQuestionHighlightCard) => void
+  handleClick: (cardType: CreateQuestionHighlightCard) => void;
   handleNextCardButtonClick: (cardData: IncorrectCard) => void;
   handleCCSSClick: () => void;
   handleAIIsEnabled: () => void;
@@ -58,15 +53,27 @@ interface IQuestionElements {
     isAIEnabledCard?: boolean,
   ) => void;
   handleDebouncedTitleChange: (title: string) => void;
-  handleDebouncedCorrectAnswerChange: (correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => void;
-  handleDebouncedCorrectAnswerStepsChange: (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => void;
-  handleAnswerSettingsChange: (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType, answerPrecision?: AnswerPrecision) => void;
+  handleDebouncedCorrectAnswerChange: (
+    correctAnswer: string,
+    draftQuestionInput: CentralQuestionTemplateInput,
+  ) => void;
+  handleDebouncedCorrectAnswerStepsChange: (
+    steps: string[],
+    draftQuestionInput: CentralQuestionTemplateInput,
+  ) => void;
+  handleAnswerSettingsChange: (
+    draftQuestionInput: CentralQuestionTemplateInput,
+    answerType: AnswerType,
+    answerPrecision?: AnswerPrecision,
+  ) => void;
 }
 
 export default function QuestionElements({
   screenSize,
   isClone,
+  isEdit,
   isCloneImageChanged,
+  label,
   draftQuestion,
   isCardSubmitted,
   isCardErrored,
@@ -98,7 +105,6 @@ export default function QuestionElements({
   const isQuestionCardErrored = isCardErrored && !questionCard.isCardComplete;
   const isCorrectCardErrored = isCardErrored && !correctCard.isCardComplete;
 
- 
   return (
     <>
       <Grid
@@ -123,6 +129,8 @@ export default function QuestionElements({
             isCreateGame
             screenSize={screenSize}
             isClone={isClone}
+            isEdit={isEdit}
+            label={label}
             isCloneImageChanged={isCloneImageChanged}
             draftQuestion={draftQuestion}
             handleTitleChange={handleDebouncedTitleChange}

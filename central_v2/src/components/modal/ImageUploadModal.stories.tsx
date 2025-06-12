@@ -25,10 +25,7 @@ const Template: StoryFn<typeof ImageUploadModal> = function CardTemplate(args) {
   return (
     <ThemeProvider theme={Theme}>
       <I18nextProvider i18n={i18n}>
-        <ImageUploadModal
-          {...args}
-          screenSize={screenSize}
-        />
+        <ImageUploadModal {...args} screenSize={screenSize} />
       </I18nextProvider>
     </ThemeProvider>
   );

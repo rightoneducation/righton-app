@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const AISwitch = styled(Switch)(({ theme }) => ({ // eslint-disable-line 
+export const AISwitch = styled(Switch)(({ theme }) => ({ // eslint-disable-line
   padding: 8,
   '& .MuiSwitch-track': {
     borderRadius: 22 / 2,

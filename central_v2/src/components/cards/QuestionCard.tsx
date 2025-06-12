@@ -1,5 +1,8 @@
 import React from 'react';
-import { IQuestionTemplate, CloudFrontDistributionUrl  } from '@righton/networking';
+import {
+  IQuestionTemplate,
+  CloudFrontDistributionUrl,
+} from '@righton/networking';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CentralButton from '../button/Button';
@@ -32,7 +35,7 @@ const CarouselQuestionImage = styled(QuestionImage)(({ theme }) => ({
   paddingTop: '1px',
   paddingLeft: '1px',
   paddingRight: '1px',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
 }));
 
 const QuestionCard = styled(Box)(({ theme }) => ({
@@ -45,7 +48,7 @@ const QuestionCard = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   boxSizing: 'border-box',
   overflow: 'hidden',
-  position: 'relative'
+  position: 'relative',
 }));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
@@ -59,7 +62,7 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-start'
+  alignItems: 'flex-start',
 }));
 
 const TitleContainer = styled(Box)(() => ({
@@ -100,19 +103,23 @@ export default function StyledQuestionCard({
   isCarousel,
   isFavorite,
   handleViewButtonClick,
-  handleCloneButtonClick
+  handleCloneButtonClick,
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;
   const centralData = useCentralDataState();
   return (
     <QuestionCard>
-      { isCarousel 
-        ? <CarouselQuestionImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />  
-        : <QuestionImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />       
-      }
-      { centralData.userStatus === UserStatusType.LOGGEDIN &&
-        <FavouriteButton isEnabled id={id}/>
-      }
+      {isCarousel ? (
+        <CarouselQuestionImage
+          src={`${CloudFrontDistributionUrl}${image}`}
+          alt="Tag"
+        />
+      ) : (
+        <QuestionImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />
+      )}
+      {centralData.userStatus === UserStatusType.LOGGEDIN && (
+        <FavouriteButton isEnabled isGame={false} id={id} />
+      )}
       <ContentContainer>
         <TitleContainer>
           <ButtonCCSS key={`${domainAndGrade}-${id}`}>
@@ -121,18 +128,18 @@ export default function StyledQuestionCard({
         </TitleContainer>
         <DescriptionText>{title}</DescriptionText>
         <BottomButtonBox>
-         <CentralButton
+          <CentralButton
             buttonType={ButtonType.VIEW}
             isEnabled
             onClick={() => handleViewButtonClick(question)}
           />
-          { centralData.userStatus === UserStatusType.LOGGEDIN &&
+          {centralData.userStatus === UserStatusType.LOGGEDIN && (
             <CentralButton
               buttonType={ButtonType.CLONE}
               isEnabled
               onClick={() => handleCloneButtonClick(question)}
             />
-          }
+          )}
         </BottomButtonBox>
       </ContentContainer>
     </QuestionCard>
