@@ -482,6 +482,7 @@ export default function useCentralDataManager({
               null,
               centralData.selectedGrades ?? [],
               null,
+              true
             )
             .then((response) => {
               if (response) {
@@ -695,7 +696,6 @@ export default function useCentralDataManager({
           publicPrivateType: PublicPrivateType.PRIVATE,
         }
       : getCallType({ ...callTypeMatches });
-    console.log('fetchElement callType:', callType);
     switch (type) {
       case GameQuestionType.QUESTION: {
         const responseQuestion =

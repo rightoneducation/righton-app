@@ -259,7 +259,8 @@ export interface IGameTemplateAPIClient {
     sortDirection: string | null,
     filterString: string | null,
     gradeTargets: GradeTarget[],
-    favIds: string[] | null
+    favIds: string[] | null,
+    isExploreGames?: boolean
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByDate<T extends PublicPrivateType>(
