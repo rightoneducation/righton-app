@@ -7,11 +7,14 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import SignUp from '../pages/SignUp';
 import Confirmation from '../pages/Confirmation';
 import GoogleSignup from '../pages/GoogleSignup';
-import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
+import {
+  useCentralDataState,
+  useCentralDataDispatch,
+} from '../hooks/context/useCentralDataContext';
 import { UserStatusType } from '../lib/CentralModels';
 import ResetPassword from '../pages/ResetPassword';
 
-interface SignUpSwitchProps{
+interface SignUpSwitchProps {
   setIsTabsOpen: (isOpen: boolean) => void;
   checkForUniqueEmail: (email: string) => Promise<boolean>;
 }
@@ -19,15 +22,17 @@ interface SignUpSwitchProps{
 export default function SignUpSwitch({
   setIsTabsOpen,
   checkForUniqueEmail,
-}:SignUpSwitchProps) {
+}: SignUpSwitchProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
 
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
-  const [step, setStep] = useState<'signup' | 'confirmation' | 'googlesignup'>('signup');
+  const [step, setStep] = useState<'signup' | 'confirmation' | 'googlesignup'>(
+    'signup',
+  );
   const googlenextstep = useMatch('/nextstep') !== null;
-  
+
   // Override step dynamically if googlenextstep is true
   const centralData = useCentralDataState();
 
@@ -48,7 +53,7 @@ export default function SignUpSwitch({
     const fileName = file.name;
     const fileType = file.type;
   };
-  
+
   switch (currentStep) {
     case 'confirmation':
       return (
@@ -86,5 +91,4 @@ export default function SignUpSwitch({
         />
       );
   }
-  
 }

@@ -14,7 +14,7 @@ export function MostPopularContainer({ // eslint-disable-line
   children,
 }: MostPopularContainerProps) {
   const theme = useTheme();
-  
+
   return (
     <Box
       sx={{
@@ -24,7 +24,9 @@ export function MostPopularContainer({ // eslint-disable-line
         width: '100%',
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundColor: isMyLibrary ? `none` : `${theme.palette.primary.creamBackgroundColor}`,
+        backgroundColor: isMyLibrary
+          ? `none`
+          : `${theme.palette.primary.creamBackgroundColor}`,
         padding:
           screenSize === ScreenSize.SMALL
             ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`

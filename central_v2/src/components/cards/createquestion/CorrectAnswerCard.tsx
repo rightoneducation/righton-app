@@ -2,35 +2,50 @@ import React, { useEffect } from 'react';
 import { Typography, Box, InputAdornment, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Close } from '@mui/icons-material';
-import { Answer, CentralQuestionTemplateInput, AnswerType, AnswerPrecision } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
 import {
-  QuestionTitleStyled,
-} from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
-import { 
-  TextContainerStyled, 
-  BaseCardStyled 
+  Answer,
+  CentralQuestionTemplateInput,
+  AnswerType,
+  AnswerPrecision,
+} from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
+import { QuestionTitleStyled } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
+import {
+  TextContainerStyled,
+  BaseCardStyled,
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import {
   ErrorIcon,
-  RemoveQuestionIcon
+  RemoveQuestionIcon,
 } from '../../../lib/styledcomponents/CentralStyledComponents';
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import ErrorBox from './ErrorBox';
 import errorIcon from '../../../images/errorIcon.svg';
 import SelectAnswerSetting from './SelectAnswerSetting';
-import { ScreenSize, AnswerSettingsDropdownType } from '../../../lib/CentralModels';
-
+import {
+  ScreenSize,
+  AnswerSettingsDropdownType,
+} from '../../../lib/CentralModels';
 
 interface DetailedQuestionSubCardProps {
   screenSize: ScreenSize;
   isClone: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   isHighlight: boolean;
-  handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CentralQuestionTemplateInput) => void;
-  handleCorrectAnswerStepsChange: (steps: string[], draftQuestion: CentralQuestionTemplateInput) => void;
-  handleAnswerSettingsChange: (draftQuestion: CentralQuestionTemplateInput, answerType: AnswerType,  answerPrecision?: AnswerPrecision, ) => void;
+  handleCorrectAnswerChange: (
+    correctAnswer: string,
+    draftQuestion: CentralQuestionTemplateInput,
+  ) => void;
+  handleCorrectAnswerStepsChange: (
+    steps: string[],
+    draftQuestion: CentralQuestionTemplateInput,
+  ) => void;
+  handleAnswerSettingsChange: (
+    draftQuestion: CentralQuestionTemplateInput,
+    answerType: AnswerType,
+    answerPrecision?: AnswerPrecision,
+  ) => void;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
   isAIError: boolean;
@@ -40,7 +55,7 @@ export default function DetailedQuestionSubCard({
   screenSize,
   isClone,
   draftQuestion,
-  isHighlight, 
+  isHighlight,
   handleCorrectAnswerChange,
   handleCorrectAnswerStepsChange,
   handleAnswerSettingsChange,
@@ -49,7 +64,7 @@ export default function DetailedQuestionSubCard({
   isAIError,
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
-  
+
   const addStep = () => {
     const newSteps = [...draftQuestion.correctCard.answerSteps, ''];
     handleCorrectAnswerStepsChange(newSteps, draftQuestion);
@@ -65,14 +80,22 @@ export default function DetailedQuestionSubCard({
     handleAnswerSettingsChange(draftQuestion, answerType);
   };
 
-  const handleAnswerSettingsPrecisionTypeChange = (answerPrecision: AnswerPrecision) => {
-    handleAnswerSettingsChange(draftQuestion, AnswerType.NUMBER, answerPrecision);
+  const handleAnswerSettingsPrecisionTypeChange = (
+    answerPrecision: AnswerPrecision,
+  ) => {
+    handleAnswerSettingsChange(
+      draftQuestion,
+      AnswerType.NUMBER,
+      answerPrecision,
+    );
   };
 
   const handleDeleteStep = (index: number): void => {
-    const newSteps = draftQuestion.correctCard.answerSteps.filter((step,i) => i !== index);
+    const newSteps = draftQuestion.correctCard.answerSteps.filter(
+      (step, i) => i !== index,
+    );
     handleCorrectAnswerStepsChange(newSteps, draftQuestion);
-  }
+  };
 
   const answerStepsComponent = (step: string, index: number) => {
     return (
@@ -97,20 +120,20 @@ export default function DetailedQuestionSubCard({
           {index + 1}
         </Typography>
         <TextContainerStyled
-            multiline 
-            variant="outlined" 
-            value={draftQuestion.correctCard.answerSteps[index]}
-            onChange={(e) => handleStepChange(index, e.target.value)}
-            rows='4'
-            sx={{
-              '& .MuiInputBase-root': {
-                fontFamily: 'Rubik',
-              },
-             '& .MuiInputBase-input': {
+          multiline
+          variant="outlined"
+          value={draftQuestion.correctCard.answerSteps[index]}
+          onChange={(e) => handleStepChange(index, e.target.value)}
+          rows="4"
+          sx={{
+            '& .MuiInputBase-root': {
+              fontFamily: 'Rubik',
+            },
+            '& .MuiInputBase-input': {
               color: '#47366C',
               opacity: isCardErrored ? 1 : 0.5,
               '&::placeholder': {
-                color: isCardErrored ? '#D0254D': '#47366C',
+                color: isCardErrored ? '#D0254D' : '#47366C',
                 opacity: isCardErrored ? 1 : 0.5,
               },
               '&:focus': {
@@ -122,122 +145,146 @@ export default function DetailedQuestionSubCard({
                 opacity: 1,
               },
             },
-            }} 
-            placeholder={`Enter step ${index + 1}...`}
-            error={(isCardErrored) && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0)}
-            InputProps={{
-              startAdornment: (
-                isCardErrored && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0) &&
-                  <InputAdornment
-                    position="start" 
-                    sx={{ 
-                      alignSelf: 'flex-start',
-                      mt: '10px',
-                    }}
-                  >
-                    <ErrorIcon src={errorIcon} alt='error icon'/>
-                  </InputAdornment>
+          }}
+          placeholder={`Enter step ${index + 1}...`}
+          error={
+            isCardErrored &&
+            (!draftQuestion.correctCard.answerSteps[index] ||
+              draftQuestion.correctCard.answerSteps[index].length === 0)
+          }
+          InputProps={{
+            startAdornment: isCardErrored &&
+              (!draftQuestion.correctCard.answerSteps[index] ||
+                draftQuestion.correctCard.answerSteps[index].length === 0) && (
+                <InputAdornment
+                  position="start"
+                  sx={{
+                    alignSelf: 'flex-start',
+                    mt: '10px',
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt="error icon" />
+                </InputAdornment>
               ),
 
-              endAdornment: index !== 0 && (
-                <InputAdornment
-                position='end'
-                sx={{ 
+            endAdornment: index !== 0 && (
+              <InputAdornment
+                position="end"
+                sx={{
                   alignSelf: 'flex-start',
                   mt: '10px',
                 }}
-                >
-                   <IconButton onClick={() => handleDeleteStep(index)}>
-                <Close sx={{ color: "#999", width: 15, height: 15, }} />
-                   </IconButton>
-                </InputAdornment>
-              )
-              }}
-          />
+              >
+                <IconButton onClick={() => handleDeleteStep(index)}>
+                  <Close sx={{ color: '#999', width: 15, height: 15 }} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
       </Box>
     );
   };
-  
+
   return (
-    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.correctCard.isCardComplete} isClone={isClone}>
-      <QuestionTitleStyled sx={{ color: "#47366C"}}>
+    <BaseCardStyled
+      elevation={6}
+      isHighlight={isHighlight}
+      isCardComplete={draftQuestion.correctCard.isCardComplete}
+      isClone={isClone}
+    >
+      <QuestionTitleStyled sx={{ color: '#47366C' }}>
         Correct Answer
       </QuestionTitleStyled>
       <TextContainerStyled
-        multiline 
-        variant="outlined" 
-        rows='1'
+        multiline
+        variant="outlined"
+        rows="1"
         sx={{
-              '& .MuiOutlinedInput-root': {
-              fontFamily: 'Rubik',
-              height: '43px',
-            },
+          '& .MuiOutlinedInput-root': {
+            fontFamily: 'Rubik',
+            height: '43px',
+          },
           '& .MuiInputBase-input': {
-              color: '#47366C',
+            color: '#47366C',
+            opacity: isCardErrored ? 1 : 0.5,
+            '&::placeholder': {
+              color: isCardErrored ? '#D0254D' : '#47366C',
               opacity: isCardErrored ? 1 : 0.5,
-                '&::placeholder': {
-                  color: isCardErrored ? '#D0254D': '#47366C',
-                  opacity: isCardErrored ? 1 : 0.5,
-              },
-              '&:focus': {
-                color: '#47366C',
-                opacity: 1,
-              },
-              '&:focus::placeholder': {
-                color: '#47366C',
-                opacity: 1,
-              },
             },
+            '&:focus': {
+              color: '#47366C',
+              opacity: 1,
+            },
+            '&:focus::placeholder': {
+              color: '#47366C',
+              opacity: 1,
+            },
+          },
         }}
-        placeholder="Enter Correct Answer..." 
+        placeholder="Enter Correct Answer..."
         value={draftQuestion.correctCard.answer}
-        onChange={(e) => handleCorrectAnswerChange(e.target.value, draftQuestion)}
-        error={(isCardSubmitted  || isAIError) && (!draftQuestion.correctCard.answer || draftQuestion.correctCard.answer.length === 0)}
+        onChange={(e) =>
+          handleCorrectAnswerChange(e.target.value, draftQuestion)
+        }
+        error={
+          (isCardSubmitted || isAIError) &&
+          (!draftQuestion.correctCard.answer ||
+            draftQuestion.correctCard.answer.length === 0)
+        }
         InputProps={{
-          startAdornment: 
-          (isCardSubmitted || isAIError) && (!draftQuestion.correctCard.answer || draftQuestion.correctCard.answer.length === 0) &&
-            <InputAdornment
-              position="start" 
-              sx={{ 
-                alignSelf: 'flex-start',
-                mt: '5px'
-              }}
-            >
-              <ErrorIcon src={errorIcon} alt='error icon'/>
-            </InputAdornment>
+          startAdornment: (isCardSubmitted || isAIError) &&
+            (!draftQuestion.correctCard.answer ||
+              draftQuestion.correctCard.answer.length === 0) && (
+              <InputAdornment
+                position="start"
+                sx={{
+                  alignSelf: 'flex-start',
+                  mt: '5px',
+                }}
+              >
+                <ErrorIcon src={errorIcon} alt="error icon" />
+              </InputAdornment>
+            ),
         }}
       />
       <SelectAnswerSetting
-          screenSize={screenSize}
-          type={AnswerSettingsDropdownType.TYPE}
-          isCardSubmitted={isCardSubmitted}
-          answerSettingsType={draftQuestion.correctCard.answerSettings.answerType }
-          onSetAnswerSettingsType={handleAnswerSettingsTypeChange}
-          isCardError={isCardErrored}
+        screenSize={screenSize}
+        type={AnswerSettingsDropdownType.TYPE}
+        isCardSubmitted={isCardSubmitted}
+        answerSettingsType={draftQuestion.correctCard.answerSettings.answerType}
+        onSetAnswerSettingsType={handleAnswerSettingsTypeChange}
+        isCardError={isCardErrored}
       />
-      { draftQuestion.correctCard.answerSettings.answerType === AnswerType.NUMBER &&
-          <SelectAnswerSetting
+      {draftQuestion.correctCard.answerSettings.answerType ===
+        AnswerType.NUMBER && (
+        <SelectAnswerSetting
           screenSize={screenSize}
           type={AnswerSettingsDropdownType.PRECISION}
           isCardSubmitted={isCardSubmitted}
-          answerSettingsPrecisionType={draftQuestion.correctCard.answerSettings.answerPrecision}
-          onSetAnswerSettingsPrecisionType={handleAnswerSettingsPrecisionTypeChange}
+          answerSettingsPrecisionType={
+            draftQuestion.correctCard.answerSettings.answerPrecision
+          }
+          onSetAnswerSettingsPrecisionType={
+            handleAnswerSettingsPrecisionTypeChange
+          }
           isCardError={isCardErrored}
-      />
-      }
-      <QuestionTitleStyled sx={{ color: "#47366C"}}>
+        />
+      )}
+      <QuestionTitleStyled sx={{ color: '#47366C' }}>
         Solution Steps
       </QuestionTitleStyled>
-      {draftQuestion.correctCard.answerSteps && 
-        draftQuestion.correctCard.answerSteps.map((step, index) => 
-          answerStepsComponent(step, index)
-        )
-      }
-      { isCardErrored &&
-          <ErrorBox/>
-      }
-      <Box style = {{width: '100%', display: 'flex', justifyContent: 'center'}}>
-        <CentralButton buttonType={ButtonType.ADDSTEP} isEnabled onClick={addStep}/>
+      {draftQuestion.correctCard.answerSteps &&
+        draftQuestion.correctCard.answerSteps.map((step, index) =>
+          answerStepsComponent(step, index),
+        )}
+      {isCardErrored && <ErrorBox />}
+      <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <CentralButton
+          buttonType={ButtonType.ADDSTEP}
+          isEnabled
+          onClick={addStep}
+        />
       </Box>
     </BaseCardStyled>
   );

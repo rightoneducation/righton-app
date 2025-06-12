@@ -8,7 +8,7 @@ export const CustomTooltip = styled(Tooltip)({ // eslint-disable-line
     fontSize: '14px',
     padding: '10px 15px',
     borderRadius: '8px',
-    maxWidth: '250px', 
+    maxWidth: '250px',
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
   },
   '& .MuiTooltip-arrow': {

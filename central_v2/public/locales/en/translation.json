@@ -58,7 +58,7 @@
     "public": "Public",
     "private": "Private"
   },
-  "gameQuestionButton":{
+  "gameQuestionButton": {
     "games": "Games",
     "questions": "Questions"
   }

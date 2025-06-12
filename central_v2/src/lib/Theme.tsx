@@ -18,8 +18,7 @@ const radialGradient =
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
 const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
-const aiGradient = 
-  'linear-gradient(90deg, #4700B2 0%, #5A257D 100%)';
+const aiGradient = 'linear-gradient(90deg, #4700B2 0%, #5A257D 100%)';
 const questionGradient =
   'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator
 const circularProgress = '#159EFA';
@@ -659,7 +658,7 @@ export default createTheme({
       sliderGrey,
       sliderBlue,
       uploadLightGrey,
-      uploadDarkGrey
+      uploadDarkGrey,
     },
   },
   typography: {

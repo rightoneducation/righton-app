@@ -12,12 +12,20 @@ import {
   IUserProfile,
   PublicPrivateType,
   GradeTarget,
-  deleteQuestion
+  deleteQuestion,
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
-import { ScreenSize, GameQuestionType, ISelectedGame, ISelectedQuestion } from '../lib/CentralModels';
+import {
+  useCentralDataState,
+  useCentralDataDispatch,
+} from '../hooks/context/useCentralDataContext';
+import {
+  ScreenSize,
+  GameQuestionType,
+  ISelectedGame,
+  ISelectedQuestion,
+} from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
@@ -34,19 +42,23 @@ import ModalBackground from '../components/modal/ModalBackground';
 interface ExploreQuestionsProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  fetchElement: (type: GameQuestionType, id: string) => Promise<ISelectedGame | ISelectedQuestion>;
-  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  fetchElement: (
+    type: GameQuestionType,
+    id: string,
+  ) => Promise<ISelectedGame | ISelectedQuestion>;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
   fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
-  handleSortChange: (
-    newSort: {
-      field: SortType;
-      direction: SortDirection | null;
-    }
-  ) => void;
+  handleSortChange: (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => void;
   handleSearchChange: (searchString: string) => void;
   loadMore: () => void;
-  deleteQuestionTemplate: (questionId: string, type: PublicPrivateType) => Promise<void>;
+  deleteQuestionTemplate: (
+    questionId: string,
+    type: PublicPrivateType,
+  ) => Promise<void>;
 }
 
 export default function ExploreQuestions({
@@ -59,8 +71,8 @@ export default function ExploreQuestions({
   handleSortChange,
   handleSearchChange,
   loadMore,
-  deleteQuestionTemplate
-}:ExploreQuestionsProps) {
+  deleteQuestionTemplate,
+}: ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -69,15 +81,17 @@ export default function ExploreQuestions({
   const [hasInitialized, setHasInitialized] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  
+
   if (!hasInitialized) {
-    const needsFetch = centralData.recommendedQuestions.length === 0 || centralData.mostPopularQuestions.length === 0; 
+    const needsFetch =
+      centralData.recommendedQuestions.length === 0 ||
+      centralData.mostPopularQuestions.length === 0;
     if (needsFetch) {
-      fetchElements(); 
+      fetchElements();
     }
     setHasInitialized(true);
   }
- 
+
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
@@ -89,7 +103,10 @@ export default function ExploreQuestions({
     setSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
-    const selectedQ = await fetchElement(GameQuestionType.QUESTION, question.id);
+    const selectedQ = await fetchElement(
+      GameQuestionType.QUESTION,
+      question.id,
+    );
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
       setSelectedQuestion(selectedQ.question);
     }
@@ -116,9 +133,9 @@ export default function ExploreQuestions({
       setSelectedQuestion(questionSet[0]);
     }
   };
-  
+
   const handleBackToExplore = () => {
-     setSelectedQuestion(null);
+    setSelectedQuestion(null);
   };
 
   const handleCloseQuestionTabs = () => {
@@ -126,7 +143,7 @@ export default function ExploreQuestions({
       type: 'SET_IS_TABS_OPEN',
       payload: false,
     });
-  }
+  };
 
   const handleCloneButtonClick = () => {
     setIsTabsOpen(false);
@@ -134,7 +151,9 @@ export default function ExploreQuestions({
       type: 'SET_SELECTED_QUESTION',
       payload: selectedQuestion,
     });
-    navigate(`/clone/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
+    navigate(
+      `/clone/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`,
+    );
   };
 
   const handleEditQuestion = () => {
@@ -143,8 +162,10 @@ export default function ExploreQuestions({
       type: 'SET_SELECTED_QUESTION',
       payload: selectedQuestion,
     });
-    navigate(`/edit/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`);
-  }
+    navigate(
+      `/edit/question/${selectedQuestion?.publicPrivateType}/${selectedQuestion?.id}`,
+    );
+  };
 
   const handleEditButtonClick = () => {
     if (selectedQuestion?.publicPrivateType === PublicPrivateType.PUBLIC) {
@@ -157,10 +178,13 @@ export default function ExploreQuestions({
   const handleDeleteQuestion = async () => {
     try {
       if (selectedQuestion) {
-        await deleteQuestionTemplate(selectedQuestion.id, selectedQuestion.publicPrivateType);
+        await deleteQuestionTemplate(
+          selectedQuestion.id,
+          selectedQuestion.publicPrivateType,
+        );
         setIsDeleteModalOpen(false);
         setSelectedQuestion(null);
-        centralDataDispatch({type: 'SET_SELECTED_QUESTION', payload: null});
+        centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: null });
         centralDataDispatch({
           type: 'SET_IS_TABS_OPEN',
           payload: false,
@@ -187,55 +211,70 @@ export default function ExploreQuestions({
   const handleCloseModal = () => {
     setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
-  }
+  };
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-        <ModalBackground isModalOpen={isEditModalOpen} handleCloseModal={handleCloseModal}/>
-        <EditModal
-          isModalOpen={isEditModalOpen}
-          gameQuestion={GameQuestionType.QUESTION}
-          setIsModalOpen={setIsEditModalOpen}
-          handleProceedToEdit={handleEditQuestion}
+      <ModalBackground
+        isModalOpen={isEditModalOpen}
+        handleCloseModal={handleCloseModal}
+      />
+      <EditModal
+        isModalOpen={isEditModalOpen}
+        gameQuestion={GameQuestionType.QUESTION}
+        setIsModalOpen={setIsEditModalOpen}
+        handleProceedToEdit={handleEditQuestion}
+      />
+      <EditModal
+        isModalOpen={isDeleteModalOpen}
+        gameQuestion={GameQuestionType.QUESTION}
+        setIsModalOpen={setIsDeleteModalOpen}
+        handleProceedToEdit={handleDeleteQuestion}
+      />
+      <>
+        <QuestionTabsModalBackground
+          isTabsOpen={centralData.isTabsOpen}
+          handleBackToExplore={handleBackToExplore}
         />
-        <EditModal
-          isModalOpen={isDeleteModalOpen}
-          gameQuestion={GameQuestionType.QUESTION}
-          setIsModalOpen={setIsDeleteModalOpen}
-          handleProceedToEdit={handleDeleteQuestion}
+        <QuestionTabs
+          screenSize={screenSize}
+          isTabsOpen={centralData.isTabsOpen}
+          question={selectedQuestion}
+          questions={questionSet}
+          setIsTabsOpen={setIsTabsOpen}
+          fetchElements={fetchElements}
+          setSelectedQuestion={setSelectedQuestion}
+          handleCloseQuestionTabs={handleCloseQuestionTabs}
+          handleBackToExplore={handleBackToExplore}
+          handlePrevQuestion={handlePrevQuestion}
+          handleNextQuestion={handleNextQuestion}
+          handleCloneButtonClick={handleCloneButtonClick}
+          handleEditButtonClick={handleEditButtonClick}
+          handleDeleteButtonClick={handleDeleteButtonClick}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+          handleSearchChange={handleSearchChange}
+          handlePublicPrivateChange={handlePublicPrivateChange}
+          handleQuestionView={handleView}
         />
-        <>
-          <QuestionTabsModalBackground
-            isTabsOpen={centralData.isTabsOpen}
-            handleBackToExplore={handleBackToExplore}
-          />
-          <QuestionTabs
-            screenSize={screenSize}
-            isTabsOpen={centralData.isTabsOpen}
-            question={selectedQuestion}
-            questions={questionSet}
-            setIsTabsOpen={setIsTabsOpen}
-            fetchElements={fetchElements}
-            setSelectedQuestion={setSelectedQuestion}
-            handleCloseQuestionTabs={handleCloseQuestionTabs}
-            handleBackToExplore={handleBackToExplore}
-            handlePrevQuestion={handlePrevQuestion}
-            handleNextQuestion={handleNextQuestion}
-            handleCloneButtonClick={handleCloneButtonClick}
-            handleEditButtonClick={handleEditButtonClick}
-            handleDeleteButtonClick={handleDeleteButtonClick}
-            handleChooseGrades={handleChooseGrades}
-            handleSortChange={handleSortChange}
-            handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
-            handleQuestionView={handleView}
-          />
-        </>
-  
+      </>
+
       <ExploreGamesUpperContainer screenSize={screenSize}>
-        {!isSearchResults && 
-          <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />
-        }
+        {!isSearchResults && (
+          <img
+            src={mathSymbolsBackground}
+            alt="Math Symbol Background"
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              bottom: '0',
+              zIndex: 0,
+              objectFit: 'none',
+              overflow: 'hidden',
+            }}
+          />
+        )}
         <SearchBar
           screenSize={screenSize}
           searchTerms={centralData.searchTerms}
@@ -243,7 +282,7 @@ export default function ExploreQuestions({
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
         />
-        {!isSearchResults && 
+        {!isSearchResults && (
           <Recommended<IQuestionTemplate>
             screenSize={screenSize}
             recommendedElements={centralData.recommendedQuestions}
@@ -251,19 +290,24 @@ export default function ExploreQuestions({
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
           />
-        }
+        )}
       </ExploreGamesUpperContainer>
       <InfiniteScroll
         dataLength={centralData.mostPopularQuestions.length}
         next={loadMore}
         hasMore={centralData.nextToken !== null}
         loader={
-                <Box style={{width: '100%', display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}> 
-                  <h4>
-                    ...
-                  </h4>
-                </Box>
-              }
+          <Box
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              paddingBottom: '20px',
+            }}
+          >
+            <h4>...</h4>
+          </Box>
+        }
         scrollableTarget="scrollableDiv"
         style={{
           width: '100vw',
@@ -277,15 +321,23 @@ export default function ExploreQuestions({
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
           grades={isSearchResults ? centralData.selectedGrades : undefined}
-          galleryElements={isSearchResults ? centralData.searchedQuestions : centralData.mostPopularQuestions}
+          galleryElements={
+            isSearchResults
+              ? centralData.searchedQuestions
+              : centralData.mostPopularQuestions
+          }
           elementType={ElementType.QUESTION}
-           galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
+          galleryType={
+            isSearchResults
+              ? GalleryType.SEARCH_RESULTS
+              : GalleryType.MOST_POPULAR
+          }
           setIsTabsOpen={setIsTabsOpen}
           handleView={handleView}
           isLoading={centralData.isLoading}
         />
       </InfiniteScroll>
-      <Box 
+      <Box
         style={{
           height: '100%',
           width: '100%',

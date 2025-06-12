@@ -52,17 +52,15 @@ type RadioLabelProps = {
 
 export const RadioLabelStyled = styled(FormControlLabel, {
   shouldForwardProp: (prop) => prop !== 'isSelected',
-})<RadioLabelProps>(
-  ({ theme, isSelected }) => ({
-    cursor: 'default',
-    margin: 0,
+})<RadioLabelProps>(({ theme, isSelected }) => ({
+  cursor: 'default',
+  margin: 0,
+  color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
+  '& .MuiTypography-root': {
     color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
-    '& .MuiTypography-root': {
-      color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
-      fontSize: '14px'
-    },
-  }),
-);
+    fontSize: '14px',
+  },
+}));
 
 export const RadioStyled = styled(Radio)(({ theme }) => ({
   cursor: 'default',
@@ -94,7 +92,7 @@ export const ImageStyled = styled('img')({
   objectFit: 'cover',
   position: 'absolute',
   top: 0,
-  left: 0
+  left: 0,
 });
 
 export const ContentRightContainerStyled = styled(Box)(({ theme }) => ({

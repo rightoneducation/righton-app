@@ -3,8 +3,16 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
-import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
-import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
+import {
+  useCentralDataState,
+  useCentralDataDispatch,
+} from '../hooks/context/useCentralDataContext';
+import {
+  ScreenType,
+  ScreenSize,
+  GameQuestionType,
+  UserStatusType,
+} from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
@@ -17,38 +25,36 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
 }));
 
 const BodyContainer = styled(Box)(() => {
-    return {
-      width: '100%',
-      display: 'flex',
-      flexGrow: 1,
-      overflowY: 'auto',
-      '&::-webkit-scrollbar': {
-        // Chrome and Safari
-        display: 'none',
-      },
-      scrollbarWidth: 'none', // Firefox
-      msOverflowStyle: 'none',
-    }
-  }
-);
+  return {
+    width: '100%',
+    display: 'flex',
+    flexGrow: 1,
+    overflowY: 'auto',
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    msOverflowStyle: 'none',
+  };
+});
 
 interface AppContainerProps {
   currentScreen: ScreenType;
   gameQuestion?: GameQuestionType;
   setIsTabsOpen?: (isTabsOpen: boolean) => void;
-  setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void
+  setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void;
   handleLogOut: () => void;
   children: React.ReactNode;
-  
 }
 
-function AppContainer({ 
-  currentScreen, 
+function AppContainer({
+  currentScreen,
   gameQuestion,
-  setIsTabsOpen, 
+  setIsTabsOpen,
   setLibraryGameQuestionSwitch,
   handleLogOut,
-  children 
+  children,
 }: AppContainerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -63,19 +69,18 @@ function AppContainer({
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
   const handleBackToExplore = () => {
-    if (setIsTabsOpen)
-      setIsTabsOpen(false);
-  }
+    if (setIsTabsOpen) setIsTabsOpen(false);
+  };
 
   return (
     <ScreenContainer>
       <HeaderContainer>
-        { centralData.isTabsOpen && 
-          <QuestionTabsModalBackground 
-            isTabsOpen={centralData.isTabsOpen} 
-            handleBackToExplore={handleBackToExplore} 
+        {centralData.isTabsOpen && (
+          <QuestionTabsModalBackground
+            isTabsOpen={centralData.isTabsOpen}
+            handleBackToExplore={handleBackToExplore}
           />
-        }
+        )}
         <Header
           currentScreen={currentScreen}
           screenSize={screenSize}

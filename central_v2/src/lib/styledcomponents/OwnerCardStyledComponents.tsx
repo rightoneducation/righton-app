@@ -26,11 +26,11 @@ export const LeftProfileTopContainer = styled(Box)(({ theme }) => ({
 
 export const LeftNameText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins, sans-serif',
-  fontWeight: 'bold', 
-  fontSize: '40px', 
+  fontWeight: 'bold',
+  fontSize: '40px',
   lineHeight: '40px',
   color: '#FFFFFF',
-  textAlign: 'center', 
+  textAlign: 'center',
   width: '100%',
 }));
 
@@ -40,7 +40,6 @@ export const AtUserNameContainerAndAccount = styled(Box)(({ theme }) => ({
   minwidth: '139px',
   gap: '8px',
   alignItems: 'center',
-
 }));
 
 export const AtUserNameContainer = styled(Box)(({ theme }) => ({
@@ -67,22 +66,22 @@ export const LeftAccountCreatedContainer = styled(Box)(({ theme }) => ({
 
 export const LeftAccountCreatedInfo = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins, sans-serif',
-  fontWeight: 400, 
-  fontSize: '14px', 
+  fontWeight: 400,
+  fontSize: '14px',
   color: '#FFFFFF',
 }));
 
 export const LeftDateText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Rubik, sans-serif',
-  fontWeight: 400, 
-  fontSize: '12px', 
+  fontWeight: 400,
+  fontSize: '12px',
   color: '#FFFFFF',
 }));
 
 export const LeftBottomContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   width: '100%',
-  gap: '8px'
+  gap: '8px',
 }));
 
 export const LeftBottomGamesQuestionContainer = styled(Box)(({ theme }) => ({
@@ -103,22 +102,22 @@ export const LeftBottomGamesContainer = styled(Box)(({ theme }) => ({
   paddingTop: '8px',
   paddingBottom: '13px',
   boxSizing: 'border-box',
-  width: "100%"
+  width: '100%',
 }));
 
 export const LeftBottomGamesText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins, sans-serif',
-  fontWeight: 400, 
-  fontSize: '12px', 
+  fontWeight: 400,
+  fontSize: '12px',
   color: '#CCCCCC',
 }));
 
 export const LeftBottomGamesNumber = styled(Typography)(({ theme }) => ({
   fontFamily: 'Rubik, sans-serif',
-  fontWeight: 400, 
-  fontSize: '36px', 
+  fontWeight: 400,
+  fontSize: '36px',
   color: '#FFFFFF',
-  lineHeight: '100%'
+  lineHeight: '100%',
 }));
 
 export const TopProfileContainer = styled(Box)(({ theme }) => ({
@@ -137,12 +136,12 @@ export const TopProfileContainer = styled(Box)(({ theme }) => ({
 
 export const TopNameText = styled(LeftNameText)(({ theme }) => ({
   fontFamily: 'Poppins, sans-serif',
-  fontWeight: 'bold', 
-  fontSize: '32px', 
+  fontWeight: 'bold',
+  fontSize: '32px',
   lineHeight: '32px',
   color: '#FFFFFF',
   textAlign: 'center',
-  width: 'fit-content'
+  width: 'fit-content',
 }));
 
 export const TopSubContainer = styled(Box)(({ theme }) => ({
@@ -151,7 +150,7 @@ export const TopSubContainer = styled(Box)(({ theme }) => ({
   gap: '16px',
   alignItems: 'center',
   width: '100%',
-  maxWidth: '400px'
+  maxWidth: '400px',
 }));
 
 export const MobileUserNameContainer = styled(Box)(({ theme }) => ({
@@ -164,6 +163,8 @@ export const MobileUserNameContainer = styled(Box)(({ theme }) => ({
   borderRadius: '25px',
 }));
 
-export const MobileBottomGamesContainer = styled(LeftBottomGamesContainer)(({ theme }) => ({
-  width: 'fit-content',
-}));
+export const MobileBottomGamesContainer = styled(LeftBottomGamesContainer)(
+  ({ theme }) => ({
+    width: 'fit-content',
+  }),
+);

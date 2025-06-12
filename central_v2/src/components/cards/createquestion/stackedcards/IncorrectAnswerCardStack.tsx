@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Box, styled } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CentralQuestionTemplateInput, IncorrectCard } from '@righton/networking';
+import {
+  CentralQuestionTemplateInput,
+  IncorrectCard,
+} from '@righton/networking';
 import { APIClientsContext } from '../../../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../../../hooks/context/useAPIClientsContext';
 import { CreateQuestionHighlightCard } from '../../../../lib/CentralModels';
@@ -24,7 +27,12 @@ interface IncorrectAnswerCardStackProps {
   completeIncorrectAnswers: IncorrectCard[];
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
   handleNextCardButtonClick: (cardData: IncorrectCard) => void;
-  handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
+  handleIncorrectCardStackUpdate: (
+    cardData: IncorrectCard,
+    draftQuestion: CentralQuestionTemplateInput,
+    completeAnswers: IncorrectCard[],
+    incompleteAnswers: IncorrectCard[],
+  ) => void;
   handleAIError: () => void;
   isCardSubmitted: boolean;
   isAIEnabled: boolean;
@@ -40,39 +48,72 @@ export default function IncorrectAnswerCardStack({
   handleCardClick,
   handleNextCardButtonClick,
   handleIncorrectCardStackUpdate,
-  handleAIError, 
+  handleAIError,
   isCardSubmitted,
   isAIEnabled,
   isAIError,
 }: IncorrectAnswerCardStackProps) {
-
-  const allAnswers = [...incompleteIncorrectAnswers, ...completeIncorrectAnswers];
+  const allAnswers = [
+    ...incompleteIncorrectAnswers,
+    ...completeIncorrectAnswers,
+  ];
   // need to pass the apiClients created at app init to the AI components
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [topCardHeight, setTopCardHeight] = useState(258);
-  const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState(false);
+  const [isAIExplanationGenerated, setIsAIExplanationGenerated] =
+    useState(false);
   const handleTopCardHeightChange = (height: number) => {
     setTopCardHeight(height);
-  }
+  };
 
   const handleAIExplanationGenerated = (isGenerated: boolean) => {
     handleAIError();
     setIsAIExplanationGenerated(isGenerated);
-  }
+  };
 
-  const handleIncorrectCardStackUpdateLocal = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => {
-    handleIncorrectCardStackUpdate(cardData, draftQuestionInput, completeAnswers, incompleteAnswers);
+  const handleIncorrectCardStackUpdateLocal = (
+    cardData: IncorrectCard,
+    draftQuestionInput: CentralQuestionTemplateInput,
+    completeAnswers: IncorrectCard[],
+    incompleteAnswers: IncorrectCard[],
+  ) => {
+    handleIncorrectCardStackUpdate(
+      cardData,
+      draftQuestionInput,
+      completeAnswers,
+      incompleteAnswers,
+    );
     setIsAIExplanationGenerated(false);
-  }
+  };
   return (
     <CardStackContainer>
-      <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>
-        {allAnswers && allAnswers.map((_, index) => 
-            <IncorrectAnswerPill index={index} selectedIndex={completeIncorrectAnswers.length} />  
-          )
-        }
+      <Box
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '4px',
+        }}
+      >
+        {allAnswers &&
+          allAnswers.map((_, index) => (
+            <IncorrectAnswerPill
+              index={index}
+              selectedIndex={completeIncorrectAnswers.length}
+            />
+          ))}
       </Box>
-      <Box style={{ width: '100%', height: incompleteIncorrectAnswers.length > 0 ?  topCardHeight + ((incompleteIncorrectAnswers.length - 1) * 50) : 0, position: 'relative' }}>
+      <Box
+        style={{
+          width: '100%',
+          height:
+            incompleteIncorrectAnswers.length > 0
+              ? topCardHeight + (incompleteIncorrectAnswers.length - 1) * 50
+              : 0,
+          position: 'relative',
+        }}
+      >
         <AnimatePresence initial={false}>
           {incompleteIncorrectAnswers.map((card, index) => {
             if (index === 0) {
@@ -82,11 +123,11 @@ export default function IncorrectAnswerCardStack({
                   layout
                   layoutId={card.id}
                   initial={false}
-                  exit={{ 
-                    opacity: 0, 
+                  exit={{
+                    opacity: 0,
                     y: 274,
-                    transition: { duration: 0.6, ease: 'easeInOut' }
-                   }}
+                    transition: { duration: 0.6, ease: 'easeInOut' },
+                  }}
                   style={{
                     position: 'absolute',
                     width: '100%',
@@ -97,7 +138,7 @@ export default function IncorrectAnswerCardStack({
                   <IncorrectAnswerCard
                     apiClients={apiClients}
                     isClone={isClone}
-                    answerData={card} 
+                    answerData={card}
                     draftQuestion={draftQuestion}
                     isHighlight={highlightCard === card.id}
                     isCardSubmitted={isCardSubmitted}
@@ -105,14 +146,15 @@ export default function IncorrectAnswerCardStack({
                     isAIError={isAIError}
                     isTopCard
                     handleNextCardButtonClick={handleNextCardButtonClick}
-                    handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdateLocal}
+                    handleIncorrectCardStackUpdate={
+                      handleIncorrectCardStackUpdateLocal
+                    }
                     handleCardClick={handleCardClick}
                     handleTopCardHeightChange={handleTopCardHeightChange}
                     handleAIExplanationGenerated={handleAIExplanationGenerated}
                     completeAnswers={completeIncorrectAnswers}
-                    incompleteAnswers={incompleteIncorrectAnswers}                    
+                    incompleteAnswers={incompleteIncorrectAnswers}
                   />
-                
                 </motion.div>
               );
             }
@@ -122,21 +164,23 @@ export default function IncorrectAnswerCardStack({
                 style={{
                   width: '100%',
                   position: 'absolute',
-                  top: (topCardHeight - 302) + ((index) * 50),
+                  top: topCardHeight - 302 + index * 50,
                   zIndex: incompleteIncorrectAnswers.length - index,
                   transition: 'top 0.6s ease-in-out',
                 }}
               >
                 <IncorrectAnswerCard
-                  apiClients={apiClients}  
-                  isClone={isClone} 
-                  answerData={card} 
+                  apiClients={apiClients}
+                  isClone={isClone}
+                  answerData={card}
                   draftQuestion={draftQuestion}
                   isHighlight={highlightCard === card.id}
                   isCardSubmitted={isCardSubmitted}
                   isAIEnabled={isAIEnabled}
                   isAIError={false}
-                  handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
+                  handleIncorrectCardStackUpdate={
+                    handleIncorrectCardStackUpdate
+                  }
                   handleCardClick={handleCardClick}
                   handleAIExplanationGenerated={handleAIExplanationGenerated}
                   completeAnswers={completeIncorrectAnswers}
@@ -171,8 +215,8 @@ export default function IncorrectAnswerCardStack({
           >
             <IncorrectAnswerCard
               apiClients={apiClients}
-              isClone={isClone}   
-              answerData={card} 
+              isClone={isClone}
+              answerData={card}
               draftQuestion={draftQuestion}
               isHighlight={highlightCard === card.id}
               isCardSubmitted={isCardSubmitted}

@@ -21,28 +21,30 @@ import { SelectPhaseLabel } from '../../../lib/styledcomponents/CreateGameStyled
 
 export const SelectPhase = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize: ScreenSize, error: boolean }>(({ theme, screenSize, error }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  width: error ? "110px" :"96px", 
-  maxWidth: error ? "110px" :"96px",
-  minHeight: '28px',
-  background: '#fffbf6',
-  border: '1px solid #02215f',
-  padding: '4px 8px',
-  gap: error ? '1px': "9px", // ask design team since button width is 128px
-  boxSizing: 'border-box',
-  zIndex: 4,
-  cursor: 'pointer',
-  ':hover': {
-    backgroundColor: '#fffbf6',
-  },
-  '&:disabled': {
-    backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
-  },
-}));
+})<{ screenSize: ScreenSize; error: boolean }>(
+  ({ theme, screenSize, error }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: error ? '110px' : '96px',
+    maxWidth: error ? '110px' : '96px',
+    minHeight: '28px',
+    background: '#fffbf6',
+    border: '1px solid #02215f',
+    padding: '4px 8px',
+    gap: error ? '1px' : '9px', // ask design team since button width is 128px
+    boxSizing: 'border-box',
+    zIndex: 4,
+    cursor: 'pointer',
+    ':hover': {
+      backgroundColor: '#fffbf6',
+    },
+    '&:disabled': {
+      backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
+    },
+  }),
+);
 
 interface SelectPhaseButtonProps {
   screenSize: ScreenSize;
@@ -67,7 +69,7 @@ export default function SelectPhaseButton({
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
   // flag error if phase is not selected or
   const isPhaseError =
-    (isCardSubmitted && phaseTime === '') || (isCardError && phaseTime === "");
+    (isCardSubmitted && phaseTime === '') || (isCardError && phaseTime === '');
 
   // handle phase selection on menu item click
   const selectPhase = (phaseVal: string) => {
@@ -90,7 +92,7 @@ export default function SelectPhaseButton({
       }}
     >
       <SelectPhase
-      error={isPhaseError}
+        error={isPhaseError}
         sx={{
           borderRadius: isSelectOpen ? '5px 5px 0 0' : '5px',
           ...(isPhaseError && { border: '1px solid #D0254D' }),
@@ -98,7 +100,9 @@ export default function SelectPhaseButton({
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
-        {isPhaseError && <ErrorIcon sx={{ width: 17, height: 17 }} src={errorIcon} />}
+        {isPhaseError && (
+          <ErrorIcon sx={{ width: 17, height: 17 }} src={errorIcon} />
+        )}
         <SelectPhaseLabel isSelected={phaseTime !== ''} error={isPhaseError}>
           {phaseTime !== '' ? phaseTime : `Phase ${phaseNumber}`}
         </SelectPhaseLabel>
@@ -124,8 +128,8 @@ export default function SelectPhaseButton({
             top: 'auto',
             left: 0,
             gap: 0,
-            minWidth: isPhaseError ? "110px": '96px',
-            width: isPhaseError ? "110px":'96px',
+            minWidth: isPhaseError ? '110px' : '96px',
+            width: isPhaseError ? '110px' : '96px',
             borderRadius: '0 0 4px 4px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',
@@ -138,14 +142,16 @@ export default function SelectPhaseButton({
           {times.map((time, i) => (
             <Box
               onClick={() => selectPhase(time.label)}
-              sx={{ cursor: 'pointer', width: '100%', }}
+              sx={{ cursor: 'pointer', width: '100%' }}
             >
-              <SelectMenuItem sx={{  height: '23px', padding: '4px 8px', width: 'auto', }}>
+              <SelectMenuItem
+                sx={{ height: '23px', padding: '4px 8px', width: 'auto' }}
+              >
                 <Typography
                   fontWeight="normal"
                   fontSize="14px"
                   fontFamily="Rubik"
-                  sx={{ color: '#02215f'}}
+                  sx={{ color: '#02215f' }}
                 >
                   {time.label}
                 </Typography>
