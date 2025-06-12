@@ -1,11 +1,26 @@
-import { IGameTemplate, IQuestionTemplate, IUserProfile, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
-import { ICentralDataState, initCentralDataState, ISelectedGame, ISelectedQuestion, UserStatusType, LibraryTabEnum } from '../CentralModels';
+import {
+  IGameTemplate,
+  IQuestionTemplate,
+  IUserProfile,
+  GradeTarget,
+  PublicPrivateType,
+  SortType,
+  SortDirection,
+} from '@righton/networking';
+import {
+  ICentralDataState,
+  initCentralDataState,
+  ISelectedGame,
+  ISelectedQuestion,
+  UserStatusType,
+  LibraryTabEnum,
+} from '../CentralModels';
 
 export type CentralDataAction =
   | { type: 'SET_USER_STATUS'; payload: UserStatusType }
   | { type: 'SET_USER_PROFILE'; payload: IUserProfile }
   | { type: 'SET_USER_ERROR_STRING'; payload: string }
-  | { type: 'CLEAR_USER_PROFILE'}
+  | { type: 'CLEAR_USER_PROFILE' }
   | { type: 'SET_RECOMMENDED_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_MOST_POPULAR_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_SEARCHED_GAMES'; payload: IGameTemplate[] }
@@ -25,7 +40,7 @@ export type CentralDataAction =
   | { type: 'SET_SELECTED_QUESTION'; payload: ISelectedQuestion | null }
   | { type: 'SET_IS_LOADING'; payload: boolean }
   | { type: 'SET_IS_LOADING_INFINITE_SCROLL'; payload: boolean }
-  | { type: 'SET_NEXT_TOKEN'; payload: string | null}
+  | { type: 'SET_NEXT_TOKEN'; payload: string | null }
   | { type: 'SET_SEARCH_TERMS'; payload: string }
   | { type: 'SET_SELECTED_GRADES'; payload: GradeTarget[] }
   | { type: 'SET_IS_LIBRARY_INIT'; payload: boolean }
@@ -33,17 +48,33 @@ export type CentralDataAction =
   | { type: 'SET_OPEN_TAB'; payload: LibraryTabEnum }
   | { type: 'SET_IS_FAV_TAB_OPEN'; payload: boolean }
   | { type: 'SET_PUBLIC_PRIVATE'; payload: PublicPrivateType }
-  | { type: 'SET_SORT'; payload: { field: SortType, direction: SortDirection | null } }
-  | { type: 'SET_ADVANCE_GOOGLE_SIGNUP'; payload: { firstName: string, lastName: string, userStatus: UserStatusType } };
-  
-export const centralDataReducer = (state: ICentralDataState, action: CentralDataAction): ICentralDataState => {
+  | {
+      type: 'SET_SORT';
+      payload: { field: SortType; direction: SortDirection | null };
+    }
+  | {
+      type: 'SET_ADVANCE_GOOGLE_SIGNUP';
+      payload: {
+        firstName: string;
+        lastName: string;
+        userStatus: UserStatusType;
+      };
+    };
+
+export const centralDataReducer = (
+  state: ICentralDataState,
+  action: CentralDataAction,
+): ICentralDataState => {
   switch (action.type) {
     case 'SET_USER_STATUS':
       return { ...state, userStatus: action.payload };
     case 'SET_USER_PROFILE':
-      return { ...state, userProfile: {...state.userProfile, ...action.payload},};
+      return {
+        ...state,
+        userProfile: { ...state.userProfile, ...action.payload },
+      };
     case 'CLEAR_USER_PROFILE':
-      return { ...state, userProfile: {...initCentralDataState.userProfile} };
+      return { ...state, userProfile: { ...initCentralDataState.userProfile } };
     case 'SET_USER_ERROR_STRING':
       return { ...state, userErrorString: action.payload };
     case 'SET_RECOMMENDED_GAMES':
@@ -79,29 +110,37 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
     case 'SET_SELECTED_QUESTION':
       return { ...state, selectedQuestion: action.payload };
     case 'SET_IS_LOADING':
-      return {...state, isLoading: action.payload};
+      return { ...state, isLoading: action.payload };
     case 'SET_IS_LOADING_INFINITE_SCROLL':
-      return {...state, isLoadingInfiniteScroll: action.payload};
+      return { ...state, isLoadingInfiniteScroll: action.payload };
     case 'SET_NEXT_TOKEN':
-      return {...state, nextToken: action.payload};
+      return { ...state, nextToken: action.payload };
     case 'SET_SEARCH_TERMS':
-      return {...state, searchTerms: action.payload};
+      return { ...state, searchTerms: action.payload };
     case 'SET_SELECTED_GRADES':
-      return {...state, selectedGrades: action.payload};
+      return { ...state, selectedGrades: action.payload };
     case 'SET_IS_LIBRARY_INIT':
-      return {...state, isLibraryInit: action.payload};
+      return { ...state, isLibraryInit: action.payload };
     case 'SET_IS_TABS_OPEN':
-      return {...state, isTabsOpen: action.payload};
+      return { ...state, isTabsOpen: action.payload };
     case 'SET_OPEN_TAB':
-      return {...state, openTab: action.payload};
+      return { ...state, openTab: action.payload };
     case 'SET_IS_FAV_TAB_OPEN':
-      return {...state, isFavTabOpen: action.payload};
+      return { ...state, isFavTabOpen: action.payload };
     case 'SET_PUBLIC_PRIVATE':
-      return {...state, publicPrivate: action.payload};
+      return { ...state, publicPrivate: action.payload };
     case 'SET_SORT':
-      return {...state, sort: action.payload};
+      return { ...state, sort: action.payload };
     case 'SET_ADVANCE_GOOGLE_SIGNUP':
-      return  {...state, userProfile: {...state.userProfile, firstName: action.payload.firstName, lastName: action.payload.lastName}, userStatus: action.payload.userStatus};
+      return {
+        ...state,
+        userProfile: {
+          ...state.userProfile,
+          firstName: action.payload.firstName,
+          lastName: action.payload.lastName,
+        },
+        userStatus: action.payload.userStatus,
+      };
     default:
       return state;
   }

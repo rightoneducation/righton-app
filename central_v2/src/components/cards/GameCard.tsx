@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { IAPIClients, IGameTemplate, CloudFrontDistributionUrl  } from '@righton/networking';
+import {
+  IAPIClients,
+  IGameTemplate,
+  CloudFrontDistributionUrl,
+} from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ScreenSize, UserStatusType } from '../../lib/CentralModels';
@@ -26,7 +30,7 @@ interface StyledGameCardProps {
 const GameImageContainer = styled(Box)({
   width: '100%',
   height: '186px',
-  position: 'relative'
+  position: 'relative',
 });
 
 const GameImage = styled('img')({
@@ -41,7 +45,7 @@ const CarouselGameImage = styled(GameImage)(({ theme }) => ({
   paddingTop: '1px',
   paddingLeft: '1px',
   paddingRight: '1px',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
 }));
 
 const HeartSVG = styled('img')(({ theme }) => ({
@@ -57,7 +61,12 @@ interface GameCardProps {
 const GameCard = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'isCarousel',
 })<GameCardProps>(({ isCarousel, screenSize, theme }) => ({
-  width: screenSize !== ScreenSize.LARGE ? (isCarousel ? '290px' : '327px') : '384px', // eslint-disable-line
+  width: 
+    screenSize !== ScreenSize.LARGE // eslint-disable-line
+      ? isCarousel
+        ? '290px'
+        : '327px'
+      : '384px',
   height: '100%',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
@@ -79,12 +88,12 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-start'
+  alignItems: 'flex-start',
 }));
 
-const ButtonContainer = styled (ContentContainer)({
+const ButtonContainer = styled(ContentContainer)({
   paddingTop: 0,
-  justifyContent: 'flex-end'
+  justifyContent: 'flex-end',
 });
 
 const TitleTextTypography = styled(Typography)(({ theme }) => ({
@@ -169,48 +178,57 @@ export default function StyledGameCard({
   handleViewButtonClick,
 }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
-  const isGameLaunchable = (game && game.questionTemplates && game?.questionTemplates?.length > 0) ?? false;
+  const isGameLaunchable =
+    (game && game.questionTemplates && game?.questionTemplates?.length > 0) ??
+    false;
   const handleLaunchGame = () => {
     const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.publicPrivateType}/${game.id}`;
     window.location.href = LAUNCH_GAME_URL;
-  }
+  };
   const centralData = useCentralDataState();
   return (
     <GameCard isCarousel={isCarousel} screenSize={screenSize}>
       <GameImageContainer>
-      {isCarousel 
-        ? <CarouselGameImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />
-        : <GameImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />
-      }
-      { centralData.userStatus === UserStatusType.LOGGEDIN &&
-        <FavouriteButton isEnabled isGame={!isMyLibraryQuestion} id={id}/>
-      }
+        {isCarousel ? (
+          <CarouselGameImage
+            src={`${CloudFrontDistributionUrl}${image}`}
+            alt="Tag"
+          />
+        ) : (
+          <GameImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />
+        )}
+        {centralData.userStatus === UserStatusType.LOGGEDIN && (
+          <FavouriteButton isEnabled isGame={!isMyLibraryQuestion} id={id} />
+        )}
       </GameImageContainer>
       <ContentContainer>
         <TitleTextTypography>{title}</TitleTextTypography>
         <CCSSButtonContainer>
           {domainAndGrades.map((domainGrade) => (
-            <ButtonCCSS key={`${domainGrade}-${id}`}>
-              {domainGrade}
-            </ButtonCCSS>
+            <ButtonCCSS key={`${domainGrade}-${id}`}>{domainGrade}</ButtonCCSS>
           ))}
         </CCSSButtonContainer>
-        <DescriptionText buttonCount={domainAndGrades.length} isCarousel={isCarousel}>
+        <DescriptionText
+          buttonCount={domainAndGrades.length}
+          isCarousel={isCarousel}
+        >
           {description}
         </DescriptionText>
       </ContentContainer>
       <ButtonContainer>
         <CentralButton
-           buttonType={isCreateGame ? ButtonType.ADDTOGAME : ButtonType.VIEW}
-           isEnabled
-           onClick={() => handleViewButtonClick(game)}
-         />
-        {!isCreateGame && !isMyLibraryQuestion && <CentralButton
-           buttonType={ButtonType.LAUNCH}
-           isEnabled={isGameLaunchable}
-           onClick={handleLaunchGame}
-         />}
-        </ButtonContainer>
+          buttonType={isCreateGame ? ButtonType.ADDTOGAME : ButtonType.VIEW}
+          isEnabled
+          onClick={() => handleViewButtonClick(game)}
+        />
+        {!isCreateGame && !isMyLibraryQuestion && (
+          <CentralButton
+            buttonType={ButtonType.LAUNCH}
+            isEnabled={isGameLaunchable}
+            onClick={handleLaunchGame}
+          />
+        )}
+      </ButtonContainer>
     </GameCard>
   );
 }

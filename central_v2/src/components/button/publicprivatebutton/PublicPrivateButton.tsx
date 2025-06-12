@@ -9,7 +9,7 @@ interface PublicPrivateContainerProps {
 
 const PublicPrivateContainer = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'isDisabled',
-})<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
+})<PublicPrivateContainerProps>(({ theme, isDisabled }) => ({
   width: '144px',
   minHeight: '36px',
   borderRadius: '24px',
@@ -19,7 +19,7 @@ const PublicPrivateContainer = styled(Button, {
   },
   padding: 0,
   position: 'relative',
-  cursor: isDisabled ? 'default' : 'pointer'
+  cursor: isDisabled ? 'default' : 'pointer',
 }));
 
 export const PublicPrivateSelectionPill = styled(Box, {
@@ -33,21 +33,21 @@ export const PublicPrivateSelectionPill = styled(Box, {
     background: `${theme.palette.primary.sliderBlue}`,
   },
   position: 'absolute',
-  left: isPublic ? '2px' : '70px', 
-  transition: 'left 0.3s ease-in-out',   
+  left: isPublic ? '2px' : '70px',
+  transition: 'left 0.3s ease-in-out',
   boxSizing: 'border-box',
   zIndex: 3,
 }));
 
-export const LabelContainer = styled(Box)(({theme}) => ({
+export const LabelContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
   paddingLeft: '16px',
   paddingRight: '16px',
   zIndex: 4,
-  position: 'relative'
-}))
+  position: 'relative',
+}));
 
 export const SubContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSelected',
@@ -56,7 +56,7 @@ export const SubContainer = styled(Box, {
   flexDirection: 'column',
   alignItems: 'center',
   position: 'relative',
-  transition: 'opacity 0.3 ease-in-out'
+  transition: 'opacity 0.3 ease-in-out',
 }));
 
 interface PublicPrivateTextProps {
@@ -65,16 +65,18 @@ interface PublicPrivateTextProps {
 
 const PublicPrivateText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'isSelected',
-})<PublicPrivateTextProps>(({isSelected, theme}) => ({
+})<PublicPrivateTextProps>(({ isSelected, theme }) => ({
   fontSize: '14px',
-  color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
+  color: isSelected
+    ? `${theme.palette.primary.main}`
+    : `${theme.palette.primary.sliderBlue}`,
   textTransform: 'none',
-  transition: 'color 0.3 ease-in-out'
+  transition: 'color 0.3 ease-in-out',
 }));
 
 interface PublicPrivateButtonInterface {
   isDisabled: boolean;
-  onHandlePublicPrivateChange?: (value: PublicPrivateType ) => void;
+  onHandlePublicPrivateChange?: (value: PublicPrivateType) => void;
   isPublic: boolean;
 }
 
@@ -84,16 +86,21 @@ export default function PublicPrivateButton({
   isPublic,
 }: PublicPrivateButtonInterface) {
   const { t } = useTranslation();
-  
-  const handlePublicPrivateSwitch = () =>{
-    onHandlePublicPrivateChange?.(isPublic ? PublicPrivateType.PRIVATE:PublicPrivateType.PUBLIC)
-  }
-  
+
+  const handlePublicPrivateSwitch = () => {
+    onHandlePublicPrivateChange?.(
+      isPublic ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC,
+    );
+  };
+
   return (
-    <PublicPrivateContainer isDisabled={isDisabled} onClick={!isDisabled ? handlePublicPrivateSwitch : undefined}>
-      <PublicPrivateSelectionPill isPublic={isPublic}/>
+    <PublicPrivateContainer
+      isDisabled={isDisabled}
+      onClick={!isDisabled ? handlePublicPrivateSwitch : undefined}
+    >
+      <PublicPrivateSelectionPill isPublic={isPublic} />
       <LabelContainer>
-        <SubContainer isSelected={isPublic}>     
+        <SubContainer isSelected={isPublic}>
           <PublicPrivateText isSelected={isPublic}>
             {t(`publicPrivateButton.public`)}
           </PublicPrivateText>

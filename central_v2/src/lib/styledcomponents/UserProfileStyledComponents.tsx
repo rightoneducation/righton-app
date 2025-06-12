@@ -46,40 +46,40 @@ export const UserProfileGridItem = styled(Grid, {
 }));
 
 export const TitleText = styled(Typography)(({ theme }) => ({
-    fontFamily: 'Poppins',
-    fontWeight: 700, 
-    fontSize: '40px', 
-    color: '#02215F',
-    textAlign: 'center', 
-    lineHeight: '40px'
+  fontFamily: 'Poppins',
+  fontWeight: 700,
+  fontSize: '40px',
+  color: '#02215F',
+  textAlign: 'center',
+  lineHeight: '40px',
 }));
 
 export const UsernameTextContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'center'
+  display: 'flex',
+  flexDirection: 'column',
+  textAlign: 'center',
 }));
 
 export const SubHeadingText = styled(Typography)(({ theme }) => ({
-    fontFamily: 'Poppins',
-    fontWeight: 600, 
-    fontSize: '16px', 
-    color: '#02215F',
+  fontFamily: 'Poppins',
+  fontWeight: 600,
+  fontSize: '16px',
+  color: '#02215F',
 }));
 
 export const SubHeadingTextLight = styled(SubHeadingText)(({ theme }) => ({
-    fontWeight: 400, 
+  fontWeight: 400,
 }));
-  
+
 export const BodyText = styled(Typography)(({ theme }) => ({
-    fontFamily: 'Poppins',
-    fontWeight: 400,
-    fontSize: '16px',
-    color: '#02215F',
-}));  
+  fontFamily: 'Poppins',
+  fontWeight: 400,
+  fontSize: '16px',
+  color: '#02215F',
+}));
 
 export const ImageText = styled(BodyText)(({ theme }) => ({
-    color: '#FFFFFF',
+  color: '#FFFFFF',
 }));
 
 export const UserInfoContainer = styled(Box)(({ theme }) => ({
@@ -90,64 +90,64 @@ export const UserInfoContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const UserInfoItemContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    gap: '12px',
-  }));
+  display: 'flex',
+  gap: '12px',
+}));
 
 export const UsernameInputContainer = styled(Box)(({ theme }) => ({
-    width: '100%',
-    display: 'flex',
+  width: '100%',
+  display: 'flex',
 }));
 
 export const TitleField = styled(TextField)(({ theme }) => ({
-    border: '2px solid #CCCCCC', 
-    borderRadius: '8px', 
-    backgroundColor: '#FFFFFF',
-    minWidth: '108px',
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '8px', // Ensure consistent border radius
-    },
-    '& .MuiSelect-select': {
-      color: '#384466',
-    },
-    '& .MuiSelect-icon': {
-      transition: 'transform 0.2s ease', // Smooth transition for rotation
-      marginRight: '10px',
-    },
-    '&.Mui-focused .MuiSelect-icon': {
-      transform: 'rotate(-180deg)', // Rotate upward when focused
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-      border: 'none', // Remove the default border
-    },
-  }));
+  border: '2px solid #CCCCCC',
+  borderRadius: '8px',
+  backgroundColor: '#FFFFFF',
+  minWidth: '108px',
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '8px', // Ensure consistent border radius
+  },
+  '& .MuiSelect-select': {
+    color: '#384466',
+  },
+  '& .MuiSelect-icon': {
+    transition: 'transform 0.2s ease', // Smooth transition for rotation
+    marginRight: '10px',
+  },
+  '&.Mui-focused .MuiSelect-icon': {
+    transform: 'rotate(-180deg)', // Rotate upward when focused
+  },
+  '& .MuiOutlinedInput-notchedOutline': {
+    border: 'none', // Remove the default border
+  },
+}));
 
 export const UploadImagesContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: '16px',
-  justifyContent: 'flex-start'
+  justifyContent: 'flex-start',
 }));
 
 export const ImageContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  backgroundColor: '#02215F', 
-  border: '1px solid #000000', 
-  borderRadius: '8px',        
+  backgroundColor: '#02215F',
+  border: '1px solid #000000',
+  borderRadius: '8px',
   flexDirection: 'column',
-  alignItems: 'center',       
-  justifyContent: 'center',    
+  alignItems: 'center',
+  justifyContent: 'center',
   width: '100%',
   minHeight: '148px',
   gap: '10px',
   paddingTop: '10px',
   paddingBottom: '10px',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
 }));
 
 export const ImagePlaceHolder = styled('img')(({ theme }) => ({
-  width: '80%', 
-  height: 148, 
-  borderRadius: 4, 
-  border: '2px solid #ccc', 
-  objectFit: 'cover'
+  width: '80%',
+  height: 148,
+  borderRadius: 4,
+  border: '2px solid #ccc',
+  objectFit: 'cover',
 }));

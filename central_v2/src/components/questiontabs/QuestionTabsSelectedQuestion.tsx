@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Grid,
-  CircularProgress,
-  useMediaQuery
-} from '@mui/material';
+import { Box, Grid, CircularProgress, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { IQuestionTemplate } from '@righton/networking';
@@ -13,21 +8,29 @@ import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import DetailedQuestionSubCard from '../cards/detailedquestion/DetailedQuestionSubCard';
 import EditMenu from './EditMenu';
-import { CardType, ScreenSize, UserStatusType, LibraryTabEnum } from '../../lib/CentralModels';
+import {
+  CardType,
+  ScreenSize,
+  UserStatusType,
+  LibraryTabEnum,
+} from '../../lib/CentralModels';
 import OwnerTag from '../profile/OwnerTag';
-import { 
-  DetailedQuestionContainer, 
-  ContentContainer, 
+import {
+  DetailedQuestionContainer,
+  ContentContainer,
   ButtonContainer,
   ButtonContainerLeft,
   ButtonContainerRight,
   CardContainer,
   SubCardGridItem,
-  GridItem
+  GridItem,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
-import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
+import {
+  useCentralDataState,
+  useCentralDataDispatch,
+} from '../../hooks/context/useCentralDataContext';
 
 interface TabContainerProps {
   screenSize: ScreenSize;
@@ -52,74 +55,102 @@ export default function QuestionTabsSelectedQuestion({
   handleCloneButtonClick,
   handleEditButtonClick,
   handleFavoriteButtonClick,
-  handleDeleteButtonClick 
+  handleDeleteButtonClick,
 }: TabContainerProps) {
   const theme = useTheme();
   const centralData = useCentralDataState();
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
-  const isEditEnabled = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === question?.userId;
+  const isEditEnabled =
+    centralData.userStatus === UserStatusType.LOGGEDIN &&
+    centralData.userProfile?.id === question?.userId;
 
   return (
-     <ContentContainer>
-        <ButtonContainer style={{
-          paddingLeft: screenSize === ScreenSize.SMALL ? `0px` : `${theme.sizing.mdPadding}px`,
-          paddingRight: screenSize === ScreenSize.SMALL ? `0px` : `${theme.sizing.mdPadding}px`,
-        }}>
-          <ButtonContainerLeft>
-            <CentralButton
-              buttonType={ButtonType.PREVIOUSQUESTION}
-              isEnabled
-              isOnQuestionTab
-              iconOnlyOverride={screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM}
-              onClick={handlePrevQuestion}
-            />
-          </ButtonContainerLeft>
-          <ButtonContainerRight style={{ paddingLeft: screenSize === ScreenSize.SMALL  ? `${theme.sizing.xxSmPadding}px` : `0px`, gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.xxSmPadding}px` : `${theme.sizing.smPadding}px` }}>
-            {centralData.userStatus === UserStatusType.LOGGEDIN && (
-              <Box>
-                {!isLoading ? (
-                  <CentralButton
-                    buttonType={
-                      !isFavorite
-                        ? ButtonType.FAVORITE
-                        : ButtonType.UNFAVORITE
-                    }
-                    isEnabled
-                    isOnQuestionTab
-                    iconOnlyOverride={screenSize === ScreenSize.SMALL}
-                    onClick={handleFavoriteButtonClick}
-                  />
-                ) : (
-                  <Box>
-                    <CircularProgress style={{ color: '#FFF' }} />
-                  </Box>
-                )}
-              </Box>
-            )}
-            <Box>
-              <EditMenu 
-                screenSize={screenSize}
-                isEditEnabled={isEditEnabled}
-                handleCloneButtonClick={handleCloneButtonClick}
-                handleEditButtonClick={handleEditButtonClick}
-                handleDeleteButtonClick={handleDeleteButtonClick}
-              />
-            </Box>
-            <CentralButton
-              buttonType={ButtonType.NEXTQUESTION}
-              isEnabled
-              isOnQuestionTab
-              iconOnlyOverride={screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM}
-              onClick={handleNextQuestion}
-            />
-          </ButtonContainerRight>
-        </ButtonContainer>
-      <CardContainer
-        style={{ paddingBottom: '60px' }}
+    <ContentContainer>
+      <ButtonContainer
+        style={{
+          paddingLeft:
+            screenSize === ScreenSize.SMALL
+              ? `0px`
+              : `${theme.sizing.mdPadding}px`,
+          paddingRight:
+            screenSize === ScreenSize.SMALL
+              ? `0px`
+              : `${theme.sizing.mdPadding}px`,
+        }}
       >
+        <ButtonContainerLeft>
+          <CentralButton
+            buttonType={ButtonType.PREVIOUSQUESTION}
+            isEnabled
+            isOnQuestionTab
+            iconOnlyOverride={
+              screenSize === ScreenSize.SMALL ||
+              screenSize === ScreenSize.MEDIUM
+            }
+            onClick={handlePrevQuestion}
+          />
+        </ButtonContainerLeft>
+        <ButtonContainerRight
+          style={{
+            paddingLeft:
+              screenSize === ScreenSize.SMALL
+                ? `${theme.sizing.xxSmPadding}px`
+                : `0px`,
+            gap:
+              screenSize === ScreenSize.SMALL
+                ? `${theme.sizing.xxSmPadding}px`
+                : `${theme.sizing.smPadding}px`,
+          }}
+        >
+          {centralData.userStatus === UserStatusType.LOGGEDIN && (
+            <Box>
+              {!isLoading ? (
+                <CentralButton
+                  buttonType={
+                    !isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE
+                  }
+                  isEnabled
+                  isOnQuestionTab
+                  iconOnlyOverride={screenSize === ScreenSize.SMALL}
+                  onClick={handleFavoriteButtonClick}
+                />
+              ) : (
+                <Box>
+                  <CircularProgress style={{ color: '#FFF' }} />
+                </Box>
+              )}
+            </Box>
+          )}
+          <Box>
+            <EditMenu
+              screenSize={screenSize}
+              isEditEnabled={isEditEnabled}
+              handleCloneButtonClick={handleCloneButtonClick}
+              handleEditButtonClick={handleEditButtonClick}
+              handleDeleteButtonClick={handleDeleteButtonClick}
+            />
+          </Box>
+          <CentralButton
+            buttonType={ButtonType.NEXTQUESTION}
+            isEnabled
+            isOnQuestionTab
+            iconOnlyOverride={
+              screenSize === ScreenSize.SMALL ||
+              screenSize === ScreenSize.MEDIUM
+            }
+            onClick={handleNextQuestion}
+          />
+        </ButtonContainerRight>
+      </ButtonContainer>
+      <CardContainer style={{ paddingBottom: '60px' }}>
         <DetailedQuestionContainer
           container
-          sx={{ gap: screenSize === ScreenSize.SMALL ? "0px" : `${theme.sizing.mdPadding}`}}
+          sx={{
+            gap:
+              screenSize === ScreenSize.SMALL
+                ? '0px'
+                : `${theme.sizing.mdPadding}`,
+          }}
         >
           <Grid
             sm
@@ -140,17 +171,25 @@ export default function QuestionTabsSelectedQuestion({
               maxWidth: '672px',
             }}
           >
-            {(screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) && (
-              <Box style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {(screenSize === ScreenSize.SMALL ||
+              screenSize === ScreenSize.MEDIUM) && (
+              <Box
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
                 <OwnerTag screenSize={screenSize} />
               </Box>
             )}
-            { question && 
+            {question && (
               <DetailedQuestionCardBase
                 screenSize={screenSize}
                 question={question}
               />
-            }
+            )}
             <Grid container spacing={`${theme.sizing.smPadding}px`}>
               <SubCardGridItem item sm={12} md={6}>
                 <DetailedQuestionSubCard
@@ -162,11 +201,7 @@ export default function QuestionTabsSelectedQuestion({
                   instructions={question?.instructions ?? []}
                 />
               </SubCardGridItem>
-              <SubCardGridItem
-                item
-                sm={12}
-                md={6}
-              >
+              <SubCardGridItem item sm={12} md={6}>
                 {question &&
                   question.choices
                     ?.filter((choice) => !choice.isAnswer)
@@ -185,5 +220,5 @@ export default function QuestionTabsSelectedQuestion({
         </DetailedQuestionContainer>
       </CardContainer>
     </ContentContainer>
-)
+  );
 }

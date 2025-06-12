@@ -4,7 +4,7 @@ import url from '../../../images/buttonIconURL.svg';
 
 export enum ImageButtonType {
   IMAGEUPLOAD = 'imageupload',
-  IMAGEURL = 'imageurl'
+  IMAGEURL = 'imageurl',
 }
 
 type ImageButtonContentMapProps = {

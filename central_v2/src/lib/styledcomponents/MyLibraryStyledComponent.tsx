@@ -13,7 +13,7 @@ export const MyLibraryMainContainer = styled(Box)(({ theme }) => ({
   scrollbarWidth: 'none', // Firefox
   msOverflowStyle: 'none',
   boxSizing: 'border-box',
-  position: 'relative'
+  position: 'relative',
 }));
 
 export const MyLibraryBackground = styled(Box)(({ theme }) => ({
@@ -53,7 +53,7 @@ export const LibraryTab = styled(Tab, {
 export const LibraryTabsStyledContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   width: '100dvw',
-  left: 0, 
+  left: 0,
   top: 0,
   position: 'absolute',
   flexGrow: 1,

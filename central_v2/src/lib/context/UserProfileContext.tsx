@@ -6,6 +6,6 @@ export const UserProfileContext = createContext<IUserProfile | undefined>( // es
   undefined,
 );
 
-export const UserProfileDispatchContext = createContext<Dispatch<IAction> | undefined>( // eslint-disable-line
-  undefined,
-);
+export const UserProfileDispatchContext = createContext<
+  Dispatch<IAction> | undefined
+>(undefined); // eslint-disable-line

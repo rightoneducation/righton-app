@@ -32,7 +32,7 @@ type GameQuestionTemplate =
   | CreatePrivateGameQuestionsInput
   | CreateDraftGameQuestionsInput;
 
-type EditedGameTemplate = 
+type EditedGameTemplate =
   | UpdatePrivateGameTemplateInput
   | UpdatePublicGameTemplateInput
   | UpdateDraftGameTemplateInput;
@@ -41,7 +41,7 @@ export const checkGameFormIsValid = (
   draftGame: TGameTemplateProps,
 ): boolean => {
   return (
-    draftGame.gameTemplate.title.trim().length > 0  &&
+    draftGame.gameTemplate.title.trim().length > 0 &&
     draftGame.gameTemplate.description.trim().length > 0 &&
     draftGame.gameTemplate.phaseOneTime !== 0 &&
     draftGame.gameTemplate.phaseTwoTime !== 0
@@ -216,7 +216,7 @@ export const buildGameTemplate = (
     });
   }
   let gameTemplate: GameTemplate | null = null;
-    gameTemplate = {
+  gameTemplate = {
     title: draftGame.gameTemplate.title,
     userId,
     lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
@@ -228,11 +228,26 @@ export const buildGameTemplate = (
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
     ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
     questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
-    grade: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] || '8',
-    gradeFilter: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] ?? '',
-    domain: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[1] ?? '',
-    cluster: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[2] ?? '',
-    standard: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[3] ?? '',
+    grade:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[0] || '8',
+    gradeFilter:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[0] ?? '',
+    domain:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[1] ?? '',
+    cluster:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[2] ?? '',
+    standard:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[3] ?? '',
     imageUrl: gameImgUrl,
     timesPlayed: 0,
   };
@@ -245,10 +260,10 @@ export const buildEditedGameTemplate = (
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
 ): EditedGameTemplate => {
-   const questionTemplatesOrder = draftQuestionsList.map((question, index) => {
+  const questionTemplatesOrder = draftQuestionsList.map((question, index) => {
     return { questionTemplateId: question.questionTemplate.id, index };
-   })
-   return {
+  });
+  return {
     id: draftGame.gameTemplate.id,
     title: draftGame.gameTemplate.title,
     userId,
@@ -261,16 +276,30 @@ export const buildEditedGameTemplate = (
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
     ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
     questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
-    grade: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] || '8',
-    gradeFilter: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[0] ?? '',
-    domain: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[1] ?? '',
-    cluster: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[2] ?? '',
-    standard: (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split('.')[3] ?? '',
+    grade:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[0] || '8',
+    gradeFilter:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[0] ?? '',
+    domain:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[1] ?? '',
+    cluster:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[2] ?? '',
+    standard:
+      (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
+        '.',
+      )[3] ?? '',
     imageUrl: gameImgUrl,
     timesPlayed: 0,
   };
-}
-
+};
 
 export const buildGameQuestion = (
   draftGame: TGameTemplateProps,
@@ -282,7 +311,7 @@ export const buildGameQuestion = (
     return {
       draftGameTemplateID: String(gameTemplateId),
       draftQuestionTemplateID: String(questionTemplateId),
-    }
+    };
   }
   return {
     ...(draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC
@@ -309,10 +338,12 @@ export const buildGameQuestionPromises = (
       draftGame,
       String(gameTemplateId),
       String(questionId),
-      type
+      type,
     );
     const response = await apiClients.gameQuestions.createGameQuestions(
-      type === PublicPrivateType.DRAFT ? PublicPrivateType.DRAFT : draftGame.gameTemplate.publicPrivateType,
+      type === PublicPrivateType.DRAFT
+        ? PublicPrivateType.DRAFT
+        : draftGame.gameTemplate.publicPrivateType,
       gameQuestion,
     );
     console.log(
@@ -322,42 +353,47 @@ export const buildGameQuestionPromises = (
   });
 };
 
-export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQuestionTemplateInput => {
-    const correctAnswer = template.choices?.find((choice) => choice.isAnswer);
-    const incorrectAnswers = template.choices?.filter((choice) => !choice.isAnswer);
-    const blankIncorrectAnswers = Array.from({ length: 3 }, (_, i) => ({
-        id: `card-${i + 1}`,
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: true
-    }));
-    const incorrectCards = incorrectAnswers?.map((answer, index) => ({
-        id: `card-${index + 1}`,
-        answer: answer.text,
-        explanation: answer.reason,
-        isFirstEdit: true,
-        isCardComplete: true
+export const assembleQuestionTemplate = (
+  template: IQuestionTemplate,
+): CentralQuestionTemplateInput => {
+  const correctAnswer = template.choices?.find((choice) => choice.isAnswer);
+  const incorrectAnswers = template.choices?.filter(
+    (choice) => !choice.isAnswer,
+  );
+  const blankIncorrectAnswers = Array.from({ length: 3 }, (_, i) => ({
+    id: `card-${i + 1}`,
+    answer: '',
+    explanation: '',
+    isFirstEdit: true,
+    isCardComplete: true,
+  }));
+  const incorrectCards =
+    incorrectAnswers?.map((answer, index) => ({
+      id: `card-${index + 1}`,
+      answer: answer.text,
+      explanation: answer.reason,
+      isFirstEdit: true,
+      isCardComplete: true,
     })) ?? blankIncorrectAnswers;
-    
-    return {
-       questionCard: {
-            title: template.title,
-            ccss: template.ccss,
-            isFirstEdit: true,
-            isCardComplete: true,
-            imageUrl: template.imageUrl ?? '',
-        },
-        correctCard: {
-            answer: correctAnswer?.text ?? '',
-            answerSteps: template.instructions ?? [],
-            answerSettings: {
-                answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
-                answerPrecision: template.answerSettings?.answerPrecision
-            },
-            isFirstEdit: true,
-            isCardComplete: true,
-        },
-        incorrectCards,
-    }
-}
+
+  return {
+    questionCard: {
+      title: template.title,
+      ccss: template.ccss,
+      isFirstEdit: true,
+      isCardComplete: true,
+      imageUrl: template.imageUrl ?? '',
+    },
+    correctCard: {
+      answer: correctAnswer?.text ?? '',
+      answerSteps: template.instructions ?? [],
+      answerSettings: {
+        answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
+        answerPrecision: template.answerSettings?.answerPrecision,
+      },
+      isFirstEdit: true,
+      isCardComplete: true,
+    },
+    incorrectCards,
+  };
+};
