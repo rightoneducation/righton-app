@@ -33,7 +33,7 @@ export enum GradeTarget {
   GRADESIX = "6",
   GRADESEVEN = "7",
   GRADEEIGHT = "8",
-  HIGHSCHOOL = "H"
+  HIGHSCHOOL = "HS"
 }
 export enum SortType {
   listGameTemplates,
