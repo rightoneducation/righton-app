@@ -1,12 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { styled } from '@mui/material/styles';
-import {
-  Box,
-  Typography,
-} from '@mui/material';
-import {
-  useCentralDataState,
-} from '../../hooks/context/useCentralDataContext';
+import { Box, Typography } from '@mui/material';
+import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../button/ButtonModels';
@@ -17,73 +12,73 @@ import errorIcon from '../../images/errorIcon.svg';
 
 // Styled components
 const VerifyText = styled(Typography)(({ theme }) => ({
-    color: '#02215F',
-    fontFamily: 'Poppins, sans-serif',
+  color: '#02215F',
+  fontFamily: 'Poppins, sans-serif',
+  fontWeight: 700,
+  fontSize: '24px',
+  lineHeight: '36px',
+  textAlign: 'center',
+}));
+
+const EnterText = styled(Typography)(({ theme }) => ({
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '20px',
+  fontFamily: 'Rubik, sans-serif',
+  color: '#02215F',
+}));
+
+const CodeandResendContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+}));
+
+const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: '8px',
+}));
+
+const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
+  width: '40px',
+  maxHeight: '54px',
+  textAlign: 'center',
+  '& .MuiInputBase-root': {
+    fontFamily: 'Rubik',
     fontWeight: 700,
-    fontSize: '24px',
-    lineHeight: '36px',
-    textAlign: 'center',
-  }));
-  
-  const EnterText = styled(Typography)(({ theme }) => ({
-    fontWeight: 400,
-    fontSize: '16px',
-    lineHeight: '20px',
-    fontFamily: 'Rubik, sans-serif',
-    color: '#02215F',
-  }));
-  
-  const CodeandResendContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  }));
-  
-  const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: '8px',
-  }));
-  
-  const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
-    width: '40px',
-    maxHeight: '54px',
-    textAlign: 'center',
-    '& .MuiInputBase-root': {
-      fontFamily: 'Rubik',
-      fontWeight: 700,
-      fontSize: '20px',
-      color: theme.palette.primary.darkBlue,
+    fontSize: '20px',
+    color: theme.palette.primary.darkBlue,
+  },
+  '& .MuiOutlinedInput-root': {
+    height: '54px',
+    '&.Mui-error fieldset': {
+      borderWidth: '2px',
+      borderColor: '#F60E44',
     },
-    '& .MuiOutlinedInput-root': {
-      height: '54px',
-      '&.Mui-error fieldset': {
-        borderWidth: '2px',
-        borderColor: '#F60E44',
-      },
-    },
-    '& .MuiTextField-root': {},
-  }));
-  
-  const ResendCodeText = styled(Typography)(({ theme }) => ({
-    fontFamily: 'Rubik, sans-serif',
-    fontWeight: 400,
-    fontSize: '16px',
-    color: '#02215F',
-    textDecoration: 'underline',
-    textAlign: 'center',
-    cursor: 'pointer',
-    "&:hover": {
-        opacity: 0.8
-    }
-  }));
-  
-  const VerifyBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-  }));
-  
+  },
+  '& .MuiTextField-root': {},
+}));
+
+const ResendCodeText = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Rubik, sans-serif',
+  fontWeight: 400,
+  fontSize: '16px',
+  color: '#02215F',
+  textDecoration: 'underline',
+  textAlign: 'center',
+  cursor: 'pointer',
+  '&:hover': {
+    opacity: 0.8,
+  },
+}));
+
+const VerifyBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+}));
+
 // Props interface
 interface PasswordResetProps {
   handleNextStep: () => void;
@@ -135,17 +130,15 @@ function PasswordResetConfirmation({
   };
 
   const handleResendCodeClick = async () => {
-      try {
-    // user is logged out
-    if(isForgotPassword && userName) {
+    try {
+      // user is logged out
+      if (isForgotPassword && userName) {
         await apiClients.auth.awsResetPassword(userName);
-    } 
-    // user is logged in
-    else if(centralData.userProfile.email){
-        await apiClients.auth.awsResetPassword(
-          centralData.userProfile.email,
-        );
-    }
+      }
+      // user is logged in
+      else if (centralData.userProfile.email) {
+        await apiClients.auth.awsResetPassword(centralData.userProfile.email);
+      }
     } catch (error) {
       console.error('Error resending confirmation code:', error);
     }

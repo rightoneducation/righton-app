@@ -8,7 +8,7 @@ import {
   ButtonContent,
   ButtonIconContainer,
   ButtonTypography,
-  ButtonIconBlue
+  ButtonIconBlue,
 } from '../../lib/styledcomponents/ButtonStyledComponents';
 
 interface CentralButtonProps {
@@ -46,13 +46,14 @@ export default function CentralButton({
     : null;
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
   const buttonWidth = buttonObj.width ?? '100%';
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride;
+  const isSmallScreen =
+    useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride;
 
   const handleButtonClick = () => {
-    if (type === "file") {
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.style.display = "none";
+    if (type === 'file') {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.style.display = 'none';
       fileInput.onchange = (event: Event) => {
         const target = event.target as HTMLInputElement;
         const file = target.files?.[0];
@@ -74,24 +75,38 @@ export default function CentralButton({
       isOnQuestionTab={isOnQuestionTab ?? false}
       onClick={handleButtonClick}
       isReset={isReset}
-      style={{width: buttonWidthOverride ?? buttonWidth}}
+      style={{ width: buttonWidthOverride ?? buttonWidth }}
     >
       <ButtonContent>
         {buttonObj.icon && (
           <ButtonIconContainer>
-            { ( buttonColor === ButtonColor.NULL && (buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.SAVEDRAFT) || (buttonType === ButtonType.SIGNUP && isReset))
-              ? <ButtonIconBlue src={buttonObj.icon}/>
-              : <img src={buttonObj.icon} alt={`${buttonText}`} />
-            }
+            {(buttonColor === ButtonColor.NULL &&
+              (buttonType === ButtonType.CHANGEIMAGE ||
+                buttonType === ButtonType.SAVEDRAFT)) ||
+            (buttonType === ButtonType.SIGNUP && isReset) ? (
+              <ButtonIconBlue src={buttonObj.icon} />
+            ) : (
+              <img src={buttonObj.icon} alt={`${buttonText}`} />
+            )}
           </ButtonIconContainer>
         )}
-        {buttonText && !isSmallScreen && !iconOnlyOverride && <ButtonTypography isReset={isReset} buttonColor={buttonColor} buttonType={buttonType}> {buttonText} </ButtonTypography>}
+        {buttonText && !isSmallScreen && !iconOnlyOverride && (
+          <ButtonTypography
+            isReset={isReset}
+            buttonColor={buttonColor}
+            buttonType={buttonType}
+          >
+            {buttonText}
+          </ButtonTypography>
+        )}
         {buttonObj.rightIcon && (
           <ButtonIconContainer>
-            { ( buttonColor === ButtonColor.NULL && buttonType === ButtonType.CHANGEIMAGE )
-              ? <ButtonIconBlue src={buttonObj.rightIcon}/>
-              : <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
-            }
+            {buttonColor === ButtonColor.NULL &&
+            buttonType === ButtonType.CHANGEIMAGE ? (
+              <ButtonIconBlue src={buttonObj.rightIcon} />
+            ) : (
+              <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
+            )}
           </ButtonIconContainer>
         )}
       </ButtonContent>

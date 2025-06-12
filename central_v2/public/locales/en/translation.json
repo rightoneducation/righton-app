@@ -47,7 +47,8 @@
     "yes": "Yes",
     "no": "No",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "ok": "OK"
   },
   "imageButton": {
     "imageupload": "Upload Image",
@@ -57,7 +58,7 @@
     "public": "Public",
     "private": "Private"
   },
-  "gameQuestionButton":{
+  "gameQuestionButton": {
     "games": "Games",
     "questions": "Questions"
   }

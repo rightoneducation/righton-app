@@ -71,12 +71,18 @@ export default function GalleryHeaderText<
               in {formattedGrades}
             </GradesText>
           )}
-            {searchedElements && searchedElements.length === 0 && (
+          {searchedElements && searchedElements.length === 0 && (
             <>
-              <ResultsLengthText screenSize={screenSize} style={{fontSize: '16px', paddingTop: '24px'}}>
+              <ResultsLengthText
+                screenSize={screenSize}
+                style={{ fontSize: '16px', paddingTop: '24px' }}
+              >
                 There are no results for {searchedTerm}.
               </ResultsLengthText>
-              <ResultsLengthText screenSize={screenSize} style={{fontSize: '16px'}}>
+              <ResultsLengthText
+                screenSize={screenSize}
+                style={{ fontSize: '16px' }}
+              >
                 Please check your spelling or try a different term
               </ResultsLengthText>
             </>

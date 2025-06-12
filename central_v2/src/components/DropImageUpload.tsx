@@ -11,7 +11,7 @@ interface FileDropItem {
   files: File[];
 }
 
-function FileDropZone({ onFilesDropped, children }: FileDropZoneProps){
+function FileDropZone({ onFilesDropped, children }: FileDropZoneProps) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: [NativeTypes.FILE],
     drop: (item, monitor) => {
@@ -30,7 +30,8 @@ function FileDropZone({ onFilesDropped, children }: FileDropZoneProps){
       ref={drop}
       style={{
         textAlign: 'center',
-        backgroundColor: isOver && canDrop ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0)',
+        backgroundColor:
+          isOver && canDrop ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0)',
         transition: 'background-color 1s ease-in',
         width: '100%',
         flexGrow: 1,
@@ -51,12 +52,13 @@ interface DropImageUploadProps {
   children?: React.ReactNode;
 }
 
-export default function DropImageUpload({ handleImageSave, children }: DropImageUploadProps) {
+export default function DropImageUpload({
+  handleImageSave,
+  children,
+}: DropImageUploadProps) {
   return (
     <DndProvider backend={HTML5Backend}>
-      <FileDropZone onFilesDropped={handleImageSave} >
-        {children}
-      </FileDropZone>
+      <FileDropZone onFilesDropped={handleImageSave}>{children}</FileDropZone>
     </DndProvider>
   );
 }

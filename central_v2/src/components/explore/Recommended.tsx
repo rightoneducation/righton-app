@@ -22,35 +22,31 @@ interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
 }
 
-const RecommendedContainer = styled(Box,{
+const RecommendedContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<RecommendedGamesContainerProps>(
-  ({ theme, screenSize }) => ({
-    // height: screenSize === ScreenSize.SMALL ? '368px': '408px',
-    // height: 'auto',
-    gap: `${theme.sizing.smPadding}px`,
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    overflow: 'hidden',
-    position: 'relative',
-  }),
-);
+})<RecommendedGamesContainerProps>(({ theme, screenSize }) => ({
+  // height: screenSize === ScreenSize.SMALL ? '368px': '408px',
+  // height: 'auto',
+  gap: `${theme.sizing.smPadding}px`,
+  display: 'flex',
+  width: '100%',
+  flexDirection: 'column',
+  alignItems: 'center',
+  overflow: 'hidden',
+  position: 'relative',
+}));
 
-const Title = styled(Typography,{
-    shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize: ScreenSize }>(
-  ({ screenSize, theme }) => ({
-    fontFamily: 'Poppins',
-    fontWeight: '700',
-    fontSize:
-      screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
-    lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
-    color: '#FFFFFF',
-    zIndex: 1
-  }),
-);
+const Title = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ screenSize, theme }) => ({
+  fontFamily: 'Poppins',
+  fontWeight: '700',
+  fontSize:
+    screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
+  lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
+  color: '#FFFFFF',
+  zIndex: 1,
+}));
 
 export default function Recommended<
   T extends IGameTemplate | IQuestionTemplate,

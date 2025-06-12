@@ -1,6 +1,7 @@
-import {Button, Box, styled, Typography} from '@mui/material';
+import { Button, Box, styled, Typography } from '@mui/material';
 
-export const ImageButtonStyled = styled(Button)(({ theme }) => ({ // eslint-disable-button
+export const ImageButtonStyled = styled(Button)(({ theme }) => ({
+  // eslint-disable-button
   width: '190px',
   height: '38px',
   borderRadius: '8px',
@@ -15,15 +16,15 @@ export const ImageButtonStyled = styled(Button)(({ theme }) => ({ // eslint-disa
   paddingLeft: '24px',
   paddingTop: '10px',
   paddingBottom: '10px',
-  gap: '8px'
+  gap: '8px',
 }));
 
-export const ImageButtonIcon = styled('img')(({theme}) => ({
+export const ImageButtonIcon = styled('img')(({ theme }) => ({
   height: '20px',
-  width: '20px'
+  width: '20px',
 }));
 
-export const ImageButtonText = styled(Typography)(({theme}) => ({
+export const ImageButtonText = styled(Typography)(({ theme }) => ({
   fontSize: '16px',
-  color: `${theme.palette.primary.main}`
+  color: `${theme.palette.primary.main}`,
 }));

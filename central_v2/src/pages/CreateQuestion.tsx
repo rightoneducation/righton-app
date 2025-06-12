@@ -1,5 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import {Grid, Typography, Box, Switch, useTheme, styled, CircularProgress, Fade} from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Box,
+  Switch,
+  useTheme,
+  styled,
+  CircularProgress,
+  Fade,
+} from '@mui/material';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { debounce, set } from 'lodash';
 import {
@@ -7,18 +16,23 @@ import {
   CentralQuestionTemplateInput,
   IncorrectCard,
   AnswerType,
-  AnswerPrecision
+  AnswerPrecision,
 } from '@righton/networking';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
-import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
-import { CreateQuestionBackground, CreateQuestionGridContainer, CreateQuestionMainContainer, CreateQuestionBoxContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
-import { 
+import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase';
+import {
+  CreateQuestionBackground,
+  CreateQuestionGridContainer,
+  CreateQuestionMainContainer,
+  CreateQuestionBoxContainer,
+} from '../lib/styledcomponents/CreateQuestionStyledComponents';
+import {
   ScreenSize,
   BorderStyle,
   CreateQuestionHighlightCard,
   StorageKey,
   TemplateType,
-  GameQuestionType
+  GameQuestionType,
 } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
@@ -31,9 +45,28 @@ import DiscardModal from '../components/modal/DiscardModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick, updateDQwithAnswerSettings } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
-import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
+import {
+  updateDQwithImage,
+  updateDQwithImageURL,
+  updateDQwithTitle,
+  updateDQwithCCSS,
+  updateDQwithQuestionClick,
+  base64ToFile,
+  fileToBase64,
+} from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import {
+  updateDQwithCorrectAnswer,
+  updateDQwithCorrectAnswerSteps,
+  updateDQwithCorrectAnswerClick,
+  updateDQwithAnswerSettings,
+} from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import {
+  getNextHighlightCard,
+  handleMoveAnswerToComplete,
+  updateDQwithIncorrectAnswerClick,
+  updateDQwithIncorrectAnswers,
+  handleIncorrectCardClick,
+} from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
@@ -41,7 +74,7 @@ import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
-}
+};
 
 const TitleText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
@@ -71,100 +104,118 @@ interface CreateQuestionProps {
 export default function CreateQuestion({
   screenSize,
   fetchElement,
-  fetchElements
-}:CreateQuestionProps){
+  fetchElements,
+}: CreateQuestionProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const route = useMatch('/clone/question/:type/:questionId');
   const editRoute = useMatch('/edit/question/:type/:questionId');
-  const isClone = route?.params.questionId !== null && route?.params.questionId !== undefined && route?.params.questionId.length > 0;
-  const isEdit = editRoute?.params.questionId !== null && editRoute?.params.questionId !== undefined && editRoute?.params.questionId.length > 0;
-  const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
+  const isClone =
+    route?.params.questionId !== null &&
+    route?.params.questionId !== undefined &&
+    route?.params.questionId.length > 0;
+  const isEdit =
+    editRoute?.params.questionId !== null &&
+    editRoute?.params.questionId !== undefined &&
+    editRoute?.params.questionId.length > 0;
+  const [isCloneImageChanged, setIsCloneImageChanged] =
+    useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
-  const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
+  const [isImageUploadVisible, setIsImageUploadVisible] =
+    useState<boolean>(false);
+  const [questionType, setQuestionType] = React.useState<PublicPrivateType>(
+    PublicPrivateType.PUBLIC,
+  );
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
-  const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
+  const [isImagePreviewVisible, setIsImagePreviewVisible] =
+    useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
-  const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
-  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
+  const [highlightCard, setHighlightCard] =
+    useState<CreateQuestionHighlightCard>(
+      CreateQuestionHighlightCard.QUESTIONCARD,
+    );
+  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
+    PublicPrivateType.PUBLIC,
+  );
   const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
   const [originalImageURl, setOriginalImageURL] = useState<string>('');
   const localData = useCreateQuestionLoader();
-  
-  const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>( 
-    localData.incompleteCards ??
-    [
+
+  const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<
+    IncorrectCard[]
+  >(
+    localData.incompleteCards ?? [
       {
         id: 'card-1',
-        answer: '', 
+        answer: '',
         explanation: '',
         isFirstEdit: true,
         isCardComplete: false,
       },
       {
         id: 'card-2',
-        answer: '', 
+        answer: '',
         explanation: '',
         isFirstEdit: true,
         isCardComplete: false,
       },
       {
         id: 'card-3',
-        answer: '', 
+        answer: '',
         explanation: '',
         isFirstEdit: true,
         isCardComplete: false,
       },
-    ]
+    ],
   );
-  const [completeIncorrectAnswers, setCompleteIncorrectAnswers] = useState<IncorrectCard[]>(
-    localData.completeCards ??
-    []
-  );
+  const [completeIncorrectAnswers, setCompleteIncorrectAnswers] = useState<
+    IncorrectCard[]
+  >(localData.completeCards ?? []);
 
-  const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
-    return  localData.draftQuestion ?? {
-        questionCard: {
-          title: '',
-          ccss: 'CCSS',
-          isFirstEdit: true,
-          isCardComplete: false,
-        },
-        correctCard: {
-          answer: '',
-          answerSteps: ['','',''],
-          answerSettings: {
-            answerType: AnswerType.NUMBER,
-            answerPrecision: AnswerPrecision.WHOLE,
+  const [draftQuestion, setDraftQuestion] =
+    useState<CentralQuestionTemplateInput>(() => {
+      return (
+        localData.draftQuestion ?? {
+          questionCard: {
+            title: '',
+            ccss: 'CCSS',
+            isFirstEdit: true,
+            isCardComplete: false,
           },
-          isFirstEdit: true,
-          isCardComplete: false,
-        },
-        incorrectCards: [
-          ...incompleteIncorrectAnswers, 
-          ...completeIncorrectAnswers
-        ]
-      }
-    }
-  );
+          correctCard: {
+            answer: '',
+            answerSteps: ['', '', ''],
+            answerSettings: {
+              answerType: AnswerType.NUMBER,
+              answerPrecision: AnswerPrecision.WHOLE,
+            },
+            isFirstEdit: true,
+            isCardComplete: false,
+          },
+          incorrectCards: [
+            ...incompleteIncorrectAnswers,
+            ...completeIncorrectAnswers,
+          ],
+        }
+      );
+    });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
 
   let label = 'Create';
-  let selectedQuestionId = ''
-  switch (true){
-    case (isEdit):
+  let selectedQuestionId = '';
+  switch (true) {
+    case isEdit:
       label = 'Edit';
       selectedQuestionId = editRoute?.params.questionId || '';
       break;
-    case (isClone):
+    case isClone:
       label = 'Clone';
       selectedQuestionId = route?.params.questionId || '';
       break;
@@ -177,33 +228,38 @@ export default function CreateQuestion({
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
     setIsCloneImageChanged(true);
     if (inputImage) {
-      const newDraftQuestion = updateDQwithImage(draftQuestion, undefined, inputImage);
+      const newDraftQuestion = updateDQwithImage(
+        draftQuestion,
+        undefined,
+        inputImage,
+      );
       setDraftQuestion(newDraftQuestion);
     } else if (inputUrl) {
       const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
       setDraftQuestion(newDraftQuestion);
     }
-  }
+  };
 
   const handleAnswerType = () => {
     setIsMultipleChoice(!isMultipleChoice);
-  }
+  };
 
-  const handleImageSave = async (
-    inputImage?: File, 
-    inputUrl?: string
-  ) => {
+  const handleImageSave = async (inputImage?: File, inputUrl?: string) => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
-    if (inputImage){
+    if (inputImage) {
       const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImage(draftQuestion, undefined, inputImage);
+      const newDraftQuestion = updateDQwithImage(
+        draftQuestion,
+        undefined,
+        inputImage,
+      );
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
       if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
     }
-    if (inputUrl){
+    if (inputUrl) {
       const { isFirstEdit } = draftQuestion.questionCard;
       const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
@@ -211,14 +267,17 @@ export default function CreateQuestion({
       if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
     }
-  }
+  };
 
   // debounced question changes when writing to localStorage
   const handleDebouncedQuestionChange = useCallback( // eslint-disable-line
     debounce((draftQuestionInput: CentralQuestionTemplateInput) => {
-      window.localStorage.setItem(StorageKey, JSON.stringify(draftQuestionInput));
+      window.localStorage.setItem(
+        StorageKey,
+        JSON.stringify(draftQuestionInput),
+      );
     }, 1000),
-    [] 
+    [],
   );
 
   const handleTitleChange = (title: string) => {
@@ -228,7 +287,7 @@ export default function CreateQuestion({
     handleDebouncedQuestionChange(newDraftQuestion);
     if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
       setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-  }
+  };
 
   const handleCCSSSubmit = (ccssString: string) => {
     setIsCCSSVisible(false);
@@ -242,44 +301,64 @@ export default function CreateQuestion({
 
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
-  }
+  };
 
   const handleImageUploadClick = () => {
     setIsImageUploadVisible(true);
-  }
+  };
 
   const handlePublicPrivateChange = (value: PublicPrivateType) => {
     setPublicPrivate((prev) => value);
-  }
+  };
 
   const handleCloseModal = () => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
     setIsCreatingTemplate(false);
     setIsCCSSVisible(false);
-  }
+  };
 
-  const handleCorrectAnswerChange = (correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
+  const handleCorrectAnswerChange = (
+    correctAnswer: string,
+    draftQuestionInput: CentralQuestionTemplateInput,
+  ) => {
     const { isFirstEdit } = draftQuestionInput.correctCard;
-    const newDraftQuestion = updateDQwithCorrectAnswer(draftQuestionInput, correctAnswer);
+    const newDraftQuestion = updateDQwithCorrectAnswer(
+      draftQuestionInput,
+      correctAnswer,
+    );
     setDraftQuestion(newDraftQuestion);
     handleDebouncedQuestionChange(newDraftQuestion);
     if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
       setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
   };
 
-  const handleCorrectAnswerStepsChange = (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
+  const handleCorrectAnswerStepsChange = (
+    steps: string[],
+    draftQuestionInput: CentralQuestionTemplateInput,
+  ) => {
     const { isFirstEdit } = draftQuestionInput.correctCard;
-      const newDraftQuestion = updateDQwithCorrectAnswerSteps(draftQuestionInput, steps);
-      setDraftQuestion(newDraftQuestion);
-      handleDebouncedQuestionChange(newDraftQuestion);
-      if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    const newDraftQuestion = updateDQwithCorrectAnswerSteps(
+      draftQuestionInput,
+      steps,
+    );
+    setDraftQuestion(newDraftQuestion);
+    handleDebouncedQuestionChange(newDraftQuestion);
+    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
+      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
   };
 
-  const handleAnswerSettingsChange = (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType,  answerPrecision?: AnswerPrecision,) => {
+  const handleAnswerSettingsChange = (
+    draftQuestionInput: CentralQuestionTemplateInput,
+    answerType: AnswerType,
+    answerPrecision?: AnswerPrecision,
+  ) => {
     const { isFirstEdit } = draftQuestionInput.correctCard;
-    const newDraftQuestion = updateDQwithAnswerSettings(draftQuestionInput, answerType, answerPrecision);
+    const newDraftQuestion = updateDQwithAnswerSettings(
+      draftQuestionInput,
+      answerType,
+      answerPrecision,
+    );
     window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
     setDraftQuestion(newDraftQuestion);
     if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
@@ -288,90 +367,125 @@ export default function CreateQuestion({
 
   // incorrect answer card functions
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
-    if (isAIError)
-      setIsAIError(false);
+    if (isAIError) setIsAIError(false);
     const updatedAnswers = incompleteIncorrectAnswers.map((answer) => {
       if (answer.id === cardData.id) {
         return cardData;
       }
       return answer;
     });
-    const { newIncompleteAnswers, newCompleteAnswers } = handleMoveAnswerToComplete(updatedAnswers, completeIncorrectAnswers);
+    const { newIncompleteAnswers, newCompleteAnswers } =
+      handleMoveAnswerToComplete(updatedAnswers, completeIncorrectAnswers);
     setIncompleteIncorrectAnswers(newIncompleteAnswers);
     setCompleteIncorrectAnswers(newCompleteAnswers);
   };
 
-  const handleIncorrectCardStackUpdate = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[], isAIEnabledCard?: boolean) => {
-      const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
-      const isUpdateInIncompleteCards = incompleteAnswers.find(answer => answer.id === cardData.id);
-      let newDraftQuestion = null;
-      const isCardComplete = cardData.answer.length >0 && cardData.explanation.length > 0;
-      // we need to break this up so we don't change the stateful arrays when a card is not being passed across them. 
-      // everytime we update those arrays, we're going to trigger an animation, so we have to only manipulate them when we want that
-      // so in this case, if the card that is being edited is already complete, we are only going to update the draftQuestion object and leave the arrays alone
-      if (isUpdateInIncompleteCards){
-        setIsAIError(false);
-        const updatedAnswers = incompleteAnswers.map((answer) => {
-          if (answer.id === cardData.id) {
-            return cardData;
-          }
-          return answer;
-        });
-        if (isCardComplete && !isAIEnabledCard){
-          // adjust incomplete and complete arrays, moving completed card over
-          const { newIncompleteAnswers, newCompleteAnswers } = handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
-          // adjust local state for the cards so that they animate properly through the stack
-          setIncompleteIncorrectAnswers(newIncompleteAnswers);
-          setCompleteIncorrectAnswers(newCompleteAnswers);
-          newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, newIncompleteAnswers, newCompleteAnswers);
-
-          if (cardData.isFirstEdit)
-            setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
-        } else {
-          newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, updatedAnswers, completeAnswers);
+  const handleIncorrectCardStackUpdate = (
+    cardData: IncorrectCard,
+    draftQuestionInput: CentralQuestionTemplateInput,
+    completeAnswers: IncorrectCard[],
+    incompleteAnswers: IncorrectCard[],
+    isAIEnabledCard?: boolean,
+  ) => {
+    const nextCard = getNextHighlightCard(
+      cardData.id as CreateQuestionHighlightCard,
+    );
+    const isUpdateInIncompleteCards = incompleteAnswers.find(
+      (answer) => answer.id === cardData.id,
+    );
+    let newDraftQuestion = null;
+    const isCardComplete =
+      cardData.answer.length > 0 && cardData.explanation.length > 0;
+    // we need to break this up so we don't change the stateful arrays when a card is not being passed across them.
+    // everytime we update those arrays, we're going to trigger an animation, so we have to only manipulate them when we want that
+    // so in this case, if the card that is being edited is already complete, we are only going to update the draftQuestion object and leave the arrays alone
+    if (isUpdateInIncompleteCards) {
+      setIsAIError(false);
+      const updatedAnswers = incompleteAnswers.map((answer) => {
+        if (answer.id === cardData.id) {
+          return cardData;
         }
+        return answer;
+      });
+      if (isCardComplete && !isAIEnabledCard) {
+        // adjust incomplete and complete arrays, moving completed card over
+        const { newIncompleteAnswers, newCompleteAnswers } =
+          handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
+        // adjust local state for the cards so that they animate properly through the stack
+        setIncompleteIncorrectAnswers(newIncompleteAnswers);
+        setCompleteIncorrectAnswers(newCompleteAnswers);
+        newDraftQuestion = updateDQwithIncorrectAnswers(
+          draftQuestionInput,
+          newIncompleteAnswers,
+          newCompleteAnswers,
+        );
+
+        if (cardData.isFirstEdit)
+          setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
       } else {
-        const newCompleteAnswers = completeAnswers.map((answer) => {
-          if (answer.id === cardData.id) {
-            return cardData;
-          }
-          return answer;
-        })
-        newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, incompleteAnswers, newCompleteAnswers);
+        newDraftQuestion = updateDQwithIncorrectAnswers(
+          draftQuestionInput,
+          updatedAnswers,
+          completeAnswers,
+        );
       }
-    
-      // adjust draftQuestion and localstorage for use in API call and retrieval, respectively
-      if (newDraftQuestion){
-        setDraftQuestion(newDraftQuestion);
-        window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
-      }
-   
-  }
-  
+    } else {
+      const newCompleteAnswers = completeAnswers.map((answer) => {
+        if (answer.id === cardData.id) {
+          return cardData;
+        }
+        return answer;
+      });
+      newDraftQuestion = updateDQwithIncorrectAnswers(
+        draftQuestionInput,
+        incompleteAnswers,
+        newCompleteAnswers,
+      );
+    }
+
+    // adjust draftQuestion and localstorage for use in API call and retrieval, respectively
+    if (newDraftQuestion) {
+      setDraftQuestion(newDraftQuestion);
+      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+    }
+  };
+
   const handleClick = (cardType: CreateQuestionHighlightCard) => {
-    switch(cardType){
+    switch (cardType) {
       case CreateQuestionHighlightCard.CORRECTANSWER:
-        if (draftQuestion.correctCard.isCardComplete){
-          const newDraftQuestion = updateDQwithCorrectAnswerClick(draftQuestion);
-          window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+        if (draftQuestion.correctCard.isCardComplete) {
+          const newDraftQuestion =
+            updateDQwithCorrectAnswerClick(draftQuestion);
+          window.localStorage.setItem(
+            StorageKey,
+            JSON.stringify(newDraftQuestion),
+          );
           setDraftQuestion(newDraftQuestion);
         }
         break;
       case CreateQuestionHighlightCard.INCORRECTANSWER1:
       case CreateQuestionHighlightCard.INCORRECTANSWER2:
-      case CreateQuestionHighlightCard.INCORRECTANSWER3:
-      {
+      case CreateQuestionHighlightCard.INCORRECTANSWER3: {
         // then we can update the draftQuestion for the api call and the localStorage for retreival, respectively
-        const newDraftQuestion = updateDQwithIncorrectAnswerClick(draftQuestion, cardType);
-        window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+        const newDraftQuestion = updateDQwithIncorrectAnswerClick(
+          draftQuestion,
+          cardType,
+        );
+        window.localStorage.setItem(
+          StorageKey,
+          JSON.stringify(newDraftQuestion),
+        );
         setDraftQuestion(newDraftQuestion);
         break;
       }
       case CreateQuestionHighlightCard.QUESTIONCARD:
       default:
-        if (draftQuestion.questionCard.isCardComplete){
+        if (draftQuestion.questionCard.isCardComplete) {
           const newDraftQuestion = updateDQwithQuestionClick(draftQuestion);
-          window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+          window.localStorage.setItem(
+            StorageKey,
+            JSON.stringify(newDraftQuestion),
+          );
           setDraftQuestion(newDraftQuestion);
         }
         break;
@@ -383,129 +497,166 @@ export default function CreateQuestion({
   };
 
   const handleDiscardClick = (value: boolean) => {
-    if (value){
+    if (value) {
       setIsDiscardModalOpen(false);
       window.localStorage.setItem(StorageKey, '');
       navigate('/');
       return;
     }
     setIsDiscardModalOpen(false);
-  }
-  
+  };
+
   const handleCheckCardsCompleteOnSave = () => {
     if (
-      draftQuestion.questionCard.ccss.length > 0 && 
+      draftQuestion.questionCard.ccss.length > 0 &&
       draftQuestion.questionCard.ccss !== 'CCSS' &&
       draftQuestion.questionCard.title.length > 0 &&
-      ((draftQuestion.questionCard.imageUrl && draftQuestion.questionCard.imageUrl?.length > 0) || draftQuestion.questionCard.image ) &&
+      ((draftQuestion.questionCard.imageUrl &&
+        draftQuestion.questionCard.imageUrl?.length > 0) ||
+        draftQuestion.questionCard.image) &&
       draftQuestion.correctCard.answer.length > 0 &&
       draftQuestion.correctCard.answerSteps.length > 0 &&
       draftQuestion.correctCard.answerSteps.every((step) => step.length > 0) &&
       draftQuestion.incorrectCards.length > 0 &&
-      draftQuestion.incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)
+      draftQuestion.incorrectCards.every(
+        (card) => card.answer.length > 0 && card.explanation.length > 0,
+      )
     )
       return true;
     return false;
-  }
+  };
 
   const handleSaveEditedQuestion = async () => {
     try {
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
-      if (isQuestionTemplateComplete){
-        if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
+      if (isQuestionTemplateComplete) {
+        if (
+          draftQuestion.questionCard.image ||
+          draftQuestion.questionCard.imageUrl
+        ) {
           setIsCreatingTemplate(true);
           let result = null;
           let url = null;
           // if the question is a clone/edit and the image hasn't been changed, we can use the original imageUrl
-          if ((!isClone && !isEdit) || draftQuestion.questionCard.imageUrl !== originalImageURl){
-            if (draftQuestion.questionCard.image){
-              const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+          if (
+            (!isClone && !isEdit) ||
+            draftQuestion.questionCard.imageUrl !== originalImageURl
+          ) {
+            if (draftQuestion.questionCard.image) {
+              const img = await apiClients.questionTemplate.storeImageInS3(
+                draftQuestion.questionCard.image,
+              );
               // have to do a nested await here because aws-storage returns a nested promise object
               result = await img.result;
               if (result && result.path && result.path.length > 0)
                 url = result.path;
-            } else if (draftQuestion.questionCard.imageUrl){
-              url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+            } else if (draftQuestion.questionCard.imageUrl) {
+              url = await apiClients.questionTemplate.storeImageUrlInS3(
+                draftQuestion.questionCard.imageUrl,
+              );
             }
           } else {
             url = draftQuestion.questionCard.imageUrl;
           }
           window.localStorage.setItem(StorageKey, '');
-          if (url){
+          if (url) {
             if (isMultipleChoice)
-              draftQuestion.correctCard.answerSettings.answerType = AnswerType.MULTICHOICE;
-            apiClients.questionTemplate.updateQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion, selectedQuestionId);
+              draftQuestion.correctCard.answerSettings.answerType =
+                AnswerType.MULTICHOICE;
+            apiClients.questionTemplate.updateQuestionTemplate(
+              publicPrivate,
+              url,
+              centralData.userProfile?.id || '',
+              draftQuestion,
+              selectedQuestionId,
+            );
           }
           setIsCreatingTemplate(false);
           fetchElements();
           navigate('/questions');
-        }   
+        }
       } else {
         setIsCardErrored(true);
       }
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
-      if (isQuestionTemplateComplete){
-        if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
+      if (isQuestionTemplateComplete) {
+        if (
+          draftQuestion.questionCard.image ||
+          draftQuestion.questionCard.imageUrl
+        ) {
           setIsCreatingTemplate(true);
           let result = null;
           let url = null;
           // if the question is a clone and the image hasn't been changed, we can use the original imageUrl
-          if (!isClone || draftQuestion.questionCard.imageUrl !== originalImageURl){
-            if (draftQuestion.questionCard.image){
-              const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+          if (
+            !isClone ||
+            draftQuestion.questionCard.imageUrl !== originalImageURl
+          ) {
+            if (draftQuestion.questionCard.image) {
+              const img = await apiClients.questionTemplate.storeImageInS3(
+                draftQuestion.questionCard.image,
+              );
               // have to do a nested await here because aws-storage returns a nested promise object
               result = await img.result;
               if (result && result.path && result.path.length > 0)
                 url = result.path;
-            } else if (draftQuestion.questionCard.imageUrl){
-              url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+            } else if (draftQuestion.questionCard.imageUrl) {
+              url = await apiClients.questionTemplate.storeImageUrlInS3(
+                draftQuestion.questionCard.imageUrl,
+              );
             }
           } else {
             url = draftQuestion.questionCard.imageUrl;
           }
           window.localStorage.setItem(StorageKey, '');
-          if (url){
+          if (url) {
             if (isMultipleChoice)
-              draftQuestion.correctCard.answerSettings.answerType = AnswerType.MULTICHOICE;
-            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion);
+              draftQuestion.correctCard.answerSettings.answerType =
+                AnswerType.MULTICHOICE;
+            apiClients.questionTemplate.createQuestionTemplate(
+              publicPrivate,
+              url,
+              centralData.userProfile?.id || '',
+              draftQuestion,
+            );
           }
           // update user stats
-          const existingNumQuestions = centralData.userProfile?.questionsMade || 0;
+          const existingNumQuestions =
+            centralData.userProfile?.questionsMade || 0;
           const newNumQuestions = existingNumQuestions + 1;
           await apiClients.user.updateUser({
-              id: centralData.userProfile?.id || '',
-              questionsMade: newNumQuestions,
-            }
-          );
-          
+            id: centralData.userProfile?.id || '',
+            questionsMade: newNumQuestions,
+          });
+
           setIsCreatingTemplate(false);
           fetchElements();
           navigate('/questions');
-        }   
+        }
       } else {
         setIsCardErrored(true);
       }
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const handleSave = () => {
-    if (isEdit){
+    if (isEdit) {
       handleSaveEditedQuestion();
       return;
     }
     handleSaveQuestion();
-  }
+  };
 
   const handleSaveDraftQuestion = async () => {
     try {
@@ -513,36 +664,44 @@ export default function CreateQuestion({
       setIsCreatingTemplate(true);
       let result = null;
       let url = '';
-      if (draftQuestion.questionCard.image){
-        const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+      if (draftQuestion.questionCard.image) {
+        const img = await apiClients.questionTemplate.storeImageInS3(
+          draftQuestion.questionCard.image,
+        );
         // have to do a nested await here because aws-storage returns a nested promise object
         result = await img.result;
-        if (result && result.path && result.path.length > 0)
-          url = result.path;
-      } else if (draftQuestion.questionCard.imageUrl){
-        url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+        if (result && result.path && result.path.length > 0) url = result.path;
+      } else if (draftQuestion.questionCard.imageUrl) {
+        url = await apiClients.questionTemplate.storeImageUrlInS3(
+          draftQuestion.questionCard.imageUrl,
+        );
       }
       window.localStorage.setItem(StorageKey, '');
-      apiClients.questionTemplate.createQuestionTemplate(PublicPrivateType.DRAFT, url,centralData.userProfile?.id || '',  draftQuestion);
+      apiClients.questionTemplate.createQuestionTemplate(
+        PublicPrivateType.DRAFT,
+        url,
+        centralData.userProfile?.id || '',
+        draftQuestion,
+      );
       setIsCreatingTemplate(false);
       navigate('/questions');
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const handleDiscardQuestion = () => {
     setIsDiscardModalOpen(true);
-  }
+  };
 
   const handleAIError = () => {
     setIsAIError(true);
-  }
+  };
 
   const handleAIIsEnabled = () => {
     setIsAIEnabled((prev) => !prev);
     setIsAIError(false);
-  }
+  };
 
   const handleCloseQuestionModal = () => {
     setIsImageUploadVisible(false);
@@ -550,10 +709,10 @@ export default function CreateQuestion({
     setIsCCSSVisible(false);
     setIsDiscardModalOpen(false);
     setIsCreatingTemplate(false);
-  }
+  };
 
   useEffect(() => {
-    setIsLoading(false); 
+    setIsLoading(false);
     const selected = centralData?.selectedQuestion?.question;
     console.log('selected question', selected);
     const title = selected?.title;
@@ -563,108 +722,188 @@ export default function CreateQuestion({
       if (title && !regex.test(title) && isClone)
         selected.title = `(Clone of) ${title}`;
       const draft = assembleQuestionTemplate(selected);
-      setDraftQuestion(prev => ({
+      setDraftQuestion((prev) => ({
         ...prev,
         ...draft,
       }));
       setOriginalImageURL(selected.imageUrl ?? '');
-      setCompleteIncorrectAnswers(draft.incorrectCards.filter((card) => card.isCardComplete));
-      setIncompleteIncorrectAnswers(draft.incorrectCards.filter((card) => !card.isCardComplete));
+      setCompleteIncorrectAnswers(
+        draft.incorrectCards.filter((card) => card.isCardComplete),
+      );
+      setIncompleteIncorrectAnswers(
+        draft.incorrectCards.filter((card) => !card.isCardComplete),
+      );
     }
-    if (!centralData.selectedQuestion?.question && selectedQuestionId && (isClone || isEdit)) {
+    if (
+      !centralData.selectedQuestion?.question &&
+      selectedQuestionId &&
+      (isClone || isEdit)
+    ) {
       setIsLoading(true);
       fetchElement(GameQuestionType.QUESTION, selectedQuestionId);
     }
-  }, [centralData.selectedQuestion, route, selectedQuestionId ]); // eslint-disable-line 
+  }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
 
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
-        <ModalBackground
-          isModalOpen={isCCSSVisible || isDiscardModalOpen || isImageUploadVisible || isCreatingTemplate}
-          handleCloseModal={handleCloseQuestionModal}
-        />
-       <CCSSTabs
-          screenSize={screenSize}
-          isTabsOpen={isCCSSVisible}
-          handleCCSSSubmit={handleCCSSSubmit}
-        />
-        <DiscardModal 
-          isModalOpen={isDiscardModalOpen}
-          screenSize={screenSize}
-          handleDiscardClick={handleDiscardClick}
-        />
-       <ImageUploadModal 
-          draftQuestion={draftQuestion} 
-          isClone={isClone}
-          isCloneImageChanged={isCloneImageChanged}
-          screenSize={screenSize}  
-          isModalOpen={isImageUploadVisible} 
-          handleImageChange={handleImageChange}
-          handleImageSave={handleImageSave} 
-          handleCloseModal={handleCloseModal}
-        />
-       <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
+      <ModalBackground
+        isModalOpen={
+          isCCSSVisible ||
+          isDiscardModalOpen ||
+          isImageUploadVisible ||
+          isCreatingTemplate
+        }
+        handleCloseModal={handleCloseQuestionModal}
+      />
+      <CCSSTabs
+        screenSize={screenSize}
+        isTabsOpen={isCCSSVisible}
+        handleCCSSSubmit={handleCCSSSubmit}
+      />
+      <DiscardModal
+        isModalOpen={isDiscardModalOpen}
+        screenSize={screenSize}
+        handleDiscardClick={handleDiscardClick}
+      />
+      <ImageUploadModal
+        draftQuestion={draftQuestion}
+        isClone={isClone}
+        isCloneImageChanged={isCloneImageChanged}
+        screenSize={screenSize}
+        isModalOpen={isImageUploadVisible}
+        handleImageChange={handleImageChange}
+        handleImageSave={handleImageSave}
+        handleCloseModal={handleCloseModal}
+      />
+      <CreatingTemplateModal
+        isModalOpen={isCreatingTemplate}
+        templateType={TemplateType.QUESTION}
+      />
       <CreateQuestionBoxContainer>
-        <TitleText screenSize={ScreenSize.LARGE}> 
-          {label} Question
-        </TitleText>
+        <TitleText screenSize={ScreenSize.LARGE}>{label} Question</TitleText>
         {isLoading ? (
           <CircularProgress
             style={{ color: `${theme.palette.primary.circularProgress}` }}
           />
         ) : (
           <>
-          {(screenSize === ScreenSize.MEDIUM) && 
-              <Box style={{
-                width: 'fit-content', 
-                display: 'flex',
-                
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                gap: `${theme.sizing.xSmPadding}px`, 
-                paddingBottom: '16px',
-              }}>
-                <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSave} />
-                {!isClone && !isEdit && 
-                  <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
-                }
-                <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
+            {screenSize === ScreenSize.MEDIUM && (
+              <Box
+                style={{
+                  width: 'fit-content',
+                  display: 'flex',
+
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: `${theme.sizing.xSmPadding}px`,
+                  paddingBottom: '16px',
+                }}
+              >
+                <CentralButton
+                  buttonType={ButtonType.SAVE}
+                  isEnabled
+                  smallScreenOverride
+                  onClick={handleSave}
+                />
+                {!isClone && !isEdit && (
+                  <CentralButton
+                    buttonType={ButtonType.SAVEDRAFT}
+                    isEnabled
+                    smallScreenOverride
+                    onClick={handleSaveDraftQuestion}
+                  />
+                )}
+                <CentralButton
+                  buttonType={ButtonType.DISCARDBLUE}
+                  isEnabled
+                  smallScreenOverride
+                  onClick={handleDiscardQuestion}
+                />
               </Box>
-            }
-             {(screenSize === ScreenSize.SMALL) && 
-              <Box style={{
-                width: '100%', 
-                maxWidth: '672px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                gap: `${theme.sizing.xSmPadding}px`, 
-                paddingBottom: '16px',
-              }}>
-                <CentralButton buttonType={ButtonType.SAVE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSave} />
-                <CentralButton buttonType={ButtonType.SAVEDRAFT} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
-                <CentralButton buttonType={ButtonType.DISCARDBLUE} buttonWidthOverride='275px' isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
+            )}
+            {screenSize === ScreenSize.SMALL && (
+              <Box
+                style={{
+                  width: '100%',
+                  maxWidth: '672px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: `${theme.sizing.xSmPadding}px`,
+                  paddingBottom: '16px',
+                }}
+              >
+                <CentralButton
+                  buttonType={ButtonType.SAVE}
+                  buttonWidthOverride="275px"
+                  isEnabled
+                  smallScreenOverride
+                  onClick={handleSave}
+                />
+                <CentralButton
+                  buttonType={ButtonType.SAVEDRAFT}
+                  buttonWidthOverride="275px"
+                  isEnabled
+                  smallScreenOverride
+                  onClick={handleSaveDraftQuestion}
+                />
+                <CentralButton
+                  buttonType={ButtonType.DISCARDBLUE}
+                  buttonWidthOverride="275px"
+                  isEnabled
+                  smallScreenOverride
+                  onClick={handleDiscardQuestion}
+                />
               </Box>
-            }
-            <CreateQuestionGridContainer container  wrap="nowrap" >
+            )}
+            <CreateQuestionGridContainer container wrap="nowrap">
               <Grid
                 sm
                 md={1}
                 lg={4}
                 item
-                style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', paddingTop: '16px', gap: '20px'}}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-start',
+                  paddingTop: '16px',
+                  gap: '20px',
+                }}
               >
-                { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
-                  <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
-                    <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSave} />
-                    {!isClone && !isEdit && 
-                      <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
-                    }
-                    <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
-                  </Box>
-                }
+                {screenSize !== ScreenSize.SMALL &&
+                  screenSize !== ScreenSize.MEDIUM && (
+                    <Box
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-Start',
+                        alignItems: 'center',
+                        gap: `${theme.sizing.xSmPadding}px`,
+                        paddingRight: '30px',
+                      }}
+                    >
+                      <CentralButton
+                        buttonType={ButtonType.SAVE}
+                        isEnabled
+                        onClick={handleSave}
+                      />
+                      {!isClone && !isEdit && (
+                        <CentralButton
+                          buttonType={ButtonType.SAVEDRAFT}
+                          isEnabled
+                          smallScreenOverride
+                          onClick={handleSaveDraftQuestion}
+                        />
+                      )}
+                      <CentralButton
+                        buttonType={ButtonType.DISCARDBLUE}
+                        isEnabled
+                        onClick={handleDiscardQuestion}
+                      />
+                    </Box>
+                  )}
               </Grid>
               <Grid
                 sm={12}
@@ -680,7 +919,12 @@ export default function CreateQuestion({
                   gap: `${theme.sizing.xLgPadding}px`,
                 }}
               >
-                <Box onClick={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)} style={{ width: '100%' }}>
+                <Box
+                  onClick={() =>
+                    handleClick(CreateQuestionHighlightCard.QUESTIONCARD)
+                  }
+                  style={{ width: '100%' }}
+                >
                   <CreateQuestionCardBase
                     screenSize={screenSize}
                     isClone={isClone}
@@ -690,7 +934,9 @@ export default function CreateQuestion({
                     draftQuestion={draftQuestion}
                     handleTitleChange={handleTitleChange}
                     handleCCSSClick={handleCCSSClick}
-                    isHighlight={highlightCard === CreateQuestionHighlightCard.QUESTIONCARD}
+                    isHighlight={
+                      highlightCard === CreateQuestionHighlightCard.QUESTIONCARD
+                    }
                     handleImageUploadClick={handleImageUploadClick}
                     handlePublicPrivateChange={handlePublicPrivateChange}
                     isCardSubmitted={isCardSubmitted}
@@ -701,23 +947,26 @@ export default function CreateQuestion({
                     handleAnswerType={handleAnswerType}
                   />
                 </Box>
-                <Grid
-                  container
-                  spacing={`${theme.sizing.smPadding}px`}
-                >
-                  <SubCardGridItem 
-                    item
-                    sm={12}
-                    md={6}
-                  >
-                    <Box onClick={() => handleClick(CreateQuestionHighlightCard.CORRECTANSWER)} style={{ width: '100%' }}>
+                <Grid container spacing={`${theme.sizing.smPadding}px`}>
+                  <SubCardGridItem item sm={12} md={6}>
+                    <Box
+                      onClick={() =>
+                        handleClick(CreateQuestionHighlightCard.CORRECTANSWER)
+                      }
+                      style={{ width: '100%' }}
+                    >
                       <CorrectAnswerCard
                         screenSize={screenSize}
                         isClone={isClone}
-                        draftQuestion={draftQuestion}                   
-                        isHighlight={highlightCard === CreateQuestionHighlightCard.CORRECTANSWER}
+                        draftQuestion={draftQuestion}
+                        isHighlight={
+                          highlightCard ===
+                          CreateQuestionHighlightCard.CORRECTANSWER
+                        }
                         handleCorrectAnswerChange={handleCorrectAnswerChange}
-                        handleCorrectAnswerStepsChange={handleCorrectAnswerStepsChange}
+                        handleCorrectAnswerStepsChange={
+                          handleCorrectAnswerStepsChange
+                        }
                         handleAnswerSettingsChange={handleAnswerSettingsChange}
                         isCardSubmitted={isCardSubmitted}
                         isCardErrored={isCardErrored}
@@ -725,26 +974,35 @@ export default function CreateQuestion({
                       />
                     </Box>
                   </SubCardGridItem>
-                  <SubCardGridItem
-                    item
-                    sm={12}
-                    md={6}
-                  >
-                    <Box style={{width: '100%', display: 'flex', alignItems: 'center'}}>
-                      <Typography style={{textAlign: 'right', fontWeight: 500}}>
+                  <SubCardGridItem item sm={12} md={6}>
+                    <Box
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Typography
+                        style={{ textAlign: 'right', fontWeight: 500 }}
+                      >
                         Try our AI-Generated Wrong Answer Explanation Prototype
                       </Typography>
-                      <AISwitch checked={isAIEnabled} onChange={(prev) => handleAIIsEnabled()}/>
+                      <AISwitch
+                        checked={isAIEnabled}
+                        onChange={(prev) => handleAIIsEnabled()}
+                      />
                     </Box>
-                    <IncorrectAnswerCardStack 
+                    <IncorrectAnswerCardStack
                       draftQuestion={draftQuestion}
                       isClone={isClone}
                       completeIncorrectAnswers={completeIncorrectAnswers}
                       incompleteIncorrectAnswers={incompleteIncorrectAnswers}
-                      highlightCard={highlightCard} 
+                      highlightCard={highlightCard}
                       handleNextCardButtonClick={handleNextCardButtonClick}
-                      handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
-                      handleCardClick={handleClick} 
+                      handleIncorrectCardStackUpdate={
+                        handleIncorrectCardStackUpdate
+                      }
+                      handleCardClick={handleClick}
                       handleAIError={handleAIError}
                       isCardSubmitted={isCardSubmitted}
                       isAIEnabled={isAIEnabled}
@@ -753,11 +1011,8 @@ export default function CreateQuestion({
                   </SubCardGridItem>
                 </Grid>
               </Grid>
-              <Grid  
-                sm
-                md={1}
-                lg={4} item />
-            </CreateQuestionGridContainer> 
+              <Grid sm md={1} lg={4} item />
+            </CreateQuestionGridContainer>
           </>
         )}
       </CreateQuestionBoxContainer>

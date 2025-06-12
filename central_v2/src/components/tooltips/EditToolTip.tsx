@@ -11,7 +11,7 @@ interface EditToolTipProps {
 export default function EditToolTip({
   isEditEnabled,
   isOnQuestionTab,
-  children
+  children,
 }: EditToolTipProps) {
   const theme = useTheme();
 
@@ -21,36 +21,47 @@ export default function EditToolTip({
     case false:
     default:
       return (
-          <CustomTooltip
-            title={
-              <Box>
-                <Typography sx={{ fontWeight: 'bold', color: isOnQuestionTab ? `${theme.palette.primary.sortText}` : '#FFFFFF' }}>
-                  You must be the owner to do this.
-                </Typography>
-              </Box>
-            }
-            componentsProps={{
-              tooltip: {
-                sx: {
-                  bgcolor: isOnQuestionTab ? '#FFF' : `${theme.palette.primary.extraDarkBlue}`,
-                  color: '#FFFFFF !important', // Ensures text remains white
-                  fontSize: '14px',
-                  padding: '10px 15px',
-                  borderRadius: '8px',
-                  maxWidth: '250px', 
-                  boxSizing: 'border-box',
-                  boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
-                  '& .MuiTooltip-arrow': {
-                    color: isOnQuestionTab ? '#FFF' : `${theme.palette.primary.extraDarkBlue}`,
-                  },
+        <CustomTooltip
+          title={
+            <Box>
+              <Typography
+                sx={{
+                  fontWeight: 'bold',
+                  color: isOnQuestionTab
+                    ? `${theme.palette.primary.sortText}`
+                    : '#FFFFFF',
+                }}
+              >
+                You must be the owner to do this.
+              </Typography>
+            </Box>
+          }
+          componentsProps={{
+            tooltip: {
+              sx: {
+                bgcolor: isOnQuestionTab
+                  ? '#FFF'
+                  : `${theme.palette.primary.extraDarkBlue}`,
+                color: '#FFFFFF !important', // Ensures text remains white
+                fontSize: '14px',
+                padding: '10px 15px',
+                borderRadius: '8px',
+                maxWidth: '250px',
+                boxSizing: 'border-box',
+                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                '& .MuiTooltip-arrow': {
+                  color: isOnQuestionTab
+                    ? '#FFF'
+                    : `${theme.palette.primary.extraDarkBlue}`,
                 },
               },
-            }}
-            arrow
-            placement="bottom"
-          >
-            {children}
-          </CustomTooltip>
-      )
-    }
+            },
+          }}
+          arrow
+          placement="bottom"
+        >
+          {children}
+        </CustomTooltip>
+      );
+  }
 }

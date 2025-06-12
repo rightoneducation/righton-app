@@ -20,27 +20,26 @@ import {
   TopSubContainer,
   TopNameText,
   MobileUserNameContainer,
-  MobileBottomGamesContainer
+  MobileBottomGamesContainer,
 } from '../../lib/styledcomponents/OwnerCardStyledComponents';
 import profilePic from '../../images/profilePicGreen.png';
 import { ScreenSize } from '../../lib/CentralModels';
 import { ButtonType } from '../button/ButtonModels';
-import CentralButton from "../button/Button";
+import CentralButton from '../button/Button';
 
 interface OwnerCardProps {
-    screenSize: ScreenSize;
-    draftUserProfile: IUserProfile;
-    newProfilePic: File | null;
-    handleEditPicture: () => void;
+  screenSize: ScreenSize;
+  draftUserProfile: IUserProfile;
+  newProfilePic: File | null;
+  handleEditPicture: () => void;
 }
 
 export default function OwnerCard({
-    screenSize,
-    draftUserProfile,
-    newProfilePic,
-    handleEditPicture
+  screenSize,
+  draftUserProfile,
+  newProfilePic,
+  handleEditPicture,
 }: OwnerCardProps) {
-
   let imageLink = '';
   if (newProfilePic) {
     const localURL = URL.createObjectURL(newProfilePic);
@@ -56,125 +55,133 @@ export default function OwnerCard({
 
   const date = new Date(createdAt);
   const formatted = date.toLocaleDateString('en-US', {
-    year:   'numeric',
-    month:  '2-digit',
-    day:    '2-digit',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
   });
 
-  return (
-    screenSize === ScreenSize.LARGE ? (
-        <LeftProfileContainer>
-        <LeftProfileTopContainer>
-            <LeftNameText>
-            {`${(draftUserProfile.title !== 'Title...') ? draftUserProfile.title : ''} ${draftUserProfile.lastName}`}
-            </LeftNameText>
-            <img src={imageLink} alt="Right On Logo" style={{ width: '165px', height: '165px', borderRadius: '128px', objectFit: 'cover' }} />
-            <Box style={{width: '140px'}}>
-                <CentralButton buttonType={ButtonType.EDITPROFILEPICTURE} isEnabled onClick={handleEditPicture}/>
-            </Box>
-            <AtUserNameContainerAndAccount>
-                <AtUserNameContainer >
-                    <AtUserNameText>
-                        @{draftUserProfile.userName}
-                    </AtUserNameText>
-                </AtUserNameContainer>
-                <LeftAccountCreatedContainer>
-                    <LeftAccountCreatedInfo>
-                        Account Created
-                    </LeftAccountCreatedInfo>
-                    <LeftDateText>
-                        {formatted}
-                    </LeftDateText>
-                </LeftAccountCreatedContainer>
-            </AtUserNameContainerAndAccount>
-        </LeftProfileTopContainer>
-        <Box style={{display: 'flex', flexDirection: 'column', width: '100%', gap: '8px'}}>
+  return screenSize === ScreenSize.LARGE ? (
+    <LeftProfileContainer>
+      <LeftProfileTopContainer>
+        <LeftNameText>
+          {`${draftUserProfile.title !== 'Title...' ? draftUserProfile.title : ''} ${draftUserProfile.lastName}`}
+        </LeftNameText>
+        <img
+          src={imageLink}
+          alt="Right On Logo"
+          style={{
+            width: '165px',
+            height: '165px',
+            borderRadius: '128px',
+            objectFit: 'cover',
+          }}
+        />
+        <Box style={{ width: '140px' }}>
+          <CentralButton
+            buttonType={ButtonType.EDITPROFILEPICTURE}
+            isEnabled
+            onClick={handleEditPicture}
+          />
+        </Box>
+        <AtUserNameContainerAndAccount>
+          <AtUserNameContainer>
+            <AtUserNameText>@{draftUserProfile.userName}</AtUserNameText>
+          </AtUserNameContainer>
+          <LeftAccountCreatedContainer>
+            <LeftAccountCreatedInfo>Account Created</LeftAccountCreatedInfo>
+            <LeftDateText>{formatted}</LeftDateText>
+          </LeftAccountCreatedContainer>
+        </AtUserNameContainerAndAccount>
+      </LeftProfileTopContainer>
+      <Box
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          gap: '8px',
+        }}
+      >
         <LeftBottomContainer>
-            <LeftBottomGamesQuestionContainer>
-                <LeftBottomGamesContainer>
-                    <LeftBottomGamesText>
-                        Games Made
-                    </LeftBottomGamesText>
-                    <LeftBottomGamesNumber>
-                        {gamesMade}
-                    </LeftBottomGamesNumber>
-                </LeftBottomGamesContainer>
-                <LeftBottomGamesContainer>
-                    <LeftBottomGamesText>
-                        Question Made
-                    </LeftBottomGamesText>
-                    <LeftBottomGamesNumber>
-                        {questionsMade}
-                    </LeftBottomGamesNumber>
-                </LeftBottomGamesContainer>
-            </LeftBottomGamesQuestionContainer>
+          <LeftBottomGamesQuestionContainer>
+            <LeftBottomGamesContainer>
+              <LeftBottomGamesText>Games Made</LeftBottomGamesText>
+              <LeftBottomGamesNumber>{gamesMade}</LeftBottomGamesNumber>
+            </LeftBottomGamesContainer>
+            <LeftBottomGamesContainer>
+              <LeftBottomGamesText>Question Made</LeftBottomGamesText>
+              <LeftBottomGamesNumber>{questionsMade}</LeftBottomGamesNumber>
+            </LeftBottomGamesContainer>
+          </LeftBottomGamesQuestionContainer>
         </LeftBottomContainer>
         <LeftBottomGamesContainer>
-            <LeftBottomGamesText>
-                Games Used
-            </LeftBottomGamesText>
-            <LeftBottomGamesNumber>
-                {gamesUsed}
-            </LeftBottomGamesNumber>
-          </LeftBottomGamesContainer>
-        </Box>
-      </LeftProfileContainer>  
-    ) : (
-        <TopProfileContainer>
-            <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
-                <TopNameText>
-                    {`${(draftUserProfile.title !== 'Title...') ? draftUserProfile.title : ''} ${draftUserProfile.lastName}`}
-                </TopNameText>
-            </Box>
-            <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
-            <MobileUserNameContainer >
-                <img src={imageLink} alt="Right On Logo" style={{ width: '50px', height: '50px' }} />
-                <AtUserNameText>
-                    @{draftUserProfile.userName}
-                </AtUserNameText>
-            </MobileUserNameContainer>
-            </Box>
-            <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', gap: '16px'}}>
-                <TopSubContainer>
-                    <LeftBottomContainer>
-                        <LeftBottomGamesContainer>
-                            <LeftBottomGamesText>
-                                Games Made
-                            </LeftBottomGamesText>
-                            <LeftBottomGamesNumber>
-                                {gamesMade}
-                            </LeftBottomGamesNumber>
-                        </LeftBottomGamesContainer>
-                        <LeftBottomGamesContainer>
-                            <LeftBottomGamesText>
-                                Questions Made
-                            </LeftBottomGamesText>
-                            <LeftBottomGamesNumber>
-                                {questionsMade}
-                            </LeftBottomGamesNumber>
-                        </LeftBottomGamesContainer>
-                        <LeftBottomGamesContainer>
-                            <LeftBottomGamesText>
-                                Games Used
-                            </LeftBottomGamesText>
-                            <LeftBottomGamesNumber>
-                                {gamesUsed}
-                            </LeftBottomGamesNumber>
-                        </LeftBottomGamesContainer>          
-                    </LeftBottomContainer>
-                </TopSubContainer>
-            </Box>
-            <TopSubContainer>
-                    <LeftAccountCreatedContainer>
-                        <LeftAccountCreatedInfo>
-                            Account Created
-                        </LeftAccountCreatedInfo>
-                        <LeftDateText>
-                            {formatted}
-                        </LeftDateText>
-                    </LeftAccountCreatedContainer>
-                </TopSubContainer>
-        </TopProfileContainer>
-    )
+          <LeftBottomGamesText>Games Used</LeftBottomGamesText>
+          <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
+        </LeftBottomGamesContainer>
+      </Box>
+    </LeftProfileContainer>
+  ) : (
+    <TopProfileContainer>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+        }}
+      >
+        <TopNameText>
+          {`${draftUserProfile.title !== 'Title...' ? draftUserProfile.title : ''} ${draftUserProfile.lastName}`}
+        </TopNameText>
+      </Box>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+        }}
+      >
+        <MobileUserNameContainer>
+          <img
+            src={imageLink}
+            alt="Right On Logo"
+            style={{ width: '50px', height: '50px' }}
+          />
+          <AtUserNameText>@{draftUserProfile.userName}</AtUserNameText>
+        </MobileUserNameContainer>
+      </Box>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          gap: '16px',
+        }}
+      >
+        <TopSubContainer>
+          <LeftBottomContainer>
+            <LeftBottomGamesContainer>
+              <LeftBottomGamesText>Games Made</LeftBottomGamesText>
+              <LeftBottomGamesNumber>{gamesMade}</LeftBottomGamesNumber>
+            </LeftBottomGamesContainer>
+            <LeftBottomGamesContainer>
+              <LeftBottomGamesText>Questions Made</LeftBottomGamesText>
+              <LeftBottomGamesNumber>{questionsMade}</LeftBottomGamesNumber>
+            </LeftBottomGamesContainer>
+            <LeftBottomGamesContainer>
+              <LeftBottomGamesText>Games Used</LeftBottomGamesText>
+              <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
+            </LeftBottomGamesContainer>
+          </LeftBottomContainer>
+        </TopSubContainer>
+      </Box>
+      <TopSubContainer>
+        <LeftAccountCreatedContainer>
+          <LeftAccountCreatedInfo>Account Created</LeftAccountCreatedInfo>
+          <LeftDateText>{formatted}</LeftDateText>
+        </LeftAccountCreatedContainer>
+      </TopSubContainer>
+    </TopProfileContainer>
   );
 }

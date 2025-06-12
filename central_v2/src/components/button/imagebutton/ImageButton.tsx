@@ -3,7 +3,11 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { imageButtonContentMap, ImageButtonType } from './ImageButtonModels';
-import { ImageButtonStyled, ImageButtonIcon, ImageButtonText } from '../../../lib/styledcomponents/ImageButtonStyledComponents';
+import {
+  ImageButtonStyled,
+  ImageButtonIcon,
+  ImageButtonText,
+} from '../../../lib/styledcomponents/ImageButtonStyledComponents';
 
 import { ButtonType } from '../ButtonModels';
 
@@ -22,13 +26,11 @@ export default function ImageButton({
   const theme = useTheme();
   const buttonObj = imageButtonContentMap[imageButtonType];
   const buttonText = buttonObj.textKey
-  ? t(`imageButton.${buttonObj.textKey}`)
-  : null;
+    ? t(`imageButton.${buttonObj.textKey}`)
+    : null;
 
   return (
-    <ImageButtonStyled
-      onClick={onClick}
-    >
+    <ImageButtonStyled onClick={onClick}>
       <ImageButtonIcon src={buttonObj.icon} />
       <ImageButtonText> {buttonText} </ImageButtonText>
     </ImageButtonStyled>

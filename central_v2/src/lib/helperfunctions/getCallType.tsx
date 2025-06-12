@@ -4,40 +4,40 @@ import { PublicPrivateType } from '@righton/networking';
 import { GameQuestionType, CallType, LibraryTabEnum } from '../CentralModels';
 
 interface CallTypeProps {
-    // openTab
-    matchViewGame: ReturnType<typeof useMatch>;
-    matchLibViewGame: ReturnType<typeof useMatch>;
-    matchCloneGame: ReturnType<typeof useMatch>;
-    matchEditGame: ReturnType<typeof useMatch>;
-    matchCloneQuestion: ReturnType<typeof useMatch>;
-    matchEditQuestion: ReturnType<typeof useMatch>;
-    matchLibraryTab?: ReturnType<typeof useMatch>;
-    libraryTab?: LibraryTabEnum;
-    gameQuestion?: GameQuestionType;
+  // openTab
+  matchViewGame: ReturnType<typeof useMatch>;
+  matchLibViewGame: ReturnType<typeof useMatch>;
+  matchCloneGame: ReturnType<typeof useMatch>;
+  matchEditGame: ReturnType<typeof useMatch>;
+  matchCloneQuestion: ReturnType<typeof useMatch>;
+  matchEditQuestion: ReturnType<typeof useMatch>;
+  matchLibraryTab?: ReturnType<typeof useMatch>;
+  libraryTab?: LibraryTabEnum;
+  gameQuestion?: GameQuestionType;
 }
 
 /*
-* This function determines the type of API call required based on the current route.
-* This is necessary for certain operations where the type is not immediately obvious.
-* ex. refreshing the page when clone a game or question (you only have the id, not the type)
-* @param {CallTypeProps} callTypeProps - An object containing the matches for various routes.
-* @returns {CallType} An object containing the gameQuestionType and publicPrivateType.
-*/
+ * This function determines the type of API call required based on the current route.
+ * This is necessary for certain operations where the type is not immediately obvious.
+ * ex. refreshing the page when clone a game or question (you only have the id, not the type)
+ * @param {CallTypeProps} callTypeProps - An object containing the matches for various routes.
+ * @returns {CallType} An object containing the gameQuestionType and publicPrivateType.
+ */
 
 // TODO: but this in the search / sort/ filter functions and pass in open tab and gamequestion switch value as well
 // we can then return the call type for those functions from here too.
 
 export default function getCallType({
-    matchViewGame,
-    matchLibViewGame,
-    matchCloneGame,
-    matchEditGame,
-    matchCloneQuestion,
-    matchEditQuestion,
-    matchLibraryTab,
-    libraryTab,
-    gameQuestion
-  }: CallTypeProps): CallType {
+  matchViewGame,
+  matchLibViewGame,
+  matchCloneGame,
+  matchEditGame,
+  matchCloneQuestion,
+  matchEditQuestion,
+  matchLibraryTab,
+  libraryTab,
+  gameQuestion,
+}: CallTypeProps): CallType {
   let gameQuestionType = gameQuestion ?? GameQuestionType.GAME;
   let publicPrivateType = PublicPrivateType.PUBLIC;
 
@@ -61,7 +61,6 @@ export default function getCallType({
     }
     return { gameQuestionType, publicPrivateType };
   }
-
 
   // check if library (can we just use the presence of openTab on this?)
   // use openTab and gameQuestionType to determine the type of API call
@@ -89,7 +88,7 @@ export default function getCallType({
   if (matchRoute) {
     gameQuestionType = matchRoute.gqType;
     publicPrivateType = parseTypeParam(matchRoute.match!.params.type);
-  } 
+  }
 
   return { gameQuestionType, publicPrivateType };
 }

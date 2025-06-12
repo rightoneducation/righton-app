@@ -19,6 +19,6 @@ export const LoadingContainer = styled(Box)(({ theme }) => ({ // eslint-disable-
   overflow: 'auto',
   flexGrow: 1,
   boxSizing: 'border-box',
-  gap: `${theme.sizing.xLgPadding}px`
+  gap: `${theme.sizing.xLgPadding}px`,
   // border: '1px solid red'
 }));

@@ -1,14 +1,14 @@
-import { 
-  CentralQuestionTemplateInput, 
-  IGameTemplate, 
-  IQuestionTemplate, 
-  IncorrectCard, 
-  PublicPrivateType, 
-  SortDirection, 
-  SortType, 
-  GradeTarget, 
-  IUserProfile 
-} from "@righton/networking";
+import {
+  CentralQuestionTemplateInput,
+  IGameTemplate,
+  IQuestionTemplate,
+  IncorrectCard,
+  PublicPrivateType,
+  SortDirection,
+  SortType,
+  GradeTarget,
+  IUserProfile,
+} from '@righton/networking';
 
 export enum UserStatusType {
   LOGGEDIN,
@@ -26,7 +26,7 @@ export enum ScreenType {
   QUESTIONS,
   LIBRARY,
   LOGIN,
-  SIGNUP, 
+  SIGNUP,
   CREATEGAME,
   CLONEGAME,
   EDITGAME,
@@ -38,7 +38,7 @@ export enum ScreenType {
   NEXTSTEP,
   USERPROFILE,
   AUTH,
-  PASSWORDRESET
+  PASSWORDRESET,
 }
 
 export enum ScreenSize {
@@ -54,7 +54,7 @@ export enum CardType {
 
 export enum AnswerSettingsDropdownType {
   TYPE,
-  PRECISION
+  PRECISION,
 }
 
 export enum BorderStyle {
@@ -72,7 +72,7 @@ export enum GameQuestionType {
 export type CallType = {
   gameQuestionType: GameQuestionType;
   publicPrivateType: PublicPrivateType;
-}
+};
 
 // enum to track the highlight card in the create question flow
 export enum CreateQuestionHighlightCard {
@@ -86,23 +86,23 @@ export enum CreateQuestionHighlightCard {
 // enum to determine between game templates and question templates for generic components like modals
 export enum TemplateType {
   GAME,
-  QUESTION
+  QUESTION,
 }
 
-// key for storage to localStorage  
+// key for storage to localStorage
 export const StorageKey = 'rightOnCentral';
 
-// type that shapes retreived storage for createQuestion 
+// type that shapes retreived storage for createQuestion
 export type CreateQuestionLocalData = {
-  draftQuestion?: CentralQuestionTemplateInput | null,
-  incompleteCards?: IncorrectCard[] | null,
-  completeCards?: IncorrectCard[] | null
-}
+  draftQuestion?: CentralQuestionTemplateInput | null;
+  incompleteCards?: IncorrectCard[] | null;
+  completeCards?: IncorrectCard[] | null;
+};
 
 // type that shapes retrieved storage for gameCreation
 export type CreateGameLocalData = {
   gameTemplate: IGameTemplate | null;
-}
+};
 
 export interface ISelectedQuestion {
   question: IQuestionTemplate | null;
@@ -120,7 +120,6 @@ export interface ISelectedGame {
   timesPlayed: number;
 }
 
-
 export enum FetchType {
   EXPLORE_GAMES,
   EXPLORE_QUESTIONS,
@@ -131,25 +130,25 @@ export enum FetchType {
   DRAFT_GAMES,
   DRAFT_QUESTIONS,
   FAVORITE_GAMES,
-  FAVORITE_QUESTIONS
+  FAVORITE_QUESTIONS,
 }
 
 export enum LibraryTabEnum {
   PUBLIC,
   PRIVATE,
   DRAFTS,
-  FAVORITES
+  FAVORITES,
 }
 
 export const userProfileInit = {
-    title: 'Title...',
-    firstName: '',
-    lastName: '',
-    userName: '',
-    email: '',
-    password: '',
-    gamesUsed: 0,
-}
+  title: 'Title...',
+  firstName: '',
+  lastName: '',
+  userName: '',
+  email: '',
+  password: '',
+  gamesUsed: 0,
+};
 
 // initialize centralDataState
 export const initCentralDataState: ICentralDataState = {
@@ -168,7 +167,7 @@ export const initCentralDataState: ICentralDataState = {
     profilePic: '',
     createdName: '',
     lastModified: new Date(),
-    timesPlayed: 0
+    timesPlayed: 0,
   },
   recommendedQuestions: [],
   mostPopularQuestions: [],
@@ -182,7 +181,7 @@ export const initCentralDataState: ICentralDataState = {
     profilePic: '',
     createdName: '',
     lastModified: new Date(),
-    timesPlayed: 0
+    timesPlayed: 0,
   },
   nextToken: null,
   isLoading: false,
@@ -197,9 +196,8 @@ export const initCentralDataState: ICentralDataState = {
   sort: {
     field: SortType.listGameTemplates,
     direction: SortDirection.ASC,
-  }
-}
-
+  },
+};
 
 export interface ICentralDataState {
   userProfile: IUserProfile;
@@ -234,10 +232,10 @@ export interface ICentralDataState {
   sort: {
     field: SortType;
     direction: SortDirection | null;
-  }
+  };
 }
 
 export const userNameOverrides = [
   { raw: ' .. RightOn', display: 'RightOn' },
   { raw: ' .. BGCP', display: 'BGCP' },
-]
+];

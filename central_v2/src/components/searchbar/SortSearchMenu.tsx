@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Box, Typography, useTheme, styled, Select, ClickAwayListener } from '@mui/material';
+import {
+  Box,
+  Typography,
+  useTheme,
+  styled,
+  Select,
+  ClickAwayListener,
+} from '@mui/material';
 import { GradeTarget, SortType, SortDirection } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
@@ -15,7 +22,8 @@ import SortArrows from '../../images/SortArrows.svg';
 import SortArrow from '../../images/sortArrow.svg';
 
 const SelectedIcon = styled('img')(({ theme }) => ({
-  filter: 'invert(100%) sepia(8%) saturate(0%) hue-rotate(198deg) brightness(112%) contrast(101%)'
+  filter:
+    'invert(100%) sepia(8%) saturate(0%) hue-rotate(198deg) brightness(112%) contrast(101%)',
 }));
 
 interface SortSearchMenuProps {
@@ -30,7 +38,6 @@ export default function SortSearchMenu({
   screenSize,
   handleSortChange,
 }: SortSearchMenuProps) {
-
   const theme = useTheme();
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [selectedSort, setSelectedSort] = useState<{
@@ -61,11 +68,13 @@ export default function SortSearchMenu({
     handleSortChange({ field: selectSort.field, direction: newDirection });
   };
   return (
-    <ClickAwayListener onClickAway={() => {
-      if (isSortOpen) {
-        setIsSortOpen(false)
-      }
-    }}>
+    <ClickAwayListener
+      onClickAway={() => {
+        if (isSortOpen) {
+          setIsSortOpen(false);
+        }
+      }}
+    >
       <SortContainer>
         <SortButton
           screenSize={screenSize ?? ScreenSize.SMALL}
@@ -80,8 +89,10 @@ export default function SortSearchMenu({
           {Object.keys(sortTypeMap).map((sortType) => (
             <SortMenuItem
               key={sortType}
-              isSelected={selectedSort.field ===
-                sortTypeMap[sortType as keyof typeof sortTypeMap]}
+              isSelected={
+                selectedSort.field ===
+                sortTypeMap[sortType as keyof typeof sortTypeMap]
+              }
               onClick={() =>
                 preSortChange({
                   field: sortTypeMap[sortType as keyof typeof sortTypeMap],
@@ -106,11 +117,12 @@ export default function SortSearchMenu({
                 selectedSort={selectedSort}
                 currentSort={sortTypeMap[sortType as keyof typeof sortTypeMap]}
               >
-                { (selectedSort.field ===
-                    sortTypeMap[sortType as keyof typeof sortTypeMap])
-                ? <SelectedIcon src={SortArrow} alt="Sort Direction Icon" />
-                : <img src={SortArrow} alt="Sort Direction Icon" />
-                }
+                {selectedSort.field ===
+                sortTypeMap[sortType as keyof typeof sortTypeMap] ? (
+                  <SelectedIcon src={SortArrow} alt="Sort Direction Icon" />
+                ) : (
+                  <img src={SortArrow} alt="Sort Direction Icon" />
+                )}
               </SortMenuArrowContainer>
             </SortMenuItem>
           ))}

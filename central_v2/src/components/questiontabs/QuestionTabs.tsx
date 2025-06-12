@@ -5,23 +5,28 @@ import {
   Modal,
   Typography,
   useMediaQuery,
-  Box
+  Box,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import { 
+import {
   IQuestionTemplate,
   IGameTemplate,
   PublicPrivateType,
   GradeTarget,
   SortType,
-  SortDirection, 
+  SortDirection,
 } from '@righton/networking';
 import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import { ScreenSize, LibraryTabEnum, GameQuestionType, UserStatusType } from '../../lib/CentralModels';
+import {
+  ScreenSize,
+  LibraryTabEnum,
+  GameQuestionType,
+  UserStatusType,
+} from '../../lib/CentralModels';
 import {
   TabContainer,
   ContentFrame,
@@ -58,15 +63,16 @@ interface TabContainerProps {
   handleEditButtonClick: () => void;
   handleDeleteButtonClick: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
-  handleSortChange: (
-    newSort: {
-      field: SortType;
-      direction: SortDirection | null;
-    }
-  ) => void;
+  handleSortChange: (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => void;
   handleSearchChange: (searchString: string) => void;
-  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
+  handleQuestionView: (
+    element: IQuestionTemplate,
+    elements: IQuestionTemplate[],
+  ) => void;
   handleCloseQuestionTabs: () => void;
 }
 
@@ -89,23 +95,30 @@ export default function QuestionTabs({
   handleSearchChange,
   handlePublicPrivateChange,
   handleQuestionView,
-  handleCloseQuestionTabs
+  handleCloseQuestionTabs,
 }: TabContainerProps) {
   const theme = useTheme();
-  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBLIC);
+  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
+    LibraryTabEnum.PUBLIC,
+  );
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
-  const handleChange = (event: React.SyntheticEvent, newTab: LibraryTabEnum) => {
+  const handleChange = (
+    event: React.SyntheticEvent,
+    newTab: LibraryTabEnum,
+  ) => {
     centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: null });
     setOpenTab(newTab);
     setSelectedQuestion(null);
     fetchElements(newTab, '');
   };
   const [isLoading, setIsLoading] = React.useState(false);
-  const isFavorite =  question
-    ? (centralData.userProfile?.favoriteGameTemplateIds?.includes(question.id) ?? false)
+  const isFavorite = question
+    ? (centralData.userProfile?.favoriteGameTemplateIds?.includes(
+        question.id,
+      ) ?? false)
     : false;
 
   const tabMap: { [key: number]: string } = {
@@ -130,7 +143,11 @@ export default function QuestionTabs({
   const handleFavoriteButtonClick = async () => {
     setIsLoading(true);
     if (!question) return;
-    const response = await apiClients.centralDataManager?.favoriteQuestionTemplate(question.id, centralData.userProfile);
+    const response =
+      await apiClients.centralDataManager?.favoriteQuestionTemplate(
+        question.id,
+        centralData.userProfile,
+      );
     if (response) {
       centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
       setIsLoading(false);
@@ -145,11 +162,23 @@ export default function QuestionTabs({
       closeAfterTransition
       disableScrollLock
     >
-    <Slide direction="up" in={isTabsOpen} timeout={1000} mountOnEnter unmountOnExit>
+      <Slide
+        direction="up"
+        in={isTabsOpen}
+        timeout={1000}
+        mountOnEnter
+        unmountOnExit
+      >
         <TabContainer>
           <ContentFrame>
             <TabContent>
-              <Box style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+              <Box
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'space-between',
+                }}
+              >
                 <Tabs
                   value={openTab}
                   onChange={handleChange}
@@ -159,35 +188,41 @@ export default function QuestionTabs({
                     },
                   }}
                 >
-                  { centralData.userStatus === UserStatusType.LOGGEDIN ?
-                  Object.entries(tabMap).map(([key, value], index) => {
-                    const numericKey = Number(key);
-                    const isSelected = openTab === numericKey;
-                    return (
-                      <StyledTab
-                        key={uuidv4()}
-                        icon={
-                          <img
-                            src={tabIconMap[numericKey]}
-                            alt={value}
-                            style={{ opacity: openTab === numericKey ? 1 : 0.5, padding: 0 }}
-                          />
-                        }
-                        iconPosition="start"
-                        label={getLabel(screenSize, isSelected, value)}
-                        isSelected={isSelected}
-                        style={{ marginRight: screenSize === ScreenSize.SMALL ? '0px' : '8px' }}
-                      />
-                    );
-                  })
-                  :  
+                  {centralData.userStatus === UserStatusType.LOGGEDIN ? (
+                    Object.entries(tabMap).map(([key, value], index) => {
+                      const numericKey = Number(key);
+                      const isSelected = openTab === numericKey;
+                      return (
+                        <StyledTab
+                          key={uuidv4()}
+                          icon={
+                            <img
+                              src={tabIconMap[numericKey]}
+                              alt={value}
+                              style={{
+                                opacity: openTab === numericKey ? 1 : 0.5,
+                                padding: 0,
+                              }}
+                            />
+                          }
+                          iconPosition="start"
+                          label={getLabel(screenSize, isSelected, value)}
+                          isSelected={isSelected}
+                          style={{
+                            marginRight:
+                              screenSize === ScreenSize.SMALL ? '0px' : '8px',
+                          }}
+                        />
+                      );
+                    })
+                  ) : (
                     <StyledTab
                       key={uuidv4()}
                       icon={
                         <img
                           src={tabIconMap[0]}
                           alt={tabMap[0]}
-                          style={{padding: 0 }}
+                          style={{ padding: 0 }}
                         />
                       }
                       iconPosition="start"
@@ -195,9 +230,18 @@ export default function QuestionTabs({
                       isSelected
                       style={{ marginRight: '8px' }}
                     />
-                  }
+                  )}
                 </Tabs>
-                <Typography style={{fontSize: '16px', textDecoration: 'underline', color: '#FFF', paddingBottom: '8px', cursor: 'pointer'}} onClick={handleCloseQuestionTabs}>
+                <Typography
+                  style={{
+                    fontSize: '16px',
+                    textDecoration: 'underline',
+                    color: '#FFF',
+                    paddingBottom: '8px',
+                    cursor: 'pointer',
+                  }}
+                  onClick={handleCloseQuestionTabs}
+                >
                   Close
                 </Typography>
               </Box>

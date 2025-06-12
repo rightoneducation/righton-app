@@ -1,4 +1,4 @@
-import { IUserProfile } from "@righton/networking";
+import { IUserProfile } from '@righton/networking';
 
 export interface IUserProfileReducer {
   update_user_profile: (userProfile: IUserProfile) => void;

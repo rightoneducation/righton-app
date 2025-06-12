@@ -1,7 +1,14 @@
-
-
 import React from 'react';
-import { Box, Paper, Fade, Typography, styled, CircularProgress, useTheme, Button } from '@mui/material';
+import {
+  Box,
+  Paper,
+  Fade,
+  Typography,
+  styled,
+  CircularProgress,
+  useTheme,
+  Button,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { IUserProfile } from '@righton/networking';
 import CentralButton from '../button/Button';
@@ -9,7 +16,6 @@ import { ButtonType } from '../button/ButtonModels';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
 import { useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
-
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
   position: 'absolute',
@@ -31,28 +37,28 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   gap: '16px',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
 }));
 
 const DragText = styled(Typography)(({ theme }) => ({
   width: '100%',
   fontSize: '24px',
   fontWeight: 700,
-  textAlign: 'center'
+  textAlign: 'center',
 }));
 
 const SubText = styled(Typography)(({ theme }) => ({
   width: '100%',
   fontSize: '16px',
   fontWeight: 400,
-  textAlign: 'center'
+  textAlign: 'center',
 }));
 
 const CloseButton = styled('img')(({ theme }) => ({
   width: '30px',
   height: '30px',
-  cursor: 'pointer'
-}))
+  cursor: 'pointer',
+}));
 
 interface CreatingTemplateModalProps {
   isModalOpen: boolean;
@@ -72,30 +78,47 @@ export default function SignUpErrorModal({
   const handleCloseModalClick = () => {
     setIsModalOpen(false);
     centralDataDispatch({ type: 'SET_USER_ERROR_STRING', payload: '' });
-  }
+  };
 
   return (
-    <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}  style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%)'}}>
+    <Fade
+      in={isModalOpen}
+      mountOnEnter
+      unmountOnExit
+      timeout={1000}
+      style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%)',
+      }}
+    >
       <IntegratedContainer elevation={12}>
-        <Box style={{
-          width: '100%',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'column',
-          gap: '16px', padding: '24px'
-        }}> 
+        <Box
+          style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexDirection: 'column',
+            gap: '16px',
+            padding: '24px',
+          }}
+        >
           <DragText> Error Signing Up </DragText>
           {errorMessage && errorMessage.length > 0 && (
             <SubText> {errorMessage} </SubText>
           )}
-          <Box style={{display: 'flex', gap: '16px'}}>
-              <CentralButton 
-                buttonType={ButtonType.RETRY} 
-                isEnabled 
-                smallScreenOverride
-                onClick={handleCloseModalClick}
-              />
+          <Box style={{ display: 'flex', gap: '16px' }}>
+            <CentralButton
+              buttonType={ButtonType.RETRY}
+              isEnabled
+              smallScreenOverride
+              onClick={handleCloseModalClick}
+            />
           </Box>
         </Box>
-      </IntegratedContainer>      
+      </IntegratedContainer>
     </Fade>
   );
 }
