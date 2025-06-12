@@ -11,7 +11,12 @@ interface GameCardProps {
 const GameCard = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'isCarousel',
 })<GameCardProps>(({ theme, screenSize, isCarousel }) => ({
-  width: screenSize !== ScreenSize.LARGE ? (isCarousel ? '290px' : '327px') : '384px', // eslint-disable-line
+  width:
+    screenSize !== ScreenSize.LARGE // eslint-disable-line
+      ? isCarousel
+        ? '290px'
+        : '327px'
+      : '384px',
   height: '505px',
   gap: `${theme.sizing.smPadding}px`,
   borderRadius: `${theme.sizing.smPadding}px`,
@@ -29,7 +34,11 @@ interface SkeletonGameCardProps {
   isCarousel: boolean;
 }
 
-export default function SkeletonGameCard({ index, screenSize, isCarousel }: SkeletonGameCardProps) {
+export default function SkeletonGameCard({
+  index,
+  screenSize,
+  isCarousel,
+}: SkeletonGameCardProps) {
   const theme = useTheme();
   return (
     <Fade
@@ -42,45 +51,55 @@ export default function SkeletonGameCard({ index, screenSize, isCarousel }: Skel
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
-          gap: '12px'
+          gap: '12px',
         }}
         screenSize={screenSize}
         isCarousel={isCarousel}
       >
-        <Skeleton animation="wave" variant="rounded" width="100%" height="186px"/>
+        <Skeleton
+          animation="wave"
+          variant="rounded"
+          width="100%"
+          height="186px"
+        />
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignContents: 'center',
             justifyContent: 'space-between',
-            paddingLeft:  `${theme.sizing.smPadding}px`,
+            paddingLeft: `${theme.sizing.smPadding}px`,
             paddingRight: `${theme.sizing.smPadding}px`,
             paddingBottom: `${theme.sizing.smPadding}px`,
-            gap: '12px'
+            gap: '12px',
           }}
         >
-          <Skeleton animation="wave" variant="text" width="100%" height='45px' />
+          <Skeleton
+            animation="wave"
+            variant="text"
+            width="100%"
+            height="45px"
+          />
           <Box sx={{ display: 'flex', gap: 2 }}>
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={40}
-                height={15}
-              />
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={40}
-                height={15}
-              />
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={40}
-                height={15}
-              />
-            </Box>
+            <Skeleton
+              animation="wave"
+              variant="rounded"
+              width={40}
+              height={15}
+            />
+            <Skeleton
+              animation="wave"
+              variant="rounded"
+              width={40}
+              height={15}
+            />
+            <Skeleton
+              animation="wave"
+              variant="rounded"
+              width={40}
+              height={15}
+            />
+          </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Skeleton
               animation="wave"
@@ -111,14 +130,14 @@ export default function SkeletonGameCard({ index, screenSize, isCarousel }: Skel
           <Skeleton
             animation="wave"
             variant="rounded"
-            width='100%'
-            height='38px'
+            width="100%"
+            height="38px"
           />
           <Skeleton
             animation="wave"
             variant="rounded"
-            width='100%'
-            height='38px'
+            width="100%"
+            height="38px"
           />
         </Box>
       </GameCard>

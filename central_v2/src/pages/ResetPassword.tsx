@@ -4,7 +4,10 @@ import { Box } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
-import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
+import {
+  useCentralDataDispatch,
+  useCentralDataState,
+} from '../hooks/context/useCentralDataContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import PasswordCodeConfirmation from '../components/PasswordReset/PasswordResetConfirmation';
@@ -65,14 +68,17 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
 
   const handlePrevStep = () => {
     setStep((prev) => prev - 1);
-  }
+  };
 
   // STEP 0: send reset link to registered e-mail
   const handleResetLink = async () => {
     if (userName) {
       try {
         const response = await apiClients.auth.awsResetPassword(userName);
-        if(response.nextStep.resetPasswordStep === 'CONFIRM_RESET_PASSWORD_WITH_CODE'){
+        if (
+          response.nextStep.resetPasswordStep ===
+          'CONFIRM_RESET_PASSWORD_WITH_CODE'
+        ) {
           handleNextStep();
         }
       } catch (error) {
@@ -106,21 +112,29 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
 
     try {
       await apiClients.auth.awsConfirmResetPassword({
-        username: action === 'update' ? centralData.userProfile.email : userName,
+        username:
+          action === 'update' ? centralData.userProfile.email : userName,
         newPassword: confirmPassword,
         confirmationCode: fullCode,
       });
-      
+
       // update local user profile if it's a password update
-      if(action === 'update') {
+      if (action === 'update') {
         const newUser = {
           ...centralData.userProfile,
           password: confirmPassword,
-        }
-        const localProfile = await apiClients.centralDataManager?.userProfileInformationUpdate(newUser, centralData.userProfile);
-        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile?.updatedUser });
+        };
+        const localProfile =
+          await apiClients.centralDataManager?.userProfileInformationUpdate(
+            newUser,
+            centralData.userProfile,
+          );
+        centralDataDispatch({
+          type: 'SET_USER_PROFILE',
+          payload: localProfile?.updatedUser,
+        });
         setIsVerifying(false);
-        navigate("/userprofile");
+        navigate('/userprofile');
       } else {
         await apiClients.user.updateUserPass(userName, confirmPassword);
         setIsVerifying(false);
@@ -204,4 +218,3 @@ export default function ResetPassword({ setIsTabsOpen }: ResetLinkProps) {
     </SignUpMainContainer>
   );
 }
-

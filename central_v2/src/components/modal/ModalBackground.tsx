@@ -26,7 +26,7 @@ const ModalBackgroundContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   width: '100%',
   background: 'rgba(0,0,0,0.5)',
-  zIndex:1305
+  zIndex: 1305,
 }));
 
 interface ModalBackgroundProps {
@@ -38,7 +38,6 @@ export default function ModalBackground({
   isModalOpen,
   handleCloseModal,
 }: ModalBackgroundProps) {
-
   return (
     <Fade
       in={isModalOpen}
@@ -46,7 +45,14 @@ export default function ModalBackground({
       unmountOnExit
       timeout={1000}
       onClick={handleCloseModal}
-      style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',  zIndex: 1305}}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 1305,
+      }}
     >
       <TabContainer>
         <ModalBackgroundContainer />

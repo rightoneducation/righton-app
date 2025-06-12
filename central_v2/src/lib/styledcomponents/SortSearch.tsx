@@ -128,7 +128,7 @@ interface SortMenuItemProps {
   isSelected: boolean;
 }
 
-export const SortMenuItem = styled(Box,{
+export const SortMenuItem = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSelected',
 })<SortMenuItemProps>(({ isSelected, theme }) => ({
   width: '100%',
@@ -139,9 +139,13 @@ export const SortMenuItem = styled(Box,{
   gap: '8px',
   paddingLeft: '4px',
   paddingRight: '4px',
-  background: isSelected ? `${theme.palette.primary.sortActive}` : 'transparent',
+  background: isSelected
+    ? `${theme.palette.primary.sortActive}`
+    : 'transparent',
   '&:hover': {
-    background: isSelected ? `${theme.palette.primary.sortActive}` : `${theme.palette.primary.sortHover}`,
+    background: isSelected
+      ? `${theme.palette.primary.sortActive}`
+      : `${theme.palette.primary.sortHover}`,
   },
 }));
 

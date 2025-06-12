@@ -5,13 +5,13 @@ import {
   PublicPrivateType,
   AnswerType,
   IGameTemplate,
-  CentralQuestionTemplateInput
+  CentralQuestionTemplateInput,
 } from '@righton/networking';
 import {
   draftTemplate,
   TDraftQuestionsList,
   TGameTemplateProps,
-  emptyQuestionTemplate
+  emptyQuestionTemplate,
 } from '../../CreateGameModels';
 import {
   updateDQwithCCSS,
@@ -41,15 +41,22 @@ export const checkDQsAreValid = (
   }
   return draftQuestionsList.every((dq, index) => {
     if (
-      dq.question.questionCard.ccss.length > 0 && 
+      dq.question.questionCard.ccss.length > 0 &&
       dq.question.questionCard.ccss !== 'CCSS' &&
       dq.question.questionCard.title.trim().length > 0 &&
-      ((dq.question.questionCard.imageUrl && dq.question.questionCard.imageUrl?.length > 0) || dq.question.questionCard.image ) &&
+      ((dq.question.questionCard.imageUrl &&
+        dq.question.questionCard.imageUrl?.length > 0) ||
+        dq.question.questionCard.image) &&
       dq.question.correctCard.answer.trim().length > 0 &&
       dq.question.correctCard.answerSteps.length > 0 &&
-      dq.question.correctCard.answerSteps.every((step) => step.trim().length > 0) &&
+      dq.question.correctCard.answerSteps.every(
+        (step) => step.trim().length > 0,
+      ) &&
       dq.question.incorrectCards.length > 0 &&
-      dq.question.incorrectCards.every((card) => card.answer.trim().length > 0 && card.explanation.trim().length > 0)
+      dq.question.incorrectCards.every(
+        (card) =>
+          card.answer.trim().length > 0 && card.explanation.trim().length > 0,
+      )
     )
       return true;
     return false;
@@ -62,15 +69,13 @@ export const buildRemoveQuestionTemplatePromises = (
   userId: string,
   apiClients: IAPIClients,
 ) => {
-
-  const questionTemplatesToRemove = gameTemplate.questionTemplates?.filter(
-    (qt) => removeQuestionTemplateIds.includes(qt.questionTemplate.id),
-  ) ?? [];
+  const questionTemplatesToRemove =
+    gameTemplate.questionTemplates?.filter((qt) =>
+      removeQuestionTemplateIds.includes(qt.questionTemplate.id),
+    ) ?? [];
 
   const gameQuestionIds =
-    questionTemplatesToRemove?.map(
-      (qt) => qt.gameQuestionId,
-    ) ?? [];
+    questionTemplatesToRemove?.map((qt) => qt.gameQuestionId) ?? [];
 
   try {
     return gameQuestionIds.map((gameQuestionId) => {
@@ -80,7 +85,10 @@ export const buildRemoveQuestionTemplatePromises = (
       );
     });
   } catch (err: any) {
-    throw new Error('Failed to update game template or delete question templates.', err);
+    throw new Error(
+      'Failed to update game template or delete question templates.',
+      err,
+    );
   }
 };
 
@@ -88,7 +96,7 @@ export const buildQuestionTemplatePromises = (
   draftQuestionsList: TDraftQuestionsList[],
   userId: string,
   apiClients: IAPIClients,
-  type?: PublicPrivateType
+  type?: PublicPrivateType,
 ) => {
   return draftQuestionsList.map(async (dq, i) => {
     const dqCopy = { ...dq };
@@ -136,7 +144,9 @@ export const buildQuestionTemplatePromises = (
       try {
         newQuestionResponse =
           await apiClients.questionTemplate.createQuestionTemplate(
-            type === PublicPrivateType.DRAFT ? PublicPrivateType.DRAFT : dqCopy.publicPrivate,
+            type === PublicPrivateType.DRAFT
+              ? PublicPrivateType.DRAFT
+              : dqCopy.publicPrivate,
             url ?? '',
             userId,
             dqCopy.question,
@@ -157,7 +167,7 @@ export const updatePublicPrivateAtIndex = (
   value: PublicPrivateType,
 ): TDraftQuestionsList[] => {
   return draftQuestionsList.map((question, i) => {
-      return { ...question, publicPrivate: value }
+    return { ...question, publicPrivate: value };
   });
 };
 
@@ -645,7 +655,7 @@ export const openModalAtIndex = (
 
 export const buildLibraryQuestionAtIndex = (
   question: IQuestionTemplate,
-  publicPrivate: PublicPrivateType
+  publicPrivate: PublicPrivateType,
 ): TDraftQuestionsList => {
   const correctAnswer = question.choices?.find((q) => q.isAnswer === true);
   const incorrectAnswers = question.choices?.filter((q) => !q.isAnswer);
@@ -676,7 +686,8 @@ export const buildLibraryQuestionAtIndex = (
           ? question?.instructions
           : ['', '', ''],
         answerSettings: {
-          answerType: question?.answerSettings?.answerType ?? AnswerType.MULTICHOICE,
+          answerType:
+            question?.answerSettings?.answerType ?? AnswerType.MULTICHOICE,
         },
         isFirstEdit: true,
         isCardComplete: true,
@@ -730,24 +741,24 @@ export const updateDraftListWithLibraryQuestion = (
   return { updatedList: updatedQuestions, addNew: true };
 };
 
-
 export const handleQuestionListErrors = (
   draftQuestionsList: TDraftQuestionsList[],
 ): TDraftQuestionsList[] => {
   return draftQuestionsList.map((question, index) => {
     const { questionCard, correctCard, incorrectCards } = question.question;
-    const incorrectCardsAreComplete = incorrectCards.every((card) => card.isCardComplete);
+    const incorrectCardsAreComplete = incorrectCards.every(
+      (card) => card.isCardComplete,
+    );
 
-   const hasError = 
-   !questionCard.isCardComplete ||
-   !correctCard.isCardComplete ||
-   !incorrectCardsAreComplete;
+    const hasError =
+      !questionCard.isCardComplete ||
+      !correctCard.isCardComplete ||
+      !incorrectCardsAreComplete;
 
     return {
       ...question,
       isQuestionCardErrored: hasError,
       isQuestionCardSubmitted: true,
-    }
-  })
+    };
+  });
 };
-

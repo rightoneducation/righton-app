@@ -21,11 +21,9 @@ interface ExploreGamesUpperContainerProps {
   screenSize: ScreenSize;
 }
 
-export const ExploreGamesUpperContainer = styled(
-  Box, {
+export const ExploreGamesUpperContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-  }
-)<ExploreGamesUpperContainerProps>(({ screenSize, theme }) => ({
+})<ExploreGamesUpperContainerProps>(({ screenSize, theme }) => ({
   // eslint-disable-line
   display: 'flex',
   justifyContent: 'center',
@@ -33,5 +31,5 @@ export const ExploreGamesUpperContainer = styled(
   flexDirection: 'column',
   alignItems: 'center',
   backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
-  position: 'relative'
+  position: 'relative',
 }));
