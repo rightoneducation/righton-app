@@ -1,25 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { ScreenType } from './lib/WebsiteModels'
+import Theme from './lib/Theme';
+import Switch from './switches/AppSwitch';
 
 function App() {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+          <>
+            <Route
+              path="/"
+              element={<Switch currentScreen={ScreenType.HOME} />}
+            />
+            <Route
+              path="/aboutus"
+              element={<Switch currentScreen={ScreenType.ABOUT_US} />}
+            />
+            <Route
+              path="/howitworks"
+              element={<Switch currentScreen={ScreenType.HOW_IT_WORKS} />}
+            />
+            <Route
+              path="/library"
+              element={<Switch currentScreen={ScreenType.LIBRARY} />}
+            />
+          </>
+        )
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={Theme}>    
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }
 
