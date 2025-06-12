@@ -25,7 +25,6 @@ import NotVerifiedModal from '../components/modal/NotVerifiedModal';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid blue',
   flexDirection: 'column',
   gap: '20px',
   height: '100%',
@@ -40,7 +39,6 @@ const InnerBodyContainer = styled(Box)(({ theme }) => ({
 
 const UpperLogin = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid blue',
   flexDirection: 'column',
   alignItems: 'center',
   gap: '20px',
@@ -52,22 +50,8 @@ const UpperLoginText = styled(Typography)(({ theme }) => ({
   fontSize: '24px', 
   color: '#02215F',
   textAlign: 'center', 
-  // border: '1px solid green',
-
 }));
 
-const UpperLoginGoogleButton = styled(Typography)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  color: '#0966E0', 
-  border: '2px solid #0966E0', // Set border to 2px with the same color
-  borderRadius: '8px', // Set border radius to 8px
-  backgroundColor: 'white', // Set background color to white
-  minHeight: '45.77px',
-  
-}));
 
 const GoogleLoginButton = styled(Button)(({ theme }) => ({
   backgroundColor: 'transparent',  // Make background transparent
@@ -95,17 +79,13 @@ const OrText = styled(Typography)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   color: '#384466', 
-  // border: '1px solid yellow',
   fontFamily: 'Poppins, sans-serif', 
   fontWeight: 600, 
   fontSize: '16px', 
-  // border: '1px solid green',
-
 }));
 
 const MiddleContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid green',
   flexDirection: 'column',
   gap: '12px'
 
@@ -119,26 +99,21 @@ const ForgotPasswordButton = styled('button')(({ theme }) => ({
   fontSize: '16px', 
   marginTop: '-8px',
   cursor: 'pointer', // Add pointer cursor for button-like behavior
-  // border:'1px red solid'
 }));
 
 const LoginContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid green',
   justifyContent: 'center',
 }));
 
 const SignupContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid green',
-  // flexDirection: 'column',
   gap: '16px',
   alignItems: 'center'
 }));
 
 const NoAccountText = styled(Typography)(({ theme }) => ({
   color: '#02215F', 
-  // border: '1px solid blue',
   fontFamily: 'Rubik, sans-serif', 
   fontWeight: 400, 
   fontSize: '16px', 
@@ -162,6 +137,7 @@ export default function Login({ handleLogOut }:LoginProps) {
   // password input field 
   const [password, setPassword] = useState('');
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isNotVerifiedModalOpen, setIsNotVerifiedModalOpen] = useState(false);
   const handleClickShowPassword = () => setIsShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -195,6 +171,7 @@ export default function Login({ handleLogOut }:LoginProps) {
       
       if (error instanceof Error && error.message.includes("UserUnAuthenticatedException: User needs to be authenticated to call this API")){
         const response = await apiClients.user.deleteUnverifiedUser(userName)
+        setIsNotVerifiedModalOpen(true);
       } else{
         setIsModalOpen(true);
       }
@@ -233,11 +210,17 @@ export default function Login({ handleLogOut }:LoginProps) {
   const handleForgotPasswordClick = () => {
     navigate("/password/reset");
   };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsNotVerifiedModalOpen(false);
+  }
   
   return (
     <SignUpMainContainer>
       <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleLogOut={handleLogOut}/>
-      <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
+      <NotVerifiedModal isModalOpen={isNotVerifiedModalOpen} setIsModalOpen={setIsNotVerifiedModalOpen} />
+      <ModalBackground isModalOpen={isModalOpen || isNotVerifiedModalOpen} handleCloseModal={handleCloseModal}/>
       <InnerBodyContainer>
         <UpperLogin>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
