@@ -7,4 +7,4 @@ export function doesObjectHaveDate (object: any): boolean {
 }
 
 // public cloudfront distribution URL
-export const CloudFrontDistributionUrl = 'https://d1api4wn3jnenc.cloudfront.net/';
+export const CloudFrontDistributionUrl = 'https://dksu6wxj1ol93.cloudfront.net/';
