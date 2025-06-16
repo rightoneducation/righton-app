@@ -143,81 +143,83 @@ export default function QuestionTabsSelectedQuestion({
         </ButtonContainerRight>
       </ButtonContainer>
       <CardContainer style={{ paddingBottom: '60px' }}>
-        <DetailedQuestionContainer
-          container
-          sx={{
-            gap:
-              screenSize === ScreenSize.SMALL
-                ? '0px'
-                : `${theme.sizing.mdPadding}`,
-          }}
-        >
-          <Grid
-            sm
-            md
-            item
-            style={{ display: 'flex', justifyContent: 'flex-end' }}
-          >
-            {screenSize === ScreenSize.LARGE && (
-              <OwnerTag screenSize={screenSize} />
-            )}
-          </Grid>
-          <GridItem
-            screenSize={screenSize}
-            sm={10}
-            md={12}
-            item
-            style={{
-              maxWidth: '672px',
+        {question && (
+          <DetailedQuestionContainer
+            container
+            sx={{
+              gap:
+                screenSize === ScreenSize.SMALL
+                  ? '0px'
+                  : `${theme.sizing.mdPadding}`,
             }}
           >
-            {(screenSize === ScreenSize.SMALL ||
-              screenSize === ScreenSize.MEDIUM) && (
-              <Box
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
+            <Grid
+              sm
+              md
+              item
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              {screenSize === ScreenSize.LARGE && (
                 <OwnerTag screenSize={screenSize} />
-              </Box>
-            )}
-            {question && (
-              <DetailedQuestionCardBase
-                screenSize={screenSize}
-                question={question}
-              />
-            )}
-            <Grid container spacing={`${theme.sizing.smPadding}px`}>
-              <SubCardGridItem item sm={12} md={6}>
-                <DetailedQuestionSubCard
-                  cardType={CardType.CORRECT}
-                  answer={
-                    question?.choices?.find((answer) => answer.isAnswer)
-                      ?.text ?? ''
-                  }
-                  instructions={question?.instructions ?? []}
-                />
-              </SubCardGridItem>
-              <SubCardGridItem item sm={12} md={6}>
-                {question &&
-                  question.choices
-                    ?.filter((choice) => !choice.isAnswer)
-                    .map((choice, index) => (
-                      <DetailedQuestionSubCard
-                        key={uuidv4()}
-                        cardType={CardType.INCORRECT}
-                        answer={choice.text}
-                        answerReason={choice.reason}
-                      />
-                    ))}
-              </SubCardGridItem>
+              )}
             </Grid>
-          </GridItem>
-          <Grid sm md item />
-        </DetailedQuestionContainer>
+            <GridItem
+              screenSize={screenSize}
+              sm={10}
+              md={12}
+              item
+              style={{
+                maxWidth: '672px',
+              }}
+            >
+              {(screenSize === ScreenSize.SMALL ||
+                screenSize === ScreenSize.MEDIUM) && (
+                <Box
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <OwnerTag screenSize={screenSize} />
+                </Box>
+              )}
+              {question && (
+                <DetailedQuestionCardBase
+                  screenSize={screenSize}
+                  question={question}
+                />
+              )}
+              <Grid container spacing={`${theme.sizing.smPadding}px`}>
+                <SubCardGridItem item sm={12} md={6}>
+                  <DetailedQuestionSubCard
+                    cardType={CardType.CORRECT}
+                    answer={
+                      question?.choices?.find((answer) => answer.isAnswer)
+                        ?.text ?? ''
+                    }
+                    instructions={question?.instructions ?? []}
+                  />
+                </SubCardGridItem>
+                <SubCardGridItem item sm={12} md={6}>
+                  {question &&
+                    question.choices
+                      ?.filter((choice) => !choice.isAnswer)
+                      .map((choice, index) => (
+                        <DetailedQuestionSubCard
+                          key={uuidv4()}
+                          cardType={CardType.INCORRECT}
+                          answer={choice.text}
+                          answerReason={choice.reason}
+                        />
+                      ))}
+                </SubCardGridItem>
+              </Grid>
+            </GridItem>
+            <Grid sm md item />
+          </DetailedQuestionContainer>
+        )}
       </CardContainer>
     </ContentContainer>
   );

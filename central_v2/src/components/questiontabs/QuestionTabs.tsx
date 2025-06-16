@@ -127,7 +127,9 @@ export default function QuestionTabs({
     2: 'Drafts',
     3: 'Favorites',
   };
-
+  console.log('selectedQuestion:');
+  console.log(openTab);
+  console.log(centralData.selectedQuestion);
   const tabIconMap: { [key: number]: string } = {
     0: tabExploreQuestionsIcon,
     1: tabMyQuestionsIcon,
