@@ -86,7 +86,6 @@ export default function MyLibrary({
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const handleQuestionView = (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
