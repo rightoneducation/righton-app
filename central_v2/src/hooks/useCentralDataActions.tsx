@@ -329,6 +329,8 @@ export default function useCentralDataManager({
             centralData.sort.field,
             centralData.selectedGrades ?? [],
             null,
+            isFromLibrary ?? false,
+            isFromLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -385,6 +387,8 @@ export default function useCentralDataManager({
             centralData.sort.field,
             centralData.selectedGrades ?? [],
             null,
+            isFromLibrary ?? false,
+            isFromLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
