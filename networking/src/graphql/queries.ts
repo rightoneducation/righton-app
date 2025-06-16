@@ -681,6 +681,738 @@ export const listPublicGameTemplates = /* GraphQL */ `
     }
   }
 `;
+export const publicGameTemplatesByUserDate = /* GraphQL */ `
+  query PublicGameTemplatesByUserDate(
+    $userId: String!
+    $updatedAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicGameTemplatesByUserDate(
+      userId: $userId
+      updatedAt: $updatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          items {
+            id
+            publicGameTemplateID
+            publicQuestionTemplateID
+            publicGameTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              description
+              lowerCaseDescription
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
+              timesPlayed
+              questionTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              questionTemplatesCount
+              questionTemplatesOrder
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            publicQuestionTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              choices
+              instructions
+              answerSettings
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              imageUrl
+              timesPlayed
+              gameTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              gameTemplatesCount
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL */ `
+  query PublicGameTemplatesByUserPublicQuestionTemplatesCount(
+    $userId: String!
+    $questionTemplatesCount: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicGameTemplatesByUserPublicQuestionTemplatesCount(
+      userId: $userId
+      questionTemplatesCount: $questionTemplatesCount
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          items {
+            id
+            publicGameTemplateID
+            publicQuestionTemplateID
+            publicGameTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              description
+              lowerCaseDescription
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
+              timesPlayed
+              questionTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              questionTemplatesCount
+              questionTemplatesOrder
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            publicQuestionTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              choices
+              instructions
+              answerSettings
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              imageUrl
+              timesPlayed
+              gameTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              gameTemplatesCount
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicGameTemplatesByUserGrade = /* GraphQL */ `
+  query PublicGameTemplatesByUserGrade(
+    $userId: String!
+    $grade: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicGameTemplatesByUserGrade(
+      userId: $userId
+      grade: $grade
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          items {
+            id
+            publicGameTemplateID
+            publicQuestionTemplateID
+            publicGameTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              description
+              lowerCaseDescription
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
+              timesPlayed
+              questionTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              questionTemplatesCount
+              questionTemplatesOrder
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            publicQuestionTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              choices
+              instructions
+              answerSettings
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              imageUrl
+              timesPlayed
+              gameTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              gameTemplatesCount
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const publicGameTemplatesByDate = /* GraphQL */ `
   query PublicGameTemplatesByDate(
     $type: String!
@@ -4084,6 +4816,732 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
     $nextToken: String
   ) {
     listPublicQuestionTemplates(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          items {
+            id
+            publicGameTemplateID
+            publicQuestionTemplateID
+            publicGameTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              description
+              lowerCaseDescription
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
+              timesPlayed
+              questionTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              questionTemplatesCount
+              questionTemplatesOrder
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            publicQuestionTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              choices
+              instructions
+              answerSettings
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              imageUrl
+              timesPlayed
+              gameTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              gameTemplatesCount
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
+  query PublicQuestionTemplatesByUserDate(
+    $userId: String!
+    $updatedAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicQuestionTemplatesByUserDate(
+      userId: $userId
+      updatedAt: $updatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          items {
+            id
+            publicGameTemplateID
+            publicQuestionTemplateID
+            publicGameTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              description
+              lowerCaseDescription
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
+              timesPlayed
+              questionTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              questionTemplatesCount
+              questionTemplatesOrder
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            publicQuestionTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              choices
+              instructions
+              answerSettings
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              imageUrl
+              timesPlayed
+              gameTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              gameTemplatesCount
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL */ `
+  query PublicQuestionTemplatesByUserPublicGameTemplatesCount(
+    $userId: String!
+    $gameTemplatesCount: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicQuestionTemplatesByUserPublicGameTemplatesCount(
+      userId: $userId
+      gameTemplatesCount: $gameTemplatesCount
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          items {
+            id
+            publicGameTemplateID
+            publicQuestionTemplateID
+            publicGameTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              description
+              lowerCaseDescription
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
+              timesPlayed
+              questionTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              questionTemplatesCount
+              questionTemplatesOrder
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            publicQuestionTemplate {
+              id
+              userId
+              publicPrivateType
+              title
+              lowerCaseTitle
+              version
+              choices
+              instructions
+              answerSettings
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              imageUrl
+              timesPlayed
+              gameTemplates {
+                items {
+                  id
+                  publicGameTemplateID
+                  publicQuestionTemplateID
+                  publicGameTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    description
+                    lowerCaseDescription
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    phaseOneTime
+                    phaseTwoTime
+                    imageUrl
+                    timesPlayed
+                    questionTemplatesCount
+                    questionTemplatesOrder
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  publicQuestionTemplate {
+                    id
+                    userId
+                    publicPrivateType
+                    title
+                    lowerCaseTitle
+                    version
+                    choices
+                    instructions
+                    answerSettings
+                    ccss
+                    domain
+                    cluster
+                    grade
+                    gradeFilter
+                    standard
+                    imageUrl
+                    timesPlayed
+                    gameTemplatesCount
+                    createdAt
+                    updatedAt
+                    type
+                    owner
+                    __typename
+                  }
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              gameTemplatesCount
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
+  query PublicQuestionTemplatesByUserGrade(
+    $userId: String!
+    $grade: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicQuestionTemplatesByUserGrade(
+      userId: $userId
+      grade: $grade
+      sortDirection: $sortDirection
       filter: $filter
       limit: $limit
       nextToken: $nextToken

@@ -18,6 +18,9 @@ import {
   publicQuestionTemplatesByDate,
   publicQuestionTemplatesByGrade,
   publicQuestionTemplatesByPublicGameTemplatesCount,
+  publicQuestionTemplatesByUserDate,
+  publicQuestionTemplatesByUserGrade,
+  publicQuestionTemplatesByUserPublicGameTemplatesCount,
   listPrivateQuestionTemplates,
   privateQuestionTemplatesByDate,
   privateQuestionTemplatesByGrade,
@@ -166,7 +169,10 @@ export const questionTemplateRuntimeMap = {
         default: listPublicQuestionTemplates,
         byDate: publicQuestionTemplatesByDate,
         byGrade: publicQuestionTemplatesByGrade,
-        byGameTemplatesCount: publicQuestionTemplatesByPublicGameTemplatesCount
+        byGameTemplatesCount: publicQuestionTemplatesByPublicGameTemplatesCount,
+        libByUserDate: publicQuestionTemplatesByUserDate,
+        libByUserGrade: publicQuestionTemplatesByUserGrade,
+        libByUserQuestionTemplatesCount: publicQuestionTemplatesByUserPublicGameTemplatesCount
       },
     },
   },
@@ -188,7 +194,7 @@ export const questionTemplateRuntimeMap = {
         default: listPrivateQuestionTemplates,
         byDate: privateQuestionTemplatesByDate,
         byGrade: privateQuestionTemplatesByGrade,
-        byGameTemplatesCount: privateQuestionTemplatesByPrivateGameTemplatesCount
+        byGameTemplatesCount: privateQuestionTemplatesByPrivateGameTemplatesCount,
       },
     },
   },
@@ -299,5 +305,38 @@ export interface IQuestionTemplateAPIClient {
     filterString: string | null,
     gradeTargets: GradeTarget[],
     favIds: string[] | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
+
+  listQuestionTemplatesByUserDate(
+    type: PublicPrivateType,
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
+
+  listQuestionTemplatesByUserGrade(
+    type: PublicPrivateType,
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
+
+  listQuestionTemplatesByUserPublicGameTemplatesCount(
+    type: PublicPrivateType,
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 }
