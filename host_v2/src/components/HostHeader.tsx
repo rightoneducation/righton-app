@@ -66,7 +66,7 @@ function HostHeader({ gameCode }: HostHeaderProps) {
   };
   
   const handleCloseClick = () => {
-    window.location.href = 'http://central.rightoneducation.com/';
+    window.location.href = 'http://dev-central.rightoneducation.com/';
   };
   return (
     <UpperStyled>
