@@ -482,6 +482,7 @@ export default function useCentralDataManager({
               null,
               centralData.selectedGrades ?? [],
               null,
+              true
             )
             .then((response) => {
               if (response) {
@@ -695,7 +696,6 @@ export default function useCentralDataManager({
           publicPrivateType: PublicPrivateType.PRIVATE,
         }
       : getCallType({ ...callTypeMatches });
-    console.log('fetchElement callType:', callType);
     switch (type) {
       case GameQuestionType.QUESTION: {
         const responseQuestion =
@@ -946,6 +946,10 @@ export default function useCentralDataManager({
       type: 'SET_USER_STATUS',
       payload: UserStatusType.LOGGEDOUT,
     });
+    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+    centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
     navigate('/');
   };
 

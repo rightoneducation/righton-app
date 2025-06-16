@@ -39,7 +39,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   } 
   
   public initGames = async () => {
-    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, [], null);
+    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null, true);
     if (response){
       return { nextToken: response.nextToken, games: response.gameTemplates };
     }
@@ -47,7 +47,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public initQuestions = async () => {
-    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null);
+    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 36, null, SortDirection.DESC, null, [], null);
     if (response)
       return { nextToken: response.nextToken, questions: response.questionTemplates };
     return { nextToken: null, questions: [] };

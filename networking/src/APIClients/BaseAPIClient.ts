@@ -170,7 +170,8 @@ export abstract class BaseAPIClient {
     query: any,
     type: PublicPrivateType,
     gradeTargets?: GradeTarget[] | null,
-    favIds?: string[] | null
+    favIds?: string[] | null,
+    isExploreGames?: boolean
   ): Promise<QueryResult | null> {
     let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
     if (!queryParameters.filter) {
@@ -180,6 +181,11 @@ export abstract class BaseAPIClient {
       queryParameters.filter.and.push({
         or: favIds.map(id => ({ id: { eq: id } }))
       });
+    }
+    if (isExploreGames) {
+       queryParameters.filter = {
+          questionTemplatesCount: { gt: 0 }
+        };
     }
     if (filterString != null) {
       const lower = filterString.toLowerCase();
@@ -202,7 +208,6 @@ export abstract class BaseAPIClient {
     if (sortDirection != null) {
       queryParameters.sortDirection = sortDirection;
     }
-
     const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     let raw;
     try{ 
