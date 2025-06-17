@@ -125,7 +125,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public searchForQuestionTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null, isLibrary?: boolean, userId?: string) => {
-    console.log(isLibrary);
     switch(sortType){
       case SortType.listQuestionTemplatesByDate: {
         let response;
@@ -133,7 +132,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
           response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
           response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
-        console.log(response);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }

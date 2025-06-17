@@ -129,6 +129,8 @@ export default function useCentralDataManager({
             centralData.sort.field,
             [...grades],
             null,
+            isLibrary ?? false,
+            isLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -150,6 +152,8 @@ export default function useCentralDataManager({
             centralData.sort.field,
             [...grades],
             null,
+            isLibrary ?? false,
+            isLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -187,6 +191,8 @@ export default function useCentralDataManager({
             newSort.field,
             centralData.selectedGrades,
             null,
+            isLibrary ?? false,
+            isLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -208,6 +214,8 @@ export default function useCentralDataManager({
             newSort.field,
             centralData.selectedGrades,
             null,
+            isLibrary ?? false,
+            isLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -230,7 +238,7 @@ export default function useCentralDataManager({
         gradeTargets: GradeTarget[],
         sortType: SortType,
         searchGameQuestion: GameQuestionType,
-        libraryTab: LibraryTabEnum,
+        libraryTab: LibraryTabEnum
       ) => {
         centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: search });
@@ -256,6 +264,8 @@ export default function useCentralDataManager({
                 sortType,
                 gradeTargets,
                 null,
+                isLibrary ?? false,
+                isLibrary ? centralData.userProfile.dynamoId : undefined,
               )
               .then((response) => {
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -278,6 +288,8 @@ export default function useCentralDataManager({
                 sortType,
                 gradeTargets,
                 null,
+                isLibrary ?? false,
+                isLibrary ? centralData.userProfile.dynamoId : undefined,
               )
               .then((response) => {
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -301,7 +313,7 @@ export default function useCentralDataManager({
       centralData.selectedGrades,
       centralData.sort.field,
       gameQuestion,
-      centralData.openTab,
+      centralData.openTab
     );
   };
 
