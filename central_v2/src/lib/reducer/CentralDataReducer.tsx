@@ -75,7 +75,7 @@ export const centralDataReducer = (
         searchTerms: '',
       };
     case 'CLEAR_USER_PROFILE':
-      return { ...state, userProfile: { ...initCentralDataState.userProfile }, searchTerms: '' };
+      return { ...initCentralDataState };
     case 'SET_USER_ERROR_STRING':
       return { ...state, userErrorString: action.payload };
     case 'SET_RECOMMENDED_GAMES':
