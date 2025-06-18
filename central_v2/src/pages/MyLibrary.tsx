@@ -231,6 +231,9 @@ export default function MyLibrary({
           screenSize={screenSize}
           isTabsOpen={centralData.isTabsOpen}
           question={selectedQuestion}
+          originalSelectedQuestion={
+           selectedQuestion
+          }
           questions={questionSet}
           setIsTabsOpen={setIsTabsOpen}
           fetchElements={fetchElements}
@@ -247,6 +250,7 @@ export default function MyLibrary({
           handleSearchChange={handleSearchChange}
           handlePublicPrivateChange={handlePublicPrivateChange}
           handleQuestionView={handleQuestionView}
+          loadMore={loadMoreLibrary}
         />
       </>
       {centralData.userStatus === UserStatusType.LOADING ? (
