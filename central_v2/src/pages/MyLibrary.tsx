@@ -86,6 +86,9 @@ export default function MyLibrary({
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [openQuestionTab, setOpenQuestionTab] = React.useState<LibraryTabEnum>(
+    LibraryTabEnum.PUBLIC,
+  );
   const handleQuestionView = (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
@@ -235,6 +238,8 @@ export default function MyLibrary({
            selectedQuestion
           }
           questions={questionSet}
+          openTab={openQuestionTab}
+          setOpenTab={setOpenQuestionTab}
           setIsTabsOpen={setIsTabsOpen}
           fetchElements={fetchElements}
           setSelectedQuestion={setSelectedQuestion}

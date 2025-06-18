@@ -9,13 +9,9 @@ import {
   SortDirection,
   SortType,
   IQuestionTemplate,
-  IUserProfile,
   PublicPrivateType,
   GradeTarget,
-  deleteQuestion,
 } from '@righton/networking';
-import { APIClientsContext } from '../lib/context/APIClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import {
   useCentralDataState,
   useCentralDataDispatch,
@@ -99,6 +95,10 @@ export default function ExploreQuestions({
     setHasInitialized(true);
   }
 
+  const [openQuestionTab, setOpenQuestionTab] = React.useState<LibraryTabEnum>(
+    LibraryTabEnum.PUBLIC,
+  );
+
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [originalSelectedQuestion, setOriginalSelectedQuestion] =
@@ -113,6 +113,8 @@ export default function ExploreQuestions({
     setOriginalSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
+    setOpenQuestionTab(LibraryTabEnum.PUBLIC);
+    
     const selectedQ = await fetchElement(
       GameQuestionType.QUESTION,
       question.id,
@@ -269,6 +271,8 @@ export default function ExploreQuestions({
           handlePublicPrivateChange={handlePublicPrivateChange}
           handleQuestionView={handleView}
           loadMore={loadMore}
+          openTab={openQuestionTab}
+          setOpenTab={setOpenQuestionTab}
         />
       </>
 

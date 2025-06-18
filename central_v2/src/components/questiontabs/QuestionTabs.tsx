@@ -51,6 +51,8 @@ interface TabContainerProps {
   question: IQuestionTemplate | null;
   originalSelectedQuestion: IQuestionTemplate | null;
   questions: IQuestionTemplate[];
+  openTab: LibraryTabEnum;
+  setOpenTab: (tab: LibraryTabEnum) => void;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   setSelectedQuestion: (question: IQuestionTemplate | null) => void;
   fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
@@ -80,6 +82,8 @@ export default function QuestionTabs({
   isTabsOpen,
   question,
   originalSelectedQuestion,
+  openTab,
+  setOpenTab,
   questions,
   setIsTabsOpen,
   fetchElements,
@@ -99,9 +103,7 @@ export default function QuestionTabs({
   loadMore
 }: TabContainerProps) {
   const theme = useTheme();
-  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
-    LibraryTabEnum.PUBLIC,
-  );
+  
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const apiClients = useTSAPIClientsContext(APIClientsContext);

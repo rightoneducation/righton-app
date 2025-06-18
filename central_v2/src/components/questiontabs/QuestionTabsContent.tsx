@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Box, CircularProgress, useTheme } from '@mui/material';
 import {
@@ -9,27 +9,23 @@ import {
   GradeTarget,
   SortType,
   SortDirection,
-  PublicPrivateType,
 } from '@righton/networking';
 import SearchBar from '../searchbar/SearchBar';
 import CardGallery from '../cardgallery/CardGallery';
 import {
   ScreenSize,
-  GameQuestionType,
   LibraryTabEnum,
 } from '../../lib/CentralModels';
 import {
   ContentContainer,
   ScrollContainer,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
-import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
+import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 import {
-  getGameElements,
   getQuestionElements,
 } from '../../lib/helperfunctions/MyLibraryHelperFunctions';
 
 interface QuestionTabsProps<T extends IGameTemplate | IQuestionTemplate> {
-  gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
   openTab: LibraryTabEnum;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
@@ -39,7 +35,6 @@ interface QuestionTabsProps<T extends IGameTemplate | IQuestionTemplate> {
     direction: SortDirection | null;
   }) => void;
   handleSearchChange: (searchString: string) => void;
-  handleGameView?: (element: IGameTemplate, elements: IGameTemplate[]) => void;
   handleQuestionView: (
     element: IQuestionTemplate,
     elements: IQuestionTemplate[],
@@ -48,33 +43,27 @@ interface QuestionTabsProps<T extends IGameTemplate | IQuestionTemplate> {
 }
 
 export default function QuestionTabsContent({
-  gameQuestion,
   screenSize,
   openTab,
   setIsTabsOpen,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  handleGameView,
   handleQuestionView,
   loadMore,
 }: QuestionTabsProps<IGameTemplate | IQuestionTemplate>) {
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const theme = useTheme();
   const isSearchResults =
     centralData.searchTerms.length > 0 ||
     centralData.selectedGrades.length > 0 ||
     (centralData.sort.field !== SortType.listGameTemplates &&
       centralData.sort.direction !== SortDirection.ASC);
-  const elements =
-    gameQuestion === GameQuestionType.GAME
-      ? getGameElements(openTab, isSearchResults, centralData)
-      : getQuestionElements(openTab, isSearchResults, centralData);
-
+  const elements = getQuestionElements(openTab, isSearchResults, centralData);
   const handleLoadMore = async () => {
     loadMore();
   };
-
   return (
     <ContentContainer>
       <SearchBar
@@ -88,7 +77,7 @@ export default function QuestionTabsContent({
         <InfiniteScroll
           dataLength={elements.length}
           next={handleLoadMore}
-          hasMore={centralData.nextToken !== null}
+          hasMore={centralData.isLoadingInfiniteScroll}
           loader={
             <Box
               style={{
@@ -103,42 +92,23 @@ export default function QuestionTabsContent({
           }
           scrollableTarget="scrollableDiv"
         >
-          {gameQuestion === GameQuestionType.GAME ? (
-            <CardGallery<IGameTemplate>
-              screenSize={screenSize}
-              searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-              grades={isSearchResults ? centralData.selectedGrades : undefined}
-              galleryElements={elements as IGameTemplate[]}
-              elementType={ElementType.GAME}
-              galleryType={
-                isSearchResults
-                  ? GalleryType.SEARCH_RESULTS
-                  : GalleryType.MOST_POPULAR
-              }
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleGameView}
-              isLoading={centralData.isLoading}
-              isMyLibrary
-            />
-          ) : (
-            <CardGallery<IQuestionTemplate>
-              screenSize={screenSize}
-              searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-              grades={isSearchResults ? centralData.selectedGrades : undefined}
-              galleryElements={elements as IQuestionTemplate[]}
-              elementType={ElementType.GAME}
-              galleryType={
-                isSearchResults
-                  ? GalleryType.SEARCH_RESULTS
-                  : GalleryType.MOST_POPULAR
-              }
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleQuestionView}
-              isLoading={centralData.isLoading}
-              isMyLibrary
-              isMyLibraryQuestion
-            />
-          )}
+          <CardGallery<IQuestionTemplate>
+            screenSize={screenSize}
+            searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+            grades={isSearchResults ? centralData.selectedGrades : undefined}
+            galleryElements={elements as IQuestionTemplate[]}
+            elementType={ElementType.GAME}
+            galleryType={
+              isSearchResults
+                ? GalleryType.SEARCH_RESULTS
+                : GalleryType.MOST_POPULAR
+            }
+            setIsTabsOpen={setIsTabsOpen}
+            handleView={handleQuestionView}
+            isLoading={centralData.isLoading}
+            isMyLibrary
+            isMyLibraryQuestion
+          />
         </InfiniteScroll>
       </ScrollContainer>
     </ContentContainer>

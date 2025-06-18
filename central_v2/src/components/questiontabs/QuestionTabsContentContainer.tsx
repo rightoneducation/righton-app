@@ -87,14 +87,12 @@ export default function QuestionTabsContentContainer({
         />
       ) : (
         <QuestionTabsContent 
-          gameQuestion={GameQuestionType.QUESTION}
           screenSize={screenSize}
           openTab={openTab}
           setIsTabsOpen={()=> {}}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}
-          handleGameView={() => {}}
           handleQuestionView={handleQuestionView}
           loadMore={loadMore}
         />

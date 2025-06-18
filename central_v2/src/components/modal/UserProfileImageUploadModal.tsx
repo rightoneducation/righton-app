@@ -281,7 +281,7 @@ export default function UserProfileImageUploadModal({
         </DashedBox>
         <AvatarAndTextContainer>
           <ChooseAvatarText>
-            Or you can choose one of the mosters below.
+            Or you can choose one of the monsters below.
           </ChooseAvatarText>
           <AvatarBox>
             <AvatarContainer>
