@@ -61,6 +61,8 @@ export default function ExploreGames({
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = centralData?.searchTerms?.length > 0;
+  console.log(centralData);
+  console.log(isSearchResults);
   const [hasInitialized, setHasInitialized] = useState(false);
 
   if (!hasInitialized) {
