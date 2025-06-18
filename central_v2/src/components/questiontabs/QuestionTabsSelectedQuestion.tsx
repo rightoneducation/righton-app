@@ -34,9 +34,9 @@ import {
 
 interface TabContainerProps {
   screenSize: ScreenSize;
+  question: IQuestionTemplate | null;
   isLoading: boolean;
   isFavorite: boolean;
-  question: IQuestionTemplate | null;
   handlePrevQuestion: () => void;
   handleNextQuestion: () => void;
   handleCloneButtonClick: () => void;
@@ -65,8 +65,6 @@ export default function QuestionTabsSelectedQuestion({
     centralData.userProfile?.id === question?.userId;
 
   return (
-    <ContentContainer>
-    {question && (
       <>
         <ButtonContainer
           style={{
@@ -225,7 +223,5 @@ export default function QuestionTabsSelectedQuestion({
           
         </CardContainer>
       </>
-      )}
-    </ContentContainer>
   );
 }

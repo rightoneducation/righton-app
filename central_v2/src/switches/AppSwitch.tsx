@@ -90,6 +90,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             loadMore={loadMore}
+            loadMoreLibrary={loadMoreLibrary}
             handlePublicPrivateChange={getPublicPrivateElements}
             deleteQuestionTemplate={deleteQuestionTemplate}
           />

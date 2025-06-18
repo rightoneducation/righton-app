@@ -39,17 +39,42 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   } 
   
   public initGames = async () => {
+    let games = [];
     const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, [], null, true);
     if (response){
-      return { nextToken: response.nextToken, games: response.gameTemplates };
+      games.push(...response.gameTemplates);
+      while (games.length < 12) {
+        if (!response.nextToken) break;
+        const nextResponse = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, response.nextToken, SortDirection.DESC, null, [], null, true);
+        if (nextResponse && nextResponse.gameTemplates) {
+          games.push(...nextResponse.gameTemplates);
+          response.nextToken = nextResponse.nextToken;
+        } else {
+          break;
+        }
+      }
+      return { nextToken: response.nextToken, games };
     }
     return { nextToken: null, games: [] };
   };
 
   public initQuestions = async () => {
+    let questions = [];
     const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null);
-    if (response)
-      return { nextToken: response.nextToken, questions: response.questionTemplates };
+    if (response) {
+      questions.push(...response.questionTemplates);
+      while (questions.length < 24) {
+        if (!response.nextToken) break;
+        const nextResponse = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, response.nextToken, SortDirection.DESC, null, [], null);
+        if (nextResponse && nextResponse.questionTemplates) {
+          questions.push(...nextResponse.questionTemplates);
+          response.nextToken = nextResponse.nextToken;
+        } else {
+          break;
+        }
+      }
+      return { nextToken: response.nextToken, questions };
+    }
     return { nextToken: null, questions: [] };
   };
 
@@ -125,7 +150,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public searchForQuestionTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null, isLibrary?: boolean, userId?: string) => {
-    console.log(isLibrary);
     switch(sortType){
       case SortType.listQuestionTemplatesByDate: {
         let response;
@@ -133,7 +157,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
           response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
           response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
-        console.log(response);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }

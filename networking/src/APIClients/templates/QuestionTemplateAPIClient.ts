@@ -234,7 +234,7 @@ export class QuestionTemplateAPIClient
     favIds: string[] | null,
     userId: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
+    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.libByUserDate;
     const awsType = `${type}QuestionTemplate`;
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByUserDate`, queryFunction, type, gradeTargets, favIds, false, userId);
 
@@ -251,7 +251,7 @@ export class QuestionTemplateAPIClient
     favIds: string[] | null,
     userId: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGrade;
+    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.libByUserGrade;
     const awsType = `${type}QuestionTemplate`;
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByUserGrade`, queryFunction, type, gradeTargets, favIds, false, userId);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
@@ -267,7 +267,7 @@ export class QuestionTemplateAPIClient
     favIds: string[] | null,
     userId: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGameTemplatesCount;
+    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.libByUserQuestionTemplatesCount;
     const awsType = `${type}QuestionTemplate`;
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByUserPublicGameTemplatesCount`, queryFunction, type, gradeTargets, favIds, false, userId);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
