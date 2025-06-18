@@ -920,7 +920,7 @@ export default function CreateQuestion({
                 }}
               >
                 <Box
-                  onClick={() =>
+                  onClickCapture={() =>
                     handleClick(CreateQuestionHighlightCard.QUESTIONCARD)
                   }
                   style={{ width: '100%' }}
@@ -950,7 +950,7 @@ export default function CreateQuestion({
                 <Grid container spacing={`${theme.sizing.smPadding}px`}>
                   <SubCardGridItem item sm={12} md={6}>
                     <Box
-                      onClick={() =>
+                      onClickCapture={() =>
                         handleClick(CreateQuestionHighlightCard.CORRECTANSWER)
                       }
                       style={{ width: '100%' }}
