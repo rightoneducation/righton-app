@@ -164,6 +164,7 @@ type PublicGameTemplate @model
   grade: String
   gradeFilter: String
   standard: String
+  ccssDescription: String
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
@@ -206,6 +207,7 @@ type PrivateGameTemplate @model
   grade: String
   gradeFilter: String
   standard: String
+  ccssDescription: String
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
@@ -247,6 +249,7 @@ type DraftGameTemplate @model
   grade: String
   gradeFilter: String
   standard: String
+  ccssDescription: String
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
@@ -293,6 +296,7 @@ type PublicQuestionTemplate @model
   grade: String
   gradeFilter: String
   standard: String
+  ccssDescription: String
   imageUrl: String
   timesPlayed: Int
   gameTemplates: [PublicGameTemplate] @manyToMany(relationName: "PublicGameQuestions")
@@ -332,6 +336,7 @@ type PrivateQuestionTemplate @model
   grade: String
   gradeFilter: String
   standard: String
+  ccssDescription: String
   imageUrl: String
   timesPlayed: Int
   gameTemplates: [PrivateGameTemplate] @manyToMany(relationName: "PrivateGameQuestions")
@@ -371,6 +376,7 @@ type DraftQuestionTemplate @model
   grade: String
   gradeFilter: String
   standard: String
+  ccssDescription: String
   imageUrl: String
   timesPlayed: Int
   gameTemplates: [DraftGameTemplate] @manyToMany(relationName: "DraftGameQuestions")

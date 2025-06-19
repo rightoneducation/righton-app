@@ -112,6 +112,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -136,6 +137,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -160,6 +162,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -192,6 +195,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -237,6 +241,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -259,6 +264,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -291,6 +297,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -357,6 +364,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -381,6 +389,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -405,6 +414,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -437,6 +447,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -482,6 +493,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -504,6 +516,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -536,6 +549,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -602,6 +616,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -626,6 +641,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -650,6 +666,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -682,6 +699,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -727,6 +745,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -749,6 +768,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -781,6 +801,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -847,6 +868,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -871,6 +893,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -895,6 +918,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -927,6 +951,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -972,6 +997,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -994,6 +1020,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -1026,6 +1053,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -1092,6 +1120,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -1116,6 +1145,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -1140,6 +1170,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -1172,6 +1203,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -1217,6 +1249,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -1239,6 +1272,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -1271,6 +1305,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -1337,6 +1372,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -1361,6 +1397,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -1385,6 +1422,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -1417,6 +1455,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -1462,6 +1501,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -1484,6 +1524,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -1516,6 +1557,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -1582,6 +1624,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -1606,6 +1649,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -1630,6 +1674,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -1662,6 +1707,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -1707,6 +1753,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -1729,6 +1776,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -1761,6 +1809,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -1827,6 +1876,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -1851,6 +1901,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -1875,6 +1926,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -1907,6 +1959,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -1952,6 +2005,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -1974,6 +2028,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2006,6 +2061,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -2072,6 +2128,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       phaseOneTime
       phaseTwoTime
       imageUrl
@@ -2096,6 +2153,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -2120,6 +2178,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2152,6 +2211,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -2197,6 +2257,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -2219,6 +2280,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2251,6 +2313,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -2318,6 +2381,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -2340,6 +2404,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -2364,6 +2429,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2396,6 +2462,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -2441,6 +2508,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -2463,6 +2531,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2495,6 +2564,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -2561,6 +2631,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -2583,6 +2654,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -2607,6 +2679,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2639,6 +2712,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -2684,6 +2758,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -2706,6 +2781,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2738,6 +2814,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -2804,6 +2881,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -2826,6 +2904,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -2850,6 +2929,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2882,6 +2962,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -2927,6 +3008,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -2949,6 +3031,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -2981,6 +3064,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -3047,6 +3131,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -3069,6 +3154,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -3093,6 +3179,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -3125,6 +3212,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -3170,6 +3258,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -3192,6 +3281,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -3224,6 +3314,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -3290,6 +3381,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -3312,6 +3404,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -3336,6 +3429,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -3368,6 +3462,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -3413,6 +3508,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -3435,6 +3531,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -3467,6 +3564,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -3533,6 +3631,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -3555,6 +3654,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -3579,6 +3679,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -3611,6 +3712,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -3656,6 +3758,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -3678,6 +3781,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -3710,6 +3814,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -3776,6 +3881,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -3798,6 +3904,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -3822,6 +3929,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -3854,6 +3962,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -3899,6 +4008,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -3921,6 +4031,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -3953,6 +4064,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -4019,6 +4131,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -4041,6 +4154,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -4065,6 +4179,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -4097,6 +4212,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -4142,6 +4258,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -4164,6 +4281,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -4196,6 +4314,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -4262,6 +4381,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
       grade
       gradeFilter
       standard
+      ccssDescription
       imageUrl
       timesPlayed
       gameTemplates {
@@ -4284,6 +4404,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             phaseOneTime
             phaseTwoTime
             imageUrl
@@ -4308,6 +4429,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -4340,6 +4462,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -4385,6 +4508,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
             grade
             gradeFilter
             standard
+            ccssDescription
             imageUrl
             timesPlayed
             gameTemplates {
@@ -4407,6 +4531,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
@@ -4439,6 +4564,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                   grade
                   gradeFilter
                   standard
+                  ccssDescription
                   imageUrl
                   timesPlayed
                   gameTemplates {
@@ -5381,6 +5507,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -5405,6 +5532,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -5429,6 +5557,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -5457,6 +5586,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -5498,6 +5628,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -5520,6 +5651,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -5548,6 +5680,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -5604,6 +5737,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -5626,6 +5760,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -5650,6 +5785,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -5678,6 +5814,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -5719,6 +5856,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -5741,6 +5879,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -5769,6 +5908,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -5839,6 +5979,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -5863,6 +6004,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -5887,6 +6029,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -5915,6 +6058,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -5956,6 +6100,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -5978,6 +6123,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6006,6 +6152,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6062,6 +6209,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -6084,6 +6232,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -6108,6 +6257,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6136,6 +6286,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6177,6 +6328,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -6199,6 +6351,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6227,6 +6380,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6297,6 +6451,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -6321,6 +6476,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -6345,6 +6501,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6373,6 +6530,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6414,6 +6572,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -6436,6 +6595,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6464,6 +6624,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6520,6 +6681,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -6542,6 +6704,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -6566,6 +6729,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6594,6 +6758,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6635,6 +6800,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -6657,6 +6823,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6685,6 +6852,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6755,6 +6923,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -6779,6 +6948,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -6803,6 +6973,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6831,6 +7002,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6872,6 +7044,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -6894,6 +7067,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -6922,6 +7096,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -6978,6 +7153,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -7000,6 +7176,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -7024,6 +7201,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7052,6 +7230,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -7093,6 +7272,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -7115,6 +7295,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7143,6 +7324,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -7213,6 +7395,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -7237,6 +7420,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -7261,6 +7445,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7289,6 +7474,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -7330,6 +7516,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -7352,6 +7539,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7380,6 +7568,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -7436,6 +7625,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -7458,6 +7648,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -7482,6 +7673,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7510,6 +7702,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -7551,6 +7744,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -7573,6 +7767,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7601,6 +7796,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -7671,6 +7867,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -7695,6 +7892,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -7719,6 +7917,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7747,6 +7946,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -7788,6 +7988,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -7810,6 +8011,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7838,6 +8040,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -7894,6 +8097,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -7916,6 +8120,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -7940,6 +8145,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -7968,6 +8174,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8009,6 +8216,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -8031,6 +8239,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8059,6 +8268,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8129,6 +8339,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -8153,6 +8364,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -8177,6 +8389,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8205,6 +8418,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8246,6 +8460,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -8268,6 +8483,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8296,6 +8512,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8352,6 +8569,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -8374,6 +8592,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -8398,6 +8617,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8426,6 +8646,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8467,6 +8688,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -8489,6 +8711,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8517,6 +8740,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8587,6 +8811,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -8611,6 +8836,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -8635,6 +8861,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8663,6 +8890,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8704,6 +8932,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -8726,6 +8955,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8754,6 +8984,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8810,6 +9041,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -8832,6 +9064,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -8856,6 +9089,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8884,6 +9118,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -8925,6 +9160,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -8947,6 +9183,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -8975,6 +9212,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -9045,6 +9283,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         phaseOneTime
         phaseTwoTime
         imageUrl
@@ -9069,6 +9308,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -9093,6 +9333,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -9121,6 +9362,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -9162,6 +9404,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -9184,6 +9427,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -9212,6 +9456,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -9268,6 +9513,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         grade
         gradeFilter
         standard
+        ccssDescription
         imageUrl
         timesPlayed
         gameTemplates {
@@ -9290,6 +9536,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               phaseOneTime
               phaseTwoTime
               imageUrl
@@ -9314,6 +9561,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -9342,6 +9590,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount
@@ -9383,6 +9632,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
               grade
               gradeFilter
               standard
+              ccssDescription
               imageUrl
               timesPlayed
               gameTemplates {
@@ -9405,6 +9655,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     phaseOneTime
                     phaseTwoTime
                     imageUrl
@@ -9433,6 +9684,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     grade
                     gradeFilter
                     standard
+                    ccssDescription
                     imageUrl
                     timesPlayed
                     gameTemplatesCount

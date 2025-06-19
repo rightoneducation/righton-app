@@ -5,6 +5,24 @@ import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
 import { PublicPrivateType } from "../APIClients";
 import { IChoice } from "../Models/IQuestion";
+import CCSSDictionary from "../Models/CCSSDictionary";
+
+const getCCSSDescription = (grade: string, domain: string, cluster: string, standard: string): string => {
+    let ccssText = '';
+    CCSSDictionary.find((gradeObj) => {
+        return gradeObj.key === grade && gradeObj.domains.find((domainObj) => {
+            ccssText = ccssText + `${domainObj.desc} `;
+            return domainObj.key === domain && domainObj.clusters.find((clusterObj) => {
+                ccssText = ccssText + `${clusterObj.desc} `;
+                return clusterObj.key === cluster && clusterObj.standards.find((standardObj) => {
+                    ccssText = ccssText + `${standardObj.desc} `;
+                    return standardObj.key === standard;
+                });
+            });
+        });
+    });
+    return ccssText.trim();
+}
 
 export class QuestionTemplateParser {
     static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
@@ -13,13 +31,14 @@ export class QuestionTemplateParser {
         createQuestionTemplateInput: CentralQuestionTemplateInput,
         id?: string
     ): QuestionTemplateType<T>['create']['input']{
-        const {title, ccss } = createQuestionTemplateInput.questionCard;
+        const {title, ccss } = createQuestionTemplateInput.questionCard; 
         const lowerCaseTitle = title.toLowerCase();
         const deconstructCCSS = (ccss: string): { grade: string, domain: string, cluster: string, standard: string } => {
             const [grade, domain, cluster, standard] = ccss.split('.');
             return { grade, domain, cluster, standard }
         }
         const {grade, domain, cluster, standard} = deconstructCCSS(ccss);
+        const ccssDescription = getCCSSDescription(grade, domain, cluster, standard);
         const instructions = JSON.stringify(createQuestionTemplateInput.correctCard.answerSteps);
         const choicesIncorrect = createQuestionTemplateInput.incorrectCards.map(card => {
             return {
@@ -46,10 +65,13 @@ export class QuestionTemplateParser {
             grade,
             gradeFilter: grade,
             standard,
+            ccssDescription,
             imageUrl,
             timesPlayed: 0,
             gameTemplatesCount: 0,
         }
+        console.log(ccssDescription);
+        console.log(questionTemplate);
         return questionTemplate
     }
 
