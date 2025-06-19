@@ -200,6 +200,7 @@ export default function Header({
     centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });
     centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
     centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
+    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     switch (screen) {
       case ScreenType.QUESTIONS:
         navigate('/questions');

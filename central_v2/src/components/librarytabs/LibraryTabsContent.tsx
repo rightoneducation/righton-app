@@ -75,6 +75,10 @@ export default function LibraryTabsContent({
       ? getGameElements(openTab, isSearchResults, centralData)
       : getQuestionElements(openTab, isSearchResults, centralData);
 
+  const hasMore = openTab !== LibraryTabEnum.FAVORITES ? 
+    centralData.nextToken !== null :
+    false;
+
   const handleLoadMore = async () => {
     loadMoreLibrary(openTab, centralData.searchTerms, centralData.nextToken);
   };
@@ -92,7 +96,7 @@ export default function LibraryTabsContent({
         <InfiniteScroll
           dataLength={elements.length}
           next={handleLoadMore}
-          hasMore={centralData.nextToken !== null}
+          hasMore={hasMore}
           loader={
             <Box
               style={{
