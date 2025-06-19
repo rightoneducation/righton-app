@@ -21,6 +21,8 @@ import {
   GameQuestionType,
   LibraryTabEnum,
   UserStatusType,
+  ISelectedGame,
+  ISelectedQuestion,
 } from '../lib/CentralModels';
 import {
   MyLibraryMainContainer,
@@ -45,8 +47,8 @@ interface MyLibraryProps {
   fetchElement: (
     type: GameQuestionType,
     id: string,
-    isPrivateQuestion: boolean,
-  ) => void;
+    isPrivateQuestion?: boolean,
+  ) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
@@ -83,21 +85,36 @@ export default function MyLibrary({
   const centralDataDispatch = useCentralDataDispatch();
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
+  const [originalSelectedQuestion, setOriginalSelectedQuestion] =
+    useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [openQuestionTab, setOpenQuestionTab] = React.useState<LibraryTabEnum>(
     LibraryTabEnum.PUBLIC,
   );
-  const handleQuestionView = (
+  const handleQuestionView = async (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
     const isPrivate = question.publicPrivateType === PublicPrivateType.PRIVATE;
-    fetchElement(GameQuestionType.QUESTION, question.id, isPrivate);
     setSelectedQuestion(question);
+    if (centralData.isTabsOpen === false)
+      setOriginalSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
+    if (centralData.isTabsOpen === false)
+      setOriginalSelectedQuestion(question);
+    const selectedQ = await fetchElement(
+      GameQuestionType.QUESTION,
+      question.id,
+      isPrivate,
+    );
+    if ('question' in selectedQ && selectedQ && selectedQ.question) {
+      setSelectedQuestion(selectedQ.question);
+      if (centralData.isTabsOpen === false)
+        setOriginalSelectedQuestion(selectedQ.question);
+    }
   };
 
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
@@ -110,6 +127,11 @@ export default function MyLibrary({
   };
 
   const handleCloseQuestionTabs = () => {
+    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+    centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
+    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({
       type: 'SET_IS_TABS_OPEN',
       payload: false,
@@ -235,12 +257,13 @@ export default function MyLibrary({
           isTabsOpen={centralData.isTabsOpen}
           question={selectedQuestion}
           originalSelectedQuestion={
-           selectedQuestion
+           originalSelectedQuestion
           }
           questions={questionSet}
           openTab={openQuestionTab}
           setOpenTab={setOpenQuestionTab}
           setIsTabsOpen={setIsTabsOpen}
+          fetchElement={fetchElement}
           fetchElements={fetchElements}
           setSelectedQuestion={setSelectedQuestion}
           handleCloseQuestionTabs={handleCloseQuestionTabs}

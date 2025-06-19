@@ -110,10 +110,10 @@ export default function ExploreQuestions({
     questions: IQuestionTemplate[],
   ) => {
     setSelectedQuestion(question);
-    setOriginalSelectedQuestion(question);
+    if (centralData.isTabsOpen === false)
+      setOriginalSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
-    setOpenQuestionTab(LibraryTabEnum.PUBLIC);
     
     const selectedQ = await fetchElement(
       GameQuestionType.QUESTION,
@@ -121,10 +121,10 @@ export default function ExploreQuestions({
     );
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
       setSelectedQuestion(selectedQ.question);
-      setOriginalSelectedQuestion(selectedQ.question);
+      if (centralData.isTabsOpen === false)
+        setOriginalSelectedQuestion(selectedQ.question);
     }
   };
-
   const handlePrevQuestion = () => {
     const index = questionSet.findIndex(
       (question) => question.id === selectedQuestion?.id,
@@ -152,6 +152,11 @@ export default function ExploreQuestions({
   };
 
   const handleCloseQuestionTabs = () => {
+    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+    centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
+    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({
       type: 'SET_IS_TABS_OPEN',
       payload: false,
@@ -256,6 +261,7 @@ export default function ExploreQuestions({
           originalSelectedQuestion={originalSelectedQuestion}
           questions={questionSet}
           setIsTabsOpen={setIsTabsOpen}
+          fetchElement={fetchElement}
           fetchElements={fetchElements}
           setSelectedQuestion={setSelectedQuestion}
           handleCloseQuestionTabs={handleCloseQuestionTabs}

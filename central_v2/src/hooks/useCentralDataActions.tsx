@@ -619,7 +619,7 @@ export default function useCentralDataManager({
           apiClients?.centralDataManager
             ?.searchForQuestionTemplates(
               PublicPrivateType.PUBLIC,
-              12,
+              null,
               nextToken ?? null,
               searchTerms ?? centralData.searchTerms,
               centralData.sort.direction ?? SortDirection.ASC,
@@ -660,7 +660,7 @@ export default function useCentralDataManager({
           apiClients?.centralDataManager
             ?.searchForGameTemplates(
               PublicPrivateType.PUBLIC,
-              12,
+              null,
               nextToken ?? null,
               searchTerms ?? centralData.searchTerms,
               centralData.sort.direction ?? SortDirection.ASC,

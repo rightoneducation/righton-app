@@ -14,7 +14,7 @@ import {
   PublicPrivateType,
   GradeTarget,
   SortType,
-  SortDirection,
+  SortDirection
 } from '@righton/networking';
 import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
@@ -23,7 +23,10 @@ import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import {
   ScreenSize,
   LibraryTabEnum,
+  GameQuestionType,
   UserStatusType,
+  ISelectedGame,
+  ISelectedQuestion,
 } from '../../lib/CentralModels';
 import {
   TabContainer,
@@ -55,6 +58,11 @@ interface TabContainerProps {
   setOpenTab: (tab: LibraryTabEnum) => void;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   setSelectedQuestion: (question: IQuestionTemplate | null) => void;
+  fetchElement: (
+    type: GameQuestionType,
+    id: string,
+    isPrivateQuestion?: boolean,
+  ) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
   handleBackToExplore: () => void;
   handlePrevQuestion: () => void;
@@ -86,6 +94,7 @@ export default function QuestionTabs({
   setOpenTab,
   questions,
   setIsTabsOpen,
+  fetchElement,
   fetchElements,
   setSelectedQuestion,
   handleBackToExplore,
@@ -108,13 +117,26 @@ export default function QuestionTabs({
   const centralDataDispatch = useCentralDataDispatch();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
-  const handleChange = (
+  const handleChange = async (
     event: React.SyntheticEvent,
     newTab: LibraryTabEnum,
   ) => {
     centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: null });
-    setOpenTab(newTab);
     setSelectedQuestion(null);
+    setOpenTab(newTab);
+    if (newTab === LibraryTabEnum.PUBLIC) {
+      if (originalSelectedQuestion) {
+        const selectedQ = await fetchElement(
+            GameQuestionType.QUESTION,
+            originalSelectedQuestion.id,
+        );
+        if ('question' in selectedQ && selectedQ && selectedQ.question) {
+          setSelectedQuestion(selectedQ.question);
+        }
+      }
+    } else {
+      setSelectedQuestion(null);
+    }
     fetchElements(newTab, '');
   };
   const [isLoading, setIsLoading] = React.useState(false);
