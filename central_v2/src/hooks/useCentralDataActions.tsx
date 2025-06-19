@@ -965,6 +965,10 @@ export default function useCentralDataManager({
       type: 'SET_USER_STATUS',
       payload: UserStatusType.LOGGEDOUT,
     });
+    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+    centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
+    centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
     navigate('/');
   };
 
