@@ -144,7 +144,6 @@ export default function QuestionTabsSelectedQuestion({
           </ButtonContainerRight>
         </ButtonContainer>
         <CardContainer style={{ paddingBottom: '60px' }}>
-    
             <DetailedQuestionContainer
               container
               sx={{
@@ -187,40 +186,41 @@ export default function QuestionTabsSelectedQuestion({
                   </Box>
                 )}
                 {question && (
-                  <DetailedQuestionCardBase
-                    screenSize={screenSize}
-                    question={question}
-                  />
-                )}
-                <Grid container spacing={`${theme.sizing.smPadding}px`}>
-                  <SubCardGridItem item sm={12} md={6}>
-                    <DetailedQuestionSubCard
-                      cardType={CardType.CORRECT}
-                      answer={
-                        question?.choices?.find((answer) => answer.isAnswer)
-                          ?.text ?? ''
-                      }
-                      instructions={question?.instructions ?? []}
+                  <>
+                    <DetailedQuestionCardBase
+                      screenSize={screenSize}
+                      question={question}
                     />
-                  </SubCardGridItem>
-                  <SubCardGridItem item sm={12} md={6}>
-                    {question &&
-                      question.choices
-                        ?.filter((choice) => !choice.isAnswer)
-                        .map((choice, index) => (
-                          <DetailedQuestionSubCard
-                            key={uuidv4()}
-                            cardType={CardType.INCORRECT}
-                            answer={choice.text}
-                            answerReason={choice.reason}
-                          />
-                        ))}
-                  </SubCardGridItem>
-                </Grid>
+                    <Grid container spacing={`${theme.sizing.smPadding}px`}>
+                      <SubCardGridItem item sm={12} md={6}>
+                        <DetailedQuestionSubCard
+                          cardType={CardType.CORRECT}
+                          answer={
+                            question?.choices?.find((answer) => answer.isAnswer)
+                              ?.text ?? ''
+                          }
+                          instructions={question?.instructions ?? []}
+                        />
+                      </SubCardGridItem>
+                      <SubCardGridItem item sm={12} md={6}>
+                        {question &&
+                          question.choices
+                            ?.filter((choice) => !choice.isAnswer)
+                            .map((choice, index) => (
+                              <DetailedQuestionSubCard
+                                key={uuidv4()}
+                                cardType={CardType.INCORRECT}
+                                answer={choice.text}
+                                answerReason={choice.reason}
+                              />
+                            ))}
+                      </SubCardGridItem>
+                    </Grid>
+                  </>
+                )}
               </GridItem>
               <Grid sm md item />
             </DetailedQuestionContainer>
-          
         </CardContainer>
       </>
   );

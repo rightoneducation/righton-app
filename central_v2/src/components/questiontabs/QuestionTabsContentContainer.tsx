@@ -68,14 +68,13 @@ export default function QuestionTabsContentContainer({
   const isEditEnabled =
     centralData.userStatus === UserStatusType.LOGGEDIN &&
     centralData.userProfile?.id === question?.userId;
-  const selectedQuestion = LibraryTabEnum.PUBLIC ? originalSelectedQuestion : question;
 
   return (
     <ContentContainer>
-    {selectedQuestion ? (
+    {(question || openTab === LibraryTabEnum.PUBLIC) ? (
         <QuestionTabsSelectedQuestion
           screenSize={screenSize}
-          question={selectedQuestion}
+          question={question}
           isLoading={isLoading}
           isFavorite={isFavorite}
           handlePrevQuestion={handlePrevQuestion}
