@@ -149,7 +149,9 @@ type PublicGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  userId: String
+  userId: String @index(name: "publicGameTemplatesByUserDate", sortKeyFields: ["updatedAt"], queryField: "publicGameTemplatesByUserDate")
+                 @index(name: "publicGameTemplatesByUserPublicQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"], queryField: "publicGameTemplatesByUserPublicQuestionTemplatesCount")
+                 @index(name: "publicGameTemplatesByUserGrade", sortKeyFields: ["grade"], queryField: "publicGameTemplatesByUserGrade")
   publicPrivateType: String
   title: String!
   lowerCaseTitle: String!
@@ -275,7 +277,9 @@ type PublicQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  userId: String
+  userId: String @index(name: "publicQuestionTemplatesByUserDate", sortKeyFields: ["updatedAt"], queryField: "publicQuestionTemplatesByUserDate")
+                 @index(name: "publicQuestionTemplatesByUserPublicGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"], queryField: "publicQuestionTemplatesByUserPublicGameTemplatesCount")
+                 @index(name: "publicQuestionTemplatesByUserGrade", sortKeyFields: ["grade"], queryField: "publicQuestionTemplatesByUserGrade")
   publicPrivateType: String
   title: String!
   lowerCaseTitle: String!

@@ -11,11 +11,10 @@ import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import {
   IQuestionTemplate,
-  IGameTemplate,
   PublicPrivateType,
   GradeTarget,
   SortType,
-  SortDirection,
+  SortDirection
 } from '@righton/networking';
 import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
@@ -26,6 +25,8 @@ import {
   LibraryTabEnum,
   GameQuestionType,
   UserStatusType,
+  ISelectedGame,
+  ISelectedQuestion,
 } from '../../lib/CentralModels';
 import {
   TabContainer,
@@ -39,8 +40,7 @@ import {
   useCentralDataState,
   useCentralDataDispatch,
 } from '../../hooks/context/useCentralDataContext';
-import QuestionTabsSelectedQuestion from './QuestionTabsSelectedQuestion';
-import LibraryTabsContent from '../librarytabs/LibraryTabsContent';
+import QuestionTabsContentContainer from './QuestionTabsContentContainer';
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -52,9 +52,18 @@ interface TabContainerProps {
   screenSize: ScreenSize;
   isTabsOpen: boolean;
   question: IQuestionTemplate | null;
+  originalSelectedQuestion: IQuestionTemplate | null;
   questions: IQuestionTemplate[];
+  openTab: LibraryTabEnum;
+  setOpenTab: (tab: LibraryTabEnum) => void;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   setSelectedQuestion: (question: IQuestionTemplate | null) => void;
+  setQuestionSet: (questions: IQuestionTemplate[]) => void;
+  fetchElement: (
+    type: GameQuestionType,
+    id: string,
+    isPrivateQuestion?: boolean,
+  ) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
   handleBackToExplore: () => void;
   handlePrevQuestion: () => void;
@@ -74,14 +83,20 @@ interface TabContainerProps {
     elements: IQuestionTemplate[],
   ) => void;
   handleCloseQuestionTabs: () => void;
+  loadMore: () => void;
 }
 
 export default function QuestionTabs({
   screenSize,
   isTabsOpen,
   question,
+  originalSelectedQuestion,
+  openTab,
+  setOpenTab,
   questions,
+  setQuestionSet,
   setIsTabsOpen,
+  fetchElement,
   fetchElements,
   setSelectedQuestion,
   handleBackToExplore,
@@ -96,22 +111,35 @@ export default function QuestionTabs({
   handlePublicPrivateChange,
   handleQuestionView,
   handleCloseQuestionTabs,
+  loadMore
 }: TabContainerProps) {
   const theme = useTheme();
-  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
-    LibraryTabEnum.PUBLIC,
-  );
+  
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const isScreenLgst = useMediaQuery('(min-width: 1200px)');
-  const handleChange = (
+  const handleChange = async (
     event: React.SyntheticEvent,
     newTab: LibraryTabEnum,
   ) => {
     centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: null });
-    setOpenTab(newTab);
     setSelectedQuestion(null);
+    setOpenTab(newTab);
+    if (newTab === LibraryTabEnum.PUBLIC) {
+      if (originalSelectedQuestion) {
+        setQuestionSet(centralData.mostPopularQuestions);
+        const selectedQ = await fetchElement(
+            GameQuestionType.QUESTION,
+            originalSelectedQuestion.id,
+        );
+        if ('question' in selectedQ && selectedQ && selectedQ.question) {
+          setSelectedQuestion(selectedQ.question);
+        }
+      }
+    } else {
+      setSelectedQuestion(null);
+    }
     fetchElements(newTab, '');
   };
   const [isLoading, setIsLoading] = React.useState(false);
@@ -247,10 +275,12 @@ export default function QuestionTabs({
                   Close
                 </Typography>
               </Box>
-              <QuestionTabsSelectedQuestion
+              <QuestionTabsContentContainer
                 screenSize={screenSize}
                 question={question}
+                originalSelectedQuestion={originalSelectedQuestion}
                 isLoading={isLoading}
+                openTab={openTab}
                 handlePrevQuestion={handlePrevQuestion}
                 handleNextQuestion={handleNextQuestion}
                 handleCloneButtonClick={handleCloneButtonClick}
@@ -258,6 +288,11 @@ export default function QuestionTabs({
                 handleFavoriteButtonClick={handleFavoriteButtonClick}
                 handleDeleteButtonClick={handleDeleteButtonClick}
                 isFavorite={isFavorite}
+                handleChooseGrades={handleChooseGrades}
+                handleSortChange={handleSortChange}
+                handleSearchChange={handleSearchChange}
+                handleQuestionView={handleQuestionView}
+                loadMore={loadMore}
               />
             </TabContent>
           </ContentFrame>

@@ -171,7 +171,8 @@ export abstract class BaseAPIClient {
     type: PublicPrivateType,
     gradeTargets?: GradeTarget[] | null,
     favIds?: string[] | null,
-    isExploreGames?: boolean
+    isExploreGames?: boolean,
+    userId?: string | null
   ): Promise<QueryResult | null> {
     let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
     if (!queryParameters.filter) {
@@ -186,6 +187,9 @@ export abstract class BaseAPIClient {
        queryParameters.filter = {
           questionTemplatesCount: { gt: 0 }
         };
+    }
+    if (userId) {
+      queryParameters.userId = userId;
     }
     if (filterString != null) {
       const lower = filterString.toLowerCase();
@@ -219,7 +223,6 @@ export abstract class BaseAPIClient {
     } catch (e) {
       raw = e as { data?: any; errors?: Array<{ message: string; path?: any[] }> };
     }
-
     const recoverable = (raw.errors || []).filter(err =>
       err.message.startsWith("Cannot return null for non-nullable type:")
     );
