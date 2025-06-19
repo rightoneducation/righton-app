@@ -260,6 +260,7 @@ export default function MyLibrary({
            originalSelectedQuestion
           }
           questions={questionSet}
+          setQuestionSet={setQuestionSet}
           openTab={openQuestionTab}
           setOpenTab={setOpenQuestionTab}
           setIsTabsOpen={setIsTabsOpen}

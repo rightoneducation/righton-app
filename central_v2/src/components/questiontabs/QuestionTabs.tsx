@@ -58,6 +58,7 @@ interface TabContainerProps {
   setOpenTab: (tab: LibraryTabEnum) => void;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   setSelectedQuestion: (question: IQuestionTemplate | null) => void;
+  setQuestionSet: (questions: IQuestionTemplate[]) => void;
   fetchElement: (
     type: GameQuestionType,
     id: string,
@@ -93,6 +94,7 @@ export default function QuestionTabs({
   openTab,
   setOpenTab,
   questions,
+  setQuestionSet,
   setIsTabsOpen,
   fetchElement,
   fetchElements,
@@ -126,6 +128,7 @@ export default function QuestionTabs({
     setOpenTab(newTab);
     if (newTab === LibraryTabEnum.PUBLIC) {
       if (originalSelectedQuestion) {
+        setQuestionSet(centralData.mostPopularQuestions);
         const selectedQ = await fetchElement(
             GameQuestionType.QUESTION,
             originalSelectedQuestion.id,

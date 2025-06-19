@@ -260,6 +260,7 @@ export default function ExploreQuestions({
           question={selectedQuestion}
           originalSelectedQuestion={originalSelectedQuestion}
           questions={questionSet}
+          setQuestionSet={setQuestionSet}
           setIsTabsOpen={setIsTabsOpen}
           fetchElement={fetchElement}
           fetchElements={fetchElements}
