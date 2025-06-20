@@ -1,3 +1,4 @@
+import { removeStopwords, eng } from 'stopword';
 import { isNullOrUndefined } from "../global";
 import { IQuestionTemplate, IGameTemplate, CentralQuestionTemplateInput } from "../Models";
 import { QuestionTemplateType } from "../APIClients/templates/interfaces/IQuestionTemplateAPIClient";
@@ -8,20 +9,28 @@ import { IChoice } from "../Models/IQuestion";
 import CCSSDictionary from "../Models/CCSSDictionary";
 
 const getCCSSDescription = (grade: string, domain: string, cluster: string, standard: string): string => {
-    let ccssText = '';
-    CCSSDictionary.find((gradeObj) => {
-        return gradeObj.key === grade && gradeObj.domains.find((domainObj) => {
-            ccssText = ccssText + `${domainObj.desc} `;
-            return domainObj.key === domain && domainObj.clusters.find((clusterObj) => {
-                ccssText = ccssText + `${clusterObj.desc} `;
-                return clusterObj.key === cluster && clusterObj.standards.find((standardObj) => {
-                    ccssText = ccssText + `${standardObj.desc} `;
-                    return standardObj.key === standard;
-                });
-            });
-        });
-    });
-    return ccssText.trim();
+    let ccssText: string = '';
+    const gradeObj = CCSSDictionary.find(g => g.key === grade);
+    if (gradeObj) {
+        ccssText += ` ${gradeObj.desc}`;
+        const domainObj = gradeObj.domains.find(d => d.key === domain);
+        if (domainObj) {
+            ccssText += ` ${domainObj.desc}`;
+            const clusterObj = domainObj.clusters.find(c => c.key === cluster);
+            if (clusterObj) {
+            ccssText += ` ${clusterObj.desc}`;
+            const standardObj = clusterObj.standards.find(s => s.key === standard);
+            if (standardObj) {
+                ccssText += ` ${standardObj.desc}`;
+            }
+            }
+        }
+    }
+    if (ccssText = '') {
+        return '';
+    }
+    const arrayCCSSText = ccssText.split(' ');
+    return removeStopwords(arrayCCSSText, eng).join(' ').toLowerCase().trim();
 }
 
 export class QuestionTemplateParser {
