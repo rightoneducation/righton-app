@@ -1,3 +1,4 @@
+import { removeStopwords, eng } from 'stopword';
 import { isNullOrUndefined } from "../global";
 import { IQuestionTemplate, IGameTemplate, CentralQuestionTemplateInput } from "../Models";
 import { QuestionTemplateType } from "../APIClients/templates/interfaces/IQuestionTemplateAPIClient";
@@ -5,6 +6,32 @@ import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
 import { PublicPrivateType } from "../APIClients";
 import { IChoice } from "../Models/IQuestion";
+import CCSSDictionary from "../Models/CCSSDictionary";
+
+const getCCSSDescription = (grade: string, domain: string, cluster: string, standard: string): string => {
+    let ccssText: string = '';
+    const gradeObj = CCSSDictionary.find(g => g.key === grade);
+    if (gradeObj) {
+        ccssText += ` ${gradeObj.desc}`;
+        const domainObj = gradeObj.domains.find(d => d.key === domain);
+        if (domainObj) {
+            ccssText += ` ${domainObj.desc}`;
+            const clusterObj = domainObj.clusters.find(c => c.key === cluster);
+            if (clusterObj) {
+            ccssText += ` ${clusterObj.desc}`;
+            const standardObj = clusterObj.standards.find(s => s.key === standard);
+            if (standardObj) {
+                ccssText += ` ${standardObj.desc}`;
+            }
+            }
+        }
+    }
+    if (ccssText === '') {
+        return '';
+    }
+    const arrayCCSSText = ccssText.split(' ');
+    return removeStopwords(arrayCCSSText, eng).join(' ').toLowerCase().trim();
+}
 
 export class QuestionTemplateParser {
     static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
@@ -13,13 +40,14 @@ export class QuestionTemplateParser {
         createQuestionTemplateInput: CentralQuestionTemplateInput,
         id?: string
     ): QuestionTemplateType<T>['create']['input']{
-        const {title, ccss } = createQuestionTemplateInput.questionCard;
+        const {title, ccss } = createQuestionTemplateInput.questionCard; 
         const lowerCaseTitle = title.toLowerCase();
         const deconstructCCSS = (ccss: string): { grade: string, domain: string, cluster: string, standard: string } => {
             const [grade, domain, cluster, standard] = ccss.split('.');
             return { grade, domain, cluster, standard }
         }
         const {grade, domain, cluster, standard} = deconstructCCSS(ccss);
+        const ccssDescription = getCCSSDescription(grade, domain, cluster, standard);
         const instructions = JSON.stringify(createQuestionTemplateInput.correctCard.answerSteps);
         const choicesIncorrect = createQuestionTemplateInput.incorrectCards.map(card => {
             return {
@@ -46,10 +74,13 @@ export class QuestionTemplateParser {
             grade,
             gradeFilter: grade,
             standard,
+            ccssDescription,
             imageUrl,
             timesPlayed: 0,
             gameTemplatesCount: 0,
         }
+        console.log(ccssDescription);
+        console.log(questionTemplate);
         return questionTemplate
     }
 

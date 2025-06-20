@@ -1,6 +1,7 @@
 // created from 'create-ts-index'
 
 export * from './AnswerClasses';
+export * from './CCSSDictionary';
 export * from './IGameSession';
 export * from './IGameTemplate';
 export * from './IHostTeamAnswers';
