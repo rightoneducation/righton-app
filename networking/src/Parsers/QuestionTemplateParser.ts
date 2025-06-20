@@ -26,7 +26,7 @@ const getCCSSDescription = (grade: string, domain: string, cluster: string, stan
             }
         }
     }
-    if (ccssText = '') {
+    if (ccssText === '') {
         return '';
     }
     const arrayCCSSText = ccssText.split(' ');
