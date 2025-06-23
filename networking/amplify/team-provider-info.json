@@ -66,9 +66,6 @@
       },
       "storage": {
         "rightoncentralstorage": {}
-      },
-      "api": {
-        "mobile": {}
       }
     }
   }
