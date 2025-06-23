@@ -181,6 +181,7 @@ export default function JoinGame({
         await handleGameCodeClick(inputGameCodeValue);
         setIsJoining(false);
       } catch (error) {
+        setIsJoining(false);
         if (inputRef.current)
           inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
