@@ -73,6 +73,7 @@ export default function DetailedQuestionSubCard({
   const handleStepChange = (index: number, value: string): void => {
     const newSteps = [...draftQuestion.correctCard.answerSteps];
     newSteps[index] = value;
+    console.log(value);
     handleCorrectAnswerStepsChange(newSteps, draftQuestion);
   };
 
