@@ -39,7 +39,7 @@ export default function QuestionCard({
         <Typography variant="body1"> {questionText[0]} </Typography>
         <Typography
           variant="body1"
-          sx={{ fontWeight: 700, whiteSpace: 'pre-line' }}
+          sx={{ fontWeight: 700, whiteSpace: 'pre-line', textAlign: 'left', width: '100%' }}
         >
           {`\n ${questionText[1]}`}
         </Typography>

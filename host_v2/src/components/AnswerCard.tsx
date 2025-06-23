@@ -62,6 +62,7 @@ export default function  AnswerCard({
         <Typography
           sx={{
             marginLeft: `${theme.sizing.xSmPadding}px`,
+            whiteSpace: 'pre-line'
           }}
         >
           {instructions !== null ? instructions[index] : null}
@@ -83,6 +84,7 @@ export default function  AnswerCard({
         <Typography
           sx={{
             marginLeft: `${theme.sizing.xSmPadding}px`,
+            whiteSpace: 'pre-line'
           }}
         >
           {answerReason}
@@ -116,7 +118,7 @@ export default function  AnswerCard({
                 {letterCode}
               </Typography>
             }
-            <Typography>{answerContent}</Typography>
+            <Typography sx={{whiteSpace: 'pre-line'}}>{answerContent}</Typography>
           </AnswerOptionStyled>
           
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
