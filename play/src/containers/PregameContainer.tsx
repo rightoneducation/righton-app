@@ -28,6 +28,9 @@ export function PregameContainer({ apiClients }: PregameFinished) {
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const isMedDevice = useMediaQuery(theme.breakpoints.down('md'));
+  const [isShowCodeError, setIsShowCodeError] = useState<boolean>(false);
+  const [isShowNameError, setIsShowNameError] = useState<boolean>(false);
+  const [isShowNameInvalidError, setIsShowNameInvalidError] = useState<boolean>(false);
   const [shouldShowAvatarSelect, setShouldShowAvatarSelect] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [pregameState, setPregameState] = useState<PregameState>(
@@ -45,9 +48,6 @@ export function PregameContainer({ apiClients }: PregameFinished) {
   const [selectedAvatar, setSelectedAvatar] = useState<number>(
     Math.floor(Math.random() * 6)
   );
-
-  // TODO: coord with u/x for modal to pop up this error message
-  const [isAPIerror, setIsAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
   const handleRejoinSession = () => {
@@ -69,6 +69,10 @@ export function PregameContainer({ apiClients }: PregameFinished) {
   const addTeamToGame = async (inputGameSession: IGameSession) => {
     const teamName = `${firstName} ${lastName}`;
     try {
+      if (inputGameSession.teams.some(team => team.name === teamName)){
+        setIsShowNameError(true);
+        throw new Error('User already joined with this name');
+      }
       const team = await apiClients.team.addTeamToGameSessionId(
         inputGameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         teamName,
@@ -76,7 +80,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
         selectedAvatar
       );
       if (!team) {
-        setIsAPIError(true);
+        setIsShowCodeError(true);
       } else {
         try {
           const teamMember = await apiClients.teamMember.addTeamMemberToTeam(
@@ -85,17 +89,17 @@ export function PregameContainer({ apiClients }: PregameFinished) {
             uuidv4()
           );
           if (!teamMember) {
-            setIsAPIError(true);
+            setIsShowCodeError(true);
           }
           return { teamId: team.id, teamMemberAnswersId: teamMember.id };
         } catch (error) {
-          console.log(error);
-          setIsAPIError(true);
+          setIsShowCodeError(true);
+          throw new Error ('error');
         }
       }
     } catch (error) {
-      console.log(error);
-      setIsAPIError(true);
+      setIsShowCodeError(true);
+      throw new Error ('error');
     }
     return undefined;
   };
@@ -106,7 +110,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       if (gameSessionResponse) {
         const teamInfo = await addTeamToGame(gameSessionResponse);
         if (!teamInfo) {
-          setIsAPIError(true);
+          setIsShowCodeError(true);
           return;
         }
         const storageObject: LocalModel = {
@@ -124,7 +128,8 @@ export function PregameContainer({ apiClients }: PregameFinished) {
         navigate(`/game`);
       }
     } catch (error) {
-      setIsAPIError(true);
+      setIsShowCodeError(true);
+      throw new Error(`Failed to add team to game: ${error}`);
     }
   };
 
@@ -141,8 +146,8 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
         parseInt(inputGameCodeValue, 10)
       );
-      console.log(gameSessionResponse);
       if (isNullOrUndefined(gameSessionResponse)) {
+        setIsShowCodeError(true);
         return false;
       }
       if (
@@ -151,11 +156,10 @@ export function PregameContainer({ apiClients }: PregameFinished) {
         return false;
       }
       setGameSession(gameSessionResponse);
-      handleAvatarSelectClick(gameSessionResponse);
+      await handleAvatarSelectClick(gameSessionResponse);
       return true;
     } catch (error) {
-      console.log(error);
-      return false;
+      throw new Error(`Failed to add team to game: ${error}`);
     }
   };
 
@@ -166,6 +170,12 @@ export function PregameContainer({ apiClients }: PregameFinished) {
         <JoinGame
           isSmallDevice={isSmallDevice}
           isMedDevice={isMedDevice}
+          isShowCodeError={isShowCodeError}
+          setIsShowCodeError={setIsShowCodeError}
+          isShowNameError={isShowNameError}
+          setIsShowNameError={setIsShowNameError}
+          isShowNameInvalidError={isShowNameInvalidError}
+          setIsShowNameInvalidError={setIsShowNameInvalidError}
           shouldShowAvatarSelect={shouldShowAvatarSelect}
           setShouldShowAvatarSelect={setShouldShowAvatarSelect}
           firstName={firstName}
