@@ -722,9 +722,11 @@ export default function CreateGame({
   };
 
   const handleCCSSClicks = () => {
+    console.log('CCSS Clicks');
     setDraftQuestionsList((prev) =>
       updateCCSSClickAtIndex(prev, selectedQuestionIndex),
     );
+    console.log('draftQuestionsList:', draftQuestionsList);
   };
 
   const handleAIError = () => {

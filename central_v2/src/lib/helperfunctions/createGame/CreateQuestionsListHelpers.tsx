@@ -594,12 +594,15 @@ export const updateCCSSClickAtIndex = (
   draftQuestionsList: TDraftQuestionsList[],
   selectedIndex: number,
 ): TDraftQuestionsList[] => {
+  console.log(selectedIndex);
   return draftQuestionsList.map((questionItem, i) => {
+    console.log(i);
     if (i === selectedIndex) {
       const updatedItem = {
         ...questionItem,
         isCCSSVisibleModal: true,
       };
+      console.log('Updated Item:', updatedItem);
       return updatedItem;
     }
     return questionItem;
