@@ -276,6 +276,7 @@ export default function QuestionTabs({
               <QuestionTabsContentContainer
                 screenSize={screenSize}
                 question={question}
+                questions={questions}
                 originalSelectedQuestion={originalSelectedQuestion}
                 isLoading={isLoading}
                 openTab={openTab}

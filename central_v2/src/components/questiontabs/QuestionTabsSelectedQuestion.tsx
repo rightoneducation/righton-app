@@ -35,6 +35,7 @@ import {
 interface TabContainerProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate | null;
+  questions: IQuestionTemplate[];
   isLoading: boolean;
   isFavorite: boolean;
   handlePrevQuestion: () => void;
@@ -48,6 +49,7 @@ interface TabContainerProps {
 export default function QuestionTabsSelectedQuestion({
   screenSize,
   question,
+  questions,
   isLoading,
   isFavorite,
   handlePrevQuestion,
@@ -66,6 +68,7 @@ export default function QuestionTabsSelectedQuestion({
 
   return (
       <>
+      
         <ButtonContainer
           style={{
             paddingLeft:
@@ -80,17 +83,21 @@ export default function QuestionTabsSelectedQuestion({
         >
       
           <ButtonContainerLeft>
-            <CentralButton
-              buttonType={ButtonType.PREVIOUSQUESTION}
-              isEnabled
-              isOnQuestionTab
-              iconOnlyOverride={
-                screenSize === ScreenSize.SMALL ||
-                screenSize === ScreenSize.MEDIUM
-              }
-              onClick={handlePrevQuestion}
-            />
+            {questions && questions.length > 1 && (
+              <CentralButton
+                buttonType={ButtonType.PREVIOUSQUESTION}
+                isEnabled
+                isOnQuestionTab
+                iconOnlyOverride={
+                  screenSize === ScreenSize.SMALL ||
+                  screenSize === ScreenSize.MEDIUM
+                }
+                onClick={handlePrevQuestion}
+              />
+              )
+            }
           </ButtonContainerLeft>
+
           <ButtonContainerRight
             style={{
               paddingLeft:
@@ -131,16 +138,18 @@ export default function QuestionTabsSelectedQuestion({
                 handleDeleteButtonClick={handleDeleteButtonClick}
               />
             </Box>
-            <CentralButton
-              buttonType={ButtonType.NEXTQUESTION}
-              isEnabled
-              isOnQuestionTab
-              iconOnlyOverride={
-                screenSize === ScreenSize.SMALL ||
-                screenSize === ScreenSize.MEDIUM
-              }
-              onClick={handleNextQuestion}
-            />
+            {questions && questions.length > 1 && (
+              <CentralButton
+                buttonType={ButtonType.NEXTQUESTION}
+                isEnabled
+                isOnQuestionTab
+                iconOnlyOverride={
+                  screenSize === ScreenSize.SMALL ||
+                  screenSize === ScreenSize.MEDIUM
+                }
+                onClick={handleNextQuestion}
+              />
+            )}
           </ButtonContainerRight>
         </ButtonContainer>
         <CardContainer style={{ paddingBottom: '60px' }}>
