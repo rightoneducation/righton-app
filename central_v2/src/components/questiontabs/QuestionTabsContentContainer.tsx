@@ -20,6 +20,7 @@ import {
 interface TabContainerProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate | null;
+  questions: IQuestionTemplate[];
   originalSelectedQuestion: IQuestionTemplate | null;
   openTab: LibraryTabEnum;
   isLoading: boolean;
@@ -46,6 +47,7 @@ interface TabContainerProps {
 export default function QuestionTabsContentContainer({
   screenSize,
   question,
+  questions,
   originalSelectedQuestion,
   openTab,
   isLoading,
@@ -75,6 +77,7 @@ export default function QuestionTabsContentContainer({
         <QuestionTabsSelectedQuestion
           screenSize={screenSize}
           question={question}
+          questions={questions}
           isLoading={isLoading}
           isFavorite={isFavorite}
           handlePrevQuestion={handlePrevQuestion}
