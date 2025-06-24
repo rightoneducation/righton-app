@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, CircularProgress, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IQuestionTemplate, GradeTarget, SortType, SortDirection } from '@righton/networking';
 import QuestionTabsContent from './QuestionTabsContent';
@@ -71,9 +71,8 @@ export default function QuestionTabsContentContainer({
     centralData.userStatus === UserStatusType.LOGGEDIN &&
     centralData.userProfile?.id === question?.userId;
 
-  return (
-    <ContentContainer>
-    {(question || openTab === LibraryTabEnum.PUBLIC) ? (
+  const tabContent = [ 
+    (question || openTab === LibraryTabEnum.PUBLIC) ? (
         <QuestionTabsSelectedQuestion
           screenSize={screenSize}
           question={question}
@@ -88,17 +87,25 @@ export default function QuestionTabsContentContainer({
           handleDeleteButtonClick={handleDeleteButtonClick}
         />
       ) : (
-        <QuestionTabsContent 
-          screenSize={screenSize}
-          openTab={openTab}
-          setIsTabsOpen={()=> {}}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
-          handleSearchChange={handleSearchChange}
-          handleQuestionView={handleQuestionView}
-          loadMore={loadMore}
-        />
-      )}
+          <QuestionTabsContent 
+            screenSize={screenSize}
+            openTab={openTab}
+            setIsTabsOpen={()=> {}}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handleQuestionView={handleQuestionView}
+            loadMore={loadMore}
+          />
+      )
+  ]
+
+  return (
+    <ContentContainer>
+      { centralData.isLoading 
+        ? <CircularProgress style={{ color: '#FFF' }} />
+        : tabContent
+      }
     </ContentContainer>
   );
 }
