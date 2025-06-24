@@ -63,7 +63,7 @@ export default function RejoinModal({
           src={Logo}
           alt="Question"
         />
-        <Typography variant="h3" style={{textAlign: 'center', color: `${theme.palette.primary.main}`}}>Welcome to RighOn! Host! </Typography>
+        <Typography variant="h3" style={{textAlign: 'center', color: `${theme.palette.primary.main}`}}>Welcome to RightOn! Host </Typography>
         <Typography variant="body1" style={{textAlign: 'center', color: `${theme.palette.primary.main}`}}>Once your students have joined, press the start game button to begin! </Typography>
         <ButtonStyled
           onClick={() => {
