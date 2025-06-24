@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMediaQuery, CircularProgress, Typography } from '@mui/material';
+import { useMediaQuery, CircularProgress, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IQuestionTemplate, GradeTarget, SortType, SortDirection } from '@righton/networking';
 import QuestionTabsContent from './QuestionTabsContent';
@@ -11,7 +11,7 @@ import {
   GameQuestionType,
 } from '../../lib/CentralModels';
 import {
-  ContentContainer,
+  QTContentContainer,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import {
   useCentralDataState,
@@ -101,11 +101,14 @@ export default function QuestionTabsContentContainer({
   ]
 
   return (
-    <ContentContainer>
+    <QTContentContainer>
       { centralData.isLoading 
-        ? <CircularProgress style={{ color: '#FFF' }} />
+        ? 
+          <Box sx={{paddingTop: `${theme.sizing.lgPadding}px`}}>
+            <CircularProgress style={{ color: '#FFF' }} />
+          </Box>
         : tabContent
       }
-    </ContentContainer>
+    </QTContentContainer>
   );
 }

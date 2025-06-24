@@ -77,6 +77,7 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   height: '100%',
   width: '100%',
+  background: '#02215F',
   zIndex: 6,
   borderTopRightRadius: '16px',
   borderBottomLeftRadius: '16px',
@@ -86,6 +87,9 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   padding: '24px',
   boxSizing: 'border-box',
+}));
+
+export const QTContentContainer = styled(ContentContainer)(({ theme }) => ({
   backgroundImage: `
   url(${mathSymbolsBackground}),
   linear-gradient(180deg, #092361 0%, #19356D 100%)
