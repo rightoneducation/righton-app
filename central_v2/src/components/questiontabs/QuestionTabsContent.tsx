@@ -17,7 +17,7 @@ import {
   LibraryTabEnum,
 } from '../../lib/CentralModels';
 import {
-  QTContentContainer,
+  QTInnerContentContainer,
   ScrollContainer,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
@@ -93,7 +93,7 @@ export default function QuestionTabsContent({
     loadMore();
   };
   return (
-    <QTContentContainer>
+    <QTInnerContentContainer>
       <SearchBar
         screenSize={screenSize}
         searchTerms={centralData.searchTerms}
@@ -153,6 +153,6 @@ export default function QuestionTabsContent({
           You currently don’t have any {emptyText}.
         </Typography>
       }
-    </QTContentContainer>
+    </QTInnerContentContainer>
   );
 }

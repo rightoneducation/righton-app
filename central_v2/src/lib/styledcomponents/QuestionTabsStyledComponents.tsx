@@ -99,6 +99,10 @@ export const QTContentContainer = styled(ContentContainer)(({ theme }) => ({
   backgroundPosition: 'bottom', 
 }));
 
+export const QTInnerContentContainer = styled(ContentContainer)(({ theme }) => ({
+  background: 'transparent',
+}));
+
 export const ScrollContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   overflow: 'auto',
