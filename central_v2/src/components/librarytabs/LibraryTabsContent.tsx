@@ -83,6 +83,45 @@ export default function LibraryTabsContent({
     loadMoreLibrary(openTab, centralData.searchTerms, centralData.nextToken);
   };
 
+  const cardGallery = [
+     gameQuestion === GameQuestionType.GAME ? (
+        <CardGallery<IGameTemplate>
+          screenSize={screenSize}
+          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+          grades={isSearchResults ? centralData.selectedGrades : undefined}
+          galleryElements={elements as IGameTemplate[]}
+          elementType={ElementType.GAME}
+          galleryType={
+            isSearchResults
+              ? GalleryType.SEARCH_RESULTS
+              : GalleryType.MOST_POPULAR
+          }
+          setIsTabsOpen={setIsTabsOpen}
+          handleView={handleGameView}
+          isLoading={centralData.isLoading}
+          isMyLibrary
+        />
+      ) : (
+        <CardGallery<IQuestionTemplate>
+          screenSize={screenSize}
+          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+          grades={isSearchResults ? centralData.selectedGrades : undefined}
+          galleryElements={elements as IQuestionTemplate[]}
+          elementType={ElementType.GAME}
+          galleryType={
+            isSearchResults
+              ? GalleryType.SEARCH_RESULTS
+              : GalleryType.MOST_POPULAR
+          }
+          setIsTabsOpen={setIsTabsOpen}
+          handleView={handleQuestionView}
+          isLoading={centralData.isLoading}
+          isMyLibrary
+          isMyLibraryQuestion
+        />
+      )
+  ]
+  
   return (
     <ContentContainer>
       <SearchBar
@@ -106,47 +145,17 @@ export default function LibraryTabsContent({
                 justifyContent: 'center',
               }}
             >
+              { !centralData.isLoading &&
               <CircularProgress style={{ color: '#FFF' }} />
+              }
             </Box>
           }
           scrollableTarget="scrollableDiv"
         >
-          {gameQuestion === GameQuestionType.GAME ? (
-            <CardGallery<IGameTemplate>
-              screenSize={screenSize}
-              searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-              grades={isSearchResults ? centralData.selectedGrades : undefined}
-              galleryElements={elements as IGameTemplate[]}
-              elementType={ElementType.GAME}
-              galleryType={
-                isSearchResults
-                  ? GalleryType.SEARCH_RESULTS
-                  : GalleryType.MOST_POPULAR
-              }
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleGameView}
-              isLoading={centralData.isLoading}
-              isMyLibrary
-            />
-          ) : (
-            <CardGallery<IQuestionTemplate>
-              screenSize={screenSize}
-              searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-              grades={isSearchResults ? centralData.selectedGrades : undefined}
-              galleryElements={elements as IQuestionTemplate[]}
-              elementType={ElementType.GAME}
-              galleryType={
-                isSearchResults
-                  ? GalleryType.SEARCH_RESULTS
-                  : GalleryType.MOST_POPULAR
-              }
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleQuestionView}
-              isLoading={centralData.isLoading}
-              isMyLibrary
-              isMyLibraryQuestion
-            />
-          )}
+          { centralData.isLoading ?
+            <CircularProgress style={{ color: '#FFF' }} /> :
+            cardGallery
+          }
         </InfiniteScroll>
       </ScrollContainer>
     </ContentContainer>
