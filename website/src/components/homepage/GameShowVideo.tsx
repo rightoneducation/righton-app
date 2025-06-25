@@ -24,7 +24,7 @@ export default function GameShowVideo({ screenSize }: IGameShowVideo) {
         </Box>  
     </Box>
 
-  <StyledFlexBox gap={48} sx={{ alignItems: { md: 'flex-start', sm: 'center'}}}>
+  <StyledFlexBox gap={48} sx={{ alignItems: { lg: 'flex-start', md: 'center'}}}>
  <StyledFlexBox
   direction="column"
   gap={24}
@@ -33,7 +33,7 @@ export default function GameShowVideo({ screenSize }: IGameShowVideo) {
   <StyledText
   fontWeight={600}
   lineHeight={screenSize !== ScreenSize.LARGE ? 1.2 : 1.3}
-    fontSize={screenSize === ScreenSize.SMALL ? "40px":"24px"}
+    fontSize={screenSize !== ScreenSize.LARGE ? "40px":"24px"}
     sx={{
       textAlign: screenSize === ScreenSize.MEDIUM ? 'center' : 'left'
     }}
@@ -50,6 +50,7 @@ export default function GameShowVideo({ screenSize }: IGameShowVideo) {
   </StyledText>
 </StyledFlexBox>
 
+<StyledFlexBox align={screenSize !== ScreenSize.LARGE ? "center" : "normal"}> 
 
     <StyledFlexBox 
     direction="row" 
@@ -64,7 +65,9 @@ export default function GameShowVideo({ screenSize }: IGameShowVideo) {
         }}>
             <StyledText>View game show questions</StyledText>
                 <img src={arrowRight} alt="arrow-right" />
-             </StyledFlexBox>
+    </StyledFlexBox>
+</StyledFlexBox>
+
   </StyledFlexBox>
         </>
     )

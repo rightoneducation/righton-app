@@ -101,14 +101,18 @@ export function Home({screenSize}: HomePageProps) { // eslint-disable-line
       </StyledSponsorDivider>
 
       {/* Question of the Day */}
-       <StyledFlexBox direction="column" align="center" gap={72} sx={{ padding: containerPadding }}>
+       <StyledFlexBox 
+       direction="column" 
+       align="center" 
+       gap={72} 
+       sx={{ padding: containerPadding }}>
         <StyledFlexBox 
               borderRadius={12} 
-              height="520px" 
               width="100%"
               gap={48}
-              sx={{ backgroundColor: '#224996', padding: '48px' }} />
-        {/* <QuestionOfTheDay />  */}
+              sx={{ backgroundColor: '#224996' }}>
+              <QuestionOfTheDay screenSize={screenSize} />  
+              </StyledFlexBox>
        </StyledFlexBox>
 
 {/* Features section */}
