@@ -29,3 +29,9 @@ export const MathSymbolsBackground = styled(Box)(({ theme }) => ({
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
 }));
+
+export enum ScreenSize {
+  LARGE,
+  MEDIUM,
+  SMALL,
+}

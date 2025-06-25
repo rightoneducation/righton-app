@@ -3,8 +3,13 @@ import Typography from '@mui/material/Typography';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import magicMathHat from '../../images/mathSymbolsHat.svg';
 import pinkCreature from '../../images/pinkCreature.svg';
+import { ScreenSize } from '../../lib/WebsiteModels'
 
-export default function GameCTAButtons() {
+
+interface CTAButtonProps {
+screenSize: ScreenSize
+}
+export default function GameCTAButtons({ screenSize }: CTAButtonProps) {
     return (
         <>
            {/* Teachers CTA button */}

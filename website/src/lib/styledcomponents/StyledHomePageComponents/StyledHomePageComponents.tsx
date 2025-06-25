@@ -3,7 +3,7 @@ import { Box, Grid, styled, Typography } from '@mui/material';
 
 
 interface StyledBoxProps {
-  direction?: 'row' | 'column';
+  direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse';
   gap?: number;
   borderRadius?: number;
   align?: 
@@ -96,3 +96,4 @@ export const OpeningTextContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: '48px',
 }));
+
