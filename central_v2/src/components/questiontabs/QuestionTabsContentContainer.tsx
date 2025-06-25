@@ -104,8 +104,8 @@ export default function QuestionTabsContentContainer({
     <QTContentContainer>
       { centralData.isLoading 
         ? 
-          <Box sx={{paddingTop: `${theme.sizing.lgPadding}px`}}>
-            <CircularProgress style={{ color: '#FFF' }} />
+          <Box sx={{display: 'flex', flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}>
+            <CircularProgress style={{ color: '#FFF'}} />
           </Box>
         : tabContent
       }
