@@ -410,21 +410,8 @@ export default function CreateGame({
           gameImgUrl = await createGameImagePath(draftGame, apiClients);
         }
         const userId = centralData.userProfile?.id || '';
-        // create & store game template in variable to retrieve id after response
-
-        const createGame = buildGameTemplate(
-          draftGame,
-          userId,
-          draftQuestionsList,
-          gameImgUrl,
-        );
+       
         try {
-          const gameTemplateResponse =
-            await apiClients.gameTemplate.createGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
-              createGame,
-            );
-
           if (draftQuestionsList.length > 0) {
             // convert questions to array of promises & write to db
             const newQuestionTemplates = buildQuestionTemplatePromises(
@@ -435,6 +422,21 @@ export default function CreateGame({
             const questionTemplateResponse =
               await Promise.all(newQuestionTemplates);
 
+             // create & store game template in variable to retrieve id after response
+             // create game after questions so we can easily grab the ccss description from the questions that are present
+             // TODO
+            const createGame = buildGameTemplate(
+              draftGame,
+              userId,
+              draftQuestionsList,
+              gameImgUrl,
+            );
+            const gameTemplateResponse =
+              await apiClients.gameTemplate.createGameTemplate(
+              draftGame.gameTemplate.publicPrivateType,
+              createGame,
+            );
+            
             // create an array of all the ids from the response
             const questionTemplateIds = questionTemplateResponse.map(
               (question) => String(question?.id),
@@ -462,6 +464,18 @@ export default function CreateGame({
                 );
               }
             }
+          } else {
+            const createGame = buildGameTemplate(
+              draftGame,
+              userId,
+              draftQuestionsList,
+              gameImgUrl,
+            );
+
+            await apiClients.gameTemplate.createGameTemplate(
+              draftGame.gameTemplate.publicPrivateType,
+              createGame,
+            );
           }
         } catch (err) {
           console.error('Error creating game template:', err);
