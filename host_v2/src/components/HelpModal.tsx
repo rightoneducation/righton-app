@@ -64,7 +64,20 @@ export default function RejoinModal({
           alt="Question"
         />
         <Typography variant="h3" style={{textAlign: 'center', color: `${theme.palette.primary.main}`}}>Welcome to RightOn! Host </Typography>
-        <Typography variant="body1" style={{textAlign: 'center', color: `${theme.palette.primary.main}`}}>Once your students have joined, press the start game button to begin! </Typography>
+        <Typography variant="body1" style={{textAlign: 'center', color: `${theme.palette.primary.main}`}}>
+          Once your students have joined, click {' '}
+            <Typography   
+              component="span"
+              display="inline" 
+              variant="body1" 
+              style={{
+                color: `${theme.palette.primary.main}`, 
+                fontWeight: 700
+              }}>
+                Prepare Game
+            </Typography>
+          {' '} to begin! 
+        </Typography>
         <ButtonStyled
           onClick={() => {
             setIsHelpDisplayed(false);
