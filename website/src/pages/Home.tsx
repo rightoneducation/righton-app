@@ -242,7 +242,7 @@ export function Home({screenSize}: HomePageProps) { // eslint-disable-line
     component="img" 
     src={bottomWaveLg} 
     alt="wavy-bottom-lg-screen" 
-    sx={{ display: 'block', width: '100%' }} />
+    sx={{ marginTop: "-1px", display: 'block', width: '100%' }} />
 </Box>
 
 {/* Feature Video */}

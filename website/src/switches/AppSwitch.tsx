@@ -28,7 +28,7 @@ export default function AppSwitch({ currentScreen }: { currentScreen: ScreenType
       pageComponent = (<HowItWorks/>);
       break;
     case ScreenType.ABOUT_US:
-      pageComponent = (<AboutUs/>);
+      pageComponent = (<AboutUs screenSize={screenSize}/>);
       break;
     case ScreenType.HOME:
     default:

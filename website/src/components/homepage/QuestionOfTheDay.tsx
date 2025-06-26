@@ -11,7 +11,7 @@ interface IQuestionOfTheDay {
 }
 
 const containerPadding = { 
-  padding: { md: '48px 60px', sm:' 48px 24px' },
+  padding: { md: '48px 60px', sm: '48px 24px', xs: '48px 24px' },
 }
 
 export default function QuestionOfTheDay({ screenSize }: IQuestionOfTheDay) {

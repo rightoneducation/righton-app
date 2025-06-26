@@ -86,6 +86,7 @@ export default function FeaturedVideo({screenSize}: IFeatureVideo) {
 
     {/* Video in the center */}
     <Box sx={{ ...videoDimensions, zIndex: 1, position: 'relative' }}>
+      {/* note: video does not fill container on iphone 14 and iphone SE */}
       <iframe
         width="100%"
         height="100%"
