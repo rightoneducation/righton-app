@@ -208,6 +208,7 @@ export const buildGameTemplate = (
   userId: string,
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
+  questionTemplateCCSS?: string[],
 ): GameTemplate => {
   let questionTemplatesOrder: any[] = [];
   if (draftQuestionsList.length > 0) {
@@ -227,6 +228,7 @@ export const buildGameTemplate = (
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
     ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
+    ccssDescription: questionTemplateCCSS?.join(' ') ?? '',
     questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
     grade:
       (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
@@ -259,6 +261,7 @@ export const buildEditedGameTemplate = (
   userId: string,
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
+  ccssDescription?: string,
 ): EditedGameTemplate => {
   const questionTemplatesOrder = draftQuestionsList.map((question, index) => {
     return { questionTemplateId: question.questionTemplate.id, index };
@@ -275,6 +278,7 @@ export const buildEditedGameTemplate = (
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
     ccss: draftQuestionsList[0]?.question?.questionCard?.ccss ?? '',
+    ccssDescription: ccssDescription ?? '',
     questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
     grade:
       (draftQuestionsList[0]?.question?.questionCard?.ccss ?? '').split(
@@ -345,10 +349,6 @@ export const buildGameQuestionPromises = (
         ? PublicPrivateType.DRAFT
         : draftGame.gameTemplate.publicPrivateType,
       gameQuestion,
-    );
-    console.log(
-      `${draftGame.gameTemplate.publicPrivateType}GameQuestion response`,
-      response,
     );
   });
 };

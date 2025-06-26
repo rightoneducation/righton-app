@@ -364,7 +364,7 @@ export default function CreateQuestion({
     if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
       setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
   };
-  console.log(completeIncorrectAnswers);
+  
   // incorrect answer card functions
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
     if (isAIError) setIsAIError(false);
@@ -714,7 +714,6 @@ export default function CreateQuestion({
   useEffect(() => {
     setIsLoading(false);
     const selected = centralData?.selectedQuestion?.question;
-    console.log('selected question', selected);
     const title = selected?.title;
     if (selected && (isClone || isEdit)) {
       // regex to detect (clone of) in title
