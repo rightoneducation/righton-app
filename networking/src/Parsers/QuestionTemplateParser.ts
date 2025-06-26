@@ -5,6 +5,7 @@ import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
 import { PublicPrivateType } from "../APIClients";
 import { IChoice } from "../Models/IQuestion";
+import { ModelHelper } from "../ModelHelper";
 
 export class QuestionTemplateParser {
     static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
@@ -20,6 +21,7 @@ export class QuestionTemplateParser {
             return { grade, domain, cluster, standard }
         }
         const {grade, domain, cluster, standard} = deconstructCCSS(ccss);
+        const ccssDescription = ModelHelper.getCCSSDescription(grade, domain, cluster, standard);
         const instructions = JSON.stringify(createQuestionTemplateInput.correctCard.answerSteps);
         const choicesIncorrect = createQuestionTemplateInput.incorrectCards.map(card => {
             return {
@@ -41,6 +43,7 @@ export class QuestionTemplateParser {
             instructions,
             answerSettings,
             ccss,
+            ccssDescription,
             domain,
             cluster,
             grade,
@@ -111,6 +114,7 @@ export class QuestionTemplateParser {
           version,
           answerSettings,
           ccss,
+          ccssDescription,
           domain,
           cluster,
           grade,
@@ -149,6 +153,7 @@ export class QuestionTemplateParser {
           instructions,
           answerSettings: awsAnswerSettings,
           ccss: ccss ?? '',
+          ccssDescription: ccssDescription ?? '',
           domain: domain ?? '',
           cluster: cluster ?? '',
           grade: grade ?? '',

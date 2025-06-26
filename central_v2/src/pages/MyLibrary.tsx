@@ -203,7 +203,7 @@ export default function MyLibrary({
           type: 'SET_SEARCH_TERMS',
           payload: '',
         });
-        navigate('/questions');
+        navigate('/library');
       }
     } catch (error) {
       console.error('Error deleting question:', error);

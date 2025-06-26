@@ -304,9 +304,15 @@ export default function CreateGame({
         );
         const newQuestionPromisesResponse =
           await Promise.all(newQuestionPromises);
+
         const newQuestionTemplateIds = newQuestionPromisesResponse.map(
           (question) => String(question?.id),
         );
+        // array to store newly added CCSSDescriptions
+        const newQuestionTemplateCCSS = newQuestionPromisesResponse.map(
+          (question) => String(question?.ccssDescription),
+        );
+
         // added questions are those added from question bank (they are already created so have ids)
         const addedQuestionTemplateIds = draftQuestionsList
           .filter((dq) => dq.questionTemplate.id)
@@ -318,6 +324,12 @@ export default function CreateGame({
           ...newQuestionTemplateIds,
           ...filteredQuestionTemplateIds,
         ];
+
+        const addedQuestionTemplates = draftQuestionsList
+          .filter((dq) => filteredQuestionTemplateIds.includes(dq.questionTemplate.id))
+
+        const addQuestionTemplateCCSS = addedQuestionTemplates
+          .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
 
         // make sure we have a gameTemplate id as well as question template ids before creating a game question
         if (draftGame.gameTemplate.id && questionTemplateIds.length > 0) {
@@ -345,6 +357,14 @@ export default function CreateGame({
           );
           await Promise.all(removedQuestionPromises);
 
+          const existingQuestionTemplateCCSS = draftGame?.gameTemplate?.questionTemplates?.filter((qt) => !removedQuestionTemplateIds.includes(qt.questionTemplate.id)).map((template) => template.questionTemplate.ccssDescription);
+          const newCCSSDescription = [
+            ...(existingQuestionTemplateCCSS || []),
+            ...addQuestionTemplateCCSS,
+            ...newQuestionTemplateCCSS,
+          ].join(' ');
+
+
           // update questionTemplateCount in gameTemplate
           const newQuestionTemplateCount =
             draftGame.gameTemplate.questionTemplatesCount +
@@ -362,6 +382,7 @@ export default function CreateGame({
             userId,
             draftQuestionsList,
             gameImgUrl,
+            newCCSSDescription
           );
           const gameTemplateResponse =
             await apiClients.gameTemplate.updateGameTemplate(
@@ -410,21 +431,8 @@ export default function CreateGame({
           gameImgUrl = await createGameImagePath(draftGame, apiClients);
         }
         const userId = centralData.userProfile?.id || '';
-        // create & store game template in variable to retrieve id after response
-
-        const createGame = buildGameTemplate(
-          draftGame,
-          userId,
-          draftQuestionsList,
-          gameImgUrl,
-        );
+       
         try {
-          const gameTemplateResponse =
-            await apiClients.gameTemplate.createGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
-              createGame,
-            );
-
           if (draftQuestionsList.length > 0) {
             // convert questions to array of promises & write to db
             const newQuestionTemplates = buildQuestionTemplatePromises(
@@ -434,7 +442,25 @@ export default function CreateGame({
             );
             const questionTemplateResponse =
               await Promise.all(newQuestionTemplates);
+                       
+            // create an array of all the ids from the response
+            const questionTemplateCCSS = questionTemplateResponse.map(
+              (question) => String(question?.ccssDescription),
+            );
 
+            const createGame = buildGameTemplate(
+              draftGame,
+              userId,
+              draftQuestionsList,
+              gameImgUrl,
+              questionTemplateCCSS
+            );
+            const gameTemplateResponse =
+              await apiClients.gameTemplate.createGameTemplate(
+              draftGame.gameTemplate.publicPrivateType,
+              createGame,
+            );
+            
             // create an array of all the ids from the response
             const questionTemplateIds = questionTemplateResponse.map(
               (question) => String(question?.id),
@@ -462,6 +488,19 @@ export default function CreateGame({
                 );
               }
             }
+          } else {
+            // no question templates so ccss description not relevant
+            const createGame = buildGameTemplate(
+              draftGame,
+              userId,
+              draftQuestionsList,
+              gameImgUrl,
+            );
+
+            await apiClients.gameTemplate.createGameTemplate(
+              draftGame.gameTemplate.publicPrivateType,
+              createGame,
+            );
           }
         } catch (err) {
           console.error('Error creating game template:', err);
@@ -522,19 +561,8 @@ export default function CreateGame({
         gameImgUrl = await createGameImagePath(draftGame, apiClients);
       }
       const userId = centralData.userProfile?.id || '';
-      // create & store game template in variable to retrieve id after response
-      const createGame = buildGameTemplate(
-        draftGameCopy,
-        userId,
-        draftQuestionsList,
-        gameImgUrl,
-      );
-      const gameTemplateResponse =
-        await apiClients.gameTemplate.createGameTemplate(
-          PublicPrivateType.DRAFT,
-          createGame,
-        );
-      // convert questions to array of promises & write to db
+
+       // convert questions to array of promises & write to db
       const newQuestionTemplates = buildQuestionTemplatePromises(
         draftQuestionsList,
         userId,
@@ -543,6 +571,25 @@ export default function CreateGame({
       );
       const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
+      // extract ccssDescription from question templates
+      const questionTemplateCCSS = questionTemplateResponse.map(
+        (question) => String(question?.ccssDescription),
+      );
+
+      // create & store game template in variable to retrieve id after response
+      const createGame = buildGameTemplate(
+        draftGameCopy,
+        userId,
+        draftQuestionsList,
+        gameImgUrl,
+        questionTemplateCCSS
+      );
+      const gameTemplateResponse =
+        await apiClients.gameTemplate.createGameTemplate(
+          PublicPrivateType.DRAFT,
+          createGame,
+        );
+     
       // create an array of all the ids from the response
       const questionTemplateIds = questionTemplateResponse.map((question) =>
         String(question?.id),
@@ -722,11 +769,9 @@ export default function CreateGame({
   };
 
   const handleCCSSClicks = () => {
-    console.log('CCSS Clicks');
     setDraftQuestionsList((prev) =>
       updateCCSSClickAtIndex(prev, selectedQuestionIndex),
     );
-    console.log('draftQuestionsList:', draftQuestionsList);
   };
 
   const handleAIError = () => {
@@ -807,7 +852,6 @@ export default function CreateGame({
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
-    console.log(`Selected question index changed to: ${index}`);
     if (draftGame.openQuestionBank) {
       setDraftGame((prev) => toggleCreateQuestion(draftGame, gameFormIsValid));
     }
