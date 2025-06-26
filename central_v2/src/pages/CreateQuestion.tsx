@@ -387,9 +387,6 @@ export default function CreateQuestion({
     incompleteAnswers: IncorrectCard[],
     isAIEnabledCard?: boolean,
   ) => {
-    console.log('handleIncorrectCardStackUpdate:');
-    console.log(draftQuestionInput);
-    console.log(cardData);
     const nextCard = getNextHighlightCard(
       cardData.id as CreateQuestionHighlightCard,
     );
@@ -529,8 +526,6 @@ export default function CreateQuestion({
       return true;
     return false;
   };
-  console.log('Draft Question:');
-  console.log(draftQuestion);
   const handleSaveEditedQuestion = async () => {
     try {
       setIsCardSubmitted(true);

@@ -55,6 +55,7 @@ const qt: IQuestionTemplate = {
   lowerCaseTitle: '',
   version: 0,
   ccss: '',
+  ccssDescription: '',
   domain: '',
   cluster: '',
   grade: '',
