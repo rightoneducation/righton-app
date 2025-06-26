@@ -65,7 +65,8 @@ export default function RejoinModal({
         />
         <Typography variant="h3" style={{textAlign: 'center', color: `${theme.palette.primary.main}`}}>Welcome to RightOn! Host </Typography>
         <Typography variant="body1" style={{textAlign: 'center', color: `${theme.palette.primary.main}`}}>
-          Once your students have joined, click {' '}
+          Once your students have joined, <br/>
+          click {' '}
             <Typography   
               component="span"
               display="inline" 
