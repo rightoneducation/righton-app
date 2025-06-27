@@ -273,7 +273,7 @@ export const buildEditedGameTemplate = (
     lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
     description: draftGame.gameTemplate.description,
     lowerCaseDescription: draftGame.gameTemplate.description.toLowerCase(),
-    questionTemplatesCount: 0,
+    questionTemplatesCount: draftGame.gameTemplate.questionTemplatesCount ?? 0,
     version: 0,
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
