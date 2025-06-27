@@ -8,6 +8,8 @@ import pinkOneEyedMonster from '../images/pinkOneEyedMonster.svg';
 import teamworkMonsters from '../images/teamworkMonsters.svg';
 import ValueCards from '../components/aboutus/ValueCards';
 import { ScreenSize } from '../lib/WebsiteModels';
+import RightonTeam from '../components/aboutus/RightOnTeam';
+import RightOnEducators from '../components/aboutus/rightOnEducators';
 
 const AboutUsContainer = styled(Box)(({theme}) => ({
 width: '100%',
@@ -30,7 +32,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
       {/* Mission & Vision Container */}
       <StyledFlexBox gap={72} align="center" justify="center" sx={{ backgroundColor: '#011849', padding: '96px 72px', width: '100%' }}>
         
-        <StyledFlexBox direction="row" align="start" justify="center" gap={48} height="341px" width="100%" sx={{ border: '1px solid white' }}>
+        <StyledFlexBox direction="row" align="start" justify="center" gap={48} height="341px" width="100%">
           
           <Box 
           sx={{ 
@@ -112,7 +114,7 @@ opportunities
 
         {/* Value cards */}
         <StyledText fontSize="40px" lineHeight={1.2} fontWeight={700}>Our Values</StyledText>
-        <StyledFlexBox align="center" width="100%" sx={{ border: '1px solid white' }}>
+        <StyledFlexBox align="center" width="100%">
           <ValueCards screenSize={screenSize} />
         </StyledFlexBox>
 
@@ -124,22 +126,10 @@ opportunities
           <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2}>Research and Development</StyledText>
           <StyledText fontSize="20px">&quot;We&apos;re a team that sometimes <EmphasizeText>falls down</EmphasizeText>, always <EmphasizeText>gets back up</EmphasizeText>, and <EmphasizeText>never stops having fun</EmphasizeText>.&quot;</StyledText>
         </StyledFlexBox>
-        <StyledFlexBox height="791px" width="1155px" gap={48}>
 
-        <StyledFlexBox width="100%" height="372px" sx={{ border: '1px solid white' }}>
-          <StyledFlexBox direction="row" align="center" gap={48}>
-          {Array.from({length: 4}).map((_,i) => (
-            <Box key={`${Math.floor(Math.random() * 10000)}-rightOnMember`} width="252px" height="372px" sx={{ border: '1px solid white'}} /> 
-          ))}
-          </StyledFlexBox>
-        </StyledFlexBox>
-        <StyledFlexBox width="100%" height="372px" sx={{ border: '1px solid white' }}>
-                    <StyledFlexBox direction="row" align="center" gap={48}>
-          {Array.from({length: 4}).map((_,i) => (
-            <Box key={`${Math.floor(Math.random() * 10000)}-rightOnMember`} width="252px" height="372px" sx={{ border: '1px solid white'}} /> 
-          ))}
-          </StyledFlexBox>
-        </StyledFlexBox>
+        {/* Right On Team */}
+        <StyledFlexBox height="791px" width="1155px" gap={48}>
+          <RightonTeam screenSize={screenSize} />
         </StyledFlexBox>
       </StyledFlexBox>
 
@@ -150,7 +140,9 @@ opportunities
           <StyledText fontSize="20px">Solving real problems encountered by <EmphasizeText>math & STEM teachers</EmphasizeText>, <EmphasizeText>professors</EmphasizeText>, <EmphasizeText>leaders</EmphasizeText>.</StyledText>
         </StyledFlexBox>
 
-        <StyledFlexBox height="404px" width="100%" sx={{ border: "1px solid white" }} />
+        <StyledFlexBox height="730px" width="100%">
+          <RightOnEducators screenSize={screenSize} />
+        </StyledFlexBox>
       
         </StyledFlexBox>
     </AboutUsContainer>
