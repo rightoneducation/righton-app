@@ -436,7 +436,7 @@ export default function CreateGame({
           if (draftQuestionsList.length > 0) {
             // convert questions to array of promises & write to db
             const newQuestionTemplates = buildQuestionTemplatePromises(
-              draftQuestionsList,
+              draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
               userId,
               apiClients,
             );
@@ -448,6 +448,12 @@ export default function CreateGame({
               (question) => String(question?.ccssDescription),
             );
 
+            // addedQuestionTemplates are those added from question bank (they are already created so have ids)
+            const addedQuestionTemplates = draftQuestionsList.filter((dq) => dq.questionTemplate.id);
+            const addQuestionTemplateCCSS = addedQuestionTemplates
+              .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
+            questionTemplateCCSS.push(...addQuestionTemplateCCSS);
+            
             const createGame = buildGameTemplate(
               draftGame,
               userId,
@@ -462,9 +468,15 @@ export default function CreateGame({
             );
             
             // create an array of all the ids from the response
-            const questionTemplateIds = questionTemplateResponse.map(
+            let questionTemplateIds = questionTemplateResponse.map(
               (question) => String(question?.id),
             );
+
+            const addedQuestionTemplatesIds = addedQuestionTemplates.map(
+              (question) => String(question?.questionTemplate?.id),
+            )
+
+            questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
 
             // make sure we have a gameTemplate id as well as question template ids before creating a game question
             if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
@@ -564,7 +576,7 @@ export default function CreateGame({
 
        // convert questions to array of promises & write to db
       const newQuestionTemplates = buildQuestionTemplatePromises(
-        draftQuestionsList,
+        draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
         userId,
         apiClients,
         PublicPrivateType.DRAFT,
@@ -576,6 +588,12 @@ export default function CreateGame({
         (question) => String(question?.ccssDescription),
       );
 
+      // addedQuestionTemplates are those added from question bank (they are already created so have ids)
+      const addedQuestionTemplates = draftQuestionsList.filter((dq) => dq.questionTemplate.id);
+      const addQuestionTemplateCCSS = addedQuestionTemplates
+        .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
+      questionTemplateCCSS.push(...addQuestionTemplateCCSS);
+      
       // create & store game template in variable to retrieve id after response
       const createGame = buildGameTemplate(
         draftGameCopy,
@@ -591,9 +609,15 @@ export default function CreateGame({
         );
      
       // create an array of all the ids from the response
-      const questionTemplateIds = questionTemplateResponse.map((question) =>
+      let questionTemplateIds = questionTemplateResponse.map((question) =>
         String(question?.id),
       );
+
+      const addedQuestionTemplatesIds = addedQuestionTemplates.map(
+        (question) => String(question?.questionTemplate?.id),
+      )
+
+      questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
 
       // make sure we have a gameTemplate id as well as question template ids before creating a game question
       if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
