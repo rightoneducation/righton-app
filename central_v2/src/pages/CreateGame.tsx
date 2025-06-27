@@ -317,6 +317,7 @@ export default function CreateGame({
         const addedQuestionTemplateIds = draftQuestionsList
           .filter((dq) => dq.questionTemplate.id)
           .map((draftQuestion) => draftQuestion.questionTemplate.id);
+
         const filteredQuestionTemplateIds = addedQuestionTemplateIds.filter(
           (dq) => !originalQuestionTemplates.map((oq) => oq.id).includes(dq),
         );
@@ -364,12 +365,15 @@ export default function CreateGame({
             ...newQuestionTemplateCCSS,
           ].join(' ');
 
-
           // update questionTemplateCount in gameTemplate
           const newQuestionTemplateCount =
             draftGame.gameTemplate.questionTemplatesCount +
-            newQuestions.length -
+            questionTemplateIds.length -
             removedQuestionTemplateIds.length;
+
+          console.log(draftGame.gameTemplate.questionTemplatesCount, questionTemplateIds.length, removedQuestionTemplateIds.length)
+          console.log(newQuestionTemplateCount);
+
           const updatedDraftGame = {
             ...draftGame,
             gameTemplate: {
