@@ -4,3 +4,9 @@ export enum ScreenType { // eslint-disable-line
   ABOUT_US = 'ABOUT_US',
   LIBRARY = 'LIBRARY'
 }
+
+export enum ScreenSize {
+  LARGE,
+  MEDIUM,
+  SMALL,
+}
