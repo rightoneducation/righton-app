@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, CircularProgress, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IQuestionTemplate, GradeTarget, SortType, SortDirection } from '@righton/networking';
 import QuestionTabsContent from './QuestionTabsContent';
@@ -11,7 +11,7 @@ import {
   GameQuestionType,
 } from '../../lib/CentralModels';
 import {
-  ContentContainer,
+  QTContentContainer,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import {
   useCentralDataState,
@@ -20,6 +20,7 @@ import {
 interface TabContainerProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate | null;
+  questions: IQuestionTemplate[];
   originalSelectedQuestion: IQuestionTemplate | null;
   openTab: LibraryTabEnum;
   isLoading: boolean;
@@ -46,6 +47,7 @@ interface TabContainerProps {
 export default function QuestionTabsContentContainer({
   screenSize,
   question,
+  questions,
   originalSelectedQuestion,
   openTab,
   isLoading,
@@ -69,12 +71,12 @@ export default function QuestionTabsContentContainer({
     centralData.userStatus === UserStatusType.LOGGEDIN &&
     centralData.userProfile?.id === question?.userId;
 
-  return (
-    <ContentContainer>
-    {(question || openTab === LibraryTabEnum.PUBLIC) ? (
+  const tabContent = [ 
+    (question || openTab === LibraryTabEnum.PUBLIC) ? (
         <QuestionTabsSelectedQuestion
           screenSize={screenSize}
           question={question}
+          questions={questions}
           isLoading={isLoading}
           isFavorite={isFavorite}
           handlePrevQuestion={handlePrevQuestion}
@@ -85,17 +87,28 @@ export default function QuestionTabsContentContainer({
           handleDeleteButtonClick={handleDeleteButtonClick}
         />
       ) : (
-        <QuestionTabsContent 
-          screenSize={screenSize}
-          openTab={openTab}
-          setIsTabsOpen={()=> {}}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
-          handleSearchChange={handleSearchChange}
-          handleQuestionView={handleQuestionView}
-          loadMore={loadMore}
-        />
-      )}
-    </ContentContainer>
+          <QuestionTabsContent 
+            screenSize={screenSize}
+            openTab={openTab}
+            setIsTabsOpen={()=> {}}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handleQuestionView={handleQuestionView}
+            loadMore={loadMore}
+          />
+      )
+  ]
+
+  return (
+    <QTContentContainer>
+      { centralData.isLoading 
+        ? 
+          <Box sx={{display: 'flex', flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}>
+            <CircularProgress style={{ color: '#FFF'}} />
+          </Box>
+        : tabContent
+      }
+    </QTContentContainer>
   );
 }

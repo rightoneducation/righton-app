@@ -152,11 +152,6 @@ export default function ExploreQuestions({
   };
 
   const handleCloseQuestionTabs = () => {
-    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
-    centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });
-    centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
-    centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
-    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({
       type: 'SET_IS_TABS_OPEN',
       payload: false,

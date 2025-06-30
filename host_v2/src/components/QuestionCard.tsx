@@ -40,12 +40,6 @@ export default function QuestionCard({
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
-      {/* <Typography
-          variant="subtitle1"
-          sx={{ width: '100%', textAlign: 'left' }}
-        >
-          {t('gamesession.questionCard.title')}
-        </Typography> */}
         <TitleTypography>
         {`${t('gamesession.questionCard.title')} ${currentQuestionIndex + 1}`}       
         </TitleTypography>
@@ -60,7 +54,9 @@ export default function QuestionCard({
             alt="Question"
           />
         )}
-        <BodyTypography> 
+        <BodyTypography 
+          sx={{whiteSpace: 'pre-line', textAlign: 'left', width: '100%'}}
+        > 
           {questionText} 
         </BodyTypography>
       </BodyCardContainerStyled>

@@ -13,6 +13,7 @@ export type AWSQuestionTemplate = {
     instructions?: string | null,
     answerSettings?: string | null,
     ccss?: string | null,
+    ccssDescription?: string | null,
     domain?: string | null,
     cluster?: string | null,
     grade?: string | null,

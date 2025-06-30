@@ -364,7 +364,7 @@ export default function CreateQuestion({
     if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
       setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
   };
-
+  
   // incorrect answer card functions
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
     if (isAIError) setIsAIError(false);
@@ -436,6 +436,7 @@ export default function CreateQuestion({
         }
         return answer;
       });
+      setCompleteIncorrectAnswers(newCompleteAnswers);
       newDraftQuestion = updateDQwithIncorrectAnswers(
         draftQuestionInput,
         incompleteAnswers,
@@ -525,7 +526,6 @@ export default function CreateQuestion({
       return true;
     return false;
   };
-
   const handleSaveEditedQuestion = async () => {
     try {
       setIsCardSubmitted(true);
@@ -714,7 +714,6 @@ export default function CreateQuestion({
   useEffect(() => {
     setIsLoading(false);
     const selected = centralData?.selectedQuestion?.question;
-    console.log('selected question', selected);
     const title = selected?.title;
     if (selected && (isClone || isEdit)) {
       // regex to detect (clone of) in title

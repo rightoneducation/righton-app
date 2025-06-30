@@ -213,6 +213,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -237,6 +238,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
             description
             lowerCaseDescription
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -261,6 +263,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -293,6 +296,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -338,6 +342,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
             instructions
             answerSettings
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -360,6 +365,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -392,6 +398,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -464,6 +471,7 @@ export const listPublicGameTemplates = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -488,6 +496,7 @@ export const listPublicGameTemplates = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -512,6 +521,7 @@ export const listPublicGameTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -540,6 +550,7 @@ export const listPublicGameTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -581,6 +592,7 @@ export const listPublicGameTemplates = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -603,6 +615,7 @@ export const listPublicGameTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -631,6 +644,7 @@ export const listPublicGameTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -708,6 +722,7 @@ export const publicGameTemplatesByUserDate = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -732,6 +747,7 @@ export const publicGameTemplatesByUserDate = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -756,6 +772,7 @@ export const publicGameTemplatesByUserDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -784,6 +801,7 @@ export const publicGameTemplatesByUserDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -825,6 +843,7 @@ export const publicGameTemplatesByUserDate = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -847,6 +866,7 @@ export const publicGameTemplatesByUserDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -875,6 +895,7 @@ export const publicGameTemplatesByUserDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -952,6 +973,7 @@ export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL 
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -976,6 +998,7 @@ export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL 
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1000,6 +1023,7 @@ export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL 
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1028,6 +1052,7 @@ export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL 
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1069,6 +1094,7 @@ export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL 
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1091,6 +1117,7 @@ export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL 
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1119,6 +1146,7 @@ export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL 
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1196,6 +1224,7 @@ export const publicGameTemplatesByUserGrade = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1220,6 +1249,7 @@ export const publicGameTemplatesByUserGrade = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1244,6 +1274,7 @@ export const publicGameTemplatesByUserGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1272,6 +1303,7 @@ export const publicGameTemplatesByUserGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1313,6 +1345,7 @@ export const publicGameTemplatesByUserGrade = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1335,6 +1368,7 @@ export const publicGameTemplatesByUserGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1363,6 +1397,7 @@ export const publicGameTemplatesByUserGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1440,6 +1475,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1464,6 +1500,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1488,6 +1525,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1516,6 +1554,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1557,6 +1596,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1579,6 +1619,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1607,6 +1648,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1684,6 +1726,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1708,6 +1751,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1732,6 +1776,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1760,6 +1805,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1801,6 +1847,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1823,6 +1870,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1851,6 +1899,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -1928,6 +1977,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1952,6 +2002,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -1976,6 +2027,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2004,6 +2056,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2045,6 +2098,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -2067,6 +2121,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2095,6 +2150,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2157,6 +2213,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -2181,6 +2238,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
             description
             lowerCaseDescription
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -2205,6 +2263,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -2237,6 +2296,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -2282,6 +2342,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
             instructions
             answerSettings
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -2304,6 +2365,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -2336,6 +2398,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -2408,6 +2471,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2432,6 +2496,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -2456,6 +2521,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2484,6 +2550,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2525,6 +2592,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -2547,6 +2615,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2575,6 +2644,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2652,6 +2722,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2676,6 +2747,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -2700,6 +2772,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2728,6 +2801,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2769,6 +2843,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -2791,6 +2866,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2819,6 +2895,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2896,6 +2973,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2920,6 +2998,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -2944,6 +3023,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -2972,6 +3052,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3013,6 +3094,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -3035,6 +3117,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3063,6 +3146,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3140,6 +3224,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -3164,6 +3249,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -3188,6 +3274,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3216,6 +3303,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3257,6 +3345,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -3279,6 +3368,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3307,6 +3397,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3369,6 +3460,7 @@ export const getDraftGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -3393,6 +3485,7 @@ export const getDraftGameTemplate = /* GraphQL */ `
             description
             lowerCaseDescription
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -3417,6 +3510,7 @@ export const getDraftGameTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -3449,6 +3543,7 @@ export const getDraftGameTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -3494,6 +3589,7 @@ export const getDraftGameTemplate = /* GraphQL */ `
             instructions
             answerSettings
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -3516,6 +3612,7 @@ export const getDraftGameTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -3548,6 +3645,7 @@ export const getDraftGameTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -3620,6 +3718,7 @@ export const listDraftGameTemplates = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -3644,6 +3743,7 @@ export const listDraftGameTemplates = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -3668,6 +3768,7 @@ export const listDraftGameTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3696,6 +3797,7 @@ export const listDraftGameTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3737,6 +3839,7 @@ export const listDraftGameTemplates = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -3759,6 +3862,7 @@ export const listDraftGameTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3787,6 +3891,7 @@ export const listDraftGameTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3864,6 +3969,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -3888,6 +3994,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -3912,6 +4019,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3940,6 +4048,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -3981,6 +4090,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -4003,6 +4113,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4031,6 +4142,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4108,6 +4220,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -4132,6 +4245,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -4156,6 +4270,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4184,6 +4299,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4225,6 +4341,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -4247,6 +4364,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4275,6 +4393,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4352,6 +4471,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -4376,6 +4496,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -4400,6 +4521,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4428,6 +4550,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4469,6 +4592,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -4491,6 +4615,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4519,6 +4644,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4582,6 +4708,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -4604,6 +4731,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
             description
             lowerCaseDescription
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -4628,6 +4756,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -4660,6 +4789,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -4705,6 +4835,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
             instructions
             answerSettings
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -4727,6 +4858,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -4759,6 +4891,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -4831,6 +4964,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -4853,6 +4987,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -4877,6 +5012,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4905,6 +5041,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4946,6 +5083,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -4968,6 +5106,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -4996,6 +5135,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5073,6 +5213,7 @@ export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -5095,6 +5236,7 @@ export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -5119,6 +5261,7 @@ export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5147,6 +5290,7 @@ export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5188,6 +5332,7 @@ export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -5210,6 +5355,7 @@ export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5238,6 +5384,7 @@ export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5315,6 +5462,7 @@ export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL 
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -5337,6 +5485,7 @@ export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL 
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -5361,6 +5510,7 @@ export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL 
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5389,6 +5539,7 @@ export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL 
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5430,6 +5581,7 @@ export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL 
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -5452,6 +5604,7 @@ export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL 
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5480,6 +5633,7 @@ export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL 
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5557,6 +5711,7 @@ export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -5579,6 +5734,7 @@ export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -5603,6 +5759,7 @@ export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5631,6 +5788,7 @@ export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5672,6 +5830,7 @@ export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -5694,6 +5853,7 @@ export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5722,6 +5882,7 @@ export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5799,6 +5960,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -5821,6 +5983,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -5845,6 +6008,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5873,6 +6037,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5914,6 +6079,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -5936,6 +6102,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -5964,6 +6131,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6041,6 +6209,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -6063,6 +6232,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -6087,6 +6257,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6115,6 +6286,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6156,6 +6328,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -6178,6 +6351,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6206,6 +6380,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6283,6 +6458,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -6305,6 +6481,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -6329,6 +6506,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6357,6 +6535,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6398,6 +6577,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -6420,6 +6600,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6448,6 +6629,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6510,6 +6692,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -6532,6 +6715,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
             description
             lowerCaseDescription
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -6556,6 +6740,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -6588,6 +6773,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -6633,6 +6819,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
             instructions
             answerSettings
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -6655,6 +6842,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -6687,6 +6875,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -6759,6 +6948,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -6781,6 +6971,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -6805,6 +6996,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6833,6 +7025,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6874,6 +7067,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -6896,6 +7090,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -6924,6 +7119,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7001,6 +7197,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -7023,6 +7220,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -7047,6 +7245,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7075,6 +7274,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7116,6 +7316,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -7138,6 +7339,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7166,6 +7368,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7243,6 +7446,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -7265,6 +7469,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -7289,6 +7494,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7317,6 +7523,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7358,6 +7565,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -7380,6 +7588,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7408,6 +7617,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7485,6 +7695,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -7507,6 +7718,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -7531,6 +7743,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7559,6 +7772,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7600,6 +7814,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -7622,6 +7837,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7650,6 +7866,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -7712,6 +7929,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -7734,6 +7952,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `
             description
             lowerCaseDescription
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -7758,6 +7977,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -7790,6 +8010,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -7835,6 +8056,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `
             instructions
             answerSettings
             ccss
+            ccssDescription
             domain
             cluster
             grade
@@ -7857,6 +8079,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `
                   description
                   lowerCaseDescription
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -7889,6 +8112,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `
                   instructions
                   answerSettings
                   ccss
+                  ccssDescription
                   domain
                   cluster
                   grade
@@ -7961,6 +8185,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -7983,6 +8208,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -8007,6 +8233,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8035,6 +8262,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8076,6 +8304,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -8098,6 +8327,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8126,6 +8356,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8203,6 +8434,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -8225,6 +8457,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -8249,6 +8482,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8277,6 +8511,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8318,6 +8553,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -8340,6 +8576,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8368,6 +8605,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8445,6 +8683,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -8467,6 +8706,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -8491,6 +8731,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8519,6 +8760,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8560,6 +8802,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -8582,6 +8825,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8610,6 +8854,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8687,6 +8932,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -8709,6 +8955,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -8733,6 +8980,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8761,6 +9009,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8802,6 +9051,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -8824,6 +9074,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -8852,6 +9103,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -9791,6 +10043,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -9815,6 +10068,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -9839,6 +10093,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -9867,6 +10122,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -9908,6 +10164,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -9930,6 +10187,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -9958,6 +10216,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10014,6 +10273,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -10036,6 +10296,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -10060,6 +10321,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10088,6 +10350,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10129,6 +10392,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -10151,6 +10415,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10179,6 +10444,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10255,6 +10521,7 @@ export const listPublicGameQuestions = /* GraphQL */ `
           description
           lowerCaseDescription
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -10279,6 +10546,7 @@ export const listPublicGameQuestions = /* GraphQL */ `
                 description
                 lowerCaseDescription
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -10320,6 +10588,7 @@ export const listPublicGameQuestions = /* GraphQL */ `
                 instructions
                 answerSettings
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -10374,6 +10643,7 @@ export const listPublicGameQuestions = /* GraphQL */ `
           instructions
           answerSettings
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -10396,6 +10666,7 @@ export const listPublicGameQuestions = /* GraphQL */ `
                 description
                 lowerCaseDescription
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -10437,6 +10708,7 @@ export const listPublicGameQuestions = /* GraphQL */ `
                 instructions
                 answerSettings
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -10505,6 +10777,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -10529,6 +10802,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -10553,6 +10827,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10581,6 +10856,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10622,6 +10898,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -10644,6 +10921,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10672,6 +10950,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10728,6 +11007,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -10750,6 +11030,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -10774,6 +11055,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10802,6 +11084,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10843,6 +11126,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -10865,6 +11149,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10893,6 +11178,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -10969,6 +11255,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `
           description
           lowerCaseDescription
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -10993,6 +11280,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `
                 description
                 lowerCaseDescription
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -11034,6 +11322,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `
                 instructions
                 answerSettings
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -11088,6 +11377,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `
           instructions
           answerSettings
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -11110,6 +11400,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `
                 description
                 lowerCaseDescription
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -11151,6 +11442,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `
                 instructions
                 answerSettings
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -11219,6 +11511,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -11243,6 +11536,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -11267,6 +11561,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -11295,6 +11590,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -11336,6 +11632,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -11358,6 +11655,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -11386,6 +11684,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -11442,6 +11741,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -11464,6 +11764,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
               description
               lowerCaseDescription
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -11488,6 +11789,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -11516,6 +11818,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -11557,6 +11860,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
               instructions
               answerSettings
               ccss
+              ccssDescription
               domain
               cluster
               grade
@@ -11579,6 +11883,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
                     description
                     lowerCaseDescription
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -11607,6 +11912,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
                     instructions
                     answerSettings
                     ccss
+                    ccssDescription
                     domain
                     cluster
                     grade
@@ -11683,6 +11989,7 @@ export const listDraftGameQuestions = /* GraphQL */ `
           description
           lowerCaseDescription
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -11707,6 +12014,7 @@ export const listDraftGameQuestions = /* GraphQL */ `
                 description
                 lowerCaseDescription
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -11748,6 +12056,7 @@ export const listDraftGameQuestions = /* GraphQL */ `
                 instructions
                 answerSettings
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -11802,6 +12111,7 @@ export const listDraftGameQuestions = /* GraphQL */ `
           instructions
           answerSettings
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -11824,6 +12134,7 @@ export const listDraftGameQuestions = /* GraphQL */ `
                 description
                 lowerCaseDescription
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade
@@ -11865,6 +12176,7 @@ export const listDraftGameQuestions = /* GraphQL */ `
                 instructions
                 answerSettings
                 ccss
+                ccssDescription
                 domain
                 cluster
                 grade

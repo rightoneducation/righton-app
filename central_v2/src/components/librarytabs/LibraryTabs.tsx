@@ -127,6 +127,7 @@ export default function LibraryTabs({
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     centralDataDispatch({ type: 'SET_OPEN_TAB', payload: newTab });
+    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     setOpenTab(newTab);
     fetchElements(newTab, '', null, true);
   };
