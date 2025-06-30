@@ -86,7 +86,7 @@ function MostPopularGamesComponent({
         maxWidth: isMyLibrary ? '5000px' : '2000px',
       }}
     >
-      {isLoading
+      {(isLoading && !isMyLibrary)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
               <Grid item key={index}> {/* eslint-disable-line */}

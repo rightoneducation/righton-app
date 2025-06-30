@@ -159,6 +159,7 @@ type PublicGameTemplate @model
   description: String!
   lowerCaseDescription: String!
   ccss: String
+  ccssDescription: String
   domain: String
   cluster: String
   grade: String
@@ -201,6 +202,7 @@ type PrivateGameTemplate @model
   description: String!
   lowerCaseDescription: String!
   ccss: String
+  ccssDescription: String
   domain: String
   cluster: String
   grade: String
@@ -242,6 +244,7 @@ type DraftGameTemplate @model
   description: String
   lowerCaseDescription: String
   ccss: String
+  ccssDescription: String
   domain: String
   cluster: String
   grade: String
@@ -288,6 +291,7 @@ type PublicQuestionTemplate @model
   instructions: AWSJSON
   answerSettings: AWSJSON
   ccss: String
+  ccssDescription: String
   domain: String
   cluster: String
   grade: String
@@ -327,6 +331,7 @@ type PrivateQuestionTemplate @model
   instructions: AWSJSON
   answerSettings: AWSJSON
   ccss: String
+  ccssDescription: String
   domain: String
   cluster: String
   grade: String
@@ -366,6 +371,7 @@ type DraftQuestionTemplate @model
   instructions: AWSJSON
   answerSettings: AWSJSON
   ccss: String
+  ccssDescription: String
   domain: String
   cluster: String
   grade: String

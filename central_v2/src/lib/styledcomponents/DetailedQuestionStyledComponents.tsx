@@ -135,7 +135,7 @@ export const CCSSIndicator = styled(Box)(({ theme }) => ({
 
 export const AnswerIndicator = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: `${theme.sizing.xLgPadding}px`,
+  // height: `${theme.sizing.xLgPadding}px`,
   borderRadius: '20px',
   background: `${theme.palette.primary.lightGrey}`,
   paddingTop: `10px`,
@@ -146,4 +146,5 @@ export const AnswerIndicator = styled(Box)(({ theme }) => ({
   justifyContent: 'flex-start',
   alignItems: 'center',
   boxSizing: 'border-box',
+  whiteSpace: 'pre-line'
 }));

@@ -49,6 +49,7 @@ export default function DetailedQuestionSubCard({
         <Typography
           sx={{
             marginLeft: `${theme.sizing.xSmPadding}px`,
+            whiteSpace: 'pre-line', 
           }}
         >
           {instructions ? instructions[index] : null}
@@ -56,7 +57,6 @@ export default function DetailedQuestionSubCard({
       </Box>
     );
   };
-
   const incorrectAnswerReasoning = [
     <Box
       sx={{
@@ -69,6 +69,7 @@ export default function DetailedQuestionSubCard({
       <Typography
         sx={{
           marginLeft: `${theme.sizing.xSmPadding}px`,
+          whiteSpace: 'pre-line', 
         }}
       >
         {answerReason}

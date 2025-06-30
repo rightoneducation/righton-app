@@ -53,6 +53,7 @@ export class GameTemplateParser {
         }
         const questionTemplatesOrder = awsGameTemplate.questionTemplatesOrder ? JSON.parse(awsGameTemplate.questionTemplatesOrder) : null;
         const sortedQuestionTemplates = sortQuestionTemplatesByOrder(questionTemplates, questionTemplatesOrder);
+
        const {
           id,
           userId,
@@ -68,6 +69,7 @@ export class GameTemplateParser {
           grade,
           standard,
           ccss,
+          ccssDescription,
           imageUrl,
           timesPlayed,
           questionTemplatesCount
@@ -100,6 +102,7 @@ export class GameTemplateParser {
           grade,
           standard,
           ccss,
+          ccssDescription: ccssDescription ?? '',
           phaseOneTime,
           phaseTwoTime,
           imageUrl,
