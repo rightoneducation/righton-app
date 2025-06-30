@@ -62,6 +62,7 @@ interface TabContainerProps {
   fetchElement: (
     type: GameQuestionType,
     id: string,
+    isTabOpen: boolean,
     isPrivateQuestion?: boolean,
   ) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
@@ -123,7 +124,9 @@ export default function QuestionTabs({
     event: React.SyntheticEvent,
     newTab: LibraryTabEnum,
   ) => {
+    console.log('handleChange', newTab);
     centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: null });
+    centralDataDispatch({ type: 'SET_OPEN_TAB', payload: newTab });
     setSelectedQuestion(null);
     setOpenTab(newTab);
     if (newTab === LibraryTabEnum.PUBLIC) {
@@ -132,6 +135,7 @@ export default function QuestionTabs({
         const selectedQ = await fetchElement(
             GameQuestionType.QUESTION,
             originalSelectedQuestion.id,
+            true
         );
         if ('question' in selectedQ && selectedQ && selectedQ.question) {
           setSelectedQuestion(selectedQ.question);
@@ -148,7 +152,7 @@ export default function QuestionTabs({
         question.id,
       ) ?? false)
     : false;
-
+console.log(centralData.openTab);
   const tabMap: { [key: number]: string } = {
     0: 'Explore Questions',
     1: 'My Questions',

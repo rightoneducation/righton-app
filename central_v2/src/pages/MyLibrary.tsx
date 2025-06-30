@@ -47,6 +47,7 @@ interface MyLibraryProps {
   fetchElement: (
     type: GameQuestionType,
     id: string,
+    isTabsOpen: boolean,
     isPrivateQuestion?: boolean,
   ) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (
@@ -98,13 +99,7 @@ export default function MyLibrary({
     questions: IQuestionTemplate[],
   ) => {
     const isPrivate = question.publicPrivateType === PublicPrivateType.PRIVATE;
-    setSelectedQuestion(question);
-    if (centralData.isTabsOpen === false)
-      setOriginalSelectedQuestion(question);
-    setQuestionSet(questions);
     setIsTabsOpen(true);
-    if (centralData.isTabsOpen === false)
-      setOriginalSelectedQuestion(question);
     const selectedQ = await fetchElement(
       GameQuestionType.QUESTION,
       question.id,
@@ -112,9 +107,11 @@ export default function MyLibrary({
     );
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
       setSelectedQuestion(selectedQ.question);
+      setQuestionSet(questions);
       if (centralData.isTabsOpen === false)
         setOriginalSelectedQuestion(selectedQ.question);
     }
+    
   };
 
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {

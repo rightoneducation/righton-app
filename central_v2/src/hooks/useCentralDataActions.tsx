@@ -37,6 +37,7 @@ interface UseCentralDataManagerReturnProps {
   fetchElement: (
     type: GameQuestionType,
     id: string,
+    tab?: LibraryTabEnum,
   ) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (
     libraryTab?: LibraryTabEnum,
@@ -705,6 +706,7 @@ export default function useCentralDataManager({
   const fetchElement = async (
     type: GameQuestionType,
     id: string,
+    tab?: LibraryTabEnum,
     isPrivateQuestion?: boolean,
   ) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
@@ -713,7 +715,7 @@ export default function useCentralDataManager({
           gameQuestionType: GameQuestionType.QUESTION,
           publicPrivateType: PublicPrivateType.PRIVATE,
         }
-      : getCallType({ ...callTypeMatches });
+      : getCallType({ ...callTypeMatches, libraryTab: tab, gameQuestion: type });
     switch (type) {
       case GameQuestionType.QUESTION: {
         const responseQuestion =
@@ -728,6 +730,7 @@ export default function useCentralDataManager({
           lastModified: new Date(),
           timesPlayed: 0,
         };
+        console.log(selectedQuestion);
         if (responseQuestion) {
           const userResponse = await apiClients?.user.getUser(
             responseQuestion.userId,

@@ -40,7 +40,7 @@ export default function getCallType({
 }: CallTypeProps): CallType {
   let gameQuestionType = gameQuestion ?? GameQuestionType.GAME;
   let publicPrivateType = PublicPrivateType.PUBLIC;
-
+  console.log(libraryTab);
   // if we are on the library tab, we need to determine the public/private type
   // this is used for the search bar, sort and filter functions
   if (matchLibraryTab && (libraryTab !== undefined || libraryTab !== null)) {
@@ -60,6 +60,9 @@ export default function getCallType({
         break;
     }
     return { gameQuestionType, publicPrivateType };
+  }
+  if (isTabOpen && libraryTab === LibraryTabEnum.DRAFTS) {
+    publicPrivateType = PublicPrivateType.DRAFT;
   }
 
   // check if library (can we just use the presence of openTab on this?)

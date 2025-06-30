@@ -42,6 +42,7 @@ interface ExploreQuestionsProps {
   fetchElement: (
     type: GameQuestionType,
     id: string,
+    isTabsOpen: boolean,
   ) => Promise<ISelectedGame | ISelectedQuestion>;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
   fetchElements: () => void;
@@ -118,6 +119,7 @@ export default function ExploreQuestions({
     const selectedQ = await fetchElement(
       GameQuestionType.QUESTION,
       question.id,
+      true
     );
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
       setSelectedQuestion(selectedQ.question);
