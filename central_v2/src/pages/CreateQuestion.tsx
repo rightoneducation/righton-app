@@ -206,6 +206,7 @@ export default function CreateQuestion({
     });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
+  const [isDraftCardErrored, setIsDraftCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
 
   let label = 'Create';
@@ -285,6 +286,7 @@ export default function CreateQuestion({
     const newDraftQuestion = updateDQwithTitle(draftQuestion, title);
     setDraftQuestion(newDraftQuestion);
     handleDebouncedQuestionChange(newDraftQuestion);
+    if (isDraftCardErrored) setIsDraftCardErrored(false);
     if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
       setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
   };
@@ -660,31 +662,35 @@ export default function CreateQuestion({
 
   const handleSaveDraftQuestion = async () => {
     try {
-      setIsCardSubmitted(true);
-      setIsCreatingTemplate(true);
-      let result = null;
-      let url = '';
-      if (draftQuestion.questionCard.image) {
-        const img = await apiClients.questionTemplate.storeImageInS3(
-          draftQuestion.questionCard.image,
+      if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
+        setIsCardSubmitted(true);
+        setIsCreatingTemplate(true);
+        let result = null;
+        let url = '';
+        if (draftQuestion.questionCard.image) {
+          const img = await apiClients.questionTemplate.storeImageInS3(
+            draftQuestion.questionCard.image,
+          );
+          // have to do a nested await here because aws-storage returns a nested promise object
+          result = await img.result;
+          if (result && result.path && result.path.length > 0) url = result.path;
+        } else if (draftQuestion.questionCard.imageUrl) {
+          url = await apiClients.questionTemplate.storeImageUrlInS3(
+            draftQuestion.questionCard.imageUrl,
+          );
+        }
+        window.localStorage.setItem(StorageKey, '');
+        apiClients.questionTemplate.createQuestionTemplate(
+          PublicPrivateType.DRAFT,
+          url,
+          centralData.userProfile?.id || '',
+          draftQuestion,
         );
-        // have to do a nested await here because aws-storage returns a nested promise object
-        result = await img.result;
-        if (result && result.path && result.path.length > 0) url = result.path;
-      } else if (draftQuestion.questionCard.imageUrl) {
-        url = await apiClients.questionTemplate.storeImageUrlInS3(
-          draftQuestion.questionCard.imageUrl,
-        );
+        setIsCreatingTemplate(false);
+        navigate('/questions');
+      } else {
+        setIsDraftCardErrored(true);
       }
-      window.localStorage.setItem(StorageKey, '');
-      apiClients.questionTemplate.createQuestionTemplate(
-        PublicPrivateType.DRAFT,
-        url,
-        centralData.userProfile?.id || '',
-        draftQuestion,
-      );
-      setIsCreatingTemplate(false);
-      navigate('/questions');
     } catch (e) {
       console.log(e);
     }
@@ -939,6 +945,7 @@ export default function CreateQuestion({
                     handleImageUploadClick={handleImageUploadClick}
                     handlePublicPrivateChange={handlePublicPrivateChange}
                     isCardSubmitted={isCardSubmitted}
+                    isDraftCardErrored={isDraftCardErrored}
                     isCardErrored={isCardErrored}
                     isAIError={isAIError}
                     isPublic={publicPrivate === PublicPrivateType.PUBLIC}
