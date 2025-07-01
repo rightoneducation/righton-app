@@ -325,6 +325,7 @@ export default function useCentralDataManager({
 
   const getPublicPrivateElements = (
     newPublicPrivate: PublicPrivateType,
+    isLoadMoreLibrary?: boolean,
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
@@ -357,9 +358,7 @@ export default function useCentralDataManager({
                 case PublicPrivateType.PRIVATE:
                   centralDataDispatch({
                     type: 'SET_PRIVATE_QUESTIONS',
-                    payload: [
-                      ...response.questions,
-                    ],
+                    payload: isLoadMoreLibrary ? [...centralData.privateQuestions, ...response.questions] : [...response.questions],
                   });
                   centralDataDispatch({
                     type: 'SET_NEXT_TOKEN',
@@ -374,9 +373,7 @@ export default function useCentralDataManager({
                 default:
                   centralDataDispatch({
                     type: 'SET_PUBLIC_QUESTIONS',
-                    payload: [
-                      ...response.questions,
-                    ],
+                    payload: isLoadMoreLibrary ? [...centralData.publicQuestions, ...response.questions] : [...response.questions],
                   });
                   centralDataDispatch({
                     type: 'SET_NEXT_TOKEN',
@@ -413,7 +410,7 @@ export default function useCentralDataManager({
                 case PublicPrivateType.PRIVATE:
                   centralDataDispatch({
                     type: 'SET_PRIVATE_GAMES',
-                    payload: [ ...response.games],
+                    payload: isLoadMoreLibrary ? [...centralData.privateGames, ...response.games] : [...response.games],
                   });
                   centralDataDispatch({
                     type: 'SET_NEXT_TOKEN',
@@ -428,7 +425,7 @@ export default function useCentralDataManager({
                 default:
                   centralDataDispatch({
                     type: 'SET_PUBLIC_GAMES',
-                    payload: [...response.games],
+                    payload: isLoadMoreLibrary ? [...centralData.publicGames, ...response.games] : [...response.games],
                   });
                   centralDataDispatch({
                     type: 'SET_NEXT_TOKEN',
@@ -536,6 +533,7 @@ export default function useCentralDataManager({
   };
 
   const getDrafts = async (
+    isLoadMoreLibrary: boolean,
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
     nextToken?: string | null,
@@ -559,7 +557,7 @@ export default function useCentralDataManager({
           .then((response) => {
             centralDataDispatch({
               type: 'SET_DRAFT_QUESTIONS',
-              payload: [...response.questions],
+              payload: isLoadMoreLibrary ? [...centralData.draftQuestions, ...response.questions] : [...response.questions],
             });
             centralDataDispatch({
               type: 'SET_NEXT_TOKEN',
@@ -588,7 +586,7 @@ export default function useCentralDataManager({
           .then((response) => {
             centralDataDispatch({
               type: 'SET_DRAFT_GAMES',
-              payload: [ ...response.games],
+              payload: isLoadMoreLibrary ? [...centralData.draftGames, ...response.games] : [...response.games],
             });
             centralDataDispatch({
               type: 'SET_NEXT_TOKEN',
@@ -606,6 +604,7 @@ export default function useCentralDataManager({
 
   const getFav = async (
     user: IUserProfile,
+    isLoadMoreLibrary: boolean,
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
@@ -632,7 +631,7 @@ export default function useCentralDataManager({
             .then((response) => {
               centralDataDispatch({
                 type: 'SET_FAV_QUESTIONS',
-                payload: [...response.questions],
+                payload: isLoadMoreLibrary ? [...centralData.favQuestions, ...response.questions] : [...response.questions],
               });
               centralDataDispatch({
                 type: 'SET_NEXT_TOKEN',
@@ -673,7 +672,7 @@ export default function useCentralDataManager({
             .then((response) => {
               centralDataDispatch({
                 type: 'SET_FAV_GAMES',
-                payload: [...response.games],
+                payload: isLoadMoreLibrary ? [...centralData.favGames, ...response.games] : [...response.games],
               });
               centralDataDispatch({
                 type: 'SET_NEXT_TOKEN',
@@ -844,6 +843,7 @@ export default function useCentralDataManager({
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibray?: boolean,
+    isLoadMoreLibrary?: boolean,
   ) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
       if (isEditGame) {
@@ -892,6 +892,7 @@ export default function useCentralDataManager({
       case FetchType.PUBLIC_QUESTIONS:
         getPublicPrivateElements(
           PublicPrivateType.PUBLIC,
+          isLoadMoreLibrary ?? false,
           searchTerms,
           nextToken,
           isFromLibray ?? false,
@@ -901,6 +902,7 @@ export default function useCentralDataManager({
       case FetchType.PRIVATE_GAMES:
         getPublicPrivateElements(
           PublicPrivateType.PRIVATE,
+          isLoadMoreLibrary ?? false,
           searchTerms,
           nextToken,
           isFromLibray ?? false,
@@ -908,12 +910,13 @@ export default function useCentralDataManager({
         break;
       case FetchType.DRAFT_QUESTIONS:
       case FetchType.DRAFT_GAMES:
-        getDrafts(libraryTab, searchTerms, nextToken, isFromLibray ?? false);
+        getDrafts(isLoadMoreLibrary ?? false, libraryTab, searchTerms, nextToken, isFromLibray ?? false);
         break;
       case FetchType.FAVORITE_QUESTIONS:
       case FetchType.FAVORITE_GAMES:
         getFav(
           centralData.userProfile,
+          isLoadMoreLibrary ?? false,
           searchTerms,
           nextToken,
           isFromLibray ?? false,
@@ -975,7 +978,7 @@ export default function useCentralDataManager({
         type: 'SET_IS_LOADING_INFINITE_SCROLL',
         payload: true,
       });
-      fetchElements(libraryTab, searchTerms, nextToken, true);
+      fetchElements(libraryTab, searchTerms, nextToken, true, true);
     }
   };
 
