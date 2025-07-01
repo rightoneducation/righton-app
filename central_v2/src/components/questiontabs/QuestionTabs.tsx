@@ -59,12 +59,9 @@ interface TabContainerProps {
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   setSelectedQuestion: (question: IQuestionTemplate | null) => void;
   setQuestionSet: (questions: IQuestionTemplate[]) => void;
-  fetchElement: (
-    type: GameQuestionType,
-    id: string,
-    isTabOpen: boolean,
-    isPrivateQuestion?: boolean,
-  ) => Promise<ISelectedGame | ISelectedQuestion>;
+  viewQuestion: (
+    question: IQuestionTemplate,
+  ) => Promise<ISelectedQuestion>;
   fetchElements: (libraryTab: LibraryTabEnum, searchTerms?: string) => void;
   handleBackToExplore: () => void;
   handlePrevQuestion: () => void;
@@ -97,8 +94,8 @@ export default function QuestionTabs({
   questions,
   setQuestionSet,
   setIsTabsOpen,
-  fetchElement,
   fetchElements,
+  viewQuestion,
   setSelectedQuestion,
   handleBackToExplore,
   handlePrevQuestion,
@@ -124,7 +121,6 @@ export default function QuestionTabs({
     event: React.SyntheticEvent,
     newTab: LibraryTabEnum,
   ) => {
-    console.log('handleChange', newTab);
     centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: null });
     centralDataDispatch({ type: 'SET_OPEN_TAB', payload: newTab });
     setSelectedQuestion(null);
@@ -132,10 +128,8 @@ export default function QuestionTabs({
     if (newTab === LibraryTabEnum.PUBLIC) {
       if (originalSelectedQuestion) {
         setQuestionSet(centralData.mostPopularQuestions);
-        const selectedQ = await fetchElement(
-            GameQuestionType.QUESTION,
-            originalSelectedQuestion.id,
-            true
+        const selectedQ = await viewQuestion(
+            originalSelectedQuestion
         );
         if ('question' in selectedQ && selectedQ && selectedQ.question) {
           setSelectedQuestion(selectedQ.question);
@@ -152,7 +146,6 @@ export default function QuestionTabs({
         question.id,
       ) ?? false)
     : false;
-console.log(centralData.openTab);
   const tabMap: { [key: number]: string } = {
     0: 'Explore Questions',
     1: 'My Questions',
