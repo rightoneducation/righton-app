@@ -564,6 +564,13 @@ export default function CreateGame({
 
   const handleSaveDraftGame = async () => {
     try {
+      if (!draftGame.gameTemplate.title) {
+        setDraftGame((prev) => ({
+          ...prev,
+          isDraftGameErrored: true,
+        }));
+        return;
+      }
       const draftGameCopy = {
         ...draftGame,
         publicPrivateGame: PublicPrivateType.DRAFT,
