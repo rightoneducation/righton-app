@@ -55,7 +55,6 @@ interface CreateQuestionCardBaseProps {
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   isHighlight: boolean;
   isCardSubmitted: boolean;
-  isDraftCardErrored?: boolean;
   isCardErrored: boolean;
   isAIError: boolean;
   isPublic: boolean;
@@ -128,7 +127,6 @@ export default function CreateQuestionCardBase({
   isMultipleChoice,
   isHighlight,
   isCardSubmitted,
-  isDraftCardErrored,
   isCardErrored,
   isAIError,
   isPublic,
@@ -382,14 +380,14 @@ export default function CreateQuestionCardBase({
             }}
             placeholder="Enter question here..."
             error={
-              (isCardSubmitted || isDraftCardErrored || isAIError) &&
+              (isCardSubmitted || isAIError) &&
               (!draftQuestion.questionCard.title ||
                 draftQuestion.questionCard.title.length === 0)
             }
             value={draftQuestion.questionCard.title}
             onChange={(e) => handleTitleChange(e.target.value)}
             InputProps={{
-              startAdornment: (isCardSubmitted || isDraftCardErrored || isAIError) &&
+              startAdornment: (isCardSubmitted || isAIError) &&
                 (!draftQuestion.questionCard.title ||
                   draftQuestion.questionCard.title.length === 0) && (
                   <InputAdornment
@@ -409,7 +407,7 @@ export default function CreateQuestionCardBase({
         </CreateQuestionContentRightContainerStyled>
         {screenSize === ScreenSize.SMALL && (
           <>
-            {(isCardErrored || isDraftCardErrored) && <ErrorBox />}
+            {isCardErrored && <ErrorBox />}
             {!isCreateGame && !isEdit && (
               <Box
                 style={{
@@ -430,7 +428,7 @@ export default function CreateQuestionCardBase({
           </>
         )}
       </ContentContainerStyled>
-      {screenSize !== ScreenSize.SMALL && (isCardErrored || isDraftCardErrored)  && <ErrorBox />}
+      {screenSize !== ScreenSize.SMALL && isCardErrored && <ErrorBox />}
     </BaseCardStyled>
   );
 }

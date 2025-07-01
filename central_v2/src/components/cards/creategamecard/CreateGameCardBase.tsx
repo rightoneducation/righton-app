@@ -163,8 +163,7 @@ export default function CreateGameCardBase({
 
   const isTitleFieldError =
     (isCardSubmitted && (!gameTitle || gameTitle.length === 0)) ||
-    (isCardErrored && (!gameTitle || gameTitle.length === 0)) || 
-    (draftGame.isDraftGameErrored && (!gameTitle || gameTitle.length === 0));
+    (isCardErrored && (!gameTitle || gameTitle.length === 0));
   const isDescriptionFieldError =
     (isCardSubmitted && (!gameDescription || gameDescription.length === 0)) ||
     (isCardErrored && (!gameDescription || gameDescription.length === 0));
@@ -296,7 +295,7 @@ export default function CreateGameCardBase({
         >
           {/* Game Title TextField */}
           <CreateGameTextFieldContainer
-            isCardError={isCardErrored || (draftGame.isDraftGameErrored ?? false)}
+            isCardError={isCardErrored}
             isTitle
             variant="outlined"
             sx={{
@@ -402,7 +401,7 @@ export default function CreateGameCardBase({
           {/* card Error */}
           {screenSize === ScreenSize.SMALL && (
             <>
-              {(isCardErrored || draftGame.isDraftGameErrored) && <CreateGameErrorBox screenSize={screenSize} />}
+              {isCardErrored && <CreateGameErrorBox screenSize={screenSize} />}
               <TooltipStyled
                 open={publicPrivateWarning}
                 onOpen={handleOpenPublicPrivateWarning}
@@ -434,7 +433,7 @@ export default function CreateGameCardBase({
         </Box>
       </GameContentContainerStyled>
 
-      {screenSize !== ScreenSize.SMALL && (isCardErrored || draftGame.isDraftGameErrored) && (
+      {screenSize !== ScreenSize.SMALL && isCardErrored && (
         <CreateGameErrorBox screenSize={screenSize} />
       )}
     </BaseCardStyled>

@@ -44,9 +44,11 @@ interface MyLibraryProps {
   }) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
-  viewQuestion: (
-    question: IQuestionTemplate,
-  ) => Promise<ISelectedQuestion>;
+  fetchElement: (
+    type: GameQuestionType,
+    id: string,
+    isPrivateQuestion?: boolean,
+  ) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
@@ -72,7 +74,7 @@ export default function MyLibrary({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  viewQuestion,
+  fetchElement,
   fetchElements,
   loadMoreLibrary,
   deleteQuestionTemplate,
@@ -95,15 +97,24 @@ export default function MyLibrary({
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
+    const isPrivate = question.publicPrivateType === PublicPrivateType.PRIVATE;
+    setSelectedQuestion(question);
+    if (centralData.isTabsOpen === false)
+      setOriginalSelectedQuestion(question);
+    setQuestionSet(questions);
     setIsTabsOpen(true);
-    const selectedQ = await viewQuestion(question);
+    if (centralData.isTabsOpen === false)
+      setOriginalSelectedQuestion(question);
+    const selectedQ = await fetchElement(
+      GameQuestionType.QUESTION,
+      question.id,
+      isPrivate,
+    );
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
       setSelectedQuestion(selectedQ.question);
-      setQuestionSet(questions);
       if (centralData.isTabsOpen === false)
         setOriginalSelectedQuestion(selectedQ.question);
     }
-    
   };
 
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
@@ -248,7 +259,7 @@ export default function MyLibrary({
           openTab={openQuestionTab}
           setOpenTab={setOpenQuestionTab}
           setIsTabsOpen={setIsTabsOpen}
-          viewQuestion={viewQuestion}
+          fetchElement={fetchElement}
           fetchElements={fetchElements}
           setSelectedQuestion={setSelectedQuestion}
           handleCloseQuestionTabs={handleCloseQuestionTabs}
