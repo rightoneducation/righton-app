@@ -22,7 +22,6 @@ export type TGameTemplateProps = {
   isCloneGameImageChanged: boolean;
   image?: File | null;
   imageUrl?: string | undefined;
-  isDraftGameErrored?: boolean;
 };
 
 // draft questions

@@ -37,11 +37,7 @@ interface UseCentralDataManagerReturnProps {
   fetchElement: (
     type: GameQuestionType,
     id: string,
-    tab?: LibraryTabEnum,
   ) => Promise<ISelectedGame | ISelectedQuestion>;
-  viewQuestion: (
-    question: IQuestionTemplate,
-  ) => Promise<ISelectedQuestion>;
   fetchElements: (
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
@@ -133,8 +129,8 @@ export default function useCentralDataManager({
             centralData.sort.field,
             [...grades],
             null,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? centralData.userProfile.dynamoId : undefined,
+            isLibrary ?? false,
+            isLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -156,8 +152,8 @@ export default function useCentralDataManager({
             centralData.sort.field,
             [...grades],
             null,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? centralData.userProfile.dynamoId : undefined,
+            isLibrary ?? false,
+            isLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -195,8 +191,8 @@ export default function useCentralDataManager({
             newSort.field,
             centralData.selectedGrades,
             null,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? centralData.userProfile.dynamoId : undefined,
+            isLibrary ?? false,
+            isLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -218,8 +214,8 @@ export default function useCentralDataManager({
             newSort.field,
             centralData.selectedGrades,
             null,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? centralData.userProfile.dynamoId : undefined,
+            isLibrary ?? false,
+            isLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -269,8 +265,8 @@ export default function useCentralDataManager({
                 sortType,
                 gradeTargets,
                 null,
-                (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC) ?? false,
-                (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC) ? userProfile.dynamoId : undefined,
+                isLibrary ?? false,
+                isLibrary ? userProfile.dynamoId : undefined,
               )
               .then((response) => {
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -293,8 +289,8 @@ export default function useCentralDataManager({
                 sortType,
                 gradeTargets,
                 null,
-                (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
-                (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? userProfile.dynamoId : undefined,
+                isLibrary ?? false,
+                isLibrary ? userProfile.dynamoId : undefined,
               )
               .then((response) => {
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -325,7 +321,6 @@ export default function useCentralDataManager({
 
   const getPublicPrivateElements = (
     newPublicPrivate: PublicPrivateType,
-    isLoadMoreLibrary?: boolean,
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
@@ -348,8 +343,8 @@ export default function useCentralDataManager({
             centralData.sort.field,
             centralData.selectedGrades ?? [],
             null,
-            (isFromLibrary && newPublicPrivate === PublicPrivateType.PUBLIC) ?? false,
-            (isFromLibrary && newPublicPrivate === PublicPrivateType.PUBLIC) ? centralData.userProfile.dynamoId : undefined,
+            isFromLibrary ?? false,
+            isFromLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -358,7 +353,10 @@ export default function useCentralDataManager({
                 case PublicPrivateType.PRIVATE:
                   centralDataDispatch({
                     type: 'SET_PRIVATE_QUESTIONS',
-                    payload: isLoadMoreLibrary ? [...centralData.privateQuestions, ...response.questions] : [...response.questions],
+                    payload: [
+                      ...centralData.privateQuestions,
+                      ...response.questions,
+                    ],
                   });
                   centralDataDispatch({
                     type: 'SET_NEXT_TOKEN',
@@ -373,7 +371,10 @@ export default function useCentralDataManager({
                 default:
                   centralDataDispatch({
                     type: 'SET_PUBLIC_QUESTIONS',
-                    payload: isLoadMoreLibrary ? [...centralData.publicQuestions, ...response.questions] : [...response.questions],
+                    payload: [
+                      ...centralData.publicQuestions,
+                      ...response.questions,
+                    ],
                   });
                   centralDataDispatch({
                     type: 'SET_NEXT_TOKEN',
@@ -400,8 +401,8 @@ export default function useCentralDataManager({
             centralData.sort.field,
             centralData.selectedGrades ?? [],
             null,
-            (isFromLibrary && newPublicPrivate === PublicPrivateType.PUBLIC) ?? false,
-            (isFromLibrary && newPublicPrivate === PublicPrivateType.PUBLIC) ? centralData.userProfile.dynamoId : undefined,
+            isFromLibrary ?? false,
+            isFromLibrary ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -410,7 +411,7 @@ export default function useCentralDataManager({
                 case PublicPrivateType.PRIVATE:
                   centralDataDispatch({
                     type: 'SET_PRIVATE_GAMES',
-                    payload: isLoadMoreLibrary ? [...centralData.privateGames, ...response.games] : [...response.games],
+                    payload: [...centralData.privateGames, ...response.games],
                   });
                   centralDataDispatch({
                     type: 'SET_NEXT_TOKEN',
@@ -425,7 +426,7 @@ export default function useCentralDataManager({
                 default:
                   centralDataDispatch({
                     type: 'SET_PUBLIC_GAMES',
-                    payload: isLoadMoreLibrary ? [...centralData.publicGames, ...response.games] : [...response.games],
+                    payload: [...centralData.publicGames, ...response.games],
                   });
                   centralDataDispatch({
                     type: 'SET_NEXT_TOKEN',
@@ -533,7 +534,6 @@ export default function useCentralDataManager({
   };
 
   const getDrafts = async (
-    isLoadMoreLibrary: boolean,
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
     nextToken?: string | null,
@@ -557,7 +557,7 @@ export default function useCentralDataManager({
           .then((response) => {
             centralDataDispatch({
               type: 'SET_DRAFT_QUESTIONS',
-              payload: isLoadMoreLibrary ? [...centralData.draftQuestions, ...response.questions] : [...response.questions],
+              payload: [...centralData.draftQuestions, ...response.questions],
             });
             centralDataDispatch({
               type: 'SET_NEXT_TOKEN',
@@ -586,7 +586,7 @@ export default function useCentralDataManager({
           .then((response) => {
             centralDataDispatch({
               type: 'SET_DRAFT_GAMES',
-              payload: isLoadMoreLibrary ? [...centralData.draftGames, ...response.games] : [...response.games],
+              payload: [...centralData.draftGames, ...response.games],
             });
             centralDataDispatch({
               type: 'SET_NEXT_TOKEN',
@@ -604,7 +604,6 @@ export default function useCentralDataManager({
 
   const getFav = async (
     user: IUserProfile,
-    isLoadMoreLibrary: boolean,
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
@@ -631,7 +630,7 @@ export default function useCentralDataManager({
             .then((response) => {
               centralDataDispatch({
                 type: 'SET_FAV_QUESTIONS',
-                payload: isLoadMoreLibrary ? [...centralData.favQuestions, ...response.questions] : [...response.questions],
+                payload: [...response.questions],
               });
               centralDataDispatch({
                 type: 'SET_NEXT_TOKEN',
@@ -672,7 +671,7 @@ export default function useCentralDataManager({
             .then((response) => {
               centralDataDispatch({
                 type: 'SET_FAV_GAMES',
-                payload: isLoadMoreLibrary ? [...centralData.favGames, ...response.games] : [...response.games],
+                payload: [...response.games],
               });
               centralDataDispatch({
                 type: 'SET_NEXT_TOKEN',
@@ -706,7 +705,6 @@ export default function useCentralDataManager({
   const fetchElement = async (
     type: GameQuestionType,
     id: string,
-    tab?: LibraryTabEnum,
     isPrivateQuestion?: boolean,
   ) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
@@ -715,7 +713,7 @@ export default function useCentralDataManager({
           gameQuestionType: GameQuestionType.QUESTION,
           publicPrivateType: PublicPrivateType.PRIVATE,
         }
-      : getCallType({ ...callTypeMatches, libraryTab: tab, gameQuestion: type });
+      : getCallType({ ...callTypeMatches });
     switch (type) {
       case GameQuestionType.QUESTION: {
         const responseQuestion =
@@ -730,7 +728,6 @@ export default function useCentralDataManager({
           lastModified: new Date(),
           timesPlayed: 0,
         };
-        console.log(selectedQuestion);
         if (responseQuestion) {
           const userResponse = await apiClients?.user.getUser(
             responseQuestion.userId,
@@ -800,50 +797,11 @@ export default function useCentralDataManager({
     }
   };
 
-  const viewQuestion = async (
-    question: IQuestionTemplate,
-  ) => {
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    let selectedQuestion: ISelectedQuestion = {
-      question,
-      profilePic: '',
-      createdName: '',
-      lastModified: new Date(),
-      timesPlayed: 0,
-    };
-    if (question) {
-      const userResponse = await apiClients?.user.getUser(
-        question.userId,
-      );
-      if (userResponse) {
-        const title =
-          userResponse.title && userResponse.title !== 'Title...'
-            ? userResponse.title
-            : '';
-        const firstName = userResponse?.firstName?.split('')[0] ?? '';
-        selectedQuestion = {
-          question,
-          profilePic: userResponse.profilePicPath ?? '',
-          createdName: `${title} ${firstName.toUpperCase()}. ${userResponse.lastName}`,
-          lastModified: question.updatedAt ?? new Date(),
-          timesPlayed: question.timesPlayed ?? 0,
-        };
-      }
-    }
-    centralDataDispatch({
-      type: 'SET_SELECTED_QUESTION',
-      payload: selectedQuestion,
-    });
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-    return selectedQuestion;
-  }
-
   const fetchElements = async (
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibray?: boolean,
-    isLoadMoreLibrary?: boolean,
   ) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
       if (isEditGame) {
@@ -892,7 +850,6 @@ export default function useCentralDataManager({
       case FetchType.PUBLIC_QUESTIONS:
         getPublicPrivateElements(
           PublicPrivateType.PUBLIC,
-          isLoadMoreLibrary ?? false,
           searchTerms,
           nextToken,
           isFromLibray ?? false,
@@ -902,7 +859,6 @@ export default function useCentralDataManager({
       case FetchType.PRIVATE_GAMES:
         getPublicPrivateElements(
           PublicPrivateType.PRIVATE,
-          isLoadMoreLibrary ?? false,
           searchTerms,
           nextToken,
           isFromLibray ?? false,
@@ -910,13 +866,12 @@ export default function useCentralDataManager({
         break;
       case FetchType.DRAFT_QUESTIONS:
       case FetchType.DRAFT_GAMES:
-        getDrafts(isLoadMoreLibrary ?? false, libraryTab, searchTerms, nextToken, isFromLibray ?? false);
+        getDrafts(libraryTab, searchTerms, nextToken, isFromLibray ?? false);
         break;
       case FetchType.FAVORITE_QUESTIONS:
       case FetchType.FAVORITE_GAMES:
         getFav(
           centralData.userProfile,
-          isLoadMoreLibrary ?? false,
           searchTerms,
           nextToken,
           isFromLibray ?? false,
@@ -978,7 +933,7 @@ export default function useCentralDataManager({
         type: 'SET_IS_LOADING_INFINITE_SCROLL',
         payload: true,
       });
-      fetchElements(libraryTab, searchTerms, nextToken, true, true);
+      fetchElements(libraryTab, searchTerms, nextToken, true);
     }
   };
 
@@ -1137,7 +1092,6 @@ export default function useCentralDataManager({
     setIsTabsOpen,
     handleLibraryInit,
     fetchElement,
-    viewQuestion,
     fetchElements,
     isUserProfileComplete,
     handleChooseGrades,

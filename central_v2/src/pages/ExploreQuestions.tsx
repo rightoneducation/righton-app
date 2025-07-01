@@ -39,11 +39,12 @@ import ModalBackground from '../components/modal/ModalBackground';
 interface ExploreQuestionsProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  viewQuestion: (
-    question: IQuestionTemplate,
-  ) => Promise<ISelectedQuestion>;
-  fetchElements: () => void;
+  fetchElement: (
+    type: GameQuestionType,
+    id: string,
+  ) => Promise<ISelectedGame | ISelectedQuestion>;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
+  fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
     field: SortType;
@@ -65,7 +66,7 @@ interface ExploreQuestionsProps {
 export default function ExploreQuestions({
   screenSize,
   setIsTabsOpen,
-  viewQuestion,
+  fetchElement,
   fetchElements,
   handlePublicPrivateChange,
   handleChooseGrades,
@@ -113,7 +114,11 @@ export default function ExploreQuestions({
       setOriginalSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
-    const selectedQ = await viewQuestion(question);
+    
+    const selectedQ = await fetchElement(
+      GameQuestionType.QUESTION,
+      question.id,
+    );
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
       setSelectedQuestion(selectedQ.question);
       if (centralData.isTabsOpen === false)
@@ -252,7 +257,7 @@ export default function ExploreQuestions({
           questions={questionSet}
           setQuestionSet={setQuestionSet}
           setIsTabsOpen={setIsTabsOpen}
-          viewQuestion={viewQuestion}
+          fetchElement={fetchElement}
           fetchElements={fetchElements}
           setSelectedQuestion={setSelectedQuestion}
           handleCloseQuestionTabs={handleCloseQuestionTabs}
