@@ -1,11 +1,15 @@
 import React from 'react';
 import { Grid, Typography, Box, Divider, Button } from '@mui/material';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import AndreaRuby from '../../images/AndreaRuby.svg';
 import BenWoodford from '../../images/BenWoodfordPhd.svg';
 import AyNurNajm from '../../images/Ay-NurNajm.jpg.svg';
-import linkedInIcon from '../../images/LinkedIn.svg'
+import linkedInIcon from '../../images/LinkedIn.svg';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 interface IRightOnEducators {
     screenSize: ScreenSize;
@@ -60,8 +64,8 @@ cardShade: '#B22E5D'
 export default function RightOnEducators({ screenSize }: IRightOnEducators) {
 
     return(
-       <StyledFlexBox direction="row" align="center" justify="center" sx={{ position: 'relative' }} >
-        <Typography 
+       <StyledFlexBox width="100%" direction="row" align="center" justify="center" sx={{ position: 'relative' }} >
+       {screenSize === ScreenSize.LARGE && <Typography 
         component={Button}
         sx={{ 
             height: '110px', 
@@ -76,7 +80,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
             left: -50,
             top: 300
 
-            }} fontSize="24px">&lt;</Typography>
+            }} fontSize="24px">&lt;</Typography>}
         {educatorData.map(({ name, title, description, cardShade, img},i) => (
             <StyledFlexBox width="410px" key={name} sx={{ padding: '20px'}}>
 
@@ -102,7 +106,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
                 </StyledFlexBox>
             </StyledFlexBox>
         ))}
-         <Typography
+         {screenSize === ScreenSize.LARGE && <Typography
          component={Button} 
          sx={{ 
             height: '110px', 
@@ -116,7 +120,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
             position: 'absolute',
             right: -50,
             top: 300 
-            }} fontSize="24px">&gt;</Typography>
+            }} fontSize="24px">&gt;</Typography>}
        </StyledFlexBox>
     )
 }
