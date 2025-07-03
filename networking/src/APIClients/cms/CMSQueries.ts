@@ -5,4 +5,4 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
   author,
   affiliation,
   contact,
-  details`;
+  details}`;
