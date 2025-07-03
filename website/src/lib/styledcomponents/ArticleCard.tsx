@@ -15,15 +15,13 @@ type ArticleCardProps = {
   screenSize: ScreenSize;
 };
 
-const StyledCard = styled(Box)(({ theme }) => ({
+const StyledCard = styled(Box)<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
-  // border: '1px solid white',
   boxSizing: 'border-box',
   borderRadius: '8px',
   background: '#224996',
   width: '100%',
-  // minWidth: '287px',
 
 }));
 
@@ -41,7 +39,7 @@ function ArticleCard({
   const theme = useTheme();
 
   return (
-    <StyledCard>
+    <StyledCard screenSize={screenSize}>
       <img src={image} alt="Main" style={{ width: '100%', height: 'auto' }} />
       <Box sx={{ display: 'flex', flexDirection: 'column', 
         margin: screenSize === ScreenSize.LARGE? '24px': '12px', 

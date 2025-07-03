@@ -31,30 +31,15 @@ const MainContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   justifyContent: 'center',
   boxSizing: 'border-box',
-  position: 'relative',
-  overflow: 'hidden',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: `url(${MathSymbolBackground})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    zIndex: -2,
-  },
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(2, 33, 95, 0.9)',
-    zIndex: -1,
-  },
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  opacity: 1,
+  backgroundImage: `linear-gradient(rgba(2, 33, 95), rgba(2, 33, 95, 0.94)),
+  url(${MathSymbolBackground})
+  `,
+  background: 'cover',
   flexGrow: 1
 }));
 
@@ -62,7 +47,6 @@ const Uppercontainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   gap: '24px', 
-  // border: '1px solid red',
   boxSizing: 'border-box',
 }));
 
@@ -73,7 +57,6 @@ const ArticlesAndBorderContainer = styled(Box)(({ theme }) => ({
   gap: '48px',
   boxSizing: 'border-box',
   width: '100%',
-  // border: '1px solid brown',
 }));
 
 const ArticlesContainer = styled(Box)(({ theme }) => ({
@@ -82,9 +65,7 @@ const ArticlesContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 const SwiperContainer = styled(Box)(({ theme }) => ({
-  // border: '1px solid red',
   width: '100%',
-  // maxWidth: `${theme.breakpoints.values.md}px`,
   boxSizing: 'border-box',
 
 }));
@@ -107,15 +88,6 @@ const StyledButton = styled(Box, {
   cursor: 'pointer',
   transition: 'border 0.3s ease',
 }));
-
-const BottomCardContainer = styled(Box)(({ theme }) => ({
-  display: 'flex', 
-  gap: 'clamp(12px, 1.5vw, 16px)',
-  flexWrap: 'wrap',
-  boxSizing: 'border-box',
-  // border: '1px solid red',
-}));
-
 
 
 export function Library() { // eslint-disable-line

@@ -18,17 +18,12 @@ const CardContainer = styled(Box)(({ theme }) => ({
   gap: '12px',
   background: '#224996',
   boxSizing: 'border-box',
-//   border: '1px solid green',    
   borderRadius: '8px',
-//   maxWidth: '426.67px',
-
-//   width: '100%'
 }));
 
 const InfoWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-//   border: '1px solid #FFFFFF',
   gap: '12px',
   padding: '12px 0',
   boxSizing: 'border-box',
