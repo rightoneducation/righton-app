@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import RedAvatar from '../images/redimage.svg';
@@ -75,7 +75,13 @@ const ArticlesCard = styled(Box)(({ theme }) => ({
 }));
 
 
-export function Library() { // eslint-disable-line
+export function Library( // eslint-disable-line
+  {cmsClient} : any 
+) { 
+  useEffect(() => {
+    const fetch = cmsClient.fetchAllArticles();
+    console.log('Fetched articles:', fetch);
+  }, []); // eslint-disable-line
   return (
     <MainContainer>
       <Uppercontainer>
