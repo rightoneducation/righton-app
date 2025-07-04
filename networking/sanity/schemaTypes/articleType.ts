@@ -10,7 +10,16 @@ export const articleType = defineType({
       type: 'image',
     }),
     defineField({
+      name: 'tags',
+      type: 'array',
+      of: [{type: 'string'}]
+    }),
+    defineField({
       name: 'title',
+      type: 'string',
+    }),
+    defineField({
+      name: 'caption',
       type: 'string',
     }),
     defineField({
@@ -26,9 +35,13 @@ export const articleType = defineType({
       type: 'string',
     }),    
     defineField({
+      name: 'date',
+      type: 'string',
+    }),    
+    defineField({
       name: 'details',
       type: 'array',
       of: [{type: 'block'}],
     }),
   ],
-})
+});

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Typography, Grid, Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -90,10 +90,23 @@ const StyledButton = styled(Box, {
 }));
 
 
-export function Library() { // eslint-disable-line
-
+export function Library({cmsClient} : any ) { // eslint-disable-line
+ 
   const [selected, setSelected] = useState<'all' | 'research' | 'resources'>('all');
-
+  const [articles, setArticles] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchContent = async () => {
+      const content = await cmsClient.fetchAllArticles();
+      setArticles(content);
+    }
+    fetchContent().then(() => {
+      setIsLoading(false);
+    })
+  }, []); // eslint-disable-line
+  console.log(articles);
   const cards = [
     { id: '1', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
     { id: '2', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
@@ -234,7 +247,7 @@ export function Library() { // eslint-disable-line
             Explore our library of resources created by educators like you!
         </Typography>
       </Uppercontainer>
-      <ArticlesAndBorderContainer>
+      {/* <ArticlesAndBorderContainer>
         <Box sx={{ 
           justifySelf: 'start', 
           width: '100%',
@@ -245,7 +258,7 @@ export function Library() { // eslint-disable-line
           </Typography>
         </Box>
         {renderArticleContainerArray}
-      </ArticlesAndBorderContainer>
+      </ArticlesAndBorderContainer> */}
       <Box sx={{ border: '1px solid #FFFFFF', width: '100%'}} />
       <ButtonContainer>
         <StyledButton selected={selected === 'all'} onClick={() => setSelected('all')}>
@@ -259,15 +272,14 @@ export function Library() { // eslint-disable-line
         </StyledButton>
       </ButtonContainer>
       <Grid container   columnSpacing={2} rowSpacing={6}>
-        {cards.map((card) => (
-          <Grid  size={{xs:12, md:12, lg:4}}  key={card.id}>
+        {articles.map((article: any) => (
+          <Grid  size={{xs:12, md:12, lg:4}} key={article.id}>
             <BottomCard
-              image={card.image}
-              tag={card.tag}
-              date={card.date}
-              views={card.views}
-              title={card.title}
-              caption={card.caption}
+              image={article.image}
+              date={article.date}
+              tags={article.tags}
+              title={article.title}
+              caption={article.caption}
             />
           </Grid>
         ))}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
-import { CMS_HeroImage, CMS_TitleText, CMS_HeaderText, CMS_BodyText } from '@righton/networking';
+import { CMSHeroImage, CMSTitleText, CMSHeaderText, CMSBodyText } from '@righton/networking';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -46,10 +46,10 @@ export default function Article(
 ) { 
   return (
     <MainContainer>
-      <CMS_HeroImage src={selectedArticle.image.asset._ref} alt="Article Hero"/>
-      <CMS_TitleText>{selectedArticle.title}</CMS_TitleText>
-      <CMS_HeaderText>{selectedArticle.header}</CMS_HeaderText>
-      <CMS_BodyText>{selectedArticle.body}</CMS_BodyText>
+      <CMSHeroImage src={selectedArticle.image.asset._ref} alt="Article Hero"/>
+      <CMSTitleText>{selectedArticle.title}</CMSTitleText>
+      <CMSHeaderText>{selectedArticle.header}</CMSHeaderText>
+      <CMSBodyText>{selectedArticle.body}</CMSBodyText>
     </MainContainer>
   )
 }
