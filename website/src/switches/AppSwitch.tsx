@@ -45,7 +45,7 @@ export default function AppSwitch({
   return (
     <AppContainer>
       <Header/>
-        {pageComponent}
+      {pageComponent}
       <Footer/>
     </AppContainer>
   )
