@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import RedAvatar from '../images/redimage.svg';
@@ -78,27 +78,30 @@ const ArticlesCard = styled(Box)(({ theme }) => ({
 export function Library( // eslint-disable-line
   {cmsClient} : any 
 ) { 
+  const [articles, setArticles] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    const fetch = cmsClient.fetchAllArticles();
-    console.log('Fetched articles:', fetch);
+    setIsLoading(true);
+    const fetchContent = async () => {
+      const content = await cmsClient.fetchAllArticles();
+      setArticles(content);
+    }
+    fetchContent().then(() => {
+      setIsLoading(false);
+    })
   }, []); // eslint-disable-line
   return (
     <MainContainer>
       <Uppercontainer>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center'}}>
-          <Typography sx={{ fontSize: '16px', fontFamily: 'Poppins, sans-serif', fontWeight: 600,   color: '#FFFFFF'}}>
-            RESOURCES
-          </Typography>
           <Typography sx={{ fontSize: '40px', fontFamily: 'Poppins, sans-serif', fontWeight: 700,   color: '#FFFFFF'}}>
-            Educator Resource Library
+            CMS - Proof of Concept
           </Typography>
         </Box>
-        <Typography sx={{ fontSize: '24px', fontFamily: 'Poppins, sans-serif', fontWeight: 400,   color: '#FFFFFF'}}>
-            Explore our library of resources created by educators like you!
-        </Typography>
       </Uppercontainer>
       <Typography sx={{fontSize: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 700,   color: '#FFFFFF', border: '1px solid green'}}>
-        Suggested Articles: 
+        Articles:
       </Typography>
       <ArticlesAndBorderContainer>
         <ArticlesContainer>
