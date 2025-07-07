@@ -127,7 +127,9 @@ export default function DetailedGameCardBase({
               justifyContent: 'space-between',
             }}
           >
-            <Typography>{game?.description ?? ''}</Typography>
+            <Typography
+              sx={{whiteSpace: 'pre-line',}}
+            >{game?.description ?? ''}</Typography>
             <Box
               style={{
                 display: 'flex',

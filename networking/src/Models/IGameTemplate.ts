@@ -16,6 +16,7 @@ export interface IGameTemplate {
   grade?: string | null | undefined,
   standard?: string | null | undefined,
   ccss?: string | null | undefined,
+  ccssDescription?: string | null | undefined,
   phaseOneTime: number,
   phaseTwoTime: number,
   imageUrl?: string | null | undefined,

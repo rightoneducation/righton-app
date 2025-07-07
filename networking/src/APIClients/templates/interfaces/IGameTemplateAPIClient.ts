@@ -18,6 +18,9 @@ import {
   publicGameTemplatesByDate,
   publicGameTemplatesByGrade,
   publicGameTemplatesByPublicQuestionTemplatesCount,
+  publicGameTemplatesByUserDate,
+  publicGameTemplatesByUserGrade,
+  publicGameTemplatesByUserPublicQuestionTemplatesCount,
   listPrivateGameTemplates,
   privateGameTemplatesByDate,
   privateGameTemplatesByGrade,
@@ -167,7 +170,10 @@ export const gameTemplateRuntimeMap = {
         default: listPublicGameTemplates,
         byDate: publicGameTemplatesByDate,
         byGrade: publicGameTemplatesByGrade,
-        byQuestionTemplatesCount: publicGameTemplatesByPublicQuestionTemplatesCount
+        byQuestionTemplatesCount: publicGameTemplatesByPublicQuestionTemplatesCount,
+        libByUserDate: publicGameTemplatesByUserDate,
+        libByUserGrade: publicGameTemplatesByUserGrade,
+        libByUserQuestionTemplatesCount: publicGameTemplatesByUserPublicQuestionTemplatesCount
       },
     },
   },
@@ -299,5 +305,38 @@ export interface IGameTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     favIds: string[]
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
+
+  listGameTemplatesByUserDate(
+    type: PublicPrivateType,
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
+
+  listGameTemplatesByUserGrade(
+    type: PublicPrivateType,
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
+
+  listGameTemplatesByUserPublicQuestionTemplatesCount(
+    type: PublicPrivateType,
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 }

@@ -240,7 +240,11 @@ export default function DetailedQuestionCardBase({
               boxSizing: 'border-box',
             }}
           >
-            <Typography>{question.title}</Typography>
+            <Typography
+              sx={{whiteSpace: 'pre-line'}}
+            >
+              {question.title}
+            </Typography>
           </Box>
         </CreateQuestionContentRightContainerStyled>
         {screenSize === ScreenSize.SMALL && !isCreateGame && (

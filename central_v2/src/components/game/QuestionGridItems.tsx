@@ -122,7 +122,7 @@ export default function QuestionElements({
         }}
       >
         <Box
-          onClick={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)}
+          onClickCapture={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)}
           style={{ width: '100%' }}
         >
           <CreateQuestionCardBase
@@ -151,7 +151,7 @@ export default function QuestionElements({
         <Grid container spacing={`${theme.sizing.smPadding}px`}>
           <SubCardGridItem item sm={12} md={6}>
             <Box
-              onClick={() =>
+              onClickCapture={() =>
                 handleClick(CreateQuestionHighlightCard.CORRECTANSWER)
               }
               style={{ width: '100%' }}

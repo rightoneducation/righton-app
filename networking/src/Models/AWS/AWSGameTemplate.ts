@@ -14,6 +14,7 @@ export type AWSGameTemplate = {
     cluster?: string | null | undefined,
     grade?: string | null | undefined,
     ccss?: string | null | undefined,
+    ccssDescription?: string | null | undefined,
     standard?: string | null | undefined,
     phaseOneTime?: number | null | undefined,
     phaseTwoTime?: number | null | undefined,

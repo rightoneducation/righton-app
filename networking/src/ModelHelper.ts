@@ -1,9 +1,11 @@
+import { removeStopwords, eng } from 'stopword'
 import { isNullOrUndefined } from "./global"
 import { BackendAnswer, IHostTeamAnswersResponse } from "./Models"
 import { IGameSession, ITeam } from "./Models"
 import { IChoice, IQuestion } from './Models/IQuestion'
 import { ITeamMember } from './Models/ITeamMember'
 import { GameSessionState } from './AWSMobileApi'
+import CCSSDictionary from "./Models/CCSSDictionary"
 
 export abstract class ModelHelper {
     private static correctAnswerScore = 10
@@ -207,4 +209,29 @@ export abstract class ModelHelper {
      }
      return ret as ITeam[];
    };
+
+   static getCCSSDescription = (grade: string, domain: string, cluster: string, standard: string): string => {
+        let ccssText: string = '';
+        const gradeObj = CCSSDictionary.find(g => g.key === grade);
+        if (gradeObj) {
+            ccssText += ` ${gradeObj.desc}`;
+            const domainObj = gradeObj.domains.find(d => d.key === domain);
+            if (domainObj) {
+                ccssText += ` ${domainObj.desc}`;
+                const clusterObj = domainObj.clusters.find(c => c.key === cluster);
+                if (clusterObj) {
+                ccssText += ` ${clusterObj.desc}`;
+                const standardObj = clusterObj.standards.find(s => s.key === standard);
+                if (standardObj) {
+                    ccssText += ` ${standardObj.desc}`;
+                }
+                }
+            }
+        }
+        if (ccssText === '') {
+            return '';
+        }
+        const arrayCCSSText = ccssText.split(' ');
+        return removeStopwords(arrayCCSSText, eng).join(' ').toLowerCase().trim();
+    }
 }

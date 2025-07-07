@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Fade } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { ccssDictionary } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import LabelCircle from './LabelCircle';
 import {
@@ -15,7 +16,6 @@ import {
   CCSSPillContainer,
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
 import { CCSSType } from '../../lib/CCSSModels';
-import ccssDictionary from '../../lib/CCSSDictionary';
 import CCSSIndicatorPill from './CCSSIndicatorPill';
 
 interface TabContainerProps {
