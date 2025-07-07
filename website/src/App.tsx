@@ -32,6 +32,10 @@ function App() {
               path="/library"
               element={<Switch currentScreen={ScreenType.LIBRARY} cmsClient={cmsClient} />}
             />
+            <Route
+              path="/library/:contentId"
+              element={<Switch currentScreen={ScreenType.CONTENT} cmsClient={cmsClient} />}
+            />
           </>
         )
   );

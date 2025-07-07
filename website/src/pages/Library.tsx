@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useMatch } from 'react-router-dom';
 import { Typography, Grid, Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -95,10 +95,17 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const [selected, setSelected] = useState<'all' | 'research' | 'resources'>('all');
   const [articles, setArticles] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const isContentPage = useMatch('/library/:contentId');
+  const contentId = isContentPage ? isContentPage.params.contentId : null;
   
   useEffect(() => {
     setIsLoading(true);
     const fetchContent = async () => {
+      if (contentId) {
+        const content = await cmsClient.fetchContentById(contentId);
+        setArticles([content]); // Wrap in an array to match the expected type
+        return;
+      }
       const content = await cmsClient.fetchAllArticles();
       setArticles(content);
     }
@@ -247,7 +254,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
             Explore our library of resources created by educators like you!
         </Typography>
       </Uppercontainer>
-      {/* <ArticlesAndBorderContainer>
+      <ArticlesAndBorderContainer>
         <Box sx={{ 
           justifySelf: 'start', 
           width: '100%',
@@ -258,7 +265,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
           </Typography>
         </Box>
         {renderArticleContainerArray}
-      </ArticlesAndBorderContainer> */}
+      </ArticlesAndBorderContainer>
       <Box sx={{ border: '1px solid #FFFFFF', width: '100%'}} />
       <ButtonContainer>
         <StyledButton selected={selected === 'all'} onClick={() => setSelected('all')}>
