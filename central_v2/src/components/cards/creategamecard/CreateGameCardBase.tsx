@@ -258,7 +258,7 @@ export default function CreateGameCardBase({
         </Box>
 
         {screenSize !== ScreenSize.SMALL && (
-           (draftGame?.gameTemplate?.questionTemplates?.length !== 0 || !isEditDraft) ? (
+           (draftGame?.gameTemplate?.questionTemplates?.length !== 0) ? (
             <TooltipStyled
               placement="top"
               title="Cannot edit while adding questions"
