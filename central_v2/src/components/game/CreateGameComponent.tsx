@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IQuestionTemplate, PublicPrivateType } from '@righton/networking';
-import { Box, CircularProgress, Grid, useTheme } from '@mui/material';
+import { Box, CircularProgress, Grid, useTheme, Typography } from '@mui/material';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
   TitleText,
@@ -9,6 +9,7 @@ import {
   CreateGameSaveDiscardGridItem,
   CreateGameCardGridItem,
   GameCreateButtonStack,
+  CustomTooltip
 } from '../../lib/styledcomponents/CreateGameStyledComponent';
 import CentralButton from '../button/Button';
 import { ButtonType, buttonContentMap } from '../button/ButtonModels';
@@ -24,6 +25,7 @@ interface ICreateGameComponent {
   screenSize: ScreenSize;
   isClone: boolean;
   isEdit: boolean;
+  isEditDraft: boolean;
   isLoading: boolean;
   isCloneImageChanged: boolean;
   label: string;
@@ -69,6 +71,7 @@ export default function CreateGameComponent({
   draftQuestionsList,
   isClone,
   isEdit,
+  isEditDraft,
   isLoading,
   isCloneImageChanged,
   label,
@@ -134,14 +137,59 @@ export default function CreateGameComponent({
               buttonWidthOverride="105px"
               onClick={handleSaveGame}
             />
-            {!isEdit && (
-              <CentralButton
-                buttonType={ButtonType.SAVEDRAFT}
-                isEnabled
-                smallScreenOverride
-                onClick={handleSaveDraftGame}
-              />
-            )}
+            {(!isEdit || isEditDraft) && (
+              draftQuestionsList?.length && draftQuestionsList?.length > 0 
+              ? (
+                 <CustomTooltip
+                  title={
+                    <Box>
+                      <Typography
+                        sx={{ fontWeight: 'bold', color: '#FFFFFF' }}
+                      >
+                        Game must have no questions to save as draft.
+                      </Typography>
+                    </Box>
+                  }
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        bgcolor: `${theme.palette.primary.extraDarkBlue}`,
+                        color: '#FFFFFF !important', // Ensures text remains white
+                        fontSize: '14px',
+                        padding: '10px 15px',
+                        borderRadius: '8px',
+                        maxWidth: '250px',
+                        boxSizing: 'border-box',
+                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                        '& .MuiTooltip-arrow': {
+                          color: `${theme.palette.primary.extraDarkBlue}`,
+                        },
+                      },
+                    },
+                  }}
+                  arrow
+                  placement="top"
+                >
+                  <span>
+                    <CentralButton
+                      buttonType={ButtonType.SAVEDRAFT}
+                      isEnabled={false}
+                      smallScreenOverride
+                      onClick={handleSaveDraftGame}
+                    />
+                  </span>
+                </CustomTooltip>
+               
+              ) : ( 
+                <CentralButton
+                  buttonType={ButtonType.SAVEDRAFT}
+                  isEnabled
+                  smallScreenOverride
+                  onClick={handleSaveDraftGame}
+                />
+              )
+            )
+            }
             <CentralButton
               buttonType={ButtonType.DISCARDBLUE}
               isEnabled
@@ -172,14 +220,59 @@ export default function CreateGameComponent({
               buttonWidthOverride="275px"
               onClick={handleSaveGame}
             />
-            {!isEdit && (
-              <CentralButton
-                buttonType={ButtonType.SAVEDRAFT}
-                isEnabled
-                smallScreenOverride
-                buttonWidthOverride="275px"
-                onClick={handleSaveDraftGame}
-              />
+            {(!isEdit || isEditDraft) && (
+              draftQuestionsList?.length && draftQuestionsList?.length > 0 
+              ? (
+                 <CustomTooltip
+                  title={
+                    <Box>
+                      <Typography
+                        sx={{ fontWeight: 'bold', color: '#FFFFFF' }}
+                      >
+                        Game must have no questions to save as draft.
+                      </Typography>
+                    </Box>
+                  }
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        bgcolor: `${theme.palette.primary.extraDarkBlue}`,
+                        color: '#FFFFFF !important', // Ensures text remains white
+                        fontSize: '14px',
+                        padding: '10px 15px',
+                        borderRadius: '8px',
+                        maxWidth: '250px',
+                        boxSizing: 'border-box',
+                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                        '& .MuiTooltip-arrow': {
+                          color: `${theme.palette.primary.extraDarkBlue}`,
+                        },
+                      },
+                    },
+                  }}
+                  arrow
+                  placement="top"
+                >
+                  <span>
+                    <CentralButton
+                      buttonType={ButtonType.SAVEDRAFT}
+                      isEnabled={false}
+                      smallScreenOverride
+                      buttonWidthOverride="275px"
+                      onClick={handleSaveDraftGame}
+                    />
+                  </span>
+                </CustomTooltip>
+               
+              ) : ( 
+                <CentralButton
+                  buttonType={ButtonType.SAVEDRAFT}
+                  isEnabled
+                  smallScreenOverride
+                  buttonWidthOverride="275px"
+                  onClick={handleSaveDraftGame}
+                />
+              )
             )}
             <CentralButton
               buttonType={ButtonType.DISCARDBLUE}
@@ -203,14 +296,59 @@ export default function CreateGameComponent({
                     buttonWidthOverride="160px"
                     onClick={handleSaveGame}
                   />
-                  {!isEdit && (
-                    <CentralButton
-                      buttonType={ButtonType.SAVEDRAFT}
-                      isEnabled
-                      smallScreenOverride
-                      buttonWidthOverride="160px"
-                      onClick={handleSaveDraftGame}
-                    />
+                  {(!isEdit || isEditDraft) && (
+                    draftQuestionsList?.length && draftQuestionsList?.length > 0 
+                    ? (
+                      <CustomTooltip
+                        title={
+                          <Box>
+                            <Typography
+                              sx={{ fontWeight: 'bold', color: '#FFFFFF' }}
+                            >
+                              Game must have no questions to save as draft.
+                            </Typography>
+                          </Box>
+                        }
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              bgcolor: `${theme.palette.primary.extraDarkBlue}`,
+                              color: '#FFFFFF !important', // Ensures text remains white
+                              fontSize: '14px',
+                              padding: '10px 15px',
+                              borderRadius: '8px',
+                              maxWidth: '250px',
+                              boxSizing: 'border-box',
+                              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                              '& .MuiTooltip-arrow': {
+                                color: `${theme.palette.primary.extraDarkBlue}`,
+                              },
+                            },
+                          },
+                        }}
+                        arrow
+                        placement="top"
+                      >
+                        <span>
+                          <CentralButton
+                            buttonType={ButtonType.SAVEDRAFT}
+                            isEnabled={false}
+                            smallScreenOverride
+                            buttonWidthOverride="160px"
+                            onClick={handleSaveDraftGame}
+                          />
+                        </span>
+                      </CustomTooltip>
+                    
+                    ) : ( 
+                      <CentralButton
+                        buttonType={ButtonType.SAVEDRAFT}
+                        isEnabled
+                        smallScreenOverride
+                        buttonWidthOverride="160px"
+                        onClick={handleSaveDraftGame}
+                      />
+                    )
                   )}
                   <CentralButton
                     buttonType={ButtonType.DISCARDBLUE}
@@ -234,6 +372,7 @@ export default function CreateGameComponent({
               draftGame={draftGame}
               isClone={isClone}
               isEdit={isEdit}
+              isEditDraft={isEditDraft}
               isCloneImageChanged={isCloneImageChanged}
               label={label}
               screenSize={screenSize}
