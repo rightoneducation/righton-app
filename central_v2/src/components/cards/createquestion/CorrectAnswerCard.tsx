@@ -64,7 +64,7 @@ export default function DetailedQuestionSubCard({
   isAIError,
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
-
+  console.log(isCardErrored, 'isCardErrored');
   const addStep = () => {
     const newSteps = [...draftQuestion.correctCard.answerSteps, ''];
     handleCorrectAnswerStepsChange(newSteps, draftQuestion);
