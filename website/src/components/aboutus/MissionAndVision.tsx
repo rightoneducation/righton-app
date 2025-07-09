@@ -17,89 +17,102 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
           gap={48}
           height={ screenSize === ScreenSize.LARGE ? "341px": "100%"}
           // account for absolute position of image height.
-          sx={{ paddingBottom:screenSize === ScreenSize.LARGE ? 0 : '159px'  }}
+          sx={{ paddingBottom:screenSize === ScreenSize.LARGE ? 0 : '115px'  }}
         >
           <Box
-            sx={{
-              borderRadius: '24px',
-              background: 'rgb(128,13,21)',
-              width: screenSize === ScreenSize.SMALL ? '369px':'526px',
-              height:screenSize === ScreenSize.SMALL ?'229px' :'326px',
-              position: 'relative',
-            }}
-          >
-            <StyledFlexBox sx={{ padding: '32px 0px 12px 19px' }} gap={6}>
-              <Typography
-                fontSize="48px"
-                fontFamily="Roboto"
-                fontWeight={700}
-                lineHeight="44px"
-                sx={{ color: 'white' }}
-              >
-                Mission
-              </Typography>
-              <Divider
-                orientation="horizontal"
-                sx={{
-                  borderBottomWidth: '6px',
-                  borderColor: 'rgb(226, 155, 93)',
-                  width: '100%',
-                  maxWidth: '462px',
-                }}
-              />
-            </StyledFlexBox>
-            {/* Monster and content */}
-            <Box
-              sx={{
-                display: 'flex',
-                direction: 'row',
-                justifyContent: 'flex-end',
-                width: '100%',
-              }}
-            >
-              <StyledFlexBox
-                sx={{
-                  padding: '0px 32px 32px 32px',
-                  width:  screenSize === ScreenSize.SMALL ? '295px':'421px',
-                  height: screenSize === ScreenSize.SMALL ? '110px':'157px',
-                }}
-              >
-                <Typography
-                  textAlign="right"
-                  fontFamily="Roboto"
-                  fontSize={screenSize === ScreenSize.SMALL ? "16px":"24px"}
-                  fontWeight={200}
-                  lineHeight={screenSize === ScreenSize.SMALL ? "22px":"31px"}
-                  letterSpacing={screenSize === ScreenSize.SMALL ? 0.16:0.22}
-                  sx={{ color: '#fff' }}
-                >
-                  Transforming how students think and feel about math, helping
-                  them see mistakes as learning opportunities
-                </Typography>
-              </StyledFlexBox>
-            </Box>
-            {/* pink monster inside card */}
-            <Box
-              sx={{ position: 'absolute', bottom: 0, left: 0 }}
-              height={ screenSize === ScreenSize.SMALL ? "97px":"138px"} // 97px
-              width={screenSize === ScreenSize.SMALL ? "123px":"176px"} // 123px
-              component="img"
-              src={pinkOneEyedMonster}
-              alt="pink-monster"
-            />
-          </Box>
+  sx={{
+    borderRadius: '24px',
+    background: 'rgb(128,13,21)',
+    width: screenSize === ScreenSize.SMALL ? '100%' : '526px',
+    height: screenSize === ScreenSize.SMALL ? '229px' : '326px',
+    position: 'relative',
+  }}
+>
+  {/* Title and Divider */}
+  <StyledFlexBox
+    direction="column"
+    alignItems="flex-start"
+    gap={2}
+    sx={{
+      padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px' : '32px 0px 12px 19px',
+      maxWidth: '462px',
+      width: '100%',
+    }}
+  >
+    <Typography
+      fontSize="48px"
+      fontFamily="Roboto"
+      fontWeight={700}
+      lineHeight="44px"
+      sx={{ color: 'white' }}
+    >
+      Mission
+    </Typography>
+
+    <Divider
+      orientation="horizontal"
+      sx={{
+        borderBottomWidth: '6px',
+        borderColor: 'rgb(226, 155, 93)',
+        width: '100%',
+      }}
+    />
+  </StyledFlexBox>
+
+  {/* Text Block */}
+  <Box
+    sx={{
+      display: 'flex',
+      justifyContent: 'flex-end',
+      width: '100%',
+    }}
+  >
+    <StyledFlexBox
+      sx={{
+        padding: screenSize === ScreenSize.SMALL ? '0px 19px 32px 32px' : '0px 32px 32px 32px',
+        maxWidth: '462px',
+        width: '100%',
+      }}
+    >
+      <Typography
+        textAlign="right"
+        fontFamily="Roboto"
+        fontSize={screenSize === ScreenSize.SMALL ? '16px' : '24px'}
+        fontWeight={200}
+        lineHeight={screenSize === ScreenSize.SMALL ? '22px' : '31px'}
+        letterSpacing={screenSize === ScreenSize.SMALL ? 0.16 : 0.22}
+        sx={{ color: '#fff', ...(screenSize === ScreenSize.SMALL && { paddingLeft: '55px' }) }}
+      >
+        Transforming how students think and feel about math, helping
+        them see mistakes as learning opportunities
+      </Typography>
+    </StyledFlexBox>
+  </Box>
+
+  {/* Monster Image */}
+  <Box
+    sx={{ position: 'absolute', bottom: 0, left: 0 }}
+    height={screenSize === ScreenSize.SMALL ? '97px' : '138px'}
+    width={screenSize === ScreenSize.SMALL ? '123px' : '176px'}
+    component="img"
+    src={pinkOneEyedMonster}
+    alt="pink-monster"
+  />
+</Box>
 
           <Box
             sx={{
               borderRadius: '24px',
               background: 'rgb(57,74,153)',
-              width: screenSize === ScreenSize.SMALL ? '369px':'526px',
+              width: screenSize === ScreenSize.SMALL ? '100%':'526px',
               height: screenSize === ScreenSize.SMALL ? '127px':'182px',
               position: 'relative',
             }}
           >
             <Box sx={{ paddingBottom: '24px ' }}>
-              <StyledFlexBox sx={{ padding: '32px 0px 12px 19px' }} gap={6}>
+              <StyledFlexBox sx={{ 
+                padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px':  '32px 0px 12px 19px' 
+                }} gap={6}>
                 <Typography
                   fontSize={screenSize === ScreenSize.SMALL ? '30px':"48px"}
                   fontFamily="Roboto"
@@ -118,11 +131,8 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
                     maxWidth: '462px',
                   }}
                 />
-              </StyledFlexBox>
-
-              <StyledFlexBox>
                 <Typography
-                  textAlign="center"
+                  textAlign="left"
                   fontFamily="Roboto"
                   fontSize={screenSize === ScreenSize.SMALL ? '16px':"24px"}
                   fontWeight={200}
@@ -135,8 +145,8 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
               </StyledFlexBox>
               <StyledFlexBox align="center">
                 <Box
-                  sx={{  position: 'absolute', bottom: '-158px' }}
-                  width="360px"
+                  sx={{  position: 'absolute', bottom: screenSize === ScreenSize.SMALL? "-135px" : '-158px' }}
+                  width={screenSize === ScreenSize.SMALL ? "256px": "360px"}
                   height="159px"
                   component="img"
                   src={teamworkMonsters}

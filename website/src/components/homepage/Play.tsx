@@ -9,11 +9,11 @@ interface IPlayGames {
 }
 export default function PlayGames({ screenSize }: IPlayGames) {
     return (
-         <Grid spacing={6} container direction="row" alignItems="center">
+         <Grid spacing={6} container direction="row" alignItems="center" justifyContent={screenSize !== ScreenSize.LARGE ? "center": "normal"}>
        <Grid 
        order={screenSize !== ScreenSize.LARGE ? 2: 1} 
        size={{ md: 12, lg: 5 }} 
-       sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+       sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
 
       <StyledFlexBox align={screenSize !== ScreenSize.LARGE ? "center":"flex-end"} sx={{ width: '100%', }}>
            <Box width={screenSize === ScreenSize.SMALL ? "353px":"440px"} height={screenSize === ScreenSize.SMALL ?"337px":"420px"}>
@@ -32,16 +32,16 @@ export default function PlayGames({ screenSize }: IPlayGames) {
     <Grid 
     order={screenSize !== ScreenSize.LARGE ? 1 : 2} 
     size={{ md: 12, lg: 7 }} 
-    sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-      <StyledFlexBox gap={24} sx={{ }}>
+    sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+      <StyledFlexBox gap={24} sx={{ maxWidth: { md: '606px', sm: '600px', xs: '100%'} }}>
             <StyledFlexBox>
-              <StyledText fontWeight={700} fontSize="40px">Play</StyledText>
+              <StyledText fontWeight={700} fontSize={screenSize === ScreenSize.LARGE ? "24px":"40px"}>Play</StyledText>
             </StyledFlexBox>
              <StyledFlexBox>
-              <StyledText 
+              <StyledText
               fontSize={screenSize !== ScreenSize.LARGE ? "16px" : "20px"} 
               lineHeight={screenSize !== ScreenSize.LARGE ? "auto" : 1.2}>
-               Students go through <EmphasizeText sx={{color: '#fff', fontSize: screenSize !== ScreenSize.LARGE ? "16px" : "20px" }}>two phases</EmphasizeText>: first picking the correct answer, then choosing the trickiest incorrect answer.
+               Students play in <EmphasizeText sx={{color: '#fff', fontSize: screenSize !== ScreenSize.LARGE ? "16px" : "20px" }}>two phases</EmphasizeText>: first they pick the correct answer—then, they try to spot the trickiest wrong one.
               </StyledText>
              </StyledFlexBox>
 

@@ -110,7 +110,9 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
         <StyledFlexBox
           direction={screenSize === ScreenSize.LARGE ? 'row' : 'column'}
           align="center"
+          justify="center"
           gap={screenSize === ScreenSize.SMALL ? 24 : 48}
+          width="100%"
         >
           <GameCTAButtons screenSize={screenSize} />
         </StyledFlexBox>
@@ -205,14 +207,14 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
       </StyledFlexBox>
 
       {/* Youtube video */}
-      <StyledFlexBox
+      {/* <StyledFlexBox
         direction={screenSize !== ScreenSize.LARGE ? 'column-reverse' : 'row'}
         align="center"
         sx={{ padding: containerPadding }}
         gap={72}
       >
         <GameShowVideo screenSize={screenSize} />
-      </StyledFlexBox>
+      </StyledFlexBox> */}
     </HomePageContainer>
   );
 }

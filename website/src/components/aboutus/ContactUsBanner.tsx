@@ -16,8 +16,8 @@ export default function ContactUsBanner({screenSize}: IContactUsBanner) {
                 gap={10}
                 sx={{ backgroundColor: '#224996', padding: '24px' }}
               >
-                <StyledText fontSize="24px">Contact us:</StyledText>
-                <StyledText sx={{ fontSize: '24px ' }}>
+                <StyledText fontWeight={700} fontSize="24px">Contact us{screenSize === ScreenSize.SMALL ? "": ":"}</StyledText>
+                <StyledText lineHeight={1.3} sx={{ fontSize: '24px ' }}>
                   info@rightoneducation.com
                 </StyledText>
               </StyledFlexBox>

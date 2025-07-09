@@ -1,6 +1,6 @@
-import React from 'react';
-import { Box, Grid } from '@mui/material';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useRef } from 'react';
+import { Box, Grid, useTheme } from '@mui/material';
+import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import { ScreenSize } from '../../lib/WebsiteModels';
@@ -8,6 +8,7 @@ import SinclairImg from '../../images/sinclair.svg';
 import SinclairTitle from '../../images/SinclarTitle.svg';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled'
 
 
 interface IRightOnTeam {
@@ -66,6 +67,8 @@ const teamArr = [
 ];
 
 export default function RightonTeam({ screenSize }: IRightOnTeam) {
+    const theme = useTheme()
+  const swiperRef = useRef<SwiperRef>(null);
   const isLarge = screenSize === ScreenSize.LARGE;
 
   if (isLarge) {
@@ -113,24 +116,28 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
 
   // Swiper layout for medium and below
   return (
-    <Box width="100%">
+    <Box width="100%" 
+    sx={{
+    '& .swiper-pagination-bullet': {
+      width: '6px',
+      height: '6px',
+      backgroundColor: '#afafaf',
+    },
+    '& .swiper-pagination-bullet-active': {
+      backgroundColor: '#494949',
+    },
+
+    }}
+    >
       <Swiper
         modules={[Pagination]}
+         pagination={{ clickable: true }}
+        ref={swiperRef}
         spaceBetween={24}
-        slidesPerView="auto"
-        pagination={{
-          el: '.swiper-pagination-container',
-          clickable: true,
-          bulletClass: 'swiper-pagination-bullet',
-          bulletActiveClass: 'swiper-pagination-bullet-active',
-          renderBullet: (index: number, className: string) => {
-            return `<span class="${className}" style="width:6px; height:6px; border-radius:50%; background:#ccc;"></span>`;
-          },
-        }}
         loop
-        centeredSlides
         centeredSlidesBounds
         updateOnWindowResize
+        navigation
          breakpoints={{
     0: {
       slidesPerView: 1,
@@ -138,7 +145,6 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
     700: {
       slidesPerView: 2,
     },
-    
   }}
 
       >
@@ -169,7 +175,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
           </SwiperSlide>
         ))}
       </Swiper>
-      <Box className="swiper-pagination-container" display="flex" justifyContent="center" />
+     
     </Box>
   );
 }

@@ -19,7 +19,7 @@ export default function WaegenList({ screenSize }: IWaegenList) {
               <StyledText lineHeight={1.3} fontWeight={700} fontSize={ screenSize === ScreenSize.LARGE ? "24px": "40px"}>Wrong Answer Explanation Generator</StyledText>
               </Box>
               <StyledText
-              fontWeight={500}
+              // fontWeight={500}
               fontSize={screenSize !== ScreenSize.LARGE ? "16px":"20px"} 
               lineHeight={screenSize !== ScreenSize.LARGE ? "auto":1.2}>
                 Help students learn from mistakes — not just get the right answer. Our AI-powered Wrong Answer Explanation Generator creates tailored explanations for incorrect choices, giving teachers editable insights that turn common errors into powerful learning moments.
@@ -40,7 +40,7 @@ export default function WaegenList({ screenSize }: IWaegenList) {
                     <Typography 
                     fontFamily={screenSize === ScreenSize.LARGE ? "Poppins": "Roboto"} 
                     sx={{ color: 'white' }} 
-                    fontWeight={ screenSize === ScreenSize.LARGE ? 600: 400} 
+                    // fontWeight={ screenSize === ScreenSize.LARGE ? 500: 400} 
                     fontSize={screenSize === ScreenSize.SMALL ? "16px":"18px"} 
                     lineHeight={1.5} 
                     >{item}</Typography></Box>

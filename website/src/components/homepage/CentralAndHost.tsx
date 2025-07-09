@@ -18,22 +18,23 @@ export default function CentralAndHost({ screenSize }: ICentralAndHost) {
   alignItems="center" 
   spacing={6} 
   width="100%">
-    <Grid size={{md: 12, lg: 6}}> 
+    <Grid size={{md: 12, lg: 6}} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}> 
       <StyledFlexBox 
       gap={24}
-       sx={{ width: '100%' }}
+       sx={{ width: '100%', maxWidth: { md: '606px', sm: '600px', xs: '100%'}  }}
       >
             <StyledFlexBox>
-              <StyledText fontWeight={700} fontSize="40px">Central & Host</StyledText>
+              <StyledText fontWeight={700} fontSize={screenSize === ScreenSize.LARGE ? "24px":"40px"}>Central & Host</StyledText>
             </StyledFlexBox>
 
              <StyledFlexBox  sx={{ width: '100%'}}>
               <StyledText
               fontSize={screenSize !== ScreenSize.LARGE ? "16px" : "20px"} 
-              lineHeight={1.2}>
-                Teachers can choose from our 
+              lineHeight={1.2}
+              >
+                Teachers can use ready-made,
                 <EmphasizeText sx={{ color: '#fff',  fontSize: screenSize !== ScreenSize.LARGE ? "16px" : "20px" }}> standard-aligned games
-                  </EmphasizeText> or create and edit their own game questions—for in-class practice, test preparation, warm-up, or exit ticket.
+                  </EmphasizeText> or create their own—to fit any moment, from warm-ups to review.
               </StyledText>
               <br />
               <br />

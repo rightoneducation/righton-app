@@ -19,9 +19,16 @@ export default function GameShowVideo({ screenSize }: IGameShowVideo) {
     return (
         <>
     <Box>
-        <Box sx={{ ...videoDimensions }}>
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/_dNfmPa6CRo?si=HSKOwRl12TDC3w5M" title="YouTube video player" frameBorder={0} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
-        </Box>  
+        <Box component="iframe" sx={{ ...videoDimensions }}
+         width="100%" 
+            height="100%" 
+            src="https://www.youtube.com/embed/_dNfmPa6CRo?si=HSKOwRl12TDC3w5M" 
+            title="YouTube video player" 
+            frameBorder={0} 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerPolicy="strict-origin-when-cross-origin" 
+            allowFullScreen 
+        />
     </Box>
 
   <StyledFlexBox gap={48} sx={{ alignItems: { lg: 'flex-start', md: 'center'}}}>

@@ -30,7 +30,8 @@ youth in STEM. A former Fulbright
 Scholar, Andrea has an MS degree in
 Urban Education, with a focus in
 secondary mathematics.`,
-cardShade: '#BE3647'
+cardShade: '#BE3647',
+gradient: 'linear-gradient(to bottom, rgba(254,74,97,1),rgba(190,54,71,1))',
 },{ img: AyNurNajm,
     name: 'Ay-Nur Najm', 
     title: 'Math Instructional Coach', 
@@ -45,7 +46,8 @@ public and charter schools for a decade
 and is passionate about providing
 access to high quality instruction to all
 kids.`,
-cardShade: '#6393B8'
+cardShade: '#6393B8',
+gradient: 'linear-gradient(to bottom, rgba(149,208,254,1),rgba(99,147,185,1))',
 },{ img: BenWoodford,
     name: 'Ben Woodford, PhD', 
     title: 'Math Education Researcher', 
@@ -57,17 +59,18 @@ curricula and next-generation survey
 instruments, and is knowledgeable
 about best practices for learning both in
 and outside the classroom.`,
-cardShade: '#B22E5D'
+cardShade: '#B22E5D',
+gradient: 'linear-gradient(to bottom, rgba(226,97,143,1), rgba(178,46,93,1))'
 }
 ]
 
 export default function RightOnEducators({ screenSize }: IRightOnEducators) {
-
-    return(
-       <StyledFlexBox width="100%" direction="row" align="center" justify="center" sx={{ position: 'relative' }} >
-       {screenSize === ScreenSize.LARGE && <Typography 
-        component={Button}
-        sx={{ 
+  if (screenSize === ScreenSize.LARGE) {
+    return (
+      <StyledFlexBox width="100%" direction="row" align="center" justify="center" gap={40} sx={{ position: 'relative' }}>
+        <Typography 
+          component={Button}
+          sx={{ 
             height: '110px', 
             width: '110px', 
             display: 'flex', 
@@ -79,36 +82,34 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
             position: 'absolute',
             left: -50,
             top: 300
+          }} 
+          fontSize="24px"
+        >
+          &lt;
+        </Typography>
 
-            }} fontSize="24px">&lt;</Typography>}
-        {educatorData.map(({ name, title, description, cardShade, img},i) => (
-            <StyledFlexBox width="410px" key={name} sx={{ padding: '20px'}}>
-
-                <StyledFlexBox width="370px" height="690px" sx={{ background: cardShade,  borderRadius: '24px' }}>
-
-                {/* image */}
-                <StyledFlexBox align="center" sx={{ paddingTop: '30px', background: cardShade, borderRadius: '24px' }}>
-                    <Box component="img" src={img} width="240px" height="240px" sx={{ borderRadius: '50%' }} />
+        {educatorData.map(({ name, title, description, cardShade, gradient, img }, i) => (
+            <StyledFlexBox key={name} width="370px" height="690px" sx={{ background: cardShade, borderRadius: '24px' }}>
+              <StyledFlexBox align="center" sx={{ paddingTop: '30px', background: gradient, borderRadius: '24px' }}>
+                <Box component="img" src={img} width="240px" height="240px" sx={{ borderRadius: '50%' }} />
+              </StyledFlexBox>
+              <StyledFlexBox sx={{ padding: '18px 22px 24px 26px', background: cardShade, width: '100%', borderRadius: '24px' }}>
+                <StyledFlexBox direction="row" justify="space-between" align="center" sx={{ width: '100%' }}>
+                  <StyledFlexBox direction="column" sx={{ width: '100%' }}>
+                    <Typography color="#fff" fontFamily="Roboto" fontSize="24px" lineHeight={1.3} fontWeight={600}>{name}</Typography>
+                    <Typography color="#fff" fontFamily="Roboto" fontSize="20px" lineHeight={1.3} fontWeight={400}>{title}</Typography>
+                  </StyledFlexBox>
+                  <Box component="img" src={linkedInIcon} alt="linkedIn" />
                 </StyledFlexBox>
-
-                {/* name, title & description */}
-                <StyledFlexBox sx={{ padding: '18px 22px 24px 26px', background: cardShade, width: '100%', borderRadius: '24px' }}>
-                    <StyledFlexBox direction="row" justify="space-between" align="center" sx={{ width: '100%'}}>
-                        <StyledFlexBox  direction="column" sx={{ width: '100%'}}>
-                        <Typography color="#fff" fontFamily="Roboto" fontSize="24px" lineHeight={1.3} fontWeight={600}>{name}</Typography>
-                        <Typography color="#fff" fontFamily="Roboto" fontSize="20px" lineHeight={1.3} fontWeight={400}>{title}</Typography>
-                        </StyledFlexBox>
-                        <Box component="img" src={linkedInIcon} alt="linkedIn" />
-                    </StyledFlexBox>
-                        <Divider flexItem sx={{ width: '100%', background: '#fff', marginBottom: '6px' }}/>
-                        <Typography color="#fff" fontFamily="Roboto" fontSize="18px" lineHeight={1.3} fontWeight={400}>{description}</Typography>
-                </StyledFlexBox>
-                </StyledFlexBox>
+                <Divider flexItem sx={{ width: '100%', background: '#fff', marginBottom: '6px' }} />
+                <Typography color="#fff" fontFamily="Roboto" fontSize="18px" lineHeight={1.3} fontWeight={400}>{description}</Typography>
+              </StyledFlexBox>
             </StyledFlexBox>
         ))}
-         {screenSize === ScreenSize.LARGE && <Typography
-         component={Button} 
-         sx={{ 
+
+        <Typography
+          component={Button} 
+          sx={{ 
             height: '110px', 
             width: '110px', 
             display: 'flex', 
@@ -116,11 +117,89 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
             justifyContent: 'center',
             background: "#494949",
             color: '#fff',
-             borderRadius: '50%',
+            borderRadius: '50%',
             position: 'absolute',
             right: -50,
             top: 300 
-            }} fontSize="24px">&gt;</Typography>}
-       </StyledFlexBox>
-    )
+          }} 
+          fontSize="24px"
+        >
+          &gt;
+        </Typography>
+      </StyledFlexBox>
+    );
+  }
+
+  return (
+    <Box width="100%"
+    sx={{
+    '& .swiper-pagination-bullet': {
+      width: '6px',
+      height: '6px',
+      backgroundColor: '#afafaf',
+    },
+    '& .swiper-pagination-bullet-active': {
+      backgroundColor: '#494949',
+    },
+    display: 'flex',
+    alignItems: 'center'
+    }}
+    >
+      <Swiper
+      style={{ paddingBottom: '48px'}}
+        modules={[Pagination]}
+        pagination={{ clickable: true }}
+        centeredSlides
+        centeredSlidesBounds
+        loop={false}
+        spaceBetween={24}
+        initialSlide={Math.floor(educatorData.length / 2)}
+        breakpoints={{
+          0: {
+            slidesPerView: 1,
+          },
+          700: {
+            slidesPerView: 1.9,
+          },
+        }}
+      >
+        {educatorData.map(({ name, title, description, cardShade, gradient, img }, i) => (
+          <SwiperSlide
+            key={name}
+            style={{
+              maxWidth: '410px',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+                
+                {/* card base */}
+              <StyledFlexBox width="100%" height="690px" sx={{ background: cardShade, borderRadius: '24px' }}>
+
+                {/* Teacher image  */}
+                <StyledFlexBox align="center" sx={{ paddingTop: '30px', background: gradient, borderRadius: '24px' }}>
+                  <Box component="img" src={img} width="240px" height="240px" sx={{ borderRadius: '50%' }} />
+                </StyledFlexBox>
+
+                {/* name, professional title & linkedin */}
+                <StyledFlexBox sx={{ padding: '18px 22px 24px 26px', background: cardShade, width: '100%', borderRadius: '24px' }}>
+                  <StyledFlexBox direction="row" justify="space-between" align="center" sx={{ width: '100%' }}>
+                    <StyledFlexBox direction="column" sx={{ width: '100%' }}>
+                      <Typography color="#fff" fontFamily="Roboto" fontSize="24px" lineHeight={1.3} fontWeight={600}>{name}</Typography>
+                      <Typography color="#fff" fontFamily="Roboto" fontSize="20px" lineHeight={1.3} fontWeight={400}>{title}</Typography>
+                    </StyledFlexBox>
+                    <Box component="img" src={linkedInIcon} alt="linkedIn" />
+                  </StyledFlexBox>
+
+                  {/* Educator description */}
+                  <Divider flexItem sx={{ width: '100%', background: '#fff', marginBottom: '6px' }} />
+                  <Typography color="#fff" fontFamily="Roboto" fontSize="18px" lineHeight={1.3} fontWeight={400}>{description}</Typography>
+                </StyledFlexBox>
+              </StyledFlexBox>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <Box className="swiper-pagination-container" display="flex" justifyContent="center" mt={2} />
+    </Box>
+  );
 }
