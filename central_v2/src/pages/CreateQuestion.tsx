@@ -215,6 +215,7 @@ export default function CreateQuestion({
     });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
+  const [isCorrectCardErrored, setIsCorrectCardErrored] = useState<boolean>(false);
   const [isDraftCardErrored, setIsDraftCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
 
@@ -340,8 +341,11 @@ export default function CreateQuestion({
     );
     setDraftQuestion(newDraftQuestion);
     handleDebouncedQuestionChange(newDraftQuestion);
-    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    if (newDraftQuestion.correctCard.isCardComplete){
+      setIsCorrectCardErrored(false);
+      if (isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    } 
   };
 
   const handleCorrectAnswerStepsChange = (
@@ -355,8 +359,11 @@ export default function CreateQuestion({
     );
     setDraftQuestion(newDraftQuestion);
     handleDebouncedQuestionChange(newDraftQuestion);
-    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    if (newDraftQuestion.correctCard.isCardComplete){
+      setIsCorrectCardErrored(false);
+      if (isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    } 
   };
 
   const handleAnswerSettingsChange = (
@@ -372,8 +379,11 @@ export default function CreateQuestion({
     );
     window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
     setDraftQuestion(newDraftQuestion);
-    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    if (newDraftQuestion.correctCard.isCardComplete) {
+      setIsCorrectCardErrored(false);
+      if (isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    }
   };
   
   // incorrect answer card functions
@@ -597,6 +607,9 @@ export default function CreateQuestion({
         }
       } else {
         setIsCardErrored(true);
+        if (!draftQuestion.correctCard.isCardComplete) {
+          setIsCorrectCardErrored(true);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -663,6 +676,9 @@ export default function CreateQuestion({
         }
       } else {
         setIsCardErrored(true);
+        if (!draftQuestion.correctCard.isCardComplete) {
+          setIsCorrectCardErrored(true);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -740,6 +756,9 @@ export default function CreateQuestion({
         }
       } else {
         setIsCardErrored(true);
+        if (!draftQuestion.correctCard.isCardComplete) {
+          setIsCorrectCardErrored(true);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -1146,7 +1165,7 @@ export default function CreateQuestion({
                         }
                         handleAnswerSettingsChange={handleAnswerSettingsChange}
                         isCardSubmitted={isCardSubmitted}
-                        isCardErrored={isCardErrored}
+                        isCardErrored={isCorrectCardErrored}
                         isAIError={isAIError}
                       />
                     </Box>
