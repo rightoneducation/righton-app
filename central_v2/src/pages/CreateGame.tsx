@@ -135,6 +135,7 @@ export default function CreateGame({
     editRoute?.params.gameId.length > 0;
   const isEditDraft = 
     editRoute?.params.type === 'Draft';
+  const [isUpdatingTemplate, setIsUpdatingTemplate] = useState<boolean>(false);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -279,8 +280,8 @@ export default function CreateGame({
       setDraftGame((prev) => ({
         ...prev,
         isGameCardSubmitted: true,
-        isCreatingTemplate: true,
       }));
+      setIsUpdatingTemplate(true);
       const dqValid = checkDQsAreValid(draftQuestionsList);
       if (gameFormIsValid && dqValid) {
         // check if game img has been changed
@@ -396,6 +397,7 @@ export default function CreateGame({
               draftGame.gameTemplate.publicPrivateType,
               updatedGame,
             );
+            setIsUpdatingTemplate(false);
         } catch (err) {
           console.log(err);
         }
@@ -690,6 +692,7 @@ export default function CreateGame({
 
   const handleUpdateDraftGame = async () => {
      try {
+      setIsUpdatingTemplate(true);
       if (!draftGame.gameTemplate.title) {
         setDraftGame((prev) => ({
           ...prev,
@@ -737,6 +740,7 @@ export default function CreateGame({
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
+      setIsUpdatingTemplate(false);
       navigate('/');
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
@@ -852,6 +856,7 @@ export default function CreateGame({
 
   const handleCloseQuestionModal = () => {
     setIsDiscardModalOpen(false);
+    setIsUpdatingTemplate(false);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
@@ -1110,7 +1115,7 @@ export default function CreateGame({
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
-        isModalOpen={openModal || isDiscardModalOpen}
+        isModalOpen={openModal || isDiscardModalOpen || draftGame.isCreatingTemplate || isUpdatingTemplate}
         handleCloseModal={handleCloseQuestionModal}
       />
       <DiscardModal
@@ -1119,7 +1124,8 @@ export default function CreateGame({
         handleDiscardClick={handleDiscardClick}
       />
       <CreatingTemplateModal
-        isModalOpen={draftGame.isCreatingTemplate}
+        isModalOpen={draftGame.isCreatingTemplate || isUpdatingTemplate}
+        isUpdatingTemplate={isUpdatingTemplate}
         templateType={TemplateType.GAME}
       />
 
