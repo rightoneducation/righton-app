@@ -144,9 +144,9 @@ export default function CreateGameComponent({
                   title={
                     <Box>
                       <Typography
-                        sx={{ fontWeight: 'bold', color: '#FFFFFF' }}
+                        sx={{ fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}
                       >
-                        Game must have no questions to save as draft.
+                        Remove all questions to save as draft
                       </Typography>
                     </Box>
                   }
@@ -227,9 +227,9 @@ export default function CreateGameComponent({
                   title={
                     <Box>
                       <Typography
-                        sx={{ fontWeight: 'bold', color: '#FFFFFF' }}
+                        sx={{ fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}
                       >
-                        Game must have no questions to save as draft.
+                        Remove all questions to save as draft
                       </Typography>
                     </Box>
                   }
@@ -303,9 +303,9 @@ export default function CreateGameComponent({
                         title={
                           <Box>
                             <Typography
-                              sx={{ fontWeight: 'bold', color: '#FFFFFF' }}
+                              sx={{ fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}
                             >
-                              Game must have no questions to save as draft.
+                              Remove all questions to save as draft
                             </Typography>
                           </Box>
                         }
