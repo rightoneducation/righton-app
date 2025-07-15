@@ -21,11 +21,13 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
         >
           <Box
   sx={{
+    padding: screenSize === ScreenSize.SMALL ? '22px':'32px',
     borderRadius: '24px',
     background: 'rgb(128,13,21)',
-    width: screenSize === ScreenSize.SMALL ? '100%' : '526px',
+   // width: screenSize === ScreenSize.SMALL ? '100%' : '526px',
     height: screenSize === ScreenSize.SMALL ? '229px' : '326px',
     position: 'relative',
+    boxSizing: 'border-box'
   }}
 >
   {/* Title and Divider */}
@@ -34,7 +36,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
     alignItems="flex-start"
     gap={2}
     sx={{
-      padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px' : '32px 0px 12px 19px',
+     // padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px' : '32px 0px 12px 19px',
       maxWidth: '462px',
       width: '100%',
     }}
@@ -57,8 +59,6 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
         width: '100%',
       }}
     />
-  </StyledFlexBox>
-
   {/* Text Block */}
   <Box
     sx={{
@@ -69,7 +69,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
   >
     <StyledFlexBox
       sx={{
-        padding: screenSize === ScreenSize.SMALL ? '0px 19px 32px 32px' : '0px 32px 32px 32px',
+        // padding: screenSize === ScreenSize.SMALL ? '0px 19px 32px 32px' : '0px 32px 32px 32px',
         maxWidth: '462px',
         width: '100%',
       }}
@@ -88,6 +88,8 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
       </Typography>
     </StyledFlexBox>
   </Box>
+  </StyledFlexBox>
+
 
   {/* Monster Image */}
   <Box

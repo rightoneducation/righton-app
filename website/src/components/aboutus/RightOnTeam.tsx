@@ -8,8 +8,8 @@ import SinclairImg from '../../images/sinclair.svg';
 import SinclairTitle from '../../images/SinclarTitle.svg';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled'
-
+import FlipCard from './FlipCard';
+import favoriteMistakeImg from '../../images/favoriteMistake.png'
 
 interface IRightOnTeam {
   screenSize: ScreenSize;
@@ -94,6 +94,9 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
             height="372px"
             sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
+            <FlipCard 
+            front={
+            <>
             <Box
               width="252px"
               height="302px"
@@ -107,6 +110,27 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
               component="img"
               src={SinclairTitle}
               alt={`${name}-title`}
+            />
+            </>
+            }
+            back={
+              <>
+            <Box
+              width="252px"
+              height="302px"
+              component="img"
+              src={favoriteMistakeImg}
+              alt={`${name}-${i}`}
+            />
+            <Box
+              width="252px"
+              height="70px"
+              component="img"
+              src={SinclairTitle}
+              alt={`${name}-title`}
+            />
+            </>
+            }
             />
           </Grid>
         ))}
@@ -158,6 +182,9 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
               alignItems: 'center',
             }}
           >
+             <FlipCard 
+            front={
+            <>
             <Box
               width="252px"
               height="302px"
@@ -171,6 +198,27 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
               component="img"
               src={SinclairTitle}
               alt={`${name}-title`}
+            />
+            </>
+            }
+            back={
+              <>
+            <Box
+              width="252px"
+              height="302px"
+              component="img"
+              src={favoriteMistakeImg}
+              alt={`${name}-${i}`}
+            />
+            <Box
+              width="252px"
+              height="70px"
+              component="img"
+              src={SinclairTitle}
+              alt={`${name}-title`}
+            />
+            </>
+            }
             />
           </SwiperSlide>
         ))}

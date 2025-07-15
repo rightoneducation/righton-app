@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Box } from '@mui/material';
 import { StyledFlexBox, StyledText, EmphasizeText } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
-import gameViewMobileImg from '../../images/gameViewMobile.svg'
+import gameViewMobileImg from '../../images/mobilePlayImage.svg'
 import { ScreenSize } from '../../lib/WebsiteModels';
 
 interface IPlayGames {
@@ -15,8 +15,11 @@ export default function PlayGames({ screenSize }: IPlayGames) {
        size={{ md: 12, lg: 5 }} 
        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
 
-      <StyledFlexBox align={screenSize !== ScreenSize.LARGE ? "center":"flex-end"} sx={{ width: '100%', }}>
-           <Box width={screenSize === ScreenSize.SMALL ? "353px":"440px"} height={screenSize === ScreenSize.SMALL ?"337px":"420px"}>
+      <StyledFlexBox 
+      align={screenSize !== ScreenSize.LARGE ? "center":"flex-end"} 
+      sx={{ width: '100%', }}>
+           <Box 
+          >
             <Box 
             width="100%"
             component="img" 
@@ -32,7 +35,7 @@ export default function PlayGames({ screenSize }: IPlayGames) {
     <Grid 
     order={screenSize !== ScreenSize.LARGE ? 1 : 2} 
     size={{ md: 12, lg: 7 }} 
-    sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+    sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: screenSize === ScreenSize.LARGE ? 'flex-start' : 'center'}}>
       <StyledFlexBox gap={24} sx={{ maxWidth: { md: '606px', sm: '600px', xs: '100%'} }}>
             <StyledFlexBox>
               <StyledText fontWeight={700} fontSize={screenSize === ScreenSize.LARGE ? "24px":"40px"}>Play</StyledText>
