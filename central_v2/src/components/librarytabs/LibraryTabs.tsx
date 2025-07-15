@@ -41,6 +41,8 @@ import LibraryTabsContent from './LibraryTabsContent';
 interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
+  openTab: LibraryTabEnum;
+  setOpenTab: (tab: LibraryTabEnum) => void;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
@@ -70,6 +72,8 @@ interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
 export default function LibraryTabs({
   gameQuestion,
   screenSize,
+  openTab,
+  setOpenTab,
   setIsTabsOpen,
   handlePublicPrivateChange,
   handleChooseGrades,
@@ -107,10 +111,6 @@ export default function LibraryTabs({
     [LibraryTabEnum.DRAFTS]: tabDraftsIcon,
     [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
   };
-
-  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
-    LibraryTabEnum.PUBLIC,
-  );
 
   if (centralData.isLibraryInit) {
     centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
