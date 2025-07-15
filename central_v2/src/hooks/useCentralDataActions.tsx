@@ -938,6 +938,10 @@ export default function useCentralDataManager({
             payload: response.questions,
           });
           centralDataDispatch({
+            type: 'SET_PUBLIC_QUESTIONS',
+            payload: response.questions,
+          });
+          centralDataDispatch({
             type: 'SET_NEXT_TOKEN',
             payload: response.nextToken,
           });
@@ -957,6 +961,10 @@ export default function useCentralDataManager({
           });
           centralDataDispatch({
             type: 'SET_MOST_POPULAR_GAMES',
+            payload: response.games,
+          });
+          centralDataDispatch({
+            type: 'SET_PUBLIC_GAMES',
             payload: response.games,
           });
           centralDataDispatch({

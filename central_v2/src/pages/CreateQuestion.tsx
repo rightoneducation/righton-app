@@ -69,7 +69,7 @@ import {
   handleIncorrectCardClick,
 } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
-import { useCentralDataState } from '../hooks/context/useCentralDataContext';
+import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
 
@@ -111,6 +111,7 @@ export default function CreateQuestion({
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const route = useMatch('/clone/question/:type/:questionId');
   const editRoute = useMatch('/edit/question/:type/:questionId');
   const isClone =
@@ -603,6 +604,7 @@ export default function CreateQuestion({
           }
           setIsUpdatingTemplate(false);
           fetchElements();
+          centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
           navigate('/questions');
         }
       } else {
