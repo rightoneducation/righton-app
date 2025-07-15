@@ -88,6 +88,9 @@ export default function MyLibrary({
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
+    LibraryTabEnum.PUBLIC,
+  );
   const [openQuestionTab, setOpenQuestionTab] = React.useState<LibraryTabEnum>(
     LibraryTabEnum.PUBLIC,
   );
@@ -192,6 +195,7 @@ export default function MyLibrary({
           type: 'SET_SEARCH_TERMS',
           payload: '',
         });
+        fetchElements(openTab, '', null, true);
         navigate('/library');
       }
     } catch (error) {
@@ -281,6 +285,8 @@ export default function MyLibrary({
         <LibraryTabsContainer
           gameQuestion={gameQuestion}
           screenSize={screenSize}
+          openTab={openTab}
+          setOpenTab={setOpenTab}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}

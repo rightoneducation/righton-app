@@ -405,6 +405,7 @@ export default function CreateGame({
           isGameCardSubmitted: false,
         }));
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+        fetchElements();
         navigate('/');
       } else {
         setDraftGame((prev) => ({
@@ -554,6 +555,7 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
+        fetchElements();
         navigate('/');
       } else {
         setDraftGame((prev) => ({
@@ -723,6 +725,7 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
+        fetchElements();
         navigate('/');
       } else {
         setDraftGame((prev) => ({
@@ -848,6 +851,7 @@ export default function CreateGame({
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
+      fetchElements();
       navigate('/');
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
@@ -905,6 +909,7 @@ export default function CreateGame({
         isGameCardSubmitted: false,
       }));
       setIsUpdatingTemplate(false);
+      fetchElements();
       navigate('/');
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
@@ -1101,7 +1106,7 @@ export default function CreateGame({
 
       // Reset data and re-direct user
       setDraftQuestionsList([]);
-
+      fetchElements();
       navigate('/');
     } catch (err) {
       console.error('Error during save process:', err);
