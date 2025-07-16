@@ -258,7 +258,7 @@ export default function CreateGameCardBase({
         </Box>
 
         {screenSize !== ScreenSize.SMALL && (
-           (draftGame?.gameTemplate?.questionTemplates?.length !== 0) ? (
+           (draftGame?.gameTemplate?.questionTemplates?.length && draftGame?.gameTemplate?.questionTemplates?.length < 1) ? (
             <TooltipStyled
               placement="top"
               title="Cannot edit while adding questions"
@@ -414,7 +414,7 @@ export default function CreateGameCardBase({
           {screenSize === ScreenSize.SMALL && (
             <>
               {(isCardErrored || draftGame.isDraftGameErrored) && <CreateGameErrorBox screenSize={screenSize} />}
-              {(draftGame?.gameTemplate?.questionTemplates?.length !== 0 || !isEditDraft) ? (
+              {((draftGame?.gameTemplate?.questionTemplates?.length && draftGame?.gameTemplate?.questionTemplates?.length < 1) || !isEditDraft) ? (
                 <TooltipStyled
                   placement="top"
                   title="Cannot edit while adding questions"

@@ -244,12 +244,13 @@ export default function useCentralDataManager({
         searchGameQuestion: GameQuestionType,
         libraryTab: LibraryTabEnum,
         userProfile: IUserProfile,
+        callTypeMatchesDebounced: any,
       ) => {
         centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: search });
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
         const callType = getCallType({
-          ...callTypeMatches,
+          ...callTypeMatchesDebounced,
           libraryTab,
           gameQuestion: searchGameQuestion,
         });
@@ -320,6 +321,7 @@ export default function useCentralDataManager({
       gameQuestion,
       centralData.openTab,
       centralData.userProfile,
+      callTypeMatches,
     );
   };
 
