@@ -245,6 +245,7 @@ export default function useCentralDataManager({
         libraryTab: LibraryTabEnum,
         userProfile: IUserProfile,
         callTypeMatchesDebounced: any,
+        isLibraryDebounced: boolean,
       ) => {
         centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: search });
@@ -270,8 +271,8 @@ export default function useCentralDataManager({
                 sortType,
                 gradeTargets,
                 null,
-                (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC) ?? false,
-                (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC) ? userProfile.dynamoId : undefined,
+                (isLibraryDebounced && callType.publicPrivateType === PublicPrivateType.PUBLIC) ?? false,
+                (isLibraryDebounced && callType.publicPrivateType === PublicPrivateType.PUBLIC) ? userProfile.dynamoId : undefined,
               )
               .then((response) => {
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -294,8 +295,8 @@ export default function useCentralDataManager({
                 sortType,
                 gradeTargets,
                 null,
-                (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
-                (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? userProfile.dynamoId : undefined,
+                (isLibraryDebounced && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
+                (isLibraryDebounced && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? userProfile.dynamoId : undefined,
               )
               .then((response) => {
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -322,6 +323,7 @@ export default function useCentralDataManager({
       centralData.openTab,
       centralData.userProfile,
       callTypeMatches,
+      isLibrary
     );
   };
 
@@ -732,7 +734,6 @@ export default function useCentralDataManager({
           lastModified: new Date(),
           timesPlayed: 0,
         };
-        console.log(selectedQuestion);
         if (responseQuestion) {
           const userResponse = await apiClients?.user.getUser(
             responseQuestion.userId,
