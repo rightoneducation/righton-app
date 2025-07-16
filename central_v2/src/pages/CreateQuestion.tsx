@@ -34,6 +34,7 @@ import {
   StorageKey,
   TemplateType,
   GameQuestionType,
+  LibraryTabEnum,
 } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
@@ -99,7 +100,12 @@ const SubCardGridItem = styled(Grid)(({ theme }) => ({
 interface CreateQuestionProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
-  fetchElements: () => void;
+  fetchElements: (
+    libraryTab?: LibraryTabEnum,
+    searchTerms?: string,
+    nextToken?: string | null,
+    isFromLibrary?: boolean,
+  ) => void;
 }
 
 export default function CreateQuestion({
@@ -127,6 +133,11 @@ export default function CreateQuestion({
     editRoute?.params.type === 'Draft' ||
     (isClone && route?.params.type === 'Draft') ||
     (isEdit && editRoute?.params.type === 'Draft');
+  const isPublic = 
+    route?.params.type === 'Public' ||
+    editRoute?.params.type === 'Public' ||
+    (isClone && route?.params.type === 'Public') ||
+    (isEdit && editRoute?.params.type === 'Public');
   const isEditDraft = 
     editRoute?.params.type === 'Draft';
   const [isCloneImageChanged, setIsCloneImageChanged] =
@@ -150,7 +161,7 @@ export default function CreateQuestion({
       CreateQuestionHighlightCard.QUESTIONCARD,
     );
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
-    PublicPrivateType.PUBLIC,
+    (!isEdit || isPublic) ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE,
   );
   const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
   const [originalImageURl, setOriginalImageURL] = useState<string>('');
@@ -644,6 +655,16 @@ export default function CreateQuestion({
               if (result && result.path && result.path.length > 0)
                 url = result.path;
             } else if (draftQuestion.questionCard.imageUrl) {
+              // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
+              if (
+                draftQuestion.questionCard.imageUrl.startsWith('https://') ||
+                draftQuestion.questionCard.imageUrl.startsWith('http://')
+              ) {
+                url = draftQuestion.questionCard.imageUrl;
+              } else {
+                // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
+                draftQuestion.questionCard.imageUrl = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
+              }
               url = await apiClients.questionTemplate.storeImageUrlInS3(
                 draftQuestion.questionCard.imageUrl,
               );
@@ -674,6 +695,7 @@ export default function CreateQuestion({
 
           setIsCreatingTemplate(false);
           fetchElements();
+          centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
           navigate('/questions');
         }
       } else {
@@ -767,7 +789,7 @@ export default function CreateQuestion({
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // case 1, saving a draft into a public/private question template
     if (isDraft) {
       handleCreateFromDraftQuestion();
@@ -775,8 +797,25 @@ export default function CreateQuestion({
     }
     // case 2, saving a public/private question template that already exists
     if (isEdit) {
-      handleSaveEditedQuestion();
+      const originalType = (
+        isPublic ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE
+      );
+      if (publicPrivate === originalType){
+        handleSaveEditedQuestion();
+        return;
+      }
+      try {
+        handleSaveQuestion();
+        await apiClients.questionTemplate.deleteQuestionTemplate(
+          originalType,
+          selectedQuestionId,
+        );
+        fetchElements(LibraryTabEnum.PUBLIC, '', null , true);
+        fetchElements(LibraryTabEnum.PRIVATE, '', null , true);
       return;
+      } catch (err) {
+        console.log(err);
+      }
     }
     // case 3, creating a new public/private question template
     handleSaveQuestion();

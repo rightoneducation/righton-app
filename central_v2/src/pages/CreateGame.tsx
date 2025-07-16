@@ -99,7 +99,12 @@ interface CreateGameProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => void;
-  fetchElements: (libraryTab?: LibraryTabEnum) => void;
+  fetchElements: (
+    libraryTab?: LibraryTabEnum,
+    searchTerms?: string,
+    nextToken?: string | null,
+    isFromLibrary?: boolean,
+  ) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
     field: SortType;
@@ -140,6 +145,7 @@ export default function CreateGame({
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
+  const [originalGameType, setOriginalGameType] = useState<PublicPrivateType>(gameTemplate.gameTemplate.publicPrivateType);
   const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
   // used when saving an edited game
   const [originalQuestionTemplates, setOriginalQuestionTemplates] = useState<
@@ -275,7 +281,7 @@ export default function CreateGame({
     setDraftGame((prev) => updateGameImageChange(prev, inputImage, inputUrl));
   };
 
-  const handleSaveEditedGame = async () => {
+  const handleUpdateEditedGame = async () => {
     try {
       setDraftGame((prev) => ({
         ...prev,
@@ -573,6 +579,23 @@ export default function CreateGame({
     }
   };
 
+   const handleSaveEditedGame = async () => {
+    try {
+      if (draftGame.gameTemplate.publicPrivateType === originalGameType) {
+        await handleUpdateEditedGame();
+        return;
+      }
+      await handleSaveGame();
+      await apiClients.gameTemplate.deleteGameTemplate(
+          originalGameType,
+          selectedGameId
+      );
+      fetchElements(LibraryTabEnum.PUBLIC, '', null , true);
+      fetchElements(LibraryTabEnum.PRIVATE, '', null , true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleCreateFromDraftGame = async () => {
     try{
