@@ -1267,6 +1267,7 @@ export default function CreateGame({
         phaseOne: timeLookup(selected.game?.phaseOneTime ?? 0),
         phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
       });
+      setOriginalGameType(selected?.game?.publicPrivateType ?? PublicPrivateType.PUBLIC);
       const originals = selected?.game?.questionTemplates;
       if (originals && originals.length > 0) {
         const oqTemplates = originals.map((q) => q.questionTemplate);
