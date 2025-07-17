@@ -6,10 +6,23 @@ import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponen
 import { ScreenSize } from '../../lib/WebsiteModels';
 import SinclairImg from '../../images/sinclair.svg';
 import SinclairTitle from '../../images/SinclarTitle.svg';
+import DrewImg from '../../images/Headshot_Drew.png'
+import MahalaImg from '../../images/Headshot_Mahala.png'
+import ChrisImg from '../../images/Headshot_Chris.png'
+import DazImg from '../../images/Headshot_Daz.png'
+import MikeImg from '../../images/Headshot_Mike.png'
+import MuhammadImg from '../../images/Headshot_Muhammad.png'
+import MarizzaImg from '../../images/Headshot_Marizza.png'
+import ImanImg from '../../images/Headshot_Iman.png'
+
+import KaterinaImg from '../../images/Headshot_Katerina.png'
+import AnnaImg from '../../images/Headshot_Anna.png'
+
 import 'swiper/css';
 import 'swiper/css/pagination';
 import FlipCard from './FlipCard';
 import favoriteMistakeImg from '../../images/favoriteMistake.png'
+import MistakeCard from './MistakeCard';
 
 interface IRightOnTeam {
   screenSize: ScreenSize;
@@ -20,49 +33,73 @@ const teamArr = [
     img: SinclairImg,
     name: 'Sinclair Wu',
     title: 'Product Lead',
-    linkedIn: '#',
+    linkedIn: 'https://www.linkedin.com/in/sinclairwu/',
+  },
+    {
+    img: AnnaImg,
+    name: 'Anna Roberds',
+    title: 'Product Lead',
+    linkedIn: 'https://www.rightoneducation.com/images/anna-name.png',
   },
   {
-    img: SinclairImg,
-    name: 'Sinclair Wu',
-    title: 'Product Lead',
-    linkedIn: '#',
+    img: DrewImg,
+    name: 'Drew Hart',
+    title: 'Development Lead',
+    linkedIn: 'https://www.rightoneducation.com/images/drew-name.png',
   },
   {
-    img: SinclairImg,
-    name: 'Sinclair Wu',
-    title: 'Product Lead',
-    linkedIn: '#',
+    img: MahalaImg,
+    name: 'Mahala Femovich',
+    title: 'UX Intern',
+    linkedIn: 'https://www.linkedin.com/in/mfemovich/',
   },
   {
-    img: SinclairImg,
-    name: 'Sinclair Wu',
-    title: 'Product Lead',
-    linkedIn: '#',
+    img: ChrisImg,
+    name: 'Christopher Tran',
+    title: 'UX Intern',
+    linkedIn: 'https://www.linkedin.com/in/chrvtran/',
   },
   {
-    img: SinclairImg,
-    name: 'Sinclair Wu',
-    title: 'Product Lead',
-    linkedIn: '#',
+    img: DazImg,
+    name: 'Daz Yang',
+    title: 'UI Designer',
+    linkedIn: 'https://www.rightoneducation.com/images/daz-name.png',
   },
   {
-    img: SinclairImg,
-    name: 'Sinclair Wu',
-    title: 'Product Lead',
-    linkedIn: '#',
+    img: MikeImg,
+    name: 'Michael Hunter',
+    title: 'Development Intern',
+    linkedIn: 'www.linkedin.com/in/michael-h-hunter',
   },
   {
-    img: SinclairImg,
-    name: 'Sinclair Wu',
-    title: 'Product Lead',
-    linkedIn: '#',
+    img: MuhammadImg,
+    name: 'Muhammad Quereshi',
+    title: 'Development Intern',
+    linkedIn: 'https://www.linkedin.com/in/muhammad-qureshi-22918218b/',
   },
   {
-    img: SinclairImg,
+    img: ImanImg,
+    name: 'Sinclair Wu',
+    title: 'STEM Administrator',
+    linkedIn: 'https://www.rightoneducation.com/images/iman-name.png',
+  },
+    {
+    img: MarizzaImg,
     name: 'Sinclair Wu',
     title: 'Product Lead',
-    linkedIn: '#',
+    linkedIn: 'https://www.rightoneducation.com/images/marizza-name.png',
+  },
+  //   {
+  //   img: RondaldImg,
+  //   name: 'Sinclair Wu',
+  //   title: 'Product Lead',
+  //   linkedIn: 'https://www.rightoneducation.com/images/ronald-name.png',
+  // },
+    {
+    img: KaterinaImg,
+    name: 'Sinclair Wu',
+    title: 'Product Lead',
+    linkedIn: 'https://www.rightoneducation.com/images/katerina-name.png',
   },
 ];
 
@@ -99,7 +136,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
             <>
             <Box
               width="252px"
-              height="302px"
+              height="280px"
               component="img"
               src={img}
               alt={`${name}-${i}`}
@@ -117,11 +154,13 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
               <>
             <Box
               width="252px"
-              height="302px"
-              component="img"
-              src={favoriteMistakeImg}
-              alt={`${name}-${i}`}
-            />
+              height="280px"
+              // component="img"
+              // src={favoriteMistakeImg}
+              // alt={`${name}-${i}`}
+            >
+              <MistakeCard answer="I merged main with my broken branch!! So embarassing..." />
+            </Box>
             <Box
               width="252px"
               height="70px"

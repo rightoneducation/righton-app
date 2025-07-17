@@ -21,10 +21,10 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
         >
           <Box
   sx={{
-    padding: screenSize === ScreenSize.SMALL ? '22px':'32px',
+    padding: screenSize === ScreenSize.SMALL ? '22px':'45px 32px',
     borderRadius: '24px',
     background: 'rgb(128,13,21)',
-   // width: screenSize === ScreenSize.SMALL ? '100%' : '526px',
+    width: screenSize === ScreenSize.SMALL ? '100%' : '526px',
     height: screenSize === ScreenSize.SMALL ? '229px' : '326px',
     position: 'relative',
     boxSizing: 'border-box'
@@ -34,7 +34,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
   <StyledFlexBox
     direction="column"
     alignItems="flex-start"
-    gap={2}
+    gap={6}
     sx={{
      // padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px' : '32px 0px 12px 19px',
       maxWidth: '462px',
@@ -69,8 +69,8 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
   >
     <StyledFlexBox
       sx={{
-        // padding: screenSize === ScreenSize.SMALL ? '0px 19px 32px 32px' : '0px 32px 32px 32px',
-        maxWidth: '462px',
+        padding: screenSize === ScreenSize.SMALL ? '0px' : '0px 0px 32px 32px',
+        maxWidth: '400px',
         width: '100%',
       }}
     >
@@ -109,11 +109,14 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
               width: screenSize === ScreenSize.SMALL ? '100%':'526px',
               height: screenSize === ScreenSize.SMALL ? '127px':'182px',
               position: 'relative',
+              boxSizing: 'border-box',
+             padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px':  '45px 32px' 
             }}
           >
-            <Box sx={{ paddingBottom: '24px ' }}>
-              <StyledFlexBox sx={{ 
-                padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px':  '32px 0px 12px 19px' 
+            
+              <StyledFlexBox 
+              sx={{ 
+               // padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px':  '32px 0px 12px 19px' 
                 }} gap={6}>
                 <Typography
                   fontSize={screenSize === ScreenSize.SMALL ? '30px':"48px"}
@@ -155,7 +158,6 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
                   alt="teamwork-righton-monsters"
                 />
               </StyledFlexBox>
-            </Box>
           </Box>
         </StyledFlexBox>
     )
