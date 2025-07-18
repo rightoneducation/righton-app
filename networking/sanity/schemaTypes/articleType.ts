@@ -37,6 +37,14 @@ export const articleType = defineType({
     defineField({
       name: 'date',
       type: 'string',
+    }),
+    defineField({
+      name: 'monsterSelect',
+      type: 'number',
+    }),
+    defineField({
+      name: 'readingTimeMinutes',
+      type: 'number',
     }),    
     defineField({
       name: 'details',

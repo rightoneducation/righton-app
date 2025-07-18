@@ -1,11 +1,10 @@
 import { Typography, styled } from '@mui/material';
 
-
 // Styled components for a full Article
 
 export const CMSHeroImage = styled('img')(() => ({
   width: '100%',
-  maxWidth: '568px',
+  maxWidth: '648px',
   height: 'auto',
   objectFit: 'cover',
   borderRadius: '8px',
@@ -28,7 +27,7 @@ export const CMSBodyText = styled(Typography)(() => ({
   fontFamily: 'Rubik',
   fontWeight: '400',
   fontSize: '16px',
-  lineHeight: '24px',
+  lineHeight: '19px',
   color: '#FFFFFF',
 }));
 

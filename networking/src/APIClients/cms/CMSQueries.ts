@@ -19,7 +19,11 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
     _id == $id
   ][0]{
     _id,
-    image{ asset->{ _ref } },
+    image{
+      asset{
+        _ref
+      }
+    },
     title,
     tags,
     date,

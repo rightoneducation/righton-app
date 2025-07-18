@@ -113,7 +113,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
       setIsLoading(false);
     })
   }, []); // eslint-disable-line
-  console.log(articles);
+  
   const cards = [
     { id: '1', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
     { id: '2', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
@@ -226,7 +226,6 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
         </SwiperContainer>
     )
   ]
-  
     return (
     <MainContainer sx={{
       alignItems: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
@@ -281,13 +280,20 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
       <Grid container   columnSpacing={2} rowSpacing={6}>
         {articles.map((article: any) => (
           <Grid  size={{xs:12, md:12, lg:4}} key={article.id}>
-            <BottomCard
-              image={article.image}
-              date={article.date}
-              tags={article.tags}
-              title={article.title}
-              caption={article.caption}
-            />
+            <Box 
+              onClick={() => {
+                window.location.href = `/library/${article._id}`;
+              }} 
+              style={{ cursor: 'pointer' }}
+            >
+              <BottomCard
+                image={article.image}
+                date={article.date}
+                tags={article.tags}
+                title={article.title}
+                caption={article.caption}
+              />
+            </Box>
           </Grid>
         ))}
       </Grid>

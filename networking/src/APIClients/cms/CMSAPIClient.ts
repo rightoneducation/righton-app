@@ -1,7 +1,7 @@
 import { createClient } from '@sanity/client'
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import { FETCH_ALL_ARTICLES } from "./CMSQueries";
+import { FETCH_ALL_ARTICLES, FETCH_CONTENT_BY_ID } from "./CMSQueries";
 
 // id from sanity.config.ts
 const client = createClient({
@@ -43,4 +43,26 @@ export class CMSAPIClient {
     }
   }
 
+  async fetchArticle(id: string) {
+    try {
+      const article = await this.client.fetch(FETCH_CONTENT_BY_ID , { id });
+      
+      // Process images to return URLs
+      if (article.image && article.image.asset && article.image.asset._ref) {
+        const imageUrl = imageUrlBuilder(this.client).image(article.image as SanityImageSource);
+        return {
+          ...article,
+          image: {
+            ...article.image,
+            url: imageUrl,
+          }
+        };
+      }
+      return article;
+    
+    } catch (error) {
+      console.error("Error fetching data from CMS:", error);
+      throw error;
+    }
+  }
 }

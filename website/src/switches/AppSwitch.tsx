@@ -6,6 +6,7 @@ import { Home } from '../pages/Home';
 import { AboutUs } from '../pages/AboutUs';
 import { HowItWorks } from '../pages/HowItWorks';
 import { Library } from '../pages/Library';
+import { Article } from '../pages/Article';
 import { ScreenType, ScreenSize } from '../lib/WebsiteModels';
 import { Footer } from '../components/Footer';
 
@@ -28,9 +29,11 @@ export default function AppSwitch({
   let pageComponent;
   switch (currentScreen) {
     case ScreenType.LIBRARY:
-    case ScreenType.CONTENT:
       pageComponent = (<Library cmsClient={cmsClient}/>);
       break;
+    case ScreenType.CONTENT:
+      pageComponent = (<Article cmsClient={cmsClient}/>);
+      break;  
     case ScreenType.HOW_IT_WORKS:
       pageComponent = (<HowItWorks/>);
       break;

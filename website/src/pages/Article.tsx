@@ -1,12 +1,16 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useEffect } from 'react';
+import { useMatch } from 'react-router-dom';
+import { Box, CircularProgress } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
-import { CMSHeroImage, CMSTitleText, CMSHeaderText, CMSBodyText } from '@righton/networking';
+import { PortableText, type PortableTextComponents } from '@portabletext/react';
+import { CMSHeroImage, CMSTitleText, CMSHeaderText, CMSBodyText, PortableTextComponentsConfig } from '@righton/networking';
+import { ArticleHeader } from '../components/article/ArticleHeader';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
+  alignItems: 'center',
   gap: '24px', 
   width: '100%', 
   height: '100%',
@@ -40,16 +44,63 @@ const MainContainer = styled(Box)(({ theme }) => ({
   }
 }));
 
-
-export default function Article( 
-  selectedArticle: any
+export function Article( // eslint-disable-line
+  { cmsClient } : any
 ) { 
+  const [selectedArticle, setSelectedArticle] = React.useState<any>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const articleId = useMatch('/library/:contentId')?.params.contentId;
+  
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        const article = await cmsClient.fetchArticle(articleId);
+        setSelectedArticle(article);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching article:', error);
+        setIsLoading(false);
+      }
+    };
+    fetchArticle();
+  }, [cmsClient]); // eslint-disable-line
+  
   return (
     <MainContainer>
-      <CMSHeroImage src={selectedArticle.image.asset._ref} alt="Article Hero"/>
-      <CMSTitleText>{selectedArticle.title}</CMSTitleText>
-      <CMSHeaderText>{selectedArticle.header}</CMSHeaderText>
-      <CMSBodyText>{selectedArticle.body}</CMSBodyText>
+      { isLoading 
+        ? (
+            <CircularProgress
+              size={50}
+              sx={{
+                color: '#fff',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          ) 
+        : (
+            <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
+              <ArticleHeader selectedArticle={selectedArticle} />
+              <CMSHeroImage src={selectedArticle.image.url} alt="Article Hero"/> 
+              <CMSTitleText>{selectedArticle.title}</CMSTitleText>
+              <Box style={{ display: 'flex', flexDirection: 'column'}}>
+                <CMSBodyText> <strong> Author: </strong> {selectedArticle.author}</CMSBodyText>
+                <CMSBodyText> <strong> Affiliation: </strong> {selectedArticle.affiliation}</CMSBodyText>
+                <CMSBodyText> <strong> Contact: </strong> {selectedArticle.contact}</CMSBodyText>
+              </Box>
+              <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <PortableText
+                  value={selectedArticle.details}
+                  components={PortableTextComponentsConfig as PortableTextComponents}
+                />
+              </Box>
+              <CMSHeaderText>{selectedArticle.header}</CMSHeaderText>
+              <CMSBodyText>{selectedArticle.body}</CMSBodyText>
+            </Box>
+          )
+      }
     </MainContainer>
   )
 }
