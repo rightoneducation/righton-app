@@ -9,6 +9,8 @@ export const AppContainer = styled(Box)(({ theme }) => ({ // eslint-disable-line
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
 }));
 
 export const MathSymbolsBackground = styled(Box)(({ theme }) => ({

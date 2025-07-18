@@ -6,10 +6,17 @@ import { Home } from '../pages/Home';
 import { AboutUs } from '../pages/AboutUs';
 import { HowItWorks } from '../pages/HowItWorks';
 import { Library } from '../pages/Library';
+import { Article } from '../pages/Article';
 import { ScreenType, ScreenSize } from '../lib/WebsiteModels';
 import { Footer } from '../components/Footer';
 
-export default function AppSwitch({ currentScreen }: { currentScreen: ScreenType }) {
+export default function AppSwitch({ 
+  currentScreen,
+  cmsClient
+ }: { 
+  currentScreen: ScreenType,
+  cmsClient?: any
+}) {
   const theme = useTheme();
      const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -22,8 +29,11 @@ export default function AppSwitch({ currentScreen }: { currentScreen: ScreenType
   let pageComponent;
   switch (currentScreen) {
     case ScreenType.LIBRARY:
-      pageComponent = (<Library/>);
+      pageComponent = (<Library cmsClient={cmsClient}/>);
       break;
+    case ScreenType.CONTENT:
+      pageComponent = (<Article cmsClient={cmsClient}/>);
+      break;  
     case ScreenType.HOW_IT_WORKS:
       pageComponent = (<HowItWorks/>);
       break;
