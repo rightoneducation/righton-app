@@ -1,6 +1,13 @@
 import { Typography, styled } from '@mui/material';
 
-// Styled components for a full Article
+// Styled components for a Article Header
+
+export const CMSMonsterAvatar = styled('img')(() => ({
+  height: '50px',
+  width: '50px',
+}));
+
+// Styled components for a Article 
 
 export const CMSHeroImage = styled('img')(() => ({
   width: '100%',

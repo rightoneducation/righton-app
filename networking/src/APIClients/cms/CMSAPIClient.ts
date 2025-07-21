@@ -2,6 +2,7 @@ import { createClient } from '@sanity/client'
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { FETCH_ALL_ARTICLES, FETCH_CONTENT_BY_ID } from "./CMSQueries";
+import { CMSArticleType } from "./CMSTypes";
 
 // id from sanity.config.ts
 const client = createClient({
@@ -43,7 +44,7 @@ export class CMSAPIClient {
     }
   }
 
-  async fetchArticle(id: string) {
+  async fetchArticle(id: string): Promise<CMSArticleType> {
     try {
       const article = await this.client.fetch(FETCH_CONTENT_BY_ID , { id });
       

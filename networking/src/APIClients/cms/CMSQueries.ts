@@ -12,7 +12,10 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
   author,
   affiliation,
   contact,
-  details}`;
+  details,
+  monsterSelect,
+  readingTimeMinutes
+  }`;
 
   export const FETCH_CONTENT_BY_ID = `
   *[
@@ -31,6 +34,8 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
     author,
     affiliation,
     contact,
-    details
+    details,
+    monsterSelect,
+    readingTimeMinutes
   }
 `
