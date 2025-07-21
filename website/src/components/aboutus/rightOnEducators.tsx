@@ -121,7 +121,16 @@ gradient: 'linear-gradient(to bottom, rgba(226,97,143,1), rgba(178,46,93,1))'
 ]
 
 export default function RightOnEducators({ screenSize }: IRightOnEducators) {
-const swiperRef = useRef<SwiperRef>(null)
+const swiperRef = useRef<SwiperRef>(null);
+
+const jumpBy = (delta: number) => {
+  const swiper = swiperRef.current?.swiper;
+  if (!swiper) return;
+  const total = educatorData.length;
+  const target = (swiper.realIndex + delta + total) % total; // wrap
+  swiper.slideToLoop(target, 300); // 300ms anim; change as needed
+};
+
 
   return (
     <Box width="100%"
@@ -143,7 +152,7 @@ const swiperRef = useRef<SwiperRef>(null)
       {screenSize === ScreenSize.LARGE && (
         <Typography
           component={Button}
-          onClick={() => swiperRef.current?.swiper?.slidePrev()}
+          onClick={() => jumpBy(-3)}
           sx={{
             height: '110px',
             width: '110px',
@@ -176,7 +185,7 @@ const swiperRef = useRef<SwiperRef>(null)
         centeredSlides
         centeredSlidesBounds
         loop
-        initialSlide={Math.floor(educatorData.length / 2)}
+        initialSlide={Math.floor(educatorData.length / 2) - 3}
         spaceBetween={10}
         breakpoints={{
           0: {
@@ -184,6 +193,7 @@ const swiperRef = useRef<SwiperRef>(null)
           },
           700: {
             slidesPerView: 1.9,
+            spaceBetween: 24,
           },
           1024: {
             slidesPerView: 3,
@@ -210,7 +220,7 @@ const swiperRef = useRef<SwiperRef>(null)
                 </StyledFlexBox>
 
                 {/* name, professional title & linkedin */}
-                <StyledFlexBox sx={{ padding: '18px 22px 24px 26px', background: cardShade, width: '100%', borderRadius: '24px' }}>
+                <StyledFlexBox sx={{ padding: '18px 22px 0px 26px', background: cardShade, width: '100%', borderRadius: '24px' }}>
                   <StyledFlexBox direction="row" justify="space-between" align="center" sx={{ width: '100%' }}>
                     <StyledFlexBox direction="column" sx={{ width: '100%' }}>
                       <Typography color="#fff" fontFamily="Roboto" fontSize="24px" lineHeight={1.3} fontWeight={600}>{name}</Typography>
@@ -221,7 +231,7 @@ const swiperRef = useRef<SwiperRef>(null)
 
                   {/* Educator description */}
                   <Divider flexItem sx={{ width: '100%', background: '#fff', marginBottom: '6px' }} />
-                  <Typography color="#fff" fontFamily="Roboto" fontSize="18px" lineHeight={1.3} fontWeight={400}>{description}</Typography>
+                  <Typography color="#fff" fontFamily="Roboto" fontSize="18px" lineHeight="22px" fontWeight={400}>{description}</Typography>
                 </StyledFlexBox>
               </StyledFlexBox>
           </SwiperSlide>
@@ -231,7 +241,7 @@ const swiperRef = useRef<SwiperRef>(null)
       {screenSize === ScreenSize.LARGE && (
         <Typography
           component={Button}
-          onClick={() => swiperRef.current?.swiper.slideNext()}
+          onClick={() => jumpBy(3)}
           sx={{
             height: '110px',
             width: '110px',

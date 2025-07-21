@@ -38,7 +38,7 @@ export default function AppSwitch({ currentScreen }: { currentScreen: ScreenType
 
   return (
     <AppContainer>
-      <Header/>
+      <Header screenSize={screenSize}/>
         {pageComponent}
       <Footer screenSize={screenSize}/>
     </AppContainer>

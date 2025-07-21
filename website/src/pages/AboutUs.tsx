@@ -91,7 +91,7 @@ export function AboutUs({ screenSize }: IAboutUs) {// eslint-disable-line
           </StyledFlexBox>
         </StyledFlexBox>
         <StyledFlexBox 
-        height={screenSize === ScreenSize.LARGE ? "791px":"100%"} 
+       // height={screenSize === ScreenSize.LARGE ? "791px":"100%"} 
         width={screenSize === ScreenSize.LARGE ? "1155px": "100%"} 
         gap={48}>
           <RightonTeam screenSize={screenSize} />
