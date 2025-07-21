@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useMatch } from 'react-router-dom';
 import { Typography, Grid, Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -90,10 +90,30 @@ const StyledButton = styled(Box, {
 }));
 
 
-export function Library() { // eslint-disable-line
-
+export function Library({cmsClient} : any ) { // eslint-disable-line
+ 
   const [selected, setSelected] = useState<'all' | 'research' | 'resources'>('all');
-
+  const [articles, setArticles] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const isContentPage = useMatch('/library/:contentId');
+  const contentId = isContentPage ? isContentPage.params.contentId : null;
+  
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchContent = async () => {
+      if (contentId) {
+        const content = await cmsClient.fetchContentById(contentId);
+        setArticles([content]); // Wrap in an array to match the expected type
+        return;
+      }
+      const content = await cmsClient.fetchAllArticles();
+      setArticles(content);
+    }
+    fetchContent().then(() => {
+      setIsLoading(false);
+    })
+  }, []); // eslint-disable-line
+  
   const cards = [
     { id: '1', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
     { id: '2', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
@@ -206,7 +226,6 @@ export function Library() { // eslint-disable-line
         </SwiperContainer>
     )
   ]
-  
     return (
     <MainContainer sx={{
       alignItems: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
@@ -259,16 +278,22 @@ export function Library() { // eslint-disable-line
         </StyledButton>
       </ButtonContainer>
       <Grid container   columnSpacing={2} rowSpacing={6}>
-        {cards.map((card) => (
-          <Grid  size={{xs:12, md:12, lg:4}}  key={card.id}>
-            <BottomCard
-              image={card.image}
-              tag={card.tag}
-              date={card.date}
-              views={card.views}
-              title={card.title}
-              caption={card.caption}
-            />
+        {articles.map((article: any) => (
+          <Grid  size={{xs:12, md:12, lg:4}} key={article.id}>
+            <Box 
+              onClick={() => {
+                window.location.href = `/library/${article._id}`;
+              }} 
+              style={{ cursor: 'pointer' }}
+            >
+              <BottomCard
+                image={article.image}
+                date={article.date}
+                tags={article.tags}
+                title={article.title}
+                caption={article.caption}
+              />
+            </Box>
           </Grid>
         ))}
       </Grid>
