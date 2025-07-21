@@ -117,7 +117,7 @@ export default function LibraryTabsContent({
       break;
     case (LibraryTabEnum.FAVORITES):
     default:
-      emptyText = `favorited ${gameQuestionText}`;
+      emptyText = `favorite ${gameQuestionText}`;
       break;
   }
   const handleLoadMore = async () => {
@@ -213,7 +213,7 @@ export default function LibraryTabsContent({
               textAlign: 'center'
             }}>
               {centralData.searchTerms.length > 0 
-              ? `No ${emptyText} found that match your search.`
+              ? `There are no ${emptyText} that match your search.`
               : `You currently don’t have any ${emptyText}.`}
             </Typography>
           )
