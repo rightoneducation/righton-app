@@ -2,7 +2,7 @@ import { createClient } from '@sanity/client'
 import imageUrlBuilder from "@sanity/image-url";
   
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
     const client = createClient({
         projectId: "qfq09qhf",
         dataset: "production",
@@ -32,7 +32,7 @@ exports.handler = async (event) => {
         readingTimeMinutes
         }
     `
-    const getArticleFromCMS = async (articleId) => {
+    const getArticleFromCMS = async (id) => {
         try {
             const article = await client.fetch(FETCH_CONTENT_BY_ID , { id });
             

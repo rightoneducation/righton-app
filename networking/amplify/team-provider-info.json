@@ -61,7 +61,7 @@
         },
         "shareContent": {
           "deploymentBucketName": "amplify-mobile-dev-102401-deployment",
-          "s3Key": "amplify-builds/shareContent-36576746386c4e4c7a51-build.zip"
+          "s3Key": "amplify-builds/shareContent-3941692b534347366b59-build.zip"
         }
       },
       "auth": {
