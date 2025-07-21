@@ -1222,7 +1222,7 @@ export default function CreateQuestion({
                       <Typography
                         style={{ textAlign: 'right', fontWeight: 500 }}
                       >
-                        Try our AI-Generated Wrong Answer Explanation Prototype
+                        Try our AI-Generated Wrong Answer Explanation Generator
                       </Typography>
                       <AISwitch
                         checked={isAIEnabled}
