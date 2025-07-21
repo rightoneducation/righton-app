@@ -123,6 +123,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "shareContent": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "teacherIdAuth": {
       "build": true,
       "providerPlugin": "awscloudformation",
