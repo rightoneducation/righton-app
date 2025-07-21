@@ -59,7 +59,10 @@
           "deploymentBucketName": "amplify-mobile-dev-102401-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
         },
-        "shareContent": {}
+        "shareContent": {
+          "deploymentBucketName": "amplify-mobile-dev-102401-deployment",
+          "s3Key": "amplify-builds/shareContent-36576746386c4e4c7a51-build.zip"
+        }
       },
       "auth": {
         "mobile6060603c": {},
@@ -67,6 +70,9 @@
       },
       "storage": {
         "rightoncentralstorage": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }
