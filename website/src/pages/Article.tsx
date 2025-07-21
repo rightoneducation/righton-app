@@ -82,7 +82,7 @@ export function Article( // eslint-disable-line
           ) 
         : (
             <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
-              <ArticleHeader selectedArticle={selectedArticle} />
+              <ArticleHeader selectedArticle={selectedArticle} articleId={articleId ?? ''}/>
               <CMSHeroImage src={selectedArticle.image.url} alt="Article Hero"/> 
               <CMSTitleText>{selectedArticle.title}</CMSTitleText>
               <Box style={{ display: 'flex', flexDirection: 'column'}}>

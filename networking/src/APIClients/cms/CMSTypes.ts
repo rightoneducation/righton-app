@@ -1,4 +1,5 @@
 export type CMSArticleType = {
+  id: string;
   image?: {
     asset?: {
       _ref?: string;
