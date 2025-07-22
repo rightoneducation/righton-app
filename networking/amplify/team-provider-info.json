@@ -29,7 +29,7 @@
         },
         "mobile6060603cPreSignup": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPreSignup-306b6c6c4c5265507571-build.zip"
+          "s3Key": "amplify-builds/mobile6060603cPreSignup-73733234557a4e704474-build.zip"
         },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
@@ -66,6 +66,9 @@
       },
       "storage": {
         "rightoncentralstorage": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }
