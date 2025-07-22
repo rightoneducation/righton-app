@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CMSBodyText, CMSMonsterAvatar, CMSArticleType } from '@righton/networking';
@@ -23,11 +23,13 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
 
 interface ArticleHeaderProps {
   selectedArticle: CMSArticleType;
+  handleShareClicked: () => void;
   articleId: string;
 }
 
 export function ArticleHeader ({ // eslint-disable-line
   selectedArticle,
+  handleShareClicked,
   articleId
  }: ArticleHeaderProps) { 
   const monsterAvatarMap: { [key: number]: string } = {
@@ -43,6 +45,7 @@ export function ArticleHeader ({ // eslint-disable-line
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}&text=${encodeURIComponent(selectedArticle.title)}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}`;
+  const shareLinkUrl = `https://www.rightoneducation.com/library/${articleId}`;
 
   return (
     <HeaderContainer>
@@ -84,13 +87,15 @@ export function ArticleHeader ({ // eslint-disable-line
           >
             <img src={shareFacebook} alt="Share on Facebook" style={{ width: '32px', height: '32px' }}/>
           </Box>
-          {/* <Box 
+          <Box 
             onClick={() => {
-              window.open(shareLink, '_blank', 'noopener,noreferrer');
+              handleShareClicked();
+              navigator.clipboard.writeText(shareLinkUrl);
             }}
-          > */}
+            style={{cursor: 'pointer'}}
+          >
             <img src={shareLink} alt="Share Link" style={{ width: '32px', height: '32px' }}/>
-          {/* </Box> */}
+          </Box>
         </Box>
       </Box>
     </HeaderContainer>
