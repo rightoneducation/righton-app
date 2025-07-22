@@ -12,6 +12,7 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
     <Box sx={{display: 'flex', margin: '0px 28.84px', width: '268px', height: '193px', boxSizing: 'border-box',}}>
       <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '76px', height: '78.45px', borderRadius: '210.87px',
         background: 'linear-gradient(to bottom,rgba(255, 42, 95, 0.7) 0%, rgba(255, 42, 95, 0.4) 50%, rgba(72, 19, 114, 0.1) 100%)',
+        boxShadow: '2.09px 9.77px 72.56px #481372'
       }}>
         <Box sx={{fontSize: '40px',fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
           {stepNumber}
@@ -21,7 +22,11 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'flex-end'
+          justifyContent: 'center',
+          width: '192px',
+          height: '193px',
+          alignItems: 'center',
+          // border: '1px solid white'
         }}
       >
         <Box
@@ -29,7 +34,7 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
             position: 'relative',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             width: 'fit-content',
             height: 'fit-content',
           }}
@@ -40,7 +45,7 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
               position: 'absolute',
               top: '50%',
               left: '50%',
-              width: '200%',
+              width: '150%',
               height: '200%',
               transform: 'translate(-50%, -50%)',
               zIndex: 0,

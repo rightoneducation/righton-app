@@ -8,6 +8,7 @@ import TwoPhone from '../images/twophone.png'
 import ThreePhone from '../images/threephone.png'
 import { ScreenSize } from '../lib/WebsiteModels';
 import  StepImage from '../lib/styledcomponents/HowItWorks/StepImage';
+import VennDiagram from '../components/VennDiagram';
 
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
@@ -27,12 +28,15 @@ const MainContainer = styled(Box)(({ theme }) => ({
   `,
   background: 'cover',
 }));
+
+// First Container Content
 const FirstContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   gap: '72px',
   width: '100%',
   boxSizing: 'border-box',
+
 }));
 
 const UpperContainerTexts = styled(Box)(({ theme }) => ({
@@ -41,13 +45,12 @@ const UpperContainerTexts = styled(Box)(({ theme }) => ({
   gap: '24px',
   justifyContent: 'center',
   width: '100%'
-  
 }));
+
 const UpperContainerGetStartedText = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   gap: '12px',
-
 }));
 
 const PhoneAndDownloadContainer = styled(Box)(({ theme }) => ({
@@ -94,6 +97,37 @@ const TeacherTutorialTextContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
 }));
 
+
+// Second Container Content
+
+const SecondContainer = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  flexDirection: 'column',
+  gap: '72px',
+  width: '100%',
+  boxSizing: 'border-box',
+  // padding: '0px 71.5px',
+  // border: '1px solid red',
+  alignItems: 'center',
+  justifyContent: 'center'
+}));
+
+const SecondUpperContainerTexts = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  flexDirection: 'column',
+  gap: '24px',
+  justifyContent: 'center',
+  alignItems: 'center',
+  maxWidth: '810px',
+  // border: '1px solid yellow'
+}));
+
+const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  flexDirection: 'column',
+  gap: '12px',
+  alignItems: 'center'
+}));
 
 export function HowItWorks() { // eslint-disable-line
   const theme = useTheme();
@@ -291,6 +325,36 @@ export function HowItWorks() { // eslint-disable-line
             )}
         </TeacherTutorialContainer>
       </FirstContainer>
+      
+      {/* The second page */}
+      <SecondContainer>
+        <SecondUpperContainerTexts>
+          <SecondUpperContainerIntegratingText>
+            <Typography sx={{lineHeight: '1.1', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
+              PEDAGOGY
+            </Typography>
+            <Typography sx={{lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> Righton! </span> into your teaching
+            </Typography>
+          </SecondUpperContainerIntegratingText>
+          <Typography sx={{maxWidth: '690px', textAlign: 'center', lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
+              Click to learn how<span style={{fontStyle: 'italic'}}> Righton! </span> meets each of three key themes in education technology.
+          </Typography>
+        </SecondUpperContainerTexts>
+        {/* Venn Diagram goes here */}
+        {/* <Box
+          sx={{
+            width: '100%',
+            flexGrow: 1,
+            position: 'relative', // <-- This is essential!
+            // margin: '0 auto',
+            border: '1px solid red'
+
+          }}
+        > */}
+          <VennDiagram />
+        {/* </Box> */}
+      </SecondContainer>
     </MainContainer>
   )
 }
