@@ -25,7 +25,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
       borderBottom: '1px solid #fff', 
       background: '#02215F', 
       width: '100%', 
-      minHeight: isSmallScreen ? '78px' : '192px'}}>
+      minHeight: screenSize !== ScreenSize.LARGE ? '78px' : '192px'}}>
       <StyledFlexBox
       sx={{
         ...(screenSize !== ScreenSize.LARGE && { padding: '12px 24px'})
@@ -40,7 +40,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
         width={screenSize === ScreenSize.LARGE ? "216px": "99px"} 
         height={screenSize === ScreenSize.LARGE ? "96px": "55px"} />
 
-        {!isSmallScreen && <StyledFlexBox direction="row" gap={198}>
+        {screenSize === ScreenSize.LARGE && <StyledFlexBox direction="row" gap={198}>
 
         <StyledFlexBox direction="row" align="center" gap={24}>
         {links.map((link) => (
@@ -54,7 +54,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
         </StyledFlexBox>
         </StyledFlexBox>}
 
-        {isSmallScreen && <Box component="img" src={hamburgerIcon}  width="24px" height="18px" sx={{ cursor: 'pointer'}} />}
+        {screenSize !== ScreenSize.LARGE && <Box component="img" src={hamburgerIcon}  width="24px" height="18px" sx={{ cursor: 'pointer'}} />}
         
       </StyledFlexBox>
       

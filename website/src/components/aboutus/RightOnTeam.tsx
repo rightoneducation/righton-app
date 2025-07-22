@@ -85,7 +85,7 @@ const teamArr = [
     mistakeImg: DazMistakeImg,
     name: 'Daz Yang',
     title: 'UI Designer',
-    title2: 'Front-En Developer',
+    title2: 'Front-End Developer',
     linkedIn: 'https://www.linkedin.com/in/dazyang',
   },
   {
@@ -197,6 +197,8 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
             <>
             {/* member img */}
             <Box
+            onMouseOver={() => {}}
+            onMouseLeave={() => {}}
               width="252px"
               component="img"
               src={img}

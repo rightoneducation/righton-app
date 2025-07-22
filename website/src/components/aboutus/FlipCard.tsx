@@ -30,7 +30,7 @@ export default function FlipCard({ front, back }: FlipCardProps) {
       >
         <motion.div
           animate={{ rotateY: flipped ? 180 : 0 }}
-          whileHover={{ rotateX: -3, rotateY: flipped ? 180 : 3 }}
+          // whileHover={{ rotateX: -3, rotateY: flipped ? 180 : 3 }}
           transition={{ duration: 0.6 }}
           style={{
             width: '100%',

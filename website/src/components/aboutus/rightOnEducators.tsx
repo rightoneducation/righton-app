@@ -123,14 +123,6 @@ gradient: 'linear-gradient(to bottom, rgba(226,97,143,1), rgba(178,46,93,1))'
 export default function RightOnEducators({ screenSize }: IRightOnEducators) {
 const swiperRef = useRef<SwiperRef>(null);
 
-const jumpBy = (delta: number) => {
-  const swiper = swiperRef.current?.swiper;
-  if (!swiper) return;
-  const total = educatorData.length;
-  const target = (swiper.realIndex + delta + total) % total; // wrap
-  swiper.slideToLoop(target, 300); // 300ms anim; change as needed
-};
-
 
   return (
     <Box width="100%"
@@ -152,7 +144,7 @@ const jumpBy = (delta: number) => {
       {screenSize === ScreenSize.LARGE && (
         <Typography
           component={Button}
-          onClick={() => jumpBy(-3)}
+          onClick={() => swiperRef.current?.swiper.slidePrev()}
           sx={{
             height: '110px',
             width: '110px',
@@ -163,7 +155,7 @@ const jumpBy = (delta: number) => {
             color: '#fff',
             borderRadius: '50%',
             position: 'absolute',
-            left: -50,
+            left: 0,
             top: 300,
             zIndex: 10,
           }}
@@ -182,21 +174,25 @@ const jumpBy = (delta: number) => {
         modules={[Pagination]}
         pagination={{ clickable: true }}
         ref={swiperRef}
-        centeredSlides
-        centeredSlidesBounds
+        // centeredSlides
+        // centeredSlidesBounds
         loop
         initialSlide={Math.floor(educatorData.length / 2) - 3}
         spaceBetween={10}
         breakpoints={{
           0: {
             slidesPerView: 1,
+            slidesPerGroup: 1,
           },
           700: {
             slidesPerView: 1.9,
             spaceBetween: 24,
+            centeredSlides: true
           },
           1024: {
             slidesPerView: 3,
+            slidesPerGroup: 3,
+            loopAddBlankSlides: false
           }
         }}
       >
@@ -204,7 +200,7 @@ const jumpBy = (delta: number) => {
           <SwiperSlide
             key={name}
             style={{
-              width: screenSize === ScreenSize.LARGE ? "370px":"100%",
+             // width: screenSize === ScreenSize.LARGE ? "370px":"100%",
               display: 'flex',
               justifyContent: 'center',
               
@@ -212,7 +208,10 @@ const jumpBy = (delta: number) => {
           >
                 
                 {/* card base */}
-              <StyledFlexBox width={ screenSize === ScreenSize.LARGE ? "370px":"100%"} height="690px" sx={{ background: cardShade, borderRadius: '24px' }}>
+              <StyledFlexBox 
+              width={ screenSize === ScreenSize.LARGE ? "370px":"100%"} 
+              height="690px" 
+              sx={{ background: cardShade, borderRadius: '24px', boxShadow: '10px 10px 10px rgba(0,0,0,.25)' }}>
 
                 {/* Teacher image  */}
                 <StyledFlexBox align="center" sx={{ paddingTop: '30px', background: gradient, borderRadius: '24px' }}>
@@ -221,7 +220,7 @@ const jumpBy = (delta: number) => {
 
                 {/* name, professional title & linkedin */}
                 <StyledFlexBox sx={{ padding: '18px 22px 0px 26px', background: cardShade, width: '100%', borderRadius: '24px' }}>
-                  <StyledFlexBox direction="row" justify="space-between" align="center" sx={{ width: '100%' }}>
+                  <StyledFlexBox direction="row" justify="space-between" align="flex-start" sx={{ width: '100%' }}>
                     <StyledFlexBox direction="column" sx={{ width: '100%' }}>
                       <Typography color="#fff" fontFamily="Roboto" fontSize="24px" lineHeight={1.3} fontWeight={600}>{name}</Typography>
                       <Typography color="#fff" fontFamily="Roboto" fontSize="20px" lineHeight={1.3} fontWeight={400}>{title}</Typography>
@@ -241,7 +240,7 @@ const jumpBy = (delta: number) => {
       {screenSize === ScreenSize.LARGE && (
         <Typography
           component={Button}
-          onClick={() => jumpBy(3)}
+          onClick={() => swiperRef.current?.swiper.slideNext()}
           sx={{
             height: '110px',
             width: '110px',
@@ -252,7 +251,7 @@ const jumpBy = (delta: number) => {
             color: '#fff',
             borderRadius: '50%',
             position: 'absolute',
-            right: -50,
+            right: 0,
             top: 300,
             zIndex: 10,
           }}
