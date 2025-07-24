@@ -3,17 +3,18 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { CMSCardThumbnailImage, CMSCardTag, CMSCardCaption, CMSCardTitle, CMSCardDateText } from '@righton/networking'; 
 
 type BottomCardProps = {
-  image: string;
-  tag: string;
+  image: any;
+  tags: string[];
   date: string;
-  views: string;
   title: string;
   caption: string;
 };
 
 const CardContainer = styled(Box)(({ theme }) => ({
+  maxHeight: '98px',
   display: 'flex',
   gap: '12px',
   background: '#224996',
@@ -74,23 +75,28 @@ const CaptionText = styled(Typography)(({ theme }) => ({
 
 export default function BottomCard({
   image,
-  tag,
+  tags,
   date,
-  views,
   title,
   caption,
 }: BottomCardProps) {
   return (
     <CardContainer>
-      <img src={image} alt="Thumbnail" />
+      <CMSCardThumbnailImage
+        src={image.url}
+        alt="Article Thumbnail"/>
       <InfoWrapper>
-        <TopRow>
-          <StyledTag>{tag}</StyledTag>
-          <MetaInfo>{`${date} • ${views} views`}</MetaInfo>
-        </TopRow>
-        <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-          <TitleText>{title}</TitleText>
-          <CaptionText>{caption}</CaptionText>
+        <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box', gap: '12px' }}>
+          <Box sx={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+            {tags.map((tag) => (
+              <CMSCardTag key={tag} sx={{maxHeight: '15px' }}>{tag}</CMSCardTag>
+            ))}
+            <CMSCardDateText> {date} </CMSCardDateText>
+          </Box>
+          <Box sx={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
+          <CMSCardTitle>{title}</CMSCardTitle>
+          <CMSCardCaption>{caption}</CMSCardCaption>
+          </Box>
         </Box>
       </InfoWrapper>
     </CardContainer>

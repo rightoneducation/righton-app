@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useMatch } from 'react-router-dom';
 import { Typography, Grid, Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -7,11 +7,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Navigation, Pagination } from 'swiper/modules';
 import { useTheme, styled } from '@mui/material/styles';
+import { CMSArticleType } from '@righton/networking';
 import { ScreenSize } from '../lib/WebsiteModels';
 import RedAvatar from '../images/redimage.svg';
 import StudentImage from '../images/studentimage.svg';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
-import ArticleCard from '../lib/styledcomponents/ArticleCard';
+import CornerstoneArticleCard from '../lib/styledcomponents/CornerstoneArticleCard';
 import BottomCard from '../lib/styledcomponents/LibraryCategoryCard';
 import ResarchImage from '../images/researchimage.svg';
 
@@ -90,20 +91,32 @@ const StyledButton = styled(Box, {
 }));
 
 
-export function Library() { // eslint-disable-line
-
+export function Library({cmsClient} : any ) { // eslint-disable-line
+ 
   const [selected, setSelected] = useState<'all' | 'research' | 'resources'>('all');
-
-  const cards = [
-    { id: '1', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '2', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '3', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '4', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '5', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '6', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '7', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '8', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '9', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },];
+  const [articles, setArticles] = useState<any[]>([]);
+  const [cornerstones, setCornerstones] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const isContentPage = useMatch('/library/:contentId');
+  const contentId = isContentPage ? isContentPage.params.contentId : null;
+  
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchContent = async () => {
+      if (contentId) {
+        const content = await cmsClient.fetchContentById(contentId);
+        setArticles([content]); // Wrap in an array to match the expected type
+        return;
+      }
+      const content = await cmsClient.fetchAllArticles();
+      const fetchedCornerstones = await cmsClient.fetchAllCornerstones();
+      setArticles(content);
+      setCornerstones(fetchedCornerstones);
+    }
+    fetchContent().then(() => {
+      setIsLoading(false);
+    })
+  }, []); // eslint-disable-line
   
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -115,44 +128,25 @@ export function Library() { // eslint-disable-line
   
   const MainContainerPadding = screenSize === ScreenSize.LARGE? // eslint-disable-line
   "96px 72px": screenSize === ScreenSize.MEDIUM? "60px 72px": "60px 12px"; // eslint-disable-line
-  
+
   const renderArticleContainerArray = [
     (screenSize === ScreenSize.LARGE) ? (
       <ArticlesContainer>
-          <ArticleCard
-            image={StudentImage}
-            category="Teaching Resources"
-            title="Math Hospital"
-            description="Help students diagnose their own mistakes with this teaching strategy"
-            avatar={RedAvatar}
-            author="Righton! Team"
-            date="11 Jan 2025"
-            readTime="5 min read"
-            screenSize={screenSize}
-          />
-          <ArticleCard
-            image={StudentImage}
-            category="Teaching Resources"
-            title="Math Hospital"
-            description="Help students diagnose their own mistakes with this teaching strategy"
-            avatar={RedAvatar}
-            author="Righton! Team"
-            date="11 Jan 2025"
-            readTime="5 min read"
-            screenSize={screenSize}
-          />
-          <ArticleCard
-            image={StudentImage}
-            category="Teaching Resources"
-            title="Math Hospital"
-            description="Help students diagnose their own mistakes with this teaching strategy"
-            avatar={RedAvatar}
-            author="Righton! Team"
-            date="11 Jan 2025"
-            readTime="5 min read"
-            screenSize={screenSize}
-          />
-        </ArticlesContainer>
+        {cornerstones.map((article: CMSArticleType) => (
+          <Box 
+            onClick={() => {
+              window.location.href = `/library/${article._id}`;
+            }} 
+            style={{ cursor: 'pointer' }}
+          >
+            <CornerstoneArticleCard
+              key={article._id}
+              screenSize={screenSize}
+              article={article}
+            />
+          </Box>
+        ))}
+      </ArticlesContainer>
     ) : (
       <SwiperContainer>
           <Swiper
@@ -163,50 +157,26 @@ export function Library() { // eslint-disable-line
             grabCursor
             freeMode
           >
-            <SwiperSlide>
-              <ArticleCard
-                image={StudentImage}
-                category="Teaching Resources"
-                title="Math Hospital"
-                description="Help students diagnose their own mistakes with this teaching strategy"
-                avatar={RedAvatar}
-                author="Righton! Team"
-                date="11 Jan 2025"
-                readTime="5 min read"
-                screenSize={screenSize}
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <ArticleCard
-                image={StudentImage}
-                category="Teaching Resources"
-                title="Math Hospital"
-                description="Help students diagnose their own mistakes with this teaching strategy"
-                avatar={RedAvatar}
-                author="Righton! Team"
-                date="11 Jan 2025"
-                readTime="5 min read"
-                screenSize={screenSize}
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <ArticleCard
-                image={StudentImage}
-                category="Teaching Resources"
-                title="Math Hospital"
-                description="Help students diagnose their own mistakes with this teaching strategy"
-                avatar={RedAvatar}
-                author="Righton! Team"
-                date="11 Jan 2025"
-                readTime="5 min read"
-                screenSize={screenSize}
-              />
-            </SwiperSlide>
+            {cornerstones.map((article: CMSArticleType) => (
+              <SwiperSlide>
+                <Box 
+                  onClick={() => {
+                    window.location.href = `/library/${article._id}`;
+                  }} 
+                  style={{ cursor: 'pointer' }}
+                >
+                  <CornerstoneArticleCard
+                    key={article._id}
+                    screenSize={screenSize}
+                    article={article}
+                  />
+                </Box>
+              </SwiperSlide>
+            ))}
           </Swiper>
         </SwiperContainer>
     )
   ]
-  
     return (
     <MainContainer sx={{
       alignItems: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
@@ -259,16 +229,22 @@ export function Library() { // eslint-disable-line
         </StyledButton>
       </ButtonContainer>
       <Grid container   columnSpacing={2} rowSpacing={6}>
-        {cards.map((card) => (
-          <Grid  size={{xs:12, md:12, lg:4}}  key={card.id}>
-            <BottomCard
-              image={card.image}
-              tag={card.tag}
-              date={card.date}
-              views={card.views}
-              title={card.title}
-              caption={card.caption}
-            />
+        {articles.map((article: any) => (
+          <Grid  size={{xs:12, md:12, lg:4}} key={article.id}>
+            <Box 
+              onClick={() => {
+                window.location.href = `/library/${article._id}`;
+              }} 
+              style={{ cursor: 'pointer' }}
+            >
+              <BottomCard
+                image={article.image}
+                date={article.date}
+                tags={article.tags}
+                title={article.title}
+                caption={article.caption}
+              />
+            </Box>
           </Grid>
         ))}
       </Grid>

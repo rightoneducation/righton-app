@@ -67,14 +67,15 @@ export const centralDataReducer = (
 ): ICentralDataState => {
   switch (action.type) {
     case 'SET_USER_STATUS':
-      return { ...state, userStatus: action.payload };
+      return { ...state, userStatus: action.payload, searchTerms: '' };
     case 'SET_USER_PROFILE':
       return {
         ...state,
         userProfile: { ...state.userProfile, ...action.payload },
+        searchTerms: '',
       };
     case 'CLEAR_USER_PROFILE':
-      return { ...state, userProfile: { ...initCentralDataState.userProfile } };
+      return { ...initCentralDataState };
     case 'SET_USER_ERROR_STRING':
       return { ...state, userErrorString: action.payload };
     case 'SET_RECOMMENDED_GAMES':
@@ -140,6 +141,7 @@ export const centralDataReducer = (
           lastName: action.payload.lastName,
         },
         userStatus: action.payload.userStatus,
+        searchTerms: '',
       };
     default:
       return state;

@@ -62,8 +62,7 @@ export const getQuestionElements = (
     case LibraryTabEnum.PUBLIC:
     default:
       if (isSearchResults) return centralData.searchedQuestions;
-      if (centralData.publicQuestions.length > 0)
         return centralData.publicQuestions;
-      return centralData.recommendedQuestions;
+      
   }
 };

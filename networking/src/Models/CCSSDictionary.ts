@@ -1,4 +1,4 @@
-const ccssDictionary = [
+export const ccssDictionary = [
   {
     key: 'HS',
     desc: 'High School',

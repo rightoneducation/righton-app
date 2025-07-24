@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "framer-motion": "^12.23.5",
     "lodash": "^4.17.21",
     "react-infinite-scroll-component": "^6.1.0"
   },

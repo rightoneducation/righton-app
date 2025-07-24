@@ -21,6 +21,8 @@ import {
   GameQuestionType,
   LibraryTabEnum,
   UserStatusType,
+  ISelectedGame,
+  ISelectedQuestion,
 } from '../lib/CentralModels';
 import {
   MyLibraryMainContainer,
@@ -45,8 +47,8 @@ interface MyLibraryProps {
   fetchElement: (
     type: GameQuestionType,
     id: string,
-    isPrivateQuestion: boolean,
-  ) => void;
+    isPrivateQuestion?: boolean,
+  ) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: (
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
@@ -83,19 +85,36 @@ export default function MyLibrary({
   const centralDataDispatch = useCentralDataDispatch();
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
+  const [originalSelectedQuestion, setOriginalSelectedQuestion] =
+    useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const handleQuestionView = (
+  const [openQuestionTab, setOpenQuestionTab] = React.useState<LibraryTabEnum>(
+    LibraryTabEnum.PUBLIC,
+  );
+  const handleQuestionView = async (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
     const isPrivate = question.publicPrivateType === PublicPrivateType.PRIVATE;
-    fetchElement(GameQuestionType.QUESTION, question.id, isPrivate);
     setSelectedQuestion(question);
+    if (centralData.isTabsOpen === false)
+      setOriginalSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
+    if (centralData.isTabsOpen === false)
+      setOriginalSelectedQuestion(question);
+    const selectedQ = await fetchElement(
+      GameQuestionType.QUESTION,
+      question.id,
+      isPrivate,
+    );
+    if ('question' in selectedQ && selectedQ && selectedQ.question) {
+      setSelectedQuestion(selectedQ.question);
+      if (centralData.isTabsOpen === false)
+        setOriginalSelectedQuestion(selectedQ.question);
+    }
   };
 
   const handleGameView = (element: IGameTemplate | IQuestionTemplate) => {
@@ -184,7 +203,7 @@ export default function MyLibrary({
           type: 'SET_SEARCH_TERMS',
           payload: '',
         });
-        navigate('/questions');
+        navigate('/library');
       }
     } catch (error) {
       console.error('Error deleting question:', error);
@@ -232,8 +251,15 @@ export default function MyLibrary({
           screenSize={screenSize}
           isTabsOpen={centralData.isTabsOpen}
           question={selectedQuestion}
+          originalSelectedQuestion={
+           originalSelectedQuestion
+          }
           questions={questionSet}
+          setQuestionSet={setQuestionSet}
+          openTab={openQuestionTab}
+          setOpenTab={setOpenQuestionTab}
           setIsTabsOpen={setIsTabsOpen}
+          fetchElement={fetchElement}
           fetchElements={fetchElements}
           setSelectedQuestion={setSelectedQuestion}
           handleCloseQuestionTabs={handleCloseQuestionTabs}
@@ -248,6 +274,7 @@ export default function MyLibrary({
           handleSearchChange={handleSearchChange}
           handlePublicPrivateChange={handlePublicPrivateChange}
           handleQuestionView={handleQuestionView}
+          loadMore={loadMoreLibrary}
         />
       </>
       {centralData.userStatus === UserStatusType.LOADING ? (

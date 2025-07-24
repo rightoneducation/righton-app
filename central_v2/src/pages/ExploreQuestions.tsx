@@ -9,13 +9,9 @@ import {
   SortDirection,
   SortType,
   IQuestionTemplate,
-  IUserProfile,
   PublicPrivateType,
   GradeTarget,
-  deleteQuestion,
 } from '@righton/networking';
-import { APIClientsContext } from '../lib/context/APIClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import {
   useCentralDataState,
   useCentralDataDispatch,
@@ -25,6 +21,7 @@ import {
   GameQuestionType,
   ISelectedGame,
   ISelectedQuestion,
+  LibraryTabEnum
 } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
@@ -55,6 +52,11 @@ interface ExploreQuestionsProps {
   }) => void;
   handleSearchChange: (searchString: string) => void;
   loadMore: () => void;
+  loadMoreLibrary: (
+    libraryTab?: LibraryTabEnum,
+    searchTerms?: string,
+    nextToken?: string | null,
+  ) => void;
   deleteQuestionTemplate: (
     questionId: string,
     type: PublicPrivateType,
@@ -71,6 +73,7 @@ export default function ExploreQuestions({
   handleSortChange,
   handleSearchChange,
   loadMore,
+  loadMoreLibrary,
   deleteQuestionTemplate,
 }: ExploreQuestionsProps) {
   const theme = useTheme();
@@ -92,7 +95,13 @@ export default function ExploreQuestions({
     setHasInitialized(true);
   }
 
+  const [openQuestionTab, setOpenQuestionTab] = React.useState<LibraryTabEnum>(
+    LibraryTabEnum.PUBLIC,
+  );
+
   const [selectedQuestion, setSelectedQuestion] =
+    useState<IQuestionTemplate | null>(null);
+  const [originalSelectedQuestion, setOriginalSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const isSearchResults = centralData.searchTerms.length > 0;
@@ -101,17 +110,21 @@ export default function ExploreQuestions({
     questions: IQuestionTemplate[],
   ) => {
     setSelectedQuestion(question);
+    if (centralData.isTabsOpen === false)
+      setOriginalSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
+    
     const selectedQ = await fetchElement(
       GameQuestionType.QUESTION,
       question.id,
     );
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
       setSelectedQuestion(selectedQ.question);
+      if (centralData.isTabsOpen === false)
+        setOriginalSelectedQuestion(selectedQ.question);
     }
   };
-
   const handlePrevQuestion = () => {
     const index = questionSet.findIndex(
       (question) => question.id === selectedQuestion?.id,
@@ -240,8 +253,11 @@ export default function ExploreQuestions({
           screenSize={screenSize}
           isTabsOpen={centralData.isTabsOpen}
           question={selectedQuestion}
+          originalSelectedQuestion={originalSelectedQuestion}
           questions={questionSet}
+          setQuestionSet={setQuestionSet}
           setIsTabsOpen={setIsTabsOpen}
+          fetchElement={fetchElement}
           fetchElements={fetchElements}
           setSelectedQuestion={setSelectedQuestion}
           handleCloseQuestionTabs={handleCloseQuestionTabs}
@@ -256,6 +272,9 @@ export default function ExploreQuestions({
           handleSearchChange={handleSearchChange}
           handlePublicPrivateChange={handlePublicPrivateChange}
           handleQuestionView={handleView}
+          loadMore={loadMore}
+          openTab={openQuestionTab}
+          setOpenTab={setOpenQuestionTab}
         />
       </>
 

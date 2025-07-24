@@ -123,6 +123,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "shareContent": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "teacherIdAuth": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -229,6 +234,22 @@
         {
           "category": "function",
           "resourceName": "mobile6060603cPreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_shareContent_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "shareContent"
+        }
+      ]
+    },
+    "AMPLIFY_function_shareContent_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "shareContent"
         }
       ]
     },
