@@ -59,7 +59,7 @@ export function ArticleHeader ({ // eslint-disable-line
               <CMSBodyText>•</CMSBodyText>
               <CMSBodyText>{selectedArticle.readingTimeMinutes} min read</CMSBodyText> 
             </Box>
-          </Box>
+          </Box> 
         </Box>
         <Box style={{ display: 'flex', gap: '24px' }}>
           <Box  
