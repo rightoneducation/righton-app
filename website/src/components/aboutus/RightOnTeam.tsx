@@ -9,17 +9,23 @@ import SinclairTitle from '../../images/SinclarTitle.svg';
 import SinclairImg from '../../images/Headshot_Sinclair.png';
 import SinclairMistakeImg from '../../images/Headshot_Sinclair_Back.png';
 
-import DrewImg from '../../images/Headshot_Drew.png';
-import DrewMistakeImg from '../../images/Headshot_Drew_Back.png';
+import DrewDefault from '../../images/headshots/drew/Headshot_Drew_Default.png';
+import DrewHover from '../../images/headshots/drew/Headshot_Drew_Hover.png';
+import DrewBack from '../../images/headshots/drew/Headshot_Drew_Back.png';
+
+import DazDefault from '../../images/headshots/daz/Headshot_Daz_Default.png';
+import DazHover from '../../images/headshots/daz/Headshot_Daz_Hover.png';
+import DazBack from '../../images/headshots/daz/Headshot_Daz_Back.png';
+
+import ImanDefault from '../../images/headshots/iman/Headshot_Iman_Default.png';
+import ImanHover from '../../images/headshots/iman/Headshot_Iman_Hover.png';
+import ImanBack from '../../images/headshots/iman/Headshot_Iman_Back.png';
 
 import MahalaImg from '../../images/Headshot_Mahala.png';
 import MahalaMistakeImg from '../../images/Headshot_Mahala_Back.png';
 
 import ChrisImg from '../../images/Headshot_Chris.png';
 import ChrisMistakeImg from '../../images/Headshot_Chris_Back.png';
-
-import DazImg from '../../images/Headshot_Daz.png';
-import DazMistakeImg from '../../images/Headshot_Daz_Back.png';
 
 import MikeImg from '../../images/Headshot_Mike.png';
 import MikeMistakeImg from '../../images/Headshot_Mike_Back.png';
@@ -36,8 +42,9 @@ import ImanMistakeImg from '../../images/Headshot_Iman_Back.png';
 import KaterinaImg from '../../images/Headshot_Katerina.png';
 import KaterinaMistakeImg from '../../images/Headshot_Katerina_Back.png';
 
-import AnnaImg from '../../images/Headshot_Anna.png';
-import AnnaMistakeImg from '../../images/Headshot_Anna_Back.png';
+import AnnaDefault from '../../images/headshots/anna/Headshot_Anna_Default.png';
+import AnnaHover from '../../images/headshots/anna/Headshot_Anna_Hover.png';
+import AnnaBack from '../../images/Headshot_Anna_Back.png';
 
 import MozzieImg from '../../images/Headshot_Mozzie.png';
 import MozzieMistakeImg from '../../images/Headshot_Mozzie_Back.png';
@@ -58,105 +65,109 @@ interface IRightOnTeam {
 }
 
 const teamArr = [
-  {
-    img: SinclairImg,
-    mistakeImg: SinclairMistakeImg,
-    name: 'Sinclair Wu',
-    title: 'Product Lead',
-    linkedIn: 'https://www.linkedin.com/in/sinclairwu/',
-  },
+  // {
+  //   img: SinclairImg,
+  //   mistakeImg: SinclairMistakeImg,
+  //   name: 'Sinclair Wu',
+  //   title: 'Product Lead',
+  //   linkedIn: 'https://www.linkedin.com/in/sinclairwu/',
+  // },
     {
-    img: AnnaImg,
-    mistakeImg: AnnaMistakeImg,
+    defaultImg: AnnaDefault,
+    hoverImg: AnnaHover,
+    backImg: AnnaBack,
     name: 'Anna Roberds',
     title: 'Math Educator',
     title2: 'Curriculum Program Manager',
     linkedIn: 'https://www.rightoneducation.com/images/anna-name.png',
   },
   {
-    img: DrewImg,
-    mistakeImg: DrewMistakeImg,
+    defaultImg: DrewDefault,
+    hoverImg: DrewHover,
+    backImg: DrewBack,
     name: 'Drew Hart',
     title: 'Development Lead',
     linkedIn: 'https://www.rightoneducation.com/images/drew-name.png',
   },
-    {
-    img: DazImg,
-    mistakeImg: DazMistakeImg,
+  {
+    defaultImg: DazDefault,
+    hoverImg: DazHover,
+    backImg: DazBack,
     name: 'Daz Yang',
     title: 'UI Designer',
     title2: 'Front-End Developer',
     linkedIn: 'https://www.linkedin.com/in/dazyang',
   },
-  {
-    img: MahalaImg,
-    mistakeImg: MahalaMistakeImg,
-    name: 'Mahala Femovich',
-    title: 'UX Intern',
-    linkedIn: 'https://www.linkedin.com/in/mfemovich/',
-  },
-  {
-    img: ChrisImg,
-    mistakeImg: ChrisMistakeImg,
-    name: 'Christopher Tran',
-    title: 'UX Intern',
-    linkedIn: 'https://www.linkedin.com/in/chrvtran/',
-  },
+  // {
+  //   img: MahalaImg,
+  //   mistakeImg: MahalaMistakeImg,
+  //   name: 'Mahala Femovich',
+  //   title: 'UX Intern',
+  //   linkedIn: 'https://www.linkedin.com/in/mfemovich/',
+  // },
+  // {
+  //   img: ChrisImg,
+  //   mistakeImg: ChrisMistakeImg,
+  //   name: 'Christopher Tran',
+  //   title: 'UX Intern',
+  //   linkedIn: 'https://www.linkedin.com/in/chrvtran/',
+  // },
 
+  // {
+  //   img: MikeImg,
+  //   mistakeImg: MikeMistakeImg,
+  //   name: 'Michael Hunter',
+  //   title: 'Development Intern',
+  //   linkedIn: 'www.linkedin.com/in/michael-h-hunter',
+  // },
+  // {
+  //   img: MuhammadImg,
+  //   mistakeImg: MuhammadMistakeImg,
+  //   name: 'Muhammad Quereshi',
+  //   title: 'Development Intern',
+  //   linkedIn: 'https://www.linkedin.com/in/muhammad-qureshi-22918218b/',
+  // },
   {
-    img: MikeImg,
-    mistakeImg: MikeMistakeImg,
-    name: 'Michael Hunter',
-    title: 'Development Intern',
-    linkedIn: 'www.linkedin.com/in/michael-h-hunter',
-  },
-  {
-    img: MuhammadImg,
-    mistakeImg: MuhammadMistakeImg,
-    name: 'Muhammad Quereshi',
-    title: 'Development Intern',
-    linkedIn: 'https://www.linkedin.com/in/muhammad-qureshi-22918218b/',
-  },
-  {
-    img: ImanImg,
-    mistakeImg: ImanMistakeImg,
+    defaultImg: ImanDefault,
+    hoverImg: ImanHover,
+    backImg: ImanBack,
     name: 'Sinclair Wu',
     title: 'STEM Administrator',
     title2: 'Curriculum Specialist',
     linkedIn: 'https://www.linkedin.com/in/imanhoward/',
   },
-    {
-    img: MozzieImg,
-    mistakeImg: MozzieMistakeImg,
-    name: 'Mozzie Dosalmas, PhD',
-    title: 'Math Educator',
-    title2: 'Content & Pedagogy',
-    linkedIn: 'https://www.linkedin.com/in/l-marizza-bailey-5b981143/',
-  },
-      {
-    img: MarizzaImg,
-    mistakeImg: MarizzaMistakeImg,
-    name: 'Marizza Baily',
-    title: 'Math Educator',
-    title2: 'Content & Pedagogy',
-    linkedIn: 'https://www.linkedin.com/in/l-marizza-bailey-5b981143/',
-  },
-    {
-    img: RonaldImg,
-    mistakeImg: favoriteMistakeImg,
-    name: 'Ronald Towns',
-    title: 'STEM Administrator',
-    title2: 'Math PD',
-    linkedIn: 'https://www.rightoneducation.com/images/ronald-name.png',
-  },
-    {
-    img: KaterinaImg,
-    mistakeImg: KaterinaMistakeImg,
-    name: 'Katerina Schenke, PhD',
-    title: 'Educator Researcher',
-    title2: 'Learning Scientist',
-    linkedIn: 'https://www.linkedin.com/in/katerina-schenke-phd-37b827b7/',
-  },
+  //   {
+  //   img: MozzieImg,
+  //   mistakeImg: MozzieMistakeImg,
+  //   name: 'Mozzie Dosalmas, PhD',
+  //   title: 'Math Educator',
+  //   title2: 'Content & Pedagogy',
+  //   linkedIn: 'https://www.linkedin.com/in/l-marizza-bailey-5b981143/',
+  // },
+  //     {
+  //   img: MarizzaImg,
+  //   mistakeImg: MarizzaMistakeImg,
+  //   name: 'Marizza Baily',
+  //   title: 'Math Educator',
+  //   title2: 'Content & Pedagogy',
+  //   linkedIn: 'https://www.linkedin.com/in/l-marizza-bailey-5b981143/',
+  // },
+  //   {
+  //   img: RonaldImg,
+  //   mistakeImg: favoriteMistakeImg,
+  //   name: 'Ronald Towns',
+  //   title: 'STEM Administrator',
+  //   title2: 'Math PD',
+  //   linkedIn: 'https://www.rightoneducation.com/images/ronald-name.png',
+  // },
+  //   {
+  //   img: KaterinaImg,
+  //   mistakeImg: KaterinaMistakeImg,
+  //   name: 'Katerina Schenke, PhD',
+  //   title: 'Educator Researcher',
+  //   title2: 'Learning Scientist',
+  //   linkedIn: 'https://www.linkedin.com/in/katerina-schenke-phd-37b827b7/',
+  // },
 ];
 
 export default function RightonTeam({ screenSize }: IRightOnTeam) {
@@ -180,10 +191,11 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
         }}
       >
         {teamArr.map(({
-           img, 
+           defaultImg,
+           hoverImg,
+           backImg,
            name, 
            title, 
-           mistakeImg,
            title2,
           }, i) => (
           <Grid
@@ -195,32 +207,67 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
             <FlipCard 
             front={
             <>
-            {/* member img */}
-            <Box
-            onMouseOver={() => {}}
-            onMouseLeave={() => {}}
-              width="252px"
-              component="img"
-              src={img}
-              alt={`${name}-${i}`}
-            />
+               <Box
+                  sx={{ 
+                    width: '252px', 
+                    height: '302px',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    '.default-img': { opacity: 1 },
+                    '.hover-img': { opacity: 0},
+                    '&:hover .default-img': { opacity: 0, transition: 'opacity 0.2s 0.1s', },
+                    '&:hover .hover-img': { opacity: 1, transition: 'opacity 0.2s 0.1s', },
+                  }}
+                  className="team-img-container"
+                >
+                  {/* Default images */}
+                  <img
+                    src={defaultImg}
+                    alt="headShot_img"
+                    style={{
+                      width: '252px',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      zIndex: 2,
+                    
+                    }}
+                    className="default-img"
+                  />
+                  {/* Hover images */}
+                  <img
+                    src={hoverImg}
+                    alt="hover_flap"
+                    style={{
+                      width: '252px',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      zIndex: 2,
+                      transition: 'opacity 0.2s',
+                    }}
+                    className="hover-img"
+                  />
+                </Box>
 
-            {/* member name & title(s) */}
-            <StyledFlexBox
-              width="252px"
-              height="70px"
-              gap={5}
-            >
-              <StyledFlexBox direction="row" align="flex-end" justify="center" gap={10}>
-              <StyledText fontFamily="Poppins" fontSize="17px" fontWeight={600}>
-                {name}
-              </StyledText>
-              <Box component="img" src={LinkedInIcon} alt="linkedIn_icon" height="25px" />
+              {/* member name & title(s) */}
+              <StyledFlexBox
+                width="252px"
+                height="70px"
+                gap={5}
+              >
+                {/* member img */}
+              
+                <StyledFlexBox direction="row" align="flex-end" justify="center" gap={10}>
+                <StyledText fontFamily="Poppins" fontSize="17px" fontWeight={600}>
+                  {name}
+                </StyledText>
+                <Box component="img" src={LinkedInIcon} alt="linkedIn_icon" height="25px" />
+                </StyledFlexBox>
+
+                <StyledText textAlign="center" fontFamily="Poppins" fontSize="17px" fontWeight={200}>{title}</StyledText>
+                {title2 && <StyledText textAlign="center" fontFamily="Poppins" fontSize="17px" fontWeight={200}>{title2}</StyledText>}
               </StyledFlexBox>
-
-              <StyledText textAlign="center" fontFamily="Poppins" fontSize="17px" fontWeight={200}>{title}</StyledText>
-              {title2 && <StyledText textAlign="center" fontFamily="Poppins" fontSize="17px" fontWeight={200}>{title2}</StyledText>}
-            </StyledFlexBox>
             </>
             }
             back={
@@ -228,7 +275,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
            <Box
               width="252px"
               component="img"
-              src={mistakeImg}
+              src={backImg}
               alt={`${name}-${i}`}
             />
            <Box
@@ -288,7 +335,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
   }}
 
       >
-        {teamArr.map(({ img, name, title, title2, mistakeImg }, i) => (
+        {teamArr.map(({ defaultImg, hoverImg, backImg, name, title, title2}, i) => (
           <SwiperSlide
             key={`${name}-${title}`}
             style={{
@@ -304,7 +351,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
             <Box
               width="252px"
               component="img"
-              src={img}
+              src={defaultImg}
               alt={`${name}-${i}`}
             />
             {/* member name & title(s) */}
@@ -330,7 +377,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
            <Box
               width="252px"
               component="img"
-              src={mistakeImg}
+              src={backImg}
               alt={`${name}-${i}`}
             />
             {/* member name & title(s) */}
