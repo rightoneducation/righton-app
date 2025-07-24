@@ -54,14 +54,26 @@ function CornerstoneArticleCard({
             {article.tags?.[0]}
           </Typography>
           <Typography sx={{ 
-          fontSize: screenSize === ScreenSize.LARGE? '24px': '16px',
-          lineHeight: screenSize === ScreenSize.LARGE? '130%': '100%',
-          fontFamily: 'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF' }}>
+            fontSize: screenSize === ScreenSize.LARGE? '24px': '16px',
+            lineHeight: screenSize === ScreenSize.LARGE? '130%': '100%',
+            fontFamily: 'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF',
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}>
             {article.title}
           </Typography>
           <Typography sx={{ 
             lineHeight: screenSize === ScreenSize.LARGE? '150%': '100%',
-            fontFamily: 'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF' }}>
+            fontFamily: 'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF',
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}>
             {article.caption}
           </Typography>
         </Box>

@@ -118,17 +118,6 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
     })
   }, []); // eslint-disable-line
   
-  const cards = [
-    { id: '1', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '2', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '3', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '4', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '5', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '6', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '7', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '8', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },
-    { id: '9', image: ResarchImage, tag: "Research", date: "Jan 1, 2022", views: "9823", title: "Title", caption: "Caption..." },];
-  
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -144,11 +133,18 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
     (screenSize === ScreenSize.LARGE) ? (
       <ArticlesContainer>
         {cornerstones.map((article: CMSArticleType) => (
-          <CornerstoneArticleCard
-            key={article.id}
-            screenSize={screenSize}
-            article={article}
-          />
+          <Box 
+            onClick={() => {
+              window.location.href = `/library/${article._id}`;
+            }} 
+            style={{ cursor: 'pointer' }}
+          >
+            <CornerstoneArticleCard
+              key={article._id}
+              screenSize={screenSize}
+              article={article}
+            />
+          </Box>
         ))}
       </ArticlesContainer>
     ) : (
@@ -163,11 +159,18 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
           >
             {cornerstones.map((article: CMSArticleType) => (
               <SwiperSlide>
-                <CornerstoneArticleCard
-                  key={article.id}
-                  screenSize={screenSize}
-                  article={article}
-                />
+                <Box 
+                  onClick={() => {
+                    window.location.href = `/library/${article._id}`;
+                  }} 
+                  style={{ cursor: 'pointer' }}
+                >
+                  <CornerstoneArticleCard
+                    key={article._id}
+                    screenSize={screenSize}
+                    article={article}
+                  />
+                </Box>
               </SwiperSlide>
             ))}
           </Swiper>
