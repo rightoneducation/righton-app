@@ -223,4 +223,53 @@ export class QuestionTemplateAPIClient
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGameTemplatesCount`, queryFunction, type, gradeTargets, favIds);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
+
+  async listQuestionTemplatesByUserDate(
+    type: PublicPrivateType.PUBLIC,
+    limit: number,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.libByUserDate;
+    const awsType = `${type}QuestionTemplate`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByUserDate`, queryFunction, type, gradeTargets, favIds, false, userId);
+
+    return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
+  }
+
+  async listQuestionTemplatesByUserGrade(
+    type: PublicPrivateType.PUBLIC,
+    limit: number,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.libByUserGrade;
+    const awsType = `${type}QuestionTemplate`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByUserGrade`, queryFunction, type, gradeTargets, favIds, false, userId);
+    return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
+  }
+
+  async listQuestionTemplatesByUserPublicGameTemplatesCount(
+    type: PublicPrivateType.PUBLIC,
+    limit: number,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null,
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null,
+    userId: string | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.libByUserQuestionTemplatesCount;
+    const awsType = `${type}QuestionTemplate`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByUserPublicGameTemplatesCount`, queryFunction, type, gradeTargets, favIds, false, userId);
+    return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
+  }
 }

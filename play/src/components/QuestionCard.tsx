@@ -7,7 +7,7 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface QuestionCardProps {
-  questionText: string[];
+  questionText: string;
   imageUrl: string;
 }
 
@@ -36,13 +36,7 @@ export default function QuestionCard({
           src={`${CloudFrontDistributionUrl}${imageUrl}`}
           alt="Question"
         />
-        <Typography variant="body1"> {questionText[0]} </Typography>
-        <Typography
-          variant="body1"
-          sx={{ fontWeight: 700, whiteSpace: 'pre-line' }}
-        >
-          {`\n ${questionText[1]}`}
-        </Typography>
+        <Typography variant="body1" sx={{whiteSpace: 'pre-line'}}> {questionText} </Typography>
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

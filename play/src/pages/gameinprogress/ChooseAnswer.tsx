@@ -25,7 +25,7 @@ import 'swiper/css/pagination';
 
 interface ChooseAnswerProps {
   isSmallDevice: boolean;
-  questionText: string[];
+  questionText: string;
   questionUrl: string;
   answerSettings: IAnswerSettings | null;
   answerChoices: IChoice[] | undefined;

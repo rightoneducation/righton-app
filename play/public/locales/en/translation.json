@@ -13,8 +13,10 @@
     "gamecode": {
       "title": "Enter Game Code",
       "button": "Join",
+      "buttonJoining": "Joining...",
       "error1": "Unable to join this game.",
-      "error2": "Check the Game Code and try again."
+      "error2": "Check the Game Code and try again.",
+      "error3": "A player with that name has already joined the game."
     },
     "playername": {
       "title": "Enter Your Name",

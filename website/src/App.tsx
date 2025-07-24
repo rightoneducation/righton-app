@@ -6,11 +6,13 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { CMSAPIClient } from '@righton/networking';
 import { ScreenType } from './lib/WebsiteModels'
 import Theme from './lib/Theme';
 import Switch from './switches/AppSwitch';
 
 function App() {
+  const cmsClient = new CMSAPIClient();
   const router = createBrowserRouter(
     createRoutesFromElements(
           <>
@@ -28,7 +30,11 @@ function App() {
             />
             <Route
               path="/library"
-              element={<Switch currentScreen={ScreenType.LIBRARY} />}
+              element={<Switch currentScreen={ScreenType.LIBRARY} cmsClient={cmsClient} />}
+            />
+            <Route
+              path="/library/:contentId"
+              element={<Switch currentScreen={ScreenType.CONTENT} cmsClient={cmsClient} />}
             />
           </>
         )

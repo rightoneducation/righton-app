@@ -240,7 +240,10 @@ export default function CreateQuestionCardBase({
           <Box>
             <ButtonCCSS
               key={uuidv4()}
-              onClick={handleCCSSButtonClick}
+              onClickCapture={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                handleCCSSButtonClick();
+              }}
               CCSSIsErrored={CCSSIsErrored}
               sx={{
                 gap: '3px',

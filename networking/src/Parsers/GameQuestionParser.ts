@@ -16,8 +16,6 @@ export class GameQuestionParser {
             )
         }
         let gameQuestion: IGameQuestion;
-        console.log('GameQuestionParser.gameQuestionFromAWSGameQuestion');
-        console.log(publicPrivate);
         if (publicPrivate === PublicPrivateType.PUBLIC){
             if (isNullOrUndefined(awsGameQuestion.publicGameTemplate))
                 throw new Error(

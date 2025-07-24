@@ -20,6 +20,7 @@ export interface IQuestionTemplate {
   instructions?: string[] | null,
   answerSettings?: AnswerSettingsType | null,
   ccss: string,
+  ccssDescription: string,
   domain: string;
   cluster: string;
   grade: string;

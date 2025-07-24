@@ -94,6 +94,12 @@ const JoinGameBody = styled(Box)<JoinGameBodyProps>(({ theme, isSmallDevice, isM
 interface JoinGameProps {
   isSmallDevice: boolean;
   isMedDevice: boolean;
+  isShowCodeError: boolean;
+  setIsShowCodeError: (value: boolean) => void;
+  isShowNameError: boolean;
+  setIsShowNameError: (value: boolean) => void;
+  isShowNameInvalidError: boolean;
+  setIsShowNameInvalidError: (value: boolean) => void;
   shouldShowAvatarSelect: boolean;
   setShouldShowAvatarSelect: (value: boolean) => void;
   firstName: string;
@@ -110,6 +116,12 @@ interface JoinGameProps {
 export default function JoinGame({
   isSmallDevice,
   isMedDevice,
+  isShowCodeError,
+  setIsShowCodeError,
+  isShowNameError,
+  setIsShowNameError,
+  isShowNameInvalidError,
+  setIsShowNameInvalidError,
   shouldShowAvatarSelect,
   setShouldShowAvatarSelect,
   firstName,
@@ -125,9 +137,8 @@ export default function JoinGame({
   const theme = useTheme();
   const { t } = useTranslation();
   const [gameCodeValue, setGameCodeValue] = useState<string>('');
+  const [isJoining, setIsJoining] = useState<boolean>(false);
   const [showHelp, setShowHelp] = useState<boolean>(false);
-  const [shouldShowCodeError, setShouldShowCodeError] = useState<boolean>(false);
-  const [shouldShowNameError, setShouldShowNameError] = useState<boolean>(false);
   const inputRef = React.useRef<HTMLDivElement>(null);
 
   // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
@@ -165,17 +176,17 @@ export default function JoinGame({
 
   const validateInput = async (inputGameCodeValue: string) => {
     if (isNameValid(firstName) && isNameValid(lastName)){
-      const isGameCodeSuccess = await handleGameCodeClick(inputGameCodeValue);
-      if (!isGameCodeSuccess) {
-        setShouldShowCodeError(true);
+      try {
+        setIsJoining(true);
+        await handleGameCodeClick(inputGameCodeValue);
+        setIsJoining(false);
+      } catch (error) {
+        setIsJoining(false);
         if (inputRef.current)
           inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else { 
-        setShouldShowCodeError(false);
       }
-    }
-    else {
-      setShouldShowNameError(true);
+    } else {
+      setIsShowNameInvalidError(true);
       if (inputRef.current)
         inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -205,6 +216,7 @@ export default function JoinGame({
               variant="filled"
               autoComplete="off"
               placeholder={InputPlaceholder.GAME_CODE}
+              onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false)}}
               onChange={handleGameCodeChange}
               value={gameCodeValue}
               style={{width: '100%', paddingLeft: '40px', paddingRight: '40px', boxSizing: 'border-box'}}
@@ -284,7 +296,7 @@ export default function JoinGame({
                   autoComplete="off"
                   placeholder={t('joingame.playername.firstnamedefault') ?? ''}
                   onChange={(event) => handleFirstNameChange(event.target.value)}
-                  onFocus={() => setShouldShowNameError(false)}
+                  onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false)}}
                   value={firstName}
                   InputProps={{
                     disableUnderline: true,
@@ -308,7 +320,7 @@ export default function JoinGame({
                   autoComplete="off"
                   placeholder={t('joingame.playername.lastnamedefault') ?? ''}
                   onChange={(event) => handleLastNameChange(event.target.value)}
-                  onFocus={() => setShouldShowCodeError(false)}
+                  onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false);  setIsShowNameInvalidError(false)}}
                   value={lastName}
                   InputProps={{
                     disableUnderline: true,
@@ -328,7 +340,7 @@ export default function JoinGame({
           </Box>
           <Box style={{padding: 0}}>
             <PaddedContainer>
-              <Collapse in={shouldShowCodeError}>
+              <Collapse in={isShowCodeError}>
                 <Typography
                   variant="h2"
                   sx={{
@@ -339,13 +351,19 @@ export default function JoinGame({
                 >
                   {t('joingame.gamecode.error1')}
                 </Typography>
+                {!isShowNameError ? 
                 <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
                   {t('joingame.gamecode.error2')}
                 </Typography>
+                :
+                 <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
+                  {t('joingame.gamecode.error3')}
+                </Typography>
+                }
               </Collapse>
             </PaddedContainer>
             <PaddedContainer>
-              <Collapse in={shouldShowNameError}>
+              <Collapse in={isShowNameInvalidError}>
                 <Typography
                   data-testid="playername-invalidtext"
                   variant="h2"
@@ -372,9 +390,9 @@ export default function JoinGame({
         </JoinGameBody>
 
       <JoinGameFooter>
-        <IntroButtonStyled disabled={isButtonDisabled} onClick={() => validateInput(gameCodeValue)} style={{ opacity: isButtonDisabled ? 0.5 : 1 }}>
+        <IntroButtonStyled disabled={isJoining || isButtonDisabled} onClick={() => validateInput(gameCodeValue)} style={{ opacity: (isJoining || isButtonDisabled) ? 0.5 : 1 }}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {t('joingame.gamecode.button')}
+            {!isJoining ? t('joingame.gamecode.button') : t('joingame.gamecode.buttonJoining')}
           </Typography>
         </IntroButtonStyled>
       </JoinGameFooter>
