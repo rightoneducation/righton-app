@@ -51,5 +51,9 @@ export const articleType = defineType({
       type: 'array',
       of: [{type: 'block'}],
     }),
+    defineField({
+      name: 'isCornerstone',
+      type: 'boolean',
+    }),
   ],
 });

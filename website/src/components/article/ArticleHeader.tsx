@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CMSBodyText, CMSMonsterAvatar, CMSArticleType } from '@righton/networking';
@@ -23,11 +23,13 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
 
 interface ArticleHeaderProps {
   selectedArticle: CMSArticleType;
+  handleShareClicked: () => void;
   articleId: string;
 }
 
 export function ArticleHeader ({ // eslint-disable-line
   selectedArticle,
+  handleShareClicked,
   articleId
  }: ArticleHeaderProps) { 
   const monsterAvatarMap: { [key: number]: string } = {
@@ -40,10 +42,11 @@ export function ArticleHeader ({ // eslint-disable-line
   };
 
   const avatarSrc = monsterAvatarMap[selectedArticle.monsterSelect] || cmsMonsterAvatar0;
-  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.rightoneducation.com/library/${articleId}`)}`;
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}&text=${encodeURIComponent(selectedArticle.title)}`;
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}`;
+  const shareLinkUrl = `https://www.rightoneducation.com/library/${articleId}`;
 
-  
-console.log(selectedArticle)
   return (
     <HeaderContainer>
       <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
@@ -56,7 +59,7 @@ console.log(selectedArticle)
               <CMSBodyText>•</CMSBodyText>
               <CMSBodyText>{selectedArticle.readingTimeMinutes} min read</CMSBodyText> 
             </Box>
-          </Box>
+          </Box> 
         </Box>
         <Box style={{ display: 'flex', gap: '24px' }}>
           <Box  
@@ -67,9 +70,32 @@ console.log(selectedArticle)
           >
             <img src={shareLinkedIn} alt="Share on LinkedIn" style={{ width: '32px', height: '32px' }}/>
           </Box>
-          <img src={shareTwitter} alt="Share on Twitter" style={{ width: '32px', height: '32px' }}/>
-          <img src={shareFacebook} alt="Share on Facebook" style={{ width: '32px', height: '32px' }}/>
-          <img src={shareLink} alt="Share Link" style={{ width: '32px', height: '32px' }}/>
+          <Box  
+            onClick={() => {
+              window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <img src={shareTwitter} alt="Share on Twitter" style={{ width: '32px', height: '32px' }}/>
+          </Box>
+
+          <Box 
+            onClick={() => {
+              window.open(facebookUrl, '_blank', 'noopener,noreferrer');
+            }}
+            style={{cursor: 'pointer'}}
+          >
+            <img src={shareFacebook} alt="Share on Facebook" style={{ width: '32px', height: '32px' }}/>
+          </Box>
+          <Box 
+            onClick={() => {
+              handleShareClicked();
+              navigator.clipboard.writeText(shareLinkUrl);
+            }}
+            style={{cursor: 'pointer'}}
+          >
+            <img src={shareLink} alt="Share Link" style={{ width: '32px', height: '32px' }}/>
+          </Box>
         </Box>
       </Box>
     </HeaderContainer>

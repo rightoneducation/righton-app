@@ -1,18 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useMatch } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
+import { AnimatePresence, motion } from 'framer-motion';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
-import { CMSHeroImage, CMSTitleText, CMSHeaderText, CMSBodyText, PortableTextComponentsConfig } from '@righton/networking';
+import {
+  CMSHeroImage,
+  CMSTitleText,
+  CMSHeaderText,
+  CMSBodyText,
+  PortableTextComponentsConfig
+} from '@righton/networking';
+import { ShareModal } from '../components/article/ShareModal';
 import { ArticleHeader } from '../components/article/ArticleHeader';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 
 const MainContainer = styled(Box)(({ theme }) => ({
-  display: 'flex', 
+  display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '24px', 
-  width: '100%', 
+  gap: '24px',
+  width: '100%',
   height: '100%',
   paddingTop: '101px',
   paddingBottom: '101px',
@@ -44,13 +52,27 @@ const MainContainer = styled(Box)(({ theme }) => ({
   }
 }));
 
-export function Article( // eslint-disable-line
-  { cmsClient } : any
-) { 
-  const [selectedArticle, setSelectedArticle] = React.useState<any>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
+export function Article({ cmsClient }: any) { // eslint-disable-line
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [isShareClicked, setIsShareClicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const articleId = useMatch('/library/:contentId')?.params.contentId;
-  
+
+  const modalWrapperRef = useRef<HTMLDivElement>(null);
+
+  const handleShareClicked = () => {
+    setIsShareClicked(true);
+  };
+
+  const handleClickOutside = (e: React.MouseEvent) => {
+    if (
+      modalWrapperRef.current &&
+      !modalWrapperRef.current.contains(e.target as Node)
+    ) {
+      setIsShareClicked(false);
+    }
+  };
+
   useEffect(() => {
     const fetchArticle = async () => {
       try {
@@ -63,44 +85,79 @@ export function Article( // eslint-disable-line
       }
     };
     fetchArticle();
-  }, [cmsClient]); // eslint-disable-line
-  
+  }, [cmsClient, articleId]);
+
   return (
     <MainContainer>
-      { isLoading 
-        ? (
-            <CircularProgress
-              size={50}
-              sx={{
-                color: '#fff',
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
+      {isLoading ? (
+        <CircularProgress
+          size={50}
+          sx={{
+            color: '#fff',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+      ) : (
+        <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
+          <ArticleHeader
+            selectedArticle={selectedArticle}
+            articleId={articleId ?? ''}
+            handleShareClicked={handleShareClicked}
+          />
+          <CMSHeroImage src={selectedArticle.image.url} alt="Article Hero" />
+          <CMSTitleText>{selectedArticle.title}</CMSTitleText>
+          <Box style={{ display: 'flex', flexDirection: 'column' }}>
+            <CMSBodyText><strong>Author:</strong> {selectedArticle.author}</CMSBodyText>
+            <CMSBodyText><strong>Affiliation:</strong> {selectedArticle.affiliation}</CMSBodyText>
+            <CMSBodyText><strong>Contact:</strong> {selectedArticle.contact}</CMSBodyText>
+          </Box>
+          <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <PortableText
+              value={selectedArticle.details}
+              components={PortableTextComponentsConfig as PortableTextComponents}
             />
-          ) 
-        : (
-            <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
-              <ArticleHeader selectedArticle={selectedArticle} articleId={articleId ?? ''}/>
-              <CMSHeroImage src={selectedArticle.image.url} alt="Article Hero"/> 
-              <CMSTitleText>{selectedArticle.title}</CMSTitleText>
-              <Box style={{ display: 'flex', flexDirection: 'column'}}>
-                <CMSBodyText> <strong> Author: </strong> {selectedArticle.author}</CMSBodyText>
-                <CMSBodyText> <strong> Affiliation: </strong> {selectedArticle.affiliation}</CMSBodyText>
-                <CMSBodyText> <strong> Contact: </strong> {selectedArticle.contact}</CMSBodyText>
+          </Box>
+          <CMSHeaderText>{selectedArticle.header}</CMSHeaderText>
+          <CMSBodyText>{selectedArticle.body}</CMSBodyText>
+
+          <AnimatePresence>
+            {isShareClicked && (
+              <Box
+                onMouseDownCapture={handleClickOutside}
+                sx={{
+                  position: 'fixed',
+                  inset: 0,
+                  zIndex: 1,
+                }}
+              >
+                <motion.div
+                  ref={modalWrapperRef}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4, ease: 'easeInOut' }}
+                  style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    zIndex: 1000,
+                    paddingBottom: '24px',
+                  }}
+                >
+                  <ShareModal />
+                </motion.div>
               </Box>
-              <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                <PortableText
-                  value={selectedArticle.details}
-                  components={PortableTextComponentsConfig as PortableTextComponents}
-                />
-              </Box>
-              <CMSHeaderText>{selectedArticle.header}</CMSHeaderText>
-              <CMSBodyText>{selectedArticle.body}</CMSBodyText>
-            </Box>
-          )
-      }
+            )}
+          </AnimatePresence>
+        </Box>
+      )}
     </MainContainer>
-  )
+  );
 }
