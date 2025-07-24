@@ -7,11 +7,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Navigation, Pagination } from 'swiper/modules';
 import { useTheme, styled } from '@mui/material/styles';
+import { CMSArticleType } from '@righton/networking';
 import { ScreenSize } from '../lib/WebsiteModels';
 import RedAvatar from '../images/redimage.svg';
 import StudentImage from '../images/studentimage.svg';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
-import ArticleCard from '../lib/styledcomponents/ArticleCard';
+import CornerstoneArticleCard from '../lib/styledcomponents/CornerstoneArticleCard';
 import BottomCard from '../lib/styledcomponents/LibraryCategoryCard';
 import ResarchImage from '../images/researchimage.svg';
 
@@ -94,6 +95,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
  
   const [selected, setSelected] = useState<'all' | 'research' | 'resources'>('all');
   const [articles, setArticles] = useState<any[]>([]);
+  const [cornerstones, setCornerstones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const isContentPage = useMatch('/library/:contentId');
   const contentId = isContentPage ? isContentPage.params.contentId : null;
@@ -107,7 +109,9 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
         return;
       }
       const content = await cmsClient.fetchAllArticles();
+      const fetchedCornerstones = await cmsClient.fetchAllCornerstones();
       setArticles(content);
+      setCornerstones(fetchedCornerstones);
     }
     fetchContent().then(() => {
       setIsLoading(false);
@@ -135,44 +139,18 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   
   const MainContainerPadding = screenSize === ScreenSize.LARGE? // eslint-disable-line
   "96px 72px": screenSize === ScreenSize.MEDIUM? "60px 72px": "60px 12px"; // eslint-disable-line
-  
+
   const renderArticleContainerArray = [
     (screenSize === ScreenSize.LARGE) ? (
       <ArticlesContainer>
-          <ArticleCard
-            image={StudentImage}
-            category="Teaching Resources"
-            title="Math Hospital"
-            description="Help students diagnose their own mistakes with this teaching strategy"
-            avatar={RedAvatar}
-            author="Righton! Team"
-            date="11 Jan 2025"
-            readTime="5 min read"
+        {cornerstones.map((article: CMSArticleType) => (
+          <CornerstoneArticleCard
+            key={article.id}
             screenSize={screenSize}
+            article={article}
           />
-          <ArticleCard
-            image={StudentImage}
-            category="Teaching Resources"
-            title="Math Hospital"
-            description="Help students diagnose their own mistakes with this teaching strategy"
-            avatar={RedAvatar}
-            author="Righton! Team"
-            date="11 Jan 2025"
-            readTime="5 min read"
-            screenSize={screenSize}
-          />
-          <ArticleCard
-            image={StudentImage}
-            category="Teaching Resources"
-            title="Math Hospital"
-            description="Help students diagnose their own mistakes with this teaching strategy"
-            avatar={RedAvatar}
-            author="Righton! Team"
-            date="11 Jan 2025"
-            readTime="5 min read"
-            screenSize={screenSize}
-          />
-        </ArticlesContainer>
+        ))}
+      </ArticlesContainer>
     ) : (
       <SwiperContainer>
           <Swiper
@@ -183,45 +161,15 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
             grabCursor
             freeMode
           >
-            <SwiperSlide>
-              <ArticleCard
-                image={StudentImage}
-                category="Teaching Resources"
-                title="Math Hospital"
-                description="Help students diagnose their own mistakes with this teaching strategy"
-                avatar={RedAvatar}
-                author="Righton! Team"
-                date="11 Jan 2025"
-                readTime="5 min read"
-                screenSize={screenSize}
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <ArticleCard
-                image={StudentImage}
-                category="Teaching Resources"
-                title="Math Hospital"
-                description="Help students diagnose their own mistakes with this teaching strategy"
-                avatar={RedAvatar}
-                author="Righton! Team"
-                date="11 Jan 2025"
-                readTime="5 min read"
-                screenSize={screenSize}
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <ArticleCard
-                image={StudentImage}
-                category="Teaching Resources"
-                title="Math Hospital"
-                description="Help students diagnose their own mistakes with this teaching strategy"
-                avatar={RedAvatar}
-                author="Righton! Team"
-                date="11 Jan 2025"
-                readTime="5 min read"
-                screenSize={screenSize}
-              />
-            </SwiperSlide>
+            {cornerstones.map((article: CMSArticleType) => (
+              <SwiperSlide>
+                <CornerstoneArticleCard
+                  key={article.id}
+                  screenSize={screenSize}
+                  article={article}
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </SwiperContainer>
     )
