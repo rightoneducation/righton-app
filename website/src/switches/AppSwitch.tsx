@@ -48,9 +48,9 @@ export default function AppSwitch({
 
   return (
     <AppContainer>
-      <Header/>
-      {pageComponent}
-      <Footer/>
+      <Header screenSize={screenSize}/>
+        {pageComponent}
+      <Footer screenSize={screenSize}/>
     </AppContainer>
   )
 }

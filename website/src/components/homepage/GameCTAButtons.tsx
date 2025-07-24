@@ -13,13 +13,18 @@ export default function GameCTAButtons({ screenSize }: CTAButtonProps) {
     return (
         <>
            {/* Teachers CTA button */}
-        <StyledFlexBox 
+           <a href="https://central.rightoneducation.com"
+           target="_blank"
+           rel="noopener noreferrer"
+           style={{ textDecoration: 'none'}}>
+        <StyledFlexBox
+
         direction="row" 
         align="center" 
         borderRadius={24} 
         gap={12} 
-        width="356px" 
-        sx={{ maxWidth: '356px', border: '1px solid white', padding: '12px 24px', cursor: 'pointer' }}>
+        width={screenSize === ScreenSize.SMALL ? "369px":"356px"} 
+        sx={{ maxWidth: screenSize === ScreenSize.SMALL ? "369px":"356px", border: '1px solid white', padding: '12px 24px', cursor: 'pointer' }}>
           <StyledFlexBox>
             <img src={pinkCreature} alt="pink-righton-creature" width="60px" height="60px" />
           </StyledFlexBox>
@@ -32,14 +37,19 @@ export default function GameCTAButtons({ screenSize }: CTAButtonProps) {
             </Typography>
           </StyledFlexBox>
         </StyledFlexBox>
+           </a>
          {/* Students CTA button */}
+         <a href="https://play.rightoneducation.com"
+           target="_blank"
+           rel="noopener noreferrer"
+           style={{ textDecoration: 'none'}}>
          <StyledFlexBox 
          direction="row" 
          align="center" 
          borderRadius={24} 
          gap={12} 
-         width="356px" 
-         sx={{ maxWidth: '356px', border: '1px solid white', padding: '12px 24px', cursor: 'pointer'  }}>
+         width={screenSize === ScreenSize.SMALL ? "369px":"356px"} 
+         sx={{ maxWidth: screenSize === ScreenSize.SMALL ? "369px":"356px", border: '1px solid white', padding: '12px 24px', cursor: 'pointer'  }}>
           <StyledFlexBox>
            <img src={magicMathHat} alt="math-symbols-hat" width="60px" height="60px" />
           </StyledFlexBox>
@@ -52,6 +62,7 @@ export default function GameCTAButtons({ screenSize }: CTAButtonProps) {
             </Typography>
           </StyledFlexBox>
         </StyledFlexBox>
+           </a>
         </>
     )
 }

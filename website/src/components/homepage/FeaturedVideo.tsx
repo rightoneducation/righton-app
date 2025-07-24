@@ -22,9 +22,9 @@ export default function FeaturedVideo({screenSize}: IFeatureVideo) {
   <StyledFlexBox direction="column" align={screenSize !== ScreenSize.LARGE ? "normal":"center"} gap={12}>
     <StyledText fontFamily="Poppins" fontSize="16px" fontWeight={600}>Media</StyledText>
     <StyledText fontFamily="Poppins" fontSize="40px" fontWeight={700} lineHeight={1.2}>
-      News and Updates
+      NBC Nightly News Feature
     </StyledText>
-    <StyledText>Check out what&apos;s recently been happening with RightOn!</StyledText>
+    <StyledText>Check out what&apos;s recently been happening with <i>RightOn!</i></StyledText>
   </StyledFlexBox>
 
   {/* Video + Monsters + Card Row */}
@@ -60,7 +60,7 @@ export default function FeaturedVideo({screenSize}: IFeatureVideo) {
     />
 
     {/* Card on Top of Blue Monster */}
-    <StyledFlexBox
+    {/* <StyledFlexBox
     align="center"
     justify="center"
       sx={{
@@ -82,7 +82,7 @@ export default function FeaturedVideo({screenSize}: IFeatureVideo) {
           We’re featured on<br />NBC Nightly News!
         </StyledText>
       </Box>
-    </StyledFlexBox>
+    </StyledFlexBox> */}
 
     {/* Video in the center */}
     <Box sx={{ ...videoDimensions, zIndex: 1, position: 'relative' }}>
