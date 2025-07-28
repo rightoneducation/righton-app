@@ -5,7 +5,7 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CMSCardThumbnailImage, CMSCardTag, CMSCardCaption, CMSCardTitle, CMSCardDateText } from '@righton/networking'; 
 
-type BottomCardProps = {
+type ArticleCardProps = {
   image: any;
   tags: string[];
   date: string;
@@ -73,13 +73,13 @@ const CaptionText = styled(Typography)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
-export default function BottomCard({
+export default function ArticleCard({
   image,
   tags,
   date,
   title,
   caption,
-}: BottomCardProps) {
+}: ArticleCardProps) {
   return (
     <CardContainer>
       <CMSCardThumbnailImage

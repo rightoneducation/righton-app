@@ -4,17 +4,15 @@ import { Typography, Grid, Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Swiper, SwiperSlide } from 'swiper/react';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Navigation, Pagination } from 'swiper/modules';
 import { useTheme, styled } from '@mui/material/styles';
+import { v4 as uuidv4 } from 'uuid';
 import { CMSArticleType } from '@righton/networking';
 import { ScreenSize } from '../lib/WebsiteModels';
-import RedAvatar from '../images/redimage.svg';
-import StudentImage from '../images/studentimage.svg';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 import CornerstoneArticleCard from '../lib/styledcomponents/CornerstoneArticleCard';
-import BottomCard from '../lib/styledcomponents/LibraryCategoryCard';
-import ResarchImage from '../images/researchimage.svg';
+import ArticleCard from '../lib/styledcomponents/ArticleCard';
+import CornerstoneSkeleton from '../components/library/CornerstoneSkeleton';
+import ArticleSkeleton from '../components/library/ArticleSkeleton';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'swiper/css';
@@ -22,6 +20,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'swiper/css/pagination';
+
 
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
@@ -96,56 +95,80 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const [selected, setSelected] = useState<'all' | 'research' | 'resources'>('all');
   const [articles, setArticles] = useState<any[]>([]);
   const [cornerstones, setCornerstones] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingArticles, setIsLoadingArticles] = useState(false);
+  const [isLoadingCornerstones, setIsLoadingCornerstones] = useState(false);
+  const [isLoadingSingleArticle, setIsLoadingSingleArticle] = useState(false);
   const isContentPage = useMatch('/library/:contentId');
   const contentId = isContentPage ? isContentPage.params.contentId : null;
-  
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchContent = async () => {
-      if (contentId) {
-        const content = await cmsClient.fetchContentById(contentId);
-        setArticles([content]); // Wrap in an array to match the expected type
-        return;
-      }
-      const content = await cmsClient.fetchAllArticles();
-      const fetchedCornerstones = await cmsClient.fetchAllCornerstones();
-      setArticles(content);
-      setCornerstones(fetchedCornerstones);
-    }
-    fetchContent().then(() => {
-      setIsLoading(false);
-    })
-  }, []); // eslint-disable-line
   
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
   const screenSize = isLargeScreen ? ScreenSize.LARGE : // eslint-disable-line
-  isMediumScreen ? ScreenSize.MEDIUM : 
-  ScreenSize.SMALL;
-  
+    isMediumScreen ? ScreenSize.MEDIUM : 
+    ScreenSize.SMALL;
+  const countCornerstone = screenSize === ScreenSize.LARGE ? 5 : 3;
+  const countArticle = screenSize === ScreenSize.LARGE ? 12 : 6;
   const MainContainerPadding = screenSize === ScreenSize.LARGE? // eslint-disable-line
-  "96px 72px": screenSize === ScreenSize.MEDIUM? "60px 72px": "60px 12px"; // eslint-disable-line
+    "96px 72px": screenSize === ScreenSize.MEDIUM? "60px 72px": "60px 12px"; // eslint-disable-line
+
+  // simple loading of CMS content
+  useEffect(() => {
+    setIsLoadingArticles(true);
+    setIsLoadingCornerstones(true);
+    setIsLoadingSingleArticle(true);
+    
+    const fetchSingleArticle = async () => {
+      if (contentId) {
+        const content = await cmsClient.fetchContentById(contentId);
+        setArticles([content]); // Wrap in an array to match the expected type
+      }
+    }
+    const fetchCornerstones = async () => {
+      const fetchedCornerstones = await cmsClient.fetchAllCornerstones();
+      setCornerstones(fetchedCornerstones);
+    }
+    const fetchArticles = async () => {
+      const content = await cmsClient.fetchAllArticles();
+      setArticles(content);
+    }
+    if (contentId){
+      fetchSingleArticle().then(() => {
+        setIsLoadingSingleArticle(false);
+      })
+    } else {
+      fetchCornerstones().then(() => {
+        setIsLoadingCornerstones(false);
+      })
+      fetchArticles().then(() => {
+        setIsLoadingArticles(false);
+      })
+    }
+  }, []); // eslint-disable-line
 
   const renderArticleContainerArray = [
     (screenSize === ScreenSize.LARGE) ? (
       <ArticlesContainer>
-        {cornerstones.map((article: CMSArticleType) => (
-          <Box 
-            onClick={() => {
-              window.location.href = `/library/${article._id}`;
-            }} 
-            style={{ cursor: 'pointer' }}
-          >
-            <CornerstoneArticleCard
-              key={article._id}
-              screenSize={screenSize}
-              article={article}
-            />
-          </Box>
-        ))}
+        {isLoadingCornerstones 
+          ? Array.from({ length: countCornerstone }).map((_, i) => (
+            <CornerstoneSkeleton index={i} screenSize={screenSize} />
+          ))
+          : cornerstones.map((article: CMSArticleType) => (
+            <Box 
+              onClick={() => {
+                window.location.href = `/library/${article._id}`;
+              }} 
+              style={{ cursor: 'pointer' }}
+            >
+              <CornerstoneArticleCard
+                key={article._id}
+                screenSize={screenSize}
+                article={article}
+              />
+            </Box>
+          ))
+        }
       </ArticlesContainer>
     ) : (
       <SwiperContainer>
@@ -228,27 +251,33 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
           Resources
         </StyledButton>
       </ButtonContainer>
-      <Grid container   columnSpacing={2} rowSpacing={6}>
-        {articles.map((article: any) => (
-          <Grid  size={{xs:12, md:12, lg:4}} key={article.id}>
-            <Box 
-              onClick={() => {
-                window.location.href = `/library/${article._id}`;
-              }} 
-              style={{ cursor: 'pointer' }}
-            >
-              <BottomCard
-                image={article.image}
-                date={article.date}
-                tags={article.tags}
-                title={article.title}
-                caption={article.caption}
-              />
-            </Box>
-          </Grid>
-        ))}
+      <Grid container columnSpacing='16px' rowSpacing='24px'>
+        { isLoadingArticles 
+          ? Array.from({ length: countArticle }).map((_, i) => (
+              <Grid size={{xs:12, md:12, lg:4}} key={uuidv4()}>
+                <ArticleSkeleton index={i} />
+              </Grid>
+            ))
+          : articles.map((article: any) => (
+            <Grid size={{xs:12, md:12, lg:4}} key={article.id}>
+              <Box 
+                onClick={() => {
+                  window.location.href = `/library/${article._id}`;
+                }} 
+                style={{ cursor: 'pointer' }}
+              >
+                <ArticleCard
+                  image={article.image}
+                  date={article.date}
+                  tags={article.tags}
+                  title={article.title}
+                  caption={article.caption}
+                />
+              </Box>
+            </Grid>
+          ))
+        }
       </Grid>
-
     </MainContainer>
   )
 }
