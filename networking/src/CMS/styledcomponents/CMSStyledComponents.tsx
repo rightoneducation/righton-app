@@ -93,3 +93,15 @@ export const CMSCardDateText = styled(CMSCardTitle)(() => ({
   fontWeight: 400,
   color: '#FFFFFF',
 }));
+
+// Cornerstone card styled components
+
+export const CMSCornerstoneTitle = styled(CMSCardTitle)(() => ({
+  color: '#FFF',
+  WebkitLineClamp: 2,
+}))
+
+export const CMSCornerstoneCaption = styled(CMSCardCaption)(() => ({
+  color: '#FFF',
+  WebkitLineClamp: 2,
+}))

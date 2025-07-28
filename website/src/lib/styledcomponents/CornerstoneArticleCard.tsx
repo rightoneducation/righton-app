@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { CMSArticleType, CMSMonsterAvatar } from '@righton/networking';
+import { CMSArticleType, CMSCornerstoneCaption, CMSCornerstoneTitle, CMSMonsterAvatar } from '@righton/networking';
 import { ScreenSize } from '../WebsiteModels';
 import { 
   cmsMonsterAvatar0, 
@@ -44,38 +44,31 @@ function CornerstoneArticleCard({
   const avatarSrc = monsterAvatarMap[article.monsterSelect] || cmsMonsterAvatar0;
 
   return (
-    <StyledCard screenSize={screenSize} style={{maxWidth: '420px'}}>
+    <StyledCard screenSize={screenSize} style={{maxWidth: '420px', minHeight: '545px'}}>
       <img src={article.image?.url ?? ''} alt="Main" style={{minHeight: '300px', objectFit: 'cover', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }} />
-      <Box sx={{ display: 'flex', flexDirection: 'column', 
-        margin: screenSize === ScreenSize.LARGE? '24px': '12px', 
-        gap: '2px', boxSizing: 'border-box' }}>
+      <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          flexGrow: 1,
+          margin: screenSize === ScreenSize.LARGE? '24px': '12px', 
+          gap: '10px', 
+          boxSizing: 'border-box'
+        }}
+      >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <Typography sx={{ fontSize: '14px', fontFamily: 'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF' }}>
             {article.tags?.[0]}
           </Typography>
-          <Typography sx={{ 
+          <CMSCornerstoneTitle sx={{ 
             fontSize: screenSize === ScreenSize.LARGE? '24px': '16px',
-            lineHeight: screenSize === ScreenSize.LARGE? '130%': '100%',
-            fontFamily: 'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF',
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 2,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
+            lineHeight: screenSize === ScreenSize.LARGE? '30px': '16px',
           }}>
             {article.title}
-          </Typography>
-          <Typography sx={{ 
-            lineHeight: screenSize === ScreenSize.LARGE? '150%': '100%',
-            fontFamily: 'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF',
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 2,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}>
+          </CMSCornerstoneTitle>
+          <CMSCornerstoneCaption>
             {article.caption}
-          </Typography>
+          </CMSCornerstoneCaption>
         </Box>
         <Box sx={{ display: 'flex', gap: '12px', alignItems: 'center'}}>
           <CMSMonsterAvatar src={avatarSrc} alt="Monster Avatar" />
