@@ -60,15 +60,18 @@ const CornerStonesContainer = styled(Box)(({ theme }) => ({
   gap: ' 48px',
 }));
 
+const SwiperContainer = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  flexDirection: 'column',
+  alignItems: 'center'
+}));
+
 const ArticleContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   alignItems: 'center'
 }));
 
-const SwiperContainer = styled(Box)(({ theme }) => ({
-  width: '100%',
-}));
 const ButtonContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   gap: 'clamp(12px, 1.5vw, 24px)',
@@ -115,6 +118,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const countArticle = screenSize === ScreenSize.LARGE ? 12 : 6;
   const paddingSide = screenSize === ScreenSize.SMALL ? '12px' : '72px';
   const paddingTopBottom = screenSize === ScreenSize.LARGE ? '96px' : '60px';
+  const slideOffset = screenSize === ScreenSize.SMALL ? 24 : 148;
   
   const handleArticleFilterClick = (tag: 'all' | 'research' | 'resources') => {
     setSelected(tag);
@@ -188,43 +192,36 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
         }
       </CornerStonesContainer>
     ) : (
-      <SwiperContainer
-        sx={{
-          width: '100%',
+      <Swiper
+        slidesPerView='auto'
+        spaceBetween={48}
+        slidesOffsetAfter={slideOffset}
+        style={{
+          width: '100%', 
           paddingLeft: paddingSide
         }}
       >
-          <Swiper
-            style={{width: '100%'}}
-            spaceBetween='48px'
-            slidesPerView="auto"
-            freeMode={false}
-            updateOnWindowResize
-            centeredSlidesBounds
-            slidesOffsetAfter={48}
+        {cornerstones.map((article: CMSArticleType) => (
+          <SwiperSlide
+            style={{width: '287px'}}
           >
-            {cornerstones.map((article: CMSArticleType) => (
-              <SwiperSlide
-                style={{
-                  width: '287px',
-                }}
-              >
-                <Box 
-                  onClick={() => {
-                    window.location.href = `/library/${article._id}`;
-                  }} 
-                  style={{ cursor: 'pointer' }}
-                >
-                  <CornerstoneArticleCard
-                    key={article._id}
-                    screenSize={screenSize}
-                    article={article}
-                  />
-                </Box>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </SwiperContainer>
+            <Box
+              onClick={() => {
+                window.location.href = `/library/${article._id}`;
+              }} 
+              style={{
+                cursor: 'pointer',     
+              }}
+            >
+              <CornerstoneArticleCard
+                key={article._id}
+                screenSize={screenSize}
+                article={article}
+              />
+            </Box>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     )
   ]
     return (
