@@ -103,5 +103,5 @@ export const CMSCornerstoneTitle = styled(CMSCardTitle)(() => ({
 
 export const CMSCornerstoneCaption = styled(CMSCardCaption)(() => ({
   color: '#FFF',
-  WebkitLineClamp: 2,
+  WebkitLineClamp: 3,
 }))

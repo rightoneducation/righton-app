@@ -86,10 +86,10 @@ export default function ArticleCard({
         src={image.url}
         alt="Article Thumbnail"/>
       <InfoWrapper>
-        <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box', gap: '12px' }}>
-          <Box sx={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box', gap: '12px', paddingRight: '12px' }}>
+          <Box sx={{display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center'}}>
             {tags.map((tag) => (
-              <CMSCardTag key={tag} sx={{maxHeight: '15px' }}>{tag}</CMSCardTag>
+              <CMSCardTag key={tag}>{tag}</CMSCardTag>
             ))}
             <CMSCardDateText> {date} </CMSCardDateText>
           </Box>

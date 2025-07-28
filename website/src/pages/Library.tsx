@@ -25,7 +25,6 @@ import 'swiper/css/pagination';
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
-  gap: '72px', 
   width: '100%', 
   minWidth: '300px',
   height: '100%',
@@ -51,28 +50,28 @@ const Uppercontainer = styled(Box)(({ theme }) => ({
 }));
 
 
-const ArticlesAndBorderContainer = styled(Box)(({ theme }) => ({
+const CornerStonesTitleContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
-  flexDirection: 'column',
-  gap: '48px',
-  boxSizing: 'border-box',
   width: '100%',
 }));
 
-const ArticlesContainer = styled(Box)(({ theme }) => ({
+const CornerStonesContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   gap: ' 48px',
-  boxSizing: 'border-box',
 }));
+
+const ArticleContainer = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  flexDirection: 'column',
+  alignItems: 'center'
+}));
+
 const SwiperContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  boxSizing: 'border-box',
-
 }));
 const ButtonContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   gap: 'clamp(12px, 1.5vw, 24px)',
-  boxSizing: 'border-box',
 }));
 
 const StyledButton = styled(Box, {
@@ -94,12 +93,16 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
  
   const [selected, setSelected] = useState<'all' | 'research' | 'resources'>('all');
   const [articles, setArticles] = useState<any[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<any[]>([]);
   const [cornerstones, setCornerstones] = useState<any[]>([]);
   const [isLoadingArticles, setIsLoadingArticles] = useState(false);
   const [isLoadingCornerstones, setIsLoadingCornerstones] = useState(false);
   const [isLoadingSingleArticle, setIsLoadingSingleArticle] = useState(false);
   const isContentPage = useMatch('/library/:contentId');
   const contentId = isContentPage ? isContentPage.params.contentId : null;
+
+  const primaryGap = '72px';
+  const secondaryGap = '48px';
   
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -110,8 +113,16 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
     ScreenSize.SMALL;
   const countCornerstone = screenSize === ScreenSize.LARGE ? 5 : 3;
   const countArticle = screenSize === ScreenSize.LARGE ? 12 : 6;
-  const MainContainerPadding = screenSize === ScreenSize.LARGE? // eslint-disable-line
-    "96px 72px": screenSize === ScreenSize.MEDIUM? "60px 72px": "60px 12px"; // eslint-disable-line
+  const paddingSide = screenSize === ScreenSize.SMALL ? '12px' : '72px';
+  const paddingTopBottom = screenSize === ScreenSize.LARGE ? '96px' : '60px';
+  
+  const handleArticleFilterClick = (tag: 'all' | 'research' | 'resources') => {
+    setSelected(tag);
+    let filtered = articles;
+    if (tag !== 'all')
+      filtered = articles.map((article) => (article.tags.includes(tag)));
+    setFilteredArticles(filtered);
+  };
 
   // simple loading of CMS content
   useEffect(() => {
@@ -132,6 +143,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
     const fetchArticles = async () => {
       const content = await cmsClient.fetchAllArticles();
       setArticles(content);
+      setFilteredArticles(content);
     }
     if (contentId){
       fetchSingleArticle().then(() => {
@@ -149,7 +161,12 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
 
   const renderArticleContainerArray = [
     (screenSize === ScreenSize.LARGE) ? (
-      <ArticlesContainer>
+      <CornerStonesContainer 
+        sx={{
+          paddingLeft: paddingSide,
+          paddingRight: paddingSide
+        }}
+      >
         {isLoadingCornerstones 
           ? Array.from({ length: countCornerstone }).map((_, i) => (
             <CornerstoneSkeleton index={i} screenSize={screenSize} />
@@ -169,19 +186,29 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
             </Box>
           ))
         }
-      </ArticlesContainer>
+      </CornerStonesContainer>
     ) : (
-      <SwiperContainer>
+      <SwiperContainer
+        sx={{
+          width: '100%',
+          paddingLeft: paddingSide
+        }}
+      >
           <Swiper
-            modules={[]}
-            spaceBetween={48}
-            slidesPerView={screenSize === ScreenSize.MEDIUM ? 2.2 : 1.2}
-            style={{ width: '100%' }}
-            grabCursor
-            freeMode
+            style={{width: '100%'}}
+            spaceBetween='48px'
+            slidesPerView="auto"
+            freeMode={false}
+            updateOnWindowResize
+            centeredSlidesBounds
+            slidesOffsetAfter={48}
           >
             {cornerstones.map((article: CMSArticleType) => (
-              <SwiperSlide>
+              <SwiperSlide
+                style={{
+                  width: '287px',
+                }}
+              >
                 <Box 
                   onClick={() => {
                     window.location.href = `/library/${article._id}`;
@@ -201,12 +228,17 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
     )
   ]
     return (
-    <MainContainer sx={{
-      alignItems: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
-      padding: MainContainerPadding,
-      }}>
+    <MainContainer 
+      sx={{
+        gap: screenSize === ScreenSize.LARGE ? primaryGap : secondaryGap,
+        alignItems: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
+      }}
+    >
       <Uppercontainer sx={{
         alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
+        paddingTop: paddingTopBottom,
+        paddingLeft: paddingSide,
+        paddingRight: paddingSide,
       }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px', 
             alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
@@ -215,7 +247,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
             RESOURCES
           </Typography>
           <Typography sx={{ lineHeight: '1.2', fontSize: '40px', fontFamily: 'Poppins, sans-serif', fontWeight: 700,   color: '#FFFFFF'}}>
-            Educator our Resource Library
+            Explore our Resource Library
           </Typography>
         </Box>
         <Typography sx={{ 
@@ -227,57 +259,88 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
             Explore our library of resources created by educators like you!
         </Typography>
       </Uppercontainer>
-      <ArticlesAndBorderContainer>
-        <Box sx={{ 
+      <CornerStonesTitleContainer
+        sx={{
+          paddingLeft: paddingSide,
+          paddingRight: paddingSide,
+          boxSizing: 'border-box'
+        }}
+      >
+        <Typography sx={{fontSize: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 700,   color: '#FFFFFF',}}>
+          Suggested Articles: 
+        </Typography>
+      </CornerStonesTitleContainer>
+      <Box 
+        sx={{ 
           justifySelf: 'start', 
           width: '100%',
           boxSizing: 'border-box',
-        }}>
-          <Typography sx={{fontSize: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 700,   color: '#FFFFFF',}}>
-            Suggested Articles: 
-          </Typography>
-        </Box>
-        {renderArticleContainerArray}
-      </ArticlesAndBorderContainer>
-      <Box sx={{ border: '1px solid #FFFFFF', width: '100%'}} />
-      <ButtonContainer>
-        <StyledButton selected={selected === 'all'} onClick={() => setSelected('all')}>
-          All
-        </StyledButton>
-        <StyledButton selected={selected === 'research'} onClick={() => setSelected('research')}>
-          Research
-        </StyledButton>
-        <StyledButton selected={selected === 'resources'} onClick={() => setSelected('resources')}>
-          Resources
-        </StyledButton>
-      </ButtonContainer>
-      <Grid container columnSpacing='16px' rowSpacing='24px'>
-        { isLoadingArticles 
-          ? Array.from({ length: countArticle }).map((_, i) => (
-              <Grid size={{xs:12, md:12, lg:4}} key={uuidv4()}>
-                <ArticleSkeleton index={i} />
-              </Grid>
+        }}
+      >
+          {renderArticleContainerArray}
+      </Box>
+      <Box 
+        sx={{ 
+          border: '1px solid #FFFFFF', 
+          width: '100%',  
+          paddingLeft: paddingSide, 
+          paddingRight: paddingSide
+        }} 
+      />
+      <ArticleContainer
+        sx={{
+          gap: secondaryGap,
+          paddingLeft: paddingSide,
+          paddingRight: paddingSide
+        }}
+      >
+        <ButtonContainer>
+          <StyledButton selected={selected === 'all'} onClick={() => handleArticleFilterClick('all')}>
+            All
+          </StyledButton>
+          <StyledButton selected={selected === 'research'} onClick={() => handleArticleFilterClick('research')}>
+            Research
+          </StyledButton>
+          <StyledButton selected={selected === 'resources'} onClick={() => handleArticleFilterClick('resources')}>
+            Resources
+          </StyledButton>
+        </ButtonContainer>
+        <Grid 
+          container 
+          columnSpacing='16px' 
+          rowSpacing='24px' 
+          sx={{
+            paddingBottom: paddingTopBottom,
+          }}
+        >
+          { isLoadingArticles 
+            ? Array.from({ length: countArticle }).map((_, i) => (
+                <Grid size={{xs:12, md:12, lg:4}} key={uuidv4()}>
+                  <ArticleSkeleton index={i} />
+                </Grid>
+              ))
+            : filteredArticles.map((article: any) => (
+                article && 
+                  <Grid size={{xs:12, md:12, lg:4}} key={article.id}>
+                    <Box 
+                      onClick={() => {
+                        window.location.href = `/library/${article._id}`;
+                      }} 
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <ArticleCard
+                        image={article.image}
+                        date={article.date}
+                        tags={article.tags}
+                        title={article.title}
+                        caption={article.caption}
+                      />
+                    </Box>
+                  </Grid>
             ))
-          : articles.map((article: any) => (
-            <Grid size={{xs:12, md:12, lg:4}} key={article.id}>
-              <Box 
-                onClick={() => {
-                  window.location.href = `/library/${article._id}`;
-                }} 
-                style={{ cursor: 'pointer' }}
-              >
-                <ArticleCard
-                  image={article.image}
-                  date={article.date}
-                  tags={article.tags}
-                  title={article.title}
-                  caption={article.caption}
-                />
-              </Box>
-            </Grid>
-          ))
-        }
-      </Grid>
+          }
+        </Grid>
+      </ArticleContainer>
     </MainContainer>
   )
 }

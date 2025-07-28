@@ -9,6 +9,8 @@ const StyledCard = styled(Box)<{ screenSize: ScreenSize }>(({ theme, screenSize 
   borderRadius: '8px',
   background: '#224996',
   width: '100%',
+  minWidth: '420px',
+  minHeight: '560px'
 }));
 
 interface SkeletonCornerstoneProps {
