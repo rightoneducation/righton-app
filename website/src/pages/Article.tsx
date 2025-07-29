@@ -77,7 +77,6 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
         setSelectedArticle(article);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching article:', error);
         setIsLoading(false);
       }
     };
