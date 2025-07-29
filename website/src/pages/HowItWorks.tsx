@@ -126,7 +126,6 @@ const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   gap: '12px',
-  alignItems: 'center'
 }));
 
 export function HowItWorks() { // eslint-disable-line
@@ -146,6 +145,15 @@ export function HowItWorks() { // eslint-disable-line
     paddingValue = '96px 72px';
   } else {
     paddingValue = '60px 12px';
+  }
+
+  let marginValue;
+  if (screenSize === ScreenSize.SMALL) {
+    marginValue = '60px 12px 0px';
+  } else if (screenSize === ScreenSize.MEDIUM) {
+    marginValue = '65px 60px 0px';
+  } else {
+    marginValue = null;
   }
   
   const [selectedBox, setSelectedBox] = React.useState(0); // 0 for first, 1 for second
@@ -327,33 +335,22 @@ export function HowItWorks() { // eslint-disable-line
       </FirstContainer>
       
       {/* The second page */}
-      <SecondContainer>
-        <SecondUpperContainerTexts>
-          <SecondUpperContainerIntegratingText>
+      <SecondContainer sx={{paddingBottom: screenSize === ScreenSize.LARGE? '111.5px' : '60px'}}>
+        <SecondUpperContainerTexts sx={{margin: marginValue}}>
+          <SecondUpperContainerIntegratingText sx={{alignItems: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'flex-start' : 'center'}}>
             <Typography sx={{lineHeight: '1.1', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
               PEDAGOGY
             </Typography>
             <Typography sx={{lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
-              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> Righton! </span> into your teaching
+              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> RightOn! </span> into your teaching
             </Typography>
           </SecondUpperContainerIntegratingText>
-          <Typography sx={{maxWidth: '690px', textAlign: 'center', lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-              Click to learn how<span style={{fontStyle: 'italic'}}> Righton! </span> meets each of three key themes in education technology.
+          <Typography sx={{textAlign: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'left' : 'center', maxWidth: '690px',  lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
+              Click to learn how<span style={{fontStyle: 'italic'}}> RightOn! </span> meets each of three key themes in education technology.
           </Typography>
         </SecondUpperContainerTexts>
         {/* Venn Diagram goes here */}
-        {/* <Box
-          sx={{
-            width: '100%',
-            flexGrow: 1,
-            position: 'relative', // <-- This is essential!
-            // margin: '0 auto',
-            border: '1px solid red'
-
-          }}
-        > */}
-          <VennDiagram />
-        {/* </Box> */}
+        <VennDiagram screensize = {screenSize}/>
       </SecondContainer>
     </MainContainer>
   )
