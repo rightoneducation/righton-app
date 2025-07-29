@@ -85,7 +85,6 @@ export class CMSAPIClient {
         };
       }
       return article;
-    
     } catch (error) {
       console.error("Error fetching data from CMS:", error);
       throw error;

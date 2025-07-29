@@ -146,6 +146,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
     }
     const fetchArticles = async () => {
       const content = await cmsClient.fetchAllArticles();
+      console.log(content);
       setArticles(content);
       setFilteredArticles(content);
     }
@@ -326,7 +327,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
                       style={{ cursor: 'pointer' }}
                     >
                       <ArticleCard
-                        image={article.image}
+                        image={article.image || article.thumbnailImage}
                         date={article.date}
                         tags={article.tags}
                         title={article.title}

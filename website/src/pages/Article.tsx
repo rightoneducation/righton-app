@@ -1,18 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useMatch } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
-import { useTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { AnimatePresence, motion } from 'framer-motion';
-import { PortableText, type PortableTextComponents } from '@portabletext/react';
-import {
-  CMSHeroImage,
-  CMSTitleText,
-  CMSHeaderText,
-  CMSBodyText,
-  PortableTextComponentsConfig
-} from '@righton/networking';
 import { ShareModal } from '../components/article/ShareModal';
 import { ArticleHeader } from '../components/article/ArticleHeader';
+import { ArticleContent } from '../components/article/ArticleContent';
+import { VideoArticleContent } from '../components/article/VideoArticleContent';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -56,6 +50,7 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const [isShareClicked, setIsShareClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isVideoArticle, setIsVideoArticle] = useState(false);
   const articleId = useMatch('/library/:contentId')?.params.contentId;
 
   const modalWrapperRef = useRef<HTMLDivElement>(null);
@@ -77,6 +72,8 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
     const fetchArticle = async () => {
       try {
         const article = await cmsClient.fetchArticle(articleId);
+        if (article.youtubeLink !== null)
+          setIsVideoArticle(true);
         setSelectedArticle(article);
         setIsLoading(false);
       } catch (error) {
@@ -107,22 +104,10 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
             articleId={articleId ?? ''}
             handleShareClicked={handleShareClicked}
           />
-          <CMSHeroImage src={selectedArticle.image.url} alt="Article Hero" />
-          <CMSTitleText>{selectedArticle.title}</CMSTitleText>
-          <Box style={{ display: 'flex', flexDirection: 'column' }}>
-            <CMSBodyText><strong>Author:</strong> {selectedArticle.author}</CMSBodyText>
-            <CMSBodyText><strong>Affiliation:</strong> {selectedArticle.affiliation}</CMSBodyText>
-            <CMSBodyText><strong>Contact:</strong> {selectedArticle.contact}</CMSBodyText>
-          </Box>
-          <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <PortableText
-              value={selectedArticle.details}
-              components={PortableTextComponentsConfig as PortableTextComponents}
-            />
-          </Box>
-          <CMSHeaderText>{selectedArticle.header}</CMSHeaderText>
-          <CMSBodyText>{selectedArticle.body}</CMSBodyText>
-
+          { isVideoArticle 
+            ? <VideoArticleContent article={selectedArticle} />
+            : <ArticleContent article={selectedArticle} />
+          }
           <AnimatePresence>
             {isShareClicked && (
               <Box

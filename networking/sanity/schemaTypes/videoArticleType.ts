@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 
-export const articleType = defineType({
+export const videoArticleType = defineType({
   name: 'videoArticle',
   title: 'Video Article',
   type: 'document',
@@ -19,21 +19,17 @@ export const articleType = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'youtubeLink',
+      type: 'string',
+    }),
+    defineField({
       name: 'caption',
       type: 'string',
     }),
     defineField({
       name: 'author',
       type: 'string',
-    }),    
-    defineField({
-      name: 'affiliation',
-      type: 'string',
     }),
-    defineField({
-      name: 'contact',
-      type: 'string',
-    }),    
     defineField({
       name: 'date',
       type: 'string',
@@ -45,7 +41,7 @@ export const articleType = defineType({
     defineField({
       name: 'readingTimeMinutes',
       type: 'number',
-    }),    
+    }),
     defineField({
       name: 'details',
       type: 'array',
