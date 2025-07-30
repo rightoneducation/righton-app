@@ -13,6 +13,7 @@ import CornerstoneArticleCard from '../lib/styledcomponents/CornerstoneArticleCa
 import ArticleCard from '../lib/styledcomponents/ArticleCard';
 import CornerstoneSkeleton from '../components/library/CornerstoneSkeleton';
 import ArticleSkeleton from '../components/library/ArticleSkeleton';
+import { ButtonContainer, StyledButton } from '../lib/styledcomponents/StyledComponents';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'swiper/css';
@@ -60,37 +61,11 @@ const CornerStonesContainer = styled(Box)(({ theme }) => ({
   gap: ' 48px',
 }));
 
-const SwiperContainer = styled(Box)(({ theme }) => ({
-  display: 'flex', 
-  flexDirection: 'column',
-  alignItems: 'center'
-}));
-
 const ArticleContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   alignItems: 'center'
 }));
-
-const ButtonContainer = styled(Box)(({ theme }) => ({
-  display: 'flex', 
-  gap: 'clamp(12px, 1.5vw, 24px)',
-}));
-
-const StyledButton = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'selected',
-})<{ selected: boolean }>(({ selected }) => ({
-  padding: 'clamp(8px, 1vw, 12px) clamp(16px, 2vw, 24px)',
-  borderRadius: '24px',
-  border: selected ? '1px solid #FFFFFF' : '1px solid transparent',
-  color: '#FFFFFF',
-  fontFamily: 'Poppins, sans-serif',
-  fontSize: 'clamp(14px, 1.2vw, 20px)',
-  fontWeight: 400,
-  cursor: 'pointer',
-  transition: 'border 0.3s ease',
-}));
-
 
 export function Library({cmsClient} : any ) { // eslint-disable-line
  
@@ -104,6 +79,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const isContentPage = useMatch('/library/:contentId');
   const contentId = isContentPage ? isContentPage.params.contentId : null;
 
+  // TODO: ~~~Theme~~~
   const primaryGap = '72px';
   const secondaryGap = '48px';
   
@@ -114,6 +90,8 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const screenSize = isLargeScreen ? ScreenSize.LARGE : // eslint-disable-line
     isMediumScreen ? ScreenSize.MEDIUM : 
     ScreenSize.SMALL;
+
+  // TODO: ~~~Theme~~~
   const countCornerstone = screenSize === ScreenSize.LARGE ? 5 : 3;
   const countArticle = screenSize === ScreenSize.LARGE ? 12 : 6;
   const paddingSide = screenSize === ScreenSize.SMALL ? '12px' : '72px';

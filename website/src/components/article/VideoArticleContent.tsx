@@ -33,8 +33,9 @@ export function VideoArticleContent({ // eslint-disable-line
         title="Youtube Video"
         style={{
           height: '450px', 
-          border: 0
-        }}
+          border: 0,
+          borderRadius: '8px'
+        }}  
       />
       <CMSTitleText>{article.title}</CMSTitleText>
       <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

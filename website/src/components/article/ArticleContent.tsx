@@ -9,18 +9,25 @@ import {
   PortableTextComponentsConfig,
   CMSArticleType
 } from '@righton/networking';
+import { ScreenSize } from '../../lib/WebsiteModels';
 
 interface ArticleContainerInterface {
-  article: CMSArticleType
+  article: CMSArticleType;
+  screenSize?: ScreenSize;
 }
 
 export function ArticleContent({ // eslint-disable-line
-  article
+  article,
+  screenSize
 } : ArticleContainerInterface) {
 
   return (
-    <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
-      <CMSHeroImage src={article?.image?.url} alt="Article Hero" />
+    <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: screenSize !== ScreenSize.LARGE ? '24px' : '40px' }}>
+      <CMSHeroImage 
+        src={article?.image?.url} 
+        alt="Article Hero" 
+        style={screenSize === ScreenSize.SMALL ? { aspectRatio: '1 / 1' } : {}}
+      />
       <CMSTitleText>{article.title}</CMSTitleText>
       <Box style={{ display: 'flex', flexDirection: 'column' }}>
         <CMSBodyText><strong>Author:</strong> {article.author}</CMSBodyText>

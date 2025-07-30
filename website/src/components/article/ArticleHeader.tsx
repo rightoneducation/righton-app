@@ -2,6 +2,7 @@ import React, { useState} from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CMSBodyText, CMSMonsterAvatar, CMSArticleType } from '@righton/networking';
+import { ScreenSize } from '../../lib/WebsiteModels';
 import { 
   cmsMonsterAvatar0, 
   cmsMonsterAvatar1, 
@@ -14,6 +15,7 @@ import shareLinkedIn from '../../images/shareLinkedIn.svg';
 import shareTwitter from '../../images/shareTwitter.svg';
 import shareFacebook from '../../images/shareFacebook.svg';
 import shareLink from '../../images/shareLink.svg';
+import shareMobile from '../../images/shareMobile.svg';
 
 const HeaderContainer = styled(Box)(({ theme }) => ({
   width: '100%', 
@@ -25,12 +27,14 @@ interface ArticleHeaderProps {
   selectedArticle: CMSArticleType;
   handleShareClicked: () => void;
   articleId: string;
+  screenSize: ScreenSize;
 }
 
 export function ArticleHeader ({ // eslint-disable-line
   selectedArticle,
   handleShareClicked,
-  articleId
+  articleId,
+  screenSize
  }: ArticleHeaderProps) { 
   const monsterAvatarMap: { [key: number]: string } = {
     0: cmsMonsterAvatar0,
@@ -61,6 +65,7 @@ export function ArticleHeader ({ // eslint-disable-line
             </Box>
           </Box> 
         </Box>
+        {screenSize === ScreenSize.LARGE ? 
         <Box style={{ display: 'flex', gap: '24px' }}>
           <Box  
             onClick={() => {
@@ -97,6 +102,17 @@ export function ArticleHeader ({ // eslint-disable-line
             <img src={shareLink} alt="Share Link" style={{ width: '32px', height: '32px' }}/>
           </Box>
         </Box>
+        : <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Box  
+            onClick={() => {
+              // TODO: Implement share per coordination with design
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <img src={shareMobile} alt="Share" style={{ width: '32px', height: '32px' }}/>
+          </Box>
+        </Box>
+}
       </Box>
     </HeaderContainer>
   )
