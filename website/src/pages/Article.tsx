@@ -26,28 +26,16 @@ const MainContainer = styled(Box)<MainContainerProps>(({ theme, screenSize }) =>
   height: '100%',
   boxSizing: 'border-box',
   position: 'relative',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: `url(${MathSymbolBackground})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    zIndex: -2,
-  },
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(2, 33, 95, 0.9)',
-    zIndex: -1,
-  }
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  opacity: 1,
+  backgroundImage: `linear-gradient(rgba(2, 33, 95), rgba(2, 33, 95, 0.94)),
+  url(${MathSymbolBackground})
+  `,
+  background: 'cover',
+  flexGrow: 1
 }));
 
 export function Article({ cmsClient }: any) { // eslint-disable-line
