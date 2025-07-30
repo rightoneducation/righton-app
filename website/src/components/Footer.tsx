@@ -21,7 +21,7 @@ const links = [
 const socialMediaIcons = [
   { icon: shareFacebook, alt: 'Facebook', link: '#' },
   { icon: shareTwitter, alt: 'Twitter', link: '#' },
-  { icon: shareLinkedIn, alt: 'LinkedIn', link: '#' }
+  { icon: shareLinkedIn, alt: 'LinkedIn', link: 'https://www.linkedin.com/company/rightoneducation' }
 ]
 
 export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
@@ -84,7 +84,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
                 color: '#FFFFFF',
                 cursor: 'pointer',
                 '&:hover': {
-                  opacity: 0.8
+                  color: '#FF3A6A'
                 }
               }}
               onClick={() => {window.location.href = link.path}}
@@ -197,7 +197,10 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
               color: '#FFFFFF',
               fontFamily: 'Rubik',
               textDecoration: 'underline',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              '&:hover': {
+                color: '#FF3A6A'
+              }
             }}
             onClick={() => {window.open('/docs/privacypolicy.pdf', '_blank')}}
           >
