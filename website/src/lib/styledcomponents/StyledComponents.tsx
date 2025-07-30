@@ -5,7 +5,7 @@ import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 export const AppContainer = styled(Box)(({ theme }) => ({ // eslint-disable-line
   display: 'flex',
   width: '100%', 
-  height: '100%',
+  minHeight: '100dvh',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
