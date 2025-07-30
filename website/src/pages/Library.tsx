@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTheme, styled } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { CMSArticleType } from '@righton/networking';
-import { ScreenSize } from '../lib/WebsiteModels';
+import { ScreenSize, LibraryType } from '../lib/WebsiteModels';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 import CornerstoneArticleCard from '../lib/styledcomponents/CornerstoneArticleCard';
 import ArticleCard from '../lib/styledcomponents/ArticleCard';
@@ -69,7 +69,7 @@ const ArticleContainer = styled(Box)(({ theme }) => ({
 
 export function Library({cmsClient} : any ) { // eslint-disable-line
  
-  const [selected, setSelected] = useState<'all' | 'research' | 'resources'>('all');
+  const [selected, setSelected] = useState<LibraryType>(LibraryType.ALL);
   const [articles, setArticles] = useState<any[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<any[]>([]);
   const [cornerstones, setCornerstones] = useState<any[]>([]);
@@ -98,11 +98,13 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const paddingTopBottom = screenSize === ScreenSize.LARGE ? '96px' : '60px';
   const slideOffset = screenSize === ScreenSize.SMALL ? 24 : 148;
   
-  const handleArticleFilterClick = (tag: 'all' | 'research' | 'resources') => {
+  const handleArticleFilterClick = (tag: LibraryType) => {
     setSelected(tag);
     let filtered = articles;
-    if (tag !== 'all')
-      filtered = articles.map((article) => (article.tags.includes(tag)));
+    console.log(articles);
+    if (tag !== LibraryType.ALL) {
+      filtered = articles.filter((article) => article.tags.includes(tag));
+    }
     setFilteredArticles(filtered);
   };
 
@@ -271,14 +273,17 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
         }}
       >
         <ButtonContainer>
-          <StyledButton selected={selected === 'all'} onClick={() => handleArticleFilterClick('all')}>
+          <StyledButton selected={selected === LibraryType.ALL} onClick={() => handleArticleFilterClick(LibraryType.ALL)}>
             All
           </StyledButton>
-          <StyledButton selected={selected === 'research'} onClick={() => handleArticleFilterClick('research')}>
-            Research
+          <StyledButton selected={selected === LibraryType.ARTICLE} onClick={() => handleArticleFilterClick(LibraryType.ARTICLE)}>
+            Articles
           </StyledButton>
-          <StyledButton selected={selected === 'resources'} onClick={() => handleArticleFilterClick('resources')}>
-            Resources
+          <StyledButton selected={selected === LibraryType.VIDEO} onClick={() => handleArticleFilterClick(LibraryType.VIDEO)}>
+            Videos
+          </StyledButton>
+          <StyledButton selected={selected === LibraryType.RESEARCH} onClick={() => handleArticleFilterClick(LibraryType.RESEARCH)}>
+            Research
           </StyledButton>
         </ButtonContainer>
         <Grid 

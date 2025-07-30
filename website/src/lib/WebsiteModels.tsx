@@ -10,3 +10,10 @@ export enum ScreenSize {
   MEDIUM,
   LARGE
 }
+
+export enum LibraryType {
+  ALL = 'All',
+  ARTICLE = 'Article',
+  VIDEO = 'Video',
+  RESEARCH = 'Research'
+}
