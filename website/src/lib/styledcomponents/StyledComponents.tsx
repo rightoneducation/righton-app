@@ -32,6 +32,25 @@ export const MathSymbolsBackground = styled(Box)(({ theme }) => ({
   backgroundRepeat: 'no-repeat',
 }));
 
+export const ButtonContainer = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  gap: 'clamp(12px, 1.5vw, 24px)',
+}));
+
+export const StyledButton = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'selected',
+})<{ selected: boolean }>(({ selected }) => ({
+  padding: 'clamp(8px, 1vw, 12px) clamp(16px, 2vw, 24px)',
+  borderRadius: '24px',
+  border: selected ? '1px solid #FFFFFF' : '1px solid transparent',
+  color: '#FFFFFF',
+  fontFamily: 'Poppins, sans-serif',
+  fontSize: 'clamp(14px, 1.2vw, 20px)',
+  fontWeight: 400,
+  cursor: 'pointer',
+  transition: 'border 0.3s ease',
+}));
+
 export enum ScreenSize {
   LARGE,
   MEDIUM,

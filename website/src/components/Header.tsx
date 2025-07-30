@@ -11,40 +11,48 @@ interface HeaderProps {
 }
 
 const links = [
-  { title: 'How It Works', path: ""},
-  { title: 'About Us', path: ""},
-  { title: 'Positive Culture of Error', path: "" },
-  {  title: 'Resource Library', path: "" }
+  { title: 'How It Works', path: "/"},
+  { title: 'About Us', path: "/"},
+  { title: 'Positive Culture of Error', path: "/" },
+  {  title: 'Resource Library', path: "/library" }
 ]
 
 export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
   const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
   return (
-    <StyledFlexBox justify="center" 
-    style={{ 
-      borderBottom: '1px solid #fff', 
-      background: '#02215F', 
-      width: '100%', 
-      minHeight: screenSize !== ScreenSize.LARGE ? '78px' : '192px'}}>
-      <StyledFlexBox
-      sx={{
-        ...(screenSize !== ScreenSize.LARGE && { padding: '12px 24px'})
+    <StyledFlexBox 
+      justify="center" 
+      style={{ 
+        borderBottom: '1px solid #fff', 
+        background: '#02215F', 
+        width: '100%', 
+        minHeight: screenSize !== ScreenSize.LARGE ? '78px' : '192px'
       }}
-      direction="row" 
-      align="center" 
-      justify={screenSize === ScreenSize.LARGE ? 'center': 'space-between'} 
-      gap={screenSize === ScreenSize.LARGE ? 24: 0}>
+    >
+      <StyledFlexBox
+        sx={{
+          ...(screenSize !== ScreenSize.LARGE && { padding: '12px 24px'})
+        }}
+        direction="row" 
+        align="center" 
+        justify={screenSize === ScreenSize.LARGE ? 'center': 'space-between'} 
+        gap={screenSize === ScreenSize.LARGE ? 24: 0}
+      >
         <Box 
-        component="img" 
-        src={RightOnLogo}  
-        width={screenSize === ScreenSize.LARGE ? "216px": "99px"} 
-        height={screenSize === ScreenSize.LARGE ? "96px": "55px"} />
+          component="img" 
+          src={RightOnLogo}  
+          width={screenSize === ScreenSize.LARGE ? "216px": "99px"} 
+          height={screenSize === ScreenSize.LARGE ? "96px": "55px"} 
+          onClick={() => {window.location.href="/"}}
+          style={{cursor: 'pointer'}}
+        />
 
         {screenSize === ScreenSize.LARGE && <StyledFlexBox direction="row" gap={198}>
-
         <StyledFlexBox direction="row" align="center" gap={24}>
         {links.map((link) => (
-            <StyledText sx={{ cursor: 'pointer', padding: '4px 12px' }} key={link.title} fontSize="20px">{link.title}</StyledText>
+            <Box onClick={() => {window.location.href=link.path}} style={{cursor: 'pointer'}}>
+              <StyledText sx={{ cursor: 'pointer', padding: '4px 12px' }} key={link.title} fontSize="20px">{link.title}</StyledText>
+            </Box>
           ))}
         </StyledFlexBox>
 

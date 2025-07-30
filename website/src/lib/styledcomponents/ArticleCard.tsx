@@ -5,7 +5,7 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CMSCardThumbnailImage, CMSCardTag, CMSCardCaption, CMSCardTitle, CMSCardDateText } from '@righton/networking'; 
 
-type BottomCardProps = {
+type ArticleCardProps = {
   image: any;
   tags: string[];
   date: string;
@@ -73,23 +73,23 @@ const CaptionText = styled(Typography)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
-export default function BottomCard({
+export default function ArticleCard({
   image,
   tags,
   date,
   title,
   caption,
-}: BottomCardProps) {
+}: ArticleCardProps) {
   return (
     <CardContainer>
       <CMSCardThumbnailImage
         src={image.url}
         alt="Article Thumbnail"/>
       <InfoWrapper>
-        <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box', gap: '12px' }}>
-          <Box sx={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box', gap: '12px', paddingRight: '12px' }}>
+          <Box sx={{display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center'}}>
             {tags.map((tag) => (
-              <CMSCardTag key={tag} sx={{maxHeight: '15px' }}>{tag}</CMSCardTag>
+              <CMSCardTag key={tag}>{tag}</CMSCardTag>
             ))}
             <CMSCardDateText> {date} </CMSCardDateText>
           </Box>
