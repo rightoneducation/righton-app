@@ -93,13 +93,13 @@ export default function DiscussAnswerCard({
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
               <Typography
                 variant="subtitle1"
-                sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
+                sx={{ whiteSpace: 'pre-line', paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
               >
                 {resultText}
               </Typography>
               <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>
             </Box>
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{whiteSpace: 'pre-line'}}>
               {t('gameinprogress.discussanswer.correctanswertext')}
             </Typography>
           </Box>
@@ -167,14 +167,14 @@ export default function DiscussAnswerCard({
                 </Box>
                 <Typography
                   variant="body1"
-                  sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px` }}
+                  sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px`,whiteSpace: 'pre-line' }}
                 >
                   {instruction}
                 </Typography>
               </Box>
             ))
           ) : (
-            <Typography variant="body1">{answerReason}</Typography>
+            <Typography variant="body1" sx={{whiteSpace: 'pre-line'}}>{answerReason}</Typography>
           )}
         </Stack>
       </BodyCardContainerStyled>

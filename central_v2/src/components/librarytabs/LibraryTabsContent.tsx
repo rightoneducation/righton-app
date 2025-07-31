@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Box, CircularProgress, useTheme } from '@mui/material';
+import { Box, CircularProgress, useTheme, Typography } from '@mui/material';
 import {
   ElementType,
   GalleryType,
@@ -75,10 +75,94 @@ export default function LibraryTabsContent({
       ? getGameElements(openTab, isSearchResults, centralData)
       : getQuestionElements(openTab, isSearchResults, centralData);
 
+  const hasMore = openTab !== LibraryTabEnum.FAVORITES ? 
+    centralData.nextToken !== null :
+    false;
+
+  let padding = 0;
+  switch (screenSize){
+    case (ScreenSize.LARGE):
+      padding = 144;
+      break;
+    case (ScreenSize.MEDIUM):
+      padding = 112;
+      break;
+    case (ScreenSize.SMALL):
+    default:
+      padding = 80;
+      break
+  }
+
+  let gameQuestionText = '';
+  switch (gameQuestion) {
+    case (GameQuestionType.GAME):
+      gameQuestionText = 'games';
+      break;
+    case (GameQuestionType.QUESTION):
+    default:
+      gameQuestionText = 'questions';
+      break;
+  }
+
+  let emptyText = '';
+  switch (openTab){
+    case (LibraryTabEnum.PUBLIC):
+      emptyText = `public ${gameQuestionText}`;
+      break;
+    case (LibraryTabEnum.PRIVATE):
+      emptyText = `private ${gameQuestionText}`;
+      break;
+    case (LibraryTabEnum.DRAFTS):
+      emptyText = 'drafts';
+      break;
+    case (LibraryTabEnum.FAVORITES):
+    default:
+      emptyText = 'favorites';
+      break;
+  }
   const handleLoadMore = async () => {
     loadMoreLibrary(openTab, centralData.searchTerms, centralData.nextToken);
   };
 
+  const cardGallery = [
+     gameQuestion === GameQuestionType.GAME ? (
+        <CardGallery<IGameTemplate>
+          screenSize={screenSize}
+          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+          grades={isSearchResults ? centralData.selectedGrades : undefined}
+          galleryElements={elements as IGameTemplate[]}
+          elementType={ElementType.GAME}
+          galleryType={
+            isSearchResults
+              ? GalleryType.SEARCH_RESULTS
+              : GalleryType.MOST_POPULAR
+          }
+          setIsTabsOpen={setIsTabsOpen}
+          handleView={handleGameView}
+          isLoading={centralData.isLoading}
+          isMyLibrary
+        />
+      ) : (
+        <CardGallery<IQuestionTemplate>
+          screenSize={screenSize}
+          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+          grades={isSearchResults ? centralData.selectedGrades : undefined}
+          galleryElements={elements as IQuestionTemplate[]}
+          elementType={ElementType.GAME}
+          galleryType={
+            isSearchResults
+              ? GalleryType.SEARCH_RESULTS
+              : GalleryType.MOST_POPULAR
+          }
+          setIsTabsOpen={setIsTabsOpen}
+          handleView={handleQuestionView}
+          isLoading={centralData.isLoading}
+          isMyLibrary
+          isMyLibraryQuestion
+        />
+      )
+  ]
+  
   return (
     <ContentContainer>
       <SearchBar
@@ -88,63 +172,50 @@ export default function LibraryTabsContent({
         handleChooseGrades={handleChooseGrades}
         handleSortChange={handleSortChange}
       />
-      <ScrollContainer id="scrollableDiv">
-        <InfiniteScroll
-          dataLength={elements.length}
-          next={handleLoadMore}
-          hasMore={centralData.nextToken !== null}
-          loader={
-            <Box
-              style={{
-                position: 'relative',
-                bottom: '75px',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
+     
+      { centralData.isLoading // eslint-disable-line no-nested-ternary
+        ? <Box sx={{display: 'flex', flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}>
+              <CircularProgress style={{ color: '#FFF'}} />
+          </Box>
+        : elements && elements.length > 0 ? (
+          <ScrollContainer id="scrollableDiv">
+            <InfiniteScroll
+              dataLength={elements.length}
+              next={handleLoadMore}
+              hasMore={hasMore}
+              loader={
+                <Box
+                  style={{
+                    position: 'relative',
+                    bottom: '75px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  { !centralData.isLoading &&
+                  <CircularProgress style={{ color: '#FFF' }} />
+                  }
+                </Box>
+              }
+              scrollableTarget="scrollableDiv"
             >
-              <CircularProgress style={{ color: '#FFF' }} />
-            </Box>
-          }
-          scrollableTarget="scrollableDiv"
-        >
-          {gameQuestion === GameQuestionType.GAME ? (
-            <CardGallery<IGameTemplate>
-              screenSize={screenSize}
-              searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-              grades={isSearchResults ? centralData.selectedGrades : undefined}
-              galleryElements={elements as IGameTemplate[]}
-              elementType={ElementType.GAME}
-              galleryType={
-                isSearchResults
-                  ? GalleryType.SEARCH_RESULTS
-                  : GalleryType.MOST_POPULAR
-              }
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleGameView}
-              isLoading={centralData.isLoading}
-              isMyLibrary
-            />
+              {cardGallery}
+            </InfiniteScroll>
+          </ScrollContainer> 
           ) : (
-            <CardGallery<IQuestionTemplate>
-              screenSize={screenSize}
-              searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-              grades={isSearchResults ? centralData.selectedGrades : undefined}
-              galleryElements={elements as IQuestionTemplate[]}
-              elementType={ElementType.GAME}
-              galleryType={
-                isSearchResults
-                  ? GalleryType.SEARCH_RESULTS
-                  : GalleryType.MOST_POPULAR
-              }
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleQuestionView}
-              isLoading={centralData.isLoading}
-              isMyLibrary
-              isMyLibraryQuestion
-            />
-          )}
-        </InfiniteScroll>
-      </ScrollContainer>
+              <Typography sx={{
+              fontFamily: 'Poppins',
+              fontSize: '24px',
+              lineHeight: '24px',
+              fontWeight: '700',
+              color: '#FFF',
+              paddingTop: `${padding}px`,
+              textAlign: 'center'
+            }}>
+              You currently don’t have any {emptyText}.
+            </Typography>
+          )
+      }
     </ContentContainer>
   );
 }

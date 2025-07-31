@@ -170,7 +170,9 @@ export abstract class BaseAPIClient {
     query: any,
     type: PublicPrivateType,
     gradeTargets?: GradeTarget[] | null,
-    favIds?: string[] | null
+    favIds?: string[] | null,
+    isExploreGames?: boolean,
+    userId?: string | null
   ): Promise<QueryResult | null> {
     let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
     if (!queryParameters.filter) {
@@ -181,12 +183,21 @@ export abstract class BaseAPIClient {
         or: favIds.map(id => ({ id: { eq: id } }))
       });
     }
+    if (isExploreGames) {
+       queryParameters.filter = {
+          questionTemplatesCount: { gt: 0 }
+        };
+    }
+    if (userId) {
+      queryParameters.userId = userId;
+    }
     if (filterString != null) {
       const lower = filterString.toLowerCase();
       const search: any = {
         or: [
           { lowerCaseTitle: { contains: lower } },
-          { ccss: { contains: filterString } }
+          { ccss: { contains: filterString } },
+          { ccssDescription: { contains: lower } }
         ]
       };
       if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
@@ -202,7 +213,6 @@ export abstract class BaseAPIClient {
     if (sortDirection != null) {
       queryParameters.sortDirection = sortDirection;
     }
-
     const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     let raw;
     try{ 
@@ -214,7 +224,6 @@ export abstract class BaseAPIClient {
     } catch (e) {
       raw = e as { data?: any; errors?: Array<{ message: string; path?: any[] }> };
     }
-
     const recoverable = (raw.errors || []).filter(err =>
       err.message.startsWith("Cannot return null for non-nullable type:")
     );

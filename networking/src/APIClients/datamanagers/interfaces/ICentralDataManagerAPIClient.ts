@@ -13,7 +13,9 @@ export interface ICentralDataManagerAPIClient {
     sortDirection: SortDirection, 
     sortType: SortType, 
     gradeTargets: GradeTarget[],
-    favIds: string[] | null
+    favIds: string[] | null,
+    isLibrary?: boolean,
+    userId?: string
   ) => Promise<{ nextToken: string | null, games: IGameTemplate[] }>;
   searchForQuestionTemplates: (
     type: PublicPrivateType, 
@@ -23,7 +25,9 @@ export interface ICentralDataManagerAPIClient {
     sortDirection: SortDirection, 
     sortType: SortType, 
     gradeTargets: GradeTarget[],
-    favIds: string[] | null
+    favIds: string[] | null,
+    isLibrary?: boolean,
+    userId?: string
   ) => Promise<{ nextToken: string | null, questions: IQuestionTemplate[] }>;
   refreshLocalUserProfile: () => Promise<IUserProfile | null>;
   getLocalUserProfile: () => IUserProfile | null;

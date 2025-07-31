@@ -108,47 +108,7 @@ export default function GameInProgress({
     ) ?? [];
   }
   const [multiChoiceCharacter, setMultiChoiceCharacter] = useState('');
-  // this breaks down the question text from the gameSession for bold formatting of the question text
-  // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
-  // second, if there isn't a question mark, it looks for the last period and cuts the question from the proceeding period to the end of the string
-  // if neither of those, it just uses the default entire string as the question text
-  const divideQuestionString = (inputText: string) => {
-    const qmarkLocation = inputText.lastIndexOf('?');
-    const lastPeriodLocation = inputText.lastIndexOf('.');
-    let introText = '';
-    let questionText = inputText;
-    if (qmarkLocation !== -1) {
-      const splicedString = inputText.substring(0, qmarkLocation + 1);
-      const periodLocationSpace = splicedString.lastIndexOf('. ');
-      const periodLocationQuote = splicedString.lastIndexOf('." ');
-      const periodLocationCurlyQuote = splicedString.lastIndexOf('.” ');
-      const periodLocation = Math.max(periodLocationSpace, periodLocationQuote, periodLocationCurlyQuote);
-      questionText = splicedString;
-      if (periodLocation !== -1) {
-        let additionalChars = 1;
-        if (periodLocation === periodLocationSpace) {
-          additionalChars = 2; // period and space
-        } else if (periodLocation === periodLocationQuote || periodLocation === periodLocationCurlyQuote) {
-          additionalChars = 3; // period, quote, and space
-        }
-        introText = inputText.substring(0, periodLocation + additionalChars);
-        questionText = inputText.substring(periodLocation + additionalChars, inputText.length);
-      }
-    } else {
-      const splicedString = inputText.substring(0, lastPeriodLocation);
-      const secondLastPeriodLocation = splicedString.lastIndexOf('.');
-      if (secondLastPeriodLocation !== -1) {
-        introText = inputText.substring(0, secondLastPeriodLocation + 1);
-        questionText = inputText.substring(
-          secondLastPeriodLocation + 1,
-          inputText.length
-        );
-      }
-    }
-    return [introText, questionText];
-  };
-
-  const questionText = divideQuestionString(currentQuestion.text);
+  const questionText = currentQuestion.text;
   const totalTime =
     currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
       ? phaseOneTime

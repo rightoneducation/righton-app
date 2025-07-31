@@ -168,6 +168,7 @@ export default function Login({ handleLogOut }: LoginProps) {
           password,
         );
       centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
+      centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: true });
       centralDataDispatch({
         type: 'SET_USER_STATUS',
         payload: UserStatusType.LOGGEDIN,

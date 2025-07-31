@@ -1,5 +1,6 @@
 import { Box, Grid, styled, Tab } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
+import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 export const TabContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -86,6 +87,20 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   padding: '24px',
   boxSizing: 'border-box',
+}));
+
+export const QTContentContainer = styled(ContentContainer)(({ theme }) => ({
+  backgroundImage: `
+  url(${mathSymbolsBackground}),
+  linear-gradient(180deg, #092361 0%, #19356D 100%)
+    
+  `,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'bottom', 
+}));
+
+export const QTInnerContentContainer = styled(ContentContainer)(({ theme }) => ({
+  background: 'transparent',
 }));
 
 export const ScrollContainer = styled(Box)(({ theme }) => ({
