@@ -155,7 +155,8 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
           width: '100%',
           flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          paddingTop: '12px'
         }}
       >
         {screenSize !== ScreenSize.LARGE && (
