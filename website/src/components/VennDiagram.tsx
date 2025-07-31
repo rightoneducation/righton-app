@@ -394,14 +394,15 @@ export default function VennDiagram({
     </motion.div>
 
     ): (
-    <SwiperContainer sx={{height: screensize === ScreenSize.MEDIUM?'488px': ''}}>
+    <SwiperContainer sx={{ height: screensize === ScreenSize.MEDIUM?'600px': ''}}>
       <Swiper
           modules={[Pagination]}
           spaceBetween={screensize === ScreenSize.SMALL? 24 : 48}
-          slidesPerView={screensize === ScreenSize.SMALL? 1: 1.6}
+          slidesPerView={screensize === ScreenSize.SMALL? 1.24: 1.6}
           style={{ 
             width: '100%', height: screensize === ScreenSize.MEDIUM?'100%': '',
-            paddingBottom: '40px'
+            paddingBottom:  screensize === ScreenSize.SMALL? '70px' : '',
+            
           }}
           centeredSlides
           grabCursor

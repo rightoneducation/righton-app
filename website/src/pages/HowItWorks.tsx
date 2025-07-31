@@ -6,9 +6,12 @@ import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 import OnePhone from '../images/onephone.png';
 import TwoPhone from '../images/twophone.png'
 import ThreePhone from '../images/threephone.png'
+import LogicModel from '../images/right-on-education.png';
 import { ScreenSize } from '../lib/WebsiteModels';
 import  StepImage from '../lib/styledcomponents/HowItWorks/StepImage';
 import VennDiagram from '../components/VennDiagram';
+
+
 
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
@@ -106,8 +109,6 @@ const SecondContainer = styled(Box)(({ theme }) => ({
   gap: '72px',
   width: '100%',
   boxSizing: 'border-box',
-  // padding: '0px 71.5px',
-  // border: '1px solid red',
   alignItems: 'center',
   justifyContent: 'center'
 }));
@@ -126,6 +127,59 @@ const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   gap: '12px',
+}));
+
+const ThirdContainer = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  flexDirection: 'column',
+  width: '100%',
+  height: '100%',
+  boxSizing: 'border-box',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '48px 72px',
+  border: '1px solid white',
+  backgroundColor: '#011849'
+}));
+
+const ThirdContainerContent = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  gap: '48px',
+  boxSizing: 'border-box',
+  alignItems: 'center',
+  justifyContent: 'center',
+  border: '1px solid red'
+}));
+
+const LeftBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '48px',
+  boxSizing: 'border-box',
+  alignItems: 'flex-start',
+}));
+
+
+const RightBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+  border: '1px solid green',
+  justifyContent: 'center',
+  alignItems: 'center'
+}));
+
+
+const MonsterAndTextContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  border: '1px solid white'
+}));
+
+
+const MonsterTextContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap:'12px'
 }));
 
 export function HowItWorks() { // eslint-disable-line
@@ -352,6 +406,80 @@ export function HowItWorks() { // eslint-disable-line
         {/* Venn Diagram goes here */}
         <VennDiagram screensize = {screenSize}/>
       </SecondContainer>
+
+      {/* The third page */}
+      <ThirdContainer>
+        <ThirdContainerContent>
+            <LeftBox>
+              <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
+                <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+                  <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
+                </Typography>
+                <Typography sx={{fontStyle: 'italic',textAlign: 'left',lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
+                  At RightOn!, we believe mistakes aren’t setbacks—they’re stepping stones to 
+                  deeper thinking. Our logic model outlines how students move beyond quick 
+                  recall to meaningful understanding, all while building a classroom culture 
+                  that embraces errors, encourages collaboration, and fosters growth mindsets.
+                  <br />
+                  <br />
+                  <span style={{color: '#FFFFFF', fontWeight: 600, fontFamily: 'Poppins, sans-serif'}}>Want to see 
+                    how it all connects? Explore the research and reasoning behind 
+                    RightOn!
+                  </span>
+                </Typography>
+                <Box
+                  component="button"
+                  sx={{
+                    borderRadius: '24px',
+                    border: '1px solid #FFFFFF',
+                    backgroundColor: 'transparent',
+                    color: '#FFFFFF',
+                    padding: '12px 24px',
+                    fontSize: '18px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 400,
+                    cursor: 'pointer',
+                    outline: 'none',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                >
+                  Download<span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}> RightOn! </span>Logic Model
+                </Box>
+              </Box>
+            </LeftBox>
+            <RightBox>
+              <img
+              src={LogicModel}
+              alt='Monster'
+              style={{
+                width: '565px',
+                height: '258px',
+              }}
+              />
+              <MonsterAndTextContainer>
+                <MonsterTextContainer>
+                  <Box sx={{height: '149px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',width: '249px', background: '#22499C', boxSizing: 'border-box', padding: '12px', borderRadius: '8px'}}>
+                    <Typography sx={{textAlign: 'center', fontSize: '24px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, lineHeight: '1.3', color: '#FFFFFF'}}>
+                      Discuss & Learn from Mistakes
+                    </Typography>
+                  </Box>
+                  <Box sx={{height: '149px',display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '249px',background: '#22499C', boxSizing: 'border-box', padding: '12px', borderRadius: '8px'}}>
+                    <Typography sx={{textAlign: 'center',fontSize: '24px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, lineHeight: '1.3', color: '#FFFFFF'}}>
+                      Postive Culture of Error
+                    </Typography>
+                  </Box>
+                  <Box sx={{height: '149px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',width: '249px',background: '#22499C', boxSizing: 'border-box', padding: '12px', borderRadius: '8px'}}>
+                    <Typography sx={{textAlign: 'center',fontSize: '24px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, lineHeight: '1.3', color: '#FFFFFF'}}>
+                      Deeper Conceptual Understanding
+                    </Typography>
+                  </Box>
+                </MonsterTextContainer>
+              </MonsterAndTextContainer>
+            </RightBox>
+        </ThirdContainerContent>
+      </ThirdContainer>
     </MainContainer>
   )
 }
