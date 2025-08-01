@@ -20,6 +20,7 @@ import { ScreenSize } from '../lib/WebsiteModels';
 import TryItNowMenu from './header/TryItNowMenu';
 import MobileMenu from './header/mobileMenu';
 import closeIcon from '../images/closeIcon.svg'
+import { SelectArrowContainer } from '../lib/styledcomponents/StyledComponents';
 
 interface HeaderProps {
   screenSize: ScreenSize;
@@ -29,7 +30,7 @@ const links = [
   { title: 'How It Works', path: '/howitworks' },
   { title: 'About Us', path: '/aboutus' },
   { title: 'Positive Culture of Error', path: '/postivecultureoferror' },
-  { title: 'Resource Library', path: 'library' },
+  { title: 'Resource Library', path: '/library' },
 ];
 
 export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
@@ -50,6 +51,8 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
     setMobileMenuAnchor(mobileMenuAnchor ? null: event.currentTarget);
     setOpenMenu(prev => !prev)
   };
+
+  const handleHomeClick = () => { navigate("/") }
 
   const openMobile = Boolean(mobileMenuAnchor);
   const mobileMenuId = openMobile ? 'mobile-menu': undefined;
@@ -75,6 +78,8 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
         gap={screenSize === ScreenSize.LARGE ? 24 : 0}
       >
         <Box
+        sx={{ cursor: 'pointer'}}
+          onClick={handleHomeClick}
           component="img"
           src={RightOnLogo}
           width={screenSize === ScreenSize.LARGE ? '216px' : '99px'}
@@ -120,6 +125,8 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
               }}
             >
               <StyledText>Try it now </StyledText>
+              <SelectArrowContainer isSelectOpen={menuAnchor !== null}>
+
               <Box
                 component="img"
                 src={arrowDownImg}
@@ -127,6 +134,7 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
                 height="10px"
                 width="18px"
               />
+              </SelectArrowContainer>
             </StyledFlexBox>
           </StyledFlexBox>
         )}
@@ -148,7 +156,7 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
                 <Box
                   sx={{
                     position: 'absolute', 
-                    top: '33px' ,
+                    top: '32px' ,
                     left: 0,
                     width: '100%',
                     height: '100vh',
@@ -158,8 +166,7 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
                   }}
                 >
                   <MobileMenu
-                    id={id ?? null}
-                    toggleMenu={handleMenuClick}
+                    screenSize={screenSize}
                     menu={links}
                     onClose={() => {
                       setOpenMenu(false);

@@ -38,3 +38,34 @@ export enum ScreenSize {
   SMALL,
 }
 
+
+export const SelectArrowContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSelectOpen',
+})<{ isSelectOpen: boolean }>(({ isSelectOpen }) => ({
+  transform: isSelectOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+  animation: isSelectOpen
+    ? 'rotateScaleOpen 300ms ease-in-out'
+    : 'rotateScaleClose 300ms ease-in-out',
+  '@keyframes rotateScaleOpen': {
+    '0%': {
+      transform: 'rotate(0deg) scale(1)',
+    },
+    '50%': {
+      transform: 'rotate(180deg) scale(1.1)',
+    },
+    '100%': {
+      transform: 'rotate(180deg) scale(1)',
+    },
+  },
+  '@keyframes rotateScaleClose': {
+    '0%': {
+      transform: 'rotate(180deg) scale(1)',
+    },
+    '50%': {
+      transform: 'rotate(0deg) scale(1.1)',
+    },
+    '100%': {
+      transform: 'rotate(0deg) scale(1)',
+    },
+  },
+}));
