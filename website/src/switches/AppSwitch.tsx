@@ -7,6 +7,7 @@ import { AboutUs } from '../pages/AboutUs';
 import { HowItWorks } from '../pages/HowItWorks';
 import { Library } from '../pages/Library';
 import { Article } from '../pages/Article';
+import { Positive } from '../pages/Positive';
 import { ScreenType, ScreenSize } from '../lib/WebsiteModels';
 import { Footer } from '../components/Footer';
 
@@ -28,6 +29,9 @@ export default function AppSwitch({
 
   let pageComponent;
   switch (currentScreen) {
+    case ScreenType.POSITIVE:
+      pageComponent = (<Positive screenSize={screenSize}/>);
+      break;
     case ScreenType.LIBRARY:
       pageComponent = (<Library cmsClient={cmsClient}/>);
       break;
