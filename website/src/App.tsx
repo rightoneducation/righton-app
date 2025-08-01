@@ -29,6 +29,10 @@ function App() {
               element={<Switch currentScreen={ScreenType.HOW_IT_WORKS} />}
             />
             <Route
+              path="/positive"
+              element={<Switch currentScreen={ScreenType.POSITIVE} />}
+            />
+            <Route
               path="/library"
               element={<Switch currentScreen={ScreenType.LIBRARY} cmsClient={cmsClient} />}
             />

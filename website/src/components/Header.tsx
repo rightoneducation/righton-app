@@ -13,7 +13,7 @@ interface HeaderProps {
 const links = [
   { title: 'How It Works', path: "/"},
   { title: 'About Us', path: "/"},
-  { title: 'Positive Culture of Error', path: "/" },
+  { title: 'Positive Culture of Error', path: "/positive" },
   {  title: 'Resource Library', path: "/library" }
 ]
 
