@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { MathSymbolsBackground } from '../../lib/styledcomponents/StyledComponents';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import positiveEmailArrow from '../../images/positiveEmailArrow.svg';
 import positiveBloopyRocket from '../../images/positiveBloopyRocket.svg';
@@ -32,7 +33,6 @@ export const PositiveCultureContainer = ({screenSize}: PositiveCultureContainerP
               height: '100%',
               minHeight: '560px',
               padding: screenSize === ScreenSize.SMALL ? smallPadding : medPadding,
-              background: 'grey',
               zIndex: 0,
               gap: primaryGap,
               boxSizing: 'border-box'
@@ -216,7 +216,6 @@ export const PositiveCultureContainer = ({screenSize}: PositiveCultureContainerP
               minHeight: '560px',
               padding: largePadding,
               boxSizing: 'border-box',
-              background: 'grey',
               zIndex:0,
               gap: largestGap
             }}

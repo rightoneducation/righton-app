@@ -106,7 +106,6 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
           width: '100%',
           height: '100%',
           minHeight: '560px',
-          background: 'grey'
         }}
       >
         <Box
@@ -399,8 +398,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
           style={{
             width: '100%',
             height: '100%',
-            minHeight: '560px',
-            background: 'grey'
+            minHeight: '560px'
           }}
         >
           <Box

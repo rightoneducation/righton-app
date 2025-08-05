@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import positiveBloopyInSpace from '../../images/positiveBloopyInSpace.svg';
 import positiveBloopyInSpaceMobile from '../../images/positiveBloopyInSpaceMobile.svg';
+import postiveBG1 from '../../images/positiveBG1.svg';
 
 interface WhatIsContainerProps {
   screenSize: ScreenSize;
@@ -33,9 +34,25 @@ export const WhatIsContainer = ({screenSize}: WhatIsContainerProps) => { // esli
               width: '100%',
               height: '100%',
               minHeight: '560px',
-              background: 'black'
+              position: 'relative'
             }}
           >
+            {/* Background Image */}
+            <Box
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${postiveBG1})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                opacity: 0.5,
+                zIndex: -1
+              }}
+            />
             <Box
               style={{
                 display: 'flex',
@@ -135,9 +152,33 @@ export const WhatIsContainer = ({screenSize}: WhatIsContainerProps) => { // esli
               width: '100%',
               height: '100%',
               minHeight: '560px',
-              background: 'lavender'
+              position: 'relative'
             }}
           >
+            {/* Background Image */}
+            <Box
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${postiveBG1})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                opacity: 0.5,
+                zIndex: 0
+              }}
+            />
+            <Box
+              style={{
+                position: 'relative',
+                zIndex: 1,
+                width: '100%',
+                height: '100%'
+              }}
+            >
             <Box
               style={{
                 display: 'flex',
@@ -164,6 +205,7 @@ export const WhatIsContainer = ({screenSize}: WhatIsContainerProps) => { // esli
                   display: 'block',
                 }}
               />
+            </Box>
             </Box>
           </Box>
       );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { ScreenSize } from '../../lib/WebsiteModels';
+import positiveBG1 from '../../images/positiveBG1.svg';
 import positiveWannaPlayPhone from '../../images/positiveWannaPlayPhone.svg';
 import positiveEmailArrow from '../../images/positiveEmailArrow.svg';
 
@@ -30,12 +31,28 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
             height: '100%',
             minHeight: '560px',
             padding: screenSize === ScreenSize.SMALL ? smallPadding : medPadding,
-            background: 'black',
+            position: 'relative',
             boxSizing: 'border-box',
-            zIndex:0,
+            zIndex: 0,
             gap: primaryGap
           }}
         >
+          {/* Background Image */}
+          <Box
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${positiveBG1})`,
+                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                opacity: 0.5,
+                zIndex: -1
+              }}
+            />
+
           <Box
             style={{
               display: 'flex',
@@ -140,11 +157,27 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
             height: '100%',
             minHeight: '560px',
             padding: largePadding,
-            background: 'black',
             zIndex:0,
-            gap: largestGap
+            gap: largestGap,
+            position: 'relative'
           }}
         >
+           {/* Background Image */}
+           <Box
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${positiveBG1})`,
+                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                opacity: 0.5,
+                zIndex: 0
+              }}
+            />
+      
           <Box
             style={{
               display: 'flex',
@@ -152,7 +185,8 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
               justifyContent: 'center',
               width: '100%',
               height: '100%',
-              gap: largestGap
+              gap: largestGap,
+              zIndex: 1,
             }}
           >
             <Box style={{position: 'relative'}}>
@@ -227,14 +261,15 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
               alignItems: 'center',
               justifyContent: 'center',
               width: '100%',
-              height: '100%'
+              height: '100%',
+              zIndex: 1,
             }}
           >
             <Typography sx={{ lineHeight: '1.2', fontSize: '18px', fontFamily: 'Poppins, sans-serif', color: '#FFFFFF', textAlign: 'center'}}>
               Got questions? Contact us at zigzag@rightoneducation.com
             </Typography>
           </Box>
-        </Box>
+          </Box>
       )
     }
 }

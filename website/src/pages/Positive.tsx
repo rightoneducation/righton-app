@@ -26,7 +26,7 @@ interface PostiveContainerInterface {
 export function Positive({ screenSize }: PostiveContainerInterface) {// eslint-disable-line
   return (
     <PositiveContainer>
-      <MathSymbolsBackground style={{height: '100%'}}/>
+      <MathSymbolsBackground />
       <WhatIsContainer screenSize={screenSize} />
       <UniverseContainer screenSize={screenSize} />
       <ZigZagContainer screenSize={screenSize} />
