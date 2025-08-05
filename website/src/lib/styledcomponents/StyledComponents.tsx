@@ -16,7 +16,7 @@ export const AppContainer = styled(Box)(({ theme }) => ({ // eslint-disable-line
 export const MathSymbolsBackground = styled(Box)(({ theme }) => ({
   position: 'fixed',
   width:'100%',
-  height: '100vh',
+  height: '100%',
   top: 0,
   left: 0,
   right: 0,
@@ -28,8 +28,9 @@ export const MathSymbolsBackground = styled(Box)(({ theme }) => ({
   linear-gradient(rgba(2, 33, 95, 0.90), rgba(2, 33, 95, 0.9)),
   url(${mathSymbolsBackground})
   `,
-  backgroundSize: 'cover',
-  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'auto',
+  backgroundRepeat: 'repeat-y',
+  backgroundPosition: 'center top',
 }));
 
 export const ButtonContainer = styled(Box)(({ theme }) => ({
