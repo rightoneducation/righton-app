@@ -271,9 +271,15 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
                       setPreviousQuestion(activeQuestion);
                       setActiveQuestion(index);
                       // Reset swiper to first slide when switching questions                      
-                      swiperQ1Ref.current?.swiper.slideTo(0);
-                      swiperQ2Ref.current?.swiper.slideTo(0);
-                      swiperQ3Ref.current?.swiper.slideTo(0);
+                      if (swiperQ1Ref.current?.swiper) {
+                        swiperQ1Ref.current.swiper.slideTo(0);
+                      }
+                      if (swiperQ2Ref.current?.swiper) {
+                        swiperQ2Ref.current.swiper.slideTo(0);
+                      }
+                      if (swiperQ3Ref.current?.swiper) {
+                        swiperQ3Ref.current.swiper.slideTo(0);
+                      }
                     }}
                   >
                     <Typography
