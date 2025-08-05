@@ -11,16 +11,17 @@ export const handler = async (event) => {
     });
 
     const FETCH_CONTENT_BY_ID = `
-        *[
+      *[
         _id == $id
-        ][0]{
+      ][0]{
         _id,
         image{
-            asset{
+          asset{
             _ref
-            }
+          }
         },
         title,
+        youtubeLink,
         tags,
         date,
         caption,
@@ -30,12 +31,12 @@ export const handler = async (event) => {
         details,
         monsterSelect,
         readingTimeMinutes
-        }
+      }
     `
     const getArticleFromCMS = async (id) => {
         try {
             const article = await client.fetch(FETCH_CONTENT_BY_ID , { id });
-            
+            console.log(article);
             // Process images to return URLs
             if (article.image && article.image.asset && article.image.asset._ref) {
               const imageUrl = imageUrlBuilder(client).image(article.image);

@@ -8,6 +8,7 @@ export type CMSArticleType = {
   };
   tags?: string[];
   title: string;
+  youtubeLink?: string;
   caption?: string;
   author?: string;
   affiliation?: string;

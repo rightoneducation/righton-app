@@ -1,4 +1,4 @@
-export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
+export const FETCH_ALL_ARTICLES = `*[_type == "article" || _type == "videoArticle"]{
   _id,
   image{
     asset{
@@ -6,6 +6,7 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
     }
   },
   title,
+  youtubeLink,
   tags,
   date,
   caption,
@@ -17,7 +18,7 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
   readingTimeMinutes
   }`;
 
-  export const FETCH_ALL_CORNERSTONES = `*[_type == "article" && isCornerstone == true]{
+  export const FETCH_ALL_CORNERSTONES = `*[(_type == "article" || _type == "videoArticle") && isCornerstone == true]{
     _id,
     image{
       asset{
@@ -25,6 +26,7 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
       }
     },
     title,
+    youtubeLink,
     tags,
     date,
     caption,
@@ -47,6 +49,7 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article"]{
       }
     },
     title,
+    youtubeLink,
     tags,
     date,
     caption,

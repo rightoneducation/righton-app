@@ -12,7 +12,16 @@ export const articleType = defineType({
     defineField({
       name: 'tags',
       type: 'array',
-      of: [{type: 'string'}]
+      of: [{
+        type: 'string',
+        options: {
+          list: [
+            {title: 'Article', value: 'Article'},
+            {title: 'Video', value: 'Video'},
+            {title: 'Research', value: 'Research'}
+          ]
+        }
+      }]
     }),
     defineField({
       name: 'title',
