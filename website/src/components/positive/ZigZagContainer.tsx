@@ -1,9 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 import type { SwiperRef } from 'swiper/react';
 import 'swiper/css';
 import { ScreenSize } from '../../lib/WebsiteModels';
+import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled';
 
 
 import positiveZigZagMonster1 from '../../images/positiveZigZagMonster1.svg';
@@ -43,16 +45,25 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
   const [isQ2End, setIsQ2End] = useState(false);
   const [isQ3Beginning, setIsQ3Beginning] = useState(true);
   const [isQ3End, setIsQ3End] = useState(false);
+  const [activeQuestion, setActiveQuestion] = useState(0);
+  const [previousQuestion, setPreviousQuestion] = useState(0);
   const smallPadding = '60px 12px';
-
-
-  
 
   const medPadding = '60px 72px';
   const largePadding = '96px 72px';
   const primaryGap = '72px';
   const secondaryGap = '48px';
   const tertiaryGap = '24px';
+  const smallGap = '12px';
+
+  const zigZagLg = 1450;
+  const isZigZagLarge = useMediaQuery(`(min-width: ${zigZagLg}px)`);
+  
+  // Override screenSize for ZigZag: if LARGE but not wide enough, use MEDIUM
+  const screenSizeZigZag = screenSize === ScreenSize.LARGE && !isZigZagLarge 
+    ? ScreenSize.MEDIUM 
+    : screenSize;
+
 
   const slides = {
     question1: [
@@ -75,7 +86,18 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
     ]
   };
 
-  switch (screenSize) {
+  const questionKeys = ['question1', 'question2', 'question3'] as const;
+
+  const questionTitleSlides = [
+    zigZagQ1,
+    zigZagQ2,
+    zigZagQ3
+  ]
+  const monsters = [positiveZigZagMonster1, positiveZigZagMonster2, positiveZigZagMonster3];
+
+
+
+  switch (screenSizeZigZag) {
     case ScreenSize.SMALL:
     case ScreenSize.MEDIUM:
       return ( 
@@ -195,18 +217,170 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
               </Box>
             </Box>
           </Box>
-          {/* ZigZag Slide Container 1 */}
+          {/* Monster Container */}
           <Box
             style={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
+              justifyContent: 'center',
               width: '100%',
               height: '100%',
-              gap: secondaryGap
+              gap: '24px'
             }}
           >
             <Box>
-              <img src={positiveZigZagMonster1} alt="positiveZigZagMonster1" />
+              {monsters.map((monster, index) => (
+                <img 
+                  key={monster}
+                  src={monster} 
+                  alt={`monster${index + 1}`} 
+                  style={{
+                    opacity: activeQuestion === index ? 1 : 0,
+                    transition: 'opacity 0.3s ease-in-out',
+                    height: activeQuestion === index ? 'auto' : '0',
+                    overflow: 'hidden'
+                  }}
+                />
+              ))}
+            </Box>
+            {/* Question Button Container */}
+            <Box
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px'
+              }}
+            >
+              {
+                Array.from({length: 3}).map((_, index) => (
+                  <Box 
+                    style={{
+                      width: '75px',
+                      height: '55px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      borderRadius: '48px',
+                      border: '5px solid #494949',
+                      background: index === activeQuestion ? '#494949' : 'transparent',
+                      boxSizing: 'border-box',
+                    }}
+                    onClick={() => {
+                      setPreviousQuestion(activeQuestion);
+                      setActiveQuestion(index);
+                    }}
+                  >
+                    <Typography
+                      style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        fontSize: '40px',
+                        fontWeight: 600,
+                        color: '#FFFFFF',
+                        textAlign: 'center',
+                        opacity: index === activeQuestion ? 1 : 0.3
+                      }}
+                    >
+                      {index + 1}
+                    </Typography>
+                  </Box>
+                ))
+              }
+            </Box>
+            {/* Question Slides Container */}
+            <Box
+              style={{
+                width: '100%',
+                maxWidth: '500px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '48px'
+              }}
+            >
+              <Box style={{
+                  width: '100%',
+                  height: '100%',
+              
+                  boxSizing: 'border-box'
+                  }}>
+                <img src={questionTitleSlides[activeQuestion]} alt="question slide" style={{width: '100%'}}/>
+              </Box>
+              <Box
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '12px'
+                }}
+              >
+                {screenSizeZigZag === ScreenSize.MEDIUM &&
+                  <Box 
+                    onClick={() => swiperQ1Ref.current?.swiper.slidePrev()}
+                    style={{
+                      cursor: 'pointer', 
+                      zIndex: 10,
+                      opacity: isQ1Beginning ? 0.3 : 1
+                    }}
+                  >
+                    <img src={zigZagNavLeft} alt="zigZagNavLeft" />
+                  </Box>
+                }
+                <Box style={{
+                  width: '100%', 
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '12px'
+                }}>
+                <Swiper
+                  ref={swiperQ1Ref}
+                  slidesPerView={1}
+                  spaceBetween='60px'
+                  onSlideChange={(swiper: any) => {
+                    setIsQ1Beginning(swiper.isBeginning);
+                    setIsQ1End(swiper.isEnd);
+                  }}
+                  modules={[Pagination]}
+                  pagination={{
+                    el: '.swiper-pagination-container',
+                    bulletClass: 'swiper-pagination-bullet',
+                    bulletActiveClass: 'swiper-pagination-bullet-active',
+                    clickable: true,
+                    renderBullet(index: number, className: string) {
+                      return `<span class="${className}" style="width:12px; height:12px; border-radius:12px;"></span>`;
+                    },
+                  }}
+                  style={{width: '100%'}}
+                >
+                  {slides[questionKeys[activeQuestion]].map((slide: string, index: number) => (
+                    <SwiperSlide key={`question${activeQuestion + 1}-slide-${slide}`}>
+                      <img src={slide} alt={`zigZagSlide${index}`} style={{width: `100%`}}/>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <PaginationContainerStyled className="swiper-pagination-container" />
+                </Box>
+                {screenSizeZigZag === ScreenSize.MEDIUM &&
+                  <Box 
+                    onClick={() => swiperQ1Ref.current?.swiper.slideNext()}
+                    style={{
+                      cursor: 'pointer', 
+                      zIndex: 10,
+                      opacity: isQ1End ? 0.3 : 1
+                    }}
+                  >
+                    <img src={zigZagNavRight} alt="zigZagNavRight" />
+                  </Box>
+                }
+              </Box>
             </Box>
           </Box>
           {/* horizontal line */}
@@ -215,40 +389,6 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
             height: '1px',
             background: '#FFF'
           }}/>
-          {/* ZigZag Slide Container 2 */}
-          <Box
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              height: '100%',
-              gap: secondaryGap
-            }}
-          >
-            <Box>
-              <img src={positiveZigZagMonster2} alt="positiveZigZagMonster2" />
-            </Box>
-          </Box>
-          {/* horizontal line */}
-          <Box style={{
-            width: '100%',
-            height: '1px',
-            background: '#FFF'
-          }}/>
-          {/* ZigZag Slide Container 3 */}
-          <Box
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              height: '100%',
-              gap: secondaryGap
-            }}
-          >
-            <Box>
-              <img src={positiveZigZagMonster3} alt="positiveZigZagMonster3" />
-            </Box>
-          </Box>
         </Box>
       </Box>  
       );
