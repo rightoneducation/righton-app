@@ -1,21 +1,79 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import type { SwiperRef } from 'swiper/react';
+import 'swiper/css';
 import { ScreenSize } from '../../lib/WebsiteModels';
+
+
 import positiveZigZagMonster1 from '../../images/positiveZigZagMonster1.svg';
 import positiveZigZagMonster2 from '../../images/positiveZigZagMonster2.svg';
 import positiveZigZagMonster3 from '../../images/positiveZigZagMonster3.svg';
+import zigZagQ1 from '../../images/zigzag/zigzagQ1.svg';
+import zigZagQ1S1 from '../../images/zigzag/zigzagQ1S1.svg';
+import zigZagQ1S2 from '../../images/zigzag/zigzagQ1S2.svg';
+import zigZagQ1S3 from '../../images/zigzag/zigzagQ1S3.svg';
+import zigZagQ1S4 from '../../images/zigzag/zigzagQ1S4.svg';
+import zigZagQ2 from '../../images/zigzag/zigzagQ2.svg';
+import zigZagQ2S1 from '../../images/zigzag/zigzagQ2S1.svg';
+import zigZagQ2S2 from '../../images/zigzag/zigzagQ2S2.svg';
+import zigZagQ2S3 from '../../images/zigzag/zigzagQ2S3.svg';
+import zigZagQ2S4 from '../../images/zigzag/zigzagQ2S4.svg';
+import zigZagQ3 from '../../images/zigzag/zigzagQ3.svg';
+import zigZagQ3S1 from '../../images/zigzag/zigzagQ3S1.svg';
+import zigZagQ3S2 from '../../images/zigzag/zigzagQ3S2.svg';
+import zigZagQ3S3 from '../../images/zigzag/zigzagQ3S3.svg';
+import zigZagQ3S4 from '../../images/zigzag/zigzagQ3S4.svg';
+import zigZagNavLeft from '../../images/zigzag/zigzagNavLeft.svg';
+import zigZagNavRight from '../../images/zigzag/zigzagNavRight.svg';
+
+
 
 interface ZigZagContainerProps {
   screenSize: ScreenSize;
 }
 
 export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // eslint-disable-line
+  const swiperQ1Ref = useRef<SwiperRef>(null);
+  const swiperQ2Ref = useRef<SwiperRef>(null);
+  const swiperQ3Ref = useRef<SwiperRef>(null);
+  const [isQ1Beginning, setIsQ1Beginning] = useState(true);
+  const [isQ1End, setIsQ1End] = useState(false);
+  const [isQ2Beginning, setIsQ2Beginning] = useState(true);
+  const [isQ2End, setIsQ2End] = useState(false);
+  const [isQ3Beginning, setIsQ3Beginning] = useState(true);
+  const [isQ3End, setIsQ3End] = useState(false);
   const smallPadding = '60px 12px';
+
+
+  
+
   const medPadding = '60px 72px';
   const largePadding = '96px 72px';
   const primaryGap = '72px';
   const secondaryGap = '48px';
   const tertiaryGap = '24px';
+
+  const slides = {
+    question1: [
+      zigZagQ1S1,
+      zigZagQ1S2,
+      zigZagQ1S3,
+      zigZagQ1S4
+    ],
+    question2: [
+      zigZagQ2S1,
+      zigZagQ2S2,
+      zigZagQ2S3,
+      zigZagQ2S4
+    ],
+    question3: [
+      zigZagQ3S1,
+      zigZagQ3S2,
+      zigZagQ3S3,
+      zigZagQ3S4
+    ]
+  };
 
   switch (screenSize) {
     case ScreenSize.SMALL:
@@ -310,6 +368,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
               style={{
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 width: '100%',
                 height: '100%',
                 gap: secondaryGap
@@ -318,26 +377,55 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
               <Box>
                 <img src={positiveZigZagMonster1} alt="positiveZigZagMonster1" />
               </Box>
+              <Box>
+                <img src={zigZagQ1} alt="zig zag q1" />
+              </Box>
               <Box
                 style={{
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: '600px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '450px',
-                  height: '420px',
-                  background: 'lightgrey'
+                  gap: '12px'
                 }}
-              /> 
-              <Box
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '450px',
-                  height: '420px',
-                  background: 'lightgrey'
-                }}
-              /> 
+              >
+                <Box 
+                  onClick={() => swiperQ1Ref.current?.swiper.slidePrev()}
+                  style={{
+                    cursor: 'pointer', 
+                    zIndex: 10,
+                    opacity: isQ1Beginning ? 0.3 : 1
+                  }}
+                >
+                  <img src={zigZagNavLeft} alt="zigZagNavLeft" />
+                </Box>
+                <Swiper
+                  ref={swiperQ1Ref}
+                  slidesPerView={1}
+                  spaceBetween='60px'
+                  onSlideChange={(swiper: any) => {
+                    setIsQ1Beginning(swiper.isBeginning);
+                    setIsQ1End(swiper.isEnd);
+                  }}
+                >
+                  {slides.question1.map((slide: string, index: number) => (
+                    <SwiperSlide key={`question1-slide-${slide}`}>
+                      <img src={slide} alt={`zigZagSlide${index}`} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <Box 
+                  onClick={() => swiperQ1Ref.current?.swiper.slideNext()}
+                  style={{
+                    cursor: 'pointer', 
+                    zIndex: 10,
+                    opacity: isQ1End ? 0.3 : 1
+                  }}
+                >
+                  <img src={zigZagNavRight} alt="zigZagNavRight" />
+                </Box>
+              </Box>
             </Box>
             {/* horizontal line */}
             <Box style={{
@@ -350,6 +438,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
               style={{
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 width: '100%',
                 height: '100%',
                 gap: secondaryGap
@@ -358,26 +447,55 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
               <Box>
                 <img src={positiveZigZagMonster2} alt="positiveZigZagMonster2" />
               </Box>
+              <Box>
+                <img src={zigZagQ2} alt="zig zag q2" />
+              </Box>
               <Box
                 style={{
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: '600px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '450px',
-                  height: '420px',
-                  background: 'lightgrey'
+                  gap: '12px'
                 }}
-              /> 
-              <Box
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '450px',
-                  height: '420px',
-                  background: 'lightgrey'
-                }}
-              /> 
+              >
+                <Box 
+                  onClick={() => swiperQ2Ref.current?.swiper.slidePrev()}
+                  style={{
+                    cursor: 'pointer', 
+                    zIndex: 10,
+                    opacity: isQ2Beginning ? 0.3 : 1
+                  }}
+                >
+                  <img src={zigZagNavLeft} alt="zigZagNavLeft" />
+                </Box>
+                <Swiper
+                  ref={swiperQ2Ref}
+                  slidesPerView={1}
+                  spaceBetween='60px'
+                  onSlideChange={(swiper: any) => {
+                    setIsQ2Beginning(swiper.isBeginning);
+                    setIsQ2End(swiper.isEnd);
+                  }}
+                >
+                  {slides.question2.map((slide: string, index: number) => (
+                    <SwiperSlide key={`question1-slide-${slide}`}>
+                      <img src={slide} alt={`zigZagSlide${index}`} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <Box 
+                  onClick={() => swiperQ2Ref.current?.swiper.slideNext()}
+                  style={{
+                    cursor: 'pointer', 
+                    zIndex: 10,
+                    opacity: isQ2End ? 0.3 : 1
+                  }}
+                >
+                  <img src={zigZagNavRight} alt="zigZagNavRight" />
+                </Box>
+              </Box>
             </Box>
             {/* horizontal line */}
             <Box style={{
@@ -390,6 +508,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
               style={{
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 width: '100%',
                 height: '100%',
                 gap: secondaryGap
@@ -398,26 +517,55 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
               <Box>
                 <img src={positiveZigZagMonster3} alt="positiveZigZagMonster3" />
               </Box>
+              <Box>
+                <img src={zigZagQ3} alt="zig zag q3" />
+              </Box>
               <Box
                 style={{
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: '600px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '450px',
-                  height: '420px',
-                  background: 'lightgrey'
+                  gap: '12px'
                 }}
-              /> 
-              <Box
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '450px',
-                  height: '420px',
-                  background: 'lightgrey'
-                }}
-              /> 
+              >
+                <Box 
+                  onClick={() => swiperQ3Ref.current?.swiper.slidePrev()}
+                  style={{
+                    cursor: 'pointer', 
+                    zIndex: 10,
+                    opacity: isQ3Beginning ? 0.3 : 1
+                  }}
+                >
+                  <img src={zigZagNavLeft} alt="zigZagNavLeft" />
+                </Box>
+                <Swiper
+                  ref={swiperQ3Ref}
+                  slidesPerView={1}
+                  spaceBetween='60px'
+                  onSlideChange={(swiper: any) => {
+                    setIsQ3Beginning(swiper.isBeginning);
+                    setIsQ3End(swiper.isEnd);
+                  }}
+                >
+                  {slides.question3.map((slide: string, index: number) => (
+                    <SwiperSlide key={`question1-slide-${slide}`}>
+                      <img src={slide} alt={`zigZagSlide${index}`} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <Box 
+                    onClick={() => swiperQ3Ref.current?.swiper.slideNext()}
+                  style={{
+                    cursor: 'pointer', 
+                    zIndex: 10,
+                    opacity: isQ3End ? 0.3 : 1
+                  }}
+                >
+                  <img src={zigZagNavRight} alt="zigZagNavRight" />
+                </Box>
+              </Box>
             </Box>
           </Box>
         </Box>  
