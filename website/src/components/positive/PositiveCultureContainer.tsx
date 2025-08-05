@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { MathSymbolsBackground } from '../../lib/styledcomponents/StyledComponents';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import positiveEmailArrow from '../../images/positiveEmailArrow.svg';
-import positiveBloopyRocket from '../../images/positiveBloopyRocket.svg';
+import positiveBloopyRocket from '../../images/positiveBloopyRocket.png';
 
 interface PositiveCultureContainerProps {
   screenSize: ScreenSize;

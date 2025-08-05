@@ -270,6 +270,10 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
                     onClick={() => {
                       setPreviousQuestion(activeQuestion);
                       setActiveQuestion(index);
+                      // Reset swiper to first slide when switching questions                      
+                      swiperQ1Ref.current?.swiper.slideTo(0);
+                      swiperQ2Ref.current?.swiper.slideTo(0);
+                      swiperQ3Ref.current?.swiper.slideTo(0);
                     }}
                   >
                     <Typography
