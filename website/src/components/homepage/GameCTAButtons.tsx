@@ -68,7 +68,7 @@ export default function GameCTAButtons({ screenSize, fontColor }: CTAButtonProps
            cursor: 'pointer',
            transition: 'background-color 0.2s ease',
            '&:hover': {
-             backgroundColor: '#e8e8e8',
+             backgroundColor: screenSize === ScreenSize.LARGE ? '#e8e8e8' : 'transparent'
            }
          }}>
           <StyledFlexBox>
