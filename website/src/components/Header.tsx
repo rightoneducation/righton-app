@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
-  Typography,
-  useMediaQuery,
   Popper,
   Fade,
   Slide,
-  Portal,
 } from '@mui/material';
 import {
   StyledFlexBox,
@@ -33,19 +30,26 @@ const links = [
   { title: 'Resource Library', path: '/library' },
 ];
 
-export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
+export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
   const location = useLocation();
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null)
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setMenuAnchor(menuAnchor ? null : event.currentTarget);
+  const handleMenuMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchor(event.currentTarget);
   };
 
   const open = Boolean(menuAnchor);
   const id = open ? 'try-it-now-menu' : undefined;
+
+  const handleMenuMouseLeave = (event: React.MouseEvent) => {
+    const relatedTarget = event.relatedTarget as HTMLElement;
+    if (!relatedTarget || !relatedTarget.closest || !relatedTarget.closest('#try-it-now-menu')) {
+      setMenuAnchor(null);
+    }
+  };
 
   const handleMobileMenu = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMenuAnchor(mobileMenuAnchor ? null: event.currentTarget);
@@ -53,7 +57,6 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
   };
 
   const handleHomeClick = () => { navigate("/") }
-
   const openMobile = Boolean(mobileMenuAnchor);
   const mobileMenuId = openMobile ? 'mobile-menu': undefined;
 
@@ -78,14 +81,13 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
         gap={screenSize === ScreenSize.LARGE ? 24 : 0}
       >
         <Box
-        sx={{ cursor: 'pointer'}}
+          sx={{ cursor: 'pointer'}}
           onClick={handleHomeClick}
           component="img"
           src={RightOnLogo}
           width={screenSize === ScreenSize.LARGE ? '216px' : '99px'}
           height={screenSize === ScreenSize.LARGE ? '96px' : '55px'}
         />
-
         {screenSize === ScreenSize.LARGE && (
           <StyledFlexBox direction="row" gap={198}>
             <StyledFlexBox direction="row" align="center" gap={24}>
@@ -95,7 +97,7 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
                   sx={{
                     ...(location.pathname === link.path && {
                       color: '#FF3A6A',
-                      fontWeight: 700,
+                      textShadow: '0.5px 0 0 #FF3A6A, -0.5px 0 0 #FF3A6A, 0 0.5px 0 #FF3A6A, 0 -0.5px 0 #FF3A6A',
                     }),
                     cursor: 'pointer',
                     padding: '4px 12px',
@@ -107,10 +109,10 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
                 </StyledText>
               ))}
             </StyledFlexBox>
-
             <StyledFlexBox
               id={id}
-              onClick={handleMenuClick}
+              onMouseEnter={handleMenuMouseEnter}
+              onMouseLeave={handleMenuMouseLeave}
               borderRadius={24}
               direction="row"
               align="center"
@@ -138,14 +140,12 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
             </StyledFlexBox>
           </StyledFlexBox>
         )}
-
         {screenSize !== ScreenSize.LARGE && (
           <Popper
             id={mobileMenuId}
             open={openMobile}
             anchorEl={mobileMenuAnchor}
             transition
-           
             sx={{
               zIndex: 2000, 
               width: '100vw',
@@ -178,7 +178,6 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
             )}
           </Popper>
         )}
-
         <Popper
           placement="bottom-start"
           sx={{ zIndex: 10000 }}
@@ -186,6 +185,8 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
           open={open}
           anchorEl={menuAnchor}
           transition
+          onMouseEnter={() => setMenuAnchor(menuAnchor)}
+          onMouseLeave={() => setMenuAnchor(null)}
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={300}>
@@ -195,7 +196,6 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
             </Fade>
           )}
         </Popper>
-
         {screenSize !== ScreenSize.LARGE && (
           <Box
             onClick={handleMobileMenu}
@@ -207,7 +207,6 @@ export function Header({ screenSize }: HeaderProps) {// eslint-disable-line
           />
         )}
       </StyledFlexBox>
-      
       </StyledFlexBox>
   );
 }
