@@ -29,7 +29,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
   
   // Padding based on design specifications
   const horizontalPadding = screenSize === ScreenSize.SMALL ? '12px' : '72px';
-  const verticalPadding = screenSize === ScreenSize.SMALL ? '60px' : '72px';
+  const verticalPadding = screenSize === ScreenSize.SMALL ? '60px' : '48px';
   const gapBetweenElements = 24; 
   
   return (
