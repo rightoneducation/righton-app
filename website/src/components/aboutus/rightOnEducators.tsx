@@ -155,7 +155,7 @@ const swiperRef = useRef<SwiperRef>(null);
             color: '#fff',
             borderRadius: '50%',
             position: 'absolute',
-            left: 0,
+            left: -50,
             top: 300,
             zIndex: 10,
           }}
@@ -251,7 +251,7 @@ const swiperRef = useRef<SwiperRef>(null);
             color: '#fff',
             borderRadius: '50%',
             position: 'absolute',
-            right: 0,
+            right: -50,
             top: 300,
             zIndex: 10,
           }}
