@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useMatch } from 'react-router-dom';
-import { Typography, Grid, Box } from '@mui/material';
+import { Typography, Grid, Box, CircularProgress } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTheme, styled } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { CMSArticleType } from '@righton/networking';
 import { ScreenSize, LibraryType } from '../lib/WebsiteModels';
 import CornerstoneArticleCard from '../lib/styledcomponents/CornerstoneArticleCard';
@@ -65,8 +66,13 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const [isLoadingArticles, setIsLoadingArticles] = useState(false);
   const [isLoadingCornerstones, setIsLoadingCornerstones] = useState(false);
   const [isLoadingSingleArticle, setIsLoadingSingleArticle] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const isContentPage = useMatch('/library/:contentId');
   const contentId = isContentPage ? isContentPage.params.contentId : null;
+
+  const ARTICLES_PER_PAGE = 9;
 
   // TODO: ~~~Theme~~~
   const primaryGap = '72px';
@@ -90,11 +96,47 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const handleArticleFilterClick = (tag: LibraryType) => {
     setSelected(tag);
     let filtered = articles;
-    console.log(articles);
     if (tag !== LibraryType.ALL) {
       filtered = articles.filter((article) => article.tags.includes(tag));
     }
     setFilteredArticles(filtered);
+    
+    // Reset pagination state when filter changes
+    setCurrentPage(0);
+    setHasMore(true);
+  };
+
+  const loadMoreArticles = async () => {
+    if (isLoadingMore || !hasMore) return;
+    
+    setIsLoadingMore(true);
+    try {
+      const start = currentPage * ARTICLES_PER_PAGE;
+      const newArticles = await cmsClient.fetchArticlesPaginated(start, ARTICLES_PER_PAGE);
+      
+      if (newArticles.length > 0) {
+        const updatedArticles = [...articles, ...newArticles];
+        setArticles(updatedArticles);
+        
+        // Apply current filter to new articles
+        let filtered = updatedArticles;
+        if (selected !== LibraryType.ALL) {
+          filtered = updatedArticles.filter((article) => article.tags.includes(selected));
+        }
+        setFilteredArticles(filtered);
+        
+        setCurrentPage(prev => prev + 1);
+      }
+      
+      // Check if we've loaded all articles
+      if (newArticles.length < ARTICLES_PER_PAGE) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error loading more articles:', error);
+    } finally {
+      setIsLoadingMore(false);
+    }
   };
 
   // simple loading of CMS content
@@ -113,12 +155,25 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
       const fetchedCornerstones = await cmsClient.fetchAllCornerstones();
       setCornerstones(fetchedCornerstones);
     }
-    const fetchArticles = async () => {
-      const content = await cmsClient.fetchAllArticles();
-      console.log(content);
-      setArticles(content);
-      setFilteredArticles(content);
+    const fetchInitialArticles = async () => {
+      try {
+        // Get total count first
+        const total = await cmsClient.fetchArticlesCount();
+        
+        // Load first page
+        const initialArticles = await cmsClient.fetchArticlesPaginated(0, ARTICLES_PER_PAGE);
+        setArticles(initialArticles);
+        setFilteredArticles(initialArticles);
+        setCurrentPage(1);
+        
+        // Check if there are more articles to load
+        const hasMoreArticles = initialArticles.length === ARTICLES_PER_PAGE;
+        setHasMore(hasMoreArticles);
+      } catch (error) {
+        console.error('Error fetching initial articles:', error);
+      }
     }
+    
     if (contentId){
       fetchSingleArticle().then(() => {
         setIsLoadingSingleArticle(false);
@@ -127,7 +182,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
       fetchCornerstones().then(() => {
         setIsLoadingCornerstones(false);
       })
-      fetchArticles().then(() => {
+      fetchInitialArticles().then(() => {
         setIsLoadingArticles(false);
       })
     }
@@ -276,41 +331,58 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
             Research
           </StyledButton>
         </ButtonContainer>
-        <Grid 
-          container 
-          columnSpacing='16px' 
-          rowSpacing='24px' 
-          sx={{
-            paddingBottom: paddingTopBottom,
-          }}
-        >
-          { isLoadingArticles 
-            ? Array.from({ length: countArticle }).map((_, i) => (
-                <Grid size={{xs:12, md:12, lg:4}} key={uuidv4()}>
-                  <ArticleSkeleton index={i} />
-                </Grid>
-              ))
-            : filteredArticles.map((article: any) => (
-                article && 
-                  <Grid size={{xs:12, md:12, lg:4}} key={article.id}>
-                    <Box 
-                      onClick={() => {
-                        window.location.href = `/library/${article._id}`;
-                      }} 
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <ArticleCard
-                        image={article.image || article.thumbnailImage}
-                        date={article.date}
-                        tags={article.tags}
-                        title={article.title}
-                        caption={article.caption}
-                      />
-                    </Box>
-                  </Grid>
-            ))
+        <InfiniteScroll
+          dataLength={filteredArticles.length}
+          next={loadMoreArticles}
+          hasMore={hasMore}
+          loader={
+            <Box
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '20px',
+              }}
+            >
+              <CircularProgress style={{ color: '#FFF' }} />
+            </Box>
           }
-        </Grid>
+        >
+          <Grid 
+            container 
+            columnSpacing='16px' 
+            rowSpacing='24px' 
+            sx={{
+              paddingBottom: paddingTopBottom,
+            }}
+          >
+            { isLoadingArticles 
+              ? Array.from({ length: countArticle }).map((_, i) => (
+                  <Grid size={{xs:12, md:12, lg:4}} key={uuidv4()}>
+                    <ArticleSkeleton index={i} />
+                  </Grid>
+                ))
+              : filteredArticles.map((article: any) => (
+                  article && 
+                    <Grid size={{xs:12, md:12, lg:4}} key={article._id}>
+                      <Box 
+                        onClick={() => {
+                          window.location.href = `/library/${article._id}`;
+                        }} 
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <ArticleCard
+                          image={article.image || article.thumbnailImage}
+                          date={article.date}
+                          tags={article.tags}
+                          title={article.title}
+                          caption={article.caption}
+                        />
+                      </Box>
+                    </Grid>
+                ))
+            }
+          </Grid>
+        </InfiniteScroll>
       </ArticleContainer>
     </MainContainer>
   )
