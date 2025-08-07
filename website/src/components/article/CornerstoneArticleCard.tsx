@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CMSArticleType, CMSCornerstoneCaption, CMSCornerstoneTitle, CMSMonsterAvatar } from '@righton/networking';
-import { ScreenSize } from '../WebsiteModels';
+import { ScreenSize } from '../../lib/WebsiteModels';
 import { 
   cmsMonsterAvatar0, 
   cmsMonsterAvatar1, 
@@ -42,6 +42,12 @@ function CornerstoneArticleCard({
     5: cmsMonsterAvatar5,
   };
   const avatarSrc = monsterAvatarMap[article.monsterSelect] || cmsMonsterAvatar0;
+  // if author is RightOn UX Team, use the full author name, otherwise use the first initial and the last name
+  const authorText = article.author === 'RightOn Team' // eslint-disable-line
+    ? article.author 
+    : article?.author && article.author.split(' ').length >= 2 
+      ? `${article.author.split(' ')[0][0]}. ${article.author.split(' ').slice(-1)[0]}`.substring(0, 12)
+      : article.author?.substring(0, 12);
 
   switch(screenSize){
     case (ScreenSize.MEDIUM):
@@ -80,7 +86,7 @@ function CornerstoneArticleCard({
               <CMSMonsterAvatar src={avatarSrc} alt="Monster Avatar" style={{width: '20px', height: '20px'}} />
                 <Typography sx={{ fontSize: '12px', 
                   fontFamily: 'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF' }}>
-                  {article.author}
+                  {authorText}
                 </Typography>                
                 <Typography sx={{ fontSize: '12px', fontFamily: 'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF' }}>
                   {article.date}
