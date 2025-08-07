@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
+import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import OnePhone from '../images/onephone.png';
 import TwoPhone from '../images/twophone.png'
 import ThreePhone from '../images/threephone.png'
@@ -11,22 +11,9 @@ import  StepImage from '../lib/styledcomponents/HowItWorks/StepImage';
 import VennDiagram from '../components/VennDiagram';
 
 const MainContainer = styled(Box)(({ theme }) => ({
-  display: 'flex', 
-  flexDirection: 'column',
-  width: '100%', 
-  height: '100%',
-  justifyContent: 'center',
-  alignItems: 'center',
+  width: '100%',
   boxSizing: 'border-box',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  opacity: 1,
-  backgroundImage: `linear-gradient(rgba(1, 24, 73, 0.94), rgba(1, 24, 73, 0.94)),
-  url(${MathSymbolBackground})
-  `,
-  background: 'cover',
+  background: 'transparent',
 }));
 
 // First Container Content
@@ -152,7 +139,7 @@ export function HowItWorks() { // eslint-disable-line
 
   return (
     <MainContainer>
-
+      <MathSymbolsBackground />
       {/* The first page */}
       <FirstContainer sx={{
         padding: paddingValue,

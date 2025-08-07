@@ -11,31 +11,16 @@ import { ArticleContent } from '../components/article/ArticleContent';
 import { VideoArticleContent } from '../components/article/VideoArticleContent';
 import { OtherArticles } from '../components/article/OtherArticles';
 import { BackToLibrary } from '../components/article/BackToLibrary';
-import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
+import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 
 interface MainContainerProps {
   screenSize: ScreenSize;
 }
 
 const MainContainer = styled(Box)<MainContainerProps>(({ theme, screenSize }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: '24px',
   width: '100%',
-  height: '100%',
   boxSizing: 'border-box',
-  position: 'relative',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  opacity: 1,
-  backgroundImage: `linear-gradient(rgba(2, 33, 95), rgba(2, 33, 95, 0.94)),
-  url(${MathSymbolBackground})
-  `,
-  background: 'cover',
-  flexGrow: 1
+  background: 'transparent',
 }));
 
 export function Article({ cmsClient }: any) { // eslint-disable-line
@@ -94,6 +79,7 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
 
   return (      
       <MainContainer screenSize={screenSize}>
+        <MathSymbolsBackground />
         {isLoading || !selectedArticle ? (
           <CircularProgress
             size={50}

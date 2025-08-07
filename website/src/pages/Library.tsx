@@ -8,12 +8,11 @@ import { useTheme, styled } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { CMSArticleType } from '@righton/networking';
 import { ScreenSize, LibraryType } from '../lib/WebsiteModels';
-import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 import CornerstoneArticleCard from '../lib/styledcomponents/CornerstoneArticleCard';
 import ArticleCard from '../lib/styledcomponents/ArticleCard';
 import CornerstoneSkeleton from '../components/library/CornerstoneSkeleton';
 import ArticleSkeleton from '../components/library/ArticleSkeleton';
-import { ButtonContainer, StyledButton } from '../lib/styledcomponents/StyledComponents';
+import { ButtonContainer, StyledButton, MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'swiper/css';
@@ -24,23 +23,9 @@ import 'swiper/css/pagination';
 
 
 const MainContainer = styled(Box)(({ theme }) => ({
-  display: 'flex', 
-  flexDirection: 'column',
-  width: '100%', 
-  minWidth: '300px',
-  height: '100%',
-  justifyContent: 'center',
+  width: '100%',
   boxSizing: 'border-box',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  opacity: 1,
-  backgroundImage: `linear-gradient(rgba(2, 33, 95), rgba(2, 33, 95, 0.94)),
-  url(${MathSymbolBackground})
-  `,
-  background: 'cover',
-  flexGrow: 1
+  background: 'transparent',
 }));
 
 const Uppercontainer = styled(Box)(({ theme }) => ({
@@ -212,6 +197,7 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
         alignItems: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
       }}
     >
+      <MathSymbolsBackground />
       <Uppercontainer sx={{
         alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
         paddingTop: paddingTopBottom,
