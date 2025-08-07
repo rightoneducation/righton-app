@@ -6,12 +6,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { CMSArticleType } from '@righton/networking';
 import { ScreenSize } from '../lib/WebsiteModels';
 import { ShareModal } from '../components/article/ShareModal';
+import { ShareMobileModal } from '../components/article/ShareMobileModal';
 import { ArticleHeader } from '../components/article/ArticleHeader';
 import { ArticleContent } from '../components/article/ArticleContent';
 import { VideoArticleContent } from '../components/article/VideoArticleContent';
 import { OtherArticles } from '../components/article/OtherArticles';
 import { BackToLibrary } from '../components/article/BackToLibrary';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
+import ShareMobileModalBackground from '../components/article/ShareMobileModalBackground';
 
 interface MainContainerProps {
   screenSize: ScreenSize;
@@ -39,12 +41,22 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingOtherArticles, setIsLoadingOtherArticles] = useState(true);
   const [isVideoArticle, setIsVideoArticle] = useState(false);
+  const [isMobileShareClicked, setIsMobileShareClicked] = useState(false);
   const articleId = useMatch('/library/:contentId')?.params.contentId;
   
   const modalWrapperRef = useRef<HTMLDivElement>(null);
 
   const handleShareClicked = () => {
     setIsShareClicked(true);
+  };
+
+  const handleMobileShareClicked = () => {
+    setIsMobileShareClicked(true);
+  };
+
+  const handleCloseShareModalClick = () => {
+    console.log('close share modal');
+    setIsMobileShareClicked(false);
   };
 
   const handleClickOutside = (e: React.MouseEvent) => {
@@ -111,10 +123,11 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                 <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? '96px' : '60px'  }}>
                   <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
                     <ArticleHeader
+                      screenSize={screenSize}
                       selectedArticle={selectedArticle}
                       articleId={articleId ?? ''}
                       handleShareClicked={handleShareClicked}
-                      screenSize={screenSize}
+                      handleMobileShareClicked={handleMobileShareClicked}
                     />
                     { isVideoArticle 
                       ? <VideoArticleContent article={selectedArticle} />
@@ -162,6 +175,37 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                 <ShareModal handleCloseClick={handleCloseClick} screenSize={screenSize} />
               </motion.div>
             </Box>
+          )}
+            {isMobileShareClicked && (
+            <>
+              <ShareMobileModalBackground isShareModalOpen={isMobileShareClicked} handleCloseShareModalClick={handleCloseShareModalClick} />
+              <Box
+                sx={{
+                  position: 'fixed',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  zIndex: 15000,
+                }}
+              >
+                <motion.div
+                  ref={modalWrapperRef}
+                  initial={{ transform: 'translateY(100%)' }}
+                  animate={{ transform: 'translateY(1%)' }}
+                  exit={{ transform: 'translateY(100%)' }}
+                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <ShareMobileModal articleId={articleId ?? ''} selectedArticle={selectedArticle} handleCloseShareModalClick={handleCloseShareModalClick} />
+                </motion.div>
+              </Box>
+            </>
           )}
         </AnimatePresence>
       </>
