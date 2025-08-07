@@ -46,8 +46,8 @@ function CornerstoneArticleCard({
   const authorText = article.author === 'RightOn Team' // eslint-disable-line
     ? article.author 
     : article?.author && article.author.split(' ').length >= 2 
-      ? `${article.author.split(' ')[0][0]}. ${article.author.split(' ').slice(-1)[0]}`
-      : article.author;
+      ? `${article.author.split(' ')[0][0]}. ${article.author.split(' ').slice(-1)[0]}`.substring(0, 12)
+      : article.author?.substring(0, 12);
 
   switch(screenSize){
     case (ScreenSize.MEDIUM):
