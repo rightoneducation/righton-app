@@ -1,7 +1,7 @@
 import { createClient } from '@sanity/client'
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import { FETCH_ALL_ARTICLES, FETCH_ALL_CORNERSTONES, FETCH_CONTENT_BY_ID, FETCH_ARTICLES_PAGINATED, FETCH_ARTICLES_COUNT } from "./CMSQueries";
+import { FETCH_ALL_ARTICLES, FETCH_ALL_CORNERSTONES, FETCH_CONTENT_BY_ID, FETCH_ARTICLES_PAGINATED, FETCH_ARTICLES_COUNT, FETCH_RECENT_ARTICLES } from "./CMSQueries";
 import { CMSArticleType } from "./CMSTypes";
 import { ICMSAPIClient } from "./interfaces/ICMSAPIClient";
 
@@ -102,6 +102,31 @@ export class CMSAPIClient implements ICMSAPIClient {
       return articlesWithImageUrls;
     } catch (error) {
       console.error("Error fetching data from CMS:", error);
+      throw error;
+    }
+  }
+
+  async fetchRecentArticles() {
+    try {
+      const data = await this.client.fetch(FETCH_RECENT_ARTICLES);
+      
+      // Process images to return URLs
+      const articlesWithImageUrls = data.map((article: any) => {
+        if (article.image && article.image.asset && article.image.asset._ref) {
+          const imageUrl = imageUrlBuilder(this.client).image(article.image as SanityImageSource);
+          return {
+            ...article,
+            image: {
+              ...article.image,
+              url: imageUrl,
+            }
+          };
+        }
+        return article;
+      });
+      return articlesWithImageUrls;
+    } catch (error) {
+      console.error("Error fetching recent articles from CMS:", error);
       throw error;
     }
   }
