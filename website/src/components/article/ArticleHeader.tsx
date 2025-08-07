@@ -66,7 +66,7 @@ export function ArticleHeader ({ // eslint-disable-line
           </Box> 
         </Box>
         {screenSize === ScreenSize.LARGE ? 
-        <Box style={{ display: 'flex', gap: '24px' }}>
+        <Box style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <Box  
             onClick={() => {
               window.open(linkedInUrl, '_blank', 'noopener,noreferrer');

@@ -56,6 +56,10 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
     }
   };
 
+  const handleCloseClick = () => {
+    setIsShareClicked(false);
+  };
+
   useEffect(() => {
     const fetchArticle = async () => {
       try {
@@ -78,85 +82,88 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
   }, [cmsClient, articleId]);
 
   return (      
-      <MainContainer screenSize={screenSize}>
-        <MathSymbolsBackground />
-        {isLoading || !selectedArticle ? (
-          <CircularProgress
-            size={50}
-            sx={{
-              color: '#fff',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
-        ) : (
-          <>
-            <BackToLibrary screenSize={screenSize} />
-            <Box style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              paddingTop: screenSize === ScreenSize.LARGE ? '48px' :  '60px',
-              paddingBottom: screenSize === ScreenSize.LARGE ? '96px' :  '60px',
-              paddingLeft: screenSize === ScreenSize.SMALL ? '24px' :  '72px',
-              paddingRight: screenSize === ScreenSize.SMALL ? '24px' :  '72px', 
-              }
-            }>
-              <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? '96px' : '60px'  }}>
-                <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
-                  <ArticleHeader
-                    selectedArticle={selectedArticle}
-                    articleId={articleId ?? ''}
-                    handleShareClicked={handleShareClicked}
-                    screenSize={screenSize}
-                  />
-                  { isVideoArticle 
-                    ? <VideoArticleContent article={selectedArticle} />
-                    : <ArticleContent article={selectedArticle} screenSize={screenSize} />
-                  }
+      <>
+        <MainContainer screenSize={screenSize}>
+          <MathSymbolsBackground />
+          {isLoading || !selectedArticle ? (
+            <CircularProgress
+              size={50}
+              sx={{
+                color: '#fff',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          ) : (
+            <>
+              <BackToLibrary screenSize={screenSize} />
+              <Box style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                paddingTop: screenSize === ScreenSize.LARGE ? '48px' :  '60px',
+                paddingBottom: screenSize === ScreenSize.LARGE ? '96px' :  '60px',
+                paddingLeft: screenSize === ScreenSize.SMALL ? '24px' :  '72px',
+                paddingRight: screenSize === ScreenSize.SMALL ? '24px' :  '72px', 
+                }
+              }>
+                <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? '96px' : '60px'  }}>
+                  <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
+                    <ArticleHeader
+                      selectedArticle={selectedArticle}
+                      articleId={articleId ?? ''}
+                      handleShareClicked={handleShareClicked}
+                      screenSize={screenSize}
+                    />
+                    { isVideoArticle 
+                      ? <VideoArticleContent article={selectedArticle} />
+                      : <ArticleContent article={selectedArticle} screenSize={screenSize} />
+                    }
+                  </Box>
+                  <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? '72px' : '60px' }}>
+                    <Box style={{ width: '100%', border: '1px solid #FFF', boxSizing: 'border-box' }}/>
+                    <OtherArticles articles={otherArticles} screenSize={screenSize} isLoadingArticles={isLoadingOtherArticles} />
+                  </Box>
                 </Box>
-                <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? '72px' : '60px' }}>
-                  <Box style={{ width: '100%', border: '1px solid #FFF', boxSizing: 'border-box' }}/>
-                  <OtherArticles articles={otherArticles} screenSize={screenSize} isLoadingArticles={isLoadingOtherArticles} />
-                </Box>
-                <AnimatePresence>
-                  {isShareClicked && (
-                    <Box
-                      onMouseDownCapture={handleClickOutside}
-                      sx={{
-                        position: 'fixed',
-                        inset: 0,
-                        zIndex: 1,
-                      }}
-                    >
-                      <motion.div
-                        ref={modalWrapperRef}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: 'easeInOut' }}
-                        style={{
-                          position: 'fixed',
-                          bottom: 0,
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          width: '100%',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          zIndex: 1000,
-                          paddingBottom: '24px',
-                        }}
-                      >
-                        <ShareModal />
-                      </motion.div>
-                    </Box>
-                  )}
-                </AnimatePresence>
               </Box>
+            </>
+          )}  
+        </MainContainer>
+        <AnimatePresence>
+          {isShareClicked && (
+            <Box
+              onMouseDownCapture={handleClickOutside}
+              sx={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 15000,
+              }}
+            >
+              <motion.div
+                ref={modalWrapperRef}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                style={{
+                  position: 'absolute',
+                  top: '21px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingLeft: screenSize === ScreenSize.SMALL ? '24px' :  '72px',
+                  paddingRight: screenSize === ScreenSize.SMALL ? '24px' :  '72px', 
+                  boxSizing: 'border-box',
+                }}
+              >
+                <ShareModal handleCloseClick={handleCloseClick} screenSize={screenSize} />
+              </motion.div>
             </Box>
-          </>
-        )}  
-      </MainContainer>
+          )}
+        </AnimatePresence>
+      </>
   );
 }

@@ -24,6 +24,9 @@ import 'swiper/css/pagination';
 
 const MainContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
   boxSizing: 'border-box',
   background: 'transparent',
 }));
@@ -42,6 +45,7 @@ const CornerStonesTitleContainer = styled(Box)(({ theme }) => ({
 }));
 
 const CornerStonesContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
   display: 'flex', 
   gap: ' 48px',
 }));
