@@ -120,7 +120,7 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
 
       {/* Sponsors Divider */}
       <StyledSponsorDivider>
-        <StyledFlexBox direction="row" align="flex-start" gap={24}>
+        <StyledFlexBox direction="row" align="center" gap={24}>
           {imageArr.map(({ image, alt }, i) => (
             <Box key={alt} sx={{ width: '250px', zIndex: 5 }}>
               <img src={image} alt={alt} />
