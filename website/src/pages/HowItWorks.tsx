@@ -6,9 +6,17 @@ import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
 import OnePhone from '../images/onephone.png';
 import TwoPhone from '../images/twophone.png'
 import ThreePhone from '../images/threephone.png'
+import LogicModel from '../images/right-on-education.png';
+import BlueMonster from '../images/BlueMonsterHandUp.svg';
+import YellowMonster from '../images/YellowMonsterHandUp.svg';
+import PinkMonster from '../images/PinkMonsterHandUp.svg';
+import TopCurve from '../images/TopCurve.png';
+import BottomCurve from '../images/BottomCurve.png';
 import { ScreenSize } from '../lib/WebsiteModels';
 import  StepImage from '../lib/styledcomponents/HowItWorks/StepImage';
 import VennDiagram from '../components/VennDiagram';
+
+
 
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
@@ -106,8 +114,6 @@ const SecondContainer = styled(Box)(({ theme }) => ({
   gap: '72px',
   width: '100%',
   boxSizing: 'border-box',
-  // padding: '0px 71.5px',
-  // border: '1px solid red',
   alignItems: 'center',
   justifyContent: 'center'
 }));
@@ -126,8 +132,52 @@ const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   gap: '12px',
+}));
+
+const ThirdContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  boxSizing: 'border-box',
+  alignItems: 'center',
+  justifyContent: 'center',
+  // border: '1px solid white',
+  backgroundColor: '#011849',
+  width: '100%',
+  height: '100%'
+}));
+
+const ThirdContainerContent = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  boxSizing: 'border-box',
+  alignItems: 'center',
+  // border: '1px solid red'
+}));
+
+const LeftBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '48px',
+  boxSizing: 'border-box',
+  alignItems: 'flex-start',
+  // border: '1px solid orange'
+}));
+
+
+const RightBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+  // border: '1px solid green',
+  justifyContent: 'center',
   alignItems: 'center'
 }));
+
+
+const MonsterAndTextContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: '12px'
+}));
+
+
 
 export function HowItWorks() { // eslint-disable-line
   const theme = useTheme();
@@ -146,6 +196,49 @@ export function HowItWorks() { // eslint-disable-line
     paddingValue = '96px 72px';
   } else {
     paddingValue = '60px 12px';
+  }
+
+  let marginValue;
+  if (screenSize === ScreenSize.SMALL) {
+    marginValue = '60px 12px 0px';
+  } else if (screenSize === ScreenSize.MEDIUM) {
+    marginValue = '65px 60px 0px';
+  } else {
+    marginValue = null;
+  }
+
+  let thirdContainerPadding;
+  if (screenSize === ScreenSize.LARGE) {
+    thirdContainerPadding = '48px 72px';
+  } else if (screenSize === ScreenSize.MEDIUM) {
+    thirdContainerPadding = '60px 72px';
+  } else {
+    thirdContainerPadding = '60px 12px';
+  }
+
+  let leftBoxWidth;
+  if (screenSize === ScreenSize.MEDIUM) {
+    leftBoxWidth = '600px';
+  } else if (screenSize === ScreenSize.SMALL) {
+    leftBoxWidth = '369px';
+  } 
+
+  let logicModelWidth;
+  if (screenSize === ScreenSize.MEDIUM) {
+    logicModelWidth = '396px';
+  } else if (screenSize === ScreenSize.LARGE) {
+    logicModelWidth = 'auto';
+  } else {
+    logicModelWidth = '200px';
+  }
+
+  let blueMonsterWidth;
+  if (screenSize === ScreenSize.MEDIUM) {
+    blueMonsterWidth = '192px';
+  } else if (screenSize === ScreenSize.SMALL) {
+    blueMonsterWidth = '115px';
+  } else {
+    blueMonsterWidth = '249px';
   }
   
   const [selectedBox, setSelectedBox] = React.useState(0); // 0 for first, 1 for second
@@ -327,34 +420,165 @@ export function HowItWorks() { // eslint-disable-line
       </FirstContainer>
       
       {/* The second page */}
-      <SecondContainer>
-        <SecondUpperContainerTexts>
-          <SecondUpperContainerIntegratingText>
+      <SecondContainer sx={{paddingBottom: screenSize === ScreenSize.LARGE? '111.5px' : '60px'}}>
+        <SecondUpperContainerTexts sx={{margin: marginValue}}>
+          <SecondUpperContainerIntegratingText sx={{alignItems: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'flex-start' : 'center'}}>
             <Typography sx={{lineHeight: '1.1', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
               PEDAGOGY
             </Typography>
             <Typography sx={{lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
-              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> Righton! </span> into your teaching
+              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> RightOn! </span> into your teaching
             </Typography>
           </SecondUpperContainerIntegratingText>
-          <Typography sx={{maxWidth: '690px', textAlign: 'center', lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-              Click to learn how<span style={{fontStyle: 'italic'}}> Righton! </span> meets each of three key themes in education technology.
+          <Typography sx={{textAlign: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'left' : 'center', maxWidth: '690px',  lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
+              Click to learn how<span style={{fontStyle: 'italic'}}> RightOn! </span> meets each of three key themes in education technology.
           </Typography>
         </SecondUpperContainerTexts>
         {/* Venn Diagram goes here */}
-        {/* <Box
-          sx={{
-            width: '100%',
-            flexGrow: 1,
-            position: 'relative', // <-- This is essential!
-            // margin: '0 auto',
-            border: '1px solid red'
-
-          }}
-        > */}
-          <VennDiagram />
-        {/* </Box> */}
+        <VennDiagram screensize = {screenSize}/>
       </SecondContainer>
+
+      {/* The third page */}
+      <Box style={{width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        {/* Top curve */}
+        <img
+        src={TopCurve}
+        alt='TopCurve'
+        style={{
+          width: '100%',
+          height: 'auto'
+        }}
+        />
+
+        <ThirdContainer sx={{padding: thirdContainerPadding,
+          boxSizing: 'border-box',
+
+        }}>
+          <ThirdContainerContent sx={{flexDirection: screenSize === ScreenSize.LARGE? 'row' : 'column',
+              gap: screenSize === ScreenSize.LARGE? '48px' : '72px',
+              alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
+            }}>
+              <LeftBox sx={{width: leftBoxWidth,
+              }}>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
+                  <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+                    <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
+                  </Typography>
+                  <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
+                    At<span style={{color: '#FFFFFF', fontStyle: 'italic',fontWeight: 400, fontFamily: 'Rubik, sans-serif'}}> RightOn! </span>, we believe mistakes aren&apos;t setbacks—they&apos;re 
+                    stepping stones to deeper thinking. Our logic model outlines 
+                    how students move beyond quick recall to meaningful understanding, 
+                    all while building a classroom culture that embraces errors, encourages 
+                    collaboration, and fosters growth mindsets.
+
+                    <br />
+                    <br />
+                    <span style={{color: '#FFFFFF', fontWeight: 600, fontFamily: 'Poppins, sans-serif'}}>Want to see 
+                      how it all connects? Explore the research and reasoning behind 
+                      RightOn!
+                    </span>
+                  </Typography>
+                </Box>
+                  {(screenSize === ScreenSize.LARGE) && (
+                  <Box
+                    component="button"
+                    sx={{
+                      borderRadius: '24px',
+                      border: '1px solid #FFFFFF',
+                      backgroundColor: 'transparent',
+                      color: '#FFFFFF',
+                      padding: '12px 24px',
+                      fontSize: '18px',
+                      fontFamily: 'Poppins, sans-serif',
+                      fontWeight: 400,
+                      cursor: 'pointer',
+                      outline: 'none',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      },
+                    }}
+                  >
+                    Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+                  </Box>
+                )}
+              </LeftBox>
+              <RightBox sx={{width: leftBoxWidth,
+              }}>
+                <img
+                src={LogicModel}
+                alt='Devices'
+                style={{
+                  width: logicModelWidth,
+                  marginLeft: '102px',
+                  marginRight: '102px',
+                  boxSizing: 'border-box',
+                }}
+                />
+                <MonsterAndTextContainer >
+                  <img
+                    src={BlueMonster}
+                    alt='BlueMonster'
+                    style={{
+                      width: blueMonsterWidth,
+                    }}
+                  />
+                  <img
+                    src={YellowMonster}
+                    alt='YellowMonster'
+                    style={{
+                      width: blueMonsterWidth,
+                    }}
+                  />
+                  <img
+                    src={PinkMonster}
+                    alt='PinkMonster'
+                    style={{
+                      width: blueMonsterWidth,
+                    }}
+                  />
+                </MonsterAndTextContainer>
+              </RightBox>
+              {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
+                <Box
+                  component="button"
+                  sx={{
+                    borderRadius: '24px',
+                    border: '1px solid #FFFFFF',
+                    backgroundColor: 'transparent',
+                    color: '#FFFFFF',
+                    padding: '12px 24px',
+                    fontSize: '18px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 400,
+                    cursor: 'pointer',
+                    outline: 'none',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                >
+                  Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+                </Box>
+              )}
+          </ThirdContainerContent>
+        </ThirdContainer>
+        
+        {/* Bottom curve */}
+        <img
+        src={BottomCurve}
+        alt='BottomCurve'
+        style={{
+          width: '100%',
+          height: 'auto'
+        }}
+        />
+      </Box>
+
     </MainContainer>
   )
 }
