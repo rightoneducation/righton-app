@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CMSArticleType } from '@righton/networking';
 import { ScreenSize, LibraryType } from '../lib/WebsiteModels';
-import CornerstoneArticleCard from '../lib/styledcomponents/CornerstoneArticleCard';
+import CornerstoneArticleCard from '../components/article/CornerstoneArticleCard';
 import ArticleCard from '../components/article/ArticleCard';
 import CornerstoneSkeleton from '../components/library/CornerstoneSkeleton';
 import ArticleSkeleton from '../components/library/ArticleSkeleton';
