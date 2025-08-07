@@ -23,9 +23,9 @@ export const MathSymbolsBackground = styled(Box)(({ theme }) => ({
   bottom: 0,
   opacity: 1,
   zIndex: -1,
-  backgroundColor: "#f6f6f6",
+  backgroundColor: "#0F235E",
   backgroundImage: `
-  linear-gradient(rgba(2, 33, 95, 0.90), rgba(2, 33, 95, 0.9)),
+  linear-gradient(rgba(2, 33, 95, 0), rgba(20, 43, 111, 0.9)),
   url(${mathSymbolsBackground})
   `,
   backgroundSize: 'auto',

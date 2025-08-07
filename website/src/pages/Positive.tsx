@@ -9,14 +9,9 @@ import { WannaPlayContainer } from '../components/positive/WannaPlayContainer';
 import { PositiveCultureContainer } from '../components/positive/PositiveCultureContainer';
 
 const PositiveContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100vw',
+  width: '100%',
   boxSizing: 'border-box',
   background: 'transparent',
-  transform: 'translateZ(0)',
-  overflow: 'hidden',
-  gap:0
 }));
 
 interface PostiveContainerInterface {
