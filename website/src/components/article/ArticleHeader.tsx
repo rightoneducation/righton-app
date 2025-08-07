@@ -24,17 +24,19 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface ArticleHeaderProps {
+  screenSize: ScreenSize;
+  articleId: string;
   selectedArticle: CMSArticleType;
   handleShareClicked: () => void;
-  articleId: string;
-  screenSize: ScreenSize;
+  handleMobileShareClicked: () => void;
 }
 
 export function ArticleHeader ({ // eslint-disable-line
+  screenSize,
+  articleId,
   selectedArticle,
   handleShareClicked,
-  articleId,
-  screenSize
+  handleMobileShareClicked,
  }: ArticleHeaderProps) { 
   const monsterAvatarMap: { [key: number]: string } = {
     0: cmsMonsterAvatar0,
@@ -66,7 +68,7 @@ export function ArticleHeader ({ // eslint-disable-line
           </Box> 
         </Box>
         {screenSize === ScreenSize.LARGE ? 
-        <Box style={{ display: 'flex', gap: '24px' }}>
+        <Box style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <Box  
             onClick={() => {
               window.open(linkedInUrl, '_blank', 'noopener,noreferrer');
@@ -105,7 +107,7 @@ export function ArticleHeader ({ // eslint-disable-line
         : <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Box  
             onClick={() => {
-              // TODO: Implement share per coordination with design
+              handleMobileShareClicked();
             }}
             style={{ cursor: 'pointer' }}
           >

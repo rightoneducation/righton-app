@@ -5,7 +5,7 @@ import {
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import CornerstoneArticleCard from '../../lib/styledcomponents/CornerstoneArticleCard';
-import ArticleCard from '../../lib/styledcomponents/ArticleCard';
+import ArticleCard from './ArticleCard';
 import CornerstoneSkeleton from '../library/CornerstoneSkeleton';
 import ArticleSkeleton from '../library/ArticleSkeleton';
 import { ScreenSize } from '../../lib/WebsiteModels';
