@@ -4,13 +4,15 @@ import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponen
 import magicMathHat from '../../images/mathSymbolsHat.svg';
 import pinkCreature from '../../images/pinkCreature.svg';
 import { ScreenSize } from '../../lib/WebsiteModels'
+import { useTheme } from '@mui/material';
 
 
 interface CTAButtonProps {
 screenSize: ScreenSize;
 fontColor?: string;
 }
-export default function GameCTAButtons({ screenSize, fontColor }: CTAButtonProps) {
+export default function   GameCTAButtons({ screenSize, fontColor }: CTAButtonProps) {
+    const theme = useTheme();
     return (
         <>
            {/* Teachers CTA button */}
@@ -22,13 +24,13 @@ export default function GameCTAButtons({ screenSize, fontColor }: CTAButtonProps
 
         direction="row" 
         align="center" 
-        borderRadius={24} 
-        gap={12} 
+        borderRadius={theme.sizing.mdPadding} 
+        gap={theme.sizing.smPadding} 
         width={screenSize === ScreenSize.SMALL ? "369px":"356px"} 
         sx={{ 
           maxWidth: screenSize === ScreenSize.SMALL ? "369px":"356px", 
-          border: '1px solid white', 
-          padding: '12px 24px', 
+          border: theme.sizing.dividerBorder, 
+          padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`, 
           cursor: 'pointer',
           transition: 'background-color 0.2s ease',
           '&:hover': {
@@ -38,7 +40,7 @@ export default function GameCTAButtons({ screenSize, fontColor }: CTAButtonProps
           <StyledFlexBox>
             <img src={pinkCreature} alt="pink-righton-creature" width="60px" height="60px" />
           </StyledFlexBox>
-          <StyledFlexBox direction="column" align="flex-start" gap={10}>
+          <StyledFlexBox direction="column" align="flex-start" gap={theme.sizing.xSmPadding}>
             <Typography style={{ color: fontColor ?? 'white', fontFamily: 'Poppins', fontSize: '20px', fontWeight: 600 }}>
               Teachers
             </Typography>
@@ -58,13 +60,13 @@ export default function GameCTAButtons({ screenSize, fontColor }: CTAButtonProps
          <StyledFlexBox 
          direction="row" 
          align="center" 
-         borderRadius={24} 
-         gap={12} 
+         borderRadius={theme.sizing.mdPadding} 
+         gap={theme.sizing.smPadding} 
          width={screenSize === ScreenSize.SMALL ? "369px":"356px"} 
          sx={{ 
            maxWidth: screenSize === ScreenSize.SMALL ? "369px":"356px", 
-           border: '1px solid white', 
-           padding: '12px 24px', 
+           border: theme.sizing.dividerBorder, 
+           padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`, 
            cursor: 'pointer',
            transition: 'background-color 0.2s ease',
            '&:hover': {
@@ -74,7 +76,7 @@ export default function GameCTAButtons({ screenSize, fontColor }: CTAButtonProps
           <StyledFlexBox>
            <img src={magicMathHat} alt="math-symbols-hat" width="60px" height="60px" />
           </StyledFlexBox>
-          <StyledFlexBox direction="column" align="flex-start" gap={10}>
+          <StyledFlexBox direction="column" align="flex-start" gap={theme.sizing.xSmPadding}>
             <Typography style={{ color: fontColor ?? 'white', fontFamily: 'Poppins', fontSize: '20px', fontWeight: 600 }}>
               Students
             </Typography>

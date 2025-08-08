@@ -5,6 +5,7 @@ import {
   Popper,
   Fade,
   Slide,
+  useTheme,
 } from '@mui/material';
 import {
   StyledFlexBox,
@@ -36,7 +37,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null)
-
+  const theme = useTheme();
   const handleMenuMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
     setMenuAnchor(event.currentTarget);
   };
@@ -64,21 +65,21 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
     <StyledFlexBox
       justify="center"
       style={{
-        borderBottom: '1px solid #fff',
-        background: '#02215F',
+        borderBottom: theme.sizing.dividerBorder,
+        background: theme.palette.primary.primaryBlue,
         width: '100%',
-        minHeight: screenSize !== ScreenSize.LARGE ? '78px' : '192px',
+        minHeight: screenSize !== ScreenSize.LARGE ? theme.sizing.headerHeightMobile : theme.sizing.headerHeightDesktop,
       }}
     >
       <StyledFlexBox
       id={mobileMenuId}
         sx={{
-          ...(screenSize !== ScreenSize.LARGE && { padding: '12px 24px' }),
+          ...(screenSize !== ScreenSize.LARGE && { padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px` }),
         }}
         direction="row"
         align="center"
         justify={screenSize === ScreenSize.LARGE ? 'center' : 'space-between'}
-        gap={screenSize === ScreenSize.LARGE ? 24 : 0}
+        gap={screenSize === ScreenSize.LARGE ? theme.sizing.mdPadding : 0}
       >
         <Box
           sx={{ cursor: 'pointer'}}
@@ -96,8 +97,8 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                   onClick={() => navigate(link.path)}
                   sx={{
                     ...(location.pathname === link.path && {
-                      color: '#FF3A6A',
-                      textShadow: '0.5px 0 0 #FF3A6A, -0.5px 0 0 #FF3A6A, 0 0.5px 0 #FF3A6A, 0 -0.5px 0 #FF3A6A',
+                      color: theme.palette.primary.primaryPink,
+                      textShadow: `0.5px 0 0 ${theme.palette.primary.primaryPink}, -0.5px 0 0 ${theme.palette.primary.primaryPink}, 0 0.5px 0 ${theme.palette.primary.primaryPink}, 0 -0.5px 0 ${theme.palette.primary.primaryPink}`,
                     }),
                     cursor: 'pointer',
                     padding: '4px 12px',
@@ -113,16 +114,16 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
               id={id}
               onMouseEnter={handleMenuMouseEnter}
               onMouseLeave={handleMenuMouseLeave}
-              borderRadius={24}
+              borderRadius={theme.sizing.mdPadding}
               direction="row"
               align="center"
               justify="center"
-              gap={12}
+              gap={theme.sizing.smPadding}
               width="183px"
               height="54px"
               sx={{
-                border: '1px solid #fff',
-                padding: '12px 24px',
+                border: theme.sizing.dividerBorder,
+                padding: `${theme.sizing.xSmPadding}px ${theme.sizing.mdPadding}px`,
                 cursor: 'pointer',
               }}
             >
@@ -161,7 +162,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                     width: '100%',
                     height: '100vh',
                     backgroundColor: '#02215F',
-                    paddingTop: '24px',
+                    paddingTop: `${theme.sizing.mdPadding}px`,
                     zIndex: 2000,
                   }}
                 >

@@ -4,7 +4,10 @@ import { ScreenSize } from './WebsiteModels';
 // design tokens - colors: (comments = example usage)
 const mainColor = '#FFFFFF'; // main  (ex white)
 const primaryTextColor = '#FFFFFF'; // main text color
+const primaryBlueColor = '#02215F'; // main background blue color
+const primaryPinkColor = '#FF3A6A'; // main highlight pink color
 const secondaryDarkBlueColor = 'rgba(2, 33, 95, 0.50)'; // sponsor divider background
+const darkGreyColor = '#CFCFCF'; // disabled pagination bullet
 
 // design tokens - breakpoints:
 const xs = 0;
@@ -28,16 +31,16 @@ const xxLgPadding = 96; // ex. vertical padding on desktop
 
 // design tokens - misc sizing
 const sponsorImageWidth = '250px'; // ex. width of sponsor images
+const headerHeightMobile = '78px'; // ex. height of header
+const headerHeightDesktop = '192px'; // ex. height of header
+
+
+// design tokens - border sizes
+const dividerBorder = '1px solid #fff';
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
-    borders: {
-      borderWidth: number;
-      solidWhite: string;
-      transparent: string;
-      semiTransparent: string;
-    };
     sizing: {
       containerPadding: {
         [ScreenSize.LARGE]: string;
@@ -51,16 +54,13 @@ declare module '@mui/material/styles' {
       xLgPadding: number;
       xxLgPadding: number;
       sponsorImageWidth: number;
+      dividerBorder: string;
+      headerHeightMobile: string;
+      headerHeightDesktop: string;
     };
   }
 
   interface ThemeOptions {
-    borders?: {
-      borderWidth?: number;
-      solidWhite?: string;
-      transparent?: string;
-      semiTransparent?: string;
-    };
     sizing?: {
       containerPadding?: {
         [ScreenSize.LARGE]?: string;
@@ -74,17 +74,26 @@ declare module '@mui/material/styles' {
       xLgPadding: number;
       xxLgPadding: number;
       sponsorImageWidth: string;
+      dividerBorder: string;
+      headerHeightMobile: string;
+      headerHeightDesktop: string;
     };
   }
 
   interface PaletteColor {
     mainColor: string;
+    primaryBlue: string;
+    primaryPink: string;
     secondaryDarkBlue: string;
+    darkGrey: string;
   }
 
   interface SimplePaletteColorOptions {
     mainColor?: string;
+    primaryBlue?: string;
+    primaryPink?: string;
     secondaryDarkBlue?: string;
+    darkGrey?: string;
   }
 }
 
@@ -101,11 +110,17 @@ export default createTheme({
     xLgPadding,
     xxLgPadding,
     sponsorImageWidth,
+    dividerBorder,
+    headerHeightMobile,
+    headerHeightDesktop,
   },
   palette: {
     primary: {
       main: mainColor,
+      primaryBlue: primaryBlueColor,
+      primaryPink: primaryPinkColor,
       secondaryDarkBlue: secondaryDarkBlueColor,
+      darkGrey: darkGreyColor,
     },
   },
   typography: {
