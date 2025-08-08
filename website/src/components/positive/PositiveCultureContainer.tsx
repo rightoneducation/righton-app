@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { MathSymbolsBackground } from '../../lib/styledcomponents/StyledComponents';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import positiveEmailArrow from '../../images/positiveEmailArrow.svg';
 import positiveBloopyRocket from '../../images/positiveBloopyRocket.png';
@@ -10,10 +9,9 @@ interface PositiveCultureContainerProps {
   screenSize: ScreenSize;
 }
 
-export const PositiveCultureContainer = ({
+export function PositiveCultureContainer ({// eslint-disable-line 
   screenSize,
-}: PositiveCultureContainerProps) => {
-  // eslint-disable-line
+}: PositiveCultureContainerProps) { 
   const theme = useTheme();
   const navigate = useNavigate();
   const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
@@ -535,4 +533,4 @@ export const PositiveCultureContainer = ({
         </Box>
       );
   }
-};
+}; // eslint-disable-line

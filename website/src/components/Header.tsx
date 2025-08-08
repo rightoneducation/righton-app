@@ -25,8 +25,7 @@ const links = [
   { title: 'Resource Library', path: '/library' },
 ];
 
-export function Header({ screenSize }: HeaderProps) {
-  // eslint-disable-line
+export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
   const location = useLocation();
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);

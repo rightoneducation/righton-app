@@ -32,8 +32,7 @@ const MainContainer = styled(Box)<MainContainerProps>(
   }),
 );
 
-export function Article({ cmsClient }: any) {
-  // eslint-disable-line
+export function Article({ cmsClient }: any) { // eslint-disable-line
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));

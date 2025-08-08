@@ -14,11 +14,12 @@ export default function TryItNowMenu({
   isMobile,
 }: TryItNowMenuProps) {
   const theme = useTheme();
+  console.log(theme.palette.primary.mainColor);
   return (
     <StyledFlexBox
       direction="column"
       borderRadius={isMobile ? 0 : 24}
-      sx={{ backgroundColor: theme.palette.primary.mainColor }}
+      sx={{ backgroundColor: theme.palette.primary.main }}
     >
       <GameCTAButtons screenSize={screenSize} fontColor="#000" />
     </StyledFlexBox>

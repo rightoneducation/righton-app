@@ -9,8 +9,7 @@ interface WannaPlayContainerProps {
   screenSize: ScreenSize;
 }
 
-export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
-  // eslint-disable-line
+export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => { // eslint-disable-line
   const theme = useTheme();
   const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
   const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];

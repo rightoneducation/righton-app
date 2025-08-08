@@ -129,15 +129,14 @@ const CoverIframe = styled('iframe')(({ theme }) => ({
   border: 0,
 }));
 
-export function HowItWorks() {
-  // eslint-disable-line
+export function HowItWorks() { // eslint-disable-line
   const theme = useTheme();
 
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const screenSize = isLargeScreen
-    ? ScreenSize.LARGE // eslint-disable-line
+  const screenSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE 
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;

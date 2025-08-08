@@ -8,8 +8,7 @@ interface BackToLibraryInterface {
   screenSize: ScreenSize;
 }
 
-export function BackToLibrary({
-  // eslint-disable-line
+export function BackToLibrary({ // eslint-disable-line
   screenSize,
 }: BackToLibraryInterface) {
   const navigate = useNavigate();

@@ -49,8 +49,7 @@ interface HomePageProps {
   screenSize: ScreenSize;
 }
 
-export function Home({ screenSize }: HomePageProps) {
-  // eslint-disable-line
+export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
   const theme = useTheme();
   const containerPadding = theme.sizing.containerPadding[screenSize];
 

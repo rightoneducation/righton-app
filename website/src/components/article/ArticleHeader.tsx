@@ -35,8 +35,7 @@ interface ArticleHeaderProps {
   handleMobileShareClicked: () => void;
 }
 
-export function ArticleHeader({
-  // eslint-disable-line
+export function ArticleHeader({ // eslint-disable-line
   screenSize,
   articleId,
   selectedArticle,

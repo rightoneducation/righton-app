@@ -9,8 +9,7 @@ interface WhatIsContainerProps {
   screenSize: ScreenSize;
 }
 
-export const WhatIsContainer = ({ screenSize }: WhatIsContainerProps) => {
-  // eslint-disable-line
+export const WhatIsContainer = ({ screenSize }: WhatIsContainerProps) => { // eslint-disable-line
   const theme = useTheme();
   const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
   const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];

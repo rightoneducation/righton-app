@@ -9,8 +9,7 @@ interface UniverseContainerProps {
   screenSize: ScreenSize;
 }
 
-export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => {
-  // eslint-disable-line
+export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { // eslint-disable-line
   const theme = useTheme();
   const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
   const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];

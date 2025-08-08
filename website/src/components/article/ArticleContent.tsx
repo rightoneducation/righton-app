@@ -16,8 +16,7 @@ interface ArticleContainerInterface {
   screenSize?: ScreenSize;
 }
 
-export function ArticleContent({
-  // eslint-disable-line
+export function ArticleContent({ // eslint-disable-line
   article,
   screenSize,
 }: ArticleContainerInterface) {

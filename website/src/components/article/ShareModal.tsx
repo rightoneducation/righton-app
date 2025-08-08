@@ -8,11 +8,10 @@ interface ShareModalProps {
   handleCloseClick: () => void;
 }
 
-export const ShareModal = ({
-  // eslint-disable-line
+export function ShareModal ({ // eslint-disable-line
   screenSize,
   handleCloseClick,
-}: ShareModalProps) => {
+}: ShareModalProps) {
   return (
     <Paper
       style={{
@@ -48,4 +47,4 @@ export const ShareModal = ({
       </Box>
     </Paper>
   );
-};
+}

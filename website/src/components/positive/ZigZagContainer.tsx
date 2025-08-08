@@ -32,8 +32,7 @@ interface ZigZagContainerProps {
   screenSize: ScreenSize;
 }
 
-export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => {
-  // eslint-disable-line
+export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // eslint-disable-line
   const theme = useTheme();
   const swiperQ1Ref = useRef<SwiperRef>(null);
   const swiperQ2Ref = useRef<SwiperRef>(null);

@@ -31,8 +31,7 @@ const socialMediaIcons = [
   },
 ];
 
-export function Footer({ screenSize }: FooterProps) {
-  // eslint-disable-line
+export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
   const isSmallScreen = useMediaQuery((theme: any) =>
     theme.breakpoints.down('md'),
   );

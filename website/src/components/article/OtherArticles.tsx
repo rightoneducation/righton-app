@@ -19,8 +19,7 @@ interface OtherArticlesInterface {
   screenSize?: ScreenSize;
 }
 
-export function OtherArticles({
-  // eslint-disable-line
+export function OtherArticles({ // eslint-disable-line
   articles,
   isLoadingArticles,
   screenSize,

@@ -25,8 +25,7 @@ interface IAboutUs {
   screenSize: ScreenSize;
 }
 
-export function AboutUs({ screenSize }: IAboutUs) {
-  // eslint-disable-line
+export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
   const theme = useTheme();
   const containerPadding = theme.sizing.containerPadding[screenSize];
 

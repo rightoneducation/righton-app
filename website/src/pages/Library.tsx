@@ -59,8 +59,7 @@ const ArticleContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-export function Library({ cmsClient }: any) {
-  // eslint-disable-line
+export function Library({ cmsClient }: any) { // eslint-disable-line
   const theme = useTheme();
   const [selected, setSelected] = useState<LibraryType>(LibraryType.ALL);
   const [articles, setArticles] = useState<any[]>([]);
@@ -77,15 +76,14 @@ export function Library({ cmsClient }: any) {
 
   const ARTICLES_PER_PAGE = 9;
 
-  // TODO: ~~~Theme~~~
   const primaryGap = `${theme.sizing.xLgPadding}px`;
   const secondaryGap = `${theme.sizing.lgPadding}px`;
 
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const screenSize = isLargeScreen
-    ? ScreenSize.LARGE // eslint-disable-line
+  const screenSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE 
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;

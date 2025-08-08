@@ -18,8 +18,7 @@ const getYouTubeId = (url: string): string | null => {
   return match ? match[1] : null;
 };
 
-export function VideoArticleContent({
-  // eslint-disable-line
+export function VideoArticleContent({// eslint-disable-line
   article,
 }: VideoArticleContainerInterface) {
   const videoId = getYouTubeId(article.youtubeLink ?? '');

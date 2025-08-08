@@ -14,12 +14,11 @@ interface ShareMobileModalProps {
   handleCloseShareModalClick: () => void;
 }
 
-export const ShareMobileModal = ({
-  // eslint-disable-line
+export function ShareMobileModal ({ // eslint-disable-line
   articleId,
   selectedArticle,
   handleCloseShareModalClick,
-}: ShareMobileModalProps) => {
+}: ShareMobileModalProps) {
   const [isCopied, setIsCopied] = useState(false);
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}&text=${encodeURIComponent(selectedArticle?.title ?? '')}`;
@@ -233,4 +232,4 @@ export const ShareMobileModal = ({
       </Box>
     </Box>
   );
-};
+}
