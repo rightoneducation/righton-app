@@ -37,7 +37,6 @@ const sponsorImageWidth = '250px'; // ex. width of sponsor images
 const headerHeightMobile = '78px'; // ex. height of header
 const headerHeightDesktop = '192px'; // ex. height of header
 
-
 // design tokens - border sizes
 const dividerBorder = '1px solid #fff';
 

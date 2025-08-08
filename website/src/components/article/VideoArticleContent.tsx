@@ -4,11 +4,11 @@ import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import {
   CMSTitleText,
   PortableTextComponentsConfig,
-  CMSArticleType
+  CMSArticleType,
 } from '@righton/networking';
 
 interface VideoArticleContainerInterface {
-  article: CMSArticleType
+  article: CMSArticleType;
 }
 
 const getYouTubeId = (url: string): string | null => {
@@ -18,21 +18,29 @@ const getYouTubeId = (url: string): string | null => {
   return match ? match[1] : null;
 };
 
-export function VideoArticleContent({ // eslint-disable-line
-  article
-} : VideoArticleContainerInterface) { 
+export function VideoArticleContent({
+  // eslint-disable-line
+  article,
+}: VideoArticleContainerInterface) {
   const videoId = getYouTubeId(article.youtubeLink ?? '');
   return (
-    <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
+    <Box
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: '648px',
+        gap: '40px',
+      }}
+    >
       <iframe
         src={`https://www.youtube.com/embed/${videoId}`}
         allow="encrypted-media"
         title="Youtube Video"
         style={{
-          height: '450px', 
+          height: '450px',
           border: 0,
-          borderRadius: '8px'
-        }}  
+          borderRadius: '8px',
+        }}
       />
       <CMSTitleText>{article.title}</CMSTitleText>
       <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

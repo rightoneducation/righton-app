@@ -1,7 +1,13 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { CMSCardThumbnailImage, CMSCardTag, CMSCardCaption, CMSCardTitle, CMSCardDateText } from '@righton/networking'; 
+import {
+  CMSCardThumbnailImage,
+  CMSCardTag,
+  CMSCardCaption,
+  CMSCardTitle,
+  CMSCardDateText,
+} from '@righton/networking';
 
 type ArticleCardProps = {
   image: any;
@@ -26,7 +32,7 @@ const InfoWrapper = styled(Box)(({ theme }) => ({
   gap: `${theme.sizing.smPadding}px`,
   padding: `${theme.sizing.smPadding}px 0`,
   boxSizing: 'border-box',
-  width: '100%'
+  width: '100%',
 }));
 
 export default function ArticleCard({
@@ -39,20 +45,33 @@ export default function ArticleCard({
   const theme = useTheme();
   return (
     <CardContainer>
-      <CMSCardThumbnailImage
-        src={image.url}
-        alt="Article Thumbnail"/>
+      <CMSCardThumbnailImage src={image.url} alt="Article Thumbnail" />
       <InfoWrapper>
-        <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box', gap: `${theme.sizing.smPadding}px`, paddingRight: `${theme.sizing.smPadding}px` }}>
-          <Box sx={{display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center'}}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            boxSizing: 'border-box',
+            gap: `${theme.sizing.smPadding}px`,
+            paddingRight: `${theme.sizing.smPadding}px`,
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '8px',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+            }}
+          >
             {tags.map((tag) => (
               <CMSCardTag key={tag}>{tag}</CMSCardTag>
             ))}
             <CMSCardDateText> {date} </CMSCardDateText>
           </Box>
-          <Box sx={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
-          <CMSCardTitle>{title}</CMSCardTitle>
-          <CMSCardCaption>{caption}</CMSCardCaption>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <CMSCardTitle>{title}</CMSCardTitle>
+            <CMSCardCaption>{caption}</CMSCardCaption>
           </Box>
         </Box>
       </InfoWrapper>

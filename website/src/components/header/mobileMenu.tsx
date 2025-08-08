@@ -94,7 +94,7 @@ export default function MobileMenu({
           }}
         />
       )}
-      
+
       <AnimatePresence>
         {toggle && (
           <motion.div

@@ -45,7 +45,6 @@ export default function FlipCard({ front, back }: FlipCardProps) {
               width: '100%',
               height: '100%',
               backfaceVisibility: 'hidden',
-          
             }}
           >
             {front}
@@ -57,7 +56,6 @@ export default function FlipCard({ front, back }: FlipCardProps) {
               height: '100%',
               backfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
-          
             }}
           >
             {back}

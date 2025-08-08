@@ -18,7 +18,8 @@ interface PostiveContainerInterface {
   screenSize: ScreenSize;
 }
 
-export function Positive({ screenSize }: PostiveContainerInterface) {// eslint-disable-line
+export function Positive({ screenSize }: PostiveContainerInterface) {
+  // eslint-disable-line
   return (
     <PositiveContainer>
       <MathSymbolsBackground />

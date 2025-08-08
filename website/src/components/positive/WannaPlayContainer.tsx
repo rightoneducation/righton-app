@@ -9,7 +9,8 @@ interface WannaPlayContainerProps {
   screenSize: ScreenSize;
 }
 
-export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { // eslint-disable-line
+export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
+  // eslint-disable-line
   const theme = useTheme();
   const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
   const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];
@@ -22,8 +23,8 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
   switch (screenSize) {
     case ScreenSize.SMALL:
     case ScreenSize.MEDIUM:
-      return ( 
-        <Box 
+      return (
+        <Box
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -31,28 +32,29 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
             width: '100%',
             height: '100%',
             minHeight: '560px',
-            padding: screenSize === ScreenSize.SMALL ? smallPadding : medPadding,
+            padding:
+              screenSize === ScreenSize.SMALL ? smallPadding : medPadding,
             position: 'relative',
             boxSizing: 'border-box',
             zIndex: 0,
-            gap: primaryGap
+            gap: primaryGap,
           }}
         >
           {/* Background Image */}
           <Box
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: `url(${positiveBG1})`,
-                backgroundPosition: 'center top',
-                backgroundSize: 'cover',
-                opacity: 0.5,
-                zIndex: -1
-              }}
-            />
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(${positiveBG1})`,
+              backgroundPosition: 'center top',
+              backgroundSize: 'cover',
+              opacity: 0.5,
+              zIndex: -1,
+            }}
+          />
 
           <Box
             style={{
@@ -62,7 +64,7 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
               justifyContent: 'center',
               width: '100%',
               height: '100%',
-              gap: secondaryGap
+              gap: secondaryGap,
             }}
           >
             <Box
@@ -70,7 +72,7 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: secondaryGap
+                gap: secondaryGap,
               }}
             >
               {/* TODO: Wanna Play top text */}
@@ -79,17 +81,29 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: tertiaryGap
+                  gap: tertiaryGap,
                 }}
               >
-                <Typography sx={{ lineHeight: '1.2', fontSize: '40px', fontFamily: 'Poppins, sans-serif', fontWeight: 700,   color: '#FFFFFF', textAlign: 'center'}}>
+                <Typography
+                  sx={{
+                    lineHeight: '1.2',
+                    fontSize: '40px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 700,
+                    color: '#FFFFFF',
+                    textAlign: 'center',
+                  }}
+                >
                   Wanna Play?
                 </Typography>
-                <Typography 
-                  sx={{ 
+                <Typography
+                  sx={{
                     fontSize: '20px',
                     lineHeight: '30px',
-                    fontFamily: 'Poppins, sans-serif', fontWeight: 400,   color: '#FFFFFF', textAlign: 'center'
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 400,
+                    color: '#FFFFFF',
+                    textAlign: 'center',
                   }}
                 >
                   Coming Soon
@@ -104,17 +118,29 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                   border: theme.sizing.dividerBorder,
                   borderRadius: secondaryGap,
                   padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
-                  gap: `${theme.sizing.xSmPadding}px`
+                  gap: `${theme.sizing.xSmPadding}px`,
                 }}
               >
-                <Typography sx={{ lineHeight: '1.2', fontSize: '18px', fontFamily: 'Poppins, sans-serif', color: '#FFFFFF', textAlign: 'center'}}>
+                <Typography
+                  sx={{
+                    lineHeight: '1.2',
+                    fontSize: '18px',
+                    fontFamily: 'Poppins, sans-serif',
+                    color: '#FFFFFF',
+                    textAlign: 'center',
+                  }}
+                >
                   Join our Email List
                 </Typography>
                 <img src={positiveEmailArrow} alt="positiveEmailArrow" />
               </Box>
-              <Box style={{position: 'relative'}}>
-                <img src={positiveWannaPlayPhone} alt="positiveWannaPlayPhone" style={{position: 'relative',zIndex: 21}}/>
-                <Box 
+              <Box style={{ position: 'relative' }}>
+                <img
+                  src={positiveWannaPlayPhone}
+                  alt="positiveWannaPlayPhone"
+                  style={{ position: 'relative', zIndex: 21 }}
+                />
+                <Box
                   style={{
                     width: '350px',
                     height: '350px',
@@ -125,7 +151,7 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    zIndex: -1
+                    zIndex: -1,
                   }}
                 />
               </Box>
@@ -137,19 +163,27 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
               alignItems: 'center',
               justifyContent: 'center',
               width: '100%',
-              height: '100%'
+              height: '100%',
             }}
           >
-            <Typography sx={{ lineHeight: '1.2', fontSize: '18px', fontFamily: 'Poppins, sans-serif', color: '#FFFFFF', textAlign: 'center'}}>
+            <Typography
+              sx={{
+                lineHeight: '1.2',
+                fontSize: '18px',
+                fontFamily: 'Poppins, sans-serif',
+                color: '#FFFFFF',
+                textAlign: 'center',
+              }}
+            >
               Got questions? Contact us at zigzag@rightoneducation.com
             </Typography>
           </Box>
         </Box>
-      )
+      );
     case ScreenSize.LARGE:
     default:
-      return ( 
-        <Box 
+      return (
+        <Box
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -158,27 +192,27 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
             height: '100%',
             minHeight: '560px',
             padding: largePadding,
-            zIndex:0,
+            zIndex: 0,
             gap: largestGap,
-            position: 'relative'
+            position: 'relative',
           }}
         >
-           {/* Background Image */}
-           <Box
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: `url(${positiveBG1})`,
-                backgroundPosition: 'center top',
-                backgroundSize: 'cover',
-                opacity: 0.5,
-                zIndex: 0
-              }}
-            />
-      
+          {/* Background Image */}
+          <Box
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(${positiveBG1})`,
+              backgroundPosition: 'center top',
+              backgroundSize: 'cover',
+              opacity: 0.5,
+              zIndex: 0,
+            }}
+          />
+
           <Box
             style={{
               display: 'flex',
@@ -190,9 +224,13 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
               zIndex: 1,
             }}
           >
-            <Box style={{position: 'relative'}}>
-              <img src={positiveWannaPlayPhone} alt="positiveWannaPlayPhone" style={{position: 'relative',zIndex: 21}}/>
-              <Box 
+            <Box style={{ position: 'relative' }}>
+              <img
+                src={positiveWannaPlayPhone}
+                alt="positiveWannaPlayPhone"
+                style={{ position: 'relative', zIndex: 21 }}
+              />
+              <Box
                 style={{
                   width: '350px',
                   height: '350px',
@@ -203,7 +241,7 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  zIndex: -1
+                  zIndex: -1,
                 }}
               />
             </Box>
@@ -212,7 +250,7 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: primaryGap
+                gap: primaryGap,
               }}
             >
               {/* TODO: Wanna Play top text */}
@@ -221,17 +259,29 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: secondaryGap
+                  gap: secondaryGap,
                 }}
               >
-                <Typography sx={{ lineHeight: '1.2', fontSize: '40px', fontFamily: 'Poppins, sans-serif', fontWeight: 700,   color: '#FFFFFF', textAlign: 'center'}}>
+                <Typography
+                  sx={{
+                    lineHeight: '1.2',
+                    fontSize: '40px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 700,
+                    color: '#FFFFFF',
+                    textAlign: 'center',
+                  }}
+                >
                   Wanna Play?
                 </Typography>
-                <Typography 
-                  sx={{ 
+                <Typography
+                  sx={{
                     fontSize: '24px',
                     lineHeight: '30px',
-                    fontFamily: 'Poppins, sans-serif', fontWeight: 400,   color: '#FFFFFF', textAlign: 'center'
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 400,
+                    color: '#FFFFFF',
+                    textAlign: 'center',
                   }}
                 >
                   Coming Soon
@@ -246,10 +296,18 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                   border: theme.sizing.dividerBorder,
                   borderRadius: secondaryGap,
                   padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
-                  gap: `${theme.sizing.xSmPadding}px`
+                  gap: `${theme.sizing.xSmPadding}px`,
                 }}
               >
-                <Typography sx={{ lineHeight: '1.2', fontSize: '18px', fontFamily: 'Poppins, sans-serif', color: '#FFFFFF', textAlign: 'center'}}>
+                <Typography
+                  sx={{
+                    lineHeight: '1.2',
+                    fontSize: '18px',
+                    fontFamily: 'Poppins, sans-serif',
+                    color: '#FFFFFF',
+                    textAlign: 'center',
+                  }}
+                >
                   Join our Email List
                 </Typography>
                 <img src={positiveEmailArrow} alt="positiveEmailArrow" />
@@ -266,11 +324,19 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
               zIndex: 1,
             }}
           >
-            <Typography sx={{ lineHeight: '1.2', fontSize: '18px', fontFamily: 'Poppins, sans-serif', color: '#FFFFFF', textAlign: 'center'}}>
+            <Typography
+              sx={{
+                lineHeight: '1.2',
+                fontSize: '18px',
+                fontFamily: 'Poppins, sans-serif',
+                color: '#FFFFFF',
+                textAlign: 'center',
+              }}
+            >
               Got questions? Contact us at zigzag@rightoneducation.com
             </Typography>
           </Box>
-          </Box>
-      )
-    }
-}
+        </Box>
+      );
+  }
+};

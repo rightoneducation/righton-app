@@ -1,6 +1,9 @@
 import React from 'react';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { StyledFlexBox, StyledText } from '../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
+import {
+  StyledFlexBox,
+  StyledText,
+} from '../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import RightOnLogo from '../images/RightOnLogo.svg';
 import shareFacebook from '../images/shareFacebook.svg';
 import shareTwitter from '../images/shareTwitter.svg';
@@ -8,40 +11,53 @@ import shareLinkedIn from '../images/shareLinkedIn.svg';
 import { ScreenSize } from '../lib/WebsiteModels';
 
 interface FooterProps {
-  screenSize: ScreenSize
+  screenSize: ScreenSize;
 }
 
 const links = [
-  { title: 'How It Works', path: "/"},
-  { title: 'About Us', path: "/"},
-  { title: 'Positive Culture of Error', path: "/" },
-  { title: 'Resource Library', path: "/library" }
-]
+  { title: 'How It Works', path: '/' },
+  { title: 'About Us', path: '/' },
+  { title: 'Positive Culture of Error', path: '/' },
+  { title: 'Resource Library', path: '/library' },
+];
 
 const socialMediaIcons = [
   { icon: shareFacebook, alt: 'Facebook', link: '#' },
   { icon: shareTwitter, alt: 'Twitter', link: '#' },
-  { icon: shareLinkedIn, alt: 'LinkedIn', link: 'https://www.linkedin.com/company/rightoneducation' }
-]
+  {
+    icon: shareLinkedIn,
+    alt: 'LinkedIn',
+    link: 'https://www.linkedin.com/company/rightoneducation',
+  },
+];
 
-export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
-  const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+export function Footer({ screenSize }: FooterProps) {
+  // eslint-disable-line
+  const isSmallScreen = useMediaQuery((theme: any) =>
+    theme.breakpoints.down('md'),
+  );
   const theme = useTheme();
-  
+
   // Padding based on design specifications
-  const horizontalPadding = screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.lgPadding}px`;
-  const verticalPadding = screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.lgPadding}px`;
-  const gapBetweenElements = theme.sizing.mdPadding; 
-  
+  const horizontalPadding =
+    screenSize === ScreenSize.SMALL
+      ? `${theme.sizing.smPadding}px`
+      : `${theme.sizing.lgPadding}px`;
+  const verticalPadding =
+    screenSize === ScreenSize.SMALL
+      ? `${theme.sizing.mdPadding}px`
+      : `${theme.sizing.lgPadding}px`;
+  const gapBetweenElements = theme.sizing.mdPadding;
+
   return (
-    <StyledFlexBox 
+    <StyledFlexBox
       gap={gapBetweenElements}
-      sx={{ 
-        background: theme.palette.primary.primaryBlue, 
-        width: '100%', 
+      sx={{
+        background: theme.palette.primary.primaryBlue,
+        width: '100%',
         padding: `${verticalPadding} ${horizontalPadding}`,
         flexDirection: 'column',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
       <StyledFlexBox
@@ -50,29 +66,32 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
           width: '100%',
           flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
           alignItems: 'center',
-          justifyContent: screenSize === ScreenSize.LARGE ? 'space-between' : 'center'
+          justifyContent:
+            screenSize === ScreenSize.LARGE ? 'space-between' : 'center',
         }}
       >
         <StyledFlexBox
           gap={gapBetweenElements}
           sx={{
             flexDirection: 'column',
-            alignItems: 'flex-start'
+            alignItems: 'flex-start',
           }}
         >
-          <Box 
-            component="img" 
-            src={RightOnLogo}  
-            width='95px'
-            onClick={() => {window.location.href="/"}}
-            style={{cursor: 'pointer'}}
+          <Box
+            component="img"
+            src={RightOnLogo}
+            width="95px"
+            onClick={() => {
+              window.location.href = '/';
+            }}
+            style={{ cursor: 'pointer' }}
           />
         </StyledFlexBox>
         <StyledFlexBox
           gap={gapBetweenElements}
           sx={{
             flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
           {links.map((link, index) => (
@@ -85,10 +104,12 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
                 color: '#FFFFFF',
                 cursor: 'pointer',
                 '&:hover': {
-                  color: '#FF3A6A'
-                }
+                  color: '#FF3A6A',
+                },
               }}
-              onClick={() => {window.location.href = link.path}}
+              onClick={() => {
+                window.location.href = link.path;
+              }}
             >
               {link.title}
             </StyledText>
@@ -99,7 +120,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
           sx={{
             flexDirection: 'column',
             alignItems: 'flex-end',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           {screenSize === ScreenSize.LARGE && (
@@ -110,7 +131,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
                 lineHeight: '14px',
                 fontWeight: 400,
                 color: '#FFFFFF',
-                fontFamily: 'Rubik'
+                fontFamily: 'Rubik',
               }}
             >
               Get in touch
@@ -120,7 +141,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
             gap={12}
             sx={{
               flexDirection: 'row',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             {socialMediaIcons.map((social, index) => (
@@ -134,21 +155,23 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
                   height: '16px',
                   cursor: 'pointer',
                   '&:hover': {
-                    opacity: 0.8
-                  }
+                    opacity: 0.8,
+                  },
                 }}
-                onClick={() => {window.open(social.link, '_blank')}}
+                onClick={() => {
+                  window.open(social.link, '_blank');
+                }}
               />
             ))}
           </StyledFlexBox>
         </StyledFlexBox>
-      </StyledFlexBox> 
-      <Box 
+      </StyledFlexBox>
+      <Box
         sx={{
           width: '100%',
           height: '1px',
-          background: '#FFFFFF'
-        }} 
+          background: '#FFFFFF',
+        }}
       />
       <StyledFlexBox
         gap={gapBetweenElements}
@@ -157,7 +180,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
           flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          paddingTop: '12px'
+          paddingTop: '12px',
         }}
       >
         {screenSize !== ScreenSize.LARGE && (
@@ -170,9 +193,11 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
               color: '#FFFFFF',
               fontFamily: 'Rubik',
               textDecoration: 'underline',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
-            onClick={() => {window.open('/docs/privacypolicy.pdf', '_blank')}}
+            onClick={() => {
+              window.open('/docs/privacypolicy.pdf', '_blank');
+            }}
           >
             Privacy Policy
           </StyledText>
@@ -184,7 +209,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
             lineHeight: '14px',
             fontWeight: 400,
             color: '#FFFFFF',
-            fontFamily: 'Rubik'
+            fontFamily: 'Rubik',
           }}
         >
           Copyright © 2025 RightOn. All rights reserved.
@@ -201,15 +226,17 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
               textDecoration: 'underline',
               cursor: 'pointer',
               '&:hover': {
-                color: '#FF3A6A'
-              }
+                color: '#FF3A6A',
+              },
             }}
-            onClick={() => {window.open('/docs/privacypolicy.pdf', '_blank')}}
+            onClick={() => {
+              window.open('/docs/privacypolicy.pdf', '_blank');
+            }}
           >
             Privacy Policy
           </StyledText>
         )}
       </StyledFlexBox>
     </StyledFlexBox>
-  )
-}  
+  );
+}

@@ -3,7 +3,14 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { CMSCardThumbnailImage, CMSCardTag, CMSCardCaption, CMSCardTitle, CMSCardDateText, CMSArticleType } from '@righton/networking'; 
+import {
+  CMSCardThumbnailImage,
+  CMSCardTag,
+  CMSCardCaption,
+  CMSCardTitle,
+  CMSCardDateText,
+  CMSArticleType,
+} from '@righton/networking';
 
 type ShareMobileModalCardProps = {
   selectedArticle: CMSArticleType;
@@ -24,7 +31,7 @@ const InfoWrapper = styled(Box)(({ theme }) => ({
   gap: '12px',
   padding: '12px 0',
   boxSizing: 'border-box',
-  width: '100%'
+  width: '100%',
 }));
 
 const CaptionText = styled(Typography)(({ theme }) => ({
@@ -42,20 +49,23 @@ export default function ShareMobileModalCard({
   return (
     <CardContainer>
       {image && (
-        <CMSCardThumbnailImage
-          src={image.url}
-          alt="Article Thumbnail"
-        />
+        <CMSCardThumbnailImage src={image.url} alt="Article Thumbnail" />
       )}
       <InfoWrapper>
-        <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box', gap: '12px', paddingRight: '12px' }}>
-          <Box sx={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            boxSizing: 'border-box',
+            gap: '12px',
+            paddingRight: '12px',
+          }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <CMSCardTitle>{title}</CMSCardTitle>
-            <CMSCardCaption >{caption}</CMSCardCaption>
+            <CMSCardCaption>{caption}</CMSCardCaption>
           </Box>
-          <CaptionText>
-            www.rightoneducation.com
-          </CaptionText>
+          <CaptionText>www.rightoneducation.com</CaptionText>
         </Box>
       </InfoWrapper>
     </CardContainer>

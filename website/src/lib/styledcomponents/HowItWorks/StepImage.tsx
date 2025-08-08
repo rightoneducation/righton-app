@@ -9,12 +9,36 @@ interface StepImageProps {
 
 function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
   return (
-    <Box sx={{display: 'flex', margin: '0px 28.84px', width: '268px', height: '193px', boxSizing: 'border-box',}}>
-      <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '76px', height: '78.45px', borderRadius: '210.87px',
-        background: 'linear-gradient(to bottom,rgba(255, 42, 95, 0.7) 0%, rgba(255, 42, 95, 0.4) 50%, rgba(72, 19, 114, 0.1) 100%)',
-        boxShadow: '2.09px 9.77px 72.56px #481372'
-      }}>
-        <Box sx={{fontSize: '40px',fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+    <Box
+      sx={{
+        display: 'flex',
+        margin: '0px 28.84px',
+        width: '268px',
+        height: '193px',
+        boxSizing: 'border-box',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '76px',
+          height: '78.45px',
+          borderRadius: '210.87px',
+          background:
+            'linear-gradient(to bottom,rgba(255, 42, 95, 0.7) 0%, rgba(255, 42, 95, 0.4) 50%, rgba(72, 19, 114, 0.1) 100%)',
+          boxShadow: '2.09px 9.77px 72.56px #481372',
+        }}
+      >
+        <Box
+          sx={{
+            fontSize: '40px',
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 700,
+            color: '#FFFFFF',
+          }}
+        >
           {stepNumber}
         </Box>
       </Box>
@@ -49,7 +73,8 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
               height: '200%',
               transform: 'translate(-50%, -50%)',
               zIndex: 0,
-              background: 'radial-gradient(circle, rgba(210,210,210,0.5) 0%, rgba(210,210,210,0) 70%)',
+              background:
+                'radial-gradient(circle, rgba(210,210,210,0.5) 0%, rgba(210,210,210,0) 70%)',
               pointerEvents: 'none',
               filter: 'blur(8px)',
             }}
