@@ -23,6 +23,7 @@ const containerPadding: Record<ScreenSize, string> = {
   [ScreenSize.MEDIUM]: '60px 72px',
   [ScreenSize.SMALL]: '60px 12px',
 };
+const xxSmPadding = 6; // ex. pagination bullets
 const xSmPadding = 10; // ex. grid spacing
 const smPadding = 12; // ex. vertical padding on mobile
 const mdPadding = 24; // ex. gap in flexbox
@@ -48,6 +49,7 @@ declare module '@mui/material/styles' {
         [ScreenSize.MEDIUM]: string;
         [ScreenSize.SMALL]: string;
       };
+      xxSmPadding: number;
       xSmPadding: number;
       smPadding: number;
       mdPadding: number;
@@ -68,6 +70,7 @@ declare module '@mui/material/styles' {
         [ScreenSize.MEDIUM]?: string;
         [ScreenSize.SMALL]?: string;
       };
+      xxSmPadding: number;
       xSmPadding: number;
       smPadding: number;
       mdPadding: number;
@@ -106,6 +109,7 @@ export default createTheme({
   },
   sizing: {
     containerPadding,
+    xxSmPadding,
     xSmPadding,
     smPadding,
     mdPadding,
