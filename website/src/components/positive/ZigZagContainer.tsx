@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import type { SwiperRef } from 'swiper/react';
 import 'swiper/css';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled';
-
 
 import positiveZigZagMonster1 from '../../images/positiveZigZagMonster1.svg';
 import positiveZigZagMonster2 from '../../images/positiveZigZagMonster2.svg';
@@ -36,6 +35,7 @@ interface ZigZagContainerProps {
 }
 
 export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // eslint-disable-line
+  const theme = useTheme();
   const swiperQ1Ref = useRef<SwiperRef>(null);
   const swiperQ2Ref = useRef<SwiperRef>(null);
   const swiperQ3Ref = useRef<SwiperRef>(null);
@@ -47,14 +47,15 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
   const [isQ3End, setIsQ3End] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [previousQuestion, setPreviousQuestion] = useState(0);
-  const smallPadding = '60px 12px';
 
-  const medPadding = '60px 72px';
-  const largePadding = '96px 72px';
-  const primaryGap = '72px';
-  const secondaryGap = '48px';
-  const tertiaryGap = '24px';
-  const smallGap = '12px';
+  
+  const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
+  const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];
+  const largePadding = theme.sizing.containerPadding[ScreenSize.LARGE];
+  const primaryGap = `${theme.sizing.lgPadding}px`;
+  const secondaryGap = `${theme.sizing.mdPadding}px`;
+  const tertiaryGap = `${theme.sizing.smPadding}px`;
+  const smallGap = `${theme.sizing.xSmPadding}px`;
 
   const zigZagLg = 1450;
   const isZigZagLarge = useMediaQuery(`(min-width: ${zigZagLg}px)`);
@@ -225,7 +226,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
               justifyContent: 'center',
               width: '100%',
               height: '100%',
-              gap: '24px'
+              gap: secondaryGap
             }}
           >
             <Box>
@@ -249,7 +250,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '10px'
+                gap: smallGap
               }}
             >
               {
@@ -307,7 +308,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '48px'
+                gap: primaryGap
               }}
             >
               <Box style={{
@@ -325,7 +326,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '12px'
+                  gap: tertiaryGap
                 }}
               >
                 {screenSizeZigZag === ScreenSize.MEDIUM &&
@@ -347,7 +348,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '12px'
+                  gap: tertiaryGap
                 }}>
                 <Swiper
                   ref={swiperQ1Ref}
@@ -605,7 +606,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
                   maxWidth: '600px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '12px'
+                  gap: tertiaryGap
                 }}
               >
                 <Box 
@@ -675,7 +676,7 @@ export const ZigZagContainer = ({screenSize}: ZigZagContainerProps) => { // esli
                   maxWidth: '600px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '12px'
+                  gap: tertiaryGap
                 }}
               >
                 <Box 

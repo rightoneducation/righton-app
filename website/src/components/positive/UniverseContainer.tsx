@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import positivePlanets from '../../images/positivePlanets.svg';
 import positivePlanetsMobile from '../../images/positivePlanetsMobile.png';
@@ -10,12 +10,13 @@ interface UniverseContainerProps {
 }
 
 export const UniverseContainer = ({screenSize}: UniverseContainerProps) => { // eslint-disable-line
-    const smallPadding = '60px 12px';
-    const medPadding = '60px 72px';
-    const largePadding = '96px 72px';
-    const primaryGap = '72px';
-    const secondaryGap = '48px';
-    const tertiaryGap = '24px';
+  const theme = useTheme();
+  const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
+  const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];
+  const largestGap = `${theme.sizing.xLgPadding}px`;
+  const primaryGap = `${theme.sizing.lgPadding}px`;
+  const secondaryGap = `${theme.sizing.mdPadding}px`;
+  const tertiaryGap = `${theme.sizing.smPadding}px`;
   
     switch (screenSize) {
       case ScreenSize.SMALL:
@@ -146,7 +147,7 @@ export const UniverseContainer = ({screenSize}: UniverseContainerProps) => { // 
                 height: '100%',
                 padding: '96px 222px',
                 boxSizing: 'border-box',
-                gap: '72px'
+                gap: largestGap
               }}
             >
               <Box
@@ -157,7 +158,7 @@ export const UniverseContainer = ({screenSize}: UniverseContainerProps) => { // 
                   justifyContent: 'center',
                   width: '100%',
                   height: '100%',
-                  gap: '24px'
+                  gap: secondaryGap
                 }}
               > 
                 {/* TODO: title text */}
