@@ -4,17 +4,17 @@ export enum ScreenType { // eslint-disable-line
   ABOUT_US = 'ABOUT_US',
   POSITIVE = 'POSITIVE',
   LIBRARY = 'LIBRARY',
-  CONTENT = 'CONTENT'
+  CONTENT = 'CONTENT',
 }
 export enum ScreenSize {
   SMALL,
   MEDIUM,
-  LARGE
+  LARGE,
 }
 
 export enum LibraryType {
   ALL = 'All',
   ARTICLE = 'Article',
   VIDEO = 'Video',
-  RESEARCH = 'Research'
+  RESEARCH = 'Research',
 }

@@ -2,9 +2,10 @@ import React from 'react';
 import { Box, styled } from '@mui/material';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
-export const AppContainer = styled(Box)(({ theme }) => ({ // eslint-disable-line
+export const AppContainer = styled(Box)(({ theme }) => ({
+  // eslint-disable-line
   display: 'flex',
-  width: '100%', 
+  width: '100%',
   minHeight: '100dvh',
   flexDirection: 'column',
   justifyContent: 'flex-start',
@@ -15,7 +16,7 @@ export const AppContainer = styled(Box)(({ theme }) => ({ // eslint-disable-line
 
 export const MathSymbolsBackground = styled(Box)(({ theme }) => ({
   position: 'fixed',
-  width:'100%',
+  width: '100%',
   height: '100%',
   top: 0,
   left: 0,
@@ -23,7 +24,7 @@ export const MathSymbolsBackground = styled(Box)(({ theme }) => ({
   bottom: 0,
   opacity: 1,
   zIndex: -1,
-  backgroundColor: "#0F235E",
+  backgroundColor: '#0F235E',
   backgroundImage: `
   linear-gradient(rgba(2, 33, 95, 0), rgba(20, 43, 111, 0.9)),
   url(${mathSymbolsBackground})
@@ -34,7 +35,7 @@ export const MathSymbolsBackground = styled(Box)(({ theme }) => ({
 }));
 
 export const ButtonContainer = styled(Box)(({ theme }) => ({
-  display: 'flex', 
+  display: 'flex',
   gap: 'clamp(12px, 1.5vw, 24px)',
 }));
 
@@ -55,7 +56,6 @@ export enum ScreenSize {
   MEDIUM,
   SMALL,
 }
-
 
 export const SelectArrowContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSelectOpen',

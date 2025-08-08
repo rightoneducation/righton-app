@@ -27,7 +27,11 @@ const VennContainer = styled(Box)<{ clicked: boolean }>(({ clicked }) => ({
 const vennData = [
   { label: 'Curriculum', color: 'rgba(204, 153, 204, 0.85)', z: 2 },
   { label: 'Assessment', color: 'rgba(102, 102, 204, 0.85)', z: 2 },
-  { label: 'Tech-Enabled Supplemental Learning', color: 'rgba(102, 204, 221, 0.85)', z: 1 },
+  {
+    label: 'Tech-Enabled Supplemental Learning',
+    color: 'rgba(102, 204, 221, 0.85)',
+    z: 1,
+  },
 ];
 /* CHANGE: numeric geometry so we can reuse for margins */
 const circleGeom = [
@@ -65,7 +69,11 @@ function getCircleBox(idx: number, clicked: boolean) {
   };
 }
 /* CHANGE: Circle now just the visual; no transform */
-const Circle = styled(Box)<{ selected: boolean; clicked: boolean; idx: number }>(({ selected, clicked, idx }) => ({
+const Circle = styled(Box)<{
+  selected: boolean;
+  clicked: boolean;
+  idx: number;
+}>(({ selected, clicked, idx }) => ({
   gridArea: 'stack',
   position: 'relative',
   borderRadius: '50%',
@@ -105,7 +113,9 @@ export default function VennDiagram({
   const [internalSelected, setInternalSelected] = useState<VennSelection>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const [resetPhase, setResetPhase] = useState<'idle' | 'fadingOut' | 'fadingIn'>('idle');
+  const [resetPhase, setResetPhase] = useState<
+    'idle' | 'fadingOut' | 'fadingIn'
+  >('idle');
   const [containerKey, setContainerKey] = useState(0); // for remounting container
   const sel = selected !== undefined ? selected : internalSelected;
   const clicked = sel !== null;
@@ -170,7 +180,7 @@ export default function VennDiagram({
       setHasInteracted(false);
       setIsFadingOut(false);
       setResetPhase('fadingIn');
-      setContainerKey(k => k + 1); // force remount for fade-in
+      setContainerKey((k) => k + 1); // force remount for fade-in
     } else if (resetPhase === 'fadingIn') {
       setResetPhase('idle');
     }
@@ -252,7 +262,13 @@ export default function VennDiagram({
             </motion.div>
           )}
         </AnimatePresence>
-        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <AnimatePresence mode="wait">
             {hasInteracted && sel === 0 && !isFadingOut && (
               <motion.div
@@ -263,14 +279,42 @@ export default function VennDiagram({
                 exit="exit"
                 style={{ width: '100%' }}
               >
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px',}}>
-                  <Typography sx={{lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+                >
+                  <Typography
+                    sx={{
+                      lineHeight: '1.3',
+                      fontSize: '24px',
+                      fontFamily: 'Poppins, sans-serif',
+                      fontWeight: 700,
+                      color: '#FFFFFF',
+                    }}
+                  >
                     Curriculum: Standards-Aligned & Searchable
                   </Typography>
-                  <Typography sx={{lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-                    Shorten the time spent on lesson creation by utilizing our collection of<span style={{color: '#FF3A6A', fontStyle: 'Regular'}}> teacher-developed </span>
-                    and<span style={{color: '#FF3A6A', fontStyle: 'Regular'}}> standards-aligned </span>games. Alternatively, you can design 
-                    your own game from scratch or incoporate questions you prefer from other games.
+                  <Typography
+                    sx={{
+                      lineHeight: '1.0',
+                      fontSize: '16px',
+                      fontFamily: 'Rubik, sans-serif',
+                      fontWeight: 400,
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    Shorten the time spent on lesson creation by utilizing our
+                    collection of
+                    <span style={{ color: '#FF3A6A', fontStyle: 'Regular' }}>
+                      {' '}
+                      teacher-developed{' '}
+                    </span>
+                    and
+                    <span style={{ color: '#FF3A6A', fontStyle: 'Regular' }}>
+                      {' '}
+                      standards-aligned{' '}
+                    </span>
+                    games. Alternatively, you can design your own game from
+                    scratch or incoporate questions you prefer from other games.
                   </Typography>
                 </Box>
               </motion.div>
@@ -284,13 +328,41 @@ export default function VennDiagram({
                 exit="exit"
                 style={{ width: '100%' }}
               >
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px',}}>
-                  <Typography sx={{lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+                >
+                  <Typography
+                    sx={{
+                      lineHeight: '1.3',
+                      fontSize: '24px',
+                      fontFamily: 'Poppins, sans-serif',
+                      fontWeight: 700,
+                      color: '#FFFFFF',
+                    }}
+                  >
                     Assessment: Embrace Learning Through Mistakes
                   </Typography>
-                  <Typography sx={{lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-                    Link your lessions to<span style={{color: '#FF3A6A', fontStyle: 'Regular'}}> error-based learning </span>approaches. RightOn promotes essential<span style={{color: '#FF3A6A', fontStyle: 'Regular'}}> SEL </span>
-                    outcomes in math, such as self-efficacy, a sense of belonging, and growth mindsets, which foster long-term 
+                  <Typography
+                    sx={{
+                      lineHeight: '1.0',
+                      fontSize: '16px',
+                      fontFamily: 'Rubik, sans-serif',
+                      fontWeight: 400,
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    Link your lessions to
+                    <span style={{ color: '#FF3A6A', fontStyle: 'Regular' }}>
+                      {' '}
+                      error-based learning{' '}
+                    </span>
+                    approaches. RightOn promotes essential
+                    <span style={{ color: '#FF3A6A', fontStyle: 'Regular' }}>
+                      {' '}
+                      SEL{' '}
+                    </span>
+                    outcomes in math, such as self-efficacy, a sense of
+                    belonging, and growth mindsets, which foster long-term
                     learning and resilence.
                   </Typography>
                 </Box>
@@ -305,15 +377,54 @@ export default function VennDiagram({
                 exit="exit"
                 style={{ width: '100%' }}
               >
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px',}}>
-                  <Typography sx={{lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+                >
+                  <Typography
+                    sx={{
+                      lineHeight: '1.3',
+                      fontSize: '24px',
+                      fontFamily: 'Poppins, sans-serif',
+                      fontWeight: 700,
+                      color: '#FFFFFF',
+                    }}
+                  >
                     Tech-Enabled Supplemental Learning: Leveraging AI
                   </Typography>
-                  <Typography sx={{lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-                    We collaborate closely with math educators and<span style={{fontWeight: 700, color: '#FF3A6A', fontFamily:'Poppins, sans-serif'}}> leverage AI </span>to reveal
-                    and respond to student thinking. Our approach supports both teachers and students by shifting the focus from quick recall
-                    and recognition to<span style={{fontWeight: 700, color: '#FF3A6A', fontFamily:'Poppins, sans-serif'}}> meaningful engagement </span>with mathematical reasoning 
-                    and conceptual understanding.
+                  <Typography
+                    sx={{
+                      lineHeight: '1.0',
+                      fontSize: '16px',
+                      fontFamily: 'Rubik, sans-serif',
+                      fontWeight: 400,
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    We collaborate closely with math educators and
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        color: '#FF3A6A',
+                        fontFamily: 'Poppins, sans-serif',
+                      }}
+                    >
+                      {' '}
+                      leverage AI{' '}
+                    </span>
+                    to reveal and respond to student thinking. Our approach
+                    supports both teachers and students by shifting the focus
+                    from quick recall and recognition to
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        color: '#FF3A6A',
+                        fontFamily: 'Poppins, sans-serif',
+                      }}
+                    >
+                      {' '}
+                      meaningful engagement{' '}
+                    </span>
+                    with mathematical reasoning and conceptual understanding.
                   </Typography>
                 </Box>
               </motion.div>

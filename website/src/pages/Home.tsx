@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  styled,
-  Grid,
-  useTheme,
-} from '@mui/material';
+import { Box, styled, Grid, useTheme } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
   StyledFlexBox,
@@ -54,9 +49,9 @@ interface HomePageProps {
   screenSize: ScreenSize;
 }
 
-export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
+export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
   const theme = useTheme();
-  const containerPadding = theme.sizing.containerPadding[screenSize]; 
+  const containerPadding = theme.sizing.containerPadding[screenSize];
 
   return (
     <HomePageContainer>
@@ -69,7 +64,12 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
       >
         {/* Opening Text */}
         <OpeningTextContainer
-          sx={{ gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.lgPadding}px` }}
+          sx={{
+            gap:
+              screenSize === ScreenSize.SMALL
+                ? `${theme.sizing.mdPadding}px`
+                : `${theme.sizing.lgPadding}px`,
+          }}
         >
           <OpeningText />
         </OpeningTextContainer>
@@ -91,7 +91,11 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
           direction={screenSize === ScreenSize.LARGE ? 'row' : 'column'}
           align="center"
           justify="center"
-          gap={screenSize === ScreenSize.SMALL ? theme.sizing.mdPadding : theme.sizing.lgPadding}
+          gap={
+            screenSize === ScreenSize.SMALL
+              ? theme.sizing.mdPadding
+              : theme.sizing.lgPadding
+          }
           width="100%"
         >
           <GameCTAButtons screenSize={screenSize} />
@@ -102,7 +106,10 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
       <StyledSponsorDivider>
         <StyledFlexBox direction="row" align="center" gap={24}>
           {imageArr.map(({ image, alt }, i) => (
-            <Box key={alt} sx={{ width: `${theme.sizing.sponsorImageWidth}px`, zIndex: 5 }}>
+            <Box
+              key={alt}
+              sx={{ width: `${theme.sizing.sponsorImageWidth}px`, zIndex: 5 }}
+            >
               <img src={image} alt={alt} />
             </Box>
           ))}

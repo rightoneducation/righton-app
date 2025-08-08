@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Box,
-  Popper,
-  Fade,
-  Slide,
-  useTheme,
-} from '@mui/material';
+import { Box, Popper, Fade, Slide, useTheme } from '@mui/material';
 import {
   StyledFlexBox,
   StyledText,
@@ -17,7 +11,7 @@ import hamburgerIcon from '../images/hamburger.svg';
 import { ScreenSize } from '../lib/WebsiteModels';
 import TryItNowMenu from './header/TryItNowMenu';
 import MobileMenu from './header/mobileMenu';
-import closeIcon from '../images/closeIcon.svg'
+import closeIcon from '../images/closeIcon.svg';
 import { SelectArrowContainer } from '../lib/styledcomponents/StyledComponents';
 
 interface HeaderProps {
@@ -36,7 +30,9 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
-  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null)
+  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
+    null,
+  );
   const theme = useTheme();
   const handleMenuMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
     setMenuAnchor(event.currentTarget);
@@ -47,19 +43,25 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
 
   const handleMenuMouseLeave = (event: React.MouseEvent) => {
     const relatedTarget = event.relatedTarget as HTMLElement;
-    if (!relatedTarget || !relatedTarget.closest || !relatedTarget.closest('#try-it-now-menu')) {
+    if (
+      !relatedTarget ||
+      !relatedTarget.closest ||
+      !relatedTarget.closest('#try-it-now-menu')
+    ) {
       setMenuAnchor(null);
     }
   };
 
   const handleMobileMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMenuAnchor(mobileMenuAnchor ? null: event.currentTarget);
-    setOpenMenu(prev => !prev)
+    setMobileMenuAnchor(mobileMenuAnchor ? null : event.currentTarget);
+    setOpenMenu((prev) => !prev);
   };
 
-  const handleHomeClick = () => { navigate("/") }
+  const handleHomeClick = () => {
+    navigate('/');
+  };
   const openMobile = Boolean(mobileMenuAnchor);
-  const mobileMenuId = openMobile ? 'mobile-menu': undefined;
+  const mobileMenuId = openMobile ? 'mobile-menu' : undefined;
 
   return (
     <StyledFlexBox
@@ -68,13 +70,18 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
         borderBottom: theme.sizing.dividerBorder,
         background: theme.palette.primary.primaryBlue,
         width: '100%',
-        minHeight: screenSize !== ScreenSize.LARGE ? theme.sizing.headerHeightMobile : theme.sizing.headerHeightDesktop,
+        minHeight:
+          screenSize !== ScreenSize.LARGE
+            ? theme.sizing.headerHeightMobile
+            : theme.sizing.headerHeightDesktop,
       }}
     >
       <StyledFlexBox
-      id={mobileMenuId}
+        id={mobileMenuId}
         sx={{
-          ...(screenSize !== ScreenSize.LARGE && { padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px` }),
+          ...(screenSize !== ScreenSize.LARGE && {
+            padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
+          }),
         }}
         direction="row"
         align="center"
@@ -82,7 +89,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
         gap={screenSize === ScreenSize.LARGE ? theme.sizing.mdPadding : 0}
       >
         <Box
-          sx={{ cursor: 'pointer'}}
+          sx={{ cursor: 'pointer' }}
           onClick={handleHomeClick}
           component="img"
           src={RightOnLogo}
@@ -129,14 +136,13 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
             >
               <StyledText>Try it now </StyledText>
               <SelectArrowContainer isSelectOpen={menuAnchor !== null}>
-
-              <Box
-                component="img"
-                src={arrowDownImg}
-                alt="arrow-down"
-                height="10px"
-                width="18px"
-              />
+                <Box
+                  component="img"
+                  src={arrowDownImg}
+                  alt="arrow-down"
+                  height="10px"
+                  width="18px"
+                />
               </SelectArrowContainer>
             </StyledFlexBox>
           </StyledFlexBox>
@@ -148,7 +154,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
             anchorEl={mobileMenuAnchor}
             transition
             sx={{
-              zIndex: 2000, 
+              zIndex: 2000,
               width: '100vw',
             }}
           >
@@ -156,8 +162,8 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
               <Slide direction="down" {...TransitionProps} timeout={300}>
                 <Box
                   sx={{
-                    position: 'absolute', 
-                    top: '32px' ,
+                    position: 'absolute',
+                    top: '32px',
                     left: 0,
                     width: '100%',
                     height: '100vh',
@@ -208,6 +214,6 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
           />
         )}
       </StyledFlexBox>
-      </StyledFlexBox>
+    </StyledFlexBox>
   );
 }

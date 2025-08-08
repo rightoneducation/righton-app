@@ -8,20 +8,17 @@ import shareTwitter from '../../images/shareTwitter.svg';
 import shareFacebook from '../../images/shareFacebook.svg';
 import shareLink from '../../images/shareLink.svg';
 
-
 interface ShareMobileModalProps {
   articleId: string;
   selectedArticle: CMSArticleType | null;
   handleCloseShareModalClick: () => void;
 }
 
-
-export const ShareMobileModal = ({ // eslint-disable-line
-    articleId,
-    selectedArticle,
-    handleCloseShareModalClick
-  }: ShareMobileModalProps
-) => { 
+export function ShareMobileModal ({ // eslint-disable-line
+  articleId,
+  selectedArticle,
+  handleCloseShareModalClick,
+}: ShareMobileModalProps) {
   const [isCopied, setIsCopied] = useState(false);
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}&text=${encodeURIComponent(selectedArticle?.title ?? '')}`;
@@ -64,7 +61,7 @@ export const ShareMobileModal = ({ // eslint-disable-line
       >
         <img src={CloseIcon} alt="Close Modal" />
       </Box>
-      <Typography 
+      <Typography
         style={{
           width: '100%',
           textAlign: 'center',
@@ -72,16 +69,22 @@ export const ShareMobileModal = ({ // eslint-disable-line
           fontSize: '24px',
           lineHeight: '24px',
           fontWeight: '600',
-          fontFamily: 'Poppins'
+          fontFamily: 'Poppins',
         }}
       >
         Check this out!
       </Typography>
-      { selectedArticle && (
+      {selectedArticle && (
         <ShareMobileModalCard selectedArticle={selectedArticle} />
       )}
-      <Box style={{ width: '100%', border: '0.5px solid #FFF', boxSizing: 'border-box' }}/>
-      <Typography 
+      <Box
+        style={{
+          width: '100%',
+          border: '0.5px solid #FFF',
+          boxSizing: 'border-box',
+        }}
+      />
+      <Typography
         style={{
           width: '100%',
           textAlign: 'left',
@@ -89,55 +92,144 @@ export const ShareMobileModal = ({ // eslint-disable-line
           fontSize: '20px',
           lineHeight: '20px',
           fontWeight: '400',
-          fontFamily: 'Poppins'
+          fontFamily: 'Poppins',
         }}
       >
         Send to:
       </Typography>
-      <Box style={{ width: '100%', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-        <Box 
+      <Box
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '10px',
+        }}
+      >
+        <Box
           onClick={() => {
             window.open(linkedInUrl, '_blank', 'noopener,noreferrer');
           }}
-          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px', minWidth: '52px', cursor: 'pointer' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+            minWidth: '52px',
+            cursor: 'pointer',
+          }}
         >
-          <img src={shareLinkedIn} alt="LinkedIn" style={{ width: '42px', height: '42px' }} />
-          <Typography style={{ color: '#fff', fontSize: '12px', lineHeight: '12px', fontWeight: '400', fontFamily: 'Rubik' }}>
+          <img
+            src={shareLinkedIn}
+            alt="LinkedIn"
+            style={{ width: '42px', height: '42px' }}
+          />
+          <Typography
+            style={{
+              color: '#fff',
+              fontSize: '12px',
+              lineHeight: '12px',
+              fontWeight: '400',
+              fontFamily: 'Rubik',
+            }}
+          >
             LinkedIn
           </Typography>
         </Box>
-        <Box 
+        <Box
           onClick={() => {
             window.open(twitterUrl, '_blank', 'noopener,noreferrer');
           }}
-          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px', minWidth: '52px', cursor: 'pointer' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+            minWidth: '52px',
+            cursor: 'pointer',
+          }}
         >
-          <img src={shareTwitter} alt="Twitter" style={{ width: '42px', height: '42px' }} />
-          <Typography style={{ color: '#fff', fontSize: '12px', lineHeight: '12px', fontWeight: '400', fontFamily: 'Rubik' }}>
+          <img
+            src={shareTwitter}
+            alt="Twitter"
+            style={{ width: '42px', height: '42px' }}
+          />
+          <Typography
+            style={{
+              color: '#fff',
+              fontSize: '12px',
+              lineHeight: '12px',
+              fontWeight: '400',
+              fontFamily: 'Rubik',
+            }}
+          >
             Twitter
           </Typography>
         </Box>
-        <Box 
+        <Box
           onClick={() => {
             window.open(facebookUrl, '_blank', 'noopener,noreferrer');
           }}
-          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px', width: '52px', cursor: 'pointer' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+            width: '52px',
+            cursor: 'pointer',
+          }}
         >
-          <img src={shareFacebook} alt="Facebook" style={{ width: '42px', height: '42px' }} />
-          <Typography style={{ color: '#fff', fontSize: '12px', lineHeight: '12px', fontWeight: '400', fontFamily: 'Rubik' }}>
+          <img
+            src={shareFacebook}
+            alt="Facebook"
+            style={{ width: '42px', height: '42px' }}
+          />
+          <Typography
+            style={{
+              color: '#fff',
+              fontSize: '12px',
+              lineHeight: '12px',
+              fontWeight: '400',
+              fontFamily: 'Rubik',
+            }}
+          >
             Facebook
           </Typography>
         </Box>
         <Box
-          onClick={handleCopyLinkClicked} 
-          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px', width: '52px', cursor: 'pointer' }}
+          onClick={handleCopyLinkClicked}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+            width: '52px',
+            cursor: 'pointer',
+          }}
         >
-          <img src={shareLink} alt="Link" style={{ width: '42px', height: '42px' }} />
-          <Typography style={{ color: '#fff', fontSize: '12px', lineHeight: '12px', fontWeight: '400', fontFamily: 'Rubik', transition: 'all 0.3s ease-in-out', transform: isCopied ? 'scale(1.1)' : 'scale(1)' }}>
+          <img
+            src={shareLink}
+            alt="Link"
+            style={{ width: '42px', height: '42px' }}
+          />
+          <Typography
+            style={{
+              color: '#fff',
+              fontSize: '12px',
+              lineHeight: '12px',
+              fontWeight: '400',
+              fontFamily: 'Rubik',
+              transition: 'all 0.3s ease-in-out',
+              transform: isCopied ? 'scale(1.1)' : 'scale(1)',
+            }}
+          >
             {isCopied ? 'Copied!' : 'Copy link'}
           </Typography>
         </Box>
       </Box>
     </Box>
   );
-};
+}

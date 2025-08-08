@@ -18,18 +18,16 @@ const InfoWrapper = styled(Box)(({ theme }) => ({
   gap: `${theme.sizing.smPadding}px`,
   padding: `${theme.sizing.smPadding}px 0`,
   boxSizing: 'border-box',
-  width: '100%'
+  width: '100%',
 }));
 
 interface ArticleSkeletonProps {
   index: number;
 }
 
-export default function ArticleSkeleton({
-  index
-}: ArticleSkeletonProps) {
+export default function ArticleSkeleton({ index }: ArticleSkeletonProps) {
   const theme = useTheme();
-  
+
   return (
     <Fade
       in
@@ -47,10 +45,24 @@ export default function ArticleSkeleton({
             flexShrink: 0,
           }}
         />
-        
+
         <InfoWrapper>
-          <Box sx={{ display: 'flex', flexDirection: 'column', boxSizing: 'border-box', gap: '12px' }}>
-            <Box sx={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              boxSizing: 'border-box',
+              gap: '12px',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '8px',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+              }}
+            >
               <Skeleton
                 animation="wave"
                 variant="rounded"
@@ -72,7 +84,7 @@ export default function ArticleSkeleton({
                 height="12px"
               />
             </Box>
-            
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <Skeleton
                 animation="wave"
@@ -86,7 +98,7 @@ export default function ArticleSkeleton({
                 width="90%"
                 height="16px"
               />
-              
+
               <Skeleton
                 animation="wave"
                 variant="text"
@@ -99,4 +111,4 @@ export default function ArticleSkeleton({
       </CardContainer>
     </Fade>
   );
-} 
+}

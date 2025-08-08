@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Fade,
-  styled,
-} from '@mui/material';
+import { Box, Fade, styled } from '@mui/material';
 
 const TabContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',

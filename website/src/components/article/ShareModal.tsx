@@ -8,12 +8,10 @@ interface ShareModalProps {
   handleCloseClick: () => void;
 }
 
-
-export const ShareModal = ({ // eslint-disable-line
-    screenSize,
-    handleCloseClick
-  }: ShareModalProps
-) => { 
+export function ShareModal ({ // eslint-disable-line
+  screenSize,
+  handleCloseClick,
+}: ShareModalProps) {
   return (
     <Paper
       style={{
@@ -28,13 +26,13 @@ export const ShareModal = ({ // eslint-disable-line
         boxSizing: 'border-box',
       }}
     >
-      <Typography 
+      <Typography
         style={{
           color: '#fff',
           fontSize: '24px',
           lineHeight: '24px',
           fontWeight: '600',
-          fontFamily: 'Poppins'
+          fontFamily: 'Poppins',
         }}
       >
         Link copied to clipboard.
@@ -49,4 +47,4 @@ export const ShareModal = ({ // eslint-disable-line
       </Box>
     </Paper>
   );
-};
+}
