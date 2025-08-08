@@ -4,190 +4,20 @@ import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { StyledFlexBox, StyledText } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import { ScreenSize } from '../../lib/WebsiteModels';
-import SinclairTitle from '../../images/SinclarTitle.svg';
-
-import DrewDefault from '../../images/headshots/drew/Headshot_Drew.png';
-import DrewHover from '../../images/headshots/drew/Headshot_Drew_Hover.png';
-import DrewBack from '../../images/headshots/drew/Headshot_Drew_Back.png';
-
-import DazDefault from '../../images/headshots/daz/Headshot_Daz_Default.png';
-import DazHover from '../../images/headshots/daz/Headshot_Daz_Hover.png';
-import DazBack from '../../images/headshots/daz/Headshot_Daz_Back.png';
-
-import ImanDefault from '../../images/headshots/iman/Headshot_Iman_Default.png';
-import ImanHover from '../../images/headshots/iman/Headshot_Iman_Hover.png';
-import ImanBack from '../../images/headshots/iman/Headshot_Iman_Back.png';
-
-import MahalaDefault from '../../images/headshots/mahala/Headshot_Mahala_Default.png';
-import MahalaHover from '../../images/headshots/mahala/Headshot_Mahala_Hover.png';
-import MahalaBack from '../../images/headshots/mahala/Headshot_Mahala_Back.png';
-
-import ChrisDefault from '../../images/headshots/chris/Headshot_Chris_Default.png';
-import ChrisHover from '../../images/headshots/chris/Headshot_Chris_Hover.png';
-import ChrisBack from '../../images/headshots/chris/Headshot_Chris_Back.png';
-
-import MikeDefault from '../../images/headshots/mike/Headshot_Mike_Default.png';
-import MikeHover from '../../images/headshots/mike/Headshot_Mike_Hover.png';
-import MikeBack from '../../images/headshots/mike/Headshot_Mike_Back.png';
-
-import MuhammadDefault from '../../images/headshots/muhammad/Headshot_Muhammad_Default.png';
-import MuhammadHover from '../../images/headshots/muhammad/Headshot_Muhammad_Hover.png';
-import MuhammadBack from '../../images/headshots/muhammad/Headshot_Muhammad_Back.png';
-
-import MarizzaDefault from '../../images/headshots/marizz/Headshot_Marizza_Default.png';
-import MarizzaHover from '../../images/headshots/marizz/Headshot_Marizza_Hover.png';
-import MarizzaBack from '../../images/headshots/marizz/Headshot_Marizza_Back.png';
-
-import KaterinaDefault from '../../images/headshots/katerina/Headshot_Katerina_Default.png';
-import KaterinaHover from '../../images/headshots/katerina/Headshot_Katerina_Hover.png';
-import KaterinaBack from '../../images/headshots/katerina/Headshot_Katerina_Back.png';
-
-import AnnaDefault from '../../images/headshots/anna/Headshot_Anna_Default.png';
-import AnnaHover from '../../images/headshots/anna/Headshot_Anna_Hover.png';
-import AnnaBack from '../../images/headshots/anna/Headshot_Anna_Back.png';
-
-import MozzieDefault from '../../images/headshots/mozzie/Headshot_Mozzie_Default.png';
-import MozzieHover from '../../images/headshots/mozzie/Headshot_Mozzie_Hover.png';
-import MozzieBack from '../../images/headshots/mozzie/Headshot_Mozzie_Back.png';
-
-import RonaldDefault from '../../images/headshots/ronald/Headshot_Ronald_Default.png';
-import RonaldHover from '../../images/headshots/ronald/Headshot_Ronald_Hover.png';
-import RonaldBack from '../../images/headshots/ronald/Headshot_Ronald_Back.png';
-// No Back image provided for Ronald
-
-import SinclairDefault from '../../images/headshots/sinclair/Headshot_Sinclair_Default.png';
-import SinclairHover from '../../images/headshots/sinclair/Headshot_Sinclair_Hover.png';
-import SinclairBack from '../../images/headshots/sinclair/Headshot_Sinclair_Back.png';
-
+import { teamArr } from '../../lib/TeamData';
 import LinkedInIcon from '../../images/LinkedIn.svg'
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import FlipCard from './FlipCard';
-import favoriteMistakeImg from '../../images/favoriteMistake.png'
-import MistakeCard from './MistakeCard';
+
 
 interface IRightOnTeam {
   screenSize: ScreenSize;
 }
 
-const teamArr = [
-  {
-    defaultImg: AnnaDefault,
-    hoverImg: AnnaHover,
-    backImg: AnnaBack,
-    name: 'Anna Roberds',
-    title: 'Math Educator',
-    title2: 'Curriculum Program Manager',
-    linkedIn: 'https://www.rightoneducation.com/images/anna-name.png',
-  },
-  {
-    defaultImg: ChrisDefault,
-    hoverImg: ChrisHover,
-    backImg: ChrisBack,
-    name: 'Christopher Tran',
-    title: 'UX Intern',
-    linkedIn: 'https://www.linkedin.com/in/chrvtran/',
-  },
-  {
-    defaultImg: DazDefault,
-    hoverImg: DazHover,
-    backImg: DazBack,
-    name: 'Daz Yang',
-    title: 'UI Designer',
-    title2: 'Front-End Developer',
-    linkedIn: 'https://www.linkedin.com/in/dazyang',
-  },
-  {
-    defaultImg: DrewDefault,
-    hoverImg: DrewHover,
-    backImg: DrewBack,
-    name: 'Drew Hart',
-    title: 'Development Lead',
-    linkedIn: 'https://www.rightoneducation.com/images/drew-name.png',
-  },
-  {
-    defaultImg: ImanDefault,
-    hoverImg: ImanHover,
-    backImg: ImanBack,
-    name: 'Iman Brodsky',
-    title: 'STEM Administrator',
-    title2: 'Curriculum Specialist',
-    linkedIn: 'https://www.linkedin.com/in/imanhoward/',
-  },
-  {
-    defaultImg: KaterinaDefault,
-    hoverImg: KaterinaHover,
-    backImg: KaterinaBack,
-    name: 'Katerina Schenke, PhD',
-    title: 'Educator Researcher',
-    title2: 'Learning Scientist',
-    linkedIn: 'https://www.linkedin.com/in/katerina-schenke-phd-37b827b7/',
-  },
-  {
-    defaultImg: MahalaDefault,
-    hoverImg: MahalaHover,
-    backImg: MahalaBack,
-    name: 'Mahala Femovich',
-    title: 'UX Intern',
-    linkedIn: 'https://www.linkedin.com/in/mfemovich/',
-  },
-  {
-    defaultImg: MarizzaDefault,
-    hoverImg: MarizzaHover,
-    backImg: MarizzaBack,
-    name: 'Marizza Baily',
-    title: 'Math Educator',
-    title2: 'Content & Pedagogy',
-    linkedIn: 'https://www.linkedin.com/in/l-marizza-bailey-5b981143/',
-  },
-  {
-    defaultImg: MikeDefault,
-    hoverImg: MikeHover,
-    backImg: MikeBack,
-    name: 'Michael Hunter',
-    title: 'Development Intern',
-    linkedIn: 'www.linkedin.com/in/michael-h-hunter',
-  },
-  {
-    defaultImg: MozzieDefault,
-    hoverImg: MozzieHover,
-    backImg: MozzieBack,
-    name: 'Mozzie Dosalmas, PhD',
-    title: 'Math Educator',
-    title2: 'Content & Pedagogy',
-    linkedIn: 'https://www.linkedin.com/in/l-marizza-bailey-5b981143/',
-  },
-  {
-    defaultImg: MuhammadDefault,
-    hoverImg: MuhammadHover,
-    backImg: MuhammadBack,
-    name: 'Muhammad Quereshi',
-    title: 'Development Intern',
-    linkedIn: 'https://www.linkedin.com/in/muhammad-qureshi-22918218b/',
-  },
-  {
-    defaultImg: RonaldDefault,
-    hoverImg: RonaldHover,
-    // No backImg provided
-    name: 'Ronald Towns',
-    title: 'STEM Administrator',
-    title2: 'Math PD',
-    linkedIn: 'https://www.rightoneducation.com/images/ronald-name.png',
-  },
-  {
-    defaultImg: SinclairDefault,
-    hoverImg: SinclairHover,
-    backImg: SinclairBack,
-    name: 'Sinclair Wu',
-    title: 'Product Lead',
-     linkedIn: 'https://www.linkedin.com/in/sinclairwu/',
-  },
-];
-
-
 export default function RightonTeam({ screenSize }: IRightOnTeam) {
-    const theme = useTheme()
+  const theme = useTheme()
   const swiperRef = useRef<SwiperRef>(null);
   const isLarge = screenSize === ScreenSize.LARGE;
 
@@ -197,7 +27,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
       <Grid
         container
         direction="row"
-        spacing={6}
+        spacing={theme.sizing.xxSmPadding}
         sx={{
           '&::-webkit-scrollbar': { display: 'none' }, // Chrome/Safari
           scrollbarWidth: 'none', // Firefox
@@ -274,7 +104,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
               >
                 {/* member img */}
               
-                <StyledFlexBox direction="row" align="flex-end" justify="center" gap={10}>
+                <StyledFlexBox direction="row" align="flex-end" justify="center" gap={theme.sizing.xSmPadding}>
                 <StyledText fontFamily="Poppins" fontSize="17px" fontWeight={600}>
                   {name}
                 </StyledText>
@@ -322,8 +152,8 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
     <Box width="100%" 
     sx={{
     '& .swiper-pagination-bullet': {
-      width: '6px',
-      height: '6px',
+      width: `${theme.sizing.xxSmPadding}px`,
+      height: `${theme.sizing.xxSmPadding}px`,
       backgroundColor: '#afafaf',
     },
     '& .swiper-pagination-bullet-active': {
@@ -336,7 +166,7 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
         modules={[Pagination]}
          pagination={{ clickable: true }}
         ref={swiperRef}
-        spaceBetween={24}
+        spaceBetween={theme.sizing.mdPadding}
         loop
         centeredSlidesBounds
         updateOnWindowResize

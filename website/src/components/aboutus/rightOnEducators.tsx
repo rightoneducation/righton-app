@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide, useSwiper, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import { ScreenSize } from '../../lib/WebsiteModels';
-import { educatorData } from '../../lib/EducatorData';
+import { educatorData } from '../../lib/TeamData';
 import linkedInIcon from '../../images/LinkedIn.svg';
 
 import 'swiper/css';
