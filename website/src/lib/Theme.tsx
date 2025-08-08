@@ -7,6 +7,7 @@ const primaryTextColor = '#FFFFFF'; // main text color
 const primaryBlueColor = '#02215F'; // main background blue color
 const primaryPinkColor = '#FF3A6A'; // main highlight pink color
 const secondaryDarkBlueColor = 'rgba(2, 33, 95, 0.50)'; // sponsor divider background
+const tertiaryDarkBlueColor = '#011849'; // about us background color
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet
 
 // design tokens - breakpoints:
@@ -86,6 +87,7 @@ declare module '@mui/material/styles' {
     primaryPink: string;
     secondaryDarkBlue: string;
     darkGrey: string;
+    tertiaryDarkBlue: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -94,6 +96,7 @@ declare module '@mui/material/styles' {
     primaryPink?: string;
     secondaryDarkBlue?: string;
     darkGrey?: string;
+    tertiaryDarkBlue?: string;
   }
 }
 
@@ -121,6 +124,7 @@ export default createTheme({
       primaryPink: primaryPinkColor,
       secondaryDarkBlue: secondaryDarkBlueColor,
       darkGrey: darkGreyColor,
+      tertiaryDarkBlue: tertiaryDarkBlueColor,
     },
   },
   typography: {

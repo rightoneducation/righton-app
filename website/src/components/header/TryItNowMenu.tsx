@@ -1,8 +1,8 @@
 import React from 'react';
+import { useTheme } from '@mui/material';
 import GameCTAButtons from '../homepage/GameCTAButtons';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
-import { useTheme } from '@mui/material';
 
 interface TryItNowMenuProps {
 screenSize: ScreenSize;

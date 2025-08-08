@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Grid, Typography, Box, Divider, Button } from '@mui/material';
+import { Grid, Typography, Box, Divider, Button, useTheme } from '@mui/material';
 import { Swiper, SwiperSlide, useSwiper, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
@@ -121,7 +121,8 @@ gradient: 'linear-gradient(to bottom, rgba(226,97,143,1), rgba(178,46,93,1))'
 ]
 
 export default function RightOnEducators({ screenSize }: IRightOnEducators) {
-const swiperRef = useRef<SwiperRef>(null);
+  const theme = useTheme();
+  const swiperRef = useRef<SwiperRef>(null);
 
 
   return (

@@ -1,10 +1,10 @@
 import React from 'react';
+import { useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import magicMathHat from '../../images/mathSymbolsHat.svg';
 import pinkCreature from '../../images/pinkCreature.svg';
 import { ScreenSize } from '../../lib/WebsiteModels'
-import { useTheme } from '@mui/material';
 
 
 interface CTAButtonProps {
