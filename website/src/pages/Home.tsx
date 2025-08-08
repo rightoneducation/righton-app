@@ -1,26 +1,18 @@
 import React from 'react';
 import {
   Box,
-  Typography,
   styled,
   Grid,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
   StyledFlexBox,
-  StyledText,
-  StyledSubText,
-  EmphasizeText,
-  StyledHeaderText,
   OpeningTextContainer,
   HomePageContainer,
 } from '../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import OpeningText from '../components/homepage/OpeningText';
 import GameCTAButtons from '../components/homepage/GameCTAButtons';
-import QuestionOfTheDay from '../components/homepage/QuestionOfTheDay';
-import GameShowVideo from '../components/homepage/GameShowVideo';
 import WaegenList from '../components/homepage/WaegenList';
 
 import RightOnMainImg from '../images/right-on-education.svg';
@@ -30,14 +22,9 @@ import schmidtImg from '../images/schmidt.svg';
 import toolsCompetitionImg from '../images/tools-competition.svg';
 import velaImg from '../images/vela.svg';
 import waltonFamilyImg from '../images/walton-family.svg';
-import gameScreen from '../images/desktopMobile.svg';
 import waegen from '../images/waegen.svg';
-import cubeImg from '../images/Relume.svg';
-import arrowRight from '../images/arrow-right.svg';
 import inwardCurveImg from '../images/inwardCurve.svg';
-import waveLg from '../images/waveLg.svg';
 import bottomWaveLg from '../images/bottomWaveLg.svg';
-import gameViewMobileImg from '../images/gameViewMobile.svg';
 import FeaturedVideo from '../components/homepage/FeaturedVideo';
 import rightMainMobile from '../images/RightOn-MobileGraphic.svg';
 import { ScreenSize } from '../lib/WebsiteModels';
@@ -53,16 +40,15 @@ const imageArr = [
   { image: waltonFamilyImg, alt: 'sponsors-walton-family' },
 ];
 
-const StyledSponsorDivider = styled(StyledFlexBox)({
-  backgroundColor: 'rgba(2, 33, 95, 0.50)',
+const StyledSponsorDivider = styled(StyledFlexBox)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.secondaryDarkBlue,
   overflowX: 'auto',
   '&::-webkit-scrollbar': {
-    // Chrome and Safari
     display: 'none',
   },
-  scrollbarWidth: 'none', // Firefox
+  scrollbarWidth: 'none',
   msOverflowStyle: 'none',
-});
+}));
 
 interface HomePageProps {
   screenSize: ScreenSize;
@@ -70,13 +56,7 @@ interface HomePageProps {
 
 export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
   const theme = useTheme();
-
-  const containerPadding =
-    screenSize === ScreenSize.LARGE // eslint-disable-line
-      ? '96px 72px'
-      : screenSize === ScreenSize.MEDIUM
-        ? '60px 72px'
-        : '60px 12px';
+  const containerPadding = theme.sizing.containerPadding[screenSize]; 
 
   return (
     <HomePageContainer>
@@ -84,12 +64,12 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
       <StyledFlexBox
         direction="column"
         align="center"
-        gap={72}
+        gap={theme.sizing.xLgPadding}
         sx={{ padding: containerPadding }}
       >
         {/* Opening Text */}
         <OpeningTextContainer
-          sx={{ gap: screenSize === ScreenSize.SMALL ? '24px' : '48px' }}
+          sx={{ gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.lgPadding}px` }}
         >
           <OpeningText />
         </OpeningTextContainer>
@@ -111,7 +91,7 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
           direction={screenSize === ScreenSize.LARGE ? 'row' : 'column'}
           align="center"
           justify="center"
-          gap={screenSize === ScreenSize.SMALL ? 24 : 48}
+          gap={screenSize === ScreenSize.SMALL ? theme.sizing.mdPadding : theme.sizing.lgPadding}
           width="100%"
         >
           <GameCTAButtons screenSize={screenSize} />
@@ -122,7 +102,7 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
       <StyledSponsorDivider>
         <StyledFlexBox direction="row" align="center" gap={24}>
           {imageArr.map(({ image, alt }, i) => (
-            <Box key={alt} sx={{ width: '250px', zIndex: 5 }}>
+            <Box key={alt} sx={{ width: `${theme.sizing.sponsorImageWidth}px`, zIndex: 5 }}>
               <img src={image} alt={alt} />
             </Box>
           ))}
@@ -132,7 +112,7 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
       <StyledFlexBox
         direction="column"
         align="center"
-        gap={72}
+        gap={theme.sizing.xLgPadding}
         sx={{ padding: containerPadding }}
       >
         {/* Central & Host */}
@@ -157,12 +137,12 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
       </Box>
 
       <Grid
-        spacing={9}
+        spacing={theme.sizing.xSmPadding}
         container
         direction="column"
         alignItems="center"
         sx={{
-          gap: '72px',
+          gap: `${theme.sizing.xLgPadding}px`,
           padding: containerPadding,
           backgroundColor: '#011849',
         }}
@@ -201,20 +181,10 @@ export function Home({ screenSize }: HomePageProps) {// eslint-disable-line
         direction="column"
         align="center"
         sx={{ padding: containerPadding }}
-        gap={72}
+        gap={theme.sizing.xLgPadding}
       >
         <FeaturedVideo screenSize={screenSize} />
       </StyledFlexBox>
-
-      {/* Youtube video */}
-      {/* <StyledFlexBox
-        direction={screenSize !== ScreenSize.LARGE ? 'column-reverse' : 'row'}
-        align="center"
-        sx={{ padding: containerPadding }}
-        gap={72}
-      >
-        <GameShowVideo screenSize={screenSize} />
-      </StyledFlexBox> */}
     </HomePageContainer>
   );
 }
