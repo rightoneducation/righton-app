@@ -116,6 +116,26 @@ const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
   alignItems: 'center'
 }));
 
+// Video wrapper that mimics object-fit: cover for iframes
+const VideoCoverContainer = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  width: '100%',
+  aspectRatio: '16 / 9',
+  overflow: 'hidden',
+  backgroundColor: '#000',
+  borderRadius: '12px',
+}));
+
+const CoverIframe = styled('iframe')(({ theme }) => ({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  width: '177.78%', // 16/9 to ensure cover
+  height: '100%',
+  transform: 'translate(-50%, -50%)',
+  border: 0,
+}));
+
 export function HowItWorks() { // eslint-disable-line
   const theme = useTheme();
 
@@ -235,17 +255,14 @@ export function HowItWorks() { // eslint-disable-line
               </Box>
               {/* The youtube video for medium and small screen only */}
               {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
-                <Box sx={{ width: '100%', border: '1px solid brown'}}>
-                  <iframe
-                    width="100%"
-                    height="100%"
+                <VideoCoverContainer>
+                  <CoverIframe
                     src="https://www.nbcnews.com/news/embedded-video/mmvo160212037562"
                     title="RightOn! Intro"
-                    frameBorder="0"
                     allow="autoplay; encrypted-media"
                     allowFullScreen
                   />
-                </Box>
+                </VideoCoverContainer>
               )}
               <Box sx={{ 
                 display: 'flex',
@@ -298,17 +315,14 @@ export function HowItWorks() { // eslint-disable-line
 
             {/* The youtube video for large screen only */}
             {screenSize === ScreenSize.LARGE && (
-              <Box sx={{ width: '100%', border: '1px solid brown'}}>
-                <iframe
-                  width="100%"
-                  height="100%"
+              <VideoCoverContainer>
+                <CoverIframe
                   src="https://www.nbcnews.com/news/embedded-video/mmvo160212037562"
                   title="RightOn! Intro"
-                  frameBorder="0"
                   allow="autoplay; encrypted-media"
                   allowFullScreen
                 />
-              </Box>
+              </VideoCoverContainer>
             )}
         </TeacherTutorialContainer>
       </FirstContainer>
