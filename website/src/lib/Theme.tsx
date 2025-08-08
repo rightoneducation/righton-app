@@ -28,6 +28,7 @@ const xSmPadding = 10; // ex. grid spacing
 const smPadding = 12; // ex. vertical padding on mobile
 const mdPadding = 24; // ex. gap in flexbox
 const lgPadding = 48; // ex. top padding in mobile
+const lgPaddingMobile = 60; // ex. top padding in mobile
 const xLgPadding = 72; // ex. vertical padding on tablet
 const xxLgPadding = 96; // ex. vertical padding on desktop
 
@@ -54,6 +55,7 @@ declare module '@mui/material/styles' {
       smPadding: number;
       mdPadding: number;
       lgPadding: number;
+      lgPaddingMobile: number;
       xLgPadding: number;
       xxLgPadding: number;
       sponsorImageWidth: number;
@@ -75,6 +77,7 @@ declare module '@mui/material/styles' {
       smPadding: number;
       mdPadding: number;
       lgPadding: number;
+      lgPaddingMobile: number;
       xLgPadding: number;
       xxLgPadding: number;
       sponsorImageWidth: string;
@@ -114,6 +117,7 @@ export default createTheme({
     smPadding,
     mdPadding,
     lgPadding,
+    lgPaddingMobile,
     xLgPadding,
     xxLgPadding,
     sponsorImageWidth,

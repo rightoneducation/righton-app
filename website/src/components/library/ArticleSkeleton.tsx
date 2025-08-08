@@ -6,7 +6,7 @@ const CardContainer = styled(Box)(({ theme }) => ({
   maxHeight: '98px',
   minHeight: '98px',
   display: 'flex',
-  gap: '12px',
+  gap: `${theme.sizing.smPadding}px`,
   background: '#224996',
   boxSizing: 'border-box',
   borderRadius: '8px',
@@ -15,8 +15,8 @@ const CardContainer = styled(Box)(({ theme }) => ({
 const InfoWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: '12px',
-  padding: '12px 0',
+  gap: `${theme.sizing.smPadding}px`,
+  padding: `${theme.sizing.smPadding}px 0`,
   boxSizing: 'border-box',
   width: '100%'
 }));

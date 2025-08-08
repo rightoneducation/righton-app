@@ -28,10 +28,6 @@ export const ShareMobileModal = ({ // eslint-disable-line
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.rightoneducation.com/share/${articleId}`)}`;
   const shareLinkUrl = `https://www.rightoneducation.com/library/${articleId}`;
 
-  const handleShareClicked = (platform: string) => {
-    console.log(platform);
-  };
-
   const handleCopyLinkClicked = () => {
     navigator.clipboard.writeText(shareLinkUrl);
     setIsCopied(true);

@@ -1,15 +1,13 @@
 import React from 'react';
-import { Box, Typography, Grid, styled } from '@mui/material';
+import { Box, Typography, Grid, styled, useTheme } from '@mui/material';
 import {
   CMSArticleType
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import CornerstoneArticleCard from './CornerstoneArticleCard';
 import ArticleCard from './ArticleCard';
-import CornerstoneSkeleton from '../library/CornerstoneSkeleton';
 import ArticleSkeleton from '../library/ArticleSkeleton';
 import { ScreenSize } from '../../lib/WebsiteModels';
-import { ButtonContainer, StyledButton } from '../../lib/styledcomponents/StyledComponents';
 
 const ArticleContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
@@ -28,15 +26,13 @@ export function OtherArticles({ // eslint-disable-line
   isLoadingArticles,
   screenSize
 } : OtherArticlesInterface) {
-
-  // TODO: ~~~Theme~~~
-  const primaryGap = '72px';
-  const secondaryGap = '48px';
+  const theme = useTheme();
+  const secondaryGap = `${theme.sizing.lgPadding}px`;
   const countCornerstone = screenSize === ScreenSize.LARGE ? 5 : 3;
   const countArticle = screenSize === ScreenSize.LARGE ? 12 : 6;
-  const paddingSide = screenSize === ScreenSize.SMALL ? '12px' : '72px';
-  const paddingTopBottom = screenSize === ScreenSize.LARGE ? '96px' : '60px';
-  const slideOffset = screenSize === ScreenSize.SMALL ? 24 : 148;
+  const paddingSide = screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.xLgPadding}px`;
+  const paddingTopBottom = screenSize === ScreenSize.LARGE ? `${theme.sizing.xxLgPadding}px` : `${theme.sizing.lgPaddingMobile}px`;
+  const slideOffset = screenSize === ScreenSize.SMALL ? theme.sizing.mdPadding : 148;
 
   return (
     <ArticleContainer

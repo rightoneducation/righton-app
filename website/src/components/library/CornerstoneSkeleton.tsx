@@ -23,7 +23,7 @@ export default function SkeletonCornerstone({
   screenSize
 }: SkeletonCornerstoneProps) {
   const theme = useTheme();
-  const contentPadding = screenSize === ScreenSize.LARGE ? '24px' : '12px';
+  const contentPadding = screenSize === ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.smPadding}px`;
   
   return (
     <Fade
