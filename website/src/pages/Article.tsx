@@ -55,7 +55,6 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
   };
 
   const handleCloseShareModalClick = () => {
-    console.log('close share modal');
     setIsMobileShareClicked(false);
   };
 
@@ -114,13 +113,13 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
               <Box style={{ 
                 display: 'flex', 
                 flexDirection: 'column', 
-                paddingTop: screenSize === ScreenSize.LARGE ? '48px' :  '60px',
-                paddingBottom: screenSize === ScreenSize.LARGE ? '96px' :  '60px',
-                paddingLeft: screenSize === ScreenSize.SMALL ? '24px' :  '72px',
-                paddingRight: screenSize === ScreenSize.SMALL ? '24px' :  '72px', 
+                paddingTop: screenSize === ScreenSize.LARGE ? `${theme.sizing.lgPadding}px` :  `${theme.sizing.lgPaddingMobile}px`,
+                paddingBottom: screenSize === ScreenSize.LARGE ? `${theme.sizing.xxLgPadding}px` :  `${theme.sizing.lgPaddingMobile}px`,
+                paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` :  `${theme.sizing.xLgPadding}px`,
+                paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` :  `${theme.sizing.xLgPadding}px`, 
                 }
               }>
-                <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? '96px' : '60px'  }}>
+                <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? `${theme.sizing.xxLgPadding}px` : `${theme.sizing.lgPaddingMobile}px`  }}>
                   <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
                     <ArticleHeader
                       screenSize={screenSize}
@@ -134,8 +133,8 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                       : <ArticleContent article={selectedArticle} screenSize={screenSize} />
                     }
                   </Box>
-                  <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? '72px' : '60px' }}>
-                    <Box style={{ width: '100%', border: '1px solid #FFF', boxSizing: 'border-box' }}/>
+                  <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: screenSize === ScreenSize.LARGE ? `${theme.sizing.xLgPadding}px` : `${theme.sizing.lgPaddingMobile}px` }}>
+                    <Box style={{ width: '100%', border: theme.sizing.dividerBorder, boxSizing: 'border-box' }}/>
                     <OtherArticles articles={otherArticles} screenSize={screenSize} isLoadingArticles={isLoadingOtherArticles} />
                   </Box>
                 </Box>
@@ -167,8 +166,8 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                   width: '100%',
                   display: 'flex',
                   justifyContent: 'center',
-                  paddingLeft: screenSize === ScreenSize.SMALL ? '24px' :  '72px',
-                  paddingRight: screenSize === ScreenSize.SMALL ? '24px' :  '72px', 
+                  paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` :  `${theme.sizing.xLgPadding}px`,
+                  paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` :  `${theme.sizing.xLgPadding}px`, 
                   boxSizing: 'border-box',
                 }}
               >

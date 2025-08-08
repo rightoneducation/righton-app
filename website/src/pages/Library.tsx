@@ -58,7 +58,7 @@ const ArticleContainer = styled(Box)(({ theme }) => ({
 }));
 
 export function Library({cmsClient} : any ) { // eslint-disable-line
- 
+  const theme = useTheme();
   const [selected, setSelected] = useState<LibraryType>(LibraryType.ALL);
   const [articles, setArticles] = useState<any[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<any[]>([]);
@@ -75,10 +75,10 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
   const ARTICLES_PER_PAGE = 9;
 
   // TODO: ~~~Theme~~~
-  const primaryGap = '72px';
-  const secondaryGap = '48px';
+  const primaryGap = `${theme.sizing.xLgPadding}px`;
+  const secondaryGap = `${theme.sizing.lgPadding}px`;
   
-  const theme = useTheme();
+  
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
@@ -86,12 +86,11 @@ export function Library({cmsClient} : any ) { // eslint-disable-line
     isMediumScreen ? ScreenSize.MEDIUM : 
     ScreenSize.SMALL;
 
-  // TODO: ~~~Theme~~~
   const countCornerstone = screenSize === ScreenSize.LARGE ? 5 : 3;
   const countArticle = screenSize === ScreenSize.LARGE ? 12 : 6;
-  const paddingSide = screenSize === ScreenSize.SMALL ? '12px' : '72px';
-  const paddingTopBottom = screenSize === ScreenSize.LARGE ? '96px' : '60px';
-  const slideOffset = screenSize === ScreenSize.SMALL ? 24 : 148;
+  const paddingSide = screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.xLgPadding}px`;
+  const paddingTopBottom = screenSize === ScreenSize.LARGE ? `${theme.sizing.xxLgPadding}px` : `${theme.sizing.lgPadding}px`;
+  const slideOffset = screenSize === ScreenSize.SMALL ? theme.sizing.mdPadding : theme.sizing.xLgPadding;   
   
   const handleArticleFilterClick = (tag: LibraryType) => {
     setSelected(tag);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { StyledFlexBox, StyledText } from '../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import RightOnLogo from '../images/RightOnLogo.svg';
 import shareFacebook from '../images/shareFacebook.svg';
@@ -26,17 +26,18 @@ const socialMediaIcons = [
 
 export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
   const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+  const theme = useTheme();
   
   // Padding based on design specifications
-  const horizontalPadding = screenSize === ScreenSize.SMALL ? '12px' : '72px';
-  const verticalPadding = screenSize === ScreenSize.SMALL ? '60px' : '48px';
-  const gapBetweenElements = 24; 
+  const horizontalPadding = screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.lgPadding}px`;
+  const verticalPadding = screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.lgPadding}px`;
+  const gapBetweenElements = theme.sizing.mdPadding; 
   
   return (
     <StyledFlexBox 
       gap={gapBetweenElements}
       sx={{ 
-        background: '#02215F', 
+        background: theme.palette.primary.primaryBlue, 
         width: '100%', 
         padding: `${verticalPadding} ${horizontalPadding}`,
         flexDirection: 'column',

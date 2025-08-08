@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import positiveBloopyInSpace from '../../images/positiveBloopyInSpace.svg';
 import positiveBloopyInSpaceMobile from '../../images/positiveBloopyInSpaceMobile.svg';
@@ -10,11 +10,12 @@ interface WhatIsContainerProps {
 }
 
 export const WhatIsContainer = ({screenSize}: WhatIsContainerProps) => { // eslint-disable-line
-    const smallPadding = '60px 12px';
-    const medPadding = '60px 72px';
-    const largePadding = '96px 72px';
-    const primaryGap = '72px';
-    const secondaryGap = '48px';
+    const theme = useTheme();
+    const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
+    const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];
+    const largePadding = theme.sizing.containerPadding[ScreenSize.LARGE];
+    const primaryGap = `${theme.sizing.lgPadding}px`;
+    const secondaryGap = `${theme.sizing.mdPadding}px`;
 
     const positiveCultureTextMap = [
       'Encourage risk-taking',

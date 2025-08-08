@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import BackLibrary from '../../images/backLibrary.svg';
 
@@ -12,6 +12,7 @@ export function BackToLibrary({ // eslint-disable-line
   screenSize
 } : BackToLibraryInterface) {
   const navigate = useNavigate();
+  const theme = useTheme();
   return (
     <Box 
       onClick={() => navigate('/library')}
@@ -19,10 +20,10 @@ export function BackToLibrary({ // eslint-disable-line
         width: '100%', 
         display: 'flex', 
         alignItems: 'center', 
-        gap: '12px', 
-        paddingTop: '24px', 
-        paddingBottom: '24px', 
-        paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '72px', 
+        gap: `${theme.sizing.smPadding}px`, 
+        paddingTop: `${theme.sizing.mdPadding}px`, 
+        paddingBottom: `${theme.sizing.mdPadding}px`, 
+        paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
         boxSizing: 'border-box',
         cursor: 'pointer', 
       }}

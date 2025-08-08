@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import positiveBG1 from '../../images/positiveBG1.svg';
 import positiveWannaPlayPhone from '../../images/positiveWannaPlayPhone.svg';
@@ -10,13 +10,14 @@ interface WannaPlayContainerProps {
 }
 
 export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { // eslint-disable-line
-  const smallPadding = '60px 12px';
-  const medPadding = '60px 72px';
-  const largePadding = '96px 72px';
-  const largestGap = '96px';
-  const primaryGap = '72px';
-  const secondaryGap = '48px';
-  const tertiaryGap = '24px';
+  const theme = useTheme();
+  const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
+  const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];
+  const largePadding = theme.sizing.containerPadding[ScreenSize.LARGE];
+  const largestGap = `${theme.sizing.xLgPadding}px`;
+  const primaryGap = `${theme.sizing.lgPadding}px`;
+  const secondaryGap = `${theme.sizing.mdPadding}px`;
+  const tertiaryGap = `${theme.sizing.smPadding}px`;
 
   switch (screenSize) {
     case ScreenSize.SMALL:
@@ -100,10 +101,10 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  border: '1px solid #FFF',
-                  borderRadius: '24px',
-                  padding: '16px 24px',
-                  gap: '12px'
+                  border: theme.sizing.dividerBorder,
+                  borderRadius: secondaryGap,
+                  padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
+                  gap: `${theme.sizing.xSmPadding}px`
                 }}
               >
                 <Typography sx={{ lineHeight: '1.2', fontSize: '18px', fontFamily: 'Poppins, sans-serif', color: '#FFFFFF', textAlign: 'center'}}>
@@ -211,7 +212,7 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '48px'
+                gap: primaryGap
               }}
             >
               {/* TODO: Wanna Play top text */}
@@ -220,7 +221,7 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '24px'
+                  gap: secondaryGap
                 }}
               >
                 <Typography sx={{ lineHeight: '1.2', fontSize: '40px', fontFamily: 'Poppins, sans-serif', fontWeight: 700,   color: '#FFFFFF', textAlign: 'center'}}>
@@ -242,10 +243,10 @@ export const WannaPlayContainer = ({screenSize}: WannaPlayContainerProps) => { /
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  border: '1px solid #FFF',
-                  borderRadius: '24px',
-                  padding: '16px 24px',
-                  gap: '12px'
+                  border: theme.sizing.dividerBorder,
+                  borderRadius: secondaryGap,
+                  padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
+                  gap: `${theme.sizing.xSmPadding}px`
                 }}
               >
                 <Typography sx={{ lineHeight: '1.2', fontSize: '18px', fontFamily: 'Poppins, sans-serif', color: '#FFFFFF', textAlign: 'center'}}>

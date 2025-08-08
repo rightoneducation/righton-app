@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, styled, useTheme } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
   EmphasizeText,
@@ -26,10 +26,8 @@ interface IAboutUs {
 }
 
 export function AboutUs({ screenSize }: IAboutUs) {// eslint-disable-line
-   const containerPadding = screenSize === ScreenSize.LARGE ? // eslint-disable-line
-        "96px 72px"
-        : screenSize === ScreenSize.MEDIUM 
-        ? "60px 72px": "60px 12px";
+  const theme = useTheme();
+  const containerPadding = theme.sizing.containerPadding[screenSize];
 
   return (
     <AboutUsContainer>
@@ -38,10 +36,10 @@ export function AboutUs({ screenSize }: IAboutUs) {// eslint-disable-line
       <MathSymbolsBackground />
 
       <StyledFlexBox
-        gap={72}
+        gap={theme.sizing.lgPadding}
         align="center"
         justify="center"
-        sx={{ backgroundColor: '#011849', padding: containerPadding, width: '100%' }}
+        sx={{ backgroundColor: theme.palette.primary.tertiaryDarkBlue, padding: containerPadding, width: '100%' }}
         >
         {/* Mission & Vision */}
         <MissionAndVision screenSize={screenSize} />
@@ -63,13 +61,13 @@ export function AboutUs({ screenSize }: IAboutUs) {// eslint-disable-line
       />
 
         {/* Right On Team */}
-      <StyledFlexBox sx={{ padding: containerPadding }} gap={72} align="center">
+      <StyledFlexBox sx={{ padding: containerPadding }} gap={theme.sizing.xLgPadding} align="center">
         <StyledFlexBox align={screenSize === ScreenSize.LARGE ? "center":"normal"}>
           <StyledText fontSize="16px" fontWeight={600}>
             OUR TEAM
           </StyledText>
 
-          <StyledFlexBox gap={24} align={screenSize === ScreenSize.LARGE ? "center":"normal"}>
+          <StyledFlexBox gap={theme.sizing.mdPadding} align={screenSize === ScreenSize.LARGE ? "center":"normal"}>
           <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2}>
             Research and Development
           </StyledText>
@@ -91,16 +89,16 @@ export function AboutUs({ screenSize }: IAboutUs) {// eslint-disable-line
           </StyledFlexBox>
         </StyledFlexBox>
         <StyledFlexBox 
-       // height={screenSize === ScreenSize.LARGE ? "791px":"100%"} 
-        width={screenSize === ScreenSize.LARGE ? "1155px": "100%"} 
-        gap={48}>
+          width={screenSize === ScreenSize.LARGE ? "1155px": "100%"} 
+          gap={theme.sizing.lgPadding}
+        >
           <RightonTeam screenSize={screenSize} />
           
         </StyledFlexBox>
       </StyledFlexBox>
 
       {/* RightOn Advisors */}
-      <StyledFlexBox sx={{ padding: containerPadding }} gap={72} width="100%">
+      <StyledFlexBox sx={{ padding: containerPadding }} gap={theme.sizing.xLgPadding} width="100%">
         <StyledFlexBox align={screenSize === ScreenSize.LARGE ? "center":"normal"}>
           <StyledText fontSize="16px" fontWeight={600}>
             OUR ADVISORS
@@ -152,7 +150,7 @@ export function AboutUs({ screenSize }: IAboutUs) {// eslint-disable-line
           msOverflowStyle: 'none',
           boxSizing: 'border-box',
           width: '100%',
-         marginBottom: '60px'
+          marginBottom: '60px'
            }}>
           <RightOnEducators screenSize={screenSize} />
           </StyledFlexBox>

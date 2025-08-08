@@ -84,17 +84,12 @@ const TeacherTutorialTextContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-
-// Second Container Content
-
 const SecondContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
   gap: '72px',
   width: '100%',
   boxSizing: 'border-box',
-  // padding: '0px 71.5px',
-  // border: '1px solid red',
   alignItems: 'center',
   justifyContent: 'center'
 }));
@@ -106,7 +101,6 @@ const SecondUpperContainerTexts = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   maxWidth: '810px',
-  // border: '1px solid yellow'
 }));
 
 const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
@@ -146,14 +140,7 @@ export function HowItWorks() { // eslint-disable-line
   isMediumScreen ? ScreenSize.MEDIUM : 
   ScreenSize.SMALL;
 
-  let paddingValue;
-  if (screenSize === ScreenSize.LARGE) {
-    paddingValue = '96px 107px';
-  } else if (screenSize === ScreenSize.MEDIUM) {
-    paddingValue = '96px 72px';
-  } else {
-    paddingValue = '60px 12px';
-  }
+  const paddingValue = theme.sizing.containerPadding[screenSize];
   
   const [selectedBox, setSelectedBox] = React.useState(0); // 0 for first, 1 for second
 

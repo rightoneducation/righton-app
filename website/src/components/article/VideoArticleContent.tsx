@@ -2,10 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import {
-  CMSHeroImage,
   CMSTitleText,
-  CMSHeaderText,
-  CMSBodyText,
   PortableTextComponentsConfig,
   CMSArticleType
 } from '@righton/networking';
