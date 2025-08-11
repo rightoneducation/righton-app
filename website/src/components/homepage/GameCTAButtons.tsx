@@ -22,7 +22,7 @@ export default function GameCTAButtons({
         href="https://central.rightoneducation.com"
         target="_blank"
         rel="noopener noreferrer"
-        style={{ textDecoration: 'none' }}
+        style={{ textDecoration: 'none', width: '100%' }}
       >
         <StyledFlexBox
           direction="row"
@@ -90,9 +90,10 @@ export default function GameCTAButtons({
           align="center"
           borderRadius={theme.sizing.mdPadding}
           gap={theme.sizing.smPadding}
-          width={screenSize === ScreenSize.SMALL ? '369px' : '356px'}
+          width={screenSize === ScreenSize.SMALL ? '500px' : '356px'}
           sx={{
-            maxWidth: screenSize === ScreenSize.SMALL ? '369px' : '356px',
+            width: '100%',
+            maxWidth: screenSize === ScreenSize.SMALL ? '500px' : '356px',
             border: theme.sizing.dividerBorder,
             padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
             cursor: 'pointer',

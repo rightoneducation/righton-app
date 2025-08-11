@@ -21,7 +21,7 @@ import waegen from '../images/waegen.svg';
 import inwardCurveImg from '../images/inwardCurve.svg';
 import bottomWaveLg from '../images/bottomWaveLg.svg';
 import FeaturedVideo from '../components/homepage/FeaturedVideo';
-import rightMainMobile from '../images/RightOn-MobileGraphic.svg';
+import rightMainMobile from '../images/RightOn-MobileGraphic.png';
 import { ScreenSize } from '../lib/WebsiteModels';
 import CentralAndHost from '../components/homepage/CentralAndHost';
 import PlayGames from '../components/homepage/Play';
