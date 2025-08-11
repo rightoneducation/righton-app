@@ -36,7 +36,7 @@ export const handler = async (event) => {
     const getArticleFromCMS = async (id) => {
         try {
             const article = await client.fetch(FETCH_CONTENT_BY_ID , { id });
-            console.log(article);
+            
             // Process images to return URLs
             if (article.image && article.image.asset && article.image.asset._ref) {
               const imageUrl = imageUrlBuilder(client).image(article.image);

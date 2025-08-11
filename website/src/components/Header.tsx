@@ -34,6 +34,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
     null,
   );
   const theme = useTheme();
+  const headerPadding = theme.sizing.headerPadding[screenSize];
   const handleMenuMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
     setMenuAnchor(event.currentTarget);
   };
@@ -65,11 +66,12 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
 
   return (
     <StyledFlexBox
-      justify="center"
+      justify='space-between'
       style={{
         borderBottom: theme.sizing.dividerBorder,
         background: theme.palette.primary.primaryBlue,
         width: '100%',
+        padding: headerPadding,
         minHeight:
           screenSize !== ScreenSize.LARGE
             ? theme.sizing.headerHeightMobile
@@ -85,19 +87,20 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
         }}
         direction="row"
         align="center"
-        justify={screenSize === ScreenSize.LARGE ? 'center' : 'space-between'}
+        justify= 'space-between'
         gap={screenSize === ScreenSize.LARGE ? theme.sizing.mdPadding : 0}
       >
-        <Box
-          sx={{ cursor: 'pointer' }}
-          onClick={handleHomeClick}
-          component="img"
-          src={RightOnLogo}
-          width={screenSize === ScreenSize.LARGE ? '216px' : '99px'}
-          height={screenSize === ScreenSize.LARGE ? '96px' : '55px'}
-        />
-        {screenSize === ScreenSize.LARGE && (
-          <StyledFlexBox direction="row" gap={198}>
+        {screenSize === ScreenSize.LARGE ? (
+          <>
+          <Box style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: '28px'}}>
+            <Box
+              sx={{ cursor: 'pointer' }}
+              onClick={handleHomeClick}
+              component="img"
+              src={RightOnLogo}
+              width='216px'
+              height='96px'
+            />
             <StyledFlexBox direction="row" align="center" gap={24}>
               {links.map((link) => (
                 <StyledText
@@ -106,9 +109,11 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                     ...(location.pathname === link.path && {
                       color: theme.palette.primary.primaryPink,
                       textShadow: `0.5px 0 0 ${theme.palette.primary.primaryPink}, -0.5px 0 0 ${theme.palette.primary.primaryPink}, 0 0.5px 0 ${theme.palette.primary.primaryPink}, 0 -0.5px 0 ${theme.palette.primary.primaryPink}`,
+                 
                     }),
                     cursor: 'pointer',
                     padding: '4px 12px',
+                    // whiteSpace: 'nowrap'
                   }}
                   key={link.title}
                   fontSize="20px"
@@ -117,6 +122,9 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                 </StyledText>
               ))}
             </StyledFlexBox>
+          </Box>
+          <StyledFlexBox direction="row">
+            
             <StyledFlexBox
               id={id}
               onMouseEnter={handleMenuMouseEnter}
@@ -130,11 +138,11 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
               height="54px"
               sx={{
                 border: theme.sizing.dividerBorder,
-                padding: `${theme.sizing.xSmPadding}px ${theme.sizing.mdPadding}px`,
+                padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
                 cursor: 'pointer',
               }}
             >
-              <StyledText>Try it now </StyledText>
+              <StyledText style={{fontSize: '20px', lineHeight: '20px', fontWeight: 700, whiteSpace: 'nowrap'}}>Try It Now </StyledText>
               <SelectArrowContainer isSelectOpen={menuAnchor !== null}>
                 <Box
                   component="img"
@@ -146,8 +154,17 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
               </SelectArrowContainer>
             </StyledFlexBox>
           </StyledFlexBox>
-        )}
-        {screenSize !== ScreenSize.LARGE && (
+        </>
+        ) : (
+          <Box style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+          <Box
+            sx={{ cursor: 'pointer' }}
+            onClick={handleHomeClick}
+            component="img"
+            src={RightOnLogo}
+            width='99px'
+            height='55px'
+          />
           <Popper
             id={mobileMenuId}
             open={openMobile}
@@ -184,6 +201,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
               </Slide>
             )}
           </Popper>
+        </Box>
         )}
         <Popper
           placement="bottom-start"
@@ -214,6 +232,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
           />
         )}
       </StyledFlexBox>
+
     </StyledFlexBox>
   );
 }

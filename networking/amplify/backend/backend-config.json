@@ -164,6 +164,208 @@
       "service": "Lambda"
     }
   },
+  "parameters": {
+    "AMPLIFY_function_S3Trigger04eb3a91_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ]
+    },
+    "AMPLIFY_function_S3Trigger04eb3a91_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGameTest_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGameTest"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGameTest_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGameTest"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_shareContent_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "shareContent"
+        }
+      ]
+    },
+    "AMPLIFY_function_shareContent_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "shareContent"
+        }
+      ]
+    },
+    "AMPLIFY_function_teacherIdAuth_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "teacherIdAuth"
+        }
+      ]
+    },
+    "AMPLIFY_function_teacherIdAuth_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "teacherIdAuth"
+        }
+      ]
+    },
+    "AMPLIFY_function_unverifiedDelete_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "unverifiedDelete"
+        }
+      ]
+    },
+    "AMPLIFY_function_unverifiedDelete_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "unverifiedDelete"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateUserPass_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateUserPass"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateUserPass_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateUserPass"
+        }
+      ]
+    },
+    "AMPLIFY_function_uploadExternalImageToS3_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "uploadExternalImageToS3"
+        }
+      ]
+    },
+    "AMPLIFY_function_uploadExternalImageToS3_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "uploadExternalImageToS3"
+        }
+      ]
+    },
+    "AMPLIFY_function_userCleaner_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_userCleaner_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_waegen_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "waegen"
+        }
+      ]
+    },
+    "AMPLIFY_function_waegen_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "waegen"
+        }
+      ]
+    },
+    "AMPLIFY_function_waeregen_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "waeregen"
+        }
+      ]
+    },
+    "AMPLIFY_function_waeregen_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "waeregen"
+        }
+      ]
+    }
+  },
   "storage": {
     "rightoncentralstorage": {
       "dependsOn": [
