@@ -90,7 +90,7 @@ export default function PlayGames({ screenSize }: IPlayGames) {
           <StyledFlexBox>
             <StyledText
               fontWeight={700}
-              fontSize={screenSize === ScreenSize.LARGE ? '24px' : '40px'}
+              fontSize='24px'
             >
               Play
             </StyledText>

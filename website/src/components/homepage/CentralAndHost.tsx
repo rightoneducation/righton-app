@@ -40,7 +40,7 @@ export default function CentralAndHost({ screenSize }: ICentralAndHost) {
           <StyledFlexBox>
             <StyledText
               fontWeight={700}
-              fontSize={screenSize === ScreenSize.LARGE ? '24px' : '40px'}
+              fontSize='24px'
             >
               Central & Host
             </StyledText>
