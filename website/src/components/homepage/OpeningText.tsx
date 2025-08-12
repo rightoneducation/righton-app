@@ -27,7 +27,7 @@ export default function OpeningText() {
             textAlign: { xs: 'start', lg: 'center' },
           }}
         >
-          RightOn! makes math fun, social, and low-pressure—where mistakes spark
+          <i>RightOn!</i> makes math fun, social, and low-pressure—where mistakes spark
           learning and every student feels confident to participate in what we
           call a positive culture of error.
         </StyledSubText>

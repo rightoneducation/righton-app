@@ -46,6 +46,7 @@ export const StyledFlexBox = styled(Box, {
     prop !== 'align',
 })<StyledBoxProps>(
   ({ theme, direction, gap, borderRadius, justify, align }) => ({
+    width: '100%',
     display: 'flex',
     flexDirection: direction ?? 'column',
     gap: gap ? `${gap}px` : 0,

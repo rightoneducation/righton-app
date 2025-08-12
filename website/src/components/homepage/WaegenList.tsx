@@ -29,15 +29,15 @@ export default function WaegenList({ screenSize }: IWaegenList) {
           <StyledText
             lineHeight={1.3}
             fontWeight={700}
-            fontSize={screenSize === ScreenSize.LARGE ? '24px' : '40px'}
+            fontSize={screenSize === ScreenSize.MEDIUM ? '40px' : '24px'}
           >
             Wrong Answer Explanation Generator
           </StyledText>
         </Box>
         <StyledText
           // fontWeight={500}
-          fontSize={screenSize !== ScreenSize.LARGE ? '16px' : '20px'}
-          lineHeight={screenSize !== ScreenSize.LARGE ? 'auto' : 1.2}
+          fontSize={screenSize === ScreenSize.SMALL ? '16px' : '20px'}
+          lineHeight={screenSize === ScreenSize.SMALL ? 'auto' : 1.2}
         >
           Help students learn from mistakes — not just get the right answer. Our
           AI-powered Wrong Answer Explanation Generator creates tailored
@@ -55,8 +55,10 @@ export default function WaegenList({ screenSize }: IWaegenList) {
           }}
           direction="column"
           gap={24}
+          style={{
+            maxWidth: screenSize === ScreenSize.MEDIUM ? '335px' : '100%',
+          }}
         >
-          {/* add list here */}
           {waegenList.map((item, i) => (
             <StyledFlexBox key={item} gap={19} direction="row" align="center">
               <Box>
@@ -68,7 +70,6 @@ export default function WaegenList({ screenSize }: IWaegenList) {
                     screenSize === ScreenSize.LARGE ? 'Poppins' : 'Roboto'
                   }
                   sx={{ color: 'white' }}
-                  // fontWeight={ screenSize === ScreenSize.LARGE ? 500: 400}
                   fontSize={screenSize === ScreenSize.SMALL ? '16px' : '18px'}
                   lineHeight={1.5}
                 >
@@ -79,8 +80,6 @@ export default function WaegenList({ screenSize }: IWaegenList) {
           ))}
         </StyledFlexBox>
       </StyledFlexBox>
-
-      {/* Add button here */}
       <StyledFlexBox
         align={screenSize === ScreenSize.SMALL ? 'center' : 'flex-start'}
       >
@@ -94,9 +93,16 @@ export default function WaegenList({ screenSize }: IWaegenList) {
             borderRadius: '23px',
             padding: '12px 24px',
             cursor: 'pointer',
+            maxWidth: '282px',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
+          }}
+          onClick={() => {
+            window.open('https://generator.rightoneducation.com', '_blank');
           }}
         >
-          <StyledText>Try our WAE Genertor</StyledText>
+          <StyledText>Try our WAE Generator</StyledText>
           <img src={arrowRight} alt="arrow-right" />
         </StyledFlexBox>
       </StyledFlexBox>

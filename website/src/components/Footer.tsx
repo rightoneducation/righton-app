@@ -5,8 +5,8 @@ import {
   StyledText,
 } from '../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import RightOnLogo from '../images/RightOnLogo.svg';
-import shareFacebook from '../images/shareFacebook.svg';
-import shareTwitter from '../images/shareTwitter.svg';
+import shareYoutube from '../images/shareYoutube.svg';
+import shareEmail from '../images/shareEmail.svg';
 import shareLinkedIn from '../images/shareLinkedIn.svg';
 import { ScreenSize } from '../lib/WebsiteModels';
 
@@ -22,13 +22,13 @@ const links = [
 ];
 
 const socialMediaIcons = [
-  { icon: shareFacebook, alt: 'Facebook', link: '#' },
-  { icon: shareTwitter, alt: 'Twitter', link: '#' },
   {
     icon: shareLinkedIn,
     alt: 'LinkedIn',
     link: 'https://www.linkedin.com/company/rightoneducation',
   },
+  { icon: shareYoutube, alt: 'Youtube', link: 'https://www.youtube.com/c/RightOnEducation' },
+  { icon: shareEmail, alt: 'Email', link: 'mailto:info@rightoneducation.com' },
 ];
 
 export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
@@ -39,13 +39,13 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
 
   // Padding based on design specifications
   const horizontalPadding =
-    screenSize === ScreenSize.SMALL
-      ? `${theme.sizing.smPadding}px`
-      : `${theme.sizing.lgPadding}px`;
+    screenSize === ScreenSize.LARGE
+      ? `${theme.sizing.xLgPadding}px`
+      : `${theme.sizing.smPadding}px`;
   const verticalPadding =
-    screenSize === ScreenSize.SMALL
-      ? `${theme.sizing.mdPadding}px`
-      : `${theme.sizing.lgPadding}px`;
+    screenSize === ScreenSize.LARGE
+      ? `${theme.sizing.lgPadding}px`
+      : `${theme.sizing.lgPaddingMobile}px`;
   const gapBetweenElements = theme.sizing.mdPadding;
 
   return (
@@ -179,7 +179,6 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
           flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          paddingTop: '12px',
         }}
       >
         {screenSize !== ScreenSize.LARGE && (

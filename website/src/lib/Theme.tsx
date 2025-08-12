@@ -18,6 +18,11 @@ const lg = 1024;
 const xl = 1536;
 
 // design tokens - padding sizes
+const headerPadding: Record<ScreenSize, string> = {
+  [ScreenSize.LARGE]: '48px 72px',
+  [ScreenSize.MEDIUM]: '12px 24px',
+  [ScreenSize.SMALL]: '12px 24px',
+};
 const containerPadding: Record<ScreenSize, string> = {
   [ScreenSize.LARGE]: '96px 72px',
   [ScreenSize.MEDIUM]: '60px 72px',
@@ -44,6 +49,11 @@ const dividerBorder = '1px solid #fff';
 declare module '@mui/material/styles' {
   interface Theme {
     sizing: {
+      headerPadding: {
+        [ScreenSize.LARGE]: string;
+        [ScreenSize.MEDIUM]: string;
+        [ScreenSize.SMALL]: string;
+      };
       containerPadding: {
         [ScreenSize.LARGE]: string;
         [ScreenSize.MEDIUM]: string;
@@ -66,6 +76,11 @@ declare module '@mui/material/styles' {
 
   interface ThemeOptions {
     sizing?: {
+      headerPadding?: {
+        [ScreenSize.LARGE]?: string;
+        [ScreenSize.MEDIUM]?: string;
+        [ScreenSize.SMALL]?: string;
+      };
       containerPadding?: {
         [ScreenSize.LARGE]?: string;
         [ScreenSize.MEDIUM]?: string;
@@ -110,6 +125,7 @@ export default createTheme({
     values: { xs, sm, md, lg, xl },
   },
   sizing: {
+    headerPadding,
     containerPadding,
     xxSmPadding,
     xSmPadding,
