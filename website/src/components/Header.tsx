@@ -123,7 +123,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
               ))}
             </StyledFlexBox>
           </Box>
-          <StyledFlexBox direction="row">
+          <StyledFlexBox direction="row" justify="flex-end">
             
             <StyledFlexBox
               id={id}
@@ -135,6 +135,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
               justify="center"
               gap={theme.sizing.smPadding}
               width="183px"
+              maxWidth="183px"
               height="54px"
               sx={{
                 border: theme.sizing.dividerBorder,
