@@ -19,6 +19,7 @@ export default function PlayGames({ screenSize }: IPlayGames) {
       direction="row"
       alignItems="center"
       justifyContent={screenSize !== ScreenSize.LARGE ? 'center' : 'normal'}
+      gap='48px'
     >
       <Grid
         order={screenSize !== ScreenSize.LARGE ? 2 : 1}
@@ -26,17 +27,49 @@ export default function PlayGames({ screenSize }: IPlayGames) {
         sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
       >
         <StyledFlexBox
-          align={screenSize !== ScreenSize.LARGE ? 'center' : 'flex-end'}
+          align='center'
           sx={{ width: '100%' }}
         >
-          <Box>
-            <Box
-              width="100%"
-              component="img"
-              src={gameViewMobileImg}
-              alt="mobile-game-play"
-            />
-          </Box>
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            width: 'fit-content',
+            height: 'fit-content',
+          }}
+        >
+          {/* Large radial gradient "smoke" background */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '150%',
+              height: '200%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 0,
+              background:
+                'radial-gradient(circle, rgba(210,210,210,0.5) 25%, rgba(210,210,210,0) 45%)',
+              pointerEvents: 'none',
+              filter: 'blur(8px)',
+            }}
+          />
+          {/* The phone image */}
+          <img
+            src={gameViewMobileImg}
+            alt='mobile-game-play'
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              borderRadius: '16px',
+              display: 'block',
+              width: '100%',
+              height: '100%',
+            }}
+          />
+        </Box>
         </StyledFlexBox>
       </Grid>
 
@@ -47,8 +80,7 @@ export default function PlayGames({ screenSize }: IPlayGames) {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent:
-            screenSize === ScreenSize.LARGE ? 'flex-start' : 'center',
+          justifyContent: 'flex-start'
         }}
       >
         <StyledFlexBox

@@ -27,7 +27,7 @@ export default function CentralAndHost({ screenSize }: ICentralAndHost) {
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'flex-end',
+          justifyContent: 'flex-start',
         }}
       >
         <StyledFlexBox
@@ -90,7 +90,7 @@ export default function CentralAndHost({ screenSize }: ICentralAndHost) {
         >
           <Box
             component="img"
-            width={screenSize === ScreenSize.SMALL ? '353px' : '595px'}
+            width='100%'
             src={gameScreen}
             alt="righton-gamescreen"
           />
