@@ -43,6 +43,9 @@ const StyledSponsorDivider = styled(StyledFlexBox)(({ theme }) => ({
   },
   scrollbarWidth: 'none',
   msOverflowStyle: 'none',
+  paddingTop: `${theme.sizing.smPadding}px`,
+  paddingBottom: `${theme.sizing.smPadding}px`,
+  boxSizing: 'border-box'
 }));
 
 interface HomePageProps {
@@ -87,31 +90,14 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
         </StyledFlexBox>
 
         {/* Teachers CTA button */}
-        <StyledFlexBox
-          direction={screenSize === ScreenSize.LARGE ? 'row' : 'column'}
-          align="center"
-          justify="center"
-          gap={
-            screenSize === ScreenSize.SMALL
-              ? theme.sizing.mdPadding
-              : theme.sizing.lgPadding
-          }
-          width="100%"
-        >
-          <GameCTAButtons screenSize={screenSize} />
-        </StyledFlexBox>
+        <GameCTAButtons screenSize={screenSize} />
       </StyledFlexBox>
 
       {/* Sponsors Divider */}
       <StyledSponsorDivider>
         <StyledFlexBox direction="row" align="center" gap={24}>
           {imageArr.map(({ image, alt }, i) => (
-            <Box
-              key={alt}
-              sx={{ width: `${theme.sizing.sponsorImageWidth}px`, zIndex: 5 }}
-            >
-              <img src={image} alt={alt} />
-            </Box>
+              <img src={image} alt={alt} style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}/>
           ))}
         </StyledFlexBox>
       </StyledSponsorDivider>

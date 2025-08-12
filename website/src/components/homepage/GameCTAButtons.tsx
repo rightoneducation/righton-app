@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 import magicMathHat from '../../images/mathSymbolsHat.svg';
@@ -16,18 +16,17 @@ export default function GameCTAButtons({
 }: CTAButtonProps) {
   const theme = useTheme();
   return (
-    <>
+    <Box 
+      style={{
+        display: 'flex',
+        flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: screenSize === ScreenSize.LARGE ? `${theme.sizing.lgPadding}px` : `${theme.sizing.mdPadding}px`,
+        width: '100%',
+      }}
+    >
       {/* Teachers CTA button */}
-      <a
-        href="https://central.rightoneducation.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ 
-          textDecoration: 'none',
-          width: screenSize === ScreenSize.SMALL ? '100%' : 'auto',
-          display: screenSize === ScreenSize.SMALL ? 'block' : 'inline-block'
-        }}
-      >
         <StyledFlexBox
           direction="row"
           align="center"
@@ -41,19 +40,20 @@ export default function GameCTAButtons({
             cursor: 'pointer',
             transition: 'background-color 0.2s ease',
             '&:hover': {
-              backgroundColor:
-                screenSize === ScreenSize.LARGE ? '#e8e8e8' : 'transparent',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
             },
           }}
+          onClick={() => {
+            window.open('https://central.rightoneducation.com', '_blank');
+          }}
         >
-          <StyledFlexBox>
-            <img
-              src={pinkCreature}
-              alt="pink-righton-creature"
-              width="60px"
-              height="60px"
-            />
-          </StyledFlexBox>
+          <img
+            src={pinkCreature}
+            alt="pink-righton-creature"
+            width="60px"
+            height="60px"
+          />
+          
           <StyledFlexBox
             direction="column"
             align="flex-start"
@@ -79,22 +79,13 @@ export default function GameCTAButtons({
             >
               Create, edit, and host games
             </Typography>
-          </StyledFlexBox>
+            </StyledFlexBox>
         </StyledFlexBox>
-      </a>
+      
       {/* Students CTA button */}
-      <a
-        href="https://play.rightoneducation.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ 
-          textDecoration: 'none',
-          width: screenSize === ScreenSize.SMALL ? '100%' : 'auto',
-          display: screenSize === ScreenSize.SMALL ? 'block' : 'inline-block'
-        }}
-      >
         <StyledFlexBox
           direction="row"
+          justify='flex-start'
           align="center"
           borderRadius={theme.sizing.mdPadding}
           gap={theme.sizing.smPadding}
@@ -106,19 +97,19 @@ export default function GameCTAButtons({
             cursor: 'pointer',
             transition: 'background-color 0.2s ease',
             '&:hover': {
-              backgroundColor:
-                screenSize === ScreenSize.LARGE ? '#e8e8e8' : 'transparent',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
             },
           }}
+          onClick={() => {
+            window.open('https://central.rightoneducation.com', '_blank');
+          }}
         >
-          <StyledFlexBox>
-            <img
-              src={magicMathHat}
-              alt="math-symbols-hat"
-              width="60px"
-              height="60px"
-            />
-          </StyledFlexBox>
+          <img
+            src={magicMathHat}
+            alt="math-symbols-hat"
+            width="60px"
+            height="60px"
+          />
           <StyledFlexBox
             direction="column"
             align="flex-start"
@@ -146,7 +137,6 @@ export default function GameCTAButtons({
             </Typography>
           </StyledFlexBox>
         </StyledFlexBox>
-      </a>
-    </>
+    </Box>
   );
 }
