@@ -8,6 +8,18 @@ export const createUser = /* GraphQL */ `
   ) {
     createUser(input: $input, condition: $condition) {
       id
+      email
+      userName
+      password
+      points
+      currentStreak
+      maxStreak
+      globalRank
+      topSubjects
+      accuracy
+      hasAnsweredToday
+      lastAnsweredDate
+      sessions
       createdAt
       updatedAt
       __typename
@@ -21,6 +33,18 @@ export const updateUser = /* GraphQL */ `
   ) {
     updateUser(input: $input, condition: $condition) {
       id
+      email
+      userName
+      password
+      points
+      currentStreak
+      maxStreak
+      globalRank
+      topSubjects
+      accuracy
+      hasAnsweredToday
+      lastAnsweredDate
+      sessions
       createdAt
       updatedAt
       __typename
@@ -34,6 +58,18 @@ export const deleteUser = /* GraphQL */ `
   ) {
     deleteUser(input: $input, condition: $condition) {
       id
+      email
+      userName
+      password
+      points
+      currentStreak
+      maxStreak
+      globalRank
+      topSubjects
+      accuracy
+      hasAnsweredToday
+      lastAnsweredDate
+      sessions
       createdAt
       updatedAt
       __typename
@@ -48,6 +84,12 @@ export const createDailyQuestion = /* GraphQL */ `
     createDailyQuestion(input: $input, condition: $condition) {
       id
       createdAt
+      topic
+      imageUrl
+      shareCount
+      question
+      answerAnalytics
+      comments
       updatedAt
       __typename
     }
@@ -61,6 +103,12 @@ export const updateDailyQuestion = /* GraphQL */ `
     updateDailyQuestion(input: $input, condition: $condition) {
       id
       createdAt
+      topic
+      imageUrl
+      shareCount
+      question
+      answerAnalytics
+      comments
       updatedAt
       __typename
     }
@@ -74,6 +122,12 @@ export const deleteDailyQuestion = /* GraphQL */ `
     deleteDailyQuestion(input: $input, condition: $condition) {
       id
       createdAt
+      topic
+      imageUrl
+      shareCount
+      question
+      answerAnalytics
+      comments
       updatedAt
       __typename
     }

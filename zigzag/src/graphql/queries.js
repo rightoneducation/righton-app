@@ -5,6 +5,18 @@ export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
+      email
+      userName
+      password
+      points
+      currentStreak
+      maxStreak
+      globalRank
+      topSubjects
+      accuracy
+      hasAnsweredToday
+      lastAnsweredDate
+      sessions
       createdAt
       updatedAt
       __typename
@@ -20,6 +32,18 @@ export const listUsers = /* GraphQL */ `
     listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        email
+        userName
+        password
+        points
+        currentStreak
+        maxStreak
+        globalRank
+        topSubjects
+        accuracy
+        hasAnsweredToday
+        lastAnsweredDate
+        sessions
         createdAt
         updatedAt
         __typename
@@ -34,6 +58,12 @@ export const getDailyQuestion = /* GraphQL */ `
     getDailyQuestion(id: $id) {
       id
       createdAt
+      topic
+      imageUrl
+      shareCount
+      question
+      answerAnalytics
+      comments
       updatedAt
       __typename
     }
@@ -48,6 +78,50 @@ export const listDailyQuestions = /* GraphQL */ `
     listDailyQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        createdAt
+        topic
+        imageUrl
+        shareCount
+        question
+        answerAnalytics
+        comments
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const userByEmail = /* GraphQL */ `
+  query UserByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        userName
+        password
+        points
+        currentStreak
+        maxStreak
+        globalRank
+        topSubjects
+        accuracy
+        hasAnsweredToday
+        lastAnsweredDate
+        sessions
         createdAt
         updatedAt
         __typename

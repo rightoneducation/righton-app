@@ -35,8 +35,8 @@
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-zigzag-dev-115250-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apizigzag"
       },
-      "lastPushTimeStamp": "2025-07-29T04:59:12.568Z",
-      "lastPushDirHash": "yz8JQN/xRn8+X+Ice5PR1J5D9RU="
+      "lastPushTimeStamp": "2025-08-11T15:40:11.080Z",
+      "lastPushDirHash": "4mMR/Wa4TQr9ZLsIgwlRVpQEMlg="
     }
   }
 }
