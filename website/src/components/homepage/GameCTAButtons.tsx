@@ -22,16 +22,20 @@ export default function GameCTAButtons({
         href="https://central.rightoneducation.com"
         target="_blank"
         rel="noopener noreferrer"
-        style={{ textDecoration: 'none', width: '100%' }}
+        style={{ 
+          textDecoration: 'none',
+          width: screenSize === ScreenSize.SMALL ? '100%' : 'auto',
+          display: screenSize === ScreenSize.SMALL ? 'block' : 'inline-block'
+        }}
       >
         <StyledFlexBox
           direction="row"
           align="center"
           borderRadius={theme.sizing.mdPadding}
           gap={theme.sizing.smPadding}
-          width={screenSize === ScreenSize.SMALL ? '369px' : '356px'}
+          width={screenSize === ScreenSize.SMALL ? '100%' : '356px'}
           sx={{
-            maxWidth: screenSize === ScreenSize.SMALL ? '369px' : '356px',
+            maxWidth: screenSize === ScreenSize.SMALL ? '100%' : '356px',
             border: theme.sizing.dividerBorder,
             padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
             cursor: 'pointer',
@@ -83,17 +87,20 @@ export default function GameCTAButtons({
         href="https://play.rightoneducation.com"
         target="_blank"
         rel="noopener noreferrer"
-        style={{ textDecoration: 'none' }}
+        style={{ 
+          textDecoration: 'none',
+          width: screenSize === ScreenSize.SMALL ? '100%' : 'auto',
+          display: screenSize === ScreenSize.SMALL ? 'block' : 'inline-block'
+        }}
       >
         <StyledFlexBox
           direction="row"
           align="center"
           borderRadius={theme.sizing.mdPadding}
           gap={theme.sizing.smPadding}
-          width={screenSize === ScreenSize.SMALL ? '500px' : '356px'}
+          width={screenSize === ScreenSize.SMALL ? '100%' : '356px'}
           sx={{
-            width: '100%',
-            maxWidth: screenSize === ScreenSize.SMALL ? '500px' : '356px',
+            maxWidth: screenSize === ScreenSize.SMALL ? '100%' : '356px',
             border: theme.sizing.dividerBorder,
             padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
             cursor: 'pointer',
