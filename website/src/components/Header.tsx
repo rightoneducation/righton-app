@@ -124,7 +124,6 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
             </StyledFlexBox>
           </Box>
           <StyledFlexBox direction="row" justify="flex-end">
-            
             <StyledFlexBox
               id={id}
               onMouseEnter={handleMenuMouseEnter}
