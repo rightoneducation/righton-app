@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
@@ -463,8 +463,8 @@ export function HowItWorks() { // eslint-disable-line
               gap: screenSize === ScreenSize.LARGE? '48px' : '72px',
               alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
             }}>
-              <LeftBox sx={{width: leftBoxWidth,
-              }}>
+              <Grid container spacing={6}>
+              <Grid size={{md: 12, lg: 5}}>
                 <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
@@ -506,20 +506,17 @@ export function HowItWorks() { // eslint-disable-line
                     Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
                   </Box>
                 )}
-              </LeftBox>
-              <RightBox sx={{width: leftBoxWidth,
-              }}>
+              </Grid>
+              <Grid size={{md: 12, lg: 7}}>
                 <img
                 src={LogicModel}
                 alt='Devices'
                 style={{
-                  width: logicModelWidth,
-                  marginLeft: '102px',
-                  marginRight: '102px',
+                  width: '100%',
                   boxSizing: 'border-box',
                 }}
                 />
-                <MonsterAndTextContainer >
+                {/* <MonsterAndTextContainer >
                   <img
                     src={BlueMonster}
                     alt='BlueMonster'
@@ -541,9 +538,10 @@ export function HowItWorks() { // eslint-disable-line
                       width: blueMonsterWidth,
                     }}
                   />
-                </MonsterAndTextContainer>
-              </RightBox>
-              {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
+                </MonsterAndTextContainer> */}
+                </Grid>
+              </Grid>
+              {/* {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
                 <Box
                   component="button"
                   sx={{
@@ -564,7 +562,7 @@ export function HowItWorks() { // eslint-disable-line
                 >
                   Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
                 </Box>
-              )}
+              )} */}
           </ThirdContainerContent>
         </ThirdContainer>
         
