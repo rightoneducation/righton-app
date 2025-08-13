@@ -89,6 +89,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
         align="center"
         justify= 'space-between'
         gap={screenSize === ScreenSize.LARGE ? theme.sizing.mdPadding : 0}
+        style={{width: '100%'}}
       >
         {screenSize === ScreenSize.LARGE ? (
           <>
@@ -101,7 +102,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
               width='216px'
               height='96px'
             />
-            <StyledFlexBox direction="row" align="center" gap={24}>
+            <Box style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '24px'}}>
               {links.map((link) => (
                 <StyledText
                   onClick={() => navigate(link.path)}
@@ -113,7 +114,6 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                     }),
                     cursor: 'pointer',
                     padding: '4px 12px',
-                    // whiteSpace: 'nowrap'
                   }}
                   key={link.title}
                   fontSize="20px"
@@ -121,9 +121,9 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                   {link.title}
                 </StyledText>
               ))}
-            </StyledFlexBox>
+            </Box>
           </Box>
-          <StyledFlexBox direction="row" justify="flex-end">
+          <Box>
             <StyledFlexBox
               id={id}
               onMouseEnter={handleMenuMouseEnter}
@@ -153,7 +153,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                 />
               </SelectArrowContainer>
             </StyledFlexBox>
-          </StyledFlexBox>
+          </Box>
         </>
         ) : (
           <Box style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
