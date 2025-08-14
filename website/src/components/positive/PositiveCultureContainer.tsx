@@ -37,7 +37,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
             padding:
               screenSize === ScreenSize.SMALL ? smallPadding : medPadding,
             zIndex: 0,
-            gap: primaryGap,
+            gap: largestGap,
             boxSizing: 'border-box',
           }}
         >
@@ -197,7 +197,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: primaryGap,
+              gap: largestGap,
             }}
           >
             <Box
@@ -308,7 +308,8 @@ export function PositiveCultureContainer ({// eslint-disable-line
               alignItems: 'center',
               paddingLeft: '144px',
               paddingRight: '144px',
-              gap: tertiaryGap,
+              gap: secondaryGap,
+              boxSizing: 'border-box',
             }}
           >
             <Typography
@@ -369,14 +370,14 @@ export function PositiveCultureContainer ({// eslint-disable-line
                 display: 'flex',
                 flexDirection: 'column',
                 maxWidth: '640px',
-                gap: secondaryGap,
+                gap: primaryGap,
               }}
             >
               <Box
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: tertiaryGap,
+                  gap: secondaryGap,
                 }}
               >
                 <Box>
@@ -432,6 +433,10 @@ export function PositiveCultureContainer ({// eslint-disable-line
                   borderRadius: '24px',
                   padding: '16px 24px',
                   gap: '12px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  window.open('https://www.youtube.com/@RightOnEducation/videos', '_blank');
                 }}
               >
                 <Typography

@@ -57,7 +57,7 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
               padding:
                 screenSize === ScreenSize.SMALL ? smallPadding : medPadding,
               boxSizing: 'border-box',
-              gap: primaryGap,
+              gap: largestGap,
             }}
           >
             <Box
@@ -68,7 +68,7 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
                 justifyContent: 'center',
                 width: '100%',
                 height: '100%',
-                gap: tertiaryGap,
+                gap: secondaryGap,
               }}
             >
               {/* TODO: title text */}
@@ -104,8 +104,8 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
               <Typography
                 sx={{
                   width: '100%',
-                  fontSize: '24px',
-                  lineHeight: '30px',
+                  fontSize: '20px',
+                  lineHeight: '24px',
                   fontFamily: 'Poppins, sans-serif',
                   fontWeight: 400,
                   color: '#FFFFFF',

@@ -49,6 +49,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
   const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
   const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];
   const largePadding = theme.sizing.containerPadding[ScreenSize.LARGE];
+  const largestGap = `${theme.sizing.xLgPadding}px`;
   const primaryGap = `${theme.sizing.lgPadding}px`;
   const secondaryGap = `${theme.sizing.mdPadding}px`;
   const tertiaryGap = `${theme.sizing.smPadding}px`;
@@ -100,7 +101,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
               padding:
                 screenSize === ScreenSize.SMALL ? smallPadding : medPadding,
               boxSizing: 'border-box',
-              gap: primaryGap,
+              gap: largestGap,
             }}
           >
             <Box
@@ -112,7 +113,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 width: '100%',
                 height: '100%',
                 boxSizing: 'border-box',
-                gap: tertiaryGap,
+                gap: secondaryGap,
               }}
             >
               {/* TODO: title text */}
@@ -174,7 +175,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 paddingLeft: screenSize === ScreenSize.SMALL ? '0px' : '60px',
                 paddingRight: screenSize === ScreenSize.SMALL ? '0px' : '60px',
                 boxSizing: 'border-box',
-                gap: tertiaryGap,
+                gap: secondaryGap,
               }}
             >
               <Box
@@ -188,7 +189,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                   gap: primaryGap,
                 }}
               >
-                <Box>
+                <Box style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', gap: secondaryGap}}>
                   {/* TODO: title text */}
                   <Typography
                     sx={{
@@ -231,7 +232,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     answer.
                   </Typography>
                 </Box>
-                <Box>
+                <Box style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', gap: secondaryGap}}>
                   {/* TODO: title text */}
                   <Typography
                     sx={{
@@ -390,7 +391,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: tertiaryGap,
+                    gap: secondaryGap,
                   }}
                 >
                   {screenSizeZigZag === ScreenSize.MEDIUM && (
@@ -413,7 +414,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: tertiaryGap,
+                      gap: secondaryGap,
                     }}
                   >
                     <Swiper
@@ -467,14 +468,6 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 </Box>
               </Box>
             </Box>
-            {/* horizontal line */}
-            <Box
-              style={{
-                width: '100%',
-                height: '1px',
-                background: '#FFF',
-              }}
-            />
           </Box>
         </Box>
       );
@@ -498,7 +491,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
               height: '100%',
               padding: largePadding,
               boxSizing: 'border-box',
-              gap: primaryGap,
+              gap: largestGap,
             }}
           >
             <Box
@@ -512,7 +505,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 paddingLeft: '166px',
                 paddingRight: '166px',
                 boxSizing: 'border-box',
-                gap: tertiaryGap,
+                gap: secondaryGap
               }}
             >
               {/* TODO: title text */}
@@ -548,8 +541,8 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
               <Typography
                 sx={{
                   width: '100%',
-                  fontSize: '24px',
-                  lineHeight: '30px',
+                  fontSize: '20px',
+                  lineHeight: '24px',
                   fontFamily: 'Poppins, sans-serif',
                   fontWeight: 400,
                   color: '#FFFFFF',
@@ -574,7 +567,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 paddingLeft: '166px',
                 paddingRight: '166px',
                 boxSizing: 'border-box',
-                gap: tertiaryGap,
+                gap: secondaryGap,
               }}
             >
               <Box
@@ -683,7 +676,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 justifyContent: 'center',
                 width: '100%',
                 height: '100%',
-                gap: secondaryGap,
+                gap: primaryGap,
               }}
             >
               <Box>
@@ -758,7 +751,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 justifyContent: 'center',
                 width: '100%',
                 height: '100%',
-                gap: secondaryGap,
+                gap: primaryGap,
               }}
             >
               <Box>
@@ -777,7 +770,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                   maxWidth: '600px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: tertiaryGap,
+                  gap: '12px',
                 }}
               >
                 <Box
@@ -833,7 +826,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 justifyContent: 'center',
                 width: '100%',
                 height: '100%',
-                gap: secondaryGap,
+                gap: primaryGap,
               }}
             >
               <Box>
@@ -852,7 +845,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                   maxWidth: '600px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: tertiaryGap,
+                  gap: '12px',
                 }}
               >
                 <Box
