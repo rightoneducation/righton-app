@@ -32,6 +32,9 @@ import AnnaBack from '../images/headshots/anna/Headshot_Anna_Back.png';
 import MozzieDefault from '../images/headshots/mozzie/Headshot_Mozzie_Default.png';
 import MozzieHover from '../images/headshots/mozzie/Headshot_Mozzie_Hover.png';
 import MozzieBack from '../images/headshots/mozzie/Headshot_Mozzie_Back.png';
+import RodDefault from '../images/headshots/rod/Headshot_Rod_Default.png';
+import RodHover from '../images/headshots/rod/Headshot_Rod_Hover.png';
+import RodBack from '../images/headshots/rod/Headshot_Rod_Back.png';
 import RonaldDefault from '../images/headshots/ronald/Headshot_Ronald_Default.png';
 import RonaldHover from '../images/headshots/ronald/Headshot_Ronald_Hover.png';
 import RonaldBack from '../images/headshots/ronald/Headshot_Ronald_Back.png';
@@ -54,10 +57,10 @@ export const teamArr = [
     defaultImg: AnnaDefault,
     hoverImg: AnnaHover,
     backImg: AnnaBack,
-    name: 'Anna Roberds',
+    name: 'Anna Roberds-Sim',
     title: 'Math Educator',
     title2: 'Curriculum Program Manager',
-    linkedIn: 'https://www.rightoneducation.com/images/anna-name.png',
+    linkedIn: 'https://www.linkedin.com/in/anna-roberds/',
   },
   {
     defaultImg: ChrisDefault,
@@ -81,8 +84,8 @@ export const teamArr = [
     hoverImg: DrewHover,
     backImg: DrewBack,
     name: 'Drew Hart',
-    title: 'Development Lead',
-    linkedIn: 'https://www.rightoneducation.com/images/drew-name.png',
+    title: 'Engineering Lead',
+    linkedIn: 'https://www.linkedin.com/in/drewjhart/',
   },
   {
     defaultImg: ImanDefault,
@@ -145,13 +148,21 @@ export const teamArr = [
     linkedIn: 'https://www.linkedin.com/in/muhammad-qureshi-22918218b/',
   },
   {
+    defaultImg: RodDefault,
+    hoverImg: RodHover,
+    backImg: RodBack,
+    name: 'Rod Hinn',
+    title: 'U/X Lead',
+    linkedIn: 'https://www.linkedin.com/in/rodhinn/',
+  },
+  {
     defaultImg: RonaldDefault,
     hoverImg: RonaldHover,
     backImg: RonaldBack,
     name: 'Ronald Towns',
     title: 'STEM Administrator',
     title2: 'Math PD',
-    linkedIn: 'https://www.rightoneducation.com/images/ronald-name.png',
+    linkedIn: 'https://www.linkedin.com/in/ronaldtowns/',
   },
   {
     defaultImg: SinclairDefault,
@@ -181,6 +192,7 @@ export const educatorData = [
   secondary mathematics.`,
     cardShade: '#BE3647',
     gradient: 'linear-gradient(to bottom, rgba(254,74,97,1),rgba(190,54,71,1))',
+    linkedIn: 'https://www.linkedin.com/in/andrea-ruby-b66280279/'
   },
   {
     img: AyNurNajm,
@@ -200,6 +212,7 @@ export const educatorData = [
     cardShade: '#6393B8',
     gradient:
       'linear-gradient(to bottom, rgba(149,208,254,1),rgba(99,147,185,1))',
+      linkedIn: 'https://www.linkedin.com/in/ay-nur-najm/'
   },
   {
     img: BenWoodford,
@@ -216,6 +229,7 @@ export const educatorData = [
     cardShade: '#B22E5D',
     gradient:
       'linear-gradient(to bottom, rgba(226,97,143,1), rgba(178,46,93,1))',
+    linkedIn: 'https://www.linkedin.com/in/benjamin-s-woodford-ph-d-32153952/'
   },
   {
     id: 3,

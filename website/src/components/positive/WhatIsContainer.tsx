@@ -14,8 +14,8 @@ export const WhatIsContainer = ({ screenSize }: WhatIsContainerProps) => { // es
   const smallPadding = theme.sizing.containerPadding[ScreenSize.SMALL];
   const medPadding = theme.sizing.containerPadding[ScreenSize.MEDIUM];
   const largePadding = theme.sizing.containerPadding[ScreenSize.LARGE];
-  const primaryGap = `${theme.sizing.lgPadding}px`;
-  const secondaryGap = `${theme.sizing.mdPadding}px`;
+  const primaryGap = `${theme.sizing.xLgPadding}px`;
+  const secondaryGap = `${theme.sizing.lgPadding}px`;
 
   const positiveCultureTextMap = [
     'Encourage risk-taking',

@@ -15,7 +15,7 @@ export default function FlipCard({ front, back }: FlipCardProps) {
       onClick={() => setFlipped(!flipped)}
       sx={{
         width: '250px',
-        height: '400px',
+        height: '302px',
         perspective: '1000px',
         cursor: 'pointer',
       }}

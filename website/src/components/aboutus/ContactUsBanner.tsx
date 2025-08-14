@@ -24,10 +24,10 @@ export default function ContactUsBanner({ screenSize }: IContactUsBanner) {
         padding: `${theme.sizing.mdPadding}px`,
       }}
     >
-      <StyledText fontWeight={700} fontSize="24px">
+      <StyledText fontWeight={700} fontSize="24px" style={{color: '#E5E7EB'}}>
         Contact us{screenSize === ScreenSize.SMALL ? '' : ':'}
       </StyledText>
-      <StyledText lineHeight={1.3} sx={{ fontSize: '24px ' }}>
+      <StyledText lineHeight='31px' sx={{ fontSize: '24px ' }}>
         info@rightoneducation.com
       </StyledText>
     </StyledFlexBox>

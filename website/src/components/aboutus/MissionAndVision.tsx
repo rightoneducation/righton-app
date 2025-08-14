@@ -24,7 +24,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
     >
       <Box
         sx={{
-          padding: screenSize === ScreenSize.SMALL ? '22px' : '45px 32px',
+          padding: screenSize === ScreenSize.SMALL ? '32px 22px' : '45px 32px',
           borderRadius: '24px',
           background: 'rgb(128,13,21)',
           width: screenSize === ScreenSize.SMALL ? '100%' : '526px',
@@ -39,13 +39,12 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
           alignItems="flex-start"
           gap={6}
           sx={{
-            // padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px' : '32px 0px 12px 19px',
             maxWidth: '462px',
             width: '100%',
           }}
         >
           <Typography
-            fontSize="48px"
+            fontSize={screenSize === ScreenSize.SMALL ? '30px' : '48px'}
             fontFamily="Roboto"
             fontWeight={700}
             lineHeight="44px"
@@ -57,7 +56,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
           <Divider
             orientation="horizontal"
             sx={{
-              borderBottomWidth: '6px',
+              borderBottomWidth: '4px',
               borderColor: 'rgb(226, 155, 93)',
               width: '100%',
             }}
@@ -125,11 +124,6 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
         }}
       >
         <StyledFlexBox
-          sx={
-            {
-              // padding: screenSize === ScreenSize.SMALL ? '32px 19px 12px 19px':  '32px 0px 12px 19px'
-            }
-          }
           gap={6}
         >
           <Typography
@@ -144,7 +138,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
           <Divider
             orientation="horizontal"
             sx={{
-              borderBottomWidth: '6px',
+              borderBottomWidth: '4px',
               borderColor: 'rgb(226, 155, 93)',
               width: '100%',
               maxWidth: '462px',

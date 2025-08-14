@@ -72,12 +72,12 @@ export default function ValueCards({ screenSize }: IValueCards) {
       }}
     >
       {ourValues.map(({ title, subText, img, imgBgColor, textBgColor }, i) => (
-        <StyledFlexBox key={title} direction="row" gap={0}>
+        <StyledFlexBox key={title} direction="row" gap={0} sx={{ width: screenSize === ScreenSize.SMALL ? '100%' : '355px' }}>
           {/* Image */}
           <StyledFlexBox
             sx={{
               backgroundColor: imgBgColor,
-              width: '100%',
+              width: '160px',
               borderTopLeftRadius: '24px',
               borderBottomLeftRadius: '24px',
             }}

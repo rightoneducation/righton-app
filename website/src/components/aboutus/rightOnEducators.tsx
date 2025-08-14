@@ -29,18 +29,18 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
     <Box
       width="100%"
       sx={{
-        '& .swiper-pagination-bullet': {
-          width: `${theme.sizing.xxSmPadding}px`,
-          height: `${theme.sizing.xxSmPadding}px`,
-          backgroundColor: '#afafaf',
+       '& .swiper-pagination': {
+          height: '20px',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         },
-        '& .swiper-pagination-bullet-active': {
-          backgroundColor: '#494949',
-        },
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        boxSizing: 'border-box',
+        '--swiper-pagination-color': `#FFF`,
+        '--swiper-pagination-bullet-inactive-color': '#afafaf',
+        '--swiper-pagination-bullet-inactive-opacity': '1',
+        '--swiper-pagination-bullet-size': '10px',
+        '--swiper-pagination-bullet-horizontal-gap': '5px',
       }}
     >
       {screenSize === ScreenSize.LARGE && (
@@ -78,7 +78,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
         ref={swiperRef}
         loop
         initialSlide={Math.floor(educatorData.length / 2) - 3}
-        spaceBetween={10}
+        spaceBetween={40}
         breakpoints={{
           0: {
             slidesPerView: 1,
@@ -97,7 +97,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
         }}
       >
         {educatorData.map(
-          ({ name, title, description, cardShade, gradient, img }, i) => (
+          ({ name, title, description, cardShade, gradient, img, linkedIn }, i) => (
             <SwiperSlide
               key={name}
               style={{
@@ -108,11 +108,14 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
               {/* card base */}
               <StyledFlexBox
                 width={screenSize === ScreenSize.LARGE ? '370px' : '100%'}
-                height="690px"
-                sx={{
+                style={{
+                  height: '690px',
                   background: cardShade,
                   borderRadius: '24px',
                   boxShadow: '10px 10px 10px rgba(0,0,0,.25)',
+                  boxSizing: 'border-box',
+                  overflow: 'hidden',
+                  paddingBottom: '26px'
                 }}
               >
                 {/* Teacher image  */}
@@ -168,7 +171,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
                         {title}
                       </Typography>
                     </StyledFlexBox>
-                    <Box component="img" src={linkedInIcon} alt="linkedIn" />
+                    <Box component="img" src={linkedInIcon} alt="linkedIn" onClick={() => window.open(linkedIn, '_blank')} style={{ cursor: 'pointer' }} />
                   </StyledFlexBox>
 
                   {/* Educator description */}
@@ -177,7 +180,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
                     sx={{
                       width: '100%',
                       background: '#fff',
-                      marginBottom: '6px',
+                      marginBottom: '6px'
                     }}
                   />
                   <Typography
@@ -186,6 +189,16 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
                     fontSize="18px"
                     lineHeight="22px"
                     fontWeight={400}
+                    sx={{
+                      height: '280px',
+                      overflow: 'auto',
+                      '&::-webkit-scrollbar': {
+                        // Chrome and Safari
+                        display: 'none',
+                      },
+                      scrollbarWidth: 'none', // Firefox
+                      '-ms-overflow-style': 'none', // IE and Edge
+                    }}
                   >
                     {description}
                   </Typography>

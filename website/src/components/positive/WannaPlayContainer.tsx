@@ -71,7 +71,7 @@ export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: secondaryGap,
+                gap: primaryGap,
               }}
             >
               {/* TODO: Wanna Play top text */}
@@ -80,7 +80,7 @@ export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: tertiaryGap,
+                  gap: secondaryGap,
                 }}
               >
                 <Typography
@@ -118,6 +118,9 @@ export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
                   borderRadius: secondaryGap,
                   padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
                   gap: `${theme.sizing.xSmPadding}px`,
+                }}
+                onClick={() => {
+                  window.open('mailto:info@rightoneducation.com', '_blank');
                 }}
               >
                 <Typography
@@ -194,6 +197,7 @@ export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
             zIndex: 0,
             gap: largestGap,
             position: 'relative',
+            boxSizing: 'border-box',
           }}
         >
           {/* Background Image */}
@@ -219,7 +223,7 @@ export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
               justifyContent: 'center',
               width: '100%',
               height: '100%',
-              gap: largestGap,
+              gap: '172px',
               zIndex: 1,
             }}
           >
