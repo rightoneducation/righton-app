@@ -9,6 +9,7 @@ import {
 import { ScreenSize } from '../../lib/WebsiteModels';
 import { teamArr } from '../../lib/TeamData';
 import LinkedInIcon from '../../images/LinkedIn.svg';
+import TeamPaginationContainerStyled from '../../lib/styledcomponents/TeamPaginationContainerStyled';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -35,27 +36,28 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
           scrollbarWidth: 'none', // Firefox
           msOverflowStyle: 'none', // IE
           boxSizing: 'border-box',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         {teamArr.map(
-          ({ defaultImg, hoverImg, backImg, name, title, title2 }, i) => (
+          ({ defaultImg, hoverImg, backImg, name, title, title2, linkedIn }, i) => (
             <Grid
               key={`${name}-${title}`}
               size={{ xs: 12, sm: 6, md: 6, lg: 3 }}
-              height="372px"
+              height="400px"
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                gap: '10px'
               }}
             >
               <FlipCard
                 front={
-                  <>
                     <Box
                       sx={{
                         width: '252px',
-                        height: '302px',
                         cursor: 'pointer',
                         position: 'relative',
                         '.default-img': { opacity: 1 },
@@ -99,11 +101,23 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
                         className="hover-img"
                       />
                     </Box>
-
-                    {/* member name & title(s) */}
-                    <StyledFlexBox width="252px" height="70px" gap={5}>
+                }
+                back={
+                    <Box
+                      width="252px"
+                      component="img"
+                      src={backImg}
+                      alt={`${name}-${i}`}
+                    />
+                }
+              />
+               {/* member name & title(s) */}
+               <Box 
+                 width="252px" 
+                 height="70px"
+                 style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: '5px'}}
+               >
                       {/* member img */}
-
                       <StyledFlexBox
                         direction="row"
                         align="flex-end"
@@ -122,57 +136,8 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
                           src={LinkedInIcon}
                           alt="linkedIn_icon"
                           height="25px"
-                        />
-                      </StyledFlexBox>
-
-                      <StyledText
-                        textAlign="center"
-                        fontFamily="Poppins"
-                        fontSize="17px"
-                        fontWeight={200}
-                      >
-                        {title}
-                      </StyledText>
-                      {title2 && (
-                        <StyledText
-                          textAlign="center"
-                          fontFamily="Poppins"
-                          fontSize="17px"
-                          fontWeight={200}
-                        >
-                          {title2}
-                        </StyledText>
-                      )}
-                    </StyledFlexBox>
-                  </>
-                }
-                back={
-                  <>
-                    <Box
-                      width="252px"
-                      component="img"
-                      src={backImg}
-                      alt={`${name}-${i}`}
-                    />
-                    <Box width="252px" height="70px">
-                      <StyledFlexBox
-                        direction="row"
-                        align="center"
-                        justify="center"
-                        gap={5}
-                      >
-                        <StyledText
-                          fontFamily="Poppins"
-                          fontSize="17px"
-                          fontWeight={600}
-                        >
-                          {name}
-                        </StyledText>
-                        <Box
-                          component="img"
-                          src={LinkedInIcon}
-                          alt="linkedIn_icon"
-                          height="25px"
+                          onClick={() => window.open(linkedIn, '_blank')}
+                          style={{ cursor: 'pointer' }}
                         />
                       </StyledFlexBox>
 
@@ -195,9 +160,6 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
                         </StyledText>
                       )}
                     </Box>
-                  </>
-                }
-              />
             </Grid>
           ),
         )}
@@ -208,27 +170,31 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
   // Swiper layout for medium and below
   return (
     <Box
-      width="100%"
       sx={{
-        '& .swiper-pagination-bullet': {
-          width: `${theme.sizing.xxSmPadding}px`,
-          height: `${theme.sizing.xxSmPadding}px`,
-          backgroundColor: '#afafaf',
+        width: '100%',
+        '& .swiper-pagination': {
+          height: '20px',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         },
-        '& .swiper-pagination-bullet-active': {
-          backgroundColor: '#494949',
-        },
+        '--swiper-pagination-color': `#FFF`,
+        '--swiper-pagination-bullet-inactive-color': '#afafaf',
+        '--swiper-pagination-bullet-inactive-opacity': '1',
+        '--swiper-pagination-bullet-size': '10px',
+        '--swiper-pagination-bullet-horizontal-gap': '5px',
       }}
     >
       <Swiper
         modules={[Pagination]}
-        pagination={{ clickable: true }}
-        ref={swiperRef}
+        pagination={{
+          clickable: true,
+        }}
         spaceBetween={theme.sizing.mdPadding}
         loop
         centeredSlidesBounds
         updateOnWindowResize
-        navigation
         breakpoints={{
           0: {
             slidesPerView: 1,
@@ -237,9 +203,10 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
             slidesPerView: 2,
           },
         }}
+        style={{ paddingBottom: '40px' }}
       >
         {teamArr.map(
-          ({ defaultImg, hoverImg, backImg, name, title, title2 }, i) => (
+          ({ defaultImg, backImg, name, title, title2, linkedIn }, i) => (
             <SwiperSlide
               key={`${name}-${title}`}
               style={{
@@ -251,115 +218,71 @@ export default function RightonTeam({ screenSize }: IRightOnTeam) {
             >
               <FlipCard
                 front={
-                  <>
-                    <Box
-                      width="252px"
-                      component="img"
-                      src={defaultImg}
-                      alt={`${name}-${i}`}
-                    />
-                    {/* member name & title(s) */}
-                    <Box width="252px" height="70px">
-                      <StyledFlexBox
-                        direction="row"
-                        align="center"
-                        justify="center"
-                        gap={5}
-                      >
-                        <StyledText
-                          fontFamily="Poppins"
-                          fontSize="17px"
-                          fontWeight={600}
-                        >
-                          {name}
-                        </StyledText>
-                        <Box
-                          component="img"
-                          src={LinkedInIcon}
-                          alt="linkedIn_icon"
-                          height="25px"
-                        />
-                      </StyledFlexBox>
-
-                      <StyledText
-                        textAlign="center"
-                        fontFamily="Poppins"
-                        fontSize="17px"
-                        fontWeight={200}
-                      >
-                        {title}
-                      </StyledText>
-                      {title2 && (
-                        <StyledText
-                          textAlign="center"
-                          fontFamily="Poppins"
-                          fontSize="17px"
-                          fontWeight={200}
-                        >
-                          {title2}
-                        </StyledText>
-                      )}
-                    </Box>
-                  </>
+                  <Box
+                    width="252px"
+                    component="img"
+                    src={defaultImg}
+                    alt={`${name}-${i}`}
+                  />
                 }
                 back={
-                  <>
-                    {/* member image */}
-                    <Box
-                      width="252px"
-                      component="img"
-                      src={backImg}
-                      alt={`${name}-${i}`}
-                    />
-                    {/* member name & title(s) */}
-                    <Box width="252px" height="70px">
-                      <StyledFlexBox
-                        direction="row"
-                        align="center"
-                        justify="center"
-                        gap={5}
-                      >
-                        <StyledText
-                          fontFamily="Poppins"
-                          fontSize="17px"
-                          fontWeight={600}
-                        >
-                          {name}
-                        </StyledText>
-                        <Box
-                          component="img"
-                          src={LinkedInIcon}
-                          height="25px"
-                          alt="linkedIn_icon"
-                        />
-                      </StyledFlexBox>
-
-                      <StyledText
-                        textAlign="center"
-                        fontFamily="Poppins"
-                        fontSize="17px"
-                        fontWeight={200}
-                      >
-                        {title}
-                      </StyledText>
-                      {title2 && (
-                        <StyledText
-                          textAlign="center"
-                          fontFamily="Poppins"
-                          fontSize="17px"
-                          fontWeight={200}
-                        >
-                          {title2}
-                        </StyledText>
-                      )}
-                    </Box>
-                  </>
+                  <Box
+                    width="252px"
+                    component="img"
+                    src={backImg}
+                    alt={`${name}-${i}`}
+                  />
                 }
               />
+              {/* member name & title(s) */}
+                <Box width="252px" height="70px">
+                <StyledFlexBox
+                  direction="row"
+                  align="center"
+                  justify="center"
+                  gap={5}
+                >
+                  <StyledText
+                    fontFamily="Poppins"
+                    fontSize="17px"
+                    fontWeight={600}
+                  >
+                    {name}
+                  </StyledText>
+                  <Box
+                    component="img"
+                    src={LinkedInIcon}
+                    alt="linkedIn_icon"
+                    height="25px"
+                    onClick={() => window.open(linkedIn, '_blank')}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </StyledFlexBox>
+                <StyledText
+                  textAlign="center"
+                  fontFamily="Poppins"
+                  fontSize="17px"
+                  fontWeight={200}
+                >
+                  {title}
+                </StyledText>
+                {title2 && (
+                  <StyledText
+                    textAlign="center"
+                    fontFamily="Poppins"
+                    fontSize="17px"
+                    fontWeight={200}
+                  >
+                    {title2}
+                  </StyledText>
+                )}
+              </Box>
             </SwiperSlide>
           ),
         )}
+        {/* <TeamPaginationContainerStyled className="swiper-pagination-container" /> */}
       </Swiper>
+      
     </Box>
   );
 }

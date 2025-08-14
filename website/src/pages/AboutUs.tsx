@@ -73,7 +73,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
         <StyledFlexBox
           align={screenSize === ScreenSize.LARGE ? 'center' : 'normal'}
         >
-          <StyledText fontSize="16px" fontWeight={600}>
+          <StyledText fontSize="16px" fontWeight={600} style={{paddingBottom: '12px'}}>
             OUR TEAM
           </StyledText>
 
@@ -81,7 +81,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
             gap={theme.sizing.mdPadding}
             align={screenSize === ScreenSize.LARGE ? 'center' : 'normal'}
           >
-            <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2}>
+            <StyledText fontSize="40px" fontWeight={700} lineHeight="40px">
               Research and Development
             </StyledText>
             <StyledText
@@ -119,7 +119,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
           </StyledFlexBox>
         </StyledFlexBox>
         <StyledFlexBox
-          width={screenSize === ScreenSize.LARGE ? '1155px' : '100%'}
+          maxWidth={screenSize === ScreenSize.LARGE ? '1155px' : '100%'}
           gap={theme.sizing.lgPadding}
         >
           <RightonTeam screenSize={screenSize} />
@@ -134,11 +134,12 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
       >
         <StyledFlexBox
           align={screenSize === ScreenSize.LARGE ? 'center' : 'normal'}
+          gap={12}
         >
           <StyledText fontSize="16px" fontWeight={600}>
             OUR ADVISORS
           </StyledText>
-          <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2}>
+          <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2} paddingBottom='12px'>
             Educators Inform our Product Vision
           </StyledText>
           <StyledText
