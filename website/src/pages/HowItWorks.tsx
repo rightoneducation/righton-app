@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Collapse } from '@mui/material';
+import { Box, Typography, Collapse, Grid } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
@@ -171,7 +171,9 @@ const RightBox = styled(Box)(({ theme }) => ({
 
 const MonsterAndTextContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  gap: '12px'
+  gap: '12px',
+  justifyContent: 'center',
+  // width: '100%'
 }));
 
 
@@ -546,15 +548,17 @@ export function HowItWorks() { // eslint-disable-line
           boxSizing: 'border-box',
 
         }}>
-          <ThirdContainerContent sx={{flexDirection: screenSize === ScreenSize.LARGE? 'row' : 'column',
-              gap: screenSize === ScreenSize.LARGE? '48px' : '72px',
-              alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
-              border: '1px solid green'
-            }}>
-              <LeftBox sx={{width: leftBoxWidth,
-              border: '1px solid red'
-              }}>
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
+          <Grid container spacing={6} sx={{border: '1px solid red',
+            flexDirection: screenSize === ScreenSize.LARGE? 'row' : 'column',
+            gap: screenSize === ScreenSize.LARGE? '48px' : '72px',
+            alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
+            display: 'flex', 
+          }}>
+            <Grid size={{md: 12, lg: 5}} sx ={{  display: 'flex', 
+            flexDirection: 'column',
+            gap: '48px',
+            border: '1px solid white'}}>
+              <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
                   </Typography>
@@ -574,88 +578,99 @@ export function HowItWorks() { // eslint-disable-line
                   </Typography>
                 </Box>
                   {(screenSize === ScreenSize.LARGE) && (
-                  <Box
-                    component="button"
-                    sx={{
-                      borderRadius: '24px',
-                      border: '1px solid #FFFFFF',
-                      backgroundColor: 'transparent',
-                      color: '#FFFFFF',
-                      padding: '12px 24px',
-                      fontSize: '18px',
-                      fontFamily: 'Poppins, sans-serif',
-                      fontWeight: 400,
-                      cursor: 'pointer',
-                      outline: 'none',
-                      '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      },
-                    }}
-                  >
-                    Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+                  <Box>
+                    <Box
+                      component="button"
+                      sx={{
+                        borderRadius: '24px',
+                        border: '1px solid #FFFFFF',
+                        backgroundColor: 'transparent',
+                        color: '#FFFFFF',
+                        padding: '12px 24px',
+                        fontSize: '18px',
+                        fontFamily: 'Poppins, sans-serif',
+                        fontWeight: 400,
+                        cursor: 'pointer',
+                        outline: 'none',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        },
+                      }}
+                    >
+                      Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+                    </Box>
                   </Box>
+
                 )}
-              </LeftBox>
-              <RightBox sx={{width: rightBoxWidth, border: '1px solid red',
-              minWidth: '761px'
-              }}>
+
+            </Grid>
+            <Grid size={{md: 12, lg: 7}} sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                // justifyContent: 'center',
+                alignItems: 'center',
+                border: '1px solid orange',
+                // width: '100%'
+            }}>
+              <img
+              src={LogicModel}
+              alt='Devices'
+              style={{
+                // width: logicModelWidth,
+                boxSizing: 'border-box',
+                border: '1px solid white'
+              }}
+              />
+              <MonsterAndTextContainer sx ={{border: '1px solid orange'}}>
                 <img
-                src={LogicModel}
-                alt='Devices'
-                style={{
-                  width: logicModelWidth,
-                  marginLeft: '102px',
-                  marginRight: '102px',
-                  boxSizing: 'border-box',
-                }}
-                />
-                <MonsterAndTextContainer >
-                  <img
-                    src={BlueMonster}
-                    alt='BlueMonster'
-                    style={{
-                      width: blueMonsterWidth,
-                    }}
-                  />
-                  <img
-                    src={YellowMonster}
-                    alt='YellowMonster'
-                    style={{
-                      width: blueMonsterWidth,
-                    }}
-                  />
-                  <img
-                    src={PinkMonster}
-                    alt='PinkMonster'
-                    style={{
-                      width: blueMonsterWidth,
-                    }}
-                  />
-                </MonsterAndTextContainer>
-              </RightBox>
-              {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
-                <Box
-                  component="button"
-                  sx={{
-                    borderRadius: '24px',
-                    border: '1px solid #FFFFFF',
-                    backgroundColor: 'transparent',
-                    color: '#FFFFFF',
-                    padding: '12px 24px',
-                    fontSize: '18px',
-                    fontFamily: 'Poppins, sans-serif',
-                    fontWeight: 400,
-                    cursor: 'pointer',
-                    outline: 'none',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    },
+                  src={BlueMonster}
+                  alt='BlueMonster'
+                  style={{
+                    width: '100%',
                   }}
-                >
-                  Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
-                </Box>
-              )}
-          </ThirdContainerContent>
+                />
+                <img
+                  src={YellowMonster}
+                  alt='YellowMonster'
+                  style={{
+                    width: '100%',
+                  }}
+                />
+                <img
+                  src={PinkMonster}
+                  alt='PinkMonster'
+                  style={{
+                    width: '100%',
+                  }}
+                />
+              </MonsterAndTextContainer>
+
+            </Grid>
+              {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
+              <Box
+                component="button"
+                sx={{
+                  borderRadius: '24px',
+                  border: '1px solid #FFFFFF',
+                  backgroundColor: 'transparent',
+                  color: '#FFFFFF',
+                  padding: '12px 24px',
+                  fontSize: '18px',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: 400,
+                  cursor: 'pointer',
+                  outline: 'none',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
+              >
+                Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+              </Box>
+            )}
+          </Grid>
+              
         </ThirdContainer>
         
         {/* Bottom curve */}
