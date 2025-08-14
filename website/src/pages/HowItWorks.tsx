@@ -516,29 +516,29 @@ export function HowItWorks() { // eslint-disable-line
                   boxSizing: 'border-box',
                 }}
                 />
-                {/* <MonsterAndTextContainer >
+                <Box style={{display: 'flex', gap: '12px', width: '100%'}} >
                   <img
                     src={BlueMonster}
                     alt='BlueMonster'
                     style={{
-                      width: blueMonsterWidth,
+                      width: 'calc(33.333% - 8px)',
                     }}
                   />
                   <img
                     src={YellowMonster}
                     alt='YellowMonster'
                     style={{
-                      width: blueMonsterWidth,
+                      width: 'calc(33.333% - 8px)',
                     }}
                   />
                   <img
                     src={PinkMonster}
                     alt='PinkMonster'
                     style={{
-                      width: blueMonsterWidth,
+                      width: 'calc(33.333% - 8px)',
                     }}
                   />
-                </MonsterAndTextContainer> */}
+                </Box>
                 </Grid>
               </Grid>
               {/* {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
