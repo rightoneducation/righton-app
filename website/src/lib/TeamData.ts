@@ -192,6 +192,7 @@ export const educatorData = [
   secondary mathematics.`,
     cardShade: '#BE3647',
     gradient: 'linear-gradient(to bottom, rgba(254,74,97,1),rgba(190,54,71,1))',
+    linkedIn: 'https://www.linkedin.com/in/andrea-ruby-b66280279/'
   },
   {
     img: AyNurNajm,
@@ -211,6 +212,7 @@ export const educatorData = [
     cardShade: '#6393B8',
     gradient:
       'linear-gradient(to bottom, rgba(149,208,254,1),rgba(99,147,185,1))',
+      linkedIn: 'https://www.linkedin.com/in/ay-nur-najm/'
   },
   {
     img: BenWoodford,
@@ -227,6 +229,7 @@ export const educatorData = [
     cardShade: '#B22E5D',
     gradient:
       'linear-gradient(to bottom, rgba(226,97,143,1), rgba(178,46,93,1))',
+    linkedIn: 'https://www.linkedin.com/in/benjamin-s-woodford-ph-d-32153952/'
   },
   {
     id: 3,

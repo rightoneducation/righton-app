@@ -97,7 +97,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
         }}
       >
         {educatorData.map(
-          ({ name, title, description, cardShade, gradient, img }, i) => (
+          ({ name, title, description, cardShade, gradient, img, linkedIn }, i) => (
             <SwiperSlide
               key={name}
               style={{
@@ -171,7 +171,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
                         {title}
                       </Typography>
                     </StyledFlexBox>
-                    <Box component="img" src={linkedInIcon} alt="linkedIn" />
+                    <Box component="img" src={linkedInIcon} alt="linkedIn" onClick={() => window.open(linkedIn, '_blank')} style={{ cursor: 'pointer' }} />
                   </StyledFlexBox>
 
                   {/* Educator description */}
