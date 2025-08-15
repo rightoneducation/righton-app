@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Collapse, Grid } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
@@ -10,13 +10,13 @@ import LogicModel from '../images/right-on-education.png';
 import BlueMonster from '../images/BlueMonsterHandUp.svg';
 import YellowMonster from '../images/YellowMonsterHandUp.svg';
 import PinkMonster from '../images/PinkMonsterHandUp.svg';
+import Minus from '../images/Minus.svg';
+import Plus from '../images/Plus.svg';
 import TopCurve from '../images/TopCurve.png';
 import BottomCurve from '../images/BottomCurve.png';
 import { ScreenSize } from '../lib/WebsiteModels';
 import StepImage from '../lib/styledcomponents/HowItWorks/StepImage';
 import VennDiagram from '../components/VennDiagram';
-
-
 
 const MainContainer = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -116,12 +116,13 @@ const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
   gap: '12px',
 }));
 
+
+// Third Container Content
 const ThirdContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   boxSizing: 'border-box',
   alignItems: 'center',
   justifyContent: 'center',
-  // border: '1px solid white',
   backgroundColor: '#011849',
   width: '100%',
   height: '100%'
@@ -176,7 +177,79 @@ const CoverIframe = styled('iframe')(({ theme }) => ({
 
 const MonsterAndTextContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  gap: '12px'
+  gap: '12px',
+  justifyContent: 'center',
+}));
+
+
+// Fourth Container Content
+const FourthContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  boxSizing: 'border-box',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  width: '100%',
+  height: '100%',
+}));
+
+const FourthContainerContent = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  flexDirection: 'column',
+  gap: '72px',
+  width: '100%'
+}));
+
+const TopFourthBox = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  boxSizing: 'border-box',
+  flexDirection: 'column',
+  gap: '24px',
+  width: '100%'
+}));
+
+
+const BottomFourthBox = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  flexDirection: 'column',
+  gap: '24px',
+  width: '100%'
+}));
+
+const TopBox = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  boxSizing: 'border-box',
+  flexDirection: 'column',
+  gap: '24px',
+}));
+
+const BottomBox = styled(Box)(({ theme }) => ({
+  display: 'flex', 
+  boxSizing: 'border-box',
+  flexDirection: 'column',
+  gap: '12px',
+}));
+
+const ExpandableFAQ = styled(Box)(({ theme }) => ({
+  backgroundColor: '#22499C',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    backgroundColor: '#1a3a7a',
+  },
+}));
+
+const FAQHeader = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+  padding:'24px',
+  boxSizing: 'border-box',
+}));
+
+const FAQContent = styled(Box)(({ theme }) => ({
+  padding: '0px 24px 24px',
 }));
 
 
@@ -195,20 +268,29 @@ export function HowItWorks() { // eslint-disable-line
 
   let paddingValue;
   if (screenSize === ScreenSize.LARGE) {
-    paddingValue = '96px 107px';
-  } else if (screenSize === ScreenSize.MEDIUM) {
     paddingValue = '96px 72px';
+  } else if (screenSize === ScreenSize.MEDIUM) {
+    paddingValue = '60px 72px';
   } else {
     paddingValue = '60px 12px';
   }
 
-  let marginValue;
+  let SecondPagePadding;
   if (screenSize === ScreenSize.SMALL) {
-    marginValue = '60px 12px 0px';
+    SecondPagePadding = '60px 12px';
   } else if (screenSize === ScreenSize.MEDIUM) {
-    marginValue = '65px 60px 0px';
+    SecondPagePadding = '60px 72px';
   } else {
-    marginValue = null;
+    SecondPagePadding = '96px 72px';
+  }
+
+  let fourthContainerPadding;
+  if (screenSize === ScreenSize.LARGE) {
+    fourthContainerPadding = '96px 72px';
+  } else if (screenSize === ScreenSize.MEDIUM) {
+    fourthContainerPadding = '60px 72px';
+  } else {
+    fourthContainerPadding = '60px 12px';
   }
 
   let thirdContainerPadding;
@@ -225,27 +307,13 @@ export function HowItWorks() { // eslint-disable-line
     leftBoxWidth = '600px';
   } else if (screenSize === ScreenSize.SMALL) {
     leftBoxWidth = '369px';
-  } 
-
-  let logicModelWidth;
-  if (screenSize === ScreenSize.MEDIUM) {
-    logicModelWidth = '396px';
-  } else if (screenSize === ScreenSize.LARGE) {
-    logicModelWidth = 'auto';
-  } else {
-    logicModelWidth = '200px';
+  } else{
+    leftBoxWidth = '100%';
   }
 
-  let blueMonsterWidth;
-  if (screenSize === ScreenSize.MEDIUM) {
-    blueMonsterWidth = '192px';
-  } else if (screenSize === ScreenSize.SMALL) {
-    blueMonsterWidth = '115px';
-  } else {
-    blueMonsterWidth = '249px';
-  }
   
   const [selectedBox, setSelectedBox] = React.useState(0); // 0 for first, 1 for second
+  const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
 
   return (
     <MainContainer>
@@ -622,8 +690,9 @@ export function HowItWorks() { // eslint-disable-line
       </FirstContainer>
 
       {/* The second page */}
-      <SecondContainer sx={{paddingBottom: screenSize === ScreenSize.LARGE? '111.5px' : '60px'}}>
-        <SecondUpperContainerTexts sx={{margin: marginValue}}>
+      <SecondContainer sx={{padding: SecondPagePadding,
+      }}>
+        <SecondUpperContainerTexts>
           <SecondUpperContainerIntegratingText sx={{alignItems: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'flex-start' : 'center'}}>
             <Typography sx={{lineHeight: '1.1', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
               PEDAGOGY
@@ -661,13 +730,16 @@ export function HowItWorks() { // eslint-disable-line
           boxSizing: 'border-box',
 
         }}>
-          <ThirdContainerContent sx={{flexDirection: screenSize === ScreenSize.LARGE? 'row' : 'column',
-              gap: screenSize === ScreenSize.LARGE? '48px' : '72px',
-              alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
-            }}>
-              <LeftBox sx={{width: leftBoxWidth,
-              }}>
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
+          <Grid container spacing={6} sx={{
+            flexDirection: screenSize === ScreenSize.LARGE? 'row' : 'column',
+            gap: screenSize === ScreenSize.LARGE? '48px' : '72px',
+            alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
+            display: 'flex', 
+          }}>
+            <Grid size={{md: 12, lg: 5}} sx ={{  display: 'flex', 
+            flexDirection: 'column',
+            gap: '48px'}}>
+              <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
                   </Typography>
@@ -687,87 +759,95 @@ export function HowItWorks() { // eslint-disable-line
                   </Typography>
                 </Box>
                   {(screenSize === ScreenSize.LARGE) && (
-                  <Box
-                    component="button"
-                    sx={{
-                      borderRadius: '24px',
-                      border: '1px solid #FFFFFF',
-                      backgroundColor: 'transparent',
-                      color: '#FFFFFF',
-                      padding: '12px 24px',
-                      fontSize: '18px',
-                      fontFamily: 'Poppins, sans-serif',
-                      fontWeight: 400,
-                      cursor: 'pointer',
-                      outline: 'none',
-                      '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      },
-                    }}
-                  >
-                    Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+                  <Box>
+                    <Box
+                      component="button"
+                      sx={{
+                        borderRadius: '24px',
+                        border: '1px solid #FFFFFF',
+                        backgroundColor: 'transparent',
+                        color: '#FFFFFF',
+                        padding: '12px 24px',
+                        fontSize: '18px',
+                        fontFamily: 'Poppins, sans-serif',
+                        fontWeight: 400,
+                        cursor: 'pointer',
+                        outline: 'none',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        },
+                      }}
+                    >
+                      Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+                    </Box>
                   </Box>
+
                 )}
-              </LeftBox>
-              <RightBox sx={{width: leftBoxWidth,
-              }}>
+
+            </Grid>
+            <Grid size={{md: 12, lg: 7}} sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                alignItems: 'center',
+            }}>
+              <img
+              src={LogicModel}
+              alt='Devices'
+              style={{
+                width: 'calc(100% - 204px)',
+                boxSizing: 'border-box',
+              }}
+              />
+              <MonsterAndTextContainer>
                 <img
-                src={LogicModel}
-                alt='Devices'
-                style={{
-                  width: logicModelWidth,
-                  marginLeft: '102px',
-                  marginRight: '102px',
-                  boxSizing: 'border-box',
-                }}
-                />
-                <MonsterAndTextContainer >
-                  <img
-                    src={BlueMonster}
-                    alt='BlueMonster'
-                    style={{
-                      width: blueMonsterWidth,
-                    }}
-                  />
-                  <img
-                    src={YellowMonster}
-                    alt='YellowMonster'
-                    style={{
-                      width: blueMonsterWidth,
-                    }}
-                  />
-                  <img
-                    src={PinkMonster}
-                    alt='PinkMonster'
-                    style={{
-                      width: blueMonsterWidth,
-                    }}
-                  />
-                </MonsterAndTextContainer>
-              </RightBox>
-              {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
-                <Box
-                  component="button"
-                  sx={{
-                    borderRadius: '24px',
-                    border: '1px solid #FFFFFF',
-                    backgroundColor: 'transparent',
-                    color: '#FFFFFF',
-                    padding: '12px 24px',
-                    fontSize: '18px',
-                    fontFamily: 'Poppins, sans-serif',
-                    fontWeight: 400,
-                    cursor: 'pointer',
-                    outline: 'none',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    },
+                  src={BlueMonster}
+                  alt='BlueMonster'
+                  style={{
+                    width: 'calc(33.3% - 8px)',
                   }}
-                >
-                  Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
-                </Box>
-              )}
-          </ThirdContainerContent>
+                />
+                <img
+                  src={YellowMonster}
+                  alt='YellowMonster'
+                  style={{
+                    width: 'calc(33.3% - 8px)',
+                  }}
+                />
+                <img
+                  src={PinkMonster}
+                  alt='PinkMonster'
+                  style={{
+                    width: 'calc(33.3% - 8px)',
+                  }}
+                />
+              </MonsterAndTextContainer>
+
+            </Grid>
+              {(screenSize === ScreenSize.MEDIUM || screenSize === ScreenSize.SMALL) && (
+              <Box
+                component="button"
+                sx={{
+                  borderRadius: '24px',
+                  border: '1px solid #FFFFFF',
+                  backgroundColor: 'transparent',
+                  color: '#FFFFFF',
+                  padding: '12px 24px',
+                  fontSize: '18px',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: 400,
+                  cursor: 'pointer',
+                  outline: 'none',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
+              >
+                Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+              </Box>
+            )}
+          </Grid>
+              
         </ThirdContainer>
         
         {/* Bottom curve */}
@@ -780,7 +860,286 @@ export function HowItWorks() { // eslint-disable-line
         }}
         />
       </Box>
+        
 
+      {/* The fourth page */}
+      <FourthContainer sx={{
+            padding: fourthContainerPadding
+        }}>
+        <FourthContainerContent>
+          <TopFourthBox>
+            <TopBox>
+              <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
+                <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+                  FAQs
+                </Typography>
+                <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '20px', fontFamily: 'Poppings, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
+                  We believe asking questions is part of the learning process.
+                </Typography>
+              </Box>
+            </TopBox>
+            <BottomBox >
+              <ExpandableFAQ onClick={() => setExpandedFAQ(expandedFAQ === 0 ? null : 0)}>
+                <FAQHeader sx={{}}>
+                  <Typography sx={{
+                    fontSize: '16px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 600,
+                    color: '#FFFFFF'
+                  }}>
+                    What is RightOn?
+                  </Typography>
+                  <Box sx={{
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <img
+                    src={expandedFAQ === 0 ? Minus : Plus}
+                    alt='Minus'
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                    }}
+                    />
+                  </Box>
+                </FAQHeader>
+                <Collapse in={expandedFAQ === 0} timeout={1000}>
+                  <FAQContent>
+                    <Typography sx={{
+                      fontSize: '16px',
+                      fontFamily: 'Rubik, sans-serif',
+                      fontWeight: 400,
+                      color: '#FFFFFF',
+                      lineHeight: '1.0',
+                      maxWidth: '768px',
+
+                    }}>
+                      RightOn is an innovative educational platform that helps students 
+                      learn math through error-based learning and interactive game experiences. 
+                      The platform consists of two main components: Central (for teachers to create 
+                      and manage content) and Play (for students to participate in math games). 
+                      RightOn transforms how students think about mistakes by making them a valuable 
+                      part of the learning process.
+                    </Typography>
+                  </FAQContent>
+                </Collapse>
+              </ExpandableFAQ>
+
+              <ExpandableFAQ onClick={() => setExpandedFAQ(expandedFAQ === 1 ? null : 1)}>
+                <FAQHeader sx={{}}>
+                  <Typography sx={{
+                    fontSize: '16px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 600,
+                    color: '#FFFFFF'
+                  }}>
+                    How does RightOn work?
+                  </Typography>
+                  <Box sx={{
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <img
+                    src={expandedFAQ === 1 ? Minus : Plus}
+                    alt='Minus'
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                    }}
+                    />
+                  </Box>
+                </FAQHeader>
+                <Collapse in={expandedFAQ === 1} timeout={1000}>
+                  <FAQContent>
+                    <Typography sx={{
+                      fontSize: '16px',
+                      fontFamily: 'Rubik, sans-serif',
+                      fontWeight: 400,
+                      color: '#FFFFFF',
+                      lineHeight: '1.0',
+                      maxWidth: '768px',
+                    }}>
+                      Teachers use RightOn Central to create math games or select from pre-made 
+                      content, then host live classroom sessions where students participate 
+                      through RightOn Play. During games, students analyze both correct answers 
+                      and common mistakes, leading to meaningful discussions about mathematical 
+                      thinking and problem-solving strategies.
+                    </Typography>
+                  </FAQContent>
+                </Collapse>
+              </ExpandableFAQ>
+
+              <ExpandableFAQ onClick={() => setExpandedFAQ(expandedFAQ === 2 ? null : 2)}>
+                <FAQHeader sx={{}}>
+                  <Typography sx={{
+                    fontSize: '16px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 600,
+                    color: '#FFFFFF'
+                  }}>
+                    What grade levels does RightOn support?
+                  </Typography>
+                  <Box sx={{
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <img
+                    src={expandedFAQ === 2 ? Minus : Plus}
+                    alt='Minus'
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                    }}
+                    />
+                  </Box>
+                </FAQHeader>
+                <Collapse in={expandedFAQ === 2} timeout={1000}>
+                  <FAQContent>
+                    <Typography sx={{
+                      fontSize: '16px',
+                      fontFamily: 'Rubik, sans-serif',
+                      fontWeight: 400,
+                      color: '#FFFFFF',
+                      lineHeight: '1.0',
+                      maxWidth: '768px',
+                    }}>
+                      RightOn is designed for K-12 mathematics education, with content that can be 
+                      adapted for various grade levels and mathematical concepts.
+                    </Typography>
+                  </FAQContent>
+                </Collapse>
+              </ExpandableFAQ>
+
+              <ExpandableFAQ onClick={() => setExpandedFAQ(expandedFAQ === 3 ? null : 3)}>
+                <FAQHeader sx={{}}>
+                  <Typography sx={{
+                    fontSize: '16px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 600,
+                    color: '#FFFFFF'
+                  }}>
+                    Is RightOn free to use?
+                  </Typography>
+                  <Box sx={{
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <img
+                    src={expandedFAQ === 3 ? Minus : Plus}
+                    alt='Minus'
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                    }}
+                    />
+                  </Box>
+                </FAQHeader>
+                <Collapse in={expandedFAQ === 3} timeout={1000}>
+                  <FAQContent>
+                    <Typography sx={{
+                      fontSize: '16px',
+                      fontFamily: 'Rubik, sans-serif',
+                      fontWeight: 400,
+                      color: '#FFFFFF',
+                      lineHeight: '1.0',
+                      maxWidth: '768px',
+                    }}>
+                      Yes? (Just want more info on how to word this)
+                    </Typography>
+                  </FAQContent>
+                </Collapse>
+              </ExpandableFAQ>
+
+              <ExpandableFAQ onClick={() => setExpandedFAQ(expandedFAQ === 4 ? null : 4)}>
+                <FAQHeader sx={{}}>
+                  <Typography sx={{
+                    fontSize: '16px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 600,
+                    color: '#FFFFFF'
+                  }}>
+                    How do I get started with RightOn?
+                  </Typography>
+                  <Box sx={{
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <img
+                    src={expandedFAQ === 4 ? Minus : Plus}
+                    alt='Minus'
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                    }}
+                    />
+                  </Box>
+                </FAQHeader>
+                <Collapse in={expandedFAQ === 4} timeout={1000}>
+                  <FAQContent>
+                    <Typography sx={{
+                      fontSize: '16px',
+                      fontFamily: 'Rubik, sans-serif',
+                      fontWeight: 400,
+                      color: '#FFFFFF',
+                      lineHeight: '1.0',
+                      maxWidth: '768px',
+                    }}>
+                      Teachers can sign up for a RightOn account and begin exploring the platform 
+                      immediately. We recommend starting with our user guide and trying out some 
+                      pre-made games before creating your own content. See the user guide here!
+                    </Typography>
+                  </FAQContent>
+                </Collapse>
+              </ExpandableFAQ>
+            </BottomBox>
+          </TopFourthBox>
+          <BottomFourthBox>
+            <Typography sx={{fontFamily: 'Poppins', fontSize: '20px', fontWeight: 800, color: '#FFFFFF'}}>
+              Still have questions?
+            </Typography>
+            <Typography sx={{fontFamily: 'Rubik', fontWeight: 400, fontSize: '16px', color: '#FFFFFF'}}>
+              We love answering questions just as much as we love learning from mistakes.
+            </Typography>
+            <Box>
+              <Box
+                component="button"
+                sx={{
+                  borderRadius: '24px',
+                  border: '1px solid #FFFFFF',
+                  backgroundColor: 'transparent',
+                  color: '#FFFFFF',
+                  padding: '12px 24px',
+                  fontSize: '18px',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: 400,
+                  cursor: 'pointer',
+                  outline: 'none',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
+              >
+                Contact
+              </Box>
+            </Box>
+          </BottomFourthBox>
+        </FourthContainerContent>
+      </FourthContainer>
     </MainContainer>
   );
 }
