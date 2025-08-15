@@ -18,8 +18,6 @@ import { ScreenSize } from '../lib/WebsiteModels';
 import  StepImage from '../lib/styledcomponents/HowItWorks/StepImage';
 import VennDiagram from '../components/VennDiagram';
 
-
-
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex', 
   flexDirection: 'column',
@@ -135,6 +133,8 @@ const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
   gap: '12px',
 }));
 
+
+// Third Container Content
 const ThirdContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   boxSizing: 'border-box',
@@ -145,38 +145,14 @@ const ThirdContainer = styled(Box)(({ theme }) => ({
   height: '100%'
 }));
 
-const ThirdContainerContent = styled(Box)(({ theme }) => ({
-  display: 'flex', 
-  boxSizing: 'border-box',
-
-}));
-
-const LeftBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '48px',
-  boxSizing: 'border-box',
-  alignItems: 'flex-start',
-}));
-
-
-const RightBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '12px',
-  justifyContent: 'center',
-  alignItems: 'center'
-}));
-
-
 const MonsterAndTextContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: '12px',
   justifyContent: 'center',
-  // width: '100%'
 }));
 
 
+// Fourth Container Content
 const FourthContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   boxSizing: 'border-box',
@@ -227,7 +203,6 @@ const ExpandableFAQ = styled(Box)(({ theme }) => ({
   backgroundColor: '#22499C',
   borderRadius: '8px',
   cursor: 'pointer',
-  // minWidth: '1378px',
   transition: 'all 0.3s ease',
   '&:hover': {
     backgroundColor: '#1a3a7a',
@@ -247,6 +222,8 @@ const FAQContent = styled(Box)(({ theme }) => ({
   padding: '0px 24px 24px',
 }));
 
+
+
 export function HowItWorks() { // eslint-disable-line
   const theme = useTheme();
 
@@ -259,20 +236,20 @@ export function HowItWorks() { // eslint-disable-line
 
   let paddingValue;
   if (screenSize === ScreenSize.LARGE) {
-    paddingValue = '96px 107px';
-  } else if (screenSize === ScreenSize.MEDIUM) {
     paddingValue = '96px 72px';
+  } else if (screenSize === ScreenSize.MEDIUM) {
+    paddingValue = '60px 72px';
   } else {
     paddingValue = '60px 12px';
   }
 
-  let marginValue;
+  let SecondPagePadding;
   if (screenSize === ScreenSize.SMALL) {
-    marginValue = '60px 12px 0px';
+    SecondPagePadding = '60px 12px';
   } else if (screenSize === ScreenSize.MEDIUM) {
-    marginValue = '65px 60px 0px';
+    SecondPagePadding = '60px 72px';
   } else {
-    marginValue = null;
+    SecondPagePadding = '96px 72px';
   }
 
   let fourthContainerPadding;
@@ -286,7 +263,7 @@ export function HowItWorks() { // eslint-disable-line
 
   let thirdContainerPadding;
   if (screenSize === ScreenSize.LARGE) {
-    thirdContainerPadding = '48px 86px';
+    thirdContainerPadding = '48px 72px';
   } else if (screenSize === ScreenSize.MEDIUM) {
     thirdContainerPadding = '60px 72px';
   } else {
@@ -302,32 +279,6 @@ export function HowItWorks() { // eslint-disable-line
     leftBoxWidth = '100%';
   }
 
-  let rightBoxWidth;
-  if (screenSize === ScreenSize.MEDIUM) {
-    rightBoxWidth = '600px';
-  } else if (screenSize === ScreenSize.SMALL) {
-    rightBoxWidth = '369px';
-  } else {
-    rightBoxWidth = '100%';
-  }
-
-  let logicModelWidth;
-  if (screenSize === ScreenSize.MEDIUM) {
-    logicModelWidth = '396px';
-  } else if (screenSize === ScreenSize.LARGE) {
-    logicModelWidth = '565px';
-  } else {
-    logicModelWidth = '200px';
-  }
-
-  let blueMonsterWidth;
-  if (screenSize === ScreenSize.MEDIUM) {
-    blueMonsterWidth = '192px';
-  } else if (screenSize === ScreenSize.SMALL) {
-    blueMonsterWidth = '115px';
-  } else {
-    blueMonsterWidth = '249px';
-  }
   
   const [selectedBox, setSelectedBox] = React.useState(0); // 0 for first, 1 for second
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
@@ -509,8 +460,9 @@ export function HowItWorks() { // eslint-disable-line
       </FirstContainer>
       
       {/* The second page */}
-      <SecondContainer sx={{paddingBottom: screenSize === ScreenSize.LARGE? '111.5px' : '60px'}}>
-        <SecondUpperContainerTexts sx={{margin: marginValue}}>
+      <SecondContainer sx={{padding: SecondPagePadding,
+      }}>
+        <SecondUpperContainerTexts>
           <SecondUpperContainerIntegratingText sx={{alignItems: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'flex-start' : 'center'}}>
             <Typography sx={{lineHeight: '1.1', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
               PEDAGOGY
@@ -548,7 +500,7 @@ export function HowItWorks() { // eslint-disable-line
           boxSizing: 'border-box',
 
         }}>
-          <Grid container spacing={6} sx={{border: '1px solid red',
+          <Grid container spacing={6} sx={{
             flexDirection: screenSize === ScreenSize.LARGE? 'row' : 'column',
             gap: screenSize === ScreenSize.LARGE? '48px' : '72px',
             alignItems: screenSize === ScreenSize.LARGE? 'center' : 'flex-start',
@@ -556,8 +508,7 @@ export function HowItWorks() { // eslint-disable-line
           }}>
             <Grid size={{md: 12, lg: 5}} sx ={{  display: 'flex', 
             flexDirection: 'column',
-            gap: '48px',
-            border: '1px solid white'}}>
+            gap: '48px'}}>
               <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
@@ -608,40 +559,36 @@ export function HowItWorks() { // eslint-disable-line
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '12px',
-                // justifyContent: 'center',
                 alignItems: 'center',
-                border: '1px solid orange',
-                // width: '100%'
             }}>
               <img
               src={LogicModel}
               alt='Devices'
               style={{
-                // width: logicModelWidth,
+                width: 'calc(100% - 204px)',
                 boxSizing: 'border-box',
-                border: '1px solid white'
               }}
               />
-              <MonsterAndTextContainer sx ={{border: '1px solid orange'}}>
+              <MonsterAndTextContainer>
                 <img
                   src={BlueMonster}
                   alt='BlueMonster'
                   style={{
-                    width: '100%',
+                    width: 'calc(33.3% - 8px)',
                   }}
                 />
                 <img
                   src={YellowMonster}
                   alt='YellowMonster'
                   style={{
-                    width: '100%',
+                    width: 'calc(33.3% - 8px)',
                   }}
                 />
                 <img
                   src={PinkMonster}
                   alt='PinkMonster'
                   style={{
-                    width: '100%',
+                    width: 'calc(33.3% - 8px)',
                   }}
                 />
               </MonsterAndTextContainer>
@@ -963,8 +910,6 @@ export function HowItWorks() { // eslint-disable-line
           </BottomFourthBox>
         </FourthContainerContent>
       </FourthContainer>
-
-
     </MainContainer>
   )
 }
