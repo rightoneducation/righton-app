@@ -4,7 +4,7 @@ import { CMSArticleType } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import CornerstoneArticleCard from './CornerstoneArticleCard';
 import ArticleCard from './ArticleCard';
-import ArticleSkeleton from '../library/ArticleSkeleton';
+import CornerstoneSkeleton from '../library/CornerstoneSkeleton';
 import { ScreenSize } from '../../lib/WebsiteModels';
 
 const ArticleContainer = styled(Box)(({ theme }) => ({
@@ -16,7 +16,7 @@ const ArticleContainer = styled(Box)(({ theme }) => ({
 interface OtherArticlesInterface {
   articles: CMSArticleType[];
   isLoadingArticles: boolean;
-  screenSize?: ScreenSize;
+  screenSize: ScreenSize;
 }
 
 export function OtherArticles({ // eslint-disable-line
@@ -59,22 +59,19 @@ export function OtherArticles({ // eslint-disable-line
       </Box>
       <Grid
         container
-        columnSpacing="16px"
+        columnSpacing="48px"
         rowSpacing="24px"
-        sx={{
-          paddingBottom: paddingTopBottom,
-        }}
       >
         {isLoadingArticles
           ? Array.from({ length: countArticle }).map((_, i) => (
               <Grid size={{ xs: 12, md: 12, lg: 4 }} key={uuidv4()}>
-                <ArticleSkeleton index={i} />
+                <CornerstoneSkeleton index={i} screenSize={screenSize} />
               </Grid>
             ))
           : articles.map(
               (article: any) =>
                 article && (
-                  <Grid size={{ xs: 12, md: 12, lg: 4 }} key={article.id}>
+                  <Grid size={{ xs: 12, md: 12, lg: 4 }} key={article.id} >
                     <Box
                       onClick={() => {
                         window.location.href = `/library/${article._id}`;
