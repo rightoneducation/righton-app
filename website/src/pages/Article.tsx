@@ -1,67 +1,70 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useMatch } from 'react-router-dom';
-import { Box, CircularProgress } from '@mui/material';
-import { useTheme, styled } from '@mui/material/styles';
-import { AnimatePresence, motion } from 'framer-motion';
-import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import {
-  CMSHeroImage,
-  CMSTitleText,
-  CMSHeaderText,
-  CMSBodyText,
-  PortableTextComponentsConfig
-} from '@righton/networking';
+  Box,
+  CircularProgress,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { AnimatePresence, motion } from 'framer-motion';
+import { CMSArticleType } from '@righton/networking';
+import { ScreenSize } from '../lib/WebsiteModels';
 import { ShareModal } from '../components/article/ShareModal';
+import { ShareMobileModal } from '../components/article/ShareMobileModal';
 import { ArticleHeader } from '../components/article/ArticleHeader';
-import MathSymbolBackground from '../images/mathSymbolsBackground4.svg';
+import { ArticleContent } from '../components/article/ArticleContent';
+import { VideoArticleContent } from '../components/article/VideoArticleContent';
+import { OtherArticles } from '../components/article/OtherArticles';
+import { BackToLibrary } from '../components/article/BackToLibrary';
+import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
+import ShareMobileModalBackground from '../components/article/ShareMobileModalBackground';
 
-const MainContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: '24px',
-  width: '100%',
-  height: '100%',
-  paddingTop: '101px',
-  paddingBottom: '101px',
-  paddingLeft: '105px',
-  paddingRight: '105px',
-  boxSizing: 'border-box',
-  position: 'relative',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: `url(${MathSymbolBackground})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    zIndex: -2,
-  },
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(2, 33, 95, 0.9)',
-    zIndex: -1,
-  }
-}));
+interface MainContainerProps {
+  screenSize: ScreenSize;
+}
+
+const MainContainer = styled(Box)<MainContainerProps>(
+  ({ theme, screenSize }) => ({
+    width: '100%',
+    boxSizing: 'border-box',
+    background: 'transparent',
+  }),
+);
 
 export function Article({ cmsClient }: any) { // eslint-disable-line
-  const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const theme = useTheme();
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const screenSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE
+    : isMediumScreen
+      ? ScreenSize.MEDIUM
+      : ScreenSize.SMALL;
+
+  const [selectedArticle, setSelectedArticle] = useState<CMSArticleType | null>(
+    null,
+  );
+  const [otherArticles, setOtherArticles] = useState<CMSArticleType[]>([]);
   const [isShareClicked, setIsShareClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingOtherArticles, setIsLoadingOtherArticles] = useState(true);
+  const [isVideoArticle, setIsVideoArticle] = useState(false);
+  const [isMobileShareClicked, setIsMobileShareClicked] = useState(false);
   const articleId = useMatch('/library/:contentId')?.params.contentId;
 
   const modalWrapperRef = useRef<HTMLDivElement>(null);
 
   const handleShareClicked = () => {
     setIsShareClicked(true);
+  };
+
+  const handleMobileShareClicked = () => {
+    setIsMobileShareClicked(true);
+  };
+
+  const handleCloseShareModalClick = () => {
+    setIsMobileShareClicked(false);
   };
 
   const handleClickOutside = (e: React.MouseEvent) => {
@@ -73,91 +76,215 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
     }
   };
 
+  const handleCloseClick = () => {
+    setIsShareClicked(false);
+  };
+
   useEffect(() => {
     const fetchArticle = async () => {
       try {
         const article = await cmsClient.fetchArticle(articleId);
+        if (article.youtubeLink !== null) setIsVideoArticle(true);
         setSelectedArticle(article);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching article:', error);
         setIsLoading(false);
       }
     };
+    const fetchOtherArticles = async () => {
+      const other = await cmsClient.fetchRecentArticles();
+      setOtherArticles(other);
+      setIsLoadingOtherArticles(false);
+    };
     fetchArticle();
+    fetchOtherArticles();
   }, [cmsClient, articleId]);
 
   return (
-    <MainContainer>
-      {isLoading ? (
-        <CircularProgress
-          size={50}
-          sx={{
-            color: '#fff',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-      ) : (
-        <Box style={{ display: 'flex', flexDirection: 'column', maxWidth: '648px', gap: '40px' }}>
-          <ArticleHeader
-            selectedArticle={selectedArticle}
-            articleId={articleId ?? ''}
-            handleShareClicked={handleShareClicked}
+    <>
+      <MainContainer screenSize={screenSize}>
+        <MathSymbolsBackground />
+        {isLoading || !selectedArticle ? (
+          <CircularProgress
+            size={50}
+            sx={{
+              color: '#fff',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
           />
-          <CMSHeroImage src={selectedArticle.image.url} alt="Article Hero" />
-          <CMSTitleText>{selectedArticle.title}</CMSTitleText>
-          <Box style={{ display: 'flex', flexDirection: 'column' }}>
-            <CMSBodyText><strong>Author:</strong> {selectedArticle.author}</CMSBodyText>
-            <CMSBodyText><strong>Affiliation:</strong> {selectedArticle.affiliation}</CMSBodyText>
-            <CMSBodyText><strong>Contact:</strong> {selectedArticle.contact}</CMSBodyText>
-          </Box>
-          <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <PortableText
-              value={selectedArticle.details}
-              components={PortableTextComponentsConfig as PortableTextComponents}
-            />
-          </Box>
-          <CMSHeaderText>{selectedArticle.header}</CMSHeaderText>
-          <CMSBodyText>{selectedArticle.body}</CMSBodyText>
-
-          <AnimatePresence>
-            {isShareClicked && (
+        ) : (
+          <>
+            <BackToLibrary screenSize={screenSize} />
+            <Box
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                paddingTop:
+                  screenSize === ScreenSize.LARGE
+                    ? `${theme.sizing.lgPadding}px`
+                    : `${theme.sizing.lgPaddingMobile}px`,
+                paddingBottom:
+                  screenSize === ScreenSize.LARGE
+                    ? `${theme.sizing.xxLgPadding}px`
+                    : `${theme.sizing.lgPaddingMobile}px`,
+                paddingLeft:
+                  screenSize === ScreenSize.SMALL
+                    ? `${theme.sizing.mdPadding}px`
+                    : `${theme.sizing.xLgPadding}px`,
+                paddingRight:
+                  screenSize === ScreenSize.SMALL
+                    ? `${theme.sizing.mdPadding}px`
+                    : `${theme.sizing.xLgPadding}px`,
+              }}
+            >
               <Box
-                onMouseDownCapture={handleClickOutside}
-                sx={{
-                  position: 'fixed',
-                  inset: 0,
-                  zIndex: 1,
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap:
+                    screenSize === ScreenSize.LARGE
+                      ? `${theme.sizing.xxLgPadding}px`
+                      : `${theme.sizing.lgPaddingMobile}px`,
                 }}
               >
-                <motion.div
-                  ref={modalWrapperRef}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4, ease: 'easeInOut' }}
+                <Box
                   style={{
-                    position: 'fixed',
-                    bottom: 0,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '100%',
                     display: 'flex',
-                    justifyContent: 'center',
-                    zIndex: 1000,
-                    paddingBottom: '24px',
+                    flexDirection: 'column',
+                    maxWidth: '648px',
+                    gap: '40px',
                   }}
                 >
-                  <ShareModal />
-                </motion.div>
+                  <ArticleHeader
+                    screenSize={screenSize}
+                    selectedArticle={selectedArticle}
+                    articleId={articleId ?? ''}
+                    handleShareClicked={handleShareClicked}
+                    handleMobileShareClicked={handleMobileShareClicked}
+                  />
+                  {isVideoArticle ? (
+                    <VideoArticleContent article={selectedArticle} />
+                  ) : (
+                    <ArticleContent
+                      article={selectedArticle}
+                      screenSize={screenSize}
+                    />
+                  )}
+                </Box>
+                <Box
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap:
+                      screenSize === ScreenSize.LARGE
+                        ? `${theme.sizing.xLgPadding}px`
+                        : `${theme.sizing.lgPaddingMobile}px`,
+                  }}
+                >
+                  <Box
+                    style={{
+                      width: '100%',
+                      border: theme.sizing.dividerBorder,
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                  <OtherArticles
+                    articles={otherArticles}
+                    screenSize={screenSize}
+                    isLoadingArticles={isLoadingOtherArticles}
+                  />
+                </Box>
               </Box>
-            )}
-          </AnimatePresence>
-        </Box>
-      )}
-    </MainContainer>
+            </Box>
+          </>
+        )}
+      </MainContainer>
+      <AnimatePresence>
+        {isShareClicked && (
+          <Box
+            onMouseDownCapture={handleClickOutside}
+            sx={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 15000,
+            }}
+          >
+            <motion.div
+              ref={modalWrapperRef}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              style={{
+                position: 'absolute',
+                top: '21px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                paddingLeft:
+                  screenSize === ScreenSize.SMALL
+                    ? `${theme.sizing.mdPadding}px`
+                    : `${theme.sizing.xLgPadding}px`,
+                paddingRight:
+                  screenSize === ScreenSize.SMALL
+                    ? `${theme.sizing.mdPadding}px`
+                    : `${theme.sizing.xLgPadding}px`,
+                boxSizing: 'border-box',
+              }}
+            >
+              <ShareModal
+                handleCloseClick={handleCloseClick}
+                screenSize={screenSize}
+              />
+            </motion.div>
+          </Box>
+        )}
+        {isMobileShareClicked && (
+          <>
+            <ShareMobileModalBackground
+              isShareModalOpen={isMobileShareClicked}
+              handleCloseShareModalClick={handleCloseShareModalClick}
+            />
+            <Box
+              sx={{
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 15000,
+              }}
+            >
+              <motion.div
+                ref={modalWrapperRef}
+                initial={{ transform: 'translateY(100%)' }}
+                animate={{ transform: 'translateY(1%)' }}
+                exit={{ transform: 'translateY(100%)' }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <ShareMobileModal
+                  articleId={articleId ?? ''}
+                  selectedArticle={selectedArticle}
+                  handleCloseShareModalClick={handleCloseShareModalClick}
+                />
+              </motion.div>
+            </Box>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

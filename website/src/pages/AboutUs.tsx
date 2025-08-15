@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, styled, useTheme } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
   EmphasizeText,
@@ -25,24 +25,26 @@ interface IAboutUs {
   screenSize: ScreenSize;
 }
 
-export function AboutUs({ screenSize }: IAboutUs) {// eslint-disable-line
-   const containerPadding = screenSize === ScreenSize.LARGE ? // eslint-disable-line
-        "96px 72px"
-        : screenSize === ScreenSize.MEDIUM 
-        ? "60px 72px": "60px 12px";
+export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
+  const theme = useTheme();
+  const containerPadding = theme.sizing.containerPadding[screenSize];
 
   return (
     <AboutUsContainer>
       {/* Contact us banner */}
-      <ContactUsBanner screenSize={screenSize}/>
+      <ContactUsBanner screenSize={screenSize} />
       <MathSymbolsBackground />
 
       <StyledFlexBox
-        gap={72}
+        gap={theme.sizing.lgPadding}
         align="center"
         justify="center"
-        sx={{ backgroundColor: '#011849', padding: containerPadding, width: '100%' }}
-        >
+        sx={{
+          backgroundColor: theme.palette.primary.tertiaryDarkBlue,
+          padding: containerPadding,
+          width: '100%',
+        }}
+      >
         {/* Mission & Vision */}
         <MissionAndVision screenSize={screenSize} />
 
@@ -62,101 +64,157 @@ export function AboutUs({ screenSize }: IAboutUs) {// eslint-disable-line
         sx={{ width: '100%', marginTop: '-1px' }}
       />
 
-        {/* Right On Team */}
-      <StyledFlexBox sx={{ padding: containerPadding }} gap={72} align="center">
-        <StyledFlexBox align={screenSize === ScreenSize.LARGE ? "center":"normal"}>
-          <StyledText fontSize="16px" fontWeight={600}>
+      {/* Right On Team */}
+      <StyledFlexBox
+        sx={{ padding: containerPadding }}
+        gap={theme.sizing.xLgPadding}
+        align="center"
+      >
+        <StyledFlexBox
+          align={screenSize === ScreenSize.LARGE ? 'center' : 'normal'}
+        >
+          <StyledText fontSize="16px" fontWeight={600} style={{paddingBottom: '12px'}}>
             OUR TEAM
           </StyledText>
 
-          <StyledFlexBox gap={24} align={screenSize === ScreenSize.LARGE ? "center":"normal"}>
-          <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2}>
-            Research and Development
-          </StyledText>
-          <StyledText fontSize={screenSize === ScreenSize.LARGE ? "20px": "16px"}>
-            &quot;We&apos;re a team that sometimes{' '}
-            <EmphasizeText sx={{
-              fontSize: screenSize === ScreenSize.LARGE ? "20px": "16px",
-              color:'#fff'
-              }}>falls down</EmphasizeText>, always{' '}
-            <EmphasizeText sx={{ 
-               fontSize: screenSize === ScreenSize.LARGE ? "20px": "16px",
-              color:'#fff'
-              }}>gets back up</EmphasizeText>, and{' '}
-            <EmphasizeText sx={{ 
-               fontSize: screenSize === ScreenSize.LARGE ? "20px": "16px",
-              color:'#fff'
-              }}>never stops having fun</EmphasizeText>.&quot;
-          </StyledText>
+          <StyledFlexBox
+            gap={theme.sizing.mdPadding}
+            align={screenSize === ScreenSize.LARGE ? 'center' : 'normal'}
+          >
+            <StyledText fontSize="40px" fontWeight={700} lineHeight="40px">
+              Research and Development
+            </StyledText>
+            <StyledText
+              fontSize={screenSize === ScreenSize.LARGE ? '20px' : '16px'}
+            >
+              &quot;We&apos;re a team that sometimes{' '}
+              <EmphasizeText
+                sx={{
+                  fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
+                  color: '#fff',
+                }}
+              >
+                falls down
+              </EmphasizeText>
+              , always{' '}
+              <EmphasizeText
+                sx={{
+                  fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
+                  color: '#fff',
+                }}
+              >
+                gets back up
+              </EmphasizeText>
+              , and{' '}
+              <EmphasizeText
+                sx={{
+                  fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
+                  color: '#fff',
+                }}
+              >
+                never stops having fun
+              </EmphasizeText>
+              .&quot;
+            </StyledText>
           </StyledFlexBox>
         </StyledFlexBox>
-        <StyledFlexBox 
-       // height={screenSize === ScreenSize.LARGE ? "791px":"100%"} 
-        width={screenSize === ScreenSize.LARGE ? "1155px": "100%"} 
-        gap={48}>
+        <StyledFlexBox
+          maxWidth={screenSize === ScreenSize.LARGE ? '1155px' : '100%'}
+          gap={theme.sizing.lgPadding}
+        >
           <RightonTeam screenSize={screenSize} />
-          
         </StyledFlexBox>
       </StyledFlexBox>
 
       {/* RightOn Advisors */}
-      <StyledFlexBox sx={{ padding: containerPadding }} gap={72} width="100%">
-        <StyledFlexBox align={screenSize === ScreenSize.LARGE ? "center":"normal"}>
+      <StyledFlexBox
+        sx={{ padding: containerPadding }}
+        gap={theme.sizing.xLgPadding}
+        width="100%"
+      >
+        <StyledFlexBox
+          align={screenSize === ScreenSize.LARGE ? 'center' : 'normal'}
+          gap={12}
+        >
           <StyledText fontSize="16px" fontWeight={600}>
             OUR ADVISORS
           </StyledText>
-          <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2}>
+          <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2} paddingBottom='12px'>
             Educators Inform our Product Vision
           </StyledText>
-          <StyledText fontSize={screenSize === ScreenSize.LARGE ? "20px": "16px"}>
+          <StyledText
+            fontSize={screenSize === ScreenSize.LARGE ? '20px' : '16px'}
+          >
             Solving real problems encountered by{' '}
-            <EmphasizeText sx={{ 
-              fontSize: screenSize === ScreenSize.LARGE ? "20px": "16px",
-              color: "#fff" 
-              }}>math & STEM teachers</EmphasizeText>,{' '}
-            <EmphasizeText sx={{ 
-              fontSize: screenSize === ScreenSize.LARGE ? "20px": "16px",
-              color: "#fff" 
-              }}>professors</EmphasizeText>,{' '}
-            <EmphasizeText sx={{ 
-              fontSize: screenSize === ScreenSize.LARGE ? "20px": "16px",
-              color: "#fff" 
-              }}>leaders</EmphasizeText>.
+            <EmphasizeText
+              sx={{
+                fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
+                color: '#fff',
+              }}
+            >
+              math & STEM teachers
+            </EmphasizeText>
+            ,{' '}
+            <EmphasizeText
+              sx={{
+                fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
+                color: '#fff',
+              }}
+            >
+              professors
+            </EmphasizeText>
+            ,{' '}
+            <EmphasizeText
+              sx={{
+                fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
+                color: '#fff',
+              }}
+            >
+              leaders
+            </EmphasizeText>
+            .
           </StyledText>
         </StyledFlexBox>
 
-       {(screenSize === ScreenSize.LARGE || screenSize === ScreenSize.SMALL) && <StyledFlexBox height="730px" width="100%" >
-          <StyledFlexBox sx={{ 
-            '&::-webkit-scrollbar': {
-            // Chrome and Safari
-            display: 'none',
-          },
-          scrollbarWidth: 'none', // Firefox
-          msOverflowStyle: 'none',
-          boxSizing: 'border-box',
-          width: '100%',
-           height: '100%'}}>
-          <RightOnEducators screenSize={screenSize} />
-          </StyledFlexBox>
-  
-        </StyledFlexBox>}
-      </StyledFlexBox>
-        {screenSize === ScreenSize.MEDIUM && (
-           <StyledFlexBox sx={{ 
-            height: '730px',
-            '&::-webkit-scrollbar': {
-            // Chrome and Safari
-            display: 'none',
-          },
-          scrollbarWidth: 'none', // Firefox
-          msOverflowStyle: 'none',
-          boxSizing: 'border-box',
-          width: '100%',
-         marginBottom: '60px'
-           }}>
-          <RightOnEducators screenSize={screenSize} />
+        {(screenSize === ScreenSize.LARGE ||
+          screenSize === ScreenSize.SMALL) && (
+          <StyledFlexBox height="730px" width="100%">
+            <StyledFlexBox
+              sx={{
+                '&::-webkit-scrollbar': {
+                  // Chrome and Safari
+                  display: 'none',
+                },
+                scrollbarWidth: 'none', // Firefox
+                msOverflowStyle: 'none',
+                boxSizing: 'border-box',
+                width: '100%',
+                height: '100%',
+              }}
+            >
+              <RightOnEducators screenSize={screenSize} />
+            </StyledFlexBox>
           </StyledFlexBox>
         )}
+      </StyledFlexBox>
+      {screenSize === ScreenSize.MEDIUM && (
+        <StyledFlexBox
+          sx={{
+            height: '730px',
+            '&::-webkit-scrollbar': {
+              // Chrome and Safari
+              display: 'none',
+            },
+            scrollbarWidth: 'none', // Firefox
+            msOverflowStyle: 'none',
+            boxSizing: 'border-box',
+            width: '100%',
+            marginBottom: '60px',
+          }}
+        >
+          <RightOnEducators screenSize={screenSize} />
+        </StyledFlexBox>
+      )}
     </AboutUsContainer>
   );
 }

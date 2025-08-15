@@ -12,8 +12,8 @@ export default function MistakeCard({
 }: MistakeCardProps) {
   const viewBoxWidth = 252;
   const viewBoxHeight = 302;
-  const centerX = viewBoxWidth / 2;   // 126
-  const centerY = viewBoxHeight / 2;  // 151
+  const centerX = viewBoxWidth / 2; // 126
+  const centerY = viewBoxHeight / 2; // 151
   const radius = 126;
   const questionRadius = radius - 25;
 
@@ -45,7 +45,7 @@ export default function MistakeCard({
       </defs>
 
       {/* curved question text */}
-      <text fontSize={16} fill="#fff" fontFamily='Poppins' fontWeight="bold">
+      <text fontSize={16} fill="#fff" fontFamily="Poppins" fontWeight="bold">
         <textPath href="#mc-q-path" startOffset="25%" textAnchor="middle">
           What is your favorite mistake?
         </textPath>
@@ -71,8 +71,8 @@ export default function MistakeCard({
             alignItems: 'center',
             justifyContent: 'center',
             padding: '0 10px',
-             transform: 'rotate(-10deg)',
-      transformOrigin: 'center',
+            transform: 'rotate(-10deg)',
+            transformOrigin: 'center',
           }}
         >
           {answer}
@@ -81,4 +81,3 @@ export default function MistakeCard({
     </svg>
   );
 }
-

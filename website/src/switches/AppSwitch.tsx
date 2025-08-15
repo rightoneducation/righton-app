@@ -7,50 +7,54 @@ import { AboutUs } from '../pages/AboutUs';
 import { HowItWorks } from '../pages/HowItWorks';
 import { Library } from '../pages/Library';
 import { Article } from '../pages/Article';
+import { Positive } from '../pages/Positive';
 import { ScreenType, ScreenSize } from '../lib/WebsiteModels';
 import { Footer } from '../components/Footer';
 
-export default function AppSwitch({ 
+export default function AppSwitch({
   currentScreen,
-  cmsClient
- }: { 
-  currentScreen: ScreenType,
-  cmsClient?: any
+  cmsClient,
+}: {
+  currentScreen: ScreenType;
+  cmsClient?: any;
 }) {
   const theme = useTheme();
-     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-    const screenSize = isLargeScreen // eslint-disable-line
-      ? ScreenSize.LARGE
-      : isMediumScreen
-        ? ScreenSize.MEDIUM
-        : ScreenSize.SMALL;
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const screenSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE
+    : isMediumScreen
+      ? ScreenSize.MEDIUM
+      : ScreenSize.SMALL;
 
   let pageComponent;
   switch (currentScreen) {
+    case ScreenType.POSITIVE:
+      pageComponent = <Positive screenSize={screenSize} />;
+      break;
     case ScreenType.LIBRARY:
-      pageComponent = (<Library cmsClient={cmsClient}/>);
+      pageComponent = <Library cmsClient={cmsClient} />;
       break;
     case ScreenType.CONTENT:
-      pageComponent = (<Article cmsClient={cmsClient}/>);
-      break;  
+      pageComponent = <Article cmsClient={cmsClient} />;
+      break;
     case ScreenType.HOW_IT_WORKS:
-      pageComponent = (<HowItWorks/>);
+      pageComponent = <HowItWorks />;
       break;
     case ScreenType.ABOUT_US:
-      pageComponent = (<AboutUs screenSize={screenSize}/>);
+      pageComponent = <AboutUs screenSize={screenSize} />;
       break;
     case ScreenType.HOME:
     default:
-      pageComponent = (<Home screenSize={screenSize}/>)
+      pageComponent = <Home screenSize={screenSize} />;
       break;
   }
 
   return (
     <AppContainer>
-      <Header screenSize={screenSize}/>
-        {pageComponent}
-      <Footer screenSize={screenSize}/>
+      <Header screenSize={screenSize} />
+      {pageComponent}
+      <Footer screenSize={screenSize} />
     </AppContainer>
-  )
+  );
 }

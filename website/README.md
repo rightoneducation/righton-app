@@ -1,46 +1,55 @@
-# Getting Started with Create React App
+# RightOn! - Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[Website](https://rightoneducation.com) is the public-facing RightOn! platform built with ReactJS and TypeScript. It makes use of [mui v7](https://mui.com/material-ui/migration/migration-v5/) for styling, [react-i18next](https://react.i18next.com/) for internationalization, [react-router-dom](https://reactrouter.com/) for routing, and [jest](https://jestjs.io/docs/getting-started) for testing.
 
-## Available Scripts
+### App Architecture:
 
-In the project directory, you can run:
+The website serves as the main public platform for RightOn, featuring multiple pages including Home, About Us, How It Works, Positive content, and a Library section. The app uses a screen-based routing system with React Router and integrates with a CMS for dynamic content management.
 
-### `yarn start`
+### Installation Instructions:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<strong> install packages per package.json: </strong>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. cd website
+2. yarn install
 
-### `yarn test`
+### Scripts:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. 'yarn start' - runs react-scripts app
+2. 'yarn build' - builds the app for production
+3. 'yarn test' - runs tests via jest
+4. 'yarn eject' - ejects from Create React App (one-way operation)
+5. 'yarn format' - applies prettier formatting to everything in /website
 
-### `yarn build`
+### Styling:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+@mui v7 is used for most components, with styled-components as the underlying styling engine. We use the latest Material-UI components and follow the current best practices. Overrides are provided through styled(). Passing props to styles is achieved either through `styled()` or `sx`. For more complicated dynamic updates, `styled()` components are broken out while simpler dynamic updates are done through `sx`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Linting/Formatting:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+ESLint and prettier are used to create a consistent codebase. We are extending airbnb for the linting rules and apply mostly default prettier rules.
+There are some exceptions though:
 
-### `yarn eject`
+<strong> .eslintrc.json: </strong>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1.  "react/jsx-props-no-spreading": ["off"],  
+    We spread props to the components to minimize the need to pass entire objects to each component.
+2.  "react/require-default-props": ["off"],  
+    Currently set to off, may be enabled when null handling is resolved.
+3.  "no-console": [1, { "allow": ["debug", "error"] }] // allowing use of console.debug and console.error  
+    Console.debug and console.error enabled for testing and error handling
+4.  "import/core-modules": ["@righton/networking"]  
+     Issue: symlink is getting flagged as "should be listed in project's dependencies". This fits under the definition of "core-modules"
+    (particularly because we will only use symlinks in development):
+    "An array of additional modules to consider as "core" modules--modules that should be considered resolved
+    but have no path on the filesystem: https://github.com/import-js/eslint-plugin-import#importcore-modules
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<strong> .prettierrc: </strong>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1.  "singleQuote": true  
+    I just think single quotes are nicer :sunglasses:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Theming:
 
-## Learn More
+lib/Theme.tsx has been added to centralize colors, fonts and breakpoints. This is deployed through the app via `<ThemeProvider>` in `App.tsx` and `import { styled, useTheme } from '@mui/material/styles';`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

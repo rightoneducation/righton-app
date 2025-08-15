@@ -15,7 +15,7 @@ export default function FlipCard({ front, back }: FlipCardProps) {
       onClick={() => setFlipped(!flipped)}
       sx={{
         width: '250px',
-        height: '400px',
+        height: '302px',
         perspective: '1000px',
         cursor: 'pointer',
       }}
@@ -45,7 +45,6 @@ export default function FlipCard({ front, back }: FlipCardProps) {
               width: '100%',
               height: '100%',
               backfaceVisibility: 'hidden',
-          
             }}
           >
             {front}
@@ -57,7 +56,6 @@ export default function FlipCard({ front, back }: FlipCardProps) {
               height: '100%',
               backfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
-          
             }}
           >
             {back}

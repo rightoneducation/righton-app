@@ -11,16 +11,17 @@ export const handler = async (event) => {
     });
 
     const FETCH_CONTENT_BY_ID = `
-        *[
+      *[
         _id == $id
-        ][0]{
+      ][0]{
         _id,
         image{
-            asset{
+          asset{
             _ref
-            }
+          }
         },
         title,
+        youtubeLink,
         tags,
         date,
         caption,
@@ -30,7 +31,7 @@ export const handler = async (event) => {
         details,
         monsterSelect,
         readingTimeMinutes
-        }
+      }
     `
     const getArticleFromCMS = async (id) => {
         try {
