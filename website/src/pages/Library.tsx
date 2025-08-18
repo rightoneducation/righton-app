@@ -6,8 +6,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTheme, styled } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { CMSArticleType } from '@righton/networking';
+import { CMSArticleType } from '@righton/networking';      
+import StyledInfiniteScroll from '../lib/styledcomponents/Library/StyledInfiniteScroll';
+
 import { ScreenSize, LibraryType } from '../lib/WebsiteModels';
 import CornerstoneArticleCard from '../components/article/CornerstoneArticleCard';
 import ArticleCard from '../components/article/ArticleCard';
@@ -125,32 +126,38 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
 
   const handleArticleFilterClick = async (tag: LibraryType) => {
     setSelected(tag);
-    
-    // Reset pagination state when filter changes
+    setArticles([]);
+    setFilteredArticles([]);
     setCurrentPage(0);
     setHasMore(true);
     
-    // Load initial articles for the selected type
+    // Force a small delay to ensure state is cleared before loading new data
+    await new Promise(resolve => {
+      setTimeout(resolve, 10);
+    });
+    
     try {
       setIsLoadingArticles(true);
+      
+      // Load first page and get count for this specific type
       let initialArticles;
+      let totalCount;
       
       if (tag === LibraryType.ALL) {
         initialArticles = await cmsClient.fetchAllArticlesPaginated(0, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchAllArticlesCount();
       } else {
         const articleType = getArticleTypeString(tag);
         initialArticles = await cmsClient.fetchArticlesPaginatedByType(articleType, 0, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchArticlesCountByType(articleType);
       }
       
-      // Clear existing articles and set new ones
       setArticles(initialArticles);
       setFilteredArticles(initialArticles);
       setCurrentPage(1);
-      
-      // Use stored count instead of fetching again
-      const totalCount = articleCounts[tag];
-      console.log('totalCount', totalCount);
       setHasMore(initialArticles.length < totalCount);
+      
+      console.log(`${tag} - loaded ${initialArticles.length} of ${totalCount} total, hasMore: ${initialArticles.length < totalCount}`);
     } catch (error) {
       console.error('Error loading articles for filter:', error);
     } finally {
@@ -159,38 +166,39 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
   };
 
   const loadMoreArticles = async () => {
+    console.log(`loadMoreArticles called - isLoadingMore: ${isLoadingMore}, hasMore: ${hasMore}, currentPage: ${currentPage}`);
     if (isLoadingMore || !hasMore) return;
 
     setIsLoadingMore(true);
     try {
       const start = currentPage * ARTICLES_PER_PAGE;
       let newArticles;
+      let totalCount;
       
       if (selected === LibraryType.ALL) {
         newArticles = await cmsClient.fetchAllArticlesPaginated(start, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchAllArticlesCount();
       } else {
         const articleType = getArticleTypeString(selected);
         newArticles = await cmsClient.fetchArticlesPaginatedByType(articleType, start, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchArticlesCountByType(articleType);
       }
 
       if (newArticles.length > 0) {
         const updatedArticles = [...articles, ...newArticles];
         setArticles(updatedArticles);
-        setFilteredArticles(updatedArticles); // No need to filter since we're using specific queries
-        
+        setFilteredArticles(updatedArticles);
         setCurrentPage((prev) => prev + 1);
         
-        // Check if we've loaded all articles
+        // Simple check: if we got fewer articles than requested, we're done
         if (newArticles.length < ARTICLES_PER_PAGE) {
           setHasMore(false);
         }
       } else {
-        // No articles returned, we've reached the end
         setHasMore(false);
       }
-      console.log('newArticles', newArticles.length);
-      console.log('filteredArticles.length before:', filteredArticles.length);
-      console.log('hasMore:', hasMore);
+      
+      console.log(`${selected} - loaded ${newArticles.length} more, total: ${articles.length + newArticles.length}, hasMore: ${newArticles.length === ARTICLES_PER_PAGE}, start: ${start}`);
     } catch (error) {
       console.error('Error loading more articles:', error);
     } finally {
@@ -217,31 +225,15 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
     const fetchInitialArticles = async () => {
       try {
         // Load first page of all articles
-        const initialArticles = await cmsClient.fetchAllArticlesPaginated(
-          0,
-          ARTICLES_PER_PAGE,
-        );
+        const initialArticles = await cmsClient.fetchAllArticlesPaginated(0, ARTICLES_PER_PAGE);
+        const totalCount = await cmsClient.fetchAllArticlesCount();
+        
         setArticles(initialArticles);
         setFilteredArticles(initialArticles);
         setCurrentPage(1);
-
-        // Fetch all article counts once
-        const [allCount, articleCount, videoCount, researchCount] = await Promise.all([
-          cmsClient.fetchAllArticlesCount(),
-          cmsClient.fetchArticlesCountByType('Article'),
-          cmsClient.fetchArticlesCountByType('Video'),
-          cmsClient.fetchArticlesCountByType('Research'),
-        ]);
-
-        setArticleCounts({
-          [LibraryType.ALL]: allCount,
-          [LibraryType.ARTICLE]: articleCount,
-          [LibraryType.VIDEO]: videoCount,
-          [LibraryType.RESEARCH]: researchCount,
-        });
-
-        // Check if there are more articles to load
-        setHasMore(initialArticles.length < allCount);
+        setHasMore(initialArticles.length < totalCount);
+        
+        console.log(`Initial load - loaded ${initialArticles.length} of ${totalCount} total`);
       } catch (error) {
         console.error('Error fetching initial articles:', error);
       }
@@ -447,6 +439,8 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
           gap: secondaryGap,
           paddingLeft: paddingSide,
           paddingRight: paddingSide,
+          width: '100%',
+          boxSizing: 'border-box',
         }}
       >
         <ButtonContainer>
@@ -475,8 +469,8 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
             Research
           </StyledButton>
         </ButtonContainer>
-        <InfiniteScroll
-          key={`${selected}-${filteredArticles.length}`}
+                    <StyledInfiniteScroll
+          key={`${selected}-${currentPage}`}
           dataLength={filteredArticles.length}
           next={loadMoreArticles}
           hasMore={hasMore}
@@ -499,6 +493,8 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
             rowSpacing="24px"
             sx={{
               paddingBottom: paddingTopBottom,
+              width: '100%',
+              justifyContent: 'flex-start',
             }}
           >
             {isLoadingArticles
@@ -529,7 +525,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
                     ),
                 )}
           </Grid>
-        </InfiniteScroll>
+                    </StyledInfiniteScroll>
       </ArticleContainer>
     </MainContainer>
   );
