@@ -6,8 +6,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTheme, styled } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { CMSArticleType } from '@righton/networking';
+import { CMSArticleType } from '@righton/networking';      
+import StyledInfiniteScroll from '../lib/styledcomponents/Library/StyledInfiniteScroll';
+
 import { ScreenSize, LibraryType } from '../lib/WebsiteModels';
 import CornerstoneArticleCard from '../components/article/CornerstoneArticleCard';
 import ArticleCard from '../components/article/ArticleCard';
@@ -71,6 +72,12 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [articleCounts, setArticleCounts] = useState<Record<LibraryType, number>>({
+    [LibraryType.ALL]: 0,
+    [LibraryType.ARTICLE]: 0,
+    [LibraryType.VIDEO]: 0,
+    [LibraryType.RESEARCH]: 0,
+  });
   const isContentPage = useMatch('/library/:contentId');
   const contentId = isContentPage ? isContentPage.params.contentId : null;
 
@@ -80,7 +87,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
   const secondaryGap = `${theme.sizing.lgPadding}px`;
 
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up(1400));
 
   const screenSize = isLargeScreen // eslint-disable-line
     ? ScreenSize.LARGE 
@@ -103,50 +110,95 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
       ? theme.sizing.mdPadding
       : theme.sizing.xLgPadding;
 
-  const handleArticleFilterClick = (tag: LibraryType) => {
-    setSelected(tag);
-    let filtered = articles;
-    if (tag !== LibraryType.ALL) {
-      filtered = articles.filter((article) => article.tags.includes(tag));
+  // Helper function to convert LibraryType to article type string
+  const getArticleTypeString = (libraryType: LibraryType): string => {
+    switch (libraryType) {
+      case LibraryType.ARTICLE:
+        return 'Article';
+      case LibraryType.VIDEO:
+        return 'Video';
+      case LibraryType.RESEARCH:
+        return 'Research';
+      default:
+        return '';
     }
-    setFilteredArticles(filtered);
+  };
 
-    // Reset pagination state when filter changes
+  const handleArticleFilterClick = async (tag: LibraryType) => {
+    setSelected(tag);
+    setArticles([]);
+    setFilteredArticles([]);
     setCurrentPage(0);
     setHasMore(true);
+    
+    // Force a small delay to ensure state is cleared before loading new data
+    await new Promise(resolve => {
+      setTimeout(resolve, 10);
+    });
+    
+    try {
+      setIsLoadingArticles(true);
+      
+      // Load first page and get count for this specific type
+      let initialArticles;
+      let totalCount;
+      
+      if (tag === LibraryType.ALL) {
+        initialArticles = await cmsClient.fetchAllArticlesPaginated(0, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchAllArticlesCount();
+      } else {
+        const articleType = getArticleTypeString(tag);
+        initialArticles = await cmsClient.fetchArticlesPaginatedByType(articleType, 0, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchArticlesCountByType(articleType);
+      }
+      
+      setArticles(initialArticles);
+      setFilteredArticles(initialArticles);
+      setCurrentPage(1);
+      setHasMore(initialArticles.length < totalCount);
+      
+      console.log(`${tag} - loaded ${initialArticles.length} of ${totalCount} total, hasMore: ${initialArticles.length < totalCount}`);
+    } catch (error) {
+      console.error('Error loading articles for filter:', error);
+    } finally {
+      setIsLoadingArticles(false);
+    }
   };
 
   const loadMoreArticles = async () => {
+    console.log(`loadMoreArticles called - isLoadingMore: ${isLoadingMore}, hasMore: ${hasMore}, currentPage: ${currentPage}`);
     if (isLoadingMore || !hasMore) return;
 
     setIsLoadingMore(true);
     try {
       const start = currentPage * ARTICLES_PER_PAGE;
-      const newArticles = await cmsClient.fetchArticlesPaginated(
-        start,
-        ARTICLES_PER_PAGE,
-      );
+      let newArticles;
+      let totalCount;
+      
+      if (selected === LibraryType.ALL) {
+        newArticles = await cmsClient.fetchAllArticlesPaginated(start, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchAllArticlesCount();
+      } else {
+        const articleType = getArticleTypeString(selected);
+        newArticles = await cmsClient.fetchArticlesPaginatedByType(articleType, start, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchArticlesCountByType(articleType);
+      }
 
       if (newArticles.length > 0) {
         const updatedArticles = [...articles, ...newArticles];
         setArticles(updatedArticles);
-
-        // Apply current filter to new articles
-        let filtered = updatedArticles;
-        if (selected !== LibraryType.ALL) {
-          filtered = updatedArticles.filter((article) =>
-            article.tags.includes(selected),
-          );
-        }
-        setFilteredArticles(filtered);
-
+        setFilteredArticles(updatedArticles);
         setCurrentPage((prev) => prev + 1);
-      }
-
-      // Check if we've loaded all articles
-      if (newArticles.length < ARTICLES_PER_PAGE) {
+        
+        // Simple check: if we got fewer articles than requested, we're done
+        if (newArticles.length < ARTICLES_PER_PAGE) {
+          setHasMore(false);
+        }
+      } else {
         setHasMore(false);
       }
+      
+      console.log(`${selected} - loaded ${newArticles.length} more, total: ${articles.length + newArticles.length}, hasMore: ${newArticles.length === ARTICLES_PER_PAGE}, start: ${start}`);
     } catch (error) {
       console.error('Error loading more articles:', error);
     } finally {
@@ -172,21 +224,16 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
     };
     const fetchInitialArticles = async () => {
       try {
-        // Get total count first
-        const total = await cmsClient.fetchArticlesCount();
-
-        // Load first page
-        const initialArticles = await cmsClient.fetchArticlesPaginated(
-          0,
-          ARTICLES_PER_PAGE,
-        );
+        // Load first page of all articles
+        const initialArticles = await cmsClient.fetchAllArticlesPaginated(0, ARTICLES_PER_PAGE);
+        const totalCount = await cmsClient.fetchAllArticlesCount();
+        
         setArticles(initialArticles);
         setFilteredArticles(initialArticles);
         setCurrentPage(1);
-
-        // Check if there are more articles to load
-        const hasMoreArticles = initialArticles.length === ARTICLES_PER_PAGE;
-        setHasMore(hasMoreArticles);
+        setHasMore(initialArticles.length < totalCount);
+        
+        console.log(`Initial load - loaded ${initialArticles.length} of ${totalCount} total`);
       } catch (error) {
         console.error('Error fetching initial articles:', error);
       }
@@ -212,6 +259,8 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
         sx={{
           paddingLeft: paddingSide,
           paddingRight: paddingSide,
+          justifyContent: screenSize === ScreenSize.LARGE ? 'center' : 'start',
+          boxSizing: 'border-box',
         }}
       >
         {isLoadingCornerstones
@@ -332,6 +381,14 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
           Explore our library of resources created by educators like you!
         </Typography>
       </Uppercontainer>
+      <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: `${theme.sizing.lgPadding}px`,
+      }}
+      >
       <CornerStonesTitleContainer
         sx={{
           paddingLeft: paddingSide,
@@ -347,31 +404,43 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
             color: '#FFFFFF',
           }}
         >
-          Suggested Articles:
+          Suggested Resources:
         </Typography>
       </CornerStonesTitleContainer>
       <Box
         sx={{
-          justifySelf: 'start',
+          justifySelf: screenSize === ScreenSize.LARGE ? 'center' : 'start',
           width: '100%',
           boxSizing: 'border-box',
         }}
       >
         {renderArticleContainerArray}
       </Box>
-      <Box
-        sx={{
-          border: '1px solid #FFFFFF',
-          width: '100%',
-          paddingLeft: paddingSide,
-          paddingRight: paddingSide,
-        }}
-      />
+      </Box>
+             <Box
+         sx={{
+           width: '100%',
+           paddingLeft: paddingSide,
+           paddingRight: paddingSide,
+           boxSizing: 'border-box',
+         }}
+       >
+         <Box
+           style={{
+             display: 'block',
+             width: '100%',
+             height: '1px',
+             background: '#FFF',
+           }}
+         />
+       </Box>
       <ArticleContainer
         sx={{
           gap: secondaryGap,
           paddingLeft: paddingSide,
           paddingRight: paddingSide,
+          width: '100%',
+          boxSizing: 'border-box',
         }}
       >
         <ButtonContainer>
@@ -400,7 +469,8 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
             Research
           </StyledButton>
         </ButtonContainer>
-        <InfiniteScroll
+                    <StyledInfiniteScroll
+          key={`${selected}-${currentPage}`}
           dataLength={filteredArticles.length}
           next={loadMoreArticles}
           hasMore={hasMore}
@@ -409,6 +479,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
               style={{
                 display: 'flex',
                 justifyContent: 'center',
+                alignItems: 'center',
                 padding: '20px',
               }}
             >
@@ -422,6 +493,8 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
             rowSpacing="24px"
             sx={{
               paddingBottom: paddingTopBottom,
+              width: '100%',
+              justifyContent: 'flex-start',
             }}
           >
             {isLoadingArticles
@@ -452,7 +525,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
                     ),
                 )}
           </Grid>
-        </InfiniteScroll>
+                    </StyledInfiniteScroll>
       </ArticleContainer>
     </MainContainer>
   );

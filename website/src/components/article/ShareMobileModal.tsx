@@ -138,37 +138,6 @@ export function ShareMobileModal ({ // eslint-disable-line
         </Box>
         <Box
           onClick={() => {
-            window.open(twitterUrl, '_blank', 'noopener,noreferrer');
-          }}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '8px',
-            minWidth: '52px',
-            cursor: 'pointer',
-          }}
-        >
-          <img
-            src={shareTwitter}
-            alt="Twitter"
-            style={{ width: '42px', height: '42px' }}
-          />
-          <Typography
-            style={{
-              color: '#fff',
-              fontSize: '12px',
-              lineHeight: '12px',
-              fontWeight: '400',
-              fontFamily: 'Rubik',
-            }}
-          >
-            Twitter
-          </Typography>
-        </Box>
-        <Box
-          onClick={() => {
             window.open(facebookUrl, '_blank', 'noopener,noreferrer');
           }}
           style={{
@@ -198,6 +167,38 @@ export function ShareMobileModal ({ // eslint-disable-line
             Facebook
           </Typography>
         </Box>
+        <Box
+          onClick={() => {
+            window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+          }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+            minWidth: '52px',
+            cursor: 'pointer',
+          }}
+        >
+          <img
+            src={shareTwitter}
+            alt="Twitter"
+            style={{ width: '42px', height: '42px' }}
+          />
+          <Typography
+            style={{
+              color: '#fff',
+              fontSize: '12px',
+              lineHeight: '12px',
+              fontWeight: '400',
+              fontFamily: 'Rubik',
+            }}
+          >
+            Twitter
+          </Typography>
+        </Box>
+        
         <Box
           onClick={handleCopyLinkClicked}
           style={{

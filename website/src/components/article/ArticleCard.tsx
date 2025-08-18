@@ -18,6 +18,7 @@ type ArticleCardProps = {
 };
 
 const CardContainer = styled(Box)(({ theme }) => ({
+  minWidth: '300px',
   maxHeight: '98px',
   display: 'flex',
   gap: `${theme.sizing.smPadding}px`,
@@ -59,7 +60,7 @@ export default function ArticleCard({
           <Box
             sx={{
               display: 'flex',
-              gap: '8px',
+              gap: `${theme.sizing.mdPadding}px`,
               flexWrap: 'wrap',
               alignItems: 'center',
             }}

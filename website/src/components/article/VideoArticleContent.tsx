@@ -28,7 +28,7 @@ export function VideoArticleContent({// eslint-disable-line
         display: 'flex',
         flexDirection: 'column',
         maxWidth: '648px',
-        gap: '40px',
+        gap: '48px',
       }}
     >
       <iframe
@@ -41,8 +41,8 @@ export function VideoArticleContent({// eslint-disable-line
           borderRadius: '8px',
         }}
       />
-      <CMSTitleText>{article.title}</CMSTitleText>
       <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <CMSTitleText>{article.title}</CMSTitleText>
         <PortableText
           value={article.details}
           components={PortableTextComponentsConfig as PortableTextComponents}

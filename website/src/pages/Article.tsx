@@ -156,6 +156,8 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                     display: 'flex',
                     flexDirection: 'column',
                     maxWidth: '648px',
+                    paddingBottom:
+                      screenSize === ScreenSize.LARGE ? '48px' : '0px',
                     gap: '40px',
                   }}
                 >
@@ -186,13 +188,22 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                         : `${theme.sizing.lgPaddingMobile}px`,
                   }}
                 >
+                <Box
+                  sx={{
+                    width: '100%',
+                    paddingLeft: '32px',
+                    paddingRight: '32px',
+                    boxSizing: 'border-box',
+                  }}
+                >
                   <Box
                     style={{
                       width: '100%',
                       border: theme.sizing.dividerBorder,
-                      boxSizing: 'border-box',
+                      display: 'block',
                     }}
                   />
+                  </Box>
                   <OtherArticles
                     articles={otherArticles}
                     screenSize={screenSize}
