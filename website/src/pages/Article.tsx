@@ -188,13 +188,22 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                         : `${theme.sizing.lgPaddingMobile}px`,
                   }}
                 >
+                <Box
+                  sx={{
+                    width: '100%',
+                    paddingLeft: '32px',
+                    paddingRight: '32px',
+                    boxSizing: 'border-box',
+                  }}
+                >
                   <Box
                     style={{
                       width: '100%',
                       border: theme.sizing.dividerBorder,
-                      boxSizing: 'border-box',
+                      display: 'block',
                     }}
                   />
+                  </Box>
                   <OtherArticles
                     articles={otherArticles}
                     screenSize={screenSize}

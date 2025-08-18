@@ -103,6 +103,18 @@ export function ArticleHeader({ // eslint-disable-line
             </Box>
             <Box
               onClick={() => {
+                window.open(facebookUrl, '_blank', 'noopener,noreferrer');
+              }}
+              style={{ cursor: 'pointer' }}
+            >
+              <img
+                src={shareFacebook}
+                alt="Share on Facebook"
+                style={{ width: '32px', height: '32px' }}
+              />
+            </Box>
+            <Box
+              onClick={() => {
                 window.open(twitterUrl, '_blank', 'noopener,noreferrer');
               }}
               style={{ cursor: 'pointer' }}
@@ -114,18 +126,7 @@ export function ArticleHeader({ // eslint-disable-line
               />
             </Box>
 
-            <Box
-              onClick={() => {
-                window.open(facebookUrl, '_blank', 'noopener,noreferrer');
-              }}
-              style={{ cursor: 'pointer' }}
-            >
-              <img
-                src={shareFacebook}
-                alt="Share on Facebook"
-                style={{ width: '32px', height: '32px' }}
-              />
-            </Box>
+           
             <Box
               onClick={() => {
                 handleShareClicked();
