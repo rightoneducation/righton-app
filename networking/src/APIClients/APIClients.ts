@@ -17,6 +17,7 @@ import {
   ITeamAnswerAPIClient
 } from './gamesession/interfaces';
 import IAIAPIClient from './AI/interfaces/IAIAPIClient';
+import { ICMSAPIClient } from './cms/interfaces/ICMSAPIClient';
 import { AuthAPIClient } from './auth/AuthAPIClient';
 import { AIAPIClient } from './AI/AIAPIClient';
 import { UserAPIClient } from './user/UserAPIClient';
@@ -28,6 +29,7 @@ import { QuestionAPIClient } from './gamesession/QuestionAPIClient';
 import { TeamAPIClient } from './gamesession/TeamAPIClient';
 import { TeamMemberAPIClient } from './gamesession/TeamMemberAPIClient';
 import { TeamAnswerAPIClient } from './gamesession/TeamAnswerAPIClient';
+import { CMSAPIClient } from './cms/CMSAPIClient';
 import { Environment } from './BaseAPIClient';
 import { PlayDataManagerAPIClient } from './datamanagers/PlayDataManagerAPIClient';
 import { IPlayDataManagerAPIClient } from './datamanagers/interfaces/IPlayDataManagerAPIClient';
@@ -57,6 +59,7 @@ export class APIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
+  cms: ICMSAPIClient;
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
   centralDataManager?: ICentralDataManagerAPIClient;
@@ -75,7 +78,8 @@ export class APIClients {
     this.team = new TeamAPIClient(env, this.auth);
     this.teamMember = new TeamMemberAPIClient(env, this.auth);
     this.teamAnswer = new TeamAnswerAPIClient(env, this.auth);
-    this.user = new UserAPIClient(env, this.auth)
+    this.user = new UserAPIClient(env, this.auth);
+    this.cms = new CMSAPIClient();
 
     if (appType === AppType.PLAY) {
       this.playDataManager = new PlayDataManagerAPIClient(env, this.gameSession);

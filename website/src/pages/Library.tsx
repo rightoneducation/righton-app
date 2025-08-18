@@ -1,10 +1,532 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { useMatch } from 'react-router-dom';
+import { Typography, Grid, Box, CircularProgress } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { useTheme, styled } from '@mui/material/styles';
+import { v4 as uuidv4 } from 'uuid';
+import { CMSArticleType } from '@righton/networking';      
+import StyledInfiniteScroll from '../lib/styledcomponents/Library/StyledInfiniteScroll';
 
-export function Library() { // eslint-disable-line
+import { ScreenSize, LibraryType } from '../lib/WebsiteModels';
+import CornerstoneArticleCard from '../components/article/CornerstoneArticleCard';
+import ArticleCard from '../components/article/ArticleCard';
+import CornerstoneSkeleton from '../components/library/CornerstoneSkeleton';
+import ArticleSkeleton from '../components/library/ArticleSkeleton';
+import {
+  ButtonContainer,
+  StyledButton,
+  MathSymbolsBackground,
+} from '../lib/styledcomponents/StyledComponents';
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'swiper/css';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'swiper/css/navigation';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'swiper/css/pagination';
+
+const MainContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  boxSizing: 'border-box',
+  background: 'transparent',
+}));
+
+const Uppercontainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '24px',
+  boxSizing: 'border-box',
+}));
+
+const CornerStonesTitleContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+}));
+
+const CornerStonesContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  gap: ' 48px',
+}));
+
+const ArticleContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+}));
+
+export function Library({ cmsClient }: any) { // eslint-disable-line
+  const theme = useTheme();
+  const [selected, setSelected] = useState<LibraryType>(LibraryType.ALL);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<any[]>([]);
+  const [cornerstones, setCornerstones] = useState<any[]>([]);
+  const [isLoadingArticles, setIsLoadingArticles] = useState(false);
+  const [isLoadingCornerstones, setIsLoadingCornerstones] = useState(false);
+  const [isLoadingSingleArticle, setIsLoadingSingleArticle] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [articleCounts, setArticleCounts] = useState<Record<LibraryType, number>>({
+    [LibraryType.ALL]: 0,
+    [LibraryType.ARTICLE]: 0,
+    [LibraryType.VIDEO]: 0,
+    [LibraryType.RESEARCH]: 0,
+  });
+  const isContentPage = useMatch('/library/:contentId');
+  const contentId = isContentPage ? isContentPage.params.contentId : null;
+
+  const ARTICLES_PER_PAGE = 9;
+
+  const primaryGap = `${theme.sizing.xLgPadding}px`;
+  const secondaryGap = `${theme.sizing.lgPadding}px`;
+
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up(1400));
+
+  const screenSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE 
+    : isMediumScreen
+      ? ScreenSize.MEDIUM
+      : ScreenSize.SMALL;
+
+  const countCornerstone = screenSize === ScreenSize.LARGE ? 5 : 3;
+  const countArticle = screenSize === ScreenSize.LARGE ? 12 : 6;
+  const paddingSide =
+    screenSize === ScreenSize.SMALL
+      ? `${theme.sizing.smPadding}px`
+      : `${theme.sizing.xLgPadding}px`;
+  const paddingTopBottom =
+    screenSize === ScreenSize.LARGE
+      ? `${theme.sizing.xxLgPadding}px`
+      : `${theme.sizing.lgPadding}px`;
+  const slideOffset =
+    screenSize === ScreenSize.SMALL
+      ? theme.sizing.mdPadding
+      : theme.sizing.xLgPadding;
+
+  // Helper function to convert LibraryType to article type string
+  const getArticleTypeString = (libraryType: LibraryType): string => {
+    switch (libraryType) {
+      case LibraryType.ARTICLE:
+        return 'Article';
+      case LibraryType.VIDEO:
+        return 'Video';
+      case LibraryType.RESEARCH:
+        return 'Research';
+      default:
+        return '';
+    }
+  };
+
+  const handleArticleFilterClick = async (tag: LibraryType) => {
+    setSelected(tag);
+    setArticles([]);
+    setFilteredArticles([]);
+    setCurrentPage(0);
+    setHasMore(true);
+    
+    // Force a small delay to ensure state is cleared before loading new data
+    await new Promise(resolve => {
+      setTimeout(resolve, 10);
+    });
+    
+    try {
+      setIsLoadingArticles(true);
+      
+      // Load first page and get count for this specific type
+      let initialArticles;
+      let totalCount;
+      
+      if (tag === LibraryType.ALL) {
+        initialArticles = await cmsClient.fetchAllArticlesPaginated(0, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchAllArticlesCount();
+      } else {
+        const articleType = getArticleTypeString(tag);
+        initialArticles = await cmsClient.fetchArticlesPaginatedByType(articleType, 0, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchArticlesCountByType(articleType);
+      }
+      
+      setArticles(initialArticles);
+      setFilteredArticles(initialArticles);
+      setCurrentPage(1);
+      setHasMore(initialArticles.length < totalCount);
+      
+      console.log(`${tag} - loaded ${initialArticles.length} of ${totalCount} total, hasMore: ${initialArticles.length < totalCount}`);
+    } catch (error) {
+      console.error('Error loading articles for filter:', error);
+    } finally {
+      setIsLoadingArticles(false);
+    }
+  };
+
+  const loadMoreArticles = async () => {
+    console.log(`loadMoreArticles called - isLoadingMore: ${isLoadingMore}, hasMore: ${hasMore}, currentPage: ${currentPage}`);
+    if (isLoadingMore || !hasMore) return;
+
+    setIsLoadingMore(true);
+    try {
+      const start = currentPage * ARTICLES_PER_PAGE;
+      let newArticles;
+      let totalCount;
+      
+      if (selected === LibraryType.ALL) {
+        newArticles = await cmsClient.fetchAllArticlesPaginated(start, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchAllArticlesCount();
+      } else {
+        const articleType = getArticleTypeString(selected);
+        newArticles = await cmsClient.fetchArticlesPaginatedByType(articleType, start, ARTICLES_PER_PAGE);
+        totalCount = await cmsClient.fetchArticlesCountByType(articleType);
+      }
+
+      if (newArticles.length > 0) {
+        const updatedArticles = [...articles, ...newArticles];
+        setArticles(updatedArticles);
+        setFilteredArticles(updatedArticles);
+        setCurrentPage((prev) => prev + 1);
+        
+        // Simple check: if we got fewer articles than requested, we're done
+        if (newArticles.length < ARTICLES_PER_PAGE) {
+          setHasMore(false);
+        }
+      } else {
+        setHasMore(false);
+      }
+      
+      console.log(`${selected} - loaded ${newArticles.length} more, total: ${articles.length + newArticles.length}, hasMore: ${newArticles.length === ARTICLES_PER_PAGE}, start: ${start}`);
+    } catch (error) {
+      console.error('Error loading more articles:', error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
+  // simple loading of CMS content
+  useEffect(() => {
+    setIsLoadingArticles(true);
+    setIsLoadingCornerstones(true);
+    setIsLoadingSingleArticle(true);
+
+    const fetchSingleArticle = async () => {
+      if (contentId) {
+        const content = await cmsClient.fetchContentById(contentId);
+        setArticles([content]); // Wrap in an array to match the expected type
+      }
+    };
+    const fetchCornerstones = async () => {
+      const fetchedCornerstones = await cmsClient.fetchAllCornerstones();
+      setCornerstones(fetchedCornerstones);
+    };
+    const fetchInitialArticles = async () => {
+      try {
+        // Load first page of all articles
+        const initialArticles = await cmsClient.fetchAllArticlesPaginated(0, ARTICLES_PER_PAGE);
+        const totalCount = await cmsClient.fetchAllArticlesCount();
+        
+        setArticles(initialArticles);
+        setFilteredArticles(initialArticles);
+        setCurrentPage(1);
+        setHasMore(initialArticles.length < totalCount);
+        
+        console.log(`Initial load - loaded ${initialArticles.length} of ${totalCount} total`);
+      } catch (error) {
+        console.error('Error fetching initial articles:', error);
+      }
+    };
+
+    if (contentId) {
+      fetchSingleArticle().then(() => {
+        setIsLoadingSingleArticle(false);
+      });
+    } else {
+      fetchCornerstones().then(() => {
+        setIsLoadingCornerstones(false);
+      });
+      fetchInitialArticles().then(() => {
+        setIsLoadingArticles(false);
+      });
+    }
+  }, []); // eslint-disable-line
+
+  const renderArticleContainerArray = [
+    screenSize === ScreenSize.LARGE ? (
+      <CornerStonesContainer
+        sx={{
+          paddingLeft: paddingSide,
+          paddingRight: paddingSide,
+          justifyContent: screenSize === ScreenSize.LARGE ? 'center' : 'start',
+          boxSizing: 'border-box',
+        }}
+      >
+        {isLoadingCornerstones
+          ? Array.from({ length: countCornerstone }).map((_, i) => (
+              <CornerstoneSkeleton index={i} screenSize={screenSize} />
+            ))
+          : cornerstones.map((article: CMSArticleType) => (
+              <Box
+                onClick={() => {
+                  window.location.href = `/library/${article._id}`;
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <CornerstoneArticleCard
+                  key={article._id}
+                  screenSize={screenSize}
+                  article={article}
+                />
+              </Box>
+            ))}
+      </CornerStonesContainer>
+    ) : (
+      <Swiper
+        slidesPerView="auto"
+        spaceBetween={48}
+        slidesOffsetAfter={slideOffset}
+        style={{
+          width: '100%',
+          paddingLeft: paddingSide,
+        }}
+      >
+        {cornerstones.map((article: CMSArticleType) => (
+          <SwiperSlide style={{ width: '287px' }}>
+            <Box
+              onClick={() => {
+                window.location.href = `/library/${article._id}`;
+              }}
+              style={{
+                cursor: 'pointer',
+              }}
+            >
+              <CornerstoneArticleCard
+                key={article._id}
+                screenSize={screenSize}
+                article={article}
+              />
+            </Box>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    ),
+  ];
   return (
-    <Box style={{background: '#000', width: '100%', height: '100%'}}>
-      <Typography>Library</Typography>
-    </Box>
-  )
+    <MainContainer
+      sx={{
+        gap: screenSize === ScreenSize.LARGE ? primaryGap : secondaryGap,
+        alignItems: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
+      }}
+    >
+      <MathSymbolsBackground />
+      <Uppercontainer
+        sx={{
+          alignItems: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
+          paddingTop: paddingTopBottom,
+          paddingLeft: paddingSide,
+          paddingRight: paddingSide,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            alignItems:
+              screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
+            boxSizing: 'border-box',
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '16px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 600,
+              color: '#FFFFFF',
+            }}
+          >
+            RESOURCES
+          </Typography>
+          <Typography
+            sx={{
+              lineHeight: '1.2',
+              fontSize: '40px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 700,
+              color: '#FFFFFF',
+            }}
+          >
+            Explore our Resource Library
+          </Typography>
+        </Box>
+        <Typography
+          sx={{
+            fontSize:
+              screenSize === ScreenSize.MEDIUM ||
+              screenSize === ScreenSize.SMALL
+                ? '20px'
+                : '24px',
+            lineHeight:
+              screenSize === ScreenSize.MEDIUM ||
+              screenSize === ScreenSize.SMALL
+                ? '100%'
+                : '130%',
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 400,
+            color: '#FFFFFF',
+          }}
+        >
+          Explore our library of resources created by educators like you!
+        </Typography>
+      </Uppercontainer>
+      <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: `${theme.sizing.lgPadding}px`,
+      }}
+      >
+      <CornerStonesTitleContainer
+        sx={{
+          paddingLeft: paddingSide,
+          paddingRight: paddingSide,
+          boxSizing: 'border-box',
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: '20px',
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 700,
+            color: '#FFFFFF',
+          }}
+        >
+          Suggested Resources:
+        </Typography>
+      </CornerStonesTitleContainer>
+      <Box
+        sx={{
+          justifySelf: screenSize === ScreenSize.LARGE ? 'center' : 'start',
+          width: '100%',
+          boxSizing: 'border-box',
+        }}
+      >
+        {renderArticleContainerArray}
+      </Box>
+      </Box>
+             <Box
+         sx={{
+           width: '100%',
+           paddingLeft: paddingSide,
+           paddingRight: paddingSide,
+           boxSizing: 'border-box',
+         }}
+       >
+         <Box
+           style={{
+             display: 'block',
+             width: '100%',
+             height: '1px',
+             background: '#FFF',
+           }}
+         />
+       </Box>
+      <ArticleContainer
+        sx={{
+          gap: secondaryGap,
+          paddingLeft: paddingSide,
+          paddingRight: paddingSide,
+          width: '100%',
+          boxSizing: 'border-box',
+        }}
+      >
+        <ButtonContainer>
+          <StyledButton
+            selected={selected === LibraryType.ALL}
+            onClick={() => handleArticleFilterClick(LibraryType.ALL)}
+          >
+            All
+          </StyledButton>
+          <StyledButton
+            selected={selected === LibraryType.ARTICLE}
+            onClick={() => handleArticleFilterClick(LibraryType.ARTICLE)}
+          >
+            Articles
+          </StyledButton>
+          <StyledButton
+            selected={selected === LibraryType.VIDEO}
+            onClick={() => handleArticleFilterClick(LibraryType.VIDEO)}
+          >
+            Videos
+          </StyledButton>
+          <StyledButton
+            selected={selected === LibraryType.RESEARCH}
+            onClick={() => handleArticleFilterClick(LibraryType.RESEARCH)}
+          >
+            Research
+          </StyledButton>
+        </ButtonContainer>
+                    <StyledInfiniteScroll
+          key={`${selected}-${currentPage}`}
+          dataLength={filteredArticles.length}
+          next={loadMoreArticles}
+          hasMore={hasMore}
+          loader={
+            <Box
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '20px',
+              }}
+            >
+              <CircularProgress style={{ color: '#FFF' }} />
+            </Box>
+          }
+        >
+          <Grid
+            container
+            columnSpacing="16px"
+            rowSpacing="24px"
+            sx={{
+              paddingBottom: paddingTopBottom,
+              width: '100%',
+              justifyContent: 'flex-start',
+            }}
+          >
+            {isLoadingArticles
+              ? Array.from({ length: countArticle }).map((_, i) => (
+                  <Grid size={{ xs: 12, md: 12, lg: 4 }} key={uuidv4()}>
+                    <ArticleSkeleton index={i} />
+                  </Grid>
+                ))
+              : filteredArticles.map(
+                  (article: any) =>
+                    article && (
+                      <Grid size={{ xs: 12, md: 12, lg: 4 }} key={article._id}>
+                        <Box
+                          onClick={() => {
+                            window.location.href = `/library/${article._id}`;
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <ArticleCard
+                            image={article.image || article.thumbnailImage}
+                            date={article.date}
+                            tags={article.tags}
+                            title={article.title}
+                            caption={article.caption}
+                          />
+                        </Box>
+                      </Grid>
+                    ),
+                )}
+          </Grid>
+                    </StyledInfiniteScroll>
+      </ArticleContainer>
+    </MainContainer>
+  );
 }
