@@ -65,7 +65,7 @@ function CornerstoneArticleCard({
       return (
         <StyledCard
           screenSize={screenSize}
-          style={{ width: '287px', maxWidth: '287px', minHeight: '400px' }}
+          style={{ width: '287px', maxWidth: '287px', minHeight: '345px' }}
         >
           <Box sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}>
             <img
@@ -83,7 +83,7 @@ function CornerstoneArticleCard({
             />
             <Typography
               sx={{
-                fontSize: '16px',
+                fontSize: '18px',
                 fontFamily: 'Poppins, sans-serif',
                 fontWeight: 600,
                 color: '#22499C',
@@ -91,11 +91,11 @@ function CornerstoneArticleCard({
                 top: '17px',
                 left: '10px',
                 border: '2px solid #22499C',
-                padding: '10px',
+                padding: '6px 8px',
                 borderRadius: '18px',
               }}
             >
-              {article.tags?.[0]}
+              Teaching Resources
             </Typography>
           </Box>
           <Box
@@ -129,21 +129,23 @@ function CornerstoneArticleCard({
                 width: '100%',
               }}
             >
-              <CMSMonsterAvatar
-                src={avatarSrc}
-                alt="Monster Avatar"
-                style={{ width: '20px', height: '20px' }}
-              />
-              <Typography
-                sx={{
-                  fontSize: '12px',
-                  fontFamily: 'Rubik, sans-serif',
-                  fontWeight: 400,
-                  color: '#FFFFFF',
-                }}
-              >
-                {authorText}
-              </Typography>
+              <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                <CMSMonsterAvatar
+                  src={avatarSrc}
+                  alt="Monster Avatar"
+                  style={{ width: '20px', height: '20px' }}
+                />
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    fontFamily: 'Rubik, sans-serif',
+                    fontWeight: 400,
+                    color: '#FFFFFF',
+                  }}
+                >
+                  {authorText}
+                </Typography>
+              </Box>
               <Typography
                 sx={{
                   fontSize: '12px',
@@ -209,13 +211,13 @@ function CornerstoneArticleCard({
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <Typography
                 sx={{
-                  fontSize: '14px',
+                  fontSize: '18px',
                   fontFamily: 'Rubik, sans-serif',
                   fontWeight: 400,
                   color: '#FFFFFF',
                 }}
               >
-                {article.tags?.[0]}
+                Teaching Resources
               </Typography>
               <CMSCornerstoneTitle
                 sx={{

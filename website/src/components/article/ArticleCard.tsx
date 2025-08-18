@@ -59,7 +59,7 @@ export default function ArticleCard({
           <Box
             sx={{
               display: 'flex',
-              gap: '8px',
+              gap: `${theme.sizing.mdPadding}px`,
               flexWrap: 'wrap',
               alignItems: 'center',
             }}
