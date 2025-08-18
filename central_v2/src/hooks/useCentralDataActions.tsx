@@ -240,12 +240,14 @@ export default function useCentralDataManager({
         searchGameQuestion: GameQuestionType,
         libraryTab: LibraryTabEnum,
         userProfile: IUserProfile,
+        callTypeMatchesDebounced: any,
+        isLibraryDebounced: boolean,
       ) => {
         centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: search });
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
         const callType = getCallType({
-          ...callTypeMatches,
+          ...callTypeMatchesDebounced,
           libraryTab,
           gameQuestion: searchGameQuestion,
         });
@@ -265,8 +267,8 @@ export default function useCentralDataManager({
                 sortType,
                 gradeTargets,
                 null,
-                isLibrary ?? false,
-                isLibrary ? userProfile.dynamoId : undefined,
+                (isLibraryDebounced && callType.publicPrivateType === PublicPrivateType.PUBLIC) ?? false,
+                (isLibraryDebounced && callType.publicPrivateType === PublicPrivateType.PUBLIC) ? userProfile.dynamoId : undefined,
               )
               .then((response) => {
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -289,8 +291,8 @@ export default function useCentralDataManager({
                 sortType,
                 gradeTargets,
                 null,
-                isLibrary ?? false,
-                isLibrary ? userProfile.dynamoId : undefined,
+                (isLibraryDebounced && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
+                (isLibraryDebounced && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? userProfile.dynamoId : undefined,
               )
               .then((response) => {
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -316,6 +318,8 @@ export default function useCentralDataManager({
       gameQuestion,
       centralData.openTab,
       centralData.userProfile,
+      callTypeMatches,
+      isLibrary
     );
   };
 
@@ -893,6 +897,10 @@ export default function useCentralDataManager({
             payload: response.questions,
           });
           centralDataDispatch({
+            type: 'SET_PUBLIC_QUESTIONS',
+            payload: response.questions,
+          });
+          centralDataDispatch({
             type: 'SET_NEXT_TOKEN',
             payload: response.nextToken,
           });
@@ -912,6 +920,10 @@ export default function useCentralDataManager({
           });
           centralDataDispatch({
             type: 'SET_MOST_POPULAR_GAMES',
+            payload: response.games,
+          });
+          centralDataDispatch({
+            type: 'SET_PUBLIC_GAMES',
             payload: response.games,
           });
           centralDataDispatch({

@@ -49,6 +49,7 @@ interface CreateGameCardBaseProps {
   draftGame: TGameTemplateProps;
   isClone: boolean;
   isEdit: boolean;
+  isEditDraft: boolean;
   isCloneImageChanged: boolean;
   label: string;
   screenSize: ScreenSize;
@@ -70,6 +71,7 @@ export default function CreateGameCardBase({
   draftGame,
   isClone,
   isEdit,
+  isEditDraft,
   isCloneImageChanged,
   label,
   screenSize,
@@ -103,7 +105,7 @@ export default function CreateGameCardBase({
       imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   } else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
-
+    
   const imageContents = [
     imageLink && (
       <Box
@@ -185,7 +187,8 @@ export default function CreateGameCardBase({
   };
 
   const handleOpenPublicPrivateWarning = () => {
-    if (openCreateQuestion || openQuestionBank) {
+    console.log('here');
+    if (draftGame.questionCount !== null && draftGame.questionCount !== undefined && draftGame.questionCount !== 0) {
       setPublicPrivateWarning(true);
     }
   };
@@ -254,32 +257,40 @@ export default function CreateGameCardBase({
         </Box>
 
         {screenSize !== ScreenSize.SMALL && (
-          <TooltipStyled
-            placement="top"
-            open={publicPrivateWarning}
-            onOpen={handleOpenPublicPrivateWarning}
-            onClose={handleClosePublicPrivateWarning}
-            title="Cannot edit while adding questions"
-            arrow
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                gap: '16px',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+           (draftGame?.gameTemplate?.questionTemplates?.length && draftGame?.gameTemplate?.questionTemplates?.length < 1) ? (
+            <TooltipStyled
+              placement="top"
+              title="Cannot edit while adding questions"
+              arrow
             >
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: '16px',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <PublicPrivateButton
+                  isPublic={
+                    draftGame.gameTemplate.publicPrivateType ===
+                    PublicPrivateType.PUBLIC
+                  }
+                  onHandlePublicPrivateChange={handlePublicPrivateChange}
+                  isDisabled
+                />
+              </Box>
+            </TooltipStyled>
+           ) : (
               <PublicPrivateButton
                 isPublic={
                   draftGame.gameTemplate.publicPrivateType ===
                   PublicPrivateType.PUBLIC
                 }
                 onHandlePublicPrivateChange={handlePublicPrivateChange}
-                isDisabled={openCreateQuestion || openQuestionBank || isEdit}
+                isDisabled={false}
               />
-            </Box>
-          </TooltipStyled>
+           )
         )}
       </CreateGameTitleBarStyled>
       <GameContentContainerStyled screenSize={screenSize}>
@@ -401,33 +412,42 @@ export default function CreateGameCardBase({
           {/* card Error */}
           {screenSize === ScreenSize.SMALL && (
             <>
-              {isCardErrored && <CreateGameErrorBox screenSize={screenSize} />}
-              <TooltipStyled
-                open={publicPrivateWarning}
-                onOpen={handleOpenPublicPrivateWarning}
-                onClose={handleClosePublicPrivateWarning}
-                title="Cannot edit while adding questions"
-                arrow
-              >
-                <Box
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    gap: '8px',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
+              {(isCardErrored || draftGame.isDraftGameErrored) && <CreateGameErrorBox screenSize={screenSize} />}
+              {((draftGame?.gameTemplate?.questionTemplates?.length && draftGame?.gameTemplate?.questionTemplates?.length < 1) || !isEditDraft) ? (
+                <TooltipStyled
+                  placement="top"
+                  title="Cannot edit while adding questions"
+                  arrow
                 >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: '16px',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <PublicPrivateButton
+                      isPublic={
+                        draftGame.gameTemplate.publicPrivateType ===
+                        PublicPrivateType.PUBLIC
+                      }
+                      onHandlePublicPrivateChange={handlePublicPrivateChange}
+                      isDisabled
+                    />
+                  </Box>
+                </TooltipStyled>
+              ) : (
                   <PublicPrivateButton
                     isPublic={
                       draftGame.gameTemplate.publicPrivateType ===
                       PublicPrivateType.PUBLIC
                     }
                     onHandlePublicPrivateChange={handlePublicPrivateChange}
-                    isDisabled={openCreateQuestion || openQuestionBank}
+                    isDisabled={false}
                   />
-                </Box>
-              </TooltipStyled>
+              )
+            }
             </>
           )}
         </Box>

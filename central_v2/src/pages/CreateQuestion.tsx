@@ -17,6 +17,7 @@ import {
   IncorrectCard,
   AnswerType,
   AnswerPrecision,
+  CloudFrontDistributionUrl
 } from '@righton/networking';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase';
@@ -33,6 +34,7 @@ import {
   StorageKey,
   TemplateType,
   GameQuestionType,
+  LibraryTabEnum,
 } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
@@ -68,7 +70,7 @@ import {
   handleIncorrectCardClick,
 } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
-import { useCentralDataState } from '../hooks/context/useCentralDataContext';
+import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
 
@@ -98,7 +100,12 @@ const SubCardGridItem = styled(Grid)(({ theme }) => ({
 interface CreateQuestionProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
-  fetchElements: () => void;
+  fetchElements: (
+    libraryTab?: LibraryTabEnum,
+    searchTerms?: string,
+    nextToken?: string | null,
+    isFromLibrary?: boolean,
+  ) => void;
 }
 
 export default function CreateQuestion({
@@ -110,6 +117,7 @@ export default function CreateQuestion({
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const route = useMatch('/clone/question/:type/:questionId');
   const editRoute = useMatch('/edit/question/:type/:questionId');
   const isClone =
@@ -120,6 +128,18 @@ export default function CreateQuestion({
     editRoute?.params.questionId !== null &&
     editRoute?.params.questionId !== undefined &&
     editRoute?.params.questionId.length > 0;
+  const isDraft = 
+    route?.params.type === 'Draft' ||
+    editRoute?.params.type === 'Draft' ||
+    (isClone && route?.params.type === 'Draft') ||
+    (isEdit && editRoute?.params.type === 'Draft');
+  const isPublic = 
+    route?.params.type === 'Public' ||
+    editRoute?.params.type === 'Public' ||
+    (isClone && route?.params.type === 'Public') ||
+    (isEdit && editRoute?.params.type === 'Public');
+  const isEditDraft = 
+    editRoute?.params.type === 'Draft';
   const [isCloneImageChanged, setIsCloneImageChanged] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -132,6 +152,7 @@ export default function CreateQuestion({
   const [isImagePreviewVisible, setIsImagePreviewVisible] =
     useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
+  const [isUpdatingTemplate, setIsUpdatingTemplate] = useState<boolean>(false);
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
@@ -140,7 +161,7 @@ export default function CreateQuestion({
       CreateQuestionHighlightCard.QUESTIONCARD,
     );
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
-    PublicPrivateType.PUBLIC,
+    (!isEdit || isPublic) ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE,
   );
   const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
   const [originalImageURl, setOriginalImageURL] = useState<string>('');
@@ -176,7 +197,7 @@ export default function CreateQuestion({
   const [completeIncorrectAnswers, setCompleteIncorrectAnswers] = useState<
     IncorrectCard[]
   >(localData.completeCards ?? []);
-
+  
   const [draftQuestion, setDraftQuestion] =
     useState<CentralQuestionTemplateInput>(() => {
       return (
@@ -206,6 +227,8 @@ export default function CreateQuestion({
     });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
+  const [isCorrectCardErrored, setIsCorrectCardErrored] = useState<boolean>(false);
+  const [isDraftCardErrored, setIsDraftCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
 
   let label = 'Create';
@@ -329,8 +352,11 @@ export default function CreateQuestion({
     );
     setDraftQuestion(newDraftQuestion);
     handleDebouncedQuestionChange(newDraftQuestion);
-    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    if (newDraftQuestion.correctCard.isCardComplete){
+      setIsCorrectCardErrored(false);
+      if (isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    } 
   };
 
   const handleCorrectAnswerStepsChange = (
@@ -344,8 +370,11 @@ export default function CreateQuestion({
     );
     setDraftQuestion(newDraftQuestion);
     handleDebouncedQuestionChange(newDraftQuestion);
-    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    if (newDraftQuestion.correctCard.isCardComplete){
+      setIsCorrectCardErrored(false);
+      if (isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    } 
   };
 
   const handleAnswerSettingsChange = (
@@ -361,8 +390,11 @@ export default function CreateQuestion({
     );
     window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
     setDraftQuestion(newDraftQuestion);
-    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    if (newDraftQuestion.correctCard.isCardComplete) {
+      setIsCorrectCardErrored(false);
+      if (isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+    }
   };
   
   // incorrect answer card functions
@@ -535,7 +567,7 @@ export default function CreateQuestion({
           draftQuestion.questionCard.image ||
           draftQuestion.questionCard.imageUrl
         ) {
-          setIsCreatingTemplate(true);
+          setIsUpdatingTemplate(true);
           let result = null;
           let url = null;
           // if the question is a clone/edit and the image hasn't been changed, we can use the original imageUrl
@@ -564,20 +596,32 @@ export default function CreateQuestion({
             if (isMultipleChoice)
               draftQuestion.correctCard.answerSettings.answerType =
                 AnswerType.MULTICHOICE;
-            apiClients.questionTemplate.updateQuestionTemplate(
+            const qtResult = await apiClients.questionTemplate.updateQuestionTemplate(
               publicPrivate,
               url,
               centralData.userProfile?.id || '',
               draftQuestion,
               selectedQuestionId,
             );
+            if (qtResult && selectedQuestionId && isDraft){
+              // if the user is saving out their draft, create a public/private question template
+              // and delete the draft question template
+              await apiClients.questionTemplate.deleteQuestionTemplate(
+                PublicPrivateType.DRAFT,
+                selectedQuestionId
+              );
+            }
           }
-          setIsCreatingTemplate(false);
+          setIsUpdatingTemplate(false);
           fetchElements();
+          centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
           navigate('/questions');
         }
       } else {
         setIsCardErrored(true);
+        if (!draftQuestion.correctCard.isCardComplete) {
+          setIsCorrectCardErrored(true);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -610,6 +654,16 @@ export default function CreateQuestion({
               if (result && result.path && result.path.length > 0)
                 url = result.path;
             } else if (draftQuestion.questionCard.imageUrl) {
+              // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
+              if (
+                draftQuestion.questionCard.imageUrl.startsWith('https://') ||
+                draftQuestion.questionCard.imageUrl.startsWith('http://')
+              ) {
+                url = draftQuestion.questionCard.imageUrl;
+              } else {
+                // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
+                draftQuestion.questionCard.imageUrl = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
+              }
               url = await apiClients.questionTemplate.storeImageUrlInS3(
                 draftQuestion.questionCard.imageUrl,
               );
@@ -622,7 +676,7 @@ export default function CreateQuestion({
             if (isMultipleChoice)
               draftQuestion.correctCard.answerSettings.answerType =
                 AnswerType.MULTICHOICE;
-            apiClients.questionTemplate.createQuestionTemplate(
+              await apiClients.questionTemplate.createQuestionTemplate(
               publicPrivate,
               url,
               centralData.userProfile?.id || '',
@@ -640,41 +694,170 @@ export default function CreateQuestion({
 
           setIsCreatingTemplate(false);
           fetchElements();
+          centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
           navigate('/questions');
         }
       } else {
         setIsCardErrored(true);
+        if (!draftQuestion.correctCard.isCardComplete) {
+          setIsCorrectCardErrored(true);
+        }
       }
     } catch (e) {
       console.log(e);
     }
   };
 
-  const handleSave = () => {
-    if (isEdit) {
-      handleSaveEditedQuestion();
+  const handleCreateFromDraftQuestion = async () => {
+    try {
+      setIsCardSubmitted(true);
+      const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
+      if (isQuestionTemplateComplete) {
+        if (
+          draftQuestion.questionCard.image ||
+          draftQuestion.questionCard.imageUrl
+        ) {
+          setIsCreatingTemplate(true);
+          let result = null;
+          let url = null;
+          // new image always needs to be created
+          if (draftQuestion.questionCard.image) {
+            const img = await apiClients.questionTemplate.storeImageInS3(
+              draftQuestion.questionCard.image,
+            );
+            // have to do a nested await here because aws-storage returns a nested promise object
+            result = await img.result;
+            if (result && result.path && result.path.length > 0)
+              url = result.path;
+          } else if (draftQuestion.questionCard.imageUrl) {
+            // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
+            if (
+              draftQuestion.questionCard.imageUrl.startsWith('https://') ||
+              draftQuestion.questionCard.imageUrl.startsWith('http://')
+            ) {
+              url = draftQuestion.questionCard.imageUrl;
+            } else {
+              // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
+              draftQuestion.questionCard.imageUrl = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
+            }
+            url = await apiClients.questionTemplate.storeImageUrlInS3(
+              draftQuestion.questionCard.imageUrl,
+            );
+          }
+          window.localStorage.setItem(StorageKey, '');
+          if (url) {
+            if (isMultipleChoice)
+              draftQuestion.correctCard.answerSettings.answerType =
+                AnswerType.MULTICHOICE;
+            const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
+              publicPrivate,
+              url,
+              centralData.userProfile?.id || '',
+              draftQuestion,
+            );
+            if (qtResult && selectedQuestionId){
+              // if the user is saving out their draft, create a public/private question template
+              // and delete the draft question template
+              await apiClients.questionTemplate.deleteQuestionTemplate(
+                PublicPrivateType.DRAFT,
+                selectedQuestionId
+              );
+            }
+          }
+          // update user stats
+          const existingNumQuestions =
+            centralData.userProfile?.questionsMade || 0;
+          const newNumQuestions = existingNumQuestions + 1;
+          await apiClients.user.updateUser({
+            id: centralData.userProfile?.id || '',
+            questionsMade: newNumQuestions,
+          });
+
+          setIsCreatingTemplate(false);
+          fetchElements();
+          navigate('/questions');
+        }
+      } else {
+        setIsCardErrored(true);
+        if (!draftQuestion.correctCard.isCardComplete) {
+          setIsCorrectCardErrored(true);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleSave = async () => {
+    // case 1, saving a draft into a public/private question template
+    if (isDraft) {
+      handleCreateFromDraftQuestion();
       return;
     }
+    // case 2, saving a public/private question template that already exists
+    if (isEdit) {
+      const originalType = (
+        isPublic ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE
+      );
+      if (publicPrivate === originalType){
+        handleSaveEditedQuestion();
+        return;
+      }
+      try {
+        handleSaveQuestion();
+        await apiClients.questionTemplate.deleteQuestionTemplate(
+          originalType,
+          selectedQuestionId,
+        );
+        fetchElements(LibraryTabEnum.PUBLIC, '', null , true);
+        fetchElements(LibraryTabEnum.PRIVATE, '', null , true);
+      return;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    // case 3, creating a new public/private question template
     handleSaveQuestion();
   };
 
   const handleSaveDraftQuestion = async () => {
     try {
-      setIsCardSubmitted(true);
-      setIsCreatingTemplate(true);
-      let result = null;
-      let url = '';
-      if (draftQuestion.questionCard.image) {
-        const img = await apiClients.questionTemplate.storeImageInS3(
-          draftQuestion.questionCard.image,
+      if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
+        setIsCardSubmitted(true);
+        setIsCreatingTemplate(true);
+        let result = null;
+        let url = ''; 
+        if (
+          draftQuestion.questionCard.imageUrl !== originalImageURl
+        ) {
+          if (draftQuestion.questionCard.image) {
+            const img = await apiClients.questionTemplate.storeImageInS3(
+              draftQuestion.questionCard.image,
+            );
+            // have to do a nested await here because aws-storage returns a nested promise object
+            result = await img.result;
+            if (result && result.path && result.path.length > 0)
+              url = result.path;
+          } else if (draftQuestion.questionCard.imageUrl) {
+            url = await apiClients.questionTemplate.storeImageUrlInS3(
+              draftQuestion.questionCard.imageUrl,
+            );
+          }
+        } else {
+          url = draftQuestion.questionCard.imageUrl;
+        }
+        window.localStorage.setItem(StorageKey, '');
+        await apiClients.questionTemplate.createQuestionTemplate(
+          PublicPrivateType.DRAFT,
+          url,
+          centralData.userProfile?.id || '',
+          draftQuestion,
         );
-        // have to do a nested await here because aws-storage returns a nested promise object
-        result = await img.result;
-        if (result && result.path && result.path.length > 0) url = result.path;
-      } else if (draftQuestion.questionCard.imageUrl) {
-        url = await apiClients.questionTemplate.storeImageUrlInS3(
-          draftQuestion.questionCard.imageUrl,
-        );
+        setIsCreatingTemplate(false);
+        fetchElements();
+        navigate('/questions');
+      } else {
+        setIsDraftCardErrored(true);
       }
       window.localStorage.setItem(StorageKey, '');
       apiClients.questionTemplate.createQuestionTemplate(
@@ -688,6 +871,63 @@ export default function CreateQuestion({
     } catch (e) {
       console.log(e);
     }
+  };
+
+
+  const handleSaveEditedDraftQuestion = async () => {
+    console.log(draftQuestion);
+    try {
+      if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
+        setIsCardSubmitted(true);
+        setIsUpdatingTemplate(true);
+        let result = null;
+        let url = ''; 
+        if (
+          draftQuestion.questionCard.imageUrl !== originalImageURl
+        ) {
+          if (draftQuestion.questionCard.image) {
+            const img = await apiClients.questionTemplate.storeImageInS3(
+              draftQuestion.questionCard.image,
+            );
+            // have to do a nested await here because aws-storage returns a nested promise object
+            result = await img.result;
+            if (result && result.path && result.path.length > 0)
+              url = result.path;
+          } else if (draftQuestion.questionCard.imageUrl) {
+            url = await apiClients.questionTemplate.storeImageUrlInS3(
+              draftQuestion.questionCard.imageUrl,
+            );
+          }
+        } else {
+          url = draftQuestion.questionCard.imageUrl;
+        }
+        window.localStorage.setItem(StorageKey, '');
+        await apiClients.questionTemplate.updateQuestionTemplate(
+            PublicPrivateType.DRAFT,
+            url,
+            centralData.userProfile?.id || '',
+            draftQuestion,
+            selectedQuestionId,
+          );
+        setIsUpdatingTemplate(false);
+        fetchElements();
+        navigate('/questions');
+      } else {
+        setIsDraftCardErrored(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleSaveDraft = () => {
+    // case 1, saving a draft that already exists
+    if (isEditDraft) {
+      handleSaveEditedDraftQuestion();
+      return;
+    }
+    // case 2, creating a new draft question template
+    handleSaveDraftQuestion();
   };
 
   const handleDiscardQuestion = () => {
@@ -743,6 +983,7 @@ export default function CreateQuestion({
     }
   }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
 
+  
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
@@ -751,7 +992,8 @@ export default function CreateQuestion({
           isCCSSVisible ||
           isDiscardModalOpen ||
           isImageUploadVisible ||
-          isCreatingTemplate
+          isCreatingTemplate || 
+          isUpdatingTemplate
         }
         handleCloseModal={handleCloseQuestionModal}
       />
@@ -776,7 +1018,8 @@ export default function CreateQuestion({
         handleCloseModal={handleCloseModal}
       />
       <CreatingTemplateModal
-        isModalOpen={isCreatingTemplate}
+        isModalOpen={isCreatingTemplate || isUpdatingTemplate}
+        isUpdatingTemplate={isUpdatingTemplate}
         templateType={TemplateType.QUESTION}
       />
       <CreateQuestionBoxContainer>
@@ -805,12 +1048,12 @@ export default function CreateQuestion({
                   smallScreenOverride
                   onClick={handleSave}
                 />
-                {!isClone && !isEdit && (
+                {!isClone && (!isEdit || isDraft) &&  (
                   <CentralButton
                     buttonType={ButtonType.SAVEDRAFT}
                     isEnabled
                     smallScreenOverride
-                    onClick={handleSaveDraftQuestion}
+                    onClick={handleSaveDraft}
                   />
                 )}
                 <CentralButton
@@ -841,13 +1084,15 @@ export default function CreateQuestion({
                   smallScreenOverride
                   onClick={handleSave}
                 />
-                <CentralButton
-                  buttonType={ButtonType.SAVEDRAFT}
-                  buttonWidthOverride="275px"
-                  isEnabled
-                  smallScreenOverride
-                  onClick={handleSaveDraftQuestion}
-                />
+                {!isClone && (!isEdit || isDraft) &&  (
+                  <CentralButton
+                    buttonType={ButtonType.SAVEDRAFT}
+                    buttonWidthOverride="275px"
+                    isEnabled
+                    smallScreenOverride
+                    onClick={handleSaveDraft}
+                  />
+                )}
                 <CentralButton
                   buttonType={ButtonType.DISCARDBLUE}
                   buttonWidthOverride="275px"
@@ -888,12 +1133,12 @@ export default function CreateQuestion({
                         isEnabled
                         onClick={handleSave}
                       />
-                      {!isClone && !isEdit && (
+                      {!isClone && (!isEdit || isDraft) && (
                         <CentralButton
                           buttonType={ButtonType.SAVEDRAFT}
                           isEnabled
                           smallScreenOverride
-                          onClick={handleSaveDraftQuestion}
+                          onClick={handleSaveDraft}
                         />
                       )}
                       <CentralButton
@@ -968,7 +1213,7 @@ export default function CreateQuestion({
                         }
                         handleAnswerSettingsChange={handleAnswerSettingsChange}
                         isCardSubmitted={isCardSubmitted}
-                        isCardErrored={isCardErrored}
+                        isCardErrored={isCorrectCardErrored}
                         isAIError={isAIError}
                       />
                     </Box>
@@ -984,7 +1229,7 @@ export default function CreateQuestion({
                       <Typography
                         style={{ textAlign: 'right', fontWeight: 500 }}
                       >
-                        Try our AI-Generated Wrong Answer Explanation Prototype
+                        Try our AI-Powered Wrong Answer Explanation Generator
                       </Typography>
                       <AISwitch
                         checked={isAIEnabled}

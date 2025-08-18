@@ -36,6 +36,7 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
 const DragText = styled(Typography)(({ theme }) => ({
   width: '100%',
   fontSize: '24px',
+  lineHeight: '32px',
   fontWeight: 700,
   textAlign: 'center',
 }));
@@ -48,15 +49,18 @@ const CloseButton = styled('img')(({ theme }) => ({
 
 interface CreatingTemplateModalProps {
   isModalOpen: boolean;
+  isUpdatingTemplate?: boolean;
   templateType: TemplateType;
 }
 
 export default function CreatingTemplateModal({
   isModalOpen,
+  isUpdatingTemplate,
   templateType,
 }: CreatingTemplateModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
+  const text2 = isUpdatingTemplate ? 'Updating' : 'Creating';
 
   return (
     <Fade
@@ -82,7 +86,7 @@ export default function CreatingTemplateModal({
             gap: '16px',
           }}
         >
-          <DragText>Creating {text} Template </DragText>
+          <DragText> {text2} {text} Template </DragText>
           <CircularProgress
             size="48px"
             style={{ color: `${theme.palette.primary.circularProgress}` }}

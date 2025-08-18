@@ -113,11 +113,11 @@ export default function LibraryTabsContent({
       emptyText = `private ${gameQuestionText}`;
       break;
     case (LibraryTabEnum.DRAFTS):
-      emptyText = 'drafts';
+      emptyText = `draft ${gameQuestionText}`;
       break;
     case (LibraryTabEnum.FAVORITES):
     default:
-      emptyText = 'favorites';
+      emptyText = `favorite ${gameQuestionText}`;
       break;
   }
   const handleLoadMore = async () => {
@@ -212,7 +212,9 @@ export default function LibraryTabsContent({
               paddingTop: `${padding}px`,
               textAlign: 'center'
             }}>
-              You currently don’t have any {emptyText}.
+              {centralData.searchTerms.length > 0 
+              ? `There are no ${emptyText} that match your search.`
+              : `You currently don’t have any ${emptyText}.`}
             </Typography>
           )
       }

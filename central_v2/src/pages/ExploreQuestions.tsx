@@ -206,6 +206,7 @@ export default function ExploreQuestions({
           type: 'SET_SEARCH_TERMS',
           payload: '',
         });
+        fetchElements();
         navigate('/questions');
       }
     } catch (error) {

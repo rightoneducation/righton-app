@@ -24,6 +24,8 @@ import { useCentralDataDispatch } from '../../hooks/context/useCentralDataContex
 interface TabContainerProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
+  openTab: LibraryTabEnum;
+  setOpenTab: (tab: LibraryTabEnum) => void;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElements: (
     libraryTab?: LibraryTabEnum,
@@ -52,6 +54,8 @@ interface TabContainerProps {
 export default function LibraryTabsContainer({
   gameQuestion,
   screenSize,
+  openTab,
+  setOpenTab,
   setIsTabsOpen,
   fetchElements,
   handleChooseGrades,
@@ -74,6 +78,8 @@ export default function LibraryTabsContainer({
         <LibraryTabs
           gameQuestion={gameQuestion}
           screenSize={screenSize}
+          openTab={openTab}
+          setOpenTab={setOpenTab}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
