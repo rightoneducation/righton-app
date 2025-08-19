@@ -22,7 +22,6 @@ const OuterContainer = styled(Box)<{ clicked: boolean }>(({ clicked }) => ({
   gap: '48px',
   padding: '48px',
   transition: 'width 0.3s ease-in-out, height 0.3s ease-in-out',
-  // border: '1px solid pink', // debug
 }));
 /* CHANGE: add single grid area + anchor children to top/left so margins become offsets */
 const VennContainer = styled(Box)<{ clicked: boolean }>(({ clicked }) => ({
@@ -30,7 +29,6 @@ const VennContainer = styled(Box)<{ clicked: boolean }>(({ clicked }) => ({
   gridTemplateAreas: '"stack"',
   justifyContent: 'start',
   alignItems: 'start',
-  // border: '1px solid red', // debug
   transition: 'width 0.3s ease-in-out, height 0.3s ease-in-out',
 }));
 const vennData = [
@@ -508,7 +506,7 @@ export default function VennDiagram({
       <Swiper
           modules={[Pagination]}
           spaceBetween={screensize === ScreenSize.SMALL? 24 : 48}
-          slidesPerView={screensize === ScreenSize.SMALL? 1.24: 1.6}
+          slidesPerView={screensize === ScreenSize.SMALL? 1.4: 1.6}
           style={{ 
             width: '100%', height: screensize === ScreenSize.MEDIUM?'100%': '',
             paddingBottom:  screensize === ScreenSize.SMALL? '70px' : '',
@@ -559,9 +557,9 @@ export default function VennDiagram({
             />
           </VennContainer>
         </SwiperSlide>
-        <SwiperSlide style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '12px', boxSizing: 'border-box', height: '100%'}}>
-          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center',width: '351px', height: '267px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px',}}>
+        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '12px', boxSizing: 'border-box',  height: '100%'}}>
+          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center',width: '351px', minHeight:'280px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
               <Typography sx={{lineHeight: '1.0', fontSize: '20px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                   Curriculum: Standards-Aligned & Searchable
               </Typography>
@@ -573,9 +571,9 @@ export default function VennDiagram({
             </Box>
           </Box>
         </SwiperSlide>
-        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center',padding: '12px', boxSizing: 'border-box',width: '100%', height: '100%', }}>
-          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '351px', height: '267px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px',}}>
+        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center',padding: '12px', boxSizing: 'border-box',  height: '100%', }}>
+          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '351px',  minHeight:'280px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
               <Typography sx={{lineHeight: '1.0', fontSize: '20px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                 Assessment: Embrace Learning Through Mistakes
               </Typography>
@@ -587,9 +585,9 @@ export default function VennDiagram({
             </Box>
           </Box>
         </SwiperSlide>
-        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center',padding: '12px', boxSizing: 'border-box',width: '100%', height: '100%',}}>
-          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '351px', height: '267px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px',}}>
+        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center',padding: '12px', boxSizing: 'border-box', height: '100%',}}>
+          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '351px',  minHeight:'280px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
               <Typography sx={{lineHeight: '1.0', fontSize: '20px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                 Tech-Enabled Supplemental Learning: Leveraging AI
               </Typography>

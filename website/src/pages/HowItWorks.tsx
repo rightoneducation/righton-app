@@ -767,9 +767,9 @@ export function HowItWorks() { // eslint-disable-line
           </Typography>
         </SecondUpperContainerTexts>
         {/* Venn Diagram goes here */}
-        <VennDiagram screensize = {screenSize}/>
+        
       </SecondContainer>
-
+      <VennDiagram screensize = {screenSize}/>
       {/* The third page */}
       <Box style={{width: '100%',
         display: 'flex',
