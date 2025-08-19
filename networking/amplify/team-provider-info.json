@@ -33,7 +33,7 @@
         },
         "shareContent": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
-          "s3Key": "amplify-builds/shareContent-3944304c66614f4a6957-build.zip"
+          "s3Key": "amplify-builds/shareContent-66375941454c56624566-build.zip"
         },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
@@ -70,6 +70,9 @@
       },
       "storage": {
         "rightoncentralstorage": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }
