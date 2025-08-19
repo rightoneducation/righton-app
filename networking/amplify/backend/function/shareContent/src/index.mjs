@@ -56,7 +56,6 @@ export const handler = async (event) => {
           }
     }
     const articleId = event.pathParameters.id;
-    // Mocked article fetch — replace with actual Sanity fetch
     const article = await getArticleFromCMS(articleId);
   
    const escapeHtml = (str = '') => {
