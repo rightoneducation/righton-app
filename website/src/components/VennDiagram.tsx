@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { ScreenSize } from '../lib/WebsiteModels';
 
-import Handup from '../images/monsterhandup.png';
+import Handup from '../images/monsterhandup.svg';
 
 import 'swiper/css';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -145,7 +145,6 @@ const Label = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   fontSize: '40px',
   textAlign: 'center',
-  textShadow: '0 2px 8px #0008',
   pointerEvents: 'none',
   userSelect: 'none',
   lineHeight: '1.2',
