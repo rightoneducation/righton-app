@@ -12,10 +12,11 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
     <Box
       sx={{
         display: 'flex',
-        margin: '0px 28.84px',
-        width: '268px',
-        height: '193px',
+        width: '100%',
+        height: '205px',
         boxSizing: 'border-box',
+        objectFit: 'contain',
+        justifyContent: 'center',
       }}
     >
       <Box
@@ -23,8 +24,10 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '76px',
-          height: '78.45px',
+          width: '100%',
+          maxWidth: '76px',
+          maxHeight: '78.45px',
+          height: 'auto',
           borderRadius: '210.87px',
           background:
             'linear-gradient(to bottom,rgba(255, 42, 95, 0.7) 0%, rgba(255, 42, 95, 0.4) 50%, rgba(72, 19, 114, 0.1) 100%)',
@@ -47,10 +50,10 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          width: '192px',
-          height: '193px',
+          width: '100%',
+          maxWidth: '192px',
+          height: 'auto',
           alignItems: 'center',
-          // border: '1px solid white'
         }}
       >
         <Box

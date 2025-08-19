@@ -10,7 +10,7 @@ interface CTAButtonProps {
   screenSize: ScreenSize;
   fontColor?: string;
 }
-export default function GameCTAButtons({
+export default function GameCTAButtonsMenu({
   screenSize,
   fontColor,
 }: CTAButtonProps) {
@@ -19,10 +19,10 @@ export default function GameCTAButtons({
     <Box 
       style={{
         display: 'flex',
-        flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
+        flexDirection:'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: screenSize === ScreenSize.LARGE ? `${theme.sizing.lgPadding}px` : `${theme.sizing.mdPadding}px`,
+        gap: screenSize === ScreenSize.LARGE ? `0px` : `${theme.sizing.mdPadding}px`,
         width: '100%',
       }}
     >
@@ -38,9 +38,10 @@ export default function GameCTAButtons({
             border: theme.sizing.dividerBorder,
             padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
             cursor: 'pointer',
+            backgroundColor: theme.palette.primary.main,
             transition: 'background-color 0.2s ease',
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: '#E6E6E6',
             },
           }}
           onClick={() => {
@@ -96,8 +97,9 @@ export default function GameCTAButtons({
             padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
             cursor: 'pointer',
             transition: 'background-color 0.2s ease',
+            backgroundColor: theme.palette.primary.main,
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: '#E6E6E6',
             },
           }}
           onClick={() => {
