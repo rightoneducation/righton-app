@@ -36,7 +36,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
         {/* Title and Divider */}
         <StyledFlexBox
           direction="column"
-          alignItems="flex-start"
+          alignItems={screenSize === ScreenSize.LARGE ? 'flex-start' : 'center'}
           gap={6}
           sx={{
             maxWidth: '462px',
