@@ -301,6 +301,9 @@ export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
                   padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
                   gap: `${theme.sizing.xSmPadding}px`,
                 }}
+                onClick={() => {
+                  window.open('mailto:info@rightoneducation.com', '_blank');
+                }}
               >
                 <Typography
                   sx={{
