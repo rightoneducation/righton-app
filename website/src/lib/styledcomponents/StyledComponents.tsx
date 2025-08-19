@@ -9,7 +9,7 @@ export const AppContainer = styled(Box, {
   width: '100%',
   minHeight: '100dvh',
   flexDirection: 'column',
-  justifyContent: 'flex-start',
+  justifyContent: 'space-between',
   alignItems: 'center',
   boxSizing: 'border-box',
   overflow: 'hidden',

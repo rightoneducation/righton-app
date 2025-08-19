@@ -29,6 +29,7 @@ import 'swiper/css/pagination';
 
 const MainContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  minHeight: '100dvh',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

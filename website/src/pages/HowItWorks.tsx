@@ -20,6 +20,7 @@ import VennDiagram from '../components/VennDiagram';
 
 const MainContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  minHeight: '100dvh',
   boxSizing: 'border-box',
   background: 'transparent'
 }));

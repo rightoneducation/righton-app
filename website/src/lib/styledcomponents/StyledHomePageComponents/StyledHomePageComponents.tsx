@@ -89,6 +89,7 @@ export const StyledSubText = styled(Typography)(({ theme }) => ({
 
 export const HomePageContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  minHeight: '100dvh',
   boxSizing: 'border-box',
   background: 'transparent',
 }));
