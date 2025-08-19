@@ -15,7 +15,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
   return (
     <StyledFlexBox
       direction={screenSize === ScreenSize.LARGE ? 'row' : 'column'}
-      align="start"
+      align={screenSize === ScreenSize.LARGE ? 'start' : 'center'}
       justify="center"
       gap={48}
       height={screenSize === ScreenSize.LARGE ? '341px' : '100%'}
