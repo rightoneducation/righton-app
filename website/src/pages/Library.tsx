@@ -474,18 +474,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
           dataLength={filteredArticles.length}
           next={loadMoreArticles}
           hasMore={hasMore}
-          loader={
-            <Box
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '20px',
-              }}
-            >
-              <CircularProgress style={{ color: '#FFF' }} />
-            </Box>
-          }
+          loader={<Box/>}
         >
           <Grid
             container

@@ -16,6 +16,8 @@ import { SelectArrowContainer } from '../lib/styledcomponents/StyledComponents';
 
 interface HeaderProps {
   screenSize: ScreenSize;
+  menuOpen?: boolean;
+  setMenuOpen?: (open: boolean) => void;
 }
 
 const links = [
@@ -25,7 +27,7 @@ const links = [
   { title: 'Resource Library', path: '/library' },
 ];
 
-export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
+export function Header({ screenSize, menuOpen, setMenuOpen }: HeaderProps) { // eslint-disable-line
   const location = useLocation();
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -56,6 +58,9 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
   const handleMobileMenu = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMenuAnchor(mobileMenuAnchor ? null : event.currentTarget);
     setOpenMenu((prev) => !prev);
+    if (setMenuOpen) {
+      setMenuOpen(!menuOpen);
+    }
   };
 
   const handleHomeClick = () => {

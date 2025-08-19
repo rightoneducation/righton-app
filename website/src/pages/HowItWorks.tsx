@@ -906,6 +906,9 @@ export function HowItWorks() { // eslint-disable-line
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   },
                 }}
+                onClick={() => {
+                  window.open('/docs/righton-logic-model.pdf', '_blank');
+                }}
               >
                 Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
               </Box>

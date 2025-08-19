@@ -2,8 +2,9 @@ import React from 'react';
 import { Box, styled } from '@mui/material';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
-export const AppContainer = styled(Box)(({ theme }) => ({
-  // eslint-disable-line
+export const AppContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'menuOpen',
+})<{ menuOpen?: boolean }>(({ menuOpen }) => ({
   display: 'flex',
   width: '100%',
   minHeight: '100dvh',
@@ -11,7 +12,8 @@ export const AppContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'flex-start',
   alignItems: 'center',
   boxSizing: 'border-box',
-  overflow: 'hidden',
+  overflow: menuOpen ? 'hidden' : 'hidden',
+  height: menuOpen ? '100vh' : 'auto',
 }));
 
 export const MathSymbolsBackground = styled(Box)(({ theme }) => ({

@@ -103,7 +103,7 @@ export default function GameCTAButtonsMenu({
             },
           }}
           onClick={() => {
-            window.open('https://central.rightoneducation.com', '_blank');
+            window.open('https://play.rightoneducation.com', '_blank');
           }}
         >
           <img
