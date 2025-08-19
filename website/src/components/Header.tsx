@@ -114,6 +114,9 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                     }),
                     cursor: 'pointer',
                     padding: '4px 12px',
+                    '&:hover': {
+                      color: theme.palette.primary.primaryPink,
+                    },
                   }}
                   key={link.title}
                   fontSize="20px"
