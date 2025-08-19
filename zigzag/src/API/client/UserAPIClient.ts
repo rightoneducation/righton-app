@@ -7,7 +7,7 @@ import UserParser from "../parser/UserParser";
 import { IAWSUser } from "../models/IAWSUser";
 
 
-export class GameTemplateAPIClient
+export class UserAPIClient
   extends BaseAPIClient
 {
   async getUser(id: string) {
@@ -19,7 +19,7 @@ export class GameTemplateAPIClient
     )
 
     if (user.data.getUser) {
-      return UserParser.parseIUserfromAWSUser(user.data.getUser as unknown as IAWSUser);
+      return UserParser.parseIUserfromIAWSUser(user.data.getUser as unknown as IAWSUser);
     }
 
     return null;

@@ -2,7 +2,7 @@ import { IUser } from "../models/IUser";
 import { IAWSUser } from "../models/IAWSUser";
 
 export default class UserParser {
-  static parseIUserfromAWSUser(user: IAWSUser): IUser {
+  static parseIUserfromIAWSUser(user: IAWSUser): IUser {
     let parsedQuestions;
     let parsedAnswers;
     
