@@ -31,7 +31,6 @@ export function Header({ screenSize, menuOpen, setMenuOpen }: HeaderProps) { // 
   const location = useLocation();
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
-  const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
     null,
   );
@@ -57,7 +56,6 @@ export function Header({ screenSize, menuOpen, setMenuOpen }: HeaderProps) { // 
 
   const handleMobileMenu = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMenuAnchor(mobileMenuAnchor ? null : event.currentTarget);
-    setOpenMenu((prev) => !prev);
     if (setMenuOpen) {
       setMenuOpen(!menuOpen);
     }
@@ -201,8 +199,10 @@ export function Header({ screenSize, menuOpen, setMenuOpen }: HeaderProps) { // 
                     screenSize={screenSize}
                     menu={links}
                     onClose={() => {
-                      setOpenMenu(false);
                       setMobileMenuAnchor(null);
+                      if (setMenuOpen) {
+                        setMenuOpen(false);
+                      }
                     }}
                   />
                 </Box>
@@ -233,7 +233,7 @@ export function Header({ screenSize, menuOpen, setMenuOpen }: HeaderProps) { // 
           <Box
             onClick={handleMobileMenu}
             component="img"
-            src={openMenu ? closeIcon : hamburgerIcon}
+            src={menuOpen ? closeIcon : hamburgerIcon}
             width="24px"
             height="18px"
             sx={{ cursor: 'pointer' }}
