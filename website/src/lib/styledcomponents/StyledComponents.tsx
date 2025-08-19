@@ -12,7 +12,7 @@ export const AppContainer = styled(Box, {
   justifyContent: 'flex-start',
   alignItems: 'center',
   boxSizing: 'border-box',
-  overflow: menuOpen ? 'hidden' : 'hidden',
+  overflow: 'hidden',
   height: menuOpen ? '100vh' : 'auto',
 }));
 
