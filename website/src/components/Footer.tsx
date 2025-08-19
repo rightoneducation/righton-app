@@ -73,7 +73,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
           gap={gapBetweenElements}
           sx={{
             flexDirection: 'column',
-            alignItems: 'flex-start',
+            alignItems: screenSize === ScreenSize.LARGE ? 'flex-start' : 'center',
           }}
         >
           <Box
@@ -86,11 +86,13 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
             style={{ cursor: 'pointer' }}
           />
         </StyledFlexBox>
-        <StyledFlexBox
-          gap={gapBetweenElements}
-          sx={{
+        <Box
+          gap='24px'
+          style={{
+            display: 'flex',
             flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
             alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           {links.map((link, index) => (
@@ -102,6 +104,8 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
                 fontWeight: 600,
                 color: '#FFFFFF',
                 cursor: 'pointer',
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
                 '&:hover': {
                   color: '#FF3A6A',
                 },
@@ -113,7 +117,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
               {link.title}
             </StyledText>
           ))}
-        </StyledFlexBox>
+        </Box>
         <StyledFlexBox
           gap={20}
           sx={{
@@ -141,6 +145,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
             sx={{
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: screenSize === ScreenSize.LARGE ? 'flex-end' : 'center',
             }}
           >
             {socialMediaIcons.map((social, index) => (

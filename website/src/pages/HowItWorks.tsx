@@ -288,7 +288,7 @@ export function HowItWorks() { // eslint-disable-line
 
   let fourthContainerPadding;
   if (screenSize === ScreenSize.LARGE) {
-    fourthContainerPadding = '96px 72px';
+    fourthContainerPadding = '154px 72px';
   } else if (screenSize === ScreenSize.MEDIUM) {
     fourthContainerPadding = '60px 72px';
   } else {
@@ -800,8 +800,8 @@ export function HowItWorks() { // eslint-disable-line
             <Grid size={{md: 12, lg: 5}} sx ={{  display: 'flex', 
             flexDirection: 'column',
             gap: '48px'}}>
-              <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
-                  <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+              <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: screenSize === ScreenSize.SMALL ? '31px' : '0px', paddingBottom: screenSize === ScreenSize.SMALL ? '31px' : '0px'}}>
+                  <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
                   </Typography>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
@@ -838,6 +838,9 @@ export function HowItWorks() { // eslint-disable-line
                           backgroundColor: 'rgba(255, 255, 255, 0.1)',
                         },
                       }}
+                      onClick={() => {
+                        window.open('/docs/righton-logic-model.pdf', '_blank');
+                      }}
                     >
                       Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
                     </Box>
@@ -856,7 +859,7 @@ export function HowItWorks() { // eslint-disable-line
               src={LogicModel}
               alt='Devices'
               style={{
-                width: 'calc(100% - 204px)',
+                width: screenSize === ScreenSize.LARGE ? 'calc(100% - 204px)' : '100%',
                 boxSizing: 'border-box',
               }}
               />
@@ -1193,6 +1196,9 @@ export function HowItWorks() { // eslint-disable-line
                   '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   },
+                }}
+                onClick={() => {
+                  window.open('mailto:info@rightoneducation.com', '_blank');
                 }}
               >
                 Contact
