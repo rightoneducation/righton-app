@@ -1,12 +1,10 @@
+/* tslint:disable */
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    createUser(input: $input, condition: $condition) {
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
+    onCreateUser(filter: $filter) {
       id
       email
       userName
@@ -26,12 +24,9 @@ export const createUser = /* GraphQL */ `
     }
   }
 `;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    updateUser(input: $input, condition: $condition) {
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
+    onUpdateUser(filter: $filter) {
       id
       email
       userName
@@ -51,12 +46,9 @@ export const updateUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    deleteUser(input: $input, condition: $condition) {
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
+    onDeleteUser(filter: $filter) {
       id
       email
       userName
@@ -76,12 +68,11 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `;
-export const createDailyQuestion = /* GraphQL */ `
-  mutation CreateDailyQuestion(
-    $input: CreateDailyQuestionInput!
-    $condition: ModelDailyQuestionConditionInput
+export const onCreateDailyQuestion = /* GraphQL */ `
+  subscription OnCreateDailyQuestion(
+    $filter: ModelSubscriptionDailyQuestionFilterInput
   ) {
-    createDailyQuestion(input: $input, condition: $condition) {
+    onCreateDailyQuestion(filter: $filter) {
       id
       createdAt
       topic
@@ -95,12 +86,11 @@ export const createDailyQuestion = /* GraphQL */ `
     }
   }
 `;
-export const updateDailyQuestion = /* GraphQL */ `
-  mutation UpdateDailyQuestion(
-    $input: UpdateDailyQuestionInput!
-    $condition: ModelDailyQuestionConditionInput
+export const onUpdateDailyQuestion = /* GraphQL */ `
+  subscription OnUpdateDailyQuestion(
+    $filter: ModelSubscriptionDailyQuestionFilterInput
   ) {
-    updateDailyQuestion(input: $input, condition: $condition) {
+    onUpdateDailyQuestion(filter: $filter) {
       id
       createdAt
       topic
@@ -114,12 +104,11 @@ export const updateDailyQuestion = /* GraphQL */ `
     }
   }
 `;
-export const deleteDailyQuestion = /* GraphQL */ `
-  mutation DeleteDailyQuestion(
-    $input: DeleteDailyQuestionInput!
-    $condition: ModelDailyQuestionConditionInput
+export const onDeleteDailyQuestion = /* GraphQL */ `
+  subscription OnDeleteDailyQuestion(
+    $filter: ModelSubscriptionDailyQuestionFilterInput
   ) {
-    deleteDailyQuestion(input: $input, condition: $condition) {
+    onDeleteDailyQuestion(filter: $filter) {
       id
       createdAt
       topic

@@ -4,6 +4,12 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 
 type User @model {
   id: ID!
+  date: String
+  question: String
+  answer: AWSJSON
+  isCorrect: Boolean
+  isCorrectAnswer: Boolean
+  isCorrectAnswer: Boolean
 }
 
 type DailyQuestion @model {
