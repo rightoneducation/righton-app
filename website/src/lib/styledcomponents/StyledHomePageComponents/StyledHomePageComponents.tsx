@@ -85,6 +85,9 @@ export const StyledSubText = styled(Typography)(({ theme }) => ({
   color: 'white',
   fontWeight: 400,
   lineHeight: 'auto',
+  WebkitFontSmoothing: 'antialiased', // improves rendering on WebKit
+  MozOsxFontSmoothing: 'grayscale',   // improves rendering on Firefox
+  textRendering: 'optimizeLegibility', // smoother curves
 }));
 
 export const HomePageContainer = styled(Box)(({ theme }) => ({

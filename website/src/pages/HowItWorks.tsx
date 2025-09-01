@@ -369,7 +369,7 @@ export function HowItWorks() { // eslint-disable-line
               with
               {screenSize === ScreenSize.MEDIUM ? <br /> : ' '}
               <span style={{ color: '#FF3A6A', fontStyle: 'italic' }}>
-                Righton!
+                RightOn!
               </span>
             </Typography>
           </UpperContainerGetStartedText>
@@ -381,7 +381,7 @@ export function HowItWorks() { // eslint-disable-line
               color: '#FFFFFF',
             }}
           >
-            Change how your class preceives mistakes!
+            Change how your class perceives mistakes!
           </Typography>
         </UpperContainerTexts>
 
@@ -432,7 +432,7 @@ export function HowItWorks() { // eslint-disable-line
                       fontWeight: 700
                     }}
                   >
-                    Righton!{' '}
+                    RightOn!{' '}
                     <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
                       Central
                     </span>
@@ -498,7 +498,7 @@ export function HowItWorks() { // eslint-disable-line
                       fontWeight: 700
                     }}
                   >
-                    Righton!{' '}
+                    RightOn!{' '}
                     <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
                       Play
                     </span>
@@ -816,7 +816,7 @@ export function HowItWorks() { // eslint-disable-line
                     <br />
                     <span style={{color: '#FFFFFF', fontWeight: 600, fontFamily: 'Poppins, sans-serif'}}>Want to see 
                       how it all connects? Explore the research and reasoning behind 
-                      RightOn!
+                      <span style={{fontStyle: 'italic'}}> RightOn!</span>
                     </span>
                   </Typography>
                 </Box>
@@ -955,7 +955,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    What is RightOn?
+                    What is <span style={{fontStyle: 'italic'}}>RightOn!?</span>
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -985,12 +985,9 @@ export function HowItWorks() { // eslint-disable-line
                       maxWidth: '768px',
 
                     }}>
-                      RightOn is an innovative educational platform that helps students 
-                      learn math through error-based learning and interactive game experiences. 
-                      The platform consists of two main components: Central (for teachers to create 
-                      and manage content) and Play (for students to participate in math games). 
-                      RightOn transforms how students think about mistakes by making them a valuable 
-                      part of the learning process.
+                      
+                    <span style={{fontStyle: 'italic'}}>RightOn!</span> is an online math platform that uses AI to turn mistakes into learning opportunities. It shows teachers how students are thinking, highlights common misconceptions in real time, and gives students quick, personalized feedback—building persistence and a positive culture of error.
+
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -1004,7 +1001,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    How does RightOn work?
+                    How does <span style={{fontStyle: 'italic'}}>RightOn!</span> work?
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -1033,11 +1030,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      Teachers use RightOn Central to create math games or select from pre-made 
-                      content, then host live classroom sessions where students participate 
-                      through RightOn Play. During games, students analyze both correct answers 
-                      and common mistakes, leading to meaningful discussions about mathematical 
-                      thinking and problem-solving strategies.
+                      With <span style={{fontStyle: 'italic'}}>RightOn!</span>, teachers create or select math games in Central, then launch them through Host for live classroom sessions. Students join on Play, where they explore both correct solutions and common mistakes. By making sense of errors as well as right answers, students gain deeper understanding, greater self-confidence, and stronger growth mindsets, helping them persist in math and thrive as learners.
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -1051,7 +1044,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    What grade levels does RightOn support?
+                    What grade levels are supported?
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -1080,8 +1073,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      RightOn is designed for K-12 mathematics education, with content that can be 
-                      adapted for various grade levels and mathematical concepts.
+                      <span style={{fontStyle: 'italic'}}>RightOn!</span> is co-designed with teachers and students for grades 7-10, with adaptable math content that helps students build skills and grow with confidence.
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -1095,7 +1087,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    Is RightOn free to use?
+                    How much does it cost?
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -1124,7 +1116,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      Yes? (Just want more info on how to word this)
+                      <span style={{fontStyle: 'italic'}}>RightOn!</span> is currently free for all students and teachers, with a focus on supporting underserved communities. Generous contributions from organizations like 4.0 Schools, the Gates Foundation, NSF, and the Walton Family Foundation allow us to provide our core apps at no cost, making high-quality math resources accessible to everyone.
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -1138,7 +1130,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    How do I get started with RightOn?
+                    How do I get started?
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -1167,9 +1159,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      Teachers can sign up for a RightOn account and begin exploring the platform 
-                      immediately. We recommend starting with our user guide and trying out some 
-                      pre-made games before creating your own content. See the user guide here!
+                      Sign up for a <span style={{fontStyle: 'italic'}}>RightOn!</span> account to start exploring—our <a href="https://docs.google.com/viewer?url=https://www.rightoneducation.com/docs/righton-user-guide.pdf&embedded=true" target="_blank" rel="noopener noreferrer" style={{color: '#FFFFFF', textDecoration: 'underline'}}>User Guide</a> and pre-made games make it easy to jump right in.
                     </Typography>
                   </FAQContent>
                 </Collapse>
