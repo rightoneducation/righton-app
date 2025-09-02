@@ -87,7 +87,7 @@ export class QuestionTemplateParser {
         }
         // parse choices array
         let choices: IChoice[] = [];
-        if (!isNullOrUndefined(awsQuestionTemplate.choices)) {
+        if (!isNullOrUndefined(awsQuestionTemplate?.choices)) {
            try {
             choices = JSON.parse(awsQuestionTemplate.choices) as IChoice[]
             } catch (e) {
@@ -96,14 +96,14 @@ export class QuestionTemplateParser {
         }
         // parse instructions array
         let instructions: string[] = [];
-        if (!isNullOrUndefined(awsQuestionTemplate.instructions)) {
+        if (!isNullOrUndefined(awsQuestionTemplate?.instructions)) {
            try {
             instructions = JSON.parse(awsQuestionTemplate.instructions) as string[]
             } catch (e) {
                 console.error(e);
            }
         }
-       
+    
       const {
           id,
           userId,

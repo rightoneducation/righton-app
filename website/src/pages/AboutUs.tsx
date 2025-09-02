@@ -17,6 +17,7 @@ import PaginationContainerStyled from '../lib/styledcomponents/PaginationContain
 
 const AboutUsContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  minHeight: '100dvh',
   boxSizing: 'border-box',
   background: 'transparent',
 }));

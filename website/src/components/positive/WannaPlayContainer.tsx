@@ -118,9 +118,10 @@ export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
                   borderRadius: secondaryGap,
                   padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
                   gap: `${theme.sizing.xSmPadding}px`,
+                  cursor: 'pointer',
                 }}
                 onClick={() => {
-                  window.open('mailto:info@rightoneducation.com', '_blank');
+                  window.open('https://forms.gle/5VhmC7eo3SuanBh39', '_blank');
                 }}
               >
                 <Typography
@@ -300,7 +301,11 @@ export const WannaPlayContainer = ({ screenSize }: WannaPlayContainerProps) => {
                   borderRadius: secondaryGap,
                   padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
                   gap: `${theme.sizing.xSmPadding}px`,
+                  cursor: 'pointer',
                 }}
+                onClick={() => {
+                   window.open('https://forms.gle/5VhmC7eo3SuanBh39', '_blank');
+                 }}
               >
                 <Typography
                   sx={{
