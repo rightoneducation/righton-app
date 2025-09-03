@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Box, styled, Grid, useTheme } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
@@ -37,16 +37,44 @@ const imageArr = [
 
 const StyledSponsorDivider = styled(StyledFlexBox)(({ theme }) => ({
   backgroundColor: theme.palette.primary.secondaryDarkBlue,
-  overflowX: 'auto',
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
-  scrollbarWidth: 'none',
-  msOverflowStyle: 'none',
+  overflow: 'hidden',
   paddingTop: `${theme.sizing.smPadding}px`,
   paddingBottom: `${theme.sizing.smPadding}px`,
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `linear-gradient(90deg, ${theme.palette.primary.secondaryDarkBlue} 0%, transparent 10%, transparent 90%, ${theme.palette.primary.secondaryDarkBlue} 100%)`,
+    zIndex: 10,
+    pointerEvents: 'none'
+  }
 }));
+
+const ScrollingContainer = styled('div')<{ duration: number }>`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  animation: scrollLeft ${props => props.duration}s linear infinite;
+  white-space: nowrap;
+  
+  @keyframes scrollLeft {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  &:hover {
+    animation-play-state: paused;
+  }
+`;
 
 interface HomePageProps {
   screenSize: ScreenSize;
@@ -55,6 +83,37 @@ interface HomePageProps {
 export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
   const theme = useTheme();
   const containerPadding = theme.sizing.containerPadding[screenSize];
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [animationDuration, setAnimationDuration] = useState(14);
+
+  useEffect(() => {
+    const calculateDuration = () => {
+      if (scrollContainerRef.current) {
+        const contentWidth = scrollContainerRef.current.scrollWidth;
+        const scrollDistance = contentWidth * 0.5; // Move half the content width for seamless loop
+        
+        // Calculate speed that gives consistent visual effect across devices
+        // On mobile: content is smaller, so we need faster speed to maintain same visual pace
+        // On desktop: content is larger, so we use standard speed
+        const baseSpeed = 100; // pixels per second for desktop
+        const mobileMultiplier = Math.max(1, 1200 / contentWidth); // Faster on smaller screens
+        const adjustedSpeed = baseSpeed * mobileMultiplier;
+        
+        const newDuration = scrollDistance / adjustedSpeed;
+        setAnimationDuration(newDuration);
+      }
+    };
+
+    calculateDuration();
+    
+    // Recalculate on window resize
+    const handleResize = () => calculateDuration();
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
 
   return (
     <HomePageContainer>
@@ -95,11 +154,44 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
 
       {/* Sponsors Divider */}
       <StyledSponsorDivider>
-        <StyledFlexBox direction="row" align="center" gap={24}>
-          {imageArr.map(({ image, alt }, i) => (
-              <img src={image} alt={alt} style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}/>
-          ))}
-        </StyledFlexBox>
+        <div 
+          ref={scrollContainerRef}
+          style={{ 
+            width: '100%', 
+            overflow: 'hidden',
+            position: 'relative'
+          }}
+        >
+          <ScrollingContainer duration={animationDuration}>
+            {/* First set of images */}
+            {imageArr.map(({ image, alt }) => (
+              <img 
+                key={`first-${alt}`}
+                src={image} 
+                alt={alt} 
+                style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
+              />
+            ))}
+            {/* Duplicate set for seamless loop */}
+            {imageArr.map(({ image, alt }) => (
+              <img 
+                key={`second-${alt}`}
+                src={image} 
+                alt={alt} 
+                style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
+              />
+            ))}
+            {/* Third set to ensure smooth transition */}
+            {imageArr.map(({ image, alt }) => (
+              <img 
+                key={`third-${alt}`}
+                src={image} 
+                alt={alt} 
+                style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
+              />
+            ))}
+          </ScrollingContainer>
+        </div>
       </StyledSponsorDivider>
 
       <StyledFlexBox

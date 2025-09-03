@@ -239,6 +239,17 @@ export default function VennDiagram({
     }
   };
 
+  // Handle clicking outside the diagram (on the outer container)
+  const handleOuterContainerClick = (e: React.MouseEvent) => {
+    if (screensize === ScreenSize.LARGE && hasInteracted && sel !== null) {
+      // Check if the click target is actually a circle
+      const target = e.target as Element;
+      if (!target.closest('[data-circle]') && !target.closest('[data-mascot]')) {
+        setResetPhase('fadingOut');
+      }
+    }
+  };
+
   // Handle container animation complete
   const handleContainerAnimationComplete = () => {
     if (resetPhase === 'fadingOut') {
@@ -271,7 +282,7 @@ export default function VennDiagram({
       animate={containerAnimate}
       onAnimationComplete={handleContainerAnimationComplete}
     >
-      <OuterContainer clicked={clicked}>
+      <OuterContainer clicked={clicked} onClick={handleOuterContainerClick}>
         <AnimatePresence initial={false}>
           {(!hasInteracted || (hasInteracted && !isFadingOut)) && (
             <motion.div
@@ -294,6 +305,7 @@ export default function VennDiagram({
                       selected={sel === idx}
                       clicked={clicked}
                       idx={idx}
+                      data-circle="true"
                       sx={{
                         width: `${d}px`,
                         height: `${d}px`,
@@ -317,6 +329,7 @@ export default function VennDiagram({
                   src={Handup}
                   alt="Handup"
                   clicked={clicked}
+                  data-mascot="true"
                   style={{
                     width: `${mascot.w}px`,
                     height: `${mascot.h}px`,
@@ -500,7 +513,6 @@ export default function VennDiagram({
         </Box>
       </OuterContainer>
     </motion.div>
-
     ): (
     <SwiperContainer sx={{ height: screensize === ScreenSize.MEDIUM?'600px': ''}}>
       <Swiper
