@@ -1,5 +1,20 @@
   import { type PortableTextComponents } from '@portabletext/react';
-  import { CMSHeaderText, CMSBodyText } from './CMSStyledComponents';
+import { styled } from '@mui/material/styles';
+import { CMSHeaderText, CMSBodyText } from './CMSStyledComponents';
+
+const StyledLink = styled('a')(() => ({
+  color: '#FFFFFF !important',
+  textDecoration: 'underline',
+  '&:hover': {
+    color: '#FFFFFF !important',
+  },
+  '&:visited': {
+    color: '#FFFFFF !important',
+  },
+  '&:link': {
+    color: '#FFFFFF !important',
+  },
+}));
 
   export const PortableTextComponentsConfig: PortableTextComponents = {
     block: {
@@ -12,8 +27,25 @@
       h3: ({ children }) => (
         <CMSHeaderText>{children}</CMSHeaderText>
       ),
+      a: ({ children }) => (
+        <StyledLink>{children}</StyledLink>
+      ),
       normal: ({ children }) => (
-        <CMSBodyText>{children}</CMSBodyText>
+        <CMSBodyText sx={{ 
+          '& a': {
+            color: '#FFFFFF !important',
+            textDecoration: 'underline',
+          },
+          '& a:hover': {
+            color: '#FFFFFF !important',
+          },
+          '& a:visited': {
+            color: '#FFFFFF !important',
+          },
+          '& a:link': {
+            color: '#FFFFFF !important',
+          }
+        }}>{children}</CMSBodyText>
       ),
     },
     list: {
