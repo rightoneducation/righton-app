@@ -1,5 +1,5 @@
 /**1. USER**/
-interface User {
+export interface User {
   _id?: string;
   email: string;
   username: string;
@@ -18,7 +18,7 @@ interface User {
 }
 
 // apart of user's unique session for QOTD
-type QOTDSession = {
+export type QOTDSession = {
   qotdId: string;
   startedAt: Date;
   pointsEarned: number;

@@ -28,3 +28,5 @@
 //   awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput>;
 //   getUserEmail(): Promise<string | null>;
 // }
+
+export {};

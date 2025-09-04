@@ -7,6 +7,7 @@ import { GetUserQuery, ListUsersQuery, CreateUserMutation, UpdateUserMutation, D
 import { UserParser } from "../../parser/UserParser";
 import { IUserApiClient } from "../../../APIClient/user/interfaces/IUserApiClient";
 
+
 export class UserApiClient extends BaseAPIClient implements IUserApiClient {
   
   async getUser(id: string): Promise<IUser | undefined> {
