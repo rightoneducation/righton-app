@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect} from 'react';
-import { motion, useAnimationControls } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Box, styled, Grid, useTheme } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
@@ -67,8 +67,6 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
   const [duration, setDuration] = useState(20);
-  const controls = useAnimationControls();
-  const [currentX, setCurrentX] = useState(0);
 
   useEffect(() => {
     const updateWidth = () => {
@@ -87,40 +85,7 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
     return () => window.removeEventListener('resize', updateWidth);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    if (trackWidth > 0) {
-      controls.start({
-        x: [-trackWidth, 0],
-        transition: {
-          repeat: Infinity,
-          ease: "linear",
-          duration
-        }
-      });
-    }
-  }, [trackWidth, duration, controls]);
 
-  // Pause animation when page is not visible (tab switch, minimize, etc.)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        controls.stop();
-      } else if (trackWidth > 0) {
-        // Resume from current position when page becomes visible again
-        controls.start({
-          x: [currentX, currentX + trackWidth],
-          transition: {
-            repeat: Infinity,
-            ease: "linear",
-            duration
-          }
-        });
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [controls, trackWidth, currentX, duration]);
 
 
 
@@ -172,33 +137,14 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
         >
           <motion.div
             ref={trackRef}
-            style={{ 
-              display: 'flex', 
-              whiteSpace: 'nowrap', 
-              willChange: 'transform'
+            style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform' }}
+            animate={{ x: [-trackWidth, 0] }}
+            transition={{
+              repeat: Infinity,
+              ease: "linear",
+              duration
             }}
-            animate={controls}
-            onUpdate={(latest) => {
-              if (typeof latest.x === 'number') {
-                setCurrentX(latest.x);
-              }
-            }}
-            onMouseEnter={() => {
-              controls.stop();
-            }}
-            onMouseLeave={() => {
-              if (trackWidth > 0) {
-                // Resume from current position
-                controls.start({
-                  x: [currentX, currentX + trackWidth],
-                  transition: {
-                    repeat: Infinity,
-                    ease: "linear",
-                    duration
-                  }
-                });
-              }
-            }}
+            whileHover={{ x: "current" }}
           >
             {Array.from({ length: 3 }, (_, setIndex) =>
              <div key={`set-${setIndex}`} style={{ display: 'flex' }}>
