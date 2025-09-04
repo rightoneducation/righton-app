@@ -582,7 +582,7 @@ export function HowItWorks() { // eslint-disable-line
                   color: '#FFFFFF',
                 }}
               >
-                Quick videos to help you save time, surface student thinking, and streamline your classroom routines.
+                Quick videos to help you save time, surface student thinking, and streamline your classroom routines
               </Typography>
             </Box>
             {/* The youtube video for medium and small screen only */}
@@ -637,7 +637,7 @@ export function HowItWorks() { // eslint-disable-line
                 </Typography>
                 <Typography
                   sx={{
-                    fontStyle: 'italic',
+                    fontStyle: 'normal',
                     fontSize: '16px',
                     fontFamily: 'Rubik, sans-serif',
                     fontWeight: 400,
@@ -694,8 +694,7 @@ export function HowItWorks() { // eslint-disable-line
                         : 'rgba(255, 255, 255, 0.5)',
                   }}
                 >
-                  Learn how to save time during lesson prep by automatically
-                  generating explanations for wrong answers.
+                  Save time during lesson prep by automatically generating explanations for wrong answers.
                 </Typography>
               </Box>
               <Box
