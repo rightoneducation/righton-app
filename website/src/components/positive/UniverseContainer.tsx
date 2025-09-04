@@ -112,7 +112,8 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
                   textAlign: 'left',
                 }}
               >
-                At the center of the RightOn! universe is a Positive Culture of
+                At the center of the 
+                <span style={{fontStyle: 'italic'}}> RightOn!</span> universe is a Positive Culture of
                 Error—our sun—around which all our products and learning
                 practices revolve, fueling growth through curiosity, iteration,
                 and continuous improvement.
@@ -232,7 +233,7 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
                     textAlign: 'center',
                   }}
                 >
-                  At the center of the RightOn! universe is a Positive Culture
+                  At the center of the <span style={{fontStyle: 'italic'}}>RightOn!</span> universe is a Positive Culture
                   of Error—our sun—around which all our products and learning
                   practices revolve, fueling growth through curiosity,
                   iteration, and continuous improvement.

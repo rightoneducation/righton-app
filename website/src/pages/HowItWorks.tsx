@@ -110,7 +110,6 @@ const SecondUpperContainerTexts = styled(Box)(({ theme }) => ({
   gap: '24px',
   justifyContent: 'center',
   alignItems: 'center',
-  maxWidth: '810px',
 }));
 
 const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
@@ -412,7 +411,7 @@ export function HowItWorks() { // eslint-disable-line
                     color: '#FFFFFF',
                   }}
                 >
-                  Signup for free!
+                  Sign up for free!
                 </Typography>
                 <Typography
                   sx={{
@@ -434,11 +433,10 @@ export function HowItWorks() { // eslint-disable-line
                   >
                     RightOn!{' '}
                     <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
-                      Central
+                      Central,
                     </span>
                   </span>{' '}
-                  teachers can select from our collection of standard-aligned
-                  games or design a unique game to meet your classroom needs.
+                  teachers can choose from our collection of standards-aligned games or create their own to fit classroom goals.
                 </Typography>
               </PhoneCardTextContainer>
             </PhoneCard>
@@ -463,8 +461,21 @@ export function HowItWorks() { // eslint-disable-line
                     color: '#FFFFFF',
                   }}
                 >
-                  Launch a game for your class to play. Manage players as they
-                  join and view student responses in real time.
+                  Use{' '} 
+                  <span
+                    style={{
+                      color: '#FF3A6A',
+                      fontStyle: 'italic',
+                      textDecoration: 'underline',
+                      fontWeight: 700
+                    }}
+                  >
+                    RightOn!{' '}
+                    <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
+                      Host
+                    </span>
+                  </span>{' '}
+                  to launch your game, manage players as they join, and view student thinking in real time — all from one place.
                 </Typography>
               </PhoneCardTextContainer>
             </PhoneCard>
@@ -500,11 +511,10 @@ export function HowItWorks() { // eslint-disable-line
                   >
                     RightOn!{' '}
                     <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
-                      Play
+                      Play,
                     </span>
                   </span>{' '}
-                  students learn and grow by selecting answers, sharing hints,
-                  and reflecting on mistakes together.
+                  students select answers, share hints, and learn from mistakes — building understanding together.
                 </Typography>
               </PhoneCardTextContainer>
             </PhoneCard>
@@ -571,7 +581,7 @@ export function HowItWorks() { // eslint-disable-line
                   color: '#FFFFFF',
                 }}
               >
-                Quick videos to help you save time, surface student thinking, and streamline your classroom routines.
+                Quick videos to help you save time, surface student thinking, and streamline your classroom routines
               </Typography>
             </Box>
             {/* The youtube video for medium and small screen only */}
@@ -626,7 +636,7 @@ export function HowItWorks() { // eslint-disable-line
                 </Typography>
                 <Typography
                   sx={{
-                    fontStyle: 'italic',
+                    fontStyle: 'normal',
                     fontSize: '16px',
                     fontFamily: 'Rubik, sans-serif',
                     fontWeight: 400,
@@ -683,8 +693,7 @@ export function HowItWorks() { // eslint-disable-line
                         : 'rgba(255, 255, 255, 0.5)',
                   }}
                 >
-                  Learn how to save time during lesson prep by automatically
-                  generating explanations for wrong answers.
+                  Save time during lesson prep by automatically generating explanations for wrong answers.
                 </Typography>
               </Box>
               <Box
@@ -759,12 +768,12 @@ export function HowItWorks() { // eslint-disable-line
             <Typography sx={{lineHeight: '1.1', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
               PEDAGOGY
             </Typography>
-            <Typography sx={{lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
-              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> RightOn! </span> into your teaching
+            <Typography sx={{lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF', textAlign: 'center' }}>
+              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> RightOn! </span> into Your Classroom Routines
             </Typography>
           </SecondUpperContainerIntegratingText>
-          <Typography sx={{textAlign: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'left' : 'center', maxWidth: '690px',  lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-              Click to learn how<span style={{fontStyle: 'italic'}}> RightOn! </span> meets each of three key themes in education technology.
+          <Typography sx={{textAlign: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'left' : 'center', maxWidth: '525px',  lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
+              Click to learn how<span style={{fontStyle: 'italic'}}> RightOn! </span> supports three key themes in education technology
           </Typography>
         </SecondUpperContainerTexts>
         {/* Venn Diagram goes here */}
@@ -806,7 +815,7 @@ export function HowItWorks() { // eslint-disable-line
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
                   </Typography>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-                    At<span style={{color: '#FFFFFF', fontStyle: 'italic',fontWeight: 400, fontFamily: 'Rubik, sans-serif'}}> RightOn! </span>, we believe mistakes aren&apos;t setbacks—they&apos;re 
+                    At<span style={{color: '#FFFFFF', fontStyle: 'italic',fontWeight: 400, fontFamily: 'Rubik, sans-serif'}}> RightOn!, </span> we believe mistakes aren&apos;t setbacks—they&apos;re 
                     stepping stones to deeper thinking. Our logic model outlines 
                     how students move beyond quick recall to meaningful understanding, 
                     all while building a classroom culture that embraces errors, encourages 

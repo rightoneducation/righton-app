@@ -431,7 +431,7 @@ export default function VennDiagram({
                       color: '#FFFFFF',
                     }}
                   >
-                    Link your lessions to
+                    Link your lessons to
                     <span style={{ color: '#FF3A6A', fontStyle: 'Regular' }}>
                       {' '}
                       error-based learning{' '}
@@ -483,7 +483,7 @@ export default function VennDiagram({
                     We collaborate closely with math educators and
                     <span
                       style={{
-                        fontWeight: 700,
+                        fontWeight: 400,
                         color: '#FF3A6A',
                         fontFamily: 'Poppins, sans-serif',
                       }}
@@ -496,7 +496,7 @@ export default function VennDiagram({
                     from quick recall and recognition to
                     <span
                       style={{
-                        fontWeight: 700,
+                        fontWeight: 400,
                         color: '#FF3A6A',
                         fontFamily: 'Poppins, sans-serif',
                       }}
