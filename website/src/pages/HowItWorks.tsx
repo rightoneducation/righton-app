@@ -412,7 +412,7 @@ export function HowItWorks() { // eslint-disable-line
                     color: '#FFFFFF',
                   }}
                 >
-                  Signup for free!
+                  Sign up for free!
                 </Typography>
                 <Typography
                   sx={{
@@ -434,11 +434,10 @@ export function HowItWorks() { // eslint-disable-line
                   >
                     RightOn!{' '}
                     <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
-                      Central
+                      Central,
                     </span>
                   </span>{' '}
-                  teachers can select from our collection of standard-aligned
-                  games or design a unique game to meet your classroom needs.
+                  teachers can choose from our collection of standards-aligned games or create their own to fit classroom goals.
                 </Typography>
               </PhoneCardTextContainer>
             </PhoneCard>
@@ -463,8 +462,21 @@ export function HowItWorks() { // eslint-disable-line
                     color: '#FFFFFF',
                   }}
                 >
-                  Launch a game for your class to play. Manage players as they
-                  join and view student responses in real time.
+                  Use{' '} 
+                  <span
+                    style={{
+                      color: '#FF3A6A',
+                      fontStyle: 'italic',
+                      textDecoration: 'underline',
+                      fontWeight: 700
+                    }}
+                  >
+                    RightOn!{' '}
+                    <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
+                      Host
+                    </span>
+                  </span>{' '}
+                  to launch your game, manage players as they join, and view student thinking in real time — all from one place.
                 </Typography>
               </PhoneCardTextContainer>
             </PhoneCard>
@@ -500,11 +512,10 @@ export function HowItWorks() { // eslint-disable-line
                   >
                     RightOn!{' '}
                     <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
-                      Play
+                      Play,
                     </span>
                   </span>{' '}
-                  students learn and grow by selecting answers, sharing hints,
-                  and reflecting on mistakes together.
+                  students select answers, share hints, and learn from mistakes — building understanding together.
                 </Typography>
               </PhoneCardTextContainer>
             </PhoneCard>
