@@ -23,7 +23,7 @@ export default function PlayGames({ screenSize }: IPlayGames) {
     >
       <Grid
         order={screenSize !== ScreenSize.LARGE ? 2 : 1}
-        size={{ md: 12, lg: 5 }}
+        size={{ md: 12, lg: 4 }}
         sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
       >
         <StyledFlexBox
@@ -47,7 +47,7 @@ export default function PlayGames({ screenSize }: IPlayGames) {
               top: '50%',
               left: '50%',
               width: '150%',
-              height: '200%',
+              height: '150%',
               transform: 'translate(-50%, -50%)',
               zIndex: 0,
               background:
@@ -75,7 +75,7 @@ export default function PlayGames({ screenSize }: IPlayGames) {
 
       <Grid
         order={screenSize !== ScreenSize.LARGE ? 1 : 2}
-        size={{ md: 12, lg: 7 }}
+        size={{ md: 12, lg: 8 }}
         sx={{
           display: 'flex',
           flexDirection: 'row',
