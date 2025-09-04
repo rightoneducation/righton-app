@@ -54,7 +54,7 @@ export default function ArticleCard({
             display: 'flex',
             flexDirection: 'column',
             boxSizing: 'border-box',
-            gap: `${theme.sizing.smPadding}px`,
+            gap: `17px`,
             paddingRight: `${theme.sizing.smPadding}px`,
           }}
         >
@@ -71,7 +71,7 @@ export default function ArticleCard({
             ))}
             <CMSCardDateText> {date} </CMSCardDateText>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
             <CMSCardTitle>{title}</CMSCardTitle>
             <CMSCardCaption>{caption}</CMSCardCaption>
           </Box>
