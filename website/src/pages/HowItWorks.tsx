@@ -400,7 +400,7 @@ export function HowItWorks() { // eslint-disable-line
             }}
           >
             <PhoneCard>
-              <StepImage stepNumber={1} phoneImage={OnePhone} />
+              <StepImage stepNumber={1} phoneImage={OnePhone} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
@@ -441,7 +441,7 @@ export function HowItWorks() { // eslint-disable-line
               </PhoneCardTextContainer>
             </PhoneCard>
             <PhoneCard>
-              <StepImage stepNumber={2} phoneImage={TwoPhone} />
+              <StepImage stepNumber={2} phoneImage={TwoPhone} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
@@ -480,7 +480,7 @@ export function HowItWorks() { // eslint-disable-line
               </PhoneCardTextContainer>
             </PhoneCard>
             <PhoneCard>
-              <StepImage stepNumber={3} phoneImage={ThreePhone} />
+              <StepImage stepNumber={3} phoneImage={ThreePhone} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
