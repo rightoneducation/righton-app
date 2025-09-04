@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect} from 'react';
+import { motion } from 'framer-motion';
 import { Box, styled, Grid, useTheme } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
@@ -55,27 +56,6 @@ const StyledSponsorDivider = styled(StyledFlexBox)(({ theme }) => ({
   }
 }));
 
-const ScrollingContainer = styled('div')<{ duration: number }>`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  animation: scrollLeft ${props => props.duration}s linear infinite;
-  white-space: nowrap;
-  
-  @keyframes scrollLeft {
-    0% {
-      transform: translateX(-50%);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-  
-  &:hover {
-    animation-play-state: paused;
-  }
-`;
-
 interface HomePageProps {
   screenSize: ScreenSize;
 }
@@ -83,35 +63,29 @@ interface HomePageProps {
 export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
   const theme = useTheme();
   const containerPadding = theme.sizing.containerPadding[screenSize];
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [animationDuration, setAnimationDuration] = useState(14);
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [trackWidth, setTrackWidth] = useState(0);
+  const [duration, setDuration] = useState(20);
 
   useEffect(() => {
-    const calculateDuration = () => {
-      if (scrollContainerRef.current) {
-        const contentWidth = scrollContainerRef.current.scrollWidth;
-        const scrollDistance = contentWidth * 0.5; // Move half the content width for seamless loop
-        
-        // Calculate speed that gives consistent visual effect across devices
-        // On mobile: content is smaller, so we need faster speed to maintain same visual pace
-        // On desktop: content is larger, so we use standard speed
-        const baseSpeed = 100; // pixels per second for desktop
-        const mobileMultiplier = Math.max(1, 1200 / contentWidth); // Faster on smaller screens
-        const adjustedSpeed = baseSpeed * mobileMultiplier;
-        
-        const newDuration = scrollDistance / adjustedSpeed;
-        setAnimationDuration(newDuration);
+    const updateWidth = () => {
+      if (trackRef.current) {
+        const firstSet = trackRef.current.children[0];
+        if (firstSet instanceof HTMLElement && firstSet.offsetWidth > 0) {
+          setTrackWidth(firstSet.offsetWidth);
+          setDuration(20 / (1400 / firstSet.offsetWidth));
+        } else {
+          requestAnimationFrame(updateWidth); 
+        }
       }
     };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    calculateDuration();
-    
-    // Recalculate on window resize
-    const handleResize = () => calculateDuration();
-    window.addEventListener('resize', handleResize);
-    
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+
 
 
 
@@ -155,42 +129,36 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
       {/* Sponsors Divider */}
       <StyledSponsorDivider>
         <div 
-          ref={scrollContainerRef}
           style={{ 
             width: '100%', 
             overflow: 'hidden',
-            position: 'relative'
+            position: 'relative',
           }}
         >
-          <ScrollingContainer duration={animationDuration}>
-            {/* First set of images */}
-            {imageArr.map(({ image, alt }) => (
-              <img 
-                key={`first-${alt}`}
-                src={image} 
-                alt={alt} 
-                style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
-              />
-            ))}
-            {/* Duplicate set for seamless loop */}
-            {imageArr.map(({ image, alt }) => (
-              <img 
-                key={`second-${alt}`}
-                src={image} 
-                alt={alt} 
-                style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
-              />
-            ))}
-            {/* Third set to ensure smooth transition */}
-            {imageArr.map(({ image, alt }) => (
-              <img 
-                key={`third-${alt}`}
-                src={image} 
-                alt={alt} 
-                style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
-              />
-            ))}
-          </ScrollingContainer>
+          <motion.div
+            ref={trackRef}
+            style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform' }}
+            animate={{ x: [-trackWidth, 0] }}
+            transition={{
+              repeat: Infinity,
+              ease: "linear",
+              duration
+            }}
+            whileHover={{ x: "current" }}
+          >
+            {Array.from({ length: 3 }, (_, setIndex) =>
+             <div key={`set-${setIndex}`} style={{ display: 'flex' }}>
+              {imageArr.map(({ image, alt }, imageIndex) => (
+                <img 
+                  key={`set-${setIndex}-${alt}`}
+                  src={image} 
+                  alt={alt} 
+                  style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
+                />
+              ))}
+              </div>
+            )}
+          </motion.div>
         </div>
       </StyledSponsorDivider>
 
