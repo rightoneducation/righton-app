@@ -110,7 +110,6 @@ const SecondUpperContainerTexts = styled(Box)(({ theme }) => ({
   gap: '24px',
   justifyContent: 'center',
   alignItems: 'center',
-  maxWidth: '810px',
 }));
 
 const SecondUpperContainerIntegratingText = styled(Box)(({ theme }) => ({
@@ -769,12 +768,12 @@ export function HowItWorks() { // eslint-disable-line
             <Typography sx={{lineHeight: '1.1', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
               PEDAGOGY
             </Typography>
-            <Typography sx={{lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
-              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> RightOn! </span> into your teaching
+            <Typography sx={{lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF', textAlign: 'center' }}>
+              Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> RightOn! </span> into Your Classroom Routines
             </Typography>
           </SecondUpperContainerIntegratingText>
-          <Typography sx={{textAlign: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'left' : 'center', maxWidth: '690px',  lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-              Click to learn how<span style={{fontStyle: 'italic'}}> RightOn! </span> meets each of three key themes in education technology.
+          <Typography sx={{textAlign: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'left' : 'center', maxWidth: '525px',  lineHeight: '1.3', fontSize: '24px', fontFamily:'Poppins, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
+              Click to learn how<span style={{fontStyle: 'italic'}}> RightOn! </span> supports three key themes in education technology
           </Typography>
         </SecondUpperContainerTexts>
         {/* Venn Diagram goes here */}
