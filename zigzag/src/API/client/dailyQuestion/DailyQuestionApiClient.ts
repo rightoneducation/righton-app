@@ -89,6 +89,4 @@ async deleteDailyQuestion(id: string): Promise<void> {
     throw new Error("Error deleting daily question.");
   }
   }
-
-
 }

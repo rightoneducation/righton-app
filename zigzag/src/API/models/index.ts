@@ -5,3 +5,5 @@ export {
   AWSAnswerAnalytics, 
   AWSComments 
 } from './DailyQuestion/IAWSDailyQuestion';
+export { IUser } from './User/IUser';
+export { IAWSUser } from './User/IAWSUser';
