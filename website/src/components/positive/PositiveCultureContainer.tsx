@@ -106,6 +106,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
                     fontWeight: 700,
                     color: '#FF3A6A',
                     display: 'inline',
+                    fontStyle: 'italic',
                   }}
                 >
                   {' '}
@@ -392,6 +393,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
                       fontWeight: 700,
                       color: '#FF3A6A',
                       display: 'inline',
+                      fontStyle: 'italic',
                     }}
                   >
                     {' '}
