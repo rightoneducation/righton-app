@@ -816,7 +816,7 @@ export function HowItWorks() { // eslint-disable-line
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
                   </Typography>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-                    At<span style={{color: '#FFFFFF', fontStyle: 'italic',fontWeight: 400, fontFamily: 'Rubik, sans-serif'}}> RightOn! </span>, we believe mistakes aren&apos;t setbacks—they&apos;re 
+                    At<span style={{color: '#FFFFFF', fontStyle: 'italic',fontWeight: 400, fontFamily: 'Rubik, sans-serif'}}> RightOn!, </span> we believe mistakes aren&apos;t setbacks—they&apos;re 
                     stepping stones to deeper thinking. Our logic model outlines 
                     how students move beyond quick recall to meaningful understanding, 
                     all while building a classroom culture that embraces errors, encourages 
