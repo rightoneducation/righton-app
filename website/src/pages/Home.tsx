@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useState, useEffect} from 'react';
+import { motion, useAnimationControls } from 'framer-motion';
 import { Box, styled, Grid, useTheme } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
@@ -64,6 +64,66 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
   const theme = useTheme();
   const containerPadding = theme.sizing.containerPadding[screenSize];
 
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [trackWidth, setTrackWidth] = useState(0);
+  const [duration, setDuration] = useState(20);
+  const controls = useAnimationControls();
+  const [currentX, setCurrentX] = useState(0);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (trackRef.current) {
+        const firstSet = trackRef.current.children[0];
+        if (firstSet instanceof HTMLElement && firstSet.offsetWidth > 0) {
+          setTrackWidth(firstSet.offsetWidth);
+          setDuration(20 / (1400 / firstSet.offsetWidth));
+        } else {
+          requestAnimationFrame(updateWidth); 
+        }
+      }
+    };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (trackWidth > 0) {
+      controls.start({
+        x: [-trackWidth, 0],
+        transition: {
+          repeat: Infinity,
+          ease: "linear",
+          duration
+        }
+      });
+    }
+  }, [trackWidth, duration, controls]);
+
+  // Pause animation when page is not visible (tab switch, minimize, etc.)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        controls.stop();
+      } else if (trackWidth > 0) {
+        // Resume from current position when page becomes visible again
+        controls.start({
+          x: [currentX, currentX + trackWidth],
+          transition: {
+            repeat: Infinity,
+            ease: "linear",
+            duration
+          }
+        });
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [controls, trackWidth, currentX, duration]);
+
+
+
   return (
     <HomePageContainer>
       <MathSymbolsBackground />
@@ -103,36 +163,54 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
 
       {/* Sponsors Divider */}
       <StyledSponsorDivider>
-        <div style={{ 
-          width: '100%', 
-          overflow: 'hidden',
-          position: 'relative'
-        }}>
+        <div 
+          style={{ 
+            width: '100%', 
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+        >
           <motion.div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '24px',
-              whiteSpace: 'nowrap'
+            ref={trackRef}
+            style={{ 
+              display: 'flex', 
+              whiteSpace: 'nowrap', 
+              willChange: 'transform'
             }}
-            animate={{
-              x: [0, -2000]
+            animate={controls}
+            onUpdate={(latest) => {
+              if (typeof latest.x === 'number') {
+                setCurrentX(latest.x);
+              }
             }}
-            transition={{
-              duration: 20,
-              ease: "linear",
-              repeat: Infinity
+            onMouseEnter={() => {
+              controls.stop();
+            }}
+            onMouseLeave={() => {
+              if (trackWidth > 0) {
+                // Resume from current position
+                controls.start({
+                  x: [currentX, currentX + trackWidth],
+                  transition: {
+                    repeat: Infinity,
+                    ease: "linear",
+                    duration
+                  }
+                });
+              }
             }}
           >
             {Array.from({ length: 3 }, (_, setIndex) =>
-              imageArr.map(({ image, alt }, imageIndex) => (
+             <div key={`set-${setIndex}`} style={{ display: 'flex' }}>
+              {imageArr.map(({ image, alt }, imageIndex) => (
                 <img 
                   key={`set-${setIndex}-${alt}`}
                   src={image} 
                   alt={alt} 
                   style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
                 />
-              ))
+              ))}
+              </div>
             )}
           </motion.div>
         </div>
