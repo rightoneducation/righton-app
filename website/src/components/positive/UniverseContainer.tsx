@@ -225,12 +225,13 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
                 <Typography
                   sx={{
                     width: '100%',
-                    fontSize: '24px',
+                    fontSize: '20px',
                     lineHeight: '30px',
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 400,
                     color: '#FFFFFF',
                     textAlign: 'center',
+                    maxWidth: '1078px'
                   }}
                 >
                   At the center of the <span style={{fontStyle: 'italic'}}>RightOn!</span> universe is a Positive Culture
