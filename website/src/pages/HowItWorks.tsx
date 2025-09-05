@@ -400,7 +400,7 @@ export function HowItWorks() { // eslint-disable-line
             }}
           >
             <PhoneCard>
-              <StepImage stepNumber={1} phoneImage={OnePhone} />
+              <StepImage stepNumber={1} phoneImage={OnePhone} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
@@ -441,7 +441,7 @@ export function HowItWorks() { // eslint-disable-line
               </PhoneCardTextContainer>
             </PhoneCard>
             <PhoneCard>
-              <StepImage stepNumber={2} phoneImage={TwoPhone} />
+              <StepImage stepNumber={2} phoneImage={TwoPhone} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
@@ -480,7 +480,7 @@ export function HowItWorks() { // eslint-disable-line
               </PhoneCardTextContainer>
             </PhoneCard>
             <PhoneCard>
-              <StepImage stepNumber={3} phoneImage={ThreePhone} />
+              <StepImage stepNumber={3} phoneImage={ThreePhone} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
@@ -815,7 +815,7 @@ export function HowItWorks() { // eslint-disable-line
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
                   </Typography>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
-                    At<span style={{color: '#FFFFFF', fontStyle: 'italic',fontWeight: 400, fontFamily: 'Rubik, sans-serif'}}> RightOn!, </span> we believe mistakes aren&apos;t setbacks—they&apos;re 
+                    At<span style={{color: '#FFFFFF', fontStyle: 'italic',fontWeight: 400, fontFamily: 'Rubik, sans-serif'}}> RightOn!, </span> we believe mistakes aren&apos;t setbacks — they&apos;re 
                     stepping stones to deeper thinking. Our logic model outlines 
                     how students move beyond quick recall to meaningful understanding, 
                     all while building a classroom culture that embraces errors, encourages 
@@ -995,7 +995,7 @@ export function HowItWorks() { // eslint-disable-line
 
                     }}>
                       
-                    <span style={{fontStyle: 'italic'}}>RightOn!</span> is an online math platform that uses AI to turn mistakes into learning opportunities. It shows teachers how students are thinking, highlights common misconceptions in real time, and gives students quick, personalized feedback—building persistence and a positive culture of error.
+                    <span style={{fontStyle: 'italic'}}>RightOn!</span> is an online math platform that uses AI to turn mistakes into learning opportunities. It shows teachers how students are thinking, highlights common misconceptions in real time, and gives students quick, personalized feedback — building persistence and a positive culture of error.
 
                     </Typography>
                   </FAQContent>
@@ -1168,7 +1168,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      Sign up for a <span style={{fontStyle: 'italic'}}>RightOn!</span> account to start exploring—our <a href="https://docs.google.com/viewer?url=https://www.rightoneducation.com/docs/righton-user-guide.pdf&embedded=true" target="_blank" rel="noopener noreferrer" style={{color: '#FFFFFF', textDecoration: 'underline'}}>User Guide</a> and pre-made games make it easy to jump right in.
+                      Sign up for a <span style={{fontStyle: 'italic'}}>RightOn!</span> account to start exploring — our <a href="https://docs.google.com/viewer?url=https://www.rightoneducation.com/docs/righton-user-guide.pdf&embedded=true" target="_blank" rel="noopener noreferrer" style={{color: '#FFFFFF', textDecoration: 'underline'}}>User Guide</a> and pre-made games make it easy to jump right in.
                     </Typography>
                   </FAQContent>
                 </Collapse>

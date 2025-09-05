@@ -109,7 +109,7 @@ export default function PlayGames({ screenSize }: IPlayGames) {
               >
                 two phases
               </EmphasizeText>
-              : first they pick the correct answer—then, they try to spot the
+              : first they pick the correct answer — then, they try to spot the
               trickiest wrong one.
             </StyledText>
           </StyledFlexBox>

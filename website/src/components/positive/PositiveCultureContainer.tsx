@@ -75,7 +75,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
                 textAlign: 'left',
               }}
             >
-              Discover how mistakes become momentum—through classrooms, media,
+              Discover how mistakes become momentum — through classrooms, media,
               and more.
             </Typography>
           </Box>
@@ -340,7 +340,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
                 textAlign: 'center',
               }}
             >
-              Discover how mistakes become momentum—through classrooms, media,
+              Discover how mistakes become momentum — through classrooms, media,
               and more.
             </Typography>
           </Box>

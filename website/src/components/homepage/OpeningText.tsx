@@ -27,7 +27,7 @@ export default function OpeningText() {
             textAlign: { xs: 'start', lg: 'center' },
           }}
         >
-          <i>RightOn!</i> makes math fun, social, and supportive—where mistakes spark learning
+          <i>RightOn!</i> makes math fun, social, and supportive — where mistakes spark learning
           <br />
           and every student feels confident participating
         </StyledSubText>

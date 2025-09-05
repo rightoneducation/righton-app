@@ -1,13 +1,15 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { ScreenSize } from '../../WebsiteModels';
 
 interface StepImageProps {
   stepNumber: number | string;
   phoneImage: string;
   phoneAlt?: string;
+  screenSize: ScreenSize;
 }
 
-function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
+function StepImage({ stepNumber, phoneImage, phoneAlt, screenSize }: StepImageProps) {
   return (
     <Box
       sx={{
@@ -16,7 +18,8 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
         height: '205px',
         boxSizing: 'border-box',
         objectFit: 'contain',
-        justifyContent: 'center',
+        justifyContent: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
+        paddingRight: (screenSize === ScreenSize.LARGE && stepNumber === 1)  ? '24px' : '0px',
       }}
     >
       <Box
