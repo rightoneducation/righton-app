@@ -114,7 +114,7 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
               >
                 At the center of the 
                 <span style={{fontStyle: 'italic'}}> RightOn!</span> universe is a Positive Culture of
-                Error—our sun—around which all our products and learning
+                Error — our sun — around which all our products and learning
                 practices revolve, fueling growth through curiosity, iteration,
                 and continuous improvement.
               </Typography>
@@ -235,7 +235,7 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
                   }}
                 >
                   At the center of the <span style={{fontStyle: 'italic'}}>RightOn!</span> universe is a Positive Culture
-                  of Error—our sun—around which all our products and learning
+                  of Error — our sun — around which all our products and learning
                   practices revolve, fueling growth through curiosity,
                   iteration, and continuous improvement.
                 </Typography>

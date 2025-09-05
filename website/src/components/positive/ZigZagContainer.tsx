@@ -161,7 +161,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 game that delivers a quick, thought-provoking question that will
                 get you thinking outside the box. From number puzzles to science
                 mysteries to surprising fun facts, each one invites discussion
-                and discovery—across math, STEM, and beyond.
+                and discovery — across math, STEM, and beyond.
               </Typography>
             </Box>
             <Box
@@ -553,7 +553,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 game that delivers a quick, thought-provoking question that will
                 get you thinking outside the box. From number puzzles to science
                 mysteries to surprising fun facts, each one invites discussion
-                and discovery—across math, STEM, and beyond.
+                and discovery — across math, STEM, and beyond.
               </Typography>
             </Box>
             <Box

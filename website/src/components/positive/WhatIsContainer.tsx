@@ -23,7 +23,7 @@ export const WhatIsContainer = ({ screenSize }: WhatIsContainerProps) => { // es
     'Normalize and destigmatize errors',
     'User errors to guide instruction',
     'Embrace mistakes as learning opportunities',
-    'Discuss all answers—right and wrong—to deepen understanding',
+    'Discuss all answers — right and wrong — to deepen understanding',
   ];
 
   switch (screenSize) {
