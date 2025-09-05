@@ -73,6 +73,7 @@ function CornerstoneArticleCard({
               alt="Main"
               style={{
                 minHeight: '185px',
+                maxHeight: '185px',
                 objectFit: 'cover',
                 borderTopLeftRadius: '8px',
                 borderTopRightRadius: '8px',
@@ -192,6 +193,7 @@ function CornerstoneArticleCard({
             alt="Main"
             style={{
               minHeight: '300px',
+              maxHeight: '300px',
               objectFit: 'cover',
               borderTopLeftRadius: '8px',
               borderTopRightRadius: '8px',
