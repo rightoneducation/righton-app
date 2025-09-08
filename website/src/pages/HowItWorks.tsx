@@ -917,7 +917,7 @@ export function HowItWorks() { // eslint-disable-line
                   },
                 }}
                 onClick={() => {
-                  window.open('/docs/righton-logic-model.pdf', '_blank');
+                  window.open('https://docs.google.com/presentation/d/1ZRlFZ6o4z50NKznbwdVOcvkFYhFIiBJzSPvCb7aDkjc/edit?usp=drive_link', '_blank');
                 }}
               >
                 View <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model

@@ -199,7 +199,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
               cursor: 'pointer',
             }}
             onClick={() => {
-              window.open('/docs/righton-privacy-policy.pdf', '_blank');
+              window.open('https://drive.google.com/file/d/1npOgxBwXLikhZ54XUelfQY5nHMpBBt5T/view?usp=drive_link', '_blank');
             }}
           >
             Privacy Policy
