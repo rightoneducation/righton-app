@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect} from 'react';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { Box, styled, Grid, useTheme } from '@mui/material';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
@@ -19,6 +19,7 @@ import toolsCompetitionImg from '../images/tools-competition.svg';
 import velaImg from '../images/vela.svg';
 import waltonFamilyImg from '../images/walton-family.svg';
 import waegen from '../images/waegen.svg';
+import gates from '../images/gates.svg';
 import inwardCurveImg from '../images/inwardCurve.svg';
 import bottomWaveLg from '../images/bottomWaveLg.svg';
 import FeaturedVideo from '../components/homepage/FeaturedVideo';
@@ -29,6 +30,7 @@ import PlayGames from '../components/homepage/Play';
 
 const imageArr = [
   { image: fourtyImg, alt: 'sponsors-forty' },
+  { image: gates, alt: 'sponsors-gates' },
   { image: toolsCompetitionImg, alt: 'sponsors-learning-engineering' },
   { image: nsfImg, alt: 'sponsors-nsf' },
   { image: schmidtImg, alt: 'sponsors-schmidt-futures' },
@@ -67,6 +69,8 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
   const [duration, setDuration] = useState(20);
+  const contentWidth = 2220; // width of the content in the track + gap between sets x1
+  const controls = useAnimation(); 
 
   useEffect(() => {
     const updateWidth = () => {
@@ -74,7 +78,17 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
         const firstSet = trackRef.current.children[0];
         if (firstSet instanceof HTMLElement && firstSet.offsetWidth > 0) {
           setTrackWidth(firstSet.offsetWidth);
-          setDuration(20 / (1400 / firstSet.offsetWidth));
+          const newDuration = 40 / (contentWidth / firstSet.offsetWidth);
+          setDuration(newDuration);
+          // Start animation after width is calculated
+          controls.start({
+            x: [-contentWidth, 0],
+            transition: {
+              repeat: Infinity,
+              ease: "linear",
+              duration: newDuration,
+            },
+          });
         } else {
           requestAnimationFrame(updateWidth); 
         }
@@ -84,9 +98,6 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
     window.addEventListener('resize', updateWidth);
     return () => window.removeEventListener('resize', updateWidth);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-
-
 
 
   return (
@@ -137,23 +148,28 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
         >
           <motion.div
             ref={trackRef}
-            style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform' }}
-            animate={{ x: [-trackWidth, 0] }}
-            transition={{
-              repeat: Infinity,
-              ease: "linear",
-              duration
-            }}
-            whileHover={{ x: "current" }}
+            style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform', gap: '120px' }}
+            animate={controls}
+            onMouseEnter={() => controls.stop()}
+            onMouseLeave={() =>
+              controls.start({
+                x: [-contentWidth, 0],
+                transition: {
+                  repeat: Infinity,
+                  ease: "linear",
+                  duration,
+                },
+              })
+            }
           >
             {Array.from({ length: 3 }, (_, setIndex) =>
-             <div key={`set-${setIndex}`} style={{ display: 'flex' }}>
+             <div key={`set-${setIndex}`} style={{ display: 'flex', gap: '120px' }}>
               {imageArr.map(({ image, alt }, imageIndex) => (
                 <img 
                   key={`set-${setIndex}-${alt}`}
                   src={image} 
                   alt={alt} 
-                  style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
+                  style={{ width: 'auto', height: '103px',  objectFit: 'contain', zIndex: 5 }}
                 />
               ))}
               </div>
