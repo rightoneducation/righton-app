@@ -18,7 +18,7 @@ function StepImage({ stepNumber, phoneImage, phoneAlt, screenSize }: StepImagePr
         height: '205px',
         boxSizing: 'border-box',
         objectFit: 'contain',
-        justifyContent: screenSize === ScreenSize.LARGE ? 'center' : 'flex-start',
+        justifyContent: screenSize === ScreenSize.LARGE ? 'flex-start' : 'flex-start',
         paddingRight: (screenSize === ScreenSize.LARGE && stepNumber === 1)  ? '24px' : '0px',
       }}
     >

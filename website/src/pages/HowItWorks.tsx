@@ -520,7 +520,7 @@ export function HowItWorks() { // eslint-disable-line
             </PhoneCard>
           </PhoneContainer>
 
-          {/* Download User guide button */}
+          {/* View User guide button */}
           <Box
             component="button"
             sx={{
@@ -542,7 +542,7 @@ export function HowItWorks() { // eslint-disable-line
               window.open('/docs/righton-user-guide.pdf', '_blank');
             }}
           >
-            Download our User Guide
+            View User Guide
           </Box>
         </PhoneAndDownloadContainer>
 
@@ -852,7 +852,7 @@ export function HowItWorks() { // eslint-disable-line
                         window.open('/docs/righton-logic-model.pdf', '_blank');
                       }}
                     >
-                      Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+                      View <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
                     </Box>
                   </Box>
 
@@ -920,7 +920,7 @@ export function HowItWorks() { // eslint-disable-line
                   window.open('/docs/righton-logic-model.pdf', '_blank');
                 }}
               >
-                Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
+                View <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
               </Box>
             )}
           </Grid>
