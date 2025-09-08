@@ -65,9 +65,9 @@ function CornerstoneArticleCard({
       return (
         <StyledCard
           screenSize={screenSize}
-          style={{ width: '287px', maxWidth: '287px', minHeight: '345px' }}
+          style={{ width: '287px', maxWidth: '287px', minHeight: '370px' }}
         >
-          <Box sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}>
+           <Box sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}>
             <img
               src={article.image?.url ?? ''}
               alt="Main"
@@ -82,22 +82,6 @@ function CornerstoneArticleCard({
                 display: 'block',
               }}
             />
-            <Typography
-              sx={{
-                fontSize: '18px',
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: 600,
-                color: '#22499C',
-                position: 'absolute',
-                top: '17px',
-                left: '10px',
-                border: '2px solid #22499C',
-                padding: '6px 8px',
-                borderRadius: '18px',
-              }}
-            >
-              Teaching Resources
-            </Typography>
           </Box>
           <Box
             sx={{
@@ -111,6 +95,16 @@ function CornerstoneArticleCard({
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <Typography
+                sx={{
+                  fontSize: '14px',
+                  fontFamily: 'Rubik, sans-serif',
+                  fontWeight: 400,
+                  color: '#FFFFFF',
+                }}
+              >
+                {article.tags?.[0]}
+              </Typography>
               <CMSCornerstoneTitle
                 sx={{
                   fontSize: '16px',
@@ -219,7 +213,7 @@ function CornerstoneArticleCard({
                   color: '#FFFFFF',
                 }}
               >
-                Teaching Resources
+                {article.tags?.[0]}
               </Typography>
               <CMSCornerstoneTitle
                 sx={{
