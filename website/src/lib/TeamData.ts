@@ -117,10 +117,10 @@ export const teamArr = [
     defaultImg: MarizzaDefault,
     hoverImg: MarizzaHover,
     backImg: MarizzaBack,
-    name: 'Marizza Baily',
+    name: 'Marizza Stix',
     title: 'Math Educator',
     title2: 'Content & Pedagogy',
-    linkedIn: 'https://www.linkedin.com/in/l-marizza-bailey-5b981143/',
+    linkedIn: ' https://www.linkedin.com/in/l-marizza-stix-5b981143',
   },
   {
     defaultImg: MikeDefault,
@@ -128,7 +128,7 @@ export const teamArr = [
     backImg: MikeBack,
     name: 'Michael Hunter',
     title: 'Development Intern',
-    linkedIn: 'www.linkedin.com/in/michael-h-hunter',
+    linkedIn: 'https://www.linkedin.com/in/michael-h-hunter',
   },
   {
     defaultImg: MozzieDefault,
@@ -137,7 +137,7 @@ export const teamArr = [
     name: 'Mozzie Dosalmas, PhD',
     title: 'Math Educator',
     title2: 'Content & Pedagogy',
-    linkedIn: 'https://www.linkedin.com/in/l-marizza-bailey-5b981143/',
+    linkedIn: 'https://www.linkedin.com/in/drmozz/',
   },
   {
     defaultImg: MuhammadDefault,
