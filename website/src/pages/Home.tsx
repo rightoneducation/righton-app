@@ -19,6 +19,7 @@ import toolsCompetitionImg from '../images/tools-competition.svg';
 import velaImg from '../images/vela.svg';
 import waltonFamilyImg from '../images/walton-family.svg';
 import waegen from '../images/waegen.svg';
+import gates from '../images/gates.svg';
 import inwardCurveImg from '../images/inwardCurve.svg';
 import bottomWaveLg from '../images/bottomWaveLg.svg';
 import FeaturedVideo from '../components/homepage/FeaturedVideo';
@@ -29,6 +30,7 @@ import PlayGames from '../components/homepage/Play';
 
 const imageArr = [
   { image: fourtyImg, alt: 'sponsors-forty' },
+  { image: gates, alt: 'sponsors-gates' },
   { image: toolsCompetitionImg, alt: 'sponsors-learning-engineering' },
   { image: nsfImg, alt: 'sponsors-nsf' },
   { image: schmidtImg, alt: 'sponsors-schmidt-futures' },
@@ -137,7 +139,7 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
         >
           <motion.div
             ref={trackRef}
-            style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform' }}
+            style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform', gap: '120px' }}
             animate={{ x: [-trackWidth, 0] }}
             transition={{
               repeat: Infinity,
@@ -147,13 +149,13 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
             whileHover={{ x: "current" }}
           >
             {Array.from({ length: 3 }, (_, setIndex) =>
-             <div key={`set-${setIndex}`} style={{ display: 'flex' }}>
+             <div key={`set-${setIndex}`} style={{ display: 'flex', gap: '120px' }}>
               {imageArr.map(({ image, alt }, imageIndex) => (
                 <img 
                   key={`set-${setIndex}-${alt}`}
                   src={image} 
                   alt={alt} 
-                  style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}
+                  style={{ width: 'auto', height: '103px',  objectFit: 'contain', zIndex: 5 }}
                 />
               ))}
               </div>
