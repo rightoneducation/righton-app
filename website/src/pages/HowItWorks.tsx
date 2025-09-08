@@ -539,7 +539,7 @@ export function HowItWorks() { // eslint-disable-line
               },
             }}
             onClick={() => {
-              window.open('/docs/righton-user-guide.pdf', '_blank');
+              window.open('https://drive.google.com/file/d/1B2CibKkPTh4jjoWNrNS4z6DSEtH0wLHt/view?usp=drive_link', '_blank');
             }}
           >
             View User Guide
@@ -849,7 +849,7 @@ export function HowItWorks() { // eslint-disable-line
                         },
                       }}
                       onClick={() => {
-                        window.open('/docs/righton-logic-model.pdf', '_blank');
+                        window.open('https://docs.google.com/presentation/d/1ZRlFZ6o4z50NKznbwdVOcvkFYhFIiBJzSPvCb7aDkjc/edit?usp=drive_link', '_blank');
                       }}
                     >
                       View <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
@@ -1168,7 +1168,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      Sign up for a <span style={{fontStyle: 'italic'}}>RightOn!</span> account to start exploring — our <a href="https://docs.google.com/viewer?url=https://www.rightoneducation.com/docs/righton-user-guide.pdf&embedded=true" target="_blank" rel="noopener noreferrer" style={{color: '#FFFFFF', textDecoration: 'underline'}}>User Guide</a> and pre-made games make it easy to jump right in.
+                      Sign up for a <span style={{fontStyle: 'italic'}}>RightOn!</span> account to start exploring — our <a href="https://drive.google.com/file/d/1B2CibKkPTh4jjoWNrNS4z6DSEtH0wLHt/view?usp=drive_link" target="_blank" rel="noopener noreferrer" style={{color: '#FFFFFF', textDecoration: 'underline'}}>User Guide</a> and pre-made games make it easy to jump right in.
                     </Typography>
                   </FAQContent>
                 </Collapse>
