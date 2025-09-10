@@ -360,7 +360,7 @@ export function HowItWorks() { // eslint-disable-line
                 fontSize: '40px',
                 fontFamily: 'Poppins, sans-serif',
                 fontWeight: 700,
-                lineHeight: '120%',
+                lineHeight: '100%',
                 color: '#FFFFFF',
               }}
             >
@@ -404,7 +404,7 @@ export function HowItWorks() { // eslint-disable-line
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
-                    lineHeight: '23px',
+                    lineHeight: '20px',
                     fontSize: '20px',
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 800,
@@ -670,7 +670,7 @@ export function HowItWorks() { // eslint-disable-line
               >
                 <Typography
                   sx={{
-                    lineHeight: '110%',
+                    lineHeight: '100%',
                     fontSize: '20px',
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 700,
@@ -716,7 +716,7 @@ export function HowItWorks() { // eslint-disable-line
               >
                 <Typography
                   sx={{
-                    lineHeight: '110%',
+                    lineHeight: '100%',
                     fontSize: '20px',
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 700,
@@ -765,10 +765,10 @@ export function HowItWorks() { // eslint-disable-line
       }}>
         <SecondUpperContainerTexts>
           <SecondUpperContainerIntegratingText sx={{alignItems: screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM? 'flex-start' : 'center'}}>
-            <Typography sx={{lineHeight: '1.1', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
+            <Typography sx={{lineHeight: '1.0', fontSize: '16px', fontFamily:'Poppins, sans-serif', fontWeight: 600, color: '#FFFFFF'}}>
               PEDAGOGY
             </Typography>
-            <Typography sx={{lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF', textAlign: 'center' }}>
+            <Typography sx={{lineHeight: '1.0', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF', textAlign: 'center' }}>
               Integrating<span style={{color: '#FF3A6A', fontStyle: 'italic'}}> RightOn! </span> into Your Classroom Routines
             </Typography>
           </SecondUpperContainerIntegratingText>
@@ -811,7 +811,7 @@ export function HowItWorks() { // eslint-disable-line
             flexDirection: 'column',
             gap: '48px'}}>
               <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: screenSize === ScreenSize.SMALL ? '31px' : '0px', paddingBottom: screenSize === ScreenSize.SMALL ? '31px' : '0px'}}>
-                  <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                  <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
                   </Typography>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
@@ -947,7 +947,7 @@ export function HowItWorks() { // eslint-disable-line
           <TopFourthBox>
             <TopBox>
               <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
-                <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+                <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '40px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                   FAQs
                 </Typography>
                 <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '20px', fontFamily: 'Poppings, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>

@@ -49,7 +49,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
         {/* Mission & Vision */}
         <MissionAndVision screenSize={screenSize} />
 
-        <StyledText fontSize="40px" lineHeight={1.2} fontWeight={700}>
+        <StyledText fontSize="40px" lineHeight={1.0} fontWeight={700}>
           Our Values
         </StyledText>
 
@@ -140,7 +140,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
           <StyledText fontSize="16px" fontWeight={600}>
             OUR ADVISORS
           </StyledText>
-          <StyledText fontSize="40px" fontWeight={700} lineHeight={1.2} paddingBottom='12px'>
+          <StyledText fontSize="40px" fontWeight={700} lineHeight={1.0} paddingBottom='12px'>
             Educators Inform our Product Vision
           </StyledText>
           <StyledText

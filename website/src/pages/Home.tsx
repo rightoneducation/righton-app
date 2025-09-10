@@ -82,7 +82,7 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
             gap:
               screenSize === ScreenSize.SMALL
                 ? `${theme.sizing.mdPadding}px`
-                : `${theme.sizing.lgPadding}px`,
+                : `32px`,
           }}
         >
           <OpeningText />
