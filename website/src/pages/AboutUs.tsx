@@ -88,7 +88,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
             <StyledText
               fontSize={screenSize === ScreenSize.LARGE ? '20px' : '16px'}
             >
-              &quot;We&apos;re a team that sometimes{' '}
+              We&apos;re a team that sometimes{' '}
               <EmphasizeText
                 sx={{
                   fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
@@ -115,7 +115,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
               >
                 never stops having fun
               </EmphasizeText>
-              .&quot;
+              .
             </StyledText>
           </StyledFlexBox>
         </StyledFlexBox>
