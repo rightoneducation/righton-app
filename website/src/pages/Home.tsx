@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect} from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { Box, styled, Grid, useTheme } from '@mui/material';
+import Marquee from "react-fast-marquee";
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
   StyledFlexBox,
@@ -66,40 +67,6 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
   const theme = useTheme();
   const containerPadding = theme.sizing.containerPadding[screenSize];
 
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [trackWidth, setTrackWidth] = useState(0);
-  const [duration, setDuration] = useState(20);
-  const contentWidth = 2220; // width of the content in the track + gap between sets x1
-  const controls = useAnimation(); 
-
-  useEffect(() => {
-    const updateWidth = () => {
-      if (trackRef.current) {
-        const firstSet = trackRef.current.children[0];
-        if (firstSet instanceof HTMLElement && firstSet.offsetWidth > 0) {
-          setTrackWidth(firstSet.offsetWidth);
-          const newDuration = 40 / (contentWidth / firstSet.offsetWidth);
-          setDuration(newDuration);
-          // Start animation after width is calculated
-          controls.start({
-            x: [-contentWidth, 0],
-            transition: {
-              repeat: Infinity,
-              ease: "linear",
-              duration: newDuration,
-            },
-          });
-        } else {
-          requestAnimationFrame(updateWidth); 
-        }
-      }
-    };
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-
   return (
     <HomePageContainer>
       <MathSymbolsBackground />
@@ -146,21 +113,12 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
             position: 'relative',
           }}
         >
-          <motion.div
-            ref={trackRef}
-            style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform', gap: '120px' }}
-            animate={controls}
-            onMouseEnter={() => controls.stop()}
-            onMouseLeave={() =>
-              controls.start({
-                x: [-contentWidth, 0],
-                transition: {
-                  repeat: Infinity,
-                  ease: "linear",
-                  duration,
-                },
-              })
-            }
+          <Marquee
+            pauseOnHover
+            pauseOnClick
+            direction="right"
+            speed={50}
+            loop={0}
           >
             {Array.from({ length: 3 }, (_, setIndex) =>
              <div key={`set-${setIndex}`} style={{ display: 'flex', gap: '120px' }}>
@@ -174,7 +132,7 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
               ))}
               </div>
             )}
-          </motion.div>
+          </Marquee>
         </div>
       </StyledSponsorDivider>
 
