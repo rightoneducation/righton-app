@@ -120,7 +120,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
               <Typography
                 sx={{
                   width: '100%',
-                  lineHeight: '1.2',
+                  lineHeight: '1.0',
                   fontSize: '40px',
                   fontFamily: 'Poppins, sans-serif',
                   fontWeight: 700,
@@ -132,7 +132,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 ZigZag{' '}
                 <Typography
                   sx={{
-                    lineHeight: '1.2',
+                    lineHeight: '1.0',
                     fontSize: '40px',
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 700,
@@ -150,7 +150,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 sx={{
                   width: '100%',
                   fontSize: '20px',
-                  lineHeight: '30px',
+                  lineHeight: '20px',
                   fontFamily: 'Poppins, sans-serif',
                   fontWeight: 400,
                   color: '#FFFFFF',
@@ -194,7 +194,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                   <Typography
                     sx={{
                       width: '100%',
-                      lineHeight: '1.2',
+                      lineHeight: '1.0',
                       fontSize: '40px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 700,
@@ -208,7 +208,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     sx={{
                       width: '100%',
                       fontSize: '20px',
-                      lineHeight: '30px',
+                      lineHeight: '20px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 400,
                       color: '#FFFFFF',
@@ -218,7 +218,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     Choose the{' '}
                     <Typography
                       sx={{
-                        lineHeight: '1.2',
+                        lineHeight: '1.0',
                         fontSize: '20px',
                         fontFamily: 'Poppins, sans-serif',
                         color: '#FF3A6A',
@@ -237,7 +237,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                   <Typography
                     sx={{
                       width: '100%',
-                      lineHeight: '1.2',
+                      lineHeight: '1.0',
                       fontSize: '40px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 700,
@@ -251,7 +251,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     sx={{
                       width: '100%',
                       fontSize: '20px',
-                      lineHeight: '30px',
+                      lineHeight: '20px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 400,
                       color: '#FFFFFF',
@@ -261,7 +261,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     Choose the{' '}
                     <Typography
                       sx={{
-                        lineHeight: '1.2',
+                        lineHeight: '1.0',
                         fontSize: '20px',
                         fontFamily: 'Poppins, sans-serif',
                         color: '#FF3A6A',
@@ -512,7 +512,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
               <Typography
                 sx={{
                   width: '100%',
-                  lineHeight: '1.2',
+                  lineHeight: '1.0',
                   fontSize: '40px',
                   fontFamily: 'Poppins, sans-serif',
                   fontWeight: 700,
@@ -524,7 +524,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 ZigZag{' '}
                 <Typography
                   sx={{
-                    lineHeight: '1.2',
+                    lineHeight: '1.0',
                     fontSize: '40px',
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 700,
@@ -542,7 +542,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                 sx={{
                   width: '100%',
                   fontSize: '20px',
-                  lineHeight: '24px',
+                  lineHeight: '20px',
                   fontFamily: 'Poppins, sans-serif',
                   fontWeight: 400,
                   color: '#FFFFFF',
@@ -580,12 +580,12 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                   gap: primaryGap,
                 }}
               >
-                <Box>
+                <Box display='flex' flexDirection='column' width='100%' gap={secondaryGap}>
                   {/* TODO: title text */}
                   <Typography
                     sx={{
                       width: '100%',
-                      lineHeight: '1.2',
+                      lineHeight: '1.0',
                       fontSize: '40px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 700,
@@ -599,7 +599,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     sx={{
                       width: '100%',
                       fontSize: '20px',
-                      lineHeight: '30px',
+                      lineHeight: '20px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 400,
                       color: '#FFFFFF',
@@ -609,7 +609,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     Choose the{' '}
                     <Typography
                       sx={{
-                        lineHeight: '1.2',
+                        lineHeight: '1.0',
                         fontSize: '20px',
                         fontFamily: 'Poppins, sans-serif',
                         color: '#FF3A6A',
@@ -623,12 +623,12 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     answer.
                   </Typography>
                 </Box>
-                <Box>
+                <Box display='flex' flexDirection='column' width='100%' gap={secondaryGap}>
                   {/* TODO: title text */}
                   <Typography
                     sx={{
                       width: '100%',
-                      lineHeight: '1.2',
+                      lineHeight: '1.0',
                       fontSize: '40px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 700,
@@ -642,7 +642,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     sx={{
                       width: '100%',
                       fontSize: '20px',
-                      lineHeight: '30px',
+                      lineHeight: '20px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 400,
                       color: '#FFFFFF',
@@ -652,7 +652,7 @@ export const ZigZagContainer = ({ screenSize }: ZigZagContainerProps) => { // es
                     Choose the{' '}
                     <Typography
                       sx={{
-                        lineHeight: '1.2',
+                        lineHeight: '1.0',
                         fontSize: '20px',
                         fontFamily: 'Poppins, sans-serif',
                         color: '#FF3A6A',

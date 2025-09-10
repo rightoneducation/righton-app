@@ -75,7 +75,7 @@ export const StyledHeaderText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins',
   color: 'white',
   fontWeight: 500,
-  lineHeight: '120%',
+  lineHeight: '100%',
   letterSpacing: '-4%',
 }));
 
@@ -101,5 +101,5 @@ export const OpeningTextContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '48px',
+  gap: '32px',
 }));

@@ -54,7 +54,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
             <Typography
               sx={{
                 width: '100%',
-                lineHeight: '1.0',
+                lineHeight: '1.2',
                 fontSize: '40px',
                 fontFamily: 'Poppins, sans-serif',
                 fontWeight: 700,

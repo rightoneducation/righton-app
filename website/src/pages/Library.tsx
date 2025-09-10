@@ -352,7 +352,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
           </Typography>
           <Typography
             sx={{
-              lineHeight: '1.2',
+              lineHeight: '1.0',
               fontSize: '40px',
               fontFamily: 'Poppins, sans-serif',
               fontWeight: 700,
@@ -373,7 +373,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
               screenSize === ScreenSize.MEDIUM ||
               screenSize === ScreenSize.SMALL
                 ? '100%'
-                : '130%',
+                : '100%',
             fontFamily: 'Poppins, sans-serif',
             fontWeight: 400,
             color: '#FFFFFF',

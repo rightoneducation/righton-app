@@ -39,7 +39,7 @@ export default function FeaturedVideo({ screenSize }: IFeatureVideo) {
       <StyledFlexBox
         direction="column"
         align={screenSize !== ScreenSize.LARGE ? 'normal' : 'center'}
-        gap={12}
+        style={{gap: '12px'}}
       >
         <StyledText fontFamily="Poppins" fontSize="16px" fontWeight={600}>
           MEDIA
@@ -48,7 +48,7 @@ export default function FeaturedVideo({ screenSize }: IFeatureVideo) {
           fontFamily="Poppins"
           fontSize="40px"
           fontWeight={700}
-          lineHeight={1.2}
+          style={{lineHeight: '100%'}}
         >
           NBC Nightly News Feature
         </StyledText>

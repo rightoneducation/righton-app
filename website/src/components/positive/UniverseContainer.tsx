@@ -196,7 +196,7 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
                 <Typography
                   sx={{
                     width: '100%',
-                    lineHeight: '1.2',
+                    lineHeight: '1.0',
                     fontSize: '40px',
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 700,
@@ -207,7 +207,7 @@ export const UniverseContainer = ({ screenSize }: UniverseContainerProps) => { /
                   The{' '}
                   <Typography
                     sx={{
-                      lineHeight: '1.2',
+                      lineHeight: '1.0',
                       fontSize: '40px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 700,

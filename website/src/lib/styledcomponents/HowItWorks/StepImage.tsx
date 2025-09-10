@@ -10,6 +10,11 @@ interface StepImageProps {
 }
 
 function StepImage({ stepNumber, phoneImage, phoneAlt, screenSize }: StepImageProps) {
+  const gaps = {
+    1: '22px',
+    2: '60px',
+    3: '32px',
+  }
   return (
     <Box
       sx={{
@@ -20,6 +25,7 @@ function StepImage({ stepNumber, phoneImage, phoneAlt, screenSize }: StepImagePr
         objectFit: 'contain',
         justifyContent: screenSize === ScreenSize.LARGE ? 'flex-start' : 'flex-start',
         paddingRight: (screenSize === ScreenSize.LARGE && stepNumber === 1)  ? '24px' : '0px',
+        gap: gaps[stepNumber as keyof typeof gaps],
       }}
     >
       <Box
@@ -53,7 +59,6 @@ function StepImage({ stepNumber, phoneImage, phoneAlt, screenSize }: StepImagePr
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          width: '100%',
           maxWidth: '192px',
           height: 'auto',
           alignItems: 'center',
