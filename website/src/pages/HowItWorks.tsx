@@ -3,9 +3,6 @@ import { Box, Typography, Collapse, Grid } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
-import OnePhone from '../images/onephone.png';
-import TwoPhone from '../images/twophone.png'
-import ThreePhone from '../images/threephone.png'
 import StepImageOne from '../images/stepImageOne.svg';
 import StepImageTwo from '../images/stepImageTwo.svg';
 import StepImageThree from '../images/stepImageThree.svg';
