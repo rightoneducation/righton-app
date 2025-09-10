@@ -146,34 +146,7 @@ export function AboutUs({ screenSize }: IAboutUs) { // eslint-disable-line
           <StyledText
             fontSize={screenSize === ScreenSize.LARGE ? '20px' : '16px'}
           >
-            Solving real problems encountered by{' '}
-            <EmphasizeText
-              sx={{
-                fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
-                color: '#fff',
-              }}
-            >
-              math & STEM teachers
-            </EmphasizeText>
-            ,{' '}
-            <EmphasizeText
-              sx={{
-                fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
-                color: '#fff',
-              }}
-            >
-              professors
-            </EmphasizeText>
-            ,{' '}
-            <EmphasizeText
-              sx={{
-                fontSize: screenSize === ScreenSize.LARGE ? '20px' : '16px',
-                color: '#fff',
-              }}
-            >
-              leaders
-            </EmphasizeText>
-            .
+            Co-designing real-world solutions with STEM educators and researchers
           </StyledText>
         </StyledFlexBox>
 
