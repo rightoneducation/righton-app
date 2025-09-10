@@ -67,7 +67,7 @@ export const teamArr = [
     hoverImg: ChrisHover,
     backImg: ChrisBack,
     name: 'Christopher Tran',
-    title: 'UX Intern',
+    title: 'Design Intern',
     linkedIn: 'https://www.linkedin.com/in/chrvtran/',
   },
   {
@@ -110,7 +110,7 @@ export const teamArr = [
     hoverImg: MahalaHover,
     backImg: MahalaBack,
     name: 'Mahala Femovich',
-    title: 'UX Intern',
+    title: 'Design Intern',
     linkedIn: 'https://www.linkedin.com/in/mfemovich/',
   },
   {
@@ -127,7 +127,7 @@ export const teamArr = [
     hoverImg: MikeHover,
     backImg: MikeBack,
     name: 'Michael Hunter',
-    title: 'Development Intern',
+    title: 'Engineering Intern',
     linkedIn: 'https://www.linkedin.com/in/michael-h-hunter',
   },
   {
@@ -144,7 +144,7 @@ export const teamArr = [
     hoverImg: MuhammadHover,
     backImg: MuhammadBack,
     name: 'Muhammad Quereshi',
-    title: 'Development Intern',
+    title: 'Engineering Intern',
     linkedIn: 'https://www.linkedin.com/in/muhammad-qureshi-22918218b/',
   },
   {
@@ -152,7 +152,7 @@ export const teamArr = [
     hoverImg: RodHover,
     backImg: RodBack,
     name: 'Rod Hinn',
-    title: 'U/X Lead',
+    title: 'Design Lead',
     linkedIn: 'https://www.linkedin.com/in/rodhinn/',
   },
   {
