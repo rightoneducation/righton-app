@@ -6,6 +6,9 @@ import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents'
 import OnePhone from '../images/onephone.png';
 import TwoPhone from '../images/twophone.png'
 import ThreePhone from '../images/threephone.png'
+import StepImageOne from '../images/stepImageOne.svg';
+import StepImageTwo from '../images/stepImageTwo.svg';
+import StepImageThree from '../images/stepImageThree.svg';
 import LogicModel from '../images/right-on-education.png';
 import BlueMonster from '../images/BlueMonsterHandUp.svg';
 import YellowMonster from '../images/YellowMonsterHandUp.svg';
@@ -400,7 +403,7 @@ export function HowItWorks() { // eslint-disable-line
             }}
           >
             <PhoneCard>
-              <StepImage stepNumber={1} phoneImage={OnePhone} screenSize={screenSize}/>
+              <StepImage stepNumber={1} phoneImage={StepImageOne} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
@@ -441,7 +444,7 @@ export function HowItWorks() { // eslint-disable-line
               </PhoneCardTextContainer>
             </PhoneCard>
             <PhoneCard>
-              <StepImage stepNumber={2} phoneImage={TwoPhone} screenSize={screenSize}/>
+              <StepImage stepNumber={2} phoneImage={StepImageTwo} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
@@ -480,7 +483,7 @@ export function HowItWorks() { // eslint-disable-line
               </PhoneCardTextContainer>
             </PhoneCard>
             <PhoneCard>
-              <StepImage stepNumber={3} phoneImage={ThreePhone} screenSize={screenSize}/>
+              <StepImage stepNumber={3} phoneImage={StepImageThree} screenSize={screenSize}/>
               <PhoneCardTextContainer>
                 <Typography
                   sx={{
