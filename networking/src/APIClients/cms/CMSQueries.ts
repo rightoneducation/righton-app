@@ -60,6 +60,29 @@ export const FETCH_RECENT_ARTICLES = `*[_type == "article" || _type == "videoArt
   readingTimeMinutes
 }`;
 
+export const FETCH_RECENT_ARTICLES_FILTERED = `*[
+  (_type == "article" || _type == "videoArticle" || _type == "research") && 
+  _id != $excludeId
+] | order(date desc) [0...3] {
+  _id,
+  image{
+    asset{
+      _ref
+    }
+  },
+  title,
+  youtubeLink,
+  tags,
+  date,
+  caption,
+  author,
+  affiliation,
+  contact,
+  details,
+  monsterSelect,
+  readingTimeMinutes
+}`;
+
   export const FETCH_ALL_CORNERSTONES = `*[(_type == "article" || _type == "videoArticle" || _type == "research") && isCornerstone == true]{
     _id,
     image{
