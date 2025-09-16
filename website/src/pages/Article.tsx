@@ -93,7 +93,7 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
       }
     };
     const fetchOtherArticles = async () => {
-      const other = await cmsClient.fetchRecentArticles();
+      const other = await cmsClient.fetchRecentArticles(articleId);
       setOtherArticles(other);
       setIsLoadingOtherArticles(false);
     };

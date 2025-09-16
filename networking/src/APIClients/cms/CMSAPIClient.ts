@@ -11,7 +11,8 @@ import {
   FETCH_ARTICLES_PAGINATED_BY_TYPE,
   FETCH_ARTICLES_COUNT_BY_TYPE,
   FETCH_ALL_ARTICLES_PAGINATED,
-  FETCH_ALL_ARTICLES_COUNT
+  FETCH_ALL_ARTICLES_COUNT,
+  FETCH_RECENT_ARTICLES_FILTERED
 } from "./CMSQueries";
 import { CMSArticleType } from "./CMSTypes";
 import { ICMSAPIClient } from "./interfaces/ICMSAPIClient";
@@ -117,9 +118,14 @@ export class CMSAPIClient implements ICMSAPIClient {
     }
   }
 
-  async fetchRecentArticles() {
+  async fetchRecentArticles(excludeId?: string) {
     try {
-      const data = await this.client.fetch(FETCH_RECENT_ARTICLES);
+      let data = [];
+      if (excludeId) {
+        data = await this.client.fetch(FETCH_RECENT_ARTICLES_FILTERED, { excludeId });
+      } else {
+        data = await this.client.fetch(FETCH_RECENT_ARTICLES);
+      }
       
       // Process images to return URLs
       const articlesWithImageUrls = data.map((article: any) => {
