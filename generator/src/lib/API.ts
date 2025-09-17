@@ -13,6 +13,7 @@ Amplify.configure(awsconfig);
 const genEndpoint = `https://dhfrlmuvjd.execute-api.us-east-1.amazonaws.com/wronganswerexp-dev`;
 const regenEndpoint = 'https://uzfkcuoui1.execute-api.us-east-1.amazonaws.com/regenerateWrongAnswerExplanation/regenwronganswerexp-dev';
 const compareEndpoint = 'https://u9a79nroqd.execute-api.us-east-1.amazonaws.com/labeledits-dev';
+const evalEndpoint = 'https://chqti87v41.execute-api.us-east-1.amazonaws.com/default/evaltextcomplexity-main';
 
 export async function generateWrongAnswerExplanations(
   question: IQuestion,
@@ -48,6 +49,32 @@ export async function generateWrongAnswerExplanations(
         console.log(e);
     }
     return null;
+}
+
+export async function evalTextComplexity(
+    text: string
+  ): Promise<string | null> {
+    console.log(text);
+    return fetch(evalEndpoint, {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            connection: "keep-alive",
+            "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+            text
+        }),
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(response.statusText)
+        }
+        return response.json()
+    })
+    .then((response) => {
+        return response;
+    })
 }
 
 export async function regenerateWrongAnswerExplanation(

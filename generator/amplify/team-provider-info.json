@@ -62,6 +62,10 @@
         "wronganswerexp": {
           "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
           "s3Key": "amplify-builds/wronganswerexp-34304153634d77784251-build.zip"
+        },
+        "evaltextcomplexity": {
+          "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
+          "s3Key": "amplify-builds/evaltextcomplexity-67517673345651796e67-build.zip"
         }
       },
       "api": {
