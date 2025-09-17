@@ -14,29 +14,29 @@
   },
   "api": {
     "zigzag": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "output": {
         "authConfig": {
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
-            "authenticationType": "API_KEY",
             "apiKeyConfig": {
               "apiKeyExpirationDays": 7
-            }
-          },
-          "additionalAuthenticationProviders": []
+            },
+            "authenticationType": "API_KEY"
+          }
         },
         "GraphQLAPIIdOutput": "oplkaicj6bbxbd5apkllzgkuty",
         "GraphQLAPIEndpointOutput": "https://gvq4d356jjbm3h5afhkiuufijy.appsync-api.us-east-1.amazonaws.com/graphql",
         "GraphQLAPIKeyOutput": "da2-tuc3oe7vsrgglkggh4vlijevwy"
       },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync",
+      "lastPushTimeStamp": "2025-09-04T15:34:43.248Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-zigzag-dev-115250-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apizigzag"
       },
-      "lastPushTimeStamp": "2025-08-11T15:40:11.080Z",
-      "lastPushDirHash": "4mMR/Wa4TQr9ZLsIgwlRVpQEMlg="
+      "lastPushDirHash": "itb7RQoNKUEZ27abollnv9PUpOs="
     }
   }
 }

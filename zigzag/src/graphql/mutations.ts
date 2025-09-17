@@ -28,6 +28,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     sessions
     createdAt
     updatedAt
+    newfield
     __typename
   }
 }
@@ -55,6 +56,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     sessions
     createdAt
     updatedAt
+    newfield
     __typename
   }
 }
@@ -82,6 +84,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     sessions
     createdAt
     updatedAt
+    newfield
     __typename
   }
 }

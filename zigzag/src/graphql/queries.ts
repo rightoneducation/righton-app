@@ -25,6 +25,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     sessions
     createdAt
     updatedAt
+    newfield
     __typename
   }
 }
@@ -51,6 +52,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       sessions
       createdAt
       updatedAt
+      newfield
       __typename
     }
     nextToken
@@ -132,6 +134,7 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       sessions
       createdAt
       updatedAt
+      newfield
       __typename
     }
     nextToken

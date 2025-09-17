@@ -25,6 +25,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
     sessions
     createdAt
     updatedAt
+    newfield
     __typename
   }
 }
@@ -49,6 +50,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
     sessions
     createdAt
     updatedAt
+    newfield
     __typename
   }
 }
@@ -73,6 +75,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
     sessions
     createdAt
     updatedAt
+    newfield
     __typename
   }
 }

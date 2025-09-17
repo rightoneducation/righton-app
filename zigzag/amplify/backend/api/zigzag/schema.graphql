@@ -22,6 +22,7 @@ type User @model {
   sessions: AWSJSON    
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
+  newfield: String
 }
 
 

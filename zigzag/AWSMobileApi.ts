@@ -18,6 +18,7 @@ export type CreateUserInput = {
   sessions?: string | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+  newfield?: string | null,
 };
 
 export type ModelUserConditionInput = {
@@ -35,6 +36,7 @@ export type ModelUserConditionInput = {
   sessions?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
+  newfield?: ModelStringInput | null,
   and?: Array< ModelUserConditionInput | null > | null,
   or?: Array< ModelUserConditionInput | null > | null,
   not?: ModelUserConditionInput | null,
@@ -128,6 +130,7 @@ export type User = {
   sessions?: string | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+  newfield?: string | null,
 };
 
 export type UpdateUserInput = {
@@ -146,6 +149,7 @@ export type UpdateUserInput = {
   sessions?: string | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+  newfield?: string | null,
 };
 
 export type DeleteUserInput = {
@@ -221,6 +225,7 @@ export type ModelUserFilterInput = {
   sessions?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
+  newfield?: ModelStringInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
   or?: Array< ModelUserFilterInput | null > | null,
   not?: ModelUserFilterInput | null,
@@ -291,6 +296,7 @@ export type ModelSubscriptionUserFilterInput = {
   sessions?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
+  newfield?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserFilterInput | null > | null,
   or?: Array< ModelSubscriptionUserFilterInput | null > | null,
 };
@@ -391,6 +397,7 @@ export type CreateUserMutation = {
     sessions?: string | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    newfield?: string | null,
   } | null,
 };
 
@@ -417,6 +424,7 @@ export type UpdateUserMutation = {
     sessions?: string | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    newfield?: string | null,
   } | null,
 };
 
@@ -443,6 +451,7 @@ export type DeleteUserMutation = {
     sessions?: string | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    newfield?: string | null,
   } | null,
 };
 
@@ -528,6 +537,7 @@ export type GetUserQuery = {
     sessions?: string | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    newfield?: string | null,
   } | null,
 };
 
@@ -557,6 +567,7 @@ export type ListUsersQuery = {
       sessions?: string | null,
       createdAt?: string | null,
       updatedAt?: string | null,
+      newfield?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -634,6 +645,7 @@ export type UserByEmailQuery = {
       sessions?: string | null,
       createdAt?: string | null,
       updatedAt?: string | null,
+      newfield?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -661,6 +673,7 @@ export type OnCreateUserSubscription = {
     sessions?: string | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    newfield?: string | null,
   } | null,
 };
 
@@ -686,6 +699,7 @@ export type OnUpdateUserSubscription = {
     sessions?: string | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    newfield?: string | null,
   } | null,
 };
 
@@ -711,6 +725,7 @@ export type OnDeleteUserSubscription = {
     sessions?: string | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    newfield?: string | null,
   } | null,
 };
 

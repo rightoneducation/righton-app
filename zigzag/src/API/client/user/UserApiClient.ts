@@ -1,9 +1,9 @@
 import { IUser } from "../../models/User/IUser";
 import { IAWSUser } from "../../models/User/IAWSUser";
-import { getUser, listUsers } from "../../../graphql/queries";
+import { getUser, listUsers, userByEmail } from "../../../graphql/queries";
 import { createUser, updateUser, deleteUser } from "../../../graphql/mutations";
-import { BaseAPIClient, GraphQLOptions } from "../../BaseAPIClient";
-import { GetUserQuery, ListUsersQuery, CreateUserMutation, UpdateUserMutation, DeleteUserMutation } from "../../../../AWSMobileApi";
+import { BaseAPIClient, GraphQLOptions, client } from "../../BaseAPIClient";
+import { GetUserQuery, ListUsersQuery, UserByEmailQuery, CreateUserMutation, UpdateUserMutation, DeleteUserMutation } from "../../../../AWSMobileApi";
 import { UserParser } from "../../parser/UserParser";
 import { IUserApiClient } from "../../../APIClient/user/interfaces/IUserApiClient";
 
@@ -13,18 +13,18 @@ export class UserApiClient extends BaseAPIClient implements IUserApiClient {
   async getUser(id: string): Promise<IUser | undefined> {
     try {
       const queryFunction = getUser;
-      const variables: GraphQLOptions = { input: { id } };
+      const variables = { id };
 
-      const user = await this.callGraphQL<GetUserQuery>(
-        queryFunction,
-        variables
-      );
+      const response = await client.graphql({ 
+        query: queryFunction, 
+        variables: variables as any
+      });
 
-      if (!user.data.getUser) {
+      if (!response.data.getUser) {
         throw new Error("User not found.");
       }
 
-      return UserParser.userFromAWSUser(user.data.getUser as IAWSUser);
+      return UserParser.userFromAWSUser(response.data.getUser as IAWSUser);
     } catch (error) {
       console.error(error);
       throw new Error("Error fetching user.");
@@ -33,24 +33,22 @@ export class UserApiClient extends BaseAPIClient implements IUserApiClient {
 
   async getUserByEmail(email: string): Promise<IUser | undefined> {
     try {
-      const queryFunction = listUsers;
-      const variables: GraphQLOptions = { 
-        input: { 
-          filter: { email: { eq: email } },
-          limit: 1
-        } 
+      const queryFunction = userByEmail;
+      const variables = { 
+        email: email,
+        limit: 1
       };
 
-      const users = await this.callGraphQL<ListUsersQuery>(
-        queryFunction,
-        variables
-      );
+      const response = await client.graphql({ 
+        query: queryFunction, 
+        variables: variables as any
+      });
 
-      if (!users.data.listUsers?.items || users.data.listUsers.items.length === 0) {
+      if (!response.data.userByEmail?.items || response.data.userByEmail.items.length === 0) {
         throw new Error("User not found.");
       }
 
-      return UserParser.userFromAWSUser(users.data.listUsers.items[0] as IAWSUser);
+      return UserParser.userFromAWSUser(response.data.userByEmail.items[0] as IAWSUser);
     } catch (error) {
       console.error(error);
       throw new Error("Error fetching user by email.");
@@ -60,17 +58,15 @@ export class UserApiClient extends BaseAPIClient implements IUserApiClient {
   async listUsers(limit?: number, nextToken?: string): Promise<{ users: IUser[], nextToken?: string }> {
     try {
       const queryFunction = listUsers;
-      const variables: GraphQLOptions = { 
-        input: { 
-          limit: limit || 100,
-          nextToken 
-        } 
+      const variables = { 
+        limit: limit || 100,
+        nextToken 
       };
 
-      const response = await this.callGraphQL<ListUsersQuery>(
-        queryFunction,
-        variables
-      );
+      const response = await client.graphql({ 
+        query: queryFunction, 
+        variables: variables as any
+      });
 
       if (!response.data.listUsers) {
         throw new Error("Failed to fetch users.");
