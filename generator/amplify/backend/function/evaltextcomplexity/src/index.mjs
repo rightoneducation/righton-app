@@ -28,7 +28,6 @@ export async function handler(event) {
         content: userPromptLabel.replace("{text}", text)
       });
       console.log(messages);
-   
       // Make the API call to OpenAI to label the sentence 
       const completionLabel = await openai.chat.completions.create({
         model: 'gpt-4o-2024-08-06', // config per CZI
