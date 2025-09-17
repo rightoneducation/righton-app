@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-, "amplify/backend/prompt.ts"  ]
+  ]
 }
