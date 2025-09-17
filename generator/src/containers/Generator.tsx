@@ -151,14 +151,6 @@ export default function Generator() {
     generateWrongAnswerExplanations(formData, discardedExplanations).then((response) => {
       const explanationsArray = response ?? [];
       const explanations =  explanationsArray.map((explanation: string, index: number) => {
-        console.log(explanation);
-        evalTextComplexity(explanation).then(response => {
-          if (response){
-            console.log(JSON.parse(response).reasoning);
-            console.log(JSON.parse(response).answer);
-          }
-          return response;
-        });
         return (
           {
             question: formData.question,

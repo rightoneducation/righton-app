@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import { Grid, Card, CardContent, Typography, Box, CircularProgress, TextField, RadioGroup, FormGroup, FormControl, FormControlLabel, Radio, Checkbox, Tooltip, useTheme } from '@mui/material';
-import { createExplanation, regenerateWrongAnswerExplanation, saveDiscardedExplanation, compareEditedExplanation } from '../lib/API';
+import { Grid, Collapse, Select, Card, CardContent, Typography, Box, CircularProgress, TextField, RadioGroup, FormGroup, FormControl, FormControlLabel, Radio, Checkbox, Tooltip, useTheme, MenuItem } from '@mui/material';
+import { createExplanation, regenerateWrongAnswerExplanation, saveDiscardedExplanation, compareEditedExplanation, evalTextComplexity } from '../lib/API';
+import { ExpandArrowContainer } from '../lib/styledcomponents/generator/StyledExplanationCardComponents';
 import { 
   CardHeaderTextStyled, 
   EditTextStyled,
@@ -13,6 +14,7 @@ import {
 } from '../lib/styledcomponents/generator/StyledTypography';
 import { EditExplanationStyledTextField } from '../lib/styledcomponents/generator/StyledTextField';
 import EditAnswer from '../img/EditAnswer.svg';
+import SelectArrow from '../img/SelectArrow.svg';
 import {
   
 } from '../lib/GamePlayButtonStyled';
@@ -71,6 +73,13 @@ export default function ExplanationCard(
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isDiscarded, setIsDiscarded] = useState<boolean>(false);
   const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
+  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
+  const [analysisResult, setAnalysisResult] = useState<string>('');
+  const [isAnalysisExpanded, setIsAnalysisExpanded] = useState<boolean>(false);
+  const [isAdjustComplexityExpanded, setIsAdjustComplexityExpanded] = useState<boolean>(false);
+
+  const complexityMap = ['Slightly Complex', 'Moderately Complex', 'Very Complex', 'Exceedingly Complex'];
+  const [selectedComplexity, setSelectedComplexity] = useState<string>(complexityMap[0]);
 
   // editMode flips the explanation into a Textfield, so that a user can edit its contents
   const [isEditMode, setIsEditMode] = useState(false);
@@ -140,6 +149,15 @@ export default function ExplanationCard(
   const handleEditModeClick = () => {
     setEditableExplanation(editableExplanation.length > 0 ? editableExplanation : explanation.genExplanation.explanation);
     setIsEditMode(true);
+  }
+
+  const handleAnalyzeClick = () => {
+    setIsAnalyzing(true);
+    evalTextComplexity(editableExplanation).then((response: any) => {
+      setAnalysisResult(response);
+      setSelectedComplexity(response.answer);
+      setIsAnalyzing(false);
+    });
   }
 
   return (
@@ -228,33 +246,130 @@ export default function ExplanationCard(
               Your edits have been updated.
             </EditStatusTextStyled>
           }
-          <Grid container spacing='8px'>
-          { !isEditMode ? 
-            <>
-            <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <ButtonWrongAnswerStyled onClick={handleEditModeClick} style={{fontWeight: 400}}>
-                Edit
-              </ButtonWrongAnswerStyled>
+          {/* CZI Implementation */}
+          <Box style={{display: 'flex', flexDirection: 'column', gap: '12px', border: '1px solid #000', borderRadius: '8px', padding: '12px', position: 'relative', paddingTop: '20px'}}>
+            <Box style={{position: 'absolute', top: '-10px', left: '12px', padding: '0 6px', backgroundColor: `rgba(249, 245, 242, 1)`,}}>
+              <CardHeaderTextStyled style={{fontSize: '12px', fontWeight: 500}}>
+                Analyze Text Complexity - Powered by Evaluators
+              </CardHeaderTextStyled>
+            </Box>
+              <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '12px', paddingRight: '12px'}}>
+                { analysisResult ? 
+                  <Box style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                    <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                      <CardHeaderTextStyled>
+                        Current: {JSON.parse(analysisResult).answer}
+                      </CardHeaderTextStyled>
+                      <ExpandArrowContainer isAnalysisExpanded={isAnalysisExpanded} onClick={() => setIsAnalysisExpanded(!isAnalysisExpanded)}>
+                          <img src={SelectArrow} alt="Select Arrow" style={{cursor: 'pointer'}}/>
+                      </ExpandArrowContainer>
+                    </Box>
+                    <Collapse in={isAnalysisExpanded} timeout={1000}>
+                      <CardHeaderTextStyled style={{fontWeight: 400}}>{JSON.parse(analysisResult).reasoning}</CardHeaderTextStyled>
+                    </Collapse>
+                    <Box style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                    <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                      <CardHeaderTextStyled>
+                        Adjust Complexity
+                      </CardHeaderTextStyled>
+                      <ExpandArrowContainer isAnalysisExpanded={isAdjustComplexityExpanded} onClick={() => setIsAdjustComplexityExpanded(!isAdjustComplexityExpanded)}>
+                          <img src={SelectArrow} alt="Select Arrow" style={{cursor: 'pointer'}}/>
+                      </ExpandArrowContainer>
+                    </Box>
+                    <Collapse in={isAdjustComplexityExpanded} timeout={1000}>
+                      <Box style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                      <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px'}}>
+                        <CardHeaderTextStyled style={{fontWeight: 400}}>
+                          Target:
+                        </CardHeaderTextStyled>
+                        <Select 
+                          value={selectedComplexity}
+                          onChange={(e) => setSelectedComplexity(e.target.value)}
+                          style={{borderRadius: '8px', height: '38px', minWidth: '200px'}}
+                        sx={{
+                          border: 'none',
+                          outline: 'none',
+                          boxShadow: 'none',
+                          '& .MuiOutlinedInput-notchedOutline': { border: '1px solid #BDBDBD' },
+                          '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': { border: '1px solid #BDBDBD' },
+                          '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '1px solid #BDBDBD' },
+                          '& .MuiInput-underline:before': { borderBottom: '1px solid #BDBDBD' },
+                          '& .MuiInput-underline:after': { borderBottom: '1px solid #BDBDBD' },
+                          '& .MuiFilledInput-underline:before': { borderBottom: '1px solid #BDBDBD' },
+                          '& .MuiFilledInput-underline:after': { borderBottom: '1px solid #BDBDBD' },
+                        }}
+                          MenuProps={{
+                            PaperProps: {
+                              sx: {
+                                border: 'none',
+                                boxShadow: 'none',
+                              }
+                            }
+                          }}
+                        >
+                          {
+                            complexityMap.filter((complexity) => complexity !== JSON.parse(analysisResult).answer).map((complexity) => (
+                              <MenuItem value={complexity}>{complexity}</MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </Box>
+                      <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingRight: '12px'}}>
+                      <ButtonStyled onClick={handleAnalyzeClick} style={{fontWeight: 400, width: '100px', paddingLeft: '12px'}}>
+                        Adjust
+                      </ButtonStyled>
+                      </Box>
+                      </Box>
+                    </Collapse>
+                    </Box>
+                  </Box>
+                  :
+                  <>
+                  {
+                    isAnalyzing ? 
+                    <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+                      <CircularProgress style={{color: "#000", height: '30px', width: '30px'}}/>
+                    </Box> 
+                    : <ButtonStyled onClick={handleAnalyzeClick} style={{fontWeight: 400, width: '200px'}}>
+                        Analyze
+                      </ButtonStyled>
+                  }
+             
+                </>
+                }
+                
+              </Box>
+          </Box>
+          <Box style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+            <Grid container spacing='8px'>
+            { !isEditMode ? 
+              <>
+            
+              <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <ButtonWrongAnswerStyled onClick={handleEditModeClick} style={{fontWeight: 400}}>
+                  Edit
+                </ButtonWrongAnswerStyled>
+              </Grid>
+              <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <ButtonWrongAnswerStyled disabled={isRegenEnabled} onClick={() => setIsRegenEnabled(true)} style={{fontWeight: 400}}>
+                  Regenerate
+                </ButtonWrongAnswerStyled>
+              </Grid>
+              <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <ButtonStyled onClick={() => handleUpdateExplanation(index, ExplanationRegenType.ACCEPT, explanation)} style={{fontWeight: 400}}>
+                  Save
+                </ButtonStyled>
+              </Grid>
+              </>
+            : 
+              <Grid item xs={12} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <ButtonStyled onClick={() => handleUpdateExplanation(index, ExplanationRegenType.ACCEPT_EDITED, explanation)} >
+                  Update
+                </ButtonStyled>
+              </Grid>
+            }
             </Grid>
-            <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <ButtonWrongAnswerStyled disabled={isRegenEnabled} onClick={() => setIsRegenEnabled(true)} style={{fontWeight: 400}}>
-                Regenerate
-              </ButtonWrongAnswerStyled>
-            </Grid>
-            <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <ButtonStyled onClick={() => handleUpdateExplanation(index, ExplanationRegenType.ACCEPT, explanation)} style={{fontWeight: 400}}>
-                Save
-              </ButtonStyled>
-            </Grid>
-            </>
-          : 
-            <Grid item xs={12} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <ButtonStyled onClick={() => handleUpdateExplanation(index, ExplanationRegenType.ACCEPT_EDITED, explanation)} >
-                Update
-              </ButtonStyled>
-            </Grid>
-          }
-          </Grid>
+          </Box>
         </>
       )
     }
