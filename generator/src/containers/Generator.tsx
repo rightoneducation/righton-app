@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Swiper as SwiperInstance } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
-import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createExplanation, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
+import { generateWrongAnswerExplanations, evalTextComplexity, regenerateWrongAnswerExplanation, createExplanation, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
 import { IQuestion, IExplanationToSave, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput, ILocalExplanation } from '../lib/Models';
 import QuestionSavedModal from '../components/modals/QuestionSavedModal';
 import HowToModal from '../components/modals/HowToModal';
@@ -151,6 +151,14 @@ export default function Generator() {
     generateWrongAnswerExplanations(formData, discardedExplanations).then((response) => {
       const explanationsArray = response ?? [];
       const explanations =  explanationsArray.map((explanation: string, index: number) => {
+        console.log(explanation);
+        evalTextComplexity(explanation).then(response => {
+          if (response){
+            console.log(JSON.parse(response).reasoning);
+            console.log(JSON.parse(response).answer);
+          }
+          return response;
+        });
         return (
           {
             question: formData.question,
@@ -164,6 +172,7 @@ export default function Generator() {
           }
         )
       });
+
       setExplanationsToSave(explanations);
       setIsQuestionGenerating(false);
       setIsQuestionGenerated(true);
