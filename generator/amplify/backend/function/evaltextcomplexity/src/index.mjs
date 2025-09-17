@@ -13,9 +13,8 @@ import {
 export async function handler(event) {
     const openai = new OpenAI(process.env.OPENAI_API_KEY);
     try {
-      console.log(event);
+
       const text = JSON.parse(event.body).text;
-      console.log(text);
       // prompt for open ai
       // first specify the format returned via the role
       let messages = [{
@@ -27,14 +26,15 @@ export async function handler(event) {
         role: "user",
         content: userPromptLabel.replace("{text}", text)
       });
-      console.log(messages);
+
+      
       // Make the API call to OpenAI to label the sentence 
       const completionLabel = await openai.chat.completions.create({
         model: 'gpt-4o-2024-08-06', // config per CZI
         messages: messages,
         response_format: zodResponseFormat(structuredResponseLabel, 'textComplexityAnalysis') // config per CZI
       });
-      console.log(completionLabel.choices[0].message.content);
+
       if (completionLabel) {
         const statistics = JSON.parse(completionLabel.choices[0].message.content);
         const userPromptAssignWithStats = userPromptAssign.replace(
