@@ -43,3 +43,15 @@ type Questions @model
   wrongAnswers: AWSJSON!
   version: String!
 }
+
+type Debug @model 
+@auth(
+ rules: [
+    { allow: public, provider: iam  },
+  ]
+)
+{
+  id: ID!
+  question: String!
+  debug: String!
+}

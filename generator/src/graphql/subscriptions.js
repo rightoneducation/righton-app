@@ -154,3 +154,39 @@ export const onDeleteQuestions = /* GraphQL */ `
     }
   }
 `;
+export const onCreateDebug = /* GraphQL */ `
+  subscription OnCreateDebug($filter: ModelSubscriptionDebugFilterInput) {
+    onCreateDebug(filter: $filter) {
+      id
+      question
+      debug
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateDebug = /* GraphQL */ `
+  subscription OnUpdateDebug($filter: ModelSubscriptionDebugFilterInput) {
+    onUpdateDebug(filter: $filter) {
+      id
+      question
+      debug
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteDebug = /* GraphQL */ `
+  subscription OnDeleteDebug($filter: ModelSubscriptionDebugFilterInput) {
+    onDeleteDebug(filter: $filter) {
+      id
+      question
+      debug
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

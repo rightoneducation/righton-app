@@ -163,3 +163,48 @@ export const deleteQuestions = /* GraphQL */ `
     }
   }
 `;
+export const createDebug = /* GraphQL */ `
+  mutation CreateDebug(
+    $input: CreateDebugInput!
+    $condition: ModelDebugConditionInput
+  ) {
+    createDebug(input: $input, condition: $condition) {
+      id
+      question
+      debug
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateDebug = /* GraphQL */ `
+  mutation UpdateDebug(
+    $input: UpdateDebugInput!
+    $condition: ModelDebugConditionInput
+  ) {
+    updateDebug(input: $input, condition: $condition) {
+      id
+      question
+      debug
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteDebug = /* GraphQL */ `
+  mutation DeleteDebug(
+    $input: DeleteDebugInput!
+    $condition: ModelDebugConditionInput
+  ) {
+    deleteDebug(input: $input, condition: $condition) {
+      id
+      question
+      debug
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

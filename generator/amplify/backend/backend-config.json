@@ -60,6 +60,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "refinecomplexity": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "regenwronganswerexp": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -101,6 +106,22 @@
         {
           "category": "function",
           "resourceName": "labeledits"
+        }
+      ]
+    },
+    "AMPLIFY_function_refinecomplexity_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "refinecomplexity"
+        }
+      ]
+    },
+    "AMPLIFY_function_refinecomplexity_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "refinecomplexity"
         }
       ]
     },

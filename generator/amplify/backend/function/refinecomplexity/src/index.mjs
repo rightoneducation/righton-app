@@ -1,0 +1,65 @@
+
+import { OpenAI } from "openai"
+import { zodResponseFormat } from 'openai/helpers/zod';
+import { 
+  systemPromptLabel, 
+  userPromptLabel, 
+  userPromptAssign,
+} from "./prompt.mjs";
+
+export async function handler(event) {
+    const openai = new OpenAI(process.env.OPENAI_API_KEY);
+    try {
+      console.log(event);
+      const text = JSON.parse(event.body).text;
+      const newComplexity = JSON.parse(event.body).newComplexity;
+      // prompt for open ai
+
+      const structuredResponseRefine = z.object({
+        refinedText: z.string()
+          .describe("Text with refined complexity"),
+      });
+      
+      // first specify the format returned via the role
+      let messages = [{
+        role: "system",
+        content: systemPromptLabel
+      }];
+      // then provide the actual content
+      messages.push({
+        role: "user",
+        content: `
+            You have previously analyzed the complexity of a text. You used ${userPromptLabel} to label the text and then ${userPromptAssign} to assign a complexity level to the text.
+            Now you will be given a new complexity level for the text. You need to refine the text to match the new complexity level, maintaining the original meaning but incorporating ${userPromptAssign} to ensure the text is at the new complexity level.
+            Here is the text:
+            ${text}
+            Here is the new complexity level:
+            ${newComplexity}
+
+            Output exclusively the refined text according to the structured JSON format here ${JSON.stringify(structuredResponseRefine, null, 2)}. I will be displaying this directly to the user, so ensure that it does not include any other text, introductory passages, explanations etc.
+        `,
+      });
+   
+      // Make the API call to OpenAI to label the sentence 
+      const completionRefine = await openai.chat.completions.create({
+          model: 'gpt-4o-2024-08-06', // config per CZI
+          messages: messages,
+          response_format: zodResponseFormat(structuredResponseRefine, 'complexityRefinement') // config per CZI
+      });
+      console.log(completionRefine.choices[0].message.content);
+    
+      if (completionRefine) {
+          return {
+          statusCode: 200,
+          body: JSON.stringify(completionRefine.choices[0].message.content),
+          };
+      }
+    } catch (error) {
+        console.error(error);
+        // Handle any errors
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Error processing your request' }),
+        };
+    }
+};
