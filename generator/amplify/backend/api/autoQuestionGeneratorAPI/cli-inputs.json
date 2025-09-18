@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/autoQuestionGenerator": {
+      "name": "/autoQuestionGenerator",
+      "lambdaFunction": "autoQuestionGenerator",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}
