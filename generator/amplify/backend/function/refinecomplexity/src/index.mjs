@@ -21,6 +21,8 @@ export async function handler(event) {
       const structuredResponseRefine = z.object({
         refinedText: z.string()
           .describe("Text with refined complexity"),
+        newComplexity: z.string()
+          .describe("The new complexity level of the text"),
       });
       
       // first specify the format returned via the role
@@ -43,10 +45,12 @@ export async function handler(event) {
 
             Make sure to maintain the original meaning of the text but target the past analysis as a means to ensure the text is at the new complexity level. A primary goal of this function is to ensure that it achieves the new complexity level in a single pass.
 
-            When finished, pause and use the following prompt to ensure the text is at the new complexity level:
-            ${userPromptAssign}
+            When finished, pause and analyze the generated text. Perform the following analysis:
+            1. ${userPromptLabel}
+            2. ${userPromptAssign}
+            The output of step 2 will be the new complexity level of the text that will be returned.
 
-            Output exclusively the refined text according to the structured JSON format here ${JSON.stringify(structuredResponseRefine, null, 2)}. I will be displaying this directly to the user, so ensure that it does not include any other text, introductory passages, explanations etc.
+            Output exclusively the refined text and the new complexity level according to the structured JSON format here ${JSON.stringify(structuredResponseRefine, null, 2)}. I will be displaying this directly to the user, so ensure that it does not include any other text, introductory passages, explanations etc.
         `,
       });
    

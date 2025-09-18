@@ -26,7 +26,6 @@ import {
 } from '../lib/styledcomponents/generator/StyledTypography';
 import { EditExplanationStyledTextField } from '../lib/styledcomponents/generator/StyledTextField';
 import SelectArrow from '../img/SelectArrow.svg';
-import {} from '../lib/GamePlayButtonStyled';
 import {
   ButtonStyled,
   ButtonWrongAnswerStyled,
@@ -88,6 +87,9 @@ export default function ExplanationCard({
   const [isDiscarded, setIsDiscarded] = useState<boolean>(false);
   const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
+  const [isRefining, setIsRefining] = useState<boolean>(false);
+  const [refinedExplanation, setRefinedExplanation] = useState<string>('');
+  const [refinedComplexity, setRefinedComplexity] = useState<string>('');
   const [analysisResult, setAnalysisResult] = useState<string>('');
   const [isAnalysisExpanded, setIsAnalysisExpanded] = useState<boolean>(false);
   const [isAdjustComplexityExpanded, setIsAdjustComplexityExpanded] =
@@ -228,10 +230,13 @@ export default function ExplanationCard({
   };
 
   const handleRefineClick = () => {
-    console.log(selectedComplexity);
+    setIsRefining(true);
     const reasoning = JSON.parse(analysisResult).reasoning; 
     refineComplexity(explanation.genExplanation.explanation, selectedComplexity, reasoning).then((response: any) => {
-      setAnalysisResult(response);
+      const responseObj = JSON.parse(response);
+      setRefinedExplanation(responseObj.refinedText);
+      setRefinedComplexity(responseObj.newComplexity);
+      setIsRefining(false);
     });
   };
 
@@ -325,7 +330,7 @@ export default function ExplanationCard({
               )}
 
               <ExplanationCardStyled key={index} isSaved={isSaved}>
-                {isRegenerating && (
+                {isRegenerating || isRefining && (
                   <Box
                     style={{
                       position: 'absolute',
@@ -369,17 +374,38 @@ export default function ExplanationCard({
                       }}
                     >
                       <CardHeaderTextStyled>
-                        Explanation for Wrong Answer #{index + 1}
+                      Explanation for Wrong Answer #{index + 1}
                       </CardHeaderTextStyled>
                     </Box>
                     {!isEditMode ? (
                       <>
+                        { refinedExplanation ?
+                          <Box style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                            <CardHeaderTextStyled>
+                              Refined Explanation:
+                            </CardHeaderTextStyled>
+                            <ExplanationTextStyled>
+                              {refinedExplanation}
+                            </ExplanationTextStyled>
+                            <Box style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                              <CardHeaderTextStyled>
+                                New Complexity:
+                              </CardHeaderTextStyled>
+                              <CardHeaderTextStyled style={{color: refinedComplexity === selectedComplexity ? 'green' : 'red'}}>
+                                {refinedComplexity}
+                              </CardHeaderTextStyled>
+                            </Box>
+                          </Box>
+                        :
+                        <>
                         <ExplanationTextStyled>
                           {firstLineText}
                         </ExplanationTextStyled>
                         <ExplanationTextStyled>
-                          {remainingText}
-                        </ExplanationTextStyled>
+                            {remainingText}
+                          </ExplanationTextStyled>
+                        </>
+                        }
                       </>
                     ) : (
                       <>
@@ -618,27 +644,6 @@ export default function ExplanationCard({
                                   </Box>
                                 </Box>
                               </Collapse>
-                              {/* {!isDebug && (
-                                <Box
-                                  style={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    paddingRight: '12px',
-                                  }}
-                                >
-                                  <ButtonWrongAnswerStyled
-                                    onClick={handleDebugClick}
-                                    style={{
-                                      fontWeight: 400,
-                                      width: 'fit-content',
-                                    }}
-                                  >
-                                    Debug
-                                  </ButtonWrongAnswerStyled>
-                                </Box>
-                              )} */}
                             </Box>
                           </Box>
                         ) : (
