@@ -15,6 +15,7 @@ import {
   saveDiscardedExplanation,
   compareEditedExplanation,
   evalTextComplexity,
+  refineComplexity,
 } from '../lib/API';
 import { ExpandArrowContainer } from '../lib/styledcomponents/generator/StyledExplanationCardComponents';
 import {
@@ -101,6 +102,7 @@ export default function ExplanationCard({
   const [selectedComplexity, setSelectedComplexity] = useState<string>(
     complexityMap[0],
   );
+
   const [isDebug, setIsDebug] = useState<boolean>(false);
 
   // editMode flips the explanation into a Textfield, so that a user can edit its contents
@@ -223,6 +225,14 @@ export default function ExplanationCard({
 
   const handleDebugCloseClick = () => {
     setIsDebug(false);
+  };
+
+  const handleRefineClick = () => {
+    console.log(selectedComplexity);
+    const reasoning = JSON.parse(analysisResult).reasoning; 
+    refineComplexity(explanation.genExplanation.explanation, selectedComplexity, reasoning).then((response: any) => {
+      setAnalysisResult(response);
+    });
   };
 
   return (
@@ -488,7 +498,7 @@ export default function ExplanationCard({
                                 }}
                               >
                                 <CardHeaderTextStyled>
-                                  Adjust Complexity
+                                  Refine Complexity
                                 </CardHeaderTextStyled>
                                 <ExpandArrowContainer
                                   isAnalysisExpanded={
@@ -596,14 +606,14 @@ export default function ExplanationCard({
                                     }}
                                   >
                                     <ButtonStyled
-                                      onClick={handleAnalyzeClick}
+                                      onClick={handleRefineClick}
                                       style={{
                                         fontWeight: 400,
                                         width: '100px',
                                         paddingLeft: '12px',
                                       }}
                                     >
-                                      Adjust
+                                      Refine
                                     </ButtonStyled>
                                   </Box>
                                 </Box>

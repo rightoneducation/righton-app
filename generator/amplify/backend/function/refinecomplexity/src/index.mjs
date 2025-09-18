@@ -1,6 +1,7 @@
 
 import { OpenAI } from "openai"
 import { zodResponseFormat } from 'openai/helpers/zod';
+import { z } from "zod";
 import { 
   systemPromptLabel, 
   userPromptLabel, 
@@ -11,8 +12,10 @@ export async function handler(event) {
     const openai = new OpenAI(process.env.OPENAI_API_KEY);
     try {
       console.log(event);
-      const text = JSON.parse(event.body).text;
-      const newComplexity = JSON.parse(event.body).newComplexity;
+      const body = JSON.parse(event.body);
+      const text = body.text;
+      const newComplexity = body.newComplexity;
+      const pastAnalysis = body.pastAnalysis;
       // prompt for open ai
 
       const structuredResponseRefine = z.object({
@@ -35,6 +38,13 @@ export async function handler(event) {
             ${text}
             Here is the new complexity level:
             ${newComplexity}
+            Here is the past analysis of the text that assigned the previous complexity level:
+            ${pastAnalysis}
+
+            Make sure to maintain the original meaning of the text but target the past analysis as a means to ensure the text is at the new complexity level. A primary goal of this function is to ensure that it achieves the new complexity level in a single pass.
+
+            When finished, pause and use the following prompt to ensure the text is at the new complexity level:
+            ${userPromptAssign}
 
             Output exclusively the refined text according to the structured JSON format here ${JSON.stringify(structuredResponseRefine, null, 2)}. I will be displaying this directly to the user, so ensure that it does not include any other text, introductory passages, explanations etc.
         `,

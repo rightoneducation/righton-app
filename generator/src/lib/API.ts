@@ -14,6 +14,7 @@ const genEndpoint = `https://dhfrlmuvjd.execute-api.us-east-1.amazonaws.com/wron
 const regenEndpoint = 'https://uzfkcuoui1.execute-api.us-east-1.amazonaws.com/regenerateWrongAnswerExplanation/regenwronganswerexp-dev';
 const compareEndpoint = 'https://u9a79nroqd.execute-api.us-east-1.amazonaws.com/labeledits-dev';
 const evalEndpoint = 'https://chqti87v41.execute-api.us-east-1.amazonaws.com/default/evaltextcomplexity-main';
+const refineEndpoint = 'https://e93swlvhul.execute-api.us-east-1.amazonaws.com/default/refinecomplexity-main';
 
 export async function generateWrongAnswerExplanations(
   question: IQuestion,
@@ -73,6 +74,38 @@ export async function evalTextComplexity(
         return response.json()
     })
     .then((response) => {
+        return response;
+    })
+}
+
+export async function refineComplexity(
+    text: string,
+    newComplexity: string,
+    pastAnalysis: string
+  ): Promise<string | null> {
+    console.log(text);
+    console.log(newComplexity);
+    return fetch(refineEndpoint, {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            connection: "keep-alive",
+            "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+            text,
+            newComplexity,
+            pastAnalysis
+        }),
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(response.statusText)
+        }
+        return response.json()
+    })
+    .then((response) => {
+        console.log(response);
         return response;
     })
 }
