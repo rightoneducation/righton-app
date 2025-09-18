@@ -13,7 +13,7 @@ Amplify.configure(awsconfig);
 const genEndpoint = `https://dhfrlmuvjd.execute-api.us-east-1.amazonaws.com/wronganswerexp-dev`;
 const regenEndpoint = 'https://uzfkcuoui1.execute-api.us-east-1.amazonaws.com/regenerateWrongAnswerExplanation/regenwronganswerexp-dev';
 const compareEndpoint = 'https://u9a79nroqd.execute-api.us-east-1.amazonaws.com/labeledits-dev';
-const autoGenEndpoint = 'https://uos03tg7vi.execute-api.us-east-1.amazonaws.com/main/autoQuestionGenerator';
+const autoGenEndpoint = 'https://ucu5tea4s3.execute-api.us-east-1.amazonaws.com/default/generatingQuestion-genaitest';
 
 export async function generateWrongAnswerExplanations(
   question: IQuestion,
@@ -55,12 +55,14 @@ export async function autoGenerateQuestion(
   question: string
 ): Promise<any | null> {
     try{
+        console.log(question);
         const response = 
             fetch(autoGenEndpoint, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",
                     connection: "keep-alive",
+                    "Access-Control-Allow-Origin": "*",
                 },
                 body: JSON.stringify({
                     question

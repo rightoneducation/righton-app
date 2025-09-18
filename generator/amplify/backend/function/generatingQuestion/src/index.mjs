@@ -11,50 +11,37 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
-const { OpenAI } = require('openai');
+import { OpenAI } from 'openai';
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-exports.handler = async (event) => {
+export async function handler(event) {
     console.log(`EVENT: ${JSON.stringify(event)}`);
     
-    // Handle CORS preflight requests
-    if (event.httpMethod === 'OPTIONS') {
+    const openai = new OpenAI(process.env.OPENAI_API_KEY);
+    
+    // Parse input data from the event object
+    if (!event.body) {
         return {
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-                "Access-Control-Allow-Methods": "POST,OPTIONS"
-            },
-            body: JSON.stringify({})
+            statusCode: 400,
+            body: JSON.stringify({ error: 'Request body is required' })
         };
     }
     
+    const parsedEvent = JSON.parse(event.body);
+    const { question } = parsedEvent;
+    
+    console.log('Question:', question);
+
+    if (!question || question.trim() === '') {
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ error: 'Question is required' })
+        };
+    }
+
     try {
-        // Initialize OpenAI client
-        const openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY
-        });
-
-        // Parse the request body
-        const body = JSON.parse(event.body);
-        const { question } = body;
-
-        if (!question || question.trim() === '') {
-            return {
-                statusCode: 400,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-                    "Access-Control-Allow-Methods": "POST,OPTIONS",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ error: 'Question is required' })
-            };
-        }
-
         // Create the prompt for OpenAI
         const prompt = `
 You are an expert math teacher creating a comprehensive question for middle school students. Given the following math question, please provide:
@@ -119,12 +106,6 @@ Make sure the wrong answers are plausible mistakes that students might make, and
             console.error('Original response content:', responseContent);
             return {
                 statusCode: 500,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-                    "Access-Control-Allow-Methods": "POST,OPTIONS",
-                    "Content-Type": "application/json"
-                },
                 body: JSON.stringify({ 
                     error: 'Failed to parse AI response',
                     originalResponse: responseContent,
@@ -137,11 +118,6 @@ Make sure the wrong answers are plausible mistakes that students might make, and
         if (!generatedData.correctAnswer || !generatedData.wrongAnswers || !generatedData.solutionExplanation || !generatedData.ccss) {
             return {
                 statusCode: 500,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers": "*",
-                    "Content-Type": "application/json"
-                },
                 body: JSON.stringify({ error: 'Invalid response structure from AI' })
             };
         }
@@ -149,12 +125,6 @@ Make sure the wrong answers are plausible mistakes that students might make, and
         // Return the generated data
         return {
             statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-                "Access-Control-Allow-Methods": "POST,OPTIONS",
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify({
                 success: true,
                 data: {
@@ -171,12 +141,6 @@ Make sure the wrong answers are plausible mistakes that students might make, and
         console.error('Error in autoQuestionGenerator:', error);
         return {
             statusCode: 500,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-                "Access-Control-Allow-Methods": "POST,OPTIONS",
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify({ 
                 error: 'Internal server error',
                 message: error.message 

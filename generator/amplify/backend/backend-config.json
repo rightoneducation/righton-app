@@ -75,5 +75,87 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
+  },
+  "parameters": {
+    "AMPLIFY_function_evaltextcomplexity_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "evaltextcomplexity"
+        }
+      ]
+    },
+    "AMPLIFY_function_evaltextcomplexity_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "evaltextcomplexity"
+        }
+      ]
+    },
+    "AMPLIFY_function_generatingQuestion_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generatingQuestion"
+        }
+      ]
+    },
+    "AMPLIFY_function_generatingQuestion_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generatingQuestion"
+        }
+      ]
+    },
+    "AMPLIFY_function_labeledits_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "labeledits"
+        }
+      ]
+    },
+    "AMPLIFY_function_labeledits_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "labeledits"
+        }
+      ]
+    },
+    "AMPLIFY_function_regenwronganswerexp_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "regenwronganswerexp"
+        }
+      ]
+    },
+    "AMPLIFY_function_regenwronganswerexp_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "regenwronganswerexp"
+        }
+      ]
+    },
+    "AMPLIFY_function_wronganswerexp_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "wronganswerexp"
+        }
+      ]
+    },
+    "AMPLIFY_function_wronganswerexp_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "wronganswerexp"
+        }
+      ]
+    }
   }
 }
