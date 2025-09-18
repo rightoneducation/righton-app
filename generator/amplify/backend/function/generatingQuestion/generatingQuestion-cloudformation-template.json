@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "wronganswerexp",
+            "generatingQuestion",
             {
               "Fn::Join": [
                 "",
                 [
-                  "wronganswerexp",
+                  "generatingQuestion",
                   "-",
                   {
                     "Ref": "env"
@@ -78,7 +78,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs18.x",
         "Layers": [],
         "Timeout": 25
       }
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "wronganswerexpLambdaRoled9a6f8f1",
+            "wronganswerexpLambdaRole12fe68de",
             {
               "Fn::Join": [
                 "",
                 [
-                  "wronganswerexpLambdaRoled9a6f8f1",
+                  "wronganswerexpLambdaRole12fe68de",
                   "-",
                   {
                     "Ref": "env"

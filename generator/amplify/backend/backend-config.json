@@ -1,19 +1,5 @@
 {
   "api": {
-    "autoQuestionGeneratorAPI": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "autoQuestionGenerator"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    },
     "wronganswerexp": {
       "dependsOn": [],
       "output": {
@@ -64,44 +50,12 @@
     }
   },
   "function": {
-    "autoQuestionGenerator": {
+    "evaltextcomplexity": {
       "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ],
-          "category": "api",
-          "resourceName": "wronganswerexp"
-        },
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "generatorauth"
-        },
-        {
-          "attributes": [
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "regenwronganswerexp"
-        },
-        {
-          "attributes": [
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "wronganswerexp"
-        }
-      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "evaltextcomplexity": {
+    "generatingQuestion": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -120,96 +74,6 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    }
-  },
-  "parameters": {
-    "AMPLIFY_function_autoQuestionGenerator_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "autoQuestionGenerator"
-        }
-      ]
-    },
-    "AMPLIFY_function_autoQuestionGenerator_openaiApiKey": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "autoQuestionGenerator"
-        }
-      ]
-    },
-    "AMPLIFY_function_autoQuestionGenerator_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "autoQuestionGenerator"
-        }
-      ]
-    },
-    "AMPLIFY_function_evaltextcomplexity_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "evaltextcomplexity"
-        }
-      ]
-    },
-    "AMPLIFY_function_evaltextcomplexity_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "evaltextcomplexity"
-        }
-      ]
-    },
-    "AMPLIFY_function_labeledits_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "labeledits"
-        }
-      ]
-    },
-    "AMPLIFY_function_labeledits_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "labeledits"
-        }
-      ]
-    },
-    "AMPLIFY_function_regenwronganswerexp_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "regenwronganswerexp"
-        }
-      ]
-    },
-    "AMPLIFY_function_regenwronganswerexp_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "regenwronganswerexp"
-        }
-      ]
-    },
-    "AMPLIFY_function_wronganswerexp_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "wronganswerexp"
-        }
-      ]
-    },
-    "AMPLIFY_function_wronganswerexp_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "wronganswerexp"
-        }
-      ]
     }
   }
 }

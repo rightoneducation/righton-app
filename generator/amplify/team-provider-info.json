@@ -32,14 +32,35 @@
           "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
           "s3Key": "amplify-builds/wronganswerexp-34304153634d77784251-build.zip"
         },
-        "autoQuestionGenerator": {
-          "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
-          "s3Key": "amplify-builds/autoQuestionGenerator-49654968365249596f74-build.zip"
-        }
+        "generatingQuestion": {}
       },
       "api": {
-        "wronganswerexp": {},
-        "autoQuestionGeneratorAPI": {}
+        "wronganswerexp": {}
+      }
+    }
+  },
+  "qgen": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-wronganswerexp-qgen-76246-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-wronganswerexp-qgen-76246-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-wronganswerexp-qgen-76246-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-wronganswerexp-qgen-76246-deployment",
+      "UnauthRoleName": "amplify-wronganswerexp-qgen-76246-unauthRole",
+      "StackName": "amplify-wronganswerexp-qgen-76246",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-wronganswerexp-qgen-76246/debddf00-94a7-11f0-9b74-0e5d9c0c88f5",
+      "AmplifyAppId": "d3r30vgiz68su"
+    },
+    "categories": {
+      "auth": {
+        "generatorauth": {}
+      },
+      "function": {
+        "evaltextcomplexity": {},
+        "generatingQuestion": {},
+        "labeledits": {},
+        "regenwronganswerexp": {},
+        "wronganswerexp": {}
       }
     }
   }
