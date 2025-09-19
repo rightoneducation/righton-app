@@ -234,6 +234,7 @@ export default function ExplanationCard({
     const reasoning = JSON.parse(analysisResult).reasoning; 
     refineComplexity(explanation.genExplanation.explanation, selectedComplexity, reasoning).then((response: any) => {
       const responseObj = JSON.parse(response);
+      console.log(responseObj);
       setRefinedExplanation(responseObj.refinedText);
       setRefinedComplexity(responseObj.newComplexity);
       setIsRefining(false);
