@@ -123,3 +123,35 @@ export const listQuestions = /* GraphQL */ `
     }
   }
 `;
+export const getDebug = /* GraphQL */ `
+  query GetDebug($id: ID!) {
+    getDebug(id: $id) {
+      id
+      question
+      debug
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listDebugs = /* GraphQL */ `
+  query ListDebugs(
+    $filter: ModelDebugFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDebugs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        question
+        debug
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
