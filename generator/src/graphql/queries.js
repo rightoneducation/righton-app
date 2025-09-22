@@ -123,29 +123,47 @@ export const listQuestions = /* GraphQL */ `
     }
   }
 `;
-export const getDebug = /* GraphQL */ `
-  query GetDebug($id: ID!) {
-    getDebug(id: $id) {
+export const getRefinedData = /* GraphQL */ `
+  query GetRefinedData($id: ID!) {
+    getRefinedData(id: $id) {
       id
-      question
-      debug
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
       createdAt
       updatedAt
       __typename
     }
   }
 `;
-export const listDebugs = /* GraphQL */ `
-  query ListDebugs(
-    $filter: ModelDebugFilterInput
+export const listRefinedData = /* GraphQL */ `
+  query ListRefinedData(
+    $filter: ModelRefinedDataFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listDebugs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listRefinedData(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        question
-        debug
+        originalText
+        targetComplexity
+        pastAnalysis
+        refinedText
+        analysisData
+        assignedComplexity
+        finalReasoning
+        analysisDataExplanation
+        complexityMatchesTarget
+        complexityMatchExplanation
+        promptContent
         createdAt
         updatedAt
         __typename

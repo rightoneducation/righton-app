@@ -85,20 +85,20 @@ export default function Generator() {
       discardedExplanations: [],
       version
     },
-    {
-      question: "A child is raising a flag up a 20-foot flag pole. She starts pulling at a rate of 2 feet per second for 5 seconds, but she starts to get tired and decreases her rate to 1/2 foot per second for the remainder of the time. In total, how many seconds does it take her to raise the flag from the bottom to the top?",
-      correctAnswer: "25", 
-      wrongAnswers: ['10'],
-      discardedExplanations: [],
-      version
-    },
-    {
-      question: "If f(x) = x^2 + 2x + 3, what is the value of f(x), when x = 6?",
-      correctAnswer: "51", 
-      wrongAnswers: ['27'],
-      discardedExplanations: [],
-      version
-    }
+    // {
+    //   question: "A child is raising a flag up a 20-foot flag pole. She starts pulling at a rate of 2 feet per second for 5 seconds, but she starts to get tired and decreases her rate to 1/2 foot per second for the remainder of the time. In total, how many seconds does it take her to raise the flag from the bottom to the top?",
+    //   correctAnswer: "25", 
+    //   wrongAnswers: ['10'],
+    //   discardedExplanations: [],
+    //   version
+    // },
+    // {
+    //   question: "If f(x) = x^2 + 2x + 3, what is the value of f(x), when x = 6?",
+    //   correctAnswer: "51", 
+    //   wrongAnswers: ['27'],
+    //   discardedExplanations: [],
+    //   version
+    // }
   ]
 
   useEffect(() => {

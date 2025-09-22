@@ -154,36 +154,69 @@ export const onDeleteQuestions = /* GraphQL */ `
     }
   }
 `;
-export const onCreateDebug = /* GraphQL */ `
-  subscription OnCreateDebug($filter: ModelSubscriptionDebugFilterInput) {
-    onCreateDebug(filter: $filter) {
+export const onCreateRefinedData = /* GraphQL */ `
+  subscription OnCreateRefinedData(
+    $filter: ModelSubscriptionRefinedDataFilterInput
+  ) {
+    onCreateRefinedData(filter: $filter) {
       id
-      question
-      debug
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
       createdAt
       updatedAt
       __typename
     }
   }
 `;
-export const onUpdateDebug = /* GraphQL */ `
-  subscription OnUpdateDebug($filter: ModelSubscriptionDebugFilterInput) {
-    onUpdateDebug(filter: $filter) {
+export const onUpdateRefinedData = /* GraphQL */ `
+  subscription OnUpdateRefinedData(
+    $filter: ModelSubscriptionRefinedDataFilterInput
+  ) {
+    onUpdateRefinedData(filter: $filter) {
       id
-      question
-      debug
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
       createdAt
       updatedAt
       __typename
     }
   }
 `;
-export const onDeleteDebug = /* GraphQL */ `
-  subscription OnDeleteDebug($filter: ModelSubscriptionDebugFilterInput) {
-    onDeleteDebug(filter: $filter) {
+export const onDeleteRefinedData = /* GraphQL */ `
+  subscription OnDeleteRefinedData(
+    $filter: ModelSubscriptionRefinedDataFilterInput
+  ) {
+    onDeleteRefinedData(filter: $filter) {
       id
-      question
-      debug
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
       createdAt
       updatedAt
       __typename

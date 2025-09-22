@@ -23,6 +23,26 @@ export async function handler(event) {
           .describe("REFINED_TEXT - The text refined to match the target complexity level"),
         newComplexity: z.string()
           .describe("NEW_COMPLEXITY_LEVEL - The new complexity level of the text"),
+        analysisData: z.object({
+          NUM_SENTENCES: z.number().int()
+            .describe("number of sentences in the generated text"),
+          NUM_SIMPLE_SENTENCES: z.number().int()
+            .describe("number of simple sentences in the generated text"),
+          NUM_COMPOUND_SENTENCES: z.number().int()
+            .describe("number of compound sentences in the generated text"),
+          NUM_BASIC_COMPLEX_SENTENCES: z.number().int()
+            .describe("number of basic complex sentences in the generated text"),
+          NUM_ADVANCED_COMPLEX_SENTENCES: z.number().int()
+            .describe("number of advanced complex sentences in the generated text"),
+          PERCENTAGE_SIMPLE: z.number()
+            .describe("percentage of all sentences that are simple"),
+          PERCENTAGE_COMPOUND: z.number()
+            .describe("percentage of all sentences that are compound"),
+          PERCENTAGE_BASIC_COMPLEX: z.number()
+            .describe("percentage of all sentences that are basic complex"),
+          PERCENTAGE_ADVANCED_COMPLEX: z.number()
+            .describe("percentage of all sentences that are advanced complex"),
+        }).describe("ANALYSIS_DATA - The analysis data of the text"),
         verification: z.object({
           analysisDataExplanation: z.string().describe("Explanation of how ANALYSIS_DATA was used in complexity assignment"),
           complexityMatchesTarget: z.boolean().describe("Does COMPLEXITY_LEVEL match the target complexity?"),
@@ -58,57 +78,33 @@ export async function handler(event) {
             STEP 2: BLIND ANALYSIS - Analyze REFINED_TEXT without considering the target
             Use these criteria: ${userPromptLabel}
             
-            CRITICAL: Forget that you refined this text for a specific complexity level. Analyze the sentences OBJECTIVELY as if this were a completely separate text. Do NOT consider what complexity level you want to achieve.
+            CRITICAL BLIND ANALYSIS STEPS:
+            1. Firstly, correctly count the number of sentences in REFINED_TEXT. Store the result as: NUM_SENTENCES.
+            2. For each sentence in REFINED_TEXT, determine if it is a simple sentence, a compound sentence, a basic complex sentence, or an advanced complex sentence.
+            3. Count the number of sentences in REFINED_TEXT that are simple, compound, basic complex, and advanced complex.
+            4. Output the total number of sentences as: NUM_SENTENCES.
+            5. Output the number of simple sentences as: NUM_SIMPLE_SENTENCES.
+            6. Output the number of compound sentences as: NUM_COMPOUND_SENTENCES.
+            7. Output the number of basic complex sentences as: NUM_BASIC_COMPLEX_SENTENCES.
+            8. Output the number of advanced complex sentences as: NUM_ADVANCED_COMPLEX_SENTENCES.
+            9. Output the percentage of simple sentences as: PERCENTAGE_SIMPLE.
+            10. Output the percentage of compound sentences as: PERCENTAGE_COMPOUND.
+            11. Output the percentage of basic complex sentences as: PERCENTAGE_BASIC_COMPLEX.
+            12. Output the percentage of advanced complex sentences as: PERCENTAGE_ADVANCED_COMPLEX.
             
-            Store result as: ANALYSIS_DATA
-
-            STEP 3: OBJECTIVE ASSIGNMENT - Use ANALYSIS_DATA to determine complexity
-            Apply these rules: ${userPromptAssign}
-            
-            CRITICAL: Assign complexity based ONLY on the statistics from your analysis. Do NOT consider what complexity level you want to achieve or what you were targeting.
-            
-            Store result as: COMPLEXITY_LEVEL
-
-            STEP 4: Compare and verify
-            TARGET COMPLEXITY: ${newComplexity}
-            ASSIGNED COMPLEXITY: [Your result from step 3]
-            
-            VERIFICATION:
-            - Did I correctly use REFINED_TEXT in step 2? [Yes/No + explanation]
-            - Did I correctly use ANALYSIS_DATA in step 3? [Yes/No + explanation]
-            - Does COMPLEXITY_LEVEL match target "${newComplexity}"? [Yes/No + explanation]
-            - Did I perform objective analysis without considering the target complexity? [Yes/No + explanation]
-
-            IMPORTANT EXAMPLE: 
-
-            Here is an example that you have incorrectly assigned as slightly complex:
-            {
-              "refinedText": "The student likely misunderstood the problem, overlooking that the rate of 1/2 foot per second applies after the initial 5 seconds. Initially, the child raised the flag 10 feet in 5 seconds (2 feet per second). They mistakenly concluded the process took only 10 seconds, not accounting for the extra 10 feet raised at 1/2 foot per second, which adds time.",
-              "newComplexity": "Slightly Complex",
-              "verification": {
-                  "analysisDataExplanation": "The analysis of the refined text shows that it contains 4 sentences: one compound sentence and three simple sentences. There are no advanced complex sentences, which fits the requirement that Slightly Complex texts must not contain any advanced complex sentences. The presence of simple and compound sentences is sufficient to categorize this text as Slightly Complex, as the number of simple sentences constitutes 75% which exceeds the necessary 50% threshold.",
-                  "complexityMatchesTarget": true,
-                  "complexityMatchExplanation": "The refined text matches the target of Slightly Complex because it consists predominantly of simple and compound sentences (75% simple sentences) and does not contain any advanced complex sentences."
-              },
-              "finalReasoning": "The refined text has been structured to predominantly feature simple sentences with straightforward clauses, lacking the complex multi-clause structure that characterizes more advanced complexity levels. This matches the definition of Slightly Complex, as it contains simple and straightforward sentence structures."
+            Store result as: ANALYSIS_DATA: {
+              NUM_SENTENCES: number,
+              NUM_SIMPLE_SENTENCES: number,
+              NUM_COMPOUND_SENTENCES: number,
+              NUM_BASIC_COMPLEX_SENTENCES: number,
+              NUM_ADVANCED_COMPLEX_SENTENCES: number,
+              PERCENTAGE_SIMPLE: number,
+              PERCENTAGE_COMPOUND: number,
+              PERCENTAGE_BASIC_COMPLEX: number,
+              PERCENTAGE_ADVANCED_COMPLEX: number,
             }
-            Here is the correct analysis (assigning moderately complex):
-            The text consists of 3 sentences: 1 simple, 1 basic complex, and 1 advanced complex sentence. The percentage of simple sentences is 33.33%, which is less than 50%, so the text cannot be classified as Slightly Complex. There is only 1 advanced complex sentence, which is less than the 3 required for the text to be classified as Very Complex. Since there are not more than 2 advanced complex sentences, the text can be considered Moderately Complex. Therefore, the text falls into the Moderately Complex category.
-
-            MAKE SURE THAT YOU ARE CORRECTLY USING THE ANALYSIS FRAMEWORK SO THAT YOU PREVENT INCORRECTLY ASSIGNING THE COMPLEXITY LEVEL LIKE IN THE EXAMPLE ABOVE.
-
-            IMPORTANT: Ensure that you are always reviewing the explanation analyzing it per the above and returning a correct complexity level. If the level doesn't match the desired complexity, ensure that you are refining again using the same process.
-
-            FINAL PROCESS CHECK:
-            Before outputting your response, verify:
-            1. I have REFINED_TEXT from step 1
-            2. I have detailed ANALYSIS_DATA from step 2 with sentence-by-sentence breakdown
-            3. I have COMPLEXITY_LEVEL from step 3 with explicit reference to analysis data
-            4. I have verification explanations from step 4
             
-            If any component is missing or incomplete, go back and complete that step properly.
-            
-            FINAL OUTPUT: Include REFINED_TEXT, COMPLEXITY_LEVEL, and verification explanations according to the structured JSON format here ${JSON.stringify(structuredResponseRefine, null, 2)}. I will be displaying this directly to the user, so ensure that it does not include any other text, introductory passages, explanations etc.
+            FINAL OUTPUT: Include REFINED_TEXT and ANALYSIS_DATA  according to the structured JSON format here ${JSON.stringify(structuredResponseRefine, null, 2)}. All other fields in the structured JSON format should be null. I will be displaying this directly to the user, so ensure that it does not include any other text, introductory passages, explanations etc.
         `,
       });
    

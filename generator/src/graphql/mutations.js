@@ -163,45 +163,72 @@ export const deleteQuestions = /* GraphQL */ `
     }
   }
 `;
-export const createDebug = /* GraphQL */ `
-  mutation CreateDebug(
-    $input: CreateDebugInput!
-    $condition: ModelDebugConditionInput
+export const createRefinedData = /* GraphQL */ `
+  mutation CreateRefinedData(
+    $input: CreateRefinedDataInput!
+    $condition: ModelRefinedDataConditionInput
   ) {
-    createDebug(input: $input, condition: $condition) {
+    createRefinedData(input: $input, condition: $condition) {
       id
-      question
-      debug
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
       createdAt
       updatedAt
       __typename
     }
   }
 `;
-export const updateDebug = /* GraphQL */ `
-  mutation UpdateDebug(
-    $input: UpdateDebugInput!
-    $condition: ModelDebugConditionInput
+export const updateRefinedData = /* GraphQL */ `
+  mutation UpdateRefinedData(
+    $input: UpdateRefinedDataInput!
+    $condition: ModelRefinedDataConditionInput
   ) {
-    updateDebug(input: $input, condition: $condition) {
+    updateRefinedData(input: $input, condition: $condition) {
       id
-      question
-      debug
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
       createdAt
       updatedAt
       __typename
     }
   }
 `;
-export const deleteDebug = /* GraphQL */ `
-  mutation DeleteDebug(
-    $input: DeleteDebugInput!
-    $condition: ModelDebugConditionInput
+export const deleteRefinedData = /* GraphQL */ `
+  mutation DeleteRefinedData(
+    $input: DeleteRefinedDataInput!
+    $condition: ModelRefinedDataConditionInput
   ) {
-    deleteDebug(input: $input, condition: $condition) {
+    deleteRefinedData(input: $input, condition: $condition) {
       id
-      question
-      debug
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
       createdAt
       updatedAt
       __typename
