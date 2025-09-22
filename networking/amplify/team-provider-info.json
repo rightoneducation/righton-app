@@ -62,6 +62,10 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
+        },
+        "expiregamecodes": {
+          "deploymentBucketName": "amplify-mobile-main-153119-deployment",
+          "s3Key": "amplify-builds/expiregamecodes-456138592b3777302b36-build.zip"
         }
       },
       "auth": {
