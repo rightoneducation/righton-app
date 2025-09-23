@@ -5,7 +5,7 @@ import { HttpRequest } from '@aws-sdk/protocol-http';
 import { default as fetch, Request } from 'node-fetch';
 
 const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
-const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
+const AWS_REGION = process.env.REGION || 'us-east-1';
 
 async function createAndSignRequest(query, variables) {
   const credentials = await defaultProvider()();
@@ -64,7 +64,7 @@ async function createAndSignRequest(query, variables) {
 
   try {
     const todaysDate = new Date();
-    const expiryDays = 30;
+    const expiryDays = 90;
     
     // Calculate the date 30 days ago
     const expiryDate = new Date(todaysDate);
@@ -79,6 +79,7 @@ async function createAndSignRequest(query, variables) {
         }
       } 
     });
+    console.log('gameSessionsRequest', gameSessionsRequest);
     const gameSessionsResponse = await fetch(gameSessionsRequest);
     const gameSessionsResponseParsed = await gameSessionsResponse.json();
     const numOfMatches = gameSessionsResponseParsed.data.listGameSessions.items.length;

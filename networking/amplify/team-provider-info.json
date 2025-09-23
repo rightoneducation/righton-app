@@ -65,7 +65,7 @@
         },
         "expiregamecodes": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
-          "s3Key": "amplify-builds/expiregamecodes-456138592b3777302b36-build.zip"
+          "s3Key": "amplify-builds/expiregamecodes-792b70476d3567773054-build.zip"
         }
       },
       "auth": {
