@@ -27,6 +27,7 @@
     "i18next-http-backend": "^3.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-fast-marquee": "^1.6.5",
     "react-i18next": "^15.5.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^7.6.0",

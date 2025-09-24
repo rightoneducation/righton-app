@@ -61,7 +61,7 @@ export default function CentralAndHost({ screenSize }: ICentralAndHost) {
                 {' '}
                 standard-aligned games
               </EmphasizeText>{' '}
-              or create their own—to fit any moment, from warm-ups to review.
+              or create their own — to fit any moment, from warm-ups to review.
             </StyledText>
             <br />
             <br />

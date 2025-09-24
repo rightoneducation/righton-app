@@ -10,6 +10,7 @@ export default function OpeningText() {
     <>
       <StyledFlexBox sx={{ width: { lg: '100%', md: ' 600px', sm: '100%' } }}>
         <StyledHeaderText
+          // style={{lineHeight: '100%'}} // TODO: figure out accurate line height here, search by lineHeight through website folders for thoroughness
           sx={{
             fontWeight: { xs: 'bold', md: 500 },
             fontSize: { xs: '40px', md: '60px' },
@@ -19,17 +20,17 @@ export default function OpeningText() {
           Everyone can be a math person!
         </StyledHeaderText>
       </StyledFlexBox>
-      <StyledFlexBox sx={{ width: { lg: '912px', md: ' 600px', sm: '100%' } }}>
+      <StyledFlexBox sx={{ width: { lg: '912px', md: ' 600px', sm: '100%' }, alignItems: 'center' }}>
         <StyledSubText
           lineHeight={1.2}
           sx={{
             fontSize: { xs: '16px', md: '20px' },
             textAlign: { xs: 'start', lg: 'center' },
+            maxWidth: { xs: '100%', md: '850px' },
           }}
         >
-          <i>RightOn!</i> makes math fun, social, and low-pressure—where mistakes spark
-          learning and every student feels confident to participate in what we
-          call a positive culture of error.
+          <i>RightOn!</i> makes math fun, social, and supportive — where mistakes spark learning
+          and every student feels confident participating
         </StyledSubText>
       </StyledFlexBox>
     </>

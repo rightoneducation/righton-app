@@ -10,6 +10,7 @@ import { PositiveCultureContainer } from '../components/positive/PositiveCulture
 
 const PositiveContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  minHeight: '100dvh',
   boxSizing: 'border-box',
   background: 'transparent',
 }));

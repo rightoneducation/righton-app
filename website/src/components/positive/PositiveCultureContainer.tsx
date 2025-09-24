@@ -54,7 +54,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
             <Typography
               sx={{
                 width: '100%',
-                lineHeight: '1.0',
+                lineHeight: '1.2',
                 fontSize: '40px',
                 fontFamily: 'Poppins, sans-serif',
                 fontWeight: 700,
@@ -75,7 +75,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
                 textAlign: 'left',
               }}
             >
-              Discover how mistakes become momentum—through classrooms, media,
+              Discover how mistakes become momentum — through classrooms, media,
               and more.
             </Typography>
           </Box>
@@ -106,6 +106,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
                     fontWeight: 700,
                     color: '#FF3A6A',
                     display: 'inline',
+                    fontStyle: 'italic',
                   }}
                 >
                   {' '}
@@ -154,6 +155,9 @@ export function PositiveCultureContainer ({// eslint-disable-line
                 borderRadius: secondaryGap,
                 padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
                 gap: `${theme.sizing.xSmPadding}px`,
+              }}
+              onClick={() => {
+                window.open('https://www.youtube.com/@RightOnEducation/videos', '_blank');
               }}
             >
               <Typography
@@ -336,7 +340,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
                 textAlign: 'center',
               }}
             >
-              Discover how mistakes become momentum—through classrooms, media,
+              Discover how mistakes become momentum — through classrooms, media,
               and more.
             </Typography>
           </Box>
@@ -389,6 +393,7 @@ export function PositiveCultureContainer ({// eslint-disable-line
                       fontWeight: 700,
                       color: '#FF3A6A',
                       display: 'inline',
+                      fontStyle: 'italic',
                     }}
                   >
                     {' '}

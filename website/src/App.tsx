@@ -4,6 +4,7 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
+  ScrollRestoration,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { CMSAPIClient } from '@righton/networking';
@@ -16,33 +17,59 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<Switch currentScreen={ScreenType.HOME} />} />
+        <Route path="/" element={
+          <>
+            <ScrollRestoration />
+            <Switch currentScreen={ScreenType.HOME} />
+          </>
+        } />
         <Route
           path="/aboutus"
-          element={<Switch currentScreen={ScreenType.ABOUT_US} />}
+          element={
+            <>
+              <ScrollRestoration />
+              <Switch currentScreen={ScreenType.ABOUT_US} />
+            </>
+          }
         />
         <Route
           path="/howitworks"
-          element={<Switch currentScreen={ScreenType.HOW_IT_WORKS} />}
+          element={
+            <>
+              <ScrollRestoration />
+              <Switch currentScreen={ScreenType.HOW_IT_WORKS} />
+            </>
+          }
         />
         <Route
           path="/positive"
-          element={<Switch currentScreen={ScreenType.POSITIVE} />}
+          element={
+            <>
+              <ScrollRestoration />
+              <Switch currentScreen={ScreenType.POSITIVE} />
+            </>
+          }
         />
         <Route
           path="/library"
           element={
-            <Switch currentScreen={ScreenType.LIBRARY} cmsClient={cmsClient} />
+            <>
+              <ScrollRestoration />
+              <Switch currentScreen={ScreenType.LIBRARY} cmsClient={cmsClient} />
+            </>
           }
         />
         <Route
           path="/library/:contentId"
           element={
-            <Switch currentScreen={ScreenType.CONTENT} cmsClient={cmsClient} />
+            <>
+              <ScrollRestoration />
+              <Switch currentScreen={ScreenType.CONTENT} cmsClient={cmsClient} />
+            </>
           }
         />
       </>,
-    ),
+    )
   );
 
   return (

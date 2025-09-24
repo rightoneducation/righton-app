@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { AppContainer } from '../lib/styledcomponents/StyledComponents';
 import { Header } from '../components/Header';
@@ -18,6 +18,7 @@ export default function AppSwitch({
   currentScreen: ScreenType;
   cmsClient?: any;
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -51,8 +52,8 @@ export default function AppSwitch({
   }
 
   return (
-    <AppContainer>
-      <Header screenSize={screenSize} />
+    <AppContainer menuOpen={menuOpen}>
+      <Header screenSize={screenSize} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       {pageComponent}
       <Footer screenSize={screenSize} />
     </AppContainer>

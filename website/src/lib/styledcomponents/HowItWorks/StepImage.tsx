@@ -1,21 +1,31 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { ScreenSize } from '../../WebsiteModels';
 
 interface StepImageProps {
   stepNumber: number | string;
   phoneImage: string;
   phoneAlt?: string;
+  screenSize: ScreenSize;
 }
 
-function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
+function StepImage({ stepNumber, phoneImage, phoneAlt, screenSize }: StepImageProps) {
+  const gaps = {
+    1: '22px',
+    2: '60px',
+    3: '32px',
+  }
   return (
     <Box
       sx={{
         display: 'flex',
-        margin: '0px 28.84px',
-        width: '268px',
-        height: '193px',
+        width: '100%',
+        height: '205px',
         boxSizing: 'border-box',
+        objectFit: 'contain',
+        justifyContent: screenSize === ScreenSize.LARGE ? 'flex-start' : 'flex-start',
+        paddingRight: (screenSize === ScreenSize.LARGE && stepNumber === 1)  ? '24px' : '0px',
+        gap: gaps[stepNumber as keyof typeof gaps],
       }}
     >
       <Box
@@ -23,8 +33,10 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '76px',
-          height: '78.45px',
+          width: '100%',
+          maxWidth: '76px',
+          maxHeight: '78.45px',
+          height: 'auto',
           borderRadius: '210.87px',
           background:
             'linear-gradient(to bottom,rgba(255, 42, 95, 0.7) 0%, rgba(255, 42, 95, 0.4) 50%, rgba(72, 19, 114, 0.1) 100%)',
@@ -47,10 +59,9 @@ function StepImage({ stepNumber, phoneImage, phoneAlt }: StepImageProps) {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          width: '192px',
-          height: '193px',
+          maxWidth: '192px',
+          height: 'auto',
           alignItems: 'center',
-          // border: '1px solid white'
         }}
       >
         <Box

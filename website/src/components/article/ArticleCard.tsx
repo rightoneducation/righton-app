@@ -44,16 +44,17 @@ export default function ArticleCard({
   caption,
 }: ArticleCardProps) {
   const theme = useTheme();
+  const safeTags = Array.isArray(tags) ? tags : [];
   return (
     <CardContainer>
-      <CMSCardThumbnailImage src={image.url} alt="Article Thumbnail" />
+      <CMSCardThumbnailImage src={image?.url ?? ''} alt="Article Thumbnail" />
       <InfoWrapper>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             boxSizing: 'border-box',
-            gap: `${theme.sizing.smPadding}px`,
+            gap: `17px`,
             paddingRight: `${theme.sizing.smPadding}px`,
           }}
         >
@@ -65,12 +66,12 @@ export default function ArticleCard({
               alignItems: 'center',
             }}
           >
-            {tags.map((tag) => (
+            {safeTags.map((tag) => (
               <CMSCardTag key={tag}>{tag}</CMSCardTag>
             ))}
             <CMSCardDateText> {date} </CMSCardDateText>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
             <CMSCardTitle>{title}</CMSCardTitle>
             <CMSCardCaption>{caption}</CMSCardCaption>
           </Box>

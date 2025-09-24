@@ -82,11 +82,11 @@ export default function QuestionTabsContent({
       emptyText = 'private questions';
       break;
     case (LibraryTabEnum.DRAFTS):
-      emptyText = 'drafts';
+      emptyText = 'draft questions';
       break;
     case (LibraryTabEnum.FAVORITES):
     default:
-      emptyText = 'favorites';
+      emptyText = 'favorite questions';
       break;
   }
   const handleLoadMore = async () => {
@@ -150,7 +150,9 @@ export default function QuestionTabsContent({
           paddingTop: `${padding}px`,
           textAlign: 'center'
         }}>
-          You currently don’t have any {emptyText}.
+            {centralData.searchTerms.length > 0 
+              ? `There are no ${emptyText} that match your search.`
+              : `You currently don’t have any ${emptyText}.`}
         </Typography>
       }
     </QTInnerContentContainer>

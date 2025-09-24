@@ -27,6 +27,7 @@ interface MainContainerProps {
 const MainContainer = styled(Box)<MainContainerProps>(
   ({ theme, screenSize }) => ({
     width: '100%',
+    minHeight: '100dvh',
     boxSizing: 'border-box',
     background: 'transparent',
   }),
@@ -92,7 +93,7 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
       }
     };
     const fetchOtherArticles = async () => {
-      const other = await cmsClient.fetchRecentArticles();
+      const other = await cmsClient.fetchRecentArticles(articleId);
       setOtherArticles(other);
       setIsLoadingOtherArticles(false);
     };

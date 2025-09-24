@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
-import GameCTAButtons from '../homepage/GameCTAButtons';
+import GameCTAButtonsMenu from '../homepage/GameCTAButtonsMenu';
 import { ScreenSize } from '../../lib/WebsiteModels';
 import { StyledFlexBox } from '../../lib/styledcomponents/StyledHomePageComponents/StyledHomePageComponents';
 
@@ -14,14 +14,14 @@ export default function TryItNowMenu({
   isMobile,
 }: TryItNowMenuProps) {
   const theme = useTheme();
-  console.log(theme.palette.primary.mainColor);
+
   return (
     <StyledFlexBox
       direction="column"
       borderRadius={isMobile ? 0 : 24}
-      sx={{ backgroundColor: theme.palette.primary.main }}
+      sx={{ backgroundColor: theme.palette.primary.main, zIndex: -1 }}
     >
-      <GameCTAButtons screenSize={screenSize} fontColor="#000" />
+      <GameCTAButtonsMenu screenSize={screenSize} fontColor="#000" />
     </StyledFlexBox>
   );
 }

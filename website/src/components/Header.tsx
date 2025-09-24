@@ -16,6 +16,8 @@ import { SelectArrowContainer } from '../lib/styledcomponents/StyledComponents';
 
 interface HeaderProps {
   screenSize: ScreenSize;
+  menuOpen?: boolean;
+  setMenuOpen?: (open: boolean) => void;
 }
 
 const links = [
@@ -25,11 +27,10 @@ const links = [
   { title: 'Resource Library', path: '/library' },
 ];
 
-export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
+export function Header({ screenSize, menuOpen, setMenuOpen }: HeaderProps) { // eslint-disable-line
   const location = useLocation();
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
-  const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
     null,
   );
@@ -55,7 +56,9 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
 
   const handleMobileMenu = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMenuAnchor(mobileMenuAnchor ? null : event.currentTarget);
-    setOpenMenu((prev) => !prev);
+    if (setMenuOpen) {
+      setMenuOpen(!menuOpen);
+    }
   };
 
   const handleHomeClick = () => {
@@ -114,6 +117,9 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                     }),
                     cursor: 'pointer',
                     padding: '4px 12px',
+                    '&:hover': {
+                      color: theme.palette.primary.primaryPink,
+                    },
                   }}
                   key={link.title}
                   fontSize="20px"
@@ -193,8 +199,10 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
                     screenSize={screenSize}
                     menu={links}
                     onClose={() => {
-                      setOpenMenu(false);
                       setMobileMenuAnchor(null);
+                      if (setMenuOpen) {
+                        setMenuOpen(false);
+                      }
                     }}
                   />
                 </Box>
@@ -225,7 +233,7 @@ export function Header({ screenSize }: HeaderProps) { // eslint-disable-line
           <Box
             onClick={handleMobileMenu}
             component="img"
-            src={openMenu ? closeIcon : hamburgerIcon}
+            src={menuOpen ? closeIcon : hamburgerIcon}
             width="24px"
             height="18px"
             sx={{ cursor: 'pointer' }}
