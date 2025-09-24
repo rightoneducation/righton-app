@@ -20,8 +20,9 @@ import VennDiagram from '../components/VennDiagram';
 
 const MainContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  minHeight: '100dvh',
   boxSizing: 'border-box',
-  background: 'transparent',
+  background: 'transparent'
 }));
 
 // First Container Content
@@ -56,6 +57,7 @@ const PhoneAndDownloadContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   backgroundColor: '#22499C',
   borderRadius: '12px',
+  width: '100%',
 }));
 
 const PhoneContainer = styled(Box)(({ theme }) => ({
@@ -71,7 +73,8 @@ const PhoneCard = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   gap: '12px',
   boxSizing: 'border-box',
-  width: '325.67px',
+  maxWidth: '325.67px',
+  width: '100%',
 }));
 const PhoneCardTextContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -154,7 +157,7 @@ const RightBox = styled(Box)(({ theme }) => ({
   alignItems: 'center'
 }));
 
-// Video wrapper that mimics object-fit: cover for iframes
+// Video wrapper that contains iframe content without cropping
 const VideoCoverContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
@@ -164,11 +167,11 @@ const VideoCoverContainer = styled(Box)(({ theme }) => ({
   borderRadius: '12px',
 }));
 
-const CoverIframe = styled('iframe')(({ theme }) => ({
+const CoverIframe = styled('iframe')<{ isNBC?: boolean }>(({ theme, isNBC }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
-  width: '177.78%', // 16/9 to ensure cover
+  width: isNBC ? '177.78%' : '100%', // NBC videos need cover behavior, YouTube videos use contain
   height: '100%',
   transform: 'translate(-50%, -50%)',
   border: 0,
@@ -286,7 +289,7 @@ export function HowItWorks() { // eslint-disable-line
 
   let fourthContainerPadding;
   if (screenSize === ScreenSize.LARGE) {
-    fourthContainerPadding = '96px 72px';
+    fourthContainerPadding = '154px 72px';
   } else if (screenSize === ScreenSize.MEDIUM) {
     fourthContainerPadding = '60px 72px';
   } else {
@@ -314,6 +317,12 @@ export function HowItWorks() { // eslint-disable-line
   
   const [selectedBox, setSelectedBox] = React.useState(0); // 0 for first, 1 for second
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
+
+  const videoMap = [
+    'https://www.nbcnews.com/news/embedded-video/mmvo160212037562',
+    'https://www.youtube.com/embed/aNYSSNtX1tA',
+    'https://www.youtube.com/embed/Q4ufGovRLG4',
+  ]
 
   return (
     <MainContainer>
@@ -360,7 +369,7 @@ export function HowItWorks() { // eslint-disable-line
               with
               {screenSize === ScreenSize.MEDIUM ? <br /> : ' '}
               <span style={{ color: '#FF3A6A', fontStyle: 'italic' }}>
-                Righton!
+                RightOn!
               </span>
             </Typography>
           </UpperContainerGetStartedText>
@@ -372,7 +381,7 @@ export function HowItWorks() { // eslint-disable-line
               color: '#FFFFFF',
             }}
           >
-            Change how your class preceives mistakes!
+            Change how your class perceives mistakes!
           </Typography>
         </UpperContainerTexts>
 
@@ -381,6 +390,7 @@ export function HowItWorks() { // eslint-disable-line
           sx={{
             padding:
               screenSize === ScreenSize.LARGE ? '48px 60px' : '48px 24px',
+            maxWidth: screenSize === ScreenSize.LARGE ? '1310px' : '400px',
           }}
         >
           {/* Images and steps */}
@@ -409,7 +419,7 @@ export function HowItWorks() { // eslint-disable-line
                     lineHeight: '100%',
                     fontSize: '16px',
                     fontFamily: 'Rubik, sans-serif',
-                    fontWeight: 700,
+                    fontWeight: 400,
                     color: '#FFFFFF',
                   }}
                 >
@@ -419,9 +429,10 @@ export function HowItWorks() { // eslint-disable-line
                       color: '#FF3A6A',
                       fontStyle: 'italic',
                       textDecoration: 'underline',
+                      fontWeight: 700
                     }}
                   >
-                    Righton!{' '}
+                    RightOn!{' '}
                     <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
                       Central
                     </span>
@@ -448,7 +459,7 @@ export function HowItWorks() { // eslint-disable-line
                   sx={{
                     fontSize: '16px',
                     fontFamily: 'Rubik, sans-serif',
-                    fontWeight: 700,
+                    fontWeight: 400,
                     color: '#FFFFFF',
                   }}
                 >
@@ -474,7 +485,7 @@ export function HowItWorks() { // eslint-disable-line
                   sx={{
                     fontSize: '16px',
                     fontFamily: 'Rubik, sans-serif',
-                    fontWeight: 700,
+                    fontWeight: 400,
                     color: '#FFFFFF',
                   }}
                 >
@@ -484,9 +495,10 @@ export function HowItWorks() { // eslint-disable-line
                       color: '#FF3A6A',
                       fontStyle: 'italic',
                       textDecoration: 'underline',
+                      fontWeight: 700
                     }}
                   >
-                    Righton!{' '}
+                    RightOn!{' '}
                     <span style={{ color: '#FF3A6A', fontStyle: 'normal' }}>
                       Play
                     </span>
@@ -516,6 +528,9 @@ export function HowItWorks() { // eslint-disable-line
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
               },
             }}
+            onClick={() => {
+              window.open('/docs/righton-user-guide.pdf', '_blank');
+            }}
           >
             Download our User Guide
           </Box>
@@ -525,6 +540,8 @@ export function HowItWorks() { // eslint-disable-line
         <TeacherTutorialContainer
           sx={{
             flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
+            width: '100%',
+            maxWidth: '1310px',
           }}
         >
           {/* Text for teacher tutorials container */}
@@ -548,16 +565,13 @@ export function HowItWorks() { // eslint-disable-line
               </Typography>
               <Typography
                 sx={{
-                  fontStyle: 'italic',
                   fontSize: '16px',
                   fontFamily: 'Poppins, sans-serif',
-                  fontWeight: 600,
+                  fontWeight: screenSize === ScreenSize.LARGE ? 600 : 400,
                   color: '#FFFFFF',
                 }}
               >
-                Learn how to effectively navigate the RightOn! app with our
-                step-by-step tutorials. These resources are designed to help you
-                maximize your teaching experience.
+                Quick videos to help you save time, surface student thinking, and streamline your classroom routines.
               </Typography>
             </Box>
             {/* The youtube video for medium and small screen only */}
@@ -565,10 +579,11 @@ export function HowItWorks() { // eslint-disable-line
               screenSize === ScreenSize.SMALL) && (
               <VideoCoverContainer>
                 <CoverIframe
-                  src="https://www.nbcnews.com/news/embedded-video/mmvo160212037562"
+                  src={videoMap[selectedBox]}
                   title="RightOn! Intro"
                   allow="autoplay; encrypted-media"
                   allowFullScreen
+                  isNBC={selectedBox === 0}
                 />
               </VideoCoverContainer>
             )}
@@ -672,6 +687,52 @@ export function HowItWorks() { // eslint-disable-line
                   generating explanations for wrong answers.
                 </Typography>
               </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  padding: '12px 24px',
+                  background:
+                    selectedBox === 2
+                      ? 'linear-gradient(90deg, rgba(255, 58, 106, 0.3) 0%, rgba(255, 58, 106, 0) 20%)'
+                      : null,
+                  borderLeft:
+                    selectedBox === 2
+                      ? '3px solid #FF3A6A'
+                      : '3px solid transparent',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setSelectedBox(2)}
+              >
+                <Typography
+                  sx={{
+                    lineHeight: '110%',
+                    fontSize: '20px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 700,
+                    color:
+                      selectedBox === 2
+                        ? '#FFFFFF'
+                        : 'rgba(255, 255, 255, 0.5)',
+                  }}
+                >
+                  Surfacing Student Thinking in <i>RightOn!</i> Host
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: '16px',
+                    fontFamily: 'Rubik, sans-serif',
+                    fontWeight: 400,
+                    color:
+                      selectedBox === 2
+                        ? '#FFFFFF'
+                        : 'rgba(255, 255, 255, 0.5)',
+                  }}
+                >
+                  Learn how <i>RightOn!</i> uses AI to surface student thinking to educators.
+                </Typography>
+              </Box>
             </Box>
           </TeacherTutorialTextContainer>
 
@@ -679,10 +740,11 @@ export function HowItWorks() { // eslint-disable-line
           {screenSize === ScreenSize.LARGE && (
             <VideoCoverContainer>
               <CoverIframe
-                src="https://www.nbcnews.com/news/embedded-video/mmvo160212037562"
-                title="RightOn! Intro"
+                src={videoMap[selectedBox]}
+                title="RightOn! Teacher Tutorial"
                 allow="autoplay; encrypted-media"
                 allowFullScreen
+                isNBC={selectedBox === 0}
               />
             </VideoCoverContainer>
           )}
@@ -706,9 +768,9 @@ export function HowItWorks() { // eslint-disable-line
           </Typography>
         </SecondUpperContainerTexts>
         {/* Venn Diagram goes here */}
-        <VennDiagram screensize = {screenSize}/>
+        
       </SecondContainer>
-
+      <VennDiagram screensize = {screenSize}/>
       {/* The third page */}
       <Box style={{width: '100%',
         display: 'flex',
@@ -739,8 +801,8 @@ export function HowItWorks() { // eslint-disable-line
             <Grid size={{md: 12, lg: 5}} sx ={{  display: 'flex', 
             flexDirection: 'column',
             gap: '48px'}}>
-              <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
-                  <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
+              <Box sx={{display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: screenSize === ScreenSize.SMALL ? '31px' : '0px', paddingBottom: screenSize === ScreenSize.SMALL ? '31px' : '0px'}}>
+                  <Typography sx={{textAlign: 'left',lineHeight: '1.2', fontSize: '40px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
                     <span style={{color: '#FF3A6A', fontStyle: 'italic'}}>RightOn!&apos;s </span>Logic Model Foundation
                   </Typography>
                   <Typography sx={{textAlign: 'left',lineHeight: '1.0', fontSize: '16px', fontFamily:'Rubik, sans-serif', fontWeight: 400, color: '#FFFFFF'}}>
@@ -754,7 +816,7 @@ export function HowItWorks() { // eslint-disable-line
                     <br />
                     <span style={{color: '#FFFFFF', fontWeight: 600, fontFamily: 'Poppins, sans-serif'}}>Want to see 
                       how it all connects? Explore the research and reasoning behind 
-                      RightOn!
+                      <span style={{fontStyle: 'italic'}}> RightOn!</span>
                     </span>
                   </Typography>
                 </Box>
@@ -777,6 +839,9 @@ export function HowItWorks() { // eslint-disable-line
                           backgroundColor: 'rgba(255, 255, 255, 0.1)',
                         },
                       }}
+                      onClick={() => {
+                        window.open('/docs/righton-logic-model.pdf', '_blank');
+                      }}
                     >
                       Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
                     </Box>
@@ -795,7 +860,7 @@ export function HowItWorks() { // eslint-disable-line
               src={LogicModel}
               alt='Devices'
               style={{
-                width: 'calc(100% - 204px)',
+                width: screenSize === ScreenSize.LARGE ? 'calc(100% - 204px)' : '100%',
                 boxSizing: 'border-box',
               }}
               />
@@ -842,6 +907,9 @@ export function HowItWorks() { // eslint-disable-line
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   },
                 }}
+                onClick={() => {
+                  window.open('/docs/righton-logic-model.pdf', '_blank');
+                }}
               >
                 Download <span style={{fontStyle: 'italic', color: '#FFFFFF', fontFamily: 'Poppins, sans-serif'}}>RightOn!</span> Logic Model
               </Box>
@@ -887,7 +955,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    What is RightOn?
+                    What is <span style={{fontStyle: 'italic'}}>RightOn!?</span>
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -917,12 +985,9 @@ export function HowItWorks() { // eslint-disable-line
                       maxWidth: '768px',
 
                     }}>
-                      RightOn is an innovative educational platform that helps students 
-                      learn math through error-based learning and interactive game experiences. 
-                      The platform consists of two main components: Central (for teachers to create 
-                      and manage content) and Play (for students to participate in math games). 
-                      RightOn transforms how students think about mistakes by making them a valuable 
-                      part of the learning process.
+                      
+                    <span style={{fontStyle: 'italic'}}>RightOn!</span> is an online math platform that uses AI to turn mistakes into learning opportunities. It shows teachers how students are thinking, highlights common misconceptions in real time, and gives students quick, personalized feedback—building persistence and a positive culture of error.
+
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -936,7 +1001,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    How does RightOn work?
+                    How does <span style={{fontStyle: 'italic'}}>RightOn!</span> work?
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -965,11 +1030,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      Teachers use RightOn Central to create math games or select from pre-made 
-                      content, then host live classroom sessions where students participate 
-                      through RightOn Play. During games, students analyze both correct answers 
-                      and common mistakes, leading to meaningful discussions about mathematical 
-                      thinking and problem-solving strategies.
+                      With <span style={{fontStyle: 'italic'}}>RightOn!</span>, teachers create or select math games in Central, then launch them through Host for live classroom sessions. Students join on Play, where they explore both correct solutions and common mistakes. By making sense of errors as well as right answers, students gain deeper understanding, greater self-confidence, and stronger growth mindsets, helping them persist in math and thrive as learners.
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -983,7 +1044,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    What grade levels does RightOn support?
+                    What grade levels are supported?
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -1012,8 +1073,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      RightOn is designed for K-12 mathematics education, with content that can be 
-                      adapted for various grade levels and mathematical concepts.
+                      <span style={{fontStyle: 'italic'}}>RightOn!</span> is co-designed with teachers and students for grades 7-10, with adaptable math content that helps students build skills and grow with confidence.
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -1027,7 +1087,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    Is RightOn free to use?
+                    How much does it cost?
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -1056,7 +1116,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      Yes? (Just want more info on how to word this)
+                      <span style={{fontStyle: 'italic'}}>RightOn!</span> is currently free for all students and teachers, with a focus on supporting underserved communities. Generous contributions from organizations like 4.0 Schools, the Gates Foundation, NSF, and the Walton Family Foundation allow us to provide our core apps at no cost, making high-quality math resources accessible to everyone.
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -1070,7 +1130,7 @@ export function HowItWorks() { // eslint-disable-line
                     fontWeight: 600,
                     color: '#FFFFFF'
                   }}>
-                    How do I get started with RightOn?
+                    How do I get started?
                   </Typography>
                   <Box sx={{
                     width: '32px',
@@ -1099,9 +1159,7 @@ export function HowItWorks() { // eslint-disable-line
                       lineHeight: '1.0',
                       maxWidth: '768px',
                     }}>
-                      Teachers can sign up for a RightOn account and begin exploring the platform 
-                      immediately. We recommend starting with our user guide and trying out some 
-                      pre-made games before creating your own content. See the user guide here!
+                      Sign up for a <span style={{fontStyle: 'italic'}}>RightOn!</span> account to start exploring—our <a href="https://docs.google.com/viewer?url=https://www.rightoneducation.com/docs/righton-user-guide.pdf&embedded=true" target="_blank" rel="noopener noreferrer" style={{color: '#FFFFFF', textDecoration: 'underline'}}>User Guide</a> and pre-made games make it easy to jump right in.
                     </Typography>
                   </FAQContent>
                 </Collapse>
@@ -1132,6 +1190,9 @@ export function HowItWorks() { // eslint-disable-line
                   '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   },
+                }}
+                onClick={() => {
+                  window.open('mailto:info@rightoneducation.com', '_blank');
                 }}
               >
                 Contact

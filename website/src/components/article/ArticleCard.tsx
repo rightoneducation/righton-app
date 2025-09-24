@@ -44,9 +44,10 @@ export default function ArticleCard({
   caption,
 }: ArticleCardProps) {
   const theme = useTheme();
+  const safeTags = Array.isArray(tags) ? tags : [];
   return (
     <CardContainer>
-      <CMSCardThumbnailImage src={image.url} alt="Article Thumbnail" />
+      <CMSCardThumbnailImage src={image?.url ?? ''} alt="Article Thumbnail" />
       <InfoWrapper>
         <Box
           sx={{
@@ -65,7 +66,7 @@ export default function ArticleCard({
               alignItems: 'center',
             }}
           >
-            {tags.map((tag) => (
+            {safeTags.map((tag) => (
               <CMSCardTag key={tag}>{tag}</CMSCardTag>
             ))}
             <CMSCardDateText> {date} </CMSCardDateText>

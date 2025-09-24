@@ -27,6 +27,7 @@ interface MainContainerProps {
 const MainContainer = styled(Box)<MainContainerProps>(
   ({ theme, screenSize }) => ({
     width: '100%',
+    minHeight: '100dvh',
     boxSizing: 'border-box',
     background: 'transparent',
   }),

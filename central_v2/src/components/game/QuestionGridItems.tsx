@@ -179,7 +179,7 @@ export default function QuestionElements({
               style={{ width: '100%', display: 'flex', alignItems: 'center' }}
             >
               <Typography style={{ textAlign: 'right', fontWeight: 500 }}>
-                Try our AI-Generated Wrong Answer Explanation Prototype
+                Try our AI-Powered Wrong Answer Explanation Generator
               </Typography>
               <AISwitch
                 checked={isAIEnabled}

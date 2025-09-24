@@ -155,6 +155,9 @@ export function PositiveCultureContainer ({// eslint-disable-line
                 padding: `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`,
                 gap: `${theme.sizing.xSmPadding}px`,
               }}
+              onClick={() => {
+                window.open('https://www.youtube.com/@RightOnEducation/videos', '_blank');
+              }}
             >
               <Typography
                 sx={{

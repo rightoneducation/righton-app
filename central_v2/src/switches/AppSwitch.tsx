@@ -57,6 +57,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     loadMore,
     loadMoreLibrary,
     fetchElement,
+    viewQuestion,
     fetchElements,
     handleLogOut,
     checkForUniqueEmail,
@@ -83,7 +84,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
         <AuthGuard handleLogOut={handleLogOut}>
           <ExploreQuestions
             screenSize={screenSize}
-            fetchElement={fetchElement}
+            viewQuestion={viewQuestion}
             fetchElements={fetchElements}
             setIsTabsOpen={setIsTabsOpen}
             handleChooseGrades={handleChooseGrades}
@@ -109,7 +110,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={getPublicPrivateElements}
-            fetchElement={fetchElement}
+            viewQuestion={viewQuestion}
             fetchElements={fetchElements}
             loadMoreLibrary={loadMoreLibrary}
             deleteQuestionTemplate={deleteQuestionTemplate}

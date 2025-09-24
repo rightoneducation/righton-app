@@ -345,9 +345,7 @@ export const buildGameQuestionPromises = (
       type,
     );
     const response = await apiClients.gameQuestions.createGameQuestions(
-      type === PublicPrivateType.DRAFT
-        ? PublicPrivateType.DRAFT
-        : draftGame.gameTemplate.publicPrivateType,
+      type ?? draftGame.gameTemplate.publicPrivateType,
       gameQuestion,
     );
   });

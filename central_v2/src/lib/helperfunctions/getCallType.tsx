@@ -40,7 +40,6 @@ export default function getCallType({
 }: CallTypeProps): CallType {
   let gameQuestionType = gameQuestion ?? GameQuestionType.GAME;
   let publicPrivateType = PublicPrivateType.PUBLIC;
-
   // if we are on the library tab, we need to determine the public/private type
   // this is used for the search bar, sort and filter functions
   if (matchLibraryTab && (libraryTab !== undefined || libraryTab !== null)) {
@@ -61,10 +60,8 @@ export default function getCallType({
     }
     return { gameQuestionType, publicPrivateType };
   }
-
-  // check if library (can we just use the presence of openTab on this?)
+  // if not on the library
   // use openTab and gameQuestionType to determine the type of API call
-
   const isValidPublicPrivate = (x: any): x is PublicPrivateType =>
     Object.values(PublicPrivateType).includes(x);
 
@@ -89,6 +86,5 @@ export default function getCallType({
     gameQuestionType = matchRoute.gqType;
     publicPrivateType = parseTypeParam(matchRoute.match!.params.type);
   }
-
   return { gameQuestionType, publicPrivateType };
 }

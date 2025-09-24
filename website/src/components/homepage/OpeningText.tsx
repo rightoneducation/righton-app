@@ -27,9 +27,9 @@ export default function OpeningText() {
             textAlign: { xs: 'start', lg: 'center' },
           }}
         >
-          <i>RightOn!</i> makes math fun, social, and low-pressure—where mistakes spark
-          learning and every student feels confident to participate in what we
-          call a positive culture of error.
+          <i>RightOn!</i> makes math fun, social, and supportive—where mistakes spark learning
+          <br />
+          and every student feels confident participating
         </StyledSubText>
       </StyledFlexBox>
     </>

@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "mobileLambdaRole4881fdd3",
+            "mobileLambdaRole18c95abd",
             {
               "Fn::Join": [
                 "",
                 [
-                  "mobileLambdaRole4881fdd3",
+                  "mobileLambdaRole18c95abd",
                   "-",
                   {
                     "Ref": "env"
