@@ -52,21 +52,24 @@ export async function generateWrongAnswerExplanations(
 }
 
 export async function autoGenerateQuestion(
-  question: string
+  questionData: {
+    question?: string;
+    correctAnswer?: string;
+    wrongAnswers?: string[];
+    solutionExplanation?: string;
+    ccss?: string;
+  }
 ): Promise<any | null> {
     try{
-        console.log(question);
+        console.log('Sending question data:', questionData);
         const response = 
             fetch(autoGenEndpoint, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",
                     connection: "keep-alive",
-                    "Access-Control-Allow-Origin": "*",
                 },
-                body: JSON.stringify({
-                    question
-                }),
+                body: JSON.stringify(questionData),
             })
             .then((response) => {
                 if (!response.ok) {

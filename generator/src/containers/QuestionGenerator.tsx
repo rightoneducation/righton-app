@@ -58,24 +58,50 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
   };
 
   const handleAutoGenerate = async () => {
-    if (!formData.question.trim()) {
-      alert('Please enter a question first');
+    // Check if at least one field has content
+    const hasContent = formData.question.trim() || 
+                      formData.correctAnswer.trim() || 
+                      formData.wrongAnswers.some(answer => answer.trim()) || 
+                      formData.solutionExplanation.trim() || 
+                      formData.ccss.trim();
+
+    if (!hasContent) {
+      alert('Please fill in at least one field before auto-generating');
       return;
     }
 
     setIsGenerating(true);
     
     try {
-      const result = await autoGenerateQuestion(formData.question);
+      // Prepare data to send (only non-empty fields)
+      const questionData = {
+        question: formData.question.trim() || undefined,
+        correctAnswer: formData.correctAnswer.trim() || undefined,
+        wrongAnswers: formData.wrongAnswers.filter(answer => answer.trim()).length > 0 
+          ? formData.wrongAnswers.filter(answer => answer.trim()) 
+          : undefined,
+        solutionExplanation: formData.solutionExplanation.trim() || undefined,
+        ccss: formData.ccss.trim() || undefined
+      };
+
+      const result = await autoGenerateQuestion(questionData);
       
       if (result) {
+        // Only update fields that were actually generated (merge with existing data)
         setFormData(prev => ({
           ...prev,
-          correctAnswer: result.correctAnswer,
-          wrongAnswers: result.wrongAnswers,
-          solutionExplanation: result.solutionExplanation,
-          ccss: result.ccss
+          question: result.question || prev.question,
+          correctAnswer: result.correctAnswer || prev.correctAnswer,
+          wrongAnswers: result.wrongAnswers || prev.wrongAnswers,
+          solutionExplanation: result.solutionExplanation || prev.solutionExplanation,
+          ccss: result.ccss || prev.ccss
         }));
+
+        // Show user what was generated
+        const generatedFields = result.generatedFields || [];
+        if (generatedFields.length > 0) {
+          alert(`Successfully generated: ${generatedFields.join(', ')}`);
+        }
       } else {
         throw new Error('Failed to generate question data');
       }
@@ -147,10 +173,13 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
 
             {/* Auto-Generate Button */}
             <Grid item xs={12}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontStyle: 'italic' }}>
+                💡 Fill in any fields you have, then click Smart Auto-Generate to complete the rest!
+              </Typography>
               <Button
                 variant="contained"
                 onClick={handleAutoGenerate}
-                disabled={!formData.question.trim() || isGenerating}
+                disabled={isGenerating}
                 sx={{
                   fontFamily: 'Poppins',
                   fontWeight: 600,
@@ -166,7 +195,7 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
                   },
                 }}
               >
-                {isGenerating ? 'Generating...' : '🤖 Auto-Generate All Fields'}
+                {isGenerating ? 'Generating...' : '🤖 Smart Auto-Generate'}
               </Button>
             </Grid>
 
