@@ -5,10 +5,11 @@ import { HttpRequest } from '@aws-sdk/protocol-http';
 import { default as fetch, Request } from 'node-fetch';
 
 const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
-const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
+const AWS_REGION = process.env.REGION || 'us-east-1';
 
 async function createAndSignRequest(query, variables) {
   const credentials = await defaultProvider()();
+  console.log(credentials);
   const endpoint = new URL(GRAPHQL_ENDPOINT ?? '');
   const signer = new SignatureV4({
     credentials: defaultProvider(),
@@ -83,7 +84,7 @@ async function createAndSignRequest(query, variables) {
 
     const gameSessionsRequest = await createAndSignRequest(listGameSessions, { 
       filter: { 
-        createdAt: { lt: expiryDateString },
+        startTime: { lt: expiryDateString },
         gameCode: { 
           between: [1000, 9999] 
         }
