@@ -123,3 +123,53 @@ export const listQuestions = /* GraphQL */ `
     }
   }
 `;
+export const getRefinedData = /* GraphQL */ `
+  query GetRefinedData($id: ID!) {
+    getRefinedData(id: $id) {
+      id
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listRefinedData = /* GraphQL */ `
+  query ListRefinedData(
+    $filter: ModelRefinedDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRefinedData(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        originalText
+        targetComplexity
+        pastAnalysis
+        refinedText
+        analysisData
+        assignedComplexity
+        finalReasoning
+        analysisDataExplanation
+        complexityMatchesTarget
+        complexityMatchExplanation
+        promptContent
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;

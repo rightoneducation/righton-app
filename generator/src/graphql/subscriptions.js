@@ -154,3 +154,72 @@ export const onDeleteQuestions = /* GraphQL */ `
     }
   }
 `;
+export const onCreateRefinedData = /* GraphQL */ `
+  subscription OnCreateRefinedData(
+    $filter: ModelSubscriptionRefinedDataFilterInput
+  ) {
+    onCreateRefinedData(filter: $filter) {
+      id
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateRefinedData = /* GraphQL */ `
+  subscription OnUpdateRefinedData(
+    $filter: ModelSubscriptionRefinedDataFilterInput
+  ) {
+    onUpdateRefinedData(filter: $filter) {
+      id
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteRefinedData = /* GraphQL */ `
+  subscription OnDeleteRefinedData(
+    $filter: ModelSubscriptionRefinedDataFilterInput
+  ) {
+    onDeleteRefinedData(filter: $filter) {
+      id
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
