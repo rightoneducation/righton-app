@@ -318,7 +318,7 @@ export function HowItWorks() { // eslint-disable-line
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
 
   const videoMap = [
-    'https://www.nbcnews.com/news/embedded-video/mmvo160212037562',
+    'https://www.youtube.com/embed/k_GEcWXJABM',
     'https://www.youtube.com/embed/aNYSSNtX1tA',
     'https://www.youtube.com/embed/Q4ufGovRLG4',
   ]
@@ -593,7 +593,6 @@ export function HowItWorks() { // eslint-disable-line
                   title="RightOn! Intro"
                   allow="autoplay; encrypted-media"
                   allowFullScreen
-                  isNBC={selectedBox === 0}
                 />
               </VideoCoverContainer>
             )}
@@ -753,7 +752,6 @@ export function HowItWorks() { // eslint-disable-line
                 title="RightOn! Teacher Tutorial"
                 allow="autoplay; encrypted-media"
                 allowFullScreen
-                isNBC={selectedBox === 0}
               />
             </VideoCoverContainer>
           )}
