@@ -1,16 +1,16 @@
 import {defineField, defineType} from 'sanity'
 
-export const videoArticleType = defineType({
-  name: 'videoArticle',
-  title: 'Video Article',
+export const rightOnResource = defineType({
+  name: 'rightOnResource',
+  title: 'RightOn Resource',
   type: 'document',
   fields: [
-     defineField({
-      name: 'image',
-      type: 'image',
+    defineField({
+      name: 'title',
+      type: 'string',
     }),
     defineField({
-      name: 'tags',
+      name: 'category',
       type: 'array',
       of: [{
         type: 'string',
@@ -18,25 +18,18 @@ export const videoArticleType = defineType({
           list: [
             {title: 'Article', value: 'Article'},
             {title: 'Video', value: 'Video'},
-            {title: 'Research', value: 'Research'}
+            {title: 'Research', value: 'Research'},
+            {title: 'Other', value: 'Other'}
           ]
         }
       }]
     }),
     defineField({
-      name: 'title',
-      type: 'string',
+      name: 'image',
+      type: 'image',
     }),
     defineField({
       name: 'youtubeLink',
-      type: 'string',
-    }),
-    defineField({
-      name: 'caption',
-      type: 'string',
-    }),
-    defineField({
-      name: 'author',
       type: 'string',
     }),
     defineField({
@@ -48,14 +41,22 @@ export const videoArticleType = defineType({
       type: 'number',
     }),
     defineField({
-      name: 'readingTimeMinutes',
-      type: 'number',
+      name: 'caption',
+      type: 'string',
     }),
     defineField({
-      name: 'details',
+      name: 'readingTimeMinutes',
+      type: 'number',
+    }),   
+    defineField({
+      name: 'contentHeader',
+      type: 'string',
+    }),
+    defineField({
+      name: 'content',
       type: 'array',
       of: [{type: 'block'}],
-    }),
+    }),  
     defineField({
       name: 'isCornerstone',
       type: 'boolean',
