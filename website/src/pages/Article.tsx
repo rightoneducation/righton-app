@@ -14,7 +14,6 @@ import { ShareModal } from '../components/article/ShareModal';
 import { ShareMobileModal } from '../components/article/ShareMobileModal';
 import { ArticleHeader } from '../components/article/ArticleHeader';
 import { ArticleContent } from '../components/article/ArticleContent';
-import { VideoArticleContent } from '../components/article/VideoArticleContent';
 import { OtherArticles } from '../components/article/OtherArticles';
 import { BackToLibrary } from '../components/article/BackToLibrary';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
