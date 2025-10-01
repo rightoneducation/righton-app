@@ -160,8 +160,6 @@ export class CMSAPIClient implements ICMSAPIClient {
   async fetchArticle(id: string): Promise<CMSArticleType> {
     try {
       const article = await this.client.fetch(FETCH_CONTENT_BY_ID , { id });
-      console.log('cms');
-      console.log(article);
       if (article._type === "rightOnResource") {
         article.author = 'RightOn! Team';
       } 

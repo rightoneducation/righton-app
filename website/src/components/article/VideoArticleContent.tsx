@@ -43,10 +43,10 @@ export function VideoArticleContent({// eslint-disable-line
       />
       <Box style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <CMSTitleText>{article.title}</CMSTitleText>
-        <PortableText
+        {/* <PortableText
           value={article.details}
           components={PortableTextComponentsConfig as PortableTextComponents}
-        />
+        /> */}
       </Box>
     </Box>
   );

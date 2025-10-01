@@ -506,7 +506,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
                           <ArticleCard
                             image={article.image || article.thumbnailImage}
                             date={article.date}
-                            tags={article.tags}
+                            tags={article.category}
                             title={article.title}
                             caption={article.caption}
                           />

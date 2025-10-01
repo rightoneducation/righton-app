@@ -50,7 +50,7 @@ function CornerstoneArticleCard({
     monsterAvatarMap[article.monsterSelect] || cmsMonsterAvatar0;
   // if author is RightOn UX Team, use the full author name, otherwise use the first initial and the last name
   const authorText = 
-    article.author === 'RightOn Team' // eslint-disable-line
+    article.author === 'RightOn! Team' // eslint-disable-line
       ? article.author
       : 'Ext. Resource';
 

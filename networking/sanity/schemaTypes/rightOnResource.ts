@@ -49,6 +49,10 @@ export const rightOnResource = defineType({
       type: 'number',
     }),   
     defineField({
+      name: 'contentHeader',
+      type: 'string',
+    }),
+    defineField({
       name: 'content',
       type: 'array',
       of: [{type: 'block'}],
