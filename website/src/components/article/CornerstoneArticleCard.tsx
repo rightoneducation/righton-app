@@ -49,15 +49,10 @@ function CornerstoneArticleCard({
   const avatarSrc =
     monsterAvatarMap[article.monsterSelect] || cmsMonsterAvatar0;
   // if author is RightOn UX Team, use the full author name, otherwise use the first initial and the last name
-  const authorText =
+  const authorText = 
     article.author === 'RightOn Team' // eslint-disable-line
       ? article.author
-      : article?.author && article.author.split(' ').length >= 2
-        ? `${article.author.split(' ')[0][0]}. ${article.author.split(' ').slice(-1)[0]}`.substring(
-            0,
-            12,
-          )
-        : article.author?.substring(0, 12);
+      : 'Ext. Resource';
 
   switch (screenSize) {
     case ScreenSize.MEDIUM:
@@ -103,7 +98,7 @@ function CornerstoneArticleCard({
                   color: '#FFFFFF',
                 }}
               >
-                {article.tags?.[0]}
+                {article.category?.[0]}
               </Typography>
               <CMSCornerstoneTitle
                 sx={{
@@ -213,7 +208,7 @@ function CornerstoneArticleCard({
                   color: '#FFFFFF',
                 }}
               >
-                {article.tags?.[0]}
+                {article.category?.[0]}
               </Typography>
               <CMSCornerstoneTitle
                 sx={{
@@ -236,7 +231,7 @@ function CornerstoneArticleCard({
                     color: '#FFFFFF',
                   }}
                 >
-                  {article.author}
+                  {authorText}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: '8px' }}>
                   <Typography

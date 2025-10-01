@@ -39,15 +39,27 @@ export function ArticleContent({ // eslint-disable-line
         style={screenSize === ScreenSize.SMALL ? { aspectRatio: '1 / 1' } : {}}
       />
       <CMSTitleText>{article.title}</CMSTitleText>
-      <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box style={{ display: 'flex', flexDirection: 'column', gap: '19px' }}>
         <CMSBodyText>
-          <strong>Author:</strong> {article.author}
+          {article.category}
         </CMSBodyText>
         <CMSBodyText>
-          <strong>Affiliation:</strong> {article.affiliation}
+          {article.apaCitation}
+        </CMSBodyText>
+        {article.abstract &&
+         <>
+         <CMSHeaderText>Abstract</CMSHeaderText>
+         <CMSBodyText>
+            {article.abstract}
+          </CMSBodyText>
+         </>
+        }
+        <CMSHeaderText>Summary</CMSHeaderText>
+        <CMSBodyText>
+          {article.summary}
         </CMSBodyText>
         <CMSBodyText>
-          <strong>Contact:</strong> {article.contact}
+          {article.resourceLink}
         </CMSBodyText>
       </Box>
       <Box

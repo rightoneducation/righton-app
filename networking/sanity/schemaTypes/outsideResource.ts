@@ -33,6 +33,10 @@ export const outsideResource = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'date',
+      type: 'string',
+    }),
+    defineField({
       name: 'monsterSelect',
       type: 'number',
     }),
@@ -45,9 +49,14 @@ export const outsideResource = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'minutesToRead',
+      name: 'readingTimeMinutes',
       type: 'number',
     }),   
+    defineField({
+      name: 'abstract',
+      type: 'array',
+      of: [{type: 'block'}],
+    }), 
     defineField({
       name: 'summary',
       type: 'array',

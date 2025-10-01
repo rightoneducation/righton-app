@@ -85,6 +85,7 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
     const fetchArticle = async () => {
       try {
         const article = await cmsClient.fetchArticle(articleId);
+        console.log(article);
         if (article.youtubeLink !== null) setIsVideoArticle(true);
         setSelectedArticle(article);
         setIsLoading(false);

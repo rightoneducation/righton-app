@@ -7,7 +7,7 @@ export const FETCH_ALL_ARTICLES = `*[_type == "article" || _type == "videoArticl
   },
   title,
   youtubeLink,
-  tags,
+  category,
   date,
   caption,
   author,
@@ -27,7 +27,7 @@ export const FETCH_ARTICLES_PAGINATED = `*[_type == "article" || _type == "video
   },
   title,
   youtubeLink,
-  tags,
+  category,
   date,
   caption,
   author,
@@ -49,7 +49,7 @@ export const FETCH_RECENT_ARTICLES = `*[_type == "article" || _type == "videoArt
   },
   title,
   youtubeLink,
-  tags,
+  category,
   date,
   caption,
   author,
@@ -72,7 +72,7 @@ export const FETCH_RECENT_ARTICLES_FILTERED = `*[
   },
   title,
   youtubeLink,
-  tags,
+  category,
   date,
   caption,
   author,
@@ -83,8 +83,9 @@ export const FETCH_RECENT_ARTICLES_FILTERED = `*[
   readingTimeMinutes
 }`;
 
-  export const FETCH_ALL_CORNERSTONES = `*[(_type == "article" || _type == "videoArticle" || _type == "research") && isCornerstone == true]{
+  export const FETCH_ALL_CORNERSTONES = `*[(_type == "article" || _type == "videoArticle" || _type == "research" || _type == "outsideResource" || _type == "rightOnResource") && isCornerstone == true]{
     _id,
+    _type,
     image{
       asset{
         _ref
@@ -92,7 +93,7 @@ export const FETCH_RECENT_ARTICLES_FILTERED = `*[
     },
     title,
     youtubeLink,
-    tags,
+    category,
     date,
     caption,
     author,
@@ -100,7 +101,13 @@ export const FETCH_RECENT_ARTICLES_FILTERED = `*[
     contact,
     details,
     monsterSelect,
-    readingTimeMinutes
+    readingTimeMinutes,
+    category,
+    apaCitation,
+    summary,
+    resourceLink,
+    minutesToRead,
+    content
   }`;
 
   export const FETCH_CONTENT_BY_ID = `
@@ -108,14 +115,15 @@ export const FETCH_RECENT_ARTICLES_FILTERED = `*[
     _id == $id
   ][0]{
     _id,
+    _type,
     image{
       asset{
         _ref
       }
     },
-    title,
+     title,
     youtubeLink,
-    tags,
+    category,
     date,
     caption,
     author,
@@ -123,14 +131,20 @@ export const FETCH_RECENT_ARTICLES_FILTERED = `*[
     contact,
     details,
     monsterSelect,
-    readingTimeMinutes
+    readingTimeMinutes,
+    category,
+    apaCitation,
+    summary,
+    resourceLink,
+    minutesToRead,
+    content
   }
 `
 
 // Specific queries for each article type
 export const FETCH_ARTICLES_PAGINATED_BY_TYPE = `*[
   (_type == "article" || _type == "videoArticle" || _type == "research") && 
-  $articleType in tags
+  $articleType in category
 ] | order(date desc) [$start...$end] {
   _id,
   image{
@@ -140,7 +154,7 @@ export const FETCH_ARTICLES_PAGINATED_BY_TYPE = `*[
   },
   title,
   youtubeLink,
-  tags,
+  category,
   date,
   caption,
   author,
@@ -153,7 +167,7 @@ export const FETCH_ARTICLES_PAGINATED_BY_TYPE = `*[
 
 export const FETCH_ARTICLES_COUNT_BY_TYPE = `count(*[
   (_type == "article" || _type == "videoArticle" || _type == "research") && 
-  $articleType in tags
+  $articleType in category
 ])`;
 
 // Query for all articles (no type filter)
@@ -168,7 +182,7 @@ export const FETCH_ALL_ARTICLES_PAGINATED = `*[
   },
   title,
   youtubeLink,
-  tags,
+  category,
   date,
   caption,
   author,

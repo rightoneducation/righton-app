@@ -33,6 +33,10 @@ export const rightOnResource = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'date',
+      type: 'string',
+    }),
+    defineField({
       name: 'monsterSelect',
       type: 'number',
     }),
@@ -41,7 +45,7 @@ export const rightOnResource = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'minutesToRead',
+      name: 'readingTimeMinutes',
       type: 'number',
     }),   
     defineField({

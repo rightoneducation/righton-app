@@ -10,7 +10,7 @@ export const videoArticleType = defineType({
       type: 'image',
     }),
     defineField({
-      name: 'tags',
+      name: 'category',
       type: 'array',
       of: [{
         type: 'string',

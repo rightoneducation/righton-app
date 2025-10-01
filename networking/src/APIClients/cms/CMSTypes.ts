@@ -6,11 +6,15 @@ export type CMSArticleType = {
     };
     url?: string;
   };
-  tags?: string[];
+  category?: string[];
   title: string;
   youtubeLink?: string;
   caption?: string;
   author?: string;
+  apaCitation?: string;
+  abstract?: string;
+  summary?: string;
+  resourceLink?: string;
   affiliation?: string;
   contact?: string;
   date?: string;

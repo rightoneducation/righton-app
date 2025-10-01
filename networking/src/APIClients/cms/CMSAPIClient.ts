@@ -36,6 +36,7 @@ export class CMSAPIClient implements ICMSAPIClient {
     try {
       const data = await this.client.fetch(FETCH_ALL_ARTICLES);
       
+      
       // Process images to return URLs
       const articlesWithImageUrls = data.map((article: any) => {
         if (article.image && article.image.asset && article.image.asset._ref) {
@@ -96,6 +97,14 @@ export class CMSAPIClient implements ICMSAPIClient {
   async fetchAllCornerstones() {
     try {
       const data = await this.client.fetch(FETCH_ALL_CORNERSTONES);
+      data.forEach((article: any) => {
+        if (article._type === "rightOnResource") {
+          article.author = 'RightOn! Team';
+        } 
+        else if (article._type === "outsideResource") {
+          article.author = 'External Resource';
+        }
+      });
       
       // Process images to return URLs
       const articlesWithImageUrls = data.map((article: any) => {
@@ -151,7 +160,14 @@ export class CMSAPIClient implements ICMSAPIClient {
   async fetchArticle(id: string): Promise<CMSArticleType> {
     try {
       const article = await this.client.fetch(FETCH_CONTENT_BY_ID , { id });
-      
+      console.log('cms');
+      console.log(article);
+      if (article._type === "rightOnResource") {
+        article.author = 'RightOn! Team';
+      } 
+      else if (article._type === "outsideResource") {
+        article.author = 'External Resource';
+      }
       // Process images to return URLs
       if (article.image && article.image.asset && article.image.asset._ref) {
         const imageUrl = imageUrlBuilder(this.client).image(article.image as SanityImageSource);

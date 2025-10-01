@@ -10,7 +10,7 @@ export const articleType = defineType({
       type: 'image',
     }),
     defineField({
-      name: 'tags',
+      name: 'category',
       type: 'array',
       of: [{
         type: 'string',
