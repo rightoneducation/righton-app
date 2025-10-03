@@ -49,15 +49,10 @@ function CornerstoneArticleCard({
   const avatarSrc =
     monsterAvatarMap[article.monsterSelect] || cmsMonsterAvatar0;
   // if author is RightOn UX Team, use the full author name, otherwise use the first initial and the last name
-  const authorText =
-    article.author === 'RightOn Team' // eslint-disable-line
+  const authorText = 
+    article.author === 'RightOn! Team' // eslint-disable-line
       ? article.author
-      : article?.author && article.author.split(' ').length >= 2
-        ? `${article.author.split(' ')[0][0]}. ${article.author.split(' ').slice(-1)[0]}`.substring(
-            0,
-            12,
-          )
-        : article.author?.substring(0, 12);
+      : 'Ext. Resource';
 
   switch (screenSize) {
     case ScreenSize.MEDIUM:
@@ -65,14 +60,15 @@ function CornerstoneArticleCard({
       return (
         <StyledCard
           screenSize={screenSize}
-          style={{ width: '287px', maxWidth: '287px', minHeight: '345px' }}
+          style={{ width: '287px', maxWidth: '287px', minHeight: '370px' }}
         >
-          <Box sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}>
+           <Box sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}>
             <img
               src={article.image?.url ?? ''}
               alt="Main"
               style={{
                 minHeight: '185px',
+                maxHeight: '185px',
                 objectFit: 'cover',
                 borderTopLeftRadius: '8px',
                 borderTopRightRadius: '8px',
@@ -81,22 +77,6 @@ function CornerstoneArticleCard({
                 display: 'block',
               }}
             />
-            <Typography
-              sx={{
-                fontSize: '18px',
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: 600,
-                color: '#22499C',
-                position: 'absolute',
-                top: '17px',
-                left: '10px',
-                border: '2px solid #22499C',
-                padding: '6px 8px',
-                borderRadius: '18px',
-              }}
-            >
-              Teaching Resources
-            </Typography>
           </Box>
           <Box
             sx={{
@@ -110,6 +90,16 @@ function CornerstoneArticleCard({
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <Typography
+                sx={{
+                  fontSize: '14px',
+                  fontFamily: 'Rubik, sans-serif',
+                  fontWeight: 400,
+                  color: '#FFFFFF',
+                }}
+              >
+                {article.category?.[0]}
+              </Typography>
               <CMSCornerstoneTitle
                 sx={{
                   fontSize: '16px',
@@ -192,6 +182,7 @@ function CornerstoneArticleCard({
             alt="Main"
             style={{
               minHeight: '300px',
+              maxHeight: '300px',
               objectFit: 'cover',
               borderTopLeftRadius: '8px',
               borderTopRightRadius: '8px',
@@ -217,7 +208,7 @@ function CornerstoneArticleCard({
                   color: '#FFFFFF',
                 }}
               >
-                Teaching Resources
+                {article.category?.[0]}
               </Typography>
               <CMSCornerstoneTitle
                 sx={{
@@ -240,7 +231,7 @@ function CornerstoneArticleCard({
                     color: '#FFFFFF',
                   }}
                 >
-                  {article.author}
+                  {authorText}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: '8px' }}>
                   <Typography

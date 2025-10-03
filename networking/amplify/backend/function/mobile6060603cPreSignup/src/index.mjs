@@ -2,7 +2,7 @@ import AWS from 'aws-sdk';
 import https from 'https';
 
 const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
-const REGION = process.env.AWS_REGION || 'us-east-1';
+const REGION = process.env.REGION || 'us-east-1';
 
 async function signedGraphQL(query, variables) {
   const endpoint = new AWS.Endpoint(GRAPHQL_ENDPOINT);
@@ -12,9 +12,10 @@ async function signedGraphQL(query, variables) {
   req.headers['Content-Type'] = 'application/json';
   req.headers['Host'] = endpoint.hostname;
   req.body = JSON.stringify({ query, variables });
-
+  
   const signer = new AWS.Signers.V4(req, 'appsync', true);
-  signer.addAuthorization(AWS.config.credentials, AWS.util.date.getDate());
+  const credentials = await new AWS.CredentialProviderChain().resolvePromise();
+  signer.addAuthorization(credentials, AWS.util.date.getDate());
 
   const options = {
     host: endpoint.hostname,

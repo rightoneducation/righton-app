@@ -113,6 +113,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "expiregamecodes": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "mobile6060603cPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -194,6 +199,22 @@
         {
           "category": "function",
           "resourceName": "createGameTest"
+        }
+      ]
+    },
+    "AMPLIFY_function_expiregamecodes_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "expiregamecodes"
+        }
+      ]
+    },
+    "AMPLIFY_function_expiregamecodes_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "expiregamecodes"
         }
       ]
     },

@@ -75,7 +75,7 @@ export const StyledHeaderText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins',
   color: 'white',
   fontWeight: 500,
-  lineHeight: '120%',
+  lineHeight: '100%',
   letterSpacing: '-4%',
 }));
 
@@ -85,10 +85,14 @@ export const StyledSubText = styled(Typography)(({ theme }) => ({
   color: 'white',
   fontWeight: 400,
   lineHeight: 'auto',
+  WebkitFontSmoothing: 'antialiased', // improves rendering on WebKit
+  MozOsxFontSmoothing: 'grayscale',   // improves rendering on Firefox
+  textRendering: 'optimizeLegibility', // smoother curves
 }));
 
 export const HomePageContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  minHeight: '100dvh',
   boxSizing: 'border-box',
   background: 'transparent',
 }));
@@ -97,5 +101,5 @@ export const OpeningTextContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '48px',
+  gap: '32px',
 }));

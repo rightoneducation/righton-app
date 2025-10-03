@@ -14,7 +14,6 @@ import { ShareModal } from '../components/article/ShareModal';
 import { ShareMobileModal } from '../components/article/ShareMobileModal';
 import { ArticleHeader } from '../components/article/ArticleHeader';
 import { ArticleContent } from '../components/article/ArticleContent';
-import { VideoArticleContent } from '../components/article/VideoArticleContent';
 import { OtherArticles } from '../components/article/OtherArticles';
 import { BackToLibrary } from '../components/article/BackToLibrary';
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
@@ -27,6 +26,7 @@ interface MainContainerProps {
 const MainContainer = styled(Box)<MainContainerProps>(
   ({ theme, screenSize }) => ({
     width: '100%',
+    minHeight: '100dvh',
     boxSizing: 'border-box',
     background: 'transparent',
   }),
@@ -49,7 +49,6 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
   const [isShareClicked, setIsShareClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingOtherArticles, setIsLoadingOtherArticles] = useState(true);
-  const [isVideoArticle, setIsVideoArticle] = useState(false);
   const [isMobileShareClicked, setIsMobileShareClicked] = useState(false);
   const articleId = useMatch('/library/:contentId')?.params.contentId;
 
@@ -84,7 +83,6 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
     const fetchArticle = async () => {
       try {
         const article = await cmsClient.fetchArticle(articleId);
-        if (article.youtubeLink !== null) setIsVideoArticle(true);
         setSelectedArticle(article);
         setIsLoading(false);
       } catch (error) {
@@ -92,7 +90,7 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
       }
     };
     const fetchOtherArticles = async () => {
-      const other = await cmsClient.fetchRecentArticles();
+      const other = await cmsClient.fetchRecentArticles(articleId);
       setOtherArticles(other);
       setIsLoadingOtherArticles(false);
     };
@@ -156,6 +154,7 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                     display: 'flex',
                     flexDirection: 'column',
                     maxWidth: '648px',
+                    width: '100%',
                     paddingBottom:
                       screenSize === ScreenSize.LARGE ? '48px' : '0px',
                     gap: '40px',
@@ -167,15 +166,11 @@ export function Article({ cmsClient }: any) { // eslint-disable-line
                     articleId={articleId ?? ''}
                     handleShareClicked={handleShareClicked}
                     handleMobileShareClicked={handleMobileShareClicked}
-                  />
-                  {isVideoArticle ? (
-                    <VideoArticleContent article={selectedArticle} />
-                  ) : (
-                    <ArticleContent
-                      article={selectedArticle}
-                      screenSize={screenSize}
-                    />
-                  )}
+                  />               
+                  <ArticleContent
+                    article={selectedArticle}
+                    screenSize={screenSize}
+                  />                  
                 </Box>
                 <Box
                   style={{

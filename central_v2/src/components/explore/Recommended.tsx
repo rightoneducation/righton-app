@@ -58,7 +58,7 @@ export default function Recommended<
   handleView,
 }: RecommendedProps<T>) {
   const theme = useTheme();
-  console.log(recommendedElements);
+
   return (
     <RecommendedContainer screenSize={screenSize}>
       <Title screenSize={screenSize}>

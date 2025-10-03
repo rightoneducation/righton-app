@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { ScreenSize } from '../lib/WebsiteModels';
 
-import Handup from '../images/monsterhandup.png';
+import Handup from '../images/monsterhandup.svg';
 
 import 'swiper/css';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -22,7 +22,6 @@ const OuterContainer = styled(Box)<{ clicked: boolean }>(({ clicked }) => ({
   gap: '48px',
   padding: '48px',
   transition: 'width 0.3s ease-in-out, height 0.3s ease-in-out',
-  // border: '1px solid pink', // debug
 }));
 /* CHANGE: add single grid area + anchor children to top/left so margins become offsets */
 const VennContainer = styled(Box)<{ clicked: boolean }>(({ clicked }) => ({
@@ -30,7 +29,6 @@ const VennContainer = styled(Box)<{ clicked: boolean }>(({ clicked }) => ({
   gridTemplateAreas: '"stack"',
   justifyContent: 'start',
   alignItems: 'start',
-  // border: '1px solid red', // debug
   transition: 'width 0.3s ease-in-out, height 0.3s ease-in-out',
 }));
 const vennData = [
@@ -145,7 +143,6 @@ const Label = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   fontSize: '40px',
   textAlign: 'center',
-  textShadow: '0 2px 8px #0008',
   pointerEvents: 'none',
   userSelect: 'none',
   lineHeight: '1.2',
@@ -242,6 +239,17 @@ export default function VennDiagram({
     }
   };
 
+  // Handle clicking outside the diagram (on the outer container)
+  const handleOuterContainerClick = (e: React.MouseEvent) => {
+    if (screensize === ScreenSize.LARGE && hasInteracted && sel !== null) {
+      // Check if the click target is actually a circle
+      const target = e.target as Element;
+      if (!target.closest('[data-circle]') && !target.closest('[data-mascot]')) {
+        setResetPhase('fadingOut');
+      }
+    }
+  };
+
   // Handle container animation complete
   const handleContainerAnimationComplete = () => {
     if (resetPhase === 'fadingOut') {
@@ -274,7 +282,7 @@ export default function VennDiagram({
       animate={containerAnimate}
       onAnimationComplete={handleContainerAnimationComplete}
     >
-      <OuterContainer clicked={clicked}>
+      <OuterContainer clicked={clicked} onClick={handleOuterContainerClick}>
         <AnimatePresence initial={false}>
           {(!hasInteracted || (hasInteracted && !isFadingOut)) && (
             <motion.div
@@ -297,6 +305,7 @@ export default function VennDiagram({
                       selected={sel === idx}
                       clicked={clicked}
                       idx={idx}
+                      data-circle="true"
                       sx={{
                         width: `${d}px`,
                         height: `${d}px`,
@@ -320,6 +329,7 @@ export default function VennDiagram({
                   src={Handup}
                   alt="Handup"
                   clicked={clicked}
+                  data-mascot="true"
                   style={{
                     width: `${mascot.w}px`,
                     height: `${mascot.h}px`,
@@ -421,7 +431,7 @@ export default function VennDiagram({
                       color: '#FFFFFF',
                     }}
                   >
-                    Link your lessions to
+                    Link your lessons to
                     <span style={{ color: '#FF3A6A', fontStyle: 'Regular' }}>
                       {' '}
                       error-based learning{' '}
@@ -473,7 +483,7 @@ export default function VennDiagram({
                     We collaborate closely with math educators and
                     <span
                       style={{
-                        fontWeight: 700,
+                        fontWeight: 400,
                         color: '#FF3A6A',
                         fontFamily: 'Poppins, sans-serif',
                       }}
@@ -486,7 +496,7 @@ export default function VennDiagram({
                     from quick recall and recognition to
                     <span
                       style={{
-                        fontWeight: 700,
+                        fontWeight: 400,
                         color: '#FF3A6A',
                         fontFamily: 'Poppins, sans-serif',
                       }}
@@ -503,13 +513,12 @@ export default function VennDiagram({
         </Box>
       </OuterContainer>
     </motion.div>
-
     ): (
     <SwiperContainer sx={{ height: screensize === ScreenSize.MEDIUM?'600px': ''}}>
       <Swiper
           modules={[Pagination]}
           spaceBetween={screensize === ScreenSize.SMALL? 24 : 48}
-          slidesPerView={screensize === ScreenSize.SMALL? 1.24: 1.6}
+          slidesPerView={screensize === ScreenSize.SMALL? 1.4: 1.6}
           style={{ 
             width: '100%', height: screensize === ScreenSize.MEDIUM?'100%': '',
             paddingBottom:  screensize === ScreenSize.SMALL? '70px' : '',
@@ -560,9 +569,9 @@ export default function VennDiagram({
             />
           </VennContainer>
         </SwiperSlide>
-        <SwiperSlide style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '12px', boxSizing: 'border-box', height: '100%'}}>
-          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center',width: '351px', height: '267px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px',}}>
+        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '12px', boxSizing: 'border-box',  height: '100%'}}>
+          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center',width: '351px', minHeight:'280px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
               <Typography sx={{lineHeight: '1.0', fontSize: '20px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                   Curriculum: Standards-Aligned & Searchable
               </Typography>
@@ -574,9 +583,9 @@ export default function VennDiagram({
             </Box>
           </Box>
         </SwiperSlide>
-        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center',padding: '12px', boxSizing: 'border-box',width: '100%', height: '100%', }}>
-          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '351px', height: '267px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px',}}>
+        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center',padding: '12px', boxSizing: 'border-box',  height: '100%', }}>
+          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '351px',  minHeight:'280px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
               <Typography sx={{lineHeight: '1.0', fontSize: '20px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                 Assessment: Embrace Learning Through Mistakes
               </Typography>
@@ -588,9 +597,9 @@ export default function VennDiagram({
             </Box>
           </Box>
         </SwiperSlide>
-        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center',padding: '12px', boxSizing: 'border-box',width: '100%', height: '100%',}}>
-          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '351px', height: '267px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px',}}>
+        <SwiperSlide style={{display: 'flex', justifyContent: 'center', alignItems: 'center',padding: '12px', boxSizing: 'border-box', height: '100%',}}>
+          <Box sx={{borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '351px',  minHeight:'280px', backgroundColor: '#22499C', padding: '12px 24px', boxSizing: 'border-box',}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
               <Typography sx={{lineHeight: '1.0', fontSize: '20px', fontFamily:'Poppins, sans-serif', fontWeight: 700, color: '#FFFFFF'}}>
                 Tech-Enabled Supplemental Learning: Leveraging AI
               </Typography>

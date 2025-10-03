@@ -11,7 +11,8 @@ import {
   FETCH_ARTICLES_PAGINATED_BY_TYPE,
   FETCH_ARTICLES_COUNT_BY_TYPE,
   FETCH_ALL_ARTICLES_PAGINATED,
-  FETCH_ALL_ARTICLES_COUNT
+  FETCH_ALL_ARTICLES_COUNT,
+  FETCH_RECENT_ARTICLES_FILTERED
 } from "./CMSQueries";
 import { CMSArticleType } from "./CMSTypes";
 import { ICMSAPIClient } from "./interfaces/ICMSAPIClient";
@@ -34,6 +35,7 @@ export class CMSAPIClient implements ICMSAPIClient {
   async fetchAllArticles() {
     try {
       const data = await this.client.fetch(FETCH_ALL_ARTICLES);
+      
       
       // Process images to return URLs
       const articlesWithImageUrls = data.map((article: any) => {
@@ -95,6 +97,14 @@ export class CMSAPIClient implements ICMSAPIClient {
   async fetchAllCornerstones() {
     try {
       const data = await this.client.fetch(FETCH_ALL_CORNERSTONES);
+      data.forEach((article: any) => {
+        if (article._type === "rightOnResource") {
+          article.author = 'RightOn! Team';
+        } 
+        else if (article._type === "outsideResource") {
+          article.author = 'External Resource';
+        }
+      });
       
       // Process images to return URLs
       const articlesWithImageUrls = data.map((article: any) => {
@@ -117,9 +127,14 @@ export class CMSAPIClient implements ICMSAPIClient {
     }
   }
 
-  async fetchRecentArticles() {
+  async fetchRecentArticles(excludeId?: string) {
     try {
-      const data = await this.client.fetch(FETCH_RECENT_ARTICLES);
+      let data = [];
+      if (excludeId) {
+        data = await this.client.fetch(FETCH_RECENT_ARTICLES_FILTERED, { excludeId });
+      } else {
+        data = await this.client.fetch(FETCH_RECENT_ARTICLES);
+      }
       
       // Process images to return URLs
       const articlesWithImageUrls = data.map((article: any) => {
@@ -145,7 +160,12 @@ export class CMSAPIClient implements ICMSAPIClient {
   async fetchArticle(id: string): Promise<CMSArticleType> {
     try {
       const article = await this.client.fetch(FETCH_CONTENT_BY_ID , { id });
-      
+      if (article._type === "rightOnResource") {
+        article.author = 'RightOn! Team';
+      } 
+      else if (article._type === "outsideResource") {
+        article.author = 'External Resource';
+      }
       // Process images to return URLs
       if (article.image && article.image.asset && article.image.asset._ref) {
         const imageUrl = imageUrlBuilder(this.client).image(article.image as SanityImageSource);

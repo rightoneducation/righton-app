@@ -1,7 +1,7 @@
 type SavedExplanation @model 
 @auth(
  rules: [
-    { allow: public, provider: identityPool  },
+    { allow: public, provider: iam  },
   ]
 )
 {
@@ -17,7 +17,7 @@ type SavedExplanation @model
 type DiscardedExplanation @model 
 @auth(
  rules: [
-    { allow: public, provider: identityPool  },
+    { allow: public, provider: iam },
   ]
 )
 {
@@ -33,7 +33,7 @@ type DiscardedExplanation @model
 type Questions @model 
 @auth(
  rules: [
-    { allow: public, provider: identityPool  },
+    { allow: public, provider: iam  },
   ]
 )
 {
