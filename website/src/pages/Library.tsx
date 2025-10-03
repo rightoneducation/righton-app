@@ -29,6 +29,7 @@ import 'swiper/css/pagination';
 
 const MainContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  minHeight: '100dvh',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -225,7 +226,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
     const fetchInitialArticles = async () => {
       try {
         // Load first page of all articles
-        const initialArticles = await cmsClient.fetchAllArticlesPaginated(0, ARTICLES_PER_PAGE);
+        const initialArticles = await cmsClient.fetchAllArticlesPaginated(0, 20);
         const totalCount = await cmsClient.fetchAllArticlesCount();
         
         setArticles(initialArticles);
@@ -351,7 +352,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
           </Typography>
           <Typography
             sx={{
-              lineHeight: '1.2',
+              lineHeight: '1.0',
               fontSize: '40px',
               fontFamily: 'Poppins, sans-serif',
               fontWeight: 700,
@@ -372,7 +373,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
               screenSize === ScreenSize.MEDIUM ||
               screenSize === ScreenSize.SMALL
                 ? '100%'
-                : '130%',
+                : '100%',
             fontFamily: 'Poppins, sans-serif',
             fontWeight: 400,
             color: '#FFFFFF',
@@ -474,18 +475,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
           dataLength={filteredArticles.length}
           next={loadMoreArticles}
           hasMore={hasMore}
-          loader={
-            <Box
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '20px',
-              }}
-            >
-              <CircularProgress style={{ color: '#FFF' }} />
-            </Box>
-          }
+          loader={<Box/>}
         >
           <Grid
             container
@@ -516,7 +506,7 @@ export function Library({ cmsClient }: any) { // eslint-disable-line
                           <ArticleCard
                             image={article.image || article.thumbnailImage}
                             date={article.date}
-                            tags={article.tags}
+                            tags={article.category}
                             title={article.title}
                             caption={article.caption}
                           />

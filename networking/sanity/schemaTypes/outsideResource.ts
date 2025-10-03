@@ -1,16 +1,16 @@
 import {defineField, defineType} from 'sanity'
 
-export const articleType = defineType({
-  name: 'article',
-  title: 'Article',
+export const outsideResource = defineType({
+  name: 'outsideResource',
+  title: 'Outside Resource',
   type: 'document',
   fields: [
-     defineField({
-      name: 'image',
-      type: 'image',
+    defineField({
+      name: 'title',
+      type: 'string',
     }),
     defineField({
-      name: 'tags',
+      name: 'category',
       type: 'array',
       of: [{
         type: 'string',
@@ -18,31 +18,20 @@ export const articleType = defineType({
           list: [
             {title: 'Article', value: 'Article'},
             {title: 'Video', value: 'Video'},
-            {title: 'Research', value: 'Research'}
+            {title: 'Research', value: 'Research'},
+            {title: 'Other', value: 'Other'}
           ]
         }
       }]
     }),
     defineField({
-      name: 'title',
-      type: 'string',
+      name: 'image',
+      type: 'image',
     }),
     defineField({
-      name: 'caption',
+      name: 'youtubeLink',
       type: 'string',
     }),
-    defineField({
-      name: 'author',
-      type: 'string',
-    }),    
-    defineField({
-      name: 'affiliation',
-      type: 'string',
-    }),
-    defineField({
-      name: 'contact',
-      type: 'string',
-    }),    
     defineField({
       name: 'date',
       type: 'string',
@@ -52,13 +41,30 @@ export const articleType = defineType({
       type: 'number',
     }),
     defineField({
+      name: 'apaCitation',
+      type: 'string',
+    }),
+    defineField({
+      name: 'caption',
+      type: 'string',
+    }),
+    defineField({
       name: 'readingTimeMinutes',
       type: 'number',
-    }),    
+    }),   
     defineField({
-      name: 'details',
+      name: 'abstract',
       type: 'array',
       of: [{type: 'block'}],
+    }), 
+    defineField({
+      name: 'summary',
+      type: 'array',
+      of: [{type: 'block'}],
+    }),
+    defineField({
+      name: 'resourceLink',
+      type: 'string',
     }),
     defineField({
       name: 'isCornerstone',

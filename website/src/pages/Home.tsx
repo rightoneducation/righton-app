@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useRef, useState, useEffect} from 'react';
+import { motion, useAnimation } from 'framer-motion';
 import { Box, styled, Grid, useTheme } from '@mui/material';
+import Marquee from "react-fast-marquee";
 import { MathSymbolsBackground } from '../lib/styledcomponents/StyledComponents';
 import {
   StyledFlexBox,
@@ -18,6 +20,7 @@ import toolsCompetitionImg from '../images/tools-competition.svg';
 import velaImg from '../images/vela.svg';
 import waltonFamilyImg from '../images/walton-family.svg';
 import waegen from '../images/waegen.svg';
+import gates from '../images/gates.svg';
 import inwardCurveImg from '../images/inwardCurve.svg';
 import bottomWaveLg from '../images/bottomWaveLg.svg';
 import FeaturedVideo from '../components/homepage/FeaturedVideo';
@@ -28,6 +31,7 @@ import PlayGames from '../components/homepage/Play';
 
 const imageArr = [
   { image: fourtyImg, alt: 'sponsors-forty' },
+  { image: gates, alt: 'sponsors-gates' },
   { image: toolsCompetitionImg, alt: 'sponsors-learning-engineering' },
   { image: nsfImg, alt: 'sponsors-nsf' },
   { image: schmidtImg, alt: 'sponsors-schmidt-futures' },
@@ -37,15 +41,22 @@ const imageArr = [
 
 const StyledSponsorDivider = styled(StyledFlexBox)(({ theme }) => ({
   backgroundColor: theme.palette.primary.secondaryDarkBlue,
-  overflowX: 'auto',
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
-  scrollbarWidth: 'none',
-  msOverflowStyle: 'none',
+  overflow: 'hidden',
   paddingTop: `${theme.sizing.smPadding}px`,
   paddingBottom: `${theme.sizing.smPadding}px`,
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `linear-gradient(90deg, ${theme.palette.primary.secondaryDarkBlue} 0%, transparent 10%, transparent 90%, ${theme.palette.primary.secondaryDarkBlue} 100%)`,
+    zIndex: 10,
+    pointerEvents: 'none'
+  }
 }));
 
 interface HomePageProps {
@@ -71,7 +82,7 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
             gap:
               screenSize === ScreenSize.SMALL
                 ? `${theme.sizing.mdPadding}px`
-                : `${theme.sizing.lgPadding}px`,
+                : `32px`,
           }}
         >
           <OpeningText />
@@ -95,11 +106,34 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
 
       {/* Sponsors Divider */}
       <StyledSponsorDivider>
-        <StyledFlexBox direction="row" align="center" gap={24}>
-          {imageArr.map(({ image, alt }, i) => (
-              <img src={image} alt={alt} style={{ height: '102px', width: 'auto', objectFit: 'contain', zIndex: 5 }}/>
-          ))}
-        </StyledFlexBox>
+        <div 
+          style={{ 
+            width: '100%', 
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+        >
+          <Marquee
+            pauseOnHover
+            pauseOnClick
+            direction="right"
+            speed={50}
+            loop={0}
+          >
+            {Array.from({ length: 3 }, (_, setIndex) =>
+             <div key={`set-${setIndex}`} style={{ display: 'flex' }}>
+              {imageArr.map(({ image, alt }, imageIndex) => (
+                <img 
+                  key={`set-${setIndex}-${alt}`}
+                  src={image} 
+                  alt={alt} 
+                  style={{ width: 'auto', height: '103px',  objectFit: 'contain', zIndex: 5, marginRight: '120px' }}
+                />
+              ))}
+              </div>
+            )}
+          </Marquee>
+        </div>
       </StyledSponsorDivider>
 
       <StyledFlexBox

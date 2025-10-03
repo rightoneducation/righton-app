@@ -18,7 +18,7 @@ import {
 import Theme from './lib/Theme';
 
 function RedirectToPlayIfMissing() {
-  window.location.href = 'http://dev-play.rightoneducation.com/';
+  window.location.href = 'http://play.rightoneducation.com/';
   return null;
 }
 

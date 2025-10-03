@@ -21,9 +21,9 @@ export const WhatIsContainer = ({ screenSize }: WhatIsContainerProps) => { // es
     'Encourage risk-taking',
     'Explore the thinking behind wrong answers',
     'Normalize and destigmatize errors',
-    'User errors to guide instruction',
+    'Use errors to guide instruction',
     'Embrace mistakes as learning opportunities',
-    'Discuss all answers—right and wrong—to deepen understanding',
+    'Discuss all answers — right and wrong — to deepen understanding',
   ];
 
   switch (screenSize) {

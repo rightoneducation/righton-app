@@ -29,6 +29,7 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
     <Box
       width="100%"
       sx={{
+        position: 'relative',
        '& .swiper-pagination': {
           height: '20px',
           width: '100%',
@@ -58,7 +59,8 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
             borderRadius: '50%',
             position: 'absolute',
             left: -50,
-            top: 300,
+            top: '50%',
+            transform: 'translateY(-50%)',
             zIndex: 10,
           }}
           fontSize="24px"
@@ -224,7 +226,8 @@ export default function RightOnEducators({ screenSize }: IRightOnEducators) {
             borderRadius: '50%',
             position: 'absolute',
             right: -50,
-            top: 300,
+            top: '50%',
+            transform: 'translateY(-50%)',
             zIndex: 10,
           }}
           fontSize="24px"

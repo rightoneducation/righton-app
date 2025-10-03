@@ -11,6 +11,7 @@ import {
   AnswerType,
   AnswerPrecision,
   IGameTemplate,
+  CloudFrontDistributionUrl
 } from '@righton/networking';
 import { Box, Fade } from '@mui/material';
 import {
@@ -98,7 +99,12 @@ interface CreateGameProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => void;
-  fetchElements: (libraryTab?: LibraryTabEnum) => void;
+  fetchElements: (
+    libraryTab?: LibraryTabEnum,
+    searchTerms?: string,
+    nextToken?: string | null,
+    isFromLibrary?: boolean,
+  ) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
     field: SortType;
@@ -132,10 +138,14 @@ export default function CreateGame({
     editRoute?.params.gameId !== null &&
     editRoute?.params.gameId !== undefined &&
     editRoute?.params.gameId.length > 0;
+  const isEditDraft = 
+    editRoute?.params.type === 'Draft';
+  const [isUpdatingTemplate, setIsUpdatingTemplate] = useState<boolean>(false);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
+  const [originalGameType, setOriginalGameType] = useState<PublicPrivateType>(gameTemplate.gameTemplate.publicPrivateType);
   const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
   // used when saving an edited game
   const [originalQuestionTemplates, setOriginalQuestionTemplates] = useState<
@@ -271,13 +281,13 @@ export default function CreateGame({
     setDraftGame((prev) => updateGameImageChange(prev, inputImage, inputUrl));
   };
 
-  const handleSaveEditedGame = async () => {
+  const handleUpdateEditedGame = async () => {
     try {
       setDraftGame((prev) => ({
         ...prev,
         isGameCardSubmitted: true,
-        isCreatingTemplate: true,
       }));
+      setIsUpdatingTemplate(true);
       const dqValid = checkDQsAreValid(draftQuestionsList);
       if (gameFormIsValid && dqValid) {
         // check if game img has been changed
@@ -371,9 +381,6 @@ export default function CreateGame({
             questionTemplateIds.length -
             removedQuestionTemplateIds.length;
 
-          console.log(draftGame.gameTemplate.questionTemplatesCount, questionTemplateIds.length, removedQuestionTemplateIds.length)
-          console.log(newQuestionTemplateCount);
-
           const updatedDraftGame = {
             ...draftGame,
             gameTemplate: {
@@ -393,6 +400,7 @@ export default function CreateGame({
               draftGame.gameTemplate.publicPrivateType,
               updatedGame,
             );
+            setIsUpdatingTemplate(false);
         } catch (err) {
           console.log(err);
         }
@@ -403,6 +411,7 @@ export default function CreateGame({
           isGameCardSubmitted: false,
         }));
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+        fetchElements();
         navigate('/');
       } else {
         setDraftGame((prev) => ({
@@ -432,8 +441,19 @@ export default function CreateGame({
         // check for images on draft game
         let gameImgUrl: string | null = null;
         if (draftGame.image || draftGame.imageUrl) {
-          gameImgUrl = await createGameImagePath(draftGame, apiClients);
-        }
+          if (
+            (!draftGame?.imageUrl?.startsWith('https://') ||
+            !draftGame?.imageUrl?.startsWith('http://')) && 
+            draftGame?.imageUrl
+          ) {
+            gameImgUrl = draftGame.imageUrl;
+          } else {
+            if ( draftGame && draftGame.imageUrl && draftGame?.imageUrl?.length > 0){
+              draftGame.imageUrl = `${CloudFrontDistributionUrl}${draftGame.imageUrl}`;
+            }
+            gameImgUrl = await createGameImagePath(draftGame, apiClients);
+          }
+      }
         const userId = centralData.userProfile?.id || '';
        
         try {
@@ -470,7 +490,7 @@ export default function CreateGame({
               draftGame.gameTemplate.publicPrivateType,
               createGame,
             );
-            
+           
             // create an array of all the ids from the response
             let questionTemplateIds = questionTemplateResponse.map(
               (question) => String(question?.id),
@@ -541,6 +561,194 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
+        fetchElements();
+        navigate('/');
+      } else {
+        setDraftGame((prev) => ({
+          ...prev,
+          ...(!gameFormIsValid && { isGameCardErrored: true }),
+          isCreatingTemplate: false,
+        }));
+        if (!allDQAreValid) {
+          setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
+          // then find first errored card and set index to that question
+        }
+      }
+    } catch (err) {
+      setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
+    }
+  };
+
+   const handleSaveEditedGame = async () => {
+    try {
+      if (draftGame.gameTemplate.publicPrivateType === originalGameType) {
+        await handleUpdateEditedGame();
+        return;
+      }
+      await handleSaveGame();
+      await apiClients.gameTemplate.deleteGameTemplate(
+          originalGameType,
+          selectedGameId
+      );
+      fetchElements(LibraryTabEnum.PUBLIC, '', null , true);
+      fetchElements(LibraryTabEnum.PRIVATE, '', null , true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleCreateFromDraftGame = async () => {
+    try{
+      const updatedDraftGame: typeof draftGame = {
+        ...draftGame,
+        isGameCardSubmitted: true,
+        isCreatingTemplate: true,
+        gameTemplate: {
+          ...draftGame.gameTemplate,
+          publicPrivateType: draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT ?
+            PublicPrivateType.PUBLIC : draftGame.gameTemplate.publicPrivateType,
+        }
+      }
+       setDraftGame(updatedDraftGame);
+      // confirm game & question form validity
+      if (gameFormIsValid && allDQAreValid) {
+        // check for images on draft game
+        let gameImgUrl: string | null = null;
+        if (updatedDraftGame.image || updatedDraftGame.imageUrl) {
+          if (
+            (!updatedDraftGame?.imageUrl?.startsWith('https://') ||
+            !updatedDraftGame?.imageUrl?.startsWith('http://')) && 
+            updatedDraftGame?.imageUrl
+          ) {
+            gameImgUrl = updatedDraftGame.imageUrl;
+          } else {
+            if ( updatedDraftGame && updatedDraftGame.imageUrl && updatedDraftGame?.imageUrl?.length > 0){
+             updatedDraftGame.imageUrl = `${CloudFrontDistributionUrl}${updatedDraftGame.imageUrl}`;
+            }
+            gameImgUrl = await createGameImagePath(updatedDraftGame, apiClients);
+          }
+        }
+        const userId = centralData.userProfile?.id || '';
+       
+        try {
+          if (draftQuestionsList.length > 0) {
+            // convert questions to array of promises & write to db
+            const newQuestionTemplates = buildQuestionTemplatePromises(
+              draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
+              userId,
+              apiClients,
+            );
+            const questionTemplateResponse =
+              await Promise.all(newQuestionTemplates);
+                       
+            // create an array of all the ids from the response
+            const questionTemplateCCSS = questionTemplateResponse.map(
+              (question) => String(question?.ccssDescription),
+            );
+
+            // addedQuestionTemplates are those added from question bank (they are already created so have ids)
+            const addedQuestionTemplates = draftQuestionsList.filter((dq) => dq.questionTemplate.id);
+            const addQuestionTemplateCCSS = addedQuestionTemplates
+              .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
+            questionTemplateCCSS.push(...addQuestionTemplateCCSS);
+            
+            const createGame = buildGameTemplate(
+              updatedDraftGame,
+              userId,
+              draftQuestionsList,
+              gameImgUrl,
+              questionTemplateCCSS
+            );
+            const gameTemplateResponse =
+              await apiClients.gameTemplate.createGameTemplate(
+              updatedDraftGame.gameTemplate.publicPrivateType,
+              createGame,
+            );
+            if (gameTemplateResponse && selectedGameId) {
+              await apiClients.gameTemplate.deleteGameTemplate(
+                PublicPrivateType.DRAFT,
+                selectedGameId
+              )
+            }
+            // create an array of all the ids from the response
+            let questionTemplateIds = questionTemplateResponse.map(
+              (question) => String(question?.id),
+            );
+
+            const addedQuestionTemplatesIds = addedQuestionTemplates.map(
+              (question) => String(question?.questionTemplate?.id),
+            )
+
+            questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
+
+            // make sure we have a gameTemplate id as well as question template ids before creating a game question
+            if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+              try {
+                questionTemplateIds = Array.from(new Set(questionTemplateIds));
+                const createGameQuestions = buildGameQuestionPromises(
+                  updatedDraftGame,
+                  gameTemplateResponse.id,
+                  questionTemplateIds,
+                  apiClients
+                );
+                // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+                await Promise.all(createGameQuestions);
+              } catch (err) {
+                setDraftGame((prev) => ({
+                  ...prev,
+                  isCreatingTemplate: false,
+                }));
+                console.error(
+                  `Failed to create one or more game questions:`,
+                  err,
+                );
+              }
+            }
+          } else {
+            // no question templates so ccss description not relevant
+            const createGame = buildGameTemplate(
+              updatedDraftGame,
+              userId,
+              draftQuestionsList,
+              gameImgUrl,
+            );
+
+            const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
+              updatedDraftGame.gameTemplate.publicPrivateType,
+              createGame,
+            );
+             if (gameTemplateResponse && selectedGameId) {
+              await apiClients.gameTemplate.deleteGameTemplate(
+                PublicPrivateType.DRAFT,
+                selectedGameId
+              )
+            }
+          }
+
+        } catch (err) {
+          console.error('Error creating game template:', err);
+        }
+        // update user stats
+        const existingNumGames = centralData.userProfile?.gamesMade || 0;
+        const existingNumQuestions =
+          centralData.userProfile?.questionsMade || 0;
+        const newNumGames = existingNumGames + 1;
+        // add new questions to user number of questions
+        const newNumQuestions =
+          existingNumQuestions +
+          draftQuestionsList.filter((dq) => !dq.questionTemplate.id).length;
+        await apiClients.user.updateUser({
+          id: centralData.userProfile?.id || '',
+          gamesMade: newNumGames,
+          questionsMade: newNumQuestions,
+        });
+
+        setDraftGame((prev) => ({
+          ...prev,
+          isCreatingTemplate: false,
+          isGameCardSubmitted: false,
+        }));
+        fetchElements();
         navigate('/');
       } else {
         setDraftGame((prev) => ({
@@ -559,11 +767,23 @@ export default function CreateGame({
   };
 
   const handleSave = async () => {
-    return isEdit ? handleSaveEditedGame() : handleSaveGame();
+    if (isEditDraft)
+      return handleCreateFromDraftGame();
+    if (isEdit)
+      return handleSaveEditedGame();
+    return handleSaveGame();
   };
+
 
   const handleSaveDraftGame = async () => {
     try {
+      if (!draftGame.gameTemplate.title) {
+        setDraftGame((prev) => ({
+          ...prev,
+          isDraftGameErrored: true,
+        }));
+        return;
+      }
       const draftGameCopy = {
         ...draftGame,
         publicPrivateGame: PublicPrivateType.DRAFT,
@@ -574,7 +794,15 @@ export default function CreateGame({
       // check for images on draft game
       let gameImgUrl: string | null = null;
       if (draftGame.image || draftGame.imageUrl) {
-        gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        if (
+          (!draftGame?.imageUrl?.startsWith('https://') ||
+          !draftGame?.imageUrl?.startsWith('http://')) && 
+          draftGame?.imageUrl
+        ) {
+          gameImgUrl = draftGame.imageUrl;
+        } else {
+          gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        }
       }
       const userId = centralData.userProfile?.id || '';
 
@@ -646,12 +874,81 @@ export default function CreateGame({
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
+      fetchElements();
       navigate('/');
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
     }
   };
+
+  const handleUpdateDraftGame = async () => {
+     try {
+      setIsUpdatingTemplate(true);
+      if (!draftGame.gameTemplate.title) {
+        setDraftGame((prev) => ({
+          ...prev,
+          isDraftGameErrored: true,
+        }));
+        return;
+      }
+      const draftGameCopy = {
+        ...draftGame,
+        publicPrivateGame: PublicPrivateType.DRAFT,
+        isGameCardSubmitted: true,
+        isCreatingTemplate: true,
+      };
+      setDraftGame(draftGameCopy);
+      // check for images on draft game
+      let gameImgUrl: string | null = null;
+      if (draftGame.image || draftGame.imageUrl) {
+        if (
+          (!draftGame?.imageUrl?.startsWith('https://') ||
+          !draftGame?.imageUrl?.startsWith('http://')) && 
+          draftGame?.imageUrl
+        ) {
+          gameImgUrl = draftGame.imageUrl;
+        } else {
+          gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        }
+      }
+      const userId = centralData.userProfile?.id || '';
+
+      // create & store game template in variable to retrieve id after response
+      const createGame = buildGameTemplate(
+        draftGameCopy,
+        userId,
+        draftQuestionsList,
+        gameImgUrl
+      );
+      const gameTemplateResponse =
+        await apiClients.gameTemplate.updateGameTemplate(
+          PublicPrivateType.DRAFT,
+          {...createGame, id: selectedGameId},
+        );
+
+      setDraftGame((prev) => ({
+        ...prev,
+        isCreatingTemplate: false,
+        isGameCardSubmitted: false,
+      }));
+      setIsUpdatingTemplate(false);
+      fetchElements();
+      navigate('/');
+    } catch (err) {
+      console.error(`HandleSaveGame - error: `, err);
+    }
+  }
+
+  const handleDraftSave = () => {
+    if (isEditDraft) {
+      return handleUpdateDraftGame();
+    }
+    return handleSaveDraftGame();
+  }
+
   /** END OF CREATE GAME HANDLERS  */
+
+
 
   /** CREATE QUESTION HANDLERS START */
   const handlePublicPrivateQuestionChange = (value: PublicPrivateType) => {
@@ -751,6 +1048,7 @@ export default function CreateGame({
 
   const handleCloseQuestionModal = () => {
     setIsDiscardModalOpen(false);
+    setIsUpdatingTemplate(false);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
@@ -831,7 +1129,7 @@ export default function CreateGame({
 
       // Reset data and re-direct user
       setDraftQuestionsList([]);
-
+      fetchElements();
       navigate('/');
     } catch (err) {
       console.error('Error during save process:', err);
@@ -969,6 +1267,7 @@ export default function CreateGame({
         phaseOne: timeLookup(selected.game?.phaseOneTime ?? 0),
         phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
       });
+      setOriginalGameType(selected?.game?.publicPrivateType ?? PublicPrivateType.PUBLIC);
       const originals = selected?.game?.questionTemplates;
       if (originals && originals.length > 0) {
         const oqTemplates = originals.map((q) => q.questionTemplate);
@@ -1009,7 +1308,7 @@ export default function CreateGame({
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
-        isModalOpen={openModal || isDiscardModalOpen}
+        isModalOpen={openModal || isDiscardModalOpen || draftGame.isCreatingTemplate || isUpdatingTemplate}
         handleCloseModal={handleCloseQuestionModal}
       />
       <DiscardModal
@@ -1018,7 +1317,8 @@ export default function CreateGame({
         handleDiscardClick={handleDiscardClick}
       />
       <CreatingTemplateModal
-        isModalOpen={draftGame.isCreatingTemplate}
+        isModalOpen={draftGame.isCreatingTemplate || isUpdatingTemplate}
+        isUpdatingTemplate={isUpdatingTemplate}
         templateType={TemplateType.GAME}
       />
 
@@ -1080,12 +1380,13 @@ export default function CreateGame({
           draftQuestionsList={draftQuestionsList}
           isClone={isClone}
           isEdit={isEdit}
+          isEditDraft={isEditDraft}
           isLoading={centralData.isLoading || isLoading}
           isCloneImageChanged={draftGame.isCloneGameImageChanged}
           label={label}
           screenSize={screenSize}
           handleSaveGame={handleSave}
-          handleSaveDraftGame={handleSaveDraftGame}
+          handleSaveDraftGame={handleDraftSave}
           handleDiscard={handleDiscardGame}
           handlePublicPrivateChange={handlePublicPrivateGameChange}
           handleImageUploadClick={handleGameImageUploadClick}
@@ -1195,7 +1496,7 @@ export default function CreateGame({
             <LibraryTabsQuestions
               isPublic={
                 draftGame.gameTemplate.publicPrivateType ===
-                PublicPrivateType.PUBLIC
+                PublicPrivateType.PUBLIC || draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT
               }
               screenSize={screenSize}
               setIsTabsOpen={setIsTabsOpen}

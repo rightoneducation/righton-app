@@ -38,6 +38,11 @@ export const CMSBodyText = styled(Typography)(() => ({
   color: '#FFFFFF',
 }));
 
+export const CMSLinkText = styled(CMSBodyText)(() => ({
+  color: '#FF3A6A',
+  textDecoration: 'underline',
+}));
+
 // Styled components for a Content Card 
 
 export const CMSCardThumbnailImage = styled('img')(() => ({
