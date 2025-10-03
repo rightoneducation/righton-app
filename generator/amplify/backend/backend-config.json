@@ -50,7 +50,17 @@
     }
   },
   "function": {
+    "evaltextcomplexity": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "labeledits": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "refinecomplexity": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -67,6 +77,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_evaltextcomplexity_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "evaltextcomplexity"
+        }
+      ]
+    },
+    "AMPLIFY_function_evaltextcomplexity_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "evaltextcomplexity"
+        }
+      ]
+    },
     "AMPLIFY_function_labeledits_deploymentBucketName": {
       "usedBy": [
         {
@@ -80,6 +106,22 @@
         {
           "category": "function",
           "resourceName": "labeledits"
+        }
+      ]
+    },
+    "AMPLIFY_function_refinecomplexity_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "refinecomplexity"
+        }
+      ]
+    },
+    "AMPLIFY_function_refinecomplexity_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "refinecomplexity"
         }
       ]
     },
