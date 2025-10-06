@@ -1,86 +1,167 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
-import { getGames, getGamesByTeacherId } from "./RightOnFunctions.js";
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import { randomUUID } from "node:crypto";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { isInitializeRequest } from '@modelcontextprotocol/sdk/types';
+import { getServer } from './mcp/mcp';
 
 const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
+if (!GRAPHQL_ENDPOINT) {
+  throw new Error('GRAPHQL_ENDPOINT is not set');
+}
 
-// aws stuff for querying the graphql api
+// server setup via express to handle get/post/delete requests
+const SERVER_PORT = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT, 10) : 3000;
+const app = express();
+app.use(express.json());
 
-// register server
-const server = new McpServer({
-  name: "righton-mcp",
-  version: "1.0.0",
-  capabilities: {
-    resources: {
-      "games": {
-        "schema": "resources/schema.graphql",
-        "description": "Game sessions from the RightOn database",
-        "handlers": {
-          "get": async (id: string) => {
-            const games = await getGames(GRAPHQL_ENDPOINT || '');
-            // Find specific game by ID
-            if (games && typeof games === 'object' && 'data' in games) {
-              const gameItems = (games as any).data?.listGameSessions?.items;
-              const game = gameItems?.find((g: any) => g.id === id);
-              return game || null;
+// Allow CORS all domains, expose the Mcp-Session-Id header
+app.use(
+  cors({
+      origin: '*', // Allow all origins
+      exposedHeaders: ['Mcp-Session-Id']
+  })
+);
+
+// Map to store transports by session ID
+const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};
+
+// post handler function
+// this uses JSON-RPC, so we will init via POST and perform all actions here as well
+const postHandler = async (req: Request, res: Response) => {
+  const sessionId = req.headers['mcp-session-id'] as string | undefined;
+  if (sessionId) {
+    console.log(`Received MCP request for session: ${sessionId}`);
+  } else {
+    console.log('Request body:', req.body);
+  }
+
+  try{
+    let transport: StreamableHTTPServerTransport;
+        if (sessionId && transports[sessionId]) {
+            // Reuse existing transport
+            transport = transports[sessionId];
+        } else if (!sessionId && isInitializeRequest(req.body)) {
+          transport = new StreamableHTTPServerTransport({
+            sessionIdGenerator: () => randomUUID(),
+            onsessioninitialized: sessionId => {
+                console.log(`Session initialized with ID: ${sessionId}`);
+                transports[sessionId] = transport;
             }
-            return null;
+        });
+
+        transport.onclose = () => {
+          const sid = transport.sessionId;
+          if (sid && transports[sid]) {
+              console.log(`Transport closed for session ${sid}, removing from transports map`);
+              delete transports[sid];
           }
+        };
+
+        // Connect the transport to the MCP server BEFORE handling the request
+        // so responses can flow back through the same transport
+        const server = getServer(GRAPHQL_ENDPOINT);
+        await server.connect(transport);
+
+        await transport.handleRequest(req, res, req.body);
+        return; // Already handled
+      } else {
+        // Invalid request - no session ID or not initialization request
+        res.status(400).json({
+            jsonrpc: '2.0',
+            error: {
+                code: -32000,
+                message: 'Bad Request: No valid session ID provided'
+            },
+            id: null
+        });
+        return;
+    }
+
+      // Handle the request with existing transport - no need to reconnect
+      // The existing transport is already connected to the server
+      await transport.handleRequest(req, res, req.body);
+    } catch (error) {
+        console.error('Error handling MCP request:', error);
+        if (!res.headersSent) {
+            res.status(500).json({
+                jsonrpc: '2.0',
+                error: {
+                    code: -32603,
+                    message: 'Internal server error'
+                },
+                id: null
+            });
         }
-      }
-    },
-    tools: {},
-  },
+    }
+};
+
+// get handler function
+// predominantly just for sse event logging
+const getHandler = async (req: Request, res: Response) => {
+  const sessionId = req.headers['mcp-session-id'] as string | undefined;
+  if (!sessionId || !transports[sessionId]) {
+    res.status(400).send('Invalid or missing session ID');
+    return;
+  }
+  const lastEventId = req.headers['last-event-id'] as string | undefined;
+  if (lastEventId) {
+      console.log(`Client reconnecting with Last-Event-ID: ${lastEventId}`);
+  } else {
+      console.log(`Establishing new SSE stream for session ${sessionId}`);
+  }
+
+  const transport = transports[sessionId];
+  await transport.handleRequest(req, res);
+};
+
+// delete handler function
+// used to terminate a session
+const deleteHandler = async (req: Request, res: Response) => {
+  const sessionId = req.headers['mcp-session-id'] as string | undefined;
+  if (!sessionId || !transports[sessionId]) {
+    res.status(400).send('Invalid or missing session ID');
+    return;
+  }
+
+  try {
+    const transport = transports[sessionId];
+    await transport.handleRequest(req, res);
+  } catch (error) {
+    console.error('Error handling session termination:', error);
+    if (!res.headersSent) {
+        res.status(500).send('Error processing session termination');
+    }
+  }
+};
+
+// post/get/delete handlers for server
+app.post('/mcp', postHandler);
+app.get('/mcp', getHandler);
+app.delete('/mcp', deleteHandler);
+
+app.listen(SERVER_PORT, error => {
+  if (error) {
+      console.error('Failed to start server:', error);
+      process.exit(1);
+  }
+  console.log(`MCP Streamable HTTP Server listening on port ${SERVER_PORT}`);
 });
 
-// pseudo-code function to identify struggling students
-async function identifyStrugglingStudents(teacherId: string) {
-  const games = await getGamesByTeacherId(GRAPHQL_ENDPOINT || '', teacherId);
-  
-  // idea here would be to pull down some student data and then analyze it to id issues
-  // we could then return a list of students with issues
-  // and recommend games to play to help them improve
-  
-  // struggling students could be those with < 50% accuracy
-  const studentsWithWrongAnswers = games.filter((game: any) => game.accuracy < 50);
-  const strugglingStudents = studentsWithWrongAnswers.map((game: any) => game.studentId);
-  
-  return strugglingStudents;
-}
+// Handle server shutdown
+process.on('SIGINT', async () => {
+  console.log('Shutting down server...');
 
-server.tool("getGames", async () => {
-  const result = await getGames(GRAPHQL_ENDPOINT || '');
-  return {
-    content: [
-      {
-        type: "text",
-        text: JSON.stringify(result, null, 2)
+  // Close all active transports to properly clean up resources
+  for (const sessionId in transports) {
+      try {
+          console.log(`Closing transport for session ${sessionId}`);
+          await transports[sessionId].close();
+          delete transports[sessionId];
+      } catch (error) {
+          console.error(`Error closing transport for session ${sessionId}:`, error);
       }
-    ]
-  };
-});
-
-server.tool("identifyStrugglingStudents", async () => {
-  // This would need to get teacherId from the request parameters
-  const teacherId = "example-teacher-id"; // In real implementation, get from request
-  const result = await identifyStrugglingStudents(teacherId);
-  return {
-    content: [
-      {
-        type: "text",
-        text: JSON.stringify(result, null, 2)
-      }
-    ]
-  };
-});
-
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-}
-
-main().catch((error) => {
-  console.error("Fatal error in main():", error);
-  process.exit(1);
+  }
+  console.log('Server shutdown complete');
+  process.exit(0);
 });

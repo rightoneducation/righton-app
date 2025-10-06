@@ -878,6 +878,7 @@ export type DeleteDraftQuestionTemplateInput = {
 
 export type CreateGameSessionInput = {
   id?: string | null,
+  classroomId: string,
   gameId: string,
   startTime?: string | null,
   phaseOneTime: number,
@@ -907,6 +908,7 @@ export enum GameSessionState {
 
 
 export type ModelGameSessionConditionInput = {
+  classroomId?: ModelStringInput | null,
   gameId?: ModelIDInput | null,
   startTime?: ModelStringInput | null,
   phaseOneTime?: ModelIntInput | null,
@@ -956,6 +958,7 @@ export type ModelBooleanInput = {
 export type GameSession = {
   __typename: "GameSession",
   id: string,
+  classroomId: string,
   gameId: string,
   startTime?: string | null,
   phaseOneTime: number,
@@ -984,6 +987,7 @@ export type ModelTeamConnection = {
 export type Team = {
   __typename: "Team",
   id: string,
+  globalStudentId: string,
   name: string,
   question?: Question | null,
   teamMembers?: ModelTeamMemberConnection | null,
@@ -1051,7 +1055,7 @@ export type TeamAnswer = {
   currentQuestionIndex: number,
   questionId: string,
   teamMemberAnswersId: string,
-  teamAnswersId?: string | null,
+  teamAnswersId: string,
   teamName?: string | null,
   text: string,
   answer: string,
@@ -1079,6 +1083,7 @@ export type ModelQuestionConnection = {
 
 export type UpdateGameSessionInput = {
   id: string,
+  classroomId?: string | null,
   gameId?: string | null,
   startTime?: string | null,
   phaseOneTime?: number | null,
@@ -1166,6 +1171,7 @@ export type DeleteQuestionInput = {
 
 export type CreateTeamInput = {
   id?: string | null,
+  globalStudentId: string,
   name: string,
   score: number,
   selectedAvatarIndex: number,
@@ -1176,6 +1182,7 @@ export type CreateTeamInput = {
 };
 
 export type ModelTeamConditionInput = {
+  globalStudentId?: ModelStringInput | null,
   name?: ModelStringInput | null,
   score?: ModelIntInput | null,
   selectedAvatarIndex?: ModelIntInput | null,
@@ -1190,6 +1197,7 @@ export type ModelTeamConditionInput = {
 
 export type UpdateTeamInput = {
   id: string,
+  globalStudentId?: string | null,
   name?: string | null,
   score?: number | null,
   selectedAvatarIndex?: number | null,
@@ -1239,7 +1247,7 @@ export type CreateTeamAnswerInput = {
   currentQuestionIndex: number,
   questionId: string,
   teamMemberAnswersId: string,
-  teamAnswersId?: string | null,
+  teamAnswersId: string,
   teamName?: string | null,
   text: string,
   answer: string,
@@ -1673,6 +1681,7 @@ export type ModelDraftQuestionTemplateConnection = {
 
 export type ModelGameSessionFilterInput = {
   id?: ModelIDInput | null,
+  classroomId?: ModelStringInput | null,
   gameId?: ModelIDInput | null,
   startTime?: ModelStringInput | null,
   phaseOneTime?: ModelIntInput | null,
@@ -1737,6 +1746,7 @@ export type ModelQuestionFilterInput = {
 
 export type ModelTeamFilterInput = {
   id?: ModelIDInput | null,
+  globalStudentId?: ModelStringInput | null,
   name?: ModelStringInput | null,
   score?: ModelIntInput | null,
   selectedAvatarIndex?: ModelIntInput | null,
@@ -2040,6 +2050,7 @@ export type ModelSubscriptionDraftQuestionTemplateFilterInput = {
 
 export type ModelSubscriptionGameSessionFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  classroomId?: ModelSubscriptionStringInput | null,
   gameId?: ModelSubscriptionIDInput | null,
   startTime?: ModelSubscriptionStringInput | null,
   phaseOneTime?: ModelSubscriptionIntInput | null,
@@ -2064,6 +2075,7 @@ export type ModelSubscriptionBooleanInput = {
 
 export type ModelSubscriptionTeamFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  globalStudentId?: ModelSubscriptionStringInput | null,
   name?: ModelSubscriptionStringInput | null,
   score?: ModelSubscriptionIntInput | null,
   selectedAvatarIndex?: ModelSubscriptionIntInput | null,
@@ -6760,6 +6772,7 @@ export type CreateGameSessionMutation = {
   createGameSession?:  {
     __typename: "GameSession",
     id: string,
+    classroomId: string,
     gameId: string,
     startTime?: string | null,
     phaseOneTime: number,
@@ -6769,6 +6782,7 @@ export type CreateGameSessionMutation = {
       items:  Array< {
         __typename: "Team",
         id: string,
+        globalStudentId: string,
         name: string,
         question?:  {
           __typename: "Question",
@@ -6808,7 +6822,7 @@ export type CreateGameSessionMutation = {
                 currentQuestionIndex: number,
                 questionId: string,
                 teamMemberAnswersId: string,
-                teamAnswersId?: string | null,
+                teamAnswersId: string,
                 teamName?: string | null,
                 text: string,
                 answer: string,
@@ -6884,6 +6898,7 @@ export type UpdateGameSessionMutation = {
   updateGameSession?:  {
     __typename: "GameSession",
     id: string,
+    classroomId: string,
     gameId: string,
     startTime?: string | null,
     phaseOneTime: number,
@@ -6893,6 +6908,7 @@ export type UpdateGameSessionMutation = {
       items:  Array< {
         __typename: "Team",
         id: string,
+        globalStudentId: string,
         name: string,
         question?:  {
           __typename: "Question",
@@ -6932,7 +6948,7 @@ export type UpdateGameSessionMutation = {
                 currentQuestionIndex: number,
                 questionId: string,
                 teamMemberAnswersId: string,
-                teamAnswersId?: string | null,
+                teamAnswersId: string,
                 teamName?: string | null,
                 text: string,
                 answer: string,
@@ -7008,6 +7024,7 @@ export type DeleteGameSessionMutation = {
   deleteGameSession?:  {
     __typename: "GameSession",
     id: string,
+    classroomId: string,
     gameId: string,
     startTime?: string | null,
     phaseOneTime: number,
@@ -7017,6 +7034,7 @@ export type DeleteGameSessionMutation = {
       items:  Array< {
         __typename: "Team",
         id: string,
+        globalStudentId: string,
         name: string,
         question?:  {
           __typename: "Question",
@@ -7056,7 +7074,7 @@ export type DeleteGameSessionMutation = {
                 currentQuestionIndex: number,
                 questionId: string,
                 teamMemberAnswersId: string,
-                teamAnswersId?: string | null,
+                teamAnswersId: string,
                 teamName?: string | null,
                 text: string,
                 answer: string,
@@ -7216,6 +7234,7 @@ export type CreateTeamMutation = {
   createTeam?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -7255,7 +7274,7 @@ export type CreateTeamMutation = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -7293,6 +7312,7 @@ export type UpdateTeamMutation = {
   updateTeam?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -7332,7 +7352,7 @@ export type UpdateTeamMutation = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -7370,6 +7390,7 @@ export type DeleteTeamMutation = {
   deleteTeam?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -7409,7 +7430,7 @@ export type DeleteTeamMutation = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -7460,7 +7481,7 @@ export type CreateTeamMemberMutation = {
         currentQuestionIndex: number,
         questionId: string,
         teamMemberAnswersId: string,
-        teamAnswersId?: string | null,
+        teamAnswersId: string,
         teamName?: string | null,
         text: string,
         answer: string,
@@ -7500,7 +7521,7 @@ export type UpdateTeamMemberMutation = {
         currentQuestionIndex: number,
         questionId: string,
         teamMemberAnswersId: string,
-        teamAnswersId?: string | null,
+        teamAnswersId: string,
         teamName?: string | null,
         text: string,
         answer: string,
@@ -7540,7 +7561,7 @@ export type DeleteTeamMemberMutation = {
         currentQuestionIndex: number,
         questionId: string,
         teamMemberAnswersId: string,
-        teamAnswersId?: string | null,
+        teamAnswersId: string,
         teamName?: string | null,
         text: string,
         answer: string,
@@ -7574,7 +7595,7 @@ export type CreateTeamAnswerMutation = {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
-    teamAnswersId?: string | null,
+    teamAnswersId: string,
     teamName?: string | null,
     text: string,
     answer: string,
@@ -7601,7 +7622,7 @@ export type UpdateTeamAnswerMutation = {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
-    teamAnswersId?: string | null,
+    teamAnswersId: string,
     teamName?: string | null,
     text: string,
     answer: string,
@@ -7628,7 +7649,7 @@ export type DeleteTeamAnswerMutation = {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
-    teamAnswersId?: string | null,
+    teamAnswersId: string,
     teamName?: string | null,
     text: string,
     answer: string,
@@ -20958,6 +20979,7 @@ export type GetGameSessionQuery = {
   getGameSession?:  {
     __typename: "GameSession",
     id: string,
+    classroomId: string,
     gameId: string,
     startTime?: string | null,
     phaseOneTime: number,
@@ -20967,6 +20989,7 @@ export type GetGameSessionQuery = {
       items:  Array< {
         __typename: "Team",
         id: string,
+        globalStudentId: string,
         name: string,
         question?:  {
           __typename: "Question",
@@ -21006,7 +21029,7 @@ export type GetGameSessionQuery = {
                 currentQuestionIndex: number,
                 questionId: string,
                 teamMemberAnswersId: string,
-                teamAnswersId?: string | null,
+                teamAnswersId: string,
                 teamName?: string | null,
                 text: string,
                 answer: string,
@@ -21085,6 +21108,7 @@ export type ListGameSessionsQuery = {
     items:  Array< {
       __typename: "GameSession",
       id: string,
+      classroomId: string,
       gameId: string,
       startTime?: string | null,
       phaseOneTime: number,
@@ -21094,6 +21118,7 @@ export type ListGameSessionsQuery = {
         items:  Array< {
           __typename: "Team",
           id: string,
+          globalStudentId: string,
           name: string,
           question?:  {
             __typename: "Question",
@@ -21133,7 +21158,140 @@ export type ListGameSessionsQuery = {
                   currentQuestionIndex: number,
                   questionId: string,
                   teamMemberAnswersId: string,
-                  teamAnswersId?: string | null,
+                  teamAnswersId: string,
+                  teamName?: string | null,
+                  text: string,
+                  answer: string,
+                  confidenceLevel?: ConfidenceLevel | null,
+                  hint?: string | null,
+                  createdAt: string,
+                  updatedAt: string,
+                } | null >,
+                nextToken?: string | null,
+              } | null,
+              deviceId: string,
+              createdAt: string,
+              updatedAt: string,
+              teamTeamMembersId?: string | null,
+            } | null >,
+            nextToken?: string | null,
+          } | null,
+          score: number,
+          selectedAvatarIndex: number,
+          createdAt: string,
+          updatedAt: string,
+          gameSessionTeamsId?: string | null,
+          teamQuestionId?: string | null,
+          teamQuestionOrder?: number | null,
+          teamQuestionGameSessionId?: string | null,
+        } | null >,
+        nextToken?: string | null,
+      } | null,
+      currentQuestionIndex?: number | null,
+      currentState: GameSessionState,
+      gameCode: number,
+      isAdvancedMode: boolean,
+      imageUrl?: string | null,
+      description?: string | null,
+      title?: string | null,
+      currentTimer?: number | null,
+      sessionData?: string | null,
+      questions?:  {
+        __typename: "ModelQuestionConnection",
+        items:  Array< {
+          __typename: "Question",
+          id: string,
+          text: string,
+          choices?: string | null,
+          answerSettings?: string | null,
+          answerData?: string | null,
+          hints?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          isConfidenceEnabled: boolean,
+          isShortAnswerEnabled: boolean,
+          isHintEnabled: boolean,
+          gameSessionId: string,
+        } | null >,
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GameSessionByClassroomIdQueryVariables = {
+  classroomId: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelGameSessionFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type GameSessionByClassroomIdQuery = {
+  gameSessionByClassroomId?:  {
+    __typename: "ModelGameSessionConnection",
+    items:  Array< {
+      __typename: "GameSession",
+      id: string,
+      classroomId: string,
+      gameId: string,
+      startTime?: string | null,
+      phaseOneTime: number,
+      phaseTwoTime: number,
+      teams?:  {
+        __typename: "ModelTeamConnection",
+        items:  Array< {
+          __typename: "Team",
+          id: string,
+          globalStudentId: string,
+          name: string,
+          question?:  {
+            __typename: "Question",
+            id: string,
+            text: string,
+            choices?: string | null,
+            answerSettings?: string | null,
+            answerData?: string | null,
+            hints?: string | null,
+            imageUrl?: string | null,
+            instructions?: string | null,
+            standard?: string | null,
+            cluster?: string | null,
+            domain?: string | null,
+            grade?: string | null,
+            order: number,
+            isConfidenceEnabled: boolean,
+            isShortAnswerEnabled: boolean,
+            isHintEnabled: boolean,
+            gameSessionId: string,
+          } | null,
+          teamMembers?:  {
+            __typename: "ModelTeamMemberConnection",
+            items:  Array< {
+              __typename: "TeamMember",
+              id: string,
+              isFacilitator?: boolean | null,
+              answers?:  {
+                __typename: "ModelTeamAnswerConnection",
+                items:  Array< {
+                  __typename: "TeamAnswer",
+                  id: string,
+                  isCorrect?: boolean | null,
+                  isSubmitted: boolean,
+                  isShortAnswerEnabled: boolean,
+                  currentState: GameSessionState,
+                  currentQuestionIndex: number,
+                  questionId: string,
+                  teamMemberAnswersId: string,
+                  teamAnswersId: string,
                   teamName?: string | null,
                   text: string,
                   answer: string,
@@ -21216,6 +21374,7 @@ export type GameSessionByStateQuery = {
     items:  Array< {
       __typename: "GameSession",
       id: string,
+      classroomId: string,
       gameId: string,
       startTime?: string | null,
       phaseOneTime: number,
@@ -21225,6 +21384,7 @@ export type GameSessionByStateQuery = {
         items:  Array< {
           __typename: "Team",
           id: string,
+          globalStudentId: string,
           name: string,
           question?:  {
             __typename: "Question",
@@ -21264,7 +21424,7 @@ export type GameSessionByStateQuery = {
                   currentQuestionIndex: number,
                   questionId: string,
                   teamMemberAnswersId: string,
-                  teamAnswersId?: string | null,
+                  teamAnswersId: string,
                   teamName?: string | null,
                   text: string,
                   answer: string,
@@ -21347,6 +21507,7 @@ export type GameSessionByCodeQuery = {
     items:  Array< {
       __typename: "GameSession",
       id: string,
+      classroomId: string,
       gameId: string,
       startTime?: string | null,
       phaseOneTime: number,
@@ -21356,6 +21517,7 @@ export type GameSessionByCodeQuery = {
         items:  Array< {
           __typename: "Team",
           id: string,
+          globalStudentId: string,
           name: string,
           question?:  {
             __typename: "Question",
@@ -21395,7 +21557,7 @@ export type GameSessionByCodeQuery = {
                   currentQuestionIndex: number,
                   questionId: string,
                   teamMemberAnswersId: string,
-                  teamAnswersId?: string | null,
+                  teamAnswersId: string,
                   teamName?: string | null,
                   text: string,
                   answer: string,
@@ -21537,6 +21699,7 @@ export type GetTeamQuery = {
   getTeam?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -21576,7 +21739,7 @@ export type GetTeamQuery = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -21617,6 +21780,7 @@ export type ListTeamsQuery = {
     items:  Array< {
       __typename: "Team",
       id: string,
+      globalStudentId: string,
       name: string,
       question?:  {
         __typename: "Question",
@@ -21656,7 +21820,92 @@ export type ListTeamsQuery = {
               currentQuestionIndex: number,
               questionId: string,
               teamMemberAnswersId: string,
-              teamAnswersId?: string | null,
+              teamAnswersId: string,
+              teamName?: string | null,
+              text: string,
+              answer: string,
+              confidenceLevel?: ConfidenceLevel | null,
+              hint?: string | null,
+              createdAt: string,
+              updatedAt: string,
+            } | null >,
+            nextToken?: string | null,
+          } | null,
+          deviceId: string,
+          createdAt: string,
+          updatedAt: string,
+          teamTeamMembersId?: string | null,
+        } | null >,
+        nextToken?: string | null,
+      } | null,
+      score: number,
+      selectedAvatarIndex: number,
+      createdAt: string,
+      updatedAt: string,
+      gameSessionTeamsId?: string | null,
+      teamQuestionId?: string | null,
+      teamQuestionOrder?: number | null,
+      teamQuestionGameSessionId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type TeamByGlobalStudentIdQueryVariables = {
+  globalStudentId: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelTeamFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type TeamByGlobalStudentIdQuery = {
+  teamByGlobalStudentId?:  {
+    __typename: "ModelTeamConnection",
+    items:  Array< {
+      __typename: "Team",
+      id: string,
+      globalStudentId: string,
+      name: string,
+      question?:  {
+        __typename: "Question",
+        id: string,
+        text: string,
+        choices?: string | null,
+        answerSettings?: string | null,
+        answerData?: string | null,
+        hints?: string | null,
+        imageUrl?: string | null,
+        instructions?: string | null,
+        standard?: string | null,
+        cluster?: string | null,
+        domain?: string | null,
+        grade?: string | null,
+        order: number,
+        isConfidenceEnabled: boolean,
+        isShortAnswerEnabled: boolean,
+        isHintEnabled: boolean,
+        gameSessionId: string,
+      } | null,
+      teamMembers?:  {
+        __typename: "ModelTeamMemberConnection",
+        items:  Array< {
+          __typename: "TeamMember",
+          id: string,
+          isFacilitator?: boolean | null,
+          answers?:  {
+            __typename: "ModelTeamAnswerConnection",
+            items:  Array< {
+              __typename: "TeamAnswer",
+              id: string,
+              isCorrect?: boolean | null,
+              isSubmitted: boolean,
+              isShortAnswerEnabled: boolean,
+              currentState: GameSessionState,
+              currentQuestionIndex: number,
+              questionId: string,
+              teamMemberAnswersId: string,
+              teamAnswersId: string,
               teamName?: string | null,
               text: string,
               answer: string,
@@ -21708,7 +21957,7 @@ export type GetTeamMemberQuery = {
         currentQuestionIndex: number,
         questionId: string,
         teamMemberAnswersId: string,
-        teamAnswersId?: string | null,
+        teamAnswersId: string,
         teamName?: string | null,
         text: string,
         answer: string,
@@ -21751,7 +22000,7 @@ export type ListTeamMembersQuery = {
           currentQuestionIndex: number,
           questionId: string,
           teamMemberAnswersId: string,
-          teamAnswersId?: string | null,
+          teamAnswersId: string,
           teamName?: string | null,
           text: string,
           answer: string,
@@ -21786,7 +22035,7 @@ export type GetTeamAnswerQuery = {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
-    teamAnswersId?: string | null,
+    teamAnswersId: string,
     teamName?: string | null,
     text: string,
     answer: string,
@@ -21816,7 +22065,7 @@ export type ListTeamAnswersQuery = {
       currentQuestionIndex: number,
       questionId: string,
       teamMemberAnswersId: string,
-      teamAnswersId?: string | null,
+      teamAnswersId: string,
       teamName?: string | null,
       text: string,
       answer: string,
@@ -28668,6 +28917,7 @@ export type OnCreateGameSessionSubscription = {
   onCreateGameSession?:  {
     __typename: "GameSession",
     id: string,
+    classroomId: string,
     gameId: string,
     startTime?: string | null,
     phaseOneTime: number,
@@ -28677,6 +28927,7 @@ export type OnCreateGameSessionSubscription = {
       items:  Array< {
         __typename: "Team",
         id: string,
+        globalStudentId: string,
         name: string,
         question?:  {
           __typename: "Question",
@@ -28716,7 +28967,7 @@ export type OnCreateGameSessionSubscription = {
                 currentQuestionIndex: number,
                 questionId: string,
                 teamMemberAnswersId: string,
-                teamAnswersId?: string | null,
+                teamAnswersId: string,
                 teamName?: string | null,
                 text: string,
                 answer: string,
@@ -28791,6 +29042,7 @@ export type OnUpdateGameSessionSubscription = {
   onUpdateGameSession?:  {
     __typename: "GameSession",
     id: string,
+    classroomId: string,
     gameId: string,
     startTime?: string | null,
     phaseOneTime: number,
@@ -28800,6 +29052,7 @@ export type OnUpdateGameSessionSubscription = {
       items:  Array< {
         __typename: "Team",
         id: string,
+        globalStudentId: string,
         name: string,
         question?:  {
           __typename: "Question",
@@ -28839,7 +29092,7 @@ export type OnUpdateGameSessionSubscription = {
                 currentQuestionIndex: number,
                 questionId: string,
                 teamMemberAnswersId: string,
-                teamAnswersId?: string | null,
+                teamAnswersId: string,
                 teamName?: string | null,
                 text: string,
                 answer: string,
@@ -28914,6 +29167,7 @@ export type OnDeleteGameSessionSubscription = {
   onDeleteGameSession?:  {
     __typename: "GameSession",
     id: string,
+    classroomId: string,
     gameId: string,
     startTime?: string | null,
     phaseOneTime: number,
@@ -28923,6 +29177,7 @@ export type OnDeleteGameSessionSubscription = {
       items:  Array< {
         __typename: "Team",
         id: string,
+        globalStudentId: string,
         name: string,
         question?:  {
           __typename: "Question",
@@ -28962,7 +29217,7 @@ export type OnDeleteGameSessionSubscription = {
                 currentQuestionIndex: number,
                 questionId: string,
                 teamMemberAnswersId: string,
-                teamAnswersId?: string | null,
+                teamAnswersId: string,
                 teamName?: string | null,
                 text: string,
                 answer: string,
@@ -29037,6 +29292,7 @@ export type OnCreateTeamSubscription = {
   onCreateTeam?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -29076,7 +29332,7 @@ export type OnCreateTeamSubscription = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -29113,6 +29369,7 @@ export type OnUpdateTeamSubscription = {
   onUpdateTeam?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -29152,7 +29409,7 @@ export type OnUpdateTeamSubscription = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -29189,6 +29446,7 @@ export type OnDeleteTeamSubscription = {
   onDeleteTeam?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -29228,7 +29486,7 @@ export type OnDeleteTeamSubscription = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -29278,7 +29536,7 @@ export type OnCreateTeamMemberSubscription = {
         currentQuestionIndex: number,
         questionId: string,
         teamMemberAnswersId: string,
-        teamAnswersId?: string | null,
+        teamAnswersId: string,
         teamName?: string | null,
         text: string,
         answer: string,
@@ -29317,7 +29575,7 @@ export type OnUpdateTeamMemberSubscription = {
         currentQuestionIndex: number,
         questionId: string,
         teamMemberAnswersId: string,
-        teamAnswersId?: string | null,
+        teamAnswersId: string,
         teamName?: string | null,
         text: string,
         answer: string,
@@ -29356,7 +29614,7 @@ export type OnDeleteTeamMemberSubscription = {
         currentQuestionIndex: number,
         questionId: string,
         teamMemberAnswersId: string,
-        teamAnswersId?: string | null,
+        teamAnswersId: string,
         teamName?: string | null,
         text: string,
         answer: string,
@@ -29389,7 +29647,7 @@ export type OnCreateTeamAnswerSubscription = {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
-    teamAnswersId?: string | null,
+    teamAnswersId: string,
     teamName?: string | null,
     text: string,
     answer: string,
@@ -29415,7 +29673,7 @@ export type OnUpdateTeamAnswerSubscription = {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
-    teamAnswersId?: string | null,
+    teamAnswersId: string,
     teamName?: string | null,
     text: string,
     answer: string,
@@ -29441,7 +29699,7 @@ export type OnDeleteTeamAnswerSubscription = {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
-    teamAnswersId?: string | null,
+    teamAnswersId: string,
     teamName?: string | null,
     text: string,
     answer: string,
@@ -33717,6 +33975,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
   onGameSessionUpdatedById?:  {
     __typename: "GameSession",
     id: string,
+    classroomId: string,
     gameId: string,
     startTime?: string | null,
     phaseOneTime: number,
@@ -33726,6 +33985,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
       items:  Array< {
         __typename: "Team",
         id: string,
+        globalStudentId: string,
         name: string,
         question?:  {
           __typename: "Question",
@@ -33765,7 +34025,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
                 currentQuestionIndex: number,
                 questionId: string,
                 teamMemberAnswersId: string,
-                teamAnswersId?: string | null,
+                teamAnswersId: string,
                 teamName?: string | null,
                 text: string,
                 answer: string,
@@ -33853,7 +34113,7 @@ export type OnTeamMemberUpdateByTeamIdSubscription = {
         currentQuestionIndex: number,
         questionId: string,
         teamMemberAnswersId: string,
-        teamAnswersId?: string | null,
+        teamAnswersId: string,
         teamName?: string | null,
         text: string,
         answer: string,
@@ -33879,6 +34139,7 @@ export type OnTeamCreateByGameSessionIdSubscription = {
   onTeamCreateByGameSessionId?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -33918,7 +34179,7 @@ export type OnTeamCreateByGameSessionIdSubscription = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -33955,6 +34216,7 @@ export type OnTeamDeleteByGameSessionIdSubscription = {
   onTeamDeleteByGameSessionId?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -33994,7 +34256,7 @@ export type OnTeamDeleteByGameSessionIdSubscription = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,
@@ -34031,6 +34293,7 @@ export type OnTeamUpdateByGameSessionIdSubscription = {
   onTeamUpdateByGameSessionId?:  {
     __typename: "Team",
     id: string,
+    globalStudentId: string,
     name: string,
     question?:  {
       __typename: "Question",
@@ -34070,7 +34333,7 @@ export type OnTeamUpdateByGameSessionIdSubscription = {
             currentQuestionIndex: number,
             questionId: string,
             teamMemberAnswersId: string,
-            teamAnswersId?: string | null,
+            teamAnswersId: string,
             teamName?: string | null,
             text: string,
             answer: string,

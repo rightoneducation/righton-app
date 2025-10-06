@@ -18,11 +18,15 @@
     "@aws-sdk/protocol-http": "^3.0.0",
     "@aws-sdk/signature-v4": "^3.0.0",
     "@modelcontextprotocol/sdk": "^1.17.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "node-fetch": "^3.3.0",
     "uuid": "^9.0.0",
     "zod": "^4.0.15"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/node": "^24.2.0",
     "@types/uuid": "^9.0.0",
     "install": "^0.13.0",

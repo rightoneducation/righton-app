@@ -406,6 +406,7 @@ type GameSession @model
 )
 {
   id: ID!
+  classroomId: String! @index(name: "byClassroomId", queryField: "gameSessionByClassroomId")
   gameId: ID!
   startTime: String
   phaseOneTime: Int!
@@ -472,6 +473,7 @@ type Team @model
 )
 {
   id: ID!
+  globalStudentId: String! @index(name: "byGlobalStudentId", queryField: "teamByGlobalStudentId")
   name: String!
   question: Question @hasOne
   teamMembers: [TeamMember] @hasMany
@@ -518,7 +520,7 @@ type TeamAnswer @model
   currentQuestionIndex: Int!
   questionId: ID!
   teamMemberAnswersId: ID!
-  teamAnswersId: ID
+  teamAnswersId: ID!
   teamName: String
   text: String!
   answer: AWSJSON!

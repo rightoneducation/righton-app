@@ -4617,6 +4617,7 @@ export const createGameSession = /* GraphQL */ `
   ) {
     createGameSession(input: $input, condition: $condition) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -4624,6 +4625,7 @@ export const createGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           question {
             id
@@ -4740,6 +4742,7 @@ export const updateGameSession = /* GraphQL */ `
   ) {
     updateGameSession(input: $input, condition: $condition) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -4747,6 +4750,7 @@ export const updateGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           question {
             id
@@ -4863,6 +4867,7 @@ export const deleteGameSession = /* GraphQL */ `
   ) {
     deleteGameSession(input: $input, condition: $condition) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -4870,6 +4875,7 @@ export const deleteGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           question {
             id
@@ -5067,6 +5073,7 @@ export const createTeam = /* GraphQL */ `
   ) {
     createTeam(input: $input, condition: $condition) {
       id
+      globalStudentId
       name
       question {
         id
@@ -5143,6 +5150,7 @@ export const updateTeam = /* GraphQL */ `
   ) {
     updateTeam(input: $input, condition: $condition) {
       id
+      globalStudentId
       name
       question {
         id
@@ -5219,6 +5227,7 @@ export const deleteTeam = /* GraphQL */ `
   ) {
     deleteTeam(input: $input, condition: $condition) {
       id
+      globalStudentId
       name
       question {
         id
