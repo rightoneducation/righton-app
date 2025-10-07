@@ -1,8 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { ccssDictionary } from "./resources/CCSSDictionary";
-import { referenceSchema } from "./resources/ReferenceSchema";
-import { getGameSessionsByClassroomId, getStudentHistory } from "./functions/HelperFunctions";
+import { ccssDictionary } from "./resources/CCSSDictionary.js";
+import { referenceSchema } from "./resources/ReferenceSchema.js";
+import { getGameSessionsByClassroomId, getStudentHistory } from "./functions/HelperFunctions.js";
 
 // MCP server definition with resources
 export const getServer = (GRAPHQL_ENDPOINT: string) => {
@@ -12,7 +12,7 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     capabilities: {
       resources: {
         "ccss": {
-          "schema": "resources/CCSSDictionary.ts",
+          "schema": "resources/CCSSDictionary.js",
           "description": "Structured Dictionary of CCSS Standards",
           "handlers": {
             "get": async () => {
@@ -21,7 +21,7 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
           }
         },
         "referenceSchema": {
-          "schema": "resources/referenceSchema.ts",
+          "schema": "resources/referenceSchema.js",
           "description": "Reference Schema for the RightOn database",
           "handlers": {
             "get": async () => {
@@ -38,7 +38,15 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     "getGameSessionsByClassroomId",
     {
       description: "Fetch game sessions for a classroom",
-      inputSchema: z.object({ classroomId: z.string() })
+      inputSchema: {
+        type: "object",
+        properties: {
+          classroomId: {
+            type: "string"
+          }
+        },
+        required: ["classroomId"]
+      }
     },
     async ({ classroomId }) => {
       const result = await getGameSessionsByClassroomId(GRAPHQL_ENDPOINT || '', classroomId);
@@ -57,7 +65,15 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     "getStudentHistory",
     {
       description: "Fetch student history by globalStudentId",
-      inputSchema: z.object({ globalStudentId: z.string() })
+      inputSchema: {
+        type: "object",
+        properties: {
+          globalStudentId: {
+            type: "string"
+          }
+        },
+        required: ["globalStudentId"]
+      }
     },
     async ({ globalStudentId }) => {
       const result = await getStudentHistory(GRAPHQL_ENDPOINT || '', globalStudentId);

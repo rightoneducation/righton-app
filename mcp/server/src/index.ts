@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { randomUUID } from "node:crypto";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { isInitializeRequest } from '@modelcontextprotocol/sdk/types';
-import { getServer } from './mcp/mcp';
+import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
+import { getServer } from './mcp/mcp.js';
 
-const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
+const GRAPHQL_ENDPOINT =  process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
 if (!GRAPHQL_ENDPOINT) {
   throw new Error('GRAPHQL_ENDPOINT is not set');
 }
