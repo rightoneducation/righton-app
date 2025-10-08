@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
-const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
-const API_KEY = process.env.API_KEY;
+const GRAPHQL_ENDPOINT = 'https://63bxwkyo7refpkph7vdbkx54xa.appsync-api.us-east-1.amazonaws.com/graphql'; // process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
+const API_KEY = 'da2-dtzvnk57cjdfbf6inf4yl3xdje'; //process.env.API_KEY;
 const COGNITO_ACCESS_TOKEN = process.env.COGNITO_ACCESS_TOKEN;
 
 // create request for GraphQL API using API key or Cognito token
@@ -169,14 +169,14 @@ export async function getGameSessionsByClassroomId<T>(url: string, classroomId: 
 `;
 
   try {
-    const { url, options } = await createAndSignRequest(gameSessionByClassroomId, { 
+    const variables = { 
       classroomId, 
-      sortDirection: "DESC", 
       filter: null, 
       limit: 100, 
       nextToken: null 
-    });
-        const response = await fetch(url!, options);
+    };
+    const { url, options } = await createAndSignRequest(gameSessionByClassroomId, variables);
+    const response = await fetch(url!, options);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -284,7 +284,6 @@ export async function getStudentHistory<T>(url: string, globalStudentId: string)
   try {
     const { url, options } = await createAndSignRequest(teamByGlobalStudentId, { 
       globalStudentId, 
-      sortDirection: "DESC", 
       filter: null, 
       limit: 100, 
       nextToken: null 

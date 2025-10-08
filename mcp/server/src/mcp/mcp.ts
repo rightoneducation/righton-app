@@ -34,59 +34,39 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
   });
 
   //MCP tool registrations
-  server.tool(
-    "getGameSessionsByClassroomId",
-    {
-      description: "Fetch game sessions for a classroom",
-      inputSchema: {
-        type: "object",
-        properties: {
-          classroomId: {
-            type: "string"
-          }
-        },
-        required: ["classroomId"]
-      }
-    },
-    async ({ classroomId }) => {
-      const result = await getGameSessionsByClassroomId(GRAPHQL_ENDPOINT || '', classroomId);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
+  server.registerTool("getGameSessionsByClassroomId", {
+    description: "Fetch game sessions for a classroom",
+    inputSchema: {
+      classroomId: z.string()
     }
-  );
+  }, async ({ classroomId }) => {
+    const result = await getGameSessionsByClassroomId(GRAPHQL_ENDPOINT || '', classroomId);
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2)
+        }
+      ]
+    };
+  });
 
-  server.tool(
-    "getStudentHistory",
-    {
-      description: "Fetch student history by globalStudentId",
-      inputSchema: {
-        type: "object",
-        properties: {
-          globalStudentId: {
-            type: "string"
-          }
-        },
-        required: ["globalStudentId"]
-      }
-    },
-    async ({ globalStudentId }) => {
-      const result = await getStudentHistory(GRAPHQL_ENDPOINT || '', globalStudentId);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }
-        ]
-      };
+  server.registerTool("getStudentHistory", {
+    description: "Fetch student history by globalStudentId",
+    inputSchema: {
+      globalStudentId: z.string()
     }
-  );
+  }, async ({ globalStudentId }) => {
+    const result = await getStudentHistory(GRAPHQL_ENDPOINT || '', globalStudentId);
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2)
+        }
+      ]
+    };
+  });
 
   return server;
 }

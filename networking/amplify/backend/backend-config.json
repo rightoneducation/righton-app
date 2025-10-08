@@ -14,6 +14,14 @@
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
+              "apiKeyConfig": {
+                "apiKeyExpirationDate": "2025-10-15T10:58:57.255Z",
+                "apiKeyExpirationDays": 7,
+                "description": "mcp"
+              },
+              "authenticationType": "API_KEY"
+            },
+            {
               "authenticationType": "AMAZON_COGNITO_USER_POOLS",
               "userPoolConfig": {
                 "userPoolId": "authmobile6060603c"

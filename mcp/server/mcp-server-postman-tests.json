@@ -1,0 +1,191 @@
+{
+	"info": {
+		"_postman_id": "441c04db-39ce-45a8-a7bd-5cbad623eda5",
+		"name": "RightOn",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21009463"
+	},
+	"item": [
+		{
+			"name": "Init",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/event-stream",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"initialize\",\n  \"params\": {\n    \"protocolVersion\": \"2024-11-05\",\n    \"capabilities\": {},\n    \"clientInfo\": {\n      \"name\": \"postman\",\n      \"version\": \"1.0.0\"\n    }\n  },\n  \"id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/mcp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"mcp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tools",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "mcp-session-id",
+						"value": "d2888401-6860-4d70-b723-c76fba5fd153",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/event-stream",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/list\",\n  \"params\": {},\n  \"id\": 2\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/mcp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"mcp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Game Sessions",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/event-stream",
+						"type": "text"
+					},
+					{
+						"key": "mcp-session-id",
+						"value": "90d96945-7feb-48a3-bca1-1179a2f95927",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"getGameSessionsByClassroomId\",\n    \"arguments\": {\n      \"classroomId\": \"432324\"\n    }\n  },\n  \"id\": 3\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/mcp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"mcp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Student History",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "mcp-session-id",
+						"value": "053646de-eb8a-4273-ba43-dca19b4152ce",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/event-stream",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"getStudentHistory\",\n    \"arguments\": {\n      \"globalStudentId\": \"7ddb39b1-1d9a-4a0c-a6fa-66a5bbea742b\"\n    }\n  },\n  \"id\": 3\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/mcp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"mcp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete MCP Session",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "mcp-session-id",
+						"value": "4c6e1415-8b4b-4775-bf75-f383f71d139b",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/mcp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"mcp"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

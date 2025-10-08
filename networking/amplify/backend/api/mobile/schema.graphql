@@ -400,6 +400,7 @@ input CreateGameSessionFromTemplateInput {
 type GameSession @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -467,6 +468,7 @@ type Question @model(subscriptions: null, timestamps: null)
 type Team @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]

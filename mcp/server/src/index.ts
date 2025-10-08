@@ -5,7 +5,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
 import { getServer } from './mcp/mcp.js';
 
-const GRAPHQL_ENDPOINT =  process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
+const GRAPHQL_ENDPOINT = 'https://63bxwkyo7refpkph7vdbkx54xa.appsync-api.us-east-1.amazonaws.com/graphql'; 
 if (!GRAPHQL_ENDPOINT) {
   throw new Error('GRAPHQL_ENDPOINT is not set');
 }
@@ -45,7 +45,6 @@ const postHandler = async (req: Request, res: Response) => {
           transport = new StreamableHTTPServerTransport({
             sessionIdGenerator: () => randomUUID(),
             onsessioninitialized: sessionId => {
-                console.log(`Session initialized with ID: ${sessionId}`);
                 transports[sessionId] = transport;
             }
         });
@@ -53,7 +52,6 @@ const postHandler = async (req: Request, res: Response) => {
         transport.onclose = () => {
           const sid = transport.sessionId;
           if (sid && transports[sid]) {
-              console.log(`Transport closed for session ${sid}, removing from transports map`);
               delete transports[sid];
           }
         };
@@ -150,8 +148,6 @@ app.listen(SERVER_PORT, error => {
 
 // Handle server shutdown
 process.on('SIGINT', async () => {
-  console.log('Shutting down server...');
-
   // Close all active transports to properly clean up resources
   for (const sessionId in transports) {
       try {
@@ -162,6 +158,5 @@ process.on('SIGINT', async () => {
           console.error(`Error closing transport for session ${sessionId}:`, error);
       }
   }
-  console.log('Server shutdown complete');
   process.exit(0);
 });
