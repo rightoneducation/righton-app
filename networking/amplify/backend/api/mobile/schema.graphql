@@ -400,12 +400,14 @@ input CreateGameSessionFromTemplateInput {
 type GameSession @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
 {
   id: ID!
+  classroomId: String! @index(name: "byClassroomId", queryField: "gameSessionByClassroomId")
   gameId: ID!
   startTime: String
   phaseOneTime: Int!
@@ -466,12 +468,14 @@ type Question @model(subscriptions: null, timestamps: null)
 type Team @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
 {
   id: ID!
+  globalStudentId: String! @index(name: "byGlobalStudentId", queryField: "teamByGlobalStudentId")
   name: String!
   question: Question @hasOne
   teamMembers: [TeamMember] @hasMany
@@ -518,7 +522,7 @@ type TeamAnswer @model
   currentQuestionIndex: Int!
   questionId: ID!
   teamMemberAnswersId: ID!
-  teamAnswersId: ID
+  teamAnswersId: ID!
   teamName: String
   text: String!
   answer: AWSJSON!
