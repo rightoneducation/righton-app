@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { randomUUID } from "node:crypto";
@@ -5,9 +6,9 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
 import { getServer } from './mcp/mcp.js';
 
-const GRAPHQL_ENDPOINT = 'https://63bxwkyo7refpkph7vdbkx54xa.appsync-api.us-east-1.amazonaws.com/graphql'; 
+const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
 if (!GRAPHQL_ENDPOINT) {
-  throw new Error('GRAPHQL_ENDPOINT is not set');
+  throw new Error('GRAPHQL_ENDPOINT environment variable is not set');
 }
 
 // server setup via express to handle get/post/delete requests

@@ -1,8 +1,16 @@
 import fetch from 'node-fetch';
 
-const GRAPHQL_ENDPOINT = 'https://63bxwkyo7refpkph7vdbkx54xa.appsync-api.us-east-1.amazonaws.com/graphql'; // process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
-const API_KEY = 'da2-dtzvnk57cjdfbf6inf4yl3xdje'; //process.env.API_KEY;
+const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
+const API_KEY = process.env.API_KEY;
 const COGNITO_ACCESS_TOKEN = process.env.COGNITO_ACCESS_TOKEN;
+
+if (!GRAPHQL_ENDPOINT) {
+  throw new Error('GRAPHQL_ENDPOINT environment variable is required');
+}
+
+if (!API_KEY && !COGNITO_ACCESS_TOKEN) {
+  throw new Error('Either API_KEY or COGNITO_ACCESS_TOKEN environment variable is required');
+}
 
 // create request for GraphQL API using API key or Cognito token
 export async function createAndSignRequest(query: string, variables: any) {
