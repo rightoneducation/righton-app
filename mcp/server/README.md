@@ -1,4 +1,4 @@
-# MCP - Server:
+# :crystal_ball: MCP - Server:
 A `node.js/express` MCP server deployed via Docker and hosted on an EC2 instance. MCP server architecture is developed via `@modelcontextprotocol`. Transport is provided via `StreamableHTTPServerTransport`
 
 Works in tandem with `host` and `client` to provide LLMs access to RightOn game/user data. 
