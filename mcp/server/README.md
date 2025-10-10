@@ -15,4 +15,9 @@ Works in tandem with `host` and `client` to provide LLMs access to RightOn game/
 
 ## MCP Resources:
 - `CCSSDictionary` - structured JSON of CCSS data for math students
-- `referenceSchema` - schema data for GameSesssion and Team GraphQL structures on the RightOn backend. 
+- `referenceSchema` - schema data for GameSesssion and Team GraphQL structures on the RightOn backend.
+
+## Tests:
+Testing can be conducted via `Postman.` A Postman Collection is located at `./mcp-server-postman-tests.json` and includes tests for initialization, get tool list, get games by class and get student history. 
+
+To conduct a test, first run the initialization test and copy the `mcp-session-id` from the response headers. Then paste that into the request header of subsequent tests.
