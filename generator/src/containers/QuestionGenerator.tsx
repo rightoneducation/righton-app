@@ -16,8 +16,19 @@ interface QuestionData {
   question: string;
   correctAnswer: string;
   wrongAnswers: string[];
+  wrongAnswerExplanations: string[];
+  wrongAnswerSummaries: string[];
   solutionExplanation: string;
   ccss: string;
+}
+
+interface GeneratedWrongAnswers {
+  allWrongAnswers: string[];
+  selectedWrongAnswers: string[];
+  allWrongAnswerExplanations: string[];
+  selectedWrongAnswerExplanations: string[];
+  allWrongAnswerSummaries: string[];
+  selectedWrongAnswerSummaries: string[];
 }
 
 interface QuestionGeneratorProps {
@@ -30,31 +41,70 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
     question: '',
     correctAnswer: '',
     wrongAnswers: ['', '', ''],
+    wrongAnswerExplanations: ['', '', ''],
+    wrongAnswerSummaries: ['', '', ''],
     solutionExplanation: '',
     ccss: ''
   });
 
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedWrongAnswers, setGeneratedWrongAnswers] = useState<GeneratedWrongAnswers>({
+    allWrongAnswers: [],
+    selectedWrongAnswers: [],
+    allWrongAnswerExplanations: [],
+    selectedWrongAnswerExplanations: [],
+    allWrongAnswerSummaries: [],
+    selectedWrongAnswerSummaries: []
+  });
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index?: number) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    
-    if (index !== undefined) {
-      setFormData((prev) => {
-        const updatedArray = [...prev.wrongAnswers];
-        updatedArray[index] = value;
-        return {
-          ...prev,
-          wrongAnswers: updatedArray
-        };
-      });
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSolutionExplanationChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData(prev => ({ ...prev, solutionExplanation: event.target.value }));
+
+  const handleWrongAnswerSelection = (answer: string, answerIndex: number) => {
+    setGeneratedWrongAnswers(prev => {
+      const isSelected = prev.selectedWrongAnswers.includes(answer);
+      let newSelected: string[];
+      let newSelectedExplanations: string[];
+      let newSelectedSummaries: string[];
+      
+      if (isSelected) {
+        // Remove from selection
+        const selectedIndex = prev.selectedWrongAnswers.indexOf(answer);
+        newSelected = prev.selectedWrongAnswers.filter(a => a !== answer);
+        newSelectedExplanations = prev.selectedWrongAnswerExplanations.filter((_, index) => index !== selectedIndex);
+        newSelectedSummaries = prev.selectedWrongAnswerSummaries.filter((_, index) => index !== selectedIndex);
+      } else {
+        // Add to selection (max 3)
+        if (prev.selectedWrongAnswers.length < 3) {
+          newSelected = [...prev.selectedWrongAnswers, answer];
+          newSelectedExplanations = [...prev.selectedWrongAnswerExplanations, prev.allWrongAnswerExplanations[answerIndex]];
+          newSelectedSummaries = [...prev.selectedWrongAnswerSummaries, prev.allWrongAnswerSummaries[answerIndex]];
+        } else {
+          // Replace the first one if we already have 3
+          newSelected = [answer, ...prev.selectedWrongAnswers.slice(1)];
+          newSelectedExplanations = [prev.allWrongAnswerExplanations[answerIndex], ...prev.selectedWrongAnswerExplanations.slice(1)];
+          newSelectedSummaries = [prev.allWrongAnswerSummaries[answerIndex], ...prev.selectedWrongAnswerSummaries.slice(1)];
+        }
+      }
+      
+      // Update form data with selected wrong answers, explanations, and summaries
+      setFormData(formPrev => ({
+        ...formPrev,
+        wrongAnswers: newSelected.length === 3 ? newSelected : [...newSelected, ...Array(3 - newSelected.length).fill('')],
+        wrongAnswerExplanations: newSelectedExplanations.length === 3 ? newSelectedExplanations : [...newSelectedExplanations, ...Array(3 - newSelectedExplanations.length).fill('')],
+        wrongAnswerSummaries: newSelectedSummaries.length === 3 ? newSelectedSummaries : [...newSelectedSummaries, ...Array(3 - newSelectedSummaries.length).fill('')]
+      }));
+      
+      return {
+        ...prev,
+        selectedWrongAnswers: newSelected,
+        selectedWrongAnswerExplanations: newSelectedExplanations,
+        selectedWrongAnswerSummaries: newSelectedSummaries
+      };
+    });
   };
 
   const handleAutoGenerate = async () => {
@@ -87,21 +137,75 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
       const result = await autoGenerateQuestion(questionData);
       
       if (result) {
-        // Only update fields that were actually generated (merge with existing data)
-        setFormData(prev => ({
-          ...prev,
-          question: result.question || prev.question,
-          correctAnswer: result.correctAnswer || prev.correctAnswer,
-          wrongAnswers: result.wrongAnswers || prev.wrongAnswers,
-          solutionExplanation: result.solutionExplanation || prev.solutionExplanation,
-          ccss: result.ccss || prev.ccss
-        }));
+        // Only update fields that were actually generated AND are currently empty
+        setFormData(prev => {
+          const updated = { ...prev };
+          
+          // Only update if the field is currently empty
+          if (!prev.question.trim() && result.data.question) {
+            updated.question = result.data.question;
+          }
+          if (!prev.correctAnswer.trim() && result.data.correctAnswer) {
+            updated.correctAnswer = result.data.correctAnswer;
+          }
+          if (!prev.solutionExplanation.trim() && result.data.solutionExplanation) {
+            updated.solutionExplanation = result.data.solutionExplanation;
+          }
+          if (!prev.ccss.trim() && result.data.ccss) {
+            updated.ccss = result.data.ccss;
+          }
+          
+          return updated;
+        });
 
-        // Show user what was generated
-        const generatedFields = result.generatedFields || [];
-        if (generatedFields.length > 0) {
-          alert(`Successfully generated: ${generatedFields.join(', ')}`);
+        // Handle wrong answers specially - store all 6 and let user select 3
+        if (result.data.wrongAnswers && result.data.wrongAnswers.length === 6) {
+          const defaultSelected = result.data.wrongAnswers.slice(0, 3);
+          const defaultExplanations = result.data.wrongAnswerExplanations ? result.data.wrongAnswerExplanations.slice(0, 3) : [];
+          const defaultSummaries = result.data.wrongAnswerSummaries ? result.data.wrongAnswerSummaries.slice(0, 3) : [];
+          
+          setGeneratedWrongAnswers({
+            allWrongAnswers: result.data.wrongAnswers,
+            selectedWrongAnswers: defaultSelected,
+            allWrongAnswerExplanations: result.data.wrongAnswerExplanations || [],
+            selectedWrongAnswerExplanations: defaultExplanations,
+            allWrongAnswerSummaries: result.data.wrongAnswerSummaries || [],
+            selectedWrongAnswerSummaries: defaultSummaries
+          });
+          
+          // Update form data with the first 3 as default
+          setFormData(prev => ({
+            ...prev,
+            wrongAnswers: defaultSelected,
+            wrongAnswerExplanations: defaultExplanations,
+            wrongAnswerSummaries: defaultSummaries
+          }));
+        } else if (result.data.wrongAnswers && result.data.wrongAnswers.length > 0) {
+          // Handle case where we get fewer than 6 wrong answers
+          const maxAnswers = Math.min(3, result.data.wrongAnswers.length);
+          const defaultSelected = result.data.wrongAnswers.slice(0, maxAnswers);
+          const defaultExplanations = result.data.wrongAnswerExplanations ? result.data.wrongAnswerExplanations.slice(0, maxAnswers) : [];
+          const defaultSummaries = result.data.wrongAnswerSummaries ? result.data.wrongAnswerSummaries.slice(0, maxAnswers) : [];
+          
+          setGeneratedWrongAnswers({
+            allWrongAnswers: result.data.wrongAnswers,
+            selectedWrongAnswers: defaultSelected,
+            allWrongAnswerExplanations: result.data.wrongAnswerExplanations || [],
+            selectedWrongAnswerExplanations: defaultExplanations,
+            allWrongAnswerSummaries: result.data.wrongAnswerSummaries || [],
+            selectedWrongAnswerSummaries: defaultSummaries
+          });
+          
+          // Update form data
+          setFormData(prev => ({
+            ...prev,
+            wrongAnswers: defaultSelected,
+            wrongAnswerExplanations: defaultExplanations,
+            wrongAnswerSummaries: defaultSummaries
+          }));
         }
+
+        // Fields have been generated and populated silently
       } else {
         throw new Error('Failed to generate question data');
       }
@@ -118,17 +222,17 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
     if (!formData.question.trim() || 
         !formData.correctAnswer.trim() || 
         !formData.ccss.trim() ||
-        formData.wrongAnswers.some(answer => !answer.trim())) {
-      alert('Please fill in all required fields');
+        generatedWrongAnswers.selectedWrongAnswers.length === 0) {
+      alert('Please fill in all required fields and select wrong answers');
       return;
     }
 
-    // Filter out empty wrong answers
-    const filteredWrongAnswers = formData.wrongAnswers.filter(answer => answer.trim() !== '');
-    
+    // Use selected wrong answers from the selection UI
     const questionData: QuestionData = {
       ...formData,
-      wrongAnswers: filteredWrongAnswers
+      wrongAnswers: generatedWrongAnswers.selectedWrongAnswers,
+      wrongAnswerExplanations: generatedWrongAnswers.selectedWrongAnswerExplanations,
+      wrongAnswerSummaries: generatedWrongAnswers.selectedWrongAnswerSummaries
     };
 
     onSubmit(questionData);
@@ -137,7 +241,7 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
   const isFormValid = formData.question.trim() !== '' && 
                      formData.correctAnswer.trim() !== '' && 
                      formData.ccss.trim() !== '' &&
-                     formData.wrongAnswers.some(answer => answer.trim() !== '');
+                     generatedWrongAnswers.selectedWrongAnswers.length > 0;
 
   return (
     <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
@@ -241,99 +345,135 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
               />
             </Grid>
 
-            {/* Solution Explanation Field */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                multiline
-                rows={3}
-                label="Solution Explanation"
-                value={formData.solutionExplanation}
-                onChange={handleSolutionExplanationChange}
-                placeholder="Enter the steps that led to the correct answer"
-                variant="outlined"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&:hover fieldset': {
-                      borderColor: '#4caf50',
-                    },
-                  },
-                }}
-              />
-            </Grid>
+             {/* Solution Explanation Preview */}
+             <Grid item xs={12} md={6}>
+               {formData.solutionExplanation ? (
+                 <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1, border: '1px solid #ddd' }}>
+                   <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                     Solution Explanation:
+                   </Typography>
+                   <Typography 
+                     variant="body2" 
+                     sx={{ 
+                       whiteSpace: 'pre-line',
+                       fontFamily: 'monospace',
+                       fontSize: '0.875rem'
+                     }}
+                   >
+                     {formData.solutionExplanation.replace(/Step \d+:/g, '\n$&').trim()}
+                   </Typography>
+                 </Box>
+               ) : (
+                 <Box sx={{ p: 2, backgroundColor: '#f9f9f9', borderRadius: 1, border: '1px solid #ddd', textAlign: 'center' }}>
+                   <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                     Solution explanation will appear here after auto-generation
+                   </Typography>
+                 </Box>
+               )}
+             </Grid>
 
-            {/* Wrong Answer Fields */}
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom sx={{ fontFamily: 'Poppins', fontWeight: 600, color: '#d32f2f' }}>
-                Incorrect Answer Choices
-              </Typography>
-            </Grid>
+            {/* Wrong Answer Selection UI */}
+            {generatedWrongAnswers.allWrongAnswers.length > 0 && (
+              <Grid item xs={12}>
+                <Card sx={{ backgroundColor: '#fff3e0', border: '2px solid #ff9800' }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom sx={{ fontFamily: 'Poppins', fontWeight: 600, color: '#e65100' }}>
+                      🎯 Select 3 Wrong Answers from Generated Options
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      Choose the 3 most appropriate wrong answers from the 6 generated options:
+                    </Typography>
+                    
+                     <Grid container spacing={2}>
+                       {generatedWrongAnswers.allWrongAnswers.map((answer, index) => {
+                         const isSelected = generatedWrongAnswers.selectedWrongAnswers.includes(answer);
+                         const explanation = generatedWrongAnswers.allWrongAnswerExplanations[index] || '';
+                         const summary = generatedWrongAnswers.allWrongAnswerSummaries[index] || '';
+                         return (
+                           <Grid item xs={12} md={6} key={index}>
+                             <Card 
+                               sx={{ 
+                                 cursor: 'pointer',
+                                 backgroundColor: isSelected ? '#4caf50' : '#fff',
+                                 border: isSelected ? '2px solid #2e7d32' : '1px solid #ddd',
+                                 '&:hover': {
+                                   backgroundColor: isSelected ? '#388e3c' : '#f5f5f5',
+                                   borderColor: isSelected ? '#1b5e20' : '#ff9800'
+                                 }
+                               }}
+                               onClick={() => handleWrongAnswerSelection(answer, index)}
+                             >
+                               <CardContent sx={{ p: 2 }}>
+                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                                   <Box
+                                     sx={{
+                                       width: 20,
+                                       height: 20,
+                                       borderRadius: '50%',
+                                       backgroundColor: isSelected ? '#fff' : '#ff9800',
+                                       display: 'flex',
+                                       alignItems: 'center',
+                                       justifyContent: 'center',
+                                       fontSize: '12px',
+                                       fontWeight: 'bold',
+                                       color: isSelected ? '#4caf50' : '#fff'
+                                     }}
+                                   >
+                                     {isSelected ? '✓' : (index + 1)}
+                                   </Box>
+                                   <Typography 
+                                     variant="body2" 
+                                     sx={{ 
+                                       fontWeight: isSelected ? 600 : 400,
+                                       color: isSelected ? '#fff' : 'text.primary'
+                                     }}
+                                   >
+                                     {answer}
+                                   </Typography>
+                                 </Box>
+                                 {summary && (
+                                   <Typography 
+                                     variant="caption" 
+                                     sx={{ 
+                                       color: isSelected ? '#e8f5e8' : 'text.secondary',
+                                       fontStyle: 'italic',
+                                       fontSize: '0.75rem',
+                                       fontWeight: 600,
+                                       display: 'block',
+                                       mb: 0.5
+                                     }}
+                                   >
+                                     📝 {summary}
+                                   </Typography>
+                                 )}
+                                 {explanation && (
+                                   <Typography 
+                                     variant="caption" 
+                                     sx={{ 
+                                       color: isSelected ? '#e8f5e8' : 'text.secondary',
+                                       fontStyle: 'italic',
+                                       fontSize: '0.75rem'
+                                     }}
+                                   >
+                                     💡 {explanation}
+                                   </Typography>
+                                 )}
+                               </CardContent>
+                             </Card>
+                           </Grid>
+                         );
+                       })}
+                     </Grid>
+                     
+                     <Typography variant="body2" color="text.secondary" sx={{ mt: 2, fontStyle: 'italic' }}>
+                       Selected: {generatedWrongAnswers.selectedWrongAnswers.length}/3
+                     </Typography>
+                   </CardContent>
+                 </Card>
+               </Grid>
+             )}
 
-            {formData.wrongAnswers.map((wrongAnswer, index) => (
-              <Grid item xs={12} md={4} key={index}>
-                <TextField
-                  fullWidth
-                  label={`Wrong Answer ${index + 1}`}
-                  value={wrongAnswer}
-                  onChange={(e) => handleInputChange(e, index)}
-                  placeholder={`Enter wrong answer ${index + 1}`}
-                  variant="outlined"
-                  required
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '&:hover fieldset': {
-                        borderColor: '#d32f2f',
-                      },
-                    },
-                  }}
-                />
-              </Grid>
-            ))}
 
-            {/* Form Actions */}
-            <Grid item xs={12}>
-              <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ marginTop: 3 }}>
-                <Button
-                  variant="outlined"
-                  onClick={onCancel}
-                  sx={{
-                    fontFamily: 'Poppins',
-                    fontWeight: 600,
-                    textTransform: 'none',
-                    padding: '8px 24px',
-                    borderColor: '#666',
-                    color: '#666',
-                    '&:hover': {
-                      borderColor: '#333',
-                      color: '#333',
-                    },
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  disabled={!isFormValid}
-                  sx={{
-                    fontFamily: 'Poppins',
-                    fontWeight: 600,
-                    textTransform: 'none',
-                    padding: '8px 24px',
-                    backgroundColor: '#1976d2',
-                    '&:hover': {
-                      backgroundColor: '#1565c0',
-                    },
-                    '&:disabled': {
-                      backgroundColor: '#ccc',
-                      color: '#666',
-                    },
-                  }}
-                >
-                  Generate Explanations
-                </Button>
-              </Stack>
-            </Grid>
           </Grid>
         </CardContent>
       </Card>
@@ -361,10 +501,20 @@ export default function QuestionGenerator({ onSubmit, onCancel }: QuestionGenera
               size="small" 
             />
             <Chip 
-              label={`Wrong Answers: ${formData.wrongAnswers.filter(a => a.trim()).length}/3`} 
-              color={formData.wrongAnswers.some(a => a.trim()) ? 'success' : 'error'} 
+              label={`Wrong Answers: ${generatedWrongAnswers.selectedWrongAnswers.length}/3`} 
+              color={generatedWrongAnswers.selectedWrongAnswers.length > 0 ? 'success' : 'error'} 
               size="small" 
             />
+             <Chip 
+               label={`Explanations: ${generatedWrongAnswers.selectedWrongAnswerExplanations.length}/3`} 
+               color={generatedWrongAnswers.selectedWrongAnswerExplanations.length > 0 ? 'success' : 'error'} 
+               size="small" 
+             />
+             <Chip 
+               label={`Summaries: ${generatedWrongAnswers.selectedWrongAnswerSummaries.length}/3`} 
+               color={generatedWrongAnswers.selectedWrongAnswerSummaries.length > 0 ? 'success' : 'error'} 
+               size="small" 
+             />
             <Chip 
               label={`Solution: ${formData.solutionExplanation ? '✓' : '✗'}`} 
               color={formData.solutionExplanation ? 'success' : 'error'} 

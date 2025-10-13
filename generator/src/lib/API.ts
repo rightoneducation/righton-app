@@ -56,6 +56,8 @@ export async function autoGenerateQuestion(
     question?: string;
     correctAnswer?: string;
     wrongAnswers?: string[];
+    wrongAnswerExplanations?: string[];
+    wrongAnswerSummaries?: string[];
     solutionExplanation?: string;
     ccss?: string;
   }
@@ -79,7 +81,7 @@ export async function autoGenerateQuestion(
                 return response.json()
             })
             .then((response) => {
-                return response.data;
+                return response;
             })
         console.log(response);
         return response;

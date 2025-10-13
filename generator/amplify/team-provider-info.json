@@ -22,7 +22,7 @@
         },
         "generatingQuestion": {
           "deploymentBucketName": "amplify-wronganswerexp-genaitest-142047-deployment",
-          "s3Key": "amplify-builds/generatingQuestion-326b3642724e44576f33-build.zip"
+          "s3Key": "amplify-builds/generatingQuestion-6934455a57624343314e-build.zip"
         },
         "labeledits": {
           "deploymentBucketName": "amplify-wronganswerexp-genaitest-142047-deployment",
