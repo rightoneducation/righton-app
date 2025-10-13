@@ -31,7 +31,7 @@ export default function PrepareGame( {
 }: PrepareGameProps) {
     const theme = useTheme();
     const [isConfidenceEnabled, setIsConfidenceEnabled] = React.useState<boolean>(true);
-    const [isHintEnabled, setIsHintEnabled] = React.useState<boolean>(false);
+    const [isHintEnabled, setIsHintEnabled] = React.useState<boolean>(true);
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
     const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
