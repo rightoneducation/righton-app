@@ -1,6 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import { initMCPClient, disconnectMCP, processQuery } from './mcp/functions/mcpFunctions.js';
+import { initMCPClient, disconnectMCP, processQuery } from './mcp/functions/MCPHostFunctions.js';
+
+// express server for handling MCP requests
+// contains a series of functions for processing queries
+// also contains class for MCP clients, each that manage an individual connection to a MCP servers
 
 const app = express();
 app.use(cors());
