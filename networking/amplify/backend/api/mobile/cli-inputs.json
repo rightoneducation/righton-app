@@ -10,8 +10,8 @@
     "additionalAuthTypes": [
       {
         "mode": "API_KEY",
-        "expirationTime": 7,
-        "apiKeyExpirationDate": "2025-10-15T10:58:57.255Z",
+        "expirationTime": 364,
+        "apiKeyExpirationDate": "2026-10-14T20:55:45.842Z",
         "keyDescription": "mcp"
       },
       {

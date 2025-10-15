@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { ccssDictionary } from "./resources/CCSSDictionary.js";
 import { referenceSchema } from "./resources/ReferenceSchema.js";
-import { getGameSessionsByClassroomId, getStudentHistory } from "./functions/HelperFunctions.js";
+import { getGameSessionsByClassroomId, getStudentHistory } from "./functions/MCPServerFunctions.js";
 
 // MCP server definition with resources
 export const getServer = (GRAPHQL_ENDPOINT: string) => {
@@ -41,11 +41,17 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     }
   }, async ({ classroomId }) => {
     const result = await getGameSessionsByClassroomId(GRAPHQL_ENDPOINT || '', classroomId);
+    // give me 3 game sessions
+    let resultToReturn = result;
+    if (result && Array.isArray(result)) {
+      resultToReturn = result.slice(0, 3);
+    }
+    console.log(resultToReturn);
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(result, null, 2)
+          text: JSON.stringify(resultToReturn, null, 2)
         }
       ]
     };
