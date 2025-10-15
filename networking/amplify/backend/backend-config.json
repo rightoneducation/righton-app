@@ -15,8 +15,8 @@
           "additionalAuthenticationProviders": [
             {
               "apiKeyConfig": {
-                "apiKeyExpirationDate": "2025-10-15T10:58:57.255Z",
-                "apiKeyExpirationDays": 7,
+                "apiKeyExpirationDate": "2026-10-14T20:55:45.842Z",
+                "apiKeyExpirationDays": 364,
                 "description": "mcp"
               },
               "authenticationType": "API_KEY"

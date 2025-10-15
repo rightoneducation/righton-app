@@ -12,6 +12,8 @@ export async function initMCPClient(servers: Array<{name: string, version: strin
     try {
       const client = new MCPClientClass(url);
       await client.connect();
+      mcpClients.set(name, client);
+      
       const tools = client.getTools();
     } catch (error) {
       console.error(`Failed to connect to MCP: ${url}`, error);
@@ -36,7 +38,7 @@ export function getAllTools() {
 function findClientForTool(toolName: string): MCPClientClass | undefined {
   for (const client of mcpClients.values()) {
     const tools = client.getTools();
-    if (tools.some(t=> t.name === toolName)){
+    if (tools.some(t=> t.function?.name === toolName)){
       return client;
     }
   }
@@ -69,11 +71,19 @@ export async function processQuery (query: string){
       if (!client) throw new Error(`No MCP server found for tool: ${toolName}`);
 
       const result = await client.callTool(toolName, toolArgs);
+      
+      // Log the tool result before adding to conversation
+      const toolContent = JSON.stringify(result.content);
+      console.log(`\n=== TOOL RESULT: ${toolName} ===`);
+      console.log(`Content length: ${toolContent.length} characters`);
+      console.log(toolContent);
+      console.log(`=== END TOOL RESULT ===\n`);
+      
       finalText.push(`[Calling tool ${toolName} with args ${JSON.stringify(toolArgs)}]`);
       messages.push({
         role: 'tool',
         tool_call_id: call.id,
-        content: JSON.stringify(result.content),
+        content: toolContent,
       })
     }
 

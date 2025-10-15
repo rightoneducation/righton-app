@@ -17,9 +17,12 @@ export class MCPClientClass {
       const toolsResult = await this.mcp.listTools();
       this.tools = toolsResult.tools.map((tool) => {
         return {
-          name: tool.name,
-          description: tool.description,
-          input_schema: tool.inputSchema,
+          type: 'function',
+          function: {
+            name: tool.name,
+            description: tool.description,
+            parameters: tool.inputSchema,
+          }
         };
       });
     } catch (error) {

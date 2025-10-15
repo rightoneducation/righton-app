@@ -441,6 +441,7 @@ enum GameSessionState {
 type Question @model(subscriptions: null, timestamps: null)
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -486,6 +487,7 @@ type Team @model
 type TeamMember @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -509,6 +511,7 @@ enum ConfidenceLevel {
 type TeamAnswer @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
