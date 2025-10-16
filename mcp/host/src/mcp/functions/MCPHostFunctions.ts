@@ -1,12 +1,14 @@
 import { OpenAI } from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
-import { MCPClientClass } from '../client/MCPClientClass.js'
+import { MCPClientClass } from '../client/MCPClientClass.js';
+import JSONLogger from '../../utils/jsonLogger.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const logger = new JSONLogger('mcp-host');
 
 export async function initMCPClient(servers: Array<{name: string, version: string, url: string}>) {
-  console.log('Initializing MCP connections...');
+  logger.info('mcp_connection_start', { serverCount: servers.length });
 
   for (const {name, url} of servers){
     try {
@@ -15,8 +17,18 @@ export async function initMCPClient(servers: Array<{name: string, version: strin
       mcpClients.set(name, client);
       
       const tools = client.getTools();
+      logger.info('mcp_connected', { 
+        name, 
+        url, 
+        toolCount: tools.length,
+        tools: tools.map(t => t.function?.name)
+      });
     } catch (error) {
-      console.error(`Failed to connect to MCP: ${url}`, error);
+      logger.error('mcp_connection_failed', { 
+        name, 
+        url, 
+        error: error instanceof Error ? error.message : String(error)
+      });
     }
   }
 }
@@ -50,17 +62,35 @@ export async function processQuery (query: string){
     { role: 'user', content: query }
   ];
 
+  const availableTools = getAllTools();
+  logger.info('llm_request_start', { 
+    query,
+    availableTools: availableTools.map(t => t.function?.name)
+  });
+
   let response = await openai.chat.completions.create({
     model: 'gpt-4o',
     messages: messages,
-    tools: getAllTools(),
+    tools: availableTools,
   })
 
   const finalText: string[] =[];
+  let iterationCount = 0;
 
   while (response.choices[0].message.tool_calls){
+    iterationCount++;
     const message = response.choices[0].message;
     messages.push(message);
+
+    logger.info('llm_tool_calls_requested', {
+      iteration: iterationCount,
+      toolCalls: message.tool_calls?.map(tc => 
+        tc.type === 'function' ? {
+          name: tc.function.name,
+          args: tc.function.arguments
+        } : tc
+      )
+    });
 
     for (const call of message.tool_calls || []){
       if (call.type !== 'function') continue;
@@ -68,16 +98,22 @@ export async function processQuery (query: string){
       const toolName = call.function.name;
       const toolArgs = JSON.parse(call.function.arguments || "{}");
       const client = findClientForTool(toolName);
-      if (!client) throw new Error(`No MCP server found for tool: ${toolName}`);
+      if (!client) {
+        logger.error('tool_not_found', { toolName });
+        throw new Error(`No MCP server found for tool: ${toolName}`);
+      }
 
+      logger.info('tool_call_start', { toolName, args: toolArgs });
+      
       const result = await client.callTool(toolName, toolArgs);
       
-      // Log the tool result before adding to conversation
       const toolContent = JSON.stringify(result.content);
-      console.log(`\n=== TOOL RESULT: ${toolName} ===`);
-      console.log(`Content length: ${toolContent.length} characters`);
-      console.log(toolContent);
-      console.log(`=== END TOOL RESULT ===\n`);
+      logger.info('tool_call_complete', { 
+        toolName, 
+        args: toolArgs,
+        resultLength: toolContent.length,
+        result: result.content
+      });
       
       finalText.push(`[Calling tool ${toolName} with args ${JSON.stringify(toolArgs)}]`);
       messages.push({
@@ -87,16 +123,23 @@ export async function processQuery (query: string){
       })
     }
 
+    logger.info('llm_request_with_tool_results', { iteration: iterationCount });
+    
     response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: messages,
-      tools: getAllTools(),
+      tools: availableTools,
     })
   }
 
   if (response.choices[0].message.content) {
     finalText.push(response.choices[0].message.content);
   }
+
+  logger.info('llm_final_response', { 
+    totalIterations: iterationCount,
+    finalResponse: response.choices[0].message.content
+  });
 
   return finalText.join("\n");
 }

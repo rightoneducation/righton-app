@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import 'dotenv/config.js';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { randomUUID } from "node:crypto";
@@ -7,12 +7,7 @@ import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
 import { getServer } from './mcp/mcp.js';
 import JSONLogger from './utils/jsonLogger.js';
 
-const logger = new JSONLogger('mcp-server');
-
-const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
-if (!GRAPHQL_ENDPOINT) {
-  throw new Error('GRAPHQL_ENDPOINT environment variable is not set');
-}
+const logger = new JSONLogger('ext-mcp-server');
 
 // server setup via express to handle get/post/delete requests
 const SERVER_PORT = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT, 10) : 3000;
@@ -65,7 +60,7 @@ const postHandler = async (req: Request, res: Response) => {
 
         // Connect the transport to the MCP server BEFORE handling the request
         // so responses can flow back through the same transport
-        const server = getServer(GRAPHQL_ENDPOINT);
+        const server = getServer();
         await server.connect(transport);
 
         await transport.handleRequest(req, res, req.body);
@@ -145,9 +140,9 @@ const deleteHandler = async (req: Request, res: Response) => {
 };
 
 // post/get/delete handlers for server
-app.post('/mcp', postHandler);
-app.get('/mcp', getHandler);
-app.delete('/mcp', deleteHandler);
+app.post('/ext-mcp', postHandler);
+app.get('/ext-mcp', getHandler);
+app.delete('/ext-mcp', deleteHandler);
 
 app.listen(SERVER_PORT, error => {
   if (error) {
@@ -156,7 +151,7 @@ app.listen(SERVER_PORT, error => {
       process.exit(1);
   }
   logger.info('server_started', { port: SERVER_PORT });
-  console.log(`MCP Streamable HTTP Server listening on port ${SERVER_PORT}`);
+  console.log(`Ext-MCP Streamable HTTP Server listening on port ${SERVER_PORT}`);
 });
 
 // Handle server shutdown

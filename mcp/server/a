@@ -1,3 +1,0 @@
-curl -X POST http://localhost:3000/mcp/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "Can you get me the most recent game session?"}'
