@@ -2,17 +2,10 @@ import fetch from 'node-fetch';
 import JSONLogger from '../../utils/jsonLogger.js';
 
 const logger = new JSONLogger('mcp-server');
-const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
-const API_KEY = process.env.API_KEY;
-const COGNITO_ACCESS_TOKEN = process.env.COGNITO_ACCESS_TOKEN;
-
-if (!GRAPHQL_ENDPOINT) {
-  throw new Error('GRAPHQL_ENDPOINT environment variable is required');
-}
-
-if (!API_KEY && !COGNITO_ACCESS_TOKEN) {
-  throw new Error('Either API_KEY or COGNITO_ACCESS_TOKEN environment variable is required');
-}
+// Get functions for environment variables, to ensure they load after secrets are loaded
+const getGraphQLEndpoint = () => process.env.GRAPHQL_ENDPOINT!;
+const getAPIKey = () => process.env.API_KEY;
+const getCognitoToken = () => process.env.COGNITO_ACCESS_TOKEN;
 
 // Construct CCSS code from question fields
 function constructCCSSCode(question: any): string | null {
@@ -111,16 +104,17 @@ export async function createAndSignRequest(query: string, variables: any) {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json'
   };
-
+  const cognitoToken = getCognitoToken();
+  const apiKey = getAPIKey();
   // Use Cognito token if available, otherwise fall back to API key
-  if (COGNITO_ACCESS_TOKEN) {
-    headers['Authorization'] = COGNITO_ACCESS_TOKEN;
-  } else if (API_KEY) {
-    headers['x-api-key'] = API_KEY;
+  if (cognitoToken) {
+    headers['Authorization'] = cognitoToken;
+  } else if (apiKey) {
+    headers['x-api-key'] = apiKey;
   }
 
   return {
-    url: GRAPHQL_ENDPOINT,
+    url: getGraphQLEndpoint(),
     options: {
       method: 'POST',
       headers,

@@ -4,7 +4,17 @@ import { MCPClientClass } from '../client/MCPClientClass.js';
 import JSONLogger from '../../utils/jsonLogger.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// lazy initialize openai client (so that it doesn't try to connect to the API until secrets are loaded)
+let openai: OpenAI;
+
+function getOpenAI() {
+  if (!openai) {
+    openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return openai;
+}
+
 const logger = new JSONLogger('mcp-host');
 
 export async function initMCPClient(servers: Array<{name: string, version: string, url: string}>) {
@@ -68,7 +78,7 @@ export async function processQuery (query: string){
     availableTools: availableTools.map(t => t.function?.name)
   });
 
-  let response = await openai.chat.completions.create({
+  let response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o',
     messages: messages,
     tools: availableTools,

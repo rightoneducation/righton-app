@@ -2,21 +2,9 @@ import fetch from 'node-fetch';
 import JSONLogger from '../../utils/jsonLogger.js';
 
 const logger = new JSONLogger('ext-mcp-server');
-const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
-const API_KEY = process.env.API_KEY;
-const SECRET_NAME = process.env.SECRET_NAME;
 
-if (!GRAPHQL_ENDPOINT) {
-  throw new Error('GRAPHQL_ENDPOINT environment variable is required');
-}
-
-if (!API_KEY) {
-  throw new Error('Either API_KEY environment variable is required');
-}
-
-if (!SECRET_NAME) {
-  throw new Error('SECRET_NAME environment variable is required');
-}
+const getGraphQLEndpoint = () => process.env.GRAPHQL_ENDPOINT!;
+const getAPIKey = () => process.env.API_KEY;
 
 // create request for GraphQL API using API key or Cognito token
 export async function createAndSignRequest(query: string, variables: any) {
@@ -24,12 +12,13 @@ export async function createAndSignRequest(query: string, variables: any) {
     'Content-Type': 'application/json'
   };
 
-  if (API_KEY) {
-    headers['x-api-key'] = API_KEY;
+  const apiKey = getAPIKey();
+  if (apiKey) {
+    headers['x-api-key'] = apiKey;
   }
 
   return {
-    url: GRAPHQL_ENDPOINT,
+    url: getGraphQLEndpoint(),
     options: {
       method: 'POST',
       headers,

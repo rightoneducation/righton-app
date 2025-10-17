@@ -16,8 +16,10 @@ if (!endpointSecretName) throw new Error('SECRET_NAME environment variable is re
 const apiSecretName = process.env.API_SECRET_NAME;
 if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
 
-process.env.API_KEY = await loadSecret(apiSecretName);
-process.env.GRAPHQL_ENDPOINT = await loadSecret(endpointSecretName);
+const apiSecret = await loadSecret(apiSecretName);
+process.env.API_KEY = JSON.parse(apiSecret)['API'];
+const endpointSecret = await loadSecret(endpointSecretName);
+process.env.GRAPHQL_ENDPOINT = JSON.parse(endpointSecret)['ext-endpoint'];
 
 // server setup via express to handle get/post/delete requests
 const SERVER_PORT = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT, 10) : 3000;

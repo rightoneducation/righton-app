@@ -10,7 +10,8 @@ const logger = new JSONLogger('mcp-host');
 const openaiSecretName = process.env.OPENAI_SECRET_NAME;
 if (!openaiSecretName) throw new Error('OPENAI_SECRET_NAME environment variable is required');
 
-process.env.OPENAI_API_KEY = await loadSecret(openaiSecretName);
+const openaiSecret = await loadSecret(openaiSecretName);
+process.env.OPENAI_API_KEY = JSON.parse(openaiSecret)['openai_api'];
 
 // express server for handling MCP requests
 // contains a series of functions for processing queries

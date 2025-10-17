@@ -16,8 +16,10 @@ if (!endpointSecretName) throw new Error('SECRET_NAME environment variable is re
 const keySecretName = process.env.KEY_SECRET_NAME;
 if (!keySecretName) throw new Error('KEY_SECRET_NAME environment variable is required');
 
-process.env.API_KEY = await loadSecret(keySecretName);
-process.env.GRAPHQL_ENDPOINT = await loadSecret(endpointSecretName);
+const keySecret = await loadSecret(keySecretName);
+process.env.API_KEY = JSON.parse(keySecret)['graphql-key'];
+const endpointSecret = await loadSecret(endpointSecretName);
+process.env.GRAPHQL_ENDPOINT = JSON.parse(endpointSecret)['graphql-endpoint'];
 
 if (!process.env.API_KEY) throw new Error('API_KEY environment variable is required');
 if (!process.env.GRAPHQL_ENDPOINT) throw new Error('GRAPHQL_ENDPOINT environment variable is required');
