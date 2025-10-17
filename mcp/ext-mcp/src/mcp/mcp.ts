@@ -15,9 +15,12 @@ export const getServer = () => {
 
   //MCP tool registrations
   server.registerTool("getLearningScienceDatabyCCSS", {
-    description: "Fetch learning science data by CCSS",
+    description: `Fetch learning science data and pedagogical context for a CCSS (Common Core State Standards) code. 
+    Returns learning components, prerequisite standards, and related standards to help understand student struggles.
+    
+    Note: Question data includes a 'ccssCode' field with the complete CCSS code already constructed (e.g., '8.EE.C.8' or 'A.REI.1').`,
     inputSchema: {
-      ccss: z.string()
+      ccss: z.string().describe("Complete CCSS code from question.ccssCode field (e.g., '8.EE.C.8' or 'A.REI.1')")
     }
   }, async ({ ccss }) => {
     logger.info('tool_called', { 
@@ -32,9 +35,9 @@ export const getServer = () => {
     if (result && typeof result === 'object' && 'data' in result) {
       const responseData = result as any;
       if (responseData.data && 
-          responseData.data.standardsFrameworkItems && 
-          responseData.data.standardsFrameworkItems.items) {
-        learningScienceData = responseData.data.standardsFrameworkItems.items;
+          responseData.data.standardsFrameworkItems &&
+          Array.isArray(responseData.data.standardsFrameworkItems)) {
+        learningScienceData = responseData.data.standardsFrameworkItems;
       }
     }
     

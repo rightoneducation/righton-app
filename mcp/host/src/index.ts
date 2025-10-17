@@ -1,9 +1,16 @@
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { initMCPClient, disconnectMCP, processQuery } from './mcp/functions/MCPHostFunctions.js';
 import JSONLogger from './utils/jsonLogger.js';
+import { loadSecret } from './utils/loadSecrets.js';
 
 const logger = new JSONLogger('mcp-host');
+
+const openaiSecretName = process.env.OPENAI_SECRET_NAME;
+if (!openaiSecretName) throw new Error('OPENAI_SECRET_NAME environment variable is required');
+
+process.env.OPENAI_API_KEY = await loadSecret(openaiSecretName);
 
 // express server for handling MCP requests
 // contains a series of functions for processing queries
@@ -64,7 +71,7 @@ app.post('/mcp/query', async (req: Request<{}, SuccessResponse | ErrorResponse, 
   }
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.SERVER_PORT || 3000;
 
 async function start() {
   logger.info('initializing_mcp_clients', {

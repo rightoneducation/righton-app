@@ -4,10 +4,20 @@ import cors from 'cors';
 import { randomUUID } from "node:crypto";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
+import { loadSecret } from './utils/loadSecrets.js';
 import { getServer } from './mcp/mcp.js';
 import JSONLogger from './utils/jsonLogger.js';
 
 const logger = new JSONLogger('ext-mcp-server');
+
+const endpointSecretName = process.env.ENDPOINT_SECRET_NAME;
+if (!endpointSecretName) throw new Error('SECRET_NAME environment variable is required');
+
+const apiSecretName = process.env.API_SECRET_NAME;
+if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
+
+process.env.API_KEY = await loadSecret(apiSecretName);
+process.env.GRAPHQL_ENDPOINT = await loadSecret(endpointSecretName);
 
 // server setup via express to handle get/post/delete requests
 const SERVER_PORT = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT, 10) : 3000;

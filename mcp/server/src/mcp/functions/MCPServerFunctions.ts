@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
+import JSONLogger from '../../utils/jsonLogger.js';
 
+const logger = new JSONLogger('mcp-server');
 const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
 const API_KEY = process.env.API_KEY;
 const COGNITO_ACCESS_TOKEN = process.env.COGNITO_ACCESS_TOKEN;
@@ -10,6 +12,98 @@ if (!GRAPHQL_ENDPOINT) {
 
 if (!API_KEY && !COGNITO_ACCESS_TOKEN) {
   throw new Error('Either API_KEY or COGNITO_ACCESS_TOKEN environment variable is required');
+}
+
+// Construct CCSS code from question fields
+function constructCCSSCode(question: any): string | null {
+  if (!question) return null;
+  
+  // Collect non-null/non-empty values in order: grade, domain, cluster, standard
+  const parts: string[] = [];
+  
+  if (question.grade && question.grade !== 'null' && question.grade !== '<empty>') {
+    parts.push(question.grade);
+  }
+  if (question.domain && question.domain !== 'null' && question.domain !== '<empty>') {
+    parts.push(question.domain);
+  }
+  if (question.cluster && question.cluster !== 'null' && question.cluster !== '<empty>') {
+    parts.push(question.cluster);
+  }
+  if (question.standard && question.standard !== 'null' && question.standard !== '<empty>') {
+    parts.push(question.standard);
+  }
+  
+  // Only return a code if we have at least grade + domain (minimum useful CCSS code)
+  // Don't return incomplete codes like just "NS" or just "8"
+  const hasGrade = question.grade && question.grade !== 'null' && question.grade !== '<empty>';
+  const hasDomain = question.domain && question.domain !== 'null' && question.domain !== '<empty>';
+  
+  if (hasGrade && hasDomain && parts.length >= 2) {
+    return parts.join('.');
+  }
+  
+  return null;
+}
+
+// Add CCSS codes to questions in the response
+function enrichWithCCSSCodes(data: any): any {
+  if (!data) return data;
+  
+  // Handle game session response
+  if (data.gameSessionByClassroomId?.items) {
+    data.gameSessionByClassroomId.items.forEach((session: any) => {
+      // Add CCSS to questions array
+      if (session.questions?.items) {
+        session.questions.items.forEach((question: any) => {
+          question.ccssCode = constructCCSSCode(question);
+          logger.info('ccss_constructed', { 
+            grade: question.grade, 
+            domain: question.domain, 
+            cluster: question.cluster, 
+            standard: question.standard, 
+            ccssCode: question.ccssCode 
+          });
+        });
+      }
+      
+      // Add CCSS to team questions
+      if (session.teams?.items) {
+        session.teams.items.forEach((team: any) => {
+          if (team.question) {
+            team.question.ccssCode = constructCCSSCode(team.question);
+            logger.info('ccss_constructed_team', { 
+              teamName: team.name,
+              grade: team.question.grade, 
+              domain: team.question.domain, 
+              cluster: team.question.cluster, 
+              standard: team.question.standard, 
+              ccssCode: team.question.ccssCode 
+            });
+          }
+        });
+      }
+    });
+  }
+  
+  // Handle student history response
+  if (data.teamByGlobalStudentId?.items) {
+    data.teamByGlobalStudentId.items.forEach((team: any) => {
+      if (team.question) {
+        team.question.ccssCode = constructCCSSCode(team.question);
+        logger.info('ccss_constructed_student_history', { 
+          studentId: team.globalStudentId,
+          grade: team.question.grade, 
+          domain: team.question.domain, 
+          cluster: team.question.cluster, 
+          standard: team.question.standard, 
+          ccssCode: team.question.ccssCode 
+        });
+      }
+    });
+  }
+  
+  return data;
 }
 
 // create request for GraphQL API using API key or Cognito token
@@ -189,7 +283,8 @@ export async function getGameSessionsByClassroomId<T>(url: string, classroomId: 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return (await response.json()) as T;
+    const data = await response.json();
+    return enrichWithCCSSCodes(data) as T;
   } catch (error) {
     console.error("Error making GraphQL request:", error);
     return null;
@@ -301,7 +396,8 @@ export async function getStudentHistory<T>(url: string, globalStudentId: string)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return (await response.json()) as T;
+    const data = await response.json();
+    return enrichWithCCSSCodes(data) as T;
   } catch (error) {
     console.error("Error making GraphQL request:", error);
     return null;
