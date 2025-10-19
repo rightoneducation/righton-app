@@ -6,9 +6,6 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
 import { loadSecret } from './utils/loadSecrets.js';
 import { getServer } from './mcp/mcp.js';
-import JSONLogger from './utils/jsonLogger.js';
-
-const logger = new JSONLogger('ext-mcp-server');
 
 const endpointSecretName = process.env.ENDPOINT_SECRET_NAME;
 if (!endpointSecretName) throw new Error('SECRET_NAME environment variable is required');
@@ -41,12 +38,6 @@ const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};
 // this uses JSON-RPC, so we will init via POST and perform all actions here as well
 const postHandler = async (req: Request, res: Response) => {
   const sessionId = req.headers['mcp-session-id'] as string | undefined;
-  
-  logger.info('request_received', {
-    sessionId: sessionId || 'new',
-    method: req.body?.method,
-    hasParams: !!req.body?.params
-  });
 
   try{
     let transport: StreamableHTTPServerTransport;
@@ -58,7 +49,6 @@ const postHandler = async (req: Request, res: Response) => {
             sessionIdGenerator: () => randomUUID(),
             onsessioninitialized: sessionId => {
                 transports[sessionId] = transport;
-                logger.info('session_initialized', { sessionId });
             }
         });
 
@@ -66,7 +56,6 @@ const postHandler = async (req: Request, res: Response) => {
           const sid = transport.sessionId;
           if (sid && transports[sid]) {
               delete transports[sid];
-              logger.info('session_closed', { sessionId: sid });
           }
         };
 
@@ -94,11 +83,6 @@ const postHandler = async (req: Request, res: Response) => {
       // The existing transport is already connected to the server
       await transport.handleRequest(req, res, req.body);
     } catch (error) {
-        logger.error('request_error', {
-            sessionId,
-            error: error instanceof Error ? error.message : String(error),
-            stack: error instanceof Error ? error.stack : undefined
-        });
         if (!res.headersSent) {
             res.status(500).json({
                 jsonrpc: '2.0',
@@ -158,11 +142,9 @@ app.delete('/ext-mcp', deleteHandler);
 
 app.listen(SERVER_PORT, error => {
   if (error) {
-      logger.error('server_start_failed', { error: error.message });
       console.error('Failed to start server:', error);
       process.exit(1);
   }
-  logger.info('server_started', { port: SERVER_PORT });
   console.log(`Ext-MCP Streamable HTTP Server listening on port ${SERVER_PORT}`);
 });
 

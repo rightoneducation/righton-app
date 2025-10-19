@@ -1,7 +1,5 @@
 import fetch from 'node-fetch';
-import JSONLogger from '../../utils/jsonLogger.js';
 
-const logger = new JSONLogger('mcp-server');
 // Get functions for environment variables, to ensure they load after secrets are loaded
 const getGraphQLEndpoint = () => process.env.GRAPHQL_ENDPOINT!;
 const getAPIKey = () => process.env.API_KEY;
@@ -50,13 +48,6 @@ function enrichWithCCSSCodes(data: any): any {
       if (session.questions?.items) {
         session.questions.items.forEach((question: any) => {
           question.ccssCode = constructCCSSCode(question);
-          logger.info('ccss_constructed', { 
-            grade: question.grade, 
-            domain: question.domain, 
-            cluster: question.cluster, 
-            standard: question.standard, 
-            ccssCode: question.ccssCode 
-          });
         });
       }
       
@@ -65,14 +56,6 @@ function enrichWithCCSSCodes(data: any): any {
         session.teams.items.forEach((team: any) => {
           if (team.question) {
             team.question.ccssCode = constructCCSSCode(team.question);
-            logger.info('ccss_constructed_team', { 
-              teamName: team.name,
-              grade: team.question.grade, 
-              domain: team.question.domain, 
-              cluster: team.question.cluster, 
-              standard: team.question.standard, 
-              ccssCode: team.question.ccssCode 
-            });
           }
         });
       }
@@ -84,14 +67,6 @@ function enrichWithCCSSCodes(data: any): any {
     data.teamByGlobalStudentId.items.forEach((team: any) => {
       if (team.question) {
         team.question.ccssCode = constructCCSSCode(team.question);
-        logger.info('ccss_constructed_student_history', { 
-          studentId: team.globalStudentId,
-          grade: team.question.grade, 
-          domain: team.question.domain, 
-          cluster: team.question.cluster, 
-          standard: team.question.standard, 
-          ccssCode: team.question.ccssCode 
-        });
       }
     });
   }

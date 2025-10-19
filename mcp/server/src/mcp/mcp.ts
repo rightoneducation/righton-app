@@ -3,9 +3,6 @@ import { z } from "zod";
 import { ccssDictionary } from "./resources/CCSSDictionary.js";
 import { referenceSchema } from "./resources/ReferenceSchema.js";
 import { getGameSessionsByClassroomId, getStudentHistory } from "./functions/MCPServerFunctions.js";
-import JSONLogger from "../utils/jsonLogger.js";
-
-const logger = new JSONLogger('mcp-server');
 
 // MCP server definition with resources
 export const getServer = (GRAPHQL_ENDPOINT: string) => {
@@ -43,11 +40,6 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
       classroomId: z.string()
     }
   }, async ({ classroomId }) => {
-    logger.info('tool_called', { 
-      tool: 'getGameSessionsByClassroomId', 
-      classroomId 
-    });
-    
     const result = await getGameSessionsByClassroomId(GRAPHQL_ENDPOINT || '', classroomId);
     
     // Extract items from GraphQL response structure
@@ -63,13 +55,6 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     
     // Return the most recent 3 game sessions (or all if less than 3)
     const resultToReturn = gameSessions.slice(0, 3);
-    
-    logger.info('tool_result', {
-      tool: 'getGameSessionsByClassroomId',
-      classroomId,
-      totalFound: gameSessions.length,
-      returned: resultToReturn.length
-    });
     
     return {
       content: [
@@ -89,18 +74,7 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
       globalStudentId: z.string()
     }
   }, async ({ globalStudentId }) => {
-    logger.info('tool_called', { 
-      tool: 'getStudentHistory', 
-      globalStudentId 
-    });
-    
     const result = await getStudentHistory(GRAPHQL_ENDPOINT || '', globalStudentId);
-    
-    logger.info('tool_result', {
-      tool: 'getStudentHistory',
-      globalStudentId,
-      hasData: !!result
-    });
     
     return {
       content: [
