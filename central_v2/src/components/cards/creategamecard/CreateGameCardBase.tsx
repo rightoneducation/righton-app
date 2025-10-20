@@ -446,57 +446,6 @@ export default function CreateGameCardBase({
               )}
             </Box>
           </GameCardBaseItem>
-          {/* card Error */}
-          {screenSize === ScreenSize.SMALL && (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                width: '100%',
-                height: '100%',
-              }}
-            >
-              {/* Image Upload handled here */}
-            
-              {(isCardErrored || draftGame.isDraftGameErrored) && <CreateGameErrorBox screenSize={screenSize} />}
-              {((draftGame?.gameTemplate?.questionTemplates?.length && draftGame?.gameTemplate?.questionTemplates?.length < 1) || !isEditDraft) ? (
-                <TooltipStyled
-                  placement="top"
-                  title="Cannot edit while adding questions"
-                  arrow
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      gap: '16px',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <PublicPrivateButton
-                      isPublic={
-                        draftGame.gameTemplate.publicPrivateType ===
-                        PublicPrivateType.PUBLIC
-                      }
-                      onHandlePublicPrivateChange={handlePublicPrivateChange}
-                      isDisabled
-                    />
-                  </Box>
-                </TooltipStyled>
-              ) : (
-                  <PublicPrivateButton
-                    isPublic={
-                      draftGame.gameTemplate.publicPrivateType ===
-                      PublicPrivateType.PUBLIC
-                    }
-                    onHandlePublicPrivateChange={handlePublicPrivateChange}
-                    isDisabled={false}
-                  />
-              )
-            }
-          </Box>
-          )}
       </GameContentContainerStyled>
 
       {screenSize !== ScreenSize.SMALL && (isCardErrored || draftGame.isDraftGameErrored) && (
