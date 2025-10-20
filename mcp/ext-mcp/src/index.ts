@@ -1,25 +1,22 @@
-import 'dotenv/config';
+import 'dotenv/config.js';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { randomUUID } from "node:crypto";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
-import { getServer } from './mcp/mcp.js';
 import { loadSecret } from './utils/loadSecrets.js';
+import { getServer } from './mcp/mcp.js';
 
 const endpointSecretName = process.env.ENDPOINT_SECRET_NAME;
 if (!endpointSecretName) throw new Error('SECRET_NAME environment variable is required');
 
-const keySecretName = process.env.KEY_SECRET_NAME;
-if (!keySecretName) throw new Error('KEY_SECRET_NAME environment variable is required');
+const apiSecretName = process.env.API_SECRET_NAME;
+if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
 
-const keySecret = await loadSecret(keySecretName);
-process.env.API_KEY = JSON.parse(keySecret)['graphql-key'];
+const apiSecret = await loadSecret(apiSecretName);
+process.env.API_KEY = JSON.parse(apiSecret)['API'];
 const endpointSecret = await loadSecret(endpointSecretName);
-process.env.GRAPHQL_ENDPOINT = JSON.parse(endpointSecret)['graphql-endpoint'];
-
-if (!process.env.API_KEY) throw new Error('API_KEY environment variable is required');
-if (!process.env.GRAPHQL_ENDPOINT) throw new Error('GRAPHQL_ENDPOINT environment variable is required');
+process.env.GRAPHQL_ENDPOINT = JSON.parse(endpointSecret)['ext-endpoint'];
 
 // server setup via express to handle get/post/delete requests
 const SERVER_PORT = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT, 10) : 3000;
@@ -64,7 +61,7 @@ const postHandler = async (req: Request, res: Response) => {
 
         // Connect the transport to the MCP server BEFORE handling the request
         // so responses can flow back through the same transport
-        const server = getServer(process.env.GRAPHQL_ENDPOINT as string);
+        const server = getServer();
         await server.connect(transport);
 
         await transport.handleRequest(req, res, req.body);
@@ -139,16 +136,16 @@ const deleteHandler = async (req: Request, res: Response) => {
 };
 
 // post/get/delete handlers for server
-app.post('/mcp', postHandler);
-app.get('/mcp', getHandler);
-app.delete('/mcp', deleteHandler);
+app.post('/ext-mcp', postHandler);
+app.get('/ext-mcp', getHandler);
+app.delete('/ext-mcp', deleteHandler);
 
 app.listen(SERVER_PORT, error => {
   if (error) {
       console.error('Failed to start server:', error);
       process.exit(1);
   }
-  console.log(`MCP Streamable HTTP Server listening on port ${SERVER_PORT}`);
+  console.log(`Ext-MCP Streamable HTTP Server listening on port ${SERVER_PORT}`);
 });
 
 // Handle server shutdown

@@ -41,17 +41,28 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     }
   }, async ({ classroomId }) => {
     const result = await getGameSessionsByClassroomId(GRAPHQL_ENDPOINT || '', classroomId);
-    // give me 3 game sessions
-    let resultToReturn = result;
-    if (result && Array.isArray(result)) {
-      resultToReturn = result.slice(0, 3);
+    
+    // Extract items from GraphQL response structure
+    let gameSessions = [];
+    if (result && typeof result === 'object' && 'data' in result) {
+      const responseData = result as any;
+      if (responseData.data && 
+          responseData.data.gameSessionByClassroomId && 
+          responseData.data.gameSessionByClassroomId.items) {
+        gameSessions = responseData.data.gameSessionByClassroomId.items;
+      }
     }
-    console.log(resultToReturn);
+    
+    // Return the most recent 3 game sessions (or all if less than 3)
+    const resultToReturn = gameSessions.slice(0, 3);
+    
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(resultToReturn, null, 2)
+          text: gameSessions.length === 0 
+            ? `No game sessions found for classroom ID: ${classroomId}`
+            : JSON.stringify(resultToReturn, null, 2)
         }
       ]
     };
@@ -64,6 +75,7 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     }
   }, async ({ globalStudentId }) => {
     const result = await getStudentHistory(GRAPHQL_ENDPOINT || '', globalStudentId);
+    
     return {
       content: [
         {

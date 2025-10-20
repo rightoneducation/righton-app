@@ -1,5 +1,5 @@
 {
-  "name": "mcp",
+  "name": "ext",
   "version": "1.0.0",
   "main": "index.ts",
   "type": "module",
@@ -13,12 +13,12 @@
   "description": "",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.0.0",
+    "@aws-sdk/client-secrets-manager": "^3.911.0",
     "@aws-sdk/client-sts": "^3.891.0",
     "@aws-sdk/credential-provider-node": "^3.0.0",
     "@aws-sdk/protocol-http": "^3.0.0",
     "@aws-sdk/signature-v4": "^3.0.0",
     "@modelcontextprotocol/sdk": "^1.17.2",
-    "client-secrets-manager": "aws-sdk/client-secrets-manager",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",

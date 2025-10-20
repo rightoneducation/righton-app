@@ -1,22 +1,27 @@
 import { OpenAI } from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
-import { MCPClientClass } from '../client/MCPClientClass.js'
+import { MCPClientClass } from '../client/MCPClientClass.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// lazy initialize openai client (so that it doesn't try to connect to the API until secrets are loaded)
+let openai: OpenAI;
+
+function getOpenAI() {
+  if (!openai) {
+    openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return openai;
+}
 
 export async function initMCPClient(servers: Array<{name: string, version: string, url: string}>) {
-  console.log('Initializing MCP connections...');
-
   for (const {name, url} of servers){
     try {
       const client = new MCPClientClass(url);
       await client.connect();
       mcpClients.set(name, client);
-      
-      const tools = client.getTools();
     } catch (error) {
-      console.error(`Failed to connect to MCP: ${url}`, error);
+      // Connection failed
     }
   }
 }
@@ -50,10 +55,12 @@ export async function processQuery (query: string){
     { role: 'user', content: query }
   ];
 
-  let response = await openai.chat.completions.create({
+  const availableTools = getAllTools();
+
+  let response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o',
     messages: messages,
-    tools: getAllTools(),
+    tools: availableTools,
   })
 
   const finalText: string[] =[];
@@ -68,16 +75,13 @@ export async function processQuery (query: string){
       const toolName = call.function.name;
       const toolArgs = JSON.parse(call.function.arguments || "{}");
       const client = findClientForTool(toolName);
-      if (!client) throw new Error(`No MCP server found for tool: ${toolName}`);
-
+      if (!client) {
+        throw new Error(`No MCP server found for tool: ${toolName}`);
+      }
+      
       const result = await client.callTool(toolName, toolArgs);
       
-      // Log the tool result before adding to conversation
       const toolContent = JSON.stringify(result.content);
-      console.log(`\n=== TOOL RESULT: ${toolName} ===`);
-      console.log(`Content length: ${toolContent.length} characters`);
-      console.log(toolContent);
-      console.log(`=== END TOOL RESULT ===\n`);
       
       finalText.push(`[Calling tool ${toolName} with args ${JSON.stringify(toolArgs)}]`);
       messages.push({
@@ -86,11 +90,11 @@ export async function processQuery (query: string){
         content: toolContent,
       })
     }
-
+    
     response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: messages,
-      tools: getAllTools(),
+      tools: availableTools,
     })
   }
 
