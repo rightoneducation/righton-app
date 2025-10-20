@@ -89,6 +89,23 @@ export const TitleText = styled(Typography)<TitleTextProps>(
   }),
 );
 
+export const HeaderText = styled(Typography)(({ theme }) => ({
+  fontSize: '14px',
+  fontWeight: '400',
+  lineHeight: '20px',
+  fontFamily: 'Rubik',
+  color: '#384466',
+}));
+
+export const GameCardBaseItem = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+  gap: `${theme.sizing.smPadding}px`,
+}));
+
 type SaveDiscardContainerProps = {
   screenSize: ScreenSize;
 };
@@ -266,8 +283,7 @@ export const CreateGameTextFieldContainer = styled(TextField, {
   '& .MuiInputBase-input': {
     ...(isTitle && {
       padding: '12px 10px',
-      fontSize: '20px',
-      fontWeight: 'bold',
+      fontSize: '16px',
     }),
     color: '#384466',
     opacity: isCardError ? 1 : 0.5,
@@ -301,13 +317,13 @@ interface ContentContainerProps {
 export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(
   ({ theme, screenSize }) => ({
     width: '100%',
-    height: screenSize === ScreenSize.SMALL ? '100%' : '100%',
+    height: '100%',
     display: 'flex',
-    flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     gap:
-      screenSize === ScreenSize.SMALL ? '12px' : `${theme.sizing.smPadding}px`,
+      '32px',
   }),
 );
 
@@ -322,7 +338,7 @@ export const SelectPhaseLabel = styled(Typography, {
   color: error ? '#D0254D' : theme.palette.primary.sliderBlue,
   fontFamily: 'Rubik',
   fontSize: 14,
-  fontWeight: isSelected ? 'normal' : 'bold',
+  fontWeight: 'bold',
   margin: 0,
 }));
 

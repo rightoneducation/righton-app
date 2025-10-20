@@ -163,8 +163,8 @@ export default function CreateGame({
   const [isLoading, setIsLoading] = useState(false);
 
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
-    phaseOne: '',
-    phaseTwo: '',
+    phaseOne: '2:00',
+    phaseTwo: '2:00',
   });
 
   const openModal = openModalAtIndex(
