@@ -21,7 +21,8 @@ import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  overflow: 'auto',
+  flexGrow: 1,
+  minHeight: 0,
   '&::-webkit-scrollbar': {
     // Chrome and Safari
     display: 'none',
@@ -39,7 +40,8 @@ export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
 
 export const CreateGameContentContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: '100%',
+  flexGrow: 1,
+  minHeight: 0,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -74,7 +76,7 @@ export const CreateGameBackground = styled(Box)(({ theme }) => ({
 
 export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: '100%',
+  height: 'fit-content',
   display: 'flex',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
@@ -82,6 +84,7 @@ export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   zIndex: 1,
   position: 'relative',
   boxSizing: 'border-box',
+  paddingBottom: `${theme.sizing.xLgPadding}px`,
 }));
 
 type TitleTextProps = {
@@ -104,6 +107,14 @@ export const HeaderText = styled(Typography)(({ theme }) => ({
   fontWeight: '400',
   lineHeight: '20px',
   fontFamily: 'Rubik',
+  color: '#384466',
+}));
+
+export const QuestionHeaderText = styled(Typography)(({ theme }) => ({
+  fontSize: '24px',
+  fontWeight: 'bold',
+  lineHeight: '32px',
+  fontFamily: 'Poppins',
   color: '#384466',
 }));
 

@@ -221,8 +221,9 @@ export const buttonContentMap: ButtonContentMapProps = {
     color: ButtonColor.NULL,
   },
   [ButtonType.CREATEQUESTION]: {
-    icon: create,
+    icon: add,
     textKey: ButtonType.CREATEQUESTION,
+    color: ButtonColor.NULL,
   },
   [ButtonType.QUESTIONBANK]: {
     icon: bank,

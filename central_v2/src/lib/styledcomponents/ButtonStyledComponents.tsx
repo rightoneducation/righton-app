@@ -91,6 +91,7 @@ export const ButtonStyled = styled(Button, {
         ? buttonType === ButtonType.CHANGEIMAGE ||
           buttonType === ButtonType.SAVEDRAFT ||
           (buttonType === ButtonType.SIGNUP && isReset) ||
+          (buttonType === ButtonType.CREATEQUESTION) ||
           (buttonType === ButtonType.BACK)
           ? `${theme.palette.primary.buttonPrimaryDefault}`
           : `#FFF`
@@ -138,6 +139,7 @@ export const ButtonTypography = styled(Typography, {
     buttonType === ButtonType.CHANGEIMAGE ||
     buttonType === ButtonType.LOGINHEADER ||
     buttonType === ButtonType.SAVEDRAFT ||
+    buttonType === ButtonType.CREATEQUESTION ||
     (buttonType === ButtonType.SIGNUP && isReset) ||
     (buttonType === ButtonType.BACK)
       ? `${theme.palette.primary.buttonPrimaryDefault}`

@@ -14,11 +14,14 @@ import {
   CloudFrontDistributionUrl
 } from '@righton/networking';
 import { Box, Fade } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
   CreateGameBoxContainer,
   CreateGameContentContainer,
+  CreateGameTitleText,
+  QuestionHeaderText,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import ViewQuestionCards from '../components/question/ViewQuestionCards';
 import {
@@ -96,6 +99,8 @@ import {
   useCentralDataState,
 } from '../hooks/context/useCentralDataContext';
 import CreateGameHeader from '../components/game/CreateGameHeader';
+import CentralButton from '../components/button/Button';
+import { ButtonType } from '../components/button/ButtonModels';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -126,6 +131,7 @@ export default function CreateGame({
   handleSortChange,
   loadMore,
 }: CreateGameProps) {
+  const theme = useTheme();
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
@@ -1400,90 +1406,132 @@ export default function CreateGame({
             openCreateQuestion={draftGame.openCreateQuestion}
             openQuestionBank={draftGame.openQuestionBank}
           />
-
-          {/* Create Question Form(s)  */}
-          {draftQuestionsList.map((draftQuestionItem, index) => {
-            return (
-              index === selectedQuestionIndex && (
-                <Fade
-                  timeout={500}
-                  in={draftGame.openCreateQuestion}
-                  mountOnEnter
-                  unmountOnExit
-                  key={`Question--${index + 1}`}
-                >
-                  <Box
-                    sx={{
-                      width: draftQuestionItem.isLibraryViewOnly
-                        ? '100%'
-                        : 'auto',
-                    }}
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+            }}
+          >
+            <Box
+              sx={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+              }}
+            >
+              <QuestionHeaderText>
+                Questions
+              </QuestionHeaderText>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  gap: `${theme.sizing.xSmPadding}px`,
+                }}
+              >
+                  <CentralButton
+                    buttonType={ButtonType.CREATEQUESTION}
+                    isEnabled
+                    onClick={handleSaveGame}
+                  />
+                  <CentralButton
+                    buttonType={ButtonType.QUESTIONBANK}
+                    isEnabled
+                    onClick={handleSaveGame}
+                  />
+              </Box>
+            </Box>
+            {/* Create Question Form(s)  */}
+            {draftQuestionsList.map((draftQuestionItem, index) => {
+              return (
+                index === selectedQuestionIndex && (
+                  <Fade
+                    timeout={500}
+                    in={draftGame.openCreateQuestion}
+                    mountOnEnter
+                    unmountOnExit
+                    key={`Question--${index + 1}`}
                   >
-                    {draftQuestionItem.isLibraryViewOnly ? (
-                      <ViewQuestionCards
-                        screenSize={screenSize}
-                        question={draftQuestionItem.questionTemplate}
-                        isViewGame
-                        isCreateGame
-                      />
-                    ) : (
-                      <QuestionElements
-                        screenSize={screenSize}
-                        isClone={isClone}
-                        isEdit={isEdit}
-                        isCloneImageChanged={
-                          draftQuestionItem.isCloneQuestionImageChanged
-                        }
-                        label={label}
-                        draftQuestion={draftQuestionItem.question}
-                        completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
-                          (card) => card.isCardComplete,
-                        )}
-                        incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
-                          (card) => !card.isCardComplete,
-                        )}
-                        isCardSubmitted={
-                          draftQuestionItem.isQuestionCardSubmitted
-                        }
-                        isCardErrored={draftQuestionItem.isQuestionCardErrored}
-                        highlightCard={draftQuestionItem.highlightCard}
-                        isAIEnabled={draftQuestionItem.isAIEnabled}
-                        isAIError={draftQuestionItem.isAIError}
-                        isPublic={
-                          draftQuestionItem.publicPrivate ===
-                          PublicPrivateType.PUBLIC
-                        }
-                        isMultipleChoice={draftQuestionItem.isMultipleChoice}
-                        handleAnswerType={handleAnswerType}
-                        handleDebouncedCorrectAnswerChange={
-                          handleDebouncedCorrectAnswerChange
-                        }
-                        handleDebouncedCorrectAnswerStepsChange={
-                          handleDebouncedCorrectAnswerStepsChange
-                        }
-                        handleAnswerSettingsChange={handleAnswerSettingsChange}
-                        handleDebouncedTitleChange={handleDebouncedTitleChange}
-                        handlePublicPrivateChange={
-                          handlePublicPrivateQuestionChange
-                        }
-                        handleDiscardQuestion={handleDiscard}
-                        handleSaveQuestion={handleSaveQuestion}
-                        handleAIError={handleAIError}
-                        handleAIIsEnabled={handleAIIsEnabled}
-                        handleNextCardButtonClick={handleNextCardButtonClick}
-                        handleIncorrectCardStackUpdate={
-                          handleIncorrectCardStackUpdate
-                        }
-                        handleClick={handleClick}
-                        handleCCSSClick={handleCCSSClicks}
-                        handleImageUploadClick={handleQuestionImageUploadClick}
-                      />
-                    )}
-                  </Box>
-                </Fade>
-              )
-            );
-          })}
+                    <Box
+                      sx={{
+                        width: draftQuestionItem.isLibraryViewOnly
+                          ? '100%'
+                          : 'auto',
+                      }}
+                    >
+                      {draftQuestionItem.isLibraryViewOnly ? (
+                        <ViewQuestionCards
+                          screenSize={screenSize}
+                          question={draftQuestionItem.questionTemplate}
+                          isViewGame
+                          isCreateGame
+                        />
+                      ) : (
+                        <QuestionElements
+                          screenSize={screenSize}
+                          isClone={isClone}
+                          isEdit={isEdit}
+                          isCloneImageChanged={
+                            draftQuestionItem.isCloneQuestionImageChanged
+                          }
+                          label={label}
+                          draftQuestion={draftQuestionItem.question}
+                          completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
+                            (card) => card.isCardComplete,
+                          )}
+                          incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
+                            (card) => !card.isCardComplete,
+                          )}
+                          isCardSubmitted={
+                            draftQuestionItem.isQuestionCardSubmitted
+                          }
+                          isCardErrored={draftQuestionItem.isQuestionCardErrored}
+                          highlightCard={draftQuestionItem.highlightCard}
+                          isAIEnabled={draftQuestionItem.isAIEnabled}
+                          isAIError={draftQuestionItem.isAIError}
+                          isPublic={
+                            draftQuestionItem.publicPrivate ===
+                            PublicPrivateType.PUBLIC
+                          }
+                          isMultipleChoice={draftQuestionItem.isMultipleChoice}
+                          handleAnswerType={handleAnswerType}
+                          handleDebouncedCorrectAnswerChange={
+                            handleDebouncedCorrectAnswerChange
+                          }
+                          handleDebouncedCorrectAnswerStepsChange={
+                            handleDebouncedCorrectAnswerStepsChange
+                          }
+                          handleAnswerSettingsChange={handleAnswerSettingsChange}
+                          handleDebouncedTitleChange={handleDebouncedTitleChange}
+                          handlePublicPrivateChange={
+                            handlePublicPrivateQuestionChange
+                          }
+                          handleDiscardQuestion={handleDiscard}
+                          handleSaveQuestion={handleSaveQuestion}
+                          handleAIError={handleAIError}
+                          handleAIIsEnabled={handleAIIsEnabled}
+                          handleNextCardButtonClick={handleNextCardButtonClick}
+                          handleIncorrectCardStackUpdate={
+                            handleIncorrectCardStackUpdate
+                          }
+                          handleClick={handleClick}
+                          handleCCSSClick={handleCCSSClicks}
+                          handleImageUploadClick={handleQuestionImageUploadClick}
+                        />
+                      )}
+                    </Box>
+                  </Fade>
+                )
+              );
+            })}
+          </Box>
           <Fade
             in={draftGame.openQuestionBank}
             mountOnEnter

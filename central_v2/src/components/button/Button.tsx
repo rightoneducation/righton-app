@@ -84,6 +84,7 @@ export default function CentralButton({
               (buttonType === ButtonType.CHANGEIMAGE ||
                 buttonType === ButtonType.SAVEDRAFT)) ||
                 (buttonType === ButtonType.BACK) ||
+                (buttonType === ButtonType.CREATEQUESTION) ||
             (buttonType === ButtonType.SIGNUP && isReset) ? (
               <ButtonIconBlue src={buttonObj.icon} />
             ) : (
