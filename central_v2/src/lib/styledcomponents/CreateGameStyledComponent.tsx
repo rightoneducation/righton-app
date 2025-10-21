@@ -80,7 +80,7 @@ export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
-  gap: `${theme.sizing.mdPadding}px`,
+  gap: `60px`,
   zIndex: 1,
   position: 'relative',
   boxSizing: 'border-box',

@@ -20,10 +20,9 @@ import {
   CreateGameBackground,
   CreateGameBoxContainer,
   CreateGameContentContainer,
-  CreateGameTitleText,
   QuestionHeaderText,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
-import ViewQuestionCards from '../components/question/ViewQuestionCards';
+import ViewQuestionCardUnified from '../components/question/ViewQuestionCardUnified';
 import {
   CreateQuestionHighlightCard,
   LibraryTabEnum,
@@ -101,6 +100,7 @@ import {
 import CreateGameHeader from '../components/game/CreateGameHeader';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
+import DetailedQuestionCardBase from '../components/cards/detailedquestion/DetailedQuestionCardBase';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -1414,12 +1414,12 @@ export default function CreateGame({
               flexDirection: 'column',
               alignItems: 'flex-start',
               justifyContent: 'flex-start',
+              gap: `${theme.sizing.lgPadding}px`,
             }}
           >
             <Box
               sx={{
                 width: '100%',
-                height: '100%',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
@@ -1444,7 +1444,7 @@ export default function CreateGame({
                   <CentralButton
                     buttonType={ButtonType.QUESTIONBANK}
                     isEnabled
-                    onClick={handleSaveGame}
+                    onClick={handleOpenQuestionBank}
                   />
               </Box>
             </Box>
@@ -1467,7 +1467,7 @@ export default function CreateGame({
                       }}
                     >
                       {draftQuestionItem.isLibraryViewOnly ? (
-                        <ViewQuestionCards
+                        <ViewQuestionCardUnified
                           screenSize={screenSize}
                           question={draftQuestionItem.questionTemplate}
                           isViewGame
