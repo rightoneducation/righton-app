@@ -289,6 +289,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.EDIT]: {
     icon: edit,
     textKey: ButtonType.EDIT,
+    color: ButtonColor.NULL,
   },
   [ButtonType.DELETE]: {
     icon: deleteIcon,

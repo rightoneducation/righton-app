@@ -96,6 +96,29 @@ export const BaseCardStyled = styled(Paper, {
   transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
 
+export const ViewQuestionBaseCardStyled = styled(Paper)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  alignItems: 'flex-start',
+  background: '#FFFFFF',
+  borderRadius: `8px`,
+  boxSizing: 'border-box',
+  height: 'fit-content',
+}));
+
+export const ViewQuestionContentContainerStyled = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.smPadding}px`,
+}));
+
+export const QuestionTextStyled = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Poppins',
+  fontSize: '20px',
+  fontWeight: 'bold',
+}));
+
 export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({
   width: '100%',
   display: 'flex',

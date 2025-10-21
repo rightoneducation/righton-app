@@ -1,10 +1,9 @@
 import React from 'react';
 import {
   Typography,
-  RadioGroup,
   Box,
   styled,
-  FormControl,
+  useTheme,
 } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -14,20 +13,17 @@ import {
   AnswerType,
 } from '@righton/networking';
 import {
-  QuestionTitleStyled,
-  RadioContainerStyled,
-  RadioLabelStyled,
-  RadioStyled,
-  ContentContainerStyled,
-  ImageStyled,
+  AnswerIndicator,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import {
-  BaseCardStyled,
-  TextContainerStyled,
+  ViewQuestionBaseCardStyled,
+  ViewQuestionContentContainerStyled,
+  QuestionTextStyled,
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
-import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
+import { ButtonType } from '../../button/ButtonModels';
+import CentralButton from '../../button/Button';
 
 interface DetailedQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -70,6 +66,9 @@ export default function DetailedQuestionCardBase({
   dropShadow,
   isCreateGame,
 }: DetailedQuestionCardBaseProps) {
+  const theme = useTheme();
+  const correctAnswer = question?.choices?.find((answer) => answer.isAnswer)?.text;
+  const incorrectAnswers = question?.choices?.filter((answer) => !answer.isAnswer)?.map((answer) => answer.text);
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [isPublic, setIsPublic] = React.useState<boolean>(
     question.publicPrivateType === PublicPrivateType.PUBLIC,
@@ -92,175 +91,117 @@ export default function DetailedQuestionCardBase({
   };
 
   return (
-    <BaseCardStyled
-      sx={{
-        ...(isCreateGame && {
-          boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
-          padding:
-            screenSize === ScreenSize.LARGE
-              ? '28px'
-              : (theme) => `${theme.sizing.mdPadding}px`,
-        }),
-      }}
+    <ViewQuestionBaseCardStyled
       elevation={6}
-      isHighlight={false}
-      isCardComplete={false}
-      dropShadow={dropShadow}
     >
-      <CreateQuestionTitleBarStyled screenSize={screenSize}>
-        <Box
+      <img
+        src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`}
+        alt="question"
+        style={{
+          width: '200px',
+          height: '100%',
+          objectFit: 'cover',
+          borderRadius: '8px',
+        }}
+      />
+      <Box
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          paddingTop: `${theme.sizing.mdPadding}px`,
+          paddingBottom: `${theme.sizing.mdPadding}px`,
+          paddingLeft: `${theme.sizing.smPadding}px`,
+          paddingRight: `${theme.sizing.smPadding}px`,
+          gap: `${theme.sizing.mdPadding}px`,
+        }}
+      >
+        {/* CCSS, buttons, and question text */}
+        <ViewQuestionContentContainerStyled
           style={{
             width: '100%',
             display: 'flex',
-            justifyContent:
-              screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
-            alignItems: 'center',
-            gap: '14px',
+            flexDirection: 'column',
+            gap: `${theme.sizing.smPadding}px`,
           }}
         >
-          <QuestionTitleStyled>Question</QuestionTitleStyled>
-          <ButtonCCSS key={uuidv4()}>{question.ccss}</ButtonCCSS>
-        </Box>
-        {screenSize !== ScreenSize.SMALL && !isCreateGame && (
-          <Box
-            style={{
-              display: 'flex',
-              gap: '16px',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <PublicPrivateButton isPublic={isPublic} isDisabled />
-          </Box>
-        )}
-        {isCreateGame && (
-          <FormControl
-            component="div"
-            disabled
-            sx={{
-              minWidth: 'unset',
-              '&&': {
-                minWidth: 'unset',
-              },
-            }}
-          >
-            <RadioContainerStyled>
-              <RadioGroup
-                row
-                value={isMultipleChoice ? 'multiple' : 'short'}
-                style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
-              >
-                <RadioLabelStyled
-                  disabled
-                  value="multiple"
-                  control={<RadioStyled style={{ cursor: 'pointer' }} />}
-                  label="Multiple Choice"
-                  isSelected={isMultipleChoice}
-                  style={{
-                    cursor: 'pointer',
-                    ...(isCreateGamePage && { whiteSpace: 'nowrap' }),
-                  }}
-                />
-                <RadioLabelStyled
-                  disabled
-                  value="short"
-                  control={<RadioStyled style={{ cursor: 'pointer' }} />}
-                  label="Short Answer"
-                  isSelected={!isMultipleChoice}
-                  style={{
-                    cursor: 'pointer',
-                    ...(isCreateGamePage && { whiteSpace: 'nowrap' }),
-                  }}
-                />
-              </RadioGroup>
-            </RadioContainerStyled>
-          </FormControl>
-        )}
-      </CreateQuestionTitleBarStyled>
-      <ContentContainerStyled screenSize={screenSize}>
-        <Box
-          style={{
-            width: '100%',
-            height: 'auto',
-            margin: 0,
-            boxSizing: 'border-box',
-          }}
-        >
-          <img
-            src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`}
-            alt="question"
-            style={{
-              width: '100%',
-              height: '200px',
-              objectFit: 'cover',
-              borderRadius: isCreateGame ? '8px' : '0px',
-            }}
-          />
-        </Box>
-        <CreateQuestionContentRightContainerStyled>
-          {!isCreateGame && (
-            <FormControl component="fieldset" disabled>
-              <RadioContainerStyled>
-                <RadioGroup
-                  row
-                  value={isMultipleChoice ? 'multiple' : 'short'}
-                  style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
-                >
-                  <RadioLabelStyled
-                    disabled
-                    value="multiple"
-                    control={<RadioStyled style={{ cursor: 'pointer' }} />}
-                    label="Multiple Choice"
-                    isSelected={isMultipleChoice}
-                    style={{
-                      cursor: 'pointer',
-                      ...(isCreateGamePage && { whiteSpace: 'nowrap' }),
-                    }}
-                  />
-                  <RadioLabelStyled
-                    disabled
-                    value="short"
-                    control={<RadioStyled style={{ cursor: 'pointer' }} />}
-                    label="Short Answer"
-                    isSelected={!isMultipleChoice}
-                    style={{
-                      cursor: 'pointer',
-                      ...(isCreateGamePage && { whiteSpace: 'nowrap' }),
-                    }}
-                  />
-                </RadioGroup>
-              </RadioContainerStyled>
-            </FormControl>
-          )}
+          <CreateQuestionTitleBarStyled screenSize={screenSize}>
+            <Box
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent:
+                  screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
+                alignItems: 'center',
+                gap: '14px',
+              }}
+            >
+              <ButtonCCSS key={uuidv4()}>{question.ccss}</ButtonCCSS>
+            </Box>
+          </CreateQuestionTitleBarStyled>
           <Box
             style={{
               width: '100%',
               margin: 0,
-              padding: '8px',
               boxSizing: 'border-box',
             }}
           >
-            <Typography
-              sx={{whiteSpace: 'pre-line'}}
-            >
+            <Typography sx={{whiteSpace: 'pre-line'}}>
               {question.title}
             </Typography>
           </Box>
-        </CreateQuestionContentRightContainerStyled>
-        {screenSize === ScreenSize.SMALL && !isCreateGame && (
+        </ViewQuestionContentContainerStyled>
+        <ViewQuestionContentContainerStyled>
+          <QuestionTextStyled sx={{whiteSpace: 'pre-line', color: '#148700'}}>
+            Correct Answer
+          </QuestionTextStyled>
+          <AnswerIndicator>{correctAnswer}</AnswerIndicator>
+        </ViewQuestionContentContainerStyled>
+        <ViewQuestionContentContainerStyled>
+          <QuestionTextStyled sx={{whiteSpace: 'pre-line', color: '#1B376F'}}>
+            Incorrect Answers
+          </QuestionTextStyled>
           <Box
             style={{
-              display: 'flex',
-              gap: '16px',
-              alignItems: 'center',
-              justifyContent: 'center',
               width: '100%',
+              display: 'flex',
+              gap: `${theme.sizing.xSmPadding}px`,
             }}
           >
-            <PublicPrivateButton isPublic={isPublic} isDisabled={false} />
+              {incorrectAnswers?.map((answer) => (
+                <AnswerIndicator>{answer}</AnswerIndicator>
+              ))}
           </Box>
-        )}
-      </ContentContainerStyled>
-    </BaseCardStyled>
+        </ViewQuestionContentContainerStyled>
+        <ViewQuestionContentContainerStyled
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            height: '38px'
+          }}
+        >
+          {question.id !== null ? 
+            <CentralButton
+              buttonType={ButtonType.EDIT}
+              isEnabled
+              buttonWidthOverride="127px"
+              onClick={() => {}}
+            />
+            : 
+            <Typography
+              sx={{
+                fontFamily: 'Rubik',
+                fontSize: '14px',
+                color: '#1B376F',
+                padding: 0
+              }}
+            >
+              Public Question Created By Other User
+            </Typography>
+          }
+        </ViewQuestionContentContainerStyled>
+      </Box>
+    </ViewQuestionBaseCardStyled>
   );
 }
