@@ -18,6 +18,7 @@ import {
   CreateGameMainContainer,
   CreateGameBackground,
   CreateGameBoxContainer,
+  CreateGameContentContainer,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import ViewQuestionCards from '../components/question/ViewQuestionCards';
 import {
@@ -40,7 +41,7 @@ import {
 import DiscardModal from '../components/modal/DiscardModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
-import CreateGameComponent from '../components/game/CreateGameComponent';
+import CreateGameCardBase from '../components/cards/creategamecard/CreateGameCardBase';
 import QuestionElements from '../components/game/QuestionGridItems';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
@@ -94,6 +95,7 @@ import {
   useCentralDataDispatch,
   useCentralDataState,
 } from '../hooks/context/useCentralDataContext';
+import CreateGameHeader from '../components/game/CreateGameHeader';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -1374,141 +1376,138 @@ export default function CreateGame({
       />
 
       {/* Create Game Card flow starts here */}
-      <CreateGameBoxContainer>
-        <CreateGameComponent
-          draftGame={draftGame}
-          draftQuestionsList={draftQuestionsList}
-          isClone={isClone}
-          isEdit={isEdit}
-          isEditDraft={isEditDraft}
-          isLoading={centralData.isLoading || isLoading}
-          isCloneImageChanged={draftGame.isCloneGameImageChanged}
-          label={label}
-          screenSize={screenSize}
-          handleSaveGame={handleSave}
-          handleSaveDraftGame={handleDraftSave}
-          handleDiscard={handleDiscardGame}
-          handlePublicPrivateChange={handlePublicPrivateGameChange}
-          handleImageUploadClick={handleGameImageUploadClick}
-          onCreateQuestion={handleOpenCreateQuestion}
-          onOpenQuestionBank={handleOpenQuestionBank}
-          handlePhaseTime={handlePhaseTime}
-          onGameDescription={handleGameDescription}
-          onGameTitle={handleGameTitle}
-          phaseTime={phaseTime}
-          selectedIndex={selectedQuestionIndex}
-          iconButtons={iconButtons}
-          setSelectedIndex={handleQuestionIndexChange}
-          addMoreQuestions={handleAddMoreQuestions}
-          handleDeleteQuestion={handleDeleteQuestion}
-        />
+      <CreateGameContentContainer>
+        <CreateGameHeader handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
+        <CreateGameBoxContainer>
+          <CreateGameCardBase
+            draftGame={draftGame}
+            isClone={isClone}
+            isEdit={isEdit}
+            isEditDraft={isEditDraft}
+            isCloneImageChanged={draftGame.isCloneGameImageChanged}
+            label={label}
+            screenSize={screenSize}
+            handleImageUploadClick={handleGameImageUploadClick}
+            handlePublicPrivateChange={handlePublicPrivateGameChange}
+            handlePhaseTime={handlePhaseTime}
+            onGameDescription={handleGameDescription}
+            onGameTitle={handleGameTitle}
+            isCardSubmitted={draftGame.isGameCardSubmitted}
+            isCardErrored={draftGame.isGameCardErrored}
+            phaseTime={phaseTime}
+            gameTitle={draftGame.gameTemplate.title}
+            gameDescription={draftGame.gameTemplate.description}
+            openCreateQuestion={draftGame.openCreateQuestion}
+            openQuestionBank={draftGame.openQuestionBank}
+          />
 
-        {/* Create Question Form(s)  */}
-        {draftQuestionsList.map((draftQuestionItem, index) => {
-          return (
-            index === selectedQuestionIndex && (
-              <Fade
-                timeout={500}
-                in={draftGame.openCreateQuestion}
-                mountOnEnter
-                unmountOnExit
-                key={`Question--${index + 1}`}
-              >
-                <Box
-                  sx={{
-                    width: draftQuestionItem.isLibraryViewOnly
-                      ? '100%'
-                      : 'auto',
-                  }}
+          {/* Create Question Form(s)  */}
+          {draftQuestionsList.map((draftQuestionItem, index) => {
+            return (
+              index === selectedQuestionIndex && (
+                <Fade
+                  timeout={500}
+                  in={draftGame.openCreateQuestion}
+                  mountOnEnter
+                  unmountOnExit
+                  key={`Question--${index + 1}`}
                 >
-                  {draftQuestionItem.isLibraryViewOnly ? (
-                    <ViewQuestionCards
-                      screenSize={screenSize}
-                      question={draftQuestionItem.questionTemplate}
-                      isViewGame
-                      isCreateGame
-                    />
-                  ) : (
-                    <QuestionElements
-                      screenSize={screenSize}
-                      isClone={isClone}
-                      isEdit={isEdit}
-                      isCloneImageChanged={
-                        draftQuestionItem.isCloneQuestionImageChanged
-                      }
-                      label={label}
-                      draftQuestion={draftQuestionItem.question}
-                      completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
-                        (card) => card.isCardComplete,
-                      )}
-                      incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
-                        (card) => !card.isCardComplete,
-                      )}
-                      isCardSubmitted={
-                        draftQuestionItem.isQuestionCardSubmitted
-                      }
-                      isCardErrored={draftQuestionItem.isQuestionCardErrored}
-                      highlightCard={draftQuestionItem.highlightCard}
-                      isAIEnabled={draftQuestionItem.isAIEnabled}
-                      isAIError={draftQuestionItem.isAIError}
-                      isPublic={
-                        draftQuestionItem.publicPrivate ===
-                        PublicPrivateType.PUBLIC
-                      }
-                      isMultipleChoice={draftQuestionItem.isMultipleChoice}
-                      handleAnswerType={handleAnswerType}
-                      handleDebouncedCorrectAnswerChange={
-                        handleDebouncedCorrectAnswerChange
-                      }
-                      handleDebouncedCorrectAnswerStepsChange={
-                        handleDebouncedCorrectAnswerStepsChange
-                      }
-                      handleAnswerSettingsChange={handleAnswerSettingsChange}
-                      handleDebouncedTitleChange={handleDebouncedTitleChange}
-                      handlePublicPrivateChange={
-                        handlePublicPrivateQuestionChange
-                      }
-                      handleDiscardQuestion={handleDiscard}
-                      handleSaveQuestion={handleSaveQuestion}
-                      handleAIError={handleAIError}
-                      handleAIIsEnabled={handleAIIsEnabled}
-                      handleNextCardButtonClick={handleNextCardButtonClick}
-                      handleIncorrectCardStackUpdate={
-                        handleIncorrectCardStackUpdate
-                      }
-                      handleClick={handleClick}
-                      handleCCSSClick={handleCCSSClicks}
-                      handleImageUploadClick={handleQuestionImageUploadClick}
-                    />
-                  )}
-                </Box>
-              </Fade>
-            )
-          );
-        })}
-        <Fade
-          in={draftGame.openQuestionBank}
-          mountOnEnter
-          unmountOnExit
-          timeout={500}
-        >
-          <Box sx={{ width: '100%' }}>
-            <LibraryTabsQuestions
-              isPublic={
-                draftGame.gameTemplate.publicPrivateType ===
-                PublicPrivateType.PUBLIC || draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT
-              }
-              screenSize={screenSize}
-              setIsTabsOpen={setIsTabsOpen}
-              handleChooseGrades={handleChooseGrades}
-              handleSortChange={handleSortChange}
-              handleSearchChange={handleSearchChange}
-              fetchElements={fetchElements}
-              handleView={handleView}
-            />
-          </Box>
-        </Fade>
-      </CreateGameBoxContainer>
+                  <Box
+                    sx={{
+                      width: draftQuestionItem.isLibraryViewOnly
+                        ? '100%'
+                        : 'auto',
+                    }}
+                  >
+                    {draftQuestionItem.isLibraryViewOnly ? (
+                      <ViewQuestionCards
+                        screenSize={screenSize}
+                        question={draftQuestionItem.questionTemplate}
+                        isViewGame
+                        isCreateGame
+                      />
+                    ) : (
+                      <QuestionElements
+                        screenSize={screenSize}
+                        isClone={isClone}
+                        isEdit={isEdit}
+                        isCloneImageChanged={
+                          draftQuestionItem.isCloneQuestionImageChanged
+                        }
+                        label={label}
+                        draftQuestion={draftQuestionItem.question}
+                        completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
+                          (card) => card.isCardComplete,
+                        )}
+                        incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
+                          (card) => !card.isCardComplete,
+                        )}
+                        isCardSubmitted={
+                          draftQuestionItem.isQuestionCardSubmitted
+                        }
+                        isCardErrored={draftQuestionItem.isQuestionCardErrored}
+                        highlightCard={draftQuestionItem.highlightCard}
+                        isAIEnabled={draftQuestionItem.isAIEnabled}
+                        isAIError={draftQuestionItem.isAIError}
+                        isPublic={
+                          draftQuestionItem.publicPrivate ===
+                          PublicPrivateType.PUBLIC
+                        }
+                        isMultipleChoice={draftQuestionItem.isMultipleChoice}
+                        handleAnswerType={handleAnswerType}
+                        handleDebouncedCorrectAnswerChange={
+                          handleDebouncedCorrectAnswerChange
+                        }
+                        handleDebouncedCorrectAnswerStepsChange={
+                          handleDebouncedCorrectAnswerStepsChange
+                        }
+                        handleAnswerSettingsChange={handleAnswerSettingsChange}
+                        handleDebouncedTitleChange={handleDebouncedTitleChange}
+                        handlePublicPrivateChange={
+                          handlePublicPrivateQuestionChange
+                        }
+                        handleDiscardQuestion={handleDiscard}
+                        handleSaveQuestion={handleSaveQuestion}
+                        handleAIError={handleAIError}
+                        handleAIIsEnabled={handleAIIsEnabled}
+                        handleNextCardButtonClick={handleNextCardButtonClick}
+                        handleIncorrectCardStackUpdate={
+                          handleIncorrectCardStackUpdate
+                        }
+                        handleClick={handleClick}
+                        handleCCSSClick={handleCCSSClicks}
+                        handleImageUploadClick={handleQuestionImageUploadClick}
+                      />
+                    )}
+                  </Box>
+                </Fade>
+              )
+            );
+          })}
+          <Fade
+            in={draftGame.openQuestionBank}
+            mountOnEnter
+            unmountOnExit
+            timeout={500}
+          >
+            <Box sx={{ width: '100%' }}>
+              <LibraryTabsQuestions
+                isPublic={
+                  draftGame.gameTemplate.publicPrivateType ===
+                  PublicPrivateType.PUBLIC || draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT
+                }
+                screenSize={screenSize}
+                setIsTabsOpen={setIsTabsOpen}
+                handleChooseGrades={handleChooseGrades}
+                handleSortChange={handleSortChange}
+                handleSearchChange={handleSearchChange}
+                fetchElements={fetchElements}
+                handleView={handleView}
+              />
+            </Box>
+          </Fade>
+        </CreateGameBoxContainer>
+      </CreateGameContentContainer>
     </CreateGameMainContainer>
   );
 }

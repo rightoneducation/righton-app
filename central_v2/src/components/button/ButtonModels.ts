@@ -231,6 +231,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.BACK]: {
     icon: previous,
     textKey: ButtonType.BACK,
+    color: ButtonColor.NULL,
   },
   [ButtonType.EDITPICTURE]: {
     textKey: ButtonType.EDITPICTURE,

@@ -90,18 +90,14 @@ export default function SelectPublicPrivateDropdown({
       }}
     >
       <SelectPublicPrivate
-        error={isCardError}
+        error={false}
         sx={{
           borderRadius: isSelectOpen ? '5px 5px 0 0' : '5px',
-          ...(isCardError && { border: '1px solid #D0254D' }),
         }}
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
-        {isCardError && (
-          <ErrorIcon sx={{ width: 17, height: 17 }} src={errorIcon} />
-        )}
-        <SelectPhaseLabel isSelected={publicPrivateType !== null} error={isCardError} style={{fontWeight: 'normal'}}>
+        <SelectPhaseLabel isSelected={publicPrivateType !== null} error={false} style={{fontWeight: 'normal'}}>
           {publicPrivateType !== null ? publicPrivateType : ``}
         </SelectPhaseLabel>
         {/* space between is here */}

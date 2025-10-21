@@ -83,6 +83,7 @@ export default function CentralButton({
             {(buttonColor === ButtonColor.NULL &&
               (buttonType === ButtonType.CHANGEIMAGE ||
                 buttonType === ButtonType.SAVEDRAFT)) ||
+                (buttonType === ButtonType.BACK) ||
             (buttonType === ButtonType.SIGNUP && isReset) ? (
               <ButtonIconBlue src={buttonObj.icon} />
             ) : (

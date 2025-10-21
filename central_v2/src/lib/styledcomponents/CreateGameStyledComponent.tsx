@@ -21,7 +21,6 @@ import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  height: '100%',
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -31,6 +30,28 @@ export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   msOverflowStyle: 'none',
   boxSizing: 'border-box',
   display: 'flex',
+  flexDirection: 'column',
+  paddingLeft: `${theme.sizing.xLgPadding}px`,
+  paddingRight: `${theme.sizing.xLgPadding}px`,
+  paddingTop: `${theme.sizing.mdPadding}px`,
+  gap: `${theme.sizing.mdPadding}px`,
+}));
+
+export const CreateGameContentContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+  gap: `${theme.sizing.mdPadding}px`,
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE and Edge
 }));
 
 export const CreateGameBackground = styled(Box)(({ theme }) => ({
@@ -53,24 +74,14 @@ export const CreateGameBackground = styled(Box)(({ theme }) => ({
 
 export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  height: '100%',
   display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   justifyContent: 'flex-start',
   gap: `${theme.sizing.mdPadding}px`,
   zIndex: 1,
   position: 'relative',
-  paddingLeft: `${theme.sizing.mdPadding}px`,
-  paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
-  flexGrow: 1,
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  msOverflowStyle: 'none', // IE and Edge
 }));
 
 type TitleTextProps = {
@@ -85,7 +96,6 @@ export const TitleText = styled(Typography)<TitleTextProps>(
     fontSize:
       screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
     color: `${theme.palette.primary.extraDarkBlue}`,
-    paddingTop: `${theme.sizing.lgPadding}px`,
   }),
 );
 
@@ -132,10 +142,11 @@ export const CreateGameSaveDiscardBoxContainer = styled(Box, {
   }),
 }));
 
-export const CreateGameGridContainer = styled(Grid)(({ theme }) => ({
+export const CreateGameGridContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
-  justifyContent: 'center',
+  alignItems: 'flex-start',
+  gap: `60px`,
 }));
 
 type QuestionCountButtonProps = {
@@ -165,7 +176,7 @@ export const QuestionCountButton = styled(Button, {
   gap: '10px',
 }));
 
-export const CreateGameSaveDiscardGridItem = styled(Grid)(({ theme }) => ({
+export const CreateGameSaveDiscardGridItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'flex-start',

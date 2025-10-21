@@ -269,12 +269,8 @@ export default function ViewGame({
                 )}
               </Box>
             )}
-            <CreateGameGridContainer container wrap="nowrap">
-              <Grid
-                sm
-                md={1}
-                lg={4}
-                item
+            <CreateGameGridContainer>
+              <Box
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
@@ -340,13 +336,8 @@ export default function ViewGame({
                       )}
                     </Box>
                   )}
-              </Grid>
-              <CreateGameCardGridItem
-                item
-                sm={12}
-                md={10}
-                lg={4}
-                screenSize={screenSize}
+              </Box>
+              <Box
                 style={{
                   width: '100%',
                   maxWidth: '672px',
@@ -361,7 +352,7 @@ export default function ViewGame({
                   game={centralData.selectedGame.game}
                   dropShadow
                 />
-              </CreateGameCardGridItem>
+              </Box>
               <Grid sm md={1} lg={4} item />
             </CreateGameGridContainer>
             <Box

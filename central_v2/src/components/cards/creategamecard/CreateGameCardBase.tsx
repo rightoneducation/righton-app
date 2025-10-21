@@ -207,10 +207,9 @@ export default function CreateGameCardBase({
       isClone={isClone}
       isCardComplete={completedCardClicked ? false : cardIsComplete}
       sx={{
-        height: responsiveHeight,
         gap: responsiveGap,
         width: '100%',
-        maxWidth: '672px',
+        maxWidth: '460px',
         padding: '24px',
         borderRadius: '8px',
         boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
