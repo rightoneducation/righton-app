@@ -74,6 +74,7 @@ export default function LibraryTabsModalContainer({
             handleSearchChange={handleSearchChange}
             fetchElements={fetchElements}
             handleView={handleQuestionView}
+            handleCloseQuestionTabs={handleCloseQuestionTabs}
           />
         </TabContainer>
       </Slide>

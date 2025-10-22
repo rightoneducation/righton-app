@@ -129,9 +129,6 @@ export const toggleQuestionBank = (
     ...(draftGame.openCreateQuestion &&
       gameFormIsValid && { openCreateQuestion: false }),
     ...(gameFormIsValid && { openQuestionBank: !draftGame.openQuestionBank }),
-    ...(gameFormIsValid &&
-      draftGame.isGameCardErrored && { isGameCardErrored: false }),
-    ...(!gameFormIsValid && { isGameCardErrored: true }),
   };
 };
 

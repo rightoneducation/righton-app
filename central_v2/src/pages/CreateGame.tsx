@@ -1150,7 +1150,7 @@ export default function CreateGame({
   };
 
   /** END OF CREATE QUESTION HANDLERS  */
-
+  console.log(draftQuestionsList);
   /** LIBRARY HANDLER HELPERS */
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE) return value;
@@ -1468,11 +1468,19 @@ export default function CreateGame({
               </Box>
             </Box>
             {draftQuestionsList.length > 0 ? (
-              <>
+              <Box 
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                  gap: `${theme.sizing.lgPadding}px`,
+                }}
+              >
                 {/* Create Question Form(s)  */}
                 {draftQuestionsList.map((draftQuestionItem, index) => {
                   return (
-                    index === selectedQuestionIndex && (
                       <Fade
                         timeout={500}
                         in={draftGame.openCreateQuestion}
@@ -1491,6 +1499,7 @@ export default function CreateGame({
                             <ViewQuestionCardUnified
                               screenSize={screenSize}
                               question={draftQuestionItem.questionTemplate}
+                              handleRemoveQuestion={() => handleDeleteQuestion(index)}
                               isViewGame
                               isCreateGame
                             />
@@ -1549,10 +1558,9 @@ export default function CreateGame({
                           )}
                         </Box>
                       </Fade>
-                    )
                   );
                 })}
-              </>
+              </Box>
             ) : (
             <Box
               sx={{

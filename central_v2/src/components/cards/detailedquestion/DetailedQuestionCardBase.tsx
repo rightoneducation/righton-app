@@ -30,6 +30,7 @@ import buttonRemoveQuestionImage from '../../../images/buttonRemoveQuestion.svg'
 interface DetailedQuestionCardBaseProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
+  handleRemoveQuestion?: () => void;
   dropShadow?: boolean;
   isCreateGame?: boolean;
 }
@@ -65,8 +66,10 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(
 export default function DetailedQuestionCardBase({
   screenSize,
   question,
+  handleRemoveQuestion,
   dropShadow,
   isCreateGame,
+
 }: DetailedQuestionCardBaseProps) {
   const theme = useTheme();
   const correctAnswer = question?.choices?.find((answer) => answer.isAnswer)?.text;
@@ -164,7 +167,9 @@ export default function DetailedQuestionCardBase({
                   alt="expand question"
                 />
               </Box>
+              {handleRemoveQuestion && (
               <Box
+                onClick={handleRemoveQuestion}
                 style={{
                   width: '28px',
                   height: '28px',
@@ -179,6 +184,7 @@ export default function DetailedQuestionCardBase({
                   alt="expand question"
                 />
               </Box>
+              )}
             </Box>
           </CreateQuestionTitleBarStyled>
           <Box
@@ -223,7 +229,7 @@ export default function DetailedQuestionCardBase({
             height: '38px'
           }}
         >
-          {question.id !== null ? 
+          {question.id === null ? 
             <CentralButton
               buttonType={ButtonType.EDIT}
               isEnabled

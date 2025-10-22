@@ -15,6 +15,7 @@ import {
 interface ViewQuestionCardUnifiedProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
+  handleRemoveQuestion: () => void;
   isViewGame: boolean;
   isCreateGame?: boolean;
 }
@@ -22,6 +23,7 @@ interface ViewQuestionCardUnifiedProps {
 export default function ViewQuestionCardUnified({
   screenSize,
   question,
+  handleRemoveQuestion,
   isViewGame,
   isCreateGame,
 }: ViewQuestionCardUnifiedProps) {
@@ -31,6 +33,7 @@ export default function ViewQuestionCardUnified({
     <CardContainer sx={{ overflowY: 'visible', paddingTop: '0px' }}>
       <DetailedQuestionCardBase
         isCreateGame={isCreateGame}
+        handleRemoveQuestion={handleRemoveQuestion}
         dropShadow
         screenSize={screenSize}
         question={question}
