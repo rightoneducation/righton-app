@@ -24,6 +24,8 @@ import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents
 import { ScreenSize } from '../../../lib/CentralModels';
 import { ButtonType } from '../../button/ButtonModels';
 import CentralButton from '../../button/Button';
+import buttonExpandQuestionImage from '../../../images/buttonExpandQuestion.svg';
+import buttonRemoveQuestionImage from '../../../images/buttonRemoveQuestion.svg';
 
 interface DetailedQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -137,6 +139,46 @@ export default function DetailedQuestionCardBase({
               }}
             >
               <ButtonCCSS key={uuidv4()}>{question.ccss}</ButtonCCSS>
+            </Box>
+            <Box
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: '14px',
+              }}
+            >
+              <Box
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                }}
+              >
+                <img
+                  src={`${buttonExpandQuestionImage}`}
+                  alt="expand question"
+                />
+              </Box>
+              <Box
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                }}
+              >
+                <img
+                  src={`${buttonRemoveQuestionImage}`}
+                  alt="expand question"
+                />
+              </Box>
             </Box>
           </CreateQuestionTitleBarStyled>
           <Box
