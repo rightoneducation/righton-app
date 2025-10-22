@@ -118,6 +118,14 @@ export const QuestionHeaderText = styled(Typography)(({ theme }) => ({
   color: '#384466',
 }));
 
+export const QuestionBodyText = styled(Typography)(({ theme }) => ({
+  fontSize: '16px',
+  fontWeight: '600',
+  fontFamily: 'Poppins',
+  textAlign: 'center',
+  color: '#384466',
+}));
+
 export const GameCardBaseItem = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
