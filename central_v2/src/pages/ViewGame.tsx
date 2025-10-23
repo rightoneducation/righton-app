@@ -35,6 +35,7 @@ import DeleteModal from '../components/modal/DeleteModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import EditToolTip from '../components/tooltips/EditToolTip';
 import ViewQuestionCardUnified from '../components/question/ViewQuestionCardUnified';
+import OwnerTag from '../components/profile/OwnerTag';
 
 
 interface ViewGameProps {
@@ -217,11 +218,17 @@ export default function ViewGame({
           <CreateGameContentContainer>
             <ViewGameHeader handleBackClick={() => {}} handleEditGame={() => {}} handleLaunchGame={() => {}} label="View" screenSize={screenSize} />
             <CreateGameBoxContainer>
-            <DetailedGameCardBase
-              screenSize={screenSize}
-              game={centralData.selectedGame.game}
-              dropShadow
-            />
+            <Box style={{ width: '100%', maxWidth: '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
+              <DetailedGameCardBase
+                screenSize={screenSize}
+                game={centralData.selectedGame.game}
+                dropShadow
+              />
+              <OwnerTag
+                screenSize={screenSize}
+                isViewGame
+              />
+            </Box>
             <Box
               sx={{
                 width: '100%',
