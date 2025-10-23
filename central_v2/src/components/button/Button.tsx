@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
@@ -77,12 +78,15 @@ export default function CentralButton({
       isReset={isReset}
       style={{ width: buttonWidthOverride ?? buttonWidth }}
     >
-      <ButtonContent>
-        {buttonObj.icon && (
+      {buttonObj.icon && (
           <ButtonIconContainer>
             {(buttonColor === ButtonColor.NULL &&
               (buttonType === ButtonType.CHANGEIMAGE ||
                 buttonType === ButtonType.SAVEDRAFT)) ||
+                (buttonType === ButtonType.BACK) ||
+                (buttonType === ButtonType.BACKTOEDIT) ||
+                (buttonType === ButtonType.EDIT) ||
+                (buttonType === ButtonType.CREATEQUESTION) ||
             (buttonType === ButtonType.SIGNUP && isReset) ? (
               <ButtonIconBlue src={buttonObj.icon} />
             ) : (
@@ -90,6 +94,8 @@ export default function CentralButton({
             )}
           </ButtonIconContainer>
         )}
+      <ButtonContent>
+        <Box style={{ height: '20px', width: '20px' }} />
         {buttonText && !isSmallScreen && !iconOnlyOverride && (
           <ButtonTypography
             isReset={isReset}

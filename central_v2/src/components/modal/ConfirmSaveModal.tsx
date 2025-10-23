@@ -9,6 +9,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { TemplateType } from '../../lib/CentralModels';
+import { ButtonType } from '../button/ButtonModels';
+import CentralButton from '../button/Button';
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
   position: 'absolute',
@@ -34,10 +36,19 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
 }));
 
 const DragText = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Poppins',
   width: '100%',
   fontSize: '24px',
   lineHeight: '32px',
   fontWeight: 700,
+  textAlign: 'center',
+}));
+
+const BodyText = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Rubik',  
+  width: '100%',
+  fontSize: '16px',
+  fontWeight: 400,
   textAlign: 'center',
 }));
 
@@ -47,20 +58,19 @@ const CloseButton = styled('img')(({ theme }) => ({
   cursor: 'pointer',
 }));
 
-interface CreatingTemplateModalProps {
+interface ConfirmSaveModalProps {
   isModalOpen: boolean;
-  isUpdatingTemplate?: boolean;
   templateType: TemplateType;
+  handleContinue: () => void;
 }
 
-export default function CreatingTemplateModal({
+export default function ConfirmSaveModal({
   isModalOpen,
-  isUpdatingTemplate,
   templateType,
-}: CreatingTemplateModalProps) {
+  handleContinue,
+}: ConfirmSaveModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
-  const text2 = isUpdatingTemplate ? 'Updating' : 'Creating';
 
   return (
     <Fade
@@ -72,10 +82,10 @@ export default function CreatingTemplateModal({
         position: 'absolute',
         top: '50%',
         left: '50%',
-        transform: 'translate(-50%)',
+        transform: 'translate(-50%, -50%)',
       }}
     >
-      <IntegratedContainer elevation={12}>
+      <IntegratedContainer elevation={12} style={{ maxWidth: '430px', padding: `${theme.sizing.xLgPadding}px`}}>
         <Box
           style={{
             width: '100%',
@@ -86,10 +96,12 @@ export default function CreatingTemplateModal({
             gap: '16px',
           }}
         >
-          <DragText> {text2} {text} Template </DragText>
-          <CircularProgress
-            size="48px"
-            style={{ color: `${theme.palette.primary.circularProgress}` }}
+          <DragText> {text} Saved </DragText>
+          <BodyText> Your game is ready to launch. </BodyText>
+          <CentralButton
+            buttonType={ButtonType.CONTINUE}
+            isEnabled
+            onClick={handleContinue}
           />
         </Box>
       </IntegratedContainer>

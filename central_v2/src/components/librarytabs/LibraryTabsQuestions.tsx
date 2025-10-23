@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Tabs } from '@mui/material';
+import { Box, Tabs, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ElementType,
@@ -27,6 +27,7 @@ import { LibraryTab } from '../../lib/styledcomponents/MyLibraryStyledComponent'
 import tabPublicIcon from '../../images/tabPublic.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import tabPrivateIcon from '../../images/tabPrivate.svg';
+import libraryTabsCloseIcon from '../../images/libraryTabsClose.svg';
 
 interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   screenSize: ScreenSize;
@@ -40,6 +41,7 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   handleSearchChange: (searchString: string) => void;
   fetchElements: (libraryTab: LibraryTabEnum) => void;
   handleView: (element: T, elements: T[]) => void;
+  handleCloseQuestionTabs: () => void;
 }
 
 export default function LibraryTabsQuestions({
@@ -51,6 +53,7 @@ export default function LibraryTabsQuestions({
   fetchElements,
   handleView,
   isPublic,
+  handleCloseQuestionTabs,
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
   const centralData = useCentralDataState();
 
@@ -98,6 +101,7 @@ export default function LibraryTabsQuestions({
 
   return (
     <TabContent>
+      <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Tabs
         value={enumToTabIndex[openTab]}
         onChange={handleChange}
@@ -147,7 +151,27 @@ export default function LibraryTabsQuestions({
             />
           );
         })}
+    
       </Tabs>
+        <Box
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+            onClick={handleCloseQuestionTabs}
+          >
+            <img
+              src={libraryTabsCloseIcon}
+              alt="Close"
+              style={{
+                width: '30px',
+                height: '30px',
+                cursor: 'pointer',
+              }}
+            />
+        </Box>
+      </Box>
       <ContentContainer>
         <SearchBar
           screenSize={screenSize}

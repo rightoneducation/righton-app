@@ -707,38 +707,7 @@ export const updateDraftListWithLibraryQuestion = (
   selectedIndex: number,
   libraryQuestion: TDraftQuestionsList,
 ): UpdateDraftListResult => {
-  const isFirstEmpty =
-    draftQuestionsList.length === 1 &&
-    !draftQuestionsList[0].question.questionCard.isCardComplete;
-
-  if (isFirstEmpty) {
-    return { updatedList: [libraryQuestion], addNew: false };
-  }
-
-  if (
-    typeof selectedIndex === 'number' &&
-    draftQuestionsList[selectedIndex] &&
-    !draftQuestionsList[selectedIndex].question.questionCard.isCardComplete
-  ) {
-    const updated = [...draftQuestionsList];
-    updated[selectedIndex] = libraryQuestion;
-    return { updatedList: updated, addNew: false };
-  }
-
-  const currentIndex = draftQuestionsList.findIndex(
-    (q) => !q.question.questionCard.isCardComplete,
-  );
-
-  if (currentIndex !== -1) {
-    const updated = [...draftQuestionsList];
-    updated[currentIndex] = libraryQuestion;
-    return { updatedList: updated, addNew: false };
-  }
-
-  const updatedQuestions = [...draftQuestionsList, draftTemplate];
-  updatedQuestions[updatedQuestions.length - 1] = libraryQuestion;
-
-  return { updatedList: updatedQuestions, addNew: true };
+  return { updatedList: [libraryQuestion, ...draftQuestionsList], addNew: false };
 };
 
 export const handleQuestionListErrors = (

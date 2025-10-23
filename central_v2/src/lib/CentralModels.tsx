@@ -69,6 +69,14 @@ export enum GameQuestionType {
   QUESTION,
 }
 
+export enum ModalStateType {
+  NULL,
+  DISCARD,
+  PUBLISH,
+  UPDATING,
+  CONFIRM
+}
+
 export type CallType = {
   gameQuestionType: GameQuestionType;
   publicPrivateType: PublicPrivateType;

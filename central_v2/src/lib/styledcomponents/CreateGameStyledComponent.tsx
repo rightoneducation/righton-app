@@ -21,8 +21,8 @@ import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  height: '100%',
-  overflow: 'auto',
+  flexGrow: 1,
+  minHeight: 0,
   '&::-webkit-scrollbar': {
     // Chrome and Safari
     display: 'none',
@@ -31,6 +31,29 @@ export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   msOverflowStyle: 'none',
   boxSizing: 'border-box',
   display: 'flex',
+  flexDirection: 'column',
+  paddingLeft: `${theme.sizing.xLgPadding}px`,
+  paddingRight: `${theme.sizing.xLgPadding}px`,
+  paddingTop: `${theme.sizing.mdPadding}px`,
+  gap: `${theme.sizing.mdPadding}px`,
+}));
+
+export const CreateGameContentContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  flexGrow: 1,
+  minHeight: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+  gap: `${theme.sizing.mdPadding}px`,
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE and Edge
 }));
 
 export const CreateGameBackground = styled(Box)(({ theme }) => ({
@@ -53,24 +76,15 @@ export const CreateGameBackground = styled(Box)(({ theme }) => ({
 
 export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  height: 'fit-content',
   display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   justifyContent: 'flex-start',
-  gap: `${theme.sizing.mdPadding}px`,
+  gap: `60px`,
   zIndex: 1,
   position: 'relative',
-  paddingLeft: `${theme.sizing.mdPadding}px`,
-  paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
-  flexGrow: 1,
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  msOverflowStyle: 'none', // IE and Edge
+  paddingBottom: `${theme.sizing.xLgPadding}px`,
 }));
 
 type TitleTextProps = {
@@ -85,9 +99,41 @@ export const TitleText = styled(Typography)<TitleTextProps>(
     fontSize:
       screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
     color: `${theme.palette.primary.extraDarkBlue}`,
-    paddingTop: `${theme.sizing.lgPadding}px`,
   }),
 );
+
+export const HeaderText = styled(Typography)(({ theme }) => ({
+  fontSize: '14px',
+  fontWeight: '400',
+  lineHeight: '20px',
+  fontFamily: 'Rubik',
+  color: '#384466',
+}));
+
+export const QuestionHeaderText = styled(Typography)(({ theme }) => ({
+  fontSize: '24px',
+  fontWeight: 'bold',
+  lineHeight: '32px',
+  fontFamily: 'Poppins',
+  color: '#384466',
+}));
+
+export const QuestionBodyText = styled(Typography)(({ theme }) => ({
+  fontSize: '16px',
+  fontWeight: '600',
+  fontFamily: 'Poppins',
+  textAlign: 'center',
+  color: '#384466',
+}));
+
+export const GameCardBaseItem = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+  gap: `${theme.sizing.smPadding}px`,
+}));
 
 type SaveDiscardContainerProps = {
   screenSize: ScreenSize;
@@ -115,10 +161,11 @@ export const CreateGameSaveDiscardBoxContainer = styled(Box, {
   }),
 }));
 
-export const CreateGameGridContainer = styled(Grid)(({ theme }) => ({
+export const CreateGameGridContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
-  justifyContent: 'center',
+  alignItems: 'flex-start',
+  gap: `60px`,
 }));
 
 type QuestionCountButtonProps = {
@@ -148,7 +195,7 @@ export const QuestionCountButton = styled(Button, {
   gap: '10px',
 }));
 
-export const CreateGameSaveDiscardGridItem = styled(Grid)(({ theme }) => ({
+export const CreateGameSaveDiscardGridItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'flex-start',
@@ -266,8 +313,7 @@ export const CreateGameTextFieldContainer = styled(TextField, {
   '& .MuiInputBase-input': {
     ...(isTitle && {
       padding: '12px 10px',
-      fontSize: '20px',
-      fontWeight: 'bold',
+      fontSize: '16px',
     }),
     color: '#384466',
     opacity: isCardError ? 1 : 0.5,
@@ -301,13 +347,13 @@ interface ContentContainerProps {
 export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(
   ({ theme, screenSize }) => ({
     width: '100%',
-    height: screenSize === ScreenSize.SMALL ? '100%' : '100%',
+    height: '100%',
     display: 'flex',
-    flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     gap:
-      screenSize === ScreenSize.SMALL ? '12px' : `${theme.sizing.smPadding}px`,
+      '32px',
   }),
 );
 
@@ -322,7 +368,7 @@ export const SelectPhaseLabel = styled(Typography, {
   color: error ? '#D0254D' : theme.palette.primary.sliderBlue,
   fontFamily: 'Rubik',
   fontSize: 14,
-  fontWeight: isSelected ? 'normal' : 'bold',
+  fontWeight: 'bold',
   margin: 0,
 }));
 
