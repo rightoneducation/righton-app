@@ -52,28 +52,36 @@ export const updateGameTitle = (
   draftGame: TGameTemplateProps,
   title: string,
 ): TGameTemplateProps => {
-  return {
+  const newDraftGame = {
     ...draftGame,
     gameTemplate: {
       ...draftGame.gameTemplate,
       title,
       lowerCaseTitle: title.toLowerCase(),
     },
-  };
+  }
+  return {
+    ...newDraftGame,
+    isGameCardErrored: !checkGameFormIsValid(newDraftGame)
+  }
 };
 
 export const updateGameDescription = (
   draftGame: TGameTemplateProps,
   description: string,
 ): TGameTemplateProps => {
-  return {
+  const newDraftGame = {
     ...draftGame,
     gameTemplate: {
       ...draftGame.gameTemplate,
       description,
       lowerCaseDescription: description.toLowerCase(),
     },
-  };
+  }
+  return {
+    ...newDraftGame,
+    isGameCardErrored: !checkGameFormIsValid(newDraftGame)
+  }
 };
 
 export const updateGameTemplatePhaseTime = (

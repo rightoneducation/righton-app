@@ -102,11 +102,8 @@ import {
 import CreateGameHeader from '../components/game/CreateGameHeader';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
-import DetailedQuestionCardBase from '../components/cards/detailedquestion/DetailedQuestionCardBase';
 import LibraryTabsModalContainer from '../components/librarytabs/LibraryTabsModalContainer';
-import DiscardGameModal from '../components/modal/DiscardGameModal';
-import ConfirmSaveModal from '../components/modal/ConfirmSaveModal';
-import UpdatingModal from '../components/modal/UpdatingModal';
+import CreateGameModalSwitch from '../components/modal/switches/CreateGameModalSwitch';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -1343,44 +1340,6 @@ export default function CreateGame({
     }
   }, [centralData.selectedGame, route, selectedGameId]); // eslint-disable-line
 
-  let modalComponent = null;
-  switch (modalState) {
-    case ModalStateType.DISCARD:
-      modalComponent =<DiscardGameModal
-        isModalOpen
-        templateType={TemplateType.GAME}
-        handleDiscardClick={handleDiscard}
-        handleCloseDiscardModal={handleCloseDiscardModal}
-      />;
-      break;
-    case ModalStateType.PUBLISH:
-      modalComponent = <SaveGameModal
-        isModalOpen
-        templateType={TemplateType.GAME}
-        handlePublishGame={handlePublishGame}
-        handleCloseSaveGameModal={handleCloseSaveGameModal}
-        isCardErrored={draftGame.isGameCardErrored}
-      />;
-      break;
-    case ModalStateType.UPDATING:
-        modalComponent = <UpdatingModal
-        isModalOpen
-        templateType={TemplateType.GAME}
-      />;
-      break;
-    case ModalStateType.CONFIRM:
-      modalComponent = <ConfirmSaveModal
-        isModalOpen
-        templateType={TemplateType.GAME}
-        handleContinue={handleContinue}
-      />;
-      break;
-    default:
-      modalComponent = null;
-      break;
-  }
-
-
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
@@ -1402,7 +1361,15 @@ export default function CreateGame({
         fetchElements={fetchElements}
         handleQuestionView={handleView}
       />
-      {modalComponent}
+      <CreateGameModalSwitch
+        modalState={modalState}
+        handleDiscard={handleDiscard}
+        handleCloseDiscardModal={handleCloseDiscardModal}
+        handlePublishGame={handlePublishGame}
+        handleCloseSaveGameModal={handleCloseSaveGameModal}
+        handleContinue={handleContinue}
+        isCardErrored={draftGame.isGameCardErrored}
+      />
 
       {/* tracks ccss state according to index */}
       {draftQuestionsList.length > 0 &&
