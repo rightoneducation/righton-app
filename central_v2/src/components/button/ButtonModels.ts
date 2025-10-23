@@ -116,6 +116,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LAUNCH]: {
     icon: launch,
     textKey: ButtonType.LAUNCH,
+    color: ButtonColor.RED,
   },
   [ButtonType.UPLOAD]: {
     icon: upload,
@@ -298,7 +299,6 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.EDIT]: {
     icon: edit,
     textKey: ButtonType.EDIT,
-    color: ButtonColor.NULL,
   },
   [ButtonType.BACKTOEDIT]: {
     icon: previous,

@@ -93,7 +93,6 @@ export const ButtonStyled = styled(Button, {
       buttonColor === ButtonColor.NULL // eslint-disable-line no-nested-ternary
         ? buttonType === ButtonType.CHANGEIMAGE ||
           buttonType === ButtonType.SAVEDRAFT ||
-          (buttonType === ButtonType.EDIT) ||
           (buttonType === ButtonType.BACKTOEDIT) ||
           (buttonType === ButtonType.SIGNUP && isReset) ||
           (buttonType === ButtonType.CREATEQUESTION) ||
@@ -152,7 +151,6 @@ export const ButtonTypography = styled(Typography, {
     buttonType === ButtonType.SAVEDRAFT ||
     buttonType === ButtonType.CREATEQUESTION ||
     (buttonType === ButtonType.BACKTOEDIT) ||
-    (buttonType === ButtonType.EDIT) ||
     (buttonType === ButtonType.SIGNUP && isReset) ||
     (buttonType === ButtonType.BACK)
       ? `${theme.palette.primary.buttonPrimaryDefault}`
