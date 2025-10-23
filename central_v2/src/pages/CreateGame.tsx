@@ -31,6 +31,7 @@ import {
   StorageKey,
   TemplateType,
   GameQuestionType,
+  ModalStateType,
 } from '../lib/CentralModels';
 import { timeLookup } from '../components/cards/creategamecard/time';
 import {
@@ -43,7 +44,7 @@ import {
 } from '../lib/CreateGameModels';
 import DiscardModal from '../components/modal/DiscardModal';
 import ModalBackground from '../components/modal/ModalBackground';
-import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
+import SaveGameModal from '../components/modal/SaveGameModal';
 import CreateGameCardBase from '../components/cards/creategamecard/CreateGameCardBase';
 import QuestionElements from '../components/game/QuestionGridItems';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
@@ -103,6 +104,9 @@ import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
 import DetailedQuestionCardBase from '../components/cards/detailedquestion/DetailedQuestionCardBase';
 import LibraryTabsModalContainer from '../components/librarytabs/LibraryTabsModalContainer';
+import DiscardGameModal from '../components/modal/DiscardGameModal';
+import ConfirmSaveModal from '../components/modal/ConfirmSaveModal';
+import UpdatingModal from '../components/modal/UpdatingModal';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -150,9 +154,8 @@ export default function CreateGame({
     editRoute?.params.gameId.length > 0;
   const isEditDraft = 
     editRoute?.params.type === 'Draft';
-  const [isUpdatingTemplate, setIsUpdatingTemplate] = useState<boolean>(false);
+  const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
-  const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
   const [isQuestionBankOpen, setIsQuestionBankOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
@@ -258,17 +261,17 @@ export default function CreateGame({
   };
 
   const handleDiscardGame = () => {
-    setIsDiscardModalOpen(true);
+    setModalState(ModalStateType.DISCARD);
   };
 
   const handleDiscardClick = (value: boolean) => {
     if (value) {
-      setIsDiscardModalOpen(false);
+      setModalState(ModalStateType.NULL);
       window.localStorage.setItem(StorageKey, '');
       navigate('/');
       return;
     }
-    setIsDiscardModalOpen(false);
+    setModalState(ModalStateType.NULL);
   };
 
   const handleGameImageUploadClick = () => {
@@ -299,7 +302,7 @@ export default function CreateGame({
         ...prev,
         isGameCardSubmitted: true,
       }));
-      setIsUpdatingTemplate(true);
+      setModalState(ModalStateType.UPDATING);
       const dqValid = checkDQsAreValid(draftQuestionsList);
       if (gameFormIsValid && dqValid) {
         // check if game img has been changed
@@ -412,7 +415,7 @@ export default function CreateGame({
               draftGame.gameTemplate.publicPrivateType,
               updatedGame,
             );
-            setIsUpdatingTemplate(false);
+            setModalState(ModalStateType.NULL);
         } catch (err) {
           console.log(err);
         }
@@ -441,8 +444,9 @@ export default function CreateGame({
     }
   };
 
-  const handleSaveGame = async () => {
+  const handlePublishGame = async () => {
     try {
+      setModalState(ModalStateType.UPDATING);
       setDraftGame((prev) => ({
         ...prev,
         isGameCardSubmitted: true,
@@ -573,8 +577,7 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
-        fetchElements();
-        navigate('/');
+        setModalState(ModalStateType.CONFIRM);
       } else {
         setDraftGame((prev) => ({
           ...prev,
@@ -585,6 +588,7 @@ export default function CreateGame({
           setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
           // then find first errored card and set index to that question
         }
+        setModalState(ModalStateType.NULL);
       }
     } catch (err) {
       setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
@@ -597,7 +601,7 @@ export default function CreateGame({
         await handleUpdateEditedGame();
         return;
       }
-      await handleSaveGame();
+      await handlePublishGame();
       await apiClients.gameTemplate.deleteGameTemplate(
           originalGameType,
           selectedGameId
@@ -779,13 +783,30 @@ export default function CreateGame({
   };
 
   const handleSave = async () => {
-    if (isEditDraft)
-      return handleCreateFromDraftGame();
-    if (isEdit)
-      return handleSaveEditedGame();
-    return handleSaveGame();
+    // if (isEditDraft)
+    //   return handleCreateFromDraftGame();
+    // if (isEdit)
+    //   return handleSaveEditedGame();
+    if (!gameFormIsValid || !allDQAreValid) {
+      setDraftGame((prev) => ({
+        ...prev,
+        ...(!gameFormIsValid && { isGameCardErrored: true }),
+        isCreatingTemplate: false,
+      }));
+      if (!allDQAreValid) {
+        setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
+      }
+    }
+    return setModalState(ModalStateType.PUBLISH);
   };
 
+  const handleCloseSaveGameModal = () => {
+    setModalState(ModalStateType.NULL);
+  };
+
+  const handleCloseDiscardModal = () => {
+    setModalState(ModalStateType.NULL);
+  };
 
   const handleSaveDraftGame = async () => {
     try {
@@ -895,7 +916,7 @@ export default function CreateGame({
 
   const handleUpdateDraftGame = async () => {
      try {
-      setIsUpdatingTemplate(true);
+      setModalState(ModalStateType.UPDATING);
       if (!draftGame.gameTemplate.title) {
         setDraftGame((prev) => ({
           ...prev,
@@ -943,7 +964,7 @@ export default function CreateGame({
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
-      setIsUpdatingTemplate(false);
+      setModalState(ModalStateType.NULL);
       fetchElements();
       navigate('/');
     } catch (err) {
@@ -1059,9 +1080,7 @@ export default function CreateGame({
   };
 
   const handleCloseQuestionModal = () => {
-    setIsDiscardModalOpen(false);
-    setIsUpdatingTemplate(false);
-    setIsQuestionBankOpen(false);
+    setModalState(ModalStateType.NULL);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
@@ -1150,7 +1169,7 @@ export default function CreateGame({
   };
 
   /** END OF CREATE QUESTION HANDLERS  */
-  console.log(draftQuestionsList);
+  
   /** LIBRARY HANDLER HELPERS */
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE) return value;
@@ -1255,8 +1274,14 @@ export default function CreateGame({
     setSelectedQuestionIndex(0);
   };
   const handleDiscard = () => {
+    setModalState(ModalStateType.NULL);
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
+  };
+
+  const handleContinue = () => {
+    setModalState(ModalStateType.NULL);
+    navigate('/');
   };
   useEffect(() => {
     setIsLoading(false);
@@ -1317,12 +1342,51 @@ export default function CreateGame({
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }
   }, [centralData.selectedGame, route, selectedGameId]); // eslint-disable-line
+
+  let modalComponent = null;
+  switch (modalState) {
+    case ModalStateType.DISCARD:
+      modalComponent =<DiscardGameModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+        handleDiscardClick={handleDiscard}
+        handleCloseDiscardModal={handleCloseDiscardModal}
+      />;
+      break;
+    case ModalStateType.PUBLISH:
+      modalComponent = <SaveGameModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+        handlePublishGame={handlePublishGame}
+        handleCloseSaveGameModal={handleCloseSaveGameModal}
+        isCardErrored={draftGame.isGameCardErrored}
+      />;
+      break;
+    case ModalStateType.UPDATING:
+        modalComponent = <UpdatingModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+      />;
+      break;
+    case ModalStateType.CONFIRM:
+      modalComponent = <ConfirmSaveModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+        handleContinue={handleContinue}
+      />;
+      break;
+    default:
+      modalComponent = null;
+      break;
+  }
+
+
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
-        isModalOpen={openModal || isDiscardModalOpen || draftGame.isCreatingTemplate || isUpdatingTemplate || isQuestionBankOpen}
+        isModalOpen={openModal || modalState !== ModalStateType.NULL}
         handleCloseModal={handleCloseQuestionModal}
       />
       <LibraryTabsModalContainer
@@ -1338,16 +1402,7 @@ export default function CreateGame({
         fetchElements={fetchElements}
         handleQuestionView={handleView}
       />
-      <DiscardModal
-        isModalOpen={isDiscardModalOpen}
-        screenSize={screenSize}
-        handleDiscardClick={handleDiscardClick}
-      />
-      <CreatingTemplateModal
-        isModalOpen={draftGame.isCreatingTemplate || isUpdatingTemplate}
-        isUpdatingTemplate={isUpdatingTemplate}
-        templateType={TemplateType.GAME}
-      />
+      {modalComponent}
 
       {/* tracks ccss state according to index */}
       {draftQuestionsList.length > 0 &&
@@ -1458,7 +1513,7 @@ export default function CreateGame({
                   <CentralButton
                     buttonType={ButtonType.CREATEQUESTION}
                     isEnabled
-                    onClick={handleSaveGame}
+                    onClick={handlePublishGame}
                   />
                   <CentralButton
                     buttonType={ButtonType.QUESTIONBANK}

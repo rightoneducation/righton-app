@@ -69,7 +69,7 @@ import {
   updateDQwithIncorrectAnswers,
   handleIncorrectCardClick,
 } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
-import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
+import CreatingTemplateModal from '../components/modal/SaveGameModal';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
@@ -1011,7 +1011,6 @@ export default function CreateQuestion({
       />
       <CreatingTemplateModal
         isModalOpen={isCreatingTemplate || isUpdatingTemplate}
-        isUpdatingTemplate={isUpdatingTemplate}
         templateType={TemplateType.QUESTION}
       />
       <CreateQuestionBoxContainer>

@@ -48,7 +48,11 @@
     "no": "No",
     "edit": "Edit",
     "delete": "Delete",
-    "ok": "OK"
+    "ok": "OK",
+    "publish": "Publish",
+    "backtoedit": "Back to Edit",
+    "update": "Update",
+    "continue": "Continue"
   },
   "imageButton": {
     "imageupload": "Upload Image",

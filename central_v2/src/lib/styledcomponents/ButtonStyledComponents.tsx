@@ -37,7 +37,10 @@ const getHoverColor = (
         buttonType === ButtonType.LOGOUT ||
         buttonType === ButtonType.EDITPROFILEPICTURE ||
         buttonType === ButtonType.CHANGEIMAGE ||
-        buttonType === ButtonType.SAVEDRAFT
+        buttonType === ButtonType.CREATEQUESTION ||
+        buttonType === ButtonType.SAVEDRAFT ||
+        buttonType === ButtonType.BACKTOEDIT ||
+        buttonType === ButtonType.BACK
       ) {
         return `rgba(0,0,0, 0.1)`;
       }
@@ -91,6 +94,7 @@ export const ButtonStyled = styled(Button, {
         ? buttonType === ButtonType.CHANGEIMAGE ||
           buttonType === ButtonType.SAVEDRAFT ||
           (buttonType === ButtonType.EDIT) ||
+          (buttonType === ButtonType.BACKTOEDIT) ||
           (buttonType === ButtonType.SIGNUP && isReset) ||
           (buttonType === ButtonType.CREATEQUESTION) ||
           (buttonType === ButtonType.BACK)
@@ -124,8 +128,14 @@ export const ButtonContent = styled(Box)(({ theme }) => ({
 }));
 
 export const ButtonIconContainer = styled(Box)(({ theme }) => ({
-  height: '20px',
-  width: '20px',
+  height: '100%',
+  position: 'absolute',
+  top: '0px',
+  left: '0px',
+  paddingLeft: '12px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 export const ButtonTypography = styled(Typography, {
@@ -141,6 +151,7 @@ export const ButtonTypography = styled(Typography, {
     buttonType === ButtonType.LOGINHEADER ||
     buttonType === ButtonType.SAVEDRAFT ||
     buttonType === ButtonType.CREATEQUESTION ||
+    (buttonType === ButtonType.BACKTOEDIT) ||
     (buttonType === ButtonType.EDIT) ||
     (buttonType === ButtonType.SIGNUP && isReset) ||
     (buttonType === ButtonType.BACK)

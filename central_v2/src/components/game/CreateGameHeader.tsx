@@ -35,7 +35,7 @@ export default function CreateGameHeader({ handleSaveGame, handleBackClick, labe
           buttonType={ButtonType.BACK}
           isEnabled
           buttonWidthOverride="127px"
-          onClick={handleSaveGame}
+          onClick={handleBackClick}
         />
         <TitleText screenSize={screenSize}>{label} Game</TitleText>
         <CentralButton

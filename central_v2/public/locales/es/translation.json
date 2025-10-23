@@ -32,6 +32,10 @@
     "editinformation": "Editar Información",
     "changepassword": "Cambiar Contraseña",
     "choose": "Elegir",
-    "clone": "Clonar"
+    "clone": "Clonar",
+    "publish": "Publicar",
+    "backtoedit": "Volver a Editar",
+    "update": "Actualizar",
+    "continue": "Continuar"
   }
 }
