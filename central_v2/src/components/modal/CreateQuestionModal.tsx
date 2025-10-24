@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
-import { Paper, Modal, Slide, styled, useTheme, Box } from '@mui/material';
+import { Paper, Modal, Slide, styled, useTheme, Box, Typography } from '@mui/material';
 import { AnswerPrecision, AnswerType, CentralQuestionTemplateInput } from '@righton/networking';
 import { ScreenSize, TemplateType } from '../../lib/CentralModels';
 import { TDraftQuestionsList } from '../../lib/CreateGameModels';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import CreateQuestionCardBase from '../cards/creategamecard/createquestion/CreateQuestionCardBase';
+import CorrectAnswerCard from '../cards/creategamecard/createquestion/CorrectAnswerCard';
+import IncorrectAnswerCard from '../cards/creategamecard/createquestion/IncorrectAnswerCard';
 
 interface CreateQuestionModalProps {
     isModalOpen: boolean;
@@ -24,24 +26,30 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   bottom: 0,
   background: '#FFF',
   paddingTop: '48px',
-  paddingBottom: '86px',
-  paddingLeft: '48px',
-  paddingRight: '48px',
+  marginTop: '48px',
   zIndex: 1310,
   display: 'flex',
   flexDirection: 'column',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
+}));
+
+const ScrollableContent = styled(Box)({
+  display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  gap: '16px',
-  boxSizing: 'border-box',
+  gap: '20px',
+  paddingLeft: '48px',
+  paddingRight: '48px',
+  paddingBottom: '86px',
   overflow: 'auto',
+  flex: 1,
   '&::-webkit-scrollbar': {
-    // Chrome and Safari
     display: 'none',
   },
-  scrollbarWidth: 'none', // Firefox
+  scrollbarWidth: 'none',
   msOverflowStyle: 'none',
-}));
+});
 
 export default function CreateQuestionModal({
     isModalOpen,
@@ -61,7 +69,7 @@ export default function CreateQuestionModal({
           },
           correctCard: {
             answer: '',
-            answerSteps: ['', '', ''],
+            answerSteps: ['', ''],
             answerSettings: {
               answerType: AnswerType.NUMBER,
               answerPrecision: AnswerPrecision.WHOLE,
@@ -79,6 +87,13 @@ export default function CreateQuestionModal({
             },
             {
               id: 'card-2',
+              answer: '',
+              explanation: '',
+              isFirstEdit: true,
+              isCardComplete: false,
+            },
+            {
+              id: 'card-3',
               answer: '',
               explanation: '',
               isFirstEdit: true,
@@ -112,6 +127,7 @@ export default function CreateQuestionModal({
             unmountOnExit
           >
             <IntegratedContainer elevation={12} tabIndex={-1}>
+              <ScrollableContent>
                 <Box
                   style={{
                     width: '100%',
@@ -119,6 +135,7 @@ export default function CreateQuestionModal({
                     display: 'flex',
                     flexDirection: 'column',
                     gap: `${theme.sizing.mdPadding}px`,
+                    
                   }}
                 >
                   <Box
@@ -161,6 +178,69 @@ export default function CreateQuestionModal({
                     />
                   </Box>
                 </Box>
+                <Box
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: `${theme.sizing.mdPadding}px`,
+                  }}
+                >
+                  <CorrectAnswerCard
+                    screenSize={screenSize}
+                    isClone={false}
+                    draftQuestion={draftQuestion}
+                    isHighlight={false}
+                    handleCorrectAnswerChange={() => {}}
+                    handleCorrectAnswerStepsChange={() => {}}
+                    handleAnswerSettingsChange={() => {}}
+                    isCardSubmitted={false}
+                    isCardErrored={false}
+                    isAIError={false}
+                  />
+                  <Box
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: `${theme.sizing.xSmPadding}px`,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontFamily: 'Poppins',
+                        fontSize: '20px',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      Incorrect Answers
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontFamily: 'Rubik',
+                        fontSize: '16px',
+                        fontWeight: '400',
+                      }}
+                    >
+                      Each question has three incorrect answers
+                    </Typography>
+                    {draftQuestion.incorrectCards.map((card, index) => (
+                      <IncorrectAnswerCard
+                        screenSize={screenSize}
+                        isClone={false}
+                        cardIndex={index}
+                        draftQuestion={draftQuestion}
+                        isHighlight={false}
+                        handleIncorrectAnswerChange={() => {}}
+                        handleIncorrectExplanationChange={() => {}}
+                        isCardSubmitted={false}
+                        isCardErrored={false}
+                        isAIError={false}
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              </ScrollableContent>
             </IntegratedContainer>
           </Slide>
         </Modal>

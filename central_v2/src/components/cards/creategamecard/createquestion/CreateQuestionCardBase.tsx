@@ -354,6 +354,7 @@ export default function CreateQuestionCardBase({
                   screenSize === ScreenSize.SMALL
                     ? '0px 2px 9px 0px rgb(149, 0, 35, 30%)'
                     : 'none',
+                width: 'fit-content',
               }}
             >
               {draftQuestion.questionCard.ccss}
@@ -367,6 +368,19 @@ export default function CreateQuestionCardBase({
               </Box>
             </ButtonCCSS>
           </Box> 
+          <Box style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Box
+              style={{
+                width: 'fit-content',
+                padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.smPadding}px`,
+                borderRadius: '12px',
+                backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
+                color: '#FFFFFF',
+              }}
+            >
+              Public
+            </Box>
+          </Box>
           </ContentContainerStyled>
       {screenSize !== ScreenSize.SMALL && (isCardErrored || isDraftCardErrored)  && <ErrorBox />}
     </BaseCardStyled>
