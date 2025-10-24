@@ -167,7 +167,7 @@ export default function DetailedQuestionCardBase({
                   alt="expand question"
                 />
               </Box>
-              {handleRemoveQuestion && (
+              {handleRemoveQuestion && isCreateGame && (
               <Box
                 onClick={handleRemoveQuestion}
                 style={{

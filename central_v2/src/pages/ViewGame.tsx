@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { IGameTemplate, PublicPrivateType } from '@righton/networking';
-import { Box, Grid, CircularProgress, useTheme } from '@mui/material';
+import { Box, Grid, CircularProgress, useTheme, Fade } from '@mui/material';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
 import DetailedGameCardBase from '../components/cards/detailedgame/DetailedGameCardBase';
@@ -14,7 +14,10 @@ import {
   CreateGameCardGridItem,
   GameCreateButtonStack,
   TitleText,
+  QuestionHeaderText,
+  CreateGameContentContainer,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
+import ViewGameHeader from '../components/game/ViewGameHeader';
 import {
   GameQuestionType,
   ScreenSize,
@@ -31,6 +34,9 @@ import EditModal from '../components/modal/EditModal';
 import DeleteModal from '../components/modal/DeleteModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import EditToolTip from '../components/tooltips/EditToolTip';
+import ViewQuestionCardUnified from '../components/question/ViewQuestionCardUnified';
+import OwnerTag from '../components/profile/OwnerTag';
+
 
 interface ViewGameProps {
   screenSize: ScreenSize;
@@ -209,212 +215,81 @@ export default function ViewGame({
         </Box>
       ) : (
         centralData.selectedGame && (
-          <CreateGameBoxContainer>
-            <TitleText screenSize={screenSize}>View Game</TitleText>
-            {(screenSize === ScreenSize.SMALL ||
-              screenSize === ScreenSize.MEDIUM) && (
-              <Box
-                style={{
-                  width: '100%',
-                  maxWidth: '672px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: `${theme.sizing.xSmPadding}px`,
-                  paddingBottom: '16px',
-                }}
-              >
-                <CentralButton
-                  buttonType={ButtonType.BACK}
-                  isEnabled
-                  onClick={handleBackClick}
-                  smallScreenOverride
-                  buttonWidthOverride="275px"
-                />
-                {centralData.userStatus === UserStatusType.LOGGEDIN && (
-                  <>
-                    <CentralButton
-                      buttonType={ButtonType.CLONE}
-                      isEnabled
-                      onClick={handleCloneGame}
-                      smallScreenOverride
-                      buttonWidthOverride="275px"
-                    />
-                    <EditToolTip
-                      isEditEnabled={isEditEnabled}
-                      isOnQuestionTab={false}
-                    >
-                      <CentralButton
-                        buttonType={ButtonType.EDIT}
-                        isEnabled={isEditEnabled}
-                        onClick={handleEditGame}
-                        smallScreenOverride
-                        buttonWidthOverride="275px"
-                      />
-                    </EditToolTip>
-                    <EditToolTip
-                      isEditEnabled={isEditEnabled}
-                      isOnQuestionTab={false}
-                    >
-                      <CentralButton
-                        buttonType={ButtonType.DELETE}
-                        isEnabled={isEditEnabled}
-                        onClick={handleDeleteGame}
-                        smallScreenOverride
-                        buttonWidthOverride="275px"
-                      />
-                    </EditToolTip>
-                  </>
-                )}
-              </Box>
-            )}
-            <CreateGameGridContainer>
-              <Box
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  alignItems: 'flex-start',
-                  paddingTop: '16px',
-                  gap: '20px',
-                }}
-              >
-                {screenSize !== ScreenSize.SMALL &&
-                  screenSize !== ScreenSize.MEDIUM && (
-                    <Box
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-Start',
-                        alignItems: 'center',
-                        gap: `${theme.sizing.xSmPadding}px`,
-                        paddingRight: '30px',
-                      }}
-                    >
-                      <CentralButton
-                        buttonType={ButtonType.BACK}
-                        isEnabled
-                        onClick={handleBackClick}
-                      />
-                      {centralData.userStatus === UserStatusType.LOGGEDIN && (
-                        <>
-                          <CentralButton
-                            buttonType={ButtonType.CLONE}
-                            isEnabled
-                            onClick={handleCloneGame}
-                            smallScreenOverride
-                          />
-                          <EditToolTip
-                            isEditEnabled={isEditEnabled}
-                            isOnQuestionTab={false}
-                          >
-                            <Box style={{ width: '100%' }}>
-                              <CentralButton
-                                buttonType={ButtonType.EDIT}
-                                isEnabled={isEditEnabled}
-                                onClick={handleEditGame}
-                                smallScreenOverride
-                                buttonWidthOverride="275px"
-                              />
-                            </Box>
-                          </EditToolTip>
-                          <EditToolTip
-                            isEditEnabled={isEditEnabled}
-                            isOnQuestionTab={false}
-                          >
-                            <Box style={{ width: '100%' }}>
-                              <CentralButton
-                                buttonType={ButtonType.DELETE}
-                                isEnabled={isEditEnabled}
-                                onClick={handleDeleteGame}
-                                smallScreenOverride
-                                buttonWidthOverride="275px"
-                              />
-                            </Box>
-                          </EditToolTip>
-                        </>
-                      )}
-                    </Box>
-                  )}
-              </Box>
-              <Box
-                style={{
-                  width: '100%',
-                  maxWidth: '672px',
-                  minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: `${theme.sizing.xLgPadding}px`,
-                }}
-              >
-                <DetailedGameCardBase
-                  screenSize={screenSize}
-                  game={centralData.selectedGame.game}
-                  dropShadow
-                />
-              </Box>
-              <Grid sm md={1} lg={4} item />
-            </CreateGameGridContainer>
+          <CreateGameContentContainer>
+            <ViewGameHeader handleBackClick={() => {}} handleEditGame={() => {}} handleLaunchGame={() => {}} label="View" screenSize={screenSize} />
+            <CreateGameBoxContainer>
+            <Box style={{ width: '100%', maxWidth: '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
+              <DetailedGameCardBase
+                screenSize={screenSize}
+                game={centralData.selectedGame.game}
+                dropShadow
+              />
+              <OwnerTag
+                screenSize={screenSize}
+                isViewGame
+              />
+            </Box>
             <Box
-              style={{
-                maxWidth: '100%',
+              sx={{
+                width: '100%',
+                height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
-                gap: '24px',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                gap: `${theme.sizing.lgPadding}px`,
               }}
             >
-              <GameCreateButtonStack
+              <Box
                 sx={{
-                  ...(screenSize === ScreenSize.SMALL && {
-                    flexDirection: 'column',
-                  }),
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
                 }}
               >
-                <CentralButton
-                  smallScreenOverride
-                  buttonWidthOverride="100%"
-                  buttonType={ButtonType.LAUNCHGAME}
-                  isEnabled={isGameLaunchable}
-                  onClick={handleLaunchGame}
-                />
-              </GameCreateButtonStack>
-              <GameCreateButtonStack
+                <QuestionHeaderText>
+                  Questions
+                </QuestionHeaderText>
+              </Box>
+              <Box 
                 sx={{
-                  maxWidth: '100%',
-                  overflow: 'scroll',
-                  minHeight: '40px',
-                  '&::-webkit-scrollbar': {
-                    // Chrome and Safari
-                    display: 'none',
-                  },
-                  scrollbarWidth: 'none', // Firefox
-                  msOverflowStyle: 'none',
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                  gap: `${theme.sizing.lgPadding}px`,
                 }}
               >
-                <ManageQuestionsButtons
-                  questions={questions ?? []}
-                  iconButtons={iconButtons}
-                  isCreate={false}
-                  selectedIndex={selectedQuestionIndex}
-                  setSelectedIndex={handleQuestionIndexChange}
-                />
-              </GameCreateButtonStack>
+                {/* Create Question Form(s)  */}
+                {centralData?.selectedGame?.game?.questionTemplates?.map((draftQuestionItem, index) => {
+                  return (
+                    <Fade
+                      timeout={500}
+                      in
+                      mountOnEnter
+                      unmountOnExit
+                      key={`Question--${index + 1}`}
+                    >
+                      <Box>
+                        <ViewQuestionCardUnified
+                          screenSize={screenSize}
+                          question={draftQuestionItem.questionTemplate}
+                          handleRemoveQuestion={() => {}}
+                          isViewGame
+                          isCreateGame={false}
+                        />
+                      </Box>
+                    </Fade>
+                  );
+                })}
+              </Box>
             </Box>
-            {questions &&
-              questions.map(
-                (question, index) =>
-                  index === selectedQuestionIndex && (
-                    <ViewQuestionCards
-                      isViewGame
-                      screenSize={screenSize}
-                      question={question.questionTemplate}
-                    />
-                  ),
-              )}
           </CreateGameBoxContainer>
-        )
-      )}
+        </CreateGameContentContainer>
+      )
+    )}
     </CreateGameMainContainer>
   );
 }

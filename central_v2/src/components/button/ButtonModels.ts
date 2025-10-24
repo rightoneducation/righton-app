@@ -73,6 +73,8 @@ export enum ButtonType {
   PUBLISH = 'publish',
   UPDATE = 'update',
   CONTINUE = 'continue',
+  CANCELQUESTION = 'cancelquestion',
+  SAVEADD = 'saveadd',
 }
 
 export enum ButtonColor {
@@ -116,6 +118,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LAUNCH]: {
     icon: launch,
     textKey: ButtonType.LAUNCH,
+    color: ButtonColor.RED,
   },
   [ButtonType.UPLOAD]: {
     icon: upload,
@@ -298,7 +301,6 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.EDIT]: {
     icon: edit,
     textKey: ButtonType.EDIT,
-    color: ButtonColor.NULL,
   },
   [ButtonType.BACKTOEDIT]: {
     icon: previous,
@@ -323,5 +325,12 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CONTINUE]: {
     textKey: ButtonType.CONTINUE,
+  },
+  [ButtonType.SAVEADD]: {
+    textKey: ButtonType.SAVEADD,
+  },
+  [ButtonType.CANCELQUESTION]: {
+    textKey: ButtonType.CANCELQUESTION,
+    color: ButtonColor.NULL,
   },
 };

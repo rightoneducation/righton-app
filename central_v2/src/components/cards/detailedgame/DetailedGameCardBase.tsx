@@ -85,7 +85,9 @@ export default function DetailedGameCardBase({
       elevation={6}
       isHighlight={false}
       isCardComplete={false}
-      dropShadow={dropShadow}
+      style={{
+        maxWidth: '410px',
+      }}
     >
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <Box
@@ -100,79 +102,52 @@ export default function DetailedGameCardBase({
         >
           <QuestionTitleStyled>{game?.title || ''}</QuestionTitleStyled>
         </Box>
-        {screenSize !== ScreenSize.SMALL && (
-          <Box
-            style={{
-              display: 'flex',
-              gap: '16px',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <PublicPrivateButton isPublic={isPublic} isDisabled />
-          </Box>
-        )}
       </CreateQuestionTitleBarStyled>
-      <ContentContainerStyled screenSize={screenSize}>
-        <CreateQuestionContentRightContainerStyled>
-          <Box
-            style={{
-              height: '100%',
-              width: '100%',
-              margin: 0,
-              padding: '8px',
-              boxSizing: 'border-box',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Typography
-              sx={{whiteSpace: 'pre-line',}}
-            >{game?.description ?? ''}</Typography>
-            <Box
-              style={{
-                display: 'flex',
-                gap: '8px',
-                flexWrap: 'wrap',
-                marginTop: '8px',
-              }}
-            >
-              {ccssChips.length > 0 &&
-                ccssChips.map((chip) => {
-                  return <ButtonCCSS key={uuidv4()}>{chip}</ButtonCCSS>;
-                })}
-            </Box>
-          </Box>
-        </CreateQuestionContentRightContainerStyled>
-        <Box
-          style={{
-            width: '100%',
-            height: 'auto',
-            margin: 0,
-            boxSizing: 'border-box',
-          }}
+      <Box
+        style={{
+          display: 'flex',
+          gap: '8px',
+          flexWrap: 'wrap',
+          marginTop: '8px',
+        }}
+      >
+        {ccssChips.length > 0 &&
+          ccssChips.map((chip) => {
+            return <ButtonCCSS key={uuidv4()}>{chip}</ButtonCCSS>;
+          })}
+      </Box>
+      <Box
+        style={{
+          height: '100%',
+          width: '100%',
+          margin: 0,
+          padding: '8px',
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography
+          sx={{whiteSpace: 'pre-line',}}
         >
-          <img
-            src={`${CloudFrontDistributionUrl}${game?.imageUrl ?? ''}`}
-            alt="question"
-            style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-          />
-        </Box>
-        {screenSize === ScreenSize.SMALL && (
-          <Box
-            style={{
-              display: 'flex',
-              gap: '16px',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-            }}
-          >
-            <PublicPrivateButton isPublic={isPublic} isDisabled={false} />
-          </Box>
-        )}
-      </ContentContainerStyled>
+          {game?.description ?? ''}
+        </Typography>
+      </Box>
+      <Box
+        style={{
+          width: '100%',
+          height: 'auto',
+          margin: 0,
+          boxSizing: 'border-box'
+        }}
+      >
+        <img
+          src={`${CloudFrontDistributionUrl}${game?.imageUrl ?? ''}`}
+          alt="question"
+          style={{ width: '100%', height: '185px', objectFit: 'cover',          borderRadius: '8px', }}
+        />
+      </Box>      
     </BaseCardStyled>
   );
 }
