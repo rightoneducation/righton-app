@@ -219,7 +219,7 @@ export default function CreateGame({
   };
 
   const handleOpenCreateQuestion = () => {
-    setDraftGame((prev) => toggleCreateQuestion(prev, gameFormIsValid));
+    setModalState(ModalStateType.CREATEQUESTION);
   };
 
   const handleOpenQuestionBank = () => {
@@ -805,6 +805,10 @@ export default function CreateGame({
     setModalState(ModalStateType.NULL);
   };
 
+  const handleCloseCreateQuestionModal = () => {
+    setModalState(ModalStateType.NULL);
+  };
+
   const handleSaveDraftGame = async () => {
     try {
       if (!draftGame.gameTemplate.title) {
@@ -977,8 +981,6 @@ export default function CreateGame({
   }
 
   /** END OF CREATE GAME HANDLERS  */
-
-
 
   /** CREATE QUESTION HANDLERS START */
   const handlePublicPrivateQuestionChange = (value: PublicPrivateType) => {
@@ -1363,11 +1365,14 @@ export default function CreateGame({
       />
       <CreateGameModalSwitch
         modalState={modalState}
+        screenSize={screenSize}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishGame={handlePublishGame}
         handleCloseSaveGameModal={handleCloseSaveGameModal}
         handleContinue={handleContinue}
+        handleCreateQuestion={() => {}}
+        handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
         isCardErrored={draftGame.isGameCardErrored}
       />
 
@@ -1480,7 +1485,7 @@ export default function CreateGame({
                   <CentralButton
                     buttonType={ButtonType.CREATEQUESTION}
                     isEnabled
-                    onClick={handlePublishGame}
+                    onClick={handleOpenCreateQuestion}
                   />
                   <CentralButton
                     buttonType={ButtonType.QUESTIONBANK}

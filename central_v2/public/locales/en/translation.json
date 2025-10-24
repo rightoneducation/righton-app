@@ -52,7 +52,9 @@
     "publish": "Publish",
     "backtoedit": "Back to Edit",
     "update": "Update",
-    "continue": "Continue"
+    "continue": "Continue",
+    "cancelquestion": "Cancel",
+    "saveadd": "Save & Add"
   },
   "imageButton": {
     "imageupload": "Upload Image",

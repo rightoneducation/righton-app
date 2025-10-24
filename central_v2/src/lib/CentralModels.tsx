@@ -74,7 +74,8 @@ export enum ModalStateType {
   DISCARD,
   PUBLISH,
   UPDATING,
-  CONFIRM
+  CONFIRM,
+  CREATEQUESTION
 }
 
 export type CallType = {

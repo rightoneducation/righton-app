@@ -1,31 +1,46 @@
 import React from "react";
-import { ModalStateType, TemplateType } from "../../../lib/CentralModels";
+import { ModalStateType, ScreenSize, TemplateType } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import DiscardGameModal from '../DiscardGameModal';
 import ConfirmSaveModal from '../ConfirmSaveModal';
 import UpdatingModal from '../UpdatingModal';
+import CreateQuestionModal from '../CreateQuestionModal';
 
 interface CreateGameModalSwitchProps {
   modalState: ModalStateType;
+  screenSize: ScreenSize;
   handleDiscard: () => void;
   handleCloseDiscardModal: () => void;
   handlePublishGame: () => void;
   handleCloseSaveGameModal: () => void;
   handleContinue: () => void;
+  handleCreateQuestion: () => void;
+  handleCloseCreateQuestionModal: () => void;
   isCardErrored: boolean;
 }
 
 export default function CreateGameModalSwitch({ 
   modalState,
+  screenSize,
   handleDiscard,
   handleCloseDiscardModal,
   handlePublishGame,
   handleCloseSaveGameModal,
   handleContinue,
+  handleCreateQuestion,
+  handleCloseCreateQuestionModal,
   isCardErrored,
 }: CreateGameModalSwitchProps) {
 
   switch (modalState) {
+    case ModalStateType.CREATEQUESTION:
+      return <CreateQuestionModal
+        isModalOpen
+        screenSize={screenSize}
+        handleCreateQuestion={handleCreateQuestion}
+        handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
+      />;
+      break;
     case ModalStateType.DISCARD:
       return <DiscardGameModal
         isModalOpen

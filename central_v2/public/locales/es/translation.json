@@ -36,6 +36,8 @@
     "publish": "Publicar",
     "backtoedit": "Volver a Editar",
     "update": "Actualizar",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "cancelquestion": "Cancelar",
+    "saveadd": "Guardar y Agregar"
   }
 }

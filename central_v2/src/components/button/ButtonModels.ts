@@ -73,6 +73,8 @@ export enum ButtonType {
   PUBLISH = 'publish',
   UPDATE = 'update',
   CONTINUE = 'continue',
+  CANCELQUESTION = 'cancelquestion',
+  SAVEADD = 'saveadd',
 }
 
 export enum ButtonColor {
@@ -323,5 +325,12 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CONTINUE]: {
     textKey: ButtonType.CONTINUE,
+  },
+  [ButtonType.SAVEADD]: {
+    textKey: ButtonType.SAVEADD,
+  },
+  [ButtonType.CANCELQUESTION]: {
+    textKey: ButtonType.CANCELQUESTION,
+    color: ButtonColor.NULL,
   },
 };
