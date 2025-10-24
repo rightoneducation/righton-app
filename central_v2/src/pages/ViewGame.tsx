@@ -278,7 +278,7 @@ export default function ViewGame({
                           question={draftQuestionItem.questionTemplate}
                           handleRemoveQuestion={() => {}}
                           isViewGame
-                          isCreateGame
+                          isCreateGame={false}
                         />
                       </Box>
                     </Fade>
