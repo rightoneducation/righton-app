@@ -39,6 +39,7 @@ const ScrollableContent = styled(Box)({
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   gap: '20px',
+  paddingTop: `8px`,
   paddingLeft: '48px',
   paddingRight: '48px',
   paddingBottom: '86px',
