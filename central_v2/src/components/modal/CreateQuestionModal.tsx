@@ -1,13 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
+import { debounce } from 'lodash';
 import { Paper, Modal, Slide, styled, useTheme, Box, Typography } from '@mui/material';
 import { AnswerPrecision, AnswerType, CentralQuestionTemplateInput } from '@righton/networking';
 import { ScreenSize, TemplateType } from '../../lib/CentralModels';
-import { TDraftQuestionsList } from '../../lib/CreateGameModels';
+import SubModalBackground from './SubModalBackground';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import CreateQuestionCardBase from '../cards/creategamecard/createquestion/CreateQuestionCardBase';
 import CorrectAnswerCard from '../cards/creategamecard/createquestion/CorrectAnswerCard';
 import IncorrectAnswerCard from '../cards/creategamecard/createquestion/IncorrectAnswerCard';
+import { handleCheckQuestionComplete } from '../../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
+import CCSSTabs from '../ccsstabs/CCSSTabs';
+import ImageUploadModal from './ImageUploadModal';
+
 
 interface CreateQuestionModalProps {
     isModalOpen: boolean;
@@ -59,6 +64,8 @@ export default function CreateQuestionModal({
     handleCloseCreateQuestionModal,
 }: CreateQuestionModalProps) {
     const theme = useTheme();
+    const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState(false);
+    const [isImageUploadVisible, setIsImageUploadVisible] = useState(false);
     const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
       return (
         {
@@ -71,6 +78,7 @@ export default function CreateQuestionModal({
           correctCard: {
             answer: '',
             answerSteps: ['', ''],
+            isMultipleChoice: true,
             answerSettings: {
               answerType: AnswerType.NUMBER,
               answerPrecision: AnswerPrecision.WHOLE,
@@ -105,12 +113,111 @@ export default function CreateQuestionModal({
       );
     });
 
+    const [isQuestionComplete, setIsQuestionComplete] = useState(handleCheckQuestionComplete(draftQuestion));
+    const handleDebouncedCheckQuestionComplete = useMemo(
+      () => debounce((debounceQuestion: CentralQuestionTemplateInput) => {
+        setIsQuestionComplete(handleCheckQuestionComplete(debounceQuestion));
+      }, 1000),
+      []
+    );
+
+
     const handleTitleChange = (title: string) => {
-      setDraftQuestion({
-        ...draftQuestion,
-        questionCard: { ...draftQuestion.questionCard, title },
+      setDraftQuestion((prev) => {
+        const newDraftQuestion = {
+          ...prev,
+          questionCard: { ...prev.questionCard, title },
+        };
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
+        return newDraftQuestion;
       });
-    };
+    }
+
+    const handleCorrectAnswerChange = (correctAnswer: string) => {
+      setDraftQuestion((prev) => {
+        const newDraftQuestion = {
+          ...prev,
+          correctCard: { ...prev.correctCard, answer: correctAnswer },
+        };
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
+        return newDraftQuestion;
+      });
+    }
+
+    const handleCorrectAnswerStepsChange = (correctAnswerSteps: string[]) => {
+      setDraftQuestion((prev) => {
+        const newDraftQuestion = {
+          ...prev,
+          correctCard: { ...prev.correctCard, answerSteps: correctAnswerSteps },
+        };
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
+        return newDraftQuestion;
+      });
+    }
+
+    const handleIncorrectAnswerChange = (incorrectAnswer: string, index: number) => {
+      setDraftQuestion((prev) => {
+        const newDraftQuestion = {
+          ...prev,
+          incorrectCards: prev.incorrectCards.map((card, i) => 
+            i === index ? { ...card, answer: incorrectAnswer } : card
+          ),
+        };
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
+        return newDraftQuestion;
+      });
+    }
+
+    const handleIncorrectExplanationChange = (incorrectExplanation: string, index: number) => {
+      setDraftQuestion((prev) => {
+        const newDraftQuestion = {
+          ...prev,
+          incorrectCards: prev.incorrectCards.map((card, i) => 
+            i === index ? { ...card, explanation: incorrectExplanation } : card
+          ),
+        };
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
+        return newDraftQuestion;
+      });
+    }
+   
+    const handleAnswerType = () => {
+      setDraftQuestion((prev) => {
+        const newDraftQuestion = {
+          ...prev,
+          correctCard: { ...prev.correctCard, isMultipleChoice: !prev.correctCard.isMultipleChoice },
+        };
+        return newDraftQuestion;
+      });
+    }
+
+    const handleCCSSSubmit = (ccss: string) => {
+      setDraftQuestion((prev) => {
+        const newDraftQuestion = {
+          ...prev,
+          questionCard: { ...prev.questionCard, ccss },
+        };
+        return newDraftQuestion;
+      });
+      setIsCCSSVisibleModal(false);
+    }
+
+    const handleImageChange = (inputImage?: File, inputUrl?: string) => {
+      setIsImageUploadVisible(true);
+    }
+
+    const handleImageSave = (inputImage?: File, inputUrl?: string) => {
+      setIsImageUploadVisible(false);
+    }
+
+    const handleCloseQuestionModal = () => {
+      setIsImageUploadVisible(false);
+    }
+
+    const handleCloseSubModal = () => { 
+      setIsCCSSVisibleModal(false);
+      setIsImageUploadVisible(false);
+    }
 
     return (
         <Modal
@@ -120,130 +227,165 @@ export default function CreateQuestionModal({
           disableEscapeKeyDown
           closeAfterTransition
         >
-          <Slide
-            direction="up"
-            in={isModalOpen}
-            timeout={1000}
-            mountOnEnter
-            unmountOnExit
-          >
-            <IntegratedContainer elevation={12} tabIndex={-1}>
-              <ScrollableContent>
-                <Box
-                  style={{
-                    width: '100%',
-                    maxWidth: '445px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: `${theme.sizing.mdPadding}px`,
-                    
-                  }}
-                >
+          <>
+            {/* tracks ccss state according to index */}
+            {isCCSSVisibleModal && (
+                <CCSSTabs
+                  screenSize={screenSize}
+                  isTabsOpen={isCCSSVisibleModal}
+                  handleCCSSSubmit={handleCCSSSubmit}
+                  ccss={
+                    draftQuestion.questionCard.ccss
+                  }
+                />
+              )}
+
+            {/* open modals according to correct index */}
+            {isImageUploadVisible && (
+                <ImageUploadModal
+                  draftQuestion={draftQuestion}
+                  screenSize={screenSize}
+                  isClone={false}
+                  isCloneImageChanged={
+                    false
+                  }
+                  isModalOpen={
+                    isImageUploadVisible
+                  }
+                  handleImageChange={handleImageChange}
+                  handleImageSave={handleImageSave}
+                  handleCloseModal={handleCloseQuestionModal}
+                />
+              )}
+            <SubModalBackground
+              isModalOpen={isCCSSVisibleModal || isImageUploadVisible}
+              handleCloseModal={handleCloseSubModal}
+            />
+            <Slide
+              direction="up"
+              in={isModalOpen}
+              timeout={1000}
+              mountOnEnter
+              unmountOnExit
+            >
+              <IntegratedContainer elevation={12} tabIndex={-1}>
+                <ScrollableContent>
                   <Box
                     style={{
+                      width: '100%',
+                      maxWidth: '445px',
                       display: 'flex',
-                      gap: `${theme.sizing.xSmPadding}px`,
+                      flexDirection: 'column',
+                      gap: `${theme.sizing.mdPadding}px`,
+                      
                     }}
                   >
-                    <CentralButton 
-                      buttonType={ButtonType.CANCELQUESTION} 
-                      isEnabled 
-                      onClick={handleCloseCreateQuestionModal} 
-                    />
-                    <CentralButton 
-                      buttonType={ButtonType.SAVEADD} 
-                      isEnabled 
-                      onClick={handleCreateQuestion} 
-                    />
+                    <Box
+                      style={{
+                        display: 'flex',
+                        gap: `${theme.sizing.xSmPadding}px`,
+                      }}
+                    >
+                      <CentralButton 
+                        buttonType={ButtonType.CANCELQUESTION} 
+                        isEnabled
+                        onClick={handleCloseCreateQuestionModal} 
+                      />
+                      <CentralButton 
+                        buttonType={ButtonType.SAVEADD} 
+                        isEnabled={isQuestionComplete}
+                        onClick={handleCreateQuestion} 
+                      />
+                    </Box>
+                    <Box>
+                      <CreateQuestionCardBase
+                        screenSize={screenSize}
+                        isClone={false}
+                        isEdit={false}
+                        isCloneImageChanged={false}
+                        label=''
+                        draftQuestion={draftQuestion}
+                        handleTitleChange={handleTitleChange}
+                        handleCCSSClick={() => setIsCCSSVisibleModal(true)}
+                        handleImageUploadClick={() => setIsImageUploadVisible(true)}
+                        handleAnswerType={handleAnswerType}
+                        handlePublicPrivateChange={() => {}}
+                        isHighlight={false}
+                        isCardSubmitted={false}
+                        isDraftCardErrored={false}
+                        isCardErrored={false}
+                        isAIError={false}
+                        isPublic={false}
+                        isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
+                      />
+                    </Box>
                   </Box>
-                  <Box>
-                    <CreateQuestionCardBase
-                      screenSize={screenSize}
-                      isClone={false}
-                      isEdit={false}
-                      isCloneImageChanged={false}
-                      label=''
-                      draftQuestion={draftQuestion}
-                      handleTitleChange={handleTitleChange}
-                      handleCCSSClick={() => {}}
-                      handleImageUploadClick={() => {}}
-                      handleAnswerType={() => {}}
-                      handlePublicPrivateChange={() => {}}
-                      isHighlight={false}
-                      isCardSubmitted={false}
-                      isDraftCardErrored={false}
-                      isCardErrored={false}
-                      isAIError={false}
-                      isPublic={false}
-                      isMultipleChoice={false}
-                    />
-                  </Box>
-                </Box>
-                <Box
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: `${theme.sizing.mdPadding}px`,
-                  }}
-                >
-                  <CorrectAnswerCard
-                    screenSize={screenSize}
-                    isClone={false}
-                    draftQuestion={draftQuestion}
-                    isHighlight={false}
-                    handleCorrectAnswerChange={() => {}}
-                    handleCorrectAnswerStepsChange={() => {}}
-                    handleAnswerSettingsChange={() => {}}
-                    isCardSubmitted={false}
-                    isCardErrored={false}
-                    isAIError={false}
-                  />
                   <Box
                     style={{
                       width: '100%',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: `${theme.sizing.xSmPadding}px`,
+                      gap: `${theme.sizing.mdPadding}px`,
                     }}
                   >
-                    <Typography
-                      sx={{
-                        fontFamily: 'Poppins',
-                        fontSize: '20px',
-                        fontWeight: 'bold',
+                    <CorrectAnswerCard
+                      screenSize={screenSize}
+                      isClone={false}
+                      draftQuestion={draftQuestion}
+                      isHighlight={false}
+                      handleCorrectAnswerChange={handleCorrectAnswerChange}
+                      handleCorrectAnswerStepsChange={handleCorrectAnswerStepsChange}
+                      handleAnswerSettingsChange={() => {}}
+                      isCardSubmitted={false}
+                      isCardErrored={false}
+                      isAIError={false}
+                    />
+                    <Box
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: `${theme.sizing.xSmPadding}px`,
                       }}
                     >
-                      Incorrect Answers
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontFamily: 'Rubik',
-                        fontSize: '16px',
-                        fontWeight: '400',
-                      }}
-                    >
-                      Each question has three incorrect answers
-                    </Typography>
-                    {draftQuestion.incorrectCards.map((card, index) => (
-                      <IncorrectAnswerCard
-                        screenSize={screenSize}
-                        isClone={false}
-                        cardIndex={index}
-                        draftQuestion={draftQuestion}
-                        isHighlight={false}
-                        handleIncorrectAnswerChange={() => {}}
-                        handleIncorrectExplanationChange={() => {}}
-                        isCardSubmitted={false}
-                        isCardErrored={false}
-                        isAIError={false}
-                      />
-                    ))}
+                      <Typography
+                        sx={{
+                          fontFamily: 'Poppins',
+                          fontSize: '20px',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Incorrect Answers
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontFamily: 'Rubik',
+                          fontSize: '16px',
+                          fontWeight: '400',
+                        }}
+                      >
+                        Each question has three incorrect answers
+                      </Typography>
+                      {draftQuestion.incorrectCards.map((card, index) => (
+                        <IncorrectAnswerCard
+                          screenSize={screenSize}
+                          isClone={false}
+                          cardIndex={index}
+                          draftQuestion={draftQuestion}
+                          isHighlight={false}
+                          handleIncorrectAnswerChange={handleIncorrectAnswerChange}
+                          handleIncorrectExplanationChange={handleIncorrectExplanationChange}
+                          isCardSubmitted={false}
+                          isCardErrored={false}
+                          isAIError={false}
+                        />
+                      ))}
+                    </Box>
                   </Box>
-                </Box>
-              </ScrollableContent>
-            </IntegratedContainer>
-          </Slide>
+                </ScrollableContent>
+              </IntegratedContainer>
+            </Slide>
+          </>
         </Modal>
     )
 }

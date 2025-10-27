@@ -211,6 +211,7 @@ export default function CreateQuestion({
           correctCard: {
             answer: '',
             answerSteps: ['', '', ''],
+            isMultipleChoice: true,
             answerSettings: {
               answerType: AnswerType.NUMBER,
               answerPrecision: AnswerPrecision.WHOLE,

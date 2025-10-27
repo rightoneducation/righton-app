@@ -56,6 +56,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
   correctCard: {
     answer: '',
     answerSteps: ['', '', ''],
+    isMultipleChoice: true,
     answerSettings: {
       answerType: AnswerType.MULTICHOICE,
     },

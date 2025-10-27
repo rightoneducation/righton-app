@@ -390,6 +390,7 @@ export const assembleQuestionTemplate = (
     correctCard: {
       answer: correctAnswer?.text ?? '',
       answerSteps: template.instructions ?? [],
+      isMultipleChoice: true,
       answerSettings: {
         answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
         answerPrecision: template.answerSettings?.answerPrecision,
