@@ -35,8 +35,8 @@ import {
 
 export const handleCheckQuestionComplete = (draftQuestion: CentralQuestionTemplateInput) => {
   if (
-    // draftQuestion.questionCard.ccss.length > 0 &&
-    // draftQuestion.questionCard.ccss !== 'CCSS' &&
+    draftQuestion.questionCard.ccss.length > 0 &&
+    draftQuestion.questionCard.ccss !== 'CCSS' &&
     draftQuestion.questionCard.title.length > 0 &&
     // ((draftQuestion.questionCard.imageUrl &&
     //   draftQuestion.questionCard.imageUrl?.length > 0) ||

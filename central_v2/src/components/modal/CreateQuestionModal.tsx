@@ -2,7 +2,7 @@ import React, {useState, useMemo} from 'react';
 import { debounce } from 'lodash';
 import { Paper, Modal, Slide, styled, useTheme, Box, Typography } from '@mui/material';
 import { AnswerPrecision, AnswerType, CentralQuestionTemplateInput } from '@righton/networking';
-import { ScreenSize, TemplateType } from '../../lib/CentralModels';
+import { ScreenSize, StorageKey, TemplateType } from '../../lib/CentralModels';
 import SubModalBackground from './SubModalBackground';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
@@ -12,6 +12,7 @@ import IncorrectAnswerCard from '../cards/creategamecard/createquestion/Incorrec
 import { handleCheckQuestionComplete } from '../../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 import CCSSTabs from '../ccsstabs/CCSSTabs';
 import ImageUploadModal from './ImageUploadModal';
+import { updateDQwithImage, updateDQwithImageURL } from '../../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 
 
 interface CreateQuestionModalProps {
@@ -202,15 +203,7 @@ export default function CreateQuestionModal({
       setIsCCSSVisibleModal(false);
     }
 
-    const handleImageChange = (inputImage?: File, inputUrl?: string) => {
-      setIsImageUploadVisible(true);
-    }
-
-    const handleImageSave = (inputImage?: File, inputUrl?: string) => {
-      setIsImageUploadVisible(false);
-    }
-
-    const handleCloseQuestionModal = () => {
+    const handleCloseImageUploadModal = () => {
       setIsImageUploadVisible(false);
     }
 
@@ -218,6 +211,40 @@ export default function CreateQuestionModal({
       setIsCCSSVisibleModal(false);
       setIsImageUploadVisible(false);
     }
+
+    const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
+      if (inputImage) {
+        const newDraftQuestion = updateDQwithImage(
+          draftQuestion,
+          undefined,
+          inputImage,
+        );
+        setDraftQuestion(newDraftQuestion);
+      } else if (inputUrl) {
+        const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
+        setDraftQuestion(newDraftQuestion);
+      }
+    };
+
+    const handleImageSave = async (inputImage?: File, inputUrl?: string) => {
+      setIsImageUploadVisible(false);
+      if (inputImage) {
+        const { isFirstEdit } = draftQuestion.questionCard;
+        const newDraftQuestion = updateDQwithImage(
+          draftQuestion,
+          undefined,
+          inputImage,
+        );
+        window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+        setDraftQuestion(newDraftQuestion);
+      }
+      if (inputUrl) {
+        const { isFirstEdit } = draftQuestion.questionCard;
+        const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
+        window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+        setDraftQuestion(newDraftQuestion);
+      }
+    };
 
     return (
         <Modal
@@ -254,7 +281,7 @@ export default function CreateQuestionModal({
                   }
                   handleImageChange={handleImageChange}
                   handleImageSave={handleImageSave}
-                  handleCloseModal={handleCloseQuestionModal}
+                  handleCloseModal={handleCloseImageUploadModal}
                 />
               )}
             <SubModalBackground
