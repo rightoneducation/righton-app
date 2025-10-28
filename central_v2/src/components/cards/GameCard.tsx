@@ -243,6 +243,13 @@ export default function StyledGameCard({
             onClick={handleLaunchGame}
           />
         )}
+        {isMyLibraryQuestion && (
+          <CentralButton
+            buttonType={ButtonType.ADDTOGAME}
+            isEnabled
+            onClick={() => handleViewButtonClick(game)}
+          />
+        )}
         {isLibrary && (
           <LastUpdatedText>
             Last updated <b>{lastUpdated}</b>
