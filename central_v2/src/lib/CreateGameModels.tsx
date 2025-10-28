@@ -43,6 +43,7 @@ export type TDraftQuestionsList = {
   isMultipleChoice: boolean;
   questionTemplate: IQuestionTemplate;
   isLibraryViewOnly: boolean;
+  localId?: string; // Unique identifier for React keys
 };
 
 // empty centralQuestionTemplate for creating question templates

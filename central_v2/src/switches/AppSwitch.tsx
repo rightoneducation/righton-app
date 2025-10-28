@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useMatch } from 'react-router-dom';
 import {
   SortType,
   SortDirection,
@@ -31,6 +32,8 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const routeLibraryGames = useMatch('/library/games/:type');
+  const routeLibraryQuestions = useMatch('/library/questions/:type');
   const [libraryGameQuestionSwitch, setLibraryGameQuestionSwitch] =
     useState<GameQuestionType>(GameQuestionType.GAME);
   const screenSize = isLargeScreen // eslint-disable-line
@@ -63,6 +66,15 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     checkForUniqueEmail,
     deleteQuestionTemplate,
   } = useCentralDataManager({ gameQuestion });
+
+  // Auto-detect games vs questions from route
+  useEffect(() => {
+    if (routeLibraryGames) {
+      setLibraryGameQuestionSwitch(GameQuestionType.GAME);
+    } else if (routeLibraryQuestions) {
+      setLibraryGameQuestionSwitch(GameQuestionType.QUESTION);
+    }
+  }, [routeLibraryGames, routeLibraryQuestions]);
 
   const handleLibraryGameQuestionSwitch = (
     gameQuestionValue: GameQuestionType,

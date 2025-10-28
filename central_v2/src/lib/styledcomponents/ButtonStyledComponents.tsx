@@ -1,5 +1,6 @@
 import { Button, Box, Typography, styled, useTheme } from '@mui/material';
 import { ButtonColor, ButtonType } from '../../components/button/ButtonModels';
+import { ScreenSize } from '../CentralModels';
 
 type ButtonStyledProps = {
   buttonColor: ButtonColor;
@@ -127,12 +128,18 @@ export const ButtonContent = styled(Box)(({ theme }) => ({
   paddingRight: '12px',
 }));
 
-export const ButtonIconContainer = styled(Box)(({ theme }) => ({
+type ButtonIconContainerProps = {
+  isSmallScreen: boolean;
+};
+
+export const ButtonIconContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSmallScreen',
+})<ButtonIconContainerProps>(({ theme, isSmallScreen }) => ({
   height: '100%',
-  position: 'absolute',
-  top: '0px',
-  left: '0px',
-  paddingLeft: '12px',
+  position: isSmallScreen ? 'relative' : 'absolute',
+  top: isSmallScreen ? '0px' : '0px',
+  left: isSmallScreen ? '0px' : '0px',
+  paddingLeft: isSmallScreen ? undefined : '12px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

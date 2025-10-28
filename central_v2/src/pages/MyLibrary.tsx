@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { CircularProgress } from '@mui/material';
 import {
@@ -81,6 +81,8 @@ export default function MyLibrary({
   const navigate = useNavigate();
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
+  const routeGames = useMatch('/library/games/:type');
+  const routeQuestions = useMatch('/library/questions/:type');
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [originalSelectedQuestion, setOriginalSelectedQuestion] =
@@ -215,6 +217,33 @@ export default function MyLibrary({
     setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
   };
+
+  useEffect(() => {
+    const tabMapping: { [key: string]: LibraryTabEnum } = {
+      'Public': LibraryTabEnum.PUBLIC,
+      'Private': LibraryTabEnum.PRIVATE,
+      'Drafts': LibraryTabEnum.DRAFTS,
+      'Favorites': LibraryTabEnum.FAVORITES,
+    };
+  
+    if (routeGames && routeGames.params.type) {
+      const mappedTab = tabMapping[routeGames.params.type];
+      if (mappedTab !== undefined) {
+        setOpenTab(mappedTab);
+        if (gameQuestion !== GameQuestionType.GAME) return;
+        fetchElements(mappedTab, '', null, true);
+      }
+    }
+    if (routeQuestions && routeQuestions.params.type) {
+      const mappedTab = tabMapping[routeQuestions.params.type];
+      if (mappedTab !== undefined) {
+        setOpenQuestionTab(mappedTab);
+        if (gameQuestion !== GameQuestionType.QUESTION) return;
+        fetchElements(mappedTab, '', null, true);
+      }
+    }
+
+  }, [routeGames, routeQuestions, gameQuestion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <MyLibraryMainContainer>

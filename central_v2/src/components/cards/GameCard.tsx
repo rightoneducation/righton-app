@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useMatch } from 'react-router-dom';
 import {
   IAPIClients,
   IGameTemplate,
@@ -154,6 +155,15 @@ const DescriptionText = styled(Typography, {
   overflow: 'hidden',
 }));
 
+const LastUpdatedText = styled(Typography)(({ theme }) => ({
+  width: '100%',
+  textAlign: 'right',
+  fontFamily: 'Rubik',
+  fontWeight: '400',
+  fontSize: `16px`,
+  color: '#384466',
+}));
+
 function getDomainAndGrades(game: IGameTemplate) {
   const extractedQuestions = game?.questionTemplates?.map(
     (question) => question.questionTemplate,
@@ -182,10 +192,15 @@ export default function StyledGameCard({
     (game && game.questionTemplates && game?.questionTemplates?.length > 0) ??
     false;
   const handleLaunchGame = () => {
-    const LAUNCH_GAME_URL = `http://host.rightoneducation.com/new/${game.publicPrivateType}/${game.id}`;
+    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.publicPrivateType}/${game.id}`;
     window.location.href = LAUNCH_GAME_URL;
   };
   const centralData = useCentralDataState();
+  const lastUpdated = game.updatedAt 
+  ? `${game.updatedAt.toLocaleDateString('en-US', { month: 'short' })}. ${game.updatedAt.getDate()}, ${game.updatedAt.getFullYear()}`
+  : '';
+  const isLibrary = useMatch('/library');
+  
   return (
     <GameCard isCarousel={isCarousel} screenSize={screenSize}>
       <GameImageContainer>
@@ -227,6 +242,18 @@ export default function StyledGameCard({
             isEnabled={isGameLaunchable}
             onClick={handleLaunchGame}
           />
+        )}
+        {isMyLibraryQuestion && (
+          <CentralButton
+            buttonType={ButtonType.ADDTOGAME}
+            isEnabled
+            onClick={() => handleViewButtonClick(game)}
+          />
+        )}
+        {isLibrary && (
+          <LastUpdatedText>
+            Last updated <b>{lastUpdated}</b>
+          </LastUpdatedText>
         )}
       </ButtonContainer>
     </GameCard>

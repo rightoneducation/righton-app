@@ -4,6 +4,7 @@ import {
   Box,
   styled,
   useTheme,
+  Collapse
 } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -27,6 +28,7 @@ import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
 import buttonExpandQuestionImage from '../../images/buttonExpandQuestion.svg';
 import buttonRemoveQuestionImage from '../../images/buttonRemoveQuestion.svg';
+import { SelectArrowContainer } from '../../lib/styledcomponents/SelectGrade';
 
 interface DetailedUnifiedQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -47,7 +49,7 @@ export const CreateQuestionTitleBarStyled = styled(
   width: '100%',
   height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
   gap:
@@ -77,6 +79,7 @@ export default function DetailedUnifiedQuestionCardBase({
   const theme = useTheme();
   const correctAnswer = question?.correctCard?.answer;
   const incorrectAnswers = question?.incorrectCards?.map((answer) => answer.answer);
+  const [isSelectOpen, setIsSelectOpen] = React.useState<boolean>(false);
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [isPublic, setIsPublic] = React.useState<boolean>(
     true
@@ -107,30 +110,54 @@ export default function DetailedUnifiedQuestionCardBase({
   const handlePublicPrivateChange = () => {
     setIsPublic((prev) => !prev);
   };
-console.log('question');
-console.log(question);
-console.log('questionTemplate');
-console.log(questionTemplate);
-console.log('imageLink');
-console.log(imageLink);
 
   return (
     <ViewQuestionBaseCardStyled
       elevation={6}
       style={{
-        marginRight: '10px' 
+        marginRight: screenSize === ScreenSize.SMALL ? '0px' : '10px',
+        flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
       }}
     >
-      <img
-        src={imageLink ?? ''}
-        alt="question"
+      <Box
         style={{
-          width: '200px',
+          width: screenSize === ScreenSize.SMALL ? '100%' : '200px',
           height: '100%',
-          objectFit: 'cover',
-          borderRadius: '8px',
+          position: screenSize === ScreenSize.SMALL ? 'relative' : 'static',
         }}
-      />
+      >
+        <img
+          src={imageLink ?? ''}
+          alt="question"
+          style={{
+            width: screenSize === ScreenSize.SMALL ? '100%' : '200px',
+            height: screenSize === ScreenSize.SMALL ? '185px' : '100%',
+            objectFit: 'cover',
+            borderRadius: '8px',
+          }}
+        />
+        {handleRemoveQuestion && isCreateGame && screenSize === ScreenSize.SMALL && (
+          <Box
+            onClick={handleRemoveQuestion}
+            style={{
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              cursor: 'pointer',
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+            }}
+          >
+            <img
+              src={`${buttonRemoveQuestionImage}`}
+              alt="expand question"
+            />
+          </Box>
+        )}
+      </Box>
       <Box
         style={{
           width: '100%',
@@ -140,6 +167,7 @@ console.log(imageLink);
           paddingBottom: `${theme.sizing.mdPadding}px`,
           paddingLeft: `${theme.sizing.smPadding}px`,
           paddingRight: `${theme.sizing.smPadding}px`,
+          boxSizing: 'border-box',
           gap: `${theme.sizing.mdPadding}px`,
         }}
       >
@@ -184,28 +212,30 @@ console.log(imageLink);
                   cursor: 'pointer',
                 }}
               >
-                <img
-                  src={`${buttonExpandQuestionImage}`}
-                  alt="expand question"
-                />
+                <SelectArrowContainer isSelectOpen={isSelectOpen} onClick={() => setIsSelectOpen(!isSelectOpen)}>
+                  <img
+                    src={`${buttonExpandQuestionImage}`}
+                    alt="expand question"
+                  />
+                </SelectArrowContainer>
               </Box>
-              {handleRemoveQuestion && isCreateGame && (
-              <Box
-                onClick={handleRemoveQuestion}
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                <img
-                  src={`${buttonRemoveQuestionImage}`}
-                  alt="expand question"
-                />
-              </Box>
+              {handleRemoveQuestion && isCreateGame && screenSize !== ScreenSize.SMALL && (
+                <Box
+                  onClick={handleRemoveQuestion}
+                  style={{
+                    width: '28px',
+                    height: '28px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <img
+                    src={`${buttonRemoveQuestionImage}`}
+                    alt="expand question"
+                  />
+                </Box>
               )}
             </Box>
           </CreateQuestionTitleBarStyled>
@@ -227,50 +257,61 @@ console.log(imageLink);
           </QuestionTextStyled>
           <AnswerIndicator>{correctAnswer}</AnswerIndicator>
         </ViewQuestionContentContainerStyled>
-        <ViewQuestionContentContainerStyled>
-          <QuestionTextStyled sx={{whiteSpace: 'pre-line', color: '#1B376F'}}>
-            Incorrect Answers
-          </QuestionTextStyled>
+        <Collapse in={isSelectOpen} timeout={1000}>
           <Box
             style={{
               width: '100%',
               display: 'flex',
-              gap: `${theme.sizing.xSmPadding}px`,
+              flexDirection: 'column',
+              gap: `${theme.sizing.smPadding}px`,
             }}
           >
-              {incorrectAnswers?.map((answer) => (
-                <AnswerIndicator>{answer}</AnswerIndicator>
-              ))}
-          </Box>
-        </ViewQuestionContentContainerStyled>
-        <ViewQuestionContentContainerStyled
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            height: '38px'
-          }}
-        >
-          {(question.questionCard.isFirstEdit && isCreateGame) ? 
-            <CentralButton
-              buttonType={ButtonType.EDIT}
-              isEnabled
-              buttonWidthOverride="127px"
-              onClick={() => {}}
-            />
-            : 
-            <Typography
-              sx={{
-                fontFamily: 'Rubik',
-                fontSize: '14px',
-                color: '#1B376F',
-                padding: 0
+            <ViewQuestionContentContainerStyled>
+              <QuestionTextStyled sx={{whiteSpace: 'pre-line', color: '#1B376F'}}>
+                Incorrect Answers
+              </QuestionTextStyled>
+              <Box
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  gap: `${theme.sizing.xSmPadding}px`,
+                }}
+              >
+                  {incorrectAnswers?.map((answer) => (
+                    <AnswerIndicator>{answer}</AnswerIndicator>
+                  ))}
+              </Box>
+            </ViewQuestionContentContainerStyled>
+            <ViewQuestionContentContainerStyled
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                height: '38px'
               }}
             >
-              Public Question Created By Other User
-            </Typography>
-          }
-        </ViewQuestionContentContainerStyled>
+              {(question.questionCard.isFirstEdit && isCreateGame) ? 
+                <CentralButton
+                  buttonType={ButtonType.EDIT}
+                  isEnabled
+                  buttonWidthOverride="127px"
+                  onClick={() => {}}
+                />
+                : 
+                <Typography
+                  sx={{
+                    fontFamily: 'Rubik',
+                    fontSize: '14px',
+                    color: '#1B376F',
+                    padding: 0
+                  }}
+                >
+                  Public Question Created By Other User
+                </Typography>
+              }
+            </ViewQuestionContentContainerStyled>
+          </Box>
+        </Collapse>
       </Box>
     </ViewQuestionBaseCardStyled>
   );

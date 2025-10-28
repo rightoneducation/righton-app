@@ -22,16 +22,23 @@ interface CreateQuestionModalProps {
     handleCloseCreateQuestionModal: () => void;
 }
 
-const IntegratedContainer = styled(Paper)(({ theme }) => ({
+
+type IntegratedContainerProps = {
+  screenSize: ScreenSize;
+};
+export const IntegratedContainer = styled(Paper, {
+  shouldForwardProp: (prop: string) =>
+    prop !== 'screenSize',
+})<IntegratedContainerProps>(({ screenSize, theme }) => ({
   position: 'absolute',
   borderTopLeftRadius: '8px',
   borderTopRightRadius: '8px',
   top: '160px',
-  left: '135px',
-  right: '135px',
+  left: screenSize === ScreenSize.SMALL ? '0px' : '135px',
+  right: screenSize === ScreenSize.SMALL ? '0px' : '135px',
   bottom: 0,
   background: '#FFF',
-  paddingTop: '48px',
+  paddingTop: screenSize === ScreenSize.SMALL ? '0px' : '48px',
   marginTop: '48px',
   zIndex: 1310,
   display: 'flex',
@@ -40,14 +47,22 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-const ScrollableContent = styled(Box)({
+type ScrollableContentProps = {
+  screenSize: ScreenSize;
+};
+
+const ScrollableContent = styled(Box, {
+  shouldForwardProp: (prop: string) =>
+    prop !== 'screenSize',
+})<ScrollableContentProps>(({ screenSize, theme }) => ({
   display: 'flex',
+  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   gap: '20px',
-  paddingTop: `8px`,
-  paddingLeft: '48px',
-  paddingRight: '48px',
+  paddingTop: screenSize === ScreenSize.SMALL ? '24px' : '8px',
+  paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '48px',
+  paddingRight: screenSize === ScreenSize.SMALL ? '24px' : '48px',
   paddingBottom: '86px',
   overflow: 'auto',
   flex: 1,
@@ -56,7 +71,7 @@ const ScrollableContent = styled(Box)({
   },
   scrollbarWidth: 'none',
   msOverflowStyle: 'none',
-});
+}));
 
 export default function CreateQuestionModal({
     isModalOpen,
@@ -299,8 +314,8 @@ export default function CreateQuestionModal({
               mountOnEnter
               unmountOnExit
             >
-              <IntegratedContainer elevation={12} tabIndex={-1}>
-                <ScrollableContent>
+              <IntegratedContainer elevation={12} tabIndex={-1} screenSize={screenSize}>
+                <ScrollableContent screenSize={screenSize}>
                   <Box
                     style={{
                       width: '100%',

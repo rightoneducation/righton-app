@@ -64,8 +64,8 @@ const OwnerTagSubGridContainer = styled(Grid)(({ theme }) => ({
 
 const OwnerTagProfilePicture = styled('img')<OwnerTagProps>(
   ({ theme, screenSize }) => ({
-    height: screenSize === ScreenSize.LARGE ? '128px' : '64px',
-    width: screenSize === ScreenSize.LARGE ? '128px' : '64px',
+    height: '128px',
+    width: '128px',
     borderRadius: '50%',
     objectFit: 'cover',
   }),
@@ -150,7 +150,7 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
     displayProfilePic !== '' &&
     displayNumUsed !== undefined;
 
-  return screenSize !== ScreenSize.SMALL ? (
+  return  (
     <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize} elevation={6} >
       {isOwnerLoaded ? (
         <Box style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', gap: `40px` }}>
@@ -183,44 +183,5 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
         <CircularProgress style={{ color: '#FFF' }} />
       )}
     </OwnerTagFlexContainer>
-  ) : (
-    <OwnerTagGridContainer
-      screenSize={screenSize}
-      isViewGame={isViewGame}
-      container
-    >
-      {isOwnerLoaded ? (
-        <>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagProfilePicture
-              src={displayProfilePic}
-              screenSize={screenSize}
-            />
-          </OwnerTagSubGridContainer>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Last Modified:</OwnerTagHeader>
-              <OwnerTagBody>{displayLastModified}</OwnerTagBody>
-            </OwnerTagSubContainer>
-          </OwnerTagSubGridContainer>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Created By:</OwnerTagHeader>
-              <OwnerNamePill ownerName={displayCreatedName} />
-            </OwnerTagSubContainer>
-          </OwnerTagSubGridContainer>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Times Played:</OwnerTagHeader>
-              <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
-            </OwnerTagSubContainer>
-          </OwnerTagSubGridContainer>
-        </>
-      ) : (
-        <OwnerTagSubGridContainer item xs={12}>
-          <CircularProgress style={{ color: '#FFF' }} />
-        </OwnerTagSubGridContainer>
-      )}
-    </OwnerTagGridContainer>
-  );
+  ); 
 }

@@ -86,11 +86,12 @@ export default function LibraryTabs({
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
+  const isDefaultSort = centralData.sort.field === SortType.listGameTemplates && 
+                        centralData.sort.direction === SortDirection.ASC;
   const isSearchResults =
     centralData.searchTerms.length > 0 ||
     centralData.selectedGrades.length > 0 ||
-    (centralData.sort.field !== SortType.listGameTemplates &&
-      centralData.sort.direction !== SortDirection.ASC);
+    !isDefaultSort;
 
   const tabs: LibraryTabEnum[] = [
     LibraryTabEnum.PUBLIC,
@@ -113,6 +114,16 @@ export default function LibraryTabs({
   };
 
   if (centralData.isLibraryInit) {
+    const librarySort = {
+      field: gameQuestion === GameQuestionType.GAME 
+        ? SortType.listGameTemplatesByDate 
+        : SortType.listQuestionTemplatesByDate,
+      direction: SortDirection.DESC,
+    };
+    centralDataDispatch({
+      type: 'SET_SORT',
+      payload: librarySort,
+    });
     centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
