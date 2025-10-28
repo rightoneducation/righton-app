@@ -10,7 +10,6 @@ import {
   Button,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
@@ -286,9 +285,7 @@ export default function CreateQuestionCardBase({
                     </InputAdornment>
                   ),
               }}
-            >
-              <Typography>{draftQuestion.questionCard.title}</Typography>
-            </TextContainerStyled>
+            />
           </Box>
         </Box>
         <Box sx={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
@@ -376,7 +373,6 @@ export default function CreateQuestionCardBase({
           </Typography>
           <Box >
             <ButtonCCSS
-              key={uuidv4()}
               onClickCapture={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleCCSSButtonClick();
