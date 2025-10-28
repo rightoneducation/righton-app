@@ -85,6 +85,7 @@ export default function CreateQuestionModal({
     const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
       return (
         {
+          publicPrivateType: PublicPrivateType.PUBLIC,
           questionCard: {
             title: '',
             ccss: 'CCSS',

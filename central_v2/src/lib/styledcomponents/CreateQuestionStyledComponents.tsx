@@ -67,7 +67,6 @@ export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface BaseCardStyledProps {
-  isHighlight: boolean;
   isCardComplete: boolean;
   isClone?: boolean;
   dropShadow?: boolean;
@@ -75,12 +74,11 @@ interface BaseCardStyledProps {
 
 export const BaseCardStyled = styled(Paper, {
   shouldForwardProp: (prop) =>
-    prop !== 'isHighlight' &&
     prop !== 'isCardComplete' &&
     prop !== 'dropShadow' &&
     prop !== 'isClone',
-})<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete, isClone }) => ({
-  // maxWidth: '410px',
+})<BaseCardStyledProps>(({ theme, isCardComplete, isClone }) => ({
+  width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
   flexDirection: 'column',
@@ -89,11 +87,6 @@ export const BaseCardStyled = styled(Paper, {
   borderRadius: `8px`,
   boxSizing: 'border-box',
   height: 'fit-content',
-  boxShadow: isHighlight
-    ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}`
-    : '',
-  opacity: isCardComplete && !isClone ? 0.6 : 1,
-  transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
 
 export const ViewQuestionBaseCardStyled = styled(Paper)(({ theme }) => ({

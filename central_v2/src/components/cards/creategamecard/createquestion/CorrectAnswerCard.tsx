@@ -197,7 +197,6 @@ export default function DetailedQuestionSubCard({
   return (
     <BaseCardStyled
       elevation={6}
-      isHighlight={isHighlight}
       isCardComplete={draftQuestion.correctCard.isCardComplete}
       isClone={isClone}
     >

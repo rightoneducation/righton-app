@@ -380,6 +380,7 @@ export const assembleQuestionTemplate = (
     })) ?? blankIncorrectAnswers;
 
   return {
+    publicPrivateType: template.publicPrivateType,
     questionCard: {
       title: template.title,
       ccss: template.ccss,
