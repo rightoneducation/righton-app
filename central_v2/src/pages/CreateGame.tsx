@@ -1044,7 +1044,7 @@ export default function CreateGame({
 
   const handleContinue = () => {
     setModalState(ModalStateType.NULL);
-    navigate('/');
+    navigate('/library/games/Public');
   };
 
   const handleCreateQuestion = (draftQuestion: CentralQuestionTemplateInput) => {

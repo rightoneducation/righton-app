@@ -79,7 +79,7 @@ export default function ViewGame({
   }, [centralData.selectedGame, route]); // eslint-disable-line
 
   const handleLaunchGame = () => {
-    const LAUNCH_GAME_URL = `http://host.rightoneducation.com/new/Public/${centralData.selectedGame?.game?.id}`;
+    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/Public/${centralData.selectedGame?.game?.id}`;
     window.location.href = LAUNCH_GAME_URL;
   };
 
@@ -206,7 +206,7 @@ export default function ViewGame({
       ) : (
         centralData.selectedGame && (
           <CreateGameContentContainer>
-            <ViewGameHeader handleBackClick={() => {}} handleEditGame={() => {}} handleLaunchGame={() => {}} label="View" screenSize={screenSize} />
+            <ViewGameHeader handleBackClick={handleBackClick} handleEditGame={handleEditGame} handleLaunchGame={handleLaunchGame} label="View" screenSize={screenSize} />
             <CreateGameBoxContainer screenSize={screenSize}>
             <Box style={{ width: '100%', maxWidth: '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
               <DetailedGameCardBase

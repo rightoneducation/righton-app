@@ -65,11 +65,14 @@ export default function LibraryTabsContent({
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
   const centralData = useCentralDataState();
   const theme = useTheme();
+  const isDefaultSort = (centralData.sort.field === SortType.listGameTemplates && 
+                        centralData.sort.direction === SortDirection.ASC) ||
+                       (centralData.sort.field === SortType.listGameTemplatesByDate && 
+                        centralData.sort.direction === SortDirection.DESC);
   const isSearchResults =
     centralData.searchTerms.length > 0 ||
     centralData.selectedGrades.length > 0 ||
-    (centralData.sort.field !== SortType.listGameTemplates &&
-      centralData.sort.direction !== SortDirection.ASC);
+    !isDefaultSort;
   const elements =
     gameQuestion === GameQuestionType.GAME
       ? getGameElements(openTab, isSearchResults, centralData)
