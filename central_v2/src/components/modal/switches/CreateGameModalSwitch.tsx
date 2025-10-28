@@ -1,0 +1,77 @@
+import React from "react";
+import { CentralQuestionTemplateInput } from "@righton/networking";
+import { ModalStateType, ScreenSize, TemplateType } from "../../../lib/CentralModels";
+import SaveGameModal from '../SaveGameModal';
+import DiscardGameModal from '../DiscardGameModal';
+import ConfirmSaveModal from '../ConfirmSaveModal';
+import UpdatingModal from '../UpdatingModal';
+import CreateQuestionModal from '../CreateQuestionModal';
+
+interface CreateGameModalSwitchProps {
+  modalState: ModalStateType;
+  screenSize: ScreenSize;
+  handleDiscard: () => void;
+  handleCloseDiscardModal: () => void;
+  handlePublishGame: () => void;
+  handleCloseSaveGameModal: () => void;
+  handleContinue: () => void;
+  handleCreateQuestion: (draftQuestion: CentralQuestionTemplateInput) => void;
+  handleCloseCreateQuestionModal: () => void;
+  isCardErrored: boolean;
+}
+
+export default function CreateGameModalSwitch({ 
+  modalState,
+  screenSize,
+  handleDiscard,
+  handleCloseDiscardModal,
+  handlePublishGame,
+  handleCloseSaveGameModal,
+  handleContinue,
+  handleCreateQuestion,
+  handleCloseCreateQuestionModal,
+  isCardErrored,
+}: CreateGameModalSwitchProps) {
+
+  switch (modalState) {
+    case ModalStateType.CREATEQUESTION:
+      return <CreateQuestionModal
+        isModalOpen
+        screenSize={screenSize}
+        handleCreateQuestion={handleCreateQuestion}
+        handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
+      />;
+      break;
+    case ModalStateType.DISCARD:
+      return <DiscardGameModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+        handleDiscardClick={handleDiscard}
+        handleCloseDiscardModal={handleCloseDiscardModal}
+      />;
+      break;
+    case ModalStateType.PUBLISH:
+      return <SaveGameModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+        handlePublishGame={handlePublishGame}
+        handleCloseSaveGameModal={handleCloseSaveGameModal}
+        isCardErrored={isCardErrored}
+      />;
+      break;
+    case ModalStateType.UPDATING:
+      return <UpdatingModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+      />;
+      break;
+    case ModalStateType.CONFIRM:
+      return <ConfirmSaveModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+        handleContinue={handleContinue}
+      />;
+    default:
+     return null;
+  }
+}

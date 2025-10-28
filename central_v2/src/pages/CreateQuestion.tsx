@@ -69,7 +69,7 @@ import {
   updateDQwithIncorrectAnswers,
   handleIncorrectCardClick,
 } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
-import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
+import CreatingTemplateModal from '../components/modal/SaveGameModal';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
@@ -211,6 +211,7 @@ export default function CreateQuestion({
           correctCard: {
             answer: '',
             answerSteps: ['', '', ''],
+            isMultipleChoice: true,
             answerSettings: {
               answerType: AnswerType.NUMBER,
               answerPrecision: AnswerPrecision.WHOLE,
@@ -1018,7 +1019,6 @@ export default function CreateQuestion({
       />
       <CreatingTemplateModal
         isModalOpen={isCreatingTemplate || isUpdatingTemplate}
-        isUpdatingTemplate={isUpdatingTemplate}
         templateType={TemplateType.QUESTION}
       />
       <CreateQuestionBoxContainer sx= {{border: '1px solid red', paddingTop: '72px', paddingLeft: '48px', paddingRight: '48px'}}>

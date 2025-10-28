@@ -56,6 +56,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
   correctCard: {
     answer: '',
     answerSteps: ['', '', ''],
+    isMultipleChoice: true,
     answerSettings: {
       answerType: AnswerType.MULTICHOICE,
     },
@@ -140,8 +141,8 @@ export const newGameTemplate: IGameTemplate = {
   version: 0,
   description: '',
   lowerCaseDescription: '',
-  phaseOneTime: 0,
-  phaseTwoTime: 0,
+  phaseOneTime: 120,
+  phaseTwoTime: 120,
   questionTemplatesCount: 0,
   questionTemplatesOrder: [],
   imageUrl: null,

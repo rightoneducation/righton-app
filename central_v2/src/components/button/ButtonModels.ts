@@ -39,6 +39,7 @@ export enum ButtonType {
   SAVE = 'save',
   SAVEPASSWORD = 'savepassword',
   SAVEDRAFT = 'savedraft',
+  SAVEDRAFTBLUE = 'savedraftblue',
   DISCARD = 'discard',
   DISCARDBLUE = 'discardblue',
   ADDSTEP = 'addstep',
@@ -50,6 +51,7 @@ export enum ButtonType {
   CREATEQUESTION = 'createquestion',
   QUESTIONBANK = 'questionbank',
   BACK = 'back',
+  BACKTOEDIT = 'backtoedit',
   EDITPICTURE = 'editpicture',
   EDITPROFILEPICTURE = 'editprofilepicture',
   EDITINFORMATION = 'editinformation',
@@ -68,6 +70,11 @@ export enum ButtonType {
   EDIT = 'edit',
   DELETE = 'delete',
   OK = 'ok',
+  PUBLISH = 'publish',
+  UPDATE = 'update',
+  CONTINUE = 'continue',
+  CANCELQUESTION = 'cancelquestion',
+  SAVEADD = 'saveadd',
 }
 
 export enum ButtonColor {
@@ -111,6 +118,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LAUNCH]: {
     icon: launch,
     textKey: ButtonType.LAUNCH,
+    color: ButtonColor.RED,
   },
   [ButtonType.UPLOAD]: {
     icon: upload,
@@ -177,6 +185,10 @@ export const buttonContentMap: ButtonContentMapProps = {
     width: '200px',
     color: ButtonColor.NULL,
   },
+  [ButtonType.SAVEDRAFTBLUE]: {
+    icon: save,
+    textKey: ButtonType.SAVEDRAFT,
+  },
   [ButtonType.DISCARD]: {
     icon: discard,
     textKey: ButtonType.DISCARD,
@@ -221,8 +233,9 @@ export const buttonContentMap: ButtonContentMapProps = {
     color: ButtonColor.NULL,
   },
   [ButtonType.CREATEQUESTION]: {
-    icon: create,
+    icon: add,
     textKey: ButtonType.CREATEQUESTION,
+    color: ButtonColor.NULL,
   },
   [ButtonType.QUESTIONBANK]: {
     icon: bank,
@@ -231,6 +244,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.BACK]: {
     icon: previous,
     textKey: ButtonType.BACK,
+    color: ButtonColor.NULL,
   },
   [ButtonType.EDITPICTURE]: {
     textKey: ButtonType.EDITPICTURE,
@@ -288,11 +302,35 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: edit,
     textKey: ButtonType.EDIT,
   },
+  [ButtonType.BACKTOEDIT]: {
+    icon: previous,
+    textKey: ButtonType.BACKTOEDIT,
+    color: ButtonColor.NULL,
+  },
   [ButtonType.DELETE]: {
     icon: deleteIcon,
     textKey: ButtonType.DELETE,
   },
   [ButtonType.OK]: {
     textKey: ButtonType.OK,
+  },
+  [ButtonType.PUBLISH]: {
+    icon: upload,
+    textKey: ButtonType.PUBLISH,
+    color: ButtonColor.RED,
+  },
+  [ButtonType.UPDATE]: {
+    icon: save,
+    textKey: ButtonType.UPDATE,
+  },
+  [ButtonType.CONTINUE]: {
+    textKey: ButtonType.CONTINUE,
+  },
+  [ButtonType.SAVEADD]: {
+    textKey: ButtonType.SAVEADD,
+  },
+  [ButtonType.CANCELQUESTION]: {
+    textKey: ButtonType.CANCELQUESTION,
+    color: ButtonColor.NULL,
   },
 };

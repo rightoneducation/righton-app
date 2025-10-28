@@ -11,25 +11,26 @@ import {
   IQuestionTemplate,
   CloudFrontDistributionUrl,
   AnswerType,
+  CentralQuestionTemplateInput,
 } from '@righton/networking';
 import {
   AnswerIndicator,
-} from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
+} from '../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import {
   ViewQuestionBaseCardStyled,
   ViewQuestionContentContainerStyled,
   QuestionTextStyled,
-} from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
-import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
-import { ScreenSize } from '../../../lib/CentralModels';
-import { ButtonType } from '../../button/ButtonModels';
-import CentralButton from '../../button/Button';
-import buttonExpandQuestionImage from '../../../images/buttonExpandQuestion.svg';
-import buttonRemoveQuestionImage from '../../../images/buttonRemoveQuestion.svg';
+} from '../../lib/styledcomponents/CreateQuestionStyledComponents';
+import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';
+import { ScreenSize } from '../../lib/CentralModels';
+import { ButtonType } from '../button/ButtonModels';
+import CentralButton from '../button/Button';
+import buttonExpandQuestionImage from '../../images/buttonExpandQuestion.svg';
+import buttonRemoveQuestionImage from '../../images/buttonRemoveQuestion.svg';
 
-interface DetailedQuestionCardBaseProps {
+interface DetailedUnifiedQuestionCardBaseProps {
   screenSize: ScreenSize;
-  question: IQuestionTemplate;
+  questionTemplate: IQuestionTemplate;
   handleRemoveQuestion?: () => void;
   dropShadow?: boolean;
   isCreateGame?: boolean;
@@ -63,27 +64,33 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(
   }),
 );
 
-export default function DetailedQuestionCardBase({
+export default function DetailedUnifiedQuestionCardBase({
   screenSize,
-  question,
+  questionTemplate,
   handleRemoveQuestion,
   dropShadow,
   isCreateGame,
 
-}: DetailedQuestionCardBaseProps) {
+}: DetailedUnifiedQuestionCardBaseProps) {
   const theme = useTheme();
-  const correctAnswer = question?.choices?.find((answer) => answer.isAnswer)?.text;
-  const incorrectAnswers = question?.choices?.filter((answer) => !answer.isAnswer)?.map((answer) => answer.text);
+  const correctAnswer = questionTemplate?.choices?.find((choice) => choice.isAnswer)?.text;
+  const incorrectAnswers = questionTemplate?.choices?.filter((choice) => !choice.isAnswer)?.map((choice) => choice.text);
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [isPublic, setIsPublic] = React.useState<boolean>(
-    question.publicPrivateType === PublicPrivateType.PUBLIC,
+    true
   );
   const isMultipleChoice =
-    question.answerSettings?.answerType === AnswerType.MULTICHOICE;
+    questionTemplate?.answerSettings?.answerType === AnswerType.MULTICHOICE;
   const isCreateGamePage =
     (isCreateGame && screenSize === ScreenSize.LARGE) ||
     (isCreateGame && screenSize === ScreenSize.MEDIUM) ||
     (isCreateGame && screenSize === ScreenSize.SMALL);
+
+
+  let imageLink: string | null = null;
+  if (questionTemplate?.imageUrl) {
+      imageLink = `${CloudFrontDistributionUrl}${questionTemplate.imageUrl}`;
+  }
 
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -94,13 +101,20 @@ export default function DetailedQuestionCardBase({
   const handlePublicPrivateChange = () => {
     setIsPublic((prev) => !prev);
   };
+console.log('questionTemplate');
+console.log(questionTemplate);
+console.log('imageLink');
+console.log(imageLink);
 
   return (
     <ViewQuestionBaseCardStyled
       elevation={6}
+      style={{
+        marginRight: '10px' 
+      }}
     >
       <img
-        src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`}
+        src={imageLink ?? ''}
         alt="question"
         style={{
           width: '200px',
@@ -141,7 +155,7 @@ export default function DetailedQuestionCardBase({
                 gap: '14px',
               }}
             >
-              <ButtonCCSS key={uuidv4()}>{question.ccss}</ButtonCCSS>
+              <ButtonCCSS key={uuidv4()}>{questionTemplate.ccss}</ButtonCCSS>
             </Box>
             <Box
               style={{
@@ -195,7 +209,7 @@ export default function DetailedQuestionCardBase({
             }}
           >
             <Typography sx={{whiteSpace: 'pre-line'}}>
-              {question.title}
+              {questionTemplate.title}
             </Typography>
           </Box>
         </ViewQuestionContentContainerStyled>
@@ -229,7 +243,7 @@ export default function DetailedQuestionCardBase({
             height: '38px'
           }}
         >
-          {question.id === null ? 
+          {(!questionTemplate.id || questionTemplate.id === '') && isCreateGame ? 
             <CentralButton
               buttonType={ButtonType.EDIT}
               isEnabled

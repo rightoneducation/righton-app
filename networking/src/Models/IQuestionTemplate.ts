@@ -53,10 +53,11 @@ export type AnswerSettingsType = {
 export type CorrectCard = {
   answer: string;
   answerSteps: string[];
+  isMultipleChoice: boolean;
   answerSettings: {
     answerType: AnswerType;
     answerPrecision?: AnswerPrecision;
-  }
+  };
   isFirstEdit: boolean;
   isCardComplete: boolean;
 }

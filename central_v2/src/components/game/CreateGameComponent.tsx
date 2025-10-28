@@ -115,10 +115,11 @@ export default function CreateGameComponent({
   );
 
   return (
-    <>
-      <TitleText screenSize={screenSize}>{label} Game</TitleText>
+    <Box style={{ 
+      width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.xSmPadding}px` 
+      }}>
       <>
-        {/* Save & Discard Button for Small & Medium Screen Size */}
+        {/* Save & Discard Button for Small & Medium Screen Size
         {screenSize === ScreenSize.MEDIUM && (
           <Box
             style={{
@@ -282,84 +283,9 @@ export default function CreateGameComponent({
               onClick={handleDiscard}
             />
           </Box>
-        )}
+        )} */}
 
-        <CreateGameGridContainer container wrap="nowrap">
-          {/* Grid item for Save & Discard Buttons for Large Screen Size */}
-          <CreateGameSaveDiscardGridItem item sm md={1} lg={4}>
-            {screenSize !== ScreenSize.SMALL &&
-              screenSize !== ScreenSize.MEDIUM && (
-                <CreateGameSaveDiscardBoxContainer screenSize={screenSize}>
-                  <CentralButton
-                    buttonType={ButtonType.SAVE}
-                    isEnabled
-                    buttonWidthOverride="160px"
-                    onClick={handleSaveGame}
-                  />
-                  {(!isEdit || isEditDraft) && (
-                    draftQuestionsList?.length && draftQuestionsList?.length > 0 
-                    ? (
-                      <CustomTooltip
-                        title={
-                          <Box>
-                            <Typography
-                              sx={{ fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}
-                            >
-                              Remove all questions to save as draft
-                            </Typography>
-                          </Box>
-                        }
-                        componentsProps={{
-                          tooltip: {
-                            sx: {
-                              bgcolor: `${theme.palette.primary.extraDarkBlue}`,
-                              color: '#FFFFFF !important', // Ensures text remains white
-                              fontSize: '14px',
-                              padding: '10px 15px',
-                              borderRadius: '8px',
-                              maxWidth: '250px',
-                              boxSizing: 'border-box',
-                              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
-                              '& .MuiTooltip-arrow': {
-                                color: `${theme.palette.primary.extraDarkBlue}`,
-                              },
-                            },
-                          },
-                        }}
-                        arrow
-                        placement="top"
-                      >
-                        <span>
-                          <CentralButton
-                            buttonType={ButtonType.SAVEDRAFT}
-                            isEnabled={false}
-                            smallScreenOverride
-                            buttonWidthOverride="160px"
-                            onClick={handleSaveDraftGame}
-                          />
-                        </span>
-                      </CustomTooltip>
-                    
-                    ) : ( 
-                      <CentralButton
-                        buttonType={ButtonType.SAVEDRAFT}
-                        isEnabled
-                        smallScreenOverride
-                        buttonWidthOverride="160px"
-                        onClick={handleSaveDraftGame}
-                      />
-                    )
-                  )}
-                  <CentralButton
-                    buttonType={ButtonType.DISCARDBLUE}
-                    isEnabled
-                    buttonWidthOverride="160px"
-                    onClick={handleDiscard}
-                  />
-                </CreateGameSaveDiscardBoxContainer>
-              )}
-          </CreateGameSaveDiscardGridItem>
-
+        <CreateGameGridContainer>
           {/* Grid Item for Create Game Card */}
           <CreateGameCardGridItem
             item
@@ -453,6 +379,6 @@ export default function CreateGameComponent({
           />
         </GameCreateButtonStack>
       </>
-    </>
+    </Box>
   );
 }

@@ -52,28 +52,36 @@ export const updateGameTitle = (
   draftGame: TGameTemplateProps,
   title: string,
 ): TGameTemplateProps => {
-  return {
+  const newDraftGame = {
     ...draftGame,
     gameTemplate: {
       ...draftGame.gameTemplate,
       title,
       lowerCaseTitle: title.toLowerCase(),
     },
-  };
+  }
+  return {
+    ...newDraftGame,
+    isGameCardErrored: !checkGameFormIsValid(newDraftGame)
+  }
 };
 
 export const updateGameDescription = (
   draftGame: TGameTemplateProps,
   description: string,
 ): TGameTemplateProps => {
-  return {
+  const newDraftGame = {
     ...draftGame,
     gameTemplate: {
       ...draftGame.gameTemplate,
       description,
       lowerCaseDescription: description.toLowerCase(),
     },
-  };
+  }
+  return {
+    ...newDraftGame,
+    isGameCardErrored: !checkGameFormIsValid(newDraftGame)
+  }
 };
 
 export const updateGameTemplatePhaseTime = (
@@ -129,9 +137,6 @@ export const toggleQuestionBank = (
     ...(draftGame.openCreateQuestion &&
       gameFormIsValid && { openCreateQuestion: false }),
     ...(gameFormIsValid && { openQuestionBank: !draftGame.openQuestionBank }),
-    ...(gameFormIsValid &&
-      draftGame.isGameCardErrored && { isGameCardErrored: false }),
-    ...(!gameFormIsValid && { isGameCardErrored: true }),
   };
 };
 
@@ -385,6 +390,7 @@ export const assembleQuestionTemplate = (
     correctCard: {
       answer: correctAnswer?.text ?? '',
       answerSteps: template.instructions ?? [],
+      isMultipleChoice: true,
       answerSettings: {
         answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
         answerPrecision: template.answerSettings?.answerPrecision,

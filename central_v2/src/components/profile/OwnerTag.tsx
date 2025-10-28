@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Grid, styled, CircularProgress } from '@mui/material';
+import { Typography, Box, Paper, Grid, styled, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { CloudFrontDistributionUrl } from '@righton/networking';
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
@@ -13,19 +13,23 @@ interface OwnerTagProps {
   isViewGame?: boolean;
 }
 
-const OwnerTagFlexContainer = styled(Box)<OwnerTagProps>(
+const OwnerTagFlexContainer = styled(Paper)<OwnerTagProps>(
   ({ theme, screenSize, isViewGame }) => ({
-    width: 'fit-content',
+    width: '100%',
     height: 'fit-content',
     display: 'flex',
     flexDirection: screenSize === ScreenSize.MEDIUM ? 'row' : 'column',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     background: isViewGame
       ? `${theme.palette.primary.extraDarkBlue}`
       : 'transparent',
     borderRadius: '8px',
-    padding: `${theme.sizing.smPadding}px`,
+    boxSizing: 'border-box',
+    paddingTop: `${theme.sizing.smPadding}px`,
+    paddingBottom: `${theme.sizing.smPadding}px`,
+    paddingLeft: `${theme.sizing.mdPadding}px`,
+    paddingRight: `${theme.sizing.mdPadding}px`,
     gap: `${theme.sizing.xSmPadding}px`,
   }),
 );
@@ -82,8 +86,8 @@ const OwnerTagSubContainer = styled(Box)<OwnerTagProps>(
     display: 'flex',
     flexDirection: 'column',
     gap: `${theme.sizing.xSmPadding}px`,
-    justifyContent: screenSize !== ScreenSize.SMALL ? 'center' : 'flex-start',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   }),
 );
 
@@ -147,18 +151,24 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
     displayNumUsed !== undefined;
 
   return screenSize !== ScreenSize.SMALL ? (
-    <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize}>
+    <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize} elevation={6} >
       {isOwnerLoaded ? (
-        <>
+        <Box style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', gap: `40px` }}>
+          <Box
+          style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.xSmPadding}px` }}
+          >
+          <OwnerTagSubContainer screenSize={screenSize} style={{ alignItems: 'center'}}>
+            <OwnerTagHeader>Created By:</OwnerTagHeader>
+            <OwnerNamePill ownerName={displayCreatedName} />
+          </OwnerTagSubContainer>
           <OwnerTagProfilePicture
             src={displayProfilePic}
             screenSize={screenSize}
           />
-          <OwnerTagTextContainer screenSize={screenSize}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Created By:</OwnerTagHeader>
-              <OwnerNamePill ownerName={displayCreatedName} />
-            </OwnerTagSubContainer>
+          </Box>
+          <Box
+          style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}
+          >
             <OwnerTagSubContainer screenSize={screenSize}>
               <OwnerTagHeader>Last Modified:</OwnerTagHeader>
               <OwnerTagBody>{displayLastModified}</OwnerTagBody>
@@ -167,8 +177,8 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
               <OwnerTagHeader>Times Played:</OwnerTagHeader>
               <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
             </OwnerTagSubContainer>
-          </OwnerTagTextContainer>
-        </>
+          </Box>
+        </Box>
       ) : (
         <CircularProgress style={{ color: '#FFF' }} />
       )}

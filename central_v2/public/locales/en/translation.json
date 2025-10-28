@@ -30,7 +30,7 @@
     "nextcard": "Next Card",
     "launchgame": "Launch Game",
     "logout": "Log out",
-    "createquestion": "Create Question",
+    "createquestion": "Add Question",
     "questionbank": "Question Bank",
     "back": "Back",
     "editpicture": "Edit Picture",
@@ -48,7 +48,13 @@
     "no": "No",
     "edit": "Edit",
     "delete": "Delete",
-    "ok": "OK"
+    "ok": "OK",
+    "publish": "Publish",
+    "backtoedit": "Back to Edit",
+    "update": "Update",
+    "continue": "Continue",
+    "cancelquestion": "Cancel",
+    "saveadd": "Save & Add"
   },
   "imageButton": {
     "imageupload": "Upload Image",
