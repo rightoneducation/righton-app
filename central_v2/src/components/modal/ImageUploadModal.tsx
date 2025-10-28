@@ -31,7 +31,7 @@ const IntegratedContainer = styled(Paper, {
   left: '50%',
   transform: 'translateY(-50%) translateX(-50%)',
   background: '#FFF',
-  zIndex: 1310,
+  zIndex: 1312,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'column',

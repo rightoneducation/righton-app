@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { IGameTemplate, PublicPrivateType } from '@righton/networking';
-import { Box, Grid, CircularProgress, useTheme, Fade } from '@mui/material';
-import CentralButton from '../components/button/Button';
-import { ButtonType } from '../components/button/ButtonModels';
+import { Box, CircularProgress, useTheme, Fade } from '@mui/material';
 import DetailedGameCardBase from '../components/cards/detailedgame/DetailedGameCardBase';
-import ManageQuestionsButtons from '../components/button/managequestionsbutton/ManageQuestionButtons';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
   CreateGameBoxContainer,
-  CreateGameGridContainer,
-  CreateGameCardGridItem,
-  GameCreateButtonStack,
-  TitleText,
   QuestionHeaderText,
   CreateGameContentContainer,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
@@ -23,7 +16,6 @@ import {
   ScreenSize,
   UserStatusType,
 } from '../lib/CentralModels';
-import ViewQuestionCards from '../components/question/ViewQuestionCards';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import {
@@ -33,10 +25,8 @@ import {
 import EditModal from '../components/modal/EditModal';
 import DeleteModal from '../components/modal/DeleteModal';
 import ModalBackground from '../components/modal/ModalBackground';
-import EditToolTip from '../components/tooltips/EditToolTip';
-import ViewQuestionCardUnified from '../components/question/ViewQuestionCardUnified';
 import OwnerTag from '../components/profile/OwnerTag';
-
+import ViewQuestionCardUnified from '../components/question/ViewQuestionCardUnified';
 
 interface ViewGameProps {
   screenSize: ScreenSize;
@@ -271,11 +261,15 @@ export default function ViewGame({
                       mountOnEnter
                       unmountOnExit
                       key={`Question--${index + 1}`}
+                      style={{
+                        width: '100%',
+                        marginRight: '10px',
+                      }}
                     >
                       <Box>
                         <ViewQuestionCardUnified
                           screenSize={screenSize}
-                          question={draftQuestionItem.questionTemplate}
+                          questionTemplate={draftQuestionItem.questionTemplate}
                           handleRemoveQuestion={() => {}}
                           isViewGame
                           isCreateGame={false}

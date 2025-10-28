@@ -36,11 +36,11 @@ interface IncorrectAnswerCardProps {
   isHighlight: boolean;
   handleIncorrectAnswerChange: (
     answer: string,
-    draftQuestion: CentralQuestionTemplateInput,
+    index: number
   ) => void;
   handleIncorrectExplanationChange: (
     explanation: string,
-    draftQuestion: CentralQuestionTemplateInput,
+    index: number
   ) => void;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
@@ -100,7 +100,7 @@ export default function IncorrectAnswerCard({
         placeholder="Enter incorrect answer here..."
         value={draftQuestion.incorrectCards[cardIndex].answer}
         onChange={(e) =>
-          handleIncorrectAnswerChange(e.target.value, draftQuestion)
+          handleIncorrectAnswerChange(e.target.value, cardIndex)
         }
         error={
           (isCardSubmitted || isAIError) &&
@@ -152,9 +152,9 @@ export default function IncorrectAnswerCard({
           },
         }}
         placeholder="Enter explanation here..."
-        value={draftQuestion.incorrectCards[cardIndex].answer}
+        value={draftQuestion.incorrectCards[cardIndex].explanation}
         onChange={(e) =>
-          handleIncorrectExplanationChange(e.target.value, draftQuestion)
+          handleIncorrectExplanationChange(e.target.value, cardIndex)
         }
         error={
           (isCardSubmitted || isAIError) &&

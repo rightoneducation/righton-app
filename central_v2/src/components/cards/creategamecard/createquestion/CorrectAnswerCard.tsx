@@ -34,8 +34,7 @@ interface DetailedQuestionSubCardProps {
   draftQuestion: CentralQuestionTemplateInput;
   isHighlight: boolean;
   handleCorrectAnswerChange: (
-    correctAnswer: string,
-    draftQuestion: CentralQuestionTemplateInput,
+    correctAnswer: string
   ) => void;
   handleCorrectAnswerStepsChange: (
     steps: string[],
@@ -234,7 +233,7 @@ export default function DetailedQuestionSubCard({
         placeholder="First correct answer..."
         value={draftQuestion.correctCard.answer}
         onChange={(e) =>
-          handleCorrectAnswerChange(e.target.value, draftQuestion)
+          handleCorrectAnswerChange(e.target.value)
         }
         error={
           (isCardSubmitted || isAIError) &&

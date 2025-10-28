@@ -1,4 +1,5 @@
 import React from "react";
+import { CentralQuestionTemplateInput } from "@righton/networking";
 import { ModalStateType, ScreenSize, TemplateType } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import DiscardGameModal from '../DiscardGameModal';
@@ -14,7 +15,7 @@ interface CreateGameModalSwitchProps {
   handlePublishGame: () => void;
   handleCloseSaveGameModal: () => void;
   handleContinue: () => void;
-  handleCreateQuestion: () => void;
+  handleCreateQuestion: (draftQuestion: CentralQuestionTemplateInput) => void;
   handleCloseCreateQuestionModal: () => void;
   isCardErrored: boolean;
 }

@@ -3,7 +3,7 @@ import { Grid, Box, useTheme } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { IQuestionTemplate, CentralQuestionTemplateInput } from '@righton/networking';
 import { ScreenSize, CardType } from '../../lib/CentralModels';
-import ViewDetailedUnifiedQuestionCardBase from './ViewUnifiedDetailedQuestionCardBase';
+import DetailedUnifiedQuestionCardBase from './DetailedUnifiedQuestionCardBase';
 import DetailedQuestionSubCard from '../cards/detailedquestion/DetailedQuestionSubCard';
 import OwnerTag from '../profile/OwnerTag';
 import {
@@ -12,30 +12,33 @@ import {
   SubCardGridItem,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 
-interface ViewQuestionCardUnifiedProps {
+interface CreateQuestionCardUnifiedProps {
   screenSize: ScreenSize;
-  questionTemplate: IQuestionTemplate;
+  question: CentralQuestionTemplateInput;
+  questionTemplate: IQuestionTemplate | null;
   handleRemoveQuestion: () => void;
   isViewGame: boolean;
   isCreateGame?: boolean;
 }
 
-export default function ViewQuestionCardUnified({
+export default function CreateQuestionCardUnified({
   screenSize,
+  question,
   questionTemplate,
   handleRemoveQuestion,
   isViewGame,
   isCreateGame,
-}: ViewQuestionCardUnifiedProps) {
+}: CreateQuestionCardUnifiedProps) {
   const theme = useTheme();
 
   return (
     <CardContainer sx={{ overflowY: 'visible', paddingTop: '0px'}}>
-      <ViewDetailedUnifiedQuestionCardBase
+      <DetailedUnifiedQuestionCardBase
         isCreateGame={isCreateGame}
         handleRemoveQuestion={handleRemoveQuestion}
         dropShadow
         screenSize={screenSize}
+        question={question}
         questionTemplate={questionTemplate}
       />
     </CardContainer>
