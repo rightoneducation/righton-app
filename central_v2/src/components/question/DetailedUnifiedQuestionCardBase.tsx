@@ -49,7 +49,7 @@ export const CreateQuestionTitleBarStyled = styled(
   width: '100%',
   height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
   gap:
@@ -115,19 +115,49 @@ export default function DetailedUnifiedQuestionCardBase({
     <ViewQuestionBaseCardStyled
       elevation={6}
       style={{
-        marginRight: '10px' 
+        marginRight: screenSize === ScreenSize.SMALL ? '0px' : '10px',
+        flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
       }}
     >
-      <img
-        src={imageLink ?? ''}
-        alt="question"
+      <Box
         style={{
-          width: '200px',
+          width: screenSize === ScreenSize.SMALL ? '100%' : '200px',
           height: '100%',
-          objectFit: 'cover',
-          borderRadius: '8px',
+          position: screenSize === ScreenSize.SMALL ? 'relative' : 'static',
         }}
-      />
+      >
+        <img
+          src={imageLink ?? ''}
+          alt="question"
+          style={{
+            width: screenSize === ScreenSize.SMALL ? '100%' : '200px',
+            height: screenSize === ScreenSize.SMALL ? '185px' : '100%',
+            objectFit: 'cover',
+            borderRadius: '8px',
+          }}
+        />
+        {handleRemoveQuestion && isCreateGame && screenSize === ScreenSize.SMALL && (
+          <Box
+            onClick={handleRemoveQuestion}
+            style={{
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              cursor: 'pointer',
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+            }}
+          >
+            <img
+              src={`${buttonRemoveQuestionImage}`}
+              alt="expand question"
+            />
+          </Box>
+        )}
+      </Box>
       <Box
         style={{
           width: '100%',
@@ -137,6 +167,7 @@ export default function DetailedUnifiedQuestionCardBase({
           paddingBottom: `${theme.sizing.mdPadding}px`,
           paddingLeft: `${theme.sizing.smPadding}px`,
           paddingRight: `${theme.sizing.smPadding}px`,
+          boxSizing: 'border-box',
           gap: `${theme.sizing.mdPadding}px`,
         }}
       >
@@ -188,23 +219,23 @@ export default function DetailedUnifiedQuestionCardBase({
                   />
                 </SelectArrowContainer>
               </Box>
-              {handleRemoveQuestion && isCreateGame && (
-              <Box
-                onClick={handleRemoveQuestion}
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                <img
-                  src={`${buttonRemoveQuestionImage}`}
-                  alt="expand question"
-                />
-              </Box>
+              {handleRemoveQuestion && isCreateGame && screenSize !== ScreenSize.SMALL && (
+                <Box
+                  onClick={handleRemoveQuestion}
+                  style={{
+                    width: '28px',
+                    height: '28px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <img
+                    src={`${buttonRemoveQuestionImage}`}
+                    alt="expand question"
+                  />
+                </Box>
               )}
             </Box>
           </CreateQuestionTitleBarStyled>

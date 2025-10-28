@@ -1328,7 +1328,7 @@ export default function CreateGame({
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingTop: '128px',
+                paddingTop: screenSize === ScreenSize.SMALL ? '0px' : '128px',
               }}
             >
               <Box
