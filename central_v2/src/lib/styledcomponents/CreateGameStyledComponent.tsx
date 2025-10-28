@@ -74,10 +74,18 @@ export const CreateGameBackground = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
+type CreateGameBoxContainerProps = {
+  screenSize: ScreenSize;
+};
+
+export const CreateGameBoxContainer = styled(Box, {
+  shouldForwardProp: (prop: string) =>
+    prop !== 'screenSize',
+})<CreateGameBoxContainerProps>(({ screenSize, theme }) => ({
   width: '100%',
   height: 'fit-content',
   display: 'flex',
+  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
   gap: `60px`,

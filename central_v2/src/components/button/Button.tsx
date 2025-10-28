@@ -95,8 +95,8 @@ export default function CentralButton({
           </ButtonIconContainer>
         )}
       <ButtonContent>
-        <Box style={{ height: '20px', width: '20px', marginLeft: buttonObj.icon ? '0px' : '-24px'}} />
-        {buttonText && !isSmallScreen && !iconOnlyOverride && (
+        <Box style={{ marginLeft: buttonObj.icon ? '0px' : '-24px'}} />
+        {buttonText && !iconOnlyOverride && (
           <ButtonTypography
             isReset={isReset}
             buttonColor={buttonColor}

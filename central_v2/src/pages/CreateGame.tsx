@@ -1168,7 +1168,43 @@ export default function CreateGame({
       {/* Create Game Card flow starts here */}
       <CreateGameContentContainer>
         <CreateGameHeader handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
-        <CreateGameBoxContainer>
+        {screenSize === ScreenSize.SMALL && (
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <QuestionHeaderText>
+              Questions
+            </QuestionHeaderText>
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: `${theme.sizing.xSmPadding}px`,
+              }}
+            >
+                <CentralButton
+                  buttonType={ButtonType.CREATEQUESTION}
+                  isEnabled
+                  onClick={handleOpenCreateQuestion}
+                />
+                <CentralButton
+                  buttonType={ButtonType.QUESTIONBANK}
+                  isEnabled
+                  onClick={handleOpenQuestionBank}
+                />
+            </Box>
+          </Box>
+        )}
+        <CreateGameBoxContainer screenSize={screenSize}>
           <CreateGameCardBase
             draftGame={draftGame}
             isClone={isClone}
@@ -1201,37 +1237,39 @@ export default function CreateGame({
               gap: `${theme.sizing.lgPadding}px`,
             }}
           >
-            <Box
-              sx={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-              }}
-            >
-              <QuestionHeaderText>
-                Questions
-              </QuestionHeaderText>
+            {screenSize !== ScreenSize.SMALL && (
               <Box
                 sx={{
+                  width: '100%',
                   display: 'flex',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                  gap: `${theme.sizing.xSmPadding}px`,
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
                 }}
               >
-                  <CentralButton
-                    buttonType={ButtonType.CREATEQUESTION}
-                    isEnabled
-                    onClick={handleOpenCreateQuestion}
-                  />
-                  <CentralButton
-                    buttonType={ButtonType.QUESTIONBANK}
-                    isEnabled
-                    onClick={handleOpenQuestionBank}
-                  />
+                <QuestionHeaderText>
+                  Questions
+                </QuestionHeaderText>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    gap: `${theme.sizing.xSmPadding}px`,
+                  }}
+                >
+                    <CentralButton
+                      buttonType={ButtonType.CREATEQUESTION}
+                      isEnabled
+                      onClick={handleOpenCreateQuestion}
+                    />
+                    <CentralButton
+                      buttonType={ButtonType.QUESTIONBANK}
+                      isEnabled
+                      onClick={handleOpenQuestionBank}
+                    />
+                </Box>
               </Box>
-            </Box>
+            )}
             {draftQuestionsList.length > 0 ? (
               <Box 
                 sx={{
