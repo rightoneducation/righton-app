@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import {
   CentralQuestionTemplateInput,
   IQuestionTemplate,
@@ -1055,6 +1056,7 @@ export default function CreateGame({
       isAIError: false,
       isQuestionCardSubmitted: false,
       isQuestionCardErrored: false,
+      localId: uuidv4(),
     }]);
     setModalState(ModalStateType.NULL);
   };
@@ -1284,13 +1286,16 @@ export default function CreateGame({
               >
                 {/* Create Question Form(s)  */}
                 {draftQuestionsList.map((draftQuestionItem, index) => {
+                  const uniqueKey = draftQuestionItem.questionTemplate?.id || 
+                                   draftQuestionItem.localId || 
+                                   `fallback-${index}`;
                   return (
                       <Fade
                         timeout={500}
                         in
                         mountOnEnter
                         unmountOnExit
-                        key={`Question--${index + 1}`}
+                        key={uniqueKey}
                         style={{
                           width: '100%'
                         }}
