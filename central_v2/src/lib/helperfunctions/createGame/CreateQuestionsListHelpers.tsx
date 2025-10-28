@@ -38,9 +38,9 @@ export const handleCheckQuestionComplete = (draftQuestion: CentralQuestionTempla
     draftQuestion.questionCard.ccss.length > 0 &&
     draftQuestion.questionCard.ccss !== 'CCSS' &&
     draftQuestion.questionCard.title.length > 0 &&
-    // ((draftQuestion.questionCard.imageUrl &&
-    //   draftQuestion.questionCard.imageUrl?.length > 0) ||
-    //   draftQuestion.questionCard.image) &&
+    ((draftQuestion.questionCard.imageUrl &&
+      draftQuestion.questionCard.imageUrl?.length > 0) ||
+      draftQuestion.questionCard.image) &&
     draftQuestion.correctCard.answer.length > 0 &&
     draftQuestion.correctCard.answerSteps.length > 0 &&
     draftQuestion.correctCard.answerSteps.every((step) => step.length > 0) &&

@@ -1,7 +1,7 @@
 import React, {useState, useMemo} from 'react';
 import { debounce } from 'lodash';
 import { Paper, Modal, Slide, styled, useTheme, Box, Typography } from '@mui/material';
-import { AnswerPrecision, AnswerType, CentralQuestionTemplateInput } from '@righton/networking';
+import { AnswerPrecision, AnswerType, CentralQuestionTemplateInput, IQuestionTemplate, PublicPrivateType } from '@righton/networking';
 import { ScreenSize, StorageKey, TemplateType } from '../../lib/CentralModels';
 import SubModalBackground from './SubModalBackground';
 import CentralButton from '../button/Button';
@@ -18,7 +18,7 @@ import { updateDQwithImage, updateDQwithImageURL } from '../../lib/helperfunctio
 interface CreateQuestionModalProps {
     isModalOpen: boolean;
     screenSize: ScreenSize;
-    handleCreateQuestion: () => void;
+    handleCreateQuestion: (draftQuestion: CentralQuestionTemplateInput) => void;
     handleCloseCreateQuestionModal: () => void;
 }
 
@@ -188,6 +188,7 @@ export default function CreateQuestionModal({
           ...prev,
           correctCard: { ...prev.correctCard, isMultipleChoice: !prev.correctCard.isMultipleChoice },
         };
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
         return newDraftQuestion;
       });
     }
@@ -198,6 +199,7 @@ export default function CreateQuestionModal({
           ...prev,
           questionCard: { ...prev.questionCard, ccss },
         };
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
         return newDraftQuestion;
       });
       setIsCCSSVisibleModal(false);
@@ -237,12 +239,14 @@ export default function CreateQuestionModal({
         );
         window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
         setDraftQuestion(newDraftQuestion);
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
       }
       if (inputUrl) {
         const { isFirstEdit } = draftQuestion.questionCard;
         const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
         window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
         setDraftQuestion(newDraftQuestion);
+        handleDebouncedCheckQuestionComplete(newDraftQuestion);
       }
     };
 
@@ -321,7 +325,7 @@ export default function CreateQuestionModal({
                       <CentralButton 
                         buttonType={ButtonType.SAVEADD} 
                         isEnabled={isQuestionComplete}
-                        onClick={handleCreateQuestion} 
+                        onClick={() => handleCreateQuestion(draftQuestion)} 
                       />
                     </Box>
                     <Box>
