@@ -80,11 +80,11 @@ export const BaseCardStyled = styled(Paper, {
     prop !== 'dropShadow' &&
     prop !== 'isClone',
 })<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete, isClone }) => ({
-  width: '100%',
+  // maxWidth: '410px',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.xSmPadding}px`,
+  gap: '16px',
   background: '#FFFFFF',
   borderRadius: `8px`,
   boxSizing: 'border-box',

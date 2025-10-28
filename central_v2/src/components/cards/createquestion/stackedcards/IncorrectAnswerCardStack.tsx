@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   CentralQuestionTemplateInput,
@@ -87,7 +87,7 @@ export default function IncorrectAnswerCardStack({
   };
   return (
     <CardStackContainer>
-      <Box
+      {/* <Box
         style={{
           width: '100%',
           display: 'flex',
@@ -103,7 +103,7 @@ export default function IncorrectAnswerCardStack({
               selectedIndex={completeIncorrectAnswers.length}
             />
           ))}
-      </Box>
+      </Box> */}
       <Box
         style={{
           width: '100%',
@@ -114,6 +114,7 @@ export default function IncorrectAnswerCardStack({
           position: 'relative',
         }}
       >
+
         <AnimatePresence initial={false}>
           {incompleteIncorrectAnswers.map((card, index) => {
             if (index === 0) {

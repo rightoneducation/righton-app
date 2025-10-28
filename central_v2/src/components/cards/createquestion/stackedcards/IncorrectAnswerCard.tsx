@@ -322,7 +322,7 @@ export default function IncorrectAnswerCard({
           }}
         >
           <QuestionTitleStyled sx={{ color: '#47366C' }}>
-            Mistake Explanation
+            Explanation
           </QuestionTitleStyled>
           {isAIEnabled && (
             <AIButton
@@ -366,7 +366,7 @@ export default function IncorrectAnswerCard({
               },
             },
           }}
-          placeholder="Enter Explanation here..."
+          placeholder="Enter incorrect answer explanation..."
           value={cardData.explanation}
           onChange={(e) => handleLocalExplanationChange(e.target.value)}
           error={isCardSubmitted && cardData.explanation.length === 0}

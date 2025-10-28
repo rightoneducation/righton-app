@@ -36,7 +36,7 @@ import { ButtonType } from '../../button/ButtonModels';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from './ErrorBox';
-import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
+import PublicPrivateDropdown from '../../button/publicprivatebutton/PublicPrivateDropdown';
 import errorIcon from '../../../images/errorIcon.svg';
 import { SelectArrowContainer } from '../../../lib/styledcomponents/SelectGrade';
 import SelectArrow from '../../../images/SelectArrow.svg';
@@ -95,13 +95,8 @@ export const CreateQuestionTitleBarStyled = styled(Box, {
   width: '100%',
   height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
-  justifyContent: 'space-between',
-  alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
-  gap:
-    screenSize === ScreenSize.SMALL
-      ? `${theme.sizing.xSmPadding}px`
-      : `${theme.sizing.smPadding}px`,
+  flexDirection: 'column' ,
+  gap: '32px'
 }));
 
 export const CreateQuestionContentRightContainerStyled = styled(Box)(
@@ -230,16 +225,156 @@ export default function CreateQuestionCardBase({
           style={{
             width: '100%',
             display: 'flex',
-            justifyContent:
-              screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
-            alignItems: 'center',
-            gap: '14px',
+            justifyContent:'flex-start',
+            flexDirection: 'column',
+            gap: '32px'
           }}
         >
           <QuestionTitleStyled sx={{ color: '#384466' }}>
             {label} Question
           </QuestionTitleStyled>
-          <Box>
+          <Box sx={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+            <Typography sx ={{fontFamily: 'Rubik', fontSize: '14px', fontWeight: '400', color: '#384466'}}>
+              Enter your question*
+            </Typography>
+            <TextContainerStyled
+              multiline
+              variant="outlined"
+              rows={isCreateGamePage ? '7' : '5'}
+              sx={{
+                '& .MuiInputBase-root': {
+                  fontFamily: 'Rubik',
+                  ...(isCreateGamePage && { height: '196px' }),
+                },
+                '& .MuiInputBase-input': {
+                  color: '#384466',
+                  opacity: isCardErrored ? 1 : 0.5,
+                  '&::placeholder': {
+                    color: isCardErrored ? '#D0254D' : '#384466',
+                    opacity: isCardErrored ? 1 : 0.5,
+                  },
+                  '&:focus': {
+                    color: '#384466',
+                    opacity: 1,
+                  },
+                  '&:focus::placeholder': {
+                    color: '#384466',
+                    opacity: 1,
+                  },
+                },
+              }}
+              placeholder="Enter your question..."
+              error={
+                (isCardSubmitted || isDraftCardErrored || isAIError) &&
+                (!draftQuestion.questionCard.title ||
+                  draftQuestion.questionCard.title.length === 0)
+              }
+              value={draftQuestion.questionCard.title}
+              onChange={(e) => handleTitleChange(e.target.value)}
+              InputProps={{
+                startAdornment: (isCardSubmitted || isDraftCardErrored || isAIError) &&
+                  (!draftQuestion.questionCard.title ||
+                    draftQuestion.questionCard.title.length === 0) && (
+                    <InputAdornment
+                      position="start"
+                      sx={{
+                        alignSelf: 'flex-start',
+                        mt: '10px',
+                      }}
+                    >
+                      <ErrorIcon src={errorIcon} alt="error icon" />
+                    </InputAdornment>
+                  ),
+              }}
+            >
+              <Typography>{draftQuestion.questionCard.title}</Typography>
+            </TextContainerStyled>
+          </Box>
+        </Box>
+        <Box sx={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+          <Typography sx={{fontFamily: 'Rubik', fontSize: '14px', fontWeight: '400', color: '#384466'}}>
+            Choose your answer type
+          </Typography>
+          {!isCreateGamePage && screenSize !== ScreenSize.SMALL && (
+            <RadioContainerStyled>
+              <RadioGroup
+                row
+                value={isMultipleChoice ? 'multiple' : 'short'}
+                onChange={handleAnswerType}
+                style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
+              >
+                <RadioLabelStyled
+                  value="multiple"
+                  control={<RadioStyled style={{ cursor: 'pointer' }} />}
+                  label="Multiple Choice"
+                  isSelected={isMultipleChoice}
+                  style={{ cursor: 'pointer' }}
+                />
+                <RadioLabelStyled
+                  value="short"
+                  control={<RadioStyled style={{ cursor: 'pointer' }} />}
+                  label="Short Answer"
+                  isSelected={!isMultipleChoice}
+                  style={{ cursor: 'pointer' }}
+                />
+              </RadioGroup>
+            </RadioContainerStyled>
+          )}
+            {(isCreateGamePage || screenSize === ScreenSize.SMALL) && (
+            <RadioContainerStyled>
+              <RadioGroup
+                row
+                value={isMultipleChoice ? 'multiple' : 'short'}
+                onChange={handleAnswerType}
+                style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
+              >
+                <RadioLabelStyled
+                  value="multiple"
+                  control={<RadioStyled style={{ cursor: 'pointer' }} />}
+                  label="Multiple Choice"
+                  isSelected={isMultipleChoice}
+                  style={{
+                    cursor: 'pointer',
+                    ...(isCreateGamePage && { whiteSpace: 'nowrap' }),
+                  }}
+                />
+                <RadioLabelStyled
+                  value="short"
+                  control={<RadioStyled style={{ cursor: 'pointer' }} />}
+                  label="Short Answer"
+                  isSelected={!isMultipleChoice}
+                  style={{
+                    cursor: 'pointer',
+                    ...(isCreateGamePage && { whiteSpace: 'nowrap' }),
+                  }}
+                />
+              </RadioGroup>
+            </RadioContainerStyled>
+          )}
+        </Box>
+        <Box sx={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+          <Typography sx={{fontFamily: 'Rubik', fontSize: '14px', fontWeight: '400', color: '#384466'}}>
+            Include a helpful visual or diagram (optional) 
+          </Typography>
+            {imageLink ? (
+            imageContents
+          ) : (
+            <ImagePlaceholder isCardErrored={isCardErrored}>
+              <CentralButton
+                buttonType={ButtonType.UPLOADIMAGE}
+                isEnabled
+                smallScreenOverride
+                onClick={handleImageUploadClick}
+              />
+            </ImagePlaceholder>
+          )}
+        </Box>
+      </CreateQuestionTitleBarStyled>
+      <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px'}}>
+          <Typography sx={{fontFamily: 'Rubik', fontSize: '14px', fontWeight: '400', color: '#384466'}}>
+            Choose a standard for your question
+          </Typography>
+          <Box >
             <ButtonCCSS
               key={uuidv4()}
               onClickCapture={(e: React.MouseEvent) => {
@@ -266,170 +401,54 @@ export default function CreateQuestionCardBase({
               </Box>
             </ButtonCCSS>
           </Box>
-        </Box>
-        {(isCreateGamePage || screenSize === ScreenSize.SMALL) && (
-          <RadioContainerStyled>
-            <RadioGroup
-              row
-              value={isMultipleChoice ? 'multiple' : 'short'}
-              onChange={handleAnswerType}
-              style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
-            >
-              <RadioLabelStyled
-                value="multiple"
-                control={<RadioStyled style={{ cursor: 'pointer' }} />}
-                label="Multiple Choice"
-                isSelected={isMultipleChoice}
-                style={{
-                  cursor: 'pointer',
-                  ...(isCreateGamePage && { whiteSpace: 'nowrap' }),
-                }}
-              />
-              <RadioLabelStyled
-                value="short"
-                control={<RadioStyled style={{ cursor: 'pointer' }} />}
-                label="Short Answer"
-                isSelected={!isMultipleChoice}
-                style={{
-                  cursor: 'pointer',
-                  ...(isCreateGamePage && { whiteSpace: 'nowrap' }),
-                }}
-              />
-            </RadioGroup>
-          </RadioContainerStyled>
-        )}
-        {screenSize !== ScreenSize.SMALL && !isCreateGame && (
-          <Box
-            style={{
-              display: 'flex',
-              gap: '16px',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <PublicPrivateButton
-              isPublic={isPublic}
-              onHandlePublicPrivateChange={handlePublicPrivateChange}
-              isDisabled={false}
-            />
-          </Box>
-        )}
-      </CreateQuestionTitleBarStyled>
-      <ContentContainerStyled screenSize={screenSize}>
-        {imageLink ? (
-          imageContents
-        ) : (
-          <ImagePlaceholder isCardErrored={isCardErrored}>
-            <CentralButton
-              buttonType={ButtonType.UPLOADIMAGE}
-              isEnabled
-              smallScreenOverride
-              onClick={handleImageUploadClick}
-            />
-          </ImagePlaceholder>
-        )}
+      </Box>
+      <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '20px'}}>
+        <Typography sx={{fontFamily: 'Rubik', fontSize: '14px', fontWeight: '400', color: '#384466',}}>
+          Make your question available to the public*
+          (Other users can use it in their games)        
+        </Typography>
         <CreateQuestionContentRightContainerStyled>
-          {!isCreateGamePage && screenSize !== ScreenSize.SMALL && (
-            <RadioContainerStyled>
-              <RadioGroup
-                row
-                value={isMultipleChoice ? 'multiple' : 'short'}
-                onChange={handleAnswerType}
-                style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
-              >
-                <RadioLabelStyled
-                  value="multiple"
-                  control={<RadioStyled style={{ cursor: 'pointer' }} />}
-                  label="Multiple Choice"
-                  isSelected={isMultipleChoice}
-                  style={{ cursor: 'pointer' }}
-                />
-                <RadioLabelStyled
-                  value="short"
-                  control={<RadioStyled style={{ cursor: 'pointer' }} />}
-                  label="Short Answer"
-                  isSelected={!isMultipleChoice}
-                  style={{ cursor: 'pointer' }}
-                />
-              </RadioGroup>
-            </RadioContainerStyled>
+          {screenSize !== ScreenSize.SMALL && !isCreateGame && (
+            <Box
+              style={{
+                width: '100%',
+                display: 'flex',
+                gap: '16px',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+              }}
+            >
+              <PublicPrivateDropdown
+                isPublic={isPublic}
+                onHandlePublicPrivateChange={handlePublicPrivateChange}
+                isDisabled={false}
+              />
+            </Box>
           )}
-          <TextContainerStyled
-            multiline
-            variant="outlined"
-            rows={isCreateGamePage ? '7' : '5'}
-            sx={{
-              '& .MuiInputBase-root': {
-                fontFamily: 'Rubik',
-                ...(isCreateGamePage && { height: '196px' }),
-              },
-              '& .MuiInputBase-input': {
-                color: '#384466',
-                opacity: isCardErrored ? 1 : 0.5,
-                '&::placeholder': {
-                  color: isCardErrored ? '#D0254D' : '#384466',
-                  opacity: isCardErrored ? 1 : 0.5,
-                },
-                '&:focus': {
-                  color: '#384466',
-                  opacity: 1,
-                },
-                '&:focus::placeholder': {
-                  color: '#384466',
-                  opacity: 1,
-                },
-              },
-            }}
-            placeholder="Enter question here..."
-            error={
-              (isCardSubmitted || isDraftCardErrored || isAIError) &&
-              (!draftQuestion.questionCard.title ||
-                draftQuestion.questionCard.title.length === 0)
-            }
-            value={draftQuestion.questionCard.title}
-            onChange={(e) => handleTitleChange(e.target.value)}
-            InputProps={{
-              startAdornment: (isCardSubmitted || isDraftCardErrored || isAIError) &&
-                (!draftQuestion.questionCard.title ||
-                  draftQuestion.questionCard.title.length === 0) && (
-                  <InputAdornment
-                    position="start"
-                    sx={{
-                      alignSelf: 'flex-start',
-                      mt: '10px',
-                    }}
-                  >
-                    <ErrorIcon src={errorIcon} alt="error icon" />
-                  </InputAdornment>
-                ),
-            }}
-          >
-            <Typography>{draftQuestion.questionCard.title}</Typography>
-          </TextContainerStyled>
+          {screenSize === ScreenSize.SMALL && (
+            <>
+              {(isCardErrored || isDraftCardErrored) && <ErrorBox />}
+              {!isCreateGame && !isEdit && (
+                <Box
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    gap: '16px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <PublicPrivateDropdown
+                    isPublic={isPublic}
+                    onHandlePublicPrivateChange={handlePublicPrivateChange}
+                    isDisabled={false}
+                  />
+                </Box>
+              )}
+            </>
+          )}
         </CreateQuestionContentRightContainerStyled>
-        {screenSize === ScreenSize.SMALL && (
-          <>
-            {(isCardErrored || isDraftCardErrored) && <ErrorBox />}
-            {!isCreateGame && !isEdit && (
-              <Box
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  gap: '16px',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <PublicPrivateButton
-                  isPublic={isPublic}
-                  onHandlePublicPrivateChange={handlePublicPrivateChange}
-                  isDisabled={false}
-                />
-              </Box>
-            )}
-          </>
-        )}
-      </ContentContainerStyled>
+      </Box>
       {screenSize !== ScreenSize.SMALL && (isCardErrored || isDraftCardErrored)  && <ErrorBox />}
     </BaseCardStyled>
   );

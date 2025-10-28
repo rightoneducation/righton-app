@@ -42,8 +42,8 @@ export const RadioContainerStyled = styled(Box)(({ theme }) => ({
   width: 'fit-content',
   height: '100%',
   display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
 }));
 
 type RadioLabelProps = {

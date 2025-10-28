@@ -231,7 +231,7 @@ export default function CreateQuestion({
   const [isDraftCardErrored, setIsDraftCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
 
-  let label = 'Create';
+  let label = 'Your';
   let selectedQuestionId = '';
   switch (true) {
     case isEdit:
@@ -243,7 +243,7 @@ export default function CreateQuestion({
       selectedQuestionId = route?.params.questionId || '';
       break;
     default:
-      label = 'Create';
+      label = 'Your';
       break;
   }
 
@@ -975,6 +975,13 @@ export default function CreateQuestion({
     }
   }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
 
+
+
+  const BodyContainer = styled(Box)(({ theme: muiTheme }) => ({
+    width: '100%',
+    display: 'flex',
+  }));
+
   
   return (
     <CreateQuestionMainContainer>
@@ -1014,87 +1021,116 @@ export default function CreateQuestion({
         isUpdatingTemplate={isUpdatingTemplate}
         templateType={TemplateType.QUESTION}
       />
-      <CreateQuestionBoxContainer>
-        <TitleText screenSize={ScreenSize.LARGE}>{label} Question</TitleText>
+      <CreateQuestionBoxContainer sx= {{border: '1px solid red', paddingTop: '72px', paddingLeft: '48px', paddingRight: '48px'}}>
+        <Box sx={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+          <CentralButton
+            buttonType={ButtonType.DISCARDBLUE}
+            isEnabled
+            smallScreenOverride
+            onClick={handleDiscardQuestion}
+          />
+          <TitleText screenSize={ScreenSize.LARGE} sx={{paddingTop: '0px'}}>{label} Question</TitleText>
+          <CentralButton
+            buttonType={ButtonType.SAVE}
+            isEnabled
+            smallScreenOverride
+            onClick={handleSave}
+          />
+        </Box>
+
         {isLoading ? (
           <CircularProgress
             style={{ color: `${theme.palette.primary.circularProgress}` }}
           />
         ) : (
           <>
-            {screenSize === ScreenSize.MEDIUM && (
+      
+            <BodyContainer sx={{border: '1px solid red', gap: '16px'}}>
               <Box
-                style={{
-                  width: 'fit-content',
-                  display: 'flex',
+                    onClickCapture={() =>
+                      handleClick(CreateQuestionHighlightCard.QUESTIONCARD)
+                    }
+                  >
+                <CreateQuestionCardBase
+                  screenSize={screenSize}
+                  isClone={isClone}
+                  isEdit={isEdit}
+                  isCloneImageChanged={isCloneImageChanged}
+                  label={label}
+                  draftQuestion={draftQuestion}
+                  handleTitleChange={handleTitleChange}
+                  handleCCSSClick={handleCCSSClick}
+                  isHighlight={
+                    highlightCard === CreateQuestionHighlightCard.QUESTIONCARD
+                  }
+                  handleImageUploadClick={handleImageUploadClick}
+                  handlePublicPrivateChange={handlePublicPrivateChange}
+                  isCardSubmitted={isCardSubmitted}
+                  isDraftCardErrored={isDraftCardErrored}
+                  isCardErrored={isCardErrored}
+                  isAIError={isAIError}
+                  isPublic={publicPrivate === PublicPrivateType.PUBLIC}
+                  isMultipleChoice={isMultipleChoice}
+                  handleAnswerType={handleAnswerType}
+                />
+              </Box>
+              <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', gap: '20px', border: '1px solid blue'}}>
+                <Box
+                    onClickCapture={() =>
+                      handleClick(CreateQuestionHighlightCard.CORRECTANSWER)
+                    }
+                    style={{ width: '100%' }}
+                  >
+                    <CorrectAnswerCard
+                      screenSize={screenSize}
+                      isClone={isClone}
+                      draftQuestion={draftQuestion}
+                      isHighlight={
+                        highlightCard ===
+                        CreateQuestionHighlightCard.CORRECTANSWER
+                      }
+                      handleCorrectAnswerChange={handleCorrectAnswerChange}
+                      handleCorrectAnswerStepsChange={
+                        handleCorrectAnswerStepsChange
+                      }
+                      handleAnswerSettingsChange={handleAnswerSettingsChange}
+                      isCardSubmitted={isCardSubmitted}
+                      isCardErrored={isCorrectCardErrored}
+                      isAIError={isAIError}
+                    />
+                </Box>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+                  <Box sx={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                    <Typography sx={{fontSize: '20px', fontWeight: '700', color: '#1B376F', fontFamily: 'Poppins'}}>
+                      Incorrect Answers
+                    </Typography>
+                    <Typography sx={{fontSize: '16px', fontWeight: '400', color: '#1B376F', fontFamily: 'Rubik'}}>
+                      Each question has three incorrect answers
+                    </Typography>
+                  </Box>
+                  <IncorrectAnswerCardStack
+                        draftQuestion={draftQuestion}
+                        isClone={isClone}
+                        completeIncorrectAnswers={completeIncorrectAnswers}
+                        incompleteIncorrectAnswers={incompleteIncorrectAnswers}
+                        highlightCard={highlightCard}
+                        handleNextCardButtonClick={handleNextCardButtonClick}
+                        handleIncorrectCardStackUpdate={
+                          handleIncorrectCardStackUpdate
+                        }
+                        handleCardClick={handleClick}
+                        handleAIError={handleAIError}
+                        isCardSubmitted={isCardSubmitted}
+                        isAIEnabled={isAIEnabled}
+                        isAIError={isAIError}
+                  />
+                </Box>
 
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: `${theme.sizing.xSmPadding}px`,
-                  paddingBottom: '16px',
-                }}
-              >
-                <CentralButton
-                  buttonType={ButtonType.SAVE}
-                  isEnabled
-                  smallScreenOverride
-                  onClick={handleSave}
-                />
-                {!isClone && (!isEdit || isDraft) &&  (
-                  <CentralButton
-                    buttonType={ButtonType.SAVEDRAFT}
-                    isEnabled
-                    smallScreenOverride
-                    onClick={handleSaveDraft}
-                  />
-                )}
-                <CentralButton
-                  buttonType={ButtonType.DISCARDBLUE}
-                  isEnabled
-                  smallScreenOverride
-                  onClick={handleDiscardQuestion}
-                />
               </Box>
-            )}
-            {screenSize === ScreenSize.SMALL && (
-              <Box
-                style={{
-                  width: '100%',
-                  maxWidth: '672px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: `${theme.sizing.xSmPadding}px`,
-                  paddingBottom: '16px',
-                }}
-              >
-                <CentralButton
-                  buttonType={ButtonType.SAVE}
-                  buttonWidthOverride="275px"
-                  isEnabled
-                  smallScreenOverride
-                  onClick={handleSave}
-                />
-                {!isClone && (!isEdit || isDraft) &&  (
-                  <CentralButton
-                    buttonType={ButtonType.SAVEDRAFT}
-                    buttonWidthOverride="275px"
-                    isEnabled
-                    smallScreenOverride
-                    onClick={handleSaveDraft}
-                  />
-                )}
-                <CentralButton
-                  buttonType={ButtonType.DISCARDBLUE}
-                  buttonWidthOverride="275px"
-                  isEnabled
-                  smallScreenOverride
-                  onClick={handleDiscardQuestion}
-                />
-              </Box>
-            )}
-            <CreateQuestionGridContainer container wrap="nowrap">
+            </BodyContainer>
+
+
+            {/* <CreateQuestionGridContainer container wrap="nowrap" sx={{border: '1px solid red'}}>
               <Grid
                 sm
                 md={1}
@@ -1141,76 +1177,8 @@ export default function CreateQuestion({
                     </Box>
                   )}
               </Grid>
-              <Grid
-                sm={12}
-                md={10}
-                lg={4}
-                item
-                style={{
-                  width: '100%',
-                  maxWidth: '672px',
-                  minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: `${theme.sizing.xLgPadding}px`,
-                }}
-              >
-                <Box
-                  onClickCapture={() =>
-                    handleClick(CreateQuestionHighlightCard.QUESTIONCARD)
-                  }
-                  style={{ width: '100%' }}
-                >
-                  <CreateQuestionCardBase
-                    screenSize={screenSize}
-                    isClone={isClone}
-                    isEdit={isEdit}
-                    isCloneImageChanged={isCloneImageChanged}
-                    label={label}
-                    draftQuestion={draftQuestion}
-                    handleTitleChange={handleTitleChange}
-                    handleCCSSClick={handleCCSSClick}
-                    isHighlight={
-                      highlightCard === CreateQuestionHighlightCard.QUESTIONCARD
-                    }
-                    handleImageUploadClick={handleImageUploadClick}
-                    handlePublicPrivateChange={handlePublicPrivateChange}
-                    isCardSubmitted={isCardSubmitted}
-                    isDraftCardErrored={isDraftCardErrored}
-                    isCardErrored={isCardErrored}
-                    isAIError={isAIError}
-                    isPublic={publicPrivate === PublicPrivateType.PUBLIC}
-                    isMultipleChoice={isMultipleChoice}
-                    handleAnswerType={handleAnswerType}
-                  />
-                </Box>
+
                 <Grid container spacing={`${theme.sizing.smPadding}px`}>
-                  <SubCardGridItem item sm={12} md={6}>
-                    <Box
-                      onClickCapture={() =>
-                        handleClick(CreateQuestionHighlightCard.CORRECTANSWER)
-                      }
-                      style={{ width: '100%' }}
-                    >
-                      <CorrectAnswerCard
-                        screenSize={screenSize}
-                        isClone={isClone}
-                        draftQuestion={draftQuestion}
-                        isHighlight={
-                          highlightCard ===
-                          CreateQuestionHighlightCard.CORRECTANSWER
-                        }
-                        handleCorrectAnswerChange={handleCorrectAnswerChange}
-                        handleCorrectAnswerStepsChange={
-                          handleCorrectAnswerStepsChange
-                        }
-                        handleAnswerSettingsChange={handleAnswerSettingsChange}
-                        isCardSubmitted={isCardSubmitted}
-                        isCardErrored={isCorrectCardErrored}
-                        isAIError={isAIError}
-                      />
-                    </Box>
-                  </SubCardGridItem>
                   <SubCardGridItem item sm={12} md={6}>
                     <Box
                       style={{
@@ -1229,27 +1197,11 @@ export default function CreateQuestion({
                         onChange={(prev) => handleAIIsEnabled()}
                       />
                     </Box>
-                    <IncorrectAnswerCardStack
-                      draftQuestion={draftQuestion}
-                      isClone={isClone}
-                      completeIncorrectAnswers={completeIncorrectAnswers}
-                      incompleteIncorrectAnswers={incompleteIncorrectAnswers}
-                      highlightCard={highlightCard}
-                      handleNextCardButtonClick={handleNextCardButtonClick}
-                      handleIncorrectCardStackUpdate={
-                        handleIncorrectCardStackUpdate
-                      }
-                      handleCardClick={handleClick}
-                      handleAIError={handleAIError}
-                      isCardSubmitted={isCardSubmitted}
-                      isAIEnabled={isAIEnabled}
-                      isAIError={isAIError}
-                    />
+                    
                   </SubCardGridItem>
                 </Grid>
-              </Grid>
               <Grid sm md={1} lg={4} item />
-            </CreateQuestionGridContainer>
+            </CreateQuestionGridContainer> */}
           </>
         )}
       </CreateQuestionBoxContainer>
