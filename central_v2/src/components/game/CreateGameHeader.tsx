@@ -20,8 +20,8 @@ export default function CreateGameHeader({ handleSaveGame, handleBackClick, labe
       width: '100%', 
       display: 'flex', 
       flexDirection: 'column',
-      paddingTop: `${theme.sizing.xLgPadding}px`, 
-      paddingBottom: `${theme.sizing.xLgPadding}px`,
+      paddingTop: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
+      paddingBottom: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
       }}>
       <Box
         style={{
@@ -34,14 +34,16 @@ export default function CreateGameHeader({ handleSaveGame, handleBackClick, labe
         <CentralButton
           buttonType={ButtonType.BACK}
           isEnabled
-          buttonWidthOverride="127px"
+          iconOnlyOverride={screenSize === ScreenSize.SMALL}
+          buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
           onClick={handleBackClick}
         />
         <TitleText screenSize={screenSize}>{label} Game</TitleText>
         <CentralButton
           buttonType={ButtonType.SAVE}
           isEnabled
-          buttonWidthOverride="127px"
+          iconOnlyOverride={screenSize === ScreenSize.SMALL}
+          buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
           onClick={handleSaveGame}
         />
       </Box>

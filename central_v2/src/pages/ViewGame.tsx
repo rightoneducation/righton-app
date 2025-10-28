@@ -171,7 +171,7 @@ export default function ViewGame({
   };
 
   return (
-    <CreateGameMainContainer>
+    <CreateGameMainContainer screenSize={screenSize}>
       <CreateGameBackground />
       <ModalBackground
         isModalOpen={isModalOpen || isDeleteModalOpen}
@@ -207,7 +207,7 @@ export default function ViewGame({
         centralData.selectedGame && (
           <CreateGameContentContainer>
             <ViewGameHeader handleBackClick={() => {}} handleEditGame={() => {}} handleLaunchGame={() => {}} label="View" screenSize={screenSize} />
-            <CreateGameBoxContainer>
+            <CreateGameBoxContainer screenSize={screenSize}>
             <Box style={{ width: '100%', maxWidth: '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
               <DetailedGameCardBase
                 screenSize={screenSize}

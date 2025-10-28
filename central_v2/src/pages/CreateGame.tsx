@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import {
   CentralQuestionTemplateInput,
   IQuestionTemplate,
@@ -954,7 +955,7 @@ export default function CreateGame({
 
   /** END OF CREATE GAME HANDLERS  */
   const handleCloseQuestionModal = () => {
-    setModalState(ModalStateType.NULL);
+    setIsQuestionBankOpen(false);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
@@ -1055,6 +1056,7 @@ export default function CreateGame({
       isAIError: false,
       isQuestionCardSubmitted: false,
       isQuestionCardErrored: false,
+      localId: uuidv4(),
     }]);
     setModalState(ModalStateType.NULL);
   };
@@ -1120,7 +1122,7 @@ export default function CreateGame({
   }, [centralData.selectedGame, route, selectedGameId]); // eslint-disable-line
 
   return (
-    <CreateGameMainContainer>
+    <CreateGameMainContainer screenSize={screenSize}>
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
@@ -1168,7 +1170,44 @@ export default function CreateGame({
       {/* Create Game Card flow starts here */}
       <CreateGameContentContainer>
         <CreateGameHeader handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
-        <CreateGameBoxContainer>
+        {screenSize === ScreenSize.SMALL && (
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              gap: `${theme.sizing.smPadding}px`,
+            }}
+          >
+            <QuestionHeaderText>
+              Questions
+            </QuestionHeaderText>
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: `${theme.sizing.xSmPadding}px`,
+              }}
+            >
+                <CentralButton
+                  buttonType={ButtonType.CREATEQUESTION}
+                  isEnabled
+                  onClick={handleOpenCreateQuestion}
+                />
+                <CentralButton
+                  buttonType={ButtonType.QUESTIONBANK}
+                  isEnabled
+                  onClick={handleOpenQuestionBank}
+                />
+            </Box>
+          </Box>
+        )}
+        <CreateGameBoxContainer screenSize={screenSize}>
           <CreateGameCardBase
             draftGame={draftGame}
             isClone={isClone}
@@ -1201,37 +1240,39 @@ export default function CreateGame({
               gap: `${theme.sizing.lgPadding}px`,
             }}
           >
-            <Box
-              sx={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-              }}
-            >
-              <QuestionHeaderText>
-                Questions
-              </QuestionHeaderText>
+            {screenSize !== ScreenSize.SMALL && (
               <Box
                 sx={{
+                  width: '100%',
                   display: 'flex',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                  gap: `${theme.sizing.xSmPadding}px`,
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
                 }}
               >
-                  <CentralButton
-                    buttonType={ButtonType.CREATEQUESTION}
-                    isEnabled
-                    onClick={handleOpenCreateQuestion}
-                  />
-                  <CentralButton
-                    buttonType={ButtonType.QUESTIONBANK}
-                    isEnabled
-                    onClick={handleOpenQuestionBank}
-                  />
+                <QuestionHeaderText>
+                  Questions
+                </QuestionHeaderText>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    gap: `${theme.sizing.xSmPadding}px`,
+                  }}
+                >
+                    <CentralButton
+                      buttonType={ButtonType.CREATEQUESTION}
+                      isEnabled
+                      onClick={handleOpenCreateQuestion}
+                    />
+                    <CentralButton
+                      buttonType={ButtonType.QUESTIONBANK}
+                      isEnabled
+                      onClick={handleOpenQuestionBank}
+                    />
+                </Box>
               </Box>
-            </Box>
+            )}
             {draftQuestionsList.length > 0 ? (
               <Box 
                 sx={{
@@ -1245,13 +1286,16 @@ export default function CreateGame({
               >
                 {/* Create Question Form(s)  */}
                 {draftQuestionsList.map((draftQuestionItem, index) => {
+                  const uniqueKey = draftQuestionItem.questionTemplate?.id || 
+                                   draftQuestionItem.localId || 
+                                   `fallback-${index}`;
                   return (
                       <Fade
                         timeout={500}
                         in
                         mountOnEnter
                         unmountOnExit
-                        key={`Question--${index + 1}`}
+                        key={uniqueKey}
                         style={{
                           width: '100%'
                         }}
@@ -1284,7 +1328,7 @@ export default function CreateGame({
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingTop: '128px',
+                paddingTop: screenSize === ScreenSize.SMALL ? '0px' : '128px',
               }}
             >
               <Box
