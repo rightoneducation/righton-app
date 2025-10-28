@@ -171,7 +171,7 @@ export default function ViewGame({
   };
 
   return (
-    <CreateGameMainContainer>
+    <CreateGameMainContainer screenSize={screenSize}>
       <CreateGameBackground />
       <ModalBackground
         isModalOpen={isModalOpen || isDeleteModalOpen}

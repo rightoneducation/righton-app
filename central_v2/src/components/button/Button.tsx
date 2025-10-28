@@ -47,8 +47,8 @@ export default function CentralButton({
     : null;
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
   const buttonWidth = buttonObj.width ?? '100%';
-  const isSmallScreen =
-    useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride;
+  const isSmallScreenIconButtonOnly =
+    (useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride && iconOnlyOverride) ?? false;
 
   const handleButtonClick = () => {
     if (type === 'file') {
@@ -79,7 +79,7 @@ export default function CentralButton({
       style={{ width: buttonWidthOverride ?? buttonWidth }}
     >
       {buttonObj.icon && (
-          <ButtonIconContainer>
+          <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly}>
             {(buttonColor === ButtonColor.NULL &&
               (buttonType === ButtonType.CHANGEIMAGE ||
                 buttonType === ButtonType.SAVEDRAFT)) ||
@@ -94,28 +94,31 @@ export default function CentralButton({
             )}
           </ButtonIconContainer>
         )}
-      <ButtonContent>
-        <Box style={{ marginLeft: buttonObj.icon ? '0px' : '-24px'}} />
-        {buttonText && !iconOnlyOverride && (
-          <ButtonTypography
-            isReset={isReset}
-            buttonColor={buttonColor}
-            buttonType={buttonType}
-          >
-            {buttonText}
-          </ButtonTypography>
-        )}
-        {buttonObj.rightIcon && (
-          <ButtonIconContainer>
-            {buttonColor === ButtonColor.NULL &&
-            buttonType === ButtonType.CHANGEIMAGE ? (
-              <ButtonIconBlue src={buttonObj.rightIcon} />
-            ) : (
-              <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
-            )}
-          </ButtonIconContainer>
-        )}
-      </ButtonContent>
+      {!isSmallScreenIconButtonOnly && (
+        <ButtonContent>
+          <Box style={{ marginLeft: buttonObj.icon ? '0px' : '-24px'}} />
+          
+          {buttonText && !iconOnlyOverride && (
+            <ButtonTypography
+              isReset={isReset}
+              buttonColor={buttonColor}
+              buttonType={buttonType}
+            >
+              {buttonText}
+            </ButtonTypography>
+          )}
+          {buttonObj.rightIcon && (
+            <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly}>
+              {buttonColor === ButtonColor.NULL &&
+              buttonType === ButtonType.CHANGEIMAGE ? (
+                <ButtonIconBlue src={buttonObj.rightIcon} />
+              ) : (
+                <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
+              )}
+            </ButtonIconContainer>
+          )}
+        </ButtonContent>
+      )}
     </ButtonStyled>
   );
 }

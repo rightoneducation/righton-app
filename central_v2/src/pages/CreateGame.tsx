@@ -954,7 +954,7 @@ export default function CreateGame({
 
   /** END OF CREATE GAME HANDLERS  */
   const handleCloseQuestionModal = () => {
-    setModalState(ModalStateType.NULL);
+    setIsQuestionBankOpen(false);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
@@ -1120,7 +1120,7 @@ export default function CreateGame({
   }, [centralData.selectedGame, route, selectedGameId]); // eslint-disable-line
 
   return (
-    <CreateGameMainContainer>
+    <CreateGameMainContainer screenSize={screenSize}>
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
@@ -1176,6 +1176,7 @@ export default function CreateGame({
               flexDirection: 'column',
               justifyContent: 'space-between',
               alignItems: 'flex-start',
+              gap: `${theme.sizing.smPadding}px`,
             }}
           >
             <QuestionHeaderText>

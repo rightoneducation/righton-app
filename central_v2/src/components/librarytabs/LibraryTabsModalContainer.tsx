@@ -60,8 +60,8 @@ export default function LibraryTabsModalContainer({
           style={{
             width: '100%',
             paddingTop: '113px',
-            paddingLeft: '146px',
-            paddingRight: '146px',
+            paddingLeft: screenSize === ScreenSize.SMALL ? '0px' : '146px',
+            paddingRight: screenSize === ScreenSize.SMALL ? '0px' : '146px',
             boxSizing: 'border-box',
           }}
         >

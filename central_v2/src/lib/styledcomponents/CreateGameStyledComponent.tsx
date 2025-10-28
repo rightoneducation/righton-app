@@ -18,7 +18,10 @@ import { ScreenSize } from '../CentralModels';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 // Create Game Page Components
-export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
+export const CreateGameMainContainer = styled(Box, {
+  shouldForwardProp: (prop: string) =>
+    prop !== 'screenSize',
+})<CreateGameBoxContainerProps>(({ screenSize, theme }) => ({
   position: 'relative',
   width: '100%',
   flexGrow: 1,
@@ -32,9 +35,9 @@ export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  paddingLeft: `${theme.sizing.xLgPadding}px`,
-  paddingRight: `${theme.sizing.xLgPadding}px`,
-  paddingTop: `${theme.sizing.mdPadding}px`,
+  paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+  paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+  paddingTop: screenSize === ScreenSize.SMALL ? `0px` : `${theme.sizing.mdPadding}px`,
   gap: `${theme.sizing.mdPadding}px`,
 }));
 
@@ -47,7 +50,7 @@ export const CreateGameContentContainer = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
   gap: `${theme.sizing.mdPadding}px`,
-  overflow: 'auto',
+  overflow: 'visible',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
     display: 'none',
