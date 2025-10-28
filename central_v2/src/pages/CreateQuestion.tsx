@@ -1,20 +1,17 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Grid,
   Typography,
   Box,
-  Switch,
   useTheme,
   styled,
   CircularProgress,
-  Fade,
 } from '@mui/material';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
-  IncorrectCard,
   AnswerType,
   AnswerPrecision,
   CloudFrontDistributionUrl
@@ -23,14 +20,11 @@ import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase';
 import {
   CreateQuestionBackground,
-  CreateQuestionGridContainer,
   CreateQuestionMainContainer,
   CreateQuestionBoxContainer,
 } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import {
   ScreenSize,
-  BorderStyle,
-  CreateQuestionHighlightCard,
   StorageKey,
   TemplateType,
   GameQuestionType,
@@ -39,14 +33,9 @@ import {
 } from '../lib/CentralModels';
 import CreateQuestionHeader from '../components/question/CreateQuestionHeader';
 import CreateQuestionModalSwitch from '../components/modal/switches/CreateQuestionModalSwitch';
-
-import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
 import IncorrectAnswerCard from '../components/cards/createquestion/IncorrectAnswerCard';
-import { ButtonType } from '../components/button/ButtonModels';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
-import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackground';
-
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import DiscardModal from '../components/modal/DiscardModal';
 import ModalBackground from '../components/modal/ModalBackground';
@@ -55,38 +44,15 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import {
   updateDQwithImage,
   updateDQwithImageURL,
-  updateDQwithTitle,
-  updateDQwithCCSS,
-  updateDQwithQuestionClick,
-  base64ToFile,
-  fileToBase64,
 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 import {
-  updateDQwithCorrectAnswer,
-  updateDQwithCorrectAnswerSteps,
-  updateDQwithCorrectAnswerClick,
   updateDQwithAnswerSettings,
 } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
-import {
-  getNextHighlightCard,
-  handleMoveAnswerToComplete,
-  updateDQwithIncorrectAnswerClick,
-  updateDQwithIncorrectAnswers,
-  handleIncorrectCardClick,
-} from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/SaveGameModal';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { handleCheckQuestionComplete } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
-
-
-const SubCardGridItem = styled(Grid)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: `${theme.sizing.xSmPadding}px`,
-}));
 
 interface CreateQuestionProps {
   screenSize: ScreenSize;
@@ -206,14 +172,13 @@ export default function CreateQuestion({
       );
     });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
-  const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
   const [isCorrectCardErrored, setIsCorrectCardErrored] = useState<boolean>(false);
   const [isDraftCardErrored, setIsDraftCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
-  const [isQuestionComplete, setIsQuestionComplete] = useState(handleCheckQuestionComplete(draftQuestion));
+  const [isCardErrored, setIsCardErrored] = useState(handleCheckQuestionComplete(draftQuestion));
     const handleDebouncedCheckQuestionComplete = useMemo(
       () => debounce((debounceQuestion: CentralQuestionTemplateInput) => {
-        setIsQuestionComplete(handleCheckQuestionComplete(debounceQuestion));
+        setIsCardErrored(handleCheckQuestionComplete(debounceQuestion));
       }, 1000),
       []
     );
@@ -817,9 +782,10 @@ export default function CreateQuestion({
     setModalState(ModalStateType.DISCARD);
   };
 
-  const handleSaveQuestionClick = useCallback(() => {
+  const handleSaveQuestionClick = () => {
+    setIsCardErrored(!handleCheckQuestionComplete(draftQuestion));
     setModalState(ModalStateType.PUBLISH);
-  }, []);
+  };
 
   const handleDiscard = () => {
     setModalState(ModalStateType.NULL);
@@ -960,7 +926,7 @@ export default function CreateQuestion({
                     draftQuestion={draftQuestion}
                     handleCorrectAnswerChange={handleCorrectAnswerChange}
                     handleCorrectAnswerStepsChange={handleCorrectAnswerStepsChange}
-                    handleAnswerSettingsChange={() => {}}
+                    handleAnswerSettingsChange={handleAnswerSettingsChange}
                     isCardSubmitted={false}
                     isCardErrored={false}
                     isAIError={false}

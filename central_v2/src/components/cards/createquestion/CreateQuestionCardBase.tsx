@@ -29,7 +29,7 @@ import {
   TextContainerStyled,
   CCSSIndicator,
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
-import { TitleText, HeaderText, CreateGameTitleText } from '../../../lib/styledcomponents/CreateGameStyledComponent';
+import { TitleText, HeaderText, CreateGameTitleText, CreateGameTextFieldContainer } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 import { ErrorIcon } from '../../../lib/styledcomponents/CentralStyledComponents';
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
@@ -169,6 +169,10 @@ export default function CreateQuestionCardBase({
     handleCCSSClick();
   };
 
+  const isTitleFieldError =
+    (!draftQuestion.questionCard.title ||
+      draftQuestion.questionCard.title.length === 0);
+
   const imageContents = [
     imageLink && (
       <Box
@@ -232,58 +236,36 @@ export default function CreateQuestionCardBase({
       <HeaderText>
         Enter your question*
       </HeaderText>
-      <TextContainerStyled
-        multiline
+      <CreateGameTextFieldContainer
+        isCardError={isCardErrored}
         variant="outlined"
-        rows={isCreateGamePage ? '7' : '5'}
         sx={{
-          '& .MuiInputBase-root': {
-            fontFamily: 'Rubik',
-            ...(isCreateGamePage && { height: '196px' }),
-          },
-          '& .MuiInputBase-input': {
-            color: '#384466',
-            opacity: isCardErrored ? 1 : 0.5,
-            '&::placeholder': {
-              color: isCardErrored ? '#D0254D' : '#384466',
-              opacity: isCardErrored ? 1 : 0.5,
-            },
-            '&:focus': {
-              color: '#384466',
-              opacity: 1,
-            },
-            '&:focus::placeholder': {
-              color: '#384466',
-              opacity: 1,
-            },
+          '& .MuiOutlinedInput-input': {
+            paddingBottom: screenSize === ScreenSize.SMALL ? 2 : 1,
           },
         }}
-        placeholder="Enter question here..."
-        error={
-          (isCardSubmitted || isDraftCardErrored || isAIError) &&
-          (!draftQuestion.questionCard.title ||
-            draftQuestion.questionCard.title.length === 0)
-        }
+        multiline
+        rows={4}
+        placeholder="Give a short description of the game."
+        error={isTitleFieldError}
         value={draftQuestion.questionCard.title}
         onChange={(e) => handleTitleChange(e.target.value)}
         InputProps={{
-          startAdornment: (isCardSubmitted || isDraftCardErrored || isAIError) &&
-            (!draftQuestion.questionCard.title ||
-              draftQuestion.questionCard.title.length === 0) && (
-              <InputAdornment
-                position="start"
-                sx={{
-                  alignSelf: 'flex-start',
-                  mt: '10px',
-                }}
-              >
-                <ErrorIcon src={errorIcon} alt="error icon" />
-              </InputAdornment>
-            ),
+          startAdornment: isTitleFieldError && (
+            <InputAdornment
+              position="start"
+              sx={{
+                alignSelf: 'flex-start',
+                mt: screenSize === ScreenSize.SMALL ? '12px' : '7px',
+              }}
+            >
+              <ErrorIcon src={errorIcon} alt="error icon" />
+            </InputAdornment>
+          ),
         }}
       >
         <Typography>{draftQuestion.questionCard.title}</Typography>
-      </TextContainerStyled>
+      </CreateGameTextFieldContainer>
       </ContentContainerStyled>
       <ContentContainerStyled>
       <HeaderText>

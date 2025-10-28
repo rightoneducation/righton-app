@@ -22,7 +22,6 @@ interface CreateQuestionModalProps {
     handleCloseCreateQuestionModal: () => void;
 }
 
-
 type IntegratedContainerProps = {
   screenSize: ScreenSize;
 };
