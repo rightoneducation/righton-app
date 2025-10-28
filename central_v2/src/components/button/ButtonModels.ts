@@ -118,7 +118,6 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LAUNCH]: {
     icon: launch,
     textKey: ButtonType.LAUNCH,
-    color: ButtonColor.RED,
   },
   [ButtonType.UPLOAD]: {
     icon: upload,
