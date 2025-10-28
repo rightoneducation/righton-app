@@ -22,7 +22,7 @@ function App() {
   );
 
   function RedirectToCentralIfMissing() {
-    window.location.href = 'http://central.rightoneducation.com/';
+    window.location.href = 'http://dev-central.rightoneducation.com/';
     return null;
   }
 
@@ -90,6 +90,14 @@ function App() {
             />
             <Route
               path="/library"
+              element={<AppSwitch currentScreen={ScreenType.LIBRARY} />}
+            />
+            <Route
+              path="/library/games/:type"
+              element={<AppSwitch currentScreen={ScreenType.LIBRARY} />}
+            />
+            <Route
+              path="/library/questions/:type"
               element={<AppSwitch currentScreen={ScreenType.LIBRARY} />}
             />
             <Route

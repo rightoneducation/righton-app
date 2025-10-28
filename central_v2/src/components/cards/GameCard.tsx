@@ -182,7 +182,7 @@ export default function StyledGameCard({
     (game && game.questionTemplates && game?.questionTemplates?.length > 0) ??
     false;
   const handleLaunchGame = () => {
-    const LAUNCH_GAME_URL = `http://host.rightoneducation.com/new/${game.publicPrivateType}/${game.id}`;
+    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.publicPrivateType}/${game.id}`;
     window.location.href = LAUNCH_GAME_URL;
   };
   const centralData = useCentralDataState();
