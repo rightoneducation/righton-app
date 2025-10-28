@@ -219,7 +219,6 @@ export default function MyLibrary({
   };
 
   useEffect(() => {
-    // Map string route params to enum values
     const tabMapping: { [key: string]: LibraryTabEnum } = {
       'Public': LibraryTabEnum.PUBLIC,
       'Private': LibraryTabEnum.PRIVATE,
@@ -231,7 +230,7 @@ export default function MyLibrary({
       const mappedTab = tabMapping[routeGames.params.type];
       if (mappedTab !== undefined) {
         setOpenTab(mappedTab);
-        // Trigger fetch when navigating to this route
+        if (gameQuestion !== GameQuestionType.GAME) return;
         fetchElements(mappedTab, '', null, true);
       }
     }
@@ -239,12 +238,12 @@ export default function MyLibrary({
       const mappedTab = tabMapping[routeQuestions.params.type];
       if (mappedTab !== undefined) {
         setOpenQuestionTab(mappedTab);
-        // Trigger fetch when navigating to this route
+        if (gameQuestion !== GameQuestionType.QUESTION) return;
         fetchElements(mappedTab, '', null, true);
       }
     }
 
-  }, [routeGames, routeQuestions]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [routeGames, routeQuestions, gameQuestion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <MyLibraryMainContainer>
