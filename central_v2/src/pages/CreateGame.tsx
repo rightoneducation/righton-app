@@ -1044,7 +1044,7 @@ export default function CreateGame({
 
   const handleContinue = () => {
     setModalState(ModalStateType.NULL);
-    navigate('/library/games/Public');
+    navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
   };
 
   const handleCreateQuestion = (draftQuestion: CentralQuestionTemplateInput) => {
@@ -1289,6 +1289,7 @@ export default function CreateGame({
                   const uniqueKey = draftQuestionItem.questionTemplate?.id || 
                                    draftQuestionItem.localId || 
                                    `fallback-${index}`;
+                  const isUserCreated = draftQuestionItem.questionTemplate?.userId === centralData.userProfile?.id;
                   return (
                       <Fade
                         timeout={500}
@@ -1311,6 +1312,7 @@ export default function CreateGame({
                             screenSize={screenSize}
                             question={draftQuestionItem.question}
                             questionTemplate={draftQuestionItem.questionTemplate ?? null}
+                            isUserCreated={isUserCreated}
                             handleRemoveQuestion={() => handleDeleteQuestion(index)}
                             isViewGame
                             isCreateGame

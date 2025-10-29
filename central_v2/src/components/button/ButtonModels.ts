@@ -69,6 +69,7 @@ export enum ButtonType {
   YES = 'yes',
   NO = 'no',
   EDIT = 'edit',
+  EDITQUESTION = 'editquestion',
   DELETE = 'delete',
   OK = 'ok',
   PUBLISH = 'publish',
@@ -306,6 +307,11 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.EDIT]: {
     icon: edit,
     textKey: ButtonType.EDIT,
+  },
+  [ButtonType.EDITQUESTION]: {
+    icon: edit,
+    textKey: ButtonType.EDITQUESTION,
+    color: ButtonColor.NULL,
   },
   [ButtonType.BACKTOEDIT]: {
     icon: previous,

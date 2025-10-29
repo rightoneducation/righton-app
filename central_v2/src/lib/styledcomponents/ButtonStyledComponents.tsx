@@ -97,6 +97,7 @@ export const ButtonStyled = styled(Button, {
           (buttonType === ButtonType.BACKTOEDIT) ||
           (buttonType === ButtonType.SIGNUP && isReset) ||
           (buttonType === ButtonType.CREATEQUESTION) ||
+          (buttonType === ButtonType.EDITQUESTION) ||
           (buttonType === ButtonType.CANCELQUESTION) ||
           (buttonType === ButtonType.BACK)
           ? `${theme.palette.primary.buttonPrimaryDefault}`
@@ -161,6 +162,7 @@ export const ButtonTypography = styled(Typography, {
     buttonType === ButtonType.CREATEQUESTION ||
     (buttonType === ButtonType.BACKTOEDIT) ||
     (buttonType === ButtonType.CANCELQUESTION) ||
+    (buttonType === ButtonType.EDITQUESTION) ||
     (buttonType === ButtonType.SIGNUP && isReset) ||
     (buttonType === ButtonType.BACK)
       ? `${theme.palette.primary.buttonPrimaryDefault}`

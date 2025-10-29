@@ -72,10 +72,18 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
   useEffect(() => {
     if (routeLibraryGames) {
       setLibraryGameQuestionSwitch(GameQuestionType.GAME);
+      handleSortChange({
+        field: SortType.listGameTemplates,
+        direction: SortDirection.DESC,
+      });
     } else if (routeLibraryQuestions) {
       setLibraryGameQuestionSwitch(GameQuestionType.QUESTION);
+      handleSortChange({
+        field: SortType.listQuestionTemplates,
+        direction: SortDirection.DESC,
+      });
     }
-  }, [routeLibraryGames, routeLibraryQuestions]);
+  }, [routeLibraryGames, routeLibraryQuestions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLibraryGameQuestionSwitch = (
     gameQuestionValue: GameQuestionType,
