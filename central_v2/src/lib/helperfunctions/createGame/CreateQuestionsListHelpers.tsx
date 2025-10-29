@@ -33,24 +33,40 @@ import {
   updateDQwithIncorrectAnswers,
 } from '../createquestion/IncorrectAnswerCardHelperFunctions';
 
-export const handleCheckQuestionComplete = (draftQuestion: CentralQuestionTemplateInput) => {
+export const handleCheckQuestionBaseComplete = (draftQuestion: CentralQuestionTemplateInput) => {
   if (
     draftQuestion.questionCard.ccss.length > 0 &&
     draftQuestion.questionCard.ccss !== 'CCSS' &&
     draftQuestion.questionCard.title.length > 0 &&
     ((draftQuestion.questionCard.imageUrl &&
       draftQuestion.questionCard.imageUrl?.length > 0) ||
-      draftQuestion.questionCard.image) &&
+      draftQuestion.questionCard.image)
+    )
+    return true;
+  return false;
+};
+
+export const handleCheckQuestionCorrectCardComplete = (draftQuestion: CentralQuestionTemplateInput) => {
+  if (
     draftQuestion.correctCard.answer.length > 0 &&
     draftQuestion.correctCard.answerSteps.length > 0 &&
-    draftQuestion.correctCard.answerSteps.every((step) => step.length > 0) &&
-    draftQuestion.incorrectCards.length > 0 &&
-    draftQuestion.incorrectCards.every(
-      (card) => card.answer.length > 0 && card.explanation.length > 0,
-    )
+    draftQuestion.correctCard.answerSteps.every((step) => step.length > 0)
   )
     return true;
   return false;
+};
+
+export const handleCheckQuestionIncorrectCardsComplete = (draftQuestion: CentralQuestionTemplateInput) => {
+  if (
+    draftQuestion.incorrectCards.length > 0 &&
+    draftQuestion.incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)
+  )
+    return true;
+  return false;
+};
+
+export const handleCheckQuestionComplete = (draftQuestion: CentralQuestionTemplateInput) => {
+  return handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
 };
 
 export const checkDQsAreValid = (

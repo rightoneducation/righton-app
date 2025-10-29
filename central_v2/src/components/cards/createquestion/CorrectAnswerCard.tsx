@@ -134,10 +134,10 @@ export default function DetailedQuestionSubCard({
               },
               '& .MuiInputBase-input': {
                 color: '#47366C',
-                opacity: isCardErrored ? 1 : 0.5,
+                opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
                 '&::placeholder': {
-                  color: isCardErrored ? '#D0254D' : '#47366C',
-                  opacity: isCardErrored ? 1 : 0.5,
+                  color:  isCardErrored && isCardSubmitted? '#D0254D' : '#47366C',
+                  opacity:  isCardErrored && isCardSubmitted? 1 : 0.5,
                 },
                 '&:focus': {
                   color: '#47366C',
@@ -151,12 +151,12 @@ export default function DetailedQuestionSubCard({
             }}
             placeholder={`Enter Step ${index + 1} of getting to the solution...`}
             error={
-              isCardErrored &&
+              isCardSubmitted &&
               (!draftQuestion.correctCard.answerSteps[index] ||
                 draftQuestion.correctCard.answerSteps[index].length === 0)
             }
             InputProps={{
-              startAdornment: isCardErrored &&
+              startAdornment: isCardSubmitted &&
                 (!draftQuestion.correctCard.answerSteps[index] ||
                   draftQuestion.correctCard.answerSteps[index].length === 0) && (
                   <InputAdornment
@@ -210,10 +210,10 @@ export default function DetailedQuestionSubCard({
           },
           '& .MuiInputBase-input': {
             color: '#47366C',
-            opacity: isCardErrored ? 1 : 0.5,
+            opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
             '&::placeholder': {
-              color: isCardErrored ? '#D0254D' : '#47366C',
-              opacity: isCardErrored ? 1 : 0.5,
+              color:  isCardErrored && isCardSubmitted ? '#D0254D' : '#47366C',
+              opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
             },
             '&:focus': {
               color: '#47366C',
@@ -258,7 +258,7 @@ export default function DetailedQuestionSubCard({
         draftQuestion.correctCard.answerSteps.map((step, index) =>
           answerStepsComponent(step, index),
         )}
-      {isCardErrored && <ErrorBox />}
+      { isCardErrored && isCardSubmitted && <ErrorBox />}
       <Box style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }} onClick={addStep}>
         <Typography
           sx={{

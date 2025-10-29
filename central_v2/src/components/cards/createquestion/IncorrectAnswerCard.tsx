@@ -69,10 +69,10 @@ export default function IncorrectAnswerCard({
           },
           '& .MuiInputBase-input': {
             color: '#47366C',
-            opacity: isCardErrored ? 1 : 0.5,
+            opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
             '&::placeholder': {
-              color: isCardErrored ? '#D0254D' : '#47366C',
-              opacity: isCardErrored ? 1 : 0.5,
+              color:  isCardErrored && isCardSubmitted ? '#D0254D' : '#47366C',
+              opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
             },
             '&:focus': {
               color: '#47366C',
@@ -123,10 +123,10 @@ export default function IncorrectAnswerCard({
           },
           '& .MuiInputBase-input': {
             color: '#47366C',
-            opacity: isCardErrored ? 1 : 0.5,
+            opacity: isCardErrored && isCardSubmitted ? 1 : 0.5,
             '&::placeholder': {
-              color: isCardErrored ? '#D0254D' : '#47366C',
-              opacity: isCardErrored ? 1 : 0.5,
+              color:  isCardErrored && isCardSubmitted ? '#D0254D' : '#47366C',
+              opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
             },
             '&:focus': {
               color: '#47366C',
@@ -164,7 +164,8 @@ export default function IncorrectAnswerCard({
             ),
         }}
       />
-      {isCardErrored && <ErrorBox />}
+      {(!draftQuestion.incorrectCards[cardIndex].explanation ||
+        draftQuestion.incorrectCards[cardIndex].explanation.length === 0) && isCardSubmitted && <ErrorBox />}
     </BaseCardStyled>
   );
 }
