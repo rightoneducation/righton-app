@@ -140,7 +140,7 @@ export const ButtonIconContainer = styled(Box, {
   position: isSmallScreen || !wideButtonOverride ? 'relative' : 'absolute',
   top: isSmallScreen ? '0px' : '0px',
   left: isSmallScreen ? '0px' : '0px',
-  paddingLeft: isSmallScreen ? undefined : '24px',
+  paddingLeft: isSmallScreen ? undefined : '12px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

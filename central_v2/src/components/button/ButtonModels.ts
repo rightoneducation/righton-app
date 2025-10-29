@@ -127,7 +127,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.UPLOADIMAGE]: {
     icon: upload,
     textKey: ButtonType.UPLOADIMAGE,
-    width: '200px',
+    width: '224px',
   },
   [ButtonType.NEXTSTEP]: {
     textKey: ButtonType.NEXTSTEP,

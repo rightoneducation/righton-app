@@ -235,12 +235,14 @@ export default function StyledGameCard({
           buttonType={isCreateGame ? ButtonType.ADDTOGAME : ButtonType.VIEW}
           isEnabled
           onClick={() => handleViewButtonClick(game)}
+          wideButtonOverride
         />
         {!isCreateGame && !isMyLibraryQuestion && (
           <CentralButton
             buttonType={ButtonType.LAUNCH}
             isEnabled={isGameLaunchable}
             onClick={handleLaunchGame}
+            wideButtonOverride
           />
         )}
         {isMyLibraryQuestion && (
@@ -248,6 +250,7 @@ export default function StyledGameCard({
             buttonType={ButtonType.ADDTOGAME}
             isEnabled
             onClick={() => handleViewButtonClick(game)}
+            wideButtonOverride
           />
         )}
         {isLibrary && (
