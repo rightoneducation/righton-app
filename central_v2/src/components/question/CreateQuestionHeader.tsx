@@ -20,6 +20,8 @@ export default function CreateQuestionHeader({ handleSaveQuestion, handleBackCli
       width: '100%', 
       display: 'flex', 
       flexDirection: 'column',
+      paddingTop: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
+      paddingBottom: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
       }}>
       <Box
         style={{
@@ -32,14 +34,16 @@ export default function CreateQuestionHeader({ handleSaveQuestion, handleBackCli
         <CentralButton
           buttonType={ButtonType.BACK}
           isEnabled
-          buttonWidthOverride="127px"
+          iconOnlyOverride={screenSize === ScreenSize.SMALL}
+          buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
           onClick={handleBackClick}
         />
         <TitleText screenSize={screenSize}>{label} Question</TitleText>
         <CentralButton
           buttonType={ButtonType.SAVE}
           isEnabled
-          buttonWidthOverride="127px"
+          iconOnlyOverride={screenSize === ScreenSize.SMALL}
+          buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
           onClick={handleSaveQuestion}
         />
       </Box>

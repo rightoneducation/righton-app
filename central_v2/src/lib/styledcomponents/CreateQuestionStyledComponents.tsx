@@ -9,6 +9,7 @@ import {
   styled,
 } from '@mui/material';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
+import { ScreenSize } from '../CentralModels';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -43,7 +44,14 @@ export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
+type CreateQuestionBoxContainerProps = {
+  screenSize: ScreenSize;
+};
+
+export const CreateQuestionBoxContainer = styled(Box, {
+  shouldForwardProp: (prop: string) =>
+    prop !== 'screenSize',
+})<CreateQuestionBoxContainerProps>(({ screenSize, theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -53,8 +61,9 @@ export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
   gap: `${theme.sizing.lgPadding}px`,
   zIndex: 1,
   position: 'relative',
-  paddingLeft: `${theme.sizing.mdPadding}px`,
-  paddingRight: `${theme.sizing.mdPadding}px`,
+  paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
+  paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+  paddingBottom: `${theme.sizing.xLgPadding}px`,
   boxSizing: 'border-box',
   flexGrow: 1,
   overflow: 'auto',

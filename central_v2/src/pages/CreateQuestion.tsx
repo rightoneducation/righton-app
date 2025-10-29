@@ -822,14 +822,19 @@ export default function CreateQuestion({
     }
   }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
 
+  type BodyContainerProps = {
+    screenSize: ScreenSize;
+  };
 
-
-  const BodyContainer = styled(Box)(({ theme: muiTheme }) => ({
+  const BodyContainer = styled(Box, {
+    shouldForwardProp: (prop: string) => prop !== 'screenSize',
+  })<BodyContainerProps>(({ screenSize: size }) => ({
     width: '100%',
     display: 'flex',
+    flexDirection: size === ScreenSize.SMALL ? 'column' : 'row',
+    gap: size === ScreenSize.SMALL ? '20px' : '16px',
   }));
 
-  
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
@@ -878,7 +883,7 @@ export default function CreateQuestion({
         handleContinue={handleContinue}
         isCardErrored={isCardErrored}
       />
-      <CreateQuestionBoxContainer sx= {{ paddingTop: '72px', paddingLeft: '48px', paddingRight: '48px'}}>
+      <CreateQuestionBoxContainer screenSize={screenSize}>
         <CreateQuestionHeader 
           handleSaveQuestion={handleSaveQuestionClick} 
           handleBackClick={handleBackQuestion} 
@@ -892,26 +897,36 @@ export default function CreateQuestion({
           />
         ) : (
 
-            <BodyContainer sx={{gap: '16px'}}>
-              <CreateQuestionCardBase
-                screenSize={screenSize}
-                isClone={isClone}
-                isEdit={isEdit}
-                isCloneImageChanged={isCloneImageChanged}
-                label={label}
-                draftQuestion={draftQuestion}
-                handleTitleChange={handleTitleChange}
-                handleCCSSClick={handleCCSSClick}
-                handleImageUploadClick={handleImageUploadClick}
-                handlePublicPrivateChange={handlePublicPrivateChange}
-                isCardSubmitted={isCardSubmitted}
-                isDraftCardErrored={isDraftCardErrored}
-                isCardErrored={isCardErrored}
-                isAIError={isAIError}
-                isPublic={isPublicQuestion}
-                isMultipleChoice={isMultipleChoice}
-                handleAnswerType={handleAnswerType}
-              />
+            <BodyContainer screenSize={screenSize}>
+              <Box
+                style={{
+                  width: '100%',
+                  maxWidth: '445px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: `${theme.sizing.mdPadding}px`,
+                }}
+              >
+                <CreateQuestionCardBase
+                  screenSize={screenSize}
+                  isClone={isClone}
+                  isEdit={isEdit}
+                  isCloneImageChanged={isCloneImageChanged}
+                  label={label}
+                  draftQuestion={draftQuestion}
+                  handleTitleChange={handleTitleChange}
+                  handleCCSSClick={handleCCSSClick}
+                  handleImageUploadClick={handleImageUploadClick}
+                  handlePublicPrivateChange={handlePublicPrivateChange}
+                  isCardSubmitted={isCardSubmitted}
+                  isDraftCardErrored={isDraftCardErrored}
+                  isCardErrored={isCardErrored}
+                  isAIError={isAIError}
+                  isPublic={isPublicQuestion}
+                  isMultipleChoice={isMultipleChoice}
+                  handleAnswerType={handleAnswerType}
+                />
+              </Box>
               <Box
                   style={{
                     width: '100%',

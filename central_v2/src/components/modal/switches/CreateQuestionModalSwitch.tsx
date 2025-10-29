@@ -26,7 +26,6 @@ export default function CreateQuestionModalSwitch({
   handleContinue,
   isCardErrored,
 }: CreateQuestionModalSwitchProps) {
-  console.log('isCardErrored', isCardErrored);
   switch (modalState) {
     case ModalStateType.DISCARD:
       return <DiscardGameModal
