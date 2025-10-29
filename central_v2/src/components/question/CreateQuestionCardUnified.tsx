@@ -19,6 +19,7 @@ interface CreateQuestionCardUnifiedProps {
   handleRemoveQuestion: () => void;
   isViewGame: boolean;
   isCreateGame?: boolean;
+  isUserCreated: boolean;
 }
 
 export default function CreateQuestionCardUnified({
@@ -28,6 +29,7 @@ export default function CreateQuestionCardUnified({
   handleRemoveQuestion,
   isViewGame,
   isCreateGame,
+  isUserCreated,
 }: CreateQuestionCardUnifiedProps) {
   const theme = useTheme();
 
@@ -35,6 +37,7 @@ export default function CreateQuestionCardUnified({
     <CardContainer sx={{ overflowY: 'visible', paddingTop: '0px'}}>
       <DetailedUnifiedQuestionCardBase
         isCreateGame={isCreateGame}
+        isUserCreated={isUserCreated}
         handleRemoveQuestion={handleRemoveQuestion}
         dropShadow
         screenSize={screenSize}

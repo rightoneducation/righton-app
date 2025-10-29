@@ -532,7 +532,6 @@ export default function CreateQuestion({
           setIsUpdatingTemplate(false);
           fetchElements();
           centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
-          navigate('/questions');
         }
       } else {
         if (!draftQuestion.correctCard.isCardComplete) {
@@ -617,7 +616,6 @@ export default function CreateQuestion({
           setIsCreatingTemplate(false);
           fetchElements();
           centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
-          navigate('/questions');
         }
       } else {
         if (!draftQuestion.questionCard.isCardComplete) {
@@ -702,7 +700,6 @@ export default function CreateQuestion({
 
           setIsCreatingTemplate(false);
           fetchElements();
-          navigate('/questions');
         }
       } else {
         if (!draftQuestion.questionCard.isCardComplete) {
@@ -723,7 +720,7 @@ export default function CreateQuestion({
   const handleSave = async () => {
     // case 1, saving a draft into a public/private question template
     if (isDraft) {
-      handleCreateFromDraftQuestion();
+      await handleCreateFromDraftQuestion();
       return;
     }
     // case 2, saving a public/private question template that already exists
@@ -732,11 +729,11 @@ export default function CreateQuestion({
         isPublic ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE
       );
       if (publicPrivate === originalType){
-        handleSaveEditedQuestion();
+        await handleSaveEditedQuestion();
         return;
       }
       try {
-        handleSaveQuestion();
+        await handleSaveQuestion();
         await apiClients.questionTemplate.deleteQuestionTemplate(
           originalType,
           selectedQuestionId,
@@ -749,7 +746,7 @@ export default function CreateQuestion({
       }
     }
     // case 3, creating a new public/private question template
-    handleSaveQuestion();
+    await handleSaveQuestion();
   };
 
   const handleSaveDraftQuestion = async () => {
@@ -787,7 +784,6 @@ export default function CreateQuestion({
         );
         setIsCreatingTemplate(false);
         fetchElements();
-        navigate('/questions');
       } else {
         setIsDraftCardErrored(true);
       }
@@ -833,7 +829,6 @@ export default function CreateQuestion({
           );
         setIsUpdatingTemplate(false);
         fetchElements();
-        navigate('/questions');
       } else {
         setIsDraftCardErrored(true);
       }
@@ -889,7 +884,7 @@ export default function CreateQuestion({
 
   const handleContinue = () => {
     setModalState(ModalStateType.NULL);
-    navigate('/questions');
+    navigate(`/library/questions/${publicPrivate}`);
   };
 
   const handleBackQuestion = () => {

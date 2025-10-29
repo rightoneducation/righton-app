@@ -239,6 +239,8 @@ export default function MyLibrary({
       if (mappedTab !== undefined) {
         setOpenQuestionTab(mappedTab);
         if (gameQuestion !== GameQuestionType.QUESTION) return;
+        // Ensure questions sort baseline so ByDate/DESC override engages for library
+        handleSortChange({ field: SortType.listQuestionTemplates, direction: SortDirection.ASC });
         fetchElements(mappedTab, '', null, true);
       }
     }

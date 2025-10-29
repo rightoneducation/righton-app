@@ -37,6 +37,7 @@ interface DetailedUnifiedQuestionCardBaseProps {
   handleRemoveQuestion?: () => void;
   dropShadow?: boolean;
   isCreateGame?: boolean;
+  isUserCreated: boolean;
 }
 
 interface CreateQuestionTitleBarStyledProps {
@@ -74,7 +75,7 @@ export default function DetailedUnifiedQuestionCardBase({
   handleRemoveQuestion,
   dropShadow,
   isCreateGame,
-
+  isUserCreated,
 }: DetailedUnifiedQuestionCardBaseProps) {
   const theme = useTheme();
   const correctAnswer = question?.correctCard?.answer;
@@ -290,9 +291,9 @@ export default function DetailedUnifiedQuestionCardBase({
                 height: '38px'
               }}
             >
-              {(question.questionCard.isFirstEdit && isCreateGame) ? 
+              {(question.questionCard.isFirstEdit && isCreateGame && isUserCreated) ? 
                 <CentralButton
-                  buttonType={ButtonType.EDIT}
+                  buttonType={ButtonType.EDITQUESTION}
                   isEnabled
                   buttonWidthOverride="127px"
                   onClick={() => {}}

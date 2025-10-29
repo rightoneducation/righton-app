@@ -57,7 +57,7 @@ export default function ViewGameHeader({handleBackClick, handleEditGame, handleL
               <CentralButton
                 buttonType={ButtonType.LAUNCH}
                 isEnabled
-                buttonWidthOverride="127px"
+                buttonWidthOverride="140px"
                 onClick={handleLaunchGame}
               />
             </Box>
