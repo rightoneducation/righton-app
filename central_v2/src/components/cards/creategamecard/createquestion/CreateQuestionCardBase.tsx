@@ -222,7 +222,6 @@ export default function CreateQuestionCardBase({
         }),
       }}
       elevation={6}
-      isHighlight={isHighlight}
       isCardComplete={draftQuestion.questionCard.isCardComplete}
       isClone={isClone}
     >

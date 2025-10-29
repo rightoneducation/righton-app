@@ -48,6 +48,7 @@ export type TDraftQuestionsList = {
 
 // empty centralQuestionTemplate for creating question templates
 export const newEmptyTemplate: CentralQuestionTemplateInput = {
+  publicPrivateType: PublicPrivateType.PUBLIC,
   questionCard: {
     title: '',
     ccss: 'CCSS',

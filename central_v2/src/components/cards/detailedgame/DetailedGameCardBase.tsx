@@ -83,7 +83,6 @@ export default function DetailedGameCardBase({
   return (
     <BaseCardStyled
       elevation={6}
-      isHighlight={false}
       isCardComplete={false}
       style={{
         maxWidth: '410px',

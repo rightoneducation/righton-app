@@ -18,21 +18,17 @@ import {
   ErrorIcon,
   RemoveQuestionIcon,
 } from '../../../lib/styledcomponents/CentralStyledComponents';
-import CentralButton from '../../button/Button';
-import { ButtonType } from '../../button/ButtonModels';
 import ErrorBox from './ErrorBox';
 import errorIcon from '../../../images/errorIcon.svg';
-import SelectAnswerSetting from './SelectAnswerSetting';
 import {
   ScreenSize,
-  AnswerSettingsDropdownType,
 } from '../../../lib/CentralModels';
+import removeIcon from '../../../images/buttonRemoveQuestion.svg';
 
 interface DetailedQuestionSubCardProps {
   screenSize: ScreenSize;
   isClone: boolean;
   draftQuestion: CentralQuestionTemplateInput;
-  isHighlight: boolean;
   handleCorrectAnswerChange: (
     correctAnswer: string,
     draftQuestion: CentralQuestionTemplateInput,
@@ -55,7 +51,6 @@ export default function DetailedQuestionSubCard({
   screenSize,
   isClone,
   draftQuestion,
-  isHighlight,
   handleCorrectAnswerChange,
   handleCorrectAnswerStepsChange,
   handleAnswerSettingsChange,
@@ -100,87 +95,97 @@ export default function DetailedQuestionSubCard({
     return (
       <Box
         sx={{
+          width: '100%',
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           alignItems: 'flex-start',
-          marginTop: `${theme.sizing.xSmPadding}px`,
-          gap: `${theme.sizing.xSmPadding}px`,
         }}
         key={index}
       >
         <Typography
           sx={{
-            minWidth: '12px',
-            fontSize: `${theme.typography.h3.fontSize}px`,
-            fontWeight: `${theme.typography.h3.fontWeight}`,
-            color: `${theme.palette.primary.darkPurple}`,
+            fontFamily: 'Rubik',
+            fontSize: '16px',
+            fontWeight: '400',
           }}
         >
-          {index + 1}
+          Step {index + 1}
         </Typography>
-        <TextContainerStyled
-          multiline
-          variant="outlined"
-          value={draftQuestion.correctCard.answerSteps[index]}
-          onChange={(e) => handleStepChange(index, e.target.value)}
-          rows="4"
+        <Box
           sx={{
-            '& .MuiInputBase-root': {
-              fontFamily: 'Rubik',
-            },
-            '& .MuiInputBase-input': {
-              color: '#47366C',
-              opacity: isCardErrored ? 1 : 0.5,
-              '&::placeholder': {
-                color: isCardErrored ? '#D0254D' : '#47366C',
-                opacity: isCardErrored ? 1 : 0.5,
-              },
-              '&:focus': {
-                color: '#47366C',
-                opacity: 1,
-              },
-              '&:focus::placeholder': {
-                color: '#47366C',
-                opacity: 1,
-              },
-            },
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            marginTop: `${theme.sizing.xSmPadding}px`,
+            gap: `${theme.sizing.xSmPadding}px`,
           }}
-          placeholder={`Enter step ${index + 1}...`}
-          error={
-            isCardErrored &&
-            (!draftQuestion.correctCard.answerSteps[index] ||
-              draftQuestion.correctCard.answerSteps[index].length === 0)
-          }
-          InputProps={{
-            startAdornment: isCardErrored &&
+          key={index}
+        >
+          <TextContainerStyled
+            multiline
+            variant="outlined"
+            value={draftQuestion.correctCard.answerSteps[index]}
+            onChange={(e) => handleStepChange(index, e.target.value)}
+            rows="4"
+            sx={{
+              '& .MuiInputBase-root': {
+                fontFamily: 'Rubik',
+              },
+              '& .MuiInputBase-input': {
+                color: '#47366C',
+                opacity: isCardErrored ? 1 : 0.5,
+                '&::placeholder': {
+                  color: isCardErrored ? '#D0254D' : '#47366C',
+                  opacity: isCardErrored ? 1 : 0.5,
+                },
+                '&:focus': {
+                  color: '#47366C',
+                  opacity: 1,
+                },
+                '&:focus::placeholder': {
+                  color: '#47366C',
+                  opacity: 1,
+                },
+              },
+            }}
+            placeholder={`Enter Step ${index + 1} of getting to the solution...`}
+            error={
+              isCardErrored &&
               (!draftQuestion.correctCard.answerSteps[index] ||
-                draftQuestion.correctCard.answerSteps[index].length === 0) && (
+                draftQuestion.correctCard.answerSteps[index].length === 0)
+            }
+            InputProps={{
+              startAdornment: isCardErrored &&
+                (!draftQuestion.correctCard.answerSteps[index] ||
+                  draftQuestion.correctCard.answerSteps[index].length === 0) && (
+                  <InputAdornment
+                    position="start"
+                    sx={{
+                      alignSelf: 'flex-start',
+                      mt: '10px',
+                    }}
+                  >
+                    <ErrorIcon src={errorIcon} alt="error icon" />
+                  </InputAdornment>
+                ),
+
+              endAdornment: index !== 0 && (
                 <InputAdornment
-                  position="start"
+                  position="end"
                   sx={{
                     alignSelf: 'flex-start',
                     mt: '10px',
                   }}
                 >
-                  <ErrorIcon src={errorIcon} alt="error icon" />
+                  <IconButton onClick={() => handleDeleteStep(index)}>
+                    <img src={removeIcon} alt="remove icon" height={20} width={20} />
+                  </IconButton>
                 </InputAdornment>
               ),
-
-            endAdornment: index !== 0 && (
-              <InputAdornment
-                position="end"
-                sx={{
-                  alignSelf: 'flex-start',
-                  mt: '10px',
-                }}
-              >
-                <IconButton onClick={() => handleDeleteStep(index)}>
-                  <Close sx={{ color: '#999', width: 15, height: 15 }} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+            }}
+          />
+        </Box>
       </Box>
     );
   };
@@ -188,11 +193,10 @@ export default function DetailedQuestionSubCard({
   return (
     <BaseCardStyled
       elevation={6}
-      isHighlight={isHighlight}
       isCardComplete={draftQuestion.correctCard.isCardComplete}
       isClone={isClone}
     >
-      <QuestionTitleStyled sx={{ color: '#47366C' }}>
+      <QuestionTitleStyled sx={{ color: '#148700' }}>
         Correct Answer
       </QuestionTitleStyled>
       <TextContainerStyled
@@ -221,7 +225,7 @@ export default function DetailedQuestionSubCard({
             },
           },
         }}
-        placeholder="Enter Correct Answer..."
+        placeholder="First correct answer..."
         value={draftQuestion.correctCard.answer}
         onChange={(e) =>
           handleCorrectAnswerChange(e.target.value, draftQuestion)
@@ -247,43 +251,25 @@ export default function DetailedQuestionSubCard({
             ),
         }}
       />
-      <SelectAnswerSetting
-        screenSize={screenSize}
-        type={AnswerSettingsDropdownType.TYPE}
-        isCardSubmitted={isCardSubmitted}
-        answerSettingsType={draftQuestion.correctCard.answerSettings.answerType}
-        onSetAnswerSettingsType={handleAnswerSettingsTypeChange}
-        isCardError={isCardErrored}
-      />
-      {draftQuestion.correctCard.answerSettings.answerType ===
-        AnswerType.NUMBER && (
-        <SelectAnswerSetting
-          screenSize={screenSize}
-          type={AnswerSettingsDropdownType.PRECISION}
-          isCardSubmitted={isCardSubmitted}
-          answerSettingsPrecisionType={
-            draftQuestion.correctCard.answerSettings.answerPrecision
-          }
-          onSetAnswerSettingsPrecisionType={
-            handleAnswerSettingsPrecisionTypeChange
-          }
-          isCardError={isCardErrored}
-        />
-      )}
       <QuestionTitleStyled sx={{ color: '#47366C' }}>
-        Solution Steps
+        Solution Explanation
       </QuestionTitleStyled>
       {draftQuestion.correctCard.answerSteps &&
         draftQuestion.correctCard.answerSteps.map((step, index) =>
           answerStepsComponent(step, index),
         )}
       {isCardErrored && <ErrorBox />}
-      <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <CentralButton
-          buttonType={ButtonType.ADDSTEP}
-          isEnabled
-          onClick={addStep}
-        />
+      <Box style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }} onClick={addStep}>
+        <Typography
+          sx={{
+            fontFamily: 'Rubik',
+            fontSize: '16px',
+            fontWeight: '400',
+            textDecoration: 'underline',
+          }}
+        >
+          Add Step
+        </Typography>
       </Box>
     </BaseCardStyled>
   );

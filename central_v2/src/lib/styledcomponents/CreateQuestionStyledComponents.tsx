@@ -9,6 +9,7 @@ import {
   styled,
 } from '@mui/material';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
+import { ScreenSize } from '../CentralModels';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -43,7 +44,14 @@ export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
+type CreateQuestionBoxContainerProps = {
+  screenSize: ScreenSize;
+};
+
+export const CreateQuestionBoxContainer = styled(Box, {
+  shouldForwardProp: (prop: string) =>
+    prop !== 'screenSize',
+})<CreateQuestionBoxContainerProps>(({ screenSize, theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -53,8 +61,9 @@ export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
   gap: `${theme.sizing.lgPadding}px`,
   zIndex: 1,
   position: 'relative',
-  paddingLeft: `${theme.sizing.mdPadding}px`,
-  paddingRight: `${theme.sizing.mdPadding}px`,
+  paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
+  paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+  paddingBottom: `${theme.sizing.xLgPadding}px`,
   boxSizing: 'border-box',
   flexGrow: 1,
   overflow: 'auto',
@@ -67,7 +76,6 @@ export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface BaseCardStyledProps {
-  isHighlight: boolean;
   isCardComplete: boolean;
   isClone?: boolean;
   dropShadow?: boolean;
@@ -75,25 +83,19 @@ interface BaseCardStyledProps {
 
 export const BaseCardStyled = styled(Paper, {
   shouldForwardProp: (prop) =>
-    prop !== 'isHighlight' &&
     prop !== 'isCardComplete' &&
     prop !== 'dropShadow' &&
     prop !== 'isClone',
-})<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete, isClone }) => ({
+})<BaseCardStyledProps>(({ theme, isCardComplete, isClone }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.xSmPadding}px`,
+  gap: '16px',
   background: '#FFFFFF',
   borderRadius: `8px`,
   boxSizing: 'border-box',
   height: 'fit-content',
-  boxShadow: isHighlight
-    ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}`
-    : '',
-  opacity: isCardComplete && !isClone ? 0.6 : 1,
-  transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
 
 export const ViewQuestionBaseCardStyled = styled(Paper)(({ theme }) => ({

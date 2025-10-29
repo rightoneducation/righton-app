@@ -1,39 +1,28 @@
 import React, { useEffect } from 'react';
 import { Typography, Box, InputAdornment, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Close } from '@mui/icons-material';
 import {
-  Answer,
   CentralQuestionTemplateInput,
-  AnswerType,
-  AnswerPrecision,
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
-import { QuestionTitleStyled } from '../../../../lib/styledcomponents/DetailedQuestionStyledComponents';
+import { QuestionTitleStyled } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import {
   TextContainerStyled,
   BaseCardStyled,
-} from '../../../../lib/styledcomponents/CreateQuestionStyledComponents';
+} from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import {
   ErrorIcon,
-  RemoveQuestionIcon,
-} from '../../../../lib/styledcomponents/CentralStyledComponents';
-import CentralButton from '../../../button/Button';
-import { ButtonType } from '../../../button/ButtonModels';
-import ErrorBox from '../../createquestion/ErrorBox';
-import errorIcon from '../../../../images/errorIcon.svg';
+} from '../../../lib/styledcomponents/CentralStyledComponents';
+import ErrorBox from './ErrorBox';
+import errorIcon from '../../../images/errorIcon.svg';
 import {
   ScreenSize,
-  AnswerSettingsDropdownType,
-} from '../../../../lib/CentralModels';
-import removeIcon from '../../../../images/buttonRemoveQuestion.svg';
+} from '../../../lib/CentralModels';
 
 interface IncorrectAnswerCardProps {
   screenSize: ScreenSize;
   isClone: boolean;
   cardIndex: number;
   draftQuestion: CentralQuestionTemplateInput;
-  isHighlight: boolean;
   handleIncorrectAnswerChange: (
     answer: string,
     index: number
@@ -52,7 +41,6 @@ export default function IncorrectAnswerCard({
   cardIndex,
   isClone,
   draftQuestion,
-  isHighlight,
   handleIncorrectAnswerChange,
   handleIncorrectExplanationChange,
   isCardSubmitted,

@@ -74,6 +74,7 @@ export type IncorrectCard = {
 // object that handles all input variables in the create question flow for the client side exclusively
 // these then get based into the more structured IQuestion/AWSQuestion objects when the API request is made
 export type CentralQuestionTemplateInput = {
+  publicPrivateType: PublicPrivateType;
   questionCard: QuestionCard;
   correctCard: CorrectCard;
   incorrectCards: IncorrectCard[];

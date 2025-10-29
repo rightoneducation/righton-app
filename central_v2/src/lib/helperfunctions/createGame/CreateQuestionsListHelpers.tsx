@@ -693,6 +693,7 @@ export const buildLibraryQuestionAtIndex = (
     publicPrivate,
     questionTemplate: { ...question },
     question: {
+      publicPrivateType: publicPrivate,
       questionCard: {
         imageUrl: question?.imageUrl ? question.imageUrl : '',
         title: question?.title,
