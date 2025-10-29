@@ -125,21 +125,22 @@ export const ButtonContent = styled(Box)(({ theme }) => ({
   paddingTop: '4px',
   paddingBottom: '4px',
   paddingLeft: '12px',
-  paddingRight: '12px',
+  paddingRight: '24px',
 }));
 
 type ButtonIconContainerProps = {
   isSmallScreen: boolean;
+  wideButtonOverride: boolean;
 };
 
 export const ButtonIconContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSmallScreen',
-})<ButtonIconContainerProps>(({ theme, isSmallScreen }) => ({
+  shouldForwardProp: (prop) => prop !== 'isSmallScreen' && prop !== 'wideButtonOverride',
+})<ButtonIconContainerProps>(({ theme, isSmallScreen, wideButtonOverride }) => ({
   height: '100%',
-  position: isSmallScreen ? 'relative' : 'absolute',
+  position: isSmallScreen || !wideButtonOverride ? 'relative' : 'absolute',
   top: isSmallScreen ? '0px' : '0px',
   left: isSmallScreen ? '0px' : '0px',
-  paddingLeft: isSmallScreen ? undefined : '12px',
+  paddingLeft: isSmallScreen ? undefined : '24px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

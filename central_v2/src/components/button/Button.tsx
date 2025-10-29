@@ -18,6 +18,7 @@ interface CentralButtonProps {
   isOnQuestionTab?: boolean;
   smallScreenOverride?: boolean;
   buttonWidthOverride?: string;
+  wideButtonOverride?: boolean;
   iconOnlyOverride?: boolean;
   type?: string;
   isReset?: boolean;
@@ -32,6 +33,7 @@ export default function CentralButton({
   isOnQuestionTab,
   smallScreenOverride,
   buttonWidthOverride,
+  wideButtonOverride,
   iconOnlyOverride,
   type,
   isReset,
@@ -79,7 +81,7 @@ export default function CentralButton({
       style={{ width: buttonWidthOverride ?? buttonWidth }}
     >
       {buttonObj.icon && (
-          <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly}>
+          <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly} wideButtonOverride={wideButtonOverride ?? false}>
             {(buttonColor === ButtonColor.NULL &&
               (buttonType === ButtonType.CHANGEIMAGE ||
                 buttonType === ButtonType.SAVEDRAFT)) ||
@@ -96,8 +98,7 @@ export default function CentralButton({
         )}
       {!isSmallScreenIconButtonOnly && (
         <ButtonContent>
-          <Box style={{ marginLeft: buttonObj.icon ? '0px' : '-24px'}} />
-          
+          <Box />
           {buttonText && !iconOnlyOverride && (
             <ButtonTypography
               isReset={isReset}
@@ -108,7 +109,7 @@ export default function CentralButton({
             </ButtonTypography>
           )}
           {buttonObj.rightIcon && (
-            <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly}>
+            <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly} wideButtonOverride={wideButtonOverride ?? false}>
               {buttonColor === ButtonColor.NULL &&
               buttonType === ButtonType.CHANGEIMAGE ? (
                 <ButtonIconBlue src={buttonObj.rightIcon} />
