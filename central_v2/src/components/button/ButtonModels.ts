@@ -65,6 +65,7 @@ export enum ButtonType {
   RETRY = 'retry',
   CANCEL = 'cancel',
   ADDTOGAME = 'addtogame',
+  ADDTOGAMEPINK = 'addtogamepink',
   YES = 'yes',
   NO = 'no',
   EDIT = 'edit',
@@ -205,6 +206,11 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.ADDTOGAME]: {
     icon: add,
     textKey: ButtonType.ADDTOGAME,
+  },
+  [ButtonType.ADDTOGAMEPINK]: {
+    icon: add,
+    textKey: ButtonType.ADDTOGAMEPINK,
+    color: ButtonColor.RED,
   },
   [ButtonType.BROWSEFILES]: {
     icon: upload,

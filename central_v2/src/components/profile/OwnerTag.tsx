@@ -16,14 +16,13 @@ interface OwnerTagProps {
 const OwnerTagFlexContainer = styled(Paper)<OwnerTagProps>(
   ({ theme, screenSize, isViewGame }) => ({
     width: '100%',
+    maxWidth: '410px',
     height: 'fit-content',
     display: 'flex',
     flexDirection: screenSize === ScreenSize.MEDIUM ? 'row' : 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    background: isViewGame
-      ? `${theme.palette.primary.extraDarkBlue}`
-      : 'transparent',
+    background: `${theme.palette.primary.extraDarkBlue}`,
     borderRadius: '8px',
     boxSizing: 'border-box',
     paddingTop: `${theme.sizing.smPadding}px`,
