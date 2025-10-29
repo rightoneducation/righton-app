@@ -65,6 +65,19 @@ interface CreateQuestionProps {
   ) => void;
 }
 
+type BodyContainerProps = {
+  screenSize: ScreenSize;
+};
+
+const BodyContainer = styled(Box, {
+  shouldForwardProp: (prop: string) => prop !== 'screenSize',
+})<BodyContainerProps>(({ screenSize: size }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: size === ScreenSize.SMALL ? 'column' : 'row',
+  gap: size === ScreenSize.SMALL ? '20px' : '16px',
+}));
+
 export default function CreateQuestion({
   screenSize,
   fetchElement,
@@ -769,6 +782,7 @@ export default function CreateQuestion({
   };
 
   const handlePublishQuestion = async () => {
+    setModalState(ModalStateType.UPDATING);
     await handleSave();
     setModalState(ModalStateType.CONFIRM);
   };
@@ -822,29 +836,13 @@ export default function CreateQuestion({
     }
   }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
 
-  type BodyContainerProps = {
-    screenSize: ScreenSize;
-  };
-
-  const BodyContainer = styled(Box, {
-    shouldForwardProp: (prop: string) => prop !== 'screenSize',
-  })<BodyContainerProps>(({ screenSize: size }) => ({
-    width: '100%',
-    display: 'flex',
-    flexDirection: size === ScreenSize.SMALL ? 'column' : 'row',
-    gap: size === ScreenSize.SMALL ? '20px' : '16px',
-  }));
-
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
       <ModalBackground
         isModalOpen={
           isCCSSVisibleModal ||
-          isDiscardModalOpen ||
           isImageUploadVisible ||
-          isCreatingTemplate || 
-          isUpdatingTemplate ||
           modalState !== ModalStateType.NULL
         }
         handleCloseModal={handleCloseQuestionModal}
@@ -853,11 +851,6 @@ export default function CreateQuestion({
         screenSize={screenSize}
         isTabsOpen={isCCSSVisibleModal}
         handleCCSSSubmit={handleCCSSSubmit}
-      />
-      <DiscardModal
-        isModalOpen={isDiscardModalOpen}
-        screenSize={screenSize}
-        handleDiscardClick={handleDiscardClick}
       />
       <ImageUploadModal
         draftQuestion={draftQuestion}
@@ -868,10 +861,6 @@ export default function CreateQuestion({
         handleImageChange={handleImageChange}
         handleImageSave={handleImageSave}
         handleCloseModal={handleCloseModal}
-      />
-      <CreatingTemplateModal
-        isModalOpen={isCreatingTemplate || isUpdatingTemplate}
-        templateType={TemplateType.QUESTION}
       />
       <CreateQuestionModalSwitch
         modalState={modalState}
