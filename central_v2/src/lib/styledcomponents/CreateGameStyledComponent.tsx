@@ -24,8 +24,10 @@ export const CreateGameMainContainer = styled(Box, {
 })<CreateGameBoxContainerProps>(({ screenSize, theme }) => ({
   position: 'relative',
   width: '100%',
+  height: '100%',
   flexGrow: 1,
   minHeight: 0,
+  overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
     display: 'none',
@@ -50,7 +52,8 @@ export const CreateGameContentContainer = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
   gap: `${theme.sizing.mdPadding}px`,
-  overflow: 'visible',
+  height: '100%',
+  overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
     display: 'none',
@@ -70,7 +73,7 @@ export const CreateGameBackground = styled(Box)(({ theme }) => ({
   zIndex: 0,
   backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
   backgroundImage: `
-    linear-gradient(180deg, rgb(254, 251, 247) 0%, rgba(254, 251, 247, 0) 100%),
+    linear-gradient(180deg, rgb(255, 251, 246) 0%, rgba(254, 251, 247, 0) 100%),
     url(${mathSymbolsBackground})
   `,
   backgroundSize: 'cover, contain',
