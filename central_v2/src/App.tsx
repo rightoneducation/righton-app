@@ -81,6 +81,14 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.EDITQUESTION} />}
             />
             <Route
+              path="/questions/:type/:questionId"
+              element={<AppSwitch currentScreen={ScreenType.VIEWQUESTION} />}
+            />
+            <Route
+              path="/library/questions/:type/:questionId"
+              element={<AppSwitch currentScreen={ScreenType.VIEWQUESTION} />}
+            />
+            <Route
               path="/confirmation"
               element={<AppSwitch currentScreen={ScreenType.CONFIRMATION} />}
             />

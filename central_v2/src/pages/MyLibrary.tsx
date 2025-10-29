@@ -100,9 +100,9 @@ export default function MyLibrary({
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
-    setIsTabsOpen(true);
     const selectedQ = await viewQuestion(question);
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
+      navigate(`/library/questions/${question.publicPrivateType}/${question.id}`);
       setSelectedQuestion(selectedQ.question);
       setQuestionSet(questions);
       if (centralData.isTabsOpen === false)

@@ -17,6 +17,7 @@ import Login from '../pages/Login';
 import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
 import ViewGame from '../pages/ViewGame';
+import ViewQuestion from '../pages/ViewQuestion';
 import MyLibrary from '../pages/MyLibrary';
 import UserProfile from '../pages/UserProfile';
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
@@ -223,6 +224,19 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
             screenSize={screenSize}
             fetchElement={fetchElement}
             fetchElements={fetchElements}
+          />
+        </AuthGuard>
+      );
+      break;
+    }
+    case ScreenType.VIEWQUESTION: {
+      screenComponent = (
+        <AuthGuard handleLogOut={handleLogOut}>
+          <ViewQuestion
+            screenSize={screenSize}
+            fetchElement={fetchElement}
+            fetchElements={fetchElements}
+            deleteQuestionTemplate={deleteQuestionTemplate}
           />
         </AuthGuard>
       );
