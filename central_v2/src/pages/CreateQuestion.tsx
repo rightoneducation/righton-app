@@ -51,7 +51,7 @@ import {
 import CreatingTemplateModal from '../components/modal/SaveGameModal';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
-import { handleCheckQuestionComplete } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
+import { handleCheckQuestionBaseComplete, handleCheckQuestionCorrectCardComplete, handleCheckQuestionIncorrectCardsComplete } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
 
 interface CreateQuestionProps {
@@ -64,6 +64,19 @@ interface CreateQuestionProps {
     isFromLibrary?: boolean,
   ) => void;
 }
+
+type BodyContainerProps = {
+  screenSize: ScreenSize;
+};
+
+const BodyContainer = styled(Box, {
+  shouldForwardProp: (prop: string) => prop !== 'screenSize',
+})<BodyContainerProps>(({ screenSize: size }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: size === ScreenSize.SMALL ? 'column' : 'row',
+  gap: size === ScreenSize.SMALL ? '20px' : '16px',
+}));
 
 export default function CreateQuestion({
   screenSize,
@@ -172,16 +185,29 @@ export default function CreateQuestion({
       );
     });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
-  const [isCorrectCardErrored, setIsCorrectCardErrored] = useState<boolean>(false);
   const [isDraftCardErrored, setIsDraftCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
-  const [isCardErrored, setIsCardErrored] = useState(handleCheckQuestionComplete(draftQuestion));
-    const handleDebouncedCheckQuestionComplete = useMemo(
-      () => debounce((debounceQuestion: CentralQuestionTemplateInput) => {
-        setIsCardErrored(handleCheckQuestionComplete(debounceQuestion));
-      }, 1000),
-      []
-    );
+  const [isBaseCardErrored, setIsBaseCardErrored] = useState(!handleCheckQuestionBaseComplete(draftQuestion));
+  const [isCorrectCardErrored, setIsCorrectCardErrored] = useState(!handleCheckQuestionCorrectCardComplete(draftQuestion));
+  const [isIncorrectCardErrored, setIsIncorrectCardErrored] = useState(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
+  const handleDebouncedCheckQuestionBaseComplete = useMemo(
+    () => debounce((debounceQuestion: CentralQuestionTemplateInput) => {
+      setIsBaseCardErrored(!handleCheckQuestionBaseComplete(debounceQuestion));
+    }, 1000),
+    []
+  );
+  const handleDebouncedCheckQuestionCorrectCardComplete = useMemo(
+    () => debounce((debounceQuestion: CentralQuestionTemplateInput) => {
+      setIsCorrectCardErrored(!handleCheckQuestionCorrectCardComplete(debounceQuestion));
+    }, 1000),
+    []
+  );
+  const handleDebouncedCheckQuestionIncorrectCardsComplete = useMemo(
+    () => debounce((debounceQuestion: CentralQuestionTemplateInput) => {
+      setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(debounceQuestion));
+    }, 1000),
+    []
+  );
 
   let label = 'Your';
   let selectedQuestionId = '';
@@ -222,9 +248,16 @@ export default function CreateQuestion({
     setDraftQuestion((prev) => {
       const newDraftQuestion = {
         ...prev,
-        correctCard: { ...prev.correctCard, isMultipleChoice: !prev.correctCard.isMultipleChoice },
+        correctCard: { 
+          ...prev.correctCard, 
+          isMultipleChoice: !prev.correctCard.isMultipleChoice,
+          isCardComplete: handleCheckQuestionCorrectCardComplete({
+            ...prev,
+            correctCard: { ...prev.correctCard, isMultipleChoice: !prev.correctCard.isMultipleChoice },
+          }),
+        },
       };
-      handleDebouncedCheckQuestionComplete(newDraftQuestion);
+      handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
       return newDraftQuestion;
     });
   }
@@ -234,19 +267,37 @@ export default function CreateQuestion({
     setIsImageURLVisible(false);
     if (inputImage) {
       const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImage(
+      let newDraftQuestion = updateDQwithImage(
         draftQuestion,
         undefined,
         inputImage,
       );
+      // Update isCardComplete based on the new state
+      newDraftQuestion = {
+        ...newDraftQuestion,
+        questionCard: {
+          ...newDraftQuestion.questionCard,
+          isCardComplete: handleCheckQuestionBaseComplete(newDraftQuestion),
+        },
+      };
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
+      handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
     }
     if (inputUrl) {
       const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
+      let newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
+      // Update isCardComplete based on the new state
+      newDraftQuestion = {
+        ...newDraftQuestion,
+        questionCard: {
+          ...newDraftQuestion.questionCard,
+          isCardComplete: handleCheckQuestionBaseComplete(newDraftQuestion),
+        },
+      };
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
+      handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
     }
   };
 
@@ -254,9 +305,16 @@ export default function CreateQuestion({
     setDraftQuestion((prev) => {
       const newDraftQuestion = {
         ...prev,
-        questionCard: { ...prev.questionCard, title },
+        questionCard: { 
+          ...prev.questionCard, 
+          title,
+          isCardComplete: handleCheckQuestionBaseComplete({
+            ...prev,
+            questionCard: { ...prev.questionCard, title },
+          }),
+        },
       };
-      handleDebouncedCheckQuestionComplete(newDraftQuestion);
+      handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
       return newDraftQuestion;
     });
   }
@@ -265,9 +323,16 @@ export default function CreateQuestion({
     setDraftQuestion((prev) => {
       const newDraftQuestion = {
         ...prev,
-        questionCard: { ...prev.questionCard, ccss },
+        questionCard: { 
+          ...prev.questionCard, 
+          ccss,
+          isCardComplete: handleCheckQuestionBaseComplete({
+            ...prev,
+            questionCard: { ...prev.questionCard, ccss },
+          }),
+        },
       };
-      handleDebouncedCheckQuestionComplete(newDraftQuestion);
+      handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
       return newDraftQuestion;
     });
     setIsCCSSVisibleModal(false);
@@ -286,8 +351,15 @@ export default function CreateQuestion({
       const newDraftQuestion = {
         ...prev,
         publicPrivateType: value,
+        questionCard: {
+          ...prev.questionCard,
+          isCardComplete: handleCheckQuestionBaseComplete({
+            ...prev,
+            publicPrivateType: value,
+          }),
+        },
       };
-      handleDebouncedCheckQuestionComplete(newDraftQuestion);
+      handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
       return newDraftQuestion;
     });
   };
@@ -303,9 +375,16 @@ export default function CreateQuestion({
     setDraftQuestion((prev) => {
       const newDraftQuestion = {
         ...prev,
-        correctCard: { ...prev.correctCard, answer: correctAnswer },
+        correctCard: { 
+          ...prev.correctCard, 
+          answer: correctAnswer,
+          isCardComplete: handleCheckQuestionCorrectCardComplete({
+            ...prev,
+            correctCard: { ...prev.correctCard, answer: correctAnswer },
+          }),
+        },
       };
-      handleDebouncedCheckQuestionComplete(newDraftQuestion);
+      handleDebouncedCheckQuestionCorrectCardComplete(newDraftQuestion);
       return newDraftQuestion;
     });
   }
@@ -314,35 +393,56 @@ export default function CreateQuestion({
     setDraftQuestion((prev) => {
       const newDraftQuestion = {
         ...prev,
-        correctCard: { ...prev.correctCard, answerSteps: correctAnswerSteps },
+        correctCard: { 
+          ...prev.correctCard, 
+          answerSteps: correctAnswerSteps,
+          isCardComplete: handleCheckQuestionCorrectCardComplete({
+            ...prev,
+            correctCard: { ...prev.correctCard, answerSteps: correctAnswerSteps },
+          }),
+        },
       };
-      handleDebouncedCheckQuestionComplete(newDraftQuestion);
+      handleDebouncedCheckQuestionCorrectCardComplete(newDraftQuestion);
       return newDraftQuestion;
     });
   }
 
   const handleIncorrectAnswerChange = (incorrectAnswer: string, index: number) => {
     setDraftQuestion((prev) => {
+      const updatedCards = prev.incorrectCards.map((card, i) => {
+        if (i === index) {
+          const updatedCard = { ...card, answer: incorrectAnswer };
+          // Check if this specific card is complete
+          const isComplete = updatedCard.answer.trim().length > 0 && updatedCard.explanation.trim().length > 0;
+          return { ...updatedCard, isCardComplete: isComplete };
+        }
+        return card;
+      });
       const newDraftQuestion = {
         ...prev,
-        incorrectCards: prev.incorrectCards.map((card, i) => 
-          i === index ? { ...card, answer: incorrectAnswer } : card
-        ),
+        incorrectCards: updatedCards,
       };
-      handleDebouncedCheckQuestionComplete(newDraftQuestion);
+      handleDebouncedCheckQuestionIncorrectCardsComplete(newDraftQuestion);
       return newDraftQuestion;
     });
   }
 
   const handleIncorrectExplanationChange = (incorrectExplanation: string, index: number) => {
     setDraftQuestion((prev) => {
+      const updatedCards = prev.incorrectCards.map((card, i) => {
+        if (i === index) {
+          const updatedCard = { ...card, explanation: incorrectExplanation };
+          // Check if this specific card is complete
+          const isComplete = updatedCard.answer.trim().length > 0 && updatedCard.explanation.trim().length > 0;
+          return { ...updatedCard, isCardComplete: isComplete };
+        }
+        return card;
+      });
       const newDraftQuestion = {
         ...prev,
-        incorrectCards: prev.incorrectCards.map((card, i) => 
-          i === index ? { ...card, explanation: incorrectExplanation } : card
-        ),
+        incorrectCards: updatedCards,
       };
-      handleDebouncedCheckQuestionComplete(newDraftQuestion);
+      handleDebouncedCheckQuestionIncorrectCardsComplete(newDraftQuestion);
       return newDraftQuestion;
     });
   }
@@ -378,7 +478,7 @@ export default function CreateQuestion({
   const handleSaveEditedQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      const isQuestionTemplateComplete = handleCheckQuestionComplete(draftQuestion);
+      const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
       if (isQuestionTemplateComplete) {
         if (
           draftQuestion.questionCard.image ||
@@ -435,9 +535,14 @@ export default function CreateQuestion({
           navigate('/questions');
         }
       } else {
-        setIsCardErrored(true);
         if (!draftQuestion.correctCard.isCardComplete) {
           setIsCorrectCardErrored(true);
+        }
+        if (!draftQuestion.incorrectCards.every((card) => card.isCardComplete)) {
+          setIsIncorrectCardErrored(true);
+        }
+        if (!draftQuestion.questionCard.isCardComplete) {
+          setIsBaseCardErrored(true);
         }
       }
     } catch (e) {
@@ -448,7 +553,7 @@ export default function CreateQuestion({
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      const isQuestionTemplateComplete = handleCheckQuestionComplete(draftQuestion);
+      const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
       if (isQuestionTemplateComplete) {
         if (
           draftQuestion.questionCard.image ||
@@ -515,9 +620,14 @@ export default function CreateQuestion({
           navigate('/questions');
         }
       } else {
-        setIsCardErrored(true);
+        if (!draftQuestion.questionCard.isCardComplete) {
+          setIsBaseCardErrored(true);
+        }
         if (!draftQuestion.correctCard.isCardComplete) {
           setIsCorrectCardErrored(true);
+        }
+        if (!draftQuestion.incorrectCards.every((card) => card.isCardComplete)) {
+          setIsIncorrectCardErrored(true);
         }
       }
     } catch (e) {
@@ -528,7 +638,7 @@ export default function CreateQuestion({
   const handleCreateFromDraftQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      const isQuestionTemplateComplete = handleCheckQuestionComplete(draftQuestion);
+      const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
       if (isQuestionTemplateComplete) {
         if (
           draftQuestion.questionCard.image ||
@@ -595,9 +705,14 @@ export default function CreateQuestion({
           navigate('/questions');
         }
       } else {
-        setIsCardErrored(true);
+        if (!draftQuestion.questionCard.isCardComplete) {
+          setIsBaseCardErrored(true);
+        }
         if (!draftQuestion.correctCard.isCardComplete) {
           setIsCorrectCardErrored(true);
+        }
+        if (!draftQuestion.incorrectCards.every((card) => card.isCardComplete)) {
+          setIsIncorrectCardErrored(true);
         }
       }
     } catch (e) {
@@ -683,7 +798,6 @@ export default function CreateQuestion({
 
 
   const handleSaveEditedDraftQuestion = async () => {
-    console.log(draftQuestion);
     try {
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
@@ -755,8 +869,6 @@ export default function CreateQuestion({
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
     setIsCCSSVisibleModal(false);
-    setIsDiscardModalOpen(false);
-    setIsCreatingTemplate(false);
     setModalState(ModalStateType.NULL);
   };
 
@@ -769,6 +881,8 @@ export default function CreateQuestion({
   };
 
   const handlePublishQuestion = async () => {
+    setModalState(ModalStateType.UPDATING);
+    setIsCardSubmitted(false);
     await handleSave();
     setModalState(ModalStateType.CONFIRM);
   };
@@ -782,8 +896,12 @@ export default function CreateQuestion({
     setModalState(ModalStateType.DISCARD);
   };
 
+  // This pops the modal that allows the user to select publish, save as draft, or back
   const handleSaveQuestionClick = () => {
-    setIsCardErrored(!handleCheckQuestionComplete(draftQuestion));
+    setIsCardSubmitted(true);
+    setIsBaseCardErrored(!handleCheckQuestionBaseComplete(draftQuestion));
+    setIsCorrectCardErrored(!handleCheckQuestionCorrectCardComplete(draftQuestion));
+    setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
     setModalState(ModalStateType.PUBLISH);
   };
 
@@ -822,29 +940,13 @@ export default function CreateQuestion({
     }
   }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
 
-  type BodyContainerProps = {
-    screenSize: ScreenSize;
-  };
-
-  const BodyContainer = styled(Box, {
-    shouldForwardProp: (prop: string) => prop !== 'screenSize',
-  })<BodyContainerProps>(({ screenSize: size }) => ({
-    width: '100%',
-    display: 'flex',
-    flexDirection: size === ScreenSize.SMALL ? 'column' : 'row',
-    gap: size === ScreenSize.SMALL ? '20px' : '16px',
-  }));
-
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
       <ModalBackground
         isModalOpen={
           isCCSSVisibleModal ||
-          isDiscardModalOpen ||
           isImageUploadVisible ||
-          isCreatingTemplate || 
-          isUpdatingTemplate ||
           modalState !== ModalStateType.NULL
         }
         handleCloseModal={handleCloseQuestionModal}
@@ -853,11 +955,6 @@ export default function CreateQuestion({
         screenSize={screenSize}
         isTabsOpen={isCCSSVisibleModal}
         handleCCSSSubmit={handleCCSSSubmit}
-      />
-      <DiscardModal
-        isModalOpen={isDiscardModalOpen}
-        screenSize={screenSize}
-        handleDiscardClick={handleDiscardClick}
       />
       <ImageUploadModal
         draftQuestion={draftQuestion}
@@ -869,10 +966,6 @@ export default function CreateQuestion({
         handleImageSave={handleImageSave}
         handleCloseModal={handleCloseModal}
       />
-      <CreatingTemplateModal
-        isModalOpen={isCreatingTemplate || isUpdatingTemplate}
-        templateType={TemplateType.QUESTION}
-      />
       <CreateQuestionModalSwitch
         modalState={modalState}
         screenSize={screenSize}
@@ -881,7 +974,7 @@ export default function CreateQuestion({
         handlePublishQuestion={handlePublishQuestion}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
         handleContinue={handleContinue}
-        isCardErrored={isCardErrored}
+        isCardErrored={isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored}
       />
       <CreateQuestionBoxContainer screenSize={screenSize}>
         <CreateQuestionHeader 
@@ -920,7 +1013,7 @@ export default function CreateQuestion({
                   handlePublicPrivateChange={handlePublicPrivateChange}
                   isCardSubmitted={isCardSubmitted}
                   isDraftCardErrored={isDraftCardErrored}
-                  isCardErrored={isCardErrored}
+                  isCardErrored={isBaseCardErrored}
                   isAIError={isAIError}
                   isPublic={isPublicQuestion}
                   isMultipleChoice={isMultipleChoice}
@@ -942,8 +1035,8 @@ export default function CreateQuestion({
                     handleCorrectAnswerChange={handleCorrectAnswerChange}
                     handleCorrectAnswerStepsChange={handleCorrectAnswerStepsChange}
                     handleAnswerSettingsChange={handleAnswerSettingsChange}
-                    isCardSubmitted={false}
-                    isCardErrored={false}
+                    isCardSubmitted={isCardSubmitted}
+                    isCardErrored={isCorrectCardErrored}
                     isAIError={false}
                   />
                   <Box
@@ -980,8 +1073,8 @@ export default function CreateQuestion({
                         draftQuestion={draftQuestion}
                         handleIncorrectAnswerChange={handleIncorrectAnswerChange}
                         handleIncorrectExplanationChange={handleIncorrectExplanationChange}
-                        isCardSubmitted={false}
-                        isCardErrored={false}
+                        isCardSubmitted={isCardSubmitted}
+                        isCardErrored={isIncorrectCardErrored}
                         isAIError={false}
                       />
                     ))}

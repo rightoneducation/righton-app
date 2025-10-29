@@ -237,7 +237,7 @@ export default function CreateQuestionCardBase({
         Enter your question*
       </HeaderText>
       <CreateGameTextFieldContainer
-        isCardError={isCardErrored}
+        isCardError={isCardErrored && isCardSubmitted}
         variant="outlined"
         sx={{
           '& .MuiOutlinedInput-input': {
@@ -247,11 +247,11 @@ export default function CreateQuestionCardBase({
         multiline
         rows={4}
         placeholder="Give a short description of the game."
-        error={isTitleFieldError}
+        error={isTitleFieldError && isCardSubmitted}
         value={draftQuestion.questionCard.title}
         onChange={(e) => handleTitleChange(e.target.value)}
         InputProps={{
-          startAdornment: isTitleFieldError && (
+          startAdornment: (isTitleFieldError && isCardSubmitted) && (
             <InputAdornment
               position="start"
               sx={{
@@ -302,7 +302,7 @@ export default function CreateQuestionCardBase({
         {imageLink ? (
           imageContents
         ) : (
-          <ImagePlaceholder isCardErrored={isCardErrored}>
+          <ImagePlaceholder isCardErrored={isCardErrored && isCardSubmitted}>
             <CentralButton
               buttonType={ButtonType.UPLOADIMAGE}
               isEnabled
@@ -323,7 +323,7 @@ export default function CreateQuestionCardBase({
                 e.stopPropagation();
                 handleCCSSButtonClick();
               }}
-              CCSSIsErrored={CCSSIsErrored}
+              CCSSIsErrored={CCSSIsErrored && isCardSubmitted}
               sx={{
                 gap: '3px',
                 boxShadow:
@@ -369,7 +369,7 @@ export default function CreateQuestionCardBase({
             />
           </Box>
           </ContentContainerStyled>
-      {screenSize !== ScreenSize.SMALL && (isCardErrored || isDraftCardErrored)  && <ErrorBox />}
+      {screenSize !== ScreenSize.SMALL && ((isCardErrored && isCardSubmitted) || isDraftCardErrored)  && <ErrorBox />}
     </BaseCardStyled>
   );
 }
