@@ -25,6 +25,30 @@ function HomePage() {
   const [rightonSwitch, setRightonSwitch] = useState(true);
   const [cziSwitch, setCziSwitch] = useState(true);
   const [outputTexts, setOutputTexts] = useState<string[]>(['']);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    setOutputTexts(['Processing...']);
+    
+    try {
+      const response = await fetch('https://co3csj97wd.execute-api.us-east-1.amazonaws.com/mcp/query', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: promptText }),
+      });
+      
+      const data = await response.json();
+      setOutputTexts([data.result || data.error || 'No response']);
+    } catch (error) {
+      setOutputTexts([`Error: ${error instanceof Error ? error.message : 'Failed to connect'}`]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
@@ -93,7 +117,13 @@ function HomePage() {
                   </Box>
                 </Box>
               </Box>
-              <StyledButton variant="contained">Submit</StyledButton>
+              <StyledButton 
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={loading || !promptText.trim()}
+              >
+                {loading ? 'Processing...' : 'Submit'}
+              </StyledButton>
             </Box>
           </Paper>
         </Box>
