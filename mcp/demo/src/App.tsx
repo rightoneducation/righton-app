@@ -4,7 +4,6 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-  Link,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { Container, Typography, Box, Paper } from '@mui/material';
@@ -41,7 +40,29 @@ function HomePage() {
       });
       
       const data = await response.json();
-      setOutputTexts([data.result || data.error || 'No response']);
+      const result = data.result || data.error || 'No response';
+      
+      // Extract tool names from the response
+      const toolRegex = /\[Calling tool (\w+) with args [^\]]+\]/g;
+      const toolMatches = result.match(toolRegex) || [];
+      const toolNames = toolMatches.map((match: string) => {
+        const nameMatch = match.match(/\[Calling tool (\w+)/);
+        return nameMatch ? nameMatch[1] : '';
+      }).filter(Boolean);
+      
+      // Remove tool calling text and clean up
+      const cleanedText = result
+        .replace(/\[Calling tool [^\]]+\]/g, '')
+        .trim();
+      
+      // Format output with tool summary header
+      let formattedResult = '';
+      if (toolNames.length > 0) {
+        formattedResult = `**Tools Called:**\n${toolNames.map((name: string) => `• ${name}`).join('\n')}\n\n`;
+      }
+      formattedResult += cleanedText;
+      
+      setOutputTexts([formattedResult]);
     } catch (error) {
       setOutputTexts([`Error: ${error instanceof Error ? error.message : 'Failed to connect'}`]);
     } finally {
@@ -52,8 +73,19 @@ function HomePage() {
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
-      <Container sx={{ zIndex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '48px' }}>
+      <Container sx={{ 
+        zIndex: 1, 
+        height: '100%', 
+        overflow: 'auto',
+        paddingTop: '48px',
+        paddingBottom: '96px',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+      }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '48px' }}>
         <StyledTitleText sx={{ width: '100%', textAlign: 'center' }}>
           RightOn! + Learning Commons MCP Demo
         </StyledTitleText>
@@ -103,7 +135,7 @@ function HomePage() {
                     </Typography>
                     <StyledSwitch
                       checked={rightonSwitch}
-                      onChange={(e: any) => setRightonSwitch(e.target.checked)}
+                      onChange={(e) => setRightonSwitch(e.target.checked)}
                     />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -112,7 +144,7 @@ function HomePage() {
                     </Typography>
                     <StyledSwitch
                       checked={cziSwitch}
-                      onChange={(e: any) => setCziSwitch(e.target.checked)}
+                      onChange={(e) => setCziSwitch(e.target.checked)}
                     />
                   </Box>
                 </Box>
@@ -131,33 +163,39 @@ function HomePage() {
           <StyledSubtitleText sx={{ width: '100%', textAlign: 'left' }}>
             Output
           </StyledSubtitleText>
-          {outputTexts.map((text, index) => (
+          {outputTexts.map((text) => (
             <Paper
+              key={text.substring(0, 50) || 'empty'}
               sx={{
                 width: '100%',
                 minWidth: '600px',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                gap: '24px',
+                alignItems: 'flex-start',
                 padding: '24px',
                 boxSizing: 'border-box',
                 borderRadius: '8px',
               }}
               elevation={4}
             >
-              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  {text !== '' ? (
-                  <Typography>{text}</Typography>
-                  ) : (
-                    <Typography>Output will appear here...</Typography>
-                  )}
-                  </Box>
-                  
-              </Box>
+              {text !== '' ? (
+                <Typography 
+                  sx={{ 
+                    whiteSpace: 'pre-wrap', 
+                    textAlign: 'left', 
+                    width: '100%',
+                    '& strong': { fontWeight: 700 }
+                  }}
+                  component="div"
+                  dangerouslySetInnerHTML={{
+                    __html: text
+                      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                      .replace(/\n/g, '<br />')
+                  }}
+                />
+              ) : (
+                <Typography>Output will appear here...</Typography>
+              )}
             </Paper>
           ))}
         </Box>
