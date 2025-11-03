@@ -51,16 +51,29 @@ function findClientForTool(toolName: string): MCPClientClass | undefined {
 }
 
 export async function processQuery (query: string){
-  const messages: ChatCompletionMessageParam[] = [
-    { role: 'user', content: query }
-  ];
-
   const availableTools = getAllTools();
+  const parsedQuery = JSON.parse(query);
+  const { query: prompt, isRightOnEnabled, isCZIEnabled } = parsedQuery;
+  
+  const messages: ChatCompletionMessageParam[] = [
+    { role: 'user', content: prompt }
+  ];
+  
+  // filter available tools based on the enabled flags
+  const filteredTools = availableTools.filter(tool => {
+    if (isRightOnEnabled && tool._server === 'custom') {
+      return true;
+    }
+    if (isCZIEnabled && tool._server === 'ext') {
+      return true;
+    }
+    return false;
+  });
 
   let response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o',
     messages: messages,
-    tools: availableTools,
+    tools: filteredTools,
   })
 
   const finalText: string[] =[];
@@ -94,7 +107,7 @@ export async function processQuery (query: string){
     response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: messages,
-      tools: availableTools,
+      tools: filteredTools,
     })
   }
 

@@ -32,6 +32,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/mcp/tools', async (req: Request, res: Response) => {
+  try {
+    const { getAllTools } = await import('./mcp/functions/MCPHostFunctions.js');
+    const tools = getAllTools();
+    res.json({ 
+      total: tools.length,
+      tools: tools.map(t => ({ 
+        name: t.function?.name, 
+        server: t._server,
+        description: t.function?.description 
+      }))
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    res.status(500).json({ error: 'Failed to get tools', errorMessage });
+  }
+});
+
 app.post('/mcp/query', async (req: Request<{}, SuccessResponse | ErrorResponse, QueryRequest>, res: Response<SuccessResponse | ErrorResponse>) => {
   try {
     const { query } = req.body;

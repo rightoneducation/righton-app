@@ -6,7 +6,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import { Container, Typography, Box, Paper } from '@mui/material';
+import { Container, Typography, Box, Paper, CircularProgress } from '@mui/material';
 import Theme from './lib/Theme';
 import {
   StyledTitleText,
@@ -46,31 +46,71 @@ function HomePage() {
     // Remove tool calling text - updated to match new regex
     const cleanedText = result.replace(/\[Calling tool \w+ with args \{[^}]*}]/g, '').trim();
     
-    // Parse sections from the response
-    const learningOutcomesMatch = cleanedText.match(/key challenges in your classroom related to:([\s\S]*?)(?=\*\*Two Students|\*\*Discussion|$)/i);
-    const studentsMatch = cleanedText.match(/\*\*Two Students:\*\*([\s\S]*?)(?=\*\*Discussion Questions|$)/i);
-    const discussionMatch = cleanedText.match(/\*\*Discussion Questions:\*\*([\s\S]*?)(?=These discussions|$)/i);
+    // Parse sections from the response - updated for ### headers
+    // Try new ### format first
+    let learningOutcomesText = '';
+    let studentsText = '';
+    let discussionText = '';
+    
+    const learningOutcomesMatch = cleanedText.match(/###\s*Most Recent Game Analysis([\s\S]*?)(?=###\s*Representative Students|$)/i);
+    const studentsMatch = cleanedText.match(/###\s*Representative Students([\s\S]*?)(?=###\s*Discussion Questions|$)/i);
+    const discussionMatch = cleanedText.match(/###\s*Discussion Questions([\s\S]*?)$/i);
+    
+    if (learningOutcomesMatch) {
+      learningOutcomesText = learningOutcomesMatch[1].trim();
+    } else {
+      // Try old format
+      const oldMatch = cleanedText.match(/key challenges in your classroom related to:([\s\S]*?)(?=\*\*Two Students|\*\*Discussion|$)/i);
+      learningOutcomesText = oldMatch ? oldMatch[1].trim() : '';
+    }
+    
+    if (studentsMatch) {
+      studentsText = studentsMatch[1].trim();
+    } else {
+      // Try old format
+      const oldMatch = cleanedText.match(/\*\*Two Students:\*\*([\s\S]*?)(?=\*\*Discussion Questions|$)/i);
+      studentsText = oldMatch ? oldMatch[1].trim() : '';
+    }
+    
+    if (discussionMatch) {
+      discussionText = discussionMatch[1].trim();
+    } else {
+      // Try old format
+      const oldMatch = cleanedText.match(/\*\*Discussion Questions:\*\*([\s\S]*?)(?=These discussions|$)/i);
+      discussionText = oldMatch ? oldMatch[1].trim() : '';
+    }
+    
     const conclusionMatch = cleanedText.match(/(These discussions[\s\S]*)/);
     
     return {
       rightonTools,
       learningCommonsTools,
-      learningOutcomes: learningOutcomesMatch ? learningOutcomesMatch[1].trim() : '',
-      students: studentsMatch ? studentsMatch[1].trim() : '',
-      discussion: discussionMatch ? discussionMatch[1].trim() : '',
+      learningOutcomes: learningOutcomesText,
+      students: studentsText,
+      discussion: discussionText,
       conclusion: conclusionMatch ? conclusionMatch[1].trim() : '',
       fullText: cleanedText
     };
   };
 
-  // Initialize with parsed mock data
-  const [outputTexts, setOutputTexts] = useState<string[]>([
-    JSON.stringify(parseResponse(mockOutput))
-  ]);
+  // Initialize with empty state
+  const [outputTexts, setOutputTexts] = useState<string[]>([]);
 
   const handleSubmit = async () => {
     setLoading(true);
-    setOutputTexts(['Processing...']);
+    const queryPayload = { 
+      query: promptText.trim(), 
+      isRightOnEnabled: rightonSwitch,
+      isCZIEnabled: cziSwitch,
+    };
+    const queryString = JSON.stringify(queryPayload);
+    
+    console.log('=== Frontend Request Debug ===');
+    console.log('RightOn Switch:', rightonSwitch);
+    console.log('CZI Switch:', cziSwitch);
+    console.log('Query payload:', queryPayload);
+    console.log('Query string:', queryString);
+    console.log('Request body:', JSON.stringify({ query: queryString }));
     
     try {
       const response = await fetch('https://co3csj97wd.execute-api.us-east-1.amazonaws.com/mcp/query', {
@@ -78,13 +118,14 @@ function HomePage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: promptText }),
+        body: JSON.stringify({ query: queryString }),
       });
       
       const data = await response.json();
+      console.log('Response data:', data);
       const result = data.result || data.error || 'No response';
       const parsed = parseResponse(result);
-      
+      console.log('Parsed result:', parsed);
       // Store parsed data as JSON string for rendering
       setOutputTexts([JSON.stringify(parsed)]);
     } catch (error) {
@@ -145,7 +186,7 @@ function HomePage() {
             color: (theme) => theme.palette.primary.darkBlue,
             marginBottom: '4px',
           }}>
-            Query Input
+            Input
           </Typography>
           <Paper
             sx={{
@@ -235,7 +276,58 @@ function HomePage() {
           <StyledSubtitleText sx={{ width: '100%', textAlign: 'left' }}>
             Output
           </StyledSubtitleText>
-          {outputTexts.map((text) => {
+          {loading && (
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '16px',
+                padding: '48px 0',
+              }}
+            >
+              <Typography sx={{ 
+                fontFamily: 'Poppins',
+                fontSize: '16px',
+                lineHeight: '24px',
+                fontWeight: 700,
+                textAlign: 'center',
+                color: (theme) => theme.palette.primary.darkBlue,
+              }}>
+                Processing Query...
+              </Typography>
+              <CircularProgress size="40px" sx={{ color: (theme) => theme.palette.primary.darkBlue }} />
+            </Box>
+          )}
+          {!loading && outputTexts.length === 0 && (
+            <Paper
+              sx={{
+                width: '100%',
+                minWidth: '600px',
+                padding: '48px',
+                boxSizing: 'border-box',
+                borderRadius: '8px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
+              }}
+              elevation={4}
+            >
+              <Typography sx={{ 
+                fontFamily: 'Rubik',
+                fontSize: '16px',
+                color: (theme) => theme.palette.primary.darkBlue,
+                opacity: 0.6,
+                textAlign: 'center',
+              }}>
+                Submit a query to see results
+              </Typography>
+            </Paper>
+          )}
+          {!loading && outputTexts.length > 0 && outputTexts.map((text) => {
             let parsed;
             try {
               parsed = JSON.parse(text);
