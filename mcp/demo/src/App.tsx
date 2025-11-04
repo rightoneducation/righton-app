@@ -9,7 +9,6 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { Container, Typography, Box, Paper, CircularProgress } from '@mui/material';
 import Theme from './lib/Theme';
 import {
-  StyledTitleText,
   StyledTextField,
   StyledButton,
   StyledSwitch,
@@ -17,7 +16,6 @@ import {
   CreateGameBackground,
   StyledSubtitleText,
 } from './lib/StyledComponents';
-import mockOutput from './lib/mock';
 import './App.css';
 
 function HomePage() {
@@ -27,7 +25,30 @@ function HomePage() {
   const [loading, setLoading] = useState(false);
 
   const parseResponse = (result: string) => {
-    // Extract tool calls - updated regex to handle JSON args properly
+    try {
+      // Try parsing as structured JSON first
+      const parsed = JSON.parse(result);
+      
+      if (parsed.toolCalls && parsed.learningOutcomes && parsed.students && parsed.discussionQuestions) {
+        // New structured format
+        const toolNames = parsed.toolCalls.map((tc: any) => tc.name);
+        const rightonTools = toolNames.filter((name: string) => name !== 'getLearningScienceDatabyCCSS');
+        const learningCommonsTools = toolNames.filter((name: string) => name === 'getLearningScienceDatabyCCSS');
+        
+        return {
+          rightonTools,
+          learningCommonsTools,
+          learningOutcomes: parsed.learningOutcomes,
+          students: parsed.students, // Array of {name, performance, justification}
+          discussionQuestions: parsed.discussionQuestions, // Array of {studentName, question}
+          toolCalls: parsed.toolCalls
+        };
+      }
+    } catch (e) {
+      // Fall through to old parsing logic
+    }
+    
+    // Fallback to old regex-based parsing
     const toolRegex = /\[Calling tool (\w+) with args \{[^}]*}]/g;
     const toolMatches = result.match(toolRegex) || [];
     const toolNames = toolMatches.map((match: string) => {
@@ -35,31 +56,22 @@ function HomePage() {
       return nameMatch ? nameMatch[1] : '';
     }).filter(Boolean);
     
-    // Categorize tools
-    const rightonTools = toolNames.filter(name => 
-      name !== 'getLearningScienceDatabyCCSS'
-    );
-    const learningCommonsTools = toolNames.filter(name => 
-      name === 'getLearningScienceDatabyCCSS'
-    );
+    const rightonTools = toolNames.filter(name => name !== 'getLearningScienceDatabyCCSS');
+    const learningCommonsTools = toolNames.filter(name => name === 'getLearningScienceDatabyCCSS');
     
-    // Remove tool calling text - updated to match new regex
     const cleanedText = result.replace(/\[Calling tool \w+ with args \{[^}]*}]/g, '').trim();
     
-    // Parse sections from the response - updated for ### headers
-    // Try new ### format first
     let learningOutcomesText = '';
     let studentsText = '';
     let discussionText = '';
     
-    const learningOutcomesMatch = cleanedText.match(/###\s*Most Recent Game Analysis([\s\S]*?)(?=###\s*Representative Students|$)/i);
-    const studentsMatch = cleanedText.match(/###\s*Representative Students([\s\S]*?)(?=###\s*Discussion Questions|$)/i);
+    const learningOutcomesMatch = cleanedText.match(/###\s*(?:Recent Game Review|Overview of Recent Game Sessions|Evidence of Struggles|Insights from Learning Science Data)([\s\S]*?)(?=###\s*(?:Emblematic Students|Student Analysis)|###\s*Discussion Questions|$)/i);
+    const studentsMatch = cleanedText.match(/###\s*(?:Emblematic Students|Student Analysis)([\s\S]*?)(?=###\s*Discussion Questions|$)/i);
     const discussionMatch = cleanedText.match(/###\s*Discussion Questions([\s\S]*?)$/i);
     
     if (learningOutcomesMatch) {
       learningOutcomesText = learningOutcomesMatch[1].trim();
     } else {
-      // Try old format
       const oldMatch = cleanedText.match(/key challenges in your classroom related to:([\s\S]*?)(?=\*\*Two Students|\*\*Discussion|$)/i);
       learningOutcomesText = oldMatch ? oldMatch[1].trim() : '';
     }
@@ -67,7 +79,6 @@ function HomePage() {
     if (studentsMatch) {
       studentsText = studentsMatch[1].trim();
     } else {
-      // Try old format
       const oldMatch = cleanedText.match(/\*\*Two Students:\*\*([\s\S]*?)(?=\*\*Discussion Questions|$)/i);
       studentsText = oldMatch ? oldMatch[1].trim() : '';
     }
@@ -75,7 +86,6 @@ function HomePage() {
     if (discussionMatch) {
       discussionText = discussionMatch[1].trim();
     } else {
-      // Try old format
       const oldMatch = cleanedText.match(/\*\*Discussion Questions:\*\*([\s\S]*?)(?=These discussions|$)/i);
       discussionText = oldMatch ? oldMatch[1].trim() : '';
     }
@@ -511,8 +521,16 @@ function HomePage() {
 
                 {/* Student Analysis */}
                 {parsed.students && (() => {
-                  // Parse individual students from the text
-                  const studentSections = parsed.students.split(/(?=\d+\.\s+\*\*Student)/);
+                  // Check if students is an array (new format) or string (old format)
+                  const isStructured = Array.isArray(parsed.students);
+                  let studentSections;
+                  
+                  if (isStructured) {
+                    studentSections = parsed.students;
+                  } else {
+                    // Parse individual students from the text - support both old and new formats
+                    studentSections = (parsed.students as string).split(/(?=\d+\.\s+\*\*Student)|(?=\d+\.\s+\*\*Student Who)/).filter((s: string) => s.trim());
+                  }
                   
                   return (
                     <Paper 
@@ -538,12 +556,33 @@ function HomePage() {
                         Student Performance Analysis
                       </Typography>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {studentSections.filter((s: string) => s.trim()).map((student: string) => (
+                        {studentSections.map((student: any) => {
+                          let isExcelling: boolean;
+                          let displayContent: string;
+                          let studentKey: string;
+                          
+                          if (isStructured) {
+                            // New structured format
+                            isExcelling = student.performance === 'excelling';
+                            displayContent = `**${student.name}**: ${student.justification}`;
+                            studentKey = student.name;
+                          } else {
+                            // Old text format
+                            if (!student.trim()) return null;
+                            isExcelling = student.includes('Excels') || 
+                                        student.includes('not struggling') || 
+                                        student.includes('Successfully') ||
+                                        student.includes('correctly');
+                            displayContent = student.trim();
+                            studentKey = student.substring(0, 30);
+                          }
+                          
+                          return (
                           <Box 
-                            key={`student-${student.substring(0, 30)}`}
+                            key={`student-${studentKey}`}
                             sx={{
                               padding: '16px',
-                              background: (theme) => student.includes('not struggling') 
+                              background: isExcelling
                                 ? 'rgba(34, 174, 72, 0.15)'
                                 : 'rgba(223, 167, 180, 0.3)',
                               borderRadius: '6px',
@@ -558,19 +597,28 @@ function HomePage() {
                                 color: (theme) => theme.palette.primary.darkBlue,
                                 '& strong': { fontWeight: 700, color: (theme) => theme.palette.primary.darkBlue }
                               }}
-                              dangerouslySetInnerHTML={{ __html: formatText(student.trim()) }}
+                              dangerouslySetInnerHTML={{ __html: formatText(displayContent) }}
                             />
                           </Box>
-                        ))}
+                          );
+                        }).filter(Boolean)}
                       </Box>
                     </Paper>
                   );
                 })()}
 
                 {/* Discussion Questions */}
-                {parsed.discussion && (() => {
-                  // Parse individual questions
-                  const questions = parsed.discussion.split(/(?=-\s+For\s+\*\*)/).filter((q: string) => q.trim());
+                {(parsed.discussionQuestions || parsed.discussion) && (() => {
+                  // Check if using new structured format or old text format
+                  const isStructured = Array.isArray(parsed.discussionQuestions);
+                  let questions;
+                  
+                  if (isStructured) {
+                    questions = parsed.discussionQuestions;
+                  } else {
+                    // Parse individual questions from text
+                    questions = (parsed.discussion as string).split(/(?=-\s+For\s+\*\*)/).filter((q: string) => q.trim());
+                  }
                   
                   return (
                     <Paper 
@@ -596,9 +644,23 @@ function HomePage() {
                         Recommended Discussion Questions
                       </Typography>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {questions.map((question: string) => (
+                        {questions.map((question: any) => {
+                          let displayContent: string;
+                          let questionKey: string;
+                          
+                          if (isStructured) {
+                            // New structured format: {studentName, question}
+                            displayContent = `**For ${question.studentName}**: ${question.question}`;
+                            questionKey = question.studentName;
+                          } else {
+                            // Old text format
+                            displayContent = question.trim();
+                            questionKey = question.substring(0, 40);
+                          }
+                          
+                          return (
                           <Box 
-                            key={`question-${question.substring(0, 40)}`}
+                            key={`question-${questionKey}`}
                             sx={{
                               padding: '16px',
                               background: (theme) => theme.palette.primary.lightGrey,
@@ -614,10 +676,11 @@ function HomePage() {
                                 color: (theme) => theme.palette.primary.darkBlue,
                                 '& strong': { fontWeight: 700 }
                               }}
-                              dangerouslySetInnerHTML={{ __html: formatText(question.trim()) }}
+                              dangerouslySetInnerHTML={{ __html: formatText(displayContent) }}
                             />
                           </Box>
-                        ))}
+                          );
+                        })}
                       </Box>
                     </Paper>
                   );
