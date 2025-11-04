@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -7,6 +7,9 @@ import {
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { Container, Typography, Box, Paper, CircularProgress } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
+import { subscribeToResponse } from './api/api';
+import { MCPParsedResult, MCPParsedResultDisplay } from './lib/Types';
 import Theme from './lib/Theme';
 import {
   StyledTextField,
@@ -23,6 +26,9 @@ function HomePage() {
   const [rightonSwitch, setRightonSwitch] = useState(true);
   const [cziSwitch, setCziSwitch] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [responseId, setResponseId] = useState('');
+  const subscriptionRef = useRef<any>(null);
+  
 
   const parseResponse = (result: string) => {
     try {
@@ -106,24 +112,61 @@ function HomePage() {
   // Initialize with empty state
   const [outputTexts, setOutputTexts] = useState<string[]>([]);
 
+  const convertToDisplay = (result: MCPParsedResult): MCPParsedResultDisplay => {
+    const toolNames = result.toolCalls?.map(tc => tc.name) || [];
+    const rightonTools = toolNames.filter(name => name !== 'getLearningScienceDatabyCCSS');
+    const learningCommonsTools = toolNames.filter(name => name === 'getLearningScienceDatabyCCSS');
+    
+    return {
+      rightonTools,
+      learningCommonsTools,
+      learningOutcomes: result.learningOutcomes || '',
+      students: result.students || [],
+      discussionQuestions: result.discussionQuestions || [],
+      toolCalls: result.toolCalls || []
+    };
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
+    
+    // Cleanup any existing subscription before starting a new one
+    if (subscriptionRef.current) {
+      subscriptionRef.current.unsubscribe();
+      subscriptionRef.current = null;
+    }
+    
+    const responseId = uuidv4();
     const queryPayload = { 
       query: promptText.trim(), 
       isRightOnEnabled: rightonSwitch,
       isCZIEnabled: cziSwitch,
+      responseId,
     };
     const queryString = JSON.stringify(queryPayload);
     
-    console.log('=== Frontend Request Debug ===');
-    console.log('RightOn Switch:', rightonSwitch);
-    console.log('CZI Switch:', cziSwitch);
-    console.log('Query payload:', queryPayload);
-    console.log('Query string:', queryString);
-    console.log('Request body:', JSON.stringify({ query: queryString }));
-    
     try {
-      const response = await fetch('https://co3csj97wd.execute-api.us-east-1.amazonaws.com/mcp/query', {
+      // Start up subscription so when MCP host writes response to table, we receive it
+      subscriptionRef.current = subscribeToResponse(responseId, (result: MCPParsedResult) => {
+        console.log('Received result:', result);
+        
+        if (result.status === 'complete' && result.learningOutcomes) {
+          const displayData = convertToDisplay(result);
+          setOutputTexts([JSON.stringify(displayData)]);
+          setLoading(false);
+        } else if (result.status === 'error') {
+          setOutputTexts([`Error: ${result.error || 'Unknown error occurred'}`]);
+          setLoading(false);
+          // Cleanup subscription after receiving error response
+          if (subscriptionRef.current) {
+            subscriptionRef.current.unsubscribe();
+            subscriptionRef.current = null;
+          }
+        }
+      });
+      
+      // Send the query to MCP Host
+      await fetch('https://co3csj97wd.execute-api.us-east-1.amazonaws.com/mcp/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,17 +174,15 @@ function HomePage() {
         body: JSON.stringify({ query: queryString }),
       });
       
-      const data = await response.json();
-      console.log('Response data:', data);
-      const result = data.result || data.error || 'No response';
-      const parsed = parseResponse(result);
-      console.log('Parsed result:', parsed);
-      // Store parsed data as JSON string for rendering
-      setOutputTexts([JSON.stringify(parsed)]);
     } catch (error) {
       setOutputTexts([`Error: ${error instanceof Error ? error.message : 'Failed to connect'}`]);
-    } finally {
       setLoading(false);
+      
+      // Cleanup subscription on error
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe();
+        subscriptionRef.current = null;
+      }
     }
   };
 
