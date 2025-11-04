@@ -8,22 +8,25 @@ export function subscribeToResponse(
   responseId: string,
   callback: (result: MCPParsedResult) => void
 ) {
+  console.log('Setting up subscription for responseId:', responseId);
+  
   const result = client.graphql({
     query: onCreateMCPParsedResult,
-    variables: {
-      filter: {
-        id: { eq: responseId }
-      }
-    }
+    variables: {}
   });
   
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore - GraphQL result type doesn't expose subscribe method
   return result.subscribe({
-    next: ({ data }: any) => {
+    next: ({ data }: { data: { onCreateMCPParsedResult: MCPParsedResult } }) => {
+      console.log('Subscription received data:', data);
       if (data?.onCreateMCPParsedResult) {
+        console.log('Calling callback with result:', data.onCreateMCPParsedResult);
         callback(data.onCreateMCPParsedResult);
       }
     },
-    error: (error: any) => console.error('Subscription error:', error),
+    error: (error: Error) => {
+      console.error('Subscription error:', error);
+    },
   });
 }

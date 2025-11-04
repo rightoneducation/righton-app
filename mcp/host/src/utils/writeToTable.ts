@@ -97,6 +97,12 @@ interface GraphQLResponse {
 
 export async function writeMCPResultToTable(result: MCPResult): Promise<MCPParsedResultResponse> {
   try {
+    // Convert toolCalls.args from object to JSON string for AWSJSON type
+    const toolCallsFormatted = result.toolCalls?.map(tc => ({
+      name: tc.name,
+      args: JSON.stringify(tc.args)
+    })) ?? null;
+
     const response = await fetch(getAppSyncEndpoint(), {
       method: 'POST',
       headers: {
@@ -112,7 +118,7 @@ export async function writeMCPResultToTable(result: MCPResult): Promise<MCPParse
             learningOutcomes: result.learningOutcomes ?? null,
             students: result.students ?? null,
             discussionQuestions: result.discussionQuestions ?? null,
-            toolCalls: result.toolCalls ?? null,
+            toolCalls: toolCallsFormatted,
             error: result.error ?? null,
           }
         }

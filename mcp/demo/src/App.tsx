@@ -26,89 +26,8 @@ function HomePage() {
   const [rightonSwitch, setRightonSwitch] = useState(true);
   const [cziSwitch, setCziSwitch] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [responseId, setResponseId] = useState('');
-  const subscriptionRef = useRef<any>(null);
+  const subscriptionRef = useRef<{ unsubscribe: () => void } | null>(null);
   
-
-  const parseResponse = (result: string) => {
-    try {
-      // Try parsing as structured JSON first
-      const parsed = JSON.parse(result);
-      
-      if (parsed.toolCalls && parsed.learningOutcomes && parsed.students && parsed.discussionQuestions) {
-        // New structured format
-        const toolNames = parsed.toolCalls.map((tc: any) => tc.name);
-        const rightonTools = toolNames.filter((name: string) => name !== 'getLearningScienceDatabyCCSS');
-        const learningCommonsTools = toolNames.filter((name: string) => name === 'getLearningScienceDatabyCCSS');
-        
-        return {
-          rightonTools,
-          learningCommonsTools,
-          learningOutcomes: parsed.learningOutcomes,
-          students: parsed.students, // Array of {name, performance, justification}
-          discussionQuestions: parsed.discussionQuestions, // Array of {studentName, question}
-          toolCalls: parsed.toolCalls
-        };
-      }
-    } catch (e) {
-      // Fall through to old parsing logic
-    }
-    
-    // Fallback to old regex-based parsing
-    const toolRegex = /\[Calling tool (\w+) with args \{[^}]*}]/g;
-    const toolMatches = result.match(toolRegex) || [];
-    const toolNames = toolMatches.map((match: string) => {
-      const nameMatch = match.match(/\[Calling tool (\w+)/);
-      return nameMatch ? nameMatch[1] : '';
-    }).filter(Boolean);
-    
-    const rightonTools = toolNames.filter(name => name !== 'getLearningScienceDatabyCCSS');
-    const learningCommonsTools = toolNames.filter(name => name === 'getLearningScienceDatabyCCSS');
-    
-    const cleanedText = result.replace(/\[Calling tool \w+ with args \{[^}]*}]/g, '').trim();
-    
-    let learningOutcomesText = '';
-    let studentsText = '';
-    let discussionText = '';
-    
-    const learningOutcomesMatch = cleanedText.match(/###\s*(?:Recent Game Review|Overview of Recent Game Sessions|Evidence of Struggles|Insights from Learning Science Data)([\s\S]*?)(?=###\s*(?:Emblematic Students|Student Analysis)|###\s*Discussion Questions|$)/i);
-    const studentsMatch = cleanedText.match(/###\s*(?:Emblematic Students|Student Analysis)([\s\S]*?)(?=###\s*Discussion Questions|$)/i);
-    const discussionMatch = cleanedText.match(/###\s*Discussion Questions([\s\S]*?)$/i);
-    
-    if (learningOutcomesMatch) {
-      learningOutcomesText = learningOutcomesMatch[1].trim();
-    } else {
-      const oldMatch = cleanedText.match(/key challenges in your classroom related to:([\s\S]*?)(?=\*\*Two Students|\*\*Discussion|$)/i);
-      learningOutcomesText = oldMatch ? oldMatch[1].trim() : '';
-    }
-    
-    if (studentsMatch) {
-      studentsText = studentsMatch[1].trim();
-    } else {
-      const oldMatch = cleanedText.match(/\*\*Two Students:\*\*([\s\S]*?)(?=\*\*Discussion Questions|$)/i);
-      studentsText = oldMatch ? oldMatch[1].trim() : '';
-    }
-    
-    if (discussionMatch) {
-      discussionText = discussionMatch[1].trim();
-    } else {
-      const oldMatch = cleanedText.match(/\*\*Discussion Questions:\*\*([\s\S]*?)(?=These discussions|$)/i);
-      discussionText = oldMatch ? oldMatch[1].trim() : '';
-    }
-    
-    const conclusionMatch = cleanedText.match(/(These discussions[\s\S]*)/);
-    
-    return {
-      rightonTools,
-      learningCommonsTools,
-      learningOutcomes: learningOutcomesText,
-      students: studentsText,
-      discussion: discussionText,
-      conclusion: conclusionMatch ? conclusionMatch[1].trim() : '',
-      fullText: cleanedText
-    };
-  };
-
   // Initialize with empty state
   const [outputTexts, setOutputTexts] = useState<string[]>([]);
 
@@ -145,11 +64,12 @@ function HomePage() {
     };
     const queryString = JSON.stringify(queryPayload);
     
+    console.log('Frontend sending responseId:', responseId);
+    console.log('Frontend sending query body:', JSON.stringify({ query: queryString }));
+    
     try {
       // Start up subscription so when MCP host writes response to table, we receive it
       subscriptionRef.current = subscribeToResponse(responseId, (result: MCPParsedResult) => {
-        console.log('Received result:', result);
-        
         if (result.status === 'complete' && result.learningOutcomes) {
           const displayData = convertToDisplay(result);
           setOutputTexts([JSON.stringify(displayData)]);
