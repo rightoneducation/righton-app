@@ -10,6 +10,17 @@ if (!openaiSecretName) throw new Error('OPENAI_SECRET_NAME environment variable 
 const openaiSecret = await loadSecret(openaiSecretName);
 process.env.OPENAI_API_KEY = JSON.parse(openaiSecret)['openai_api'];
 
+const dynamoDbEndpoint = process.env.DYNAMO_DB_ENDPOINT;
+if (!dynamoDbEndpoint) throw new Error('DYNAMO_DB_ENDPOINT environment variable is required');
+const dynamoDbKey = process.env.DYNAMO_DB_API;
+if (!dynamoDbKey) throw new Error('DYNAMO_DB_API environment variable is required');
+
+const dynamoDbSecret = await loadSecret(dynamoDbEndpoint);
+process.env.DYNAMO_DB_ENDPOINT = JSON.parse(dynamoDbSecret)['dynamo_db_endpoint'];
+
+const dynamoDbKeySecret = await loadSecret(dynamoDbKey);
+process.env.DYNAMO_DB_API = JSON.parse(dynamoDbKeySecret)['dynamo_db_api'];
+
 // express server for handling MCP requests
 // contains a series of functions for processing queries
 // also contains class for MCP clients, each that manage an individual connection to a MCP servers

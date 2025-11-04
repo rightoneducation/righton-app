@@ -3,6 +3,7 @@ import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mj
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import { MCPClientClass } from '../client/MCPClientClass.js';
+import { writeMCPResultToTable } from '../../utils/writeToTable.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
 
@@ -72,7 +73,7 @@ const ClassroomAnalysisSchema = z.object({
 export async function processQuery (query: string){
   const availableTools = getAllTools();
   const parsedQuery = JSON.parse(query);
-  const { query: prompt, isRightOnEnabled, isCZIEnabled } = parsedQuery;
+  const { query: prompt, isRightOnEnabled, isCZIEnabled, responseId } = parsedQuery;
   
   const messages: ChatCompletionMessageParam[] = [
     { role: 'user', content: prompt }
@@ -138,21 +139,39 @@ export async function processQuery (query: string){
     console.warn('Hit maximum iteration limit of', MAX_ITERATIONS, 'tool calls');
   }
 
-  // After tool loop, one final call to get structured output
-  const structuredResponse = await getOpenAI().chat.completions.create({
-    model: 'gpt-4o',
-    messages: messages,
-    response_format: zodResponseFormat(ClassroomAnalysisSchema, 'classroomAnalysis')
-  });
+  try {
+    // After tool loop, one final call to get structured output
+    const structuredResponse = await getOpenAI().chat.completions.create({
+      model: 'gpt-4o',
+      messages: messages,
+      response_format: zodResponseFormat(ClassroomAnalysisSchema, 'classroomAnalysis')
+    });
 
-  const content = JSON.parse(structuredResponse.choices[0].message.content || '{}');
-  const structuredData = ClassroomAnalysisSchema.parse(content);
+    const content = JSON.parse(structuredResponse.choices[0].message.content || '{}');
+    const structuredData = ClassroomAnalysisSchema.parse(content);
 
-  // Return combined response with tool calls and structured data
-  return JSON.stringify({
-    toolCalls,
-    ...structuredData
-  });
+    // Write successful result to DynamoDB via AppSync
+    await writeMCPResultToTable({
+      id: responseId,
+      status: 'complete',
+      learningOutcomes: structuredData.learningOutcomes,
+      students: structuredData.students,
+      discussionQuestions: structuredData.discussionQuestions,
+      toolCalls: toolCalls
+    });
+    
+    return 'Success';
+  } catch (error) {
+    // Write error to DynamoDB
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    await writeMCPResultToTable({
+      id: responseId,
+      status: 'error',
+      error: errorMessage
+    });
+    
+    throw error;
+  }
 }
 
 export async function disconnectMCP(){
