@@ -69,17 +69,19 @@ app.post('/mcp/query', async (req: Request<{}, SuccessResponse | ErrorResponse, 
       return res.status(400).json({ error: 'Missing or invalid query field' });
     }
     
-    const result = await processQuery(query);
+    // Fire and forget - process in background
+    processQuery(query).catch(error => {
+      console.error('Error processing query:', error);
+    });
     
-    res.json({ result });
+    // Return immediately
+    res.status(202).json({ result: 'Processing started' });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : undefined;
     
     res.status(500).json({ 
       error: 'Internal server error', 
-      errorMessage,
-      ...(errorStack && { errorStack })
+      errorMessage
     });
   }
 });
