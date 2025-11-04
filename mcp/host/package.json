@@ -13,7 +13,9 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "openai": "^6.3.0"
+    "node-fetch": "^3.3.2",
+    "openai": "^6.3.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.51.0",

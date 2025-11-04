@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -6,10 +6,12 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import { Container, Typography, Box, Paper } from '@mui/material';
+import { Container, Typography, Box, Paper, CircularProgress } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
+import { subscribeToResponse } from './api/api';
+import { MCPParsedResult, MCPParsedResultDisplay } from './lib/Types';
 import Theme from './lib/Theme';
 import {
-  StyledTitleText,
   StyledTextField,
   StyledButton,
   StyledSwitch,
@@ -17,7 +19,6 @@ import {
   CreateGameBackground,
   StyledSubtitleText,
 } from './lib/StyledComponents';
-import mockOutput from './lib/mock';
 import './App.css';
 
 function HomePage() {
@@ -25,72 +26,83 @@ function HomePage() {
   const [rightonSwitch, setRightonSwitch] = useState(true);
   const [cziSwitch, setCziSwitch] = useState(true);
   const [loading, setLoading] = useState(false);
+  const subscriptionRef = useRef<{ unsubscribe: () => void } | null>(null);
+  
+  // Initialize with empty state
+  const [outputTexts, setOutputTexts] = useState<string[]>([]);
 
-  const parseResponse = (result: string) => {
-    // Extract tool calls - updated regex to handle JSON args properly
-    const toolRegex = /\[Calling tool (\w+) with args \{[^}]*}]/g;
-    const toolMatches = result.match(toolRegex) || [];
-    const toolNames = toolMatches.map((match: string) => {
-      const nameMatch = match.match(/\[Calling tool (\w+)/);
-      return nameMatch ? nameMatch[1] : '';
-    }).filter(Boolean);
-    
-    // Categorize tools
-    const rightonTools = toolNames.filter(name => 
-      name !== 'getLearningScienceDatabyCCSS'
-    );
-    const learningCommonsTools = toolNames.filter(name => 
-      name === 'getLearningScienceDatabyCCSS'
-    );
-    
-    // Remove tool calling text - updated to match new regex
-    const cleanedText = result.replace(/\[Calling tool \w+ with args \{[^}]*}]/g, '').trim();
-    
-    // Parse sections from the response
-    const learningOutcomesMatch = cleanedText.match(/key challenges in your classroom related to:([\s\S]*?)(?=\*\*Two Students|\*\*Discussion|$)/i);
-    const studentsMatch = cleanedText.match(/\*\*Two Students:\*\*([\s\S]*?)(?=\*\*Discussion Questions|$)/i);
-    const discussionMatch = cleanedText.match(/\*\*Discussion Questions:\*\*([\s\S]*?)(?=These discussions|$)/i);
-    const conclusionMatch = cleanedText.match(/(These discussions[\s\S]*)/);
+  const convertToDisplay = (result: MCPParsedResult): MCPParsedResultDisplay => {
+    const toolNames = result.toolCalls?.map(tc => tc.name) || [];
+    const rightonTools = toolNames.filter(name => name !== 'getLearningScienceDatabyCCSS');
+    const learningCommonsTools = toolNames.filter(name => name === 'getLearningScienceDatabyCCSS');
     
     return {
       rightonTools,
       learningCommonsTools,
-      learningOutcomes: learningOutcomesMatch ? learningOutcomesMatch[1].trim() : '',
-      students: studentsMatch ? studentsMatch[1].trim() : '',
-      discussion: discussionMatch ? discussionMatch[1].trim() : '',
-      conclusion: conclusionMatch ? conclusionMatch[1].trim() : '',
-      fullText: cleanedText
+      learningOutcomes: result.learningOutcomes || '',
+      students: result.students || [],
+      discussionQuestions: result.discussionQuestions || [],
+      toolCalls: result.toolCalls || []
     };
   };
 
-  // Initialize with parsed mock data
-  const [outputTexts, setOutputTexts] = useState<string[]>([
-    JSON.stringify(parseResponse(mockOutput))
-  ]);
-
   const handleSubmit = async () => {
     setLoading(true);
-    setOutputTexts(['Processing...']);
+    
+    // Cleanup any existing subscription before starting a new one
+    if (subscriptionRef.current) {
+      subscriptionRef.current.unsubscribe();
+      subscriptionRef.current = null;
+    }
+    
+    const responseId = uuidv4();
+    const queryPayload = { 
+      query: promptText.trim(), 
+      isRightOnEnabled: rightonSwitch,
+      isCZIEnabled: cziSwitch,
+      responseId,
+    };
+    const queryString = JSON.stringify(queryPayload);
+    
+    console.log('Frontend sending responseId:', responseId);
+    console.log('Frontend sending query body:', JSON.stringify({ query: queryString }));
     
     try {
-      const response = await fetch('https://co3csj97wd.execute-api.us-east-1.amazonaws.com/mcp/query', {
+      // Start up subscription so when MCP host writes response to table, we receive it
+      subscriptionRef.current = subscribeToResponse(responseId, (result: MCPParsedResult) => {
+        if (result.status === 'complete' && result.learningOutcomes) {
+          const displayData = convertToDisplay(result);
+          setOutputTexts([JSON.stringify(displayData)]);
+          setLoading(false);
+        } else if (result.status === 'error') {
+          setOutputTexts([`Error: ${result.error || 'Unknown error occurred'}`]);
+          setLoading(false);
+          // Cleanup subscription after receiving error response
+          if (subscriptionRef.current) {
+            subscriptionRef.current.unsubscribe();
+            subscriptionRef.current = null;
+          }
+        }
+      });
+      
+      // Send the query to MCP Host
+      await fetch('https://co3csj97wd.execute-api.us-east-1.amazonaws.com/mcp/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: promptText }),
+        body: JSON.stringify({ query: queryString }),
       });
       
-      const data = await response.json();
-      const result = data.result || data.error || 'No response';
-      const parsed = parseResponse(result);
-      
-      // Store parsed data as JSON string for rendering
-      setOutputTexts([JSON.stringify(parsed)]);
     } catch (error) {
       setOutputTexts([`Error: ${error instanceof Error ? error.message : 'Failed to connect'}`]);
-    } finally {
       setLoading(false);
+      
+      // Cleanup subscription on error
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe();
+        subscriptionRef.current = null;
+      }
     }
   };
 
@@ -145,7 +157,7 @@ function HomePage() {
             color: (theme) => theme.palette.primary.darkBlue,
             marginBottom: '4px',
           }}>
-            Query Input
+            Input
           </Typography>
           <Paper
             sx={{
@@ -235,7 +247,58 @@ function HomePage() {
           <StyledSubtitleText sx={{ width: '100%', textAlign: 'left' }}>
             Output
           </StyledSubtitleText>
-          {outputTexts.map((text) => {
+          {loading && (
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '16px',
+                padding: '48px 0',
+              }}
+            >
+              <Typography sx={{ 
+                fontFamily: 'Poppins',
+                fontSize: '16px',
+                lineHeight: '24px',
+                fontWeight: 700,
+                textAlign: 'center',
+                color: (theme) => theme.palette.primary.darkBlue,
+              }}>
+                Processing Query...
+              </Typography>
+              <CircularProgress size="40px" sx={{ color: (theme) => theme.palette.primary.darkBlue }} />
+            </Box>
+          )}
+          {!loading && outputTexts.length === 0 && (
+            <Paper
+              sx={{
+                width: '100%',
+                minWidth: '600px',
+                padding: '48px',
+                boxSizing: 'border-box',
+                borderRadius: '8px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
+              }}
+              elevation={4}
+            >
+              <Typography sx={{ 
+                fontFamily: 'Rubik',
+                fontSize: '16px',
+                color: (theme) => theme.palette.primary.darkBlue,
+                opacity: 0.6,
+                textAlign: 'center',
+              }}>
+                Submit a query to see results
+              </Typography>
+            </Paper>
+          )}
+          {!loading && outputTexts.length > 0 && outputTexts.map((text) => {
             let parsed;
             try {
               parsed = JSON.parse(text);
@@ -419,8 +482,16 @@ function HomePage() {
 
                 {/* Student Analysis */}
                 {parsed.students && (() => {
-                  // Parse individual students from the text
-                  const studentSections = parsed.students.split(/(?=\d+\.\s+\*\*Student)/);
+                  // Check if students is an array (new format) or string (old format)
+                  const isStructured = Array.isArray(parsed.students);
+                  let studentSections;
+                  
+                  if (isStructured) {
+                    studentSections = parsed.students;
+                  } else {
+                    // Parse individual students from the text - support both old and new formats
+                    studentSections = (parsed.students as string).split(/(?=\d+\.\s+\*\*Student)|(?=\d+\.\s+\*\*Student Who)/).filter((s: string) => s.trim());
+                  }
                   
                   return (
                     <Paper 
@@ -446,12 +517,33 @@ function HomePage() {
                         Student Performance Analysis
                       </Typography>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {studentSections.filter((s: string) => s.trim()).map((student: string) => (
+                        {studentSections.map((student: any) => {
+                          let isExcelling: boolean;
+                          let displayContent: string;
+                          let studentKey: string;
+                          
+                          if (isStructured) {
+                            // New structured format
+                            isExcelling = student.performance === 'excelling';
+                            displayContent = `**${student.name}**: ${student.justification}`;
+                            studentKey = student.name;
+                          } else {
+                            // Old text format
+                            if (!student.trim()) return null;
+                            isExcelling = student.includes('Excels') || 
+                                        student.includes('not struggling') || 
+                                        student.includes('Successfully') ||
+                                        student.includes('correctly');
+                            displayContent = student.trim();
+                            studentKey = student.substring(0, 30);
+                          }
+                          
+                          return (
                           <Box 
-                            key={`student-${student.substring(0, 30)}`}
+                            key={`student-${studentKey}`}
                             sx={{
                               padding: '16px',
-                              background: (theme) => student.includes('not struggling') 
+                              background: isExcelling
                                 ? 'rgba(34, 174, 72, 0.15)'
                                 : 'rgba(223, 167, 180, 0.3)',
                               borderRadius: '6px',
@@ -466,19 +558,28 @@ function HomePage() {
                                 color: (theme) => theme.palette.primary.darkBlue,
                                 '& strong': { fontWeight: 700, color: (theme) => theme.palette.primary.darkBlue }
                               }}
-                              dangerouslySetInnerHTML={{ __html: formatText(student.trim()) }}
+                              dangerouslySetInnerHTML={{ __html: formatText(displayContent) }}
                             />
                           </Box>
-                        ))}
+                          );
+                        }).filter(Boolean)}
                       </Box>
                     </Paper>
                   );
                 })()}
 
                 {/* Discussion Questions */}
-                {parsed.discussion && (() => {
-                  // Parse individual questions
-                  const questions = parsed.discussion.split(/(?=-\s+For\s+\*\*)/).filter((q: string) => q.trim());
+                {(parsed.discussionQuestions || parsed.discussion) && (() => {
+                  // Check if using new structured format or old text format
+                  const isStructured = Array.isArray(parsed.discussionQuestions);
+                  let questions;
+                  
+                  if (isStructured) {
+                    questions = parsed.discussionQuestions;
+                  } else {
+                    // Parse individual questions from text
+                    questions = (parsed.discussion as string).split(/(?=-\s+For\s+\*\*)/).filter((q: string) => q.trim());
+                  }
                   
                   return (
                     <Paper 
@@ -504,9 +605,23 @@ function HomePage() {
                         Recommended Discussion Questions
                       </Typography>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {questions.map((question: string) => (
+                        {questions.map((question: any) => {
+                          let displayContent: string;
+                          let questionKey: string;
+                          
+                          if (isStructured) {
+                            // New structured format: {studentName, question}
+                            displayContent = `**For ${question.studentName}**: ${question.question}`;
+                            questionKey = question.studentName;
+                          } else {
+                            // Old text format
+                            displayContent = question.trim();
+                            questionKey = question.substring(0, 40);
+                          }
+                          
+                          return (
                           <Box 
-                            key={`question-${question.substring(0, 40)}`}
+                            key={`question-${questionKey}`}
                             sx={{
                               padding: '16px',
                               background: (theme) => theme.palette.primary.lightGrey,
@@ -522,10 +637,11 @@ function HomePage() {
                                 color: (theme) => theme.palette.primary.darkBlue,
                                 '& strong': { fontWeight: 700 }
                               }}
-                              dangerouslySetInnerHTML={{ __html: formatText(question.trim()) }}
+                              dangerouslySetInnerHTML={{ __html: formatText(displayContent) }}
                             />
                           </Box>
-                        ))}
+                          );
+                        })}
                       </Box>
                     </Paper>
                   );

@@ -1,6 +1,9 @@
 import { OpenAI } from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
+import { zodResponseFormat } from 'openai/helpers/zod';
+import { z } from 'zod';
 import { MCPClientClass } from '../client/MCPClientClass.js';
+import { writeMCPResultToTable } from '../../utils/writeToTable.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
 
@@ -50,22 +53,55 @@ function findClientForTool(toolName: string): MCPClientClass | undefined {
   return undefined;
 }
 
-export async function processQuery (query: string){
-  const messages: ChatCompletionMessageParam[] = [
-    { role: 'user', content: query }
-  ];
+const ClassroomAnalysisSchema = z.object({
+  learningOutcomes: z.string().describe("Analysis of the most recent game and identification of areas where students are struggling, with evidence from previous games and learning science data"),
+  students: z.array(
+    z.object({
+      name: z.string().describe("Student's full name"),
+      performance: z.enum(["excelling", "struggling"]).describe("Whether the student is performing well or struggling"),
+      justification: z.string().describe("Justification for choosing this student")
+    })
+  ).describe("Two students that are emblematic of the classroom"),
+  discussionQuestions: z.array(
+    z.object({
+      studentName: z.string().describe("Student's full name"),
+      question: z.string().describe("The discussion question for this student")
+    })
+  ).describe("Discussion questions for each of the two students")
+});
 
+export async function processQuery (query: string){
   const availableTools = getAllTools();
+  const parsedQuery = JSON.parse(query);
+  const { query: prompt, isRightOnEnabled, isCZIEnabled, responseId } = parsedQuery;
+  
+  const messages: ChatCompletionMessageParam[] = [
+    { role: 'user', content: prompt }
+  ];
+  
+  // filter available tools based on the enabled flags
+  const filteredTools = availableTools.filter(tool => {
+    if (isRightOnEnabled && tool._server === 'custom') {
+      return true;
+    }
+    if (isCZIEnabled && tool._server === 'ext') {
+      return true;
+    }
+    return false;
+  });
 
   let response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o',
     messages: messages,
-    tools: availableTools,
+    tools: filteredTools,
   })
 
-  const finalText: string[] =[];
+  const toolCalls: Array<{name: string, args: any}> = [];
+  const MAX_ITERATIONS = 10;
+  let iterationCount = 0;
 
-  while (response.choices[0].message.tool_calls){
+  while (response.choices[0].message.tool_calls && iterationCount < MAX_ITERATIONS){
+    iterationCount++;
     const message = response.choices[0].message;
     messages.push(message);
 
@@ -83,7 +119,7 @@ export async function processQuery (query: string){
       
       const toolContent = JSON.stringify(result.content);
       
-      finalText.push(`[Calling tool ${toolName} with args ${JSON.stringify(toolArgs)}]`);
+      toolCalls.push({ name: toolName, args: toolArgs });
       messages.push({
         role: 'tool',
         tool_call_id: call.id,
@@ -94,15 +130,48 @@ export async function processQuery (query: string){
     response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: messages,
-      tools: availableTools,
+      tools: filteredTools,
     })
   }
-
-  if (response.choices[0].message.content) {
-    finalText.push(response.choices[0].message.content);
+  
+  // Log if we hit the max iteration limit
+  if (iterationCount >= MAX_ITERATIONS && response.choices[0].message.tool_calls) {
+    console.warn('Hit maximum iteration limit of', MAX_ITERATIONS, 'tool calls');
   }
 
-  return finalText.join("\n");
+  try {
+    // After tool loop, one final call to get structured output
+    const structuredResponse = await getOpenAI().chat.completions.create({
+      model: 'gpt-4o',
+      messages: messages,
+      response_format: zodResponseFormat(ClassroomAnalysisSchema, 'classroomAnalysis')
+    });
+
+    const content = JSON.parse(structuredResponse.choices[0].message.content || '{}');
+    const structuredData = ClassroomAnalysisSchema.parse(content);
+
+    // Write successful result to DynamoDB via AppSync
+    await writeMCPResultToTable({
+      id: responseId,
+      status: 'complete',
+      learningOutcomes: structuredData.learningOutcomes,
+      students: structuredData.students,
+      discussionQuestions: structuredData.discussionQuestions,
+      toolCalls: toolCalls
+    });
+    
+    return 'Success';
+  } catch (error) {
+    // Write error to DynamoDB
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    await writeMCPResultToTable({
+      id: responseId,
+      status: 'error',
+      error: errorMessage
+    });
+    
+    throw error;
+  }
 }
 
 export async function disconnectMCP(){
