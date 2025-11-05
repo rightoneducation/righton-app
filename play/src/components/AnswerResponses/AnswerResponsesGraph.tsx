@@ -47,23 +47,25 @@ export default function AnswerphaseOneResponsesGraph({
   }
   const adjustedResponses = isShortAnswerEnabled ? [...phaseOneResponses.filter((response) => response.isSelectedMistake || response.isCorrect), ...otherResponsesTrimmed] : phaseOneResponses;
   
-  const data = adjustedResponses.reduce<{ letterCode: string; count: string; fill: string }[]>((acc, response, index) => {
+  const data = adjustedResponses.reduce<{ letterCode: string; count: number; percentage: string; fill: string }[]>((acc, response, index) => {
     if (response.count !== 0) {
       acc.push({
         letterCode: assignLetterCode(response, phaseTwoResponses),
-        count: `${Math.floor((response.count / totalAnswers) * 100)}%`,
+        count: response.count,
+        percentage: `${Math.floor((response.count / totalAnswers) * 100)}%`,
         fill: (!isShortAnswerEnabled || (response.isSelectedMistake || response.isCorrect)) ? assignColor(response, phaseTwoResponses.find((res) => res.rawAnswer === response.rawAnswer) ?? null) : "#B5B5B5"
       });
     }
     return acc;
   }, []);
+  console.log(data);
   return (
   
      <VictoryPie
       data={data}
       x="letterCode"
       y="count"
-      labels={({ datum }) => `${datum.count}`}
+      labels={({ datum }) => datum.percentage}
       height={400}
       width={400}
       innerRadius={120}
