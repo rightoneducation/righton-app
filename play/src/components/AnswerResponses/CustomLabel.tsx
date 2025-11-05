@@ -29,7 +29,7 @@ export default function CustomLabel(props: any) {
             />
           )}    
           <text x={x} y={y} style={{ fontSize: '16px', fill: 'black', textAnchor: 'middle', dominantBaseline: 'middle' }}>
-            {datum.count} 
+            {datum.percentage} 
           </text>
           { datum.fill === '#6F9E3C' &&
             <svg x={x-6} y={y+5} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
