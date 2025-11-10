@@ -24,6 +24,7 @@ export const getMCPParsedResult = /* GraphQL */ `
         __typename
       }
       error
+      temp
       createdAt
       updatedAt
       __typename
@@ -62,6 +63,7 @@ export const listMCPParsedResults = /* GraphQL */ `
           __typename
         }
         error
+        temp
         createdAt
         updatedAt
         __typename

@@ -6,27 +6,83 @@ import { MCPClientClass } from '../client/MCPClientClass.js';
 import { writeMCPResultToTable } from '../../utils/writeToTable.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
+const COMPLETIONS_MODEL = 'gpt-5-nano';
 
 // lazy initialize openai client (so that it doesn't try to connect to the API until secrets are loaded)
 let openai: OpenAI;
 
 function getOpenAI() {
   if (!openai) {
+    console.log('[MCPHost]', new Date().toISOString(), 'Initializing OpenAI client');
     openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   }
   return openai;
 }
 
+function createStepLogger(responseId?: string) {
+  const start = Date.now();
+  return (label: string, extra?: Record<string, unknown>) => {
+    const payload = {
+      ...(responseId ? { responseId } : {}),
+      elapsedMs: Date.now() - start,
+      ...extra,
+    };
+    console.log('[MCPHost]', new Date().toISOString(), label, payload);
+  };
+}
+
+function logPromptLength(
+  log: ReturnType<typeof createStepLogger>,
+  label: string,
+  messages: ChatCompletionMessageParam[],
+  extra: Record<string, unknown> = {},
+) {
+  try {
+    const promptLength = messages.reduce((sum, message) => {
+      if (typeof message.content === 'string') {
+        return sum + message.content.length;
+      }
+      if (Array.isArray(message.content)) {
+        const serialized = message.content.map((item) => JSON.stringify(item)).join('');
+        return sum + serialized.length;
+      }
+      return sum + JSON.stringify(message.content ?? '').length;
+    }, 0);
+
+    log(label, {
+      promptLength,
+      messageCount: messages.length,
+      ...extra,
+    });
+  } catch (error) {
+    log(`${label}.error`, {
+      promptLengthError: error instanceof Error ? error.message : 'Unknown prompt length error',
+      ...extra,
+    });
+  }
+}
+
 export async function initMCPClient(servers: Array<{name: string, version: string, url: string}>) {
+  const log = createStepLogger();
+  log('initMCPClient.start', { serverCount: servers.length });
   for (const {name, url} of servers){
     try {
+      const connectStart = Date.now();
+      console.log('[MCPHost]', new Date().toISOString(), 'initMCPClient.connecting', { server: name, url });
       const client = new MCPClientClass(url);
       await client.connect();
       mcpClients.set(name, client);
+      console.log('[MCPHost]', new Date().toISOString(), 'initMCPClient.connected', {
+        server: name,
+        url,
+        elapsedMs: Date.now() - connectStart,
+      });
     } catch (error) {
       // Connection failed
+      console.warn('[MCPHost]', new Date().toISOString(), 'initMCPClient.connectionFailed', { server: name, url, error });
     }
   }
+  log('initMCPClient.complete', { connectedServers: mcpClients.size });
 }
 
 export function getAllTools() {
@@ -71,9 +127,30 @@ const ClassroomAnalysisSchema = z.object({
 });
 
 export async function processQuery (query: string){
-  const availableTools = getAllTools();
   const parsedQuery = JSON.parse(query);
   const { query: prompt, isRightOnEnabled, isCZIEnabled, responseId } = parsedQuery;
+  const log = createStepLogger(responseId);
+  log('processQuery.start');
+
+  try {
+    log('processQuery.modelPing.start');
+    const pingStart = Date.now();
+    await getOpenAI().chat.completions.create({
+      model: COMPLETIONS_MODEL,
+      messages: [
+        { role: 'user', content: 'ping' },
+      ],
+      max_completion_tokens: 1,
+    });
+    log('processQuery.modelPing.complete', { pingElapsedMs: Date.now() - pingStart });
+  } catch (pingError) {
+    log('processQuery.modelPing.error', {
+      message: pingError instanceof Error ? pingError.message : 'Unknown ping error',
+    });
+  }
+
+  const availableTools = getAllTools();
+  log('processQuery.availableToolsLoaded', { availableTools: availableTools.length });
   
   const messages: ChatCompletionMessageParam[] = [
     { role: 'user', content: prompt }
@@ -89,12 +166,20 @@ export async function processQuery (query: string){
     }
     return false;
   });
+  log('processQuery.toolsFiltered', {
+    filteredTools: filteredTools.length,
+    isRightOnEnabled,
+    isCZIEnabled,
+  });
+  logPromptLength(log, 'processQuery.promptLength.beforeInitial', messages);
 
+  log('processQuery.initialCompletion.start');
   let response = await getOpenAI().chat.completions.create({
-    model: 'gpt-4o',
+    model: COMPLETIONS_MODEL,
     messages: messages,
     tools: filteredTools,
-  })
+  });
+  log('processQuery.initialCompletion.complete');
 
   const toolCalls: Array<{name: string, args: any}> = [];
   const MAX_ITERATIONS = 10;
@@ -102,8 +187,10 @@ export async function processQuery (query: string){
 
   while (response.choices[0].message.tool_calls && iterationCount < MAX_ITERATIONS){
     iterationCount++;
+    log('processQuery.iteration.start', { iteration: iterationCount });
     const message = response.choices[0].message;
     messages.push(message);
+    logPromptLength(log, 'processQuery.promptLength.afterToolMessage', messages, { iteration: iterationCount });
 
     for (const call of message.tool_calls || []){
       if (call.type !== 'function') continue;
@@ -114,8 +201,14 @@ export async function processQuery (query: string){
       if (!client) {
         throw new Error(`No MCP server found for tool: ${toolName}`);
       }
-      
+      log('processQuery.toolCall.start', { iteration: iterationCount, toolName });
+      const callStart = Date.now();
       const result = await client.callTool(toolName, toolArgs);
+      log('processQuery.toolCall.complete', {
+        iteration: iterationCount,
+        toolName,
+        elapsedMs: Date.now() - callStart,
+      });
       
       const toolContent = JSON.stringify(result.content);
       
@@ -124,32 +217,39 @@ export async function processQuery (query: string){
         role: 'tool',
         tool_call_id: call.id,
         content: toolContent,
-      })
+      });
     }
     
-    response = await openai.chat.completions.create({
-      model: 'gpt-4o',
+    log('processQuery.followUpCompletion.start', { iteration: iterationCount });
+    logPromptLength(log, 'processQuery.promptLength.beforeFollowUp', messages, { iteration: iterationCount });
+    response = await getOpenAI().chat.completions.create({
+      model: COMPLETIONS_MODEL,
       messages: messages,
       tools: filteredTools,
-    })
+    });
+    log('processQuery.followUpCompletion.complete', { iteration: iterationCount });
   }
   
   // Log if we hit the max iteration limit
   if (iterationCount >= MAX_ITERATIONS && response.choices[0].message.tool_calls) {
-    console.warn('Hit maximum iteration limit of', MAX_ITERATIONS, 'tool calls');
+    console.warn('[MCPHost]', new Date().toISOString(), 'Hit maximum iteration limit', { iterationCount });
   }
 
   try {
+    log('processQuery.structuredResponse.start');
     // After tool loop, one final call to get structured output
+    logPromptLength(log, 'processQuery.promptLength.beforeStructured', messages);
     const structuredResponse = await getOpenAI().chat.completions.create({
-      model: 'gpt-4o',
+      model: COMPLETIONS_MODEL,
       messages: messages,
       response_format: zodResponseFormat(ClassroomAnalysisSchema, 'classroomAnalysis')
     });
+    log('processQuery.structuredResponse.complete');
 
     const content = JSON.parse(structuredResponse.choices[0].message.content || '{}');
     const structuredData = ClassroomAnalysisSchema.parse(content);
 
+    log('processQuery.writeResult.start');
     // Write successful result to DynamoDB via AppSync
     await writeMCPResultToTable({
       id: responseId,
@@ -159,9 +259,14 @@ export async function processQuery (query: string){
       discussionQuestions: structuredData.discussionQuestions,
       toolCalls: toolCalls
     });
+    log('processQuery.writeResult.complete');
     
+    log('processQuery.success');
     return 'Success';
   } catch (error) {
+    log('processQuery.error', {
+      message: error instanceof Error ? error.message : 'Unknown error occurred',
+    });
     // Write error to DynamoDB
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     await writeMCPResultToTable({
