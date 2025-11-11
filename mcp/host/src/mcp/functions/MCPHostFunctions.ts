@@ -1,12 +1,13 @@
 import { OpenAI } from "openai";
-import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
+import { ChatCompletionMessageParam, type ChatCompletionCreateParams } from "openai/resources/chat/completions.mjs";
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import { MCPClientClass } from '../client/MCPClientClass.js';
 import { writeMCPResultToTable } from '../../utils/writeToTable.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
-const COMPLETIONS_MODEL = 'gpt-5-nano';
+const COMPLETIONS_MODEL = 'gpt-4o-mini';
+const MAX_MESSAGE_LENGTH = 4000;
 
 // lazy initialize openai client (so that it doesn't try to connect to the API until secrets are loaded)
 let openai: OpenAI;
@@ -60,6 +61,40 @@ function logPromptLength(
       ...extra,
     });
   }
+}
+
+function truncateMessageContent(content: ChatCompletionMessageParam['content']): string {
+  if (typeof content === 'string') {
+    if (content.length <= MAX_MESSAGE_LENGTH) {
+      return content;
+    }
+    return `${content.slice(0, MAX_MESSAGE_LENGTH)}... [truncated ${content.length - MAX_MESSAGE_LENGTH} chars]`;
+  }
+
+  if (Array.isArray(content)) {
+    const serialized = JSON.stringify(content);
+    if (serialized.length <= MAX_MESSAGE_LENGTH) {
+      return serialized;
+    }
+    return `${serialized.slice(0, MAX_MESSAGE_LENGTH)}... [truncated ${serialized.length - MAX_MESSAGE_LENGTH} chars]`;
+  }
+
+  if (content === null || content === undefined) {
+    return '';
+  }
+
+  const serialized = JSON.stringify(content);
+  if (serialized.length <= MAX_MESSAGE_LENGTH) {
+    return serialized;
+  }
+  return `${serialized.slice(0, MAX_MESSAGE_LENGTH)}... [truncated ${serialized.length - MAX_MESSAGE_LENGTH} chars]`;
+}
+
+function truncateMessage(message: ChatCompletionMessageParam): ChatCompletionMessageParam {
+  return {
+    ...message,
+    content: truncateMessageContent(message.content),
+  };
 }
 
 export async function initMCPClient(servers: Array<{name: string, version: string, url: string}>) {
@@ -133,14 +168,14 @@ export async function processQuery (query: string){
   log('processQuery.start');
 
   try {
-    log('processQuery.modelPing.start');
+    log('processQuery.modelPing.start', { model: COMPLETIONS_MODEL, maxCompletionTokens: 8 });
     const pingStart = Date.now();
     await getOpenAI().chat.completions.create({
       model: COMPLETIONS_MODEL,
       messages: [
         { role: 'user', content: 'ping' },
       ],
-      max_completion_tokens: 1,
+      max_completion_tokens: 8,
     });
     log('processQuery.modelPing.complete', { pingElapsedMs: Date.now() - pingStart });
   } catch (pingError) {
@@ -174,11 +209,16 @@ export async function processQuery (query: string){
   logPromptLength(log, 'processQuery.promptLength.beforeInitial', messages);
 
   log('processQuery.initialCompletion.start');
-  let response = await getOpenAI().chat.completions.create({
+  const initialParams: ChatCompletionCreateParams = {
     model: COMPLETIONS_MODEL,
     messages: messages,
     tools: filteredTools,
+  };
+  log('processQuery.initialCompletion.config', {
+    includeTools: filteredTools.length > 0,
+    availableTools: filteredTools.length,
   });
+  let response = await getOpenAI().chat.completions.create(initialParams);
   log('processQuery.initialCompletion.complete');
 
   const toolCalls: Array<{name: string, args: any}> = [];
@@ -188,11 +228,12 @@ export async function processQuery (query: string){
   while (response.choices[0].message.tool_calls && iterationCount < MAX_ITERATIONS){
     iterationCount++;
     log('processQuery.iteration.start', { iteration: iterationCount });
-    const message = response.choices[0].message;
-    messages.push(message);
+    const toolCallsFromResponse = response.choices[0].message.tool_calls ?? [];
+    const assistantMessage = truncateMessage(response.choices[0].message);
+    messages.push(assistantMessage);
     logPromptLength(log, 'processQuery.promptLength.afterToolMessage', messages, { iteration: iterationCount });
 
-    for (const call of message.tool_calls || []){
+    for (const call of toolCallsFromResponse){
       if (call.type !== 'function') continue;
 
       const toolName = call.function.name;
@@ -211,22 +252,31 @@ export async function processQuery (query: string){
       });
       
       const toolContent = JSON.stringify(result.content);
+      const truncatedToolContent = truncateMessageContent(toolContent);
       
       toolCalls.push({ name: toolName, args: toolArgs });
       messages.push({
         role: 'tool',
         tool_call_id: call.id,
-        content: toolContent,
+        content: truncatedToolContent,
       });
     }
     
     log('processQuery.followUpCompletion.start', { iteration: iterationCount });
     logPromptLength(log, 'processQuery.promptLength.beforeFollowUp', messages, { iteration: iterationCount });
-    response = await getOpenAI().chat.completions.create({
-      model: COMPLETIONS_MODEL,
-      messages: messages,
-      tools: filteredTools,
+    log('processQuery.followUpCompletion.config', {
+      iteration: iterationCount,
+      includeTools: filteredTools.length > 0,
+      availableTools: filteredTools.length,
     });
+    const followUpParams: ChatCompletionCreateParams = {
+      model: COMPLETIONS_MODEL,
+      messages: messages.map(truncateMessage),
+    };
+    if (filteredTools.length > 0) {
+      followUpParams.tools = filteredTools;
+    }
+    response = await getOpenAI().chat.completions.create(followUpParams);
     log('processQuery.followUpCompletion.complete', { iteration: iterationCount });
   }
   
@@ -241,7 +291,7 @@ export async function processQuery (query: string){
     logPromptLength(log, 'processQuery.promptLength.beforeStructured', messages);
     const structuredResponse = await getOpenAI().chat.completions.create({
       model: COMPLETIONS_MODEL,
-      messages: messages,
+      messages: messages.map(truncateMessage),
       response_format: zodResponseFormat(ClassroomAnalysisSchema, 'classroomAnalysis')
     });
     log('processQuery.structuredResponse.complete');
