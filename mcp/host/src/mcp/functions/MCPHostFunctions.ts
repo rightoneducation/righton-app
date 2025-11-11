@@ -7,6 +7,7 @@ import { writeMCPResultToTable } from '../../utils/writeToTable.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
 const COMPLETIONS_MODEL = 'gpt-4o-mini';
+const FINAL_REASONING_MODEL = 'gpt-4o';
 const MAX_MESSAGE_LENGTH = 4000;
 
 // lazy initialize openai client (so that it doesn't try to connect to the API until secrets are loaded)
@@ -95,6 +96,34 @@ function truncateMessage(message: ChatCompletionMessageParam): ChatCompletionMes
     ...message,
     content: truncateMessageContent(message.content),
   };
+}
+
+function logFullPrompt(
+  label: string,
+  messages: ChatCompletionMessageParam[],
+) {
+  const raw = messages.map((message, index) => {
+    const toolCalls = (message as any).tool_calls;
+    const truncatedContent = truncateMessageContent(message.content).slice(0, 250);
+    const entry: Record<string, unknown> = {
+      index,
+      role: message.role,
+      name: (message as any).name,
+      contentPreview: truncatedContent,
+    };
+    if (toolCalls) {
+      entry.toolCalls = toolCalls.map((call: any) => ({
+        id: call.id,
+        type: call.type,
+        function: {
+          name: call.function?.name,
+          argsPreview: (call.function?.arguments ?? '').slice(0, 250),
+        },
+      }));
+    }
+    return entry;
+  });
+  console.log('[MCPHost]', new Date().toISOString(), label, { rawPrompt: raw });
 }
 
 export async function initMCPClient(servers: Array<{name: string, version: string, url: string}>) {
@@ -207,6 +236,7 @@ export async function processQuery (query: string){
     isCZIEnabled,
   });
   logPromptLength(log, 'processQuery.promptLength.beforeInitial', messages);
+  // logFullPrompt('processQuery.prompt.beforeInitial', messages);
 
   log('processQuery.initialCompletion.start');
   const initialParams: ChatCompletionCreateParams = {
@@ -225,6 +255,8 @@ export async function processQuery (query: string){
   const MAX_ITERATIONS = 10;
   let iterationCount = 0;
 
+  // loop that calls tools and then reasons based on the output of the tools
+  // continues while reasoning loop determines that more tools are needed
   while (response.choices[0].message.tool_calls && iterationCount < MAX_ITERATIONS){
     iterationCount++;
     log('processQuery.iteration.start', { iteration: iterationCount });
@@ -232,6 +264,7 @@ export async function processQuery (query: string){
     const assistantMessage = truncateMessage(response.choices[0].message);
     messages.push(assistantMessage);
     logPromptLength(log, 'processQuery.promptLength.afterToolMessage', messages, { iteration: iterationCount });
+    // logFullPrompt('processQuery.prompt.afterToolMessage', messages);
 
     for (const call of toolCallsFromResponse){
       if (call.type !== 'function') continue;
@@ -264,6 +297,7 @@ export async function processQuery (query: string){
     
     log('processQuery.followUpCompletion.start', { iteration: iterationCount });
     logPromptLength(log, 'processQuery.promptLength.beforeFollowUp', messages, { iteration: iterationCount });
+    // logFullPrompt('processQuery.prompt.beforeFollowUp', messages);
     log('processQuery.followUpCompletion.config', {
       iteration: iterationCount,
       includeTools: filteredTools.length > 0,
@@ -290,7 +324,7 @@ export async function processQuery (query: string){
     // After tool loop, one final call to get structured output
     logPromptLength(log, 'processQuery.promptLength.beforeStructured', messages);
     const structuredResponse = await getOpenAI().chat.completions.create({
-      model: COMPLETIONS_MODEL,
+      model: FINAL_REASONING_MODEL,
       messages: messages.map(truncateMessage),
       response_format: zodResponseFormat(ClassroomAnalysisSchema, 'classroomAnalysis')
     });
