@@ -4703,6 +4703,7 @@ export const onCreateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -4827,6 +4828,7 @@ export const onUpdateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -4951,6 +4953,7 @@ export const onDeleteGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -9732,6 +9735,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
