@@ -9244,6 +9244,7 @@ export const getGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -9371,6 +9372,7 @@ export const listGameSessions = /* GraphQL */ `
         description
         title
         currentTimer
+        studentID
         sessionData
         questions {
           items {
@@ -9509,6 +9511,7 @@ export const gameSessionByClassroomId = /* GraphQL */ `
         description
         title
         currentTimer
+        studentID
         sessionData
         questions {
           items {
@@ -9647,6 +9650,7 @@ export const gameSessionByState = /* GraphQL */ `
         description
         title
         currentTimer
+        studentID
         sessionData
         questions {
           items {
@@ -9785,6 +9789,7 @@ export const gameSessionByCode = /* GraphQL */ `
         description
         title
         currentTimer
+        studentID
         sessionData
         questions {
           items {

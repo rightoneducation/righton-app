@@ -422,6 +422,7 @@ type GameSession @model
   description: String
   title: String
   currentTimer: Int
+  studentID: Int
   sessionData: AWSJSON
   questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
 }
