@@ -84,36 +84,47 @@ export async function getLearningComponentsByCCSS<T>(ccss: string): Promise<T | 
     .map(code => `{ statementCode: "${code}" }`)
     .join(', ');
   
-  const learningScienceDataQuery = `
-  {
-  standardsFrameworkItems(where: { 
-    AND: [
-      { OR: [${whereConditions}] },
-      { statementType: "Standard" }
-    ]
-  }) {
+    const learningScienceDataQuery = `
+{
+  standardsFrameworkItems(
+    where: {
+      AND: [
+        { OR: [${whereConditions}] },
+        { jurisdiction: "Multi-State" },
+        { statementType: "Standard" }
+      ]
+    }
+  ) {
+    identifier
     statementCode
     description
-    statementType
-    
-    # Learning science context
-    learningComponentssupports {
-      description
-    }
-    
-    # Prerequisites to check against student history
     standardsFrameworkItemsbuildsTowards {
+      identifier
       statementCode
       description
     }
-    
-    # Related standards to assess if struggle is broad or narrow
-    relatesToStandardsFrameworkItems {
+    buildsTowardsStandardsFrameworkItems {
+      identifier
       statementCode
+      description
+    }
+    standardsFrameworkItemshasChild {
+      identifier
+      statementCode
+      description
+    }
+    standardsFrameworkItemsrelatesTo {
+      identifier
+      statementCode
+      description
+    }
+    learningComponentssupports {
+      identifier
       description
     }
   }
-}`;
+}
+`;
 
   try {
     const variables = { 
@@ -121,7 +132,6 @@ export async function getLearningComponentsByCCSS<T>(ccss: string): Promise<T | 
     };
     const { url, options } = await createAndSignRequest(learningScienceDataQuery, variables);
     const response = await fetch(url!, options);
-    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -218,7 +228,6 @@ export async function exploreLearningScienceData<T>(limit: number = 50): Promise
     const variables = {};
     const { url, options } = await createAndSignRequest(exploreQuery, variables);
     const response = await fetch(url!, options);
-    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

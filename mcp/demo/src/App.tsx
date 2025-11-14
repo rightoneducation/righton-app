@@ -64,9 +64,6 @@ function HomePage() {
     };
     const queryString = JSON.stringify(queryPayload);
     
-    console.log('Frontend sending responseId:', responseId);
-    console.log('Frontend sending query body:', JSON.stringify({ query: queryString }));
-    
     try {
       // Start up subscription so when MCP host writes response to table, we receive it
       subscriptionRef.current = subscribeToResponse(responseId, (result: MCPParsedResult) => {

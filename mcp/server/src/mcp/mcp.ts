@@ -38,6 +38,9 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     description: "Fetch game sessions for a classroom",
     inputSchema: {
       classroomId: z.string()
+    },
+    annotations: {
+      category: 'game-session'
     }
   }, async ({ classroomId }) => {
     const result = await getGameSessionsByClassroomId(GRAPHQL_ENDPOINT || '', classroomId);
@@ -72,6 +75,9 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     description: "Fetch student history by globalStudentId",
     inputSchema: {
       globalStudentId: z.string()
+    },
+    annotations: {
+      category: 'student-history'
     }
   }, async ({ globalStudentId }) => {
     const result = await getStudentHistory(GRAPHQL_ENDPOINT || '', globalStudentId);

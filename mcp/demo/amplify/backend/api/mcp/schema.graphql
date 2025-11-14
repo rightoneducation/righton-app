@@ -10,6 +10,7 @@ type MCPParsedResult @model {
   discussionQuestions: [DiscussionQuestion!]
   toolCalls: [ToolCall!]
   error: String
+  temp: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }

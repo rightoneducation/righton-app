@@ -175,7 +175,7 @@ const customVictoryResponsesTheme = {
         strokeWidth: 1,
       },
       labels: {
-        fill: ({ datum, index }: any) =>
+        fill: ({ datum, index }: { datum: { answerCount: number }; index: number }) =>
           index === 0 || datum.answerCount === 0 ? '#FFF' : '#384466',
         fontFamily: 'Rubik',
         fontWeight: '400',
