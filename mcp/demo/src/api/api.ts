@@ -11,7 +11,8 @@ export function subscribeToResponse(
   
   const result = client.graphql({
     query: onCreateMCPParsedResult,
-    variables: {}
+    variables: {},
+    authMode: 'apiKey',
   });
   
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
