@@ -8,7 +8,6 @@ export function subscribeToResponse(
   responseId: string,
   callback: (result: MCPParsedResult) => void
 ) {
-  console.log('Setting up subscription for responseId:', responseId);
   
   const result = client.graphql({
     query: onCreateMCPParsedResult,
@@ -19,9 +18,7 @@ export function subscribeToResponse(
   // @ts-ignore - GraphQL result type doesn't expose subscribe method
   return result.subscribe({
     next: ({ data }: { data: { onCreateMCPParsedResult: MCPParsedResult } }) => {
-      console.log('Subscription received data:', data);
       if (data?.onCreateMCPParsedResult) {
-        console.log('Calling callback with result:', data.onCreateMCPParsedResult);
         callback(data.onCreateMCPParsedResult);
       }
     },

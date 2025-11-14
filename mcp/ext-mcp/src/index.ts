@@ -105,11 +105,6 @@ const getHandler = async (req: Request, res: Response) => {
     return;
   }
   const lastEventId = req.headers['last-event-id'] as string | undefined;
-  if (lastEventId) {
-      console.log(`Client reconnecting with Last-Event-ID: ${lastEventId}`);
-  } else {
-      console.log(`Establishing new SSE stream for session ${sessionId}`);
-  }
 
   const transport = transports[sessionId];
   await transport.handleRequest(req, res);
@@ -153,7 +148,6 @@ process.on('SIGINT', async () => {
   // Close all active transports to properly clean up resources
   for (const sessionId in transports) {
       try {
-          console.log(`Closing transport for session ${sessionId}`);
           await transports[sessionId].close();
           delete transports[sessionId];
       } catch (error) {
