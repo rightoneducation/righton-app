@@ -367,7 +367,7 @@ export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     gap:
-      '32px',
+      `${theme.sizing.mdPadding}px`,
   }),
 );
 
