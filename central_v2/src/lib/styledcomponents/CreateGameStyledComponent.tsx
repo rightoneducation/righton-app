@@ -37,9 +37,9 @@ export const CreateGameMainContainer = styled(Box, {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
-  paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
-  paddingTop: screenSize === ScreenSize.SMALL ? `0px` : `${theme.sizing.mdPadding}px`,
+  paddingLeft: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+  paddingRight: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+  paddingTop: screenSize !== ScreenSize.LARGE ? `0px` : `${theme.sizing.mdPadding}px`,
   gap: `${theme.sizing.mdPadding}px`,
 }));
 
@@ -91,7 +91,7 @@ export const CreateGameBoxContainer = styled(Box, {
   width: '100%',
   height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  flexDirection: screenSize !== ScreenSize.LARGE ? 'column' : 'row',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
   gap: `60px`,

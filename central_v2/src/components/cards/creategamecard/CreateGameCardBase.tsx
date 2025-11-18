@@ -208,7 +208,7 @@ export default function CreateGameCardBase({
       sx={{
         gap: `${theme.sizing.mdPadding}px`,
         width: '100%',
-        maxWidth: screenSize === ScreenSize.SMALL ? '100%' : '460px',
+        maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '460px',
         padding: '24px',
         borderRadius: '8px',
         boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',

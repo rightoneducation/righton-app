@@ -1170,7 +1170,7 @@ export default function CreateGame({
       {/* Create Game Card flow starts here */}
       <CreateGameContentContainer>
         <CreateGameHeader handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
-        {screenSize === ScreenSize.SMALL && (
+        {screenSize !== ScreenSize.LARGE && (
           <Box
             sx={{
               width: '100%',
@@ -1188,7 +1188,7 @@ export default function CreateGame({
               sx={{
                 width: '100%',
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: screenSize !== ScreenSize.MEDIUM ? 'column' : 'row',
                 justifyContent: 'flex-end',
                 alignItems: 'center',
                 gap: `${theme.sizing.xSmPadding}px`,
@@ -1240,7 +1240,7 @@ export default function CreateGame({
               gap: `${theme.sizing.lgPadding}px`,
             }}
           >
-            {screenSize !== ScreenSize.SMALL && (
+            {screenSize === ScreenSize.LARGE && (
               <Box
                 sx={{
                   width: '100%',

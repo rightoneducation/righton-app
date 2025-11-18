@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, RadioGroup, Box, styled, useTheme } from '@mui/material';
+import { Typography, Box, styled, useTheme } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
@@ -8,19 +8,12 @@ import {
 } from '@righton/networking';
 import {
   QuestionTitleStyled,
-  RadioContainerStyled,
-  RadioLabelStyled,
-  RadioStyled,
-  ContentContainerStyled,
-  ImageStyled,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import {
   BaseCardStyled,
-  TextContainerStyled,
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
-import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 
 interface DetailedGameCardBaseProps {
   screenSize: ScreenSize;
