@@ -217,7 +217,7 @@ export default function ViewGame({
           <CreateGameContentContainer>
             <ViewGameHeader isOwner={isOwner} isIncompleteDraft={isIncompleteDraft} handleBackClick={handleBackClick} handleEditGame={handleEditGame} handleLaunchGame={handleLaunchGame} label="View" screenSize={screenSize} />
             <CreateGameBoxContainer screenSize={screenSize}>
-            <Box style={{ width: '100%', maxWidth: '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
+            <Box style={{ width: '100%', maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
               <DetailedGameCardBase
                 screenSize={screenSize}
                 game={centralData.selectedGame.game}

@@ -35,8 +35,8 @@ export default function ViewQuestionHeader({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
-        paddingBottom: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+        paddingTop: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
+        paddingBottom: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
         }}>
         <Box style={{ position: 'absolute', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <TitleText style={{lineHeight: '48px'}} screenSize={screenSize}>View {isOwner ? 'My' : ''} Question</TitleText>
@@ -52,52 +52,80 @@ export default function ViewQuestionHeader({
           <CentralButton
             buttonType={ButtonType.BACK}
             isEnabled
-            iconOnlyOverride={screenSize === ScreenSize.SMALL}
-            buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
+            iconOnlyOverride={screenSize !== ScreenSize.LARGE}
+            buttonWidthOverride={screenSize !== ScreenSize.LARGE ? '48px' : '127px'}
             onClick={handleBackClick}
           />
-          <Box
-            style={{
-              display: 'flex',
-              gap: `${theme.sizing.xSmPadding}px`,
-            }}
-          >
-            {isOwner ? (
-              <CentralButton
-                buttonType={ButtonType.EDIT}
-                isEnabled
-                iconOnlyOverride={screenSize === ScreenSize.SMALL}
-                buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
-                onClick={handleBackClick}
-              />
-            ) :(
+          {screenSize === ScreenSize.LARGE && (
+            <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: `${theme.sizing.xSmPadding}px` }}>
               <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
+                {isOwner ? (
+                  <CentralButton
+                    buttonType={ButtonType.EDIT}
+                    isEnabled
+                    buttonWidthOverride='127px'
+                    onClick={handleEditQuestion}
+                  />
+                ) :(
+                  <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
+                    <CentralButton
+                      buttonType={ButtonType.FAVORITE}
+                      isEnabled
+                      onClick={handleBackClick}
+                    />
+                    <CentralButton
+                      buttonType={ButtonType.DUPLICATE}
+                      isEnabled
+                      onClick={handleCloneQuestion}
+                    />
+                  </Box>
+                )}
                 <CentralButton
-                  buttonType={ButtonType.FAVORITE}
+                  buttonType={ButtonType.ADDTOGAMEPINK}
                   isEnabled
-                  iconOnlyOverride={screenSize === ScreenSize.SMALL}
-                  buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : 'auto'}
-                  onClick={handleBackClick}
-                />
-                <CentralButton
-                  buttonType={ButtonType.DUPLICATE}
-                  isEnabled
-                  iconOnlyOverride={screenSize === ScreenSize.SMALL}
-                  buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : 'auto'}
+                  buttonWidthOverride="auto"
                   onClick={handleBackClick}
                 />
               </Box>
-            )}
-            <CentralButton
-              buttonType={ButtonType.ADDTOGAMEPINK}
-              isEnabled
-              iconOnlyOverride={screenSize === ScreenSize.SMALL}
-              buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : 'auto'}
-              onClick={handleBackClick}
-            />
-          </Box>
+            </Box>
+          )}
         </Box>
       </Box>
+      {screenSize !== ScreenSize.LARGE && (
+        <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
+          {isOwner ? (
+            <CentralButton
+              buttonType={ButtonType.EDIT}
+              isEnabled
+              iconOnlyOverride
+              buttonWidthOverride='48px'
+              onClick={handleEditQuestion}
+            />
+          ) :(
+            <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
+              <CentralButton
+                buttonType={ButtonType.FAVORITE}
+                isEnabled
+                iconOnlyOverride
+                buttonWidthOverride='48px'
+                onClick={handleBackClick}
+              />
+              <CentralButton
+                buttonType={ButtonType.DUPLICATE}
+                isEnabled
+                iconOnlyOverride
+                buttonWidthOverride='48px'
+                onClick={handleCloneQuestion}
+              />
+            </Box>
+          )}
+          <CentralButton
+            buttonType={ButtonType.ADDTOGAMEPINK}
+            isEnabled
+            onClick={handleBackClick}
+          />
+        </Box>
+      )}
     </Box>
   );
 }

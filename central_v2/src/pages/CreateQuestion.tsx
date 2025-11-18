@@ -74,8 +74,8 @@ const BodyContainer = styled(Box, {
 })<BodyContainerProps>(({ screenSize: size }) => ({
   width: '100%',
   display: 'flex',
-  flexDirection: size === ScreenSize.SMALL ? 'column' : 'row',
-  gap: size === ScreenSize.SMALL ? '20px' : '16px',
+  flexDirection: size !== ScreenSize.LARGE ? 'column' : 'row',
+  gap: size !== ScreenSize.LARGE ? '20px' : '16px',
 }));
 
 export default function CreateQuestion({
@@ -989,7 +989,7 @@ export default function CreateQuestion({
               <Box
                 style={{
                   width: '100%',
-                  maxWidth: '445px',
+                  maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '445px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: `${theme.sizing.mdPadding}px`,

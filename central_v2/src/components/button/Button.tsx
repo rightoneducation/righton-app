@@ -50,7 +50,7 @@ export default function CentralButton({
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
   const buttonWidth = buttonObj.width ?? '100%';
   const isSmallScreenIconButtonOnly =
-    (useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride && iconOnlyOverride) ?? false;
+    (useMediaQuery(theme.breakpoints.down('lg')) && !smallScreenOverride && iconOnlyOverride) ?? false;
 
   const handleButtonClick = () => {
     if (type === 'file') {

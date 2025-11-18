@@ -155,8 +155,8 @@ export default function ViewQuestion({
   })<BodyContainerProps>(({ screenSize: size, theme: th }: any) => ({
     width: '100%',
     display: 'flex',
-    flexDirection: size === ScreenSize.SMALL ? 'column' : 'row',
-    gap: size === ScreenSize.SMALL ? '20px' : `${theme.sizing.xLgPadding}px`,
+    flexDirection: size !== ScreenSize.LARGE ? 'column' : 'row',
+    gap: size !== ScreenSize.LARGE ? '20px' : `${theme.sizing.xLgPadding}px`,
   }));
 
   return (
@@ -209,9 +209,9 @@ export default function ViewQuestion({
                 <Box
                   style={{
                     width: '100%',
-                    maxWidth: '410px',
+                    maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px',
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: screenSize !== ScreenSize.LARGE ? 'column' : 'row',
                     gap: `${theme.sizing.mdPadding}px`,
                   }}
                 >

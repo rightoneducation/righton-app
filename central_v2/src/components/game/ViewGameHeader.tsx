@@ -28,8 +28,8 @@ export default function ViewGameHeader({ handleBackClick, handleEditGame, handle
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
-        paddingBottom: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+        paddingTop: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
+        paddingBottom: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
         }}>
         <Box style={{ position: 'absolute', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <TitleText style={{lineHeight: '48px'}} screenSize={screenSize}>{label} {isOwner ? 'My' : ''} Game</TitleText>
@@ -45,11 +45,11 @@ export default function ViewGameHeader({ handleBackClick, handleEditGame, handle
           <CentralButton
             buttonType={ButtonType.BACK}
             isEnabled
-            iconOnlyOverride={screenSize === ScreenSize.SMALL}
-            buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
+            iconOnlyOverride={screenSize !== ScreenSize.LARGE}
+            buttonWidthOverride={screenSize !== ScreenSize.LARGE ? '48px' : '127px'}
             onClick={handleBackClick}
           />
-          {screenSize !== ScreenSize.SMALL && (
+          {screenSize === ScreenSize.LARGE && (
             <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: `${theme.sizing.xSmPadding}px` }}>
               <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
               {isOwner ? (
@@ -89,14 +89,14 @@ export default function ViewGameHeader({ handleBackClick, handleEditGame, handle
           )}
         </Box>
       </Box>
-      {screenSize === ScreenSize.SMALL && (
+      {screenSize !== ScreenSize.LARGE && (
         <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
         {isOwner ? (
               <CentralButton
                 buttonType={ButtonType.EDIT}
                 isEnabled
-                iconOnlyOverride={screenSize === ScreenSize.SMALL}
-                buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
+                iconOnlyOverride
+                buttonWidthOverride='48px'
                 onClick={handleBackClick}
               />
             ) :(
@@ -104,15 +104,15 @@ export default function ViewGameHeader({ handleBackClick, handleEditGame, handle
                 <CentralButton
                   buttonType={ButtonType.FAVORITE}
                   isEnabled
-                  iconOnlyOverride={screenSize === ScreenSize.SMALL}
-                  buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : 'auto'}
+                  iconOnlyOverride
+                  buttonWidthOverride='48px'
                   onClick={handleBackClick}
                 />
                 <CentralButton
                   buttonType={ButtonType.DUPLICATE}
                   isEnabled
-                  iconOnlyOverride={screenSize === ScreenSize.SMALL}
-                  buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : 'auto'}
+                  iconOnlyOverride
+                  buttonWidthOverride='48px'
                   onClick={handleBackClick}
                 />
               </Box>
