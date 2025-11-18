@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, RadioGroup, Box, styled } from '@mui/material';
+import { Typography, RadioGroup, Box, styled, useTheme } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
@@ -62,6 +62,7 @@ export default function DetailedGameCardBase({
   game,
   dropShadow,
 }: DetailedGameCardBaseProps) {
+  const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [isPublic, setIsPublic] = React.useState<boolean>(
     game?.publicPrivateType === PublicPrivateType.PUBLIC,
@@ -88,43 +89,47 @@ export default function DetailedGameCardBase({
         maxWidth: '410px',
       }}
     >
-      <CreateQuestionTitleBarStyled screenSize={screenSize}>
+      <Box style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: `${theme.sizing.xSmPadding}px`,
+      }}>
+        <CreateQuestionTitleBarStyled screenSize={screenSize}>
+          <Box
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent:
+                screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
+              alignItems: 'center',
+              gap: '14px',
+            }}
+          >
+            <QuestionTitleStyled>{game?.title || ''}</QuestionTitleStyled>
+          </Box>
+        </CreateQuestionTitleBarStyled>
         <Box
           style={{
-            width: '100%',
             display: 'flex',
-            justifyContent:
-              screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
-            alignItems: 'center',
-            gap: '14px',
+            gap: '8px',
+            flexWrap: 'wrap',
           }}
         >
-          <QuestionTitleStyled>{game?.title || ''}</QuestionTitleStyled>
+          {ccssChips.length > 0 &&
+            ccssChips.map((chip) => {
+              return <ButtonCCSS key={uuidv4()}>{chip}</ButtonCCSS>;
+            })}
         </Box>
-      </CreateQuestionTitleBarStyled>
-      <Box
-        style={{
-          display: 'flex',
-          gap: '8px',
-          flexWrap: 'wrap',
-          marginTop: '8px',
-        }}
-      >
-        {ccssChips.length > 0 &&
-          ccssChips.map((chip) => {
-            return <ButtonCCSS key={uuidv4()}>{chip}</ButtonCCSS>;
-          })}
       </Box>
       <Box
         style={{
           height: '100%',
           width: '100%',
           margin: 0,
-          padding: '8px',
-          boxSizing: 'border-box',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
+          paddingTop: '8px'
         }}
       >
         <Typography
@@ -144,9 +149,30 @@ export default function DetailedGameCardBase({
         <img
           src={`${CloudFrontDistributionUrl}${game?.imageUrl ?? ''}`}
           alt="question"
-          style={{ width: '100%', height: '185px', objectFit: 'cover',          borderRadius: '8px', }}
+          style={{ width: '100%', height: '185px', objectFit: 'cover', borderRadius: '8px', }}
         />
       </Box>      
+      <Box
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: '8px',
+          flexWrap: 'wrap',
+        }}
+      >
+        <Box
+          style={{
+            width: 'fit-content',
+            padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.smPadding}px`,
+            borderRadius: '12px',
+            backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
+            color: '#FFFFFF',
+          }}
+        >
+          {game?.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
+        </Box>
+      </Box>
     </BaseCardStyled>
   );
 }
