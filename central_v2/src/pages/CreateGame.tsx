@@ -271,7 +271,7 @@ export default function CreateGame({
         ...prev,
         isGameCardSubmitted: true,
       }));
-      setModalState(ModalStateType.UPDATING);
+      setModalState(ModalStateType.SAVING);
       const dqValid = checkDQsAreValid(draftQuestionsList);
       if (gameFormIsValid && dqValid) {
         // check if game img has been changed
@@ -415,7 +415,7 @@ export default function CreateGame({
 
   const handlePublishGame = async () => {
     try {
-      setModalState(ModalStateType.UPDATING);
+      setModalState(ModalStateType.PUBLISHING);
       setDraftGame((prev) => ({
         ...prev,
         isGameCardSubmitted: true,
@@ -890,7 +890,7 @@ export default function CreateGame({
 
   const handleUpdateDraftGame = async () => {
      try {
-      setModalState(ModalStateType.UPDATING);
+      setModalState(ModalStateType.SAVING);
       if (!draftGame.gameTemplate.title) {
         setDraftGame((prev) => ({
           ...prev,
