@@ -45,7 +45,7 @@ export default function DetailedQuestionCardUnified({
       elevation={6}
       isCardComplete={false}
       style={{
-        maxWidth: '410px',
+        maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px',
         gap: `${theme.sizing.xSmPadding}px`,
       }}
     >
@@ -55,7 +55,7 @@ export default function DetailedQuestionCardUnified({
             width: '100%',
             display: 'flex',
             justifyContent:
-              screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
+              screenSize !== ScreenSize.LARGE ? 'space-between' : 'flex-start',
             alignItems: 'center',
             gap: '14px',
           }}

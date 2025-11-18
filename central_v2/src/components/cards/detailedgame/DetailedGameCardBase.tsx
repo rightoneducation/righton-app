@@ -31,11 +31,11 @@ export const CreateQuestionTitleBarStyled = styled(
   width: '100%',
   height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  flexDirection: screenSize !== ScreenSize.LARGE ? 'column' : 'row',
   justifyContent: 'space-between',
-  alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
+  alignItems: screenSize !== ScreenSize.LARGE ? 'flex-start' : 'center',
   gap:
-    screenSize === ScreenSize.SMALL
+    screenSize !== ScreenSize.LARGE
       ? `${theme.sizing.xSmPadding}px`
       : `${theme.sizing.smPadding}px`,
 }));
@@ -79,7 +79,7 @@ export default function DetailedGameCardBase({
       elevation={6}
       isCardComplete={false}
       style={{
-        maxWidth: '410px',
+        maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px',
       }}
     >
       <Box style={{

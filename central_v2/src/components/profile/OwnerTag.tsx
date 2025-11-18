@@ -16,7 +16,7 @@ interface OwnerTagProps {
 const OwnerTagFlexContainer = styled(Paper)<OwnerTagProps>(
   ({ theme, screenSize, isViewGame }) => ({
     width: '100%',
-    maxWidth: '410px',
+    maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px',
     height: 'fit-content',
     display: 'flex',
     flexDirection: screenSize === ScreenSize.MEDIUM ? 'row' : 'column',
