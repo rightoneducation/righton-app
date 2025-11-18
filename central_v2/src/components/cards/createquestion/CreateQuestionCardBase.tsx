@@ -216,7 +216,7 @@ export default function CreateQuestionCardBase({
     <BaseCardStyled
       sx={{
         width: '100%',
-        maxWidth: '410px',
+        maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px',
         gap: `${theme.sizing.mdPadding}px`,
         padding:`${theme.sizing.mdPadding}px`,
       }}

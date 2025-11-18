@@ -20,8 +20,8 @@ export default function CreateQuestionHeader({ handleSaveQuestion, handleBackCli
       width: '100%', 
       display: 'flex', 
       flexDirection: 'column',
-      paddingTop: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
-      paddingBottom: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
+      paddingTop: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
+      paddingBottom: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
       }}>
       <Box
         style={{
@@ -34,16 +34,16 @@ export default function CreateQuestionHeader({ handleSaveQuestion, handleBackCli
         <CentralButton
           buttonType={ButtonType.BACK}
           isEnabled
-          iconOnlyOverride={screenSize === ScreenSize.SMALL}
-          buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
+          iconOnlyOverride={screenSize !== ScreenSize.LARGE}
+          buttonWidthOverride={screenSize !== ScreenSize.LARGE ? '48px' : '127px'}
           onClick={handleBackClick}
         />
         <TitleText screenSize={screenSize}>{label} Question</TitleText>
         <CentralButton
           buttonType={ButtonType.SAVE}
           isEnabled
-          iconOnlyOverride={screenSize === ScreenSize.SMALL}
-          buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
+          iconOnlyOverride={screenSize !== ScreenSize.LARGE}
+          buttonWidthOverride={screenSize !== ScreenSize.LARGE ? '48px' : '127px'}
           onClick={handleSaveQuestion}
         />
       </Box>
