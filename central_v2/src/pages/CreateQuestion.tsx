@@ -876,7 +876,7 @@ export default function CreateQuestion({
   };
 
   const handlePublishQuestion = async () => {
-    setModalState(ModalStateType.UPDATING);
+    setModalState(ModalStateType.PUBLISHING);
     setIsCardSubmitted(false);
     await handleSave();
     setModalState(ModalStateType.CONFIRM);

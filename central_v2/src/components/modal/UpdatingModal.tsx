@@ -8,7 +8,7 @@ import {
   CircularProgress,
   useTheme,
 } from '@mui/material';
-import { TemplateType } from '../../lib/CentralModels';
+import { ModalStateType, TemplateType } from '../../lib/CentralModels';
 import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
 
@@ -38,8 +38,8 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
 const DragText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins',
   width: '100%',
-  fontSize: '24px',
-  lineHeight: '32px',
+  fontSize: '16px',
+  lineHeight: '24px',
   fontWeight: 700,
   textAlign: 'center',
 }));
@@ -59,16 +59,32 @@ const CloseButton = styled('img')(({ theme }) => ({
 }));
 
 interface UpdatingModalProps {
+  modalState: ModalStateType;
   isModalOpen: boolean;
   templateType: TemplateType;
 }
 
 export default function UpdatingModal({
+  modalState,
   isModalOpen,
   templateType,
 }: UpdatingModalProps) {
   const theme = useTheme();
-  const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
+  let text = '';
+
+  switch (modalState){
+    case ModalStateType.SAVING:
+      text = 'Saving...';
+      break;
+    case ModalStateType.PUBLISHING:
+      text = 'Publishing...';
+      break;
+    case ModalStateType.LOADING:
+    default:
+      text = 'Loading...';
+    break;
+  }
+
 
   return (
     <Fade
@@ -87,12 +103,10 @@ export default function UpdatingModal({
           style={{
             position: 'absolute',
             width: 'calc(100%)',
-            height: 'auto',
+            height: '100%',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            maxHeight: '100%',
-            maxWidth: '400px',
             zIndex: 1310,
             display: 'flex',
             flexDirection: 'column',
@@ -101,8 +115,23 @@ export default function UpdatingModal({
             gap: '16px',
           }}
         >
-          <DragText style={{ color: "#FFF"}}> Updating {text}... </DragText>
-          <CircularProgress size="48px" style={{ color: "FFF" }} />
+          <Paper elevation={6} style={{ 
+            width: '100%', 
+            height: '100%', 
+            maxWidth: '430px', 
+            maxHeight: '225px', 
+            padding: `${theme.sizing.xLgPadding}px`, 
+            borderRadius: '13px', 
+            boxSizing: 'border-box',
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            gap: `${theme.sizing.smPadding}px`
+          }}>
+              <CircularProgress size="48px" style={{ color: "#000" }} />
+              <DragText style={{ color: "#000", fontWeight: 400}}> {text} </DragText>
+          </Paper>
         </Box>
     </Fade>
   );

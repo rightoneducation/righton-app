@@ -217,8 +217,8 @@ export default function CreateQuestionCardBase({
       sx={{
         width: '100%',
         maxWidth: '410px',
-        gap: `${theme.sizing.lgPadding}px`,
-        padding:`${theme.sizing.mdPadding}`,
+        gap: `${theme.sizing.mdPadding}px`,
+        padding:`${theme.sizing.mdPadding}px`,
       }}
       elevation={6}
       isCardComplete={draftQuestion.questionCard.isCardComplete}
@@ -245,8 +245,8 @@ export default function CreateQuestionCardBase({
           },
         }}
         multiline
-        rows={4}
-        placeholder="Give a short description of the game."
+        rows={6}
+        placeholder="Enter your question here..."
         error={isTitleFieldError && isCardSubmitted}
         value={draftQuestion.questionCard.title}
         onChange={(e) => handleTitleChange(e.target.value)}
@@ -268,32 +268,34 @@ export default function CreateQuestionCardBase({
       </CreateGameTextFieldContainer>
       </ContentContainerStyled>
       <ContentContainerStyled>
-      <HeaderText>
-        Choose your answer type
-      </HeaderText>
-      <RadioContainerStyled>
-        <RadioGroup
-          row
-          value={isMultipleChoice ? 'multiple' : 'short'}
-          onChange={handleAnswerType}
-          style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
-        >
-          <RadioLabelStyled
-            value="multiple"
-            control={<RadioStyled style={{ cursor: 'pointer' }} />}
-            label="Multiple Choice"
-            isSelected={isMultipleChoice}
-            style={{ cursor: 'pointer' }}
-          />
-          <RadioLabelStyled
-            value="short"
-            control={<RadioStyled style={{ cursor: 'pointer' }} />}
-            label="Short Answer"
-            isSelected={!isMultipleChoice}
-            style={{ cursor: 'pointer' }}
-          />
-        </RadioGroup>
-      </RadioContainerStyled>
+        <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}>
+          <HeaderText>
+            Choose your answer type*
+          </HeaderText>
+          <RadioContainerStyled>
+            <RadioGroup
+              row
+              value={isMultipleChoice ? 'multiple' : 'short'}
+              onChange={handleAnswerType}
+              style={{ overflow: 'hidden', flexWrap: 'nowrap', gap: `${theme.sizing.xSmPadding}px` }}
+            >
+              <RadioLabelStyled
+                value="multiple"
+                control={<RadioStyled style={{ cursor: 'pointer' }} />}
+                label="Multiple Choice"
+                isSelected={isMultipleChoice}
+                style={{ cursor: 'pointer' }}
+              />
+              <RadioLabelStyled
+                value="short"
+                control={<RadioStyled style={{ cursor: 'pointer' }} />}
+                label="Short Answer"
+                isSelected={!isMultipleChoice}
+                style={{ cursor: 'pointer' }}
+              />
+            </RadioGroup>
+          </RadioContainerStyled>
+        </Box>
       </ContentContainerStyled>
       <ContentContainerStyled>
         <HeaderText>
@@ -312,11 +314,12 @@ export default function CreateQuestionCardBase({
           </ImagePlaceholder>
         )}
         </ContentContainerStyled>
-        <ContentContainerStyled>
+        <ContentContainerStyled style={{ gap: `${theme.sizing.mdPadding}px` }}>
+
+        <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}>
         <HeaderText>
           Choose a standard for your question*
         </HeaderText>
-        <Box>
             <ButtonCCSS
               key={uuidv4()}
               onClickCapture={(e: React.MouseEvent) => {

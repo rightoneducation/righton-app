@@ -59,8 +59,11 @@ export default function CreateGameModalSwitch({
         isCardErrored={isCardErrored}
       />;
       break;
-    case ModalStateType.UPDATING:
+    case ModalStateType.LOADING:
+    case ModalStateType.SAVING:
+    case ModalStateType.PUBLISHING:
       return <UpdatingModal
+        modalState={modalState}
         isModalOpen
         templateType={TemplateType.GAME}
       />;

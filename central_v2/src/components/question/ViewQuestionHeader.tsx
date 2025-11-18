@@ -12,6 +12,7 @@ interface ViewQuestionHeaderProps {
   handleCloneQuestion: () => void;
   handleDeleteQuestion: () => void;
   isEditEnabled: boolean;
+  isOwner: boolean;
   screenSize: ScreenSize;
 }
 
@@ -21,6 +22,7 @@ export default function ViewQuestionHeader({
   handleCloneQuestion,
   handleDeleteQuestion,
   isEditEnabled,
+  isOwner,
   screenSize
 }: ViewQuestionHeaderProps) {
   const theme = useTheme();
@@ -37,7 +39,7 @@ export default function ViewQuestionHeader({
         paddingBottom: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
         }}>
         <Box style={{ position: 'absolute', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <TitleText style={{lineHeight: '48px'}} screenSize={screenSize}>View Question</TitleText>
+          <TitleText style={{lineHeight: '48px'}} screenSize={screenSize}>View {isOwner ? 'My' : ''} Question</TitleText>
         </Box>
         <Box
           style={{
@@ -60,13 +62,32 @@ export default function ViewQuestionHeader({
               gap: `${theme.sizing.xSmPadding}px`,
             }}
           >
-            <CentralButton
-              buttonType={ButtonType.EDIT}
-              isEnabled
-              iconOnlyOverride={screenSize === ScreenSize.SMALL}
-              buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
-              onClick={handleBackClick}
-            />
+            {isOwner ? (
+              <CentralButton
+                buttonType={ButtonType.EDIT}
+                isEnabled
+                iconOnlyOverride={screenSize === ScreenSize.SMALL}
+                buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : '127px'}
+                onClick={handleBackClick}
+              />
+            ) :(
+              <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
+                <CentralButton
+                  buttonType={ButtonType.FAVORITE}
+                  isEnabled
+                  iconOnlyOverride={screenSize === ScreenSize.SMALL}
+                  buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : 'auto'}
+                  onClick={handleBackClick}
+                />
+                <CentralButton
+                  buttonType={ButtonType.DUPLICATE}
+                  isEnabled
+                  iconOnlyOverride={screenSize === ScreenSize.SMALL}
+                  buttonWidthOverride={screenSize === ScreenSize.SMALL ? '48px' : 'auto'}
+                  onClick={handleBackClick}
+                />
+              </Box>
+            )}
             <CentralButton
               buttonType={ButtonType.ADDTOGAMEPINK}
               isEnabled

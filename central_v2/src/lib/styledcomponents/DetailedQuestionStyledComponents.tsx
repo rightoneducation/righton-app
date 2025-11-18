@@ -65,6 +65,9 @@ export const RadioLabelStyled = styled(FormControlLabel, {
 export const RadioStyled = styled(Radio)(({ theme }) => ({
   cursor: 'default',
   color: 'rgba(0, 0, 0, 0.2)',
+  paddingTop: 0,
+  paddingBottom: 0,
+  paddingLeft: 0,
   '&.Mui-checked': {
     color: `${theme.palette.primary.mediumBlue}`,
   },

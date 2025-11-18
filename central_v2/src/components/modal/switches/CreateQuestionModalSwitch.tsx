@@ -44,8 +44,11 @@ export default function CreateQuestionModalSwitch({
         isCardErrored={isCardErrored}
       />;
       break;
-    case ModalStateType.UPDATING:
+    case ModalStateType.LOADING:
+    case ModalStateType.SAVING:
+    case ModalStateType.PUBLISHING:
       return <UpdatingModal
+        modalState={modalState}
         isModalOpen
         templateType={TemplateType.QUESTION}
       />;

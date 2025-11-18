@@ -54,116 +54,121 @@ export default function IncorrectAnswerCard({
       elevation={6}
       isCardComplete={draftQuestion.correctCard.isCardComplete}
       isClone={isClone}
+      style={{paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`, paddingTop: '14px', paddingBottom: '14px', gap: `${theme.sizing.mdPadding}px`}}
     >
-      <QuestionTitleStyled sx={{ color: '#47366C' }}>
-        Incorrect Answer {cardIndex+1}
-      </QuestionTitleStyled>
-      <TextContainerStyled
-        multiline
-        variant="outlined"
-        rows="1"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            fontFamily: 'Rubik',
-            height: '43px',
-          },
-          '& .MuiInputBase-input': {
-            color: '#47366C',
-            opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
-            '&::placeholder': {
-              color:  isCardErrored && isCardSubmitted ? '#D0254D' : '#47366C',
+      <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}>
+        <QuestionTitleStyled sx={{ color: '#47366C' }}>
+          Incorrect Answer {cardIndex+1}*
+        </QuestionTitleStyled>
+        <TextContainerStyled
+          multiline
+          variant="outlined"
+          rows="1"
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              fontFamily: 'Rubik',
+              height: '43px',
+            },
+            '& .MuiInputBase-input': {
+              color: '#47366C',
               opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
+              '&::placeholder': {
+                color:  isCardErrored && isCardSubmitted ? '#D0254D' : '#47366C',
+                opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
             },
-            '&:focus': {
-              color: '#47366C',
-              opacity: 1,
-            },
-            '&:focus::placeholder': {
-              color: '#47366C',
-              opacity: 1,
-            },
-          },
-        }}
-        placeholder="Enter incorrect answer here..."
-        value={draftQuestion.incorrectCards[cardIndex].answer}
-        onChange={(e) =>
-          handleIncorrectAnswerChange(e.target.value, cardIndex)
-        }
-        error={
-          (isCardSubmitted || isAIError) &&
-          (!draftQuestion.incorrectCards[cardIndex].answer ||
-            draftQuestion.incorrectCards[cardIndex].answer.length === 0)
-        }
-        InputProps={{
-          startAdornment: (isCardSubmitted || isAIError) &&
+          }}
+          placeholder="Enter incorrect answer..."
+          value={draftQuestion.incorrectCards[cardIndex].answer}
+          onChange={(e) =>
+            handleIncorrectAnswerChange(e.target.value, cardIndex)
+          }
+          error={
+            (isCardSubmitted || isAIError) &&
             (!draftQuestion.incorrectCards[cardIndex].answer ||
-              draftQuestion.incorrectCards[cardIndex].answer.length === 0) && (
-              <InputAdornment
-                position="start"
-                sx={{
-                  alignSelf: 'flex-start',
-                  mt: '5px',
-                }}
-              >
-                <ErrorIcon src={errorIcon} alt="error icon" />
-              </InputAdornment>
-            ),
-        }}
-      />
-      <QuestionTitleStyled sx={{ color: '#47366C' }}>
-        Solution Explanation
-      </QuestionTitleStyled>
-      <TextContainerStyled
-        multiline
-        variant="outlined"
-        rows="5"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            fontFamily: 'Rubik',
-          },
-          '& .MuiInputBase-input': {
-            color: '#47366C',
-            opacity: isCardErrored && isCardSubmitted ? 1 : 0.5,
-            '&::placeholder': {
-              color:  isCardErrored && isCardSubmitted ? '#D0254D' : '#47366C',
-              opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
+              draftQuestion.incorrectCards[cardIndex].answer.length === 0)
+          }
+          InputProps={{
+            startAdornment: (isCardSubmitted || isAIError) &&
+              (!draftQuestion.incorrectCards[cardIndex].answer ||
+                draftQuestion.incorrectCards[cardIndex].answer.length === 0) && (
+                <InputAdornment
+                  position="start"
+                  sx={{
+                    alignSelf: 'flex-start',
+                    mt: '5px',
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt="error icon" />
+                </InputAdornment>
+              ),
+          }}
+        />
+      </Box>
+      <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}>
+        <QuestionTitleStyled sx={{ color: '#47366C' }}>
+          Solution Explanation*
+        </QuestionTitleStyled>
+        <TextContainerStyled
+          multiline
+          variant="outlined"
+          rows="5"
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              fontFamily: 'Rubik',
             },
-            '&:focus': {
+            '& .MuiInputBase-input': {
               color: '#47366C',
-              opacity: 1,
+              opacity: isCardErrored && isCardSubmitted ? 1 : 0.5,
+              '&::placeholder': {
+                color:  isCardErrored && isCardSubmitted ? '#D0254D' : '#47366C',
+                opacity:  isCardErrored && isCardSubmitted ? 1 : 0.5,
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
             },
-            '&:focus::placeholder': {
-              color: '#47366C',
-              opacity: 1,
-            },
-          },
-        }}
-        placeholder="Enter explanation here..."
-        value={draftQuestion.incorrectCards[cardIndex].explanation}
-        onChange={(e) =>
-          handleIncorrectExplanationChange(e.target.value, cardIndex)
-        }
-        error={
-          (isCardSubmitted || isAIError) &&
-          (!draftQuestion.incorrectCards[cardIndex].explanation ||
-            draftQuestion.incorrectCards[cardIndex].explanation.length === 0)
-        }
-        InputProps={{
-          startAdornment: (isCardSubmitted || isAIError) &&
+          }}
+          placeholder="Explain why this answer is incorrect..."
+          value={draftQuestion.incorrectCards[cardIndex].explanation}
+          onChange={(e) =>
+            handleIncorrectExplanationChange(e.target.value, cardIndex)
+          }
+          error={
+            (isCardSubmitted || isAIError) &&
             (!draftQuestion.incorrectCards[cardIndex].explanation ||
-              draftQuestion.incorrectCards[cardIndex].explanation.length === 0) && (
-              <InputAdornment
-                position="start"
-                sx={{
-                  alignSelf: 'flex-start',
-                  mt: '5px',
-                }}
-              >
-                <ErrorIcon src={errorIcon} alt="error icon" />
-              </InputAdornment>
-            ),
-        }}
-      />
+              draftQuestion.incorrectCards[cardIndex].explanation.length === 0)
+          }
+          InputProps={{
+            startAdornment: (isCardSubmitted || isAIError) &&
+              (!draftQuestion.incorrectCards[cardIndex].explanation ||
+                draftQuestion.incorrectCards[cardIndex].explanation.length === 0) && (
+                <InputAdornment
+                  position="start"
+                  sx={{
+                    alignSelf: 'flex-start',
+                    mt: '5px',
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt="error icon" />
+                </InputAdornment>
+              ),
+          }}
+        />
+      </Box>
       {(!draftQuestion.incorrectCards[cardIndex].explanation ||
         draftQuestion.incorrectCards[cardIndex].explanation.length === 0) && isCardSubmitted && <ErrorBox />}
     </BaseCardStyled>

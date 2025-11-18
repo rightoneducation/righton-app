@@ -206,7 +206,7 @@ export default function CreateGameCardBase({
       isClone={isClone}
       isCardComplete={completedCardClicked ? false : cardIsComplete}
       sx={{
-        gap: responsiveGap,
+        gap: `${theme.sizing.mdPadding}px`,
         width: '100%',
         maxWidth: screenSize === ScreenSize.SMALL ? '100%' : '460px',
         padding: '24px',
@@ -234,6 +234,9 @@ export default function CreateGameCardBase({
         </Box>
       </CreateGameTitleBarStyled>
       <GameContentContainerStyled screenSize={screenSize}>
+      {screenSize !== ScreenSize.SMALL && (isCardErrored || draftGame.isDraftGameErrored) && (
+        <CreateGameErrorBox screenSize={screenSize} />
+      )}
         {/* Create Game Card Base Item */}
           <GameCardBaseItem
           >
@@ -445,10 +448,6 @@ export default function CreateGameCardBase({
             </Box>
           </GameCardBaseItem>
       </GameContentContainerStyled>
-
-      {screenSize !== ScreenSize.SMALL && (isCardErrored || draftGame.isDraftGameErrored) && (
-        <CreateGameErrorBox screenSize={screenSize} />
-      )}
     </BaseCardStyled>
   );
 }

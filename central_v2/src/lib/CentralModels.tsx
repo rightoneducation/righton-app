@@ -74,7 +74,9 @@ export enum ModalStateType {
   NULL,
   DISCARD,
   PUBLISH,
-  UPDATING,
+  LOADING,
+  SAVING,
+  PUBLISHING,
   CONFIRM,
   CREATEQUESTION
 }

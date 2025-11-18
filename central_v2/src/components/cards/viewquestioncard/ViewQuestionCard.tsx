@@ -122,13 +122,6 @@ export default function StyledQuestionCard({
             isEnabled
             onClick={() => handleViewButtonClick(question)}
           />
-          {centralData.userStatus === UserStatusType.LOGGEDIN && (
-            <CentralButton
-              buttonType={ButtonType.CLONE}
-              isEnabled
-              onClick={() => handleCloneButtonClick(question)}
-            />
-          )}
         </BottomButtonBox>
       </ContentContainer>
     </ViewQuestionCard>

@@ -58,6 +58,8 @@ export default function ViewQuestion({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
+  const isOwner = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedQuestion?.question?.userId;
+
   const isEditEnabled =
     centralData.userStatus === UserStatusType.LOGGEDIN &&
     centralData.userProfile?.id === centralData.selectedQuestion?.question?.userId;
@@ -200,6 +202,7 @@ export default function ViewQuestion({
               handleDeleteQuestion={handleDeleteQuestion}
               isEditEnabled={isEditEnabled}
               screenSize={screenSize}
+              isOwner={isOwner}
             />
             <CreateGameBoxContainer screenSize={screenSize}>
               <BodyContainer screenSize={screenSize}>
