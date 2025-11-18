@@ -40,7 +40,6 @@ const CarouselQuestionImage = styled(QuestionImage)(({ theme }) => ({
 
 const QuestionCard = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: '100%',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
   background: '#FFFFFF',
@@ -73,8 +72,6 @@ const TitleContainer = styled(Box)(() => ({
 }));
 
 const DescriptionText = styled(Typography)(({ theme }) => ({
-  flex: 1,
-  height: 'auto',
   fontFamily: 'Rubik',
   fontWeight: '400',
   fontSize: `${theme.sizing.smPadding}px`,
@@ -134,14 +131,6 @@ export default function StyledQuestionCard({
             onClick={() => handleViewButtonClick(question)}
             wideButtonOverride
           />
-          {centralData.userStatus === UserStatusType.LOGGEDIN && (
-            <CentralButton
-              buttonType={ButtonType.CLONE}
-              isEnabled
-              onClick={() => handleCloneButtonClick(question)}
-              wideButtonOverride
-            />
-          )}
         </BottomButtonBox>
       </ContentContainer>
     </QuestionCard>

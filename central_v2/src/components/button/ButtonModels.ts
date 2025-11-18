@@ -47,6 +47,7 @@ export enum ButtonType {
   CHANGEIMAGE = 'changeimage',
   NEXTCARD = 'nextcard',
   LAUNCHGAME = 'launchgame',
+  LAUNCHPINK = 'launchpink',
   LOGOUT = 'logout',
   CREATEQUESTION = 'createquestion',
   QUESTIONBANK = 'questionbank',
@@ -121,6 +122,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LAUNCH]: {
     icon: launch,
     textKey: ButtonType.LAUNCH,
+  },
+  [ButtonType.LAUNCHPINK]: {
+    icon: launch,
+    textKey: ButtonType.LAUNCHPINK,
     color: ButtonColor.RED,
   },
   [ButtonType.UPLOAD]: {

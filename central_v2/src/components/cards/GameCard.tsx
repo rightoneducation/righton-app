@@ -6,7 +6,7 @@ import {
   CloudFrontDistributionUrl,
 } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { ScreenSize, UserStatusType } from '../../lib/CentralModels';
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import CentralButton from '../button/Button';
@@ -187,6 +187,7 @@ export default function StyledGameCard({
   isCreateGame,
   handleViewButtonClick,
 }: StyledGameCardProps) {
+  const theme = useTheme();
   const domainAndGrades = getDomainAndGrades(game);
   const isGameLaunchable =
     (game && game.questionTemplates && game?.questionTemplates?.length > 0) ??
@@ -196,9 +197,19 @@ export default function StyledGameCard({
     window.location.href = LAUNCH_GAME_URL;
   };
   const centralData = useCentralDataState();
-  const lastUpdated = game.updatedAt 
-  ? `${game.updatedAt.toLocaleDateString('en-US', { month: 'short' })}. ${game.updatedAt.getDate()}, ${game.updatedAt.getFullYear()}`
-  : '';
+  const date = game.updatedAt;
+  let lastUpdated = '';
+  if (date) {
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const timeString = date.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    }).toLowerCase().replace(' ', '');
+    lastUpdated = `${month}. ${day}, ${year},  ${timeString}`;
+  }
   const isLibrary = useMatch('/library');
   
   return (
@@ -216,49 +227,60 @@ export default function StyledGameCard({
           <FavouriteButton isEnabled isGame={!isMyLibraryQuestion} id={id} />
         )}
       </GameImageContainer>
-      <ContentContainer>
-        <TitleTextTypography>{title}</TitleTextTypography>
-        <CCSSButtonContainer>
-          {domainAndGrades.map((domainGrade) => (
-            <ButtonCCSS key={`${domainGrade}-${id}`}>{domainGrade}</ButtonCCSS>
-          ))}
-        </CCSSButtonContainer>
-        <DescriptionText
-          buttonCount={domainAndGrades.length}
-          isCarousel={isCarousel}
-        >
-          {description}
-        </DescriptionText>
-      </ContentContainer>
-      <ButtonContainer>
-        <CentralButton
-          buttonType={isCreateGame ? ButtonType.ADDTOGAME : ButtonType.VIEW}
-          isEnabled
-          onClick={() => handleViewButtonClick(game)}
-          wideButtonOverride
-        />
-        {!isCreateGame && !isMyLibraryQuestion && (
+      <Box
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          gap: `${theme.sizing.smPadding}px`,
+        }}
+      >
+        <ContentContainer>
+          <TitleTextTypography>{title}</TitleTextTypography>
+          <CCSSButtonContainer>
+            {domainAndGrades.map((domainGrade) => (
+              <ButtonCCSS key={`${domainGrade}-${id}`}>{domainGrade}</ButtonCCSS>
+            ))}
+          </CCSSButtonContainer>
+          <DescriptionText
+            buttonCount={domainAndGrades.length}
+            isCarousel={isCarousel}
+          >
+            {description}
+          </DescriptionText>
+        </ContentContainer>
+        <ButtonContainer>
           <CentralButton
-            buttonType={ButtonType.LAUNCH}
-            isEnabled={isGameLaunchable}
-            onClick={handleLaunchGame}
-            wideButtonOverride
-          />
-        )}
-        {isMyLibraryQuestion && (
-          <CentralButton
-            buttonType={ButtonType.ADDTOGAME}
+            buttonType={isCreateGame ? ButtonType.ADDTOGAME : ButtonType.VIEW}
             isEnabled
             onClick={() => handleViewButtonClick(game)}
             wideButtonOverride
           />
-        )}
-        {isLibrary && (
-          <LastUpdatedText>
-            Last updated <b>{lastUpdated}</b>
-          </LastUpdatedText>
-        )}
-      </ButtonContainer>
+          {!isCreateGame && !isMyLibraryQuestion && (
+            <CentralButton
+              buttonType={ButtonType.LAUNCH}
+              isEnabled={isGameLaunchable}
+              onClick={handleLaunchGame}
+              wideButtonOverride
+            />
+          )}
+          {isMyLibraryQuestion && (
+            <CentralButton
+              buttonType={ButtonType.ADDTOGAME}
+              isEnabled
+              onClick={() => handleViewButtonClick(game)}
+              wideButtonOverride
+            />
+          )}
+          {isLibrary && (
+            <LastUpdatedText>
+              Last modified <i>{lastUpdated}</i>
+            </LastUpdatedText>
+          )}
+        </ButtonContainer>
+      </Box>
     </GameCard>
   );
 }

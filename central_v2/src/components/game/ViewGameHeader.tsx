@@ -74,7 +74,7 @@ export default function ViewGameHeader({ handleBackClick, handleEditGame, handle
                 </Box>
               )}
                 <CentralButton
-                  buttonType={ButtonType.LAUNCH}
+                  buttonType={ButtonType.LAUNCHPINK}
                   isEnabled={!isIncompleteDraft}
                   buttonWidthOverride="140px"
                   onClick={handleLaunchGame}
@@ -118,7 +118,7 @@ export default function ViewGameHeader({ handleBackClick, handleEditGame, handle
               </Box>
             )}
           <CentralButton
-            buttonType={ButtonType.LAUNCH}
+            buttonType={ButtonType.LAUNCHPINK}
             isEnabled={!isIncompleteDraft}
             onClick={handleLaunchGame}
           />
