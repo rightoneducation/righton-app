@@ -61,8 +61,17 @@ export default function ViewGame({
     (centralData.selectedGame &&
       centralData.selectedGame.game &&
       centralData.selectedGame.game.questionTemplates &&
-      centralData.selectedGame.game.questionTemplates?.length > 0) ??
+      centralData.selectedGame.game.questionTemplates?.length > 0 &&
+      centralData.selectedGame.game.title.length > 0 && 
+      centralData.selectedGame.game.description.length > 0 &&
+      centralData.selectedGame.game.imageUrl &&
+      centralData.selectedGame.game.phaseOneTime > 0 &&
+      centralData.selectedGame.game.phaseTwoTime > 0 )
+      ??
     false;
+
+  const isOwner = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
+  const isIncompleteDraft = centralData.selectedGame?.game?.publicPrivateType === PublicPrivateType.DRAFT && !isGameLaunchable;
 
   useEffect(() => {
     setIsLoading(false);
@@ -206,7 +215,7 @@ export default function ViewGame({
       ) : (
         centralData.selectedGame && (
           <CreateGameContentContainer>
-            <ViewGameHeader handleBackClick={handleBackClick} handleEditGame={handleEditGame} handleLaunchGame={handleLaunchGame} label="View" screenSize={screenSize} />
+            <ViewGameHeader isOwner={isOwner} isIncompleteDraft={isIncompleteDraft} handleBackClick={handleBackClick} handleEditGame={handleEditGame} handleLaunchGame={handleLaunchGame} label="View" screenSize={screenSize} />
             <CreateGameBoxContainer screenSize={screenSize}>
             <Box style={{ width: '100%', maxWidth: '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
               <DetailedGameCardBase

@@ -38,6 +38,7 @@
     "update": "Actualizar",
     "continue": "Continuar",
     "cancelquestion": "Cancelar",
-    "saveadd": "Guardar y Agregar"
+    "saveadd": "Guardar y Agregar",
+    "duplicate": "Duplicar"
   }
 }
