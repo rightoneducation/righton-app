@@ -63,8 +63,8 @@ const OwnerTagSubGridContainer = styled(Grid)(({ theme }) => ({
 
 const OwnerTagProfilePicture = styled('img')<OwnerTagProps>(
   ({ theme, screenSize }) => ({
-    height: '128px',
-    width: '128px',
+    height: '100px',
+    width: '100px',
     borderRadius: '50%',
     objectFit: 'cover',
   }),
@@ -99,7 +99,7 @@ const OwnerTagHeader = styled(Typography)(({ theme }) => ({
 
 const OwnerTagBody = styled(OwnerTagHeader)(({ theme }) => ({
   fontWeight: 300,
-  textAlign: 'center',
+  textAlign: 'left',
 }));
 
 export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
@@ -119,14 +119,16 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
       );
       displayCreatedName = override ? override.display : createdName;
       displayNumUsed = timesPlayed ?? 0;
-      displayLastModified = (lastModified ?? new Date()).toLocaleDateString(
-        'en-US',
-        {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        },
-      );
+      const date = lastModified ?? new Date();
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const day = date.getDate().toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const timeString = date.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      }).toLowerCase().replace(' ', '');
+      displayLastModified = `${month}. ${day}, ${year} at ${timeString}`;
     }
   } else if (centralData.selectedQuestion) {
     const { profilePic, createdName, lastModified, timesPlayed } =
@@ -135,14 +137,16 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
     const override = userNameOverrides.find((o) => createdName.includes(o.raw));
     displayCreatedName = override ? override.display : createdName;
     displayNumUsed = timesPlayed ?? 0;
-    displayLastModified = (lastModified ?? new Date()).toLocaleDateString(
-      'en-US',
-      {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      },
-    );
+    const date = lastModified ?? new Date();
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const timeString = date.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    }).toLowerCase().replace(' ', '');
+    displayLastModified = `${month}. ${day}, ${year} at ${timeString}`;
   }
   const isOwnerLoaded =
     displayCreatedName !== '' &&
@@ -152,9 +156,9 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
   return  (
     <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize} elevation={6} >
       {isOwnerLoaded ? (
-        <Box style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', gap: `40px` }}>
+        <Box style={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: `24px` }}>
           <Box
-          style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.xSmPadding}px` }}
+          style={{  display: 'flex', flexDirection: 'column', paddingLeft: `${theme.sizing.lgPadding}px`, paddingRight: `${theme.sizing.lgPadding}px`,  gap: `${theme.sizing.smPadding}px`, boxSizing: 'border-box' }}
           >
           <OwnerTagSubContainer screenSize={screenSize} style={{ alignItems: 'center'}}>
             <OwnerTagHeader>Created By:</OwnerTagHeader>
@@ -166,7 +170,7 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
           />
           </Box>
           <Box
-          style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}
+          style={{ maxWidth: '168px',display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}
           >
             <OwnerTagSubContainer screenSize={screenSize}>
               <OwnerTagHeader>Last Modified:</OwnerTagHeader>

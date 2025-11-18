@@ -46,6 +46,7 @@ export default function DetailedQuestionCardUnified({
       isCardComplete={false}
       style={{
         maxWidth: '410px',
+        gap: `${theme.sizing.xSmPadding}px`,
       }}
     >
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
@@ -79,6 +80,7 @@ export default function DetailedQuestionCardUnified({
           width: '100%',
           margin: 0,
           padding: '8px',
+          paddingBottom: '35px',
           boxSizing: 'border-box',
           display: 'flex',
           flexDirection: 'column',
@@ -115,7 +117,6 @@ export default function DetailedQuestionCardUnified({
           justifyContent: 'flex-end',
           gap: '8px',
           flexWrap: 'wrap',
-          marginTop: '8px',
         }}
       >
         {question?.ccss && <ButtonCCSS key={uuidv4()}>{question.ccss}</ButtonCCSS>}
