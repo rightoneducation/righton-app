@@ -28,6 +28,7 @@ import {
   StorageKey,
   GameQuestionType,
   ModalStateType,
+  StorageKeyIsFirstCreate,
 } from '../lib/CentralModels';
 import { timeLookup } from '../components/cards/creategamecard/time';
 import {
@@ -1063,6 +1064,8 @@ export default function CreateGame({
 
   useEffect(() => {
     setIsLoading(false);
+    if (localStorage.getItem(StorageKeyIsFirstCreate) === null)
+      localStorage.setItem(StorageKeyIsFirstCreate, 'true');
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;
