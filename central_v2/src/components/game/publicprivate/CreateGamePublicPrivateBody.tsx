@@ -1,8 +1,14 @@
 import React from 'react';
 import { Box, Paper, Typography, useTheme, styled } from '@mui/material';
+import { PublicPrivateType } from '@righton/networking';
 import { ScreenSize } from '../../../lib/CentralModels';
 import { CreateGameContentContainer } from '../../../lib/styledcomponents/CreateGameStyledComponent';
+import CreateGamePublicPrivateButton from './CreateGamePublicPrivateButton';
+import { ButtonType } from '../../button/ButtonModels';
+import CentralButton from '../../button/Button';
 import aiMonster from '../../../images/aiMonster.svg';
+import CreateGamePublicPrivateSwiper from './CreateGamePublicPrivateSwiper';
+import PaginationContainerStyled from '../../../lib/PaginationContainerStyled';
 
 const TitleText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins',
@@ -20,27 +26,14 @@ const SubTitleText = styled(Typography)(({ theme }) => ({
   lineHeight: '18px',
 }));
 
-const HeaderText = styled(Typography)({
-  fontSize: '24px',
-  fontFamily: 'Poppins',
-  fontWeight: '700',
-  lineHeight: '32px',
-  color: '#384466',
-});
-
-const BodyText = styled(Typography)({
-  fontSize: '16px',
-  fontFamily: 'Rubik',
-  fontWeight: '400',
-  lineHeight: '18px',
-  color: '#384466',
-});
-
 interface CreateGamePublicPrivateBodyProps {
   screenSize: ScreenSize;
+  selectedButton: PublicPrivateType;
+  setSelectedButton: (button: PublicPrivateType) => void;
+  handleStartCreating: (selected: PublicPrivateType) => void;
 }
 
-export default function CreateGamePublicPrivateBody({ screenSize }: CreateGamePublicPrivateBodyProps) {
+export default function CreateGamePublicPrivateBody({ screenSize, selectedButton, setSelectedButton, handleStartCreating }: CreateGamePublicPrivateBodyProps) {
   const theme = useTheme();
   return (
     <CreateGameContentContainer
@@ -63,7 +56,7 @@ export default function CreateGamePublicPrivateBody({ screenSize }: CreateGamePu
             elevation={6}
             style={{
               position: 'relative',
-              width: '100%',
+              width: screenSize !== ScreenSize.LARGE ? '100%' : '436px',
               maxWidth: '436px',
               minHeight: '577px',
               display: 'flex',
@@ -82,19 +75,16 @@ export default function CreateGamePublicPrivateBody({ screenSize }: CreateGamePu
           >
             <Box
               style={{
+                width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',
                 justifyContent: 'flex-start',
-                gap: `${theme.sizing.mdPadding}px`,
+                gap: `${theme.sizing.lgPadding}px`
               }}
             >
-              <HeaderText>What happens if my game is made public?</HeaderText>
-              <BodyText>Public games are usable by other users, once published, without making edits to your game. </BodyText>
-              <BodyText>
-                  <b>If you decide to make your game private before publishing, all public questions added from the question bank will be removed.</b> Once your game is published, you will no longer be able to edit 
-                  this setting.
-              </BodyText>
+              <CreateGamePublicPrivateSwiper />
+              <PaginationContainerStyled className="swiper-pagination-container" style={{justifyContent: 'flex-start'}}/>
             </Box>
             <img 
               src={aiMonster} 
@@ -109,19 +99,65 @@ export default function CreateGamePublicPrivateBody({ screenSize }: CreateGamePu
           </Paper>
         </Box>
         {/* Column 2 */}
-        <Box>
+        <Box
+          style={{
+            position: 'relative',
+            width: '100%',
+            zIndex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            alignSelf: 'stretch',
+          }}
+        >
           <Box
             style={{
+              width: '100%',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-start',
               justifyContent: 'flex-start',
-              gap: `${theme.sizing.smPadding}px`,
+              gap: `72px`,
             }}
           >
-            <TitleText>Choose your game type</TitleText>
-            <SubTitleText>You can change your mind while editing your game before publishing</SubTitleText>
+            <Box
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                gap: `${theme.sizing.smPadding}px`,
+              }}
+            >
+              <TitleText>Choose your game type</TitleText>
+              <SubTitleText>You can change your mind while editing your game before publishing</SubTitleText>
+            </Box>
+            <Box
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                gap: `${theme.sizing.lgPadding}px`,
+              }}
+            >
+              <Box style={{width: '100%', cursor: 'pointer'}} onClick={() => setSelectedButton(PublicPrivateType.PUBLIC)}> 
+                <CreateGamePublicPrivateButton isPublic isSelected={selectedButton === PublicPrivateType.PUBLIC} />
+              </Box >
+              <Box style={{width: '100%', cursor: 'pointer'}} onClick={() => setSelectedButton(PublicPrivateType.PRIVATE)}> 
+                <CreateGamePublicPrivateButton isPublic={false} isSelected={selectedButton === PublicPrivateType.PRIVATE} />
+              </Box>
+            </Box>
           </Box>
+          <CentralButton 
+            buttonType={ButtonType.STARTCREATING}
+            buttonWidthOverride={ screenSize === ScreenSize.LARGE ? "240px" : "100%" }
+            isEnabled 
+            onClick={() => handleStartCreating(selectedButton)}
+          /> 
         </Box>
       </Box>
     </CreateGameContentContainer> 

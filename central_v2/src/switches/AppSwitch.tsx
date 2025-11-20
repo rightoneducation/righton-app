@@ -213,7 +213,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.CLONEGAME:
     case ScreenType.EDITGAME: {
       screenComponent = (
-        <CreateGame
+        <CreateGameSwitch
           screenSize={screenSize}
           setIsTabsOpen={setIsTabsOpen}
           fetchElement={fetchElement}

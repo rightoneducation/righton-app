@@ -80,6 +80,7 @@ import CreateGameModalSwitch from '../components/modal/switches/CreateGameModalS
 
 interface CreateGameProps {
   screenSize: ScreenSize;
+  initPublicPrivate: PublicPrivateType;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: (
@@ -99,6 +100,7 @@ interface CreateGameProps {
 
 export default function CreateGame({
   screenSize,
+  initPublicPrivate,
   setIsTabsOpen,
   fetchElement,
   fetchElements,
@@ -1064,8 +1066,16 @@ export default function CreateGame({
 
   useEffect(() => {
     setIsLoading(false);
-    if (localStorage.getItem(StorageKeyIsFirstCreate) === null)
-      localStorage.setItem(StorageKeyIsFirstCreate, 'true');
+    if (localStorage.getItem(StorageKeyIsFirstCreate) === null){
+      localStorage.setItem(StorageKeyIsFirstCreate, 'false');
+      setDraftGame((prev) => ({
+        ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+          publicPrivateType: initPublicPrivate,
+        },
+      }));
+    }
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;

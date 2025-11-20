@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GradeTarget, SortType, SortDirection } from '@righton/networking';
+import { GradeTarget, SortType, SortDirection, PublicPrivateType } from '@righton/networking';
 import { 
   ScreenSize, 
   GameQuestionType, 
@@ -40,11 +40,18 @@ export default function CreateGameSwitch({
   loadMore
 }: CreateGameProps) {
   const navigate = useNavigate();
-  const isFirstCreate = localStorage.getItem(StorageKeyIsFirstCreate) === 'true';
+  const [isFirstCreate, setIsFirstCreate] = useState<boolean>(!localStorage.getItem(StorageKeyIsFirstCreate));
   const handleBackClick = () => {
     localStorage.removeItem(StorageKeyIsFirstCreate);
     navigate('/library');
   };
+  const [initPublicPrivate, setInitPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
+
+  const handleStartCreating = (selected: PublicPrivateType) => {
+    setInitPublicPrivate(selected);
+    setIsFirstCreate(false);
+  };
+
   switch (isFirstCreate){
     case false:
       return (
@@ -57,6 +64,7 @@ export default function CreateGameSwitch({
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}
           loadMore={loadMore}
+          initPublicPrivate={initPublicPrivate}
         />
       );
     case true:
@@ -65,6 +73,7 @@ export default function CreateGameSwitch({
         <CreateGamePublicPrivate 
           screenSize={screenSize}
           handleBackClick={handleBackClick}
+          handleStartCreating={handleStartCreating}
         />
       );
   }
