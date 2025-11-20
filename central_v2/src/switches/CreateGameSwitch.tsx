@@ -1,12 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GradeTarget, SortType, SortDirection } from '@righton/networking';
 import { 
   ScreenSize, 
   GameQuestionType, 
   LibraryTabEnum,
   StorageKeyIsFirstCreate
 } from '../lib/CentralModels';
-import { GradeTarget, SortType, SortDirection } from '@righton/networking';
 import CreateGame from '../pages/CreateGame';
+import CreateGamePublicPrivate from '../pages/CreateGamePublicPrivate';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -37,8 +39,12 @@ export default function CreateGameSwitch({
   handleSortChange,
   loadMore
 }: CreateGameProps) {
+  const navigate = useNavigate();
   const isFirstCreate = localStorage.getItem(StorageKeyIsFirstCreate) === 'true';
-  console.log('isFirstCreate', isFirstCreate);
+  const handleBackClick = () => {
+    localStorage.removeItem(StorageKeyIsFirstCreate);
+    navigate('/library');
+  };
   switch (isFirstCreate){
     case false:
       return (
@@ -56,15 +62,9 @@ export default function CreateGameSwitch({
     case true:
     default:
       return (
-        <CreateGame
+        <CreateGamePublicPrivate 
           screenSize={screenSize}
-          setIsTabsOpen={setIsTabsOpen}
-          fetchElement={fetchElement}
-          fetchElements={fetchElements}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
-          handleSearchChange={handleSearchChange}
-          loadMore={loadMore}
+          handleBackClick={handleBackClick}
         />
       );
   }

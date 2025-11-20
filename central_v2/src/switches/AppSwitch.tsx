@@ -16,6 +16,7 @@ import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login';
 import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
+import CreateGameSwitch from './CreateGameSwitch';
 import ViewGame from '../pages/ViewGame';
 import ViewQuestion from '../pages/ViewQuestion';
 import MyLibrary from '../pages/MyLibrary';
@@ -195,7 +196,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.CREATEGAME: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
-          <CreateGame
+          <CreateGameSwitch
             screenSize={screenSize}
             setIsTabsOpen={setIsTabsOpen}
             fetchElement={fetchElement}
