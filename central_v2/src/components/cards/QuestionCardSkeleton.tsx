@@ -31,6 +31,7 @@ export default function SkeletonQuestionCard({
     >
       <QuestionCard
         sx={{
+          height: '100%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
@@ -102,12 +103,6 @@ export default function SkeletonQuestionCard({
               sx={{ borderRadius: 1, height: '100%' }}
             />
           </Box>
-          <Skeleton
-            animation="wave"
-            variant="rounded"
-            width="100%"
-            height="38px"
-          />
           <Skeleton
             animation="wave"
             variant="rounded"

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box, styled, useTheme } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import { IQuestionTemplate, CloudFrontDistributionUrl } from '@righton/networking';
+import { IQuestionTemplate, CloudFrontDistributionUrl, PublicPrivateType } from '@righton/networking';
 import {
   QuestionTitleStyled,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
@@ -71,7 +71,7 @@ export default function DetailedQuestionCardUnified({
             color: '#FFFFFF',
           }}
         >
-          Public
+          {question?.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
         </Box>
       </CreateQuestionTitleBarStyled>
       <Box

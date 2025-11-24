@@ -103,6 +103,7 @@ export enum TemplateType {
 
 // key for storage to localStorage
 export const StorageKey = 'rightOnCentral';
+export const StorageKeyIsFirstCreate = 'isFirstCreate';
 
 // type that shapes retreived storage for createQuestion
 export type CreateQuestionLocalData = {

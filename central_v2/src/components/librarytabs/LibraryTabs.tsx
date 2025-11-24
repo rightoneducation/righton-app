@@ -35,7 +35,7 @@ import {
 import tabPublicIcon from '../../images/tabPublic.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import tabPrivateIcon from '../../images/tabPrivate.svg';
+import tabPrivateIcon from '../../images/books.svg';
 import LibraryTabsContent from './LibraryTabsContent';
 
 interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
@@ -100,9 +100,11 @@ export default function LibraryTabs({
     LibraryTabEnum.FAVORITES,
   ];
 
+  const gameQuestionText = gameQuestion === GameQuestionType.GAME ? 'Games' : 'Questions';
+
   const tabMap: { [key in LibraryTabEnum]: string } = {
-    [LibraryTabEnum.PUBLIC]: 'Public',
-    [LibraryTabEnum.PRIVATE]: 'Private',
+    [LibraryTabEnum.PUBLIC]: `Public ${gameQuestionText}`,
+    [LibraryTabEnum.PRIVATE]: `Private ${gameQuestionText}`,
     [LibraryTabEnum.DRAFTS]: 'Drafts',
     [LibraryTabEnum.FAVORITES]: 'Favorites',
   };
@@ -185,11 +187,12 @@ export default function LibraryTabs({
                 alignItems: 'center',
                 marginRight: '12px',
                 textTransform: 'none',
-                fontFamily: 'Karla',
+                fontFamily: 'Poppins',
                 fontSize: 20,
-                fontWeight: 600,
+                fontWeight: 800,
                 padding: '16px',
                 boxSizing: 'border-box',
+                color: isSelected ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)',
               }}
             />
           );

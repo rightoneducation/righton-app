@@ -38,8 +38,9 @@
     "update": "Actualizar",
     "continue": "Continuar",
     "cancelquestion": "Cancelar",
-    "saveadd": "Guardar y Agregar",
+    "saveadd": "Agregar Pregunta",
     "duplicate": "Duplicar",
-    "launchpink": "Lanzar"
+    "launchpink": "Lanzar",
+    "startcreating": "Empezar a Crear"
   }
 }
