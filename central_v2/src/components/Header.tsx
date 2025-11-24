@@ -79,7 +79,7 @@ const HeaderContainer = styled(Box, {
     `,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'bottom', // Adjust as needed
-  zIndex: 1,
+  zIndex: 5350,
   gap: `${theme.sizing.mdPadding}px`,
   transition: 'height 0.5s ease-in-out',
 }));
@@ -89,7 +89,7 @@ const HeaderFirstRow = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  zIndex: 1000,
+  zIndex: 5400,
 }));
 
 const HeaderSecondRow = styled(HeaderFirstRow)(({ theme }) => ({
@@ -218,7 +218,7 @@ export default function Header({
 
   const createMenu = [
     <CreateButtonContainer key="createMenu">
-      <Box style={{ zIndex: 9 }}>
+      <Box style={{ zIndex: 5403 }}>
         <CentralButton
           buttonType={ButtonType.CREATE}
           isEnabled
@@ -229,7 +229,7 @@ export default function Header({
       </Box>
       <Collapse
         in={isCreateMenuOpen}
-        style={{ position: 'absolute', top: '50%', zIndex: 8, width: '100%' }}
+        style={{ position: 'absolute', top: '50%', zIndex: 5401, width: '100%' }}
       >
         <CreateDropDown>
           <Box
@@ -354,7 +354,7 @@ export default function Header({
           collapsedSize={0}
           style={{
             width: '100%',
-            zIndex: 1000,
+            zIndex: 5400,
             position: 'absolute',
             paddingBottom: '34px',
             background: menuOpen
