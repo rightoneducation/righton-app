@@ -13,7 +13,7 @@ import { handleCheckQuestionComplete } from '../../lib/helperfunctions/createGam
 import CCSSTabs from '../ccsstabs/CCSSTabs';
 import ImageUploadModal from './ImageUploadModal';
 import { updateDQwithImage, updateDQwithImageURL } from '../../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-
+import { AISwitch } from '../../lib/styledcomponents/AISwitchStyledComponent';
 
 interface CreateQuestionModalProps {
     isModalOpen: boolean;
@@ -81,6 +81,12 @@ export default function CreateQuestionModal({
     const theme = useTheme();
     const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState(false);
     const [isImageUploadVisible, setIsImageUploadVisible] = useState(false);
+    const [isAISwitchEnabled, setIsAISwitchEnabled] = useState(false);
+
+    const handleSwitchChange = (value: boolean) => {
+      setIsAISwitchEnabled(value);
+    }
+
     const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
       return (
         {
@@ -394,24 +400,30 @@ export default function CreateQuestionModal({
                         gap: `${theme.sizing.xSmPadding}px`,
                       }}
                     >
-                      <Typography
-                        sx={{
-                          fontFamily: 'Poppins',
-                          fontSize: '20px',
-                          fontWeight: 'bold',
+                      <Box
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          gap: `${theme.sizing.smPadding}px`,
                         }}
                       >
-                        Incorrect Answers
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontFamily: 'Rubik',
-                          fontSize: '16px',
-                          fontWeight: '400',
-                        }}
-                      >
-                        Each question has three incorrect answers
-                      </Typography>
+                        <Typography
+                          sx={{
+                            maxWidth: '550px',
+                            fontFamily: 'Rubik',
+                            fontSize: '16px',
+                            fontWeight: '400',
+                            textAlign: 'right'
+                          }}
+                        >
+                          Use our <i>Wrong Answer Explanation Generator</i> to generate incorrect answer explanations.
+                        </Typography>
+                        <AISwitch
+                          value={isAISwitchEnabled}
+                          onChange={(e: any) => handleSwitchChange(e.target.checked)}
+                        />
+                      </Box>
                       {draftQuestion.incorrectCards.map((card, index) => (
                         <IncorrectAnswerCard
                           screenSize={screenSize}
@@ -424,6 +436,7 @@ export default function CreateQuestionModal({
                           isCardSubmitted={false}
                           isCardErrored={false}
                           isAIError={false}
+                          isAISwitchEnabled={isAISwitchEnabled}
                         />
                       ))}
                     </Box>
