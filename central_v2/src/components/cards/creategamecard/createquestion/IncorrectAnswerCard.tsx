@@ -68,7 +68,7 @@ export default function IncorrectAnswerCard({
       isClone={isClone}
     >
       <QuestionTitleStyled sx={{ color: '#47366C' }}>
-        Incorrect Answer {cardIndex+1}
+        Incorrect Answer {cardIndex+1}*
       </QuestionTitleStyled>
       <TextContainerStyled
         multiline
@@ -123,7 +123,7 @@ export default function IncorrectAnswerCard({
         }}
       />
       <QuestionTitleStyled sx={{ color: '#47366C' }}>
-        Solution Explanation
+        Explanation*
       </QuestionTitleStyled>
       <TextContainerStyled
         multiline

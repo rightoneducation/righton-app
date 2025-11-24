@@ -232,6 +232,17 @@ export default function CreateQuestionCardBase({
         >
           Your Question
         </CreateGameTitleText>
+        <Box
+          style={{
+            width: 'fit-content',
+            padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.smPadding}px`,
+            borderRadius: '12px',
+            backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
+            color: '#FFFFFF',
+          }}
+        >
+          {draftQuestion.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
+        </Box>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled>
       <HeaderText>
@@ -367,19 +378,6 @@ export default function CreateQuestionCardBase({
               </Box>
             </ButtonCCSS>
           </Box> 
-          <Box style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Box
-              style={{
-                width: 'fit-content',
-                padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.smPadding}px`,
-                borderRadius: '12px',
-                backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
-                color: '#FFFFFF',
-              }}
-            >
-              Public
-            </Box>
-          </Box>
           </ContentContainerStyled>
       {screenSize !== ScreenSize.SMALL && (isCardErrored || isDraftCardErrored)  && <ErrorBox />}
     </BaseCardStyled>

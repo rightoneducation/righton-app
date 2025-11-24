@@ -201,7 +201,7 @@ export default function DetailedQuestionSubCard({
       isClone={isClone}
     >
       <QuestionTitleStyled sx={{ color: '#148700' }}>
-        Correct Answer
+        Correct Answer*
       </QuestionTitleStyled>
       <TextContainerStyled
         multiline
@@ -256,7 +256,7 @@ export default function DetailedQuestionSubCard({
         }}
       />
       <QuestionTitleStyled sx={{ color: '#47366C' }}>
-        Solution Explanation
+        Explanation*
       </QuestionTitleStyled>
       {draftQuestion.correctCard.answerSteps &&
         draftQuestion.correctCard.answerSteps.map((step, index) =>

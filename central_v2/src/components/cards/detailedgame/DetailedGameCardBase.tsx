@@ -31,7 +31,7 @@ export const CreateQuestionTitleBarStyled = styled(
   width: '100%',
   height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize !== ScreenSize.LARGE ? 'column' : 'row',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: screenSize !== ScreenSize.LARGE ? 'flex-start' : 'center',
   gap:
@@ -100,6 +100,17 @@ export default function DetailedGameCardBase({
           >
             <QuestionTitleStyled>{game?.title || ''}</QuestionTitleStyled>
           </Box>
+          <Box
+            style={{
+              width: 'fit-content',
+              padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.smPadding}px`,
+              borderRadius: '12px',
+              backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
+              color: '#FFFFFF',
+            }}
+          >
+            {game?.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
+          </Box>
         </CreateQuestionTitleBarStyled>
         <Box
           style={{
@@ -145,27 +156,6 @@ export default function DetailedGameCardBase({
           style={{ width: '100%', height: '185px', objectFit: 'cover', borderRadius: '8px', }}
         />
       </Box>      
-      <Box
-        style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: '8px',
-          flexWrap: 'wrap',
-        }}
-      >
-        <Box
-          style={{
-            width: 'fit-content',
-            padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.smPadding}px`,
-            borderRadius: '12px',
-            backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
-            color: '#FFFFFF',
-          }}
-        >
-          {game?.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
-        </Box>
-      </Box>
     </BaseCardStyled>
   );
 }

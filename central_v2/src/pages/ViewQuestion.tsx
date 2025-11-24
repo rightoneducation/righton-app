@@ -211,7 +211,7 @@ export default function ViewQuestion({
                     width: '100%',
                     maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px',
                     display: 'flex',
-                    flexDirection: screenSize !== ScreenSize.LARGE ? 'column' : 'row',
+                    flexDirection:  'column',
                     gap: `${theme.sizing.mdPadding}px`,
                   }}
                 >

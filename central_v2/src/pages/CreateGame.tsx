@@ -1051,7 +1051,7 @@ export default function CreateGame({
   };
 
   const handleCreateQuestion = (draftQuestion: CentralQuestionTemplateInput) => {
-    setDraftQuestionsList((prev) => [...prev, {
+    setDraftQuestionsList((prev) => [{
       ...draftTemplate,
       question: draftQuestion,
       publicPrivate: draftGame.gameTemplate.publicPrivateType,
@@ -1060,7 +1060,7 @@ export default function CreateGame({
       isQuestionCardSubmitted: false,
       isQuestionCardErrored: false,
       localId: uuidv4(),
-    }]);
+    },...prev ]);
     setModalState(ModalStateType.NULL);
   };
 
