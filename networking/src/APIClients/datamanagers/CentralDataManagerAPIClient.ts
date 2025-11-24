@@ -13,6 +13,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 export const userProfileLocalStorage = 'righton_userprofile';
+export const isFirstCreate = 'isFirstCreate';
 
 export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient{
   protected env: Environment;
@@ -274,6 +275,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
   public clearLocalUserProfile = () => {
     window.localStorage.removeItem(userProfileLocalStorage);
+    window.localStorage.removeItem(isFirstCreate);
   }
 
   public getUser = async (cognitoId: string) => {
