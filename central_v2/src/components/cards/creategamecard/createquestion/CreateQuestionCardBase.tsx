@@ -95,7 +95,7 @@ const CreateQuestionTitleBarStyled = styled(Box, {
   width: '100%',
   height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
   gap:
@@ -214,12 +214,14 @@ export default function CreateQuestionCardBase({
       sx={{
         ...(isCreateGame && {
           boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
-          gap: `${theme.sizing.lgPadding}px`,
           padding:
             isCreateGame && screenSize === ScreenSize.LARGE
               ? `28px`
               : `${theme.sizing.mdPadding}`,
         }),
+      }}
+      style={{
+        gap: `${theme.sizing.mdPadding}px`,
       }}
       elevation={6}
       isCardComplete={draftQuestion.questionCard.isCardComplete}
@@ -245,139 +247,139 @@ export default function CreateQuestionCardBase({
         </Box>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled>
-      <HeaderText>
-        Enter your question*
-      </HeaderText>
-      <TextContainerStyled
-        multiline
-        variant="outlined"
-        rows={isCreateGamePage ? '7' : '5'}
-        sx={{
-          '& .MuiInputBase-root': {
-            fontFamily: 'Rubik',
-            ...(isCreateGamePage && { height: '196px' }),
-          },
-          '& .MuiInputBase-input': {
-            color: '#384466',
-            opacity: isCardErrored ? 1 : 0.5,
-            '&::placeholder': {
-              color: isCardErrored ? '#D0254D' : '#384466',
+        <HeaderText>
+          Enter your question*
+        </HeaderText>
+        <TextContainerStyled
+          multiline
+          variant="outlined"
+          rows={isCreateGamePage ? '7' : '5'}
+          sx={{
+            '& .MuiInputBase-root': {
+              fontFamily: 'Rubik',
+              ...(isCreateGamePage && { height: '196px' }),
+            },
+            '& .MuiInputBase-input': {
+              color: '#384466',
               opacity: isCardErrored ? 1 : 0.5,
+              '&::placeholder': {
+                color: isCardErrored ? '#D0254D' : '#384466',
+                opacity: isCardErrored ? 1 : 0.5,
+              },
+              '&:focus': {
+                color: '#384466',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#384466',
+                opacity: 1,
+              },
             },
-            '&:focus': {
-              color: '#384466',
-              opacity: 1,
-            },
-            '&:focus::placeholder': {
-              color: '#384466',
-              opacity: 1,
-            },
-          },
-        }}
-        placeholder="Enter question here..."
-        error={
-          (isCardSubmitted || isDraftCardErrored || isAIError) &&
-          (!draftQuestion.questionCard.title ||
-            draftQuestion.questionCard.title.length === 0)
-        }
-        value={draftQuestion.questionCard.title}
-        onChange={(e) => handleTitleChange(e.target.value)}
-        InputProps={{
-          startAdornment: (isCardSubmitted || isDraftCardErrored || isAIError) &&
+          }}
+          placeholder="Enter question here..."
+          error={
+            (isCardSubmitted || isDraftCardErrored || isAIError) &&
             (!draftQuestion.questionCard.title ||
-              draftQuestion.questionCard.title.length === 0) && (
-              <InputAdornment
-                position="start"
-                sx={{
-                  alignSelf: 'flex-start',
-                  mt: '10px',
-                }}
-              >
-                <ErrorIcon src={errorIcon} alt="error icon" />
-              </InputAdornment>
-            ),
-        }}
-      >
-        <Typography>{draftQuestion.questionCard.title}</Typography>
-      </TextContainerStyled>
-      </ContentContainerStyled>
-      <ContentContainerStyled>
-      <HeaderText>
-        Choose your answer type
-      </HeaderText>
-      <RadioContainerStyled>
-        <RadioGroup
-          row
-          value={isMultipleChoice ? 'multiple' : 'short'}
-          onChange={handleAnswerType}
-          style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
+              draftQuestion.questionCard.title.length === 0)
+          }
+          value={draftQuestion.questionCard.title}
+          onChange={(e) => handleTitleChange(e.target.value)}
+          InputProps={{
+            startAdornment: (isCardSubmitted || isDraftCardErrored || isAIError) &&
+              (!draftQuestion.questionCard.title ||
+                draftQuestion.questionCard.title.length === 0) && (
+                <InputAdornment
+                  position="start"
+                  sx={{
+                    alignSelf: 'flex-start',
+                    mt: '10px',
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt="error icon" />
+                </InputAdornment>
+              ),
+          }}
         >
-          <RadioLabelStyled
-            value="multiple"
-            control={<RadioStyled style={{ cursor: 'pointer' }} />}
-            label="Multiple Choice"
-            isSelected={isMultipleChoice}
-            style={{ cursor: 'pointer' }}
-          />
-          <RadioLabelStyled
-            value="short"
-            control={<RadioStyled style={{ cursor: 'pointer' }} />}
-            label="Short Answer"
-            isSelected={!isMultipleChoice}
-            style={{ cursor: 'pointer' }}
-          />
-        </RadioGroup>
-      </RadioContainerStyled>
+          <Typography>{draftQuestion.questionCard.title}</Typography>
+        </TextContainerStyled>
       </ContentContainerStyled>
       <ContentContainerStyled>
         <HeaderText>
-          Include a helpful visual or diagram (optional)
+          Choose your answer type*
         </HeaderText>
-        {imageLink ? (
-          imageContents
-        ) : (
-          <ImagePlaceholder isCardErrored={isCardErrored}>
-            <CentralButton
-              buttonType={ButtonType.UPLOADIMAGE}
-              isEnabled
-              smallScreenOverride
-              onClick={handleImageUploadClick}
+        <RadioContainerStyled>
+          <RadioGroup
+            row
+            value={isMultipleChoice ? 'multiple' : 'short'}
+            onChange={handleAnswerType}
+            style={{ overflow: 'hidden', flexWrap: 'nowrap', gap: `${theme.sizing.xSmPadding}px` }}
+          >
+            <RadioLabelStyled
+              value="multiple"
+              control={<RadioStyled style={{ cursor: 'pointer' }} />}
+              label="Multiple Choice"
+              isSelected={isMultipleChoice}
+              style={{ cursor: 'pointer' }}
             />
-          </ImagePlaceholder>
-        )}
+            <RadioLabelStyled
+              value="short"
+              control={<RadioStyled style={{ cursor: 'pointer' }} />}
+              label="Short Answer"
+              isSelected={!isMultipleChoice}
+              style={{ cursor: 'pointer' }}
+            />
+          </RadioGroup>
+        </RadioContainerStyled>
+      </ContentContainerStyled>
+      <ContentContainerStyled>
+          <HeaderText>
+            Include a helpful visual or diagram (optional)
+          </HeaderText>
+          {imageLink ? (
+            imageContents
+          ) : (
+            <ImagePlaceholder isCardErrored={isCardErrored}>
+              <CentralButton
+                buttonType={ButtonType.UPLOADIMAGE}
+                isEnabled
+                smallScreenOverride
+                onClick={handleImageUploadClick}
+              />
+            </ImagePlaceholder>
+          )}
         </ContentContainerStyled>
         <ContentContainerStyled>
-        <HeaderText>
-          Choose a standard for your question*
-        </HeaderText>
-        <Box>
-            <ButtonCCSS
-              key={uuidv4()}
-              onClickCapture={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                handleCCSSButtonClick();
-              }}
-              CCSSIsErrored={CCSSIsErrored}
-              sx={{
-                gap: '3px',
-                boxShadow:
-                  screenSize === ScreenSize.SMALL
-                    ? '0px 2px 9px 0px rgb(149, 0, 35, 30%)'
-                    : 'none',
-                width: 'fit-content',
-              }}
-            >
-              {draftQuestion.questionCard.ccss}
-              <Box>
-                <img
-                  src={SelectArrow}
-                  alt="select-arrow"
-                  width={9}
-                  height={9}
-                />
-              </Box>
-            </ButtonCCSS>
-          </Box> 
+          <HeaderText>
+            Choose a standard for your question*
+          </HeaderText>
+          <Box>
+              <ButtonCCSS
+                key={uuidv4()}
+                onClickCapture={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  handleCCSSButtonClick();
+                }}
+                CCSSIsErrored={CCSSIsErrored}
+                sx={{
+                  gap: '3px',
+                  boxShadow:
+                    screenSize === ScreenSize.SMALL
+                      ? '0px 2px 9px 0px rgb(149, 0, 35, 30%)'
+                      : 'none',
+                  width: 'fit-content',
+                }}
+              >
+                {draftQuestion.questionCard.ccss}
+                <Box>
+                  <img
+                    src={SelectArrow}
+                    alt="select-arrow"
+                    width={9}
+                    height={9}
+                  />
+                </Box>
+              </ButtonCCSS>
+            </Box> 
           </ContentContainerStyled>
       {screenSize !== ScreenSize.SMALL && (isCardErrored || isDraftCardErrored)  && <ErrorBox />}
     </BaseCardStyled>

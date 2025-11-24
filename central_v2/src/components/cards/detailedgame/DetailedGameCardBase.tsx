@@ -100,17 +100,6 @@ export default function DetailedGameCardBase({
           >
             <QuestionTitleStyled>{game?.title || ''}</QuestionTitleStyled>
           </Box>
-          <Box
-            style={{
-              width: 'fit-content',
-              padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.smPadding}px`,
-              borderRadius: '12px',
-              backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
-              color: '#FFFFFF',
-            }}
-          >
-            {game?.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
-          </Box>
         </CreateQuestionTitleBarStyled>
         <Box
           style={{
@@ -155,7 +144,20 @@ export default function DetailedGameCardBase({
           alt="question"
           style={{ width: '100%', height: '185px', objectFit: 'cover', borderRadius: '8px', }}
         />
-      </Box>      
+      </Box> 
+      <Box style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+        <Box
+          style={{
+            width: 'fit-content',
+            padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.smPadding}px`,
+            borderRadius: '12px',
+            backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
+            color: '#FFFFFF',
+          }}
+        >
+          {game?.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
+        </Box>
+      </Box>
     </BaseCardStyled>
   );
 }

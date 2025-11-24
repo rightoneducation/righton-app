@@ -81,7 +81,7 @@ export default function ViewGame({
     let id = '';
     if (route) id = route?.params.gameId ?? '';
     else if (libRoute) id = libRoute?.params.gameId ?? '';
-    if (!centralData.selectedGame || (!centralData.selectedGame.game && id)) {
+    if (!centralData.selectedGame || (!centralData.selectedGame.game && id)  || (centralData.selectedGame?.game?.id !== id)) {
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, id);
     }

@@ -69,7 +69,7 @@ export default function ViewQuestion({
     let id = '';
     if (route) id = route?.params.questionId ?? '';
     else if (libRoute) id = libRoute?.params.questionId ?? '';
-    if (!centralData.selectedQuestion || (!centralData.selectedQuestion.question && id)) {
+    if (!centralData.selectedQuestion || (!centralData.selectedQuestion.question && id) || (centralData.selectedQuestion.question?.id !== id)) {
       setIsLoading(true);
       fetchElement(GameQuestionType.QUESTION, id);
     }
@@ -260,12 +260,13 @@ export default function ViewQuestion({
                         >
                           {centralData.selectedQuestion.question?.choices
                             ?.filter((choice) => !choice.isAnswer)
-                            .map((choice) => (
+                            .map((choice, index) => (
                               <DetailedQuestionSubCard
                                 key={uuidv4()}
                                 cardType={CardType.INCORRECT}
                                 answer={choice.text}
                                 answerReason={choice.reason}
+                                explanationIndex={index}
                               />
                             ))}
                         </Box>
