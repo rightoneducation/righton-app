@@ -89,7 +89,7 @@ const HeaderFirstRow = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  zIndex: 7,
+  zIndex: 1000,
 }));
 
 const HeaderSecondRow = styled(HeaderFirstRow)(({ theme }) => ({
@@ -354,7 +354,7 @@ export default function Header({
           collapsedSize={0}
           style={{
             width: '100%',
-            zIndex: 7,
+            zIndex: 1000,
             position: 'absolute',
             paddingBottom: '34px',
             background: menuOpen
