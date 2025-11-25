@@ -169,12 +169,12 @@ export default function IncorrectAnswerCard({
           handleIncorrectExplanationChange(e.target.value, cardIndex)
         }
         error={
-          (isCardSubmitted || isAIError) &&
+          (isCardSubmitted) &&
           (!draftQuestion.incorrectCards[cardIndex].explanation ||
             draftQuestion.incorrectCards[cardIndex].explanation.length === 0)
         }
         InputProps={{
-          startAdornment: (isCardSubmitted || isAIError) &&
+          startAdornment: (isCardSubmitted) &&
             (!draftQuestion.incorrectCards[cardIndex].explanation ||
               draftQuestion.incorrectCards[cardIndex].explanation.length === 0) && (
               <InputAdornment
@@ -203,7 +203,7 @@ export default function IncorrectAnswerCard({
             />
         </Box>
       </Fade>
-      {isCardErrored && <ErrorBox />}
+      {isCardErrored || isAIError && <ErrorBox />}
     </BaseCardStyled>
   );
 }

@@ -22,6 +22,9 @@ interface CreateQuestionModalProps {
     handleCloseCreateQuestionModal: () => void;
 }
 
+type AIErrorArray = [boolean, boolean, boolean];
+const AI_ERROR_INDICES: ReadonlyArray<0 | 1 | 2> = [0, 1, 2];
+
 type IntegratedContainerProps = {
   screenSize: ScreenSize;
 };
@@ -82,9 +85,11 @@ export default function CreateQuestionModal({
     const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState(false);
     const [isImageUploadVisible, setIsImageUploadVisible] = useState(false);
     const [isAISwitchEnabled, setIsAISwitchEnabled] = useState(false);
+    const [isAIError, setIsAIError] = useState<AIErrorArray>([false, false, false]);
 
     const handleSwitchChange = (value: boolean) => {
       setIsAISwitchEnabled(value);
+      setIsAIError([false, false, false]);
     }
 
     const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
@@ -143,6 +148,34 @@ export default function CreateQuestionModal({
       []
     );
 
+    const handleDebouncedCheckAIFieldsComplete = useMemo(
+      () =>
+        debounce(
+          (debounceQuestion: CentralQuestionTemplateInput, currentErrors: AIErrorArray) => {
+            const hasRequiredFields =
+              Boolean(debounceQuestion.questionCard.title) &&
+              Boolean(debounceQuestion.correctCard.answer);
+
+            if (!hasRequiredFields) return;
+
+            const nextErrors = currentErrors.map((hasError, index) => {
+              if (!hasError) return hasError;
+              const card = debounceQuestion.incorrectCards[index];
+              return card?.answer ? false : hasError;
+            }) as AIErrorArray;
+
+            const hasChanged = nextErrors.some(
+              (value, index) => value !== currentErrors[index],
+            );
+
+            if (hasChanged) {
+              setIsAIError(nextErrors);
+            }
+          },
+          1000,
+        ),
+      [],
+    );
 
     const handleTitleChange = (title: string) => {
       setDraftQuestion((prev) => {
@@ -150,6 +183,8 @@ export default function CreateQuestionModal({
           ...prev,
           questionCard: { ...prev.questionCard, title },
         };
+        if (isAIError.some(Boolean))
+          handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
         handleDebouncedCheckQuestionComplete(newDraftQuestion);
         return newDraftQuestion;
       });
@@ -162,6 +197,8 @@ export default function CreateQuestionModal({
           correctCard: { ...prev.correctCard, answer: correctAnswer },
         };
         handleDebouncedCheckQuestionComplete(newDraftQuestion);
+        if (isAIError.some(Boolean))
+          handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
         return newDraftQuestion;
       });
     }
@@ -185,12 +222,20 @@ export default function CreateQuestionModal({
             i === index ? { ...card, answer: incorrectAnswer } : card
           ),
         };
+        if (isAIError.some(Boolean))
+          handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
         handleDebouncedCheckQuestionComplete(newDraftQuestion);
         return newDraftQuestion;
       });
     }
 
     const handleIncorrectExplanationChange = (incorrectExplanation: string, index: number) => {
+      if (incorrectExplanation === 'ERROR') {
+        const nextErrors = [...isAIError] as AIErrorArray;
+        nextErrors[index as 0 | 1 | 2] = true;
+        setIsAIError(nextErrors);
+        return;
+      }
       setDraftQuestion((prev) => {
         const newDraftQuestion = {
           ...prev,
@@ -366,7 +411,7 @@ export default function CreateQuestionModal({
                         isCardSubmitted={false}
                         isDraftCardErrored={false}
                         isCardErrored={false}
-                        isAIError={false}
+                        isAIError={isAIError.some(Boolean)}
                         isPublic={false}
                         isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
                       />
@@ -390,7 +435,7 @@ export default function CreateQuestionModal({
                       handleAnswerSettingsChange={() => {}}
                       isCardSubmitted={false}
                       isCardErrored={false}
-                      isAIError={false}
+                      isAIError={isAIError.some(Boolean)}
                     />
                     <Box
                       style={{
@@ -435,7 +480,7 @@ export default function CreateQuestionModal({
                           handleIncorrectExplanationChange={handleIncorrectExplanationChange}
                           isCardSubmitted={false}
                           isCardErrored={false}
-                          isAIError={false}
+                          isAIError={isAIError[index as 0 | 1 | 2]}
                           isAISwitchEnabled={isAISwitchEnabled}
                         />
                       ))}
