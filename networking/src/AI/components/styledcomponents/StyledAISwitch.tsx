@@ -12,6 +12,6 @@ export const StyledAISwitch = styled(Switch)(({
     color: '#FFFFFF',
   },
   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#111111',
+    backgroundColor: aiGradient,
   },
 }));

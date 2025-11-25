@@ -1,19 +1,17 @@
 import { Button, Typography, styled } from '@mui/material';
-import { aiGradient, darkPurple } from '../../lib/AITheme';
+import { darkPurple } from '../../lib/AITheme';
 
 export const ButtonStyled = styled(Button)(() => ({
-  width: '38px',
-  minWidth: '38px',
+  width: '100%',
   height: '38px',
-  borderRadius: '54px',
+  borderRadius: '8px',
   textTransform: 'none',
-  boxShadow: '0px 5px 16px 0px rgba(71, 15, 104, 0.6)',
-  background: aiGradient,
+  background: darkPurple,
   ':hover': {
-    background: aiGradient,
+    background: '#642db9',
   },
   '&:disabled': {
-    background: aiGradient,
+    background: '#c1abe3',
   },
   pointerEvents: 'auto'
 }));
