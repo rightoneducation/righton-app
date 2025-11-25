@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
-import { Typography, Box, InputAdornment, IconButton } from '@mui/material';
+import React from 'react';
+import {  Box, InputAdornment, Fade } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
   CentralQuestionTemplateInput,
+  WaegenInput,
+  AIButtonType,
+  AIButton,
 } from '@righton/networking';
 import { QuestionTitleStyled } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import {
@@ -17,6 +20,8 @@ import errorIcon from '../../../images/errorIcon.svg';
 import {
   ScreenSize,
 } from '../../../lib/CentralModels';
+import { useTSAPIClientsContext } from '../../../hooks/context/useAPIClientsContext';
+import { APIClientsContext } from '../../../lib/context/APIClientsContext';
 
 interface IncorrectAnswerCardProps {
   screenSize: ScreenSize;
@@ -34,6 +39,7 @@ interface IncorrectAnswerCardProps {
   isCardSubmitted: boolean;
   isCardErrored: boolean;
   isAIError: boolean;
+  isAISwitchEnabled?: boolean;
 }
 
 export default function IncorrectAnswerCard({
@@ -46,8 +52,19 @@ export default function IncorrectAnswerCard({
   isCardSubmitted,
   isCardErrored,
   isAIError,
+  isAISwitchEnabled,
 }: IncorrectAnswerCardProps) {
   const theme = useTheme();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const waegenInput: WaegenInput = {
+    question: draftQuestion.questionCard.title,
+    correctAnswer: draftQuestion.correctCard.answer,
+    wrongAnswer: draftQuestion.incorrectCards[cardIndex].answer,
+    discardedExplanations: JSON.stringify([draftQuestion.incorrectCards[cardIndex].explanation]),
+  };
+  const handleAIExplanationChange = (value: string) => {
+    handleIncorrectExplanationChange(value, cardIndex);
+  };
 
   return (
     <BaseCardStyled
@@ -148,12 +165,12 @@ export default function IncorrectAnswerCard({
             handleIncorrectExplanationChange(e.target.value, cardIndex)
           }
           error={
-            (isCardSubmitted || isAIError) &&
+            (isCardSubmitted) &&
             (!draftQuestion.incorrectCards[cardIndex].explanation ||
               draftQuestion.incorrectCards[cardIndex].explanation.length === 0)
           }
           InputProps={{
-            startAdornment: (isCardSubmitted || isAIError) &&
+            startAdornment: (isCardSubmitted) &&
               (!draftQuestion.incorrectCards[cardIndex].explanation ||
                 draftQuestion.incorrectCards[cardIndex].explanation.length === 0) && (
                 <InputAdornment
@@ -169,8 +186,21 @@ export default function IncorrectAnswerCard({
           }}
         />
       </Box>
-      {(!draftQuestion.incorrectCards[cardIndex].explanation ||
-        draftQuestion.incorrectCards[cardIndex].explanation.length === 0) && isCardSubmitted && <ErrorBox />}
+      <Fade in={isAISwitchEnabled} timeout={300} unmountOnExit>
+        <Box
+          style={{
+            width: '100%',
+          }}
+        >
+            <AIButton
+              apiClients={apiClients}
+              waegenInput={waegenInput}
+              type={AIButtonType.WAE_GEN}
+              handleClickOutput={(output) => handleAIExplanationChange(output)}
+            />
+        </Box>
+      </Fade>
+      {isCardErrored || isAIError && <ErrorBox />}
     </BaseCardStyled>
   );
 }
