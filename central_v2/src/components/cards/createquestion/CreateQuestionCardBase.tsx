@@ -247,11 +247,11 @@ export default function CreateQuestionCardBase({
         multiline
         rows={6}
         placeholder="Enter your question here..."
-        error={isTitleFieldError && isCardSubmitted}
+        error={isTitleFieldError && (isCardSubmitted || isAIError)}
         value={draftQuestion.questionCard.title}
         onChange={(e) => handleTitleChange(e.target.value)}
         InputProps={{
-          startAdornment: (isTitleFieldError && isCardSubmitted) && (
+          startAdornment: (isTitleFieldError && (isCardSubmitted || isAIError)) && (
             <InputAdornment
               position="start"
               sx={{

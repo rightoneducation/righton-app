@@ -23,7 +23,6 @@ interface CreateQuestionModalProps {
 }
 
 type AIErrorArray = [boolean, boolean, boolean];
-const AI_ERROR_INDICES: ReadonlyArray<0 | 1 | 2> = [0, 1, 2];
 
 type IntegratedContainerProps = {
   screenSize: ScreenSize;
