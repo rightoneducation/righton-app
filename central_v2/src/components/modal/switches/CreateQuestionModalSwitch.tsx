@@ -1,5 +1,5 @@
 import React from "react";
-import { ModalStateType, ScreenSize, TemplateType } from "../../../lib/CentralModels";
+import { ConfirmStateType, ModalStateType, ScreenSize, TemplateType } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import DiscardGameModal from '../DiscardGameModal';
 import ConfirmSaveModal from '../ConfirmSaveModal';
@@ -59,6 +59,7 @@ export default function CreateQuestionModalSwitch({
     case ModalStateType.CONFIRM:
       return <ConfirmSaveModal
         isModalOpen
+        confirmState={ConfirmStateType.DRAFT}
         templateType={TemplateType.QUESTION}
         handleContinue={handleContinue}
       />;

@@ -231,9 +231,11 @@ export default function MyLibrary({
       if (mappedTab !== undefined) {
         setOpenTab(mappedTab);
         if (gameQuestion !== GameQuestionType.GAME) return;
+        handleSortChange({ field: SortType.listGameTemplates, direction: SortDirection.ASC });
         fetchElements(mappedTab, '', null, true);
       }
     }
+    
     if (routeQuestions && routeQuestions.params.type) {
       const mappedTab = tabMapping[routeQuestions.params.type];
       if (mappedTab !== undefined) {
