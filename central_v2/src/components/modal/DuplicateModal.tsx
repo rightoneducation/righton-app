@@ -58,19 +58,19 @@ const CloseButton = styled('img')(({ theme }) => ({
   cursor: 'pointer',
 }));
 
-interface ConfirmSaveModalProps {
+interface DuplicateModalProps {
   isModalOpen: boolean;
-  templateType: TemplateType;
-  handleContinue?: () => void;
+  handleCloseDiscardModal?: () => void;
+  handleConfirmModal?: () => void;
+
 }
 
-export default function ConfirmSaveModal({
+export default function DuplicateModal({
   isModalOpen,
-  templateType,
-  handleContinue,
-}: ConfirmSaveModalProps) {
+  handleCloseDiscardModal,
+  handleConfirmModal
+}: DuplicateModalProps) {
   const theme = useTheme();
-  const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
 
   return (
     <Fade
@@ -96,13 +96,20 @@ export default function ConfirmSaveModal({
             gap: '16px',
           }}
         >
-          <DragText> {text} Saved </DragText>
-          <BodyText> Your game is ready to launch. </BodyText>
-          <CentralButton
-            buttonType={ButtonType.CONTINUE}
-            isEnabled
-            onClick={handleContinue || (() => {})}
-          />
+            <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
+              <Box style={{ display: 'flex', flexDirection:'column', gap: `${theme.sizing.xSmPadding}px` }}>
+              <CentralButton
+                buttonType={ButtonType.SAVE}
+                isEnabled
+                onClick={handleConfirmModal}
+              />
+              <CentralButton
+                buttonType={ButtonType.BACKTOEDIT}
+                isEnabled
+                onClick={handleCloseDiscardModal}
+              />
+              </Box>
+            </Box>
         </Box>
       </IntegratedContainer>
     </Fade>

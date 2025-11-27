@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import CentralButton from "../button/Button";
 import { ButtonType } from "../button/ButtonModels";
 import { TitleText } from "../../lib/styledcomponents/CreateGameStyledComponent";
-import { ScreenSize } from "../../lib/CentralModels";
+import { ScreenSize, ModalStateType } from "../../lib/CentralModels";
+import DuplicateModal from "../modal/DuplicateModal";
+// import CreateQuestionModalSwitch from '../components/modal/switches/CreateQuestionModalSwitch';
 
 interface ViewQuestionHeaderProps {
   handleBackClick: () => void;
@@ -26,6 +28,18 @@ export default function ViewQuestionHeader({
   screenSize
 }: ViewQuestionHeaderProps) {
   const theme = useTheme();
+  const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
+
+
+  const handleCloseDiscardModal = () => {
+    setModalState(ModalStateType.NULL);
+  };
+
+  const handleConfirmModal = () => {
+    handleCloneQuestion()  
+  };
+
+  console.log(modalState)
   return (
     <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
       <Box style={{ 
@@ -38,6 +52,24 @@ export default function ViewQuestionHeader({
         paddingTop: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
         paddingBottom: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
         }}>
+
+        {/* <ModalBackground
+                isModalOpen={
+                  isCCSSVisibleModal ||
+                  isImageUploadVisible ||
+                  modalState !== ModalStateType.NULL
+                }
+                handleCloseModal={handleCloseQuestionModal}
+        /> */}
+
+
++       {modalState === ModalStateType.DUPLICATE && (
+          <DuplicateModal
+            isModalOpen
+            handleCloseDiscardModal={handleCloseDiscardModal}
+            handleConfirmModal={handleConfirmModal}
+          />
+        )}
         <Box style={{ position: 'absolute', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <TitleText style={{lineHeight: '48px'}} screenSize={screenSize}>View {isOwner ? 'My' : ''} Question</TitleText>
         </Box>
@@ -76,7 +108,10 @@ export default function ViewQuestionHeader({
                     <CentralButton
                       buttonType={ButtonType.DUPLICATE}
                       isEnabled
-                      onClick={handleCloneQuestion}
+                      onClick={() =>{
+                        setModalState(ModalStateType.DUPLICATE)
+                        // handleCloneQuestion()
+                      }}
                     />
                   </Box>
                 )}

@@ -1,23 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import CentralButton from "../button/Button";
 import { ButtonType } from "../button/ButtonModels";
 import { TitleText } from "../../lib/styledcomponents/CreateGameStyledComponent";
-import { ScreenSize } from "../../lib/CentralModels";
+import { ModalStateType, ScreenSize } from "../../lib/CentralModels";
 
 interface ViewGameHeaderProps {
   handleBackClick: () => void;
   handleEditGame: () => void;
   handleLaunchGame: () => void;
+  handleDuplicate: () => void;
   label: string;
   screenSize: ScreenSize;
   isOwner: boolean;
   isIncompleteDraft: boolean;
 }
 
-export default function ViewGameHeader({ handleBackClick, handleEditGame, handleLaunchGame,  label, screenSize, isOwner, isIncompleteDraft }: ViewGameHeaderProps) {
+export default function ViewGameHeader({ handleDuplicate, handleBackClick, handleEditGame, handleLaunchGame,  label, screenSize, isOwner, isIncompleteDraft }: ViewGameHeaderProps) {
   const theme = useTheme();
+  const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
 
   return(
     <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
@@ -49,6 +51,7 @@ export default function ViewGameHeader({ handleBackClick, handleEditGame, handle
             buttonWidthOverride={screenSize !== ScreenSize.LARGE ? '48px' : '127px'}
             onClick={handleBackClick}
           />
+          
           {screenSize === ScreenSize.LARGE && (
             <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: `${theme.sizing.xSmPadding}px` }}>
               <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
@@ -69,7 +72,7 @@ export default function ViewGameHeader({ handleBackClick, handleEditGame, handle
                   <CentralButton
                     buttonType={ButtonType.DUPLICATE}
                     isEnabled
-                    onClick={handleBackClick}
+                    onClick={handleDuplicate}
                   />
                 </Box>
               )}

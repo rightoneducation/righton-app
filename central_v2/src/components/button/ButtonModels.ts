@@ -79,6 +79,7 @@ export enum ButtonType {
   CANCELQUESTION = 'cancelquestion',
   SAVEADD = 'saveadd',
   DUPLICATE = 'duplicate',
+  CONFIRM = 'confirm'
 }
 
 export enum ButtonColor {
@@ -354,5 +355,9 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.DUPLICATE]: {
     icon: clone,
     textKey: ButtonType.DUPLICATE,
+  },
+  [ButtonType.CONFIRM]: {
+    icon: clone,
+    textKey: ButtonType.CONFIRM,
   },
 };
