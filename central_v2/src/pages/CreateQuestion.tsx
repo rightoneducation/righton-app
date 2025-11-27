@@ -844,7 +844,6 @@ export default function CreateQuestion({
     }
   };
 
-
   const handleSaveEditedDraftQuestion = async () => {
     try {
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
@@ -1012,6 +1011,7 @@ export default function CreateQuestion({
         handlePublishQuestion={handlePublishQuestion}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
         handleContinue={handleContinue}
+        handleSaveDraft={handleSaveDraft}
         isCardErrored={isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored}
       />
       <CreateQuestionBoxContainer screenSize={screenSize}>

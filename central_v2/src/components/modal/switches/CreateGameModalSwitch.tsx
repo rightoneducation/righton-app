@@ -17,6 +17,7 @@ interface CreateGameModalSwitchProps {
   handleContinue: () => void;
   handleCreateQuestion: (draftQuestion: CentralQuestionTemplateInput) => void;
   handleCloseCreateQuestionModal: () => void;
+  handleSaveDraft: () => void;
   isCardErrored: boolean;
 }
 
@@ -30,6 +31,7 @@ export default function CreateGameModalSwitch({
   handleContinue,
   handleCreateQuestion,
   handleCloseCreateQuestionModal,
+  handleSaveDraft,
   isCardErrored,
 }: CreateGameModalSwitchProps) {
 
@@ -56,6 +58,7 @@ export default function CreateGameModalSwitch({
         templateType={TemplateType.GAME}
         handlePublishGame={handlePublishGame}
         handleCloseSaveGameModal={handleCloseSaveGameModal}
+        handleSaveDraft={handleSaveDraft}
         isCardErrored={isCardErrored}
       />;
       break;

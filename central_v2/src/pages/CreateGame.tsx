@@ -1165,6 +1165,7 @@ export default function CreateGame({
         handleContinue={handleContinue}
         handleCreateQuestion={handleCreateQuestion}
         handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
+        handleSaveDraft={handleDraftSave}
         isCardErrored={draftGame.isGameCardErrored}
       />
 

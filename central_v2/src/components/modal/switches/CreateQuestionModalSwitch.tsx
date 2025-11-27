@@ -13,6 +13,7 @@ interface CreateQuestionModalSwitchProps {
   handlePublishQuestion: () => void;
   handleCloseSaveQuestionModal: () => void;
   handleContinue: () => void;
+  handleSaveDraft: () => void;
   isCardErrored: boolean;
 }
 
@@ -24,6 +25,7 @@ export default function CreateQuestionModalSwitch({
   handlePublishQuestion,
   handleCloseSaveQuestionModal,
   handleContinue,
+  handleSaveDraft,
   isCardErrored,
 }: CreateQuestionModalSwitchProps) {
   switch (modalState) {
@@ -41,6 +43,7 @@ export default function CreateQuestionModalSwitch({
         templateType={TemplateType.QUESTION}
         handlePublishGame={handlePublishQuestion}
         handleCloseSaveGameModal={handleCloseSaveQuestionModal}
+        handleSaveDraft={handleSaveDraft}
         isCardErrored={isCardErrored}
       />;
       break;
