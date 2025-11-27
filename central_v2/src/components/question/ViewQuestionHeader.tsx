@@ -7,6 +7,7 @@ import { TitleText } from "../../lib/styledcomponents/CreateGameStyledComponent"
 import { ScreenSize, ModalStateType } from "../../lib/CentralModels";
 import DuplicateModal from "../modal/DuplicateModal";
 // import CreateQuestionModalSwitch from '../components/modal/switches/CreateQuestionModalSwitch';
+import ModalBackground from "../modal/ModalBackground";
 
 interface ViewQuestionHeaderProps {
   handleBackClick: () => void;
@@ -29,6 +30,7 @@ export default function ViewQuestionHeader({
 }: ViewQuestionHeaderProps) {
   const theme = useTheme();
   const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
+  const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState<boolean>(false);
 
 
   const handleCloseDiscardModal = () => {
@@ -37,6 +39,10 @@ export default function ViewQuestionHeader({
 
   const handleConfirmModal = () => {
     handleCloneQuestion()  
+  };
+
+  const handleCloseQuestionModal = () => {
+    setModalState(ModalStateType.NULL);
   };
 
   console.log(modalState)
@@ -53,14 +59,13 @@ export default function ViewQuestionHeader({
         paddingBottom: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
         }}>
 
-        {/* <ModalBackground
-                isModalOpen={
-                  isCCSSVisibleModal ||
-                  isImageUploadVisible ||
-                  modalState !== ModalStateType.NULL
-                }
-                handleCloseModal={handleCloseQuestionModal}
-        /> */}
+        <ModalBackground
+          isModalOpen={
+            isCCSSVisibleModal ||
+            modalState !== ModalStateType.NULL
+          }
+          handleCloseModal={handleCloseQuestionModal}
+        /> 
 
 
 +       {modalState === ModalStateType.DUPLICATE && (
