@@ -147,7 +147,7 @@ export default function CardCarousel<
               />
             ) : (
               <SkeletonQuestionCard index={index} />
-            )}
+            )} 
           </SwiperSlide>
         );
       })}

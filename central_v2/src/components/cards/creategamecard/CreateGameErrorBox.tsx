@@ -4,6 +4,7 @@ import errorCardIcon from '../../../images/errorCardIcon.svg';
 import { ScreenSize } from '../../../lib/CentralModels';
 
 const CreateGameErrorContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
   display: 'flex',
   gap: '16px',
   paddingLeft: '16px',
@@ -15,7 +16,7 @@ const CreateGameErrorContainer = styled(Box)(({ theme }) => ({
   borderRadius: '8px',
   border: `2px solid ${theme.palette.primary.errorBorder}`,
   background: `${theme.palette.primary.uploadLightGrey}`,
-  borderBox: 'box-sizing',
+  boxSizing: 'border-box',
 }));
 
 type TErrorTextProps = {
