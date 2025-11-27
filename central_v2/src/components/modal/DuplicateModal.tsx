@@ -11,6 +11,7 @@ import {
 import { TemplateType } from '../../lib/CentralModels';
 import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
+import { ButtonTypography } from '../../lib/styledcomponents/ButtonStyledComponents';
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
   position: 'absolute',
@@ -19,7 +20,7 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   height: 'auto',
   top: '50%',
   transform: 'translateY(-50%)',
-  maxHeight: '100%',
+  // maxHeight: '100%',
   maxWidth: '400px',
   background: '#FFF',
   paddingTop: '16px',
@@ -58,19 +59,19 @@ const CloseButton = styled('img')(({ theme }) => ({
   cursor: 'pointer',
 }));
 
-interface ConfirmSaveModalProps {
+interface DuplicateModalProps {
   isModalOpen: boolean;
-  templateType: TemplateType;
-  handleContinue?: () => void;
+  handleCloseDiscardModal?: () => void;
+  handleConfirmModal?: () => void;
+
 }
 
-export default function ConfirmSaveModal({
+export default function DuplicateModal({
   isModalOpen,
-  templateType,
-  handleContinue,
-}: ConfirmSaveModalProps) {
+  handleCloseDiscardModal,
+  handleConfirmModal
+}: DuplicateModalProps) {
   const theme = useTheme();
-  const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
 
   return (
     <Fade
@@ -78,13 +79,12 @@ export default function ConfirmSaveModal({
       mountOnEnter
       unmountOnExit
       timeout={1000}
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      }}
-    >
+        style={{
+          position: 'fixed',  // Use fixed instead of absolute
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+      }}    >
       <IntegratedContainer elevation={12} style={{ maxWidth: '430px', padding: `${theme.sizing.xLgPadding}px`}}>
         <Box
           style={{
@@ -93,16 +93,32 @@ export default function ConfirmSaveModal({
             justifyContent: 'space-between',
             alignItems: 'center',
             flexDirection: 'column',
-            gap: '16px',
+            gap: '24px',
           }}
         >
-          <DragText> {text} Saved </DragText>
-          <BodyText> Your game is ready to launch. </BodyText>
-          <CentralButton
-            buttonType={ButtonType.CONTINUE}
-            isEnabled
-            onClick={handleContinue || (() => {})}
-          />
+            <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
+              <Box style={{ display: 'flex', flexDirection:'column', gap: `24px` }}>
+                <DragText> Duplicate Question </DragText>
+                <BodyText> Duplicating a question creates a seperate copy you can edit freely. </BodyText>
+                <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection:'column', gap: `12px`, width: '100%'}}>
+                  <Box sx={{ width: '100%'}}>
+                    <CentralButton
+                      buttonType={ButtonType.CONFIRM}
+                      isEnabled
+                      onClick={handleConfirmModal}
+                      buttonWidthOverride='100%'
+                    />
+                  </Box>
+                  <Box sx={{ width: '100%' }}>
+                    <CentralButton
+                      buttonType={ButtonType.BACK}
+                      isEnabled
+                      onClick={handleCloseDiscardModal}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
         </Box>
       </IntegratedContainer>
     </Fade>

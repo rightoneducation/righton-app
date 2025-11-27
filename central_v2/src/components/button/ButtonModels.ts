@@ -79,6 +79,7 @@ export enum ButtonType {
   CANCELQUESTION = 'cancelquestion',
   SAVEADD = 'saveadd',
   DUPLICATE = 'duplicate',
+  CONFIRM = 'confirm',
   STARTCREATING = 'startcreating',
 }
 
@@ -355,6 +356,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.DUPLICATE]: {
     icon: clone,
     textKey: ButtonType.DUPLICATE,
+  },
+  [ButtonType.CONFIRM]: {
+    icon: clone,
+    textKey: ButtonType.CONFIRM,
   },
   [ButtonType.STARTCREATING]: {
     textKey: ButtonType.STARTCREATING,

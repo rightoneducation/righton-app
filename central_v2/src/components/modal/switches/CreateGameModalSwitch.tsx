@@ -6,6 +6,7 @@ import DiscardGameModal from '../DiscardGameModal';
 import ConfirmSaveModal from '../ConfirmSaveModal';
 import UpdatingModal from '../UpdatingModal';
 import CreateQuestionModal from '../CreateQuestionModal';
+// import DuplicateModal from "../DuplicateModal";
 
 interface CreateGameModalSwitchProps {
   modalState: ModalStateType;

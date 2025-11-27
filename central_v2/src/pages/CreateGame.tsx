@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   CentralQuestionTemplateInput,
   IQuestionTemplate,
@@ -1299,42 +1300,47 @@ export default function CreateGame({
                 }}
               >
                 {/* Create Question Form(s)  */}
-                {draftQuestionsList.map((draftQuestionItem, index) => {
-                  const uniqueKey = draftQuestionItem.questionTemplate?.id || 
-                                   draftQuestionItem.localId || 
-                                   `fallback-${index}`;
-                  const isUserCreated = draftQuestionItem.questionTemplate?.userId === centralData.userProfile?.id;
-                  return (
-                      <Fade
-                        timeout={500}
-                        in
-                        mountOnEnter
-                        unmountOnExit
-                        key={uniqueKey}
-                        style={{
-                          width: '100%'
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            width: draftQuestionItem.isLibraryViewOnly
-                              ? '100%'
-                              : 'auto',
+                <AnimatePresence>
+                  {draftQuestionsList.map((draftQuestionItem, index) => {
+                    const uniqueKey = draftQuestionItem.questionTemplate?.id ||
+                                     draftQuestionItem.localId ||
+                                     `fallback-${index}`;
+                    const isUserCreated = draftQuestionItem.questionTemplate?.userId === centralData.userProfile?.id;
+                    return (
+                        <motion.div
+                          key={uniqueKey}
+                          initial={{ opacity: 0, y: index === 0 ? 0 : -100 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                          layout
+                          style={{
+                            width: '100%',
+                            display: 'flex'
                           }}
-                        >                   
-                          <CreateQuestionCardUnified
-                            screenSize={screenSize}
-                            question={draftQuestionItem.question}
-                            questionTemplate={draftQuestionItem.questionTemplate ?? null}
-                            isUserCreated={isUserCreated}
-                            handleRemoveQuestion={() => handleDeleteQuestion(index)}
-                            isViewGame
-                            isCreateGame
-                          />
-                        </Box>
-                      </Fade>
-                  );
-                })}
+                        >
+                          <Box
+                            sx={{
+                              width: draftQuestionItem.isLibraryViewOnly
+                                ? '100%'
+                                : 'auto',
+                              flex: 1,
+                            }}
+                          >
+                            <CreateQuestionCardUnified
+                              screenSize={screenSize}
+                              question={draftQuestionItem.question}
+                              questionTemplate={draftQuestionItem.questionTemplate ?? null}
+                              isUserCreated={isUserCreated}
+                              handleRemoveQuestion={() => handleDeleteQuestion(index)}
+                              isViewGame
+                              isCreateGame
+                            />
+                          </Box>
+                        </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
               </Box>
             ) : (
             <Box

@@ -86,6 +86,7 @@ export default function CentralButton({
               (buttonType === ButtonType.CHANGEIMAGE ||
                 buttonType === ButtonType.SAVEDRAFT)) ||
                 (buttonType === ButtonType.BACK) ||
+                (buttonType === ButtonType.CONFIRM) || 
                 (buttonType === ButtonType.BACKTOEDIT) ||
                 (buttonType === ButtonType.CREATEQUESTION) ||
                 (buttonType === ButtonType.CANCELQUESTION) ||

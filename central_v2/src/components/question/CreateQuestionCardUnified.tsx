@@ -32,7 +32,7 @@ export default function CreateQuestionCardUnified({
   isUserCreated,
 }: CreateQuestionCardUnifiedProps) {
   const theme = useTheme();
-
+  console.log("Question: ", question)
   return (
     <CardContainer sx={{ overflowY: 'visible', paddingTop: '0px'}}>
       <DetailedUnifiedQuestionCardBase
