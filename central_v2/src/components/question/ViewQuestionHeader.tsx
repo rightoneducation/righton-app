@@ -66,9 +66,7 @@ export default function ViewQuestionHeader({
           }
           handleCloseModal={handleCloseQuestionModal}
         /> 
-
-
-+       {modalState === ModalStateType.DUPLICATE && (
+       {modalState === ModalStateType.DUPLICATE && (
           <DuplicateModal
             isModalOpen
             handleCloseDiscardModal={handleCloseDiscardModal}
