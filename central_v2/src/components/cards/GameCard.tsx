@@ -266,14 +266,6 @@ export default function StyledGameCard({
               wideButtonOverride
             />
           )}
-          {isMyLibraryQuestion && (
-            <CentralButton
-              buttonType={ButtonType.ADDTOGAME}
-              isEnabled
-              onClick={() => handleViewButtonClick(game)}
-              wideButtonOverride
-            />
-          )}
           {isLibrary && (
             <LastUpdatedText>
               Last modified <i>{lastUpdated}</i>
