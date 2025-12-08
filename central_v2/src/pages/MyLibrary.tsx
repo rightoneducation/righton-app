@@ -318,8 +318,8 @@ export default function MyLibrary({
         <LibraryTabsContainer
           gameQuestion={gameQuestion}
           screenSize={screenSize}
-          openTab={openTab}
-          setOpenTab={setOpenTab}
+          openTab={gameQuestion === GameQuestionType.GAME ? openTab : openQuestionTab}
+          setOpenTab={gameQuestion === GameQuestionType.GAME ? setOpenTab : setOpenQuestionTab}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}

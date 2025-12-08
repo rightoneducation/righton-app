@@ -836,6 +836,7 @@ export default function CreateQuestion({
         );
         setIsCreatingTemplate(false);
         fetchElements();
+        navigate('/library/questions/Drafts');
       } else {
         setIsDraftCardErrored(true);
       }
