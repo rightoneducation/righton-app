@@ -18,6 +18,7 @@ type AIButtonContentMapProps = {
 export const aiButtonContentMap: AIButtonContentMapProps = {
   [AIButtonType.WAE_GEN]: {
     icon: waeGenIcon,
+    textKey: 'Generate Explanation Using AI',
   },
   [AIButtonType.WAE_REGEN]: {
     icon: waeRegenIcon,

@@ -65,6 +65,8 @@ interface CreateQuestionProps {
   ) => void;
 }
 
+type AIErrorArray = [boolean, boolean, boolean];
+
 type BodyContainerProps = {
   screenSize: ScreenSize;
 };
@@ -135,6 +137,15 @@ export default function CreateQuestion({
   const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
   const [originalImageURl, setOriginalImageURL] = useState<string>('');
   const localData = useCreateQuestionLoader();
+
+  const [isAISwitchEnabled, setIsAISwitchEnabled] = useState(false);
+  const [isAIError, setIsAIError] = useState<AIErrorArray>([false, false, false]);
+
+  const handleSwitchChange = (value: boolean) => {
+    setIsAISwitchEnabled(value);
+    setIsAIError([false, false, false]);
+  }
+
   
   const [draftQuestion, setDraftQuestion] =
     useState<CentralQuestionTemplateInput>(() => {
@@ -186,7 +197,6 @@ export default function CreateQuestion({
     });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isDraftCardErrored, setIsDraftCardErrored] = useState<boolean>(false);
-  const [isAIError, setIsAIError] = useState<boolean>(false);
   const [isBaseCardErrored, setIsBaseCardErrored] = useState(!handleCheckQuestionBaseComplete(draftQuestion));
   const [isCorrectCardErrored, setIsCorrectCardErrored] = useState(!handleCheckQuestionCorrectCardComplete(draftQuestion));
   const [isIncorrectCardErrored, setIsIncorrectCardErrored] = useState(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
@@ -207,6 +217,36 @@ export default function CreateQuestion({
       setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(debounceQuestion));
     }, 1000),
     []
+  );
+
+
+  const handleDebouncedCheckAIFieldsComplete = useMemo(
+    () =>
+      debounce(
+        (debounceQuestion: CentralQuestionTemplateInput, currentErrors: AIErrorArray) => {
+          const hasRequiredFields =
+            Boolean(debounceQuestion.questionCard.title) &&
+            Boolean(debounceQuestion.correctCard.answer);
+
+          if (!hasRequiredFields) return;
+
+          const nextErrors = currentErrors.map((hasError, index) => {
+            if (!hasError) return hasError;
+            const card = debounceQuestion.incorrectCards[index];
+            return card?.answer ? false : hasError;
+          }) as AIErrorArray;
+
+          const hasChanged = nextErrors.some(
+            (value, index) => value !== currentErrors[index],
+          );
+
+          if (hasChanged) {
+            setIsAIError(nextErrors);
+          }
+        },
+        1000,
+      ),
+    [],
   );
 
   let label = 'Your';
@@ -314,6 +354,8 @@ export default function CreateQuestion({
           }),
         },
       };
+      if (isAIError.some(Boolean))
+        handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
       handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
       return newDraftQuestion;
     });
@@ -384,6 +426,8 @@ export default function CreateQuestion({
           }),
         },
       };
+      if (isAIError.some(Boolean))
+        handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
       handleDebouncedCheckQuestionCorrectCardComplete(newDraftQuestion);
       return newDraftQuestion;
     });
@@ -422,12 +466,20 @@ export default function CreateQuestion({
         ...prev,
         incorrectCards: updatedCards,
       };
+      if (isAIError.some(Boolean))
+        handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
       handleDebouncedCheckQuestionIncorrectCardsComplete(newDraftQuestion);
       return newDraftQuestion;
     });
   }
 
   const handleIncorrectExplanationChange = (incorrectExplanation: string, index: number) => {
+    if (incorrectExplanation === 'ERROR') {
+      const nextErrors = [...isAIError] as AIErrorArray;
+      nextErrors[index as 0 | 1 | 2] = true;
+      setIsAIError(nextErrors);
+      return;
+    }
     setDraftQuestion((prev) => {
       const updatedCards = prev.incorrectCards.map((card, i) => {
         if (i === index) {
@@ -851,15 +903,6 @@ export default function CreateQuestion({
     setIsDiscardModalOpen(true);
   };
 
-  const handleAIError = () => {
-    setIsAIError(true);
-  };
-
-  const handleAIIsEnabled = () => {
-    setIsAIEnabled((prev) => !prev);
-    setIsAIError(false);
-  };
-
   const handleCloseQuestionModal = () => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
@@ -1010,7 +1053,7 @@ export default function CreateQuestion({
                   isCardSubmitted={isCardSubmitted}
                   isDraftCardErrored={isDraftCardErrored}
                   isCardErrored={isBaseCardErrored}
-                  isAIError={isAIError}
+                  isAIError={isAIError.some(Boolean)}
                   isPublic={isPublicQuestion}
                   isMultipleChoice={isMultipleChoice}
                   handleAnswerType={handleAnswerType}
@@ -1033,7 +1076,7 @@ export default function CreateQuestion({
                     handleAnswerSettingsChange={handleAnswerSettingsChange}
                     isCardSubmitted={isCardSubmitted}
                     isCardErrored={isCorrectCardErrored}
-                    isAIError={false}
+                    isAIError={isAIError.some(Boolean)}
                   />
                   <Box
                     style={{
@@ -1043,24 +1086,30 @@ export default function CreateQuestion({
                       gap: `${theme.sizing.xSmPadding}px`,
                     }}
                   >
-                    <Typography
-                      sx={{
-                        fontFamily: 'Poppins',
-                        fontSize: '20px',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      Incorrect Answers
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontFamily: 'Rubik',
-                        fontSize: '16px',
-                        fontWeight: '400',
-                      }}
-                    >
-                      Each question has three incorrect answers
-                    </Typography>
+                     <Box
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          gap: `${theme.sizing.smPadding}px`,
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            maxWidth: '550px',
+                            fontFamily: 'Rubik',
+                            fontSize: '16px',
+                            fontWeight: '400',
+                            textAlign: 'right'
+                          }}
+                        >
+                          Use our <i>Wrong Answer Explanation Generator</i> to generate incorrect answer explanations.
+                        </Typography>
+                        <AISwitch
+                          value={isAISwitchEnabled}
+                          onChange={(e: any) => handleSwitchChange(e.target.checked)}
+                        />
+                      </Box>
                     {draftQuestion.incorrectCards.map((card, index) => (
                       <IncorrectAnswerCard
                         screenSize={screenSize}
@@ -1071,7 +1120,8 @@ export default function CreateQuestion({
                         handleIncorrectExplanationChange={handleIncorrectExplanationChange}
                         isCardSubmitted={isCardSubmitted}
                         isCardErrored={isIncorrectCardErrored}
-                        isAIError={false}
+                        isAIError={isAIError[index as 0 | 1 | 2]}
+                        isAISwitchEnabled={isAISwitchEnabled}
                       />
                     ))}
                   </Box>

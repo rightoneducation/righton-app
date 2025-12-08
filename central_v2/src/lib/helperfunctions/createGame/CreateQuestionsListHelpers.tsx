@@ -80,9 +80,6 @@ export const checkDQsAreValid = (
       dq.question.questionCard.ccss.length > 0 &&
       dq.question.questionCard.ccss !== 'CCSS' &&
       dq.question.questionCard.title.trim().length > 0 &&
-      ((dq.question.questionCard.imageUrl &&
-        dq.question.questionCard.imageUrl?.length > 0) ||
-        dq.question.questionCard.image) &&
       dq.question.correctCard.answer.trim().length > 0 &&
       dq.question.correctCard.answerSteps.length > 0 &&
       dq.question.correctCard.answerSteps.every(

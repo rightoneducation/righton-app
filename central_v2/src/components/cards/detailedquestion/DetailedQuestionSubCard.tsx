@@ -14,6 +14,7 @@ interface DetailedQuestionSubCardProps {
   answer: string;
   instructions?: string[];
   answerReason?: string;
+  explanationIndex?: number;
 }
 
 export default function DetailedQuestionSubCard({
@@ -21,6 +22,7 @@ export default function DetailedQuestionSubCard({
   answer,
   instructions,
   answerReason,
+  explanationIndex
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
@@ -79,11 +81,11 @@ export default function DetailedQuestionSubCard({
   ];
   return (
     <BaseCardStyled elevation={6} style={{gap: `${theme.sizing.smPadding}px`}}>
-      <QuestionTitleStyled style={{ color: cardType === CardType.CORRECT ? '#148700' : '#000000' }}>
-        {cardType === CardType.CORRECT ? 'Correct' : 'Incorrect'} Answer
+      <QuestionTitleStyled style={{ color: cardType === CardType.CORRECT ? '#148700' : '#47366C' }}>
+        {cardType === CardType.CORRECT ? 'Correct' : 'Incorrect'} Answer {(explanationIndex !== undefined && explanationIndex !== null) ? explanationIndex + 1 : ''}
       </QuestionTitleStyled>
       <AnswerIndicator>{answer}</AnswerIndicator>
-      <QuestionTitleStyled>
+      <QuestionTitleStyled sx={{ color: '#47366C' }}>
       {cardType === CardType.CORRECT && ('Solution')} Explanation
       </QuestionTitleStyled>
       {cardType === CardType.CORRECT && instructions

@@ -29,6 +29,7 @@ import {
   StorageKey,
   GameQuestionType,
   ModalStateType,
+  StorageKeyIsFirstCreate,
 } from '../lib/CentralModels';
 import { timeLookup } from '../components/cards/creategamecard/time';
 import {
@@ -80,6 +81,7 @@ import CreateGameModalSwitch from '../components/modal/switches/CreateGameModalS
 
 interface CreateGameProps {
   screenSize: ScreenSize;
+  initPublicPrivate: PublicPrivateType;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: (
@@ -99,6 +101,7 @@ interface CreateGameProps {
 
 export default function CreateGame({
   screenSize,
+  initPublicPrivate,
   setIsTabsOpen,
   fetchElement,
   fetchElements,
@@ -1049,7 +1052,7 @@ export default function CreateGame({
   };
 
   const handleCreateQuestion = (draftQuestion: CentralQuestionTemplateInput) => {
-    setDraftQuestionsList((prev) => [...prev, {
+    setDraftQuestionsList((prev) => [{
       ...draftTemplate,
       question: draftQuestion,
       publicPrivate: draftGame.gameTemplate.publicPrivateType,
@@ -1058,12 +1061,22 @@ export default function CreateGame({
       isQuestionCardSubmitted: false,
       isQuestionCardErrored: false,
       localId: uuidv4(),
-    }]);
+    },...prev ]);
     setModalState(ModalStateType.NULL);
   };
 
   useEffect(() => {
     setIsLoading(false);
+    if (localStorage.getItem(StorageKeyIsFirstCreate) === null){
+      localStorage.setItem(StorageKeyIsFirstCreate, 'false');
+      setDraftGame((prev) => ({
+        ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+          publicPrivateType: initPublicPrivate,
+        },
+      }));
+    }
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;

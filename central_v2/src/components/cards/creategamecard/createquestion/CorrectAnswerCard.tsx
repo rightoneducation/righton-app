@@ -199,81 +199,86 @@ export default function DetailedQuestionSubCard({
       elevation={6}
       isCardComplete={draftQuestion.correctCard.isCardComplete}
       isClone={isClone}
+      style={{gap: `${theme.sizing.mdPadding}px`}}
     >
-      <QuestionTitleStyled sx={{ color: '#148700' }}>
-        Correct Answer
-      </QuestionTitleStyled>
-      <TextContainerStyled
-        multiline
-        variant="outlined"
-        rows="1"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            fontFamily: 'Rubik',
-            height: '43px',
-          },
-          '& .MuiInputBase-input': {
-            color: '#47366C',
-            opacity: isCardErrored ? 1 : 0.5,
-            '&::placeholder': {
-              color: isCardErrored ? '#D0254D' : '#47366C',
-              opacity: isCardErrored ? 1 : 0.5,
-            },
-            '&:focus': {
-              color: '#47366C',
-              opacity: 1,
-            },
-            '&:focus::placeholder': {
-              color: '#47366C',
-              opacity: 1,
-            },
-          },
-        }}
-        placeholder="First correct answer..."
-        value={draftQuestion.correctCard.answer}
-        onChange={(e) =>
-          handleCorrectAnswerChange(e.target.value)
-        }
-        error={
-          (isCardSubmitted || isAIError) &&
-          (!draftQuestion.correctCard.answer ||
-            draftQuestion.correctCard.answer.length === 0)
-        }
-        InputProps={{
-          startAdornment: (isCardSubmitted || isAIError) &&
-            (!draftQuestion.correctCard.answer ||
-              draftQuestion.correctCard.answer.length === 0) && (
-              <InputAdornment
-                position="start"
-                sx={{
-                  alignSelf: 'flex-start',
-                  mt: '5px',
-                }}
-              >
-                <ErrorIcon src={errorIcon} alt="error icon" />
-              </InputAdornment>
-            ),
-        }}
-      />
-      <QuestionTitleStyled sx={{ color: '#47366C' }}>
-        Solution Explanation
-      </QuestionTitleStyled>
-      {draftQuestion.correctCard.answerSteps &&
-        draftQuestion.correctCard.answerSteps.map((step, index) =>
-          answerStepsComponent(step, index),
-        )}
-      {isCardErrored && <ErrorBox />}
-      <Box style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }} onClick={addStep}>
-        <Typography
+      <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}>
+        <QuestionTitleStyled sx={{ color: '#148700' }}>
+          Correct Answer*
+        </QuestionTitleStyled>
+        <TextContainerStyled
+          multiline
+          variant="outlined"
+          rows="1"
           sx={{
-            fontFamily: 'Rubik',
-            fontSize: '16px',
-            fontWeight: '400',
-            textDecoration: 'underline',
+            '& .MuiOutlinedInput-root': {
+              fontFamily: 'Rubik',
+              height: '43px',
+            },
+            '& .MuiInputBase-input': {
+              color: '#47366C',
+              opacity: isCardErrored ? 1 : 0.5,
+              '&::placeholder': {
+                color: isCardErrored ? '#D0254D' : '#47366C',
+                opacity: isCardErrored ? 1 : 0.5,
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
+            },
           }}
-        >
-          Add Step
-        </Typography>
+          placeholder="First correct answer..."
+          value={draftQuestion.correctCard.answer}
+          onChange={(e) =>
+            handleCorrectAnswerChange(e.target.value)
+          }
+          error={
+            (isCardSubmitted || isAIError) &&
+            (!draftQuestion.correctCard.answer ||
+              draftQuestion.correctCard.answer.length === 0)
+          }
+          InputProps={{
+            startAdornment: (isCardSubmitted || isAIError) &&
+              (!draftQuestion.correctCard.answer ||
+                draftQuestion.correctCard.answer.length === 0) && (
+                <InputAdornment
+                  position="start"
+                  sx={{
+                    alignSelf: 'flex-start',
+                    mt: '5px',
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt="error icon" />
+                </InputAdornment>
+              ),
+          }}
+        />
+      </Box>
+      <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}>
+        <QuestionTitleStyled sx={{ color: '#47366C' }}>
+          Explanation*
+        </QuestionTitleStyled>
+        {draftQuestion.correctCard.answerSteps &&
+          draftQuestion.correctCard.answerSteps.map((step, index) =>
+            answerStepsComponent(step, index),
+          )}
+        {isCardErrored && <ErrorBox />}
+        <Box style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }} onClick={addStep}>
+          <Typography
+            sx={{
+              fontFamily: 'Rubik',
+              fontSize: '16px',
+              fontWeight: '400',
+              textDecoration: 'underline',
+            }}
+          >
+            Add Step
+          </Typography>
+        </Box>
       </Box>
     </BaseCardStyled>
   );

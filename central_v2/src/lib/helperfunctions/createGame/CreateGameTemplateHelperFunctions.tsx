@@ -61,8 +61,7 @@ export const updateGameTitle = (
     },
   }
   return {
-    ...newDraftGame,
-    isGameCardErrored: !checkGameFormIsValid(newDraftGame)
+    ...newDraftGame
   }
 };
 
@@ -79,8 +78,7 @@ export const updateGameDescription = (
     },
   }
   return {
-    ...newDraftGame,
-    isGameCardErrored: !checkGameFormIsValid(newDraftGame)
+    ...newDraftGame
   }
 };
 

@@ -13,7 +13,7 @@ import { handleCheckQuestionComplete } from '../../lib/helperfunctions/createGam
 import CCSSTabs from '../ccsstabs/CCSSTabs';
 import ImageUploadModal from './ImageUploadModal';
 import { updateDQwithImage, updateDQwithImageURL } from '../../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-
+import { AISwitch } from '../../lib/styledcomponents/AISwitchStyledComponent';
 
 interface CreateQuestionModalProps {
     isModalOpen: boolean;
@@ -21,6 +21,8 @@ interface CreateQuestionModalProps {
     handleCreateQuestion: (draftQuestion: CentralQuestionTemplateInput) => void;
     handleCloseCreateQuestionModal: () => void;
 }
+
+type AIErrorArray = [boolean, boolean, boolean];
 
 type IntegratedContainerProps = {
   screenSize: ScreenSize;
@@ -55,13 +57,13 @@ const ScrollableContent = styled(Box, {
     prop !== 'screenSize',
 })<ScrollableContentProps>(({ screenSize, theme }) => ({
   display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  flexDirection: screenSize !== ScreenSize.LARGE ? 'column' : 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   gap: '20px',
-  paddingTop: screenSize === ScreenSize.SMALL ? '24px' : '8px',
-  paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '48px',
-  paddingRight: screenSize === ScreenSize.SMALL ? '24px' : '48px',
+  paddingTop: screenSize !== ScreenSize.LARGE ? '24px' : '8px',
+  paddingLeft: screenSize !== ScreenSize.LARGE ? '24px' : '48px',
+  paddingRight: screenSize !== ScreenSize.LARGE ? '24px' : '48px',
   paddingBottom: '86px',
   overflow: 'auto',
   flex: 1,
@@ -81,6 +83,14 @@ export default function CreateQuestionModal({
     const theme = useTheme();
     const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState(false);
     const [isImageUploadVisible, setIsImageUploadVisible] = useState(false);
+    const [isAISwitchEnabled, setIsAISwitchEnabled] = useState(false);
+    const [isAIError, setIsAIError] = useState<AIErrorArray>([false, false, false]);
+
+    const handleSwitchChange = (value: boolean) => {
+      setIsAISwitchEnabled(value);
+      setIsAIError([false, false, false]);
+    }
+
     const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
       return (
         {
@@ -137,6 +147,34 @@ export default function CreateQuestionModal({
       []
     );
 
+    const handleDebouncedCheckAIFieldsComplete = useMemo(
+      () =>
+        debounce(
+          (debounceQuestion: CentralQuestionTemplateInput, currentErrors: AIErrorArray) => {
+            const hasRequiredFields =
+              Boolean(debounceQuestion.questionCard.title) &&
+              Boolean(debounceQuestion.correctCard.answer);
+
+            if (!hasRequiredFields) return;
+
+            const nextErrors = currentErrors.map((hasError, index) => {
+              if (!hasError) return hasError;
+              const card = debounceQuestion.incorrectCards[index];
+              return card?.answer ? false : hasError;
+            }) as AIErrorArray;
+
+            const hasChanged = nextErrors.some(
+              (value, index) => value !== currentErrors[index],
+            );
+
+            if (hasChanged) {
+              setIsAIError(nextErrors);
+            }
+          },
+          1000,
+        ),
+      [],
+    );
 
     const handleTitleChange = (title: string) => {
       setDraftQuestion((prev) => {
@@ -144,6 +182,8 @@ export default function CreateQuestionModal({
           ...prev,
           questionCard: { ...prev.questionCard, title },
         };
+        if (isAIError.some(Boolean))
+          handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
         handleDebouncedCheckQuestionComplete(newDraftQuestion);
         return newDraftQuestion;
       });
@@ -156,6 +196,8 @@ export default function CreateQuestionModal({
           correctCard: { ...prev.correctCard, answer: correctAnswer },
         };
         handleDebouncedCheckQuestionComplete(newDraftQuestion);
+        if (isAIError.some(Boolean))
+          handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
         return newDraftQuestion;
       });
     }
@@ -179,12 +221,20 @@ export default function CreateQuestionModal({
             i === index ? { ...card, answer: incorrectAnswer } : card
           ),
         };
+        if (isAIError.some(Boolean))
+          handleDebouncedCheckAIFieldsComplete(newDraftQuestion, isAIError);
         handleDebouncedCheckQuestionComplete(newDraftQuestion);
         return newDraftQuestion;
       });
     }
 
     const handleIncorrectExplanationChange = (incorrectExplanation: string, index: number) => {
+      if (incorrectExplanation === 'ERROR') {
+        const nextErrors = [...isAIError] as AIErrorArray;
+        nextErrors[index as 0 | 1 | 2] = true;
+        setIsAIError(nextErrors);
+        return;
+      }
       setDraftQuestion((prev) => {
         const newDraftQuestion = {
           ...prev,
@@ -360,7 +410,7 @@ export default function CreateQuestionModal({
                         isCardSubmitted={false}
                         isDraftCardErrored={false}
                         isCardErrored={false}
-                        isAIError={false}
+                        isAIError={isAIError.some(Boolean)}
                         isPublic={false}
                         isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
                       />
@@ -384,7 +434,7 @@ export default function CreateQuestionModal({
                       handleAnswerSettingsChange={() => {}}
                       isCardSubmitted={false}
                       isCardErrored={false}
-                      isAIError={false}
+                      isAIError={isAIError.some(Boolean)}
                     />
                     <Box
                       style={{
@@ -394,24 +444,30 @@ export default function CreateQuestionModal({
                         gap: `${theme.sizing.xSmPadding}px`,
                       }}
                     >
-                      <Typography
-                        sx={{
-                          fontFamily: 'Poppins',
-                          fontSize: '20px',
-                          fontWeight: 'bold',
+                      <Box
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          gap: `${theme.sizing.smPadding}px`,
                         }}
                       >
-                        Incorrect Answers
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontFamily: 'Rubik',
-                          fontSize: '16px',
-                          fontWeight: '400',
-                        }}
-                      >
-                        Each question has three incorrect answers
-                      </Typography>
+                        <Typography
+                          sx={{
+                            maxWidth: '550px',
+                            fontFamily: 'Rubik',
+                            fontSize: '16px',
+                            fontWeight: '400',
+                            textAlign: 'right'
+                          }}
+                        >
+                          Use our <i>Wrong Answer Explanation Generator</i> to generate incorrect answer explanations.
+                        </Typography>
+                        <AISwitch
+                          value={isAISwitchEnabled}
+                          onChange={(e: any) => handleSwitchChange(e.target.checked)}
+                        />
+                      </Box>
                       {draftQuestion.incorrectCards.map((card, index) => (
                         <IncorrectAnswerCard
                           screenSize={screenSize}
@@ -423,7 +479,8 @@ export default function CreateQuestionModal({
                           handleIncorrectExplanationChange={handleIncorrectExplanationChange}
                           isCardSubmitted={false}
                           isCardErrored={false}
-                          isAIError={false}
+                          isAIError={isAIError[index as 0 | 1 | 2]}
+                          isAISwitchEnabled={isAISwitchEnabled}
                         />
                       ))}
                     </Box>

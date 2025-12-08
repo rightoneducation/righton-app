@@ -56,9 +56,11 @@
     "update": "Update",
     "continue": "Continue",
     "cancelquestion": "Cancel",
-    "saveadd": "Save & Add",
+    "saveadd": "Add Question",
     "duplicate": "Duplicate",
-    "launchpink": "Launch"
+    "launchpink": "Launch",
+    "startcreating": "Start Creating",
+    "confirm": "Confirm"
   },
   "imageButton": {
     "imageupload": "Upload Image",

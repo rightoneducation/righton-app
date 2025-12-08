@@ -31,7 +31,7 @@ export const CreateQuestionTitleBarStyled = styled(
   width: '100%',
   height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize !== ScreenSize.LARGE ? 'column' : 'row',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: screenSize !== ScreenSize.LARGE ? 'flex-start' : 'center',
   gap:
@@ -144,16 +144,8 @@ export default function DetailedGameCardBase({
           alt="question"
           style={{ width: '100%', height: '185px', objectFit: 'cover', borderRadius: '8px', }}
         />
-      </Box>      
-      <Box
-        style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: '8px',
-          flexWrap: 'wrap',
-        }}
-      >
+      </Box> 
+      <Box style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
         <Box
           style={{
             width: 'fit-content',
