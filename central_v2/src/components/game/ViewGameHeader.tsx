@@ -5,21 +5,40 @@ import CentralButton from "../button/Button";
 import { ButtonType } from "../button/ButtonModels";
 import { TitleText } from "../../lib/styledcomponents/CreateGameStyledComponent";
 import { ModalStateType, ScreenSize } from "../../lib/CentralModels";
+import ModalBackground from "../modal/ModalBackground";
+import DuplicateModal from "../modal/DuplicateModal";
 
 interface ViewGameHeaderProps {
   handleBackClick: () => void;
   handleEditGame: () => void;
   handleLaunchGame: () => void;
   handleDuplicate: () => void;
+  handleCloneGame: () => void;
   label: string;
   screenSize: ScreenSize;
   isOwner: boolean;
   isIncompleteDraft: boolean;
 }
 
-export default function ViewGameHeader({ handleDuplicate, handleBackClick, handleEditGame, handleLaunchGame,  label, screenSize, isOwner, isIncompleteDraft }: ViewGameHeaderProps) {
-  const theme = useTheme();
+export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handleBackClick, handleEditGame, handleLaunchGame,  label, screenSize, isOwner, isIncompleteDraft }: ViewGameHeaderProps) {
+  
   const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
+  const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState<boolean>(false);
+
+  const handleCloseQuestionModal = () => {
+    setModalState(ModalStateType.NULL);
+  };
+
+  const handleCloseDiscardModal = () => {
+    setModalState(ModalStateType.NULL);
+  };
+
+  const handleConfirmModal = () => {
+    handleCloneGame()  
+  };
+
+  const theme = useTheme();
+
 
   return(
     <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
@@ -33,6 +52,20 @@ export default function ViewGameHeader({ handleDuplicate, handleBackClick, handl
         paddingTop: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
         paddingBottom: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
         }}>
+          <ModalBackground
+            isModalOpen={
+              isCCSSVisibleModal ||
+              modalState !== ModalStateType.NULL
+            }
+            handleCloseModal={handleCloseQuestionModal}
+          /> 
+        {modalState === ModalStateType.DUPLICATE && (
+            <DuplicateModal
+              isModalOpen
+              handleCloseDiscardModal={handleCloseDiscardModal}
+              handleConfirmModal={handleConfirmModal}
+            />
+          )}
         <Box style={{ position: 'absolute', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <TitleText style={{lineHeight: '48px'}} screenSize={screenSize}>{label} {isOwner ? 'My' : ''} Game</TitleText>
         </Box>
@@ -72,7 +105,9 @@ export default function ViewGameHeader({ handleDuplicate, handleBackClick, handl
                   <CentralButton
                     buttonType={ButtonType.DUPLICATE}
                     isEnabled
-                    onClick={handleDuplicate}
+                    onClick={() =>{
+                      setModalState(ModalStateType.DUPLICATE)
+                    }}
                   />
                 </Box>
               )}
