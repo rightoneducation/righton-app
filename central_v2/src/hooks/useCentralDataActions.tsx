@@ -564,15 +564,21 @@ export default function useCentralDataManager({
     if (!isFromLibrary)
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion) {
-      case GameQuestionType.QUESTION:
+      case GameQuestionType.QUESTION: {
+        const sortField = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+          ? SortType.listQuestionTemplatesByDate
+          : centralData.sort.field;
+        const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+          ? SortDirection.DESC
+          : (centralData.sort.direction ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
             PublicPrivateType.DRAFT,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             [...centralData.selectedGrades],
             null,
           )
@@ -592,16 +598,24 @@ export default function useCentralDataManager({
             });
           });
         break;
+      }
       case GameQuestionType.GAME:
-      default:
+      default: {
+        const sortField = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+          ? SortType.listGameTemplatesByDate
+          : centralData.sort.field;
+        const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+          ? SortDirection.DESC
+          : (centralData.sort.direction ?? SortDirection.ASC);
+      
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             PublicPrivateType.DRAFT,
             12,
             nextToken ?? null,
             libraryTab ? '' : centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             [...centralData.selectedGrades],
             null,
           )
@@ -621,6 +635,7 @@ export default function useCentralDataManager({
             });
           });
         break;
+      }
     }
   };
 
@@ -639,14 +654,20 @@ export default function useCentralDataManager({
           user.favoriteQuestionTemplateIds &&
           user.favoriteQuestionTemplateIds.length > 0
         ) {
+          const sortField = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+            ? SortType.listQuestionTemplatesByDate
+            : centralData.sort.field;
+          const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+            ? SortDirection.DESC
+            : (centralData.sort.direction ?? SortDirection.ASC);
           apiClients?.centralDataManager
             ?.searchForQuestionTemplates(
               PublicPrivateType.PUBLIC,
               null,
               nextToken ?? null,
               searchTerms ?? centralData.searchTerms,
-              centralData.sort.direction ?? SortDirection.ASC,
-              centralData.sort.field,
+              sortDirection,
+              sortField,
               [...centralData.selectedGrades],
               user.favoriteQuestionTemplateIds,
             )
@@ -680,14 +701,20 @@ export default function useCentralDataManager({
           user.favoriteGameTemplateIds &&
           user.favoriteGameTemplateIds.length > 0
         ) {
+          const sortField = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+            ? SortType.listGameTemplatesByDate
+            : centralData.sort.field;
+          const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+            ? SortDirection.DESC
+            : (centralData.sort.direction ?? SortDirection.ASC);
           apiClients?.centralDataManager
             ?.searchForGameTemplates(
               PublicPrivateType.PUBLIC,
               null,
               nextToken ?? null,
               searchTerms ?? centralData.searchTerms,
-              centralData.sort.direction ?? SortDirection.ASC,
-              centralData.sort.field,
+              sortDirection,
+              sortField,
               [...centralData.selectedGrades],
               user.favoriteGameTemplateIds,
             )

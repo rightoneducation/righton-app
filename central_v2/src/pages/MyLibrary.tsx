@@ -225,16 +225,20 @@ export default function MyLibrary({
       'Drafts': LibraryTabEnum.DRAFTS,
       'Favorites': LibraryTabEnum.FAVORITES,
     };
-  
+    
     if (routeGames && routeGames.params.type) {
+      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
       const mappedTab = tabMapping[routeGames.params.type];
       if (mappedTab !== undefined) {
         setOpenTab(mappedTab);
         if (gameQuestion !== GameQuestionType.GAME) return;
+        handleSortChange({ field: SortType.listGameTemplates, direction: SortDirection.ASC });
         fetchElements(mappedTab, '', null, true);
       }
     }
+    
     if (routeQuestions && routeQuestions.params.type) {
+      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
       const mappedTab = tabMapping[routeQuestions.params.type];
       if (mappedTab !== undefined) {
         setOpenQuestionTab(mappedTab);
@@ -316,8 +320,8 @@ export default function MyLibrary({
         <LibraryTabsContainer
           gameQuestion={gameQuestion}
           screenSize={screenSize}
-          openTab={openTab}
-          setOpenTab={setOpenTab}
+          openTab={gameQuestion === GameQuestionType.GAME ? openTab : openQuestionTab}
+          setOpenTab={gameQuestion === GameQuestionType.GAME ? setOpenTab : setOpenQuestionTab}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}

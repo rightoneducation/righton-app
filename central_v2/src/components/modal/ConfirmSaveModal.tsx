@@ -8,7 +8,7 @@ import {
   CircularProgress,
   useTheme,
 } from '@mui/material';
-import { TemplateType } from '../../lib/CentralModels';
+import { ConfirmStateType, TemplateType } from '../../lib/CentralModels';
 import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
 
@@ -61,16 +61,40 @@ const CloseButton = styled('img')(({ theme }) => ({
 interface ConfirmSaveModalProps {
   isModalOpen: boolean;
   templateType: TemplateType;
+  confirmState: ConfirmStateType;
   handleContinue?: () => void;
 }
 
 export default function ConfirmSaveModal({
   isModalOpen,
   templateType,
+  confirmState,
   handleContinue,
 }: ConfirmSaveModalProps) {
   const theme = useTheme();
-  const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
+  const type = templateType === TemplateType.GAME ? 'Game' : 'Question';
+  let titleText = '';
+  let subtitleText = '';
+
+  switch (confirmState) {
+    case ConfirmStateType.FAVORITED:
+      titleText = `${type} Favorited`;
+      subtitleText = `You can view your favorited ${type.toLowerCase()} in My Library.`;
+      break;
+    case ConfirmStateType.DRAFT:
+      titleText = `Draft ${type} saved`;
+      subtitleText = `A draft of your ${type.toLowerCase()} has been saved.`;
+      break;
+    case ConfirmStateType.PUBLISHED:
+      titleText = `${type} published`;
+      subtitleText = `Congratulations! Your ${type.toLowerCase()} is ready to be launched.`;
+      break;
+    case ConfirmStateType.UPDATED:
+    default:
+      titleText = `${type} updated`;
+      subtitleText = `Your ${type.toLowerCase()} is ready to launch.`;
+      break;
+  }
 
   return (
     <Fade
@@ -96,8 +120,8 @@ export default function ConfirmSaveModal({
             gap: '16px',
           }}
         >
-          <DragText> {text} Saved </DragText>
-          <BodyText> Your game is ready to launch. </BodyText>
+          <DragText> {titleText} </DragText>
+          <BodyText> {subtitleText} </BodyText>
           <CentralButton
             buttonType={ButtonType.CONTINUE}
             isEnabled

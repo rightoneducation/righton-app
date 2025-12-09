@@ -835,7 +835,7 @@ export default function CreateQuestion({
           draftQuestion,
         );
         setIsCreatingTemplate(false);
-        fetchElements();
+        navigate('/library/questions/Drafts');
       } else {
         setIsDraftCardErrored(true);
       }
@@ -843,7 +843,6 @@ export default function CreateQuestion({
       console.log(e);
     }
   };
-
 
   const handleSaveEditedDraftQuestion = async () => {
     try {
@@ -932,7 +931,6 @@ export default function CreateQuestion({
 
   const handleBackQuestion = () => {
     setModalState(ModalStateType.DISCARD);
-    console.log("I GOT CLICKED")
   };
 
   // This pops the modal that allows the user to select publish, save as draft, or back
@@ -1013,6 +1011,7 @@ export default function CreateQuestion({
         handlePublishQuestion={handlePublishQuestion}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
         handleContinue={handleContinue}
+        handleSaveDraft={handleSaveDraft}
         isCardErrored={isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored}
       />
       <CreateQuestionBoxContainer screenSize={screenSize}>
