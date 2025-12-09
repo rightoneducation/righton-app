@@ -931,6 +931,10 @@ export default function CreateGame({
 
       setDraftGame((prev) => ({
         ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+          publicPrivateType: PublicPrivateType.DRAFT,
+        },
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));

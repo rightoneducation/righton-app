@@ -835,7 +835,7 @@ export default function CreateQuestion({
           draftQuestion,
         );
         setIsCreatingTemplate(false);
-        navigate('/library/questions/Drafts');
+        navigate(`/library/questions/${PublicPrivateType.DRAFT}`);
       } else {
         setIsDraftCardErrored(true);
       }
