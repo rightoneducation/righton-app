@@ -222,7 +222,7 @@ export default function MyLibrary({
     const tabMapping: { [key: string]: LibraryTabEnum } = {
       'Public': LibraryTabEnum.PUBLIC,
       'Private': LibraryTabEnum.PRIVATE,
-      'Drafts': LibraryTabEnum.DRAFTS,
+      'Draft': LibraryTabEnum.DRAFTS,
       'Favorites': LibraryTabEnum.FAVORITES,
     };
     

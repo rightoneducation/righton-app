@@ -30,6 +30,8 @@ import {
   GameQuestionType,
   LibraryTabEnum,
   ModalStateType,
+  ModalObject,
+  ConfirmStateType,
 } from '../lib/CentralModels';
 import CreateQuestionHeader from '../components/question/CreateQuestionHeader';
 import CreateQuestionModalSwitch from '../components/modal/switches/CreateQuestionModalSwitch';
@@ -128,7 +130,10 @@ export default function CreateQuestion({
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [isUpdatingTemplate, setIsUpdatingTemplate] = useState<boolean>(false);
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState<boolean>(false);
-  const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
+  const [modalObject, setModalObject] = useState<ModalObject>({
+    modalState: ModalStateType.NULL,
+    confirmState: ConfirmStateType.NULL,
+  });
   const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
@@ -803,6 +808,10 @@ export default function CreateQuestion({
 
   const handleSaveDraftQuestion = async () => {
     try {
+      setModalObject({
+        modalState: ModalStateType.SAVING,
+        confirmState: ConfirmStateType.DRAFT,
+      });
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
         setIsCreatingTemplate(true);
@@ -835,17 +844,32 @@ export default function CreateQuestion({
           draftQuestion,
         );
         setIsCreatingTemplate(false);
-        navigate('/library/questions/Drafts');
+        setModalObject({
+          modalState: ModalStateType.CONFIRM,
+          confirmState: ConfirmStateType.DRAFT,
+        });
       } else {
         setIsDraftCardErrored(true);
+        setModalObject({
+          modalState: ModalStateType.NULL,
+          confirmState: ConfirmStateType.NULL,
+        });
       }
     } catch (e) {
       console.log(e);
+      setModalObject({
+        modalState: ModalStateType.NULL,
+        confirmState: ConfirmStateType.NULL,
+      });
     }
   };
 
   const handleSaveEditedDraftQuestion = async () => {
     try {
+      setModalObject({
+        modalState: ModalStateType.SAVING,
+        confirmState: ConfirmStateType.DRAFT,
+      });
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
         setIsUpdatingTemplate(true);
@@ -879,12 +903,24 @@ export default function CreateQuestion({
             selectedQuestionId,
           );
         setIsUpdatingTemplate(false);
+        setModalObject({
+          modalState: ModalStateType.CONFIRM,
+          confirmState: ConfirmStateType.DRAFT,
+        });
         fetchElements();
       } else {
         setIsDraftCardErrored(true);
+        setModalObject({
+          modalState: ModalStateType.NULL,
+          confirmState: ConfirmStateType.NULL,
+        });
       }
     } catch (e) {
       console.log(e);
+      setModalObject({
+        modalState: ModalStateType.NULL,
+        confirmState: ConfirmStateType.NULL,
+      });
     }
   };
 
@@ -906,31 +942,56 @@ export default function CreateQuestion({
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
     setIsCCSSVisibleModal(false);
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleCloseSaveQuestionModal = () => {
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleCloseDiscardModal = () => {
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handlePublishQuestion = async () => {
-    setModalState(ModalStateType.PUBLISHING);
+    setModalObject({
+      modalState: ModalStateType.PUBLISHING,
+      confirmState: ConfirmStateType.PUBLISHED,
+    });
     setIsCardSubmitted(false);
     await handleSave();
-    setModalState(ModalStateType.CONFIRM);
+    setModalObject({
+      modalState: ModalStateType.CONFIRM,
+      confirmState: ConfirmStateType.PUBLISHED,
+    });
   };
 
   const handleContinue = () => {
-    setModalState(ModalStateType.NULL);
-    navigate(`/library/questions/${publicPrivate}`);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+    if (modalObject.confirmState === ConfirmStateType.DRAFT) {
+      navigate(`/library/questions/${PublicPrivateType.DRAFT}`);
+    } else {
+      navigate(`/library/questions/${publicPrivate}`);
+    }
   };
 
   const handleBackQuestion = () => {
-    setModalState(ModalStateType.DISCARD);
+    setModalObject({
+      modalState: ModalStateType.DISCARD,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   // This pops the modal that allows the user to select publish, save as draft, or back
@@ -939,11 +1000,17 @@ export default function CreateQuestion({
     setIsBaseCardErrored(!handleCheckQuestionBaseComplete(draftQuestion));
     setIsCorrectCardErrored(!handleCheckQuestionCorrectCardComplete(draftQuestion));
     setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
-    setModalState(ModalStateType.PUBLISH);
+    setModalObject({
+      modalState: ModalStateType.PUBLISH,
+      confirmState: ConfirmStateType.PUBLISHED,
+    });
   };
 
   const handleDiscard = () => {
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
     window.localStorage.setItem(StorageKey, '');
     navigate('/');
   };
@@ -984,7 +1051,7 @@ export default function CreateQuestion({
         isModalOpen={
           isCCSSVisibleModal ||
           isImageUploadVisible ||
-          modalState !== ModalStateType.NULL
+          modalObject.modalState !== ModalStateType.NULL
         }
         handleCloseModal={handleCloseQuestionModal}
       />
@@ -1004,7 +1071,7 @@ export default function CreateQuestion({
         handleCloseModal={handleCloseModal}
       />
       <CreateQuestionModalSwitch
-        modalState={modalState}
+        modalObject={modalObject}
         screenSize={screenSize}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}

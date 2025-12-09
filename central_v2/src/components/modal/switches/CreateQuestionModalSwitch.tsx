@@ -1,12 +1,12 @@
 import React from "react";
-import { ConfirmStateType, ModalStateType, ScreenSize, TemplateType } from "../../../lib/CentralModels";
+import { ConfirmStateType, ModalStateType, ScreenSize, TemplateType, ModalObject } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import DiscardGameModal from '../DiscardGameModal';
 import ConfirmSaveModal from '../ConfirmSaveModal';
 import UpdatingModal from '../UpdatingModal';
 
 interface CreateQuestionModalSwitchProps {
-  modalState: ModalStateType;
+  modalObject: ModalObject;
   screenSize: ScreenSize;
   handleDiscard: () => void;
   handleCloseDiscardModal: () => void;
@@ -18,7 +18,7 @@ interface CreateQuestionModalSwitchProps {
 }
 
 export default function CreateQuestionModalSwitch({ 
-  modalState,
+  modalObject,
   screenSize,
   handleDiscard,
   handleCloseDiscardModal,
@@ -28,7 +28,7 @@ export default function CreateQuestionModalSwitch({
   handleSaveDraft,
   isCardErrored,
 }: CreateQuestionModalSwitchProps) {
-  switch (modalState) {
+  switch (modalObject.modalState) {
     case ModalStateType.DISCARD:
       return <DiscardGameModal
         isModalOpen
@@ -51,7 +51,7 @@ export default function CreateQuestionModalSwitch({
     case ModalStateType.SAVING:
     case ModalStateType.PUBLISHING:
       return <UpdatingModal
-        modalState={modalState}
+        modalState={modalObject.modalState}
         isModalOpen
         templateType={TemplateType.QUESTION}
       />;
@@ -59,7 +59,7 @@ export default function CreateQuestionModalSwitch({
     case ModalStateType.CONFIRM:
       return <ConfirmSaveModal
         isModalOpen
-        confirmState={ConfirmStateType.DRAFT}
+        confirmState={modalObject.confirmState}
         templateType={TemplateType.QUESTION}
         handleContinue={handleContinue}
       />;
