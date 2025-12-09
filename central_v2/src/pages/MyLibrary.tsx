@@ -225,8 +225,9 @@ export default function MyLibrary({
       'Drafts': LibraryTabEnum.DRAFTS,
       'Favorites': LibraryTabEnum.FAVORITES,
     };
-  
+    
     if (routeGames && routeGames.params.type) {
+      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
       const mappedTab = tabMapping[routeGames.params.type];
       if (mappedTab !== undefined) {
         setOpenTab(mappedTab);
@@ -237,6 +238,7 @@ export default function MyLibrary({
     }
     
     if (routeQuestions && routeQuestions.params.type) {
+      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
       const mappedTab = tabMapping[routeQuestions.params.type];
       if (mappedTab !== undefined) {
         setOpenQuestionTab(mappedTab);

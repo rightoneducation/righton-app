@@ -835,7 +835,6 @@ export default function CreateQuestion({
           draftQuestion,
         );
         setIsCreatingTemplate(false);
-        fetchElements();
         navigate('/library/questions/Drafts');
       } else {
         setIsDraftCardErrored(true);
@@ -932,7 +931,6 @@ export default function CreateQuestion({
 
   const handleBackQuestion = () => {
     setModalState(ModalStateType.DISCARD);
-    console.log("I GOT CLICKED")
   };
 
   // This pops the modal that allows the user to select publish, save as draft, or back
