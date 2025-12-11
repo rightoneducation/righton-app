@@ -82,7 +82,7 @@ export default function ConfirmSaveModal({
       subtitleText = `You can view your favorited ${type.toLowerCase()} in My Library.`;
       break;
     case ConfirmStateType.DRAFT:
-      titleText = `Draft ${type} saved`;
+      titleText = `${type} saved`;
       subtitleText = `A draft of your ${type.toLowerCase()} has been saved.`;
       break;
     case ConfirmStateType.PUBLISHED:
