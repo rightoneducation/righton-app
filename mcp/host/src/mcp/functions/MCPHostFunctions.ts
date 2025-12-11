@@ -1,24 +1,24 @@
-import { OpenAI } from "openai";
-import { ChatCompletionMessageParam, type ChatCompletionCreateParams } from "openai/resources/chat/completions.mjs";
-import { zodResponseFormat } from 'openai/helpers/zod';
+import Anthropic from '@anthropic-ai/sdk';
+import { MessageParam, Message, Tool } from '@anthropic-ai/sdk/resources';
 import { z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 import { v4 as uuidv4 } from 'uuid';
 import { MCPClientClass } from '../client/MCPClientClass.js';
 import { writeMCPResultToTable } from '../../utils/writeToTable.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
-const COMPLETIONS_MODEL = 'gpt-4o-mini';
-const FINAL_REASONING_MODEL = 'gpt-4o-mini';
+const COMPLETIONS_MODEL = 'claude-3-5-sonnet-20241022';
+const FINAL_REASONING_MODEL = 'claude-3-5-sonnet-20241022';
 const MAX_MESSAGE_LENGTH = 4000;
 
-// lazy initialize openai client (so that it doesn't try to connect to the API until secrets are loaded)
-let openai: OpenAI;
+// lazy initialize anthropic client (so that it doesn't try to connect to the API until secrets are loaded)
+let anthropic: Anthropic;
 
-function getOpenAI() {
-  if (!openai) {
-    openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+function getAnthropic() {
+  if (!anthropic) {
+    anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY });
   }
-  return openai;
+  return anthropic;
 }
 
 function formatValue(value: unknown) {
@@ -55,7 +55,7 @@ function createStepLogger(responseId?: string) {
   };
 }
 
-function truncateMessageContent(content: ChatCompletionMessageParam['content']): string {
+function truncateMessageContent(content: MessageParam['content']): string {
   if (typeof content === 'string') {
     if (content.length <= MAX_MESSAGE_LENGTH) {
       return content;
@@ -71,54 +71,49 @@ function truncateMessageContent(content: ChatCompletionMessageParam['content']):
     return `${serialized.slice(0, MAX_MESSAGE_LENGTH)}... [truncated ${serialized.length - MAX_MESSAGE_LENGTH} chars]`;
   }
 
-  if (content === null || content === undefined) {
-    return '';
-  }
-
-  const serialized = JSON.stringify(content);
-  if (serialized.length <= MAX_MESSAGE_LENGTH) {
-    return serialized;
-  }
-  return `${serialized.slice(0, MAX_MESSAGE_LENGTH)}... [truncated ${serialized.length - MAX_MESSAGE_LENGTH} chars]`;
+  return '';
 }
 
-function calculateTotalChars(messages: ChatCompletionMessageParam[]) {
+function calculateTotalChars(messages: MessageParam[]) {
   return messages.reduce((sum, message) => {
     if (typeof message.content === 'string') {
       return sum + message.content.length;
     }
     if (Array.isArray(message.content)) {
-      const serialized = message.content.map((item) => JSON.stringify(item)).join('');
+      const serialized = message.content.map((item) => {
+        if (typeof item === 'string' || (item && typeof item === 'object' && 'type' in item)) {
+          return JSON.stringify(item);
+        }
+        return '';
+      }).join('');
       return sum + serialized.length;
     }
-    return sum + JSON.stringify(message.content ?? '').length;
+    return sum;
   }, 0);
 }
 
-function getContentPreview(content: ChatCompletionMessageParam['content']) {
+function getContentPreview(content: MessageParam['content']) {
   let serialized = '';
   if (typeof content === 'string') {
     serialized = content;
   } else if (Array.isArray(content)) {
     serialized = content.map((item) => JSON.stringify(item)).join('');
-  } else if (content === null || content === undefined) {
-    serialized = '';
   } else {
-    serialized = JSON.stringify(content);
+    serialized = '';
   }
   return serialized;
 }
 
-function formatToolCallsForLog(toolCalls: Array<{ id?: string; function?: { name?: string; arguments?: string } }> | undefined) {
-  if (!toolCalls) {
+function formatToolCallsForLog(toolUses: Array<{ id: string; name: string; input: Record<string, unknown> }> | undefined) {
+  if (!toolUses) {
     return [];
   }
 
-  return toolCalls.map((call) => {
+  return toolUses.map((call) => {
     return {
       id: call.id,
-      functionName: call.function?.name,
-      arguments: call.function?.arguments,
+      functionName: call.name,
+      arguments: JSON.stringify(call.input),
     };
   });
 }
@@ -300,79 +295,72 @@ const ClassroomAnalysisSchema = z.object({
   ).describe("Discussion questions for each of the two students")
 });
 
-const THINKING_INSTRUCTION: ChatCompletionMessageParam = {
-  role: 'system',
-  content: [
-    {
-      type: 'text',
-      text: [
-        'You are an expert classroom analyst.',
-        'Always explain your reasoning in plain English before choosing or justifying a tool call.',
-        'If you request a tool, describe why you need it and what you expect to learn.',
-        'Before finalizing any analysis of class struggles, you MUST call `getLearningScienceDatabyCCSS` for every CCSS you reference so your reasoning is grounded in that data. Cite the learning science output (with quotes) when explaining trends.',
-        'When identifying emblematic students, consult `getStudentHistory` for those students (or comparable representatives) before describing their performance so your claims reflect actual history.',
-        'Only reference student names and IDs that actually appear in the fetched game session data; reuse the `globalStudentId` from `teams.items` when calling `getStudentHistory`.',
-        'Do not repeat the same tool call with identical arguments if you already have that data—reuse earlier results.',
-      ].join('\n'),
-    },
-  ],
-};
+const SYSTEM_PROMPT = [
+  'You are an expert classroom analyst.',
+  'Always explain your reasoning in plain English before choosing or justifying a tool call.',
+  'If you request a tool, describe why you need it and what you expect to learn.',
+  'Before finalizing any analysis of class struggles, you MUST call `getLearningScienceDatabyCCSS` for every CCSS you reference so your reasoning is grounded in that data. Cite the learning science output (with quotes) when explaining trends.',
+  'When identifying emblematic students, consult `getStudentHistory` for those students (or comparable representatives) before describing their performance so your claims reflect actual history.',
+  'Only reference student names and IDs that actually appear in the fetched game session data; reuse the `globalStudentId` from `teams.items` when calling `getStudentHistory`.',
+  'Do not repeat the same tool call with identical arguments if you already have that data—reuse earlier results.',
+].join('\n');
 
-const EXAMPLE_USER_MESSAGE: ChatCompletionMessageParam = {
+const EXAMPLE_USER_MESSAGE: MessageParam = {
   role: 'user',
   content: 'Example: Give me a quick read on classroom 999 before we start.',
 };
 
-const EXAMPLE_ASSISTANT_MESSAGE: ChatCompletionMessageParam = {
+const EXAMPLE_ASSISTANT_MESSAGE: MessageParam = {
   role: 'assistant',
-  content: 'To ground my analysis, I will first fetch the most recent sessions for classroom 999 so I know what activity to reason about.',
-  tool_calls: [
+  content: [
     {
+      type: 'text',
+      text: 'To ground my analysis, I will first fetch the most recent sessions for classroom 999 so I know what activity to reason about.',
+    },
+    {
+      type: 'tool_use',
       id: 'example_call_1',
-      type: 'function',
-      function: {
-        name: 'getGameSessionsByClassroomId',
-        arguments: JSON.stringify({ classroomId: '999' }),
-      },
+      name: 'getGameSessionsByClassroomId',
+      input: { classroomId: '999' },
     },
   ],
 };
 
-const EXAMPLE_TOOL_MESSAGE: ChatCompletionMessageParam = {
-  role: 'tool',
-  tool_call_id: 'example_call_1',
-  content: '[example tool output omitted]',
-};
-
-const STRUCTURED_INSTRUCTION: ChatCompletionMessageParam = {
-  role: 'system',
+const EXAMPLE_TOOL_MESSAGE: MessageParam = {
+  role: 'user',
   content: [
     {
-      type: 'text',
-      text: [
-        'Convert ongoing summary data into structured output according to the schema defined in response_format. Perform no other reasoning on this data.',
-      ].join('\n'),
+      type: 'tool_result',
+      tool_use_id: 'example_call_1',
+      content: '[example tool output omitted]',
     },
   ],
 };
 
-const DISCUSSION_QUESTION_REMINDER: ChatCompletionMessageParam = {
-  role: 'system',
-  content: [
-    {
-      type: 'text',
-      text: [
-        'When generating discussion questions:',
-        '1. Tie each question to the actual trends the class is struggling with.',
-        '2. Base the question on concrete examples from the reviewed game sessions and explicitly reference the scenario or numbers from that example (e.g., restate the question text or the fraction values involved) so students recognize the context.',
-        '3. Do NOT mention CCSS codes; refer to the underlying ideas in plain language.',
-        '4. Avoid generic directions—anchor each question in specific situations or mistakes observed in the data, quoting or paraphrasing the exact prompt rather than saying “problem 5” or “last session.”',
-        '5. Do not ask the student to identify what confused them; instead, directly surface the specific misconception or error you observed so the question guides them through the tricky step.',
-        '6. Frame each question around the specific misconception or error you observed in the example (describe what went wrong), but let the model decide how best to phrase the follow-up; avoid telling the student to identify their confusion.',
-      ].join(' '),
-    },
-  ],
-};
+// Convert Zod schema to JSON Schema for Claude's structured outputs
+const CLASSROOM_ANALYSIS_JSON_SCHEMA = zodToJsonSchema(ClassroomAnalysisSchema, {
+  name: 'ClassroomAnalysis',
+  target: 'openApi3',
+  $refStrategy: 'none',
+});
+
+const DISCUSSION_QUESTION_REMINDER = [
+  'When generating discussion questions:',
+  '1. Tie each question to the actual trends the class is struggling with.',
+  '2. Base the question on concrete examples from the reviewed game sessions and explicitly reference the scenario or numbers from that example (e.g., restate the question text or the fraction values involved) so students recognize the context.',
+  '3. Do NOT mention CCSS codes; refer to the underlying ideas in plain language.',
+  '4. Avoid generic directions—anchor each question in specific situations or mistakes observed in the data, quoting or paraphrasing the exact prompt rather than saying "problem 5" or "last session."',
+  '5. Do not ask the student to identify what confused them; instead, directly surface the specific misconception or error you observed so the question guides them through the tricky step.',
+  '6. Frame each question around the specific misconception or error you observed in the example (describe what went wrong), but let the model decide how best to phrase the follow-up; avoid telling the student to identify their confusion.',
+].join(' ');
+
+function convertToolsToClaudeFormat(tools: any[]): Tool[] {
+  return tools.map(tool => ({
+    name: tool.function?.name || '',
+    description: tool.function?.description || '',
+    input_schema: tool.function?.parameters || {},
+  }));
+}
 
 export async function processQuery (query: string){
   const parsedQuery = JSON.parse(query);
@@ -383,8 +371,7 @@ export async function processQuery (query: string){
 
   const availableTools = getAllTools();
   const toolMetadataMap = getToolMetadataMap(availableTools);
-  const messages: ChatCompletionMessageParam[] = [
-    THINKING_INSTRUCTION,
+  const messages: MessageParam[] = [
     EXAMPLE_USER_MESSAGE,
     EXAMPLE_ASSISTANT_MESSAGE,
     EXAMPLE_TOOL_MESSAGE,
@@ -401,22 +388,30 @@ export async function processQuery (query: string){
     }
     return false;
   });
-    log('Initial completion started', { totalChars: calculateTotalChars(messages) });
-  const initialParams: ChatCompletionCreateParams = {
-    model: COMPLETIONS_MODEL,
-    messages,
-    tools: filteredTools,
-  };
+  
+  const claudeTools = convertToolsToClaudeFormat(filteredTools);
+  
+  log('Initial completion started', { totalChars: calculateTotalChars(messages) });
   const initialStart = Date.now();
-  let response = await getOpenAI().chat.completions.create(initialParams);
+  let response = await getAnthropic().messages.create({
+    model: COMPLETIONS_MODEL,
+    max_tokens: 4096,
+    system: SYSTEM_PROMPT,
+    messages,
+    tools: claudeTools.length > 0 ? claudeTools : undefined,
+  });
   log(`Initial completion finished`, {
     durationMs: Date.now() - initialStart,
     totalChars: calculateTotalChars(messages),
   });
   log('Initial completion assistant response', {
-    assistantContent: getContentPreview(response.choices[0].message.content),
-    toolCalls: formatToolCallsForLog(response.choices[0].message.tool_calls),
-    rawMessage: response.choices[0].message,
+    assistantContent: getContentPreview(response.content),
+    toolCalls: formatToolCallsForLog(
+      response.content.filter((item): item is { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> } => 
+        item.type === 'tool_use'
+      ) as any
+    ),
+    rawMessage: response,
   });
 
   const toolCalls: Array<{name: string, args: any}> = [];
@@ -425,45 +420,51 @@ export async function processQuery (query: string){
   const toolResultCache = new Map<string, string>();
   const knownStudents = new Map<string, { name?: string; latestQuestion?: string; latestCCSS?: string }>();
   let rosterInstructionInjected = false;
+  let systemMessages: string[] = [];
 
   // loop that calls tools and then reasons based on the output of the tools
   // continues while reasoning loop determines that more tools are needed
-  while ((response.choices[0].message.tool_calls?.length ?? 0) > 0 && iterationCount < MAX_ITERATIONS){
-    const assistantMessageFull = response.choices[0].message;
-    const toolCallsFromResponse = assistantMessageFull.tool_calls ?? [];
+  let toolUses = response.content.filter((item): item is { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> } => 
+    item.type === 'tool_use'
+  );
+  
+  while (toolUses.length > 0 && iterationCount < MAX_ITERATIONS){
     iterationCount++;
     log(`Iteration ${iterationCount} started`, { totalChars: calculateTotalChars(messages) });
+    
+    // Add assistant message with tool uses
     messages.push({
-      role: assistantMessageFull.role,
-      content: assistantMessageFull.content ?? '',
-      tool_calls: toolCallsFromResponse,
-    } as ChatCompletionMessageParam);
+      role: 'assistant',
+      content: response.content,
+    });
     log(`Iteration ${iterationCount} assistant message added`, {
       totalChars: calculateTotalChars(messages),
     });
 
-    const summaryMessages: ChatCompletionMessageParam[] = [];
-    for (const call of toolCallsFromResponse){
-      if (call.type !== 'function') continue;
-
-      const toolName = call.function.name;
-      const toolArgs = JSON.parse(call.function.arguments || "{}");
+    const toolResults: Array<{ type: 'tool_result'; tool_use_id: string; content: string }> = [];
+    const summaryMessages: MessageParam[] = [];
+    
+    for (const call of toolUses){
+      const toolName = call.name;
+      const toolArgs = call.input;
       const cacheKey = `${toolName}:${JSON.stringify(toolArgs)}`;
       const cachedContent = toolResultCache.get(cacheKey);
+      
       if (cachedContent) {
         log(`Tool ${toolName} skipped (duplicate arguments)`, {
           iteration: iterationCount,
           totalChars: calculateTotalChars(messages),
         });
-        messages.push({
-          role: 'tool',
-          tool_call_id: call.id,
+        toolResults.push({
+          type: 'tool_result',
+          tool_use_id: call.id,
           content: cachedContent,
         });
         continue;
       }
+      
       if (toolName === 'getStudentHistory') {
-        const requestedId = toolArgs?.globalStudentId;
+        const requestedId = toolArgs?.globalStudentId as string;
         if (!requestedId || (knownStudents.size > 0 && !knownStudents.has(requestedId))) {
           const availableList = Array.from(knownStudents.entries()).map(([id, info]) => ({
             id,
@@ -476,9 +477,9 @@ export async function processQuery (query: string){
             availableStudents: availableList,
           });
           toolCalls.push({ name: toolName, args: toolArgs });
-          messages.push({
-            role: 'tool',
-            tool_call_id: call.id,
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: call.id,
             content: syntheticContent,
           });
           summaryMessages.push({
@@ -490,12 +491,11 @@ export async function processQuery (query: string){
               availableStudents: availableList,
             })}`,
           });
-          messages.push({
-            role: 'system',
-            content: knownStudents.size > 0
+          systemMessages.push(
+            knownStudents.size > 0
               ? `Invalid student id "${requestedId}". Choose from the latest roster: ${availableList.map((s) => `${s.name ?? '(unnamed)'} (${s.id})`).join(', ')}.`
-              : 'No student roster available yet. Fetch classroom sessions with team data before requesting student history.',
-          });
+              : 'No student roster available yet. Fetch classroom sessions with team data before requesting student history.'
+          );
           continue;
         }
       }
@@ -522,9 +522,9 @@ export async function processQuery (query: string){
 
       toolCalls.push({ name: toolName, args: toolArgs });
       toolResultCache.set(cacheKey, truncatedToolContent);
-      messages.push({
-        role: 'tool',
-        tool_call_id: call.id,
+      toolResults.push({
+        type: 'tool_result',
+        tool_use_id: call.id,
         content: truncatedToolContent,
       });
       const toolSummary = summarizeToolResult(toolName, toolArgs, result);
@@ -549,14 +549,13 @@ export async function processQuery (query: string){
               .slice(0, 12)
               .map(([id, info]) => `${info.name ?? '(unnamed)'} — ${id}`)
               .join('\n');
-            messages.push({
-              role: 'system',
-              content: [
+            systemMessages.push(
+              [
                 'Use actual students from the latest roster when citing performance or calling `getStudentHistory`.',
                 'Roster preview:',
                 rosterPreview || '(no names available)',
-              ].join('\n'),
-            });
+              ].join('\n')
+            );
           }
         }
       }
@@ -565,59 +564,113 @@ export async function processQuery (query: string){
         totalChars: calculateTotalChars(messages),
       });
     }
+    
+    // Add tool results as user message
+    if (toolResults.length > 0) {
+      messages.push({
+        role: 'user',
+        content: toolResults,
+      });
+    }
+    
     if (summaryMessages.length > 0) {
       messages.push(...summaryMessages);
     }
 
     log(`Iteration ${iterationCount} follow-up started`, { totalChars: calculateTotalChars(messages) });
-    const followUpParams: ChatCompletionCreateParams = {
-      model: COMPLETIONS_MODEL,
-      messages,
-    };
-    if (filteredTools.length > 0) {
-      followUpParams.tools = filteredTools;
-    }
     const followUpStart = Date.now();
-    response = await getOpenAI().chat.completions.create(followUpParams);
+    const updatedSystemPrompt = systemMessages.length > 0 
+      ? [SYSTEM_PROMPT, ...systemMessages].join('\n\n')
+      : SYSTEM_PROMPT;
+    
+    response = await getAnthropic().messages.create({
+      model: COMPLETIONS_MODEL,
+      max_tokens: 4096,
+      system: updatedSystemPrompt,
+      messages,
+      tools: claudeTools.length > 0 ? claudeTools : undefined,
+    });
     log(`Iteration ${iterationCount} follow-up finished`, {
       durationMs: Date.now() - followUpStart,
       totalChars: calculateTotalChars(messages),
     });
+    
+    const newToolUses = response.content.filter((item): item is { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> } => 
+      item.type === 'tool_use'
+    );
+    
     log(`Iteration ${iterationCount} follow-up assistant response`, {
-      assistantContent: getContentPreview(response.choices[0].message.content),
-      toolCalls: formatToolCallsForLog(response.choices[0].message.tool_calls),
-      rawMessage: response.choices[0].message,
+      assistantContent: getContentPreview(response.content),
+      toolCalls: formatToolCallsForLog(newToolUses as any),
+      rawMessage: response,
     });
 
-    if (!response.choices[0].message.tool_calls || response.choices[0].message.tool_calls.length === 0) {
+    if (newToolUses.length === 0) {
       break;
     }
+    
+    // Update toolUses for next iteration
+    toolUses = newToolUses;
   }
   
   // Log if we hit the max iteration limit
-  if (iterationCount >= MAX_ITERATIONS && (response.choices[0].message.tool_calls?.length ?? 0) > 0) {
+  const finalToolUses = response.content.filter((item): item is { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> } => 
+    item.type === 'tool_use'
+  );
+  if (iterationCount >= MAX_ITERATIONS && finalToolUses.length > 0) {
     console.warn('[MCPHost]', new Date().toISOString(), 'Hit maximum iteration limit', { iterationCount });
   }
 
   try {
     log('Structured completion started', { totalChars: calculateTotalChars(messages) });
-    // After tool loop, one final call to get structured output
+    // After tool loop, one final call to get structured output using Claude's structured outputs
     const structuredStart = Date.now();
-    const structuredResponse = await getOpenAI().chat.completions.create({
+    const finalSystemPrompt = [
+      SYSTEM_PROMPT,
+      DISCUSSION_QUESTION_REMINDER,
+      ...systemMessages,
+    ].join('\n\n');
+    
+    // Use beta API for structured outputs
+    const structuredResponse = await (getAnthropic() as any).beta.messages.create({
       model: FINAL_REASONING_MODEL,
+      max_tokens: 4096,
+      system: finalSystemPrompt,
       messages: [
-        STRUCTURED_INSTRUCTION,
-        DISCUSSION_QUESTION_REMINDER,
         ...messages,
+        {
+          role: 'user',
+          content: 'Now output the final structured analysis.',
+        },
       ],
-      response_format: zodResponseFormat(ClassroomAnalysisSchema, 'classroomAnalysis')
+      output_format: {
+        type: 'json_schema',
+        schema: CLASSROOM_ANALYSIS_JSON_SCHEMA as any,
+      },
+    }, {
+      betas: ['structured-outputs-2025-11-13'],
     });
     log('Structured completion finished', {
       durationMs: Date.now() - structuredStart,
       totalChars: calculateTotalChars(messages),
     });
 
-    const content = JSON.parse(structuredResponse.choices[0].message.content || '{}');
+    // Extract text content from Claude's structured output response
+    // With structured outputs, response.content[0].text contains valid JSON
+    const textContent = structuredResponse.content
+      .filter((item: any) => item.type === 'text')
+      .map((item: any) => {
+        if (item.type === 'text') {
+          return item.text;
+        }
+        return '';
+      })
+      .join('');
+    
+    // Parse the JSON response (should always be valid with structured outputs)
+    const content = JSON.parse(textContent);
+    
+    // Validate against Zod schema (structured outputs guarantee schema compliance, but we validate for type safety)
     const structuredData = ClassroomAnalysisSchema.parse(content);
 
     log('Writing result', { totalChars: calculateTotalChars(messages) });

@@ -10,6 +10,12 @@ if (!openaiSecretName) throw new Error('OPENAI_SECRET_NAME environment variable 
 const openaiSecret = await loadSecret(openaiSecretName);
 process.env.OPENAI_API_KEY = JSON.parse(openaiSecret)['openai_api'];
 
+const claudeSecretName = process.env.CLAUDE_SECRET_NAME;
+if(!claudeSecretName) throw new Error('CLAUDE_SECRET_NAME environment variable is required');
+
+const claudeSecret = await loadSecret(claudeSecretName);
+process.env.CLAUDE_API_KEY = JSON.parse(claudeSecret)['claude_api'];
+
 const dynamoDbEndpoint = process.env.DYNAMO_DB_ENDPOINT;
 if (!dynamoDbEndpoint) throw new Error('DYNAMO_DB_ENDPOINT environment variable is required');
 const dynamoDbKey = process.env.DYNAMO_DB_API;
