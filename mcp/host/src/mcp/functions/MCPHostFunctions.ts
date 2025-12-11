@@ -1,14 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { MessageParam, Message, Tool } from '@anthropic-ai/sdk/resources';
 import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 import { v4 as uuidv4 } from 'uuid';
 import { MCPClientClass } from '../client/MCPClientClass.js';
 import { writeMCPResultToTable } from '../../utils/writeToTable.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
-const COMPLETIONS_MODEL = 'claude-3-5-sonnet-20241022';
-const FINAL_REASONING_MODEL = 'claude-3-5-sonnet-20241022';
+const COMPLETIONS_MODEL = 'claude-haiku-4-5';
+const FINAL_REASONING_MODEL = 'claude-haiku-4-5';
 const MAX_MESSAGE_LENGTH = 4000;
 
 // lazy initialize anthropic client (so that it doesn't try to connect to the API until secrets are loaded)
@@ -38,9 +37,7 @@ function formatValue(value: unknown) {
 function createStepLogger(responseId?: string) {
   const start = Date.now();
   return (label: string, extra?: Record<string, unknown>) => {
-    if (label !== 'processQuery.start' && label !== 'Process complete') {
-      return;
-    }
+    // Removed filter - now logs all events for table tracking
     const elapsed = Date.now() - start;
     const timestamp = new Date().toISOString();
     const payload: Record<string, unknown> = { elapsedMs: elapsed };
@@ -337,12 +334,53 @@ const EXAMPLE_TOOL_MESSAGE: MessageParam = {
   ],
 };
 
-// Convert Zod schema to JSON Schema for Claude's structured outputs
-const CLASSROOM_ANALYSIS_JSON_SCHEMA = zodToJsonSchema(ClassroomAnalysisSchema, {
-  name: 'ClassroomAnalysis',
-  target: 'openApi3',
-  $refStrategy: 'none',
-});
+// JSON Schema for Claude's structured outputs
+const CLASSROOM_ANALYSIS_JSON_SCHEMA = {
+  type: 'object',
+  properties: {
+    learningOutcomes: {
+      type: 'string'
+    },
+    students: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string'
+          },
+          performance: {
+            type: 'string',
+            enum: ['excelling', 'struggling']
+          },
+          justification: {
+            type: 'string'
+          }
+        },
+        required: ['name', 'performance', 'justification'],
+        additionalProperties: false
+      }
+    },
+    discussionQuestions: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          studentName: {
+            type: 'string'
+          },
+          question: {
+            type: 'string'
+          }
+        },
+        required: ['studentName', 'question'],
+        additionalProperties: false
+      }
+    }
+  },
+  required: ['learningOutcomes', 'students', 'discussionQuestions'],
+  additionalProperties: false
+};
 
 const DISCUSSION_QUESTION_REMINDER = [
   'When generating discussion questions:',
@@ -367,9 +405,12 @@ export async function processQuery (query: string){
   const { query: prompt, isRightOnEnabled, isCZIEnabled } = parsedQuery;
   let responseId = uuidv4();
   const log = createStepLogger(responseId);
+  // TABLE: event_type='processQuery.start', iteration=0, elapsed_ms=0, duration_ms=null, tool_name=null, prompt_length=null
   log('processQuery.start');
 
   const availableTools = getAllTools();
+  // TABLE: event_type='processQuery.availableToolsLoaded', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=null
+  log('processQuery.availableToolsLoaded');
   const toolMetadataMap = getToolMetadataMap(availableTools);
   const messages: MessageParam[] = [
     EXAMPLE_USER_MESSAGE,
@@ -388,9 +429,12 @@ export async function processQuery (query: string){
     }
     return false;
   });
+  // TABLE: event_type='processQuery.toolsFiltered', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=null
+  log('processQuery.toolsFiltered');
   
   const claudeTools = convertToolsToClaudeFormat(filteredTools);
   
+  // TABLE: event_type='processQuery.initialCompletion.start', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
   log('Initial completion started', { totalChars: calculateTotalChars(messages) });
   const initialStart = Date.now();
   let response = await getAnthropic().messages.create({
@@ -400,6 +444,7 @@ export async function processQuery (query: string){
     messages,
     tools: claudeTools.length > 0 ? claudeTools : undefined,
   });
+  // TABLE: event_type='processQuery.initialCompletion.complete', iteration=0, elapsed_ms=<current>, duration_ms=<durationMs>, tool_name=null, prompt_length=<totalChars>
   log(`Initial completion finished`, {
     durationMs: Date.now() - initialStart,
     totalChars: calculateTotalChars(messages),
@@ -430,6 +475,7 @@ export async function processQuery (query: string){
   
   while (toolUses.length > 0 && iterationCount < MAX_ITERATIONS){
     iterationCount++;
+    // TABLE: event_type='processQuery.iteration.start', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
     log(`Iteration ${iterationCount} started`, { totalChars: calculateTotalChars(messages) });
     
     // Add assistant message with tool uses
@@ -504,12 +550,14 @@ export async function processQuery (query: string){
       if (!client) {
         throw new Error(`No MCP server found for tool: ${toolName}`);
       }
+      // TABLE: event_type='processQuery.toolCall.start', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=null, tool_name=<toolName>, prompt_length=<totalChars>
       log(`Tool ${toolName} started`, {
         iteration: iterationCount,
         totalChars: calculateTotalChars(messages),
       });
       const callStart = Date.now();
       const result = await client.callTool(toolName, toolArgs);
+      // TABLE: event_type='processQuery.toolCall.complete', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=<durationMs>, tool_name=<toolName>, prompt_length=<totalChars>
       log(`Tool ${toolName} finished`, {
         iteration: iterationCount,
         durationMs: Date.now() - callStart,
@@ -577,6 +625,7 @@ export async function processQuery (query: string){
       messages.push(...summaryMessages);
     }
 
+    // TABLE: event_type='processQuery.followUpCompletion.start', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
     log(`Iteration ${iterationCount} follow-up started`, { totalChars: calculateTotalChars(messages) });
     const followUpStart = Date.now();
     const updatedSystemPrompt = systemMessages.length > 0 
@@ -590,6 +639,7 @@ export async function processQuery (query: string){
       messages,
       tools: claudeTools.length > 0 ? claudeTools : undefined,
     });
+    // TABLE: event_type='processQuery.followUpCompletion.complete', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=<durationMs>, tool_name=null, prompt_length=<totalChars>
     log(`Iteration ${iterationCount} follow-up finished`, {
       durationMs: Date.now() - followUpStart,
       totalChars: calculateTotalChars(messages),
@@ -622,6 +672,7 @@ export async function processQuery (query: string){
   }
 
   try {
+    // TABLE: event_type='processQuery.structuredResponse.start', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
     log('Structured completion started', { totalChars: calculateTotalChars(messages) });
     // After tool loop, one final call to get structured output using Claude's structured outputs
     const structuredStart = Date.now();
@@ -636,6 +687,7 @@ export async function processQuery (query: string){
       model: FINAL_REASONING_MODEL,
       max_tokens: 4096,
       system: finalSystemPrompt,
+      betas: ['structured-outputs-2025-11-13'],
       messages: [
         ...messages,
         {
@@ -645,11 +697,10 @@ export async function processQuery (query: string){
       ],
       output_format: {
         type: 'json_schema',
-        schema: CLASSROOM_ANALYSIS_JSON_SCHEMA as any,
+        schema: CLASSROOM_ANALYSIS_JSON_SCHEMA,
       },
-    }, {
-      betas: ['structured-outputs-2025-11-13'],
     });
+    // TABLE: event_type='processQuery.structuredResponse.complete', iteration=0, elapsed_ms=<current>, duration_ms=<durationMs>, tool_name=null, prompt_length=<totalChars>
     log('Structured completion finished', {
       durationMs: Date.now() - structuredStart,
       totalChars: calculateTotalChars(messages),
@@ -673,7 +724,9 @@ export async function processQuery (query: string){
     // Validate against Zod schema (structured outputs guarantee schema compliance, but we validate for type safety)
     const structuredData = ClassroomAnalysisSchema.parse(content);
 
+    // TABLE: event_type='processQuery.writeResult.start', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
     log('Writing result', { totalChars: calculateTotalChars(messages) });
+    const writeStart = Date.now();
     // Write successful result to DynamoDB via AppSync
     await writeMCPResultToTable({
       id: responseId,
@@ -683,8 +736,10 @@ export async function processQuery (query: string){
       discussionQuestions: structuredData.discussionQuestions,
       toolCalls: toolCalls
     });
-    log('Write complete');
+    // TABLE: event_type='processQuery.writeResult.complete', iteration=0, elapsed_ms=<current>, duration_ms=<Date.now() - writeStart>, tool_name=null, prompt_length=null
+    log('Write complete', { durationMs: Date.now() - writeStart });
     
+    // TABLE: event_type='Process complete', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=null
     log('Process complete');
     return 'Success';
   } catch (error) {

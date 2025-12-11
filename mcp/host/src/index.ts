@@ -14,7 +14,7 @@ const claudeSecretName = process.env.CLAUDE_SECRET_NAME;
 if(!claudeSecretName) throw new Error('CLAUDE_SECRET_NAME environment variable is required');
 
 const claudeSecret = await loadSecret(claudeSecretName);
-process.env.CLAUDE_API_KEY = JSON.parse(claudeSecret)['claude_api'];
+process.env.CLAUDE_API_KEY = JSON.parse(claudeSecret)['claude-api'];
 
 const dynamoDbEndpoint = process.env.DYNAMO_DB_ENDPOINT;
 if (!dynamoDbEndpoint) throw new Error('DYNAMO_DB_ENDPOINT environment variable is required');

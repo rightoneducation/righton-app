@@ -8,7 +8,7 @@ export class MCPClientClass {
 
   constructor(url: string){
     this.transport = new StreamableHTTPClientTransport(new URL(url));
-    this.mcp = new Client({ name: "mcp", version: "1.0.0", transport: this.transport });
+    this.mcp = new Client({ name: "mcp", version: "1.0.0" });
   }
 
   async connect(){
