@@ -685,7 +685,7 @@ export async function processQuery (query: string){
     // Use beta API for structured outputs
     const structuredResponse = await (getAnthropic() as any).beta.messages.create({
       model: FINAL_REASONING_MODEL,
-      max_tokens: 4096,
+      max_tokens: 2048, // Reduced from 4096 - structured JSON output is more concise
       system: finalSystemPrompt,
       betas: ['structured-outputs-2025-11-13'],
       messages: [
