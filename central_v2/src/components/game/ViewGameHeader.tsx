@@ -6,7 +6,7 @@ import { ButtonType } from "../button/ButtonModels";
 import { TitleText } from "../../lib/styledcomponents/CreateGameStyledComponent";
 import { ModalStateType, ScreenSize } from "../../lib/CentralModels";
 import ModalBackground from "../modal/ModalBackground";
-import DuplicateModal from "../modal/DuplicateModal";
+import DuplicateGameModal from "../modal/DuplicateGameModal";
 
 interface ViewGameHeaderProps {
   handleBackClick: () => void;
@@ -60,7 +60,7 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
             handleCloseModal={handleCloseQuestionModal}
           /> 
         {modalState === ModalStateType.DUPLICATE && (
-            <DuplicateModal
+            <DuplicateGameModal
               isModalOpen
               handleCloseDiscardModal={handleCloseDiscardModal}
               handleConfirmModal={handleConfirmModal}
@@ -93,7 +93,7 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
                   buttonType={ButtonType.EDIT}
                   isEnabled
                   buttonWidthOverride='127px'
-                  onClick={handleBackClick}
+                  onClick={handleEditGame}
                 />
               ) :(
                 <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
