@@ -1,38 +1,15 @@
-import Anthropic from '@anthropic-ai/sdk';
-import { MessageParam, Message, Tool } from '@anthropic-ai/sdk/resources';
+import { query } from '@anthropic-ai/claude-agent-sdk';
+import { MessageParam } from '@anthropic-ai/sdk/resources';
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import { MCPClientClass } from '../client/MCPClientClass.js';
 import { writeMCPResultToTable } from '../../utils/writeToTable.js';
 
 const mcpClients = new Map<string, MCPClientClass>();
+
+// set model
 const COMPLETIONS_MODEL = 'claude-haiku-4-5';
-const FINAL_REASONING_MODEL = 'claude-haiku-4-5';
 const MAX_MESSAGE_LENGTH = 4000;
-
-// lazy initialize anthropic client (so that it doesn't try to connect to the API until secrets are loaded)
-let anthropic: Anthropic;
-
-function getAnthropic() {
-  if (!anthropic) {
-    anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY });
-  }
-  return anthropic;
-}
-
-function formatValue(value: unknown) {
-  if (value === null || value === undefined) {
-    return String(value);
-  }
-  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-    return String(value);
-  }
-  try {
-    return JSON.stringify(value);
-  } catch {
-    return '[unserializable]';
-  }
-}
 
 function createStepLogger(responseId?: string) {
   const start = Date.now();
@@ -52,55 +29,6 @@ function createStepLogger(responseId?: string) {
   };
 }
 
-function truncateMessageContent(content: MessageParam['content']): string {
-  if (typeof content === 'string') {
-    if (content.length <= MAX_MESSAGE_LENGTH) {
-      return content;
-    }
-    return `${content.slice(0, MAX_MESSAGE_LENGTH)}... [truncated ${content.length - MAX_MESSAGE_LENGTH} chars]`;
-  }
-
-  if (Array.isArray(content)) {
-    const serialized = JSON.stringify(content);
-    if (serialized.length <= MAX_MESSAGE_LENGTH) {
-      return serialized;
-    }
-    return `${serialized.slice(0, MAX_MESSAGE_LENGTH)}... [truncated ${serialized.length - MAX_MESSAGE_LENGTH} chars]`;
-  }
-
-  return '';
-}
-
-function calculateTotalChars(messages: MessageParam[]) {
-  return messages.reduce((sum, message) => {
-    if (typeof message.content === 'string') {
-      return sum + message.content.length;
-    }
-    if (Array.isArray(message.content)) {
-      const serialized = message.content.map((item) => {
-        if (typeof item === 'string' || (item && typeof item === 'object' && 'type' in item)) {
-          return JSON.stringify(item);
-        }
-        return '';
-      }).join('');
-      return sum + serialized.length;
-    }
-    return sum;
-  }, 0);
-}
-
-function getContentPreview(content: MessageParam['content']) {
-  let serialized = '';
-  if (typeof content === 'string') {
-    serialized = content;
-  } else if (Array.isArray(content)) {
-    serialized = content.map((item) => JSON.stringify(item)).join('');
-  } else {
-    serialized = '';
-  }
-  return serialized;
-}
-
 function formatToolCallsForLog(toolUses: Array<{ id: string; name: string; input: Record<string, unknown> }> | undefined) {
   if (!toolUses) {
     return [];
@@ -113,17 +41,6 @@ function formatToolCallsForLog(toolUses: Array<{ id: string; name: string; input
       arguments: JSON.stringify(call.input),
     };
   });
-}
-
-function safeJSONParse<T>(value: string | null | undefined): T | undefined {
-  if (!value) {
-    return undefined;
-  }
-  try {
-    return JSON.parse(value) as T;
-  } catch {
-    return undefined;
-  }
 }
 
 export async function initMCPClient(servers: Array<{name: string, version: string, url: string}>) {
@@ -156,125 +73,237 @@ export function getAllTools() {
   return allTools;
 }
 
-function findClientForTool(toolName: string): MCPClientClass | undefined {
-  for (const client of mcpClients.values()) {
-    const tools = client.getTools();
-    if (tools.some(t=> t.function?.name === toolName)){
-      return client;
-    }
-  }
-  return undefined;
-}
 
-function getToolMetadataMap(tools: any[]) {
-  const metadata = new Map<string, { category?: string }>();
-  for (const tool of tools) {
-    const name = tool?.function?.name;
-    if (!name) continue;
-    const category =
-      tool.metadata?.category ??
-      tool.metadata?.tags?.[0] ??
-      tool.annotations?.category ??
-      tool.annotations?.tags?.[0] ??
-      tool._meta?.category ??
-      tool._meta?.tags?.[0];
-    metadata.set(name, { category });
-  }
-  return metadata;
-}
+const SUBAGENT_INVOCATION_PROMPT = [
+  `Your documentation provides the following formation about subagent invocation
+  Automatic Invocation
+    The SDK will automatically invoke appropriate subagents based on the task context. Ensure your agent's description field clearly indicates when it should be used:
 
-function summarizeToolResult(toolName: string, args: Record<string, unknown>, result: any) {
-  const summary: Record<string, unknown> = {
-    toolName,
-    args,
-  };
-  try {
-    if (toolName === 'getGameSessionsByClassroomId' && Array.isArray(result?.content)) {
-      const text = result.content[0]?.text;
-      if (text) {
-        const items = JSON.parse(text);
-        summary.itemCount = Array.isArray(items) ? items.length : 0;
-        summary.firstTitle = Array.isArray(items) && items[0]?.title ? items[0].title : undefined;
-        if (Array.isArray(items) && items.length > 0) {
-          const questionSession = items[0];
-          const rosterSession = items.find((session: any) => session?.teams?.items?.length) ?? questionSession;
-          const questions = questionSession?.questions?.items ?? [];
-          const questionCodes = questions.map((q: any) => {
-            if (!q?.grade || !q?.domain || !q?.cluster || !q?.standard) {
-              return undefined;
-            }
-            return `${q.grade}.${q.domain}.${q.cluster}.${q.standard}`;
-          });
-          summary.uniqueCCSS = Array.from(new Set(questionCodes.filter(Boolean)));
-          summary.firstSessionQuestions = questions.slice(0, 5).map((q: any) => ({
-            text: q?.text,
-            choices: q?.choices,
-            grade: q?.grade,
-            domain: q?.domain,
-            cluster: q?.cluster,
-            standard: q?.standard,
-          }));
-          summary.teamSourceSessionId = rosterSession?.id;
-          const teams = rosterSession?.teams?.items ?? [];
-          summary.firstSessionTeams = teams.slice(0, 10).map((team: any) => ({
-            name: team?.name,
-            globalStudentId: team?.globalStudentId,
-            score: team?.score,
-            questionText: team?.question?.text,
-            questionCCSS: team?.question?.ccssCode ??
-              (team?.question?.grade && team?.question?.domain
-                ? `${team.question.grade}.${team.question.domain}.${team.question.cluster ?? ''}.${team.question.standard ?? ''}`.replace(/\.+$/, '')
-                : undefined),
-          }));
-          const sessionIds = [questionSession?.id].filter(Boolean);
-        }
-      }
-    }
-    if (toolName === 'getLearningScienceDatabyCCSS' && Array.isArray(result?.content)) {
-      const text = result.content[0]?.text;
-      if (text && !text.startsWith('No learning science data')) {
-        const items = JSON.parse(text);
-        summary.itemCount = Array.isArray(items) ? items.length : 0;
-        summary.firstCode = Array.isArray(items) && items[0]?.statementCode ? items[0].statementCode : undefined;
-      } else {
-        summary.itemCount = 0;
-      }
-    }
-    if (toolName === 'getStudentHistory' && Array.isArray(result?.content)) {
-      const text = result.content[0]?.text;
-      try {
-        const parsed = text ? JSON.parse(text) : undefined;
-        const connection = parsed?.data?.teamByGlobalStudentId;
-        const firstTeam = connection?.items?.[0];
-        if (firstTeam) {
-          summary.student = {
-            name: firstTeam.name,
-            globalStudentId: firstTeam.globalStudentId,
-            recentScore: firstTeam.score,
-            latestQuestion: firstTeam.question?.text,
-            latestCCSS: firstTeam.question?.ccssCode,
-          };
-          if (connection?.items?.length) {
-            summary.recentAppearances = connection.items.slice(0, 5).map((item: any) => ({
-              questionText: item?.question?.text,
-              questionCCSS: item?.question?.ccssCode,
-              score: item?.score,
-              teamId: item?.id,
-            }));
+    const result = query({
+      prompt: "Optimize the database queries in the API layer",
+      options: {
+        agents: {
+          'performance-optimizer': {
+            description: 'Use PROACTIVELY when code changes might impact performance. MUST BE USED for optimization tasks.',
+            prompt: 'You are a performance optimization specialist...',
+            tools: ['Read', 'Edit', 'Bash', 'Grep'],
+            model: 'sonnet'
           }
-        } else {
-          summary.details = 'Student history retrieved (no records for this ID)';
         }
-      } catch {
-        summary.details = 'Student history retrieved (parse failed)';
       }
-    }
-  } catch {
-    summary.details = 'Summary parsing failed';
-  }
-  return summary;
-}
+    });
 
+    const result = query({
+      prompt: "Use the code-reviewer agent to check the authentication module",
+      options: {
+        agents: {
+          'code-reviewer': {
+            description: 'Expert code review specialist',
+            prompt: 'You are a security-focused code reviewer...',
+            tools: ['Read', 'Grep', 'Glob']
+          }
+        }
+      }
+    });
+
+    The query function that I am using is here:
+    const q = query({
+      prompt,
+      options: {
+        model: modelToUse, // Explicitly use haiku - never use sonnet
+        systemPrompt: fullSystemPrompt,
+        // mcpServers: mcpServers,
+        disallowedTools: disallowedTools,
+        maxTurns: maxTurnsValue,
+        settingSources: [], // No filesystem settings - ensures no model override
+        outputFormat: {
+          type: 'json_schema',
+          schema: CLASSROOM_ANALYSIS_JSON_SCHEMA
+        },
+        agents: {
+          'game-session-agent': {
+            description: 'Game session data specialist. Proactively fetches and analyzes game sessions for classrooms. Use immediately when you need game session data, student IDs, or CCSS codes from classroom activities.',
+            prompt: GAME_SESSION_AGENT_PROMPT,
+            tools: ['mcp__custom__getGameSessionsByClassroomId'],
+            model: 'haiku'
+          },
+          'student-history-fetcher': {
+            description: 'Student history data specialist. Proactively fetches student performance history. Use immediately when you need a student\'s past performance, game results, or historical data for analysis.',
+            prompt: STUDENT_HISTORY_FETCHER_PROMPT,
+            tools: ['mcp__custom__getStudentHistory'],
+            model: 'haiku'
+          },
+          'learning-science-fetcher': {
+            description: 'Learning science data specialist. Proactively fetches pedagogical insights and misconceptions for CCSS standards. Use immediately when you need learning science context, common errors, or pedagogical guidance for a specific CCSS code.',
+            prompt: LEARNING_SCIENCE_FETCHER_PROMPT,
+            tools: ['mcp__ext__getLearningScienceDatabyCCSS'],
+            model: 'haiku'
+          },
+          'analysis-agent': {
+            description: 'Classroom performance analyst. Synthesizes game sessions, student history, and learning science data into insights and recommendations. Use proactively when all data has been collected and you need comprehensive analysis.',
+            prompt: ANALYSIS_AGENT_PROMPT,
+            tools: [], // No tools - pure analysis
+            model: 'haiku'
+          },
+          'output-generator': {
+            description: 'Structured output generator. Generates the final JSON output in the required schema format. Use proactively when you have completed analysis and need to generate the final structured output with learning outcomes, student assessments, and discussion questions.',
+            prompt: OUTPUT_GENERATOR_PROMPT,
+            tools: ['StructuredOutput'], // Only this subagent can use StructuredOutput
+            model: 'haiku'
+          }
+        }
+      }
+    });
+  `
+];
+
+// Prompts for agents
+const SYSTEM_PROMPT = [
+  `You are an orchestration agent for classroom analysis. You coordinate specialized subagents to gather and analyze data. 
+  You invoke these agents via the provided documentation snippets.`,
+  `${SUBAGENT_INVOCATION_PROMPT}`,
+  '',
+  'CRITICAL RULES:',
+  '1. You have NO tools available - you CANNOT use any tools, including StructuredOutput',
+  '2. You CAN and SHOULD invoke subagents on my behalf that are available to you. These subagents will provide the data that you need.',
+  `3. If you can not invoke the subagents, explain why and troubleshoot the issue. I don't really understand what you need from me so if there is an issue, explictly explain how I can provide what you need in terms of configuration. In this case, this is your priority.`,
+  '',
+  'Workflow:',
+  '1. The game-session-agent will be invoked first to fetch game sessions',
+  '2. From the subagent results, identify all studentIds and ccssCodes',
+  '3. The student-history-fetcher and learning-science-fetcher will be invoked for each student/CCSS (multiple can run in parallel)',
+  '4. The analysis-agent will be invoked to synthesize all collected data',
+  '5. The output-generator will be invoked to generate the final structured output',
+  '',
+  'IMPORTANT:',
+  '- You have ZERO tools - do not try to use any tools',
+  '- You DO have function calls to the subagents - use them to get the data you need',
+  '- Available subagents: game-session-agent, student-history-fetcher, learning-science-fetcher, analysis-agent, output-generator',
+].join('\n');
+
+// After SYSTEM_PROMPT (around line 298)
+
+const GAME_SESSION_AGENT_PROMPT = [
+  'You are a game session data specialist ensuring comprehensive classroom activity analysis.',
+  '',
+  'When invoked:',
+  '1. Use getGameSessionsByClassroomId to fetch sessions for the given classroomId',
+  '2. Analyze the sessions immediately',
+  '3. Extract all key information systematically',
+  '',
+  'Extraction checklist:',
+  '- All unique student IDs (globalStudentId) from teams.items',
+  '- All unique CCSS codes from questions (format: grade.domain.cluster.standard)',
+  '- Summary of most recent sessions and their completion status',
+  '- Student response patterns and correctness',
+  '- Question difficulty and performance metrics',
+  '',
+  'Return a clear, structured summary with:',
+  '- studentIds array (all unique globalStudentId values)',
+  '- ccssCodes array (all unique CCSS codes found)',
+  '- Session summary with dates, completion status, and key metrics',
+  '',
+  'Be thorough and ensure no student IDs or CCSS codes are missed.',
+].join('\n');
+
+const STUDENT_HISTORY_FETCHER_PROMPT = [
+  'You are a student history data specialist focused on comprehensive performance tracking.',
+  '',
+  'When invoked:',
+  '1. Use getStudentHistory with the provided globalStudentId',
+  '2. Fetch the complete student history immediately',
+  '3. Return all data clearly formatted',
+  '',
+  'Key practices:',
+  '- Fetch the full history for the specified student',
+  '- Preserve all historical data without filtering',
+  '- Format results for easy analysis',
+  '- Include timestamps, performance metrics, and trends',
+  '',
+  'Return the raw student history data clearly formatted with all available fields.',
+].join('\n');
+
+const LEARNING_SCIENCE_FETCHER_PROMPT = [
+  'You are a learning science data specialist providing pedagogical insights and context.',
+  '',
+  'When invoked:',
+  '1. Use getLearningScienceDatabyCCSS with the provided CCSS code',
+  '2. Fetch learning science data immediately',
+  '3. Return all pedagogical insights clearly formatted',
+  '',
+  'Key practices:',
+  '- Fetch complete learning science data for the CCSS standard',
+  '- Include misconceptions, common errors, and pedagogical guidance',
+  '- Preserve all learning components and related standards',
+  '- Format for easy cross-referencing with student errors',
+  '',
+  'Return the raw learning science data clearly formatted with all available insights.',
+].join('\n');
+
+const ANALYSIS_AGENT_PROMPT = [
+  'You are a classroom performance analyst specializing in comprehensive data synthesis and insights.',
+  '',
+  'When invoked:',
+  '1. Review all collected data systematically',
+  '2. Cross-reference student mistakes with learning science misconceptions',
+  '3. Identify struggling and excelling students',
+  '4. Generate actionable insights and recommendations',
+  '',
+  'You receive:',
+  '- Game session analysis with student responses and CCSS codes',
+  '- Student history data showing past performance and trends',
+  '- Learning science data with misconceptions and pedagogical insights',
+  '',
+  'Analysis process:',
+  '- Cross-reference student mistakes with documented misconceptions',
+  '- Identify which students are struggling with which concepts',
+  '- Connect patterns across multiple game sessions',
+  '- Verify trends using historical student data',
+  '- Link errors to specific learning science insights',
+  '',
+  'For each analysis, provide:',
+  '- Learning outcomes based on CCSS standards covered',
+  '- Student performance assessments (struggling vs. excelling)',
+  '- Evidence-based justifications for each assessment',
+  '- Two targeted discussion questions for struggling students',
+  '',
+  'Be thorough in connecting student errors to documented misconceptions. Provide specific evidence for all assessments.',
+  '',
+  'Return your analysis in a clear, structured format that can be used by the output-generator subagent.',
+].join('\n');
+
+const OUTPUT_GENERATOR_PROMPT = [
+  'You are a structured output generator specializing in formatting analysis results into the required JSON schema.',
+  '',
+  'When invoked:',
+  '1. Receive analysis results from the analysis-agent',
+  '2. Format the data according to the required schema',
+  '3. Use the StructuredOutput tool to generate the final JSON',
+  '',
+  'You receive:',
+  '- Analysis results with learning outcomes, student assessments, and discussion questions',
+  '',
+  'Output requirements:',
+  '- learningOutcomes: String describing what students should learn',
+  '- students: Array of student objects with name, performance (struggling/excelling), and justification',
+  '- discussionQuestions: Array of two question objects with studentName and question',
+  '',
+  'Use the StructuredOutput tool to generate the final output. Ensure all fields match the required schema exactly.',
+].join('\n');
+
+const DISCUSSION_QUESTION_REMINDER = [
+  'When generating discussion questions:',
+  '1. Tie each question to the actual trends the class is struggling with.',
+  '2. Base the question on concrete examples from the reviewed game sessions and explicitly reference the scenario or numbers from that example (e.g., restate the question text or the fraction values involved) so students recognize the context.',
+  '3. Do NOT mention CCSS codes; refer to the underlying ideas in plain language.',
+  '4. Avoid generic directions—anchor each question in specific situations or mistakes observed in the data, quoting or paraphrasing the exact prompt rather than saying "problem 5" or "last session."',
+  '5. Do not ask the student to identify what confused them; instead, directly surface the specific misconception or error you observed so the question guides them through the tricky step.',
+  '6. Frame each question around the specific misconception or error you observed in the example (describe what went wrong), but let the model decide how best to phrase the follow-up; avoid telling the student to identify their confusion.',
+].join(' ');
+
+// Schemas for structued outputs
+
+// validation schema
 const ClassroomAnalysisSchema = z.object({
   learningOutcomes: z.string().describe("Analysis of the most recent game and identification of areas where students are struggling, with evidence from previous games and learning science data"),
   students: z.array(
@@ -292,49 +321,6 @@ const ClassroomAnalysisSchema = z.object({
   ).describe("Discussion questions for each of the two students")
 });
 
-const SYSTEM_PROMPT = [
-  'You are an expert classroom analyst.',
-  'Always explain your reasoning in plain English before choosing or justifying a tool call.',
-  'If you request a tool, describe why you need it and what you expect to learn.',
-  'Before finalizing any analysis of class struggles, you MUST call `getLearningScienceDatabyCCSS` for every CCSS you reference so your reasoning is grounded in that data. Cite the learning science output (with quotes) when explaining trends.',
-  'When identifying emblematic students, consult `getStudentHistory` for those students (or comparable representatives) before describing their performance so your claims reflect actual history.',
-  'Only reference student names and IDs that actually appear in the fetched game session data; reuse the `globalStudentId` from `teams.items` when calling `getStudentHistory`.',
-  'Do not repeat the same tool call with identical arguments if you already have that data—reuse earlier results.',
-].join('\n');
-
-const EXAMPLE_USER_MESSAGE: MessageParam = {
-  role: 'user',
-  content: 'Example: Give me a quick read on classroom 999 before we start.',
-};
-
-const EXAMPLE_ASSISTANT_MESSAGE: MessageParam = {
-  role: 'assistant',
-  content: [
-    {
-      type: 'text',
-      text: 'To ground my analysis, I will first fetch the most recent sessions for classroom 999 so I know what activity to reason about.',
-    },
-    {
-      type: 'tool_use',
-      id: 'example_call_1',
-      name: 'getGameSessionsByClassroomId',
-      input: { classroomId: '999' },
-    },
-  ],
-};
-
-const EXAMPLE_TOOL_MESSAGE: MessageParam = {
-  role: 'user',
-  content: [
-    {
-      type: 'tool_result',
-      tool_use_id: 'example_call_1',
-      content: '[example tool output omitted]',
-    },
-  ],
-};
-
-// JSON Schema for Claude's structured outputs
 const CLASSROOM_ANALYSIS_JSON_SCHEMA = {
   type: 'object',
   properties: {
@@ -382,351 +368,210 @@ const CLASSROOM_ANALYSIS_JSON_SCHEMA = {
   additionalProperties: false
 };
 
-const DISCUSSION_QUESTION_REMINDER = [
-  'When generating discussion questions:',
-  '1. Tie each question to the actual trends the class is struggling with.',
-  '2. Base the question on concrete examples from the reviewed game sessions and explicitly reference the scenario or numbers from that example (e.g., restate the question text or the fraction values involved) so students recognize the context.',
-  '3. Do NOT mention CCSS codes; refer to the underlying ideas in plain language.',
-  '4. Avoid generic directions—anchor each question in specific situations or mistakes observed in the data, quoting or paraphrasing the exact prompt rather than saying "problem 5" or "last session."',
-  '5. Do not ask the student to identify what confused them; instead, directly surface the specific misconception or error you observed so the question guides them through the tricky step.',
-  '6. Frame each question around the specific misconception or error you observed in the example (describe what went wrong), but let the model decide how best to phrase the follow-up; avoid telling the student to identify their confusion.',
-].join(' ');
 
-function convertToolsToClaudeFormat(tools: any[]): Tool[] {
-  return tools.map(tool => ({
-    name: tool.function?.name || '',
-    description: tool.function?.description || '',
-    input_schema: tool.function?.parameters || {},
-  }));
-}
 
-export async function processQuery (query: string){
-  const parsedQuery = JSON.parse(query);
+
+export async function processQuery (queryString: string){
+  const parsedQuery = JSON.parse(queryString);
   const { query: prompt, isRightOnEnabled, isCZIEnabled } = parsedQuery;
   let responseId = uuidv4();
   const log = createStepLogger(responseId);
-  // TABLE: event_type='processQuery.start', iteration=0, elapsed_ms=0, duration_ms=null, tool_name=null, prompt_length=null
   log('processQuery.start');
 
-  const availableTools = getAllTools();
-  // TABLE: event_type='processQuery.availableToolsLoaded', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=null
-  log('processQuery.availableToolsLoaded');
-  const toolMetadataMap = getToolMetadataMap(availableTools);
-  const messages: MessageParam[] = [
-    EXAMPLE_USER_MESSAGE,
-    EXAMPLE_ASSISTANT_MESSAGE,
-    EXAMPLE_TOOL_MESSAGE,
-    { role: 'user', content: prompt }
-  ];
+  // Configure MCP servers based on enabled flags
+  // The SDK will automatically discover tools from these servers
+
+  const mcpServers: Record<string, any> = {};
+
+  if (isRightOnEnabled && process.env.MCP_SERVER_URL) {
+    mcpServers['custom'] = {
+      type: 'http' as const,
+      url: process.env.MCP_SERVER_URL,
+      headers: {}
+    };
+  }
   
-  // filter available tools based on the enabled flags
-  const filteredTools = availableTools.filter(tool => {
-    if (isRightOnEnabled && tool._server === 'custom') {
-      return true;
-    }
-    if (isCZIEnabled && tool._server === 'ext') {
-      return true;
-    }
-    return false;
-  });
+  if (isCZIEnabled && process.env.EXT_MCP_SERVER_URL) {
+    mcpServers['ext'] = {
+      type: 'http' as const,
+      url: process.env.EXT_MCP_SERVER_URL,
+      headers: {}
+    };
+  }
+
+
   // TABLE: event_type='processQuery.toolsFiltered', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=null
-  log('processQuery.toolsFiltered');
-  
-  const claudeTools = convertToolsToClaudeFormat(filteredTools);
-  
-  // TABLE: event_type='processQuery.initialCompletion.start', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
-  log('Initial completion started', { totalChars: calculateTotalChars(messages) });
-  const initialStart = Date.now();
-  let response = await getAnthropic().messages.create({
-    model: COMPLETIONS_MODEL,
-    max_tokens: 4096,
-    system: SYSTEM_PROMPT,
-    messages,
-    tools: claudeTools.length > 0 ? claudeTools : undefined,
+  log('processQuery.toolsFiltered', { 
+    enabledServers: Object.keys(mcpServers),
+    serverCount: Object.keys(mcpServers).length,
+    serverUrls: Object.entries(mcpServers).map(([name, config]) => ({
+      name,
+      url: (config as any).url,
+      type: (config as any).type
+    }))
   });
-  // TABLE: event_type='processQuery.initialCompletion.complete', iteration=0, elapsed_ms=<current>, duration_ms=<durationMs>, tool_name=null, prompt_length=<totalChars>
-  log(`Initial completion finished`, {
-    durationMs: Date.now() - initialStart,
-    totalChars: calculateTotalChars(messages),
-  });
-  log('Initial completion assistant response', {
-    assistantContent: getContentPreview(response.content),
-    toolCalls: formatToolCallsForLog(
-      response.content.filter((item): item is { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> } => 
-        item.type === 'tool_use'
-      ) as any
-    ),
-    rawMessage: response,
-  });
-
-  const toolCalls: Array<{name: string, args: any}> = [];
-  const MAX_ITERATIONS = 10;
-  let iterationCount = 0;
-  const toolResultCache = new Map<string, string>();
-  const knownStudents = new Map<string, { name?: string; latestQuestion?: string; latestCCSS?: string }>();
-  let rosterInstructionInjected = false;
-  let systemMessages: string[] = [];
-
-  // loop that calls tools and then reasons based on the output of the tools
-  // continues while reasoning loop determines that more tools are needed
-  let toolUses = response.content.filter((item): item is { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> } => 
-    item.type === 'tool_use'
-  );
   
-  while (toolUses.length > 0 && iterationCount < MAX_ITERATIONS){
-    iterationCount++;
-    // TABLE: event_type='processQuery.iteration.start', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
-    log(`Iteration ${iterationCount} started`, { totalChars: calculateTotalChars(messages) });
-    
-    // Add assistant message with tool uses
-    messages.push({
-      role: 'assistant',
-      content: response.content,
-    });
-    log(`Iteration ${iterationCount} assistant message added`, {
-      totalChars: calculateTotalChars(messages),
-    });
-
-    const toolResults: Array<{ type: 'tool_result'; tool_use_id: string; content: string }> = [];
-    const summaryMessages: MessageParam[] = [];
-    
-    for (const call of toolUses){
-      const toolName = call.name;
-      const toolArgs = call.input;
-      const cacheKey = `${toolName}:${JSON.stringify(toolArgs)}`;
-      const cachedContent = toolResultCache.get(cacheKey);
-      
-      if (cachedContent) {
-        log(`Tool ${toolName} skipped (duplicate arguments)`, {
-          iteration: iterationCount,
-          totalChars: calculateTotalChars(messages),
-        });
-        toolResults.push({
-          type: 'tool_result',
-          tool_use_id: call.id,
-          content: cachedContent,
-        });
-        continue;
-      }
-      
-      if (toolName === 'getStudentHistory') {
-        const requestedId = toolArgs?.globalStudentId as string;
-        if (!requestedId || (knownStudents.size > 0 && !knownStudents.has(requestedId))) {
-          const availableList = Array.from(knownStudents.entries()).map(([id, info]) => ({
-            id,
-            name: info.name,
-            question: info.latestQuestion,
-          }));
-          const syntheticContent = JSON.stringify({
-            error: 'unknown_student_id',
-            providedId: requestedId ?? null,
-            availableStudents: availableList,
-          });
-          toolCalls.push({ name: toolName, args: toolArgs });
-          toolResults.push({
-            type: 'tool_result',
-            tool_use_id: call.id,
-            content: syntheticContent,
-          });
-          summaryMessages.push({
-            role: 'assistant',
-            content: `Summary: ${JSON.stringify({
-              toolName,
-              args: toolArgs,
-              error: 'Student ID not found in latest roster',
-              availableStudents: availableList,
-            })}`,
-          });
-          systemMessages.push(
-            knownStudents.size > 0
-              ? `Invalid student id "${requestedId}". Choose from the latest roster: ${availableList.map((s) => `${s.name ?? '(unnamed)'} (${s.id})`).join(', ')}.`
-              : 'No student roster available yet. Fetch classroom sessions with team data before requesting student history.'
-          );
-          continue;
-        }
-      }
-
-      const client = findClientForTool(toolName);
-      if (!client) {
-        throw new Error(`No MCP server found for tool: ${toolName}`);
-      }
-      // TABLE: event_type='processQuery.toolCall.start', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=null, tool_name=<toolName>, prompt_length=<totalChars>
-      log(`Tool ${toolName} started`, {
-        iteration: iterationCount,
-        totalChars: calculateTotalChars(messages),
-      });
-      const callStart = Date.now();
-      const result = await client.callTool(toolName, toolArgs);
-      // TABLE: event_type='processQuery.toolCall.complete', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=<durationMs>, tool_name=<toolName>, prompt_length=<totalChars>
-      log(`Tool ${toolName} finished`, {
-        iteration: iterationCount,
-        durationMs: Date.now() - callStart,
-        totalChars: calculateTotalChars(messages),
-      });
-      const toolContent = JSON.stringify(result.content);
-      const truncatedToolContent = toolContent.length > 1000
-        ? `${toolContent.slice(0, 1000)}... [truncated ${toolContent.length - 1000} chars]`
-        : toolContent;
-
-      toolCalls.push({ name: toolName, args: toolArgs });
-      toolResultCache.set(cacheKey, truncatedToolContent);
-      toolResults.push({
-        type: 'tool_result',
-        tool_use_id: call.id,
-        content: truncatedToolContent,
-      });
-      const toolSummary = summarizeToolResult(toolName, toolArgs, result);
-      summaryMessages.push({
-        role: 'assistant',
-        content: `Summary: ${JSON.stringify(toolSummary)}`,
-      });
-      if (toolName === 'getGameSessionsByClassroomId') {
-        const teams = (toolSummary as any)?.firstSessionTeams;
-        if (Array.isArray(teams)) {
-          for (const team of teams) {
-            if (!team?.globalStudentId) continue;
-            knownStudents.set(team.globalStudentId, {
-              name: team.name,
-              latestQuestion: team.questionText,
-              latestCCSS: team.questionCCSS,
-            });
-          }
-          if (!rosterInstructionInjected && knownStudents.size > 0) {
-            rosterInstructionInjected = true;
-            const rosterPreview = Array.from(knownStudents.entries())
-              .slice(0, 12)
-              .map(([id, info]) => `${info.name ?? '(unnamed)'} — ${id}`)
-              .join('\n');
-            systemMessages.push(
-              [
-                'Use actual students from the latest roster when citing performance or calling `getStudentHistory`.',
-                'Roster preview:',
-                rosterPreview || '(no names available)',
-              ].join('\n')
-            );
-          }
-        }
-      }
-      log(`Tool ${toolName} message added`, {
-        iteration: iterationCount,
-        totalChars: calculateTotalChars(messages),
-      });
-    }
-    
-    // Add tool results as user message
-    if (toolResults.length > 0) {
-      messages.push({
-        role: 'user',
-        content: toolResults,
-      });
-    }
-    
-    if (summaryMessages.length > 0) {
-      messages.push(...summaryMessages);
-    }
-
-    // TABLE: event_type='processQuery.followUpCompletion.start', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
-    log(`Iteration ${iterationCount} follow-up started`, { totalChars: calculateTotalChars(messages) });
-    const followUpStart = Date.now();
-    const updatedSystemPrompt = systemMessages.length > 0 
-      ? [SYSTEM_PROMPT, ...systemMessages].join('\n\n')
-      : SYSTEM_PROMPT;
-    
-    response = await getAnthropic().messages.create({
-      model: COMPLETIONS_MODEL,
-      max_tokens: 4096,
-      system: updatedSystemPrompt,
-      messages,
-      tools: claudeTools.length > 0 ? claudeTools : undefined,
-    });
-    // TABLE: event_type='processQuery.followUpCompletion.complete', iteration=<iterationCount>, elapsed_ms=<current>, duration_ms=<durationMs>, tool_name=null, prompt_length=<totalChars>
-    log(`Iteration ${iterationCount} follow-up finished`, {
-      durationMs: Date.now() - followUpStart,
-      totalChars: calculateTotalChars(messages),
-    });
-    
-    const newToolUses = response.content.filter((item): item is { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> } => 
-      item.type === 'tool_use'
-    );
-    
-    log(`Iteration ${iterationCount} follow-up assistant response`, {
-      assistantContent: getContentPreview(response.content),
-      toolCalls: formatToolCallsForLog(newToolUses as any),
-      rawMessage: response,
-    });
-
-    if (newToolUses.length === 0) {
-      break;
-    }
-    
-    // Update toolUses for next iteration
-    toolUses = newToolUses;
-  }
-  
-  // Log if we hit the max iteration limit
-  const finalToolUses = response.content.filter((item): item is { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> } => 
-    item.type === 'tool_use'
-  );
-  if (iterationCount >= MAX_ITERATIONS && finalToolUses.length > 0) {
-    console.warn('[MCPHost]', new Date().toISOString(), 'Hit maximum iteration limit', { iterationCount });
-  }
+  // Disable ALL tools from orchestration agent - it can only use subagents
+  // StructuredOutput is also disallowed - it will be handled by the output-generator subagent
+  const disallowedTools = [
+    'Task',
+    'TaskOutput',
+    'Bash',
+    'Glob',
+    'Grep',
+    'ExitPlanMode',
+    'Read',
+    'Edit',
+    'Write',
+    'NotebookEdit',
+    'WebFetch',
+    'TodoWrite',
+    'WebSearch',
+    'KillShell',
+    'Skill',
+    'SlashCommand',
+    'EnterPlanMode',
+    // Disallow MCP tools from orchestration agent - subagents must use them
+    'mcp__custom__getGameSessionsByClassroomId',
+    'mcp__custom__getStudentHistory',
+    'mcp__ext__getLearningScienceDatabyCCSS',
+    // Disallow StructuredOutput - output-generator subagent will handle it
+    'StructuredOutput'
+  ];
 
   try {
-    // TABLE: event_type='processQuery.structuredResponse.start', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
-    log('Structured completion started', { totalChars: calculateTotalChars(messages) });
-    // After tool loop, one final call to get structured output using Claude's structured outputs
-    const structuredStart = Date.now();
-    const finalSystemPrompt = [
+    log('Initial completion started', { totalChars: prompt.length });
+    const initialStart = Date.now();
+
+    // Build system prompt
+    const fullSystemPrompt = [
       SYSTEM_PROMPT,
-      DISCUSSION_QUESTION_REMINDER,
-      ...systemMessages,
+      DISCUSSION_QUESTION_REMINDER
     ].join('\n\n');
+
+    // Explicitly set model to ensure we always use haiku, not sonnet
+    const modelToUse = COMPLETIONS_MODEL; // 'claude-haiku-4-5'
     
-    // Use beta API for structured outputs
-    const structuredResponse = await (getAnthropic() as any).beta.messages.create({
-      model: FINAL_REASONING_MODEL,
-      max_tokens: 2048, // Reduced from 4096 - structured JSON output is more concise
-      system: finalSystemPrompt,
-      betas: ['structured-outputs-2025-11-13'],
-      messages: [
-        ...messages,
-        {
-          role: 'user',
-          content: 'Now output the final structured analysis.',
+    const maxTurnsValue = 30; // Increased from 10 to allow more turns for complex analysis
+    
+    log('Query configuration', {
+      model: modelToUse,
+      maxTurns: maxTurnsValue,
+      mcpServerCount: Object.keys(mcpServers).length,
+      disallowedToolsCount: disallowedTools.length
+    });
+
+    const q = query({
+      prompt,
+      options: {
+        model: modelToUse, // Explicitly use haiku - never use sonnet
+        systemPrompt: fullSystemPrompt,
+        // mcpServers: mcpServers,
+        disallowedTools: disallowedTools,
+        maxTurns: maxTurnsValue,
+        settingSources: [], // No filesystem settings - ensures no model override
+        outputFormat: {
+          type: 'json_schema',
+          schema: CLASSROOM_ANALYSIS_JSON_SCHEMA
         },
-      ],
-      output_format: {
-        type: 'json_schema',
-        schema: CLASSROOM_ANALYSIS_JSON_SCHEMA,
-      },
-    });
-    // TABLE: event_type='processQuery.structuredResponse.complete', iteration=0, elapsed_ms=<current>, duration_ms=<durationMs>, tool_name=null, prompt_length=<totalChars>
-    log('Structured completion finished', {
-      durationMs: Date.now() - structuredStart,
-      totalChars: calculateTotalChars(messages),
-    });
-
-    // Extract text content from Claude's structured output response
-    // With structured outputs, response.content[0].text contains valid JSON
-    const textContent = structuredResponse.content
-      .filter((item: any) => item.type === 'text')
-      .map((item: any) => {
-        if (item.type === 'text') {
-          return item.text;
+        agents: {
+          'game-session-agent': {
+            description: 'Game session data specialist. Proactively fetches and analyzes game sessions for classrooms. Use immediately when you need game session data, student IDs, or CCSS codes from classroom activities.',
+            prompt: GAME_SESSION_AGENT_PROMPT,
+            tools: ['mcp__custom__getGameSessionsByClassroomId'],
+            model: 'haiku'
+          },
+          'student-history-fetcher': {
+            description: 'Student history data specialist. Proactively fetches student performance history. Use immediately when you need a student\'s past performance, game results, or historical data for analysis.',
+            prompt: STUDENT_HISTORY_FETCHER_PROMPT,
+            tools: ['mcp__custom__getStudentHistory'],
+            model: 'haiku'
+          },
+          'learning-science-fetcher': {
+            description: 'Learning science data specialist. Proactively fetches pedagogical insights and misconceptions for CCSS standards. Use immediately when you need learning science context, common errors, or pedagogical guidance for a specific CCSS code.',
+            prompt: LEARNING_SCIENCE_FETCHER_PROMPT,
+            tools: ['mcp__ext__getLearningScienceDatabyCCSS'],
+            model: 'haiku'
+          },
+          'analysis-agent': {
+            description: 'Classroom performance analyst. Synthesizes game sessions, student history, and learning science data into insights and recommendations. Use proactively when all data has been collected and you need comprehensive analysis.',
+            prompt: ANALYSIS_AGENT_PROMPT,
+            tools: [], // No tools - pure analysis
+            model: 'haiku'
+          },
+          'output-generator': {
+            description: 'Structured output generator. Generates the final JSON output in the required schema format. Use proactively when you have completed analysis and need to generate the final structured output with learning outcomes, student assessments, and discussion questions.',
+            prompt: OUTPUT_GENERATOR_PROMPT,
+            tools: ['StructuredOutput'], // Only this subagent can use StructuredOutput
+            model: 'haiku'
+          }
         }
-        return '';
-      })
-      .join('');
-    
-    // Parse the JSON response (should always be valid with structured outputs)
-    const content = JSON.parse(textContent);
-    
-    // Validate against Zod schema (structured outputs guarantee schema compliance, but we validate for type safety)
-    const structuredData = ClassroomAnalysisSchema.parse(content);
+      }
+    });
 
-    // TABLE: event_type='processQuery.writeResult.start', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=<totalChars>
-    log('Writing result', { totalChars: calculateTotalChars(messages) });
+    // Process messages from the generator
+    let finalResult: string | undefined;
+    let structuredData: any = undefined;
+    let toolCalls: Array<{name: string, args: any}> = [];
+    const invokedAgents = new Set<string>(); // Track which subagents were invoked
+    
+
+    // Main agentic loop from query
+    for await (const msg of q) {
+      
+      // Log all messages to debug what fields are available
+      log('Message received', {
+        type: msg.type,
+        message: msg
+      });
+
+      // Handle final result
+      if (msg.type === 'result') {
+        if (msg.subtype === 'success') {
+          finalResult = msg.result;
+          
+          // Extract structured output if available
+          if (msg.structured_output) {
+            structuredData = msg.structured_output;
+          } else if (finalResult) {
+            // Try to parse as JSON if structured_output not available
+            try {
+              structuredData = JSON.parse(finalResult);
+            } catch {
+              // If not JSON, we'll need to handle it differently
+              console.log('Final result is not JSON:', finalResult);
+            }
+          }
+          
+          log('Process complete', {
+            durationMs: msg.duration_ms,
+            numTurns: msg.num_turns,
+            totalCostUsd: msg.total_cost_usd,
+            toolCalls: toolCalls.length,
+            invokedAgents: Array.from(invokedAgents),
+            totalAgentsInvoked: invokedAgents.size,
+            modelUsage: msg.modelUsage // Log which models were actually used
+          });
+          
+        } else {
+          log('Process failed', {
+            subtype: msg.subtype,
+            errors: 'errors' in msg ? msg.errors : undefined
+          });
+          throw new Error(`Query failed: ${msg.subtype}`);
+        }
+        break; // Exit loop when result is received
+      }
+    }
+
+    if (!finalResult) {
+      throw new Error('No result received from query');
+    }
+
+
+    log('Writing result');
     const writeStart = Date.now();
+    
     // Write successful result to DynamoDB via AppSync
     await writeMCPResultToTable({
       id: responseId,
@@ -736,17 +581,16 @@ export async function processQuery (query: string){
       discussionQuestions: structuredData.discussionQuestions,
       toolCalls: toolCalls
     });
-    // TABLE: event_type='processQuery.writeResult.complete', iteration=0, elapsed_ms=<current>, duration_ms=<Date.now() - writeStart>, tool_name=null, prompt_length=null
-    log('Write complete', { durationMs: Date.now() - writeStart });
     
-    // TABLE: event_type='Process complete', iteration=0, elapsed_ms=<current>, duration_ms=null, tool_name=null, prompt_length=null
+    log('Write complete', { durationMs: Date.now() - writeStart });
     log('Process complete');
     return 'Success';
+
   } catch (error) {
     log('Process failed', {
       message: error instanceof Error ? error.message : 'Unknown error occurred',
     });
-    // Write error to DynamoDB
+    
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     await writeMCPResultToTable({
       id: responseId,

@@ -7,6 +7,7 @@
     "build": "tsc && chmod 755 build/index.js"
   },
   "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.1.67",
     "@anthropic-ai/sdk": "^0.70.0",
     "@aws-sdk/client-secrets-manager": "^3.911.0",
     "@modelcontextprotocol/sdk": "^1.24.0",

@@ -32,11 +32,39 @@ export class MCPClientClass {
   }
 
   async callTool(name: string, args: any){
-    const result = await this.mcp.callTool({
-      name,
-      arguments: args
+    console.log('[MCPClientClass] callTool called', {
+      timestamp: new Date().toISOString(),
+      toolName: name,
+      args: JSON.stringify(args),
+      argsKeys: Object.keys(args || {})
     });
-    return result;
+    
+    try {
+      const result = await this.mcp.callTool({
+        name,
+        arguments: args
+      });
+      
+      console.log('[MCPClientClass] callTool result received', {
+        timestamp: new Date().toISOString(),
+        toolName: name,
+        resultType: typeof result,
+        hasContent: !!result?.content,
+        contentLength: Array.isArray(result?.content) ? result.content.length : 0,
+        resultPreview: result ? JSON.stringify(result).substring(0, 500) : 'null'
+      });
+      
+      return result;
+    } catch (error) {
+      console.error('[MCPClientClass] callTool error', {
+        timestamp: new Date().toISOString(),
+        toolName: name,
+        args: JSON.stringify(args),
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      throw error;
+    }
   }
 
   getTools() {
