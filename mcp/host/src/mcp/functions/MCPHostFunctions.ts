@@ -1,5 +1,4 @@
 import { query } from '@anthropic-ai/claude-agent-sdk';
-import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import { MCPClientClass } from '../client/MCPClientClass.js';
 import { writeMCPResultToTable } from '../../utils/writeToTable.js';
@@ -74,19 +73,24 @@ export function getAllTools() {
 
 // Prompts for agents
 const SYSTEM_PROMPT = [
-  'You are an orchestration agent. Your ONLY job is to coordinate subagents.',
+  'You are an orchestration agent. Your ONLY job is to coordinate subagents to achieve the workflow outlined below.',
   '',
   'YOU CANNOT ACCESS DATA DIRECTLY. You must delegate all data fetching to subagents:',
   '- To get game sessions: You MUST invoke the game-session-agent subagent',
   '- To get student history: You MUST invoke the student-history-fetcher subagent', 
   '- To get learning science data: You MUST invoke the learning-science-fetcher subagent',
+  '- To analyze the data: You MUST invoke the analysis-agent subagent',
+  '- To generate the final output: You MUST invoke the output-generator subagent',
   '',
   'When the task requires data, you should say: "I need to invoke the [subagent-name] subagent to gather this data."',
   '',
   'You have NO direct access to mcp__custom__getGameSessionsByClassroomId or other MCP tools.',
+  'Workflow:',
+  '1. The game-session-agent will be invoked to fetch game session data for the given classroomId',
+  '2. The student-history-fetcher will be invoked to fetch student history data for the given classroomId and the learning-science-fetcher will be invoked IN PARELLEL to get learning science data for the given classroomId',
+  '3. The analysis-agent will be invoked to analyze the data',
+  '4. The output-generator will be invoked to generate the final output',
 ].join('\n');
-
-// After SYSTEM_PROMPT (around line 298)
 
 const GAME_SESSION_AGENT_PROMPT = [
   'You are a game session data specialist ensuring comprehensive classroom activity analysis.',
@@ -112,38 +116,24 @@ const GAME_SESSION_AGENT_PROMPT = [
 ].join('\n');
 
 const STUDENT_HISTORY_FETCHER_PROMPT = [
-  'You are a student history data specialist focused on comprehensive performance tracking.',
-  '',
-  'When invoked:',
-  '1. Use getStudentHistory with the provided globalStudentId',
-  '2. Fetch the complete student history immediately',
-  '3. Return all data clearly formatted',
-  '',
-  'Key practices:',
-  '- Fetch the full history for the specified student',
-  '- Preserve all historical data without filtering',
-  '- Format results for easy analysis',
-  '- Include timestamps, performance metrics, and trends',
-  '',
-  'Return the raw student history data clearly formatted with all available fields.',
+  'Call mcp__custom__getStudentHistory with the provided globalStudentId and classroomId.',
+  'Return ONLY the raw JSON result exactly as received. Do not format, analyze, or add commentary.',
 ].join('\n');
 
 const LEARNING_SCIENCE_FETCHER_PROMPT = [
-  'You are a learning science data specialist providing pedagogical insights and context.',
-  '',
-  'When invoked:',
-  '1. Use getLearningScienceDatabyCCSS with the provided CCSS code',
-  '2. Fetch learning science data immediately',
-  '3. Return all pedagogical insights clearly formatted',
-  '',
-  'Key practices:',
-  '- Fetch complete learning science data for the CCSS standard',
-  '- Include misconceptions, common errors, and pedagogical guidance',
-  '- Preserve all learning components and related standards',
-  '- Format for easy cross-referencing with student errors',
-  '',
-  'Return the raw learning science data clearly formatted with all available insights.',
+  'Call mcp__ext__getLearningScienceDatabyCCSS with the provided CCSS code.',
+  'Return ONLY the raw JSON result exactly as received. Do not format, analyze, or add commentary.',
 ].join('\n');
+
+const DISCUSSION_QUESTION_GUIDANCE = [
+  'When generating discussion questions:',
+  '1. Tie each question to the actual trends the class is struggling with.',
+  '2. Base the question on concrete examples from the reviewed game sessions and explicitly reference the scenario or numbers from that example (e.g., restate the question text or the fraction values involved) so students recognize the context.',
+  '3. Do NOT mention CCSS codes; refer to the underlying ideas in plain language.',
+  '4. Avoid generic directions—anchor each question in specific situations or mistakes observed in the data, quoting or paraphrasing the exact prompt rather than saying "problem 5" or "last session."',
+  '5. Do not ask the student to identify what confused them; instead, directly surface the specific misconception or error you observed so the question guides them through the tricky step.',
+  '6. Frame each question around the specific misconception or error you observed in the example (describe what went wrong), but let the model decide how best to phrase the follow-up; avoid telling the student to identify their confusion.',
+].join(' ');
 
 const ANALYSIS_AGENT_PROMPT = [
   'You are a classroom performance analyst specializing in comprehensive data synthesis and insights.',
@@ -170,7 +160,7 @@ const ANALYSIS_AGENT_PROMPT = [
   '- Learning outcomes based on CCSS standards covered',
   '- Student performance assessments (struggling vs. excelling)',
   '- Evidence-based justifications for each assessment',
-  '- Two targeted discussion questions for struggling students',
+  `- Two targeted discussion questions for struggling students. These questions should be based on the data and the learning science data and follow ${DISCUSSION_QUESTION_GUIDANCE}`,
   '',
   'Be thorough in connecting student errors to documented misconceptions. Provide specific evidence for all assessments.',
   '',
@@ -196,36 +186,7 @@ const OUTPUT_GENERATOR_PROMPT = [
   'Use the StructuredOutput tool to generate the final output. Ensure all fields match the required schema exactly.',
 ].join('\n');
 
-const DISCUSSION_QUESTION_REMINDER = [
-  'When generating discussion questions:',
-  '1. Tie each question to the actual trends the class is struggling with.',
-  '2. Base the question on concrete examples from the reviewed game sessions and explicitly reference the scenario or numbers from that example (e.g., restate the question text or the fraction values involved) so students recognize the context.',
-  '3. Do NOT mention CCSS codes; refer to the underlying ideas in plain language.',
-  '4. Avoid generic directions—anchor each question in specific situations or mistakes observed in the data, quoting or paraphrasing the exact prompt rather than saying "problem 5" or "last session."',
-  '5. Do not ask the student to identify what confused them; instead, directly surface the specific misconception or error you observed so the question guides them through the tricky step.',
-  '6. Frame each question around the specific misconception or error you observed in the example (describe what went wrong), but let the model decide how best to phrase the follow-up; avoid telling the student to identify their confusion.',
-].join(' ');
-
-// Schemas for structued outputs
-
-// validation schema
-const ClassroomAnalysisSchema = z.object({
-  learningOutcomes: z.string().describe("Analysis of the most recent game and identification of areas where students are struggling, with evidence from previous games and learning science data"),
-  students: z.array(
-    z.object({
-      name: z.string().describe("Student's full name"),
-      performance: z.enum(["excelling", "struggling"]).describe("Whether the student is performing well or struggling"),
-      justification: z.string().describe("Justification for choosing this student")
-    })
-  ).describe("Two students that are emblematic of the classroom"),
-  discussionQuestions: z.array(
-    z.object({
-      studentName: z.string().describe("Student's full name"),
-      question: z.string().describe("The discussion question for this student")
-    })
-  ).describe("Discussion questions for each of the two students")
-});
-
+// Schema for structured outputs
 const CLASSROOM_ANALYSIS_JSON_SCHEMA = {
   type: 'object',
   properties: {
@@ -360,14 +321,14 @@ export async function processQuery (queryString: string){
     });
 
     const q = query({
-      prompt: 'Test subagent invocation by fetching game session data for classroom ID: test-classroom-123',
+      prompt,
       options: {
         model: modelToUse, // Explicitly use haiku - never use sonnet
         systemPrompt: fullSystemPrompt,
         mcpServers: mcpServers, // CRITICAL: Must be enabled for subagents to access MCP tools
         disallowedTools: disallowedTools,
         maxTurns: maxTurnsValue,
-        permissionMode: 'bypassPermissions', // Allow subagents to use MCP tools without permission prompts
+        permissionMode: 'default', // Allow subagents to use MCP tools without permission prompts
         settingSources: ['project'], // Load project settings for MCP tool permissions
         outputFormat: {
           type: 'json_schema',
@@ -413,15 +374,68 @@ export async function processQuery (queryString: string){
     let structuredData: any = undefined;
     let toolCalls: Array<{name: string, args: any}> = [];
     const invokedAgents = new Set<string>(); // Track which subagents were invoked
+    const subagentResults = new Map<string, any>(); // Store subagent results
+    const subagentStartTimes = new Map<string, number>(); // Track start times
     
 
-    // Main agentic loop from query
+    // Main agentic loop from query - stream results as they arrive
     for await (const msg of q) {
       
-      // Log all messages to debug what fields are available
+      // Track subagent invocations via Task tool
+      if (msg.type === 'assistant' && msg.message?.content) {
+        for (const content of msg.message.content) {
+          if (content.type === 'tool_use' && content.name === 'Task') {
+            const agentType = content.input?.subagent_type;
+            if (agentType) {
+              invokedAgents.add(agentType);
+              subagentStartTimes.set(content.id, Date.now());
+              log('Subagent invoked', {
+                agentType,
+                taskId: content.id,
+                description: content.input?.description
+              });
+            }
+          }
+          
+          // Track other tool calls
+          if (content.type === 'tool_use' && content.name !== 'Task') {
+            toolCalls.push({
+              name: content.name,
+              args: content.input
+            });
+          }
+        }
+      }
+
+      // Track subagent completions via tool_use_result
+      if (msg.type === 'user' && 'tool_use_result' in msg) {
+        const result = msg.tool_use_result as any;
+        
+        // Check if this is a subagent completion (has agentId or status)
+        if (result && (result.agentId || result.status === 'completed')) {
+          const agentId = result.agentId || 'unknown';
+          const taskId = msg.parent_tool_use_id;
+          const startTime = taskId ? subagentStartTimes.get(taskId) : undefined;
+          const duration = startTime ? Date.now() - startTime : undefined;
+          
+          subagentResults.set(agentId, result);
+          
+          log('Subagent completed', {
+            agentId,
+            taskId,
+            durationMs: duration,
+            prompt: result.prompt,
+            status: result.status
+          });
+        }
+      }
+
+      // Log all messages for debugging
       log('Message received', {
         type: msg.type,
-        message: msg
+        subtype: (msg as any).subtype || undefined,
+        hasToolUse: msg.type === 'assistant' && msg.message?.content?.some((c: any) => c.type === 'tool_use'),
+        hasToolResult: msg.type === 'user' && 'tool_use_result' in msg
       });
 
       // Handle final result
@@ -449,6 +463,7 @@ export async function processQuery (queryString: string){
             toolCalls: toolCalls.length,
             invokedAgents: Array.from(invokedAgents),
             totalAgentsInvoked: invokedAgents.size,
+            subagentCompletions: subagentResults.size,
             modelUsage: msg.modelUsage // Log which models were actually used
           });
           
