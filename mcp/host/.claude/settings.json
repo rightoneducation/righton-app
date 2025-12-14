@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "mcp__custom__getGameSessionsByClassroomId",
+      "mcp__custom__getStudentHistory",
+      "mcp__ext__getLearningScienceDatabyCCSS"
+    ]
+  }
+}

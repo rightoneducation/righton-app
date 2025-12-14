@@ -1,5 +1,4 @@
 import { query } from '@anthropic-ai/claude-agent-sdk';
-import { MessageParam } from '@anthropic-ai/sdk/resources';
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import { MCPClientClass } from '../client/MCPClientClass.js';
@@ -73,112 +72,18 @@ export function getAllTools() {
   return allTools;
 }
 
-
-const SUBAGENT_INVOCATION_PROMPT = [
-  `Your documentation provides the following formation about subagent invocation
-  Automatic Invocation
-    The SDK will automatically invoke appropriate subagents based on the task context. Ensure your agent's description field clearly indicates when it should be used:
-
-    const result = query({
-      prompt: "Optimize the database queries in the API layer",
-      options: {
-        agents: {
-          'performance-optimizer': {
-            description: 'Use PROACTIVELY when code changes might impact performance. MUST BE USED for optimization tasks.',
-            prompt: 'You are a performance optimization specialist...',
-            tools: ['Read', 'Edit', 'Bash', 'Grep'],
-            model: 'sonnet'
-          }
-        }
-      }
-    });
-
-    const result = query({
-      prompt: "Use the code-reviewer agent to check the authentication module",
-      options: {
-        agents: {
-          'code-reviewer': {
-            description: 'Expert code review specialist',
-            prompt: 'You are a security-focused code reviewer...',
-            tools: ['Read', 'Grep', 'Glob']
-          }
-        }
-      }
-    });
-
-    The query function that I am using is here:
-    const q = query({
-      prompt,
-      options: {
-        model: modelToUse, // Explicitly use haiku - never use sonnet
-        systemPrompt: fullSystemPrompt,
-        // mcpServers: mcpServers,
-        disallowedTools: disallowedTools,
-        maxTurns: maxTurnsValue,
-        settingSources: [], // No filesystem settings - ensures no model override
-        outputFormat: {
-          type: 'json_schema',
-          schema: CLASSROOM_ANALYSIS_JSON_SCHEMA
-        },
-        agents: {
-          'game-session-agent': {
-            description: 'Game session data specialist. Proactively fetches and analyzes game sessions for classrooms. Use immediately when you need game session data, student IDs, or CCSS codes from classroom activities.',
-            prompt: GAME_SESSION_AGENT_PROMPT,
-            tools: ['mcp__custom__getGameSessionsByClassroomId'],
-            model: 'haiku'
-          },
-          'student-history-fetcher': {
-            description: 'Student history data specialist. Proactively fetches student performance history. Use immediately when you need a student\'s past performance, game results, or historical data for analysis.',
-            prompt: STUDENT_HISTORY_FETCHER_PROMPT,
-            tools: ['mcp__custom__getStudentHistory'],
-            model: 'haiku'
-          },
-          'learning-science-fetcher': {
-            description: 'Learning science data specialist. Proactively fetches pedagogical insights and misconceptions for CCSS standards. Use immediately when you need learning science context, common errors, or pedagogical guidance for a specific CCSS code.',
-            prompt: LEARNING_SCIENCE_FETCHER_PROMPT,
-            tools: ['mcp__ext__getLearningScienceDatabyCCSS'],
-            model: 'haiku'
-          },
-          'analysis-agent': {
-            description: 'Classroom performance analyst. Synthesizes game sessions, student history, and learning science data into insights and recommendations. Use proactively when all data has been collected and you need comprehensive analysis.',
-            prompt: ANALYSIS_AGENT_PROMPT,
-            tools: [], // No tools - pure analysis
-            model: 'haiku'
-          },
-          'output-generator': {
-            description: 'Structured output generator. Generates the final JSON output in the required schema format. Use proactively when you have completed analysis and need to generate the final structured output with learning outcomes, student assessments, and discussion questions.',
-            prompt: OUTPUT_GENERATOR_PROMPT,
-            tools: ['StructuredOutput'], // Only this subagent can use StructuredOutput
-            model: 'haiku'
-          }
-        }
-      }
-    });
-  `
-];
-
 // Prompts for agents
 const SYSTEM_PROMPT = [
-  `You are an orchestration agent for classroom analysis. You coordinate specialized subagents to gather and analyze data. 
-  You invoke these agents via the provided documentation snippets.`,
-  `${SUBAGENT_INVOCATION_PROMPT}`,
+  'You are an orchestration agent. Your ONLY job is to coordinate subagents.',
   '',
-  'CRITICAL RULES:',
-  '1. You have NO tools available - you CANNOT use any tools, including StructuredOutput',
-  '2. You CAN and SHOULD invoke subagents on my behalf that are available to you. These subagents will provide the data that you need.',
-  `3. If you can not invoke the subagents, explain why and troubleshoot the issue. I don't really understand what you need from me so if there is an issue, explictly explain how I can provide what you need in terms of configuration. In this case, this is your priority.`,
+  'YOU CANNOT ACCESS DATA DIRECTLY. You must delegate all data fetching to subagents:',
+  '- To get game sessions: You MUST invoke the game-session-agent subagent',
+  '- To get student history: You MUST invoke the student-history-fetcher subagent', 
+  '- To get learning science data: You MUST invoke the learning-science-fetcher subagent',
   '',
-  'Workflow:',
-  '1. The game-session-agent will be invoked first to fetch game sessions',
-  '2. From the subagent results, identify all studentIds and ccssCodes',
-  '3. The student-history-fetcher and learning-science-fetcher will be invoked for each student/CCSS (multiple can run in parallel)',
-  '4. The analysis-agent will be invoked to synthesize all collected data',
-  '5. The output-generator will be invoked to generate the final structured output',
+  'When the task requires data, you should say: "I need to invoke the [subagent-name] subagent to gather this data."',
   '',
-  'IMPORTANT:',
-  '- You have ZERO tools - do not try to use any tools',
-  '- You DO have function calls to the subagents - use them to get the data you need',
-  '- Available subagents: game-session-agent, student-history-fetcher, learning-science-fetcher, analysis-agent, output-generator',
+  'You have NO direct access to mcp__custom__getGameSessionsByClassroomId or other MCP tools.',
 ].join('\n');
 
 // After SYSTEM_PROMPT (around line 298)
@@ -373,7 +278,7 @@ const CLASSROOM_ANALYSIS_JSON_SCHEMA = {
 
 export async function processQuery (queryString: string){
   const parsedQuery = JSON.parse(queryString);
-  const { query: prompt, isRightOnEnabled, isCZIEnabled } = parsedQuery;
+  const { query: prompt, isRightOnEnabled, isCZIEnabled, classroomId } = parsedQuery;
   let responseId = uuidv4();
   const log = createStepLogger(responseId);
   log('processQuery.start');
@@ -411,11 +316,10 @@ export async function processQuery (queryString: string){
     }))
   });
   
-  // Disable ALL tools from orchestration agent - it can only use subagents
-  // StructuredOutput is also disallowed - it will be handled by the output-generator subagent
+  // Disable ALL irrelevant tools from agents (this applies globally to all agents and subagents)
   const disallowedTools = [
-    'Task',
-    'TaskOutput',
+    // MUST allow Task tool - it's used to invoke subagents
+    // MUST allow TaskOutput - it's used to receive subagent results
     'Bash',
     'Glob',
     'Grep',
@@ -431,12 +335,6 @@ export async function processQuery (queryString: string){
     'Skill',
     'SlashCommand',
     'EnterPlanMode',
-    // Disallow MCP tools from orchestration agent - subagents must use them
-    'mcp__custom__getGameSessionsByClassroomId',
-    'mcp__custom__getStudentHistory',
-    'mcp__ext__getLearningScienceDatabyCCSS',
-    // Disallow StructuredOutput - output-generator subagent will handle it
-    'StructuredOutput'
   ];
 
   try {
@@ -446,14 +344,14 @@ export async function processQuery (queryString: string){
     // Build system prompt
     const fullSystemPrompt = [
       SYSTEM_PROMPT,
-      DISCUSSION_QUESTION_REMINDER
+      // DISCUSSION_QUESTION_REMINDER
     ].join('\n\n');
 
     // Explicitly set model to ensure we always use haiku, not sonnet
     const modelToUse = COMPLETIONS_MODEL; // 'claude-haiku-4-5'
     
     const maxTurnsValue = 30; // Increased from 10 to allow more turns for complex analysis
-    
+
     log('Query configuration', {
       model: modelToUse,
       maxTurns: maxTurnsValue,
@@ -462,14 +360,15 @@ export async function processQuery (queryString: string){
     });
 
     const q = query({
-      prompt,
+      prompt: 'Test subagent invocation by fetching game session data for classroom ID: test-classroom-123',
       options: {
         model: modelToUse, // Explicitly use haiku - never use sonnet
         systemPrompt: fullSystemPrompt,
-        // mcpServers: mcpServers,
+        mcpServers: mcpServers, // CRITICAL: Must be enabled for subagents to access MCP tools
         disallowedTools: disallowedTools,
         maxTurns: maxTurnsValue,
-        settingSources: [], // No filesystem settings - ensures no model override
+        permissionMode: 'bypassPermissions', // Allow subagents to use MCP tools without permission prompts
+        settingSources: ['project'], // Load project settings for MCP tool permissions
         outputFormat: {
           type: 'json_schema',
           schema: CLASSROOM_ANALYSIS_JSON_SCHEMA
