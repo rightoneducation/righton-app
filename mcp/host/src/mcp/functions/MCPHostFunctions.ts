@@ -71,120 +71,23 @@ export function getAllTools() {
   return allTools;
 }
 
-// Prompts for agents
+// System prompt for single agent - ultra-concise for speed
 const SYSTEM_PROMPT = [
-  'You are an orchestration agent. Your ONLY job is to coordinate subagents to achieve the workflow outlined below.',
+  'Fast classroom analyst. Max 6 tool calls. NO intermediate thinking - call StructuredOutput immediately after getting data.',
   '',
-  'YOU CANNOT ACCESS DATA DIRECTLY. You must delegate all data fetching to subagents:',
-  '- To get game sessions: You MUST invoke the game-session-agent subagent',
-  '- To get student history: You MUST invoke the student-history-fetcher subagent', 
-  '- To get learning science data: You MUST invoke the learning-science-fetcher subagent',
-  '- To analyze the data: You MUST invoke the analysis-agent subagent',
-  '- To generate the final output: You MUST invoke the output-generator subagent',
+  'WORKFLOW (exact order):',
+  '1. mcp__custom__getGameSessionsByClassroomId',
+  '2. Extract: 1 CCSS code, 1 struggling student ID (in your head, no text output)',
+  '3. mcp__custom__getStudentHistory (1 student)',
+  '4. mcp__ext__getLearningScienceDatabyCCSS (1 code)',
+  '5. IMMEDIATELY call StructuredOutput - NO thinking, NO planning, NO analysis text',
   '',
-  'When the task requires data, you should say: "I need to invoke the [subagent-name] subagent to gather this data."',
+  'OUTPUT: learningOutcomes (brief), 2 students (1 struggling/1 excelling), 2 questions (reference specific wrong answers)',
   '',
-  'You have NO direct access to mcp__custom__getGameSessionsByClassroomId or other MCP tools.',
-  'Workflow:',
-  '1. The game-session-agent will be invoked to fetch game session data for the given classroomId',
-  '2. The student-history-fetcher will be invoked to fetch student history data for the given classroomId and the learning-science-fetcher will be invoked IN PARELLEL to get learning science data for the given classroomId',
-  '3. The analysis-agent will be invoked to analyze the data',
-  '4. The output-generator will be invoked to generate the final output',
+  'After step 4, go DIRECTLY to StructuredOutput. Do not write analysis. Do not explain. Just output JSON.',
 ].join('\n');
 
-const GAME_SESSION_AGENT_PROMPT = [
-  'You are a game session data specialist ensuring comprehensive classroom activity analysis.',
-  '',
-  'When invoked:',
-  '1. Use getGameSessionsByClassroomId to fetch sessions for the given classroomId',
-  '2. Analyze the sessions immediately',
-  '3. Extract all key information systematically',
-  '',
-  'Extraction checklist:',
-  '- All unique student IDs (globalStudentId) from teams.items',
-  '- All unique CCSS codes from questions (format: grade.domain.cluster.standard)',
-  '- Summary of most recent sessions and their completion status',
-  '- Student response patterns and correctness',
-  '- Question difficulty and performance metrics',
-  '',
-  'Return a clear, structured summary with:',
-  '- studentIds array (all unique globalStudentId values)',
-  '- ccssCodes array (all unique CCSS codes found)',
-  '- Session summary with dates, completion status, and key metrics',
-  '',
-  'Be thorough and ensure no student IDs or CCSS codes are missed.',
-].join('\n');
-
-const STUDENT_HISTORY_FETCHER_PROMPT = [
-  'Call mcp__custom__getStudentHistory with the provided globalStudentId and classroomId.',
-  'Return ONLY the raw JSON result exactly as received. Do not format, analyze, or add commentary.',
-].join('\n');
-
-const LEARNING_SCIENCE_FETCHER_PROMPT = [
-  'Call mcp__ext__getLearningScienceDatabyCCSS with the provided CCSS code.',
-  'Return ONLY the raw JSON result exactly as received. Do not format, analyze, or add commentary.',
-].join('\n');
-
-const DISCUSSION_QUESTION_GUIDANCE = [
-  'When generating discussion questions:',
-  '1. Tie each question to the actual trends the class is struggling with.',
-  '2. Base the question on concrete examples from the reviewed game sessions and explicitly reference the scenario or numbers from that example (e.g., restate the question text or the fraction values involved) so students recognize the context.',
-  '3. Do NOT mention CCSS codes; refer to the underlying ideas in plain language.',
-  '4. Avoid generic directions—anchor each question in specific situations or mistakes observed in the data, quoting or paraphrasing the exact prompt rather than saying "problem 5" or "last session."',
-  '5. Do not ask the student to identify what confused them; instead, directly surface the specific misconception or error you observed so the question guides them through the tricky step.',
-  '6. Frame each question around the specific misconception or error you observed in the example (describe what went wrong), but let the model decide how best to phrase the follow-up; avoid telling the student to identify their confusion.',
-].join(' ');
-
-const ANALYSIS_AGENT_PROMPT = [
-  'You are a classroom performance analyst specializing in comprehensive data synthesis and insights.',
-  '',
-  'When invoked:',
-  '1. Review all collected data systematically',
-  '2. Cross-reference student mistakes with learning science misconceptions',
-  '3. Identify struggling and excelling students',
-  '4. Generate actionable insights and recommendations',
-  '',
-  'You receive:',
-  '- Game session analysis with student responses and CCSS codes',
-  '- Student history data showing past performance and trends',
-  '- Learning science data with misconceptions and pedagogical insights',
-  '',
-  'Analysis process:',
-  '- Cross-reference student mistakes with documented misconceptions',
-  '- Identify which students are struggling with which concepts',
-  '- Connect patterns across multiple game sessions',
-  '- Verify trends using historical student data',
-  '- Link errors to specific learning science insights',
-  '',
-  'For each analysis, provide:',
-  '- Learning outcomes based on CCSS standards covered',
-  '- Student performance assessments (struggling vs. excelling)',
-  '- Evidence-based justifications for each assessment',
-  `- Two targeted discussion questions for struggling students. These questions should be based on the data and the learning science data and follow ${DISCUSSION_QUESTION_GUIDANCE}`,
-  '',
-  'Be thorough in connecting student errors to documented misconceptions. Provide specific evidence for all assessments.',
-  '',
-  'Return your analysis in a clear, structured format that can be used by the output-generator subagent.',
-].join('\n');
-
-const OUTPUT_GENERATOR_PROMPT = [
-  'You are a structured output generator specializing in formatting analysis results into the required JSON schema.',
-  '',
-  'When invoked:',
-  '1. Receive analysis results from the analysis-agent',
-  '2. Format the data according to the required schema',
-  '3. Use the StructuredOutput tool to generate the final JSON',
-  '',
-  'You receive:',
-  '- Analysis results with learning outcomes, student assessments, and discussion questions',
-  '',
-  'Output requirements:',
-  '- learningOutcomes: String describing what students should learn',
-  '- students: Array of student objects with name, performance (struggling/excelling), and justification',
-  '- discussionQuestions: Array of two question objects with studentName and question',
-  '',
-  'Use the StructuredOutput tool to generate the final output. Ensure all fields match the required schema exactly.',
-].join('\n');
+// No subagent prompts needed - single agent handles everything
 
 // Schema for structured outputs
 const CLASSROOM_ANALYSIS_JSON_SCHEMA = {
@@ -305,13 +208,17 @@ export async function processQuery (queryString: string){
     // Build system prompt
     const fullSystemPrompt = [
       SYSTEM_PROMPT,
-      // DISCUSSION_QUESTION_REMINDER
     ].join('\n\n');
+    
+    // Prepend efficiency instruction to user prompt
+    const optimizedPrompt = `[No thinking aloud. No explanations. Execute workflow then call StructuredOutput immediately.]\n\n${prompt}`;
 
     // Explicitly set model to ensure we always use haiku, not sonnet
-    const modelToUse = COMPLETIONS_MODEL; // 'claude-haiku-4-5'
+    // Use shorthand to potentially enforce more strictly
+    const modelToUse = 'haiku'; // Force haiku without allowing SDK to upgrade
     
-    const maxTurnsValue = 30; // Increased from 10 to allow more turns for complex analysis
+    // Strict turn limit to enforce efficiency (need ~7 turns for 4 tools + reasoning)
+    const maxTurnsValue = 10;
 
     log('Query configuration', {
       model: modelToUse,
@@ -321,51 +228,20 @@ export async function processQuery (queryString: string){
     });
 
     const q = query({
-      prompt,
+      prompt: optimizedPrompt,
       options: {
-        model: modelToUse, // Explicitly use haiku - never use sonnet
+        model: modelToUse,
         systemPrompt: fullSystemPrompt,
-        mcpServers: mcpServers, // CRITICAL: Must be enabled for subagents to access MCP tools
+        mcpServers: mcpServers,
         disallowedTools: disallowedTools,
         maxTurns: maxTurnsValue,
-        permissionMode: 'default', // Allow subagents to use MCP tools without permission prompts
-        settingSources: ['project'], // Load project settings for MCP tool permissions
+        permissionMode: 'default',
+        settingSources: ['project'],
         outputFormat: {
           type: 'json_schema',
           schema: CLASSROOM_ANALYSIS_JSON_SCHEMA
-        },
-        agents: {
-          'game-session-agent': {
-            description: 'Game session data specialist. Proactively fetches and analyzes game sessions for classrooms. Use immediately when you need game session data, student IDs, or CCSS codes from classroom activities.',
-            prompt: GAME_SESSION_AGENT_PROMPT,
-            tools: ['mcp__custom__getGameSessionsByClassroomId'],
-            model: 'haiku'
-          },
-          'student-history-fetcher': {
-            description: 'Student history data specialist. Proactively fetches student performance history. Use immediately when you need a student\'s past performance, game results, or historical data for analysis.',
-            prompt: STUDENT_HISTORY_FETCHER_PROMPT,
-            tools: ['mcp__custom__getStudentHistory'],
-            model: 'haiku'
-          },
-          'learning-science-fetcher': {
-            description: 'Learning science data specialist. Proactively fetches pedagogical insights and misconceptions for CCSS standards. Use immediately when you need learning science context, common errors, or pedagogical guidance for a specific CCSS code.',
-            prompt: LEARNING_SCIENCE_FETCHER_PROMPT,
-            tools: ['mcp__ext__getLearningScienceDatabyCCSS'],
-            model: 'haiku'
-          },
-          'analysis-agent': {
-            description: 'Classroom performance analyst. Synthesizes game sessions, student history, and learning science data into insights and recommendations. Use proactively when all data has been collected and you need comprehensive analysis.',
-            prompt: ANALYSIS_AGENT_PROMPT,
-            tools: [], // No tools - pure analysis
-            model: 'haiku'
-          },
-          'output-generator': {
-            description: 'Structured output generator. Generates the final JSON output in the required schema format. Use proactively when you have completed analysis and need to generate the final structured output with learning outcomes, student assessments, and discussion questions.',
-            prompt: OUTPUT_GENERATOR_PROMPT,
-            tools: ['StructuredOutput'], // Only this subagent can use StructuredOutput
-            model: 'haiku'
-          }
         }
+        // No agents config - single agent handles everything
       }
     });
 
@@ -373,69 +249,28 @@ export async function processQuery (queryString: string){
     let finalResult: string | undefined;
     let structuredData: any = undefined;
     let toolCalls: Array<{name: string, args: any}> = [];
-    const invokedAgents = new Set<string>(); // Track which subagents were invoked
-    const subagentResults = new Map<string, any>(); // Store subagent results
-    const subagentStartTimes = new Map<string, number>(); // Track start times
     
-
-    // Main agentic loop from query - stream results as they arrive
+    // Main agentic loop from query
     for await (const msg of q) {
       
-      // Track subagent invocations via Task tool
+      // Track tool calls
       if (msg.type === 'assistant' && msg.message?.content) {
         for (const content of msg.message.content) {
-          if (content.type === 'tool_use' && content.name === 'Task') {
-            const agentType = content.input?.subagent_type;
-            if (agentType) {
-              invokedAgents.add(agentType);
-              subagentStartTimes.set(content.id, Date.now());
-              log('Subagent invoked', {
-                agentType,
-                taskId: content.id,
-                description: content.input?.description
-              });
-            }
-          }
-          
-          // Track other tool calls
-          if (content.type === 'tool_use' && content.name !== 'Task') {
+          if (content.type === 'tool_use') {
             toolCalls.push({
               name: content.name,
               args: content.input
             });
+            
           }
         }
       }
 
-      // Track subagent completions via tool_use_result
-      if (msg.type === 'user' && 'tool_use_result' in msg) {
-        const result = msg.tool_use_result as any;
-        
-        // Check if this is a subagent completion (has agentId or status)
-        if (result && (result.agentId || result.status === 'completed')) {
-          const agentId = result.agentId || 'unknown';
-          const taskId = msg.parent_tool_use_id;
-          const startTime = taskId ? subagentStartTimes.get(taskId) : undefined;
-          const duration = startTime ? Date.now() - startTime : undefined;
-          
-          subagentResults.set(agentId, result);
-          
-          log('Subagent completed', {
-            agentId,
-            taskId,
-            durationMs: duration,
-            prompt: result.prompt,
-            status: result.status
-          });
-        }
-      }
-
-      // Log all messages for debugging
+      // Log messages for debugging
       log('Message received', {
         type: msg.type,
         subtype: (msg as any).subtype || undefined,
-        hasToolUse: msg.type === 'assistant' && msg.message?.content?.some((c: any) => c.type === 'tool_use'),
-        hasToolResult: msg.type === 'user' && 'tool_use_result' in msg
+        hasToolUse: msg.type === 'assistant' && msg.message?.content?.some((c: any) => c.type === 'tool_use')
       });
 
       // Handle final result
@@ -461,10 +296,14 @@ export async function processQuery (queryString: string){
             numTurns: msg.num_turns,
             totalCostUsd: msg.total_cost_usd,
             toolCalls: toolCalls.length,
-            invokedAgents: Array.from(invokedAgents),
-            totalAgentsInvoked: invokedAgents.size,
-            subagentCompletions: subagentResults.size,
-            modelUsage: msg.modelUsage // Log which models were actually used
+            modelUsage: msg.modelUsage
+          });
+          
+          // Log the final structured output
+          log('Final JSON Output', {
+            learningOutcomes: structuredData?.learningOutcomes,
+            students: structuredData?.students,
+            discussionQuestions: structuredData?.discussionQuestions
           });
           
         } else {
