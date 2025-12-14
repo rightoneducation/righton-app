@@ -76,6 +76,18 @@ function enrichWithCCSSCodes(data: any): any {
 
 // create request for GraphQL API using API key or Cognito token
 export async function createAndSignRequest(query: string, variables: any) {
+  console.log('[MCPServerFunctions] createAndSignRequest called', {
+    timestamp: new Date().toISOString(),
+    queryName: query.substring(0, 100).replace(/\s+/g, ' '),
+    variables: JSON.stringify(variables),
+    hasCognitoToken: !!getCognitoToken(),
+    hasAPIKey: !!getAPIKey(),
+    cognitoTokenLength: getCognitoToken()?.length || 0,
+    apiKeyLength: getAPIKey()?.length || 0,
+    graphQLEndpoint: getGraphQLEndpoint() || 'NOT SET',
+    endpointLength: getGraphQLEndpoint()?.length || 0
+  });
+  
   const headers: Record<string, string> = {
     'Content-Type': 'application/json'
   };
@@ -84,11 +96,27 @@ export async function createAndSignRequest(query: string, variables: any) {
   // Use Cognito token if available, otherwise fall back to API key
   if (cognitoToken) {
     headers['Authorization'] = cognitoToken;
+    console.log('[MCPServerFunctions] Using Cognito token for authentication', {
+      timestamp: new Date().toISOString(),
+      tokenPrefix: cognitoToken.substring(0, 20) + '...',
+      tokenLength: cognitoToken.length
+    });
   } else if (apiKey) {
     headers['x-api-key'] = apiKey;
+    console.log('[MCPServerFunctions] Using API key for authentication', {
+      timestamp: new Date().toISOString(),
+      keyPrefix: apiKey.substring(0, 10) + '...',
+      keyLength: apiKey.length
+    });
+  } else {
+    console.error('[MCPServerFunctions] WARNING: No authentication method available!', {
+      timestamp: new Date().toISOString(),
+      cognitoTokenExists: !!cognitoToken,
+      apiKeyExists: !!apiKey
+    });
   }
 
-  return {
+  const requestConfig = {
     url: getGraphQLEndpoint(),
     options: {
       method: 'POST',
@@ -96,6 +124,17 @@ export async function createAndSignRequest(query: string, variables: any) {
       body: JSON.stringify({ query, variables })
     }
   };
+  
+  console.log('[MCPServerFunctions] Request configuration', {
+    timestamp: new Date().toISOString(),
+    url: requestConfig.url,
+    method: requestConfig.options.method,
+    headers: Object.keys(requestConfig.options.headers),
+    bodyLength: requestConfig.options.body.length,
+    headerKeys: Object.keys(headers)
+  });
+
+  return requestConfig;
 }
 
 // Helper function for getting gameSessions by classroomId
@@ -242,20 +281,77 @@ export async function getGameSessionsByClassroomId<T>(url: string, classroomId: 
   try {
     const variables = { 
       classroomId, 
-      filter: null, 
+      filter: null,
       limit: 100, 
-      nextToken: null 
+      nextToken: null
     };
-    const { url, options } = await createAndSignRequest(gameSessionByClassroomId, variables);
-    const response = await fetch(url!, options);
+    console.log('[MCPServerFunctions] getGameSessionsByClassroomId starting request', {
+      timestamp: new Date().toISOString(),
+      classroomId,
+      limit: 100,
+      url: url || 'NOT PROVIDED'
+    });
+    
+    const { url: requestUrl, options } = await createAndSignRequest(gameSessionByClassroomId, variables);
+    
+    console.log('[MCPServerFunctions] Making fetch request', {
+      timestamp: new Date().toISOString(),
+      url: requestUrl,
+      method: options.method,
+      hasAuthHeader: !!options.headers['Authorization'],
+      hasAPIKeyHeader: !!options.headers['x-api-key'],
+      headerCount: Object.keys(options.headers).length
+    });
+    
+    const response = await fetch(requestUrl!, options);
+    
+    console.log('[MCPServerFunctions] Fetch response received', {
+      timestamp: new Date().toISOString(),
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      headers: Object.fromEntries(response.headers.entries())
+    });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('[MCPServerFunctions] HTTP error response', {
+        timestamp: new Date().toISOString(),
+        status: response.status,
+        statusText: response.statusText,
+        errorBody: errorText.substring(0, 1000)
+      });
+      throw new Error(`HTTP error! status: ${response.status}, body: ${errorText.substring(0, 500)}`);
     }
-    const data = await response.json();
+    
+    const data = await response.json() as any;
+    
+    console.log('[MCPServerFunctions] GraphQL response parsed', {
+      timestamp: new Date().toISOString(),
+      hasData: !!data?.data,
+      hasErrors: !!data?.errors,
+      errors: data?.errors,
+      dataKeys: data ? Object.keys(data) : [],
+      responsePreview: JSON.stringify(data).substring(0, 500)
+    });
+    
+    if (data?.errors) {
+      console.error('[MCPServerFunctions] GraphQL errors in response', {
+        timestamp: new Date().toISOString(),
+        errors: data.errors,
+        errorCount: Array.isArray(data.errors) ? data.errors.length : 0
+      });
+    }
+    
     return enrichWithCCSSCodes(data) as T;
   } catch (error) {
-    console.error("Error making GraphQL request:", error);
+    console.error('[MCPServerFunctions] Error making GraphQL request', {
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      classroomId,
+      url: url || 'NOT PROVIDED'
+    });
     return null;
   }
 }
