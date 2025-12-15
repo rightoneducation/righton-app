@@ -222,7 +222,7 @@ export default function ViewGame({
       ) : (
         centralData.selectedGame && (
           <CreateGameContentContainer>
-            <ViewGameHeader isOwner={isOwner} isIncompleteDraft={isIncompleteDraft} handleDuplicate={handleDuplicate}handleBackClick={handleBackClick} handleEditGame={handleEditGame} handleLaunchGame={handleLaunchGame} label="View" screenSize={screenSize} />
+            <ViewGameHeader isOwner={isOwner} isIncompleteDraft={isIncompleteDraft} handleCloneGame={handleCloneGame} handleDuplicate={handleDuplicate}handleBackClick={handleBackClick} handleEditGame={handleEditGame} handleLaunchGame={handleLaunchGame} label="View" screenSize={screenSize} />
             <CreateGameBoxContainer screenSize={screenSize}>
             <Box style={{ width: '100%', maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
               <DetailedGameCardBase

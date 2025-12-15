@@ -26,12 +26,28 @@ export const getServer = () => {
       category: 'learning-science'
     }
   }, async ({ ccss }) => {
+    console.log('[Ext-MCP Server] getLearningScienceDatabyCCSS called', {
+      timestamp: new Date().toISOString(),
+      ccss,
+      graphQLEndpoint: process.env.GRAPHQL_ENDPOINT || 'NOT SET',
+      endpointLength: process.env.GRAPHQL_ENDPOINT?.length || 0
+    });
+    
     logger.info('tool_called', { 
       tool: 'getLearningScienceDatabyCCSS', 
       ccss 
     });
     
     const result = await getLearningComponentsByCCSS<LearningScienceDataResponse> (ccss);
+    
+    console.log('[Ext-MCP Server] getLearningScienceDatabyCCSS result received', {
+      timestamp: new Date().toISOString(),
+      ccss,
+      resultType: typeof result,
+      hasData: result && typeof result === 'object' && 'data' in result,
+      resultKeys: result && typeof result === 'object' ? Object.keys(result) : [],
+      resultPreview: result ? JSON.stringify(result).substring(0, 500) : 'null'
+    });
     
     // Extract items from GraphQL response structure
     let learningScienceData = [];
@@ -43,6 +59,13 @@ export const getServer = () => {
         learningScienceData = responseData.data.standardsFrameworkItems;
       }
     }
+    
+    console.log('[Ext-MCP Server] getLearningScienceDatabyCCSS processed', {
+      timestamp: new Date().toISOString(),
+      ccss,
+      learningScienceDataCount: learningScienceData.length,
+      returningCount: Math.min(learningScienceData.length, 3)
+    });
     
     // Return the most recent 3 learning science data (or all if less than 3)
     const resultToReturn = learningScienceData.slice(0, 3);

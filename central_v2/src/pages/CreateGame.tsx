@@ -177,7 +177,7 @@ export default function CreateGame({
       selectedGameId = editRoute?.params.gameId || '';
       break;
     case isClone:
-      label = 'Clone';
+      label = 'Your';
       selectedGameId = route?.params.gameId || '';
       break;
     default:
@@ -1151,10 +1151,10 @@ export default function CreateGame({
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;
     if (selected !== null && (isClone || isEdit)) {
-      // regex to detect (clone of) in title
-      const regex = /\(Clone of\)/i;
+      // regex to detect [DUPLICATE OF] in title
+      const regex = /\[DUPLICATE OF\]/i;
       if (selected?.game && title && !regex.test(title) && isClone)
-        selected.game.title = `(Clone of) ${title}`;
+        selected.game.title = `[DUPLICATE OF] ${title}`;
       if (selected.game) {
         setDraftGame((prev) => ({
           ...prev,

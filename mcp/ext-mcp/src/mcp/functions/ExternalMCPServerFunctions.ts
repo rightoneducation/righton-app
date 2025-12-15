@@ -5,6 +5,16 @@ const getAPIKey = () => process.env.API_KEY;
 
 // create request for GraphQL API using API key or Cognito token
 export async function createAndSignRequest(query: string, variables: any) {
+  console.log('[Ext-MCPServerFunctions] createAndSignRequest called', {
+    timestamp: new Date().toISOString(),
+    queryName: query.substring(0, 100).replace(/\s+/g, ' '),
+    variables: JSON.stringify(variables),
+    hasAPIKey: !!getAPIKey(),
+    apiKeyLength: getAPIKey()?.length || 0,
+    graphQLEndpoint: getGraphQLEndpoint() || 'NOT SET',
+    endpointLength: getGraphQLEndpoint()?.length || 0
+  });
+  
   const headers: Record<string, string> = {
     'Content-Type': 'application/json'
   };
@@ -12,9 +22,19 @@ export async function createAndSignRequest(query: string, variables: any) {
   const apiKey = getAPIKey();
   if (apiKey) {
     headers['x-api-key'] = apiKey;
+    console.log('[Ext-MCPServerFunctions] Using API key for authentication', {
+      timestamp: new Date().toISOString(),
+      keyPrefix: apiKey.substring(0, 10) + '...',
+      keyLength: apiKey.length
+    });
+  } else {
+    console.error('[Ext-MCPServerFunctions] WARNING: No API key available!', {
+      timestamp: new Date().toISOString(),
+      apiKeyExists: !!apiKey
+    });
   }
 
-  return {
+  const requestConfig = {
     url: getGraphQLEndpoint(),
     options: {
       method: 'POST',
@@ -22,6 +42,17 @@ export async function createAndSignRequest(query: string, variables: any) {
       body: JSON.stringify({ query, variables })
     }
   };
+  
+  console.log('[Ext-MCPServerFunctions] Request configuration', {
+    timestamp: new Date().toISOString(),
+    url: requestConfig.url,
+    method: requestConfig.options.method,
+    headers: Object.keys(requestConfig.options.headers),
+    bodyLength: requestConfig.options.body.length,
+    headerKeys: Object.keys(headers)
+  });
+
+  return requestConfig;
 }
 
 // Normalize CCSS code to match database format
@@ -130,14 +161,72 @@ export async function getLearningComponentsByCCSS<T>(ccss: string): Promise<T | 
     const variables = { 
       ccss
     };
-    const { url, options } = await createAndSignRequest(learningScienceDataQuery, variables);
-    const response = await fetch(url!, options);
+    console.log('[Ext-MCPServerFunctions] getLearningComponentsByCCSS starting request', {
+      timestamp: new Date().toISOString(),
+      ccss,
+      normalizedCodes: normalizeCCSSCode(ccss),
+      url: getGraphQLEndpoint() || 'NOT PROVIDED'
+    });
+    
+    const { url: requestUrl, options } = await createAndSignRequest(learningScienceDataQuery, variables);
+    
+    console.log('[Ext-MCPServerFunctions] Making fetch request', {
+      timestamp: new Date().toISOString(),
+      url: requestUrl,
+      method: options.method,
+      hasAPIKeyHeader: !!options.headers['x-api-key'],
+      headerCount: Object.keys(options.headers).length
+    });
+    
+    const response = await fetch(requestUrl!, options);
+    
+    console.log('[Ext-MCPServerFunctions] Fetch response received', {
+      timestamp: new Date().toISOString(),
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      headers: Object.fromEntries(response.headers.entries())
+    });
+    
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('[Ext-MCPServerFunctions] HTTP error response', {
+        timestamp: new Date().toISOString(),
+        status: response.status,
+        statusText: response.statusText,
+        errorBody: errorText.substring(0, 1000)
+      });
+      throw new Error(`HTTP error! status: ${response.status}, body: ${errorText.substring(0, 500)}`);
     }
-    const result = await response.json() as T;
-    return result;
+    
+    const data = await response.json() as any;
+    
+    console.log('[Ext-MCPServerFunctions] GraphQL response parsed', {
+      timestamp: new Date().toISOString(),
+      hasData: !!data?.data,
+      hasErrors: !!data?.errors,
+      errors: data?.errors,
+      dataKeys: data ? Object.keys(data) : [],
+      responsePreview: JSON.stringify(data).substring(0, 500)
+    });
+    
+    if (data?.errors) {
+      console.error('[Ext-MCPServerFunctions] GraphQL errors in response', {
+        timestamp: new Date().toISOString(),
+        errors: data.errors,
+        errorCount: Array.isArray(data.errors) ? data.errors.length : 0
+      });
+    }
+    
+    return data as T;
   } catch (error) {
+    console.error('[Ext-MCPServerFunctions] Error making GraphQL request', {
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      ccss,
+      url: getGraphQLEndpoint() || 'NOT PROVIDED'
+    });
     return null;
   }
 }
