@@ -82,6 +82,19 @@ export enum ModalStateType {
   DUPLICATE
 }
 
+export enum ConfirmStateType {
+  NULL,
+  DRAFT,
+  PUBLISHED,
+  UPDATED,
+  FAVORITED
+}
+
+export type ModalObject = {
+  modalState: ModalStateType;
+  confirmState: ConfirmStateType;
+}
+
 export type CallType = {
   gameQuestionType: GameQuestionType;
   publicPrivateType: PublicPrivateType;

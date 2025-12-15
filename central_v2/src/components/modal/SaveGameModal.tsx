@@ -63,6 +63,7 @@ interface SaveGameModalProps {
   templateType: TemplateType;
   handlePublishGame?: () => void;
   handleCloseSaveGameModal?: () => void;
+  handleSaveDraft?: () => void;
   isCardErrored?: boolean;
 }
 
@@ -71,6 +72,7 @@ export default function SaveGameModal({
   templateType,
   handlePublishGame,
   handleCloseSaveGameModal,
+  handleSaveDraft,
   isCardErrored,
 }: SaveGameModalProps) {
   const theme = useTheme();
@@ -125,6 +127,7 @@ export default function SaveGameModal({
               <CentralButton
                 buttonType={ButtonType.SAVEDRAFTBLUE}
                 isEnabled
+                onClick={handleSaveDraft}
               />
               <CentralButton
                 buttonType={ButtonType.BACKTOEDIT}
