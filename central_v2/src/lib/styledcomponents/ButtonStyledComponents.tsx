@@ -41,6 +41,7 @@ const getHoverColor = (
         buttonType === ButtonType.CREATEQUESTION ||
         buttonType === ButtonType.SAVEDRAFT ||
         buttonType === ButtonType.BACKTOEDIT ||
+        buttonType === ButtonType.BACKNOARROW ||
         buttonType === ButtonType.BACK
       ) {
         return `rgba(0,0,0, 0.1)`;
@@ -95,6 +96,7 @@ export const ButtonStyled = styled(Button, {
         ? buttonType === ButtonType.CHANGEIMAGE ||
           buttonType === ButtonType.SAVEDRAFT ||
           (buttonType === ButtonType.BACKTOEDIT) ||
+          buttonType === ButtonType.BACKNOARROW ||
           (buttonType === ButtonType.SIGNUP && isReset) ||
           (buttonType === ButtonType.CREATEQUESTION) ||
           (buttonType === ButtonType.EDITQUESTION) ||
@@ -159,6 +161,7 @@ export const ButtonTypography = styled(Typography, {
     buttonType === ButtonType.CHANGEIMAGE ||
     buttonType === ButtonType.LOGINHEADER ||
     buttonType === ButtonType.SAVEDRAFT ||
+    buttonType === ButtonType.BACKNOARROW ||
     buttonType === ButtonType.CREATEQUESTION ||
     (buttonType === ButtonType.BACKTOEDIT) ||
     (buttonType === ButtonType.CANCELQUESTION) ||

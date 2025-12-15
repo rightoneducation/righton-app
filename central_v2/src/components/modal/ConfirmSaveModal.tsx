@@ -96,8 +96,8 @@ export default function ConfirmSaveModal({
             gap: '16px',
           }}
         >
-          <DragText> {text} Saved </DragText>
-          <BodyText> Your game is ready to launch. </BodyText>
+          <DragText> {text} Published </DragText>
+          <BodyText> Congratulations! Your game is ready to launch. </BodyText>
           <CentralButton
             buttonType={ButtonType.CONTINUE}
             isEnabled

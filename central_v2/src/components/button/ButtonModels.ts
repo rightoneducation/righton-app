@@ -81,6 +81,8 @@ export enum ButtonType {
   DUPLICATE = 'duplicate',
   CONFIRM = 'confirm',
   STARTCREATING = 'startcreating',
+  BACKNOARROW = 'backnoarrow',
+  CONFIRMNOICON = 'confirmnoicon',
 }
 
 export enum ButtonColor {
@@ -364,4 +366,12 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.STARTCREATING]: {
     textKey: ButtonType.STARTCREATING,
   },
+  [ButtonType.BACKNOARROW]: {
+    textKey: ButtonType.BACK,
+    color: ButtonColor.NULL,
+  },
+  [ButtonType.CONFIRMNOICON]: {
+    textKey: ButtonType.CONFIRM,
+  },
+
 };

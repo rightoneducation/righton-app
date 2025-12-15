@@ -1084,7 +1084,7 @@ export default function CreateGame({
       // regex to detect (clone of) in title
       const regex = /\[Duplicate of\]/i;
       if (selected?.game && title && !regex.test(title) && isClone)
-        selected.game.title = `[Duplicate of] ${title}`;
+        selected.game.title = `[DUPLICATE OF] ${title}`;
       if (selected.game) {
         setDraftGame((prev) => ({
           ...prev,
