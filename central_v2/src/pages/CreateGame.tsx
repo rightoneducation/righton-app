@@ -30,6 +30,8 @@ import {
   GameQuestionType,
   ModalStateType,
   StorageKeyIsFirstCreate,
+  ModalObject, 
+  ConfirmStateType 
 } from '../lib/CentralModels';
 import { timeLookup } from '../components/cards/creategamecard/time';
 import {
@@ -127,10 +129,13 @@ export default function CreateGame({
     editRoute?.params.gameId.length > 0;
   const isEditDraft = 
     editRoute?.params.type === 'Draft';
-  const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [isQuestionBankOpen, setIsQuestionBankOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
+  const [modalObject, setModalObject] = useState<ModalObject>({
+    modalState: ModalStateType.NULL,
+    confirmState: ConfirmStateType.NULL,
+  });
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
   const [originalGameType, setOriginalGameType] = useState<PublicPrivateType>(gameTemplate.gameTemplate.publicPrivateType);
   const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
@@ -195,7 +200,10 @@ export default function CreateGame({
   };
 
   const handleOpenCreateQuestion = () => {
-    setModalState(ModalStateType.CREATEQUESTION);
+    setModalObject({
+      modalState: ModalStateType.CREATEQUESTION,
+      confirmState: ConfirmStateType.DRAFT,
+    });
   };
 
   const handleOpenQuestionBank = () => {
@@ -234,17 +242,26 @@ export default function CreateGame({
   };
 
   const handleDiscardGame = () => {
-    setModalState(ModalStateType.DISCARD);
+    setModalObject({
+      modalState: ModalStateType.DISCARD,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleDiscardClick = (value: boolean) => {
     if (value) {
-      setModalState(ModalStateType.NULL);
+      setModalObject({
+        modalState: ModalStateType.NULL,
+        confirmState: ConfirmStateType.NULL,
+      });
       window.localStorage.setItem(StorageKey, '');
       navigate('/');
       return;
     }
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleGameImageUploadClick = () => {
@@ -275,7 +292,10 @@ export default function CreateGame({
         ...prev,
         isGameCardSubmitted: true,
       }));
-      setModalState(ModalStateType.SAVING);
+      setModalObject({
+        modalState: ModalStateType.SAVING,
+        confirmState: ConfirmStateType.UPDATED,
+      });
       const dqValid = checkDQsAreValid(draftQuestionsList);
       if (gameFormIsValid && dqValid) {
         // check if game img has been changed
@@ -388,7 +408,10 @@ export default function CreateGame({
               draftGame.gameTemplate.publicPrivateType,
               updatedGame,
             );
-            setModalState(ModalStateType.NULL);
+            setModalObject({
+              modalState: ModalStateType.NULL,
+              confirmState: ConfirmStateType.NULL,
+            });
         } catch (err) {
           console.log(err);
         }
@@ -419,7 +442,10 @@ export default function CreateGame({
 
   const handlePublishGame = async () => {
     try {
-      setModalState(ModalStateType.PUBLISHING);
+      setModalObject({
+        modalState: ModalStateType.PUBLISHING,
+        confirmState: ConfirmStateType.PUBLISHED,
+      });
       setDraftGame((prev) => ({
         ...prev,
         isGameCardSubmitted: true,
@@ -550,7 +576,10 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
-        setModalState(ModalStateType.CONFIRM);
+        setModalObject({
+          modalState: ModalStateType.CONFIRM,
+          confirmState: ConfirmStateType.PUBLISHED,
+        });
       } else {
         setDraftGame((prev) => ({
           ...prev,
@@ -561,7 +590,10 @@ export default function CreateGame({
           setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
           // then find first errored card and set index to that question
         }
-        setModalState(ModalStateType.NULL);
+        setModalObject({
+          modalState: ModalStateType.NULL,
+          confirmState: ConfirmStateType.NULL,
+        });
       }
     } catch (err) {
       console.error('Error creating game template:', err);
@@ -714,7 +746,6 @@ export default function CreateGame({
               )
             }
           }
-
         } catch (err) {
           console.error('Error creating game template:', err);
         }
@@ -738,8 +769,10 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
-        fetchElements();
-        navigate('/');
+        setModalObject({
+          modalState: ModalStateType.CONFIRM,
+          confirmState: ConfirmStateType.DRAFT,
+        });
       } else {
         setDraftGame((prev) => ({
           ...prev,
@@ -771,23 +804,39 @@ export default function CreateGame({
         setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
       }
     }
-    return setModalState(ModalStateType.PUBLISH);
+    return setModalObject({
+      modalState: ModalStateType.PUBLISH,
+      confirmState: ConfirmStateType.PUBLISHED,
+    });
   };
 
   const handleCloseSaveGameModal = () => {
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleCloseDiscardModal = () => {
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleCloseCreateQuestionModal = () => {
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleSaveDraftGame = async () => {
     try {
+      setModalObject({
+        modalState: ModalStateType.SAVING,
+        confirmState: ConfirmStateType.DRAFT,
+      });
       if (!draftGame.gameTemplate.title) {
         setDraftGame((prev) => ({
           ...prev,
@@ -882,11 +931,17 @@ export default function CreateGame({
 
       setDraftGame((prev) => ({
         ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+          publicPrivateType: PublicPrivateType.DRAFT,
+        },
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
-      fetchElements();
-      navigate('/');
+      setModalObject({
+        modalState: ModalStateType.CONFIRM,
+        confirmState: ConfirmStateType.DRAFT,
+      });
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
     }
@@ -894,7 +949,10 @@ export default function CreateGame({
 
   const handleUpdateDraftGame = async () => {
      try {
-      setModalState(ModalStateType.SAVING);
+      setModalObject({
+        modalState: ModalStateType.SAVING,
+        confirmState: ConfirmStateType.DRAFT,
+      });
       if (!draftGame.gameTemplate.title) {
         setDraftGame((prev) => ({
           ...prev,
@@ -942,7 +1000,10 @@ export default function CreateGame({
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
-      setModalState(ModalStateType.NULL);
+      setModalObject({
+        modalState: ModalStateType.NULL,
+        confirmState: ConfirmStateType.NULL,
+      });
       fetchElements();
       navigate('/');
     } catch (err) {
@@ -1041,13 +1102,19 @@ export default function CreateGame({
     setSelectedQuestionIndex(0);
   };
   const handleDiscard = () => {
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
 
   const handleContinue = () => {
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
     navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
   };
 
@@ -1062,7 +1129,10 @@ export default function CreateGame({
       isQuestionCardErrored: false,
       localId: uuidv4(),
     },...prev ]);
-    setModalState(ModalStateType.NULL);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   useEffect(() => {
@@ -1140,7 +1210,7 @@ export default function CreateGame({
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
-        isModalOpen={openModal || modalState !== ModalStateType.NULL}
+        isModalOpen={openModal || modalObject.modalState !== ModalStateType.NULL}
         handleCloseModal={handleCloseQuestionModal}
       />
       <LibraryTabsModalContainer
@@ -1157,7 +1227,7 @@ export default function CreateGame({
         handleQuestionView={handleView}
       />
       <CreateGameModalSwitch
-        modalState={modalState}
+        modalObject={modalObject}
         screenSize={screenSize}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
@@ -1166,6 +1236,7 @@ export default function CreateGame({
         handleContinue={handleContinue}
         handleCreateQuestion={handleCreateQuestion}
         handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
+        handleSaveDraft={handleDraftSave}
         isCardErrored={draftGame.isGameCardErrored}
       />
 

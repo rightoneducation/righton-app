@@ -1,6 +1,6 @@
 import React from "react";
 import { CentralQuestionTemplateInput } from "@righton/networking";
-import { ModalStateType, ScreenSize, TemplateType } from "../../../lib/CentralModels";
+import { ModalStateType, ScreenSize, TemplateType, ConfirmStateType, ModalObject } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import DiscardGameModal from '../DiscardGameModal';
 import ConfirmSaveModal from '../ConfirmSaveModal';
@@ -9,7 +9,7 @@ import CreateQuestionModal from '../CreateQuestionModal';
 // import DuplicateModal from "../DuplicateModal";
 
 interface CreateGameModalSwitchProps {
-  modalState: ModalStateType;
+  modalObject: ModalObject;
   screenSize: ScreenSize;
   handleDiscard: () => void;
   handleCloseDiscardModal: () => void;
@@ -18,11 +18,12 @@ interface CreateGameModalSwitchProps {
   handleContinue: () => void;
   handleCreateQuestion: (draftQuestion: CentralQuestionTemplateInput) => void;
   handleCloseCreateQuestionModal: () => void;
+  handleSaveDraft: () => void;
   isCardErrored: boolean;
 }
 
 export default function CreateGameModalSwitch({ 
-  modalState,
+  modalObject,
   screenSize,
   handleDiscard,
   handleCloseDiscardModal,
@@ -31,10 +32,11 @@ export default function CreateGameModalSwitch({
   handleContinue,
   handleCreateQuestion,
   handleCloseCreateQuestionModal,
+  handleSaveDraft,
   isCardErrored,
 }: CreateGameModalSwitchProps) {
 
-  switch (modalState) {
+  switch (modalObject.modalState) {
     case ModalStateType.CREATEQUESTION:
       return <CreateQuestionModal
         isModalOpen
@@ -57,6 +59,7 @@ export default function CreateGameModalSwitch({
         templateType={TemplateType.GAME}
         handlePublishGame={handlePublishGame}
         handleCloseSaveGameModal={handleCloseSaveGameModal}
+        handleSaveDraft={handleSaveDraft}
         isCardErrored={isCardErrored}
       />;
       break;
@@ -64,7 +67,7 @@ export default function CreateGameModalSwitch({
     case ModalStateType.SAVING:
     case ModalStateType.PUBLISHING:
       return <UpdatingModal
-        modalState={modalState}
+        modalState={modalObject.modalState}
         isModalOpen
         templateType={TemplateType.GAME}
       />;
@@ -72,6 +75,7 @@ export default function CreateGameModalSwitch({
     case ModalStateType.CONFIRM:
       return <ConfirmSaveModal
         isModalOpen
+        confirmState={modalObject.confirmState}
         templateType={TemplateType.GAME}
         handleContinue={handleContinue}
       />;

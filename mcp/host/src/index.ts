@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { initMCPClient, disconnectMCP, processQuery } from './mcp/functions/MCPHostFunctions.js';
+import { processQuery } from './mcp/functions/MCPHostFunctions.js';
 import { loadSecret } from './utils/loadSecrets.js';
 
 const openaiSecretName = process.env.OPENAI_SECRET_NAME;
@@ -9,6 +9,12 @@ if (!openaiSecretName) throw new Error('OPENAI_SECRET_NAME environment variable 
 
 const openaiSecret = await loadSecret(openaiSecretName);
 process.env.OPENAI_API_KEY = JSON.parse(openaiSecret)['openai_api'];
+
+const claudeSecretName = process.env.CLAUDE_SECRET_NAME;
+if(!claudeSecretName) throw new Error('CLAUDE_SECRET_NAME environment variable is required');
+
+const claudeSecret = await loadSecret(claudeSecretName);
+process.env.ANTHROPIC_API_KEY = JSON.parse(claudeSecret)['claude-api'];
 
 const dynamoDbEndpoint = process.env.DYNAMO_DB_ENDPOINT;
 if (!dynamoDbEndpoint) throw new Error('DYNAMO_DB_ENDPOINT environment variable is required');
@@ -89,25 +95,12 @@ app.post('/mcp/query', async (req: Request<{}, SuccessResponse | ErrorResponse, 
 const PORT = process.env.SERVER_PORT || 3000;
 
 async function start() {
-  await initMCPClient([{
-    name: 'custom',
-    url: process.env.MCP_SERVER_URL || '',
-    version: '1.0.0'
-  },
-  {
-    name: 'ext',
-    url: process.env.EXT_MCP_SERVER_URL || '',
-    version: '1.0.0'
-  }
-]);
-
   app.listen(PORT, () => {
     console.log(`MCP Host Server running on port ${PORT}`);
   })
 }
 
 process.on('SIGTERM', async () => {
-  await disconnectMCP();
   process.exit(0);
 });
 

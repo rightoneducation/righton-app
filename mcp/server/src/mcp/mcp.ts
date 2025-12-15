@@ -43,7 +43,22 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
       category: 'game-session'
     }
   }, async ({ classroomId }) => {
+    console.log('[MCP Server] getGameSessionsByClassroomId called', {
+      timestamp: new Date().toISOString(),
+      classroomId,
+      graphQLEndpoint: GRAPHQL_ENDPOINT || 'NOT SET',
+      endpointLength: GRAPHQL_ENDPOINT?.length || 0
+    });
     const result = await getGameSessionsByClassroomId(GRAPHQL_ENDPOINT || '', classroomId);
+    
+    console.log('[MCP Server] getGameSessionsByClassroomId result received', {
+      timestamp: new Date().toISOString(),
+      classroomId,
+      resultType: typeof result,
+      hasData: result && typeof result === 'object' && 'data' in result,
+      resultKeys: result && typeof result === 'object' ? Object.keys(result) : [],
+      resultPreview: result ? JSON.stringify(result).substring(0, 500) : 'null'
+    });
     
     // Extract items from GraphQL response structure
     let gameSessions = [];
@@ -56,8 +71,41 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
       }
     }
     
+    // Sort by createdAt descending (most recent first)
+    gameSessions.sort((a: any, b: any) => {
+      const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return bTime - aTime; // Descending order
+    });
+    
+    // Log all game session IDs and their creation dates for debugging
+    const sessionDetails = gameSessions.map((gs: any) => ({
+      id: gs.id,
+      title: gs.title,
+      createdAt: gs.createdAt,
+      currentState: gs.currentState,
+      hasTeams: gs.teams?.items?.length > 0
+    }));
+    
+    console.log('[MCP Server] getGameSessionsByClassroomId processed', {
+      timestamp: new Date().toISOString(),
+      classroomId,
+      gameSessionsCount: gameSessions.length,
+      returningCount: Math.min(gameSessions.length, 3),
+      allSessionIds: gameSessions.map((gs: any) => gs.id),
+      sessionDetails: sessionDetails
+    });
+    
     // Return the most recent 3 game sessions (or all if less than 3)
     const resultToReturn = gameSessions.slice(0, 3);
+    
+    console.log('[MCP Server] Returning game sessions', {
+      timestamp: new Date().toISOString(),
+      classroomId,
+      returningIds: resultToReturn.map((gs: any) => gs.id),
+      returningTitles: resultToReturn.map((gs: any) => gs.title),
+      returningCreatedAt: resultToReturn.map((gs: any) => gs.createdAt)
+    });
     
     return {
       content: [
