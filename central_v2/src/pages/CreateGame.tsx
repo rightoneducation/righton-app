@@ -1081,8 +1081,8 @@ export default function CreateGame({
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;
     if (selected !== null && (isClone || isEdit)) {
-      // regex to detect (clone of) in title
-      const regex = /\[Duplicate of\]/i;
+      // regex to detect [DUPLICATE OF] in title
+      const regex = /\[DUPLICATE OF\]/i;
       if (selected?.game && title && !regex.test(title) && isClone)
         selected.game.title = `[DUPLICATE OF] ${title}`;
       if (selected.game) {
