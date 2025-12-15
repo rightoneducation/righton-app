@@ -14,6 +14,8 @@ interface CreateGameHeaderProps {
 }
 
 export default function CreateGameHeader({ handleSaveGame, handleBackClick, label, screenSize }: CreateGameHeaderProps) {
+  const displayLabel = label === "Your" ? 'Edit' : label;
+
   const theme = useTheme();
   return(
     <Box style={{ 
@@ -38,7 +40,7 @@ export default function CreateGameHeader({ handleSaveGame, handleBackClick, labe
           buttonWidthOverride={screenSize !== ScreenSize.LARGE ? '48px' : '127px'}
           onClick={handleBackClick}
         />
-        <TitleText screenSize={screenSize}>{label} Game</TitleText>
+        <TitleText screenSize={screenSize}>{displayLabel} Game</TitleText>
         <CentralButton
           buttonType={ButtonType.SAVE}
           isEnabled
