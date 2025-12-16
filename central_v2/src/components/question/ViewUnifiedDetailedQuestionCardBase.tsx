@@ -104,10 +104,6 @@ export default function DetailedUnifiedQuestionCardBase({
   const handlePublicPrivateChange = () => {
     setIsPublic((prev) => !prev);
   };
-console.log('questionTemplate');
-console.log(questionTemplate);
-console.log('imageLink');
-console.log(imageLink);
 
   return (
     <ViewQuestionBaseCardStyled
@@ -130,6 +126,7 @@ console.log(imageLink);
           style={{
             width: screenSize === ScreenSize.SMALL ? '100%' : '200px',
             height: screenSize === ScreenSize.SMALL ? '185px' : '100%',
+            aspectRatio: '1/1',
             objectFit: 'cover',
             borderRadius: '8px',
           }}
