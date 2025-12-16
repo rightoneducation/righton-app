@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { IGameTemplate, PublicPrivateType } from '@righton/networking';
+import { IGameTemplate, PublicPrivateType, TemplateType } from '@righton/networking';
 import { Box, CircularProgress, useTheme, Fade } from '@mui/material';
 import DetailedGameCardBase from '../components/cards/detailedgame/DetailedGameCardBase';
 import {
@@ -136,7 +136,7 @@ export default function ViewGame({
           await Promise.all(gameQuestionPromises);
         }
         await apiClients.gameTemplate.deleteGameTemplate(
-          game.publicPrivateType,
+          game.publicPrivateType as TemplateType,
           centralData.selectedGame.game.id,
         );
       }

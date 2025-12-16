@@ -78,19 +78,43 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
 
         const customDeleteDraftGameQuestions = /* GraphQL */ `
             mutation DeleteDraftGameQuestions(
-                $input: DeleteDraftGameQuestionsInput!
-                $condition: ModelDraftGameQuestionsConditionInput
+                $input: DeleteDraftGameDraftQuestionsInput!
+                $condition: ModelDraftGameDraftQuestionsConditionInput
             ) {
-                deleteDraftGameQuestions(input: $input, condition: $condition) {
+                deleteDraftGameDraftQuestions(input: $input, condition: $condition) {
                 id
                 }
             }
         `;
 
-        const deleteFunctionMap = {
+        const customDeleteDraftGamePublicQuestions = /* GraphQL */ `
+            mutation DeleteDraftGamePublicQuestions(
+                $input: DeleteDraftGamePublicQuestionsInput!
+                $condition: ModelDraftGamePublicQuestionsConditionInput
+            ) {
+                deleteDraftGamePublicQuestions(input: $input, condition: $condition) {
+                id
+                }
+            }
+        `;
+
+        const customDeleteDraftGamePrivateQuestions = /* GraphQL */ `
+            mutation DeleteDraftGamePrivateQuestions(
+                $input: DeleteDraftGamePrivateQuestionsInput!
+                $condition: ModelDraftGamePrivateQuestionsConditionInput
+            ) {
+                deleteDraftGamePrivateQuestions(input: $input, condition: $condition) {
+                id
+                }
+            }
+        `;
+
+        const deleteFunctionMap: Record<PublicPrivateType, string> = {
             [PublicPrivateType.PUBLIC]: customDeletePublicGameQuestions,
             [PublicPrivateType.PRIVATE]: customDeletePrivateGameQuestions,
             [PublicPrivateType.DRAFT]: customDeleteDraftGameQuestions,
+            [PublicPrivateType.DRAFT_PUBLIC]: customDeleteDraftGamePublicQuestions,
+            [PublicPrivateType.DRAFT_PRIVATE]: customDeleteDraftGamePrivateQuestions,
         };
 
         const variables: GameQuestionType<T>['delete']['variables'] = {input: {id}};

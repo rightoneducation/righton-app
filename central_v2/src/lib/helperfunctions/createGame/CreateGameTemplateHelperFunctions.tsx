@@ -1,7 +1,7 @@
 import {
   CreatePublicGameQuestionsInput,
   CreatePrivateGameQuestionsInput,
-  CreateDraftGameQuestionsInput,
+  CreateDraftGameDraftQuestionsInput,
   CreatePrivateGameTemplateInput,
   CreatePublicGameTemplateInput,
   PublicPrivateType,
@@ -30,7 +30,7 @@ type GameTemplate =
 type GameQuestionTemplate =
   | CreatePublicGameQuestionsInput
   | CreatePrivateGameQuestionsInput
-  | CreateDraftGameQuestionsInput;
+  | CreateDraftGameDraftQuestionsInput;
 
 type EditedGameTemplate =
   | UpdatePrivateGameTemplateInput

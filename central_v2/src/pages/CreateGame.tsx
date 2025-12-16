@@ -6,6 +6,7 @@ import {
   CentralQuestionTemplateInput,
   IQuestionTemplate,
   PublicPrivateType,
+  TemplateType,
   GradeTarget,
   SortType,
   SortDirection,
@@ -405,7 +406,7 @@ export default function CreateGame({
           );
           const gameTemplateResponse =
             await apiClients.gameTemplate.updateGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               updatedGame,
             );
             setModalObject({
@@ -502,7 +503,7 @@ export default function CreateGame({
             );
             const gameTemplateResponse =
               await apiClients.gameTemplate.createGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
            
@@ -549,7 +550,7 @@ export default function CreateGame({
             );
 
             await apiClients.gameTemplate.createGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
           }
@@ -609,7 +610,7 @@ export default function CreateGame({
       }
       await handlePublishGame();
       await apiClients.gameTemplate.deleteGameTemplate(
-          originalGameType,
+          originalGameType as TemplateType,
           selectedGameId
       );
       fetchElements(LibraryTabEnum.PUBLIC, '', null , true);
@@ -683,12 +684,12 @@ export default function CreateGame({
             );
             const gameTemplateResponse =
               await apiClients.gameTemplate.createGameTemplate(
-              updatedDraftGame.gameTemplate.publicPrivateType,
+              updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
             if (gameTemplateResponse && selectedGameId) {
               await apiClients.gameTemplate.deleteGameTemplate(
-                PublicPrivateType.DRAFT,
+                PublicPrivateType.DRAFT as TemplateType,
                 selectedGameId
               )
             }
@@ -736,12 +737,12 @@ export default function CreateGame({
             );
 
             const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
-              updatedDraftGame.gameTemplate.publicPrivateType,
+              updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
              if (gameTemplateResponse && selectedGameId) {
               await apiClients.gameTemplate.deleteGameTemplate(
-                PublicPrivateType.DRAFT,
+                PublicPrivateType.DRAFT as TemplateType,
                 selectedGameId
               )
             }
@@ -866,7 +867,8 @@ export default function CreateGame({
       }
       const userId = centralData.userProfile?.id || '';
 
-       // convert questions to array of promises & write to db
+      // questions that are new (and will be saved as draft questions)
+      // convert questions to array of promises & write to db
       const newQuestionTemplates = buildQuestionTemplatePromises(
         draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
         userId,
@@ -896,7 +898,7 @@ export default function CreateGame({
       );
       const gameTemplateResponse =
         await apiClients.gameTemplate.createGameTemplate(
-          PublicPrivateType.DRAFT,
+          PublicPrivateType.DRAFT as TemplateType,
           createGame,
         );
      
@@ -991,7 +993,7 @@ export default function CreateGame({
       );
       const gameTemplateResponse =
         await apiClients.gameTemplate.updateGameTemplate(
-          PublicPrivateType.DRAFT,
+          PublicPrivateType.DRAFT as TemplateType,
           {...createGame, id: selectedGameId},
         );
 

@@ -3,12 +3,12 @@ import { IQuestionTemplate, IGameTemplate, CentralQuestionTemplateInput } from "
 import { QuestionTemplateType } from "../APIClients/templates/interfaces/IQuestionTemplateAPIClient";
 import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
-import { PublicPrivateType } from "../APIClients";
+import { PublicPrivateType, TemplateType } from "../APIClients";
 import { IChoice } from "../Models/IQuestion";
 import { ModelHelper } from "../ModelHelper";
 
 export class QuestionTemplateParser {
-    static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
+    static centralQuestionTemplateInputToIQuestionTemplate<T extends TemplateType>(
         imageUrl: string,
         userId: string,
         createQuestionTemplateInput: CentralQuestionTemplateInput,
