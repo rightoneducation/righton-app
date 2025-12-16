@@ -2,6 +2,8 @@ import {
   CreatePublicGameQuestionsInput,
   CreatePrivateGameQuestionsInput,
   CreateDraftGameDraftQuestionsInput,
+  CreateDraftGamePublicQuestionsInput,
+  CreateDraftGamePrivateQuestionsInput,
   CreatePrivateGameTemplateInput,
   CreatePublicGameTemplateInput,
   PublicPrivateType,
@@ -30,7 +32,9 @@ type GameTemplate =
 type GameQuestionTemplate =
   | CreatePublicGameQuestionsInput
   | CreatePrivateGameQuestionsInput
-  | CreateDraftGameDraftQuestionsInput;
+  | CreateDraftGameDraftQuestionsInput
+  | CreateDraftGamePublicQuestionsInput
+  | CreateDraftGamePrivateQuestionsInput;
 
 type EditedGameTemplate =
   | UpdatePrivateGameTemplateInput
@@ -314,23 +318,39 @@ export const buildGameQuestion = (
   questionTemplateId: string,
   type?: PublicPrivateType,
 ): GameQuestionTemplate => {
-  if (type === PublicPrivateType.DRAFT) {
-    return {
-      draftGameTemplateID: String(gameTemplateId),
-      draftQuestionTemplateID: String(questionTemplateId),
-    };
+  // update to switch on type
+  switch (type) {
+    case PublicPrivateType.DRAFT:
+      return {
+        draftGameTemplateID: String(gameTemplateId),
+        draftQuestionTemplateID: String(questionTemplateId),
+      };
+    case PublicPrivateType.PUBLIC:
+      return {
+        publicGameTemplateID: String(gameTemplateId),
+        publicQuestionTemplateID: String(questionTemplateId),
+      };
+    case PublicPrivateType.PRIVATE:
+      return {
+        privateGameTemplateID: String(gameTemplateId),
+        privateQuestionTemplateID: String(questionTemplateId),
+      };
+    case PublicPrivateType.DRAFT_PUBLIC:
+      return {
+        draftGameTemplateID: String(gameTemplateId),
+        publicQuestionTemplateID: String(questionTemplateId),
+      };
+    case PublicPrivateType.DRAFT_PRIVATE:
+      return {
+        draftGameTemplateID: String(gameTemplateId),
+        privateQuestionTemplateID: String(questionTemplateId),
+      };
+    default:
+      return {
+        draftGameTemplateID: String(gameTemplateId),
+        draftQuestionTemplateID: String(questionTemplateId),
+      };
   }
-  return {
-    ...(draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC
-      ? {
-          publicGameTemplateID: String(gameTemplateId),
-          publicQuestionTemplateID: String(questionTemplateId),
-        }
-      : {
-          privateGameTemplateID: String(gameTemplateId),
-          privateQuestionTemplateID: String(questionTemplateId),
-        }),
-  };
 };
 
 export const buildGameQuestionPromises = (

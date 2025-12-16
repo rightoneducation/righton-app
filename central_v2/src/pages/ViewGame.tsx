@@ -71,7 +71,7 @@ export default function ViewGame({
 
   const isOwner = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
   const isIncompleteDraft = centralData.selectedGame?.game?.publicPrivateType === PublicPrivateType.DRAFT && !isGameLaunchable;
-
+  const allQuestions = [...(centralData.selectedGame?.game?.questionTemplates ?? []), ...(centralData.selectedGame?.game?.publicQuestionTemplates ?? []), ...(centralData.selectedGame?.game?.privateQuestionTemplates ?? [])];
   useEffect(() => {
     setIsLoading(false);
     if (centralData?.selectedGame?.game) {
@@ -269,7 +269,7 @@ export default function ViewGame({
                 }}
               >
                 {/* Create Question Form(s)  */}
-                {centralData?.selectedGame?.game?.questionTemplates?.map((draftQuestionItem, index) => {
+                {allQuestions?.map((questionItem, index) => {
                   return (
                     <Fade
                       timeout={500}
@@ -285,7 +285,7 @@ export default function ViewGame({
                       <Box>
                         <ViewQuestionCardUnified
                           screenSize={screenSize}
-                          questionTemplate={draftQuestionItem.questionTemplate}
+                          questionTemplate={questionItem.questionTemplate}
                           handleRemoveQuestion={() => {}}
                           isViewGame
                           isCreateGame={false}

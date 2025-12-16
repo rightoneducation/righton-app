@@ -15,8 +15,26 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
             const gameQuestions = await this.callGraphQL<GameQuestionType<T>['create']['query']>(
                 queryFunction, variables
             ) as { data: any };
-        
-            const createType = `create${type}GameQuestions`;
+            let createType = '';
+            switch (type) {
+                case PublicPrivateType.PRIVATE:
+                    createType = `createPrivateGameQuestions`;
+                    break;
+                case PublicPrivateType.DRAFT:
+                    createType = `createDraftGameDraftQuestions`;
+                    break;
+                case PublicPrivateType.DRAFT_PUBLIC:
+                    createType = `createDraftGamePublicQuestions`;
+                    break;
+                case PublicPrivateType.DRAFT_PRIVATE:
+                    createType = `createDraftGamePrivateQuestions`;
+                    break;
+                case PublicPrivateType.PUBLIC:
+                default:
+                    createType = `createPublicGameQuestions`;
+                    break;
+            }
+            
             if (isNullOrUndefined(gameQuestions?.data || gameQuestions?.data[createType])) {
                 throw new Error(`Failed to create gameQuestions.`);
             }

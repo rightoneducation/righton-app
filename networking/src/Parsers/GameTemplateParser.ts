@@ -26,6 +26,8 @@ export class GameTemplateParser {
         publicPrivate: PublicPrivateType
     ): IGameTemplate {
         // parse the IQuestionTemplate[] from IModelGameQuestionConnection
+        let publicQuestionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
+        let privateQuestionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
         let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
         if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
             for (const item of awsGameTemplate.questionTemplates.items) {
@@ -40,6 +42,7 @@ export class GameTemplateParser {
                     } else {
                         continue;
                     }
+
                     const { gameTemplates, ...rest } = template;
                     // Only add to questionTemplates if 'rest' is not empty
                     if (Object.keys(rest).length > 0) {
@@ -50,6 +53,36 @@ export class GameTemplateParser {
         } else {
             // assign an empty array if questionTemplates is null
             questionTemplates = [];
+        }
+        if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.publicQuestionTemplates) && !isNullOrUndefined(awsGameTemplate.publicQuestionTemplates.items)) {
+            for (const item of awsGameTemplate.publicQuestionTemplates.items) {
+                if (item) {
+                    let template;
+                    template = item.publicQuestionTemplate;
+                    if (template) {
+                        const { gameTemplates, ...rest } = template;
+                        // Only add to questionTemplates if 'rest' is not empty
+                        if (Object.keys(rest).length > 0) {
+                            publicQuestionTemplates.push({questionTemplate: QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(rest, publicPrivate) as IQuestionTemplate, gameQuestionId: item.id as string});
+                        }
+                    }
+                }
+            }
+        }
+        if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.privateQuestionTemplates) && !isNullOrUndefined(awsGameTemplate.privateQuestionTemplates.items)) {
+            for (const item of awsGameTemplate.privateQuestionTemplates.items) {
+                if (item) {
+                    let template;
+                    template = item.privateQuestionTemplate;
+                    if (template) {
+                        const { gameTemplates, ...rest } = template;
+                        // Only add to questionTemplates if 'rest' is not empty
+                        if (Object.keys(rest).length > 0) {
+                            privateQuestionTemplates.push({questionTemplate: QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(rest, publicPrivate) as IQuestionTemplate, gameQuestionId: item.id as string});
+                        }
+                    }
+                }
+            }
         }
         const questionTemplatesOrder = awsGameTemplate.questionTemplatesOrder ? JSON.parse(awsGameTemplate.questionTemplatesOrder) : null;
         const sortedQuestionTemplates = sortQuestionTemplatesByOrder(questionTemplates, questionTemplatesOrder);
@@ -108,6 +141,8 @@ export class GameTemplateParser {
           imageUrl,
           timesPlayed,
           questionTemplates: sortedQuestionTemplates,
+          publicQuestionTemplates,
+          privateQuestionTemplates,
           questionTemplatesCount,
           questionTemplatesOrder,
           createdAt,

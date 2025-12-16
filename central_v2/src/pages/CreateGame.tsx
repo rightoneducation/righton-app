@@ -901,21 +901,24 @@ export default function CreateGame({
           PublicPrivateType.DRAFT as TemplateType,
           createGame,
         );
-     
       // create an array of all the ids from the response
-      let questionTemplateIds = questionTemplateResponse.map((question) =>
+      const questionTemplateIds = questionTemplateResponse.map((question) =>
         String(question?.id),
       );
 
-      const addedQuestionTemplatesIds = addedQuestionTemplates.map(
+      const addedQuestionPublicTemplatesIds = addedQuestionTemplates.filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PUBLIC).map(
         (question) => String(question?.questionTemplate?.id),
       )
 
-      questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
+      const addedQuestionPrivateTemplatesIds = addedQuestionTemplates.filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE).map(
+        (question) => String(question?.questionTemplate?.id),
+      )
 
       // make sure we have a gameTemplate id as well as question template ids before creating a game question
-      if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+      
+      if (gameTemplateResponse.id && (questionTemplateIds.length > 0 || addedQuestionPublicTemplatesIds.length > 0 || addedQuestionPrivateTemplatesIds.length > 0)) {
         try {
+          // this is only for new questions so we don't write gamequestions that mix draft and public/private questions
           const createGameQuestions = buildGameQuestionPromises(
             draftGameCopy,
             gameTemplateResponse.id,
@@ -923,8 +926,26 @@ export default function CreateGame({
             apiClients,
             PublicPrivateType.DRAFT,
           );
+
+          const createMixedPublicGameQuestions = buildGameQuestionPromises(
+            draftGameCopy,
+            gameTemplateResponse.id,
+            addedQuestionPublicTemplatesIds,
+            apiClients,
+            PublicPrivateType.DRAFT_PUBLIC,
+          );
+
+          const createMixedPrivateGameQuestions = buildGameQuestionPromises(
+            draftGameCopy,
+            gameTemplateResponse.id,
+            addedQuestionPrivateTemplatesIds,
+            apiClients,
+            PublicPrivateType.DRAFT_PRIVATE,
+          );
           // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
           await Promise.all(createGameQuestions);
+          await Promise.all(createMixedPublicGameQuestions);
+          await Promise.all(createMixedPrivateGameQuestions); 
         } catch (err) {
           setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
           console.error(`Failed to create one or more game questions:`, err);

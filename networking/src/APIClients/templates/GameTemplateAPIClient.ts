@@ -83,6 +83,7 @@ export class GameTemplateAPIClient
         queryFunction,
         { id } as unknown as GraphQLOptions
       ) as { data: any };
+
       if (
         isNullOrUndefined(result?.data)
       ) {
