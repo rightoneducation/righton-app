@@ -18,6 +18,7 @@ import { AISwitch } from '../../lib/styledcomponents/AISwitchStyledComponent';
 interface CreateQuestionModalProps {
     isModalOpen: boolean;
     screenSize: ScreenSize;
+    publicPrivate: PublicPrivateType;
     handleCreateQuestion: (draftQuestion: CentralQuestionTemplateInput) => void;
     handleCloseCreateQuestionModal: () => void;
 }
@@ -77,6 +78,7 @@ const ScrollableContent = styled(Box, {
 export default function CreateQuestionModal({
     isModalOpen,
     screenSize,
+    publicPrivate,
     handleCreateQuestion,
     handleCloseCreateQuestionModal,
 }: CreateQuestionModalProps) {
@@ -94,7 +96,7 @@ export default function CreateQuestionModal({
     const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
       return (
         {
-          publicPrivateType: PublicPrivateType.PUBLIC,
+          publicPrivateType: publicPrivate,
           questionCard: {
             title: '',
             ccss: 'CCSS',

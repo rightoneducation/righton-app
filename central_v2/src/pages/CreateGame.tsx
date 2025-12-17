@@ -1252,6 +1252,7 @@ export default function CreateGame({
       <CreateGameModalSwitch
         modalObject={modalObject}
         screenSize={screenSize}
+        publicPrivate={draftGame.gameTemplate.publicPrivateType}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishGame={handlePublishGame}

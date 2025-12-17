@@ -394,6 +394,7 @@ export default function CreateQuestion({
   };
 
   const handlePublicPrivateChange = (value: PublicPrivateType) => {
+    setPublicPrivate(value);
     setDraftQuestion((prev) => {
       const newDraftQuestion = {
         ...prev,
