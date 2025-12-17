@@ -106,6 +106,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -153,6 +154,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -200,6 +202,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -247,6 +250,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -294,6 +298,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -341,6 +346,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -388,6 +394,7 @@ export const createDraftGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -402,6 +409,32 @@ export const createDraftGameTemplate = /* GraphQL */ `
           id
           draftGameTemplateID
           draftQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      publicQuestionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          publicQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      privateQuestionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          privateQuestionTemplateID
           createdAt
           updatedAt
           owner
@@ -435,6 +468,7 @@ export const updateDraftGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -449,6 +483,32 @@ export const updateDraftGameTemplate = /* GraphQL */ `
           id
           draftGameTemplateID
           draftQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      publicQuestionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          publicQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      privateQuestionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          privateQuestionTemplateID
           createdAt
           updatedAt
           owner
@@ -482,6 +542,7 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -496,6 +557,32 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
           id
           draftGameTemplateID
           draftQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      publicQuestionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          publicQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      privateQuestionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          privateQuestionTemplateID
           createdAt
           updatedAt
           owner
@@ -530,6 +617,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -541,6 +629,19 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
         items {
           id
           publicGameTemplateID
+          publicQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      draftGameTemplates {
+        items {
+          id
+          draftGameTemplateID
           publicQuestionTemplateID
           createdAt
           updatedAt
@@ -575,6 +676,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -586,6 +688,19 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
         items {
           id
           publicGameTemplateID
+          publicQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      draftGameTemplates {
+        items {
+          id
+          draftGameTemplateID
           publicQuestionTemplateID
           createdAt
           updatedAt
@@ -620,6 +735,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -631,6 +747,19 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
         items {
           id
           publicGameTemplateID
+          publicQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      draftGameTemplates {
+        items {
+          id
+          draftGameTemplateID
           publicQuestionTemplateID
           createdAt
           updatedAt
@@ -665,6 +794,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -676,6 +806,19 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
         items {
           id
           privateGameTemplateID
+          privateQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      draftGameTemplates {
+        items {
+          id
+          draftGameTemplateID
           privateQuestionTemplateID
           createdAt
           updatedAt
@@ -710,6 +853,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -721,6 +865,19 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
         items {
           id
           privateGameTemplateID
+          privateQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      draftGameTemplates {
+        items {
+          id
+          draftGameTemplateID
           privateQuestionTemplateID
           createdAt
           updatedAt
@@ -755,6 +912,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -766,6 +924,19 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
         items {
           id
           privateGameTemplateID
+          privateQuestionTemplateID
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      draftGameTemplates {
+        items {
+          id
+          draftGameTemplateID
           privateQuestionTemplateID
           createdAt
           updatedAt
@@ -800,6 +971,7 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -845,6 +1017,7 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -890,6 +1063,7 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -926,6 +1100,7 @@ export const createGameSession = /* GraphQL */ `
   ) {
     createGameSession(input: $input, condition: $condition) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -933,6 +1108,7 @@ export const createGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           score
           selectedAvatarIndex
@@ -955,6 +1131,7 @@ export const createGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -993,6 +1170,7 @@ export const updateGameSession = /* GraphQL */ `
   ) {
     updateGameSession(input: $input, condition: $condition) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -1000,6 +1178,7 @@ export const updateGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           score
           selectedAvatarIndex
@@ -1022,6 +1201,7 @@ export const updateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -1060,6 +1240,7 @@ export const deleteGameSession = /* GraphQL */ `
   ) {
     deleteGameSession(input: $input, condition: $condition) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -1067,6 +1248,7 @@ export const deleteGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           score
           selectedAvatarIndex
@@ -1089,6 +1271,7 @@ export const deleteGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -1208,6 +1391,7 @@ export const createTeam = /* GraphQL */ `
   ) {
     createTeam(input: $input, condition: $condition) {
       id
+      globalStudentId
       name
       question {
         id
@@ -1261,6 +1445,7 @@ export const updateTeam = /* GraphQL */ `
   ) {
     updateTeam(input: $input, condition: $condition) {
       id
+      globalStudentId
       name
       question {
         id
@@ -1314,6 +1499,7 @@ export const deleteTeam = /* GraphQL */ `
   ) {
     deleteTeam(input: $input, condition: $condition) {
       id
+      globalStudentId
       name
       question {
         id
@@ -1574,6 +1760,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1606,6 +1793,7 @@ export const createPublicGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1614,6 +1802,10 @@ export const createPublicGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
           nextToken
           __typename
         }
@@ -1650,6 +1842,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1682,6 +1875,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1690,6 +1884,10 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
           nextToken
           __typename
         }
@@ -1726,6 +1924,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1758,6 +1957,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1766,6 +1966,10 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
           nextToken
           __typename
         }
@@ -1802,6 +2006,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1834,6 +2039,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1842,6 +2048,10 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
           nextToken
           __typename
         }
@@ -1878,6 +2088,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1910,6 +2121,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1918,6 +2130,10 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
           nextToken
           __typename
         }
@@ -1954,6 +2170,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1986,6 +2203,97 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createDraftGameDraftQuestions = /* GraphQL */ `
+  mutation CreateDraftGameDraftQuestions(
+    $input: CreateDraftGameDraftQuestionsInput!
+    $condition: ModelDraftGameDraftQuestionsConditionInput
+  ) {
+    createDraftGameDraftQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      draftQuestionTemplateID
+      draftGameTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      draftQuestionTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2011,12 +2319,12 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
     }
   }
 `;
-export const createDraftGameQuestions = /* GraphQL */ `
-  mutation CreateDraftGameQuestions(
-    $input: CreateDraftGameQuestionsInput!
-    $condition: ModelDraftGameQuestionsConditionInput
+export const updateDraftGameDraftQuestions = /* GraphQL */ `
+  mutation UpdateDraftGameDraftQuestions(
+    $input: UpdateDraftGameDraftQuestionsInput!
+    $condition: ModelDraftGameDraftQuestionsConditionInput
   ) {
-    createDraftGameQuestions(input: $input, condition: $condition) {
+    updateDraftGameDraftQuestions(input: $input, condition: $condition) {
       id
       draftGameTemplateID
       draftQuestionTemplateID
@@ -2030,6 +2338,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2040,6 +2349,14 @@ export const createDraftGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         questionTemplates {
+          nextToken
+          __typename
+        }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
           nextToken
           __typename
         }
@@ -2062,6 +2379,7 @@ export const createDraftGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2087,12 +2405,12 @@ export const createDraftGameQuestions = /* GraphQL */ `
     }
   }
 `;
-export const updateDraftGameQuestions = /* GraphQL */ `
-  mutation UpdateDraftGameQuestions(
-    $input: UpdateDraftGameQuestionsInput!
-    $condition: ModelDraftGameQuestionsConditionInput
+export const deleteDraftGameDraftQuestions = /* GraphQL */ `
+  mutation DeleteDraftGameDraftQuestions(
+    $input: DeleteDraftGameDraftQuestionsInput!
+    $condition: ModelDraftGameDraftQuestionsConditionInput
   ) {
-    updateDraftGameQuestions(input: $input, condition: $condition) {
+    deleteDraftGameDraftQuestions(input: $input, condition: $condition) {
       id
       draftGameTemplateID
       draftQuestionTemplateID
@@ -2106,6 +2424,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2116,6 +2435,14 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         questionTemplates {
+          nextToken
+          __typename
+        }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
           nextToken
           __typename
         }
@@ -2138,6 +2465,7 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2163,15 +2491,15 @@ export const updateDraftGameQuestions = /* GraphQL */ `
     }
   }
 `;
-export const deleteDraftGameQuestions = /* GraphQL */ `
-  mutation DeleteDraftGameQuestions(
-    $input: DeleteDraftGameQuestionsInput!
-    $condition: ModelDraftGameQuestionsConditionInput
+export const createDraftGamePublicQuestions = /* GraphQL */ `
+  mutation CreateDraftGamePublicQuestions(
+    $input: CreateDraftGamePublicQuestionsInput!
+    $condition: ModelDraftGamePublicQuestionsConditionInput
   ) {
-    deleteDraftGameQuestions(input: $input, condition: $condition) {
+    createDraftGamePublicQuestions(input: $input, condition: $condition) {
       id
       draftGameTemplateID
-      draftQuestionTemplateID
+      publicQuestionTemplateID
       draftGameTemplate {
         id
         userId
@@ -2182,6 +2510,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2195,6 +2524,14 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
+          nextToken
+          __typename
+        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -2203,7 +2540,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         owner
         __typename
       }
-      draftQuestionTemplate {
+      publicQuestionTemplate {
         id
         userId
         publicPrivateType
@@ -2214,6 +2551,7 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2222,6 +2560,460 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateDraftGamePublicQuestions = /* GraphQL */ `
+  mutation UpdateDraftGamePublicQuestions(
+    $input: UpdateDraftGamePublicQuestionsInput!
+    $condition: ModelDraftGamePublicQuestionsConditionInput
+  ) {
+    updateDraftGamePublicQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      publicQuestionTemplateID
+      draftGameTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      publicQuestionTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteDraftGamePublicQuestions = /* GraphQL */ `
+  mutation DeleteDraftGamePublicQuestions(
+    $input: DeleteDraftGamePublicQuestionsInput!
+    $condition: ModelDraftGamePublicQuestionsConditionInput
+  ) {
+    deleteDraftGamePublicQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      publicQuestionTemplateID
+      draftGameTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      publicQuestionTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createDraftGamePrivateQuestions = /* GraphQL */ `
+  mutation CreateDraftGamePrivateQuestions(
+    $input: CreateDraftGamePrivateQuestionsInput!
+    $condition: ModelDraftGamePrivateQuestionsConditionInput
+  ) {
+    createDraftGamePrivateQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      privateQuestionTemplateID
+      draftGameTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      privateQuestionTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateDraftGamePrivateQuestions = /* GraphQL */ `
+  mutation UpdateDraftGamePrivateQuestions(
+    $input: UpdateDraftGamePrivateQuestionsInput!
+    $condition: ModelDraftGamePrivateQuestionsConditionInput
+  ) {
+    updateDraftGamePrivateQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      privateQuestionTemplateID
+      draftGameTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      privateQuestionTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteDraftGamePrivateQuestions = /* GraphQL */ `
+  mutation DeleteDraftGamePrivateQuestions(
+    $input: DeleteDraftGamePrivateQuestionsInput!
+    $condition: ModelDraftGamePrivateQuestionsConditionInput
+  ) {
+    deleteDraftGamePrivateQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      privateQuestionTemplateID
+      draftGameTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        publicQuestionTemplates {
+          nextToken
+          __typename
+        }
+        privateQuestionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      privateQuestionTemplate {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        draftGameTemplates {
           nextToken
           __typename
         }

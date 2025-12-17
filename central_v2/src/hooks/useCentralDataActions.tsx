@@ -4,6 +4,7 @@ import { useNavigate, useMatch } from 'react-router-dom';
 import {
   IGameTemplate,
   PublicPrivateType,
+  TemplateType,
   SortDirection,
   SortType,
   GradeTarget,
@@ -127,7 +128,7 @@ export default function useCentralDataManager({
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
-            callType.publicPrivateType,
+            callType.publicPrivateType as TemplateType,
             null,
             null,
             centralData.searchTerms,
@@ -150,7 +151,7 @@ export default function useCentralDataManager({
       default:
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
-            callType.publicPrivateType,
+            callType.publicPrivateType as TemplateType,
             null,
             null,
             centralData.searchTerms,
@@ -189,7 +190,7 @@ export default function useCentralDataManager({
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
-            callType.publicPrivateType,
+            callType.publicPrivateType as TemplateType,
             null,
             null,
             centralData.searchTerms,
@@ -212,7 +213,7 @@ export default function useCentralDataManager({
       default:
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
-            callType.publicPrivateType,
+            callType.publicPrivateType as TemplateType,
             null,
             null,
             centralData.searchTerms,
@@ -265,7 +266,7 @@ export default function useCentralDataManager({
             });
             apiClients?.centralDataManager
               ?.searchForQuestionTemplates(
-                callType.publicPrivateType,
+                callType.publicPrivateType as TemplateType,
                 500,
                 null,
                 search,
@@ -289,7 +290,7 @@ export default function useCentralDataManager({
             centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
             apiClients?.centralDataManager
               ?.searchForGameTemplates(
-                callType.publicPrivateType,
+                callType.publicPrivateType as TemplateType,
                 500,
                 null,
                 search,
@@ -353,7 +354,7 @@ export default function useCentralDataManager({
         
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
-            newPublicPrivate,
+            newPublicPrivate as TemplateType,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
@@ -413,7 +414,7 @@ export default function useCentralDataManager({
         
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
-            newPublicPrivate,
+            newPublicPrivate as TemplateType,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
@@ -769,7 +770,7 @@ export default function useCentralDataManager({
       case GameQuestionType.QUESTION: {
         const responseQuestion =
           await apiClients?.questionTemplate.getQuestionTemplate(
-            callType.publicPrivateType,
+            callType.publicPrivateType as TemplateType,
             id,
           );
         let selectedQuestion: ISelectedQuestion = {
@@ -808,7 +809,7 @@ export default function useCentralDataManager({
       case GameQuestionType.GAME:
       default: {
         const responseGame = await apiClients?.gameTemplate.getGameTemplate(
-          callType.publicPrivateType,
+          callType.publicPrivateType as TemplateType,
           id,
         );
         // TODO: check refresh condition on an empty game, as I think questionTEmplatesOrder is going to break stuff when its null
@@ -1159,7 +1160,7 @@ export default function useCentralDataManager({
     try {
       const response =
         await apiClients.centralDataManager?.deleteQuestionTemplate(
-          type,
+          type as TemplateType,
           questionId,
         );
     } catch (err) {

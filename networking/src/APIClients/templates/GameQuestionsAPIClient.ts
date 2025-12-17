@@ -15,8 +15,26 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
             const gameQuestions = await this.callGraphQL<GameQuestionType<T>['create']['query']>(
                 queryFunction, variables
             ) as { data: any };
-        
-            const createType = `create${type}GameQuestions`;
+            let createType = '';
+            switch (type) {
+                case PublicPrivateType.PRIVATE:
+                    createType = `createPrivateGameQuestions`;
+                    break;
+                case PublicPrivateType.DRAFT:
+                    createType = `createDraftGameDraftQuestions`;
+                    break;
+                case PublicPrivateType.DRAFT_PUBLIC:
+                    createType = `createDraftGamePublicQuestions`;
+                    break;
+                case PublicPrivateType.DRAFT_PRIVATE:
+                    createType = `createDraftGamePrivateQuestions`;
+                    break;
+                case PublicPrivateType.PUBLIC:
+                default:
+                    createType = `createPublicGameQuestions`;
+                    break;
+            }
+            
             if (isNullOrUndefined(gameQuestions?.data || gameQuestions?.data[createType])) {
                 throw new Error(`Failed to create gameQuestions.`);
             }
@@ -78,19 +96,43 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
 
         const customDeleteDraftGameQuestions = /* GraphQL */ `
             mutation DeleteDraftGameQuestions(
-                $input: DeleteDraftGameQuestionsInput!
-                $condition: ModelDraftGameQuestionsConditionInput
+                $input: DeleteDraftGameDraftQuestionsInput!
+                $condition: ModelDraftGameDraftQuestionsConditionInput
             ) {
-                deleteDraftGameQuestions(input: $input, condition: $condition) {
+                deleteDraftGameDraftQuestions(input: $input, condition: $condition) {
                 id
                 }
             }
         `;
 
-        const deleteFunctionMap = {
+        const customDeleteDraftGamePublicQuestions = /* GraphQL */ `
+            mutation DeleteDraftGamePublicQuestions(
+                $input: DeleteDraftGamePublicQuestionsInput!
+                $condition: ModelDraftGamePublicQuestionsConditionInput
+            ) {
+                deleteDraftGamePublicQuestions(input: $input, condition: $condition) {
+                id
+                }
+            }
+        `;
+
+        const customDeleteDraftGamePrivateQuestions = /* GraphQL */ `
+            mutation DeleteDraftGamePrivateQuestions(
+                $input: DeleteDraftGamePrivateQuestionsInput!
+                $condition: ModelDraftGamePrivateQuestionsConditionInput
+            ) {
+                deleteDraftGamePrivateQuestions(input: $input, condition: $condition) {
+                id
+                }
+            }
+        `;
+
+        const deleteFunctionMap: Record<PublicPrivateType, string> = {
             [PublicPrivateType.PUBLIC]: customDeletePublicGameQuestions,
             [PublicPrivateType.PRIVATE]: customDeletePrivateGameQuestions,
             [PublicPrivateType.DRAFT]: customDeleteDraftGameQuestions,
+            [PublicPrivateType.DRAFT_PUBLIC]: customDeleteDraftGamePublicQuestions,
+            [PublicPrivateType.DRAFT_PRIVATE]: customDeleteDraftGamePrivateQuestions,
         };
 
         const variables: GameQuestionType<T>['delete']['variables'] = {input: {id}};

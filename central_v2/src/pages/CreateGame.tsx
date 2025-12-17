@@ -6,6 +6,7 @@ import {
   CentralQuestionTemplateInput,
   IQuestionTemplate,
   PublicPrivateType,
+  TemplateType,
   GradeTarget,
   SortType,
   SortDirection,
@@ -405,7 +406,7 @@ export default function CreateGame({
           );
           const gameTemplateResponse =
             await apiClients.gameTemplate.updateGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               updatedGame,
             );
             setModalObject({
@@ -502,7 +503,7 @@ export default function CreateGame({
             );
             const gameTemplateResponse =
               await apiClients.gameTemplate.createGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
            
@@ -549,7 +550,7 @@ export default function CreateGame({
             );
 
             await apiClients.gameTemplate.createGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
           }
@@ -609,7 +610,7 @@ export default function CreateGame({
       }
       await handlePublishGame();
       await apiClients.gameTemplate.deleteGameTemplate(
-          originalGameType,
+          originalGameType as TemplateType,
           selectedGameId
       );
       fetchElements(LibraryTabEnum.PUBLIC, '', null , true);
@@ -683,12 +684,12 @@ export default function CreateGame({
             );
             const gameTemplateResponse =
               await apiClients.gameTemplate.createGameTemplate(
-              updatedDraftGame.gameTemplate.publicPrivateType,
+              updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
             if (gameTemplateResponse && selectedGameId) {
               await apiClients.gameTemplate.deleteGameTemplate(
-                PublicPrivateType.DRAFT,
+                PublicPrivateType.DRAFT as TemplateType,
                 selectedGameId
               )
             }
@@ -736,12 +737,12 @@ export default function CreateGame({
             );
 
             const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
-              updatedDraftGame.gameTemplate.publicPrivateType,
+              updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
              if (gameTemplateResponse && selectedGameId) {
               await apiClients.gameTemplate.deleteGameTemplate(
-                PublicPrivateType.DRAFT,
+                PublicPrivateType.DRAFT as TemplateType,
                 selectedGameId
               )
             }
@@ -866,7 +867,8 @@ export default function CreateGame({
       }
       const userId = centralData.userProfile?.id || '';
 
-       // convert questions to array of promises & write to db
+      // questions that are new (and will be saved as draft questions)
+      // convert questions to array of promises & write to db
       const newQuestionTemplates = buildQuestionTemplatePromises(
         draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
         userId,
@@ -896,24 +898,27 @@ export default function CreateGame({
       );
       const gameTemplateResponse =
         await apiClients.gameTemplate.createGameTemplate(
-          PublicPrivateType.DRAFT,
+          PublicPrivateType.DRAFT as TemplateType,
           createGame,
         );
-     
       // create an array of all the ids from the response
-      let questionTemplateIds = questionTemplateResponse.map((question) =>
+      const questionTemplateIds = questionTemplateResponse.map((question) =>
         String(question?.id),
       );
 
-      const addedQuestionTemplatesIds = addedQuestionTemplates.map(
+      const addedQuestionPublicTemplatesIds = addedQuestionTemplates.filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PUBLIC).map(
         (question) => String(question?.questionTemplate?.id),
       )
 
-      questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
+      const addedQuestionPrivateTemplatesIds = addedQuestionTemplates.filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE).map(
+        (question) => String(question?.questionTemplate?.id),
+      )
 
       // make sure we have a gameTemplate id as well as question template ids before creating a game question
-      if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+      
+      if (gameTemplateResponse.id && (questionTemplateIds.length > 0 || addedQuestionPublicTemplatesIds.length > 0 || addedQuestionPrivateTemplatesIds.length > 0)) {
         try {
+          // this is only for new questions so we don't write gamequestions that mix draft and public/private questions
           const createGameQuestions = buildGameQuestionPromises(
             draftGameCopy,
             gameTemplateResponse.id,
@@ -921,8 +926,26 @@ export default function CreateGame({
             apiClients,
             PublicPrivateType.DRAFT,
           );
+
+          const createMixedPublicGameQuestions = buildGameQuestionPromises(
+            draftGameCopy,
+            gameTemplateResponse.id,
+            addedQuestionPublicTemplatesIds,
+            apiClients,
+            PublicPrivateType.DRAFT_PUBLIC,
+          );
+
+          const createMixedPrivateGameQuestions = buildGameQuestionPromises(
+            draftGameCopy,
+            gameTemplateResponse.id,
+            addedQuestionPrivateTemplatesIds,
+            apiClients,
+            PublicPrivateType.DRAFT_PRIVATE,
+          );
           // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
           await Promise.all(createGameQuestions);
+          await Promise.all(createMixedPublicGameQuestions);
+          await Promise.all(createMixedPrivateGameQuestions); 
         } catch (err) {
           setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
           console.error(`Failed to create one or more game questions:`, err);
@@ -991,7 +1014,7 @@ export default function CreateGame({
       );
       const gameTemplateResponse =
         await apiClients.gameTemplate.updateGameTemplate(
-          PublicPrivateType.DRAFT,
+          PublicPrivateType.DRAFT as TemplateType,
           {...createGame, id: selectedGameId},
         );
 
@@ -1229,6 +1252,7 @@ export default function CreateGame({
       <CreateGameModalSwitch
         modalObject={modalObject}
         screenSize={screenSize}
+        publicPrivate={draftGame.gameTemplate.publicPrivateType}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishGame={handlePublishGame}

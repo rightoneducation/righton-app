@@ -11,6 +11,7 @@ import { useNavigate, useMatch } from 'react-router-dom';
 import { debounce } from 'lodash';
 import {
   PublicPrivateType,
+  TemplateType,
   CentralQuestionTemplateInput,
   AnswerType,
   AnswerPrecision,
@@ -26,7 +27,6 @@ import {
 import {
   ScreenSize,
   StorageKey,
-  TemplateType,
   GameQuestionType,
   LibraryTabEnum,
   ModalStateType,
@@ -394,6 +394,7 @@ export default function CreateQuestion({
   };
 
   const handlePublicPrivateChange = (value: PublicPrivateType) => {
+    setPublicPrivate(value);
     setDraftQuestion((prev) => {
       const newDraftQuestion = {
         ...prev,
@@ -571,7 +572,7 @@ export default function CreateQuestion({
               draftQuestion.correctCard.answerSettings.answerType =
                 AnswerType.MULTICHOICE;
             const qtResult = await apiClients.questionTemplate.updateQuestionTemplate(
-              publicPrivate,
+              publicPrivate as TemplateType,
               url,
               centralData.userProfile?.id || '',
               draftQuestion,
@@ -655,7 +656,7 @@ export default function CreateQuestion({
               draftQuestion.correctCard.answerSettings.answerType =
                 AnswerType.MULTICHOICE;
               await apiClients.questionTemplate.createQuestionTemplate(
-              publicPrivate,
+              publicPrivate as TemplateType,
               url,
               centralData.userProfile?.id || '',
               draftQuestion,
@@ -732,7 +733,7 @@ export default function CreateQuestion({
               draftQuestion.correctCard.answerSettings.answerType =
                 AnswerType.MULTICHOICE;
             const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
-              publicPrivate,
+              publicPrivate as TemplateType,
               url,
               centralData.userProfile?.id || '',
               draftQuestion,
@@ -838,7 +839,7 @@ export default function CreateQuestion({
         }
         window.localStorage.setItem(StorageKey, '');
         await apiClients.questionTemplate.createQuestionTemplate(
-          PublicPrivateType.DRAFT,
+          PublicPrivateType.DRAFT as TemplateType,
           url,
           centralData.userProfile?.id || '',
           draftQuestion,
@@ -896,7 +897,7 @@ export default function CreateQuestion({
         }
         window.localStorage.setItem(StorageKey, '');
         await apiClients.questionTemplate.updateQuestionTemplate(
-            PublicPrivateType.DRAFT,
+            PublicPrivateType.DRAFT as TemplateType,
             url,
             centralData.userProfile?.id || '',
             draftQuestion,
