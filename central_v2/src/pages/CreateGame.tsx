@@ -163,7 +163,7 @@ export default function CreateGame({
   const allDQAreValid = checkDQsAreValid(draftQuestionsList);
   // const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid)
   // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
-
+  console.log("IS EDIT", isEdit)
   let label = 'Create';
   let selectedGameId = '';
   switch (true) {
@@ -399,8 +399,8 @@ export default function CreateGame({
           isGameCardSubmitted: false,
         }));
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
-        fetchElements();
-        navigate('/');
+        await fetchElements();
+        navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
       } else {
         setDraftGame((prev) => ({
           ...prev,
@@ -568,6 +568,11 @@ export default function CreateGame({
       setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
     }
   };
+
+  const handleEdit = () => {
+      setModalState(ModalStateType.UPDATE);
+  };
+
 
    const handleSaveEditedGame = async () => {
     try {
@@ -738,7 +743,7 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
-        fetchElements();
+        await fetchElements();
         navigate('/');
       } else {
         setDraftGame((prev) => ({
@@ -885,7 +890,7 @@ export default function CreateGame({
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
-      fetchElements();
+      await fetchElements();
       navigate('/');
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
@@ -943,7 +948,7 @@ export default function CreateGame({
         isGameCardSubmitted: false,
       }));
       setModalState(ModalStateType.NULL);
-      fetchElements();
+      await fetchElements();
       navigate('/');
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
@@ -1167,6 +1172,7 @@ export default function CreateGame({
         handleCreateQuestion={handleCreateQuestion}
         handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
         isCardErrored={draftGame.isGameCardErrored}
+        handleSaveEditedGame={handleSaveEditedGame}
       />
 
       {/* Create Game Image Upload Modal */}
@@ -1183,7 +1189,7 @@ export default function CreateGame({
 
       {/* Create Game Card flow starts here */}
       <CreateGameContentContainer>
-        <CreateGameHeader handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
+        <CreateGameHeader handleEdit={handleEdit} isEdit={isEdit} handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
         {screenSize !== ScreenSize.LARGE && (
           <Box
             sx={{
