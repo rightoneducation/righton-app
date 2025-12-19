@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { IGameTemplate, PublicPrivateType, TemplateType } from '@righton/networking';
+import { IGameTemplate, IQuestionTemplate, PublicPrivateType, TemplateType } from '@righton/networking';
 import { Box, CircularProgress, useTheme, Fade } from '@mui/material';
 import DetailedGameCardBase from '../components/cards/detailedgame/DetailedGameCardBase';
 import {
@@ -68,10 +68,10 @@ export default function ViewGame({
       centralData.selectedGame.game.phaseTwoTime > 0 )
       ??
     false;
-
   const isOwner = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
   const isIncompleteDraft = centralData.selectedGame?.game?.publicPrivateType === PublicPrivateType.DRAFT && !isGameLaunchable;
-  const allQuestions = [...(centralData.selectedGame?.game?.questionTemplates ?? []), ...(centralData.selectedGame?.game?.publicQuestionTemplates ?? []), ...(centralData.selectedGame?.game?.privateQuestionTemplates ?? [])];
+  const allQuestions = [...(centralData.selectedGame?.game?.questionTemplates ?? [])];
+
   useEffect(() => {
     setIsLoading(false);
     if (centralData?.selectedGame?.game) {
@@ -269,7 +269,7 @@ export default function ViewGame({
                 }}
               >
                 {/* Create Question Form(s)  */}
-                {allQuestions?.map((questionItem, index) => {
+                {allQuestions?.filter((questionItem) => questionItem.questionTemplate).map((questionItem, index) => {
                   return (
                     <Fade
                       timeout={500}
@@ -285,7 +285,7 @@ export default function ViewGame({
                       <Box>
                         <ViewQuestionCardUnified
                           screenSize={screenSize}
-                          questionTemplate={questionItem.questionTemplate}
+                          questionTemplate={questionItem.questionTemplate as IQuestionTemplate}
                           handleRemoveQuestion={() => {}}
                           isViewGame
                           isCreateGame={false}

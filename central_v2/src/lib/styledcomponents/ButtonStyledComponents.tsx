@@ -75,7 +75,7 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
 
 export const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) =>
-    prop !== 'buttonColor' && prop !== 'isOnQuestionTab' && prop !== 'isReset',
+    prop !== 'buttonColor' && prop !== 'buttonType' && prop !== 'isOnQuestionTab' && prop !== 'isReset',
 })<ButtonStyledProps>(
   ({ theme, buttonColor, buttonType, isOnQuestionTab, isReset }) => ({
     width: '100%',
@@ -150,7 +150,7 @@ export const ButtonIconContainer = styled(Box, {
 }));
 
 export const ButtonTypography = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'buttonColor',
+  shouldForwardProp: (prop) => prop !== 'buttonColor' && prop !== 'buttonType' && prop !== 'isReset',
 })<ButtonStyledProps>(({ theme, buttonColor, buttonType, isReset }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',

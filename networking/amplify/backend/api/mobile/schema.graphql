@@ -254,9 +254,9 @@ type DraftGameTemplate @model
   phaseTwoTime: Int
   imageUrl: String
   timesPlayed: Int
-  questionTemplates: [DraftQuestionTemplate] @manyToMany(relationName: "DraftGameDraftQuestions")
-  publicQuestionTemplates: [PublicQuestionTemplate] @manyToMany(relationName: "DraftGamePublicQuestions")
-  privateQuestionTemplates: [PrivateQuestionTemplate] @manyToMany(relationName: "DraftGamePrivateQuestions")
+  questionTemplates: [DraftQuestionTemplate] @manyToMany(relationName: "DraftGameQuestions")
+  publicQuestionIds: AWSJSON
+  privateQuestionIds: AWSJSON
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
@@ -302,7 +302,6 @@ type PublicQuestionTemplate @model
   imageUrl: String
   timesPlayed: Int
   gameTemplates: [PublicGameTemplate] @manyToMany(relationName: "PublicGameQuestions")
-  draftGameTemplates: [DraftGameTemplate] @manyToMany(relationName: "DraftGamePublicQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
@@ -343,7 +342,6 @@ type PrivateQuestionTemplate @model
   imageUrl: String
   timesPlayed: Int
   gameTemplates: [PrivateGameTemplate] @manyToMany(relationName: "PrivateGameQuestions")
-  draftGameTemplates: [DraftGameTemplate] @manyToMany(relationName: "DraftGamePrivateQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
@@ -383,7 +381,7 @@ type DraftQuestionTemplate @model
   standard: String
   imageUrl: String
   timesPlayed: Int
-  gameTemplates: [DraftGameTemplate] @manyToMany(relationName: "DraftGameDraftQuestions")
+  gameTemplates: [DraftGameTemplate] @manyToMany(relationName: "DraftGameQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime

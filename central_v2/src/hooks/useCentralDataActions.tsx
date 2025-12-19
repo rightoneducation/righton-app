@@ -812,6 +812,37 @@ export default function useCentralDataManager({
           callType.publicPrivateType as TemplateType,
           id,
         );
+        console.log('ResponseGame');
+        console.log(responseGame);
+        if (callType.publicPrivateType === PublicPrivateType.DRAFT) {
+          if (responseGame.publicQuestionIds) {
+            await Promise.all(
+              responseGame.publicQuestionIds.map(async (questionId) => {
+                const question = await apiClients?.questionTemplate.getQuestionTemplate(
+                  PublicPrivateType.PUBLIC,
+                  questionId,
+                );
+                if (question) {
+                  responseGame.questionTemplates?.push({questionTemplate: question, gameQuestionId: questionId});
+                }
+              })
+            );
+          }
+          if (responseGame.privateQuestionIds) {
+            await Promise.all(
+              responseGame.privateQuestionIds.map(async (questionId) => {
+                const question = await apiClients?.questionTemplate.getQuestionTemplate(
+                  PublicPrivateType.PRIVATE,
+                  questionId,
+                );
+                if (question) {
+                  responseGame.questionTemplates?.push({questionTemplate: question, gameQuestionId: questionId});
+                }
+              })
+            );
+          }
+        }
+        console.log(responseGame);
         // TODO: check refresh condition on an empty game, as I think questionTEmplatesOrder is going to break stuff when its null
         let selectedGame: ISelectedGame = {
           game: responseGame,

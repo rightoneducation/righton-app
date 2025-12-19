@@ -417,32 +417,8 @@ export const onCreateDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      publicQuestionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      privateQuestionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      publicQuestionIds
+      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -491,32 +467,8 @@ export const onUpdateDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      publicQuestionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      privateQuestionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      publicQuestionIds
+      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -565,32 +517,8 @@ export const onDeleteDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      publicQuestionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      privateQuestionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      publicQuestionIds
+      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -629,19 +557,6 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `
         items {
           id
           publicGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      draftGameTemplates {
-        items {
-          id
-          draftGameTemplateID
           publicQuestionTemplateID
           createdAt
           updatedAt
@@ -697,19 +612,6 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      draftGameTemplates {
-        items {
-          id
-          draftGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
       gameTemplatesCount
       createdAt
       updatedAt
@@ -747,19 +649,6 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `
         items {
           id
           publicGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      draftGameTemplates {
-        items {
-          id
-          draftGameTemplateID
           publicQuestionTemplateID
           createdAt
           updatedAt
@@ -815,19 +704,6 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      draftGameTemplates {
-        items {
-          id
-          draftGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
       gameTemplatesCount
       createdAt
       updatedAt
@@ -874,19 +750,6 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      draftGameTemplates {
-        items {
-          id
-          draftGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
       gameTemplatesCount
       createdAt
       updatedAt
@@ -924,19 +787,6 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `
         items {
           id
           privateGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      draftGameTemplates {
-        items {
-          id
-          draftGameTemplateID
           privateQuestionTemplateID
           createdAt
           updatedAt
@@ -1706,10 +1556,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1785,10 +1631,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
-          nextToken
-          __typename
-        }
-        draftGameTemplates {
           nextToken
           __typename
         }
@@ -1870,10 +1712,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1949,10 +1787,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
-          nextToken
-          __typename
-        }
-        draftGameTemplates {
           nextToken
           __typename
         }
@@ -2034,10 +1868,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -2116,10 +1946,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -2134,12 +1960,12 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
     }
   }
 `;
-export const onCreateDraftGameDraftQuestions = /* GraphQL */ `
-  subscription OnCreateDraftGameDraftQuestions(
-    $filter: ModelSubscriptionDraftGameDraftQuestionsFilterInput
+export const onCreateDraftGameQuestions = /* GraphQL */ `
+  subscription OnCreateDraftGameQuestions(
+    $filter: ModelSubscriptionDraftGameQuestionsFilterInput
     $owner: String
   ) {
-    onCreateDraftGameDraftQuestions(filter: $filter, owner: $owner) {
+    onCreateDraftGameQuestions(filter: $filter, owner: $owner) {
       id
       draftGameTemplateID
       draftQuestionTemplateID
@@ -2167,14 +1993,8 @@ export const onCreateDraftGameDraftQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
+        publicQuestionIds
+        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -2220,12 +2040,12 @@ export const onCreateDraftGameDraftQuestions = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateDraftGameDraftQuestions = /* GraphQL */ `
-  subscription OnUpdateDraftGameDraftQuestions(
-    $filter: ModelSubscriptionDraftGameDraftQuestionsFilterInput
+export const onUpdateDraftGameQuestions = /* GraphQL */ `
+  subscription OnUpdateDraftGameQuestions(
+    $filter: ModelSubscriptionDraftGameQuestionsFilterInput
     $owner: String
   ) {
-    onUpdateDraftGameDraftQuestions(filter: $filter, owner: $owner) {
+    onUpdateDraftGameQuestions(filter: $filter, owner: $owner) {
       id
       draftGameTemplateID
       draftQuestionTemplateID
@@ -2253,14 +2073,8 @@ export const onUpdateDraftGameDraftQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
+        publicQuestionIds
+        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -2306,12 +2120,12 @@ export const onUpdateDraftGameDraftQuestions = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteDraftGameDraftQuestions = /* GraphQL */ `
-  subscription OnDeleteDraftGameDraftQuestions(
-    $filter: ModelSubscriptionDraftGameDraftQuestionsFilterInput
+export const onDeleteDraftGameQuestions = /* GraphQL */ `
+  subscription OnDeleteDraftGameQuestions(
+    $filter: ModelSubscriptionDraftGameQuestionsFilterInput
     $owner: String
   ) {
-    onDeleteDraftGameDraftQuestions(filter: $filter, owner: $owner) {
+    onDeleteDraftGameQuestions(filter: $filter, owner: $owner) {
       id
       draftGameTemplateID
       draftQuestionTemplateID
@@ -2339,14 +2153,8 @@ export const onDeleteDraftGameDraftQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
+        publicQuestionIds
+        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -2375,546 +2183,6 @@ export const onDeleteDraftGameDraftQuestions = /* GraphQL */ `
         imageUrl
         timesPlayed
         gameTemplates {
-          nextToken
-          __typename
-        }
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onCreateDraftGamePublicQuestions = /* GraphQL */ `
-  subscription OnCreateDraftGamePublicQuestions(
-    $filter: ModelSubscriptionDraftGamePublicQuestionsFilterInput
-    $owner: String
-  ) {
-    onCreateDraftGamePublicQuestions(filter: $filter, owner: $owner) {
-      id
-      draftGameTemplateID
-      publicQuestionTemplateID
-      draftGameTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        description
-        lowerCaseDescription
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
-        questionTemplatesCount
-        questionTemplatesOrder
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      publicQuestionTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        choices
-        instructions
-        answerSettings
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        imageUrl
-        timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onUpdateDraftGamePublicQuestions = /* GraphQL */ `
-  subscription OnUpdateDraftGamePublicQuestions(
-    $filter: ModelSubscriptionDraftGamePublicQuestionsFilterInput
-    $owner: String
-  ) {
-    onUpdateDraftGamePublicQuestions(filter: $filter, owner: $owner) {
-      id
-      draftGameTemplateID
-      publicQuestionTemplateID
-      draftGameTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        description
-        lowerCaseDescription
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
-        questionTemplatesCount
-        questionTemplatesOrder
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      publicQuestionTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        choices
-        instructions
-        answerSettings
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        imageUrl
-        timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onDeleteDraftGamePublicQuestions = /* GraphQL */ `
-  subscription OnDeleteDraftGamePublicQuestions(
-    $filter: ModelSubscriptionDraftGamePublicQuestionsFilterInput
-    $owner: String
-  ) {
-    onDeleteDraftGamePublicQuestions(filter: $filter, owner: $owner) {
-      id
-      draftGameTemplateID
-      publicQuestionTemplateID
-      draftGameTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        description
-        lowerCaseDescription
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
-        questionTemplatesCount
-        questionTemplatesOrder
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      publicQuestionTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        choices
-        instructions
-        answerSettings
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        imageUrl
-        timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onCreateDraftGamePrivateQuestions = /* GraphQL */ `
-  subscription OnCreateDraftGamePrivateQuestions(
-    $filter: ModelSubscriptionDraftGamePrivateQuestionsFilterInput
-    $owner: String
-  ) {
-    onCreateDraftGamePrivateQuestions(filter: $filter, owner: $owner) {
-      id
-      draftGameTemplateID
-      privateQuestionTemplateID
-      draftGameTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        description
-        lowerCaseDescription
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
-        questionTemplatesCount
-        questionTemplatesOrder
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      privateQuestionTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        choices
-        instructions
-        answerSettings
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        imageUrl
-        timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onUpdateDraftGamePrivateQuestions = /* GraphQL */ `
-  subscription OnUpdateDraftGamePrivateQuestions(
-    $filter: ModelSubscriptionDraftGamePrivateQuestionsFilterInput
-    $owner: String
-  ) {
-    onUpdateDraftGamePrivateQuestions(filter: $filter, owner: $owner) {
-      id
-      draftGameTemplateID
-      privateQuestionTemplateID
-      draftGameTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        description
-        lowerCaseDescription
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
-        questionTemplatesCount
-        questionTemplatesOrder
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      privateQuestionTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        choices
-        instructions
-        answerSettings
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        imageUrl
-        timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
-        draftGameTemplates {
-          nextToken
-          __typename
-        }
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onDeleteDraftGamePrivateQuestions = /* GraphQL */ `
-  subscription OnDeleteDraftGamePrivateQuestions(
-    $filter: ModelSubscriptionDraftGamePrivateQuestionsFilterInput
-    $owner: String
-  ) {
-    onDeleteDraftGamePrivateQuestions(filter: $filter, owner: $owner) {
-      id
-      draftGameTemplateID
-      privateQuestionTemplateID
-      draftGameTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        description
-        lowerCaseDescription
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
-        publicQuestionTemplates {
-          nextToken
-          __typename
-        }
-        privateQuestionTemplates {
-          nextToken
-          __typename
-        }
-        questionTemplatesCount
-        questionTemplatesOrder
-        createdAt
-        updatedAt
-        type
-        owner
-        __typename
-      }
-      privateQuestionTemplate {
-        id
-        userId
-        publicPrivateType
-        title
-        lowerCaseTitle
-        version
-        choices
-        instructions
-        answerSettings
-        ccss
-        ccssDescription
-        domain
-        cluster
-        grade
-        gradeFilter
-        standard
-        imageUrl
-        timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
-        draftGameTemplates {
           nextToken
           __typename
         }

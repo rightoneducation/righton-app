@@ -30,6 +30,7 @@ export class GameTemplateAPIClient
         queryFunction,
         variables
     ) as { data: any};
+    
     if (
         isNullOrUndefined(gameTemplate?.data)
     ) {
@@ -83,7 +84,6 @@ export class GameTemplateAPIClient
         queryFunction,
         { id } as unknown as GraphQLOptions
       ) as { data: any };
-
       if (
         isNullOrUndefined(result?.data)
       ) {

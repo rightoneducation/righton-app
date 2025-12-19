@@ -9,8 +9,10 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         type: T,
         input: GameQuestionType<T>['create']['input']
     ): Promise<IGameQuestion> {
+        console.log(type);
+        console.log(input);
         const variables: GameQuestionType<T>['create']['variables'] = { input } as GameQuestionType<T>['create']['variables'];
-        const { queryFunction } = gameQuestionRuntimeMap[type]['create'];
+        const { queryFunction } = gameQuestionRuntimeMap[type as keyof typeof gameQuestionRuntimeMap]['create'];
         try{
             const gameQuestions = await this.callGraphQL<GameQuestionType<T>['create']['query']>(
                 queryFunction, variables
@@ -21,13 +23,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
                     createType = `createPrivateGameQuestions`;
                     break;
                 case PublicPrivateType.DRAFT:
-                    createType = `createDraftGameDraftQuestions`;
-                    break;
-                case PublicPrivateType.DRAFT_PUBLIC:
-                    createType = `createDraftGamePublicQuestions`;
-                    break;
-                case PublicPrivateType.DRAFT_PRIVATE:
-                    createType = `createDraftGamePrivateQuestions`;
+                    createType = `createDraftGameQuestions`;
                     break;
                 case PublicPrivateType.PUBLIC:
                 default:
@@ -50,7 +46,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         id: string
     ): Promise<IGameQuestion> {
         const variables: GameQuestionType<T>['get']['variables'] = { id }
-        const { queryFunction } = gameQuestionRuntimeMap[type]['get'];
+        const { queryFunction } = gameQuestionRuntimeMap[type as keyof typeof gameQuestionRuntimeMap]['get'];
         const result = await this.callGraphQL<GameQuestionType<T>['get']['query']>(
         queryFunction,
         { variables }
@@ -94,49 +90,16 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
             }
         `;
 
-        const customDeleteDraftGameQuestions = /* GraphQL */ `
-            mutation DeleteDraftGameQuestions(
-                $input: DeleteDraftGameDraftQuestionsInput!
-                $condition: ModelDraftGameDraftQuestionsConditionInput
-            ) {
-                deleteDraftGameDraftQuestions(input: $input, condition: $condition) {
-                id
-                }
-            }
-        `;
-
-        const customDeleteDraftGamePublicQuestions = /* GraphQL */ `
-            mutation DeleteDraftGamePublicQuestions(
-                $input: DeleteDraftGamePublicQuestionsInput!
-                $condition: ModelDraftGamePublicQuestionsConditionInput
-            ) {
-                deleteDraftGamePublicQuestions(input: $input, condition: $condition) {
-                id
-                }
-            }
-        `;
-
-        const customDeleteDraftGamePrivateQuestions = /* GraphQL */ `
-            mutation DeleteDraftGamePrivateQuestions(
-                $input: DeleteDraftGamePrivateQuestionsInput!
-                $condition: ModelDraftGamePrivateQuestionsConditionInput
-            ) {
-                deleteDraftGamePrivateQuestions(input: $input, condition: $condition) {
-                id
-                }
-            }
-        `;
-
-        const deleteFunctionMap: Record<PublicPrivateType, string> = {
+        const deleteFunctionMap: Partial<Record<PublicPrivateType, string>> = {
             [PublicPrivateType.PUBLIC]: customDeletePublicGameQuestions,
             [PublicPrivateType.PRIVATE]: customDeletePrivateGameQuestions,
-            [PublicPrivateType.DRAFT]: customDeleteDraftGameQuestions,
-            [PublicPrivateType.DRAFT_PUBLIC]: customDeleteDraftGamePublicQuestions,
-            [PublicPrivateType.DRAFT_PRIVATE]: customDeleteDraftGamePrivateQuestions,
         };
 
         const variables: GameQuestionType<T>['delete']['variables'] = {input: {id}};
         const queryFunction = deleteFunctionMap[type];
+        if (!queryFunction) {
+            throw new Error(`Delete operation not supported for type: ${type}`);
+        }
         const result = await this.callGraphQL<GameQuestionType<T>['delete']['query']>(
             queryFunction,
             variables
@@ -155,7 +118,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         nextToken: string | null
     ): Promise<{ gameQuestions: IGameQuestion[], nextToken: string }> {
         const variables: GameQuestionType<T>['list']['variables'] = { limit, nextToken };
-        const { queryFunction } = gameQuestionRuntimeMap[type]['list'];
+        const { queryFunction } = gameQuestionRuntimeMap[type as keyof typeof gameQuestionRuntimeMap]['list'];
         let result = await this.callGraphQL<GameQuestionType<T>['list']['query']>(
             queryFunction,
             { variables }
