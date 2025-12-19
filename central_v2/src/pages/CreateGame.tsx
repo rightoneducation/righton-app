@@ -876,7 +876,8 @@ export default function CreateGame({
         PublicPrivateType.DRAFT,
       );
       const questionTemplateResponse = await Promise.all(newQuestionTemplates);
-
+      console.log('QuestionTemplateResponse');
+      console.log(questionTemplateResponse);
       // extract ccssDescription from question templates
       const questionTemplateCCSS = questionTemplateResponse.map(
         (question) => String(question?.ccssDescription),

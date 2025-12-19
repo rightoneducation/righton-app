@@ -71,8 +71,7 @@ export default function ViewGame({
   const isOwner = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
   const isIncompleteDraft = centralData.selectedGame?.game?.publicPrivateType === PublicPrivateType.DRAFT && !isGameLaunchable;
   const allQuestions = [...(centralData.selectedGame?.game?.questionTemplates ?? [])];
-  console.log(centralData.selectedGame?.game);
-  console.log(allQuestions);
+
   useEffect(() => {
     setIsLoading(false);
     if (centralData?.selectedGame?.game) {
