@@ -24,8 +24,6 @@ export class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
         awsGameTemplate: AWSGameTemplate,
         publicPrivate: PublicPrivateType,
-        draftPublicQuestionTemplates?: {questionTemplate: IQuestionTemplate | null, questionTemplateID: string}[],
-        draftPrivateQuestionTemplates?: {questionTemplate: IQuestionTemplate | null, questionTemplateID: string}[]
     ): IGameTemplate {
         let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
         if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
@@ -36,8 +34,6 @@ export class GameTemplateParser {
                         template = item.publicQuestionTemplate;
                     } else if (publicPrivate === PublicPrivateType.PRIVATE && item.privateQuestionTemplate) {
                         template = item.privateQuestionTemplate;
-                    } else if (publicPrivate === PublicPrivateType.DRAFT && item.draftQuestionTemplate) {
-                        template = item.draftQuestionTemplate;
                     } else {
                         continue;
                     }
@@ -81,7 +77,8 @@ export class GameTemplateParser {
         const phaseOneTime = awsGameTemplate.phaseOneTime ?? 0;
         const phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 0;
 
-
+        const publicQuestionIds = awsGameTemplate.publicQuestionIds ? JSON.parse(awsGameTemplate.publicQuestionIds) : [];
+        const privateQuestionIds = awsGameTemplate.privateQuestionIds ? JSON.parse(awsGameTemplate.privateQuestionIds) : [];
     
       const isPublicPrivateValid = (x: any): x is PublicPrivateType => {
         return Object.values(PublicPrivateType).includes(x);
@@ -110,8 +107,8 @@ export class GameTemplateParser {
           imageUrl,
           timesPlayed,
           questionTemplates: sortedQuestionTemplates,
-          draftPublicQuestionTemplates,
-          draftPrivateQuestionTemplates,
+          publicQuestionIds: publicQuestionIds ?? [],
+          privateQuestionIds: privateQuestionIds ?? [],
           questionTemplatesCount,
           questionTemplatesOrder,
           createdAt,

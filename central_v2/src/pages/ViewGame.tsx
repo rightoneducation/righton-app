@@ -70,7 +70,7 @@ export default function ViewGame({
     false;
   const isOwner = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedGame?.game?.userId;
   const isIncompleteDraft = centralData.selectedGame?.game?.publicPrivateType === PublicPrivateType.DRAFT && !isGameLaunchable;
-  const allQuestions = [...(centralData.selectedGame?.game?.questionTemplates ?? []), ...(centralData.selectedGame?.game?.draftPublicQuestionTemplates ?? []), ...(centralData.selectedGame?.game?.draftPrivateQuestionTemplates ?? [])];
+  const allQuestions = [...(centralData.selectedGame?.game?.questionTemplates ?? [])];
   console.log(centralData.selectedGame?.game);
   console.log(allQuestions);
   useEffect(() => {

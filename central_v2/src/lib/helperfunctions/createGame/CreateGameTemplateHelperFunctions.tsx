@@ -259,8 +259,8 @@ export const buildGameTemplate = (
   };
   if (isDraft) {
     const draftGameTemplate = gameTemplate as CreateDraftGameTemplateInput;
-    draftGameTemplate.publicQuestionIds = JSON.stringify(draftGame.gameTemplate.draftPublicQuestionTemplates?.map((question) => question.questionTemplateID) ?? []);
-    draftGameTemplate.privateQuestionIds = JSON.stringify(draftGame.gameTemplate.draftPrivateQuestionTemplates?.map((question) => question.questionTemplateID) ?? []);
+    draftGameTemplate.publicQuestionIds = JSON.stringify(draftGame.gameTemplate.publicQuestionIds ?? []);
+    draftGameTemplate.privateQuestionIds = JSON.stringify(draftGame.gameTemplate.privateQuestionIds ?? []);
     return draftGameTemplate;
   }
   return gameTemplate;

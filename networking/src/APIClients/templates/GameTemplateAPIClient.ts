@@ -80,13 +80,10 @@ export class GameTemplateAPIClient
     try{
       const queryFunction = gameTemplateRuntimeMap[type].get.queryFunction;
       const getType = `get${type}GameTemplate`;
-      console.log(queryFunction);
-      console.log(type);
       const result = await this.callGraphQL<GameTemplateType<T>['get']['query']>(
         queryFunction,
         { id } as unknown as GraphQLOptions
       ) as { data: any };
-      console.log(result);
       if (
         isNullOrUndefined(result?.data)
       ) {

@@ -892,11 +892,11 @@ export default function CreateGame({
 
       const addedQuestionPrivateTemplates = addedQuestionTemplates.filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE);
 
-      const draftPublicQuestionTemplates = addedQuestionPublicTemplates.map((question) => ({questionTemplate: question.questionTemplate, questionTemplateID: question.questionTemplate.id}));
-      const draftPrivateQuestionTemplates = addedQuestionPrivateTemplates.map((question) => ({questionTemplate: question.questionTemplate, questionTemplateID: question.questionTemplate.id}));
+      const draftPublicQuestionIds = addedQuestionPublicTemplates.map((question) => question.questionTemplate.id);
+      const draftPrivateQuestionIds = addedQuestionPrivateTemplates.map((question) => question.questionTemplate.id);
       
-      draftGameCopy.gameTemplate.draftPublicQuestionTemplates = [...draftPublicQuestionTemplates];
-      draftGameCopy.gameTemplate.draftPrivateQuestionTemplates = [...draftPrivateQuestionTemplates];
+      draftGameCopy.gameTemplate.publicQuestionIds = [...draftPublicQuestionIds];
+      draftGameCopy.gameTemplate.privateQuestionIds = [...draftPrivateQuestionIds];
       // create & store game template in variable to retrieve id after response
       const createGame = buildGameTemplate(
         draftGameCopy,
