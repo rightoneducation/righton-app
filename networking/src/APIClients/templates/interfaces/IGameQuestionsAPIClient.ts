@@ -30,7 +30,7 @@ import {
   ListPrivateGameQuestionsQueryVariables,
   ListPrivateGameQuestionsQuery,
   ListDraftGameQuestionsQueryVariables,
-  ListDraftGameQuestionsQuery
+  ListDraftGameQuestionsQuery,
 } from "../../../AWSMobileApi";
 import {
   createPublicGameQuestions,
@@ -44,7 +44,7 @@ import {
   deleteDraftGameQuestions,
   listPublicGameQuestions,
   listPrivateGameQuestions,
-  listDraftGameQuestions
+  listDraftGameQuestions,
 } from "../../../graphql";
 
 export interface IPublicGameQuestion {
@@ -109,8 +109,6 @@ export interface IDraftGameQuestion {
     query: ListDraftGameQuestionsQuery;
   }
 }
-
-
 // runtime mapping of game question type to mutation function
 export const gameQuestionRuntimeMap = {
   Public: {
@@ -154,7 +152,7 @@ export const gameQuestionRuntimeMap = {
     list: {
       queryFunction: listDraftGameQuestions,
     },
-  }
+  },
 };
 
 export type GameQuestionType<T extends PublicPrivateType> =

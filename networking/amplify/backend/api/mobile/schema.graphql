@@ -255,6 +255,8 @@ type DraftGameTemplate @model
   imageUrl: String
   timesPlayed: Int
   questionTemplates: [DraftQuestionTemplate] @manyToMany(relationName: "DraftGameQuestions")
+  publicQuestionIds: AWSJSON
+  privateQuestionIds: AWSJSON
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime

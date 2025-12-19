@@ -212,6 +212,7 @@ export const buildGameTemplate = (
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
   questionTemplateCCSS?: string[],
+  isDraft?: boolean
 ): GameTemplate => {
   let questionTemplatesOrder: any[] = [];
   if (draftQuestionsList.length > 0) {
@@ -256,6 +257,12 @@ export const buildGameTemplate = (
     imageUrl: gameImgUrl,
     timesPlayed: 0,
   };
+  if (isDraft) {
+    const draftGameTemplate = gameTemplate as CreateDraftGameTemplateInput;
+    draftGameTemplate.publicQuestionIds = JSON.stringify(draftGame.gameTemplate.publicQuestionIds ?? []);
+    draftGameTemplate.privateQuestionIds = JSON.stringify(draftGame.gameTemplate.privateQuestionIds ?? []);
+    return draftGameTemplate;
+  }
   return gameTemplate;
 };
 
@@ -309,28 +316,29 @@ export const buildEditedGameTemplate = (
 };
 
 export const buildGameQuestion = (
-  draftGame: TGameTemplateProps,
   gameTemplateId: string,
   questionTemplateId: string,
   type?: PublicPrivateType,
 ): GameQuestionTemplate => {
-  if (type === PublicPrivateType.DRAFT) {
-    return {
-      draftGameTemplateID: String(gameTemplateId),
-      draftQuestionTemplateID: String(questionTemplateId),
-    };
+  // update to switch on type
+  switch (type) {
+    case PublicPrivateType.PUBLIC:
+      return {
+        publicGameTemplateID: String(gameTemplateId),
+        publicQuestionTemplateID: String(questionTemplateId),
+      };
+    case PublicPrivateType.DRAFT:
+      return {
+        draftGameTemplateID: String(gameTemplateId),
+        draftQuestionTemplateID: String(questionTemplateId),
+      };
+    case PublicPrivateType.PRIVATE:
+      default:
+      return {
+        privateGameTemplateID: String(gameTemplateId),
+        privateQuestionTemplateID: String(questionTemplateId),
+      };
   }
-  return {
-    ...(draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC
-      ? {
-          publicGameTemplateID: String(gameTemplateId),
-          publicQuestionTemplateID: String(questionTemplateId),
-        }
-      : {
-          privateGameTemplateID: String(gameTemplateId),
-          privateQuestionTemplateID: String(questionTemplateId),
-        }),
-  };
 };
 
 export const buildGameQuestionPromises = (
@@ -342,7 +350,6 @@ export const buildGameQuestionPromises = (
 ) => {
   return questionTemplateIds.map(async (questionId, i) => {
     const gameQuestion = buildGameQuestion(
-      draftGame,
       String(gameTemplateId),
       String(questionId),
       type,

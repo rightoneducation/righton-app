@@ -1,4 +1,4 @@
-import { PublicPrivateType, GradeTarget } from "../../BaseAPIClient";
+import { PublicPrivateType, TemplateType, GradeTarget } from "../../BaseAPIClient";
 import { UploadDataWithPathOutput } from 'aws-amplify/storage';
 import { IGameTemplate } from "../../../Models";
 import { 
@@ -223,13 +223,13 @@ export const gameTemplateRuntimeMap = {
   }
 }
 
-export type GameTemplateType<T extends PublicPrivateType> =
-  T extends "Public"? IPublicGameTemplate :
-  T extends "Private" ? IPrivateGameTemplate :
+export type GameTemplateType<T extends TemplateType> =
+  T extends PublicPrivateType.PUBLIC ? IPublicGameTemplate :
+  T extends PublicPrivateType.PRIVATE ? IPrivateGameTemplate :
   IDraftGameTemplate;
 
 export interface IGameTemplateAPIClient {
-  createGameTemplate<T extends PublicPrivateType>(
+  createGameTemplate<T extends TemplateType>(
     type: T,
     createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate>;
@@ -243,22 +243,22 @@ export interface IGameTemplateAPIClient {
   ): Promise<string>;
   
 
-  getGameTemplate<T extends PublicPrivateType>(
+  getGameTemplate<T extends TemplateType>(
     type: T,
     id: string
   ): Promise<IGameTemplate>;
 
-  updateGameTemplate<T extends PublicPrivateType>(
+  updateGameTemplate<T extends TemplateType>(
     type: T,
     updateGameTemplateInput: GameTemplateType<T>['update']['input'] | IGameTemplate
   ): Promise<IGameTemplate>;
 
-  deleteGameTemplate<T extends PublicPrivateType>(
+  deleteGameTemplate<T extends TemplateType>(
     type: T,
     id: string
   ): Promise<boolean>;
 
-  listGameTemplates<T extends PublicPrivateType>(
+  listGameTemplates<T extends TemplateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -269,7 +269,7 @@ export interface IGameTemplateAPIClient {
     isExploreGames?: boolean
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
-  listGameTemplatesByDate<T extends PublicPrivateType>(
+  listGameTemplatesByDate<T extends TemplateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -279,7 +279,7 @@ export interface IGameTemplateAPIClient {
     favIds: string[] | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
-  listGameTemplatesByGrade<T extends PublicPrivateType>(
+  listGameTemplatesByGrade<T extends TemplateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -289,7 +289,7 @@ export interface IGameTemplateAPIClient {
     favIds: string[] | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
-  listGameTemplatesByQuestionTemplatesCount<T extends PublicPrivateType>(
+  listGameTemplatesByQuestionTemplatesCount<T extends TemplateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -299,7 +299,7 @@ export interface IGameTemplateAPIClient {
     favIds: string[] | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
-  listGameTemplatesByFavorite<T extends PublicPrivateType>(
+  listGameTemplatesByFavorite<T extends TemplateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -308,7 +308,7 @@ export interface IGameTemplateAPIClient {
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByUserDate(
-    type: PublicPrivateType,
+    type: typeof PublicPrivateType.PUBLIC,
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
@@ -319,7 +319,7 @@ export interface IGameTemplateAPIClient {
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByUserGrade(
-    type: PublicPrivateType,
+    type: typeof PublicPrivateType.PUBLIC,
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
@@ -330,7 +330,7 @@ export interface IGameTemplateAPIClient {
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByUserPublicQuestionTemplatesCount(
-    type: PublicPrivateType,
+    type: typeof PublicPrivateType.PUBLIC,
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,

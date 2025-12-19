@@ -3,6 +3,7 @@ import {
   IncorrectCard,
   IQuestionTemplate,
   PublicPrivateType,
+  TemplateType,
   AnswerType,
   IGameTemplate,
   CentralQuestionTemplateInput,
@@ -177,9 +178,9 @@ export const buildQuestionTemplatePromises = (
       try {
         newQuestionResponse =
           await apiClients.questionTemplate.createQuestionTemplate(
-            type === PublicPrivateType.DRAFT
+            (type === PublicPrivateType.DRAFT
               ? PublicPrivateType.DRAFT
-              : dqCopy.publicPrivate,
+              : dqCopy.publicPrivate) as TemplateType,
             url ?? '',
             userId,
             dqCopy.question,

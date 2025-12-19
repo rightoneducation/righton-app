@@ -23,9 +23,8 @@ const sortQuestionTemplatesByOrder = (questionTemplates: {questionTemplate: IQue
 export class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
         awsGameTemplate: AWSGameTemplate,
-        publicPrivate: PublicPrivateType
+        publicPrivate: PublicPrivateType,
     ): IGameTemplate {
-        // parse the IQuestionTemplate[] from IModelGameQuestionConnection
         let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
         if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
             for (const item of awsGameTemplate.questionTemplates.items) {
@@ -40,6 +39,7 @@ export class GameTemplateParser {
                     } else {
                         continue;
                     }
+
                     const { gameTemplates, ...rest } = template;
                     // Only add to questionTemplates if 'rest' is not empty
                     if (Object.keys(rest).length > 0) {
@@ -79,7 +79,8 @@ export class GameTemplateParser {
         const phaseOneTime = awsGameTemplate.phaseOneTime ?? 0;
         const phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 0;
 
-
+        const publicQuestionIds = awsGameTemplate.publicQuestionIds ? JSON.parse(awsGameTemplate.publicQuestionIds) : [];
+        const privateQuestionIds = awsGameTemplate.privateQuestionIds ? JSON.parse(awsGameTemplate.privateQuestionIds) : [];
     
       const isPublicPrivateValid = (x: any): x is PublicPrivateType => {
         return Object.values(PublicPrivateType).includes(x);
@@ -108,6 +109,8 @@ export class GameTemplateParser {
           imageUrl,
           timesPlayed,
           questionTemplates: sortedQuestionTemplates,
+          publicQuestionIds: publicQuestionIds ?? [],
+          privateQuestionIds: privateQuestionIds ?? [],
           questionTemplatesCount,
           questionTemplatesOrder,
           createdAt,

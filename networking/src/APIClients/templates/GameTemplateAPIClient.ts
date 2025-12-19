@@ -1,5 +1,5 @@
 import { uploadData, UploadDataWithPathOutput } from 'aws-amplify/storage';
-import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
+import { BaseAPIClient, PublicPrivateType, TemplateType, GradeTarget } from "../BaseAPIClient";
 import { GameTemplateType, gameTemplateRuntimeMap, IGameTemplateAPIClient } from "./interfaces/IGameTemplateAPIClient";
 import { IGameTemplate } from "../../Models";
 import { GameTemplateParser } from "../../Parsers/GameTemplateParser";
@@ -18,7 +18,7 @@ export class GameTemplateAPIClient
   extends BaseAPIClient
   implements IGameTemplateAPIClient
 {
-  async createGameTemplate<T extends PublicPrivateType>( 
+  async createGameTemplate<T extends TemplateType>( 
     type: T,
     createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate> {
@@ -30,6 +30,7 @@ export class GameTemplateAPIClient
         queryFunction,
         variables
     ) as { data: any};
+    
     if (
         isNullOrUndefined(gameTemplate?.data)
     ) {
@@ -72,7 +73,7 @@ export class GameTemplateAPIClient
       return response.data.uploadExternalImageToS3;
     }
 
-  async getGameTemplate<T extends PublicPrivateType>(
+  async getGameTemplate<T extends TemplateType>(
     type: T,
     id: string
   ): Promise<IGameTemplate> {
@@ -95,7 +96,7 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate({} as AWSGameTemplate, type);
   }
 
-  async updateGameTemplate<T extends PublicPrivateType>(
+  async updateGameTemplate<T extends TemplateType>(
     type: T,
     updateGameTemplateInput: GameTemplateType<T>['update']['input']
   ): Promise<IGameTemplate> {
@@ -114,7 +115,7 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data[updateType] as AWSGameTemplate, type);
   }
 
-  async deleteGameTemplate<T extends PublicPrivateType>(
+  async deleteGameTemplate<T extends TemplateType>(
     type: T,
     id: string
   ): Promise<boolean> {
@@ -129,10 +130,10 @@ export class GameTemplateAPIClient
     return (!isNullOrUndefined(result));
   }
 
-  async listGameTemplates<T extends PublicPrivateType>(
+  async listGameTemplates<T extends TemplateType>(
     type: T,
-    limit: number, 
-    nextToken: string | null, 
+    limit: number,
+    nextToken: string | null,
     sortDirection: string | null, 
     filterString: string | null,
     gradeTargets: GradeTarget[],
@@ -146,10 +147,10 @@ export class GameTemplateAPIClient
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
-  async listGameTemplatesByDate<T extends PublicPrivateType>(
+  async listGameTemplatesByDate<T extends TemplateType>(
     type: T,
-    limit: number, 
-    nextToken: string | null, 
+    limit: number,
+    nextToken: string | null,
     sortDirection: string | null, 
     filterString: string | null,
     gradeTargets: GradeTarget[],
@@ -162,10 +163,10 @@ export class GameTemplateAPIClient
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
-  async listGameTemplatesByGrade<T extends PublicPrivateType>(
+  async listGameTemplatesByGrade<T extends TemplateType>(
     type: T,
-    limit: number, 
-    nextToken: string | null, 
+    limit: number,
+    nextToken: string | null,
     sortDirection: string | null, 
     filterString: string | null,
     gradeTargets: GradeTarget[],
@@ -178,7 +179,7 @@ export class GameTemplateAPIClient
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; }; 
   }
 
-  async listGameTemplatesByQuestionTemplatesCount<T extends PublicPrivateType>(
+  async listGameTemplatesByQuestionTemplatesCount<T extends TemplateType>(
     type: T,
     limit: number,
     nextToken: string | null, 
@@ -193,7 +194,7 @@ export class GameTemplateAPIClient
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
-  async listGameTemplatesByFavorite<T extends PublicPrivateType>(
+  async listGameTemplatesByFavorite<T extends TemplateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -208,9 +209,9 @@ export class GameTemplateAPIClient
   }
 
   async listGameTemplatesByUserDate(
-    type: PublicPrivateType.PUBLIC,
-    limit: number, 
-    nextToken: string | null, 
+    type: typeof PublicPrivateType.PUBLIC,
+    limit: number,
+    nextToken: string | null,
     sortDirection: string | null, 
     filterString: string | null,
     gradeTargets: GradeTarget[],
@@ -225,9 +226,9 @@ export class GameTemplateAPIClient
   }
 
   async listGameTemplatesByUserGrade(
-    type: PublicPrivateType.PUBLIC,
-    limit: number, 
-    nextToken: string | null, 
+    type: typeof PublicPrivateType.PUBLIC,
+    limit: number,
+    nextToken: string | null,
     sortDirection: string | null, 
     filterString: string | null,
     gradeTargets: GradeTarget[],
@@ -242,7 +243,7 @@ export class GameTemplateAPIClient
   }
 
   async listGameTemplatesByUserPublicQuestionTemplatesCount(
-    type: PublicPrivateType.PUBLIC,
+    type: typeof PublicPrivateType.PUBLIC,
     limit: number,
     nextToken: string | null, 
     sortDirection: string | null,  

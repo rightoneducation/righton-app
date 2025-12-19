@@ -1,5 +1,5 @@
 import React from "react";
-import { CentralQuestionTemplateInput } from "@righton/networking";
+import { CentralQuestionTemplateInput, PublicPrivateType } from "@righton/networking";
 import { ModalStateType, ScreenSize, TemplateType, ConfirmStateType, ModalObject } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import EditGameModal from '../EditGameModal';
@@ -12,6 +12,7 @@ import CreateQuestionModal from '../CreateQuestionModal';
 interface CreateGameModalSwitchProps {
   modalObject: ModalObject;
   screenSize: ScreenSize;
+  publicPrivate: PublicPrivateType;
   handleDiscard: () => void;
   handleCloseDiscardModal: () => void;
   handlePublishGame: () => void;
@@ -28,6 +29,7 @@ interface CreateGameModalSwitchProps {
 export default function CreateGameModalSwitch({ 
   modalObject,
   screenSize,
+  publicPrivate,
   handleDiscard,
   handleCloseDiscardModal,
   handlePublishGame,
@@ -45,6 +47,7 @@ export default function CreateGameModalSwitch({
       return <CreateQuestionModal
         isModalOpen
         screenSize={screenSize}
+        publicPrivate={publicPrivate}
         handleCreateQuestion={handleCreateQuestion}
         handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
       />;

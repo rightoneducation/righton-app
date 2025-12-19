@@ -1683,6 +1683,8 @@ export const createDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1729,6 +1731,8 @@ export const createDraftGameTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
+            publicQuestionIds
+            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -1785,6 +1789,8 @@ export const createDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1846,6 +1852,8 @@ export const createDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
+      publicQuestionIds
+      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -1935,6 +1943,8 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1981,6 +1991,8 @@ export const updateDraftGameTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
+            publicQuestionIds
+            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -2037,6 +2049,8 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2098,6 +2112,8 @@ export const updateDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
+      publicQuestionIds
+      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -2187,6 +2203,8 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2233,6 +2251,8 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
+            publicQuestionIds
+            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -2289,6 +2309,8 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2350,6 +2372,8 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
+      publicQuestionIds
+      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -3938,6 +3962,8 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -3984,6 +4010,8 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
+            publicQuestionIds
+            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -4040,6 +4068,8 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4188,6 +4218,8 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4234,6 +4266,8 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
+            publicQuestionIds
+            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -4290,6 +4324,8 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4438,6 +4474,8 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4484,6 +4522,8 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
+            publicQuestionIds
+            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -4540,6 +4580,8 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
+                  publicQuestionIds
+                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8406,6 +8448,8 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -8448,6 +8492,8 @@ export const createDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
+              publicQuestionIds
+              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -8500,6 +8546,8 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -8557,6 +8605,8 @@ export const createDraftGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
+        publicQuestionIds
+        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -8634,6 +8684,8 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -8676,6 +8728,8 @@ export const createDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
+              publicQuestionIds
+              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -8728,6 +8782,8 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -8878,6 +8934,8 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -8920,6 +8978,8 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
+              publicQuestionIds
+              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -8972,6 +9032,8 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9029,6 +9091,8 @@ export const updateDraftGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
+        publicQuestionIds
+        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -9106,6 +9170,8 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9148,6 +9214,8 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
+              publicQuestionIds
+              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -9200,6 +9268,8 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9350,6 +9420,8 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9392,6 +9464,8 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
+              publicQuestionIds
+              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -9444,6 +9518,8 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9501,6 +9577,8 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
+        publicQuestionIds
+        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -9578,6 +9656,8 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9620,6 +9700,8 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
+              publicQuestionIds
+              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -9672,6 +9754,8 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
+                    publicQuestionIds
+                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
