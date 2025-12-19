@@ -76,6 +76,10 @@ export default function EditGameModal({
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
 
+  const handleConfirmSaveModal = () => {
+    handleSaveEditedGame?.();
+  };
+
   return (
     <Fade
       in={isModalOpen}
@@ -103,7 +107,7 @@ export default function EditGameModal({
             <Box style={{ display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
               {/* eslint-disable-next-line no-nested-ternary */}
               {
-              isCardErrored ? 
+              isCardErrored ?
               (
                 <>
                   <DragText> Missing required fields! </DragText>
@@ -120,7 +124,7 @@ export default function EditGameModal({
               <CentralButton
                 buttonType={ButtonType.UPDATE}
                 isEnabled={!isCardErrored}
-                onClick={handleSaveEditedGame}
+                onClick={handleConfirmSaveModal}
               />
               <CentralButton
                 buttonType={ButtonType.BACKTOEDIT}

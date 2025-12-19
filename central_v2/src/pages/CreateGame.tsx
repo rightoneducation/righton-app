@@ -388,7 +388,7 @@ export default function CreateGame({
               draftGame.gameTemplate.publicPrivateType,
               updatedGame,
             );
-            setModalState(ModalStateType.NULL);
+            setModalState(ModalStateType.CONFIRM);
         } catch (err) {
           console.log(err);
         }
@@ -400,7 +400,7 @@ export default function CreateGame({
         }));
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
         await fetchElements();
-        navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
+        // navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
       } else {
         setDraftGame((prev) => ({
           ...prev,
