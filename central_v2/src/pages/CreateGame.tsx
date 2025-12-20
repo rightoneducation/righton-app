@@ -169,7 +169,6 @@ export default function CreateGame({
   const allDQAreValid = checkDQsAreValid(draftQuestionsList);
   // const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid)
   // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
-  console.log("IS EDIT", isEdit)
   let label = 'Create';
   let selectedGameId = '';
   switch (true) {
@@ -471,7 +470,6 @@ export default function CreateGame({
           }
       }
         const userId = centralData.userProfile?.id || '';
-       
         try {
           if (draftQuestionsList.length > 0) {
             // convert questions to array of promises & write to db
@@ -526,6 +524,7 @@ export default function CreateGame({
                   gameTemplateResponse.id,
                   questionTemplateIds,
                   apiClients,
+                  draftGame.gameTemplate.publicPrivateType,
                 );
                 // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
                 await Promise.all(createGameQuestions);
@@ -603,7 +602,10 @@ export default function CreateGame({
   };
 
   const handleEdit = () => {
-      setModalState(ModalStateType.UPDATE);
+      setModalObject({
+        modalState: ModalStateType.UPDATE,
+        confirmState: ConfirmStateType.NULL,
+      });
   };
 
 
@@ -881,8 +883,6 @@ export default function CreateGame({
         PublicPrivateType.DRAFT,
       );
       const questionTemplateResponse = await Promise.all(newQuestionTemplates);
-      console.log('QuestionTemplateResponse');
-      console.log(questionTemplateResponse);
       // extract ccssDescription from question templates
       const questionTemplateCCSS = questionTemplateResponse.map(
         (question) => String(question?.ccssDescription),
@@ -934,8 +934,6 @@ export default function CreateGame({
             apiClients,
             PublicPrivateType.DRAFT,
           );
-          console.log(createGameQuestions);
-          console.log('here');
           // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
           await Promise.all(createGameQuestions);
         } catch (err) {
