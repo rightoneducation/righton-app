@@ -199,6 +199,9 @@ export default function CreateGameCardBase({
     setPublicPrivateWarning(false);
   };
 
+
+  const displayLabel = label === "Edit" ? 'Your' : label;
+
   return (
     <BaseCardStyled
       onClick={handleCardClick}
@@ -229,7 +232,7 @@ export default function CreateGameCardBase({
             align={screenSize === ScreenSize.SMALL ? 'left' : 'inherit'}
             sx={{ color: '#384466' }}
           >
-            {label} Game
+            {displayLabel} Game
           </CreateGameTitleText>
         </Box>
       </CreateGameTitleBarStyled>

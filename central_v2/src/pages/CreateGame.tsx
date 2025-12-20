@@ -169,7 +169,6 @@ export default function CreateGame({
   const allDQAreValid = checkDQsAreValid(draftQuestionsList);
   // const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid)
   // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
-
   let label = 'Create';
   let selectedGameId = '';
   switch (true) {
@@ -410,8 +409,8 @@ export default function CreateGame({
               updatedGame,
             );
             setModalObject({
-              modalState: ModalStateType.NULL,
-              confirmState: ConfirmStateType.NULL,
+              modalState: ModalStateType.CONFIRM,
+              confirmState: ConfirmStateType.UPDATED,
             });
         } catch (err) {
           console.log(err);
@@ -423,8 +422,8 @@ export default function CreateGame({
           isGameCardSubmitted: false,
         }));
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
-        fetchElements();
-        navigate('/');
+        await fetchElements();
+        // navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
       } else {
         setDraftGame((prev) => ({
           ...prev,
@@ -471,7 +470,6 @@ export default function CreateGame({
           }
       }
         const userId = centralData.userProfile?.id || '';
-       
         try {
           if (draftQuestionsList.length > 0) {
             // convert questions to array of promises & write to db
@@ -526,6 +524,7 @@ export default function CreateGame({
                   gameTemplateResponse.id,
                   questionTemplateIds,
                   apiClients,
+                  draftGame.gameTemplate.publicPrivateType,
                 );
                 // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
                 await Promise.all(createGameQuestions);
@@ -601,6 +600,14 @@ export default function CreateGame({
       setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
     }
   };
+
+  const handleEdit = () => {
+      setModalObject({
+        modalState: ModalStateType.UPDATE,
+        confirmState: ConfirmStateType.NULL,
+      });
+  };
+
 
    const handleSaveEditedGame = async () => {
     try {
@@ -876,8 +883,6 @@ export default function CreateGame({
         PublicPrivateType.DRAFT,
       );
       const questionTemplateResponse = await Promise.all(newQuestionTemplates);
-      console.log('QuestionTemplateResponse');
-      console.log(questionTemplateResponse);
       // extract ccssDescription from question templates
       const questionTemplateCCSS = questionTemplateResponse.map(
         (question) => String(question?.ccssDescription),
@@ -929,8 +934,6 @@ export default function CreateGame({
             apiClients,
             PublicPrivateType.DRAFT,
           );
-          console.log(createGameQuestions);
-          console.log('here');
           // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
           await Promise.all(createGameQuestions);
         } catch (err) {
@@ -1249,6 +1252,7 @@ export default function CreateGame({
         handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
         handleSaveDraft={handleDraftSave}
         isCardErrored={draftGame.isGameCardErrored}
+        handleSaveEditedGame={handleSaveEditedGame}
       />
 
       {/* Create Game Image Upload Modal */}
@@ -1265,7 +1269,7 @@ export default function CreateGame({
 
       {/* Create Game Card flow starts here */}
       <CreateGameContentContainer>
-        <CreateGameHeader handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
+        <CreateGameHeader handleEdit={handleEdit} isEdit={isEdit} handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
         {screenSize !== ScreenSize.LARGE && (
           <Box
             sx={{
