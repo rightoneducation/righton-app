@@ -217,73 +217,82 @@ export default function Header({
   };
 
   const createMenu = [
-    <CreateButtonContainer key="createMenu">
-      <Box style={{ zIndex: 5403 }}>
-        <CentralButton
-          buttonType={ButtonType.CREATE}
-          isEnabled
-          buttonWidthOverride="150px"
-          smallScreenOverride={screenSize === ScreenSize.SMALL}
-          onClick={() => setIsCreateMenuOpen(!isCreateMenuOpen)}
-        />
-      </Box>
-      <Collapse
-        in={isCreateMenuOpen}
-        style={{ position: 'absolute', top: '50%', zIndex: 5401, width: '100%' }}
-      >
-        <CreateDropDown>
-          <Box
-            style={{
-              display: 'flex',
-              gap: `${theme.sizing.smPadding}px`,
-              paddingTop: `${theme.sizing.mdPadding}px`,
-              cursor: 'pointer',
-            }}
-            onClick={() => {
-              setMenuOpen(false);
-              setIsCreateMenuOpen(false);
-              window.localStorage.setItem(StorageKey, '');
-              navigate('/create/game');
-            }}
-          >
-            <img src={createDropdownGame} alt="Create Game" />
-            <Typography
+    <ClickAwayListener
+      key="createMenu"
+      onClickAway={() => {
+        if (isCreateMenuOpen) {
+          setIsCreateMenuOpen(false);
+        }
+      }}
+    >
+      <CreateButtonContainer>
+        <Box style={{ zIndex: 5403 }}>
+          <CentralButton
+            buttonType={ButtonType.CREATE}
+            isEnabled
+            buttonWidthOverride="150px"
+            smallScreenOverride={screenSize === ScreenSize.SMALL}
+            onClick={() => setIsCreateMenuOpen(!isCreateMenuOpen)}
+          />
+        </Box>
+        <Collapse
+          in={isCreateMenuOpen}
+          style={{ position: 'absolute', top: '50%', zIndex: 5401, width: '100%' }}
+        >
+          <CreateDropDown>
+            <Box
               style={{
-                color: `${theme.palette.primary.darkBlue}`,
-                fontWeight: 400,
-                fontSize: 16,
+                display: 'flex',
+                gap: `${theme.sizing.smPadding}px`,
+                paddingTop: `${theme.sizing.mdPadding}px`,
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                setMenuOpen(false);
+                setIsCreateMenuOpen(false);
+                window.localStorage.setItem(StorageKey, '');
+                navigate('/create/game');
               }}
             >
-              Game
-            </Typography>
-          </Box>
-          <Box
-            style={{
-              display: 'flex',
-              gap: `${theme.sizing.smPadding}px`,
-              cursor: 'pointer',
-            }}
-            onClick={() => {
-              setMenuOpen(false);
-              setIsCreateMenuOpen(false);
-              window.localStorage.setItem(StorageKey, '');
-              navigate('/create/question');
-            }}
-          >
-            <img src={createDropdownQuestion} alt="Create Question" />
-            <Typography
+              <img src={createDropdownGame} alt="Create Game" />
+              <Typography
+                style={{
+                  color: `${theme.palette.primary.darkBlue}`,
+                  fontWeight: 400,
+                  fontSize: 16,
+                }}
+              >
+                Game
+              </Typography>
+            </Box>
+            <Box
               style={{
-                color: `${theme.palette.primary.darkBlue}`,
-                fontWeight: 400,
-                fontSize: 16,
+                display: 'flex',
+                gap: `${theme.sizing.smPadding}px`,
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                setMenuOpen(false);
+                setIsCreateMenuOpen(false);
+                window.localStorage.setItem(StorageKey, '');
+                navigate('/create/question');
               }}
             >
-              Question
-            </Typography>
-          </Box>
-        </CreateDropDown>
-      </Collapse>
-    </CreateButtonContainer>,
+              <img src={createDropdownQuestion} alt="Create Question" />
+              <Typography
+                style={{
+                  color: `${theme.palette.primary.darkBlue}`,
+                  fontWeight: 400,
+                  fontSize: 16,
+                }}
+              >
+                Question
+              </Typography>
+            </Box>
+          </CreateDropDown>
+        </Collapse>
+      </CreateButtonContainer>
+    </ClickAwayListener>,
   ];
 
   const loggedInUserComponents = [
@@ -296,11 +305,6 @@ export default function Header({
         key="lgscreen"
       >
         {createMenu}
-        <CentralButton
-          buttonType={ButtonType.LOGOUT}
-          isEnabled
-          onClick={handleLogOut}
-        />
         <Box
           onClick={() => navigate('/userprofile')}
           style={{ cursor: 'pointer' }}
@@ -412,14 +416,6 @@ export default function Header({
               </TransparentButton>
             )}
             {userStatus === UserStatusType.LOGGEDIN && createMenu}
-            {userStatus === UserStatusType.LOGGEDIN && (
-              <CentralButton
-                buttonType={ButtonType.LOGOUT}
-                buttonWidthOverride="150px"
-                isEnabled
-                onClick={handleLogOut}
-              />
-            )}
           </Box>
         </Collapse>
       )}
