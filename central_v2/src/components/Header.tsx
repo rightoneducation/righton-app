@@ -89,6 +89,7 @@ const HeaderFirstRow = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
+  gap: '24px',
   zIndex: 5400,
 }));
 
@@ -449,7 +450,7 @@ export default function Header({
         </Box>
         <Box style={{ flex: '0 0 auto' }}>
           <ImageContainer align="center" style={{ flexDirection: 'column' }}>
-            {isScreenLgst ? (
+            {isScreenLgst && (
               <Box display="flex" style={{ gap: '80px' }}>
                 <TransparentButton
                   disableRipple
@@ -498,13 +499,6 @@ export default function Header({
                   </TransparentButton>
                 )}
               </Box>
-            ) : (
-              <IconButton onClick={handleMenuToggle}>
-                <img
-                  src={menuOpen ? hamburgerX : hamburger}
-                  alt="Hamburger Menu"
-                />
-              </IconButton>
             )}
           </ImageContainer>
         </Box>
@@ -514,20 +508,29 @@ export default function Header({
             userStatus === UserStatusType.GOOGLE_SIGNIN ? (
               loggedInUserComponents
             ) : (
-              <Box display="flex" style={{ maxWidth: '300px', gap: '24px' }}>
-                <CentralButton
-                  buttonType={ButtonType.LOGINHEADER}
-                  isEnabled
-                  onClick={() => navigate('/login')}
-                />
-                <CentralButton
-                  buttonType={ButtonType.SIGNUP}
-                  isEnabled
-                  onClick={() => navigate('/signup')}
-                />
-              </Box>
+                <Box display="flex" style={{ maxWidth: '300px', gap: '24px' }}>
+                  <CentralButton
+                    buttonType={ButtonType.LOGINHEADER}
+                    isEnabled
+                    onClick={() => navigate('/login')}
+                  />
+                  <CentralButton
+                    buttonType={ButtonType.SIGNUP}
+                    isEnabled
+                    onClick={() => navigate('/signup')}
+                  />
+                </Box>
             ))}
         </Box>
+        {!isScreenLgst && (
+          <IconButton onClick={handleMenuToggle}>
+            <img
+              src={menuOpen ? hamburgerX : hamburger}
+              style={{ width: '40px', height: 'auto' }}
+              alt="Hamburger Menu"
+            />
+          </IconButton>
+        )}
       </HeaderFirstRow>
       {currentScreen === ScreenType.LIBRARY && (
         <Collapse
