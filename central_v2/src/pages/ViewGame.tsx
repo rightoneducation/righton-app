@@ -15,6 +15,7 @@ import {
   GameQuestionType,
   ScreenSize,
   UserStatusType,
+  TemplateType as GameTemplateType,
 } from '../lib/CentralModels';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
@@ -22,7 +23,7 @@ import {
   useCentralDataState,
   useCentralDataDispatch,
 } from '../hooks/context/useCentralDataContext';
-import EditModal from '../components/modal/EditModal';
+import EditGameModal from '../components/modal/EditGameModal';
 import DeleteModal from '../components/modal/DeleteModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import OwnerTag from '../components/profile/OwnerTag';
@@ -193,11 +194,12 @@ export default function ViewGame({
         isModalOpen={isModalOpen || isDeleteModalOpen}
         handleCloseModal={handleCloseEditModal}
       />
-      <EditModal
+      <EditGameModal
         isModalOpen={isModalOpen}
-        gameQuestion={GameQuestionType.GAME}
-        setIsModalOpen={setIsModalOpen}
-        handleProceedToEdit={handleProceedToEdit}
+        templateType={GameTemplateType.GAME}
+        handleSaveEditedGame={handleProceedToEdit}
+        handleCloseSaveGameModal={handleCloseEditModal}
+        isCardErrored={false}
       />
       <DeleteModal
         isModalOpen={isDeleteModalOpen}
