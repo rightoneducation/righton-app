@@ -346,11 +346,21 @@ export default function Header({
   ];
 
   return (
-    <HeaderContainer
-      screenSize={screenSize}
-      menuOpen={menuOpen}
-      currentScreen={currentScreen}
+    <ClickAwayListener
+      onClickAway={() => {
+        if (menuOpen) {
+          setMenuOpen(false);
+        }
+        if (isCreateMenuOpen) {
+          setIsCreateMenuOpen(false);
+        }
+      }}
     >
+      <HeaderContainer
+        screenSize={screenSize}
+        menuOpen={menuOpen}
+        currentScreen={currentScreen}
+      >
       {!isScreenLgst && (
         <Collapse
           in={menuOpen === true}
@@ -549,5 +559,6 @@ export default function Header({
         </Collapse>
       )}
     </HeaderContainer>
+    </ClickAwayListener>
   );
 }
