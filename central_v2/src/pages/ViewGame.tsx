@@ -173,7 +173,7 @@ export default function ViewGame({
 
   const handleBackClick = () => {
     if (libRoute) {
-      navigate('/library');
+      navigate(`/library/games/${centralData.selectedGame?.game?.publicPrivateType}`);
     } else {
       navigate('/');
     }

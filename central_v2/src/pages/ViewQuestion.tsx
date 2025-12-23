@@ -140,7 +140,7 @@ export default function ViewQuestion({
 
   const handleBackClick = () => {
     if (libRoute) {
-      navigate('/library');
+      navigate(`/library/questions/${centralData.selectedQuestion?.question?.publicPrivateType}`);
     } else {
       navigate('/questions');
     }
