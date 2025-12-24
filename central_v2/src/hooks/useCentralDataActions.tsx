@@ -812,8 +812,6 @@ export default function useCentralDataManager({
           callType.publicPrivateType as TemplateType,
           id,
         );
-        console.log('ResponseGame');
-        console.log(responseGame);
         if (callType.publicPrivateType === PublicPrivateType.DRAFT) {
           if (responseGame.publicQuestionIds) {
             await Promise.all(
@@ -842,7 +840,6 @@ export default function useCentralDataManager({
             );
           }
         }
-        console.log(responseGame);
         // TODO: check refresh condition on an empty game, as I think questionTEmplatesOrder is going to break stuff when its null
         let selectedGame: ISelectedGame = {
           game: responseGame,
