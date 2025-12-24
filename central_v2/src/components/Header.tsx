@@ -196,7 +196,7 @@ export default function Header({
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
-
+console.log('currentScreen', currentScreen);
   const handleButtonClick = (screen: ScreenType) => {
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });

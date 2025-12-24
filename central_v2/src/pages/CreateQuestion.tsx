@@ -262,7 +262,7 @@ export default function CreateQuestion({
       selectedQuestionId = editRoute?.params.questionId || '';
       break;
     case isClone:
-      label = 'Clone';
+      label = 'Edit';
       selectedQuestionId = route?.params.questionId || '';
       break;
     case isCreate:
@@ -1012,7 +1012,7 @@ export default function CreateQuestion({
       confirmState: ConfirmStateType.NULL,
     });
     window.localStorage.setItem(StorageKey, '');
-    navigate('/');
+    navigate('/questions');
   };
 
   // Stable references for props to prevent unnecessary re-renders
@@ -1023,10 +1023,10 @@ export default function CreateQuestion({
     const selected = centralData?.selectedQuestion?.question;
     const title = selected?.title;
     if (selected && (isClone || isEdit)) {
-      // regex to detect (clone of) in title
-      const regex = /\(Clone of\)/i;
+      // regex to detect [DUPLICATE] in title
+      const regex = /\[DUPLICATE\]/i;
       if (title && !regex.test(title) && isClone)
-        selected.title = `(Clone of) ${title}`;
+        selected.title = `${title} [DUPLICATE]`;
       const draft = assembleQuestionTemplate(selected);
       setDraftQuestion((prev) => ({
         ...prev,
