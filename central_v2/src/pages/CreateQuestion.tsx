@@ -612,13 +612,14 @@ export default function CreateQuestion({
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
       if (isQuestionTemplateComplete) {
+        let result = null;
+        let url = null;
         if (
           draftQuestion.questionCard.image ||
           draftQuestion.questionCard.imageUrl
         ) {
           setIsCreatingTemplate(true);
-          let result = null;
-          let url = null;
+        
           // if the question is a clone and the image hasn't been changed, we can use the original imageUrl
           if (
             !isClone ||
@@ -650,18 +651,17 @@ export default function CreateQuestion({
           } else {
             url = draftQuestion.questionCard.imageUrl;
           }
+        }
           window.localStorage.setItem(StorageKey, '');
-          if (url) {
-            if (isMultipleChoice)
-              draftQuestion.correctCard.answerSettings.answerType =
-                AnswerType.MULTICHOICE;
-              await apiClients.questionTemplate.createQuestionTemplate(
-              publicPrivate as TemplateType,
-              url,
-              centralData.userProfile?.id || '',
-              draftQuestion,
-            );
-          }
+          if (isMultipleChoice)
+            draftQuestion.correctCard.answerSettings.answerType =
+              AnswerType.MULTICHOICE;
+          const response = await apiClients.questionTemplate.createQuestionTemplate(
+            publicPrivate as TemplateType,
+            url || '',
+            centralData.userProfile?.id || '',
+            draftQuestion,
+          );
           // update user stats
           const existingNumQuestions =
             centralData.userProfile?.questionsMade || 0;
@@ -674,7 +674,6 @@ export default function CreateQuestion({
           setIsCreatingTemplate(false);
           fetchElements();
           centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
-        }
       } else {
         if (!draftQuestion.questionCard.isCardComplete) {
           setIsBaseCardErrored(true);

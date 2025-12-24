@@ -38,10 +38,7 @@ export const handleCheckQuestionBaseComplete = (draftQuestion: CentralQuestionTe
   if (
     draftQuestion.questionCard.ccss.length > 0 &&
     draftQuestion.questionCard.ccss !== 'CCSS' &&
-    draftQuestion.questionCard.title.length > 0 &&
-    ((draftQuestion.questionCard.imageUrl &&
-      draftQuestion.questionCard.imageUrl?.length > 0) ||
-      draftQuestion.questionCard.image)
+    draftQuestion.questionCard.title.length > 0
     )
     return true;
   return false;
