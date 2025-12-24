@@ -238,6 +238,7 @@ type DraftGameTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -366,6 +367,7 @@ type DraftQuestionTemplate @model
   id: ID
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
