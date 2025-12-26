@@ -3,6 +3,7 @@ import { ConfirmStateType, ModalStateType, ScreenSize, TemplateType, ModalObject
 import SaveGameModal from '../SaveGameModal';
 import DiscardGameModal from '../DiscardGameModal';
 import ConfirmSaveModal from '../ConfirmSaveModal';
+import EditGameModal from '../EditGameModal';
 import UpdatingModal from '../UpdatingModal';
 
 interface CreateQuestionModalSwitchProps {
@@ -12,6 +13,7 @@ interface CreateQuestionModalSwitchProps {
   handleCloseDiscardModal: () => void;
   handlePublishQuestion: () => void;
   handleCloseSaveQuestionModal: () => void;
+  handleSaveEditedQuestion: () => void;
   handleContinue: () => void;
   handleSaveDraft: () => void;
   isCardErrored: boolean;
@@ -24,6 +26,7 @@ export default function CreateQuestionModalSwitch({
   handleCloseDiscardModal,
   handlePublishQuestion,
   handleCloseSaveQuestionModal,
+  handleSaveEditedQuestion,
   handleContinue,
   handleSaveDraft,
   isCardErrored,
@@ -44,6 +47,15 @@ export default function CreateQuestionModalSwitch({
         handlePublishGame={handlePublishQuestion}
         handleCloseSaveGameModal={handleCloseSaveQuestionModal}
         handleSaveDraft={handleSaveDraft}
+        isCardErrored={isCardErrored}
+      />;
+      break;
+    case ModalStateType.UPDATE:
+      return <EditGameModal
+        isModalOpen
+        templateType={TemplateType.GAME}
+        handleSaveEditedGame={handleSaveEditedQuestion}
+        handleCloseSaveGameModal={handleCloseSaveQuestionModal}
         isCardErrored={isCardErrored}
       />;
       break;

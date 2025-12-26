@@ -1001,8 +1001,8 @@ export default function CreateQuestion({
     setIsCorrectCardErrored(!handleCheckQuestionCorrectCardComplete(draftQuestion));
     setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
     setModalObject({
-      modalState: ModalStateType.PUBLISH,
-      confirmState: ConfirmStateType.PUBLISHED,
+      modalState: isEdit ? ModalStateType.UPDATE : ModalStateType.PUBLISH,
+      confirmState: isEdit ? ConfirmStateType.UPDATED : ConfirmStateType.PUBLISHED,
     });
   };
 
@@ -1077,6 +1077,7 @@ export default function CreateQuestion({
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishQuestion={handlePublishQuestion}
+        handleSaveEditedQuestion={handlePublishQuestion}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
         handleContinue={handleContinue}
         handleSaveDraft={handleSaveDraft}
