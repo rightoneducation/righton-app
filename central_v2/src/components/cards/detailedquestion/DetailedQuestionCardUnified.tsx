@@ -40,6 +40,7 @@ export default function DetailedQuestionCardUnified({
   question,
 }: DetailedQuestionCardUnifiedProps) {
   const theme = useTheme();
+  const publicPrivate = question?.publicPrivateType === PublicPrivateType.DRAFT ? question.finalPublicPrivateType : question?.publicPrivateType;
   return (
     <BaseCardStyled
       elevation={6}
@@ -71,7 +72,7 @@ export default function DetailedQuestionCardUnified({
             color: '#FFFFFF',
           }}
         >
-          {question?.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
+          {publicPrivate}
         </Box>
       </CreateQuestionTitleBarStyled>
       <Box

@@ -12,6 +12,7 @@ export interface IQuestionTemplate {
   id: string,
   userId: string,
   publicPrivateType: PublicPrivateType,
+  finalPublicPrivateType: PublicPrivateType,
   title: string,
   lowerCaseTitle: string,
   owner?: string,

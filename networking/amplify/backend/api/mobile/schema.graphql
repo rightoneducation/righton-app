@@ -153,6 +153,7 @@ type PublicGameTemplate @model
                  @index(name: "publicGameTemplatesByUserPublicQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"], queryField: "publicGameTemplatesByUserPublicQuestionTemplatesCount")
                  @index(name: "publicGameTemplatesByUserGrade", sortKeyFields: ["grade"], queryField: "publicGameTemplatesByUserGrade")
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -196,6 +197,7 @@ type PrivateGameTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -238,6 +240,7 @@ type DraftGameTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -286,6 +289,7 @@ type PublicQuestionTemplate @model
                  @index(name: "publicQuestionTemplatesByUserPublicGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"], queryField: "publicQuestionTemplatesByUserPublicGameTemplatesCount")
                  @index(name: "publicQuestionTemplatesByUserGrade", sortKeyFields: ["grade"], queryField: "publicQuestionTemplatesByUserGrade")
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -326,6 +330,7 @@ type PrivateQuestionTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -366,6 +371,7 @@ type DraftQuestionTemplate @model
   id: ID
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int

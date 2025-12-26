@@ -159,14 +159,16 @@ export default function CreateGame({
     phaseOne: '2:00',
     phaseTwo: '2:00',
   });
+  
+  const [gameFormIsValid, setGameFormIsValid] = useState(false);
+  const [allDQAreValid, setAllDQAreValid] = useState(false);
 
   const openModal = openModalAtIndex(
     draftGame,
     draftQuestionsList,
     selectedQuestionIndex,
   );
-  const gameFormIsValid = checkGameFormIsValid(draftGame);
-  const allDQAreValid = checkDQsAreValid(draftQuestionsList);
+
   // const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid)
   // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
   let label = 'Create';
@@ -208,7 +210,9 @@ export default function CreateGame({
 
   const handleOpenQuestionBank = () => {
     setIsQuestionBankOpen(true);
-    setDraftGame((prev) => toggleQuestionBank(prev, gameFormIsValid));
+    const isGameFormIsValid = checkGameFormIsValid(draftGame);
+    setGameFormIsValid(isGameFormIsValid);
+    setDraftGame((prev) => toggleQuestionBank(prev, isGameFormIsValid));
   };
 
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
@@ -296,8 +300,11 @@ export default function CreateGame({
         modalState: ModalStateType.SAVING,
         confirmState: ConfirmStateType.UPDATED,
       });
-      const dqValid = checkDQsAreValid(draftQuestionsList);
-      if (gameFormIsValid && dqValid) {
+      const isDqValid = checkDQsAreValid(draftQuestionsList);
+      const isGameFormIsValid = checkGameFormIsValid(draftGame);
+      setAllDQAreValid(isDqValid);
+      setGameFormIsValid(isGameFormIsValid);
+      if (isGameFormIsValid && isDqValid) {
         // check if game img has been changed
         let gameImgUrl: string | null = null;
         if (
@@ -430,7 +437,7 @@ export default function CreateGame({
           ...(!gameFormIsValid && { isGameCardErrored: true }),
           isCreatingTemplate: false,
         }));
-        if (!allDQAreValid) {
+        if (!isDqValid) {
           setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
           // then find first errored card and set index to that question
         }
@@ -452,7 +459,11 @@ export default function CreateGame({
         isCreatingTemplate: true,
       }));
       // confirm game & question form validity
-      if (gameFormIsValid && allDQAreValid) {
+      const isGameFormIsValid = checkGameFormIsValid(draftGame);
+      setGameFormIsValid(isGameFormIsValid);
+      const isDqValid = checkDQsAreValid(draftQuestionsList);
+      setAllDQAreValid(isDqValid);
+      if (isGameFormIsValid && isDqValid) {
         // check for images on draft game
         let gameImgUrl: string | null = null;
         if (draftGame.image || draftGame.imageUrl) {
@@ -515,7 +526,6 @@ export default function CreateGame({
             )
 
             questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
-
             // make sure we have a gameTemplate id as well as question template ids before creating a game question
             if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
               try {
@@ -641,7 +651,11 @@ export default function CreateGame({
       }
        setDraftGame(updatedDraftGame);
       // confirm game & question form validity
-      if (gameFormIsValid && allDQAreValid) {
+      const isGameFormIsValid = checkGameFormIsValid(updatedDraftGame);
+      const isDqValid = checkDQsAreValid(draftQuestionsList);
+      setAllDQAreValid(isDqValid);
+      setGameFormIsValid(isGameFormIsValid);
+      if (isGameFormIsValid && isDqValid) {
         // check for images on draft game
         let gameImgUrl: string | null = null;
         if (updatedDraftGame.image || updatedDraftGame.imageUrl) {
@@ -802,15 +816,24 @@ export default function CreateGame({
     //   return handleCreateFromDraftGame();
     // if (isEdit)
     //   return handleSaveEditedGame();
-    if (!gameFormIsValid || !allDQAreValid) {
+    const isGameFormIsValid = checkGameFormIsValid(draftGame);
+    const isDqValid = checkDQsAreValid(draftQuestionsList);
+    setAllDQAreValid(isDqValid);
+    setGameFormIsValid(isGameFormIsValid);
+    if (!isGameFormIsValid || !isDqValid) {
       setDraftGame((prev) => ({
         ...prev,
-        ...(!gameFormIsValid && { isGameCardErrored: true }),
+        ...(!isGameFormIsValid && { isGameCardErrored: true }),
         isCreatingTemplate: false,
       }));
       if (!allDQAreValid) {
         setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
       }
+    } else {
+      setDraftGame((prev) => ({
+        ...prev,
+        isGameCardErrored: false,
+      }));
     }
     return setModalObject({
       modalState: ModalStateType.PUBLISH,
@@ -852,12 +875,24 @@ export default function CreateGame({
         }));
         return;
       }
+
+      // update the game and questions to store the currently selected public private type
       const draftGameCopy = {
         ...draftGame,
         publicPrivateGame: PublicPrivateType.DRAFT,
+        finalPublicPrivateType: draftGame.gameTemplate.finalPublicPrivateType,
         isGameCardSubmitted: true,
         isCreatingTemplate: true,
       };
+      const draftQuestionsListCopy = draftQuestionsList.map((dq) => ({
+        ...dq,
+        questionTemplate: {
+          ...dq.questionTemplate,
+          finalPublicPrivateType: draftGameCopy.gameTemplate.finalPublicPrivateType
+        }
+      }));
+      
+      setDraftQuestionsList(draftQuestionsListCopy);
       setDraftGame(draftGameCopy);
       // check for images on draft game
       let gameImgUrl: string | null = null;
@@ -1269,7 +1304,7 @@ export default function CreateGame({
 
       {/* Create Game Card flow starts here */}
       <CreateGameContentContainer>
-        <CreateGameHeader handleEdit={handleEdit} isEdit={isEdit} handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} />
+        <CreateGameHeader handleEdit={handleEdit} isEdit={isEdit} handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} isQuestionAdded={draftQuestionsList.length > 0}/>
         {screenSize !== ScreenSize.LARGE && (
           <Box
             sx={{

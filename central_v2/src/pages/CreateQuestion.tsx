@@ -262,7 +262,7 @@ export default function CreateQuestion({
       selectedQuestionId = editRoute?.params.questionId || '';
       break;
     case isClone:
-      label = 'Clone';
+      label = 'Edit';
       selectedQuestionId = route?.params.questionId || '';
       break;
     case isCreate:
@@ -612,13 +612,14 @@ export default function CreateQuestion({
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
       if (isQuestionTemplateComplete) {
+        let result = null;
+        let url = null;
         if (
           draftQuestion.questionCard.image ||
           draftQuestion.questionCard.imageUrl
         ) {
           setIsCreatingTemplate(true);
-          let result = null;
-          let url = null;
+        
           // if the question is a clone and the image hasn't been changed, we can use the original imageUrl
           if (
             !isClone ||
@@ -650,18 +651,17 @@ export default function CreateQuestion({
           } else {
             url = draftQuestion.questionCard.imageUrl;
           }
+        }
           window.localStorage.setItem(StorageKey, '');
-          if (url) {
-            if (isMultipleChoice)
-              draftQuestion.correctCard.answerSettings.answerType =
-                AnswerType.MULTICHOICE;
-              await apiClients.questionTemplate.createQuestionTemplate(
-              publicPrivate as TemplateType,
-              url,
-              centralData.userProfile?.id || '',
-              draftQuestion,
-            );
-          }
+          if (isMultipleChoice)
+            draftQuestion.correctCard.answerSettings.answerType =
+              AnswerType.MULTICHOICE;
+          const response = await apiClients.questionTemplate.createQuestionTemplate(
+            publicPrivate as TemplateType,
+            url || '',
+            centralData.userProfile?.id || '',
+            draftQuestion,
+          );
           // update user stats
           const existingNumQuestions =
             centralData.userProfile?.questionsMade || 0;
@@ -674,7 +674,6 @@ export default function CreateQuestion({
           setIsCreatingTemplate(false);
           fetchElements();
           centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
-        }
       } else {
         if (!draftQuestion.questionCard.isCardComplete) {
           setIsBaseCardErrored(true);
@@ -1002,8 +1001,8 @@ export default function CreateQuestion({
     setIsCorrectCardErrored(!handleCheckQuestionCorrectCardComplete(draftQuestion));
     setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
     setModalObject({
-      modalState: ModalStateType.PUBLISH,
-      confirmState: ConfirmStateType.PUBLISHED,
+      modalState: isEdit ? ModalStateType.UPDATE : ModalStateType.PUBLISH,
+      confirmState: isEdit ? ConfirmStateType.UPDATED : ConfirmStateType.PUBLISHED,
     });
   };
 
@@ -1013,7 +1012,7 @@ export default function CreateQuestion({
       confirmState: ConfirmStateType.NULL,
     });
     window.localStorage.setItem(StorageKey, '');
-    navigate('/');
+    navigate('/questions');
   };
 
   // Stable references for props to prevent unnecessary re-renders
@@ -1024,10 +1023,10 @@ export default function CreateQuestion({
     const selected = centralData?.selectedQuestion?.question;
     const title = selected?.title;
     if (selected && (isClone || isEdit)) {
-      // regex to detect (clone of) in title
-      const regex = /\(Clone of\)/i;
+      // regex to detect [DUPLICATE] in title
+      const regex = /\[DUPLICATE\]/i;
       if (title && !regex.test(title) && isClone)
-        selected.title = `(Clone of) ${title}`;
+        selected.title = `${title} [DUPLICATE]`;
       const draft = assembleQuestionTemplate(selected);
       setDraftQuestion((prev) => ({
         ...prev,
@@ -1065,6 +1064,7 @@ export default function CreateQuestion({
         draftQuestion={draftQuestion}
         isClone={isClone}
         isCloneImageChanged={isCloneImageChanged}
+        isEdit={isEdit}
         screenSize={screenSize}
         isModalOpen={isImageUploadVisible}
         handleImageChange={handleImageChange}
@@ -1077,6 +1077,7 @@ export default function CreateQuestion({
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishQuestion={handlePublishQuestion}
+        handleSaveEditedQuestion={handlePublishQuestion}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
         handleContinue={handleContinue}
         handleSaveDraft={handleSaveDraft}

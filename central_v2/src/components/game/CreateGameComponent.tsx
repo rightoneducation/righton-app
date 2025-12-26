@@ -53,6 +53,7 @@ const qt: IQuestionTemplate = {
   id: '',
   userId: '',
   publicPrivateType: PublicPrivateType.PUBLIC,
+  finalPublicPrivateType: PublicPrivateType.PUBLIC,
   title: '',
   lowerCaseTitle: '',
   version: 0,

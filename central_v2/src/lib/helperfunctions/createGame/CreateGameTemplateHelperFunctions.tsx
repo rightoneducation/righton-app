@@ -256,11 +256,13 @@ export const buildGameTemplate = (
       )[3] ?? '',
     imageUrl: gameImgUrl,
     timesPlayed: 0,
+    finalPublicPrivateType: draftGame.gameTemplate.finalPublicPrivateType,
   };
   if (isDraft) {
     const draftGameTemplate = gameTemplate as CreateDraftGameTemplateInput;
     draftGameTemplate.publicQuestionIds = JSON.stringify(draftGame.gameTemplate.publicQuestionIds ?? []);
     draftGameTemplate.privateQuestionIds = JSON.stringify(draftGame.gameTemplate.privateQuestionIds ?? []);
+    draftGameTemplate.finalPublicPrivateType = draftGame.gameTemplate.finalPublicPrivateType;
     return draftGameTemplate;
   }
   return gameTemplate;

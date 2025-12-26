@@ -48,9 +48,10 @@ import ConfirmPasswordUpdateModal from '../components/modal/ConfirmPasswordUpdat
 
 interface UserProfileProps {
   screenSize: ScreenSize;
+  handleLogOut: () => void;
 }
 
-export default function UserProfile({ screenSize }: UserProfileProps) {
+export default function UserProfile({ screenSize, handleLogOut }: UserProfileProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const [isEditInformationHighlight, setEditInformationHighlight] =
@@ -311,6 +312,7 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
                 draftUserProfile={draftUserProfile}
                 newProfilePic={newProfilePic}
                 handleEditPicture={handleEditPicture}
+                handleLogOut={handleLogOut}
               />
             </Box>
           )}
@@ -337,6 +339,7 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
               draftUserProfile={draftUserProfile}
               newProfilePic={newProfilePic}
               handleEditPicture={handleEditPicture}
+              handleLogOut={handleLogOut}
             />
           )}
           <UsernameTextContainer>

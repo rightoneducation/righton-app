@@ -88,14 +88,7 @@ export default function ViewQuestion({
   };
 
   const handleEditQuestion = () => {
-    if (
-      centralData.selectedQuestion?.question?.publicPrivateType ===
-      PublicPrivateType.PUBLIC
-    ) {
-      setIsModalOpen(true);
-    } else {
       handleProceedToEdit();
-    }
   };
 
   const handleProceedToDelete = async () => {
@@ -140,7 +133,7 @@ export default function ViewQuestion({
 
   const handleBackClick = () => {
     if (libRoute) {
-      navigate('/library');
+      navigate(`/library/questions/${centralData.selectedQuestion?.question?.publicPrivateType}`);
     } else {
       navigate('/questions');
     }

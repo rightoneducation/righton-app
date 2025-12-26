@@ -108,6 +108,7 @@ export class QuestionTemplateParser {
           id,
           userId,
           publicPrivateType,
+          finalPublicPrivateType,
           title,
           lowerCaseTitle,
           owner,
@@ -138,13 +139,14 @@ export class QuestionTemplateParser {
       }
 
       const parsedPublicPrivate = isPublicPrivateValid(publicPrivateType) ? publicPrivateType : PublicPrivateType.PUBLIC;
-
+      const parsedFinalPublicPrivate = isPublicPrivateValid(finalPublicPrivateType) ? finalPublicPrivateType : PublicPrivateType.PUBLIC;
       const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
       const questionTemplate: IQuestionTemplate = {
           id,
           userId,
           publicPrivateType: parsedPublicPrivate,
+          finalPublicPrivateType: parsedFinalPublicPrivate,
           title,
           lowerCaseTitle: lowerCaseTitle ?? '',
           owner: owner ?? '',

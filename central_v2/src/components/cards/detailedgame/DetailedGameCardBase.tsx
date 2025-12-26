@@ -74,6 +74,8 @@ export default function DetailedGameCardBase({
     setIsPublic((prev) => !prev);
   };
 
+  const publicPrivate = game?.publicPrivateType === PublicPrivateType.DRAFT ? game.finalPublicPrivateType : game?.publicPrivateType;
+
   return (
     <BaseCardStyled
       elevation={6}
@@ -155,7 +157,7 @@ export default function DetailedGameCardBase({
             color: '#FFFFFF',
           }}
         >
-          {game?.publicPrivateType === PublicPrivateType.PUBLIC ? 'Public' : 'Private'}
+          {publicPrivate}
         </Box>
       </Box>
     </BaseCardStyled>

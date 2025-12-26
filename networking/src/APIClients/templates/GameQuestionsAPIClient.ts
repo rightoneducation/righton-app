@@ -9,8 +9,6 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         type: T,
         input: GameQuestionType<T>['create']['input']
     ): Promise<IGameQuestion> {
-        console.log(type);
-        console.log(input);
         const variables: GameQuestionType<T>['create']['variables'] = { input } as GameQuestionType<T>['create']['variables'];
         const { queryFunction } = gameQuestionRuntimeMap[type as keyof typeof gameQuestionRuntimeMap]['create'];
         try{

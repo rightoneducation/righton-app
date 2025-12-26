@@ -304,7 +304,7 @@ export default function CreateQuestionCardBase({
         {imageLink ? (
           imageContents
         ) : (
-          <ImagePlaceholder isCardErrored={isCardErrored && isCardSubmitted}>
+          <ImagePlaceholder isCardErrored={false}>
             <CentralButton
               buttonType={ButtonType.UPLOADIMAGE}
               isEnabled

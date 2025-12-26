@@ -4,6 +4,7 @@ import {
   IAPIClients,
   IGameTemplate,
   CloudFrontDistributionUrl,
+  PublicPrivateType,
 } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
@@ -189,8 +190,9 @@ export default function StyledGameCard({
 }: StyledGameCardProps) {
   const theme = useTheme();
   const domainAndGrades = getDomainAndGrades(game);
+  const isDraft = game.publicPrivateType === PublicPrivateType.DRAFT;
   const isGameLaunchable =
-    (game && game.questionTemplates && game?.questionTemplates?.length > 0) ??
+    (game && game.questionTemplates && game?.questionTemplates?.length > 0 && !isDraft) ??
     false;
   const handleLaunchGame = () => {
     const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.publicPrivateType}/${game.id}`;

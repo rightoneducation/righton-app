@@ -79,6 +79,7 @@ interface ImageUploadModalProps {
   screenSize: ScreenSize;
   isClone: boolean;
   isCloneImageChanged: boolean;
+  isEdit: boolean;
   isModalOpen: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   handleImageChange: (inputImage?: File, inputUrl?: string) => void;
@@ -90,6 +91,7 @@ export default function ImageUploadModal({
   screenSize,
   isClone,
   isCloneImageChanged,
+  isEdit,
   isModalOpen,
   draftQuestion,
   handleImageChange,
@@ -104,7 +106,7 @@ export default function ImageUploadModal({
 
   let imageLink: string | null = null;
   if (imageUrl) imageLink = imageUrl;
-  if (isClone && !isCloneImageChanged)
+  if ((isClone && !isCloneImageChanged) || isEdit)
     imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);

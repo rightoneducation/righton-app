@@ -89,6 +89,7 @@ export default function useCentralDataManager({
   const isQuestions = useMatch('/questions');
   const isCreateGame = useMatch('/create/game');
   const isEditGame = useMatch('/edit/game/:type/:gameId') !== null;
+  const isCloneGame = useMatch('/clone/game/:type/:gameId') !== null;
   const isLibraryExact = useMatch('/library');
   const isLibraryWildcard = useMatch('/library/*');
   const isLibrary = isLibraryExact !== null || isLibraryWildcard !== null;
@@ -812,8 +813,6 @@ export default function useCentralDataManager({
           callType.publicPrivateType as TemplateType,
           id,
         );
-        console.log('ResponseGame');
-        console.log(responseGame);
         if (callType.publicPrivateType === PublicPrivateType.DRAFT) {
           if (responseGame.publicQuestionIds) {
             await Promise.all(
@@ -842,7 +841,6 @@ export default function useCentralDataManager({
             );
           }
         }
-        console.log(responseGame);
         // TODO: check refresh condition on an empty game, as I think questionTEmplatesOrder is going to break stuff when its null
         let selectedGame: ISelectedGame = {
           game: responseGame,
@@ -926,7 +924,7 @@ export default function useCentralDataManager({
     isLoadMoreLibrary?: boolean,
   ) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
-      if (isEditGame) {
+      if (isEditGame || isCloneGame) {
         switch (tab) {
           case LibraryTabEnum.FAVORITES:
             return FetchType.FAVORITE_QUESTIONS;
@@ -967,7 +965,6 @@ export default function useCentralDataManager({
       return FetchType.EXPLORE_GAMES;
     };
     const fetchType = getFetchType(libraryTab ?? null);
-    
     switch (fetchType) {
       case FetchType.PUBLIC_GAMES:
       case FetchType.PUBLIC_QUESTIONS:

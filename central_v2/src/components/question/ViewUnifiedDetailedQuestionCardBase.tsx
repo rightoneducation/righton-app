@@ -277,6 +277,7 @@ export default function DetailedUnifiedQuestionCardBase({
                   ))}
               </Box>
             </ViewQuestionContentContainerStyled>
+            {isCreateGame && (
             <ViewQuestionContentContainerStyled
               style={{
                 flexDirection: 'row',
@@ -305,6 +306,7 @@ export default function DetailedUnifiedQuestionCardBase({
                 </Typography>
               }
             </ViewQuestionContentContainerStyled>
+            )}
           </Box>
         </Collapse>
       </Box>

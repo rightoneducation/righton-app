@@ -38,10 +38,7 @@ export const handleCheckQuestionBaseComplete = (draftQuestion: CentralQuestionTe
   if (
     draftQuestion.questionCard.ccss.length > 0 &&
     draftQuestion.questionCard.ccss !== 'CCSS' &&
-    draftQuestion.questionCard.title.length > 0 &&
-    ((draftQuestion.questionCard.imageUrl &&
-      draftQuestion.questionCard.imageUrl?.length > 0) ||
-      draftQuestion.questionCard.image)
+    draftQuestion.questionCard.title.length > 0
     )
     return true;
   return false;
@@ -172,27 +169,23 @@ export const buildQuestionTemplatePromises = (
       }
     }
 
-    let newQuestionResponse: IQuestionTemplate | undefined;
-    // if an image url is available, we can create a question template
-    if (url || type === PublicPrivateType.DRAFT) {
-      try {
-        newQuestionResponse =
-          await apiClients.questionTemplate.createQuestionTemplate(
-            (type === PublicPrivateType.DRAFT
-              ? PublicPrivateType.DRAFT
-              : dqCopy.publicPrivate) as TemplateType,
-            url ?? '',
-            userId,
-            dqCopy.question,
-          );
-      } catch (err) {
-        console.error('Error creating question template:', err);
-        throw new Error('Failed to create question template.');
-      }
+    // create question template (images are optional)
+    try {
+      const newQuestionResponse =
+        await apiClients.questionTemplate.createQuestionTemplate(
+          (type === PublicPrivateType.DRAFT
+            ? PublicPrivateType.DRAFT
+            : dqCopy.publicPrivate) as TemplateType,
+          url ?? '',
+          userId,
+          dqCopy.question,
+        );
+      // return updated question with POST response
+      return newQuestionResponse;
+    } catch (err) {
+      console.error('Error creating question template:', err);
+      throw new Error('Failed to create question template.');
     }
-
-    // return updated question with POST response
-    return newQuestionResponse;
   });
 };
 
