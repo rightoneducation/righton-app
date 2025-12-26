@@ -4,6 +4,7 @@ export type AWSGameTemplate = {
     id: string,
     userId: string,
     publicPrivateType?: string | null,
+    finalPublicPrivateType?: string | null,
     title: string,
     lowerCaseTitle: string,
     owner: string,

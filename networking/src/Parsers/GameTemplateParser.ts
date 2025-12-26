@@ -58,6 +58,7 @@ export class GameTemplateParser {
           id,
           userId,
           publicPrivateType,
+          finalPublicPrivateType,
           title,
           lowerCaseTitle,
           owner,
@@ -87,11 +88,13 @@ export class GameTemplateParser {
       }
 
       const parsedPublicPrivate = isPublicPrivateValid(publicPrivateType) ? publicPrivateType : PublicPrivateType.PUBLIC;
+      const parsedFinalPublicPrivate = isPublicPrivateValid(finalPublicPrivateType) ? finalPublicPrivateType : PublicPrivateType.PUBLIC;
 
       const gameTemplate: IGameTemplate = {
           id,
           userId,
           publicPrivateType: parsedPublicPrivate,
+          finalPublicPrivateType: parsedFinalPublicPrivate,
           title,
           lowerCaseTitle,
           owner,

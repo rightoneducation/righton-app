@@ -876,12 +876,24 @@ export default function CreateGame({
         }));
         return;
       }
+
+      // update the game and questions to store the currently selected public private type
       const draftGameCopy = {
         ...draftGame,
         publicPrivateGame: PublicPrivateType.DRAFT,
+        finalPublicPrivateType: draftGame.gameTemplate.finalPublicPrivateType,
         isGameCardSubmitted: true,
         isCreatingTemplate: true,
       };
+      const draftQuestionsListCopy = draftQuestionsList.map((dq) => ({
+        ...dq,
+        questionTemplate: {
+          ...dq.questionTemplate,
+          finalPublicPrivateType: draftGameCopy.gameTemplate.finalPublicPrivateType
+        }
+      }));
+      
+      setDraftQuestionsList(draftQuestionsListCopy);
       setDraftGame(draftGameCopy);
       // check for images on draft game
       let gameImgUrl: string | null = null;

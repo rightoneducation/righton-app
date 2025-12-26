@@ -26,11 +26,12 @@ export class GameTemplateAPIClient
     const variables: GraphQLOptions = { input: gameTemplateInput };
     const queryFunction = gameTemplateRuntimeMap[type].create.queryFunction;
     const createType = `create${type}GameTemplate`;
+    console.log('gameTemplateInput', gameTemplateInput);
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['create']['query']>(
         queryFunction,
         variables
     ) as { data: any};
-    
+    console.log('gameTemplate', gameTemplate);
     if (
         isNullOrUndefined(gameTemplate?.data)
     ) {

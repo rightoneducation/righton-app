@@ -5,6 +5,7 @@ export interface IGameTemplate {
   id: string,
   userId: string,
   publicPrivateType: PublicPrivateType,
+  finalPublicPrivateType: PublicPrivateType,
   title: string,
   lowerCaseTitle: string,
   owner: string,
