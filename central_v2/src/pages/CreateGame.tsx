@@ -526,7 +526,6 @@ export default function CreateGame({
             )
 
             questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
-
             // make sure we have a gameTemplate id as well as question template ids before creating a game question
             if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
               try {
