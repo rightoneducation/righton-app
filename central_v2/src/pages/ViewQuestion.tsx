@@ -88,14 +88,7 @@ export default function ViewQuestion({
   };
 
   const handleEditQuestion = () => {
-    if (
-      centralData.selectedQuestion?.question?.publicPrivateType ===
-      PublicPrivateType.PUBLIC
-    ) {
-      setIsModalOpen(true);
-    } else {
       handleProceedToEdit();
-    }
   };
 
   const handleProceedToDelete = async () => {

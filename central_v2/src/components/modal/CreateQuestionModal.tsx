@@ -341,6 +341,7 @@ export default function CreateQuestionModal({
             {/* open modals according to correct index */}
             {isImageUploadVisible && (
                 <ImageUploadModal
+                  isEdit={false}
                   draftQuestion={draftQuestion}
                   screenSize={screenSize}
                   isClone={false}
