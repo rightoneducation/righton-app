@@ -2,10 +2,12 @@
 
 import { Amplify} from "aws-amplify"
 import { generateClient } from 'aws-amplify/api';
-import { createSavedExplanation, createDiscardedExplanation } from "../graphql/mutations";
+import { createSavedExplanation, createDiscardedExplanation, createRefinedData } from "../graphql/mutations";
 import { listQuestions, listDiscardedExplanations } from "../graphql/queries";
 import { IQuestion, IExplanationToSave, IWrongAnswerExplanation, IWrongAnswerExplanations, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput } from "./Models";
+import { promptCopy } from "./promptcopy/PromptCopy";
 import awsconfig from "../aws-exports"
+
 
 const client = generateClient();
 Amplify.configure(awsconfig);
@@ -13,6 +15,8 @@ Amplify.configure(awsconfig);
 const genEndpoint = `https://dhfrlmuvjd.execute-api.us-east-1.amazonaws.com/wronganswerexp-dev`;
 const regenEndpoint = 'https://uzfkcuoui1.execute-api.us-east-1.amazonaws.com/regenerateWrongAnswerExplanation/regenwronganswerexp-dev';
 const compareEndpoint = 'https://u9a79nroqd.execute-api.us-east-1.amazonaws.com/labeledits-dev';
+const evalEndpoint = 'https://chqti87v41.execute-api.us-east-1.amazonaws.com/default/evaltextcomplexity-main';
+const refineEndpoint = 'https://e93swlvhul.execute-api.us-east-1.amazonaws.com/default/refinecomplexity-main';
 
 export async function generateWrongAnswerExplanations(
   question: IQuestion,
@@ -42,12 +46,93 @@ export async function generateWrongAnswerExplanations(
             .then((response) => {
                 return response.wrongAnswerExplanations;
             })
-        console.log(response);
         return response;
     } catch (e) {
         console.log(e);
     }
     return null;
+}
+
+export async function evalTextComplexity(
+    text: string
+  ): Promise<string | null> {
+    return fetch(evalEndpoint, {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            connection: "keep-alive",
+            "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+            text
+        }),
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(response.statusText)
+        }
+        return response.json()
+    })
+    .then((response) => {
+        return response;
+    })
+}
+
+export async function refineComplexity(
+    text: string,
+    newComplexity: string,
+    pastAnalysis: string
+  ): Promise<string | null> {
+    return fetch(refineEndpoint, {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            connection: "keep-alive",
+            "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+            text,
+            newComplexity,
+            pastAnalysis
+        }),
+    })
+    .then(async (response) => {
+        if (!response.ok) {
+            throw new Error(response.statusText)
+        }
+        const responseObj = await response.json();
+        
+        // Parse the JSON string that Lambda returns
+        const parsedData = typeof responseObj === 'string' ? JSON.parse(responseObj) : responseObj;
+        
+        // Map the Lambda response to match the GraphQL schema
+        const dbInput = {
+            originalText: text,
+            targetComplexity: newComplexity,
+            pastAnalysis: pastAnalysis,
+            analysisData: parsedData.analysisData,
+            refinedText: parsedData.refinedText,
+            assignedComplexity: parsedData.newComplexity,
+            finalReasoning: parsedData.finalReasoning,
+            analysisDataExplanation: parsedData.verification.analysisDataExplanation,
+            complexityMatchesTarget: parsedData.verification.complexityMatchesTarget,
+            complexityMatchExplanation: parsedData.verification.complexityMatchExplanation,
+            promptContent: promptCopy
+        };
+        
+        // don't await this so it just drops it into the database
+        client.graphql({ 
+            query: createRefinedData,
+            variables: {
+                input: dbInput
+            },
+            authMode: "iam"
+        });
+        return responseObj;
+    })
+    .then((response) => {
+        return response;
+    })
 }
 
 export async function regenerateWrongAnswerExplanation(
@@ -65,7 +150,6 @@ export async function regenerateWrongAnswerExplanation(
         }),
     })
         .then((response) => {
-            console.log(response);
             if (!response.ok) {
                 throw new Error(response.statusText)
             }

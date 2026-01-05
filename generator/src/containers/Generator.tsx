@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Swiper as SwiperInstance } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
-import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createExplanation, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
+import { generateWrongAnswerExplanations, evalTextComplexity, regenerateWrongAnswerExplanation, createExplanation, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
 import { IQuestion, IExplanationToSave, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput, ILocalExplanation } from '../lib/Models';
 import QuestionSavedModal from '../components/modals/QuestionSavedModal';
 import HowToModal from '../components/modals/HowToModal';
@@ -164,6 +164,7 @@ export default function Generator() {
           }
         )
       });
+
       setExplanationsToSave(explanations);
       setIsQuestionGenerating(false);
       setIsQuestionGenerated(true);
