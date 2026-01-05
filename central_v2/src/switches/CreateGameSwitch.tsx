@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router-dom';
 import { GradeTarget, SortType, SortDirection, PublicPrivateType } from '@righton/networking';
 import { 
   ScreenSize, 
@@ -40,7 +40,8 @@ export default function CreateGameSwitch({
   loadMore
 }: CreateGameProps) {
   const navigate = useNavigate();
-  const [isFirstCreate, setIsFirstCreate] = useState<boolean>(!localStorage.getItem(StorageKeyIsFirstCreate));
+  const isEdit = useMatch('/edit/game/:type/:gameId') !== null;
+  const [isFirstCreate, setIsFirstCreate] = useState<boolean>(!localStorage.getItem(StorageKeyIsFirstCreate) && !isEdit);
   const handleBackClick = () => {
     localStorage.removeItem(StorageKeyIsFirstCreate);
     navigate('/library');

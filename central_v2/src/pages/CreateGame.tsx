@@ -1185,7 +1185,7 @@ export default function CreateGame({
 
   useEffect(() => {
     setIsLoading(false);
-    if (localStorage.getItem(StorageKeyIsFirstCreate) === null){
+    if (localStorage.getItem(StorageKeyIsFirstCreate) === null && !isEdit){
       localStorage.setItem(StorageKeyIsFirstCreate, 'false');
       setDraftGame((prev) => ({
         ...prev,
