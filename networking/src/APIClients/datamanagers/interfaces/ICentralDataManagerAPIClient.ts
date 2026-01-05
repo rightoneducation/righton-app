@@ -1,12 +1,12 @@
 import { IGameTemplate, IQuestionTemplate} from "../../../Models";
 import { IUserProfile } from "../../../Models/IUserProfile";
-import { PublicPrivateType, SortDirection, SortType, GradeTarget } from "../../BaseAPIClient";
+import { TemplateType, SortDirection, SortType, GradeTarget } from "../../BaseAPIClient";
 
 export interface ICentralDataManagerAPIClient {
   initGames: () => Promise<{ nextToken: string | null, games: IGameTemplate[] }>;
   initQuestions: () => Promise<{ nextToken: string | null, questions: IQuestionTemplate[] }>;
   searchForGameTemplates: (
-    type: PublicPrivateType, 
+    type: TemplateType, 
     limit: number | null, 
     nextToken: string | null, 
     search: string, 
@@ -18,7 +18,7 @@ export interface ICentralDataManagerAPIClient {
     userId?: string
   ) => Promise<{ nextToken: string | null, games: IGameTemplate[] }>;
   searchForQuestionTemplates: (
-    type: PublicPrivateType, 
+    type: TemplateType, 
     limit: number | null, 
     nextToken: string | null, 
     search: string, 
@@ -44,6 +44,6 @@ export interface ICentralDataManagerAPIClient {
   userProfileInformationUpdate(user: IUserProfile, oldUser: IUserProfile, frontImage?: File | null,
     backImage?: File | null): Promise<{updatedUser: any}>;
   userProfileImageUpdate(user: IUserProfile, newProfilePic: File | null): Promise<{updatedUser: any}>;
-  removeQuestionTemplateFromGameTemplate(type: PublicPrivateType, questionId: string, gameId: string): Promise<boolean>;
-  deleteQuestionTemplate:(type: PublicPrivateType, questionId: string, ) => void;
+  removeQuestionTemplateFromGameTemplate(type: TemplateType, questionId: string, gameId: string): Promise<boolean>;
+  deleteQuestionTemplate:(type: TemplateType, questionId: string, ) => void;
 }

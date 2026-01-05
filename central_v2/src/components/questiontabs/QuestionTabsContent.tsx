@@ -55,11 +55,14 @@ export default function QuestionTabsContent({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const theme = useTheme();
+  const isDefaultSort = (centralData.sort.field === SortType.listQuestionTemplates && 
+                        centralData.sort.direction === SortDirection.ASC) ||
+                       (centralData.sort.field === SortType.listQuestionTemplatesByDate && 
+                        centralData.sort.direction === SortDirection.DESC);
   const isSearchResults =
     centralData.searchTerms.length > 0 ||
     centralData.selectedGrades.length > 0 ||
-    (centralData.sort.field !== SortType.listGameTemplates &&
-      centralData.sort.direction !== SortDirection.ASC);
+    !isDefaultSort;
 
   const elements = getQuestionElements(openTab, isSearchResults, centralData);
   let padding = 0;

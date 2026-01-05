@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { CircularProgress } from '@mui/material';
 import {
@@ -81,6 +81,8 @@ export default function MyLibrary({
   const navigate = useNavigate();
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
+  const routeGames = useMatch('/library/games/:type');
+  const routeQuestions = useMatch('/library/questions/:type');
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [originalSelectedQuestion, setOriginalSelectedQuestion] =
@@ -98,9 +100,9 @@ export default function MyLibrary({
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
-    setIsTabsOpen(true);
     const selectedQ = await viewQuestion(question);
     if ('question' in selectedQ && selectedQ && selectedQ.question) {
+      navigate(`/library/questions/${question.publicPrivateType}/${question.id}`);
       setSelectedQuestion(selectedQ.question);
       setQuestionSet(questions);
       if (centralData.isTabsOpen === false)
@@ -216,6 +218,39 @@ export default function MyLibrary({
     setIsDeleteModalOpen(false);
   };
 
+  useEffect(() => {
+    const tabMapping: { [key: string]: LibraryTabEnum } = {
+      'Public': LibraryTabEnum.PUBLIC,
+      'Private': LibraryTabEnum.PRIVATE,
+      'Draft': LibraryTabEnum.DRAFTS,
+      'Favorites': LibraryTabEnum.FAVORITES,
+    };
+    
+    if (routeGames && routeGames.params.type) {
+      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+      const mappedTab = tabMapping[routeGames.params.type];
+      if (mappedTab !== undefined) {
+        setOpenTab(mappedTab);
+        if (gameQuestion !== GameQuestionType.GAME) return;
+        handleSortChange({ field: SortType.listGameTemplates, direction: SortDirection.ASC });
+        fetchElements(mappedTab, '', null, true);
+      }
+    }
+    
+    if (routeQuestions && routeQuestions.params.type) {
+      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+      const mappedTab = tabMapping[routeQuestions.params.type];
+      if (mappedTab !== undefined) {
+        setOpenQuestionTab(mappedTab);
+        if (gameQuestion !== GameQuestionType.QUESTION) return;
+        // Ensure questions sort baseline so ByDate/DESC override engages for library
+        handleSortChange({ field: SortType.listQuestionTemplates, direction: SortDirection.ASC });
+        fetchElements(mappedTab, '', null, true);
+      }
+    }
+
+  }, [routeGames, routeQuestions, gameQuestion]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground />
@@ -285,8 +320,8 @@ export default function MyLibrary({
         <LibraryTabsContainer
           gameQuestion={gameQuestion}
           screenSize={screenSize}
-          openTab={openTab}
-          setOpenTab={setOpenTab}
+          openTab={gameQuestion === GameQuestionType.GAME ? openTab : openQuestionTab}
+          setOpenTab={gameQuestion === GameQuestionType.GAME ? setOpenTab : setOpenQuestionTab}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}

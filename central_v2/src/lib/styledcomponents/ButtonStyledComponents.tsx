@@ -1,5 +1,6 @@
 import { Button, Box, Typography, styled, useTheme } from '@mui/material';
 import { ButtonColor, ButtonType } from '../../components/button/ButtonModels';
+import { ScreenSize } from '../CentralModels';
 
 type ButtonStyledProps = {
   buttonColor: ButtonColor;
@@ -37,7 +38,11 @@ const getHoverColor = (
         buttonType === ButtonType.LOGOUT ||
         buttonType === ButtonType.EDITPROFILEPICTURE ||
         buttonType === ButtonType.CHANGEIMAGE ||
-        buttonType === ButtonType.SAVEDRAFT
+        buttonType === ButtonType.CREATEQUESTION ||
+        buttonType === ButtonType.SAVEDRAFT ||
+        buttonType === ButtonType.BACKTOEDIT ||
+        buttonType === ButtonType.BACKNOARROW ||
+        buttonType === ButtonType.BACK
       ) {
         return `rgba(0,0,0, 0.1)`;
       }
@@ -70,7 +75,7 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
 
 export const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) =>
-    prop !== 'buttonColor' && prop !== 'isOnQuestionTab' && prop !== 'isReset',
+    prop !== 'buttonColor' && prop !== 'buttonType' && prop !== 'isOnQuestionTab' && prop !== 'isReset',
 })<ButtonStyledProps>(
   ({ theme, buttonColor, buttonType, isOnQuestionTab, isReset }) => ({
     width: '100%',
@@ -90,8 +95,13 @@ export const ButtonStyled = styled(Button, {
       buttonColor === ButtonColor.NULL // eslint-disable-line no-nested-ternary
         ? buttonType === ButtonType.CHANGEIMAGE ||
           buttonType === ButtonType.SAVEDRAFT ||
+          (buttonType === ButtonType.BACKTOEDIT) ||
+          buttonType === ButtonType.BACKNOARROW ||
           (buttonType === ButtonType.SIGNUP && isReset) ||
-          (buttonType === ButtonType.BACK && isReset)
+          (buttonType === ButtonType.CREATEQUESTION) ||
+          (buttonType === ButtonType.EDITQUESTION) ||
+          (buttonType === ButtonType.CANCELQUESTION) ||
+          (buttonType === ButtonType.BACK)
           ? `${theme.palette.primary.buttonPrimaryDefault}`
           : `#FFF`
         : 'none',
@@ -118,16 +128,29 @@ export const ButtonContent = styled(Box)(({ theme }) => ({
   paddingTop: '4px',
   paddingBottom: '4px',
   paddingLeft: '12px',
-  paddingRight: '12px',
+  paddingRight: '24px',
 }));
 
-export const ButtonIconContainer = styled(Box)(({ theme }) => ({
-  height: '20px',
-  width: '20px',
+type ButtonIconContainerProps = {
+  isSmallScreen: boolean;
+  wideButtonOverride: boolean;
+};
+
+export const ButtonIconContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSmallScreen' && prop !== 'wideButtonOverride',
+})<ButtonIconContainerProps>(({ theme, isSmallScreen, wideButtonOverride }) => ({
+  height: '100%',
+  position: isSmallScreen || !wideButtonOverride ? 'relative' : 'absolute',
+  top: isSmallScreen ? '0px' : '0px',
+  left: isSmallScreen ? '0px' : '0px',
+  paddingLeft: isSmallScreen ? undefined : '12px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 export const ButtonTypography = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'buttonColor',
+  shouldForwardProp: (prop) => prop !== 'buttonColor' && prop !== 'buttonType' && prop !== 'isReset',
 })<ButtonStyledProps>(({ theme, buttonColor, buttonType, isReset }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
@@ -138,8 +161,13 @@ export const ButtonTypography = styled(Typography, {
     buttonType === ButtonType.CHANGEIMAGE ||
     buttonType === ButtonType.LOGINHEADER ||
     buttonType === ButtonType.SAVEDRAFT ||
+    buttonType === ButtonType.BACKNOARROW ||
+    buttonType === ButtonType.CREATEQUESTION ||
+    (buttonType === ButtonType.BACKTOEDIT) ||
+    (buttonType === ButtonType.CANCELQUESTION) ||
+    (buttonType === ButtonType.EDITQUESTION) ||
     (buttonType === ButtonType.SIGNUP && isReset) ||
-    (buttonType === ButtonType.BACK && isReset)
+    (buttonType === ButtonType.BACK)
       ? `${theme.palette.primary.buttonPrimaryDefault}`
       : '#FFFFFF',
   whiteSpace: 'nowrap',

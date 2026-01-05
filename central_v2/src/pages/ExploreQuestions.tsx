@@ -109,16 +109,7 @@ export default function ExploreQuestions({
     questions: IQuestionTemplate[],
   ) => {
     setSelectedQuestion(question);
-    if (centralData.isTabsOpen === false)
-      setOriginalSelectedQuestion(question);
-    setQuestionSet(questions);
-    setIsTabsOpen(true);
-    const selectedQ = await viewQuestion(question);
-    if ('question' in selectedQ && selectedQ && selectedQ.question) {
-      setSelectedQuestion(selectedQ.question);
-      if (centralData.isTabsOpen === false)
-        setOriginalSelectedQuestion(selectedQ.question);
-    }
+    navigate(`/questions/${question.publicPrivateType}/${question.id}`);
   };
   const handlePrevQuestion = () => {
     const index = questionSet.findIndex(

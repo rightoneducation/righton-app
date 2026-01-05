@@ -153,6 +153,7 @@ type PublicGameTemplate @model
                  @index(name: "publicGameTemplatesByUserPublicQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"], queryField: "publicGameTemplatesByUserPublicQuestionTemplatesCount")
                  @index(name: "publicGameTemplatesByUserGrade", sortKeyFields: ["grade"], queryField: "publicGameTemplatesByUserGrade")
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -196,6 +197,7 @@ type PrivateGameTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -238,6 +240,7 @@ type DraftGameTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -255,6 +258,8 @@ type DraftGameTemplate @model
   imageUrl: String
   timesPlayed: Int
   questionTemplates: [DraftQuestionTemplate] @manyToMany(relationName: "DraftGameQuestions")
+  publicQuestionIds: AWSJSON
+  privateQuestionIds: AWSJSON
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
@@ -284,6 +289,7 @@ type PublicQuestionTemplate @model
                  @index(name: "publicQuestionTemplatesByUserPublicGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"], queryField: "publicQuestionTemplatesByUserPublicGameTemplatesCount")
                  @index(name: "publicQuestionTemplatesByUserGrade", sortKeyFields: ["grade"], queryField: "publicQuestionTemplatesByUserGrade")
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -324,6 +330,7 @@ type PrivateQuestionTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -364,6 +371,7 @@ type DraftQuestionTemplate @model
   id: ID
   userId: String
   publicPrivateType: String
+  finalPublicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -400,12 +408,14 @@ input CreateGameSessionFromTemplateInput {
 type GameSession @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
 {
   id: ID!
+  classroomId: String! @index(name: "byClassroomId", queryField: "gameSessionByClassroomId")
   gameId: ID!
   startTime: String
   phaseOneTime: Int!
@@ -420,6 +430,7 @@ type GameSession @model
   description: String
   title: String
   currentTimer: Int
+  studentID: Int
   sessionData: AWSJSON
   questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
 }
@@ -439,6 +450,7 @@ enum GameSessionState {
 type Question @model(subscriptions: null, timestamps: null)
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -466,12 +478,14 @@ type Question @model(subscriptions: null, timestamps: null)
 type Team @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
 {
   id: ID!
+  globalStudentId: String! @index(name: "byGlobalStudentId", queryField: "teamByGlobalStudentId")
   name: String!
   question: Question @hasOne
   teamMembers: [TeamMember] @hasMany
@@ -482,6 +496,7 @@ type Team @model
 type TeamMember @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -505,6 +520,7 @@ enum ConfidenceLevel {
 type TeamAnswer @model 
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -518,7 +534,7 @@ type TeamAnswer @model
   currentQuestionIndex: Int!
   questionId: ID!
   teamMemberAnswersId: ID!
-  teamAnswersId: ID
+  teamAnswersId: ID!
   teamName: String
   text: String!
   answer: AWSJSON!

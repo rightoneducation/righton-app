@@ -32,8 +32,7 @@ import CreateGameErrorBox from './CreateGameErrorBox';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
 import SelectPhaseButton from './SelectPhaseButton';
-import SelectArrowImage from '../../../images/SelectArrow.svg';
-import ImageUploadModal from '../../modal/ImageUploadModal';
+import SelectPublicPrivateDropdown from './SelectPublicPrivateDropdown';
 import {
   CreateGameContentLeftContainerStyled,
   ImagePlaceholder,
@@ -42,6 +41,8 @@ import {
   CreateGameTitleText,
   GameContentContainerStyled,
   TooltipStyled,
+  HeaderText,
+  GameCardBaseItem,
 } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 import { TPhaseTime, TGameTemplateProps } from '../../../lib/CreateGameModels';
 
@@ -152,7 +153,7 @@ export default function CreateGameCardBase({
     screenSize === ScreenSize.LARGE && !isCardErrored ? '100%' : '100%';
   const responsiveGap =
     screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM
-      ? '24px'
+      ? '32px'
       : '8px';
 
   const handlePhaseOneTime = (val: string) => {
@@ -198,19 +199,20 @@ export default function CreateGameCardBase({
     setPublicPrivateWarning(false);
   };
 
+
+  const displayLabel = label === "Edit" ? 'Your' : label;
+
   return (
     <BaseCardStyled
       onClick={handleCardClick}
       elevation={6}
-      isHighlight={false}
       isClone={isClone}
       isCardComplete={completedCardClicked ? false : cardIsComplete}
       sx={{
-        height: responsiveHeight,
-        gap: responsiveGap,
+        gap: `${theme.sizing.mdPadding}px`,
         width: '100%',
-        maxWidth: '672px',
-        padding: screenSize === ScreenSize.LARGE ? '28px' : '24px',
+        maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '460px',
+        padding: '24px',
         borderRadius: '8px',
         boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
       }}
@@ -219,7 +221,7 @@ export default function CreateGameCardBase({
         <Box
           style={{
             display: 'flex',
-            flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+            flexDirection: 'column',
             justifyContent:
               screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
             alignItems: screenSize === ScreenSize.SMALL ? 'start' : 'center',
@@ -230,233 +232,225 @@ export default function CreateGameCardBase({
             align={screenSize === ScreenSize.SMALL ? 'left' : 'inherit'}
             sx={{ color: '#384466' }}
           >
-            {label} Game
+            {displayLabel} Game
           </CreateGameTitleText>
-          <Stack
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            justifyContent={isSmallerScreen ? 'center' : 'normal'}
-          >
-            <SelectPhaseButton
-              onSetPhaseTime={handlePhaseOneTime}
-              phaseTime={phaseTime.phaseOne}
-              isCardSubmitted={isCardSubmitted}
-              phaseNumber={1}
-              screenSize={screenSize}
-              isCardError={isCardErrored}
-            />
-            <SelectPhaseButton
-              onSetPhaseTime={handlePhaseTwoTime}
-              phaseTime={phaseTime.phaseTwo}
-              isCardSubmitted={isCardSubmitted}
-              phaseNumber={2}
-              screenSize={screenSize}
-              isCardError={isCardErrored}
-            />
-          </Stack>
         </Box>
-
-        {screenSize !== ScreenSize.SMALL && (
-           (draftGame?.gameTemplate?.questionTemplates?.length && draftGame?.gameTemplate?.questionTemplates?.length < 1) ? (
-            <TooltipStyled
-              placement="top"
-              title="Cannot edit while adding questions"
-              arrow
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '16px',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <PublicPrivateButton
-                  isPublic={
-                    draftGame.gameTemplate.publicPrivateType ===
-                    PublicPrivateType.PUBLIC
-                  }
-                  onHandlePublicPrivateChange={handlePublicPrivateChange}
-                  isDisabled
-                />
-              </Box>
-            </TooltipStyled>
-           ) : (
-              <PublicPrivateButton
-                isPublic={
-                  draftGame.gameTemplate.publicPrivateType ===
-                  PublicPrivateType.PUBLIC
-                }
-                onHandlePublicPrivateChange={handlePublicPrivateChange}
-                isDisabled={false}
-              />
-           )
-        )}
       </CreateGameTitleBarStyled>
       <GameContentContainerStyled screenSize={screenSize}>
-        {/* Create Question Content Left Container */}
-        <CreateGameContentLeftContainerStyled
-          sx={{
-            gap:
-              screenSize === ScreenSize.LARGE ||
-              screenSize === ScreenSize.MEDIUM
-                ? '12px'
-                : '8px',
-          }}
-        >
-          {/* Game Title TextField */}
-          <CreateGameTextFieldContainer
-            isCardError={isCardErrored || (draftGame.isDraftGameErrored ?? false)}
-            isTitle
-            variant="outlined"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                height: '54px',
-              },
-            }}
-            placeholder="Game title here.."
-            value={gameTitle}
-            onChange={(e) => onGameTitle(e.target.value)}
-            error={isTitleFieldError}
-            InputProps={{
-              startAdornment: isTitleFieldError && (
-                <InputAdornment
-                  position="start"
-                  sx={{
-                    alignSelf: 'flex-start',
-                    margin: 'auto 0',
-                  }}
-                >
-                  <ErrorIcon src={errorIcon} alt="error icon" />
-                </InputAdornment>
-              ),
-            }}
+      {screenSize !== ScreenSize.SMALL && (isCardErrored || draftGame.isDraftGameErrored) && (
+        <CreateGameErrorBox screenSize={screenSize} />
+      )}
+        {/* Create Game Card Base Item */}
+          <GameCardBaseItem
           >
-            {gameTitle}
-          </CreateGameTextFieldContainer>
-          {/* Game Title TextField */}
-          <CreateGameTextFieldContainer
-            isCardError={isCardErrored}
-            variant="outlined"
-            sx={{
-              '& .MuiInputBase-root': {
-                height: screenSize === ScreenSize.SMALL ? '138px' : '119px',
-                fontFamily: 'Rubik',
-                padding: '12px 10px',
-              },
-              '& .MuiOutlinedInput-input': {
-                paddingBottom: screenSize === ScreenSize.SMALL ? 2 : 1,
-              },
-            }}
-            multiline
-            rows={4}
-            placeholder="Enter game description here..."
-            error={isDescriptionFieldError}
-            value={gameDescription}
-            onChange={(e) => onGameDescription(e.target.value)}
-            InputProps={{
-              startAdornment: isDescriptionFieldError && (
-                <InputAdornment
-                  position="start"
-                  sx={{
-                    alignSelf: 'flex-start',
-                    mt: screenSize === ScreenSize.SMALL ? '12px' : '7px',
-                  }}
-                >
-                  <ErrorIcon src={errorIcon} alt="error icon" />
-                </InputAdornment>
-              ),
-            }}
-          >
-            <Typography>{gameDescription}</Typography>
-          </CreateGameTextFieldContainer>
-        </CreateGameContentLeftContainerStyled>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-            width: '100%',
-            height:
-              screenSize === ScreenSize.LARGE ||
-              screenSize === ScreenSize.MEDIUM
-                ? '185px'
-                : '100%',
-          }}
-        >
-          {/* Image Upload handled here */}
-          {imageLink ? (
-            imageContents
-          ) : (
-            <ImagePlaceholder
-              isCardErrored={false}
+            {/* Game Title TextField */}
+            <HeaderText>
+              Enter a title for your game*
+            </HeaderText>
+            <CreateGameTextFieldContainer
+              isCardError={isCardErrored || (draftGame.isDraftGameErrored ?? false)}
+              isTitle
+              variant="outlined"
               sx={{
+                '& .MuiOutlinedInput-root': {
+                  height: '43px',
+                },
+              }}
+              placeholder="What do you want to call your game?"
+              value={gameTitle}
+              onChange={(e) => onGameTitle(e.target.value)}
+              error={isTitleFieldError}
+              InputProps={{
+                startAdornment: isTitleFieldError && (
+                  <InputAdornment
+                    position="start"
+                    sx={{
+                      alignSelf: 'flex-start',
+                      margin: 'auto 0',
+                    }}
+                  >
+                    <ErrorIcon src={errorIcon} alt="error icon" />
+                  </InputAdornment>
+                ),
+              }}
+            >
+              {gameTitle}
+            </CreateGameTextFieldContainer>
+          </GameCardBaseItem>
+          <GameCardBaseItem>
+            {/* Game Description TextField */}
+            <HeaderText>
+              Describe your game*
+            </HeaderText>
+            <CreateGameTextFieldContainer
+              isCardError={isCardErrored}
+              variant="outlined"
+              sx={{
+                '& .MuiOutlinedInput-input': {
+                  paddingBottom: screenSize === ScreenSize.SMALL ? 2 : 1,
+                },
+              }}
+              multiline
+              rows={4}
+              placeholder="Give a short description of the game."
+              error={isDescriptionFieldError}
+              value={gameDescription}
+              onChange={(e) => onGameDescription(e.target.value)}
+              InputProps={{
+                startAdornment: isDescriptionFieldError && (
+                  <InputAdornment
+                    position="start"
+                    sx={{
+                      alignSelf: 'flex-start',
+                      mt: screenSize === ScreenSize.SMALL ? '12px' : '7px',
+                    }}
+                  >
+                    <ErrorIcon src={errorIcon} alt="error icon" />
+                  </InputAdornment>
+                ),
+              }}
+            >
+              <Typography>{gameDescription}</Typography>
+            </CreateGameTextFieldContainer>
+          </GameCardBaseItem>
+          <GameCardBaseItem>
+            {/* Public Private Dropdown */}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0px',
+              }}
+            >
+              <HeaderText>
+              Make your game available to the public*
+              </HeaderText>
+              <HeaderText>
+              (Other users can launch it)
+              </HeaderText>
+            </Box>
+            <SelectPublicPrivateDropdown
+              publicPrivateType={draftGame.gameTemplate.publicPrivateType}
+              onHandlePublicPrivateChange={handlePublicPrivateChange}
+              isCardSubmitted={isCardSubmitted}
+              screenSize={screenSize}
+              isCardError={isCardErrored}
+            />
+          </GameCardBaseItem>
+          <GameCardBaseItem>
+            {/* Timing Dropdowns */}
+            <HeaderText>
+              Select the timing of each phase*
+            </HeaderText>
+            <Stack
+            direction="row"
+            spacing={1}
+            alignItems="flex-start"
+            justifyContent={isSmallerScreen ? 'center' : 'normal'}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}
+            >
+              <HeaderText>
+                Phase 1
+              </HeaderText>
+              <SelectPhaseButton
+                onSetPhaseTime={handlePhaseOneTime}
+                phaseTime={phaseTime.phaseOne}
+                isCardSubmitted={isCardSubmitted}
+                phaseNumber={1}
+                screenSize={screenSize}
+                isCardError={isCardErrored}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}
+            >
+              <HeaderText>
+                Phase 2
+              </HeaderText>
+              <SelectPhaseButton
+                onSetPhaseTime={handlePhaseTwoTime}
+                phaseTime={phaseTime.phaseTwo}
+                isCardSubmitted={isCardSubmitted}
+                phaseNumber={2}
+                screenSize={screenSize}
+                isCardError={isCardErrored}
+              />
+            </Box>
+          </Stack>
+          </GameCardBaseItem>
+          <GameCardBaseItem>
+            {/* Timing Supplemental Text */}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0px',
+              }}
+            >
+            <HeaderText>
+              <i>RightOn!</i> questions are divided into two phases:
+            </HeaderText>
+            <HeaderText>
+              <b>Phase 1:</b> Choose the correct answer
+            </HeaderText>
+            <HeaderText>
+              <b>Phase 2:</b> Choose the most popular incorrect answer
+            </HeaderText>
+            </Box>
+          </GameCardBaseItem>
+          <GameCardBaseItem>
+            {/* Image Select */}
+            <HeaderText>
+              Add an image to showcase your game (optional)
+            </HeaderText>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                width: '100%',
                 height:
                   screenSize === ScreenSize.LARGE ||
                   screenSize === ScreenSize.MEDIUM
                     ? '185px'
-                    : '202px',
+                    : '100%',
               }}
             >
-              <CentralButton
-                buttonType={ButtonType.UPLOADIMAGE}
-                isEnabled
-                smallScreenOverride
-                onClick={handleImageUploadClick}
-              />
-            </ImagePlaceholder>
-          )}
-          {/* Image Upload handled here */}
-
-          {/* card Error */}
-          {screenSize === ScreenSize.SMALL && (
-            <>
-              {(isCardErrored || draftGame.isDraftGameErrored) && <CreateGameErrorBox screenSize={screenSize} />}
-              {((draftGame?.gameTemplate?.questionTemplates?.length && draftGame?.gameTemplate?.questionTemplates?.length < 1) || !isEditDraft) ? (
-                <TooltipStyled
-                  placement="top"
-                  title="Cannot edit while adding questions"
-                  arrow
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      gap: '16px',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <PublicPrivateButton
-                      isPublic={
-                        draftGame.gameTemplate.publicPrivateType ===
-                        PublicPrivateType.PUBLIC
-                      }
-                      onHandlePublicPrivateChange={handlePublicPrivateChange}
-                      isDisabled
-                    />
-                  </Box>
-                </TooltipStyled>
+              {/* Image Upload handled here */}
+              {imageLink ? (
+                imageContents
               ) : (
-                  <PublicPrivateButton
-                    isPublic={
-                      draftGame.gameTemplate.publicPrivateType ===
-                      PublicPrivateType.PUBLIC
-                    }
-                    onHandlePublicPrivateChange={handlePublicPrivateChange}
-                    isDisabled={false}
+                <ImagePlaceholder
+                  isCardErrored={false}
+                  sx={{
+                    height:
+                      screenSize === ScreenSize.LARGE ||
+                      screenSize === ScreenSize.MEDIUM
+                        ? '185px'
+                        : '202px',
+                  }}
+                >
+                  <CentralButton
+                    buttonType={ButtonType.UPLOADIMAGE}
+                    isEnabled
+                    smallScreenOverride
+                    onClick={handleImageUploadClick}
                   />
-              )
-            }
-            </>
-          )}
-        </Box>
+                </ImagePlaceholder>
+              )}
+            </Box>
+          </GameCardBaseItem>
       </GameContentContainerStyled>
-
-      {screenSize !== ScreenSize.SMALL && (isCardErrored || draftGame.isDraftGameErrored) && (
-        <CreateGameErrorBox screenSize={screenSize} />
-      )}
     </BaseCardStyled>
   );
 }

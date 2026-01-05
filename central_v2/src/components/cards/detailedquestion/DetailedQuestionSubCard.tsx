@@ -14,6 +14,7 @@ interface DetailedQuestionSubCardProps {
   answer: string;
   instructions?: string[];
   answerReason?: string;
+  explanationIndex?: number;
 }
 
 export default function DetailedQuestionSubCard({
@@ -21,6 +22,7 @@ export default function DetailedQuestionSubCard({
   answer,
   instructions,
   answerReason,
+  explanationIndex
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
@@ -30,25 +32,26 @@ export default function DetailedQuestionSubCard({
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           alignItems: 'flex-start',
           marginTop: `${theme.sizing.xSmPadding}px`,
+          gap: `${theme.sizing.mdPadding}px`,
         }}
         key={uuidv4()}
       >
         <Typography
           sx={{
-            marginLeft: `${theme.sizing.smPadding}px`,
-            fontSize: `${theme.typography.h3.fontSize}px`,
-            fontWeight: `${theme.typography.h3.fontWeight}`,
-            color: `${theme.palette.primary.darkPurple}`,
+            fontFamily: 'Poppins',
+            fontSize: `16px`,
+            fontWeight: 700,
+            color: `${theme.palette.primary.darkBlue}`,
           }}
         >
-          {index + 1}
+          Step {index + 1}
         </Typography>
         <Typography
           sx={{
-            marginLeft: `${theme.sizing.xSmPadding}px`,
+            marginLeft: `10px`,
             whiteSpace: 'pre-line', 
           }}
         >
@@ -77,11 +80,14 @@ export default function DetailedQuestionSubCard({
     </Box>,
   ];
   return (
-    <BaseCardStyled elevation={6}>
-      <QuestionTitleStyled>
-        {cardType === CardType.CORRECT ? 'Correct' : 'Incorrect'} Answer
+    <BaseCardStyled elevation={6} style={{gap: `${theme.sizing.smPadding}px`}}>
+      <QuestionTitleStyled style={{ color: cardType === CardType.CORRECT ? '#148700' : '#47366C' }}>
+        {cardType === CardType.CORRECT ? 'Correct' : 'Incorrect'} Answer {(explanationIndex !== undefined && explanationIndex !== null) ? explanationIndex + 1 : ''}
       </QuestionTitleStyled>
       <AnswerIndicator>{answer}</AnswerIndicator>
+      <QuestionTitleStyled sx={{ color: '#47366C' }}>
+      {cardType === CardType.CORRECT && ('Solution')} Explanation
+      </QuestionTitleStyled>
       {cardType === CardType.CORRECT && instructions
         ? instructions.map((instruction, index) =>
             correctAnswerInstruction(index),

@@ -2,11 +2,16 @@ import React from 'react';
 import { Switch } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+const aiGradient = 
+  'linear-gradient(90deg, #4700B2 0%, #5A257D 100%)';
+
+const darkPurple = '#4700B2';
+
 export const AISwitch = styled(Switch)(({ theme }) => ({ // eslint-disable-line
   padding: 8,
   '& .MuiSwitch-track': {
     borderRadius: 22 / 2,
-    backgroundColor: '#CCCCCC',
+    backgroundColor: '#D8DFE9',
     opacity: 1,
     '&::before, &::after': {
       content: '""',
@@ -24,16 +29,20 @@ export const AISwitch = styled(Switch)(({ theme }) => ({ // eslint-disable-line
     },
   },
   '& .MuiSwitch-switchBase.Mui-checked': {
-    color: '#FFFFFF',
+    color: aiGradient,
   },
   '& .MuiSwitch-thumb': {
-    background: theme.palette.primary.aiGradient,
+    background: aiGradient,
     boxShadow: 'none',
     width: 16,
     height: 16,
     margin: 2,
   },
+  '& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb': {
+    background: '#D8DFE9',
+  },
   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#CCCCCC',
+    background: aiGradient,
+    opacity: 1,
   },
 }));

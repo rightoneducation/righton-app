@@ -34,6 +34,7 @@ export enum ScreenType {
   CREATEQUESTION,
   CLONEQUESTION,
   EDITQUESTION,
+  VIEWQUESTION,
   CONFIRMATION,
   NEXTSTEP,
   USERPROFILE,
@@ -69,6 +70,32 @@ export enum GameQuestionType {
   QUESTION,
 }
 
+export enum ModalStateType {
+  NULL,
+  DISCARD,
+  PUBLISH,
+  LOADING,
+  SAVING,
+  PUBLISHING,
+  CONFIRM,
+  CREATEQUESTION,
+  DUPLICATE,
+  UPDATE
+}
+
+export enum ConfirmStateType {
+  NULL,
+  DRAFT,
+  PUBLISHED,
+  UPDATED,
+  FAVORITED
+}
+
+export type ModalObject = {
+  modalState: ModalStateType;
+  confirmState: ConfirmStateType;
+}
+
 export type CallType = {
   gameQuestionType: GameQuestionType;
   publicPrivateType: PublicPrivateType;
@@ -91,6 +118,7 @@ export enum TemplateType {
 
 // key for storage to localStorage
 export const StorageKey = 'rightOnCentral';
+export const StorageKeyIsFirstCreate = 'isFirstCreate';
 
 // type that shapes retreived storage for createQuestion
 export type CreateQuestionLocalData = {

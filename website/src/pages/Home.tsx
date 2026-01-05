@@ -121,13 +121,13 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
             loop={0}
           >
             {Array.from({ length: 3 }, (_, setIndex) =>
-             <div key={`set-${setIndex}`} style={{ display: 'flex', gap: '120px' }}>
+             <div key={`set-${setIndex}`} style={{ display: 'flex' }}>
               {imageArr.map(({ image, alt }, imageIndex) => (
                 <img 
                   key={`set-${setIndex}-${alt}`}
                   src={image} 
                   alt={alt} 
-                  style={{ width: 'auto', height: '103px',  objectFit: 'contain', zIndex: 5 }}
+                  style={{ width: 'auto', height: '103px',  objectFit: 'contain', zIndex: 5, marginRight: '120px' }}
                 />
               ))}
               </div>

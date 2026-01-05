@@ -1,32 +1,38 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   CentralQuestionTemplateInput,
-  IncorrectCard,
   IQuestionTemplate,
   PublicPrivateType,
+  TemplateType,
   GradeTarget,
   SortType,
   SortDirection,
-  AnswerType,
-  AnswerPrecision,
   IGameTemplate,
   CloudFrontDistributionUrl
 } from '@righton/networking';
-import { Box, Fade } from '@mui/material';
+import { Box, Fade, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
   CreateGameBoxContainer,
+  CreateGameContentContainer,
+  QuestionHeaderText,
+  QuestionBodyText,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
-import ViewQuestionCards from '../components/question/ViewQuestionCards';
+import CreateQuestionCardUnified from '../components/question/CreateQuestionCardUnified';
 import {
-  CreateQuestionHighlightCard,
   LibraryTabEnum,
   ScreenSize,
   StorageKey,
-  TemplateType,
   GameQuestionType,
+  ModalStateType,
+  StorageKeyIsFirstCreate,
+  ModalObject, 
+  ConfirmStateType 
 } from '../lib/CentralModels';
 import { timeLookup } from '../components/cards/creategamecard/time';
 import {
@@ -35,16 +41,9 @@ import {
   draftTemplate,
   TPhaseTime,
   gameTemplate,
-  emptyQuestionTemplate,
 } from '../lib/CreateGameModels';
-import DiscardModal from '../components/modal/DiscardModal';
 import ModalBackground from '../components/modal/ModalBackground';
-import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
-import CreateGameComponent from '../components/game/CreateGameComponent';
-import QuestionElements from '../components/game/QuestionGridItems';
-import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
-import CCSSTabs from '../components/ccsstabs/CCSSTabs';
-import ImageUploadModal from '../components/modal/ImageUploadModal';
+import CreateGameCardBase from '../components/cards/creategamecard/CreateGameCardBase';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
@@ -54,7 +53,6 @@ import {
   updateGameDescription,
   updateGameTemplatePhaseTime,
   updatePhaseTime,
-  toggleCreateQuestion,
   toggleQuestionBank,
   updateGameImageChange,
   updateGameImageSave,
@@ -69,34 +67,24 @@ import {
   buildRemoveQuestionTemplatePromises,
   buildQuestionTemplatePromises,
   updatePublicPrivateAtIndex,
-  updateAIIsEnabledAtIndex,
-  updateQuestionImageChangeAtIndex,
-  updateQuestionImageSaveAtIndex,
-  updateQuestionTitleChangeAtIndex,
-  updateCorrectAnswerAtIndex,
-  updateCorrectAnswerStepsAtIndex,
-  updateQuestionAnswerTypeAtIndex,
-  updateCloseQuestionModelAtIndex,
-  handleCardClickAtIndex,
-  updateCCSSAtIndex,
-  updateNextButtonClickAtIndex,
-  updateIncorrectCardStackAtIndex,
-  updateCCSSClickAtIndex,
-  updateAIErrorAtIndex,
-  updateImageUploadClickAtIndex,
   openModalAtIndex,
   buildLibraryQuestionAtIndex,
   updateDraftListWithLibraryQuestion,
   handleQuestionListErrors,
 } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
-import { updateDQwithAnswerSettings } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import {
   useCentralDataDispatch,
   useCentralDataState,
 } from '../hooks/context/useCentralDataContext';
+import CreateGameHeader from '../components/game/CreateGameHeader';
+import CentralButton from '../components/button/Button';
+import { ButtonType } from '../components/button/ButtonModels';
+import LibraryTabsModalContainer from '../components/librarytabs/LibraryTabsModalContainer';
+import CreateGameModalSwitch from '../components/modal/switches/CreateGameModalSwitch';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
+  initPublicPrivate: PublicPrivateType;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: (
@@ -116,6 +104,7 @@ interface CreateGameProps {
 
 export default function CreateGame({
   screenSize,
+  initPublicPrivate,
   setIsTabsOpen,
   fetchElement,
   fetchElements,
@@ -124,6 +113,7 @@ export default function CreateGame({
   handleSortChange,
   loadMore,
 }: CreateGameProps) {
+  const theme = useTheme();
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
@@ -140,10 +130,13 @@ export default function CreateGame({
     editRoute?.params.gameId.length > 0;
   const isEditDraft = 
     editRoute?.params.type === 'Draft';
-  const [isUpdatingTemplate, setIsUpdatingTemplate] = useState<boolean>(false);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
-  const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
+  const [isQuestionBankOpen, setIsQuestionBankOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
+  const [modalObject, setModalObject] = useState<ModalObject>({
+    modalState: ModalStateType.NULL,
+    confirmState: ConfirmStateType.NULL,
+  });
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
   const [originalGameType, setOriginalGameType] = useState<PublicPrivateType>(gameTemplate.gameTemplate.publicPrivateType);
   const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
@@ -163,20 +156,21 @@ export default function CreateGame({
   const [isLoading, setIsLoading] = useState(false);
 
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
-    phaseOne: '',
-    phaseTwo: '',
+    phaseOne: '2:00',
+    phaseTwo: '2:00',
   });
+  
+  const [gameFormIsValid, setGameFormIsValid] = useState(false);
+  const [allDQAreValid, setAllDQAreValid] = useState(false);
 
   const openModal = openModalAtIndex(
     draftGame,
     draftQuestionsList,
     selectedQuestionIndex,
   );
-  const gameFormIsValid = checkGameFormIsValid(draftGame);
-  const allDQAreValid = checkDQsAreValid(draftQuestionsList);
+
   // const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid)
   // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
-
   let label = 'Create';
   let selectedGameId = '';
   switch (true) {
@@ -185,7 +179,7 @@ export default function CreateGame({
       selectedGameId = editRoute?.params.gameId || '';
       break;
     case isClone:
-      label = 'Clone';
+      label = 'Your';
       selectedGameId = route?.params.gameId || '';
       break;
     default:
@@ -208,11 +202,17 @@ export default function CreateGame({
   };
 
   const handleOpenCreateQuestion = () => {
-    setDraftGame((prev) => toggleCreateQuestion(prev, gameFormIsValid));
+    setModalObject({
+      modalState: ModalStateType.CREATEQUESTION,
+      confirmState: ConfirmStateType.DRAFT,
+    });
   };
 
   const handleOpenQuestionBank = () => {
-    setDraftGame((prev) => toggleQuestionBank(prev, gameFormIsValid));
+    setIsQuestionBankOpen(true);
+    const isGameFormIsValid = checkGameFormIsValid(draftGame);
+    setGameFormIsValid(isGameFormIsValid);
+    setDraftGame((prev) => toggleQuestionBank(prev, isGameFormIsValid));
   };
 
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
@@ -246,17 +246,26 @@ export default function CreateGame({
   };
 
   const handleDiscardGame = () => {
-    setIsDiscardModalOpen(true);
+    setModalObject({
+      modalState: ModalStateType.DISCARD,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleDiscardClick = (value: boolean) => {
     if (value) {
-      setIsDiscardModalOpen(false);
+      setModalObject({
+        modalState: ModalStateType.NULL,
+        confirmState: ConfirmStateType.NULL,
+      });
       window.localStorage.setItem(StorageKey, '');
       navigate('/');
       return;
     }
-    setIsDiscardModalOpen(false);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
   };
 
   const handleGameImageUploadClick = () => {
@@ -287,9 +296,15 @@ export default function CreateGame({
         ...prev,
         isGameCardSubmitted: true,
       }));
-      setIsUpdatingTemplate(true);
-      const dqValid = checkDQsAreValid(draftQuestionsList);
-      if (gameFormIsValid && dqValid) {
+      setModalObject({
+        modalState: ModalStateType.SAVING,
+        confirmState: ConfirmStateType.UPDATED,
+      });
+      const isDqValid = checkDQsAreValid(draftQuestionsList);
+      const isGameFormIsValid = checkGameFormIsValid(draftGame);
+      setAllDQAreValid(isDqValid);
+      setGameFormIsValid(isGameFormIsValid);
+      if (isGameFormIsValid && isDqValid) {
         // check if game img has been changed
         let gameImgUrl: string | null = null;
         if (
@@ -397,10 +412,13 @@ export default function CreateGame({
           );
           const gameTemplateResponse =
             await apiClients.gameTemplate.updateGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               updatedGame,
             );
-            setIsUpdatingTemplate(false);
+            setModalObject({
+              modalState: ModalStateType.CONFIRM,
+              confirmState: ConfirmStateType.UPDATED,
+            });
         } catch (err) {
           console.log(err);
         }
@@ -411,15 +429,15 @@ export default function CreateGame({
           isGameCardSubmitted: false,
         }));
         centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
-        fetchElements();
-        navigate('/');
+        await fetchElements();
+        // navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
       } else {
         setDraftGame((prev) => ({
           ...prev,
           ...(!gameFormIsValid && { isGameCardErrored: true }),
           isCreatingTemplate: false,
         }));
-        if (!allDQAreValid) {
+        if (!isDqValid) {
           setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
           // then find first errored card and set index to that question
         }
@@ -429,15 +447,23 @@ export default function CreateGame({
     }
   };
 
-  const handleSaveGame = async () => {
+  const handlePublishGame = async () => {
     try {
+      setModalObject({
+        modalState: ModalStateType.PUBLISHING,
+        confirmState: ConfirmStateType.PUBLISHED,
+      });
       setDraftGame((prev) => ({
         ...prev,
         isGameCardSubmitted: true,
         isCreatingTemplate: true,
       }));
       // confirm game & question form validity
-      if (gameFormIsValid && allDQAreValid) {
+      const isGameFormIsValid = checkGameFormIsValid(draftGame);
+      setGameFormIsValid(isGameFormIsValid);
+      const isDqValid = checkDQsAreValid(draftQuestionsList);
+      setAllDQAreValid(isDqValid);
+      if (isGameFormIsValid && isDqValid) {
         // check for images on draft game
         let gameImgUrl: string | null = null;
         if (draftGame.image || draftGame.imageUrl) {
@@ -455,7 +481,6 @@ export default function CreateGame({
           }
       }
         const userId = centralData.userProfile?.id || '';
-       
         try {
           if (draftQuestionsList.length > 0) {
             // convert questions to array of promises & write to db
@@ -487,7 +512,7 @@ export default function CreateGame({
             );
             const gameTemplateResponse =
               await apiClients.gameTemplate.createGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
            
@@ -501,7 +526,6 @@ export default function CreateGame({
             )
 
             questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
-
             // make sure we have a gameTemplate id as well as question template ids before creating a game question
             if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
               try {
@@ -510,6 +534,7 @@ export default function CreateGame({
                   gameTemplateResponse.id,
                   questionTemplateIds,
                   apiClients,
+                  draftGame.gameTemplate.publicPrivateType,
                 );
                 // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
                 await Promise.all(createGameQuestions);
@@ -534,7 +559,7 @@ export default function CreateGame({
             );
 
             await apiClients.gameTemplate.createGameTemplate(
-              draftGame.gameTemplate.publicPrivateType,
+              draftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
           }
@@ -561,8 +586,10 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
-        fetchElements();
-        navigate('/');
+        setModalObject({
+          modalState: ModalStateType.CONFIRM,
+          confirmState: ConfirmStateType.PUBLISHED,
+        });
       } else {
         setDraftGame((prev) => ({
           ...prev,
@@ -573,11 +600,24 @@ export default function CreateGame({
           setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
           // then find first errored card and set index to that question
         }
+        setModalObject({
+          modalState: ModalStateType.NULL,
+          confirmState: ConfirmStateType.NULL,
+        });
       }
     } catch (err) {
+      console.error('Error creating game template:', err);
       setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
     }
   };
+
+  const handleEdit = () => {
+      setModalObject({
+        modalState: ModalStateType.UPDATE,
+        confirmState: ConfirmStateType.NULL,
+      });
+  };
+
 
    const handleSaveEditedGame = async () => {
     try {
@@ -585,9 +625,9 @@ export default function CreateGame({
         await handleUpdateEditedGame();
         return;
       }
-      await handleSaveGame();
+      await handlePublishGame();
       await apiClients.gameTemplate.deleteGameTemplate(
-          originalGameType,
+          originalGameType as TemplateType,
           selectedGameId
       );
       fetchElements(LibraryTabEnum.PUBLIC, '', null , true);
@@ -611,7 +651,11 @@ export default function CreateGame({
       }
        setDraftGame(updatedDraftGame);
       // confirm game & question form validity
-      if (gameFormIsValid && allDQAreValid) {
+      const isGameFormIsValid = checkGameFormIsValid(updatedDraftGame);
+      const isDqValid = checkDQsAreValid(draftQuestionsList);
+      setAllDQAreValid(isDqValid);
+      setGameFormIsValid(isGameFormIsValid);
+      if (isGameFormIsValid && isDqValid) {
         // check for images on draft game
         let gameImgUrl: string | null = null;
         if (updatedDraftGame.image || updatedDraftGame.imageUrl) {
@@ -661,12 +705,12 @@ export default function CreateGame({
             );
             const gameTemplateResponse =
               await apiClients.gameTemplate.createGameTemplate(
-              updatedDraftGame.gameTemplate.publicPrivateType,
+              updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
             if (gameTemplateResponse && selectedGameId) {
               await apiClients.gameTemplate.deleteGameTemplate(
-                PublicPrivateType.DRAFT,
+                PublicPrivateType.DRAFT as TemplateType,
                 selectedGameId
               )
             }
@@ -714,17 +758,16 @@ export default function CreateGame({
             );
 
             const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
-              updatedDraftGame.gameTemplate.publicPrivateType,
+              updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
              if (gameTemplateResponse && selectedGameId) {
               await apiClients.gameTemplate.deleteGameTemplate(
-                PublicPrivateType.DRAFT,
+                PublicPrivateType.DRAFT as TemplateType,
                 selectedGameId
               )
             }
           }
-
         } catch (err) {
           console.error('Error creating game template:', err);
         }
@@ -748,8 +791,10 @@ export default function CreateGame({
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
         }));
-        fetchElements();
-        navigate('/');
+        setModalObject({
+          modalState: ModalStateType.CONFIRM,
+          confirmState: ConfirmStateType.DRAFT,
+        });
       } else {
         setDraftGame((prev) => ({
           ...prev,
@@ -767,16 +812,62 @@ export default function CreateGame({
   };
 
   const handleSave = async () => {
-    if (isEditDraft)
-      return handleCreateFromDraftGame();
-    if (isEdit)
-      return handleSaveEditedGame();
-    return handleSaveGame();
+    // if (isEditDraft)
+    //   return handleCreateFromDraftGame();
+    // if (isEdit)
+    //   return handleSaveEditedGame();
+    const isGameFormIsValid = checkGameFormIsValid(draftGame);
+    const isDqValid = checkDQsAreValid(draftQuestionsList);
+    setAllDQAreValid(isDqValid);
+    setGameFormIsValid(isGameFormIsValid);
+    if (!isGameFormIsValid || !isDqValid) {
+      setDraftGame((prev) => ({
+        ...prev,
+        ...(!isGameFormIsValid && { isGameCardErrored: true }),
+        isCreatingTemplate: false,
+      }));
+      if (!allDQAreValid) {
+        setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
+      }
+    } else {
+      setDraftGame((prev) => ({
+        ...prev,
+        isGameCardErrored: false,
+      }));
+    }
+    return setModalObject({
+      modalState: ModalStateType.PUBLISH,
+      confirmState: ConfirmStateType.PUBLISHED,
+    });
   };
 
+  const handleCloseSaveGameModal = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
+
+  const handleCloseDiscardModal = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
+
+  const handleCloseCreateQuestionModal = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
 
   const handleSaveDraftGame = async () => {
     try {
+      setModalObject({
+        modalState: ModalStateType.SAVING,
+        confirmState: ConfirmStateType.DRAFT,
+      });
       if (!draftGame.gameTemplate.title) {
         setDraftGame((prev) => ({
           ...prev,
@@ -784,12 +875,24 @@ export default function CreateGame({
         }));
         return;
       }
+
+      // update the game and questions to store the currently selected public private type
       const draftGameCopy = {
         ...draftGame,
         publicPrivateGame: PublicPrivateType.DRAFT,
+        finalPublicPrivateType: draftGame.gameTemplate.finalPublicPrivateType,
         isGameCardSubmitted: true,
         isCreatingTemplate: true,
       };
+      const draftQuestionsListCopy = draftQuestionsList.map((dq) => ({
+        ...dq,
+        questionTemplate: {
+          ...dq.questionTemplate,
+          finalPublicPrivateType: draftGameCopy.gameTemplate.finalPublicPrivateType
+        }
+      }));
+      
+      setDraftQuestionsList(draftQuestionsListCopy);
       setDraftGame(draftGameCopy);
       // check for images on draft game
       let gameImgUrl: string | null = null;
@@ -806,7 +909,8 @@ export default function CreateGame({
       }
       const userId = centralData.userProfile?.id || '';
 
-       // convert questions to array of promises & write to db
+      // questions that are new (and will be saved as draft questions)
+      // convert questions to array of promises & write to db
       const newQuestionTemplates = buildQuestionTemplatePromises(
         draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
         userId,
@@ -814,7 +918,6 @@ export default function CreateGame({
         PublicPrivateType.DRAFT,
       );
       const questionTemplateResponse = await Promise.all(newQuestionTemplates);
-
       // extract ccssDescription from question templates
       const questionTemplateCCSS = questionTemplateResponse.map(
         (question) => String(question?.ccssDescription),
@@ -825,35 +928,40 @@ export default function CreateGame({
       const addQuestionTemplateCCSS = addedQuestionTemplates
         .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
       questionTemplateCCSS.push(...addQuestionTemplateCCSS);
+
+      const addedQuestionPublicTemplates = addedQuestionTemplates.filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PUBLIC);
+
+      const addedQuestionPrivateTemplates = addedQuestionTemplates.filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE);
+
+      const draftPublicQuestionIds = addedQuestionPublicTemplates.map((question) => question.questionTemplate.id);
+      const draftPrivateQuestionIds = addedQuestionPrivateTemplates.map((question) => question.questionTemplate.id);
       
+      draftGameCopy.gameTemplate.publicQuestionIds = [...draftPublicQuestionIds];
+      draftGameCopy.gameTemplate.privateQuestionIds = [...draftPrivateQuestionIds];
       // create & store game template in variable to retrieve id after response
       const createGame = buildGameTemplate(
         draftGameCopy,
         userId,
         draftQuestionsList,
         gameImgUrl,
-        questionTemplateCCSS
+        questionTemplateCCSS,
+        true
       );
       const gameTemplateResponse =
         await apiClients.gameTemplate.createGameTemplate(
-          PublicPrivateType.DRAFT,
+          PublicPrivateType.DRAFT as TemplateType,
           createGame,
         );
-     
       // create an array of all the ids from the response
-      let questionTemplateIds = questionTemplateResponse.map((question) =>
+      const questionTemplateIds = questionTemplateResponse.map((question) =>
         String(question?.id),
       );
 
-      const addedQuestionTemplatesIds = addedQuestionTemplates.map(
-        (question) => String(question?.questionTemplate?.id),
-      )
-
-      questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
-
       // make sure we have a gameTemplate id as well as question template ids before creating a game question
-      if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+      
+      if (gameTemplateResponse.id && (questionTemplateIds.length > 0)) {
         try {
+          // this is only for new questions so we don't write gamequestions that mix draft and public/private questions
           const createGameQuestions = buildGameQuestionPromises(
             draftGameCopy,
             gameTemplateResponse.id,
@@ -871,11 +979,17 @@ export default function CreateGame({
 
       setDraftGame((prev) => ({
         ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+          publicPrivateType: PublicPrivateType.DRAFT,
+        },
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
-      fetchElements();
-      navigate('/');
+      setModalObject({
+        modalState: ModalStateType.CONFIRM,
+        confirmState: ConfirmStateType.DRAFT,
+      });
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
     }
@@ -883,7 +997,10 @@ export default function CreateGame({
 
   const handleUpdateDraftGame = async () => {
      try {
-      setIsUpdatingTemplate(true);
+      setModalObject({
+        modalState: ModalStateType.SAVING,
+        confirmState: ConfirmStateType.DRAFT,
+      });
       if (!draftGame.gameTemplate.title) {
         setDraftGame((prev) => ({
           ...prev,
@@ -922,7 +1039,7 @@ export default function CreateGame({
       );
       const gameTemplateResponse =
         await apiClients.gameTemplate.updateGameTemplate(
-          PublicPrivateType.DRAFT,
+          PublicPrivateType.DRAFT as TemplateType,
           {...createGame, id: selectedGameId},
         );
 
@@ -931,7 +1048,10 @@ export default function CreateGame({
         isCreatingTemplate: false,
         isGameCardSubmitted: false,
       }));
-      setIsUpdatingTemplate(false);
+      setModalObject({
+        modalState: ModalStateType.NULL,
+        confirmState: ConfirmStateType.NULL,
+      });
       fetchElements();
       navigate('/');
     } catch (err) {
@@ -947,197 +1067,13 @@ export default function CreateGame({
   }
 
   /** END OF CREATE GAME HANDLERS  */
-
-
-
-  /** CREATE QUESTION HANDLERS START */
-  const handlePublicPrivateQuestionChange = (value: PublicPrivateType) => {
-    setDraftQuestionsList((prev) => updatePublicPrivateAtIndex(prev, value));
-  };
-
-  const handleAIIsEnabled = () => {
-    setDraftQuestionsList((prev) =>
-      updateAIIsEnabledAtIndex(prev, selectedQuestionIndex),
-    );
-  };
-
-  const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
-    setDraftQuestionsList((prev) =>
-      updateQuestionImageChangeAtIndex(
-        prev,
-        selectedQuestionIndex,
-        inputImage,
-        inputUrl,
-      ),
-    );
-  };
-
-  const handleImageSave = async (inputImage?: File, inputUrl?: string) => {
-    setDraftQuestionsList((prev) =>
-      updateQuestionImageSaveAtIndex(
-        prev,
-        selectedQuestionIndex,
-        inputImage,
-        inputUrl,
-      ),
-    );
-  };
-
-  const handleDebouncedTitleChange = useCallback(
-    // eslint-disable-line
-    (title: string) => {
-      setDraftQuestionsList((prev) =>
-        updateQuestionTitleChangeAtIndex(prev, selectedQuestionIndex, title),
-      );
-    },
-    [selectedQuestionIndex],
-  );
-
-  const handleDebouncedCorrectAnswerChange = useCallback(
-    // eslint-disable-line
-    (
-      correctAnswer: string,
-      draftQuestionInput: CentralQuestionTemplateInput,
-    ) => {
-      setDraftQuestionsList((prev) =>
-        updateCorrectAnswerAtIndex(prev, selectedQuestionIndex, correctAnswer),
-      );
-    },
-    [selectedQuestionIndex],
-  );
-
-  const handleDebouncedCorrectAnswerStepsChange = useCallback(
-    // eslint-disable-line
-    (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
-      setDraftQuestionsList((prev) =>
-        updateCorrectAnswerStepsAtIndex(prev, selectedQuestionIndex, steps),
-      );
-    },
-    [selectedQuestionIndex],
-  );
-
-  const handleAnswerSettingsChange = (
-    draftQuestionInput: CentralQuestionTemplateInput,
-    answerType: AnswerType,
-    answerPrecision?: AnswerPrecision,
-  ) => {
-    setDraftQuestionsList((prev) => {
-      return prev.map((draftItem, i) => {
-        if (i === selectedQuestionIndex) {
-          const currentDraftQuestion = draftItem.question;
-          const newQuestion = updateDQwithAnswerSettings(
-            currentDraftQuestion,
-            answerType,
-            answerPrecision,
-          );
-          return {
-            ...draftItem,
-            question: newQuestion,
-          };
-        }
-        return draftItem;
-      });
-    });
-  };
-
-  const handleAnswerType = () => {
-    setDraftQuestionsList((prev) =>
-      updateQuestionAnswerTypeAtIndex(prev, selectedQuestionIndex),
-    );
-  };
-
   const handleCloseQuestionModal = () => {
-    setIsDiscardModalOpen(false);
-    setIsUpdatingTemplate(false);
+    setIsQuestionBankOpen(false);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
-    setDraftQuestionsList((prev) =>
-      updateCloseQuestionModelAtIndex(prev, selectedQuestionIndex),
-    );
   };
-
-  const handleClick = (cardType: CreateQuestionHighlightCard) => {
-    setDraftQuestionsList((prev) =>
-      handleCardClickAtIndex(prev, selectedQuestionIndex, cardType),
-    );
-  };
-
-  const handleCCSSSubmit = (ccssString: string) => {
-    setDraftQuestionsList((prev) =>
-      updateCCSSAtIndex(prev, selectedQuestionIndex, ccssString),
-    );
-  };
-
-  const handleNextCardButtonClick = (cardData: IncorrectCard) => {
-    setDraftQuestionsList((prev) =>
-      updateNextButtonClickAtIndex(prev, selectedQuestionIndex, cardData),
-    );
-  };
-
-  const handleIncorrectCardStackUpdate = (
-    cardData: IncorrectCard,
-    draftQuestionInput: CentralQuestionTemplateInput,
-    completeAnswers: IncorrectCard[],
-    incompleteAnswers: IncorrectCard[],
-    isAIEnabledCard?: boolean,
-  ) => {
-    setDraftQuestionsList((prev) =>
-      updateIncorrectCardStackAtIndex(
-        prev,
-        selectedQuestionIndex,
-        cardData,
-        completeAnswers,
-        incompleteAnswers,
-        isAIEnabledCard,
-      ),
-    );
-  };
-
-  const handleCCSSClicks = () => {
-    setDraftQuestionsList((prev) =>
-      updateCCSSClickAtIndex(prev, selectedQuestionIndex),
-    );
-  };
-
-  const handleAIError = () => {
-    setDraftQuestionsList((prev) =>
-      updateAIErrorAtIndex(prev, selectedQuestionIndex),
-    );
-  };
-
-  const handleQuestionImageUploadClick = () => {
-    setDraftQuestionsList((prev) =>
-      updateImageUploadClickAtIndex(prev, selectedQuestionIndex),
-    );
-  };
-
-  const handleSaveQuestion = async () => {
-    try {
-      // Make sure all cards are completed for question.
-      if (!allDQAreValid) {
-        return;
-      }
-      const userId = centralData.userProfile?.id || '';
-      // process valid questions in order
-      const questionTemplate = buildQuestionTemplatePromises(
-        draftQuestionsList,
-        userId,
-        apiClients,
-      );
-      await Promise.all(questionTemplate);
-
-      // Reset data and re-direct user
-      setDraftQuestionsList([]);
-      fetchElements();
-      navigate('/');
-    } catch (err) {
-      console.error('Error during save process:', err);
-    }
-  };
-
-  /** END OF CREATE QUESTION HANDLERS  */
-
+  
   /** LIBRARY HANDLER HELPERS */
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE) return value;
@@ -1171,37 +1107,10 @@ export default function CreateGame({
     setIconButtons((prevButtons) =>
       addNew ? [...prevButtons, prevButtons.length + 1] : prevButtons,
     );
+    setIsQuestionBankOpen(false);
   };
 
   /** LIBRARY HANDLER HELPERS */
-
-  // game questions index handlers
-  const handleQuestionIndexChange = (index: number) => {
-    setSelectedQuestionIndex(index);
-    if (draftGame.openQuestionBank) {
-      setDraftGame((prev) => toggleCreateQuestion(draftGame, gameFormIsValid));
-    }
-  };
-
-  const handleAddMoreQuestions = () => {
-    const numOfQuestions = draftQuestionsList.length;
-    setDraftQuestionsList((prev) => [
-      ...prev,
-      {
-        ...draftTemplate,
-        publicPrivate: draftGame.gameTemplate.publicPrivateType,
-      },
-    ]);
-    setDraftGame((prev) => ({
-      ...prev,
-      questionCount: prev.questionCount + 1,
-      isGameCardSubmitted: false,
-    }));
-    setIconButtons((prev) => [...prev, prev.length + 1]);
-    const newIndex = numOfQuestions;
-    setSelectedQuestionIndex(newIndex);
-  };
-
   const handleDeleteQuestion = (index: number) => {
     if (index === 0 && draftQuestionsList.length === 1) {
       setDraftQuestionsList([]);
@@ -1241,19 +1150,59 @@ export default function CreateGame({
     setSelectedQuestionIndex(0);
   };
   const handleDiscard = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
+
+  const handleContinue = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+    navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
+  };
+
+  const handleCreateQuestion = (draftQuestion: CentralQuestionTemplateInput) => {
+    setDraftQuestionsList((prev) => [{
+      ...draftTemplate,
+      question: draftQuestion,
+      publicPrivate: draftGame.gameTemplate.publicPrivateType,
+      isAIEnabled: false,
+      isAIError: false,
+      isQuestionCardSubmitted: false,
+      isQuestionCardErrored: false,
+      localId: uuidv4(),
+    },...prev ]);
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
+
   useEffect(() => {
     setIsLoading(false);
+    if (localStorage.getItem(StorageKeyIsFirstCreate) === null){
+      localStorage.setItem(StorageKeyIsFirstCreate, 'false');
+      setDraftGame((prev) => ({
+        ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+          publicPrivateType: initPublicPrivate,
+        },
+      }));
+    }
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;
     if (selected !== null && (isClone || isEdit)) {
-      // regex to detect (clone of) in title
-      const regex = /\(Clone of\)/i;
+      // regex to detect [DUPLICATE OF] in title
+      const regex = /\[DUPLICATE OF\]/i;
       if (selected?.game && title && !regex.test(title) && isClone)
-        selected.game.title = `(Clone of) ${title}`;
+        selected.game.title = `[DUPLICATE OF] ${title}`;
       if (selected.game) {
         setDraftGame((prev) => ({
           ...prev,
@@ -1303,63 +1252,43 @@ export default function CreateGame({
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }
   }, [centralData.selectedGame, route, selectedGameId]); // eslint-disable-line
+
   return (
-    <CreateGameMainContainer>
+    <CreateGameMainContainer screenSize={screenSize}>
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
-        isModalOpen={openModal || isDiscardModalOpen || draftGame.isCreatingTemplate || isUpdatingTemplate}
+        isModalOpen={openModal || modalObject.modalState !== ModalStateType.NULL}
         handleCloseModal={handleCloseQuestionModal}
       />
-      <DiscardModal
-        isModalOpen={isDiscardModalOpen}
+      <LibraryTabsModalContainer
+        isPublic={ draftGame.gameTemplate.publicPrivateType ===
+          PublicPrivateType.PUBLIC || draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT}
+        isTabsOpen={isQuestionBankOpen}
+        handleCloseQuestionTabs={handleCloseQuestionModal}
         screenSize={screenSize}
-        handleDiscardClick={handleDiscardClick}
+        setIsTabsOpen={setIsTabsOpen}
+        handleChooseGrades={handleChooseGrades}
+        handleSortChange={handleSortChange}
+        handleSearchChange={handleSearchChange}
+        fetchElements={fetchElements}
+        handleQuestionView={handleView}
       />
-      <CreatingTemplateModal
-        isModalOpen={draftGame.isCreatingTemplate || isUpdatingTemplate}
-        isUpdatingTemplate={isUpdatingTemplate}
-        templateType={TemplateType.GAME}
+      <CreateGameModalSwitch
+        modalObject={modalObject}
+        screenSize={screenSize}
+        publicPrivate={draftGame.gameTemplate.publicPrivateType}
+        handleDiscard={handleDiscard}
+        handleCloseDiscardModal={handleCloseDiscardModal}
+        handlePublishGame={handlePublishGame}
+        handleCloseSaveGameModal={handleCloseSaveGameModal}
+        handleContinue={handleContinue}
+        handleCreateQuestion={handleCreateQuestion}
+        handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
+        handleSaveDraft={handleDraftSave}
+        isCardErrored={draftGame.isGameCardErrored}
+        handleSaveEditedGame={handleSaveEditedGame}
       />
-
-      {/* tracks ccss state according to index */}
-      {draftQuestionsList.length > 0 &&
-        selectedQuestionIndex !== null &&
-        draftQuestionsList[selectedQuestionIndex] != null &&
-        draftQuestionsList[selectedQuestionIndex]?.isCCSSVisibleModal && (
-          <CCSSTabs
-            screenSize={screenSize}
-            isTabsOpen={
-              draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal
-            }
-            handleCCSSSubmit={handleCCSSSubmit}
-            ccss={
-              draftQuestionsList[selectedQuestionIndex].question.questionCard
-                .ccss ?? ''
-            }
-          />
-        )}
-
-      {/* open modals according to correct index */}
-      {draftQuestionsList.length > 0 &&
-        selectedQuestionIndex !== null &&
-        draftQuestionsList[selectedQuestionIndex] != null && (
-          <ImageUploadModal
-            draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
-            screenSize={screenSize}
-            isClone={isClone}
-            isCloneImageChanged={
-              draftQuestionsList[selectedQuestionIndex]
-                .isCloneQuestionImageChanged
-            }
-            isModalOpen={
-              draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
-            }
-            handleImageChange={handleImageChange}
-            handleImageSave={handleImageSave}
-            handleCloseModal={handleCloseQuestionModal}
-          />
-        )}
 
       {/* Create Game Image Upload Modal */}
       <CreateGameImageUploadModal
@@ -1374,141 +1303,191 @@ export default function CreateGame({
       />
 
       {/* Create Game Card flow starts here */}
-      <CreateGameBoxContainer>
-        <CreateGameComponent
-          draftGame={draftGame}
-          draftQuestionsList={draftQuestionsList}
-          isClone={isClone}
-          isEdit={isEdit}
-          isEditDraft={isEditDraft}
-          isLoading={centralData.isLoading || isLoading}
-          isCloneImageChanged={draftGame.isCloneGameImageChanged}
-          label={label}
-          screenSize={screenSize}
-          handleSaveGame={handleSave}
-          handleSaveDraftGame={handleDraftSave}
-          handleDiscard={handleDiscardGame}
-          handlePublicPrivateChange={handlePublicPrivateGameChange}
-          handleImageUploadClick={handleGameImageUploadClick}
-          onCreateQuestion={handleOpenCreateQuestion}
-          onOpenQuestionBank={handleOpenQuestionBank}
-          handlePhaseTime={handlePhaseTime}
-          onGameDescription={handleGameDescription}
-          onGameTitle={handleGameTitle}
-          phaseTime={phaseTime}
-          selectedIndex={selectedQuestionIndex}
-          iconButtons={iconButtons}
-          setSelectedIndex={handleQuestionIndexChange}
-          addMoreQuestions={handleAddMoreQuestions}
-          handleDeleteQuestion={handleDeleteQuestion}
-        />
-
-        {/* Create Question Form(s)  */}
-        {draftQuestionsList.map((draftQuestionItem, index) => {
-          return (
-            index === selectedQuestionIndex && (
-              <Fade
-                timeout={500}
-                in={draftGame.openCreateQuestion}
-                mountOnEnter
-                unmountOnExit
-                key={`Question--${index + 1}`}
+      <CreateGameContentContainer>
+        <CreateGameHeader handleEdit={handleEdit} isEdit={isEdit} handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} isQuestionAdded={draftQuestionsList.length > 0}/>
+        {screenSize !== ScreenSize.LARGE && (
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              gap: `${theme.sizing.smPadding}px`,
+            }}
+          >
+            <QuestionHeaderText>
+              Questions
+            </QuestionHeaderText>
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: screenSize !== ScreenSize.MEDIUM ? 'column' : 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: `${theme.sizing.xSmPadding}px`,
+              }}
+            >
+                <CentralButton
+                  buttonType={ButtonType.CREATEQUESTION}
+                  isEnabled
+                  onClick={handleOpenCreateQuestion}
+                />
+                <CentralButton
+                  buttonType={ButtonType.QUESTIONBANK}
+                  isEnabled
+                  onClick={handleOpenQuestionBank}
+                />
+            </Box>
+          </Box>
+        )}
+        <CreateGameBoxContainer screenSize={screenSize}>
+          <CreateGameCardBase
+            draftGame={draftGame}
+            isClone={isClone}
+            isEdit={isEdit}
+            isEditDraft={isEditDraft}
+            isCloneImageChanged={draftGame.isCloneGameImageChanged}
+            label={label}
+            screenSize={screenSize}
+            handleImageUploadClick={handleGameImageUploadClick}
+            handlePublicPrivateChange={handlePublicPrivateGameChange}
+            handlePhaseTime={handlePhaseTime}
+            onGameDescription={handleGameDescription}
+            onGameTitle={handleGameTitle}
+            isCardSubmitted={draftGame.isGameCardSubmitted}
+            isCardErrored={draftGame.isGameCardErrored}
+            phaseTime={phaseTime}
+            gameTitle={draftGame.gameTemplate.title}
+            gameDescription={draftGame.gameTemplate.description}
+            openCreateQuestion={draftGame.openCreateQuestion}
+            openQuestionBank={draftGame.openQuestionBank}
+          />
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+              gap: `${theme.sizing.lgPadding}px`,
+            }}
+          >
+            {screenSize === ScreenSize.LARGE && (
+              <Box
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                }}
               >
+                <QuestionHeaderText>
+                  Questions
+                </QuestionHeaderText>
                 <Box
                   sx={{
-                    width: draftQuestionItem.isLibraryViewOnly
-                      ? '100%'
-                      : 'auto',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    gap: `${theme.sizing.xSmPadding}px`,
                   }}
                 >
-                  {draftQuestionItem.isLibraryViewOnly ? (
-                    <ViewQuestionCards
-                      screenSize={screenSize}
-                      question={draftQuestionItem.questionTemplate}
-                      isViewGame
-                      isCreateGame
+                    <CentralButton
+                      buttonType={ButtonType.CREATEQUESTION}
+                      isEnabled
+                      onClick={handleOpenCreateQuestion}
                     />
-                  ) : (
-                    <QuestionElements
-                      screenSize={screenSize}
-                      isClone={isClone}
-                      isEdit={isEdit}
-                      isCloneImageChanged={
-                        draftQuestionItem.isCloneQuestionImageChanged
-                      }
-                      label={label}
-                      draftQuestion={draftQuestionItem.question}
-                      completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
-                        (card) => card.isCardComplete,
-                      )}
-                      incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
-                        (card) => !card.isCardComplete,
-                      )}
-                      isCardSubmitted={
-                        draftQuestionItem.isQuestionCardSubmitted
-                      }
-                      isCardErrored={draftQuestionItem.isQuestionCardErrored}
-                      highlightCard={draftQuestionItem.highlightCard}
-                      isAIEnabled={draftQuestionItem.isAIEnabled}
-                      isAIError={draftQuestionItem.isAIError}
-                      isPublic={
-                        draftQuestionItem.publicPrivate ===
-                        PublicPrivateType.PUBLIC
-                      }
-                      isMultipleChoice={draftQuestionItem.isMultipleChoice}
-                      handleAnswerType={handleAnswerType}
-                      handleDebouncedCorrectAnswerChange={
-                        handleDebouncedCorrectAnswerChange
-                      }
-                      handleDebouncedCorrectAnswerStepsChange={
-                        handleDebouncedCorrectAnswerStepsChange
-                      }
-                      handleAnswerSettingsChange={handleAnswerSettingsChange}
-                      handleDebouncedTitleChange={handleDebouncedTitleChange}
-                      handlePublicPrivateChange={
-                        handlePublicPrivateQuestionChange
-                      }
-                      handleDiscardQuestion={handleDiscard}
-                      handleSaveQuestion={handleSaveQuestion}
-                      handleAIError={handleAIError}
-                      handleAIIsEnabled={handleAIIsEnabled}
-                      handleNextCardButtonClick={handleNextCardButtonClick}
-                      handleIncorrectCardStackUpdate={
-                        handleIncorrectCardStackUpdate
-                      }
-                      handleClick={handleClick}
-                      handleCCSSClick={handleCCSSClicks}
-                      handleImageUploadClick={handleQuestionImageUploadClick}
+                    <CentralButton
+                      buttonType={ButtonType.QUESTIONBANK}
+                      isEnabled
+                      onClick={handleOpenQuestionBank}
                     />
-                  )}
                 </Box>
-              </Fade>
-            )
-          );
-        })}
-        <Fade
-          in={draftGame.openQuestionBank}
-          mountOnEnter
-          unmountOnExit
-          timeout={500}
-        >
-          <Box sx={{ width: '100%' }}>
-            <LibraryTabsQuestions
-              isPublic={
-                draftGame.gameTemplate.publicPrivateType ===
-                PublicPrivateType.PUBLIC || draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT
-              }
-              screenSize={screenSize}
-              setIsTabsOpen={setIsTabsOpen}
-              handleChooseGrades={handleChooseGrades}
-              handleSortChange={handleSortChange}
-              handleSearchChange={handleSearchChange}
-              fetchElements={fetchElements}
-              handleView={handleView}
-            />
+              </Box>
+            )}
+            {draftQuestionsList.length > 0 ? (
+              <Box 
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                  gap: `${theme.sizing.lgPadding}px`,
+                }}
+              >
+                {/* Create Question Form(s)  */}
+                <AnimatePresence>
+                  {draftQuestionsList.map((draftQuestionItem, index) => {
+                    const uniqueKey = draftQuestionItem.questionTemplate?.id ||
+                                     draftQuestionItem.localId ||
+                                     `fallback-${index}`;
+                    const isUserCreated = draftQuestionItem.questionTemplate?.userId === centralData.userProfile?.id;
+                    return (
+                        <motion.div
+                          key={uniqueKey}
+                          initial={{ opacity: 0, y: index === 0 ? 0 : -100 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                          layout
+                          style={{
+                            width: '100%',
+                            display: 'flex'
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: draftQuestionItem.isLibraryViewOnly
+                                ? '100%'
+                                : 'auto',
+                              flex: 1,
+                            }}
+                          >
+                            <CreateQuestionCardUnified
+                              screenSize={screenSize}
+                              question={draftQuestionItem.question}
+                              questionTemplate={draftQuestionItem.questionTemplate ?? null}
+                              isUserCreated={isUserCreated}
+                              handleRemoveQuestion={() => handleDeleteQuestion(index)}
+                              isViewGame
+                              isCreateGame
+                            />
+                          </Box>
+                        </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </Box>
+            ) : (
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingTop: screenSize === ScreenSize.SMALL ? '0px' : '128px',
+              }}
+            >
+              <Box
+                sx={{
+                  width: '100%',
+                  maxWidth:'520px',
+                }}
+              >
+                <QuestionBodyText>
+                  You can select <i>Add Question</i> to create questions from scratch or select <i>Question Bank</i> to add ready-made public questions.
+                </QuestionBodyText>
+              </Box>
+            </Box>
+          )}
           </Box>
-        </Fade>
-      </CreateGameBoxContainer>
+        </CreateGameBoxContainer>
+      </CreateGameContentContainer>
     </CreateGameMainContainer>
   );
 }

@@ -4,18 +4,19 @@ import errorCardIcon from '../../../images/errorCardIcon.svg';
 import { ScreenSize } from '../../../lib/CentralModels';
 
 const CreateGameErrorContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
   display: 'flex',
   gap: '16px',
   paddingLeft: '16px',
   paddingRight: '16px',
-  paddingTop: '8px',
-  paddingBottom: '8px',
+  paddingTop: '36px',
+  paddingBottom: '36px',
   alignItems: 'center',
   justifyContent: 'flex-start',
   borderRadius: '8px',
   border: `2px solid ${theme.palette.primary.errorBorder}`,
   background: `${theme.palette.primary.uploadLightGrey}`,
-  borderBox: 'box-sizing',
+  boxSizing: 'border-box',
 }));
 
 type TErrorTextProps = {

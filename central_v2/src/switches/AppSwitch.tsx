@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useMatch } from 'react-router-dom';
 import {
   SortType,
   SortDirection,
@@ -15,7 +16,9 @@ import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login';
 import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
+import CreateGameSwitch from './CreateGameSwitch';
 import ViewGame from '../pages/ViewGame';
+import ViewQuestion from '../pages/ViewQuestion';
 import MyLibrary from '../pages/MyLibrary';
 import UserProfile from '../pages/UserProfile';
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
@@ -31,6 +34,8 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const routeLibraryGames = useMatch('/library/games/:type');
+  const routeLibraryQuestions = useMatch('/library/questions/:type');
   const [libraryGameQuestionSwitch, setLibraryGameQuestionSwitch] =
     useState<GameQuestionType>(GameQuestionType.GAME);
   const screenSize = isLargeScreen // eslint-disable-line
@@ -63,6 +68,23 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     checkForUniqueEmail,
     deleteQuestionTemplate,
   } = useCentralDataManager({ gameQuestion });
+
+  // Auto-detect games vs questions from route
+  useEffect(() => {
+    if (routeLibraryGames) {
+      setLibraryGameQuestionSwitch(GameQuestionType.GAME);
+      handleSortChange({
+        field: SortType.listGameTemplates,
+        direction: SortDirection.DESC,
+      });
+    } else if (routeLibraryQuestions) {
+      setLibraryGameQuestionSwitch(GameQuestionType.QUESTION);
+      handleSortChange({
+        field: SortType.listQuestionTemplates,
+        direction: SortDirection.DESC,
+      });
+    }
+  }, [routeLibraryGames, routeLibraryQuestions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLibraryGameQuestionSwitch = (
     gameQuestionValue: GameQuestionType,
@@ -174,7 +196,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.CREATEGAME: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
-          <CreateGame
+          <CreateGameSwitch
             screenSize={screenSize}
             setIsTabsOpen={setIsTabsOpen}
             fetchElement={fetchElement}
@@ -191,7 +213,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.CLONEGAME:
     case ScreenType.EDITGAME: {
       screenComponent = (
-        <CreateGame
+        <CreateGameSwitch
           screenSize={screenSize}
           setIsTabsOpen={setIsTabsOpen}
           fetchElement={fetchElement}
@@ -216,8 +238,21 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
       );
       break;
     }
+    case ScreenType.VIEWQUESTION: {
+      screenComponent = (
+        <AuthGuard handleLogOut={handleLogOut}>
+          <ViewQuestion
+            screenSize={screenSize}
+            fetchElement={fetchElement}
+            fetchElements={fetchElements}
+            deleteQuestionTemplate={deleteQuestionTemplate}
+          />
+        </AuthGuard>
+      );
+      break;
+    }
     case ScreenType.USERPROFILE: {
-      screenComponent = <UserProfile screenSize={screenSize} />;
+      screenComponent = <UserProfile screenSize={screenSize} handleLogOut={handleLogOut} />;
       break;
     }
     case ScreenType.GAMES:

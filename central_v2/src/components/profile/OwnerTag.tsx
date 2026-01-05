@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Grid, styled, CircularProgress } from '@mui/material';
+import { Typography, Box, Paper, Grid, styled, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { CloudFrontDistributionUrl } from '@righton/networking';
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
@@ -13,19 +13,22 @@ interface OwnerTagProps {
   isViewGame?: boolean;
 }
 
-const OwnerTagFlexContainer = styled(Box)<OwnerTagProps>(
+const OwnerTagFlexContainer = styled(Paper)<OwnerTagProps>(
   ({ theme, screenSize, isViewGame }) => ({
-    width: 'fit-content',
+    width: '100%',
+    maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px',
     height: 'fit-content',
     display: 'flex',
     flexDirection: screenSize === ScreenSize.MEDIUM ? 'row' : 'column',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    background: isViewGame
-      ? `${theme.palette.primary.extraDarkBlue}`
-      : 'transparent',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    background: `${theme.palette.primary.extraDarkBlue}`,
     borderRadius: '8px',
-    padding: `${theme.sizing.smPadding}px`,
+    boxSizing: 'border-box',
+    paddingTop: `${theme.sizing.smPadding}px`,
+    paddingBottom: `${theme.sizing.smPadding}px`,
+    paddingLeft: `${theme.sizing.mdPadding}px`,
+    paddingRight: `${theme.sizing.mdPadding}px`,
     gap: `${theme.sizing.xSmPadding}px`,
   }),
 );
@@ -60,8 +63,8 @@ const OwnerTagSubGridContainer = styled(Grid)(({ theme }) => ({
 
 const OwnerTagProfilePicture = styled('img')<OwnerTagProps>(
   ({ theme, screenSize }) => ({
-    height: screenSize === ScreenSize.LARGE ? '128px' : '64px',
-    width: screenSize === ScreenSize.LARGE ? '128px' : '64px',
+    height: '100px',
+    width: '100px',
     borderRadius: '50%',
     objectFit: 'cover',
   }),
@@ -82,8 +85,8 @@ const OwnerTagSubContainer = styled(Box)<OwnerTagProps>(
     display: 'flex',
     flexDirection: 'column',
     gap: `${theme.sizing.xSmPadding}px`,
-    justifyContent: screenSize !== ScreenSize.SMALL ? 'center' : 'flex-start',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   }),
 );
 
@@ -96,7 +99,7 @@ const OwnerTagHeader = styled(Typography)(({ theme }) => ({
 
 const OwnerTagBody = styled(OwnerTagHeader)(({ theme }) => ({
   fontWeight: 300,
-  textAlign: 'center',
+  textAlign: 'left',
 }));
 
 export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
@@ -116,14 +119,16 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
       );
       displayCreatedName = override ? override.display : createdName;
       displayNumUsed = timesPlayed ?? 0;
-      displayLastModified = (lastModified ?? new Date()).toLocaleDateString(
-        'en-US',
-        {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        },
-      );
+      const date = lastModified ?? new Date();
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const day = date.getDate().toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const timeString = date.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      }).toLowerCase().replace(' ', '');
+      displayLastModified = `${month}. ${day}, ${year} at ${timeString}`;
     }
   } else if (centralData.selectedQuestion) {
     const { profilePic, createdName, lastModified, timesPlayed } =
@@ -132,33 +137,41 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
     const override = userNameOverrides.find((o) => createdName.includes(o.raw));
     displayCreatedName = override ? override.display : createdName;
     displayNumUsed = timesPlayed ?? 0;
-    displayLastModified = (lastModified ?? new Date()).toLocaleDateString(
-      'en-US',
-      {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      },
-    );
+    const date = lastModified ?? new Date();
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const timeString = date.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    }).toLowerCase().replace(' ', '');
+    displayLastModified = `${month}. ${day}, ${year} at ${timeString}`;
   }
   const isOwnerLoaded =
     displayCreatedName !== '' &&
     displayProfilePic !== '' &&
     displayNumUsed !== undefined;
 
-  return screenSize !== ScreenSize.SMALL ? (
-    <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize}>
+  return  (
+    <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize} elevation={6} >
       {isOwnerLoaded ? (
-        <>
+        <Box style={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: `24px` }}>
+          <Box
+          style={{  display: 'flex', flexDirection: 'column', paddingLeft: `${theme.sizing.lgPadding}px`, paddingRight: `${theme.sizing.lgPadding}px`,  gap: `${theme.sizing.smPadding}px`, boxSizing: 'border-box' }}
+          >
+          <OwnerTagSubContainer screenSize={screenSize} style={{ alignItems: 'center'}}>
+            <OwnerTagHeader>Created By:</OwnerTagHeader>
+            <OwnerNamePill ownerName={displayCreatedName} />
+          </OwnerTagSubContainer>
           <OwnerTagProfilePicture
             src={displayProfilePic}
             screenSize={screenSize}
           />
-          <OwnerTagTextContainer screenSize={screenSize}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Created By:</OwnerTagHeader>
-              <OwnerNamePill ownerName={displayCreatedName} />
-            </OwnerTagSubContainer>
+          </Box>
+          <Box
+          style={{ maxWidth: '168px',display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px` }}
+          >
             <OwnerTagSubContainer screenSize={screenSize}>
               <OwnerTagHeader>Last Modified:</OwnerTagHeader>
               <OwnerTagBody>{displayLastModified}</OwnerTagBody>
@@ -167,50 +180,11 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
               <OwnerTagHeader>Times Played:</OwnerTagHeader>
               <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
             </OwnerTagSubContainer>
-          </OwnerTagTextContainer>
-        </>
+          </Box>
+        </Box>
       ) : (
         <CircularProgress style={{ color: '#FFF' }} />
       )}
     </OwnerTagFlexContainer>
-  ) : (
-    <OwnerTagGridContainer
-      screenSize={screenSize}
-      isViewGame={isViewGame}
-      container
-    >
-      {isOwnerLoaded ? (
-        <>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagProfilePicture
-              src={displayProfilePic}
-              screenSize={screenSize}
-            />
-          </OwnerTagSubGridContainer>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Last Modified:</OwnerTagHeader>
-              <OwnerTagBody>{displayLastModified}</OwnerTagBody>
-            </OwnerTagSubContainer>
-          </OwnerTagSubGridContainer>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Created By:</OwnerTagHeader>
-              <OwnerNamePill ownerName={displayCreatedName} />
-            </OwnerTagSubContainer>
-          </OwnerTagSubGridContainer>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Times Played:</OwnerTagHeader>
-              <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
-            </OwnerTagSubContainer>
-          </OwnerTagSubGridContainer>
-        </>
-      ) : (
-        <OwnerTagSubGridContainer item xs={12}>
-          <CircularProgress style={{ color: '#FFF' }} />
-        </OwnerTagSubGridContainer>
-      )}
-    </OwnerTagGridContainer>
-  );
+  ); 
 }

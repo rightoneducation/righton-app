@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,7 @@ interface CentralButtonProps {
   isOnQuestionTab?: boolean;
   smallScreenOverride?: boolean;
   buttonWidthOverride?: string;
+  wideButtonOverride?: boolean;
   iconOnlyOverride?: boolean;
   type?: string;
   isReset?: boolean;
@@ -31,6 +33,7 @@ export default function CentralButton({
   isOnQuestionTab,
   smallScreenOverride,
   buttonWidthOverride,
+  wideButtonOverride,
   iconOnlyOverride,
   type,
   isReset,
@@ -46,8 +49,8 @@ export default function CentralButton({
     : null;
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
   const buttonWidth = buttonObj.width ?? '100%';
-  const isSmallScreen =
-    useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride;
+  const isSmallScreenIconButtonOnly =
+    (useMediaQuery(theme.breakpoints.down('lg')) && !smallScreenOverride && iconOnlyOverride) ?? false;
 
   const handleButtonClick = () => {
     if (type === 'file') {
@@ -77,12 +80,17 @@ export default function CentralButton({
       isReset={isReset}
       style={{ width: buttonWidthOverride ?? buttonWidth }}
     >
-      <ButtonContent>
-        {buttonObj.icon && (
-          <ButtonIconContainer>
+      {buttonObj.icon && (
+          <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly} wideButtonOverride={wideButtonOverride ?? false}>
             {(buttonColor === ButtonColor.NULL &&
               (buttonType === ButtonType.CHANGEIMAGE ||
                 buttonType === ButtonType.SAVEDRAFT)) ||
+                (buttonType === ButtonType.BACK) ||
+                (buttonType === ButtonType.CONFIRM) || 
+                (buttonType === ButtonType.BACKTOEDIT) ||
+                (buttonType === ButtonType.CREATEQUESTION) ||
+                (buttonType === ButtonType.CANCELQUESTION) ||
+                (buttonType === ButtonType.EDITQUESTION) ||
             (buttonType === ButtonType.SIGNUP && isReset) ? (
               <ButtonIconBlue src={buttonObj.icon} />
             ) : (
@@ -90,26 +98,30 @@ export default function CentralButton({
             )}
           </ButtonIconContainer>
         )}
-        {buttonText && !isSmallScreen && !iconOnlyOverride && (
-          <ButtonTypography
-            isReset={isReset}
-            buttonColor={buttonColor}
-            buttonType={buttonType}
-          >
-            {buttonText}
-          </ButtonTypography>
-        )}
-        {buttonObj.rightIcon && (
-          <ButtonIconContainer>
-            {buttonColor === ButtonColor.NULL &&
-            buttonType === ButtonType.CHANGEIMAGE ? (
-              <ButtonIconBlue src={buttonObj.rightIcon} />
-            ) : (
-              <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
-            )}
-          </ButtonIconContainer>
-        )}
-      </ButtonContent>
+      {!isSmallScreenIconButtonOnly && (
+        <ButtonContent>
+          <Box />
+          {buttonText && !iconOnlyOverride && (
+            <ButtonTypography
+              isReset={isReset}
+              buttonColor={buttonColor}
+              buttonType={buttonType}
+            >
+              {buttonText}
+            </ButtonTypography>
+          )}
+          {buttonObj.rightIcon && (
+            <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly} wideButtonOverride={wideButtonOverride ?? false}>
+              {buttonColor === ButtonColor.NULL &&
+              buttonType === ButtonType.CHANGEIMAGE ? (
+                <ButtonIconBlue src={buttonObj.rightIcon} />
+              ) : (
+                <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
+              )}
+            </ButtonIconContainer>
+          )}
+        </ButtonContent>
+      )}
     </ButtonStyled>
   );
 }

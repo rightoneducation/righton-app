@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mcp-dev-102958-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mcp-dev-102958-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mcp-dev-102958-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mcp-dev-102958-deployment",
+      "UnauthRoleName": "amplify-mcp-dev-102958-unauthRole",
+      "StackName": "amplify-mcp-dev-102958",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mcp-dev-102958/20f60310-b993-11f0-8fcf-126c091e9377",
+      "AmplifyAppId": "d1n97zzvwakv98"
+    },
+    "categories": {
+      "api": {
+        "mcp": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "ext",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && chmod 755 build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-crypto/sha256-js": "^5.0.0",
+    "@aws-sdk/client-secrets-manager": "^3.911.0",
+    "@aws-sdk/client-sts": "^3.891.0",
+    "@aws-sdk/credential-provider-node": "^3.0.0",
+    "@aws-sdk/protocol-http": "^3.0.0",
+    "@aws-sdk/signature-v4": "^3.0.0",
+    "@modelcontextprotocol/sdk": "^1.17.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.0",
+    "uuid": "^9.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@dotenvx/dotenvx": "^1.51.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.2.0",
+    "@types/uuid": "^9.0.0",
+    "install": "^0.13.0",
+    "typescript": "^5.9.2"
+  }
+}

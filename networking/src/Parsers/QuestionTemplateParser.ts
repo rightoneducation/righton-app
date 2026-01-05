@@ -3,12 +3,12 @@ import { IQuestionTemplate, IGameTemplate, CentralQuestionTemplateInput } from "
 import { QuestionTemplateType } from "../APIClients/templates/interfaces/IQuestionTemplateAPIClient";
 import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
-import { PublicPrivateType } from "../APIClients";
+import { PublicPrivateType, TemplateType } from "../APIClients";
 import { IChoice } from "../Models/IQuestion";
 import { ModelHelper } from "../ModelHelper";
 
 export class QuestionTemplateParser {
-    static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
+    static centralQuestionTemplateInputToIQuestionTemplate<T extends TemplateType>(
         imageUrl: string,
         userId: string,
         createQuestionTemplateInput: CentralQuestionTemplateInput,
@@ -108,6 +108,7 @@ export class QuestionTemplateParser {
           id,
           userId,
           publicPrivateType,
+          finalPublicPrivateType,
           title,
           lowerCaseTitle,
           owner,
@@ -138,13 +139,14 @@ export class QuestionTemplateParser {
       }
 
       const parsedPublicPrivate = isPublicPrivateValid(publicPrivateType) ? publicPrivateType : PublicPrivateType.PUBLIC;
-
+      const parsedFinalPublicPrivate = isPublicPrivateValid(finalPublicPrivateType) ? finalPublicPrivateType : PublicPrivateType.PUBLIC;
       const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
       const questionTemplate: IQuestionTemplate = {
           id,
           userId,
           publicPrivateType: parsedPublicPrivate,
+          finalPublicPrivateType: parsedFinalPublicPrivate,
           title,
           lowerCaseTitle: lowerCaseTitle ?? '',
           owner: owner ?? '',

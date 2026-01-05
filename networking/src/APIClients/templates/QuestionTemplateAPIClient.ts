@@ -1,5 +1,5 @@
 import { uploadData, UploadDataWithPathOutput } from 'aws-amplify/storage';
-import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
+import { BaseAPIClient, PublicPrivateType, TemplateType, GradeTarget } from "../BaseAPIClient";
 import { QuestionTemplateType, questionTemplateRuntimeMap, IQuestionTemplateAPIClient } from "./interfaces/IQuestionTemplateAPIClient";
 import { CentralQuestionTemplateInput, IQuestionTemplate } from "../../Models";
 import { QuestionTemplateParser } from "../../Parsers/QuestionTemplateParser";
@@ -18,7 +18,7 @@ export class QuestionTemplateAPIClient
   extends BaseAPIClient
   implements IQuestionTemplateAPIClient
 {
-  async createQuestionTemplate<T extends PublicPrivateType>(
+  async createQuestionTemplate<T extends TemplateType>(
     type: T,
     imageUrl: string,
     userId: string,
@@ -75,7 +75,7 @@ export class QuestionTemplateAPIClient
     return response.data.uploadExternalImageToS3;
   }
 
-  async getQuestionTemplate<T extends PublicPrivateType>(
+  async getQuestionTemplate<T extends TemplateType>(
     type: T,
     id: string
   ): Promise<IQuestionTemplate> {
@@ -98,7 +98,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate({} as AWSQuestionTemplate, type);
   }
 
-  async getQuestionTemplateJoinTableIds<T extends PublicPrivateType>(
+  async getQuestionTemplateJoinTableIds<T extends TemplateType>(
     type: T,
     id: string
   ): Promise<string[]> {
@@ -125,7 +125,7 @@ export class QuestionTemplateAPIClient
     return [];
   }
 
-  async updateQuestionTemplate<T extends PublicPrivateType>(
+  async updateQuestionTemplate<T extends TemplateType>(
     type: T,
     imageUrl: string,
     userId: string,
@@ -148,7 +148,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data[updateType] as AWSQuestionTemplate, type);
   }
 
-  async deleteQuestionTemplate<T extends PublicPrivateType>(
+  async deleteQuestionTemplate<T extends TemplateType>(
     type: T,
     id: string
   ): Promise<boolean> {
@@ -163,7 +163,7 @@ export class QuestionTemplateAPIClient
     return (!isNullOrUndefined(result));
   }
 
-  async listQuestionTemplates<T extends PublicPrivateType>(
+  async listQuestionTemplates<T extends TemplateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -178,7 +178,7 @@ export class QuestionTemplateAPIClient
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
-  async listQuestionTemplatesByDate<T extends PublicPrivateType>(
+  async listQuestionTemplatesByDate<T extends TemplateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -194,7 +194,7 @@ export class QuestionTemplateAPIClient
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
-  async listQuestionTemplatesByGrade<T extends PublicPrivateType>(
+  async listQuestionTemplatesByGrade<T extends TemplateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -209,7 +209,7 @@ export class QuestionTemplateAPIClient
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
-  async listQuestionTemplatesByGameTemplatesCount<T extends PublicPrivateType>(
+  async listQuestionTemplatesByGameTemplatesCount<T extends TemplateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -225,7 +225,7 @@ export class QuestionTemplateAPIClient
   }
 
   async listQuestionTemplatesByUserDate(
-    type: PublicPrivateType.PUBLIC,
+    type: typeof PublicPrivateType.PUBLIC,
     limit: number,
     nextToken: string | null,
     sortDirection: string | null,
@@ -242,7 +242,7 @@ export class QuestionTemplateAPIClient
   }
 
   async listQuestionTemplatesByUserGrade(
-    type: PublicPrivateType.PUBLIC,
+    type: typeof PublicPrivateType.PUBLIC,
     limit: number,
     nextToken: string | null,
     sortDirection: string | null,
@@ -258,7 +258,7 @@ export class QuestionTemplateAPIClient
   }
 
   async listQuestionTemplatesByUserPublicGameTemplatesCount(
-    type: PublicPrivateType.PUBLIC,
+    type: typeof PublicPrivateType.PUBLIC,
     limit: number,
     nextToken: string | null,
     sortDirection: string | null,

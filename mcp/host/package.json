@@ -1,0 +1,29 @@
+{
+  "name": "mcp-host",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && chmod 755 build/index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.1.67",
+    "@aws-sdk/client-secrets-manager": "^3.911.0",
+    "@modelcontextprotocol/sdk": "^1.24.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2",
+    "openai": "^6.3.0",
+    "uuid": "^13.0.0",
+    "zod": "^3.22.4",
+    "zod-to-json-schema": "^3.25.0"
+  },
+  "devDependencies": {
+    "@dotenvx/dotenvx": "^1.51.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.7.2",
+    "typescript": "^5.9.3"
+  }
+}

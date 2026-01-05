@@ -35,6 +35,7 @@ import {
   ScreenSize,
   GameQuestionType,
   UserStatusType,
+  StorageKey
 } from '../lib/CentralModels';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
@@ -78,7 +79,7 @@ const HeaderContainer = styled(Box, {
     `,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'bottom', // Adjust as needed
-  zIndex: 1,
+  zIndex: 5350,
   gap: `${theme.sizing.mdPadding}px`,
   transition: 'height 0.5s ease-in-out',
 }));
@@ -88,7 +89,8 @@ const HeaderFirstRow = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  zIndex: 7,
+  gap: '24px',
+  zIndex: 5400,
 }));
 
 const HeaderSecondRow = styled(HeaderFirstRow)(({ theme }) => ({
@@ -201,6 +203,7 @@ export default function Header({
     centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
     centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+    setMenuOpen(false);
     switch (screen) {
       case ScreenType.QUESTIONS:
         navigate('/questions');
@@ -216,71 +219,82 @@ export default function Header({
   };
 
   const createMenu = [
-    <CreateButtonContainer key="createMenu">
-      <Box style={{ zIndex: 9 }}>
-        <CentralButton
-          buttonType={ButtonType.CREATE}
-          isEnabled
-          buttonWidthOverride="150px"
-          smallScreenOverride={screenSize === ScreenSize.SMALL}
-          onClick={() => setIsCreateMenuOpen(!isCreateMenuOpen)}
-        />
-      </Box>
-      <Collapse
-        in={isCreateMenuOpen}
-        style={{ position: 'absolute', top: '50%', zIndex: 8, width: '100%' }}
-      >
-        <CreateDropDown>
-          <Box
-            style={{
-              display: 'flex',
-              gap: `${theme.sizing.smPadding}px`,
-              paddingTop: `${theme.sizing.mdPadding}px`,
-              cursor: 'pointer',
-            }}
-            onClick={() => {
-              setMenuOpen(false);
-              setIsCreateMenuOpen(false);
-              navigate('/create/game');
-            }}
-          >
-            <img src={createDropdownGame} alt="Create Game" />
-            <Typography
+    <ClickAwayListener
+      key="createMenu"
+      onClickAway={() => {
+        if (isCreateMenuOpen) {
+          setIsCreateMenuOpen(false);
+        }
+      }}
+    >
+      <CreateButtonContainer>
+        <Box style={{ zIndex: 5403 }}>
+          <CentralButton
+            buttonType={ButtonType.CREATE}
+            isEnabled
+            buttonWidthOverride="150px"
+            smallScreenOverride={screenSize === ScreenSize.SMALL}
+            onClick={() => setIsCreateMenuOpen(!isCreateMenuOpen)}
+          />
+        </Box>
+        <Collapse
+          in={isCreateMenuOpen}
+          style={{ position: 'absolute', top: '50%', zIndex: 5401, width: '100%' }}
+        >
+          <CreateDropDown>
+            <Box
               style={{
-                color: `${theme.palette.primary.darkBlue}`,
-                fontWeight: 400,
-                fontSize: 16,
+                display: 'flex',
+                gap: `${theme.sizing.smPadding}px`,
+                paddingTop: `${theme.sizing.mdPadding}px`,
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                setMenuOpen(false);
+                setIsCreateMenuOpen(false);
+                window.localStorage.setItem(StorageKey, '');
+                navigate('/create/game');
               }}
             >
-              Game
-            </Typography>
-          </Box>
-          <Box
-            style={{
-              display: 'flex',
-              gap: `${theme.sizing.smPadding}px`,
-              cursor: 'pointer',
-            }}
-            onClick={() => {
-              setMenuOpen(false);
-              setIsCreateMenuOpen(false);
-              navigate('/create/question');
-            }}
-          >
-            <img src={createDropdownQuestion} alt="Create Question" />
-            <Typography
+              <img src={createDropdownGame} alt="Create Game" />
+              <Typography
+                style={{
+                  color: `${theme.palette.primary.darkBlue}`,
+                  fontWeight: 400,
+                  fontSize: 16,
+                }}
+              >
+                Game
+              </Typography>
+            </Box>
+            <Box
               style={{
-                color: `${theme.palette.primary.darkBlue}`,
-                fontWeight: 400,
-                fontSize: 16,
+                display: 'flex',
+                gap: `${theme.sizing.smPadding}px`,
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                setMenuOpen(false);
+                setIsCreateMenuOpen(false);
+                window.localStorage.setItem(StorageKey, '');
+                navigate('/create/question');
               }}
             >
-              Question
-            </Typography>
-          </Box>
-        </CreateDropDown>
-      </Collapse>
-    </CreateButtonContainer>,
+              <img src={createDropdownQuestion} alt="Create Question" />
+              <Typography
+                style={{
+                  color: `${theme.palette.primary.darkBlue}`,
+                  fontWeight: 400,
+                  fontSize: 16,
+                }}
+              >
+                Question
+              </Typography>
+            </Box>
+          </CreateDropDown>
+        </Collapse>
+      </CreateButtonContainer>
+    </ClickAwayListener>,
   ];
 
   const loggedInUserComponents = [
@@ -293,11 +307,6 @@ export default function Header({
         key="lgscreen"
       >
         {createMenu}
-        <CentralButton
-          buttonType={ButtonType.LOGOUT}
-          isEnabled
-          onClick={handleLogOut}
-        />
         <Box
           onClick={() => navigate('/userprofile')}
           style={{ cursor: 'pointer' }}
@@ -339,11 +348,21 @@ export default function Header({
   ];
 
   return (
-    <HeaderContainer
-      screenSize={screenSize}
-      menuOpen={menuOpen}
-      currentScreen={currentScreen}
+    <ClickAwayListener
+      onClickAway={() => {
+        if (menuOpen) {
+          setMenuOpen(false);
+        }
+        if (isCreateMenuOpen) {
+          setIsCreateMenuOpen(false);
+        }
+      }}
     >
+      <HeaderContainer
+        screenSize={screenSize}
+        menuOpen={menuOpen}
+        currentScreen={currentScreen}
+      >
       {!isScreenLgst && (
         <Collapse
           in={menuOpen === true}
@@ -351,7 +370,7 @@ export default function Header({
           collapsedSize={0}
           style={{
             width: '100%',
-            zIndex: 7,
+            zIndex: 5400,
             position: 'absolute',
             paddingBottom: '34px',
             background: menuOpen
@@ -409,14 +428,6 @@ export default function Header({
               </TransparentButton>
             )}
             {userStatus === UserStatusType.LOGGEDIN && createMenu}
-            {userStatus === UserStatusType.LOGGEDIN && (
-              <CentralButton
-                buttonType={ButtonType.LOGOUT}
-                buttonWidthOverride="150px"
-                isEnabled
-                onClick={handleLogOut}
-              />
-            )}
           </Box>
         </Collapse>
       )}
@@ -440,7 +451,7 @@ export default function Header({
         </Box>
         <Box style={{ flex: '0 0 auto' }}>
           <ImageContainer align="center" style={{ flexDirection: 'column' }}>
-            {isScreenLgst ? (
+            {isScreenLgst && (
               <Box display="flex" style={{ gap: '80px' }}>
                 <TransparentButton
                   disableRipple
@@ -489,13 +500,6 @@ export default function Header({
                   </TransparentButton>
                 )}
               </Box>
-            ) : (
-              <IconButton onClick={handleMenuToggle}>
-                <img
-                  src={menuOpen ? hamburgerX : hamburger}
-                  alt="Hamburger Menu"
-                />
-              </IconButton>
             )}
           </ImageContainer>
         </Box>
@@ -505,20 +509,29 @@ export default function Header({
             userStatus === UserStatusType.GOOGLE_SIGNIN ? (
               loggedInUserComponents
             ) : (
-              <Box display="flex" style={{ maxWidth: '300px', gap: '24px' }}>
-                <CentralButton
-                  buttonType={ButtonType.LOGINHEADER}
-                  isEnabled
-                  onClick={() => navigate('/login')}
-                />
-                <CentralButton
-                  buttonType={ButtonType.SIGNUP}
-                  isEnabled
-                  onClick={() => navigate('/signup')}
-                />
-              </Box>
+                <Box display="flex" style={{ maxWidth: '300px', gap: '24px' }}>
+                  <CentralButton
+                    buttonType={ButtonType.LOGINHEADER}
+                    isEnabled
+                    onClick={() => navigate('/login')}
+                  />
+                  <CentralButton
+                    buttonType={ButtonType.SIGNUP}
+                    isEnabled
+                    onClick={() => navigate('/signup')}
+                  />
+                </Box>
             ))}
         </Box>
+        {!isScreenLgst && (
+          <IconButton onClick={handleMenuToggle}>
+            <img
+              src={menuOpen ? hamburgerX : hamburger}
+              style={{ width: '40px', height: 'auto' }}
+              alt="Hamburger Menu"
+            />
+          </IconButton>
+        )}
       </HeaderFirstRow>
       {currentScreen === ScreenType.LIBRARY && (
         <Collapse
@@ -550,5 +563,6 @@ export default function Header({
         </Collapse>
       )}
     </HeaderContainer>
+    </ClickAwayListener>
   );
 }

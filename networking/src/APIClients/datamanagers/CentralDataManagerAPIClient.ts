@@ -1,7 +1,7 @@
 import { Environment } from '../interfaces/IBaseAPIClient';
 import { ICentralDataManagerAPIClient } from './interfaces/ICentralDataManagerAPIClient';
 import { IGameTemplateAPIClient, IQuestionTemplateAPIClient, IGameQuestionsAPIClient } from '../templates';
-import { PublicPrivateType, SortDirection, GradeTarget, SortType } from "../BaseAPIClient";
+import { PublicPrivateType, TemplateType, SortDirection, GradeTarget, SortType } from "../BaseAPIClient";
 import { IUserProfile } from '../../Models/IUserProfile';
 import { IAuthAPIClient } from '../auth';
 import { IUserAPIClient } from '../user';
@@ -13,6 +13,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 export const userProfileLocalStorage = 'righton_userprofile';
+export const isFirstCreate = 'isFirstCreate';
 
 export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient{
   protected env: Environment;
@@ -98,14 +99,14 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteQuestionTemplateIds: JSON.stringify(newFavoriteQuestionTemplateIds) });
   };
 
-  public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null, isLibrary?: boolean, userId?: string) => {
+  public searchForGameTemplates = async (type: TemplateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null, isLibrary?: boolean, userId?: string) => {
     switch(sortType){
       case SortType.listGameTemplatesByDate: {
         let response;
         if (!isLibrary) 
           response = await this.gameTemplateAPIClient.listGameTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
-          response = await this.gameTemplateAPIClient.listGameTemplatesByUserDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
+          response = await this.gameTemplateAPIClient.listGameTemplatesByUserDate(PublicPrivateType.PUBLIC, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
@@ -116,7 +117,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         if (!isLibrary)
          response = await this.gameTemplateAPIClient.listGameTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
-          response = await this.gameTemplateAPIClient.listGameTemplatesByUserGrade(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
+          response = await this.gameTemplateAPIClient.listGameTemplatesByUserGrade(PublicPrivateType.PUBLIC, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
@@ -127,7 +128,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         if (!isLibrary)
           response = await this.gameTemplateAPIClient.listGameTemplatesByQuestionTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
-          response = await this.gameTemplateAPIClient.listGameTemplatesByUserPublicQuestionTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
+          response = await this.gameTemplateAPIClient.listGameTemplatesByUserPublicQuestionTemplatesCount(PublicPrivateType.PUBLIC, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
@@ -139,7 +140,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         if (!isLibrary)
           response = await this.gameTemplateAPIClient.listGameTemplates(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
-          response = await this.gameTemplateAPIClient.listGameTemplatesByUserDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
+          response = await this.gameTemplateAPIClient.listGameTemplatesByUserDate(PublicPrivateType.PUBLIC, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
@@ -149,14 +150,14 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, games: []};
   };
 
-  public searchForQuestionTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null, isLibrary?: boolean, userId?: string) => {
+  public searchForQuestionTemplates = async (type: TemplateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null, isLibrary?: boolean, userId?: string) => {
     switch(sortType){
       case SortType.listQuestionTemplatesByDate: {
         let response;
         if (!isLibrary)
           response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
-          response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
+          response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserDate(PublicPrivateType.PUBLIC, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
@@ -167,7 +168,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         if (!isLibrary)
           response = await this.questionTemplateAPIClient.listQuestionTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
-          response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserGrade(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
+          response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserGrade(PublicPrivateType.PUBLIC, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
@@ -178,7 +179,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         if (!isLibrary)
           response = await this.questionTemplateAPIClient.listQuestionTemplatesByGameTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else
-          response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserPublicGameTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
+          response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserPublicGameTemplatesCount(PublicPrivateType.PUBLIC, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
@@ -190,7 +191,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         if (!isLibrary)
           response = await this.questionTemplateAPIClient.listQuestionTemplates(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         else 
-          response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
+          response = await this.questionTemplateAPIClient.listQuestionTemplatesByUserDate(PublicPrivateType.PUBLIC, limit, nextToken, sortDirection, search, gradeTargets, favIds, userId ?? '');
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
@@ -200,7 +201,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, questions: []};
   };
 
-  public removeQuestionTemplateFromGameTemplate = async (type: PublicPrivateType, questionId: string, gameId: string) => {
+  public removeQuestionTemplateFromGameTemplate = async (type: TemplateType, questionId: string, gameId: string) => {
     const gameQuestionIds = await this.questionTemplateAPIClient.getQuestionTemplateJoinTableIds(type, questionId);
     const gameQuestionId = gameQuestionIds.find((id) => id === gameId);
 
@@ -215,7 +216,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return false;
   };
 
-  public deleteQuestionTemplate = async (type: PublicPrivateType, questionId: string) => {
+  public deleteQuestionTemplate = async (type: TemplateType, questionId: string) => {
     try {
       // need to delete the question template from the join table first
       const gameQuestionIds = await this.questionTemplateAPIClient.getQuestionTemplateJoinTableIds( type, questionId);
@@ -274,6 +275,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
   public clearLocalUserProfile = () => {
     window.localStorage.removeItem(userProfileLocalStorage);
+    window.localStorage.removeItem(isFirstCreate);
   }
 
   public getUser = async (cognitoId: string) => {

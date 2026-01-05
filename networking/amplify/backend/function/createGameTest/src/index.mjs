@@ -270,6 +270,8 @@ mutation CreateGameSession(
   createGameSession(input: $input, condition: $condition) {
     id
     gameId
+    classroomId
+    sessionData
     startTime
     phaseOneTime
     phaseTwoTime
@@ -385,39 +387,79 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
   let responseBody ={};
 
   const generateUniqueGameCode = async () => {
+    console.log('=== Starting game code generation ===');
     let gameCodeIsUnique = false;
     let gameCode = 0;
+    let attempts = 0;
     while (!gameCodeIsUnique){
+      attempts++;
       gameCode = Math.floor(Math.random() * 9000) + 1000;
+      console.log(`Attempt ${attempts}: Generated game code: ${gameCode}`);
+      
       const matchingGameSessionsRequest = await createAndSignRequest(listGameSessions, { filter: { gameCode: { eq: gameCode } } });
       const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
       const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
-      const numOfMatches = matchingGameSessionsResponseParsed.data.listGameSessions.items.length;
-      if (numOfMatches === 0)
+      
+      console.log('Game sessions response:', JSON.stringify(matchingGameSessionsResponseParsed, null, 2));
+      
+      const numOfMatches = matchingGameSessionsResponseParsed?.data?.listGameSessions?.items?.length || 0;
+      console.log(`Found ${numOfMatches} matching game sessions`);
+      
+      if (numOfMatches === 0) {
         gameCodeIsUnique = true;
+        console.log(`Game code ${gameCode} is unique!`);
+      } else {
+        console.log(`Game code ${gameCode} is not unique, trying again...`);
+      }
     }
+    console.log(`=== Game code generation complete: ${gameCode} (${attempts} attempts) ===`);
     return gameCode;
   };
 
 
   try {
+    console.log('=== Handler started ===');
+    console.log('Event arguments:', JSON.stringify(event.arguments, null, 2));
+    
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
     const publicPrivate = event.arguments.input.publicPrivate;
+    console.log(`Getting ${publicPrivate} game template with ID: ${gameTemplateId}`);
+    
     const gameTemplateRequest = await createAndSignRequest( publicPrivate === 'Public' ? getPublicGameTemplate : getPrivateGameTemplate, { id: gameTemplateId });
     const gameTemplateResponse = await fetch(gameTemplateRequest);
-    const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json(), publicPrivate);
+    const gameTemplateJson = await gameTemplateResponse.json();
+    console.log('Game template response:', JSON.stringify(gameTemplateJson, null, 2));
+    
+    const gameTemplateParsed = gameTemplateFromAWSGameTemplate(gameTemplateJson, publicPrivate);
+    console.log('Parsed game template:', JSON.stringify(gameTemplateParsed, null, 2));
     const { questionTemplates, questionTemplatesOrder, userId, owner, timesPlayed, ...game } = gameTemplateParsed;
+    console.log(`Found ${questionTemplates?.length || 0} question templates`);
+    
     const uniqueGameCode = await generateUniqueGameCode();
+    console.log(`Using unique game code: ${uniqueGameCode}`);
 
     const questionTemplatesOrderParsed = questionTemplatesOrder ? JSON.parse(questionTemplatesOrder) : null;
     const sortedQuestionTemplates = sortQuestionTemplatesByOrder(questionTemplates, questionTemplatesOrderParsed);
+    console.log(`Sorted ${sortedQuestionTemplates.length} question templates`);
 
     // createGameSession
-    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game, gameCode: uniqueGameCode }});
+    const gameSessionId = uuidv4();
+    const classroomId = uuidv4();
+    console.log(`Creating game session with ID: ${gameSessionId}, classroom ID: ${classroomId}`);
+    
+    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: gameSessionId, ...game, gameCode: uniqueGameCode, classroomId }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
-    const gameSessionParsed = gameSessionJson.data.createGameSession; 
+    console.log('Game session creation response:', JSON.stringify(gameSessionJson, null, 2));
+    
+    const gameSessionParsed = gameSessionJson.data.createGameSession;
+    
+    // Check if game session creation failed
+    if (!gameSessionParsed) {
+      const errorMessage = gameSessionJson.errors ? gameSessionJson.errors[0]?.message : 'Game session creation failed';
+      throw new Error(`Failed to create game session: ${errorMessage}`);
+    } 
 
     // update gameTemplate timesPlayed
     const newTimesPlayed = timesPlayed + 1;
@@ -425,7 +467,9 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
     const timesPlayedGameResponse = await fetch(timesPlayedGameRequest);
     
     // createQuestions
+    console.log('=== Creating questions ===');
     const promises = sortedQuestionTemplates.map(async (question, index) => {
+      console.log(`Processing question ${index + 1}/${sortedQuestionTemplates.length}: ${question.title || question.id}`);
       const {choices, owner, userId, version, createdAt, title, updatedAt, gameId, timesPlayed, __typename, ...trimmedQuestion} = question;
       const shuffledChoices = JSON.parse(choices).sort(() => Math.random() - 0.5);
       
@@ -455,19 +499,28 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
       return questionParsed;
     });
     const questionsParsed = await Promise.all(promises);
+    console.log(`=== Created ${questionsParsed.length} questions successfully ===`);
 
     // update Owner to increment gamesUsed
     const gameTemplateUserId = gameTemplateParsed.userId;
+    console.log(`Updating user gamesUsed count for user: ${gameTemplateUserId}`);
+    
     const userRequest = await createAndSignRequest(getUser, { id: gameTemplateUserId });
     const userResponse = await fetch(userRequest);
     const userJson = await userResponse.json();
     const userParsed = userJson.data.getUser;
     const gamesUsed = userParsed.gamesUsed + 1;
+    
+    console.log(`User had ${userParsed.gamesUsed} games used, updating to ${gamesUsed}`);
+    
     const userUpdateRequest = await createAndSignRequest(updateUser, { input: { id: gameTemplateUserId, gamesUsed } });
     const userUpdateResponse = await fetch(userUpdateRequest);
     const userUpdateJson = await userUpdateResponse.json();
     const userUpdateParsed = userUpdateJson.data.updateUser;
+    
     responseBody = gameSessionParsed.id;
+    console.log('=== Handler completed successfully ===');
+    console.log(`Returning game session ID: ${responseBody}`);
   } catch (error) {
     console.error("Error occurred:", error);
     // Log detailed error information
