@@ -462,7 +462,7 @@ export default function ExplanationCard({
                         <CardHeaderTextStyled
                           style={{ fontSize: '12px', fontWeight: 500 }}
                         >
-                          Analyze Text Complexity - Powered by Evaluators
+                          Analyze Text Complexity
                         </CardHeaderTextStyled>
                       </Box>
                       <Box
