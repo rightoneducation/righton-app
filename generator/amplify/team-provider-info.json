@@ -76,5 +76,49 @@
         "wronganswerexp": {}
       }
     }
+  },
+  "genaitest": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-wronganswerexp-genaitest-142047-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-wronganswerexp-genaitest-142047-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-wronganswerexp-genaitest-142047-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-wronganswerexp-genaitest-142047-deployment",
+      "UnauthRoleName": "amplify-wronganswerexp-genaitest-142047-unauthRole",
+      "StackName": "amplify-wronganswerexp-genaitest-142047",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-wronganswerexp-genaitest-142047/d3eac280-94b3-11f0-9770-127e0b45de19",
+      "AmplifyAppId": "d3r30vgiz68su"
+    },
+    "categories": {
+      "auth": {
+        "generatorauth": {}
+      },
+      "function": {
+        "evaltextcomplexity": {
+          "deploymentBucketName": "amplify-wronganswerexp-genaitest-142047-deployment",
+          "s3Key": "amplify-builds/evaltextcomplexity-67517673345651796e67-build.zip"
+        },
+        "generatingQuestion": {
+          "deploymentBucketName": "amplify-wronganswerexp-genaitest-142047-deployment",
+          "s3Key": "amplify-builds/generatingQuestion-326b3642724e44576f33-build.zip"
+        },
+        "labeledits": {
+          "deploymentBucketName": "amplify-wronganswerexp-genaitest-142047-deployment",
+          "s3Key": "amplify-builds/labeledits-6a545061533850526633-build.zip"
+        },
+        "regenwronganswerexp": {
+          "deploymentBucketName": "amplify-wronganswerexp-genaitest-142047-deployment",
+          "s3Key": "amplify-builds/regenwronganswerexp-346a4f5430416e626872-build.zip"
+        },
+        "wronganswerexp": {
+          "deploymentBucketName": "amplify-wronganswerexp-genaitest-142047-deployment",
+          "s3Key": "amplify-builds/wronganswerexp-34304153634d77784251-build.zip"
+        },
+        "refinecomplexity": {}
+      },
+      "api": {
+        "wronganswerexp": {}
+      }
+    }
   }
 }

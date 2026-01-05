@@ -93,6 +93,22 @@
         }
       ]
     },
+    "AMPLIFY_function_generatingQuestion_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generatingQuestion"
+        }
+      ]
+    },
+    "AMPLIFY_function_generatingQuestion_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generatingQuestion"
+        }
+      ]
+    },
     "AMPLIFY_function_labeledits_deploymentBucketName": {
       "usedBy": [
         {
@@ -106,22 +122,6 @@
         {
           "category": "function",
           "resourceName": "labeledits"
-        }
-      ]
-    },
-    "AMPLIFY_function_refinecomplexity_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "refinecomplexity"
-        }
-      ]
-    },
-    "AMPLIFY_function_refinecomplexity_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "refinecomplexity"
         }
       ]
     },

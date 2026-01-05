@@ -32,13 +32,6 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
-    "refinecomplexity": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
-    },
     "regenwronganswerexp": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
