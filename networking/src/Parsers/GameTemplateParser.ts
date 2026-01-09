@@ -43,7 +43,7 @@ export class GameTemplateParser {
                     const { gameTemplates, ...rest } = template;
                     // Only add to questionTemplates if 'rest' is not empty
                     if (Object.keys(rest).length > 0) {
-                        questionTemplates.push({questionTemplate: QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(rest, publicPrivate) as IQuestionTemplate, gameQuestionId: item.id as string});
+                       questionTemplates.push({questionTemplate: QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(rest, publicPrivate) as IQuestionTemplate, gameQuestionId: item.id as string});
                     }
                 }
             }

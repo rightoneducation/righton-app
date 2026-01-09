@@ -966,7 +966,6 @@ export default function CreateGame({
   };
 
   const handleUpdateDraftGame = async () => {
-    console.log('handleUpdateDraftGame');
      try {
       setModalObject({
         modalState: ModalStateType.SAVING,
@@ -1000,19 +999,60 @@ export default function CreateGame({
         }
       }
       const userId = centralData.userProfile?.id || '';
+      
+      // create any new question templates
+      const newQuestionTemplates = buildQuestionTemplatePromises(
+        draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
+        userId,
+        apiClients,
+        PublicPrivateType.DRAFT,
+      );
+      const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
+      // filter out any questions that have an id or that match the ids in draftGameCopy.gameTemplate.publicQuestionIds or draftGameCopy.gameTemplate.privateQuestionIds
+      const addedQuestionTemplatesPublic = draftQuestionsList.filter((dq) => dq.questionTemplate.publicPrivateType === PublicPrivateType.PUBLIC && (!dq.questionTemplate.id || !draftGameCopy.gameTemplate.publicQuestionIds?.includes(dq.questionTemplate.id)));
+      const addedQuestionTemplatesPrivate = draftQuestionsList.filter((dq) => dq.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE && (!dq.questionTemplate.id || !draftGameCopy.gameTemplate.privateQuestionIds?.includes(dq.questionTemplate.id)));
+      const addedQuestionTemplatesPublicIds = addedQuestionTemplatesPublic.map((question) => question.questionTemplate.id);
+      const addedQuestionTemplatesPrivateIds = addedQuestionTemplatesPrivate.map((question) => question.questionTemplate.id);
+      draftGameCopy.gameTemplate.publicQuestionIds = [...draftGameCopy.gameTemplate.publicQuestionIds??[], ...addedQuestionTemplatesPublicIds];
+      draftGameCopy.gameTemplate.privateQuestionIds = [...draftGameCopy.gameTemplate.privateQuestionIds??[], ...addedQuestionTemplatesPrivateIds];
       // create & store game template in variable to retrieve id after response
       const createGame = buildGameTemplate(
         draftGameCopy,
         userId,
         draftQuestionsList,
-        gameImgUrl
+        gameImgUrl,
+        draftGameCopy.gameTemplate.ccss ? [draftGameCopy.gameTemplate.ccss] : undefined,
+        true
       );
+
       const gameTemplateResponse =
         await apiClients.gameTemplate.updateGameTemplate(
           PublicPrivateType.DRAFT as TemplateType,
           {...createGame, id: selectedGameId},
         );
+
+        const questionTemplateIds = questionTemplateResponse.map((question) =>
+          String(question?.id),
+        );
+        // make sure we have a gameTemplate id as well as question template ids before creating a game question
+        if (gameTemplateResponse.id && (questionTemplateIds.length > 0)) {
+          try {
+            // this is only for new questions so we don't write gamequestions that mix draft and public/private questions
+            const createGameQuestions = buildGameQuestionPromises(
+              draftGameCopy,
+              gameTemplateResponse.id,
+              questionTemplateIds,
+              apiClients,
+              PublicPrivateType.DRAFT,
+            );
+            // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+            await Promise.all(createGameQuestions);
+          } catch (err) {
+            setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
+            console.error(`Failed to create one or more game questions:`, err);
+          }
+        }
 
       setDraftGame((prev) => ({
         ...prev,
@@ -1020,11 +1060,9 @@ export default function CreateGame({
         isGameCardSubmitted: false,
       }));
       setModalObject({
-        modalState: ModalStateType.NULL,
-        confirmState: ConfirmStateType.NULL,
+        modalState: ModalStateType.CONFIRM,
+        confirmState: ConfirmStateType.DRAFT,
       });
-      fetchElements();
-      navigate('/');
     } catch (err) {
       console.error(`HandleSaveGame - error: `, err);
     }
