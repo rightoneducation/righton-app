@@ -29,6 +29,7 @@ import CentralButton from '../button/Button';
 import buttonExpandQuestionImage from '../../images/buttonExpandQuestion.svg';
 import buttonRemoveQuestionImage from '../../images/buttonRemoveQuestion.svg';
 import { SelectArrowContainer } from '../../lib/styledcomponents/SelectGrade';
+import { handleCheckQuestionBaseComplete, handleCheckQuestionComplete, handleCheckQuestionCorrectCardComplete, handleCheckQuestionIncorrectCardsComplete } from '../../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 
 interface DetailedUnifiedQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -93,6 +94,8 @@ export default function DetailedUnifiedQuestionCardBase({
     (isCreateGame && screenSize === ScreenSize.SMALL);
 
 
+  const isIncompleteDraftQuestion = !handleCheckQuestionComplete(question);
+
   let imageLink: string | null = null;
   if (question.questionCard.imageUrl) {
     if (!questionTemplate?.id || questionTemplate.id === '')
@@ -118,6 +121,10 @@ export default function DetailedUnifiedQuestionCardBase({
       style={{
         marginRight: screenSize === ScreenSize.SMALL ? '0px' : '10px',
         flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+        ...(isIncompleteDraftQuestion && { 
+          boxShadow: '0px 8px 16px -4px rgba(231, 120, 0, 0.5)',
+          border: '2px solid #EABB85'
+        }),
       }}
     >
       <Box
