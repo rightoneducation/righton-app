@@ -811,36 +811,6 @@ export default function CreateGame({
     }
   };
 
-  const handleSave = async () => {
-    // if (isEditDraft)
-    //   return handleCreateFromDraftGame();
-    // if (isEdit)
-    //   return handleSaveEditedGame();
-    const isGameFormIsValid = checkGameFormIsValid(draftGame);
-    const isDqValid = checkDQsAreValid(draftQuestionsList);
-    setAllDQAreValid(isDqValid);
-    setGameFormIsValid(isGameFormIsValid);
-    if (!isGameFormIsValid || !isDqValid) {
-      setDraftGame((prev) => ({
-        ...prev,
-        ...(!isGameFormIsValid && { isGameCardErrored: true }),
-        isCreatingTemplate: false,
-      }));
-      if (!allDQAreValid) {
-        setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
-      }
-    } else {
-      setDraftGame((prev) => ({
-        ...prev,
-        isGameCardErrored: false,
-      }));
-    }
-    return setModalObject({
-      modalState: ModalStateType.PUBLISH,
-      confirmState: ConfirmStateType.PUBLISHED,
-    });
-  };
-
   const handleCloseSaveGameModal = () => {
     setModalObject({
       modalState: ModalStateType.NULL,
@@ -996,6 +966,7 @@ export default function CreateGame({
   };
 
   const handleUpdateDraftGame = async () => {
+    console.log('handleUpdateDraftGame');
      try {
       setModalObject({
         modalState: ModalStateType.SAVING,
@@ -1183,6 +1154,34 @@ export default function CreateGame({
     });
   };
 
+  const handleSave = async () => {
+    if (isEdit && !isEditDraft)
+      return handleSaveEditedGame();
+    const isGameFormIsValid = checkGameFormIsValid(draftGame);
+    const isDqValid = checkDQsAreValid(draftQuestionsList);
+    setAllDQAreValid(isDqValid);
+    setGameFormIsValid(isGameFormIsValid);
+    if (!isGameFormIsValid || !isDqValid) {
+      setDraftGame((prev) => ({
+        ...prev,
+        ...(!isGameFormIsValid && { isGameCardErrored: true }),
+        isCreatingTemplate: false,
+      }));
+      if (!allDQAreValid) {
+        setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
+      }
+    } else {
+      setDraftGame((prev) => ({
+        ...prev,
+        isGameCardErrored: false,
+      }));
+    }
+    return setModalObject({
+      modalState: ModalStateType.PUBLISH,
+      confirmState: ConfirmStateType.PUBLISHED,
+    });
+  };
+
   useEffect(() => {
     setIsLoading(false);
     if (localStorage.getItem(StorageKeyIsFirstCreate) === null && !isEdit){
@@ -1304,7 +1303,7 @@ export default function CreateGame({
 
       {/* Create Game Card flow starts here */}
       <CreateGameContentContainer>
-        <CreateGameHeader handleEdit={handleEdit} isEdit={isEdit} handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} isQuestionAdded={draftQuestionsList.length > 0}/>
+        <CreateGameHeader handleSaveGame={handleSave} handleBackClick={handleDiscardGame} label={label} screenSize={screenSize} isQuestionAdded={draftQuestionsList.length > 0}/>
         {screenSize !== ScreenSize.LARGE && (
           <Box
             sx={{
