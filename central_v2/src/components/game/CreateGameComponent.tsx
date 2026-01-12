@@ -303,6 +303,7 @@ export default function CreateGameComponent({
               isCloneImageChanged={isCloneImageChanged}
               label={label}
               screenSize={screenSize}
+              editedPublicPrivateType={draftGame.gameTemplate.publicPrivateType}
               handleImageUploadClick={handleImageUploadClick}
               handlePublicPrivateChange={handlePublicPrivateChange}
               handlePhaseTime={handlePhaseTime}

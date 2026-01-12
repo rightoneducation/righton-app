@@ -54,6 +54,7 @@ interface CreateGameCardBaseProps {
   isCloneImageChanged: boolean;
   label: string;
   screenSize: ScreenSize;
+  editedPublicPrivateType: PublicPrivateType;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   isCardSubmitted: boolean;
@@ -76,6 +77,7 @@ export default function CreateGameCardBase({
   isCloneImageChanged,
   label,
   screenSize,
+  editedPublicPrivateType,
   handleImageUploadClick,
   handlePublicPrivateChange,
   isCardSubmitted,
@@ -330,7 +332,7 @@ export default function CreateGameCardBase({
               </HeaderText>
             </Box>
             <SelectPublicPrivateDropdown
-              publicPrivateType={draftGame.gameTemplate.publicPrivateType}
+              publicPrivateType={isEditDraft ? editedPublicPrivateType : draftGame.gameTemplate.publicPrivateType}
               onHandlePublicPrivateChange={handlePublicPrivateChange}
               isCardSubmitted={isCardSubmitted}
               screenSize={screenSize}

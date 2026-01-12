@@ -11,12 +11,10 @@ interface CreateGameHeaderProps {
   handleBackClick: () => void;
   label: string;
   screenSize: ScreenSize;
-  isEdit: boolean;
-  handleEdit: () => void;
   isQuestionAdded: boolean;
 }
 
-export default function CreateGameHeader({ handleSaveGame, handleBackClick, label, screenSize, isEdit, handleEdit, isQuestionAdded }: CreateGameHeaderProps) {
+export default function CreateGameHeader({ handleSaveGame, handleBackClick, label, screenSize, isQuestionAdded }: CreateGameHeaderProps) {
   const displayLabel = label === "Your" ? 'Edit' : label;
 
   const theme = useTheme();
@@ -49,7 +47,7 @@ export default function CreateGameHeader({ handleSaveGame, handleBackClick, labe
           isEnabled={isQuestionAdded}
           iconOnlyOverride={screenSize !== ScreenSize.LARGE}
           buttonWidthOverride={screenSize !== ScreenSize.LARGE ? '48px' : '127px'}
-          onClick={isEdit ? handleEdit : handleSaveGame}
+          onClick={handleSaveGame}
         />
       </Box>
     </Box>
