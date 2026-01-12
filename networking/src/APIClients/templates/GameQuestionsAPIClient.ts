@@ -88,9 +88,21 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
             }
         `;
 
+        const customDeleteDraftGameQuestions = /* GraphQL */ `
+            mutation DeleteDraftGameQuestions(
+                $input: DeleteDraftGameQuestionsInput!
+                $condition: ModelDraftGameQuestionsConditionInput
+            ) {
+                deleteDraftGameQuestions(input: $input, condition: $condition) {
+                id
+                }
+            }
+        `;
+
         const deleteFunctionMap: Partial<Record<PublicPrivateType, string>> = {
             [PublicPrivateType.PUBLIC]: customDeletePublicGameQuestions,
             [PublicPrivateType.PRIVATE]: customDeletePrivateGameQuestions,
+            [PublicPrivateType.DRAFT]: customDeleteDraftGameQuestions,
         };
 
         const variables: GameQuestionType<T>['delete']['variables'] = {input: {id}};

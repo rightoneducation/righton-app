@@ -671,6 +671,10 @@ export default function CreateGame({
   };
 
   const handleCreateFromDraftGame = async () => {
+    setModalObject({
+      modalState: ModalStateType.PUBLISHING,
+      confirmState: ConfirmStateType.PUBLISHED,
+    });
     try{
       const updatedDraftGame: typeof draftGame = {
         ...draftGame,
@@ -707,12 +711,14 @@ export default function CreateGame({
         const userId = centralData.userProfile?.id || '';
        
         try {
+          let gameTemplateResponse: IGameTemplate | undefined;
           if (draftQuestionsList.length > 0) {
             // convert questions to array of promises & write to db
             const newQuestionTemplates = buildQuestionTemplatePromises(
               draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
               userId,
               apiClients,
+              updatedDraftGame.gameTemplate.publicPrivateType
             );
             const questionTemplateResponse =
               await Promise.all(newQuestionTemplates);
@@ -735,17 +741,11 @@ export default function CreateGame({
               gameImgUrl,
               questionTemplateCCSS
             );
-            const gameTemplateResponse =
+            gameTemplateResponse =
               await apiClients.gameTemplate.createGameTemplate(
               updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
-            if (gameTemplateResponse && selectedGameId) {
-              await apiClients.gameTemplate.deleteGameTemplate(
-                PublicPrivateType.DRAFT as TemplateType,
-                selectedGameId
-              )
-            }
             // create an array of all the ids from the response
             let questionTemplateIds = questionTemplateResponse.map(
               (question) => String(question?.id),
@@ -765,7 +765,8 @@ export default function CreateGame({
                   updatedDraftGame,
                   gameTemplateResponse.id,
                   questionTemplateIds,
-                  apiClients
+                  apiClients,
+                  updatedDraftGame.gameTemplate.publicPrivateType
                 );
                 // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
                 await Promise.all(createGameQuestions);
@@ -780,6 +781,27 @@ export default function CreateGame({
                 );
               }
             }
+            // final step is to delete the old draft game template and any associated game questions// Delete the old draft game if this was an edit/clone
+            if (gameTemplateResponse && selectedGameId) {
+              // Delete draft game questions first to avoid circular reference errors
+              const draftGameQuestions = centralData.selectedGame?.game?.questionTemplates?.map(
+                (item) => item.gameQuestionId,
+              ) ?? [];
+              if (draftGameQuestions.length > 0) {
+                const gameQuestionPromises = draftGameQuestions.map(async (questionId) => {
+                  return apiClients.gameQuestions.deleteGameQuestions(
+                    PublicPrivateType.DRAFT,
+                    questionId,
+                  );
+                });
+                await Promise.all(gameQuestionPromises);
+              }
+              // Now delete the draft game template
+              await apiClients.gameTemplate.deleteGameTemplate(
+                PublicPrivateType.DRAFT as TemplateType,
+                selectedGameId
+              )
+            }
           } else {
             // no question templates so ccss description not relevant
             const createGame = buildGameTemplate(
@@ -789,16 +811,19 @@ export default function CreateGame({
               gameImgUrl,
             );
 
-            const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
+            gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
               updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
-             if (gameTemplateResponse && selectedGameId) {
-              await apiClients.gameTemplate.deleteGameTemplate(
-                PublicPrivateType.DRAFT as TemplateType,
-                selectedGameId
-              )
-            }
+          }
+          
+          // Delete the old draft game if this was an edit/clone
+          if (gameTemplateResponse && selectedGameId) {
+            // Now delete the draft game template
+            await apiClients.gameTemplate.deleteGameTemplate(
+              PublicPrivateType.DRAFT as TemplateType,
+              selectedGameId
+            )
           }
         } catch (err) {
           console.error('Error creating game template:', err);
