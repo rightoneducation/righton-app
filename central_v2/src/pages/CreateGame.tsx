@@ -162,6 +162,7 @@ export default function CreateGame({
   
   const [gameFormIsValid, setGameFormIsValid] = useState(false);
   const [allDQAreValid, setAllDQAreValid] = useState(false);
+  const [editedPublicPrivateType, setEditedPublicPrivateType] = useState<PublicPrivateType>(draftGame.gameTemplate.publicPrivateType);
 
   const openModal = openModalAtIndex(
     draftGame,
@@ -215,34 +216,66 @@ export default function CreateGame({
     setDraftGame((prev) => toggleQuestionBank(prev, isGameFormIsValid));
   };
 
+  // editing the public/private of a game is complicated
+  // if we switch the type, any existing, published questions need to be removed
+  // if we switch the type during draft edit, we need to maintain the original draft type and flip the local state
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
-    const isPublicPrivateMatch = draftQuestionsList.every(
-      (question) => question.publicPrivate === value,
-    );
-    if (!isPublicPrivateMatch) {
-      const newDraft = [{ ...draftTemplate, publicPrivate: value }];
-      setDraftQuestionsList(newDraft);
-      setIconButtons([1]);
-      setSelectedQuestionIndex(0);
+    // case 1, editing a draft game
+    // remove any published questions (cant cross types)
+    // then switch all question types to new type
+    if (isEditDraft) {
+      setEditedPublicPrivateType(value);
+      const newDraftQuestionList = 
+        draftQuestionsList
+        .filter((question) => !question.questionTemplate.id && question.questionTemplate.publicPrivateType !== value)
+        .map((question) => ({
+          ...question,
+          questionTemplate: {
+            ...question.questionTemplate,
+            publicPrivateType: value,
+        },
+      }));
+      console.log('newDraftQuestionList', newDraftQuestionList);
+      setDraftGame((prev) => ({
+        ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+          finalPublicPrivateType: value,
+        },
+      }));
+      setEditedPublicPrivateType(value);
+      setDraftQuestionsList(newDraftQuestionList);
+    }
+    // case 2, creating/editing a game
+    else {
+      const isPublicPrivateMatch = draftQuestionsList.every(
+        (question) => question.publicPrivate === value,
+      );
+      if (!isPublicPrivateMatch) {
+        const newDraft = [{ ...draftTemplate, publicPrivate: value }].filter((question) => !question.questionTemplate.id && question.questionTemplate.publicPrivateType !== value);
+        setDraftQuestionsList(newDraft);
+        setIconButtons([1]);
+        setSelectedQuestionIndex(0);
+        setDraftGame((prev) => ({
+          ...prev,
+          gameTemplate: {
+            ...prev.gameTemplate,
+            publicPrivateType: value,
+          },
+          questionCount: newDraft.length,
+          // isGameCardErrored: false,
+        }));
+        return;
+      }
       setDraftGame((prev) => ({
         ...prev,
         gameTemplate: {
           ...prev.gameTemplate,
           publicPrivateType: value,
         },
-        questionCount: newDraft.length,
-        // isGameCardErrored: false,
       }));
-      return;
-    }
-    setDraftGame((prev) => ({
-      ...prev,
-      gameTemplate: {
-        ...prev.gameTemplate,
-        publicPrivateType: value,
-      },
-    }));
-    setDraftQuestionsList((prev) => updatePublicPrivateAtIndex(prev, value));
+      setDraftQuestionsList((prev) => updatePublicPrivateAtIndex(prev, value));
+  }
   };
 
   const handleDiscardGame = () => {
@@ -645,8 +678,7 @@ export default function CreateGame({
         isCreatingTemplate: true,
         gameTemplate: {
           ...draftGame.gameTemplate,
-          publicPrivateType: draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT ?
-            PublicPrivateType.PUBLIC : draftGame.gameTemplate.publicPrivateType,
+          publicPrivateType: draftGame.gameTemplate.finalPublicPrivateType,
         }
       }
        setDraftGame(updatedDraftGame);
@@ -793,7 +825,7 @@ export default function CreateGame({
         }));
         setModalObject({
           modalState: ModalStateType.CONFIRM,
-          confirmState: ConfirmStateType.DRAFT,
+          confirmState: ConfirmStateType.PUBLISHED,
         });
       } else {
         setDraftGame((prev) => ({
@@ -811,6 +843,14 @@ export default function CreateGame({
     }
   };
 
+  const handlePublishSwitch = async () => {
+    if (draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT) {
+      await handleCreateFromDraftGame();
+    } else {
+      await handlePublishGame();
+    }
+  };
+  
   const handleCloseSaveGameModal = () => {
     setModalObject({
       modalState: ModalStateType.NULL,
@@ -1300,7 +1340,7 @@ export default function CreateGame({
       />
       <LibraryTabsModalContainer
         isPublic={ draftGame.gameTemplate.publicPrivateType ===
-          PublicPrivateType.PUBLIC || draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT}
+          PublicPrivateType.PUBLIC || (draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT && editedPublicPrivateType === PublicPrivateType.PUBLIC)}
         isTabsOpen={isQuestionBankOpen}
         handleCloseQuestionTabs={handleCloseQuestionModal}
         screenSize={screenSize}
@@ -1317,7 +1357,7 @@ export default function CreateGame({
         publicPrivate={draftGame.gameTemplate.publicPrivateType}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
-        handlePublishGame={handlePublishGame}
+        handlePublishGame={handlePublishSwitch}
         handleCloseSaveGameModal={handleCloseSaveGameModal}
         handleContinue={handleContinue}
         handleCreateQuestion={handleCreateQuestion}
@@ -1388,6 +1428,7 @@ export default function CreateGame({
             isCloneImageChanged={draftGame.isCloneGameImageChanged}
             label={label}
             screenSize={screenSize}
+            editedPublicPrivateType={editedPublicPrivateType}
             handleImageUploadClick={handleGameImageUploadClick}
             handlePublicPrivateChange={handlePublicPrivateGameChange}
             handlePhaseTime={handlePhaseTime}
