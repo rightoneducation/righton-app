@@ -220,22 +220,22 @@ export default function CreateGame({
   // if we switch the type, any existing, published questions need to be removed
   // if we switch the type during draft edit, we need to maintain the original draft type and flip the local state
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
+    // regardless of case, we need to remove any published questions (cant cross types)
+    const newDraftQuestionList = 
+      draftQuestionsList
+      .filter((question) => !question.questionTemplate.id && question.questionTemplate.publicPrivateType !== value)
+      .map((question) => ({
+        ...question,
+        questionTemplate: {
+          ...question.questionTemplate,
+          publicPrivateType: value,
+      },
+    }));
     // case 1, editing a draft game
     // remove any published questions (cant cross types)
     // then switch all question types to new type
     if (isEditDraft) {
       setEditedPublicPrivateType(value);
-      const newDraftQuestionList = 
-        draftQuestionsList
-        .filter((question) => !question.questionTemplate.id && question.questionTemplate.publicPrivateType !== value)
-        .map((question) => ({
-          ...question,
-          questionTemplate: {
-            ...question.questionTemplate,
-            publicPrivateType: value,
-        },
-      }));
-      console.log('newDraftQuestionList', newDraftQuestionList);
       setDraftGame((prev) => ({
         ...prev,
         gameTemplate: {
@@ -252,8 +252,7 @@ export default function CreateGame({
         (question) => question.publicPrivate === value,
       );
       if (!isPublicPrivateMatch) {
-        const newDraft = [{ ...draftTemplate, publicPrivate: value }].filter((question) => !question.questionTemplate.id && question.questionTemplate.publicPrivateType !== value);
-        setDraftQuestionsList(newDraft);
+        setDraftQuestionsList(newDraftQuestionList);
         setIconButtons([1]);
         setSelectedQuestionIndex(0);
         setDraftGame((prev) => ({
@@ -262,7 +261,7 @@ export default function CreateGame({
             ...prev.gameTemplate,
             publicPrivateType: value,
           },
-          questionCount: newDraft.length,
+          questionCount: newDraftQuestionList.length,
           // isGameCardErrored: false,
         }));
         return;
@@ -714,22 +713,25 @@ export default function CreateGame({
           let gameTemplateResponse: IGameTemplate | undefined;
           if (draftQuestionsList.length > 0) {
             // convert questions to array of promises & write to db
+            // new question templates are those that are new or that are existing draft questions that need to be converted
             const newQuestionTemplates = buildQuestionTemplatePromises(
-              draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
+              draftQuestionsList.filter((dq) => dq.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT || !dq.questionTemplate.id),
               userId,
               apiClients,
               updatedDraftGame.gameTemplate.publicPrivateType
             );
+            
             const questionTemplateResponse =
               await Promise.all(newQuestionTemplates);
-                       
+          
             // create an array of all the ids from the response
             const questionTemplateCCSS = questionTemplateResponse.map(
               (question) => String(question?.ccssDescription),
             );
 
-            // addedQuestionTemplates are those added from question bank (they are already created so have ids)
-            const addedQuestionTemplates = draftQuestionsList.filter((dq) => dq.questionTemplate.id);
+            // addedQuestionTemplates are those added from question bank 
+            // that are not draft questions and have ids
+            const addedQuestionTemplates = draftQuestionsList.filter((dq) => dq.questionTemplate.publicPrivateType !== PublicPrivateType.DRAFT && dq.questionTemplate.id);
             const addQuestionTemplateCCSS = addedQuestionTemplates
               .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
             questionTemplateCCSS.push(...addQuestionTemplateCCSS);
@@ -755,6 +757,10 @@ export default function CreateGame({
               (question) => String(question?.questionTemplate?.id),
             )
 
+            // this combines the ids from the new question templates (new + draft)
+            // with the ids from the public or private questions that were already created
+            // use this merged array to create game/questions 
+            // (have to create a new one for each as we are linking to a new game template)
             questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
 
             // make sure we have a gameTemplate id as well as question template ids before creating a game question
@@ -781,12 +787,15 @@ export default function CreateGame({
                 );
               }
             }
-            // final step is to delete the old draft game template and any associated game questions// Delete the old draft game if this was an edit/clone
+            // final step is to delete the old draft content
+            // delete gamequestions first
+            // then delete game template
             if (gameTemplateResponse && selectedGameId) {
               // Delete draft game questions first to avoid circular reference errors
-              const draftGameQuestions = centralData.selectedGame?.game?.questionTemplates?.map(
-                (item) => item.gameQuestionId,
-              ) ?? [];
+              // Only delete join table records for actual DRAFT questions (not public/private ones)
+              const draftGameQuestions = centralData.selectedGame?.game?.questionTemplates
+                ?.filter((item) => item.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT)
+                ?.map((item) => item.gameQuestionId) ?? [];
               if (draftGameQuestions.length > 0) {
                 const gameQuestionPromises = draftGameQuestions.map(async (questionId) => {
                   return apiClients.gameQuestions.deleteGameQuestions(
@@ -797,7 +806,7 @@ export default function CreateGame({
                 await Promise.all(gameQuestionPromises);
               }
               // Now delete the draft game template
-              await apiClients.gameTemplate.deleteGameTemplate(
+              const response =await apiClients.gameTemplate.deleteGameTemplate(
                 PublicPrivateType.DRAFT as TemplateType,
                 selectedGameId
               )
@@ -815,16 +824,17 @@ export default function CreateGame({
               updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
               createGame,
             );
-          }
-          
-          // Delete the old draft game if this was an edit/clone
-          if (gameTemplateResponse && selectedGameId) {
-            // Now delete the draft game template
-            await apiClients.gameTemplate.deleteGameTemplate(
+            // Delete the old draft game if this was an edit/clone
+            if (gameTemplateResponse && selectedGameId) {
+              // Now delete the draft game template
+              const response = await apiClients.gameTemplate.deleteGameTemplate(
               PublicPrivateType.DRAFT as TemplateType,
               selectedGameId
             )
+            }
           }
+          
+      
         } catch (err) {
           console.error('Error creating game template:', err);
         }
