@@ -13,10 +13,20 @@ import {
 /**
  * This class is responsible for handling the draft assets for a game
  * Draft assets are complicated for a few reasons:
- * 1. When they are published, public/private assets are created and draft assets are deleted
- * 2. During creation of draft games, public/private questions can be linked to draft games (but cant use join tables)
- * 3. Additionally, draft questions can be linked to the game as draft gameQuestions (using a join table)
- * 4. When a draft game is published, existing public/private questions must be handled separately from draft questions
+ * a. When they are published, public/private assets are created and draft assets are deleted
+ * b. During creation of draft games, public/private questions can be linked to draft games (but cant use join tables)
+ * c. Additionally, draft questions can be linked to the game as draft gameQuestions (using a join table)
+ * d. When a draft game is published, existing public/private questions must be handled separately from draft questions
+ * 
+ * Here are the steps to publish a draft game:
+ * 1. Validation
+ * 2. Image Upload and Image URL Return
+ * 3. Categorize Question Templates By Type
+ * 4. Create Question Templates
+ * 5. Create Game Template
+ * 6. Create GameQuestions
+ * 7. Delete Old Draft Game Questions
+ * 8. Delete Old Draft Game Template
  */
 
 enum DraftAssetStep {
@@ -30,15 +40,6 @@ enum DraftAssetStep {
   DELETE_OLD_DRAFT_GAME_QUESTIONS,
   DELETE_OLD_DRAFT_GAME_TEMPLATE,
   UPDATE_USER_STATS,
-  CREATE_DRAFT_QUESTIONS = 'create_draft_questions',
-  CREATE_DRAFT_GAME_QUESTIONS = 'create_draft_game_questions',
-  PUBLISH_GAME = 'publish_game',
-}
-
-enum QuestionTemplateType {
-  NEW, // questions that have been just added before publish (so can be stored directly as public/private)
-  DRAFT, // questions that are draft questions, need to be converted to public/private and then deleted
-  ADDED, // questions that are already public/private and will be added via publicQuestionIds or privateQuestionIds
 }
 
 export class DraftAssetHandler {
@@ -124,7 +125,7 @@ export class DraftAssetHandler {
     draftQuestionsList: TDraftQuestionsList[], 
     apiClients: IAPIClients,
     selectedGameId: string
-  ): Promise<void> {
+  ): Promise<TGameTemplateProps> {
     const centralData = useCentralDataState(); // used for user profile id
     try{
       const updatedDraftGame: typeof draftGame = {
@@ -256,7 +257,7 @@ export class DraftAssetHandler {
             )
             this.completedSteps.push(DraftAssetStep.DELETE_OLD_DRAFT_GAME_TEMPLATE);
           }
-        }
+        
 
         // Step 9: Update User Stats
         // update user stats
@@ -266,25 +267,28 @@ export class DraftAssetHandler {
         }
         // TODO: return a value to handle these updates
         // Also handle errors and rollbacks
-        setDraftGame((prev) => ({
-          ...prev,
+        // then create an update draft game function (as this is a publish draft game function)
+        const publishDraftGameResponse = {
+          ...draftGame,
           isCreatingTemplate: false,
           isGameCardSubmitted: false,
-        }));
-        setModalObject({
-          modalState: ModalStateType.CONFIRM,
-          confirmState: ConfirmStateType.PUBLISHED,
-        });
-      } else {
-        setDraftGame((prev) => ({
-          ...prev,
-          ...(!gameFormIsValid && { isGameCardErrored: true }),
-          isCreatingTemplate: false,
-        }));
-        if (!allDQAreValid) {
-          setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
-          // then find first errored card and set index to that question
         }
+        return publishDraftGameResponse;
+      } else {
+        const publishDraftGameResponse = {
+          ...draftGame,
+          isCreatingTemplate: false,
+          ...(!isDraftGameValid && { isGameCardErrored: true }),
+        }
+        return publishDraftGameResponse;
       }
+    } catch (err) {
+      console.error('Error publishing draft game:', err);
+      const publishDraftGameResponse = {
+        ...draftGame,
+        isCreatingTemplate: false,
+      }
+      return publishDraftGameResponse;
+    }
   }
 }
