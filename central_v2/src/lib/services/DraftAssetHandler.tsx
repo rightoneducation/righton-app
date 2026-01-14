@@ -41,7 +41,7 @@ export class DraftAssetHandler {
     return checkGameFormIsValid(draftGame) && checkDQsAreValid(draftQuestionsList);
   }
 
-  private static async imageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
+  private static async existingImageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
     let gameImgUrl: string | null = null;
     if (draftGame.image || draftGame.imageUrl) {
       if (
@@ -57,6 +57,22 @@ export class DraftAssetHandler {
         }
         const draftGameWithUrl = { ...draftGame, imageUrl };
         gameImgUrl = await createGameImagePath(draftGameWithUrl, apiClients);
+      }
+    }
+    return gameImgUrl;
+  }
+
+  private static async newImageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
+    let gameImgUrl: string | null = null;
+    if (draftGame.image || draftGame.imageUrl) {
+      if (
+        (!draftGame?.imageUrl?.startsWith('https://') ||
+        !draftGame?.imageUrl?.startsWith('http://')) && 
+        draftGame?.imageUrl
+      ) {
+        gameImgUrl = draftGame.imageUrl;
+      } else {
+        gameImgUrl = await createGameImagePath(draftGame, apiClients);
       }
     }
     return gameImgUrl;
@@ -112,7 +128,6 @@ export class DraftAssetHandler {
     });
   }
 
-
   /**
    * Publishes a draft game and returns the updated draft game
    * Here are the steps to publish a draft game:
@@ -154,7 +169,7 @@ export class DraftAssetHandler {
       this.completedSteps.push(DraftAssetStep.VALIDATION);
       if (isDraftGameValid) {
         // Step 2: Image Upload and Image URL Return
-        const gameImgUrl = await DraftAssetHandler.imageHandler(updatedDraftGame, apiClients);
+        const gameImgUrl = await DraftAssetHandler.existingImageHandler(updatedDraftGame, apiClients);
         this.completedSteps.push(DraftAssetStep.IMAGE_UPLOAD);
         const userId = centralData.userProfile?.id || '';
        
@@ -302,6 +317,131 @@ export class DraftAssetHandler {
         isCreatingTemplate: false,
       }
       return publishDraftGameResponse;
+    }
+  }
+
+  /**
+   * Creates a draft game and returns the updated draft game
+   * @param centralData 
+   * @param draftGame 
+   * @param draftQuestionsList 
+   * @param apiClients 
+   * @param selectedGameId 
+   */
+  async createDraftGame(
+    centralData: ICentralDataState, 
+    draftGame: TGameTemplateProps, 
+    draftQuestionsList: TDraftQuestionsList[], 
+    apiClients: IAPIClients,
+     selectedGameId: string
+  ): Promise<TGameTemplateProps> {
+    try {
+      // Step 1: Update the game and questions to store the currently selected public private type
+      // finalPublicPrivateType is the user's desired final public/private type
+      const newDraftGame = {
+        ...draftGame,
+        publicPrivateGame: PublicPrivateType.DRAFT,
+        finalPublicPrivateType: draftGame.gameTemplate.finalPublicPrivateType,
+        isGameCardSubmitted: true,
+        isCreatingTemplate: true,
+      };
+      const draftQuestionsListCopy = draftQuestionsList.map((dq) => ({
+        ...dq,
+        questionTemplate: {
+          ...dq.questionTemplate,
+          finalPublicPrivateType: newDraftGame.gameTemplate.finalPublicPrivateType
+        }
+      }));
+
+      // Step 2: Image Upload and Image URL Return
+      const gameImgUrl = await DraftAssetHandler.newImageHandler(newDraftGame, apiClients);
+      const userId = centralData.userProfile?.id || '';
+
+      // Step 3: Categorize Question Templates By Type
+      const { 
+        newQuestionTemplates, 
+        draftQuestionTemplates, 
+        addedQuestionTemplates 
+      } = DraftAssetHandler.categorizeQuestionTemplates(draftQuestionsList);
+      
+      // Step 4: Create newly added Draft Question Templates 
+      const newQuestionTemplatePromises = buildQuestionTemplatePromises(
+        newQuestionTemplates,
+        userId,
+        apiClients,
+        PublicPrivateType.DRAFT,
+      );
+      const questionTemplateResponse = await Promise.all(newQuestionTemplatePromises);
+      // extract ccssDescription from question templates
+      const questionTemplateCCSS = questionTemplateResponse.map(
+        (question) => String(question?.ccssDescription),
+      );
+      // create an array of all the ids from the question templates
+      const questionTemplateIds = questionTemplateResponse.map((question) =>
+        String(question?.id),
+      );
+
+      // Step 5: Process the linked public/private question templates and update the game template with their ids
+      const addQuestionTemplateCCSS = addedQuestionTemplates
+        .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
+      questionTemplateCCSS.push(...addQuestionTemplateCCSS);
+
+      newDraftGame.gameTemplate.publicQuestionIds = addedQuestionTemplates
+        .filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PUBLIC)
+        .map((question) => question.questionTemplate.id);
+
+      newDraftGame.gameTemplate.privateQuestionIds = addedQuestionTemplates
+        .filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE)
+        .map((question) => question.questionTemplate.id);
+
+      // Step 6: Create Game Template
+      const createDraftGameTemplate = buildGameTemplate(
+        newDraftGame,
+        userId,
+        draftQuestionsList,
+        gameImgUrl,
+        questionTemplateCCSS,
+        true
+      );
+      const gameTemplateResponse =
+        await apiClients.gameTemplate.createGameTemplate(
+          PublicPrivateType.DRAFT as TemplateType,
+          createDraftGameTemplate,
+        );
+     
+
+      // Step 7: Create Draft GameQuestions (only for newly added draft questions)
+      // make sure we have a gameTemplate id as well as question template ids before creating a game question
+      if (gameTemplateResponse.id && (questionTemplateIds.length > 0)) {
+          // this is only for new questions so we don't write gamequestions that mix draft and public/private questions
+          const createGameQuestions = buildGameQuestionPromises(
+            newDraftGame,
+            gameTemplateResponse.id,
+            questionTemplateIds,
+            apiClients,
+            PublicPrivateType.DRAFT,
+          );
+          // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+          await Promise.all(createGameQuestions);
+      }
+
+      const createDraftGameResponse = {
+        ...newDraftGame,
+        gameTemplate: {
+          ...newDraftGame.gameTemplate,
+          publicPrivateType: PublicPrivateType.DRAFT,
+        },
+        isCreatingTemplate: false,
+        isGameCardSubmitted: false,
+      }
+      return createDraftGameResponse;
+    } catch (err) {
+      console.error(`Failed to create draft game:`, err);
+      const createDraftGameResponse = {
+        ...draftGame,
+        isCreatingTemplate: false,
+      }
+      return createDraftGameResponse;
     }
   }
 }
