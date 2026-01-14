@@ -17,16 +17,6 @@ import {
  * b. During creation of draft games, public/private questions can be linked to draft games (but cant use join tables)
  * c. Additionally, draft questions can be linked to the game as draft gameQuestions (using a join table)
  * d. When a draft game is published, existing public/private questions must be handled separately from draft questions
- * 
- * Here are the steps to publish a draft game:
- * 1. Validation
- * 2. Image Upload and Image URL Return
- * 3. Categorize Question Templates By Type
- * 4. Create Question Templates
- * 5. Create Game Template
- * 6. Create GameQuestions
- * 7. Delete Old Draft Game Questions
- * 8. Delete Old Draft Game Template
  */
 
 enum DraftAssetStep {
@@ -47,11 +37,11 @@ export class DraftAssetHandler {
   private completedSteps: DraftAssetStep[] = [];
 
 
-  private validateDraftGame(draftGame: TGameTemplateProps, draftQuestionsList: TDraftQuestionsList[]): boolean {
+  private static validateDraftGame(draftGame: TGameTemplateProps, draftQuestionsList: TDraftQuestionsList[]): boolean {
     return checkGameFormIsValid(draftGame) && checkDQsAreValid(draftQuestionsList);
   }
 
-  private async imageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
+  private static async imageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
     let gameImgUrl: string | null = null;
     if (draftGame.image || draftGame.imageUrl) {
       if (
@@ -61,16 +51,18 @@ export class DraftAssetHandler {
       ) {
         gameImgUrl = draftGame.imageUrl;
       } else {
-        if ( draftGame && draftGame.imageUrl && draftGame?.imageUrl?.length > 0){
-         draftGame.imageUrl = `${CloudFrontDistributionUrl}${draftGame.imageUrl}`;
+        let { imageUrl } = draftGame;
+        if (draftGame && imageUrl && imageUrl.length > 0){
+          imageUrl = `${CloudFrontDistributionUrl}${imageUrl}`;
         }
-        gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        const draftGameWithUrl = { ...draftGame, imageUrl };
+        gameImgUrl = await createGameImagePath(draftGameWithUrl, apiClients);
       }
     }
     return gameImgUrl;
   }
 
-  private categorizeQuestionTemplates(draftQuestionsList: TDraftQuestionsList[]): {
+  private static categorizeQuestionTemplates(draftQuestionsList: TDraftQuestionsList[]): {
     newQuestionTemplates: TDraftQuestionsList[],
     draftQuestionTemplates: TDraftQuestionsList[],
     addedQuestionTemplates: TDraftQuestionsList[],
@@ -94,7 +86,7 @@ export class DraftAssetHandler {
     }
   }
 
-  private extractDraftGameQuestionsIds(draftQuestionsList: TDraftQuestionsList[], selectedGame: ISelectedGame): string[] {
+  private static extractDraftGameQuestionsIds(draftQuestionsList: TDraftQuestionsList[], selectedGame: ISelectedGame): string[] {
     // pull the question template ids from the selected game and cross reference with categroized question templates
     const draftGameQuestions = selectedGame.game?.questionTemplates
       ?.filter((item) => item.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT)
@@ -104,7 +96,7 @@ export class DraftAssetHandler {
     return draftGameQuestions;
   }
 
-  private async updateUserStats(centralData: ICentralDataState, draftQuestionsList: TDraftQuestionsList[], apiClients: IAPIClients): Promise<IUser | null> {
+  private static async updateUserStats(centralData: ICentralDataState, draftQuestionsList: TDraftQuestionsList[], apiClients: IAPIClients): Promise<IUser | null> {
     const existingNumGames = centralData.userProfile?.gamesMade || 0;
     const existingNumQuestions =
       centralData.userProfile?.questionsMade || 0;
@@ -113,20 +105,40 @@ export class DraftAssetHandler {
     const newNumQuestions =
       existingNumQuestions +
       draftQuestionsList.filter((dq) => !dq.questionTemplate.id).length;
-    return await apiClients.user.updateUser({
+    return apiClients.user.updateUser({
       id: centralData.userProfile?.id || '',
       gamesMade: newNumGames,
       questionsMade: newNumQuestions,
     });
   }
 
+
+  /**
+   * Publishes a draft game and returns the updated draft game
+   * Here are the steps to publish a draft game:
+    * 1. Validation
+    * 2. Image Upload and Image URL Return
+    * 3. Categorize Question Templates By Type
+    * 4. Create Question Templates
+    * 5. Create Game Template
+    * 6. Create GameQuestions
+    * 7. Delete Old Draft Game Questions
+    * 8. Delete Old Draft Game Template
+    * 9. Update User Stats
+   * @param centralData - The central data state
+   * @param draftGame - The draft game
+   * @param draftQuestionsList - The draft questions list
+   * @param apiClients - The API clients
+   * @param selectedGameId - The selected game id
+   * @returns The published draft game (used to adjust state variables in main code)
+   */
   async publishDraftGame(
+    centralData: ICentralDataState,
     draftGame: TGameTemplateProps, 
     draftQuestionsList: TDraftQuestionsList[], 
     apiClients: IAPIClients,
     selectedGameId: string
   ): Promise<TGameTemplateProps> {
-    const centralData = useCentralDataState(); // used for user profile id
     try{
       const updatedDraftGame: typeof draftGame = {
         ...draftGame,
@@ -138,11 +150,11 @@ export class DraftAssetHandler {
         }
       }
       // Step 1: Validation
-      const isDraftGameValid = this.validateDraftGame(updatedDraftGame, draftQuestionsList);
+      const isDraftGameValid = DraftAssetHandler.validateDraftGame(updatedDraftGame, draftQuestionsList);
       this.completedSteps.push(DraftAssetStep.VALIDATION);
       if (isDraftGameValid) {
         // Step 2: Image Upload and Image URL Return
-        const gameImgUrl = await this.imageHandler(updatedDraftGame, apiClients);
+        const gameImgUrl = await DraftAssetHandler.imageHandler(updatedDraftGame, apiClients);
         this.completedSteps.push(DraftAssetStep.IMAGE_UPLOAD);
         const userId = centralData.userProfile?.id || '';
        
@@ -151,10 +163,10 @@ export class DraftAssetHandler {
           newQuestionTemplates, 
           draftQuestionTemplates, 
           addedQuestionTemplates 
-        } = this.categorizeQuestionTemplates(draftQuestionsList);
+        } = DraftAssetHandler.categorizeQuestionTemplates(draftQuestionsList);
         this.completedSteps.push(DraftAssetStep.CATEGORIZE_QUESTION_TEMPLATES);
 
-        let gameTemplateResponse: IGameTemplate | undefined;
+
         let questionTemplateCCSS: string[] = [];
         let combinedQuestionTemplateIds: string[] = [];
        
@@ -180,7 +192,7 @@ export class DraftAssetHandler {
             (question) => String(question?.ccssDescription),
           );
           // create an array of all the ids from the response
-          let questionTemplateIds = questionTemplateResponse.map(
+          const questionTemplateIds = questionTemplateResponse.map(
             (question) => String(question?.id),
           );
           this.completedSteps.push(DraftAssetStep.CREATE_NEW_QUESTION_TEMPLATES);
@@ -208,7 +220,7 @@ export class DraftAssetHandler {
             gameImgUrl,
             questionTemplateCCSS
           );
-          gameTemplateResponse =
+         const gameTemplateResponse =
             await apiClients.gameTemplate.createGameTemplate(
             updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
             createGame,
@@ -236,7 +248,7 @@ export class DraftAssetHandler {
           if (gameTemplateResponse && selectedGameId && centralData.selectedGame) {
             
             if (draftQuestionsList.length > 0) {
-              const draftGameQuestions = this.extractDraftGameQuestionsIds(draftQuestionsList, centralData.selectedGame);
+              const draftGameQuestions = DraftAssetHandler.extractDraftGameQuestionsIds(draftQuestionsList, centralData.selectedGame);
               
               if (draftGameQuestions.length > 0) {
                 const gameQuestionPromises = draftGameQuestions.map(async (gameQuestionId) => {
@@ -261,7 +273,7 @@ export class DraftAssetHandler {
 
         // Step 9: Update User Stats
         // update user stats
-        const response = await this.updateUserStats(centralData, draftQuestionsList, apiClients);
+        const response = await DraftAssetHandler.updateUserStats(centralData, draftQuestionsList, apiClients);
         if (response) {
           this.completedSteps.push(DraftAssetStep.UPDATE_USER_STATS);
         }
@@ -274,14 +286,15 @@ export class DraftAssetHandler {
           isGameCardSubmitted: false,
         }
         return publishDraftGameResponse;
-      } else {
-        const publishDraftGameResponse = {
-          ...draftGame,
-          isCreatingTemplate: false,
-          ...(!isDraftGameValid && { isGameCardErrored: true }),
-        }
-        return publishDraftGameResponse;
+      } 
+      // if the draft game is not valid, return the draft game with the isGameCardErrored flag
+      const publishDraftGameResponse = {
+        ...draftGame,
+        isCreatingTemplate: false,
+        ...(!isDraftGameValid && { isGameCardErrored: true }),
       }
+      return publishDraftGameResponse;
+      
     } catch (err) {
       console.error('Error publishing draft game:', err);
       const publishDraftGameResponse = {

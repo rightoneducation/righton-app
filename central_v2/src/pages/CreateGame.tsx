@@ -676,7 +676,7 @@ export default function CreateGame({
       confirmState: ConfirmStateType.PUBLISHED,
     });
     const draftAssetHandler = new DraftAssetHandler();
-    const publishDraftGameResponse = await draftAssetHandler.publishDraftGame(draftGame, draftQuestionsList, apiClients, selectedGameId);
+    const publishDraftGameResponse = await draftAssetHandler.publishDraftGame(centralData, draftGame, draftQuestionsList, apiClients, selectedGameId);
     setDraftGame(publishDraftGameResponse);
     if (publishDraftGameResponse.isGameCardErrored) {
       if (!checkDQsAreValid(draftQuestionsList)) {
@@ -1056,11 +1056,17 @@ export default function CreateGame({
   };
 
   const handleContinue = () => {
+    let navigateTo = '';
+    if (draftGame.gameTemplate.publicPrivateType === PublicPrivateType.DRAFT && modalObject.confirmState === ConfirmStateType.PUBLISHED) {
+      navigateTo = `/library/games/${draftGame.gameTemplate.finalPublicPrivateType}`;
+    } else {
+      navigateTo = `/library/games/${draftGame.gameTemplate.publicPrivateType}`;
+    }
     setModalObject({
       modalState: ModalStateType.NULL,
       confirmState: ConfirmStateType.NULL,
     });
-    navigate(`/library/games/${draftGame.gameTemplate.publicPrivateType}`);
+    navigate(navigateTo);
   };
 
   const handleCreateQuestion = (draftQuestion: CentralQuestionTemplateInput) => {
