@@ -734,7 +734,7 @@ export default function CreateGame({
         return;
       }
       const draftAssetHandler = new DraftAssetHandler();
-      const createDraftGameResponse = await draftAssetHandler.createDraftGame(centralData, draftGame, draftQuestionsList, apiClients, selectedGameId);
+      const createDraftGameResponse = await draftAssetHandler.createDraftGame(centralData, draftGame, draftQuestionsList, apiClients);
       setDraftGame(createDraftGameResponse);
       setModalObject({
         modalState: ModalStateType.CONFIRM,

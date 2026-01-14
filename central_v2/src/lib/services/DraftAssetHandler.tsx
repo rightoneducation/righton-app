@@ -19,7 +19,7 @@ import {
  * d. When a draft game is published, existing public/private questions must be handled separately from draft questions
  */
 
-enum DraftAssetStep {
+enum PublishDraftAssetStep {
   VALIDATION,
   IMAGE_UPLOAD,
   CATEGORIZE_QUESTION_TEMPLATES,
@@ -32,9 +32,20 @@ enum DraftAssetStep {
   UPDATE_USER_STATS,
 }
 
+enum CreateDraftAssetStep {
+  FINAL_PUBLIC_PRIVATE_TYPE,
+  IMAGE_UPLOAD,
+  CATEGORIZE_QUESTION_TEMPLATES,
+  CREATE_NEW_QUESTION_TEMPLATES,
+  PROCESS_ADDED_QUESTION_TEMPLATES,
+  CREATE_GAME_TEMPLATE,
+  CREATE_GAME_QUESTIONS,
+}
+
 export class DraftAssetHandler {
   private rollbackActions: Array<() => Promise<void>> = [];
-  private completedSteps: DraftAssetStep[] = [];
+  private completedPublishSteps: PublishDraftAssetStep[] = [];
+  private completedCreateSteps: CreateDraftAssetStep[] = [];
 
 
   private static validateDraftGame(draftGame: TGameTemplateProps, draftQuestionsList: TDraftQuestionsList[]): boolean {
@@ -87,7 +98,7 @@ export class DraftAssetHandler {
     const draftQuestionTemplates: TDraftQuestionsList[] = [];
     const addedQuestionTemplates: TDraftQuestionsList[] = [];
     draftQuestionsList.forEach((dq) => {
-      if (dq.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT || !dq.questionTemplate.id) {
+      if (dq.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT) {
         draftQuestionTemplates.push(dq);
       } else if ((dq.questionTemplate.publicPrivateType === PublicPrivateType.PUBLIC || dq.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE) && dq.questionTemplate.id) {
         addedQuestionTemplates.push(dq);
@@ -166,11 +177,11 @@ export class DraftAssetHandler {
       }
       // Step 1: Validation
       const isDraftGameValid = DraftAssetHandler.validateDraftGame(updatedDraftGame, draftQuestionsList);
-      this.completedSteps.push(DraftAssetStep.VALIDATION);
+      this.completedPublishSteps.push(PublishDraftAssetStep.VALIDATION);
       if (isDraftGameValid) {
         // Step 2: Image Upload and Image URL Return
         const gameImgUrl = await DraftAssetHandler.existingImageHandler(updatedDraftGame, apiClients);
-        this.completedSteps.push(DraftAssetStep.IMAGE_UPLOAD);
+        this.completedPublishSteps.push(PublishDraftAssetStep.IMAGE_UPLOAD);
         const userId = centralData.userProfile?.id || '';
        
         // Step 3: Categorize Question Templates By Type
@@ -179,7 +190,7 @@ export class DraftAssetHandler {
           draftQuestionTemplates, 
           addedQuestionTemplates 
         } = DraftAssetHandler.categorizeQuestionTemplates(draftQuestionsList);
-        this.completedSteps.push(DraftAssetStep.CATEGORIZE_QUESTION_TEMPLATES);
+        this.completedPublishSteps.push(PublishDraftAssetStep.CATEGORIZE_QUESTION_TEMPLATES);
 
 
         let questionTemplateCCSS: string[] = [];
@@ -210,7 +221,7 @@ export class DraftAssetHandler {
           const questionTemplateIds = questionTemplateResponse.map(
             (question) => String(question?.id),
           );
-          this.completedSteps.push(DraftAssetStep.CREATE_NEW_QUESTION_TEMPLATES);
+          this.completedPublishSteps.push(PublishDraftAssetStep.CREATE_NEW_QUESTION_TEMPLATES);
 
           // Step 4b: Process Added Question Templates (required for questions that are already public/private)
           // extract ccss descriptions from added question templates
@@ -225,7 +236,7 @@ export class DraftAssetHandler {
           // combined ids from new question templates and added question templates
           // used when creating join table entries
           combinedQuestionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds];
-          this.completedSteps.push(DraftAssetStep.PROCESS_ADDED_QUESTION_TEMPLATES);
+          this.completedPublishSteps.push(PublishDraftAssetStep.PROCESS_ADDED_QUESTION_TEMPLATES);
         }
           // Step 5: Create Game Template
           const createGame = buildGameTemplate(
@@ -240,7 +251,7 @@ export class DraftAssetHandler {
             updatedDraftGame.gameTemplate.publicPrivateType as TemplateType,
             createGame,
           );
-          this.completedSteps.push(DraftAssetStep.CREATE_GAME_TEMPLATE);
+          this.completedPublishSteps.push(PublishDraftAssetStep.CREATE_GAME_TEMPLATE);
 
           // Step 6: Create GameQuestions
           // make sure we have a gameTemplate id as well as question template ids before creating a game question
@@ -256,7 +267,7 @@ export class DraftAssetHandler {
               // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
               await Promise.all(createGameQuestions);
           }
-          this.completedSteps.push(DraftAssetStep.CREATE_GAME_QUESTIONS);
+          this.completedPublishSteps.push(PublishDraftAssetStep.CREATE_GAME_QUESTIONS);
 
           // Step 7: Delete Old Draft Game Questions
           // delete draft game questions first to avoid circular reference errors
@@ -274,7 +285,7 @@ export class DraftAssetHandler {
                 });
                 await Promise.all(gameQuestionPromises);
               }
-              this.completedSteps.push(DraftAssetStep.DELETE_OLD_DRAFT_GAME_QUESTIONS);
+              this.completedPublishSteps.push(PublishDraftAssetStep.DELETE_OLD_DRAFT_GAME_QUESTIONS);
             }
             
             // Step 8: Delete Old Draft Game Template
@@ -282,7 +293,7 @@ export class DraftAssetHandler {
               PublicPrivateType.DRAFT as TemplateType,
               selectedGameId
             )
-            this.completedSteps.push(DraftAssetStep.DELETE_OLD_DRAFT_GAME_TEMPLATE);
+            this.completedPublishSteps.push(PublishDraftAssetStep.DELETE_OLD_DRAFT_GAME_TEMPLATE);
           }
         
 
@@ -290,7 +301,7 @@ export class DraftAssetHandler {
         // update user stats
         const response = await DraftAssetHandler.updateUserStats(centralData, draftQuestionsList, apiClients);
         if (response) {
-          this.completedSteps.push(DraftAssetStep.UPDATE_USER_STATS);
+          this.completedPublishSteps.push(PublishDraftAssetStep.UPDATE_USER_STATS);
         }
         // TODO: return a value to handle these updates
         // Also handle errors and rollbacks
@@ -322,6 +333,14 @@ export class DraftAssetHandler {
 
   /**
    * Creates a draft game and returns the updated draft game
+   * Here are the steps to create a draft game:
+   * 1. Update the game and questions to store the currently selected public private type
+   * 2. Image Upload and Image URL Return
+   * 3. Categorize Question Templates By Type
+   * 4. Create newly added Draft Question Templates
+   * 5. Process the linked public/private question templates and update the game template with their ids
+   * 6. Create Game Template
+   * 7. Create Draft GameQuestions (only for newly added draft questions)
    * @param centralData 
    * @param draftGame 
    * @param draftQuestionsList 
@@ -333,7 +352,6 @@ export class DraftAssetHandler {
     draftGame: TGameTemplateProps, 
     draftQuestionsList: TDraftQuestionsList[], 
     apiClients: IAPIClients,
-     selectedGameId: string
   ): Promise<TGameTemplateProps> {
     try {
       // Step 1: Update the game and questions to store the currently selected public private type
@@ -345,25 +363,28 @@ export class DraftAssetHandler {
         isGameCardSubmitted: true,
         isCreatingTemplate: true,
       };
-      const draftQuestionsListCopy = draftQuestionsList.map((dq) => ({
+      const newDraftQuestionsList = draftQuestionsList.map((dq) => ({
         ...dq,
         questionTemplate: {
           ...dq.questionTemplate,
           finalPublicPrivateType: newDraftGame.gameTemplate.finalPublicPrivateType
         }
       }));
+      this.completedCreateSteps.push(CreateDraftAssetStep.FINAL_PUBLIC_PRIVATE_TYPE);
 
       // Step 2: Image Upload and Image URL Return
       const gameImgUrl = await DraftAssetHandler.newImageHandler(newDraftGame, apiClients);
       const userId = centralData.userProfile?.id || '';
+      this.completedCreateSteps.push(CreateDraftAssetStep.IMAGE_UPLOAD);
 
       // Step 3: Categorize Question Templates By Type
       const { 
         newQuestionTemplates, 
         draftQuestionTemplates, 
         addedQuestionTemplates 
-      } = DraftAssetHandler.categorizeQuestionTemplates(draftQuestionsList);
-      
+      } = DraftAssetHandler.categorizeQuestionTemplates(newDraftQuestionsList);
+      this.completedCreateSteps.push(CreateDraftAssetStep.CATEGORIZE_QUESTION_TEMPLATES);
+
       // Step 4: Create newly added Draft Question Templates 
       const newQuestionTemplatePromises = buildQuestionTemplatePromises(
         newQuestionTemplates,
@@ -380,6 +401,7 @@ export class DraftAssetHandler {
       const questionTemplateIds = questionTemplateResponse.map((question) =>
         String(question?.id),
       );
+      this.completedCreateSteps.push(CreateDraftAssetStep.CREATE_NEW_QUESTION_TEMPLATES);
 
       // Step 5: Process the linked public/private question templates and update the game template with their ids
       const addQuestionTemplateCCSS = addedQuestionTemplates
@@ -393,6 +415,8 @@ export class DraftAssetHandler {
       newDraftGame.gameTemplate.privateQuestionIds = addedQuestionTemplates
         .filter((question) => question.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE)
         .map((question) => question.questionTemplate.id);
+
+      this.completedCreateSteps.push(CreateDraftAssetStep.PROCESS_ADDED_QUESTION_TEMPLATES);
 
       // Step 6: Create Game Template
       const createDraftGameTemplate = buildGameTemplate(
@@ -408,7 +432,7 @@ export class DraftAssetHandler {
           PublicPrivateType.DRAFT as TemplateType,
           createDraftGameTemplate,
         );
-     
+      this.completedCreateSteps.push(CreateDraftAssetStep.CREATE_GAME_TEMPLATE);
 
       // Step 7: Create Draft GameQuestions (only for newly added draft questions)
       // make sure we have a gameTemplate id as well as question template ids before creating a game question
@@ -424,6 +448,7 @@ export class DraftAssetHandler {
           // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
           await Promise.all(createGameQuestions);
       }
+      this.completedCreateSteps.push(CreateDraftAssetStep.CREATE_GAME_QUESTIONS);
 
       const createDraftGameResponse = {
         ...newDraftGame,
