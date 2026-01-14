@@ -119,6 +119,7 @@ export default function CreateGame({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
+  const draftAssetHandler = new DraftAssetHandler();
   const route = useMatch('/clone/game/:type/:gameId');
   const editRoute = useMatch('/edit/game/:type/:gameId');
   const isClone =
@@ -675,7 +676,6 @@ export default function CreateGame({
       modalState: ModalStateType.PUBLISHING,
       confirmState: ConfirmStateType.PUBLISHED,
     });
-    const draftAssetHandler = new DraftAssetHandler();
     const publishDraftGameResponse = await draftAssetHandler.publishDraftGame(centralData, draftGame, draftQuestionsList, apiClients, selectedGameId);
     setDraftGame(publishDraftGameResponse);
     if (publishDraftGameResponse.isGameCardErrored) {
@@ -733,7 +733,6 @@ export default function CreateGame({
         }));
         return;
       }
-      const draftAssetHandler = new DraftAssetHandler();
       const createDraftGameResponse = await draftAssetHandler.createDraftGame(centralData, draftGame, draftQuestionsList, apiClients);
       setDraftGame(createDraftGameResponse);
       setModalObject({
@@ -758,87 +757,8 @@ export default function CreateGame({
         }));
         return;
       }
-      const draftGameCopy = {
-        ...draftGame,
-        publicPrivateGame: PublicPrivateType.DRAFT,
-        isGameCardSubmitted: true,
-        isCreatingTemplate: true,
-      };
-      setDraftGame(draftGameCopy);
-      // check for images on draft game
-      let gameImgUrl: string | null = null;
-      if (draftGame.image || draftGame.imageUrl) {
-        if (
-          (!draftGame?.imageUrl?.startsWith('https://') ||
-          !draftGame?.imageUrl?.startsWith('http://')) && 
-          draftGame?.imageUrl
-        ) {
-          gameImgUrl = draftGame.imageUrl;
-        } else {
-          gameImgUrl = await createGameImagePath(draftGame, apiClients);
-        }
-      }
-      const userId = centralData.userProfile?.id || '';
-      
-      // create any new question templates
-      const newQuestionTemplates = buildQuestionTemplatePromises(
-        draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
-        userId,
-        apiClients,
-        PublicPrivateType.DRAFT,
-      );
-      const questionTemplateResponse = await Promise.all(newQuestionTemplates);
-
-      // filter out any questions that have an id or that match the ids in draftGameCopy.gameTemplate.publicQuestionIds or draftGameCopy.gameTemplate.privateQuestionIds
-      const addedQuestionTemplatesPublic = draftQuestionsList.filter((dq) => dq.questionTemplate.publicPrivateType === PublicPrivateType.PUBLIC && (!dq.questionTemplate.id || !draftGameCopy.gameTemplate.publicQuestionIds?.includes(dq.questionTemplate.id)));
-      const addedQuestionTemplatesPrivate = draftQuestionsList.filter((dq) => dq.questionTemplate.publicPrivateType === PublicPrivateType.PRIVATE && (!dq.questionTemplate.id || !draftGameCopy.gameTemplate.privateQuestionIds?.includes(dq.questionTemplate.id)));
-      const addedQuestionTemplatesPublicIds = addedQuestionTemplatesPublic.map((question) => question.questionTemplate.id);
-      const addedQuestionTemplatesPrivateIds = addedQuestionTemplatesPrivate.map((question) => question.questionTemplate.id);
-      draftGameCopy.gameTemplate.publicQuestionIds = [...draftGameCopy.gameTemplate.publicQuestionIds??[], ...addedQuestionTemplatesPublicIds];
-      draftGameCopy.gameTemplate.privateQuestionIds = [...draftGameCopy.gameTemplate.privateQuestionIds??[], ...addedQuestionTemplatesPrivateIds];
-      // create & store game template in variable to retrieve id after response
-      const createGame = buildGameTemplate(
-        draftGameCopy,
-        userId,
-        draftQuestionsList,
-        gameImgUrl,
-        draftGameCopy.gameTemplate.ccss ? [draftGameCopy.gameTemplate.ccss] : undefined,
-        true
-      );
-
-      const gameTemplateResponse =
-        await apiClients.gameTemplate.updateGameTemplate(
-          PublicPrivateType.DRAFT as TemplateType,
-          {...createGame, id: selectedGameId},
-        );
-
-        const questionTemplateIds = questionTemplateResponse.map((question) =>
-          String(question?.id),
-        );
-        // make sure we have a gameTemplate id as well as question template ids before creating a game question
-        if (gameTemplateResponse.id && (questionTemplateIds.length > 0)) {
-          try {
-            // this is only for new questions so we don't write gamequestions that mix draft and public/private questions
-            const createGameQuestions = buildGameQuestionPromises(
-              draftGameCopy,
-              gameTemplateResponse.id,
-              questionTemplateIds,
-              apiClients,
-              PublicPrivateType.DRAFT,
-            );
-            // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
-            await Promise.all(createGameQuestions);
-          } catch (err) {
-            setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
-            console.error(`Failed to create one or more game questions:`, err);
-          }
-        }
-
-      setDraftGame((prev) => ({
-        ...prev,
-        isCreatingTemplate: false,
-        isGameCardSubmitted: false,
-      }));
+      const updateDraftGameResponse = await draftAssetHandler.updateDraftGame(centralData, draftGame, draftQuestionsList, apiClients);
+      setDraftGame(updateDraftGameResponse);
       setModalObject({
         modalState: ModalStateType.CONFIRM,
         confirmState: ConfirmStateType.DRAFT,
