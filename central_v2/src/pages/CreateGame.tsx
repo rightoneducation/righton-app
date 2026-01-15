@@ -849,7 +849,7 @@ export default function CreateGame({
       confirmState: ConfirmStateType.NULL,
     });
     window.localStorage.setItem(StorageKey, '');
-    navigate('/questions');
+    navigate(`/library/games/${centralData.selectedGame?.game?.publicPrivateType}`);
   };
 
   const handleContinue = () => {
