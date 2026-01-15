@@ -256,6 +256,7 @@ export default function useCentralDataManager({
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
         const callType = getCallType({
           ...callTypeMatchesDebounced,
+          matchLibraryTab: libraryTab,
           libraryTab,
           gameQuestion: searchGameQuestion,
         });
@@ -318,6 +319,7 @@ export default function useCentralDataManager({
   );
 
   const handleSearchChange = (searchString: string) => {
+    console.log(centralData.openTab);
     debouncedSearch(
       searchString.trim(),
       centralData.sort.direction ?? SortDirection.ASC,
