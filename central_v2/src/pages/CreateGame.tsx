@@ -164,7 +164,7 @@ export default function CreateGame({
   
   const [gameFormIsValid, setGameFormIsValid] = useState(false);
   const [allDQAreValid, setAllDQAreValid] = useState(false);
-  const [editedPublicPrivateType, setEditedPublicPrivateType] = useState<PublicPrivateType>(draftGame.gameTemplate.publicPrivateType);
+  const [editedPublicPrivateType, setEditedPublicPrivateType] = useState<PublicPrivateType>(isEditDraft ? draftGame.gameTemplate.finalPublicPrivateType : draftGame.gameTemplate.publicPrivateType);
 
   const openModal = openModalAtIndex(
     draftGame,
@@ -225,7 +225,7 @@ export default function CreateGame({
     // regardless of case, we need to remove any published questions (cant cross types)
     const newDraftQuestionList = 
       draftQuestionsList
-      .filter((question) => !question.questionTemplate.id && question.questionTemplate.publicPrivateType !== value)
+      .filter((question) => (!question.questionTemplate.id && ((!isEditDraft && question.questionTemplate.publicPrivateType !== value) || (isEditDraft && question.questionTemplate.finalPublicPrivateType !== value))))
       .map((question) => ({
         ...question,
         questionTemplate: {
@@ -250,35 +250,20 @@ export default function CreateGame({
     }
     // case 2, creating/editing a game
     else {
-      const isPublicPrivateMatch = draftQuestionsList.every(
-        (question) => question.publicPrivate === value,
-      );
-      if (!isPublicPrivateMatch) {
-        setDraftQuestionsList(newDraftQuestionList);
-        setIconButtons([1]);
-        setSelectedQuestionIndex(0);
-        setDraftGame((prev) => ({
-          ...prev,
-          gameTemplate: {
-            ...prev.gameTemplate,
-            publicPrivateType: value,
-          },
-          questionCount: newDraftQuestionList.length,
-          // isGameCardErrored: false,
-        }));
-        return;
-      }
+      setDraftQuestionsList(newDraftQuestionList);
+      setIconButtons([1]);
+      setSelectedQuestionIndex(0);
       setDraftGame((prev) => ({
         ...prev,
         gameTemplate: {
           ...prev.gameTemplate,
           publicPrivateType: value,
         },
+        questionCount: newDraftQuestionList.length,
+        // isGameCardErrored: false,
       }));
-      setDraftQuestionsList((prev) => updatePublicPrivateAtIndex(prev, value));
   }
   };
-
   const handleDiscardGame = () => {
     setModalObject({
       modalState: ModalStateType.DISCARD,
@@ -885,7 +870,7 @@ export default function CreateGame({
     setDraftQuestionsList((prev) => [{
       ...draftTemplate,
       question: draftQuestion,
-      publicPrivate: draftGame.gameTemplate.publicPrivateType,
+      publicPrivate: isEditDraft ? draftGame.gameTemplate.finalPublicPrivateType : draftGame.gameTemplate.publicPrivateType,
       isAIEnabled: false,
       isAIError: false,
       isQuestionCardSubmitted: false,
@@ -1020,7 +1005,7 @@ export default function CreateGame({
       <CreateGameModalSwitch
         modalObject={modalObject}
         screenSize={screenSize}
-        publicPrivate={draftGame.gameTemplate.publicPrivateType}
+        publicPrivate={isEditDraft ? draftGame.gameTemplate.finalPublicPrivateType : draftGame.gameTemplate.publicPrivateType}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishGame={handlePublishSwitch}

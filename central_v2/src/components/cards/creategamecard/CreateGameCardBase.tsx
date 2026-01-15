@@ -191,7 +191,6 @@ export default function CreateGameCardBase({
   };
 
   const handleOpenPublicPrivateWarning = () => {
-    console.log('here');
     if (draftGame.questionCount !== null && draftGame.questionCount !== undefined && draftGame.questionCount !== 0) {
       setPublicPrivateWarning(true);
     }
@@ -332,7 +331,7 @@ export default function CreateGameCardBase({
               </HeaderText>
             </Box>
             <SelectPublicPrivateDropdown
-              publicPrivateType={isEditDraft ? editedPublicPrivateType : draftGame.gameTemplate.publicPrivateType}
+              publicPrivateType={isEditDraft ? draftGame.gameTemplate.finalPublicPrivateType : draftGame.gameTemplate.publicPrivateType}
               onHandlePublicPrivateChange={handlePublicPrivateChange}
               isCardSubmitted={isCardSubmitted}
               screenSize={screenSize}

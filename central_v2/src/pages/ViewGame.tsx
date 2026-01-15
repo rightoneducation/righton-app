@@ -88,7 +88,7 @@ export default function ViewGame({
   }, [centralData.selectedGame, route]); // eslint-disable-line
 
   const handleLaunchGame = () => {
-    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/Public/${centralData.selectedGame?.game?.id}`;
+    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${centralData.selectedGame?.game?.publicPrivateType}/${centralData.selectedGame?.game?.id}`;
     window.location.href = LAUNCH_GAME_URL;
   };
 
@@ -185,7 +185,6 @@ export default function ViewGame({
       navigate('/');
     }
   };
-
 
   return (
     <CreateGameMainContainer screenSize={screenSize}>

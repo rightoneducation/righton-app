@@ -124,14 +124,22 @@ export class DraftAssetHandler {
 
   private static extractDraftGameQuestionsIds(draftQuestionsList: TDraftQuestionsList[], draftGame: TGameTemplateProps): string[] {
     // pull the question template ids from the selected game and cross reference with categroized question templates
-    console.log(draftGame)
-    console.log(draftQuestionsList)
     const draftGameQuestions = draftGame.gameTemplate.questionTemplates
       ?.filter((item) => item.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT)
       ?.filter((item) => draftQuestionsList.some((dq) => dq.questionTemplate.id === item.questionTemplate.id))
       ?.map((item) => item.gameQuestionId)
        ?? [];
     return draftGameQuestions;
+  }
+
+  private static extractRemovedDraftQuestionIds(draftQuestionsList: TDraftQuestionsList[], draftGame: TGameTemplateProps): string[] {
+    // identify draft game questions that have been removed from the current draft questions list
+    const removedDraftGameQuestions = draftGame.gameTemplate.questionTemplates
+      ?.filter((item) => item.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT)
+      ?.filter((item) => !draftQuestionsList.some((dq) => dq.questionTemplate.id === item.questionTemplate.id))
+      ?.map((item) => item.gameQuestionId)
+       ?? [];
+    return removedDraftGameQuestions;
   }
 
   private static async updateUserStats(centralData: ICentralDataState, draftQuestionsList: TDraftQuestionsList[], apiClients: IAPIClients): Promise<IUser | null> {
@@ -267,6 +275,15 @@ export class DraftAssetHandler {
           // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
           await Promise.all(createGameQuestions);
       }
+
+      // identify draft questions that have been removed from the game and delete the respective gamequestions
+      const removedDraftGameQuestions = DraftAssetHandler.extractRemovedDraftQuestionIds(draftQuestionsList, newDraftGame);
+      if (removedDraftGameQuestions.length > 0) {
+        const gameQuestionPromises = removedDraftGameQuestions.map(async (gameQuestionId) => {
+          return apiClients.gameQuestions.deleteGameQuestions(PublicPrivateType.DRAFT, gameQuestionId);
+        });
+        await Promise.all(gameQuestionPromises);
+      }
       this.completedCreateSteps.push(CreateDraftAssetStep.CREATE_GAME_QUESTIONS);
 
       const createDraftGameResponse = {
@@ -382,6 +399,16 @@ export class DraftAssetHandler {
         );
         // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
         await Promise.all(createGameQuestions);
+      }
+
+
+      // identify draft questions that have been removed from the game and delete the respective gamequestions
+      const removedDraftGameQuestions = DraftAssetHandler.extractRemovedDraftQuestionIds(draftQuestionsList, updatedDraftGame);
+      if (removedDraftGameQuestions.length > 0) {
+        const gameQuestionPromises = removedDraftGameQuestions.map(async (gameQuestionId) => {
+          return apiClients.gameQuestions.deleteGameQuestions(PublicPrivateType.DRAFT, gameQuestionId);
+        });
+        await Promise.all(gameQuestionPromises);
       }
       this.completedUpdateSteps.push(UpdateDraftAssetStep.CREATE_GAME_QUESTIONS);
       const updateDraftGameResponse = {
