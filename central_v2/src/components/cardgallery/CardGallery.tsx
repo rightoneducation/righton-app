@@ -134,7 +134,6 @@ function MostPopularQuestionsComponent({
   handleViewButtonClick,
   isCreateGame,
 }: MostPopularComponentProps<IQuestionTemplate>) {
-  const array = Array.from({ length: numColumns });
   const navigate = useNavigate();
   const elementsLength = Object.values(mostPopularElements).reduce(
     (acc, column) => acc + column.length,
@@ -168,9 +167,13 @@ function MostPopularQuestionsComponent({
               </Grid>
             );
           })
-        : Array.from({ length: numColumns }).map((_, index) => {
+        : Object.keys(mostPopularElements)
+            .map(Number)
+            .sort((a, b) => a - b)
+            .map((columnIndex) => {
+            const columnQuestions = mostPopularElements[columnIndex] || [];
             return (
-              <Grid item xs={12} md={4} lg key={uuidv4()}>
+              <Grid item xs={12} md={4} lg key={`question-column-${columnIndex}`}>
                 <Box
                   style={{
                     display: 'flex',
@@ -178,14 +181,14 @@ function MostPopularQuestionsComponent({
                     gap: '16px',
                   }}
                 >
-                  {mostPopularElements[index] &&
-                    mostPopularElements[index].length > 0 &&
-                    mostPopularElements[index].map((question) => {
+                  {columnQuestions.length > 0 &&
+                    columnQuestions.map((question) => {
                       const isFavorite =
                         favoriteQuestionTemplateIds?.includes(question.id) ||
                         false;
                       return (
                         <StyledQuestionCard
+                          key={question.id}
                           question={question}
                           id={question.id}
                           title={question.title}

@@ -135,6 +135,7 @@ export default function LibraryTabsContent({
   const cardGallery = [
      gameQuestion === GameQuestionType.GAME ? (
         <CardGallery<IGameTemplate>
+          key="game-gallery"
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
           grades={isSearchResults ? centralData.selectedGrades : undefined}
@@ -152,6 +153,7 @@ export default function LibraryTabsContent({
         />
       ) : (
         <CardGallery<IQuestionTemplate>
+          key="question-gallery"
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
           grades={isSearchResults ? centralData.selectedGrades : undefined}

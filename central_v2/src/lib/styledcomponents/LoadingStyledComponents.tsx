@@ -14,7 +14,7 @@ export const LoadingContainer = styled(Box)(({ theme }) => ({ // eslint-disable-
     display: 'none',
   },
   scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
+  msOverflowStyle: 'none', // IE and Edge
   // justifyContent: 'center',
   overflow: 'auto',
   flexGrow: 1,
