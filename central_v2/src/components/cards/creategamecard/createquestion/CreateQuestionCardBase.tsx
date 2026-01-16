@@ -154,11 +154,11 @@ export default function CreateQuestionCardBase({
   let imageLink: string | null = null;
   if (imageUrl) {
     imageLink = imageUrl;
+
     if ((isClone || isEdit) && !isCloneImageChanged)
       imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   } else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
-
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {

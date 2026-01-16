@@ -1010,8 +1010,9 @@ export default function CreateGame({
       confirmState: ConfirmStateType.NULL,
     });
   };
-
+  
   const handleSaveEditedQuestion = (editedQuestion: CentralQuestionTemplateInput) => {
+
     if (editQuestionIndex !== null) {
       setDraftQuestionsList((prev) =>
         prev.map((item, idx) => {
@@ -1311,6 +1312,7 @@ export default function CreateGame({
                               handleEditQuestion={() => handleEditQuestion(index)}
                               isViewGame
                               isCreateGame
+                              isEditGame={isEdit}
                             />
                           </Box>
                         </motion.div>

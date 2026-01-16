@@ -20,6 +20,7 @@ interface CreateQuestionCardUnifiedProps {
   handleEditQuestion?: () => void;
   isViewGame: boolean;
   isCreateGame?: boolean;
+  isEditGame?: boolean;
   isUserCreated: boolean;
 }
 
@@ -32,6 +33,7 @@ export default function CreateQuestionCardUnified({
   isViewGame,
   isCreateGame,
   isUserCreated,
+  isEditGame,
 }: CreateQuestionCardUnifiedProps) {
   const theme = useTheme();
   return (

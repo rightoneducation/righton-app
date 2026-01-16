@@ -150,7 +150,6 @@ export default function CreateQuestionModal({
     });
 
     const [isQuestionComplete, setIsQuestionComplete] = useState(handleCheckQuestionComplete(draftQuestion));
-
     // useEffect to detect when editQuestionDraft is provided and populate the form
     useEffect(() => {
       if (editQuestionDraft) {
@@ -358,7 +357,7 @@ export default function CreateQuestionModal({
             {/* open modals according to correct index */}
             {isImageUploadVisible && (
                 <ImageUploadModal
-                  isEdit={false}
+                  isEdit={editQuestionDraft !== null && editQuestionDraft !== undefined}
                   draftQuestion={draftQuestion}
                   screenSize={screenSize}
                   isClone={false}
@@ -425,7 +424,7 @@ export default function CreateQuestionModal({
                       <CreateQuestionCardBase
                         screenSize={screenSize}
                         isClone={false}
-                        isEdit={false}
+                        isEdit={editQuestionDraft !== null && editQuestionDraft !== undefined}
                         isCloneImageChanged={false}
                         label=''
                         draftQuestion={draftQuestion}
