@@ -139,7 +139,6 @@ export default function CreateQuestion({
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
     (!isEdit || isPublic) ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE,
   );
-  const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
   const [originalImageURl, setOriginalImageURL] = useState<string>('');
   const localData = useCreateQuestionLoader();
 
@@ -306,7 +305,6 @@ export default function CreateQuestion({
       return newDraftQuestion;
     });
   }
-
   const handleImageSave = async (inputImage?: File, inputUrl?: string) => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
@@ -574,9 +572,13 @@ export default function CreateQuestion({
         }
           window.localStorage.setItem(StorageKey, '');
           
-          if (isMultipleChoice)
+          // TODO: add support for other answer types
+          if (draftQuestion.correctCard.isMultipleChoice)
             draftQuestion.correctCard.answerSettings.answerType =
               AnswerType.MULTICHOICE;
+          else 
+            draftQuestion.correctCard.answerSettings.answerType =
+              AnswerType.STRING;
           const qtResult = await apiClients.questionTemplate.updateQuestionTemplate(
             publicPrivate as TemplateType,
             url || '',
@@ -658,7 +660,7 @@ export default function CreateQuestion({
           }
         }
           window.localStorage.setItem(StorageKey, '');
-          if (isMultipleChoice)
+          if (draftQuestion.correctCard.isMultipleChoice)
             draftQuestion.correctCard.answerSettings.answerType =
               AnswerType.MULTICHOICE;
           const response = await apiClients.questionTemplate.createQuestionTemplate(
@@ -733,7 +735,7 @@ export default function CreateQuestion({
           }
           window.localStorage.setItem(StorageKey, '');
           if (url) {
-            if (isMultipleChoice)
+            if (draftQuestion.correctCard.isMultipleChoice)
               draftQuestion.correctCard.answerSettings.answerType =
                 AnswerType.MULTICHOICE;
             const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
@@ -1017,7 +1019,7 @@ export default function CreateQuestion({
       confirmState: ConfirmStateType.NULL,
     });
     window.localStorage.setItem(StorageKey, '');
-    navigate('/questions');
+    navigate(`/library/questions/${centralData.selectedQuestion?.question?.publicPrivateType}`);
   };
 
   // Stable references for props to prevent unnecessary re-renders
@@ -1130,7 +1132,7 @@ export default function CreateQuestion({
                   isCardErrored={isBaseCardErrored}
                   isAIError={isAIError.some(Boolean)}
                   isPublic={isPublicQuestion}
-                  isMultipleChoice={isMultipleChoice}
+                  isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
                   handleAnswerType={handleAnswerType}
                 />
               </Box>
