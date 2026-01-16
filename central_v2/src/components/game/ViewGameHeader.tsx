@@ -120,7 +120,7 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
               </Box>
               {isIncompleteDraft && (
                 <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
-                  <Typography style={{ fontSize: '14px', color: '#000', fontFamily: 'Rubik', fontWeight: '400' }}>Finish editing this draft game and publish it in order to launch</Typography>
+                  <Typography style={{ fontSize: '14px', color: '#000', fontFamily: 'Rubik', fontWeight: '400' }}>To launch your game, finish editing by completing all required fields.</Typography>
                 </Box>
               )}
             </Box>

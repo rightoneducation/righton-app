@@ -350,10 +350,6 @@ export const buildGameQuestionPromises = (
   apiClients: IAPIClients,
   type?: PublicPrivateType,
 ) => {
-  console.log('questionTemplateIds', questionTemplateIds);
-  console.log('gameTemplateId', gameTemplateId);
-  console.log('type', type);
-  console.log('draftGame', draftGame);
   return questionTemplateIds.map(async (questionId, i) => {
     const gameQuestion = buildGameQuestion(
       String(gameTemplateId),

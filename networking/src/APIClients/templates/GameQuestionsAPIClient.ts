@@ -9,8 +9,235 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         type: T,
         input: GameQuestionType<T>['create']['input']
     ): Promise<IGameQuestion> {
+
+        // use abridged versions of the mutations here
+        // to avoid null errors from the API when it tries to return deeply nested elements with orphaned data
+
+        const customCreatePublicGameQuestions = /* GraphQL */ `
+            mutation CreatePublicGameQuestions(
+                $input: CreatePublicGameQuestionsInput!
+                $condition: ModelPublicGameQuestionsConditionInput
+            ) {
+                createPublicGameQuestions(input: $input, condition: $condition) {
+                    id
+                    publicGameTemplateID
+                    publicQuestionTemplateID
+                    publicGameTemplate {
+                        id
+                        userId
+                        publicPrivateType
+                        finalPublicPrivateType
+                        title
+                        lowerCaseTitle
+                        version
+                        description
+                        lowerCaseDescription
+                        ccss
+                        ccssDescription
+                        domain
+                        cluster
+                        grade
+                        gradeFilter
+                        standard
+                        phaseOneTime
+                        phaseTwoTime
+                        imageUrl
+                        timesPlayed
+                        questionTemplatesCount
+                        questionTemplatesOrder
+                        createdAt
+                        updatedAt
+                        type
+                        owner
+                    }
+                    publicQuestionTemplate {
+                        id
+                        userId
+                        publicPrivateType
+                        finalPublicPrivateType
+                        title
+                        lowerCaseTitle
+                        version
+                        choices
+                        instructions
+                        answerSettings
+                        ccss
+                        ccssDescription
+                        domain
+                        cluster
+                        grade
+                        gradeFilter
+                        standard
+                        imageUrl
+                        timesPlayed
+                        gameTemplatesCount
+                        createdAt
+                        updatedAt
+                        type
+                        owner
+                    }
+                    createdAt
+                    updatedAt
+                    owner
+                }
+            }
+        `;
+
+        const customCreatePrivateGameQuestions = /* GraphQL */ `
+            mutation CreatePrivateGameQuestions(
+                $input: CreatePrivateGameQuestionsInput!
+                $condition: ModelPrivateGameQuestionsConditionInput
+            ) {
+                createPrivateGameQuestions(input: $input, condition: $condition) {
+                    id
+                    privateGameTemplateID
+                    privateQuestionTemplateID
+                    privateGameTemplate {
+                        id
+                        userId
+                        publicPrivateType
+                        finalPublicPrivateType
+                        title
+                        lowerCaseTitle
+                        version
+                        description
+                        lowerCaseDescription
+                        ccss
+                        ccssDescription
+                        domain
+                        cluster
+                        grade
+                        gradeFilter
+                        standard
+                        phaseOneTime
+                        phaseTwoTime
+                        imageUrl
+                        timesPlayed
+                        questionTemplatesCount
+                        questionTemplatesOrder
+                        createdAt
+                        updatedAt
+                        type
+                        owner
+                    }
+                    privateQuestionTemplate {
+                        id
+                        userId
+                        publicPrivateType
+                        finalPublicPrivateType
+                        title
+                        lowerCaseTitle
+                        version
+                        choices
+                        instructions
+                        answerSettings
+                        ccss
+                        ccssDescription
+                        domain
+                        cluster
+                        grade
+                        gradeFilter
+                        standard
+                        imageUrl
+                        timesPlayed
+                        gameTemplatesCount
+                        createdAt
+                        updatedAt
+                        type
+                        owner
+                    }
+                    createdAt
+                    updatedAt
+                    owner
+                }
+            }
+        `;
+
+        const customCreateDraftGameQuestions = /* GraphQL */ `
+            mutation CreateDraftGameQuestions(
+                $input: CreateDraftGameQuestionsInput!
+                $condition: ModelDraftGameQuestionsConditionInput
+            ) {
+                createDraftGameQuestions(input: $input, condition: $condition) {
+                    id
+                    draftGameTemplateID
+                    draftQuestionTemplateID
+                    draftGameTemplate {
+                        id
+                        userId
+                        publicPrivateType
+                        finalPublicPrivateType
+                        title
+                        lowerCaseTitle
+                        version
+                        description
+                        lowerCaseDescription
+                        ccss
+                        ccssDescription
+                        domain
+                        cluster
+                        grade
+                        gradeFilter
+                        standard
+                        phaseOneTime
+                        phaseTwoTime
+                        imageUrl
+                        timesPlayed
+                        questionTemplatesCount
+                        questionTemplatesOrder
+                        publicQuestionIds
+                        privateQuestionIds
+                        createdAt
+                        updatedAt
+                        type
+                        owner
+                    }
+                    draftQuestionTemplate {
+                        id
+                        userId
+                        publicPrivateType
+                        finalPublicPrivateType
+                        title
+                        lowerCaseTitle
+                        version
+                        choices
+                        instructions
+                        answerSettings
+                        ccss
+                        ccssDescription
+                        domain
+                        cluster
+                        grade
+                        gradeFilter
+                        standard
+                        imageUrl
+                        timesPlayed
+                        gameTemplatesCount
+                        createdAt
+                        updatedAt
+                        type
+                        owner
+                    }
+                    createdAt
+                    updatedAt
+                    owner
+                }
+            }
+        `;
+
+        const createFunctionMap: Partial<Record<PublicPrivateType, string>> = {
+            [PublicPrivateType.PUBLIC]: customCreatePublicGameQuestions,
+            [PublicPrivateType.PRIVATE]: customCreatePrivateGameQuestions,
+            [PublicPrivateType.DRAFT]: customCreateDraftGameQuestions,
+        };
+
         const variables: GameQuestionType<T>['create']['variables'] = { input } as GameQuestionType<T>['create']['variables'];
-        const { queryFunction } = gameQuestionRuntimeMap[type as keyof typeof gameQuestionRuntimeMap]['create'];
+        const queryFunction = createFunctionMap[type];
+        
+        if (!queryFunction) {
+            throw new Error(`Create operation not supported for type: ${type}`);
+        }
+
         try{
             const gameQuestions = await this.callGraphQL<GameQuestionType<T>['create']['query']>(
                 queryFunction, variables
@@ -127,16 +354,274 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         limit: number, 
         nextToken: string | null
     ): Promise<{ gameQuestions: IGameQuestion[], nextToken: string }> {
+
+        // use abridged versions of the queries here
+        // to avoid null errors from the API when it tries to return deeply nested elements with orphaned data
+
+        const customListPublicGameQuestions = /* GraphQL */ `
+            query ListPublicGameQuestions(
+                $filter: ModelPublicGameQuestionsFilterInput
+                $limit: Int
+                $nextToken: String
+            ) {
+                listPublicGameQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+                    items {
+                        id
+                        publicGameTemplateID
+                        publicQuestionTemplateID
+                        publicGameTemplate {
+                            id
+                            userId
+                            publicPrivateType
+                            finalPublicPrivateType
+                            title
+                            lowerCaseTitle
+                            version
+                            description
+                            lowerCaseDescription
+                            ccss
+                            ccssDescription
+                            domain
+                            cluster
+                            grade
+                            gradeFilter
+                            standard
+                            phaseOneTime
+                            phaseTwoTime
+                            imageUrl
+                            timesPlayed
+                            questionTemplatesCount
+                            questionTemplatesOrder
+                            publicQuestionIds
+                            privateQuestionIds
+                            createdAt
+                            updatedAt
+                            type
+                            owner
+                        }
+                        publicQuestionTemplate {
+                            id
+                            userId
+                            publicPrivateType
+                            finalPublicPrivateType
+                            title
+                            lowerCaseTitle
+                            version
+                            choices
+                            instructions
+                            answerSettings
+                            ccss
+                            ccssDescription
+                            domain
+                            cluster
+                            grade
+                            gradeFilter
+                            standard
+                            imageUrl
+                            timesPlayed
+                            gameTemplatesCount
+                            createdAt
+                            updatedAt
+                            type
+                            owner
+                        }
+                        createdAt
+                        updatedAt
+                        owner
+                    }
+                    nextToken
+                }
+            }
+        `;
+
+        const customListPrivateGameQuestions = /* GraphQL */ `
+            query ListPrivateGameQuestions(
+                $filter: ModelPrivateGameQuestionsFilterInput
+                $limit: Int
+                $nextToken: String
+            ) {
+                listPrivateGameQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+                    items {
+                        id
+                        privateGameTemplateID
+                        privateQuestionTemplateID
+                        privateGameTemplate {
+                            id
+                            userId
+                            publicPrivateType
+                            finalPublicPrivateType
+                            title
+                            lowerCaseTitle
+                            version
+                            description
+                            lowerCaseDescription
+                            ccss
+                            ccssDescription
+                            domain
+                            cluster
+                            grade
+                            gradeFilter
+                            standard
+                            phaseOneTime
+                            phaseTwoTime
+                            imageUrl
+                            timesPlayed
+                            questionTemplatesCount
+                            questionTemplatesOrder
+                            publicQuestionIds
+                            privateQuestionIds
+                            createdAt
+                            updatedAt
+                            type
+                            owner
+                        }
+                        privateQuestionTemplate {
+                            id
+                            userId
+                            publicPrivateType
+                            finalPublicPrivateType
+                            title
+                            lowerCaseTitle
+                            version
+                            choices
+                            instructions
+                            answerSettings
+                            ccss
+                            ccssDescription
+                            domain
+                            cluster
+                            grade
+                            gradeFilter
+                            standard
+                            imageUrl
+                            timesPlayed
+                            gameTemplatesCount
+                            createdAt
+                            updatedAt
+                            type
+                            owner
+                        }
+                        createdAt
+                        updatedAt
+                        owner
+                    }
+                    nextToken
+                }
+            }
+        `;
+
+        const customListDraftGameQuestions = /* GraphQL */ `
+            query ListDraftGameQuestions(
+                $filter: ModelDraftGameQuestionsFilterInput
+                $limit: Int
+                $nextToken: String
+            ) {
+                listDraftGameQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+                    items {
+                        id
+                        draftGameTemplateID
+                        draftQuestionTemplateID
+                        draftGameTemplate {
+                            id
+                            userId
+                            publicPrivateType
+                            finalPublicPrivateType
+                            title
+                            lowerCaseTitle
+                            version
+                            description
+                            lowerCaseDescription
+                            ccss
+                            ccssDescription
+                            domain
+                            cluster
+                            grade
+                            gradeFilter
+                            standard
+                            phaseOneTime
+                            phaseTwoTime
+                            imageUrl
+                            timesPlayed
+                            questionTemplatesCount
+                            questionTemplatesOrder
+                            publicQuestionIds
+                            privateQuestionIds
+                            createdAt
+                            updatedAt
+                            type
+                            owner
+                        }
+                        draftQuestionTemplate {
+                            id
+                            userId
+                            publicPrivateType
+                            finalPublicPrivateType
+                            title
+                            lowerCaseTitle
+                            version
+                            choices
+                            instructions
+                            answerSettings
+                            ccss
+                            ccssDescription
+                            domain
+                            cluster
+                            grade
+                            gradeFilter
+                            standard
+                            imageUrl
+                            timesPlayed
+                            gameTemplatesCount
+                            createdAt
+                            updatedAt
+                            type
+                            owner
+                        }
+                        createdAt
+                        updatedAt
+                        owner
+                    }
+                    nextToken
+                }
+            }
+        `;
+
+        const listFunctionMap: Partial<Record<PublicPrivateType, string>> = {
+            [PublicPrivateType.PUBLIC]: customListPublicGameQuestions,
+            [PublicPrivateType.PRIVATE]: customListPrivateGameQuestions,
+            [PublicPrivateType.DRAFT]: customListDraftGameQuestions,
+        };
+
         const variables: GameQuestionType<T>['list']['variables'] = { limit, nextToken };
-        const { queryFunction } = gameQuestionRuntimeMap[type as keyof typeof gameQuestionRuntimeMap]['list'];
+        const queryFunction = listFunctionMap[type];
+
+        if (!queryFunction) {
+            throw new Error(`List operation not supported for type: ${type}`);
+        }
+
         let result = await this.callGraphQL<GameQuestionType<T>['list']['query']>(
             queryFunction,
             { variables }
         ) as { data: any };
-        const parsedGameQuestions = result.data.listGameQuestions.items.map((gameQuestions: AWSGameQuestion) => {
+
+        let listType = '';
+        switch (type) {
+            case PublicPrivateType.PRIVATE:
+                listType = `listPrivateGameQuestions`;
+                break;
+            case PublicPrivateType.DRAFT:
+                listType = `listDraftGameQuestions`;
+                break;
+            case PublicPrivateType.PUBLIC:
+            default:
+                listType = `listPublicGameQuestions`;
+                break;
+        }
+
+        const parsedGameQuestions = result.data[listType].items.map((gameQuestions: AWSGameQuestion) => {
             return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions, type) as IGameQuestion;
         });
-        const parsedNextToken = result.data.listGameQuestions.nextToken;
+        const parsedNextToken = result.data[listType].nextToken;
 
         return { gameQuestions: parsedGameQuestions, nextToken: parsedNextToken };
 

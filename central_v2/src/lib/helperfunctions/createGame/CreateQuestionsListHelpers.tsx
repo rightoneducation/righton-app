@@ -136,8 +136,8 @@ export const buildQuestionTemplatePromises = (
     dqCopy.questionTemplate.userId = userId;
     dqCopy.questionTemplate.timesPlayed = 0;
 
-    // if existing question return its ID for Game Creation
-    if (dqCopy.questionTemplate.id) {
+    // if existing question without need for type change (draft to public/private) return its ID for Game Creation
+    if (dqCopy.questionTemplate.id && dqCopy.questionTemplate.publicPrivateType === type) {
       return { id: dqCopy.questionTemplate.id } as IQuestionTemplate;
     }
 
@@ -168,7 +168,6 @@ export const buildQuestionTemplatePromises = (
         throw new Error('Failed to store image URL.');
       }
     }
-
     // create question template (images are optional)
     try {
       const newQuestionResponse =
