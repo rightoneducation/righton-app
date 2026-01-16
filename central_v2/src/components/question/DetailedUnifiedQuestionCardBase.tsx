@@ -36,6 +36,7 @@ interface DetailedUnifiedQuestionCardBaseProps {
   question: CentralQuestionTemplateInput;
   questionTemplate: IQuestionTemplate | null;
   handleRemoveQuestion?: () => void;
+  handleEditQuestion?: () => void;
   dropShadow?: boolean;
   isCreateGame?: boolean;
   isUserCreated: boolean;
@@ -74,6 +75,7 @@ export default function DetailedUnifiedQuestionCardBase({
   question,
   questionTemplate,
   handleRemoveQuestion,
+  handleEditQuestion,
   dropShadow,
   isCreateGame,
   isUserCreated,
@@ -298,12 +300,12 @@ export default function DetailedUnifiedQuestionCardBase({
                 height: '38px'
               }}
             >
-              {(question.questionCard.isFirstEdit && isCreateGame && isUserCreated) ? 
+              {(question.questionCard.isFirstEdit && isCreateGame && isUserCreated) ?
                 <CentralButton
                   buttonType={ButtonType.EDITQUESTION}
                   isEnabled
                   buttonWidthOverride="127px"
-                  onClick={() => {}}
+                  onClick={handleEditQuestion}
                 />
                 : 
                 <Typography

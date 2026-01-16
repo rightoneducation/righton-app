@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import { debounce } from 'lodash';
 import { Paper, Modal, Slide, styled, useTheme, Box, Typography } from '@mui/material';
 import { AnswerPrecision, AnswerType, CentralQuestionTemplateInput, IQuestionTemplate, PublicPrivateType } from '@righton/networking';
@@ -21,6 +21,8 @@ interface CreateQuestionModalProps {
     publicPrivate: PublicPrivateType;
     handleCreateQuestion: (draftQuestion: CentralQuestionTemplateInput) => void;
     handleCloseCreateQuestionModal: () => void;
+    editQuestionDraft?: CentralQuestionTemplateInput | null;
+    handleSaveEditedQuestion?: (editedQuestion: CentralQuestionTemplateInput) => void;
 }
 
 type AIErrorArray = [boolean, boolean, boolean];
@@ -81,6 +83,8 @@ export default function CreateQuestionModal({
     publicPrivate,
     handleCreateQuestion,
     handleCloseCreateQuestionModal,
+    editQuestionDraft,
+    handleSaveEditedQuestion,
 }: CreateQuestionModalProps) {
     const theme = useTheme();
     const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState(false);
@@ -94,6 +98,10 @@ export default function CreateQuestionModal({
     }
 
     const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
+      // Check if editQuestionDraft exists and use it, otherwise use default structure
+      if (editQuestionDraft) {
+        return editQuestionDraft;
+      }
       return (
         {
           publicPrivateType: publicPrivate,
@@ -142,6 +150,15 @@ export default function CreateQuestionModal({
     });
 
     const [isQuestionComplete, setIsQuestionComplete] = useState(handleCheckQuestionComplete(draftQuestion));
+
+    // useEffect to detect when editQuestionDraft is provided and populate the form
+    useEffect(() => {
+      if (editQuestionDraft) {
+        setDraftQuestion(editQuestionDraft);
+        setIsQuestionComplete(handleCheckQuestionComplete(editQuestionDraft));
+      }
+    }, [editQuestionDraft]);
+
     const handleDebouncedCheckQuestionComplete = useMemo(
       () => debounce((debounceQuestion: CentralQuestionTemplateInput) => {
         setIsQuestionComplete(handleCheckQuestionComplete(debounceQuestion));
@@ -385,16 +402,24 @@ export default function CreateQuestionModal({
                         gap: `${theme.sizing.xSmPadding}px`,
                       }}
                     >
-                      <CentralButton 
-                        buttonType={ButtonType.CANCELQUESTION} 
+                      <CentralButton
+                        buttonType={ButtonType.CANCELQUESTION}
                         isEnabled
-                        onClick={handleCloseCreateQuestionModal} 
+                        onClick={handleCloseCreateQuestionModal}
                       />
-                      <CentralButton 
-                        buttonType={ButtonType.SAVEADD} 
-                        isEnabled={isQuestionComplete}
-                        onClick={() => handleCreateQuestion(draftQuestion)} 
-                      />
+                      {editQuestionDraft && handleSaveEditedQuestion ? (
+                        <CentralButton
+                          buttonType={ButtonType.SAVE}
+                          isEnabled={isQuestionComplete}
+                          onClick={() => handleSaveEditedQuestion(draftQuestion)}
+                        />
+                      ) : (
+                        <CentralButton
+                          buttonType={ButtonType.SAVEADD}
+                          isEnabled={isQuestionComplete}
+                          onClick={() => handleCreateQuestion(draftQuestion)}
+                        />
+                      )}
                     </Box>
                     <Box>
                       <CreateQuestionCardBase
