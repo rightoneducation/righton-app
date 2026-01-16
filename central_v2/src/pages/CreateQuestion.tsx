@@ -139,7 +139,6 @@ export default function CreateQuestion({
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
     (!isEdit || isPublic) ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE,
   );
-  const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
   const [originalImageURl, setOriginalImageURL] = useState<string>('');
   const localData = useCreateQuestionLoader();
 
@@ -272,7 +271,7 @@ export default function CreateQuestion({
       label = 'Your';
       break;
   }
-
+  
   // QuestionCardBase handler functions
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
     setIsCloneImageChanged(true);
@@ -306,7 +305,6 @@ export default function CreateQuestion({
       return newDraftQuestion;
     });
   }
-
   const handleImageSave = async (inputImage?: File, inputUrl?: string) => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
@@ -534,17 +532,22 @@ export default function CreateQuestion({
   };
 
   const handleSaveEditedQuestion = async () => {
+    setModalObject({
+      modalState: ModalStateType.SAVING,
+      confirmState: ConfirmStateType.UPDATED,
+    });
     try {
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
       if (isQuestionTemplateComplete) {
+        let result = null;
+        let url = null;
         if (
           draftQuestion.questionCard.image ||
           draftQuestion.questionCard.imageUrl
         ) {
           setIsUpdatingTemplate(true);
-          let result = null;
-          let url = null;
+          
           // if the question is a clone/edit and the image hasn't been changed, we can use the original imageUrl
           if (
             (!isClone && !isEdit) ||
@@ -566,31 +569,35 @@ export default function CreateQuestion({
           } else {
             url = draftQuestion.questionCard.imageUrl;
           }
-          window.localStorage.setItem(StorageKey, '');
-          if (url) {
-            if (isMultipleChoice)
-              draftQuestion.correctCard.answerSettings.answerType =
-                AnswerType.MULTICHOICE;
-            const qtResult = await apiClients.questionTemplate.updateQuestionTemplate(
-              publicPrivate as TemplateType,
-              url,
-              centralData.userProfile?.id || '',
-              draftQuestion,
-              selectedQuestionId,
-            );
-            if (qtResult && selectedQuestionId && isDraft){
-              // if the user is saving out their draft, create a public/private question template
-              // and delete the draft question template
-              await apiClients.questionTemplate.deleteQuestionTemplate(
-                PublicPrivateType.DRAFT,
-                selectedQuestionId
-              );
-            }
-          }
-          setIsUpdatingTemplate(false);
-          fetchElements();
-          centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
         }
+          window.localStorage.setItem(StorageKey, '');
+          
+          // TODO: add support for other answer types
+          if (draftQuestion.correctCard.isMultipleChoice)
+            draftQuestion.correctCard.answerSettings.answerType =
+              AnswerType.MULTICHOICE;
+          else 
+            draftQuestion.correctCard.answerSettings.answerType =
+              AnswerType.STRING;
+          const qtResult = await apiClients.questionTemplate.updateQuestionTemplate(
+            publicPrivate as TemplateType,
+            url || '',
+            centralData.userProfile?.id || '',
+            draftQuestion,
+            selectedQuestionId,
+          );
+          if (qtResult && selectedQuestionId && isDraft){
+            // if the user is saving out their draft, create a public/private question template
+            // and delete the draft question template
+            await apiClients.questionTemplate.deleteQuestionTemplate(
+              PublicPrivateType.DRAFT,
+              selectedQuestionId
+            );
+          }
+          setModalObject({
+            modalState: ModalStateType.CONFIRM,
+            confirmState: ConfirmStateType.UPDATED,
+          });
       } else {
         if (!draftQuestion.correctCard.isCardComplete) {
           setIsCorrectCardErrored(true);
@@ -653,7 +660,7 @@ export default function CreateQuestion({
           }
         }
           window.localStorage.setItem(StorageKey, '');
-          if (isMultipleChoice)
+          if (draftQuestion.correctCard.isMultipleChoice)
             draftQuestion.correctCard.answerSettings.answerType =
               AnswerType.MULTICHOICE;
           const response = await apiClients.questionTemplate.createQuestionTemplate(
@@ -728,7 +735,7 @@ export default function CreateQuestion({
           }
           window.localStorage.setItem(StorageKey, '');
           if (url) {
-            if (isMultipleChoice)
+            if (draftQuestion.correctCard.isMultipleChoice)
               draftQuestion.correctCard.answerSettings.answerType =
                 AnswerType.MULTICHOICE;
             const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
@@ -1012,7 +1019,7 @@ export default function CreateQuestion({
       confirmState: ConfirmStateType.NULL,
     });
     window.localStorage.setItem(StorageKey, '');
-    navigate('/questions');
+    navigate(`/library/questions/${centralData.selectedQuestion?.question?.publicPrivateType}`);
   };
 
   // Stable references for props to prevent unnecessary re-renders
@@ -1044,6 +1051,8 @@ export default function CreateQuestion({
     }
   }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
 
+
+  
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
@@ -1123,7 +1132,7 @@ export default function CreateQuestion({
                   isCardErrored={isBaseCardErrored}
                   isAIError={isAIError.some(Boolean)}
                   isPublic={isPublicQuestion}
-                  isMultipleChoice={isMultipleChoice}
+                  isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
                   handleAnswerType={handleAnswerType}
                 />
               </Box>

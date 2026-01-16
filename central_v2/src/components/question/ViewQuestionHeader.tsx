@@ -45,7 +45,6 @@ export default function ViewQuestionHeader({
     setModalState(ModalStateType.NULL);
   };
 
-  console.log(modalState)
   return (
     <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
       <Box style={{ 
