@@ -21,10 +21,11 @@ interface CreateGameModalSwitchProps {
   handleCloseCreateQuestionModal: () => void;
   isCardErrored: boolean;
   handleSaveEditedGame: () => void;
-
+  editQuestionDraft?: CentralQuestionTemplateInput | null;
+  handleSaveEditedQuestion?: (editedQuestion: CentralQuestionTemplateInput) => void;
 }
 
-export default function CreateGameModalSwitch({ 
+export default function CreateGameModalSwitch({
   modalState,
   screenSize,
   handleDiscard,
@@ -36,6 +37,8 @@ export default function CreateGameModalSwitch({
   handleCloseCreateQuestionModal,
   isCardErrored,
   handleSaveEditedGame,
+  editQuestionDraft,
+  handleSaveEditedQuestion,
 }: CreateGameModalSwitchProps) {
 
   switch (modalState) {
@@ -45,6 +48,16 @@ export default function CreateGameModalSwitch({
         screenSize={screenSize}
         handleCreateQuestion={handleCreateQuestion}
         handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
+      />;
+      break;
+    case ModalStateType.GAMEEDITQUESTION:
+      return <CreateQuestionModal
+        isModalOpen
+        screenSize={screenSize}
+        handleCreateQuestion={handleCreateQuestion}
+        handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
+        editQuestionDraft={editQuestionDraft}
+        handleSaveEditedQuestion={handleSaveEditedQuestion}
       />;
       break;
     case ModalStateType.DISCARD:

@@ -104,14 +104,14 @@ export default function ViewGame({
   };
 
   const handleEditGame = () => {
-    if (
-      centralData.selectedGame?.game?.publicPrivateType ===
-      PublicPrivateType.PUBLIC
-    ) {
-      setIsModalOpen(true);
-    } else {
+    // if (
+    //   centralData.selectedGame?.game?.publicPrivateType ===
+    //   PublicPrivateType.PUBLIC
+    // ) {
+    //   setIsModalOpen(true);
+    // } else {
       handleProceedToEdit();
-    }
+    // }
   };
 
   const handleProceedToDelete = async () => {

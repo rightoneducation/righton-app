@@ -80,7 +80,8 @@ export enum ModalStateType {
   CONFIRM,
   CREATEQUESTION,
   DUPLICATE,
-  UPDATE
+  UPDATE, 
+  GAMEEDITQUESTION
 }
 
 export type CallType = {

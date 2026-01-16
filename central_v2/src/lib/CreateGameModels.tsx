@@ -44,6 +44,7 @@ export type TDraftQuestionsList = {
   questionTemplate: IQuestionTemplate;
   isLibraryViewOnly: boolean;
   localId?: string; // Unique identifier for React keys
+  isEdited?: boolean; // Track if question has been edited
 };
 
 // empty centralQuestionTemplate for creating question templates

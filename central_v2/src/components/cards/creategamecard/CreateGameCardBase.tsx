@@ -124,6 +124,7 @@ export default function CreateGameCardBase({
           justifyContent: 'center',
           gap: '16px',
           position: 'relative',
+          
         }}
       >
         <ImageStyled

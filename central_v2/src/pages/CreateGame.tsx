@@ -148,6 +148,8 @@ export default function CreateGame({
     string[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [editQuestionDraft, setEditQuestionDraft] = useState<CentralQuestionTemplateInput | null>(null);
+  const [editQuestionIndex, setEditQuestionIndex] = useState<number | null>(null);
 
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
     phaseOne: '2:00',
@@ -163,7 +165,6 @@ export default function CreateGame({
   const allDQAreValid = checkDQsAreValid(draftQuestionsList);
   // const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid)
   // || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
-  console.log("IS EDIT", isEdit)
   let label = 'Create';
   let selectedGameId = '';
   switch (true) {
@@ -330,6 +331,48 @@ export default function CreateGame({
         const addQuestionTemplateCCSS = addedQuestionTemplates
           .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
 
+        // handle edited questions - update existing question templates
+        const editedQuestions = draftQuestionsList.filter(
+          (dq) => dq.isEdited && dq.questionTemplate.id && dq.questionTemplate.id.length > 0
+        );
+        if (editedQuestions.length > 0) {
+          try {
+            const updatePromises = editedQuestions.map(async (dq) => {
+              let imageUrl = dq.questionTemplate.imageUrl || '';
+
+              // Handle image upload if there's a new image
+              if (dq.question.questionCard.image || dq.question.questionCard.imageUrl) {
+                if (dq.question.questionCard.image) {
+                  const img = await apiClients.questionTemplate.storeImageInS3(
+                    dq.question.questionCard.image
+                  );
+                  const result = await img.result;
+                  if (result && result.path && result.path.length > 0) {
+                    imageUrl = result.path;
+                  }
+                } else if (dq.question.questionCard.imageUrl &&
+                           dq.question.questionCard.imageUrl !== dq.questionTemplate.imageUrl) {
+                  // New image URL provided
+                  imageUrl = await apiClients.questionTemplate.storeImageUrlInS3(
+                    dq.question.questionCard.imageUrl
+                  );
+                }
+              }
+
+              return apiClients.questionTemplate.updateQuestionTemplate(
+                dq.publicPrivate,
+                imageUrl,
+                userId,
+                dq.question,
+                dq.questionTemplate.id
+              );
+            });
+            await Promise.all(updatePromises);
+          } catch (err) {
+            console.error('Failed to update one or more edited questions:', err);
+          }
+        }
+
         // make sure we have a gameTemplate id as well as question template ids before creating a game question
         if (draftGame.gameTemplate.id && questionTemplateIds.length > 0) {
           try {
@@ -444,9 +487,50 @@ export default function CreateGame({
           }
       }
         const userId = centralData.userProfile?.id || '';
-       
+
         try {
           if (draftQuestionsList.length > 0) {
+            // handle edited questions - update existing question templates first
+            const editedQuestions = draftQuestionsList.filter(
+              (dq) => dq.isEdited && dq.questionTemplate.id && dq.questionTemplate.id.length > 0
+            );
+            if (editedQuestions.length > 0) {
+              try {
+                const updatePromises = editedQuestions.map(async (dq) => {
+                  let imageUrl = dq.questionTemplate.imageUrl || '';
+
+                  // Handle image upload if there's a new image
+                  if (dq.question.questionCard.image || dq.question.questionCard.imageUrl) {
+                    if (dq.question.questionCard.image) {
+                      const img = await apiClients.questionTemplate.storeImageInS3(
+                        dq.question.questionCard.image
+                      );
+                      const result = await img.result;
+                      if (result && result.path && result.path.length > 0) {
+                        imageUrl = result.path;
+                      }
+                    } else if (dq.question.questionCard.imageUrl &&
+                               dq.question.questionCard.imageUrl !== dq.questionTemplate.imageUrl) {
+                      imageUrl = await apiClients.questionTemplate.storeImageUrlInS3(
+                        dq.question.questionCard.imageUrl
+                      );
+                    }
+                  }
+
+                  return apiClients.questionTemplate.updateQuestionTemplate(
+                    dq.publicPrivate,
+                    imageUrl,
+                    userId,
+                    dq.question,
+                    dq.questionTemplate.id
+                  );
+                });
+                await Promise.all(updatePromises);
+              } catch (err) {
+                console.error('Failed to update one or more edited questions:', err);
+              }
+            }
+
             // convert questions to array of promises & write to db
             const newQuestionTemplates = buildQuestionTemplatePromises(
               draftQuestionsList.filter((dq) => !dq.questionTemplate.id),
@@ -455,18 +539,18 @@ export default function CreateGame({
             );
             const questionTemplateResponse =
               await Promise.all(newQuestionTemplates);
-                       
+
             // create an array of all the ids from the response
             const questionTemplateCCSS = questionTemplateResponse.map(
               (question) => String(question?.ccssDescription),
             );
 
-            // addedQuestionTemplates are those added from question bank (they are already created so have ids)
-            const addedQuestionTemplates = draftQuestionsList.filter((dq) => dq.questionTemplate.id);
+            // addedQuestionTemplates are those added from question bank (they are already created so have ids) and not edited
+            const addedQuestionTemplates = draftQuestionsList.filter((dq) => dq.questionTemplate.id && !dq.isEdited);
             const addQuestionTemplateCCSS = addedQuestionTemplates
               .map((draftQuestion) => String(draftQuestion.questionTemplate.ccssDescription));
             questionTemplateCCSS.push(...addQuestionTemplateCCSS);
-            
+
             const createGame = buildGameTemplate(
               draftGame,
               userId,
@@ -479,7 +563,7 @@ export default function CreateGame({
               draftGame.gameTemplate.publicPrivateType,
               createGame,
             );
-           
+
             // create an array of all the ids from the response
             let questionTemplateIds = questionTemplateResponse.map(
               (question) => String(question?.id),
@@ -489,7 +573,12 @@ export default function CreateGame({
               (question) => String(question?.questionTemplate?.id),
             )
 
-            questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds]
+            // Include edited question IDs
+            const editedQuestionTemplatesIds = editedQuestions.map(
+              (question) => String(question?.questionTemplate?.id),
+            )
+
+            questionTemplateIds = [...questionTemplateIds, ...addedQuestionTemplatesIds, ...editedQuestionTemplatesIds]
 
             // make sure we have a gameTemplate id as well as question template ids before creating a game question
             if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
@@ -1070,6 +1159,34 @@ export default function CreateGame({
     setModalState(ModalStateType.NULL);
   };
 
+  const handleEditQuestion = (index: number) => {
+    const questionToEdit = draftQuestionsList[index].question;
+    setEditQuestionDraft(questionToEdit);
+    setEditQuestionIndex(index);
+    setModalState(ModalStateType.GAMEEDITQUESTION);
+  };
+
+  const handleSaveEditedQuestion = (editedQuestion: CentralQuestionTemplateInput) => {
+    if (editQuestionIndex !== null) {
+      setDraftQuestionsList((prev) =>
+        prev.map((item, idx) => {
+          if (idx === editQuestionIndex) {
+            // Update the question and mark it as edited (keep the ID to update existing template)
+            return {
+              ...item,
+              question: editedQuestion,
+              isEdited: true, // Mark as edited so we know to update it
+            };
+          }
+          return item;
+        })
+      );
+    }
+    setModalState(ModalStateType.NULL);
+    setEditQuestionDraft(null);
+    setEditQuestionIndex(null);
+  };
+
   useEffect(() => {
     setIsLoading(false);
     if (localStorage.getItem(StorageKeyIsFirstCreate) === null){
@@ -1173,6 +1290,8 @@ export default function CreateGame({
         handleCloseCreateQuestionModal={handleCloseCreateQuestionModal}
         isCardErrored={draftGame.isGameCardErrored}
         handleSaveEditedGame={handleSaveEditedGame}
+        editQuestionDraft={editQuestionDraft}
+        handleSaveEditedQuestion={handleSaveEditedQuestion}
       />
 
       {/* Create Game Image Upload Modal */}
@@ -1338,6 +1457,7 @@ export default function CreateGame({
                               questionTemplate={draftQuestionItem.questionTemplate ?? null}
                               isUserCreated={isUserCreated}
                               handleRemoveQuestion={() => handleDeleteQuestion(index)}
+                              handleEditQuestion={() => handleEditQuestion(index)}
                               isViewGame
                               isCreateGame
                             />
