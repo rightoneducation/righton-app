@@ -106,11 +106,11 @@ export default function ImageUploadModal({
 
   let imageLink: string | null = null;
   if (imageUrl) imageLink = imageUrl;
-  if ((isClone && !isCloneImageChanged) || isEdit)
-    imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
-  else if (image && image instanceof File)
+  if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
-
+  else if ((isClone && !isCloneImageChanged) || isEdit)
+    imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
+ 
   const handleChangeClick = (newImage: File) => {
     setIsChangeImage(false);
     handleImageChange(newImage);
