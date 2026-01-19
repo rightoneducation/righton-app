@@ -1,5 +1,5 @@
 import React from 'react';
-import { IAPIClients, CloudFrontDistributionUrl, IGameTemplate, IQuestionTemplate, CentralQuestionTemplateInput, IUser, PublicPrivateType, TemplateType } from '@righton/networking';
+import { IAPIClients, CloudFrontDistributionUrl, IGameTemplate, IQuestionTemplate, CentralQuestionTemplateInput, IUser, PublicPrivateType, TemplateType, AnswerType } from '@righton/networking';
 import { checkGameFormIsValid, createGameImagePath, buildGameTemplate, buildGameQuestionPromises } from '../helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { checkDQsAreValid, buildQuestionTemplatePromises } from '../helperfunctions/createGame/CreateQuestionsListHelpers';
 import { ICentralDataState, ISelectedGame, StorageKey } from '../CentralModels';
@@ -62,7 +62,10 @@ enum UpdateDraftQuestionStep{
 }
 
 enum PublishDraftQuestionStep{
-
+  IMAGE_UPLOAD,
+  CREATE_QUESTION_TEMPLATE,
+  DELETE_OLD_DRAFT_QUESTION_TEMPLATE,
+  UPDATE_USER_STATS,
 }
 
 export class DraftAssetHandler {
@@ -133,6 +136,36 @@ export class DraftAssetHandler {
       );
     } else {
       url = draftQuestion.questionCard.imageUrl || null;
+    }
+    return url;
+  }
+
+  private static async publishQuestionImageHandler(draftQuestion: CentralQuestionTemplateInput, apiClients: IAPIClients): Promise<string | null> {
+    let url: string | null = null;
+    let result = null;
+    // new image always needs to be created
+    if (draftQuestion.questionCard.image) {
+      const img = await apiClients.questionTemplate.storeImageInS3(
+        draftQuestion.questionCard.image,
+      );
+      // have to do a nested await here because aws-storage returns a nested promise object
+      result = await img.result;
+      if (result && result.path && result.path.length > 0)
+        url = result.path;
+    } else if (draftQuestion.questionCard.imageUrl) {
+      // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
+      if (
+        draftQuestion.questionCard.imageUrl.startsWith('https://') ||
+        draftQuestion.questionCard.imageUrl.startsWith('http://')
+      ) {
+        url = draftQuestion.questionCard.imageUrl;
+      } else {
+        // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
+        url = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
+      }
+      url = await apiClients.questionTemplate.storeImageUrlInS3(
+        draftQuestion.questionCard.imageUrl,
+      );
     }
     return url;
   }
@@ -713,6 +746,57 @@ export class DraftAssetHandler {
       return !!response;
     } catch (err) {
       console.error('Error creating draft question:', err);
+      return false;
+    }
+  }
+
+  async publishDraftQuestion(
+    centralData: ICentralDataState,
+    draftQuestion: CentralQuestionTemplateInput,
+    apiClients: IAPIClients,
+    originalImageURl: string | null,
+    selectedQuestionId: string,
+    publicPrivate: PublicPrivateType,
+  ): Promise<boolean> {
+    const draftQuestionCopy: CentralQuestionTemplateInput = { ...draftQuestion };
+    console.log('publishDraftQuestion: draftQuestionCopy', draftQuestionCopy);
+    try {
+      const url = await DraftAssetHandler.publishQuestionImageHandler(draftQuestion, apiClients);
+      this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.IMAGE_UPLOAD);
+      window.localStorage.setItem(StorageKey, '');
+      if (url) {
+        if (draftQuestionCopy.correctCard.isMultipleChoice)
+          draftQuestionCopy.correctCard.answerSettings.answerType =
+            AnswerType.MULTICHOICE;
+        const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
+          publicPrivate as TemplateType,
+          url,
+          centralData.userProfile?.id || '',
+          draftQuestionCopy,
+        );
+        this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
+        if (qtResult && selectedQuestionId){
+          // if the user is saving out their draft, create a public/private question template
+          // and delete the draft question template
+          await apiClients.questionTemplate.deleteQuestionTemplate(
+            PublicPrivateType.DRAFT,
+            selectedQuestionId
+          );
+        }
+        this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.DELETE_OLD_DRAFT_QUESTION_TEMPLATE);
+      }
+      // update user stats
+      const existingNumQuestions =
+        centralData.userProfile?.questionsMade || 0;
+      const newNumQuestions = existingNumQuestions + 1;
+      await apiClients.user.updateUser({
+        id: centralData.userProfile?.id || '',
+        questionsMade: newNumQuestions,
+      });
+      this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.UPDATE_USER_STATS);
+      return true;
+    } catch (err) {
+      console.error('Error publishing draft question:', err);
       return false;
     }
   }

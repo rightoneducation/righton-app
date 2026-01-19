@@ -703,67 +703,15 @@ export default function CreateQuestion({
     try {
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
+      console.log('handleCreateFromDraftQuestion: isQuestionTemplateComplete', isQuestionTemplateComplete);
       if (isQuestionTemplateComplete) {
         if (
           draftQuestion.questionCard.image ||
           draftQuestion.questionCard.imageUrl
         ) {
           setIsCreatingTemplate(true);
-          let result = null;
-          let url = null;
-          // new image always needs to be created
-          if (draftQuestion.questionCard.image) {
-            const img = await apiClients.questionTemplate.storeImageInS3(
-              draftQuestion.questionCard.image,
-            );
-            // have to do a nested await here because aws-storage returns a nested promise object
-            result = await img.result;
-            if (result && result.path && result.path.length > 0)
-              url = result.path;
-          } else if (draftQuestion.questionCard.imageUrl) {
-            // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
-            if (
-              draftQuestion.questionCard.imageUrl.startsWith('https://') ||
-              draftQuestion.questionCard.imageUrl.startsWith('http://')
-            ) {
-              url = draftQuestion.questionCard.imageUrl;
-            } else {
-              // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
-              draftQuestion.questionCard.imageUrl = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
-            }
-            url = await apiClients.questionTemplate.storeImageUrlInS3(
-              draftQuestion.questionCard.imageUrl,
-            );
-          }
-          window.localStorage.setItem(StorageKey, '');
-          if (url) {
-            if (draftQuestion.correctCard.isMultipleChoice)
-              draftQuestion.correctCard.answerSettings.answerType =
-                AnswerType.MULTICHOICE;
-            const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
-              publicPrivate as TemplateType,
-              url,
-              centralData.userProfile?.id || '',
-              draftQuestion,
-            );
-            if (qtResult && selectedQuestionId){
-              // if the user is saving out their draft, create a public/private question template
-              // and delete the draft question template
-              await apiClients.questionTemplate.deleteQuestionTemplate(
-                PublicPrivateType.DRAFT,
-                selectedQuestionId
-              );
-            }
-          }
-          // update user stats
-          const existingNumQuestions =
-            centralData.userProfile?.questionsMade || 0;
-          const newNumQuestions = existingNumQuestions + 1;
-          await apiClients.user.updateUser({
-            id: centralData.userProfile?.id || '',
-            questionsMade: newNumQuestions,
-          });
-
+          console.log('handleCreateFromDraftQuestion: draftQuestion', draftQuestion);
+          await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId, publicPrivate);
           setIsCreatingTemplate(false);
           fetchElements();
         }
@@ -786,6 +734,7 @@ export default function CreateQuestion({
   const handleSave = async () => {
     // case 1, saving a draft into a public/private question template
     if (isDraft) {
+      console.log('handleSave: isDraft');
       await handleCreateFromDraftQuestion();
       return;
     }
@@ -963,8 +912,8 @@ export default function CreateQuestion({
     setIsCorrectCardErrored(!handleCheckQuestionCorrectCardComplete(draftQuestion));
     setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
     setModalObject({
-      modalState: isEdit ? ModalStateType.UPDATE : ModalStateType.PUBLISH,
-      confirmState: isEdit ? ConfirmStateType.UPDATED : ConfirmStateType.PUBLISHED,
+      modalState: ModalStateType.PUBLISH,
+      confirmState: ConfirmStateType.PUBLISHED,
     });
   };
 
@@ -1045,7 +994,8 @@ export default function CreateQuestion({
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
         handleContinue={handleContinue}
         handleSaveDraft={handleSaveDraft}
-        isCardErrored={(isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored) && !isDraft}
+        isCardErrored={(isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored)}
+        isDraft={isDraft}
       />
       <CreateQuestionBoxContainer screenSize={screenSize}>
         <CreateQuestionHeader 
