@@ -57,7 +57,8 @@ enum CreateDraftQuestionStep{
 }
 
 enum UpdateDraftQuestionStep{
-  
+  IMAGE_UPLOAD,
+  UPDATE_QUESTION_TEMPLATE,
 }
 
 enum PublishDraftQuestionStep{
@@ -676,6 +677,39 @@ export class DraftAssetHandler {
         draftQuestion,
       );
       this.completedCreateQuestionSteps.push(CreateDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
+      return !!response;
+    } catch (err) {
+      console.error('Error creating draft question:', err);
+      return false;
+    }
+  }
+
+  async updateDraftQuestion(
+    centralData: ICentralDataState,
+    draftQuestion: CentralQuestionTemplateInput,
+    apiClients: IAPIClients,
+    originalImageURl: string | null,
+    questionTemplateId: string,
+  ): Promise<boolean> {
+    try {
+      let url = ''; 
+      if (
+        draftQuestion.questionCard.imageUrl !== originalImageURl
+      ) {
+        url = await DraftAssetHandler.newQuestionImageHandler(draftQuestion, apiClients) || '';
+      } else {
+        url = draftQuestion.questionCard.imageUrl;
+      }
+      this.completedUpdateQuestionSteps.push(UpdateDraftQuestionStep.IMAGE_UPLOAD);
+      window.localStorage.setItem(StorageKey, '');
+      const response = await apiClients.questionTemplate.updateQuestionTemplate(
+        PublicPrivateType.DRAFT as TemplateType,
+        url,
+        centralData.userProfile?.id || '',
+        draftQuestion,
+        questionTemplateId,
+      );
+      this.completedUpdateQuestionSteps.push(UpdateDraftQuestionStep.UPDATE_QUESTION_TEMPLATE);
       return !!response;
     } catch (err) {
       console.error('Error creating draft question:', err);

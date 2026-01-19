@@ -855,35 +855,7 @@ export default function CreateQuestion({
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
         setIsUpdatingTemplate(true);
-        let result = null;
-        let url = ''; 
-        if (
-          draftQuestion.questionCard.imageUrl !== originalImageURl
-        ) {
-          if (draftQuestion.questionCard.image) {
-            const img = await apiClients.questionTemplate.storeImageInS3(
-              draftQuestion.questionCard.image,
-            );
-            // have to do a nested await here because aws-storage returns a nested promise object
-            result = await img.result;
-            if (result && result.path && result.path.length > 0)
-              url = result.path;
-          } else if (draftQuestion.questionCard.imageUrl) {
-            url = await apiClients.questionTemplate.storeImageUrlInS3(
-              draftQuestion.questionCard.imageUrl,
-            );
-          }
-        } else {
-          url = draftQuestion.questionCard.imageUrl;
-        }
-        window.localStorage.setItem(StorageKey, '');
-        await apiClients.questionTemplate.updateQuestionTemplate(
-            PublicPrivateType.DRAFT as TemplateType,
-            url,
-            centralData.userProfile?.id || '',
-            draftQuestion,
-            selectedQuestionId,
-          );
+        await draftAssetHandler.updateDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId);
         setIsUpdatingTemplate(false);
         setModalObject({
           modalState: ModalStateType.CONFIRM,
@@ -915,6 +887,14 @@ export default function CreateQuestion({
     // case 2, creating a new draft question template
     handleSaveDraftQuestion();
   };
+
+  const handleSaveEditedQuestionSwitch = async () => {
+    if (isDraft) {
+      await handleSaveEditedDraftQuestion();
+    } else {
+      await handleSaveEditedQuestion();
+    }
+  }
 
   const handleDiscardQuestion = () => {
     setIsDiscardModalOpen(true);
@@ -1061,11 +1041,11 @@ export default function CreateQuestion({
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishQuestion={handlePublishQuestion}
-        handleSaveEditedQuestion={handlePublishQuestion}
+        handleSaveEditedQuestion={handleSaveEditedQuestionSwitch}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
         handleContinue={handleContinue}
         handleSaveDraft={handleSaveDraft}
-        isCardErrored={isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored}
+        isCardErrored={(isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored) && !isDraft}
       />
       <CreateQuestionBoxContainer screenSize={screenSize}>
         <CreateQuestionHeader 

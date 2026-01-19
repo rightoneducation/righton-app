@@ -132,6 +132,7 @@ export class QuestionTemplateAPIClient
     updateQuestionTemplateInput: CentralQuestionTemplateInput,
     questionId: string
   ): Promise<IQuestionTemplate> {
+    console.log(type);
     const parsedInput = QuestionTemplateParser.centralQuestionTemplateInputToIQuestionTemplate<T>(imageUrl, userId, updateQuestionTemplateInput, questionId);
     const variables: GraphQLOptions = { input: parsedInput as QuestionTemplateType<T>['update']['input'] };
     const queryFunction = questionTemplateRuntimeMap[type].update.queryFunction;

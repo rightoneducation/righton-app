@@ -53,7 +53,7 @@ export default function CreateQuestionModalSwitch({
     case ModalStateType.UPDATE:
       return <EditGameModal
         isModalOpen
-        templateType={TemplateType.GAME}
+        templateType={TemplateType.QUESTION}
         handleSaveEditedGame={handleSaveEditedQuestion}
         handleCloseSaveGameModal={handleCloseSaveQuestionModal}
         isCardErrored={isCardErrored}
