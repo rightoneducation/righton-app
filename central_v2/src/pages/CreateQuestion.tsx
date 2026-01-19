@@ -55,6 +55,7 @@ import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/us
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { handleCheckQuestionBaseComplete, handleCheckQuestionCorrectCardComplete, handleCheckQuestionIncorrectCardsComplete } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
+import { DraftAssetHandler } from '../lib/services/DraftAssetHandler';
 
 interface CreateQuestionProps {
   screenSize: ScreenSize;
@@ -92,6 +93,7 @@ export default function CreateQuestion({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
+  const draftAssetHandler = new DraftAssetHandler();
   const route = useMatch('/clone/question/:type/:questionId');
   const editRoute = useMatch('/edit/question/:type/:questionId');
   const createRoute = useMatch('/create/question');
@@ -822,34 +824,7 @@ export default function CreateQuestion({
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
         setIsCreatingTemplate(true);
-        let result = null;
-        let url = ''; 
-        if (
-          draftQuestion.questionCard.imageUrl !== originalImageURl
-        ) {
-          if (draftQuestion.questionCard.image) {
-            const img = await apiClients.questionTemplate.storeImageInS3(
-              draftQuestion.questionCard.image,
-            );
-            // have to do a nested await here because aws-storage returns a nested promise object
-            result = await img.result;
-            if (result && result.path && result.path.length > 0)
-              url = result.path;
-          } else if (draftQuestion.questionCard.imageUrl) {
-            url = await apiClients.questionTemplate.storeImageUrlInS3(
-              draftQuestion.questionCard.imageUrl,
-            );
-          }
-        } else {
-          url = draftQuestion.questionCard.imageUrl;
-        }
-        window.localStorage.setItem(StorageKey, '');
-        await apiClients.questionTemplate.createQuestionTemplate(
-          PublicPrivateType.DRAFT as TemplateType,
-          url,
-          centralData.userProfile?.id || '',
-          draftQuestion,
-        );
+        await draftAssetHandler.createDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl);
         setIsCreatingTemplate(false);
         setModalObject({
           modalState: ModalStateType.CONFIRM,

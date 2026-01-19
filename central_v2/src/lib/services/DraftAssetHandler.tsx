@@ -1,13 +1,14 @@
 import React from 'react';
-import { IAPIClients, CloudFrontDistributionUrl, IGameTemplate, IQuestionTemplate, IUser, PublicPrivateType, TemplateType } from '@righton/networking';
+import { IAPIClients, CloudFrontDistributionUrl, IGameTemplate, IQuestionTemplate, CentralQuestionTemplateInput, IUser, PublicPrivateType, TemplateType } from '@righton/networking';
 import { checkGameFormIsValid, createGameImagePath, buildGameTemplate, buildGameQuestionPromises } from '../helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { checkDQsAreValid, buildQuestionTemplatePromises } from '../helperfunctions/createGame/CreateQuestionsListHelpers';
-import { ICentralDataState, ISelectedGame } from '../CentralModels';
-
+import { ICentralDataState, ISelectedGame, StorageKey } from '../CentralModels';
 import {
   TGameTemplateProps,
   TDraftQuestionsList,
 } from '../CreateGameModels';
+
+
 
 /**
  * This class is responsible for handling the draft assets for a game
@@ -50,11 +51,27 @@ enum PublishDraftAssetStep {
   UPDATE_USER_STATS,
 }
 
+enum CreateDraftQuestionStep{
+  IMAGE_UPLOAD,
+  CREATE_QUESTION_TEMPLATE,
+}
+
+enum UpdateDraftQuestionStep{
+  
+}
+
+enum PublishDraftQuestionStep{
+
+}
+
 export class DraftAssetHandler {
   private rollbackActions: Array<() => Promise<void>> = [];
   private completedPublishSteps: PublishDraftAssetStep[] = [];
   private completedCreateSteps: CreateDraftAssetStep[] = [];
   private completedUpdateSteps: UpdateDraftAssetStep[] = [];
+  private completedCreateQuestionSteps: CreateDraftQuestionStep[] = [];
+  private completedUpdateQuestionSteps: UpdateDraftQuestionStep[] = [];
+  private completedPublishQuestionSteps: PublishDraftQuestionStep[] = [];
 
 
   private static validateDraftGame(draftGame: TGameTemplateProps, draftQuestionsList: TDraftQuestionsList[]): boolean {
@@ -96,6 +113,27 @@ export class DraftAssetHandler {
       }
     }
     return gameImgUrl;
+  }
+
+  private static async newQuestionImageHandler(draftQuestion: CentralQuestionTemplateInput, apiClients: IAPIClients): Promise<string | null> {
+    let url: string | null = null;
+    let result = null;
+    if (draftQuestion.questionCard.image) {
+      const img = await apiClients.questionTemplate.storeImageInS3(
+        draftQuestion.questionCard.image,
+      );
+      // have to do a nested await here because aws-storage returns a nested promise object
+      result = await img.result;
+      if (result && result.path && result.path.length > 0)
+        url = result.path;
+    } else if (draftQuestion.questionCard.imageUrl) {
+      url = await apiClients.questionTemplate.storeImageUrlInS3(
+        draftQuestion.questionCard.imageUrl,
+      );
+    } else {
+      url = draftQuestion.questionCard.imageUrl || null;
+    }
+    return url;
   }
 
   private static categorizeQuestionTemplates(draftQuestionsList: TDraftQuestionsList[]): {
@@ -611,6 +649,37 @@ export class DraftAssetHandler {
         isCreatingTemplate: false,
       }
       return publishDraftGameResponse;
+    }
+  }
+
+  async createDraftQuestion(
+    centralData: ICentralDataState,
+    draftQuestion: CentralQuestionTemplateInput,
+    apiClients: IAPIClients,
+    originalImageURl: string | null,
+  ): Promise<boolean> {
+    try {
+      let url = ''; 
+      if (
+        draftQuestion.questionCard.imageUrl !== originalImageURl
+      ) {
+        url = await DraftAssetHandler.newQuestionImageHandler(draftQuestion, apiClients) || '';
+      } else {
+        url = draftQuestion.questionCard.imageUrl;
+      }
+      this.completedCreateQuestionSteps.push(CreateDraftQuestionStep.IMAGE_UPLOAD);
+      window.localStorage.setItem(StorageKey, '');
+      const response = await apiClients.questionTemplate.createQuestionTemplate(
+        PublicPrivateType.DRAFT as TemplateType,
+        url,
+        centralData.userProfile?.id || '',
+        draftQuestion,
+      );
+      this.completedCreateQuestionSteps.push(CreateDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
+      return !!response;
+    } catch (err) {
+      console.error('Error creating draft question:', err);
+      return false;
     }
   }
 }
