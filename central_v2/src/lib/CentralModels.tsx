@@ -224,7 +224,7 @@ export const initCentralDataState: ICentralDataState = {
   publicPrivate: PublicPrivateType.PUBLIC,
   sort: {
     field: SortType.listGameTemplates,
-    direction: SortDirection.ASC,
+    direction: SortDirection.DESC,
   },
 };
 

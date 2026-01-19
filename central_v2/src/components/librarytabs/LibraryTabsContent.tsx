@@ -67,11 +67,11 @@ export default function LibraryTabsContent({
   const theme = useTheme();
   const isDefaultSort = gameQuestion === GameQuestionType.GAME
     ? (centralData.sort.field === SortType.listGameTemplates && 
-       centralData.sort.direction === SortDirection.ASC) ||
+       centralData.sort.direction === SortDirection.DESC) ||
       (centralData.sort.field === SortType.listGameTemplatesByDate && 
        centralData.sort.direction === SortDirection.DESC)
     : (centralData.sort.field === SortType.listQuestionTemplates && 
-       centralData.sort.direction === SortDirection.ASC) ||
+       centralData.sort.direction === SortDirection.DESC) ||
       (centralData.sort.field === SortType.listQuestionTemplatesByDate && 
        centralData.sort.direction === SortDirection.DESC);
   const isSearchResults =
@@ -82,7 +82,6 @@ export default function LibraryTabsContent({
     gameQuestion === GameQuestionType.GAME
       ? getGameElements(openTab, isSearchResults, centralData)
       : getQuestionElements(openTab, isSearchResults, centralData);
-
   const hasMore = openTab !== LibraryTabEnum.FAVORITES ? 
     centralData.nextToken !== null :
     false;
@@ -131,7 +130,6 @@ export default function LibraryTabsContent({
   const handleLoadMore = async () => {
     loadMoreLibrary(openTab, centralData.searchTerms, centralData.nextToken);
   };
-
   const cardGallery = [
      gameQuestion === GameQuestionType.GAME ? (
         <CardGallery<IGameTemplate>

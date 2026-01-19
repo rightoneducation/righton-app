@@ -52,6 +52,11 @@ interface MyLibraryProps {
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
+    isLoadMoreLibrary?: boolean,
+    sortOverride?: {
+      field: SortType;
+      direction: SortDirection | null;
+    } | null,
   ) => void;
   loadMoreLibrary: (
     libraryTab?: LibraryTabEnum,
@@ -232,8 +237,8 @@ export default function MyLibrary({
       if (mappedTab !== undefined) {
         setOpenTab(mappedTab);
         if (gameQuestion !== GameQuestionType.GAME) return;
-        handleSortChange({ field: SortType.listGameTemplates, direction: SortDirection.ASC });
-        fetchElements(mappedTab, '', null, true);
+        // override sort for library
+        fetchElements(mappedTab, '', null, true, undefined, { field: SortType.listGameTemplates, direction: SortDirection.DESC });
       }
     }
     
@@ -243,14 +248,12 @@ export default function MyLibrary({
       if (mappedTab !== undefined) {
         setOpenQuestionTab(mappedTab);
         if (gameQuestion !== GameQuestionType.QUESTION) return;
-        // Ensure questions sort baseline so ByDate/DESC override engages for library
-        handleSortChange({ field: SortType.listQuestionTemplates, direction: SortDirection.ASC });
-        fetchElements(mappedTab, '', null, true);
+        // override sort for library
+        fetchElements(mappedTab, '', null, true, undefined, { field: SortType.listQuestionTemplates, direction: SortDirection.DESC });
       }
     }
 
   }, [routeGames, routeQuestions, gameQuestion]); // eslint-disable-line react-hooks/exhaustive-deps
-
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground />

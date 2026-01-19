@@ -87,7 +87,7 @@ export default function LibraryTabs({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const isDefaultSort = centralData.sort.field === SortType.listGameTemplates && 
-                        centralData.sort.direction === SortDirection.ASC;
+                        centralData.sort.direction === SortDirection.DESC;
   const isSearchResults =
     centralData.searchTerms.length > 0 ||
     centralData.selectedGrades.length > 0 ||
