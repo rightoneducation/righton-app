@@ -324,7 +324,6 @@ export default function useCentralDataManager({
   );
 
   const handleSearchChange = (searchString: string) => {
-    console.log(centralData.openTab);
     debouncedSearch(
       searchString.trim(),
       centralData.sort.direction ?? SortDirection.ASC,

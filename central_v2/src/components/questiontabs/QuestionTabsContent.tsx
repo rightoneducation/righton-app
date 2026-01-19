@@ -56,7 +56,7 @@ export default function QuestionTabsContent({
   const centralDataDispatch = useCentralDataDispatch();
   const theme = useTheme();
   const isDefaultSort = (centralData.sort.field === SortType.listQuestionTemplates && 
-                        centralData.sort.direction === SortDirection.ASC) ||
+                        centralData.sort.direction === SortDirection.DESC) ||
                        (centralData.sort.field === SortType.listQuestionTemplatesByDate && 
                         centralData.sort.direction === SortDirection.DESC);
   const isSearchResults =
