@@ -694,14 +694,12 @@ export default function CreateQuestion({
     try {
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
-      console.log('handleCreateFromDraftQuestion: isQuestionTemplateComplete', isQuestionTemplateComplete);
       if (isQuestionTemplateComplete) {
         if (
           draftQuestion.questionCard.image ||
           draftQuestion.questionCard.imageUrl
         ) {
           setIsCreatingTemplate(true);
-          console.log('handleCreateFromDraftQuestion: draftQuestion', draftQuestion);
           await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId)
           setIsCreatingTemplate(false);
           fetchElements();
@@ -725,7 +723,6 @@ export default function CreateQuestion({
   const handleSave = async () => {
     // case 1, saving a draft into a public/private question template
     if (isDraft) {
-      console.log('handleSave: isDraft');
       await handleCreateFromDraftQuestion();
       return;
     }
@@ -801,7 +798,6 @@ export default function CreateQuestion({
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
         setIsUpdatingTemplate(true);
-        console.log('here)');
         await draftAssetHandler.updateDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId);
         setIsUpdatingTemplate(false);
         setModalObject({
