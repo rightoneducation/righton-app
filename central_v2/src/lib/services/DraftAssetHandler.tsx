@@ -1,13 +1,14 @@
 import React from 'react';
-import { IAPIClients, CloudFrontDistributionUrl, IGameTemplate, IQuestionTemplate, IUser, PublicPrivateType, TemplateType } from '@righton/networking';
-import { checkGameFormIsValid, createGameImagePath, buildGameTemplate, buildGameQuestionPromises } from '../helperfunctions/createGame/CreateGameTemplateHelperFunctions';
+import { IAPIClients, CloudFrontDistributionUrl, IGameTemplate, IQuestionTemplate, CentralQuestionTemplateInput, IUser, PublicPrivateType, TemplateType, AnswerType } from '@righton/networking';
+import { checkGameFormIsValid, buildGameTemplate, buildGameQuestionPromises } from '../helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { checkDQsAreValid, buildQuestionTemplatePromises } from '../helperfunctions/createGame/CreateQuestionsListHelpers';
-import { ICentralDataState, ISelectedGame } from '../CentralModels';
-
+import { ICentralDataState, ISelectedGame, StorageKey } from '../CentralModels';
 import {
   TGameTemplateProps,
   TDraftQuestionsList,
 } from '../CreateGameModels';
+
+
 
 /**
  * This class is responsible for handling the draft assets for a game
@@ -50,16 +51,85 @@ enum PublishDraftAssetStep {
   UPDATE_USER_STATS,
 }
 
+enum CreateDraftQuestionStep{
+  IMAGE_UPLOAD,
+  CREATE_QUESTION_TEMPLATE,
+}
+
+enum UpdateDraftQuestionStep{
+  IMAGE_UPLOAD,
+  UPDATE_QUESTION_TEMPLATE,
+}
+
+enum PublishDraftQuestionStep{
+  IMAGE_UPLOAD,
+  CREATE_QUESTION_TEMPLATE,
+  DELETE_OLD_DRAFT_QUESTION_TEMPLATE,
+  UPDATE_USER_STATS,
+}
+
 export class DraftAssetHandler {
   private rollbackActions: Array<() => Promise<void>> = [];
   private completedPublishSteps: PublishDraftAssetStep[] = [];
   private completedCreateSteps: CreateDraftAssetStep[] = [];
   private completedUpdateSteps: UpdateDraftAssetStep[] = [];
+  private completedCreateQuestionSteps: CreateDraftQuestionStep[] = [];
+  private completedUpdateQuestionSteps: UpdateDraftQuestionStep[] = [];
+  private completedPublishQuestionSteps: PublishDraftQuestionStep[] = [];
 
 
   private static validateDraftGame(draftGame: TGameTemplateProps, draftQuestionsList: TDraftQuestionsList[]): boolean {
     return checkGameFormIsValid(draftGame) && checkDQsAreValid(draftQuestionsList);
   }
+
+  private static async createGameImagePath(
+    draftGame: TGameTemplateProps,
+    apiClients: IAPIClients,
+  ): Promise<string | null> {
+    let gameImgUrl: string | null = null;
+    let gameImgResult = null;
+    // handle case for image type: File
+    if (draftGame.image) {
+      const gameImg = await apiClients.gameTemplate.storeImageInS3(
+        draftGame.image,
+      );
+      gameImgResult = await gameImg.result;
+      if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
+        gameImgUrl = gameImgResult.path;
+      }
+      // handle case for imageUrl type: string
+    } else if (draftGame.imageUrl) {
+      gameImgUrl = await apiClients.gameTemplate.storeImageUrlInS3(
+        draftGame.imageUrl,
+      );
+    }
+    return gameImgUrl;
+  }
+
+  private static async createQuestionImagePath(
+    draftQuestion: CentralQuestionTemplateInput,
+    apiClients: IAPIClients,
+  ): Promise<string | null> {
+    let gameImgUrl: string | null = null;
+    let gameImgResult = null;
+    // handle case for image type: File
+    if (draftQuestion.questionCard.image) {
+      const gameImg = await apiClients.questionTemplate.storeImageInS3(
+        draftQuestion.questionCard.image,
+      );
+      gameImgResult = await gameImg.result;
+      if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
+        gameImgUrl = gameImgResult.path;
+      }
+      // handle case for imageUrl type: string
+    } else if (draftQuestion.questionCard.imageUrl) {
+      gameImgUrl = await apiClients.questionTemplate.storeImageUrlInS3(
+        draftQuestion.questionCard.imageUrl,
+      );
+    }
+    return gameImgUrl;
+  }
+
 
   private static async existingImageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
     let gameImgUrl: string | null = null;
@@ -76,7 +146,7 @@ export class DraftAssetHandler {
           imageUrl = `${CloudFrontDistributionUrl}${imageUrl}`;
         }
         const draftGameWithUrl = { ...draftGame, imageUrl };
-        gameImgUrl = await createGameImagePath(draftGameWithUrl, apiClients);
+        gameImgUrl = await DraftAssetHandler.createGameImagePath(draftGameWithUrl, apiClients);
       }
     }
     return gameImgUrl;
@@ -92,10 +162,47 @@ export class DraftAssetHandler {
       ) {
         gameImgUrl = draftGame.imageUrl;
       } else {
-        gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        gameImgUrl = await DraftAssetHandler.createGameImagePath(draftGame, apiClients);
       }
     }
     return gameImgUrl;
+  }
+
+  private static async newQuestionImageHandler(draftQuestion: CentralQuestionTemplateInput, apiClients: IAPIClients): Promise<string | null> {
+    let questionImgUrl: string | null = null;
+    if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl) {
+      if (
+        (!draftQuestion.questionCard?.imageUrl?.startsWith('https://') ||
+        !draftQuestion.questionCard?.imageUrl?.startsWith('http://')) && 
+        draftQuestion.questionCard?.imageUrl
+      ) {
+        questionImgUrl = draftQuestion.questionCard.imageUrl;
+      } else {
+        questionImgUrl = await DraftAssetHandler.createQuestionImagePath(draftQuestion, apiClients);
+      }
+    }
+    return questionImgUrl;
+  }
+
+  private static async publishQuestionImageHandler(draftQuestion: CentralQuestionTemplateInput, apiClients: IAPIClients): Promise<string | null> {
+    let questionImgUrl: string | null = null;
+    if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl) {
+      if (
+        (!draftQuestion.questionCard?.imageUrl?.startsWith('https://') ||
+        !draftQuestion.questionCard?.imageUrl?.startsWith('http://')) && 
+        draftQuestion.questionCard?.imageUrl
+      ) {
+        questionImgUrl = draftQuestion.questionCard.imageUrl;
+      } else {
+        let { imageUrl } = draftQuestion.questionCard;
+        if (draftQuestion.questionCard && imageUrl && imageUrl.length > 0){
+          imageUrl = `${CloudFrontDistributionUrl}${imageUrl}`;
+        }
+        const draftQuestionWithUrl = { ...draftQuestion, questionCard: { ...draftQuestion.questionCard, imageUrl } };
+        questionImgUrl = await DraftAssetHandler.createQuestionImagePath(draftQuestionWithUrl, apiClients);
+      }
+    }
+    return questionImgUrl;
   }
 
   private static categorizeQuestionTemplates(draftQuestionsList: TDraftQuestionsList[]): {
@@ -611,6 +718,119 @@ export class DraftAssetHandler {
         isCreatingTemplate: false,
       }
       return publishDraftGameResponse;
+    }
+  }
+
+  async createDraftQuestion(
+    centralData: ICentralDataState,
+    draftQuestion: CentralQuestionTemplateInput,
+    apiClients: IAPIClients,
+    originalImageURl: string | null,
+  ): Promise<boolean> {
+    try {
+      let url = ''; 
+      if (
+        draftQuestion.questionCard.imageUrl !== originalImageURl
+      ) {
+        url = await DraftAssetHandler.newQuestionImageHandler(draftQuestion, apiClients) || '';
+      } else {
+        url = draftQuestion.questionCard.imageUrl;
+      }
+      this.completedCreateQuestionSteps.push(CreateDraftQuestionStep.IMAGE_UPLOAD);
+      window.localStorage.setItem(StorageKey, '');
+      const response = await apiClients.questionTemplate.createQuestionTemplate(
+        PublicPrivateType.DRAFT as TemplateType,
+        url,
+        centralData.userProfile?.id || '',
+        draftQuestion,
+      );
+      this.completedCreateQuestionSteps.push(CreateDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
+      return !!response;
+    } catch (err) {
+      console.error('Error creating draft question:', err);
+      return false;
+    }
+  }
+
+  async updateDraftQuestion(
+    centralData: ICentralDataState,
+    draftQuestion: CentralQuestionTemplateInput,
+    apiClients: IAPIClients,
+    originalImageURl: string | null,
+    questionTemplateId: string,
+  ): Promise<boolean> {
+    try {
+      let url = ''; 
+      if (
+        draftQuestion.questionCard.imageUrl !== originalImageURl
+      ) {
+        url = await DraftAssetHandler.newQuestionImageHandler(draftQuestion, apiClients) || '';
+      } else {
+        url = draftQuestion.questionCard.imageUrl;
+      }
+      this.completedUpdateQuestionSteps.push(UpdateDraftQuestionStep.IMAGE_UPLOAD);
+      window.localStorage.setItem(StorageKey, '');
+      const response = await apiClients.questionTemplate.updateQuestionTemplate(
+        PublicPrivateType.DRAFT as TemplateType,
+        url,
+        centralData.userProfile?.id || '',
+        draftQuestion,
+        questionTemplateId,
+      );
+      this.completedUpdateQuestionSteps.push(UpdateDraftQuestionStep.UPDATE_QUESTION_TEMPLATE);
+      return !!response;
+    } catch (err) {
+      console.error('Error creating draft question:', err);
+      return false;
+    }
+  }
+
+  async publishDraftQuestion(
+    centralData: ICentralDataState,
+    draftQuestion: CentralQuestionTemplateInput,
+    apiClients: IAPIClients,
+    originalImageURl: string | null,
+    selectedQuestionId: string,
+  ): Promise<boolean> {
+    const draftQuestionCopy: CentralQuestionTemplateInput = { ...draftQuestion };
+    try {
+      const url = await DraftAssetHandler.publishQuestionImageHandler(draftQuestion, apiClients);
+      this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.IMAGE_UPLOAD);
+      window.localStorage.setItem(StorageKey, '');
+      if (url) {
+        if (draftQuestionCopy.correctCard.isMultipleChoice)
+          draftQuestionCopy.correctCard.answerSettings.answerType =
+            AnswerType.MULTICHOICE;
+        const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
+          draftQuestionCopy.publicPrivateType as TemplateType,
+          url,
+          centralData.userProfile?.id || '',
+          draftQuestionCopy,
+        );
+        this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
+        if (qtResult && selectedQuestionId){
+          // if the user is saving out their draft, create a public/private question template
+          // and delete the draft question template
+          await apiClients.questionTemplate.deleteQuestionTemplate(
+            PublicPrivateType.DRAFT,
+            selectedQuestionId
+          );
+        }
+        this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.DELETE_OLD_DRAFT_QUESTION_TEMPLATE);
+      }
+      // update user stats
+      const existingNumQuestions =
+        centralData.userProfile?.questionsMade || 0;
+      const newNumQuestions = existingNumQuestions + 1;
+      await apiClients.user.updateUser({
+        id: centralData.userProfile?.id || '',
+        questionsMade: newNumQuestions,
+      });
+      this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.UPDATE_USER_STATS);
+      return true;
+    } catch (err) {
+      console.error('Error publishing draft question:', err);
+      return false;
     }
   }
 }

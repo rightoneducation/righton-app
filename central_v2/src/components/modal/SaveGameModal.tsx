@@ -65,6 +65,7 @@ interface SaveGameModalProps {
   handleCloseSaveGameModal?: () => void;
   handleSaveDraft?: () => void;
   isCardErrored?: boolean;
+  isDraft?: boolean;
 }
 
 export default function SaveGameModal({
@@ -74,6 +75,7 @@ export default function SaveGameModal({
   handleCloseSaveGameModal,
   handleSaveDraft,
   isCardErrored,
+  isDraft
 }: SaveGameModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';

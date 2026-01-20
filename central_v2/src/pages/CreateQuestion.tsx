@@ -55,6 +55,7 @@ import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/us
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { handleCheckQuestionBaseComplete, handleCheckQuestionCorrectCardComplete, handleCheckQuestionIncorrectCardsComplete } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
+import { DraftAssetHandler } from '../lib/services/DraftAssetHandler';
 
 interface CreateQuestionProps {
   screenSize: ScreenSize;
@@ -92,6 +93,7 @@ export default function CreateQuestion({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
+  const draftAssetHandler = new DraftAssetHandler();
   const route = useMatch('/clone/question/:type/:questionId');
   const editRoute = useMatch('/edit/question/:type/:questionId');
   const createRoute = useMatch('/create/question');
@@ -124,6 +126,7 @@ export default function CreateQuestion({
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(
     PublicPrivateType.PUBLIC,
   );
+  const [initPublicPrivate, setInitPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isImagePreviewVisible, setIsImagePreviewVisible] =
     useState<boolean>(false);
@@ -167,7 +170,7 @@ export default function CreateQuestion({
             answerSteps: ['', ''],
             isMultipleChoice: true,
             answerSettings: {
-              answerType: AnswerType.NUMBER,
+              answerType: AnswerType.MULTICHOICE,
               answerPrecision: AnswerPrecision.WHOLE,
             },
             isFirstEdit: true,
@@ -295,10 +298,10 @@ export default function CreateQuestion({
         correctCard: { 
           ...prev.correctCard, 
           isMultipleChoice: !prev.correctCard.isMultipleChoice,
-          isCardComplete: handleCheckQuestionCorrectCardComplete({
-            ...prev,
-            correctCard: { ...prev.correctCard, isMultipleChoice: !prev.correctCard.isMultipleChoice },
-          }),
+          answerSettings: {
+            ...prev.correctCard.answerSettings,
+            answerType: !prev.correctCard.isMultipleChoice ? AnswerType.MULTICHOICE : prev.correctCard.answerSettings.answerType,
+          },
         },
       };
       handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
@@ -397,13 +400,6 @@ export default function CreateQuestion({
       const newDraftQuestion = {
         ...prev,
         publicPrivateType: value,
-        questionCard: {
-          ...prev.questionCard,
-          isCardComplete: handleCheckQuestionBaseComplete({
-            ...prev,
-            publicPrivateType: value,
-          }),
-        },
       };
       handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
       return newDraftQuestion;
@@ -586,11 +582,9 @@ export default function CreateQuestion({
             draftQuestion,
             selectedQuestionId,
           );
-          if (qtResult && selectedQuestionId && isDraft){
-            // if the user is saving out their draft, create a public/private question template
-            // and delete the draft question template
+          if (qtResult?.publicPrivateType !== initPublicPrivate) {
             await apiClients.questionTemplate.deleteQuestionTemplate(
-              PublicPrivateType.DRAFT,
+              initPublicPrivate as TemplateType,
               selectedQuestionId
             );
           }
@@ -642,17 +636,16 @@ export default function CreateQuestion({
                 url = result.path;
             } else if (draftQuestion.questionCard.imageUrl) {
               // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
+              let imageUrlToStore = draftQuestion.questionCard.imageUrl;
               if (
-                draftQuestion.questionCard.imageUrl.startsWith('https://') ||
-                draftQuestion.questionCard.imageUrl.startsWith('http://')
+                !imageUrlToStore.startsWith('https://') &&
+                !imageUrlToStore.startsWith('http://')
               ) {
-                url = draftQuestion.questionCard.imageUrl;
-              } else {
                 // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
-                draftQuestion.questionCard.imageUrl = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
+                imageUrlToStore = `${CloudFrontDistributionUrl}${imageUrlToStore}`;
               }
               url = await apiClients.questionTemplate.storeImageUrlInS3(
-                draftQuestion.questionCard.imageUrl,
+                imageUrlToStore,
               );
             }
           } else {
@@ -707,61 +700,7 @@ export default function CreateQuestion({
           draftQuestion.questionCard.imageUrl
         ) {
           setIsCreatingTemplate(true);
-          let result = null;
-          let url = null;
-          // new image always needs to be created
-          if (draftQuestion.questionCard.image) {
-            const img = await apiClients.questionTemplate.storeImageInS3(
-              draftQuestion.questionCard.image,
-            );
-            // have to do a nested await here because aws-storage returns a nested promise object
-            result = await img.result;
-            if (result && result.path && result.path.length > 0)
-              url = result.path;
-          } else if (draftQuestion.questionCard.imageUrl) {
-            // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
-            if (
-              draftQuestion.questionCard.imageUrl.startsWith('https://') ||
-              draftQuestion.questionCard.imageUrl.startsWith('http://')
-            ) {
-              url = draftQuestion.questionCard.imageUrl;
-            } else {
-              // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
-              draftQuestion.questionCard.imageUrl = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
-            }
-            url = await apiClients.questionTemplate.storeImageUrlInS3(
-              draftQuestion.questionCard.imageUrl,
-            );
-          }
-          window.localStorage.setItem(StorageKey, '');
-          if (url) {
-            if (draftQuestion.correctCard.isMultipleChoice)
-              draftQuestion.correctCard.answerSettings.answerType =
-                AnswerType.MULTICHOICE;
-            const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
-              publicPrivate as TemplateType,
-              url,
-              centralData.userProfile?.id || '',
-              draftQuestion,
-            );
-            if (qtResult && selectedQuestionId){
-              // if the user is saving out their draft, create a public/private question template
-              // and delete the draft question template
-              await apiClients.questionTemplate.deleteQuestionTemplate(
-                PublicPrivateType.DRAFT,
-                selectedQuestionId
-              );
-            }
-          }
-          // update user stats
-          const existingNumQuestions =
-            centralData.userProfile?.questionsMade || 0;
-          const newNumQuestions = existingNumQuestions + 1;
-          await apiClients.user.updateUser({
-            id: centralData.userProfile?.id || '',
-            questionsMade: newNumQuestions,
-          });
-
+          await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId)
           setIsCreatingTemplate(false);
           fetchElements();
         }
@@ -822,34 +761,13 @@ export default function CreateQuestion({
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
         setIsCreatingTemplate(true);
-        let result = null;
-        let url = ''; 
-        if (
-          draftQuestion.questionCard.imageUrl !== originalImageURl
-        ) {
-          if (draftQuestion.questionCard.image) {
-            const img = await apiClients.questionTemplate.storeImageInS3(
-              draftQuestion.questionCard.image,
-            );
-            // have to do a nested await here because aws-storage returns a nested promise object
-            result = await img.result;
-            if (result && result.path && result.path.length > 0)
-              url = result.path;
-          } else if (draftQuestion.questionCard.imageUrl) {
-            url = await apiClients.questionTemplate.storeImageUrlInS3(
-              draftQuestion.questionCard.imageUrl,
-            );
-          }
-        } else {
-          url = draftQuestion.questionCard.imageUrl;
+        await draftAssetHandler.createDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl);
+        if (initPublicPrivate !== PublicPrivateType.DRAFT) {
+          await apiClients.questionTemplate.deleteQuestionTemplate(
+            initPublicPrivate as TemplateType,
+            selectedQuestionId
+          );
         }
-        window.localStorage.setItem(StorageKey, '');
-        await apiClients.questionTemplate.createQuestionTemplate(
-          PublicPrivateType.DRAFT as TemplateType,
-          url,
-          centralData.userProfile?.id || '',
-          draftQuestion,
-        );
         setIsCreatingTemplate(false);
         setModalObject({
           modalState: ModalStateType.CONFIRM,
@@ -880,35 +798,7 @@ export default function CreateQuestion({
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
         setIsUpdatingTemplate(true);
-        let result = null;
-        let url = ''; 
-        if (
-          draftQuestion.questionCard.imageUrl !== originalImageURl
-        ) {
-          if (draftQuestion.questionCard.image) {
-            const img = await apiClients.questionTemplate.storeImageInS3(
-              draftQuestion.questionCard.image,
-            );
-            // have to do a nested await here because aws-storage returns a nested promise object
-            result = await img.result;
-            if (result && result.path && result.path.length > 0)
-              url = result.path;
-          } else if (draftQuestion.questionCard.imageUrl) {
-            url = await apiClients.questionTemplate.storeImageUrlInS3(
-              draftQuestion.questionCard.imageUrl,
-            );
-          }
-        } else {
-          url = draftQuestion.questionCard.imageUrl;
-        }
-        window.localStorage.setItem(StorageKey, '');
-        await apiClients.questionTemplate.updateQuestionTemplate(
-            PublicPrivateType.DRAFT as TemplateType,
-            url,
-            centralData.userProfile?.id || '',
-            draftQuestion,
-            selectedQuestionId,
-          );
+        await draftAssetHandler.updateDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId);
         setIsUpdatingTemplate(false);
         setModalObject({
           modalState: ModalStateType.CONFIRM,
@@ -940,6 +830,14 @@ export default function CreateQuestion({
     // case 2, creating a new draft question template
     handleSaveDraftQuestion();
   };
+
+  const handleSaveEditedQuestionSwitch = async () => {
+    if (isDraft) {
+      await handleSaveEditedDraftQuestion();
+    } else {
+      await handleSaveEditedQuestion();
+    }
+  }
 
   const handleDiscardQuestion = () => {
     setIsDiscardModalOpen(true);
@@ -990,7 +888,7 @@ export default function CreateQuestion({
     if (modalObject.confirmState === ConfirmStateType.DRAFT) {
       navigate(`/library/questions/${PublicPrivateType.DRAFT}`);
     } else {
-      navigate(`/library/questions/${publicPrivate}`);
+      navigate(`/library/questions/${draftQuestion.publicPrivateType}`);
     }
   };
 
@@ -1008,8 +906,8 @@ export default function CreateQuestion({
     setIsCorrectCardErrored(!handleCheckQuestionCorrectCardComplete(draftQuestion));
     setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
     setModalObject({
-      modalState: isEdit ? ModalStateType.UPDATE : ModalStateType.PUBLISH,
-      confirmState: isEdit ? ConfirmStateType.UPDATED : ConfirmStateType.PUBLISHED,
+      modalState: ModalStateType.PUBLISH,
+      confirmState: ConfirmStateType.PUBLISHED,
     });
   };
 
@@ -1034,7 +932,8 @@ export default function CreateQuestion({
       const regex = /\[DUPLICATE\]/i;
       if (title && !regex.test(title) && isClone)
         selected.title = `${title} [DUPLICATE]`;
-      const draft = assembleQuestionTemplate(selected);
+      const draft = assembleQuestionTemplate(selected, isDraft);
+      setInitPublicPrivate(draft.publicPrivateType);
       setDraftQuestion((prev) => ({
         ...prev,
         ...draft,
@@ -1086,11 +985,12 @@ export default function CreateQuestion({
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishQuestion={handlePublishQuestion}
-        handleSaveEditedQuestion={handlePublishQuestion}
+        handleSaveEditedQuestion={handleSaveEditedQuestionSwitch}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
         handleContinue={handleContinue}
         handleSaveDraft={handleSaveDraft}
-        isCardErrored={isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored}
+        isCardErrored={(isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored)}
+        isDraft={isDraft}
       />
       <CreateQuestionBoxContainer screenSize={screenSize}>
         <CreateQuestionHeader 

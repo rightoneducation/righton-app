@@ -365,6 +365,7 @@ export const buildGameQuestionPromises = (
 
 export const assembleQuestionTemplate = (
   template: IQuestionTemplate,
+  isDraft?: boolean,
 ): CentralQuestionTemplateInput => {
   const correctAnswer = template.choices?.find((choice) => choice.isAnswer);
   const incorrectAnswers = template.choices?.filter(
@@ -387,7 +388,7 @@ export const assembleQuestionTemplate = (
     })) ?? blankIncorrectAnswers;
 
   return {
-    publicPrivateType: template.publicPrivateType,
+    publicPrivateType: isDraft ? template.finalPublicPrivateType : template.publicPrivateType,
     questionCard: {
       title: template.title,
       ccss: template.ccss,

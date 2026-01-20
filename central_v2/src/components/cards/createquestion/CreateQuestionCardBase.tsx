@@ -168,7 +168,7 @@ export default function CreateQuestionCardBase({
   const handleCCSSButtonClick = () => {
     handleCCSSClick();
   };
-
+  
   const isTitleFieldError =
     (!draftQuestion.questionCard.title ||
       draftQuestion.questionCard.title.length === 0);
