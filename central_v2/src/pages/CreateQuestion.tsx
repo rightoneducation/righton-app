@@ -126,6 +126,7 @@ export default function CreateQuestion({
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(
     PublicPrivateType.PUBLIC,
   );
+  const [initPublicPrivate, setInitPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isImagePreviewVisible, setIsImagePreviewVisible] =
     useState<boolean>(false);
@@ -169,7 +170,7 @@ export default function CreateQuestion({
             answerSteps: ['', ''],
             isMultipleChoice: true,
             answerSettings: {
-              answerType: AnswerType.NUMBER,
+              answerType: AnswerType.MULTICHOICE,
               answerPrecision: AnswerPrecision.WHOLE,
             },
             isFirstEdit: true,
@@ -297,10 +298,10 @@ export default function CreateQuestion({
         correctCard: { 
           ...prev.correctCard, 
           isMultipleChoice: !prev.correctCard.isMultipleChoice,
-          isCardComplete: handleCheckQuestionCorrectCardComplete({
-            ...prev,
-            correctCard: { ...prev.correctCard, isMultipleChoice: !prev.correctCard.isMultipleChoice },
-          }),
+          answerSettings: {
+            ...prev.correctCard.answerSettings,
+            answerType: !prev.correctCard.isMultipleChoice ? AnswerType.MULTICHOICE : prev.correctCard.answerSettings.answerType,
+          },
         },
       };
       handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
@@ -399,13 +400,6 @@ export default function CreateQuestion({
       const newDraftQuestion = {
         ...prev,
         publicPrivateType: value,
-        questionCard: {
-          ...prev.questionCard,
-          isCardComplete: handleCheckQuestionBaseComplete({
-            ...prev,
-            publicPrivateType: value,
-          }),
-        },
       };
       handleDebouncedCheckQuestionBaseComplete(newDraftQuestion);
       return newDraftQuestion;
@@ -588,11 +582,9 @@ export default function CreateQuestion({
             draftQuestion,
             selectedQuestionId,
           );
-          if (qtResult && selectedQuestionId && isDraft){
-            // if the user is saving out their draft, create a public/private question template
-            // and delete the draft question template
+          if (qtResult?.publicPrivateType !== initPublicPrivate) {
             await apiClients.questionTemplate.deleteQuestionTemplate(
-              PublicPrivateType.DRAFT,
+              initPublicPrivate as TemplateType,
               selectedQuestionId
             );
           }
@@ -644,17 +636,16 @@ export default function CreateQuestion({
                 url = result.path;
             } else if (draftQuestion.questionCard.imageUrl) {
               // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
+              let imageUrlToStore = draftQuestion.questionCard.imageUrl;
               if (
-                draftQuestion.questionCard.imageUrl.startsWith('https://') ||
-                draftQuestion.questionCard.imageUrl.startsWith('http://')
+                !imageUrlToStore.startsWith('https://') &&
+                !imageUrlToStore.startsWith('http://')
               ) {
-                url = draftQuestion.questionCard.imageUrl;
-              } else {
                 // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
-                draftQuestion.questionCard.imageUrl = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
+                imageUrlToStore = `${CloudFrontDistributionUrl}${imageUrlToStore}`;
               }
               url = await apiClients.questionTemplate.storeImageUrlInS3(
-                draftQuestion.questionCard.imageUrl,
+                imageUrlToStore,
               );
             }
           } else {
@@ -711,7 +702,7 @@ export default function CreateQuestion({
         ) {
           setIsCreatingTemplate(true);
           console.log('handleCreateFromDraftQuestion: draftQuestion', draftQuestion);
-          await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId, publicPrivate);
+          await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId)
           setIsCreatingTemplate(false);
           fetchElements();
         }
@@ -774,6 +765,12 @@ export default function CreateQuestion({
         setIsCardSubmitted(true);
         setIsCreatingTemplate(true);
         await draftAssetHandler.createDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl);
+        if (initPublicPrivate !== PublicPrivateType.DRAFT) {
+          await apiClients.questionTemplate.deleteQuestionTemplate(
+            initPublicPrivate as TemplateType,
+            selectedQuestionId
+          );
+        }
         setIsCreatingTemplate(false);
         setModalObject({
           modalState: ModalStateType.CONFIRM,
@@ -804,6 +801,7 @@ export default function CreateQuestion({
       if (draftQuestion.questionCard.title && draftQuestion.questionCard.title.length > 0) {
         setIsCardSubmitted(true);
         setIsUpdatingTemplate(true);
+        console.log('here)');
         await draftAssetHandler.updateDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId);
         setIsUpdatingTemplate(false);
         setModalObject({
@@ -894,7 +892,7 @@ export default function CreateQuestion({
     if (modalObject.confirmState === ConfirmStateType.DRAFT) {
       navigate(`/library/questions/${PublicPrivateType.DRAFT}`);
     } else {
-      navigate(`/library/questions/${publicPrivate}`);
+      navigate(`/library/questions/${draftQuestion.publicPrivateType}`);
     }
   };
 
@@ -938,7 +936,8 @@ export default function CreateQuestion({
       const regex = /\[DUPLICATE\]/i;
       if (title && !regex.test(title) && isClone)
         selected.title = `${title} [DUPLICATE]`;
-      const draft = assembleQuestionTemplate(selected);
+      const draft = assembleQuestionTemplate(selected, isDraft);
+      setInitPublicPrivate(draft.publicPrivateType);
       setDraftQuestion((prev) => ({
         ...prev,
         ...draft,

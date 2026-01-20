@@ -1,6 +1,6 @@
 import React from 'react';
 import { IAPIClients, CloudFrontDistributionUrl, IGameTemplate, IQuestionTemplate, CentralQuestionTemplateInput, IUser, PublicPrivateType, TemplateType, AnswerType } from '@righton/networking';
-import { checkGameFormIsValid, createGameImagePath, buildGameTemplate, buildGameQuestionPromises } from '../helperfunctions/createGame/CreateGameTemplateHelperFunctions';
+import { checkGameFormIsValid, buildGameTemplate, buildGameQuestionPromises } from '../helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { checkDQsAreValid, buildQuestionTemplatePromises } from '../helperfunctions/createGame/CreateQuestionsListHelpers';
 import { ICentralDataState, ISelectedGame, StorageKey } from '../CentralModels';
 import {
@@ -82,6 +82,55 @@ export class DraftAssetHandler {
     return checkGameFormIsValid(draftGame) && checkDQsAreValid(draftQuestionsList);
   }
 
+  private static async createGameImagePath(
+    draftGame: TGameTemplateProps,
+    apiClients: IAPIClients,
+  ): Promise<string | null> {
+    let gameImgUrl: string | null = null;
+    let gameImgResult = null;
+    // handle case for image type: File
+    if (draftGame.image) {
+      const gameImg = await apiClients.gameTemplate.storeImageInS3(
+        draftGame.image,
+      );
+      gameImgResult = await gameImg.result;
+      if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
+        gameImgUrl = gameImgResult.path;
+      }
+      // handle case for imageUrl type: string
+    } else if (draftGame.imageUrl) {
+      gameImgUrl = await apiClients.gameTemplate.storeImageUrlInS3(
+        draftGame.imageUrl,
+      );
+    }
+    return gameImgUrl;
+  }
+
+  private static async createQuestionImagePath(
+    draftQuestion: CentralQuestionTemplateInput,
+    apiClients: IAPIClients,
+  ): Promise<string | null> {
+    let gameImgUrl: string | null = null;
+    let gameImgResult = null;
+    // handle case for image type: File
+    if (draftQuestion.questionCard.image) {
+      const gameImg = await apiClients.questionTemplate.storeImageInS3(
+        draftQuestion.questionCard.image,
+      );
+      gameImgResult = await gameImg.result;
+      if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
+        gameImgUrl = gameImgResult.path;
+      }
+      // handle case for imageUrl type: string
+    } else if (draftQuestion.questionCard.imageUrl) {
+      gameImgUrl = await apiClients.questionTemplate.storeImageUrlInS3(
+        draftQuestion.questionCard.imageUrl,
+      );
+    }
+    return gameImgUrl;
+  }
+
+
   private static async existingImageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
     let gameImgUrl: string | null = null;
     if (draftGame.image || draftGame.imageUrl) {
@@ -97,7 +146,7 @@ export class DraftAssetHandler {
           imageUrl = `${CloudFrontDistributionUrl}${imageUrl}`;
         }
         const draftGameWithUrl = { ...draftGame, imageUrl };
-        gameImgUrl = await createGameImagePath(draftGameWithUrl, apiClients);
+        gameImgUrl = await DraftAssetHandler.createGameImagePath(draftGameWithUrl, apiClients);
       }
     }
     return gameImgUrl;
@@ -113,61 +162,47 @@ export class DraftAssetHandler {
       ) {
         gameImgUrl = draftGame.imageUrl;
       } else {
-        gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        gameImgUrl = await DraftAssetHandler.createGameImagePath(draftGame, apiClients);
       }
     }
     return gameImgUrl;
   }
 
   private static async newQuestionImageHandler(draftQuestion: CentralQuestionTemplateInput, apiClients: IAPIClients): Promise<string | null> {
-    let url: string | null = null;
-    let result = null;
-    if (draftQuestion.questionCard.image) {
-      const img = await apiClients.questionTemplate.storeImageInS3(
-        draftQuestion.questionCard.image,
-      );
-      // have to do a nested await here because aws-storage returns a nested promise object
-      result = await img.result;
-      if (result && result.path && result.path.length > 0)
-        url = result.path;
-    } else if (draftQuestion.questionCard.imageUrl) {
-      url = await apiClients.questionTemplate.storeImageUrlInS3(
-        draftQuestion.questionCard.imageUrl,
-      );
-    } else {
-      url = draftQuestion.questionCard.imageUrl || null;
+    let questionImgUrl: string | null = null;
+    if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl) {
+      if (
+        (!draftQuestion.questionCard?.imageUrl?.startsWith('https://') ||
+        !draftQuestion.questionCard?.imageUrl?.startsWith('http://')) && 
+        draftQuestion.questionCard?.imageUrl
+      ) {
+        questionImgUrl = draftQuestion.questionCard.imageUrl;
+      } else {
+        questionImgUrl = await DraftAssetHandler.createQuestionImagePath(draftQuestion, apiClients);
+      }
     }
-    return url;
+    return questionImgUrl;
   }
 
   private static async publishQuestionImageHandler(draftQuestion: CentralQuestionTemplateInput, apiClients: IAPIClients): Promise<string | null> {
-    let url: string | null = null;
-    let result = null;
-    // new image always needs to be created
-    if (draftQuestion.questionCard.image) {
-      const img = await apiClients.questionTemplate.storeImageInS3(
-        draftQuestion.questionCard.image,
-      );
-      // have to do a nested await here because aws-storage returns a nested promise object
-      result = await img.result;
-      if (result && result.path && result.path.length > 0)
-        url = result.path;
-    } else if (draftQuestion.questionCard.imageUrl) {
-      // check if imageUrl is valid http(s) or if we need to add cloudfrontdistributionurl
+    let questionImgUrl: string | null = null;
+    if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl) {
       if (
-        draftQuestion.questionCard.imageUrl.startsWith('https://') ||
-        draftQuestion.questionCard.imageUrl.startsWith('http://')
+        (!draftQuestion.questionCard?.imageUrl?.startsWith('https://') ||
+        !draftQuestion.questionCard?.imageUrl?.startsWith('http://')) && 
+        draftQuestion.questionCard?.imageUrl
       ) {
-        url = draftQuestion.questionCard.imageUrl;
+        questionImgUrl = draftQuestion.questionCard.imageUrl;
       } else {
-        // if it doesn't start with https or http, we need to add the CloudFrontDistributionUrl
-        url = `${CloudFrontDistributionUrl}${draftQuestion.questionCard.imageUrl}`;
+        let { imageUrl } = draftQuestion.questionCard;
+        if (draftQuestion.questionCard && imageUrl && imageUrl.length > 0){
+          imageUrl = `${CloudFrontDistributionUrl}${imageUrl}`;
+        }
+        const draftQuestionWithUrl = { ...draftQuestion, questionCard: { ...draftQuestion.questionCard, imageUrl } };
+        questionImgUrl = await DraftAssetHandler.createQuestionImagePath(draftQuestionWithUrl, apiClients);
       }
-      url = await apiClients.questionTemplate.storeImageUrlInS3(
-        draftQuestion.questionCard.imageUrl,
-      );
     }
-    return url;
+    return questionImgUrl;
   }
 
   private static categorizeQuestionTemplates(draftQuestionsList: TDraftQuestionsList[]): {
@@ -756,10 +791,8 @@ export class DraftAssetHandler {
     apiClients: IAPIClients,
     originalImageURl: string | null,
     selectedQuestionId: string,
-    publicPrivate: PublicPrivateType,
   ): Promise<boolean> {
     const draftQuestionCopy: CentralQuestionTemplateInput = { ...draftQuestion };
-    console.log('publishDraftQuestion: draftQuestionCopy', draftQuestionCopy);
     try {
       const url = await DraftAssetHandler.publishQuestionImageHandler(draftQuestion, apiClients);
       this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.IMAGE_UPLOAD);
@@ -769,7 +802,7 @@ export class DraftAssetHandler {
           draftQuestionCopy.correctCard.answerSettings.answerType =
             AnswerType.MULTICHOICE;
         const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
-          publicPrivate as TemplateType,
+          draftQuestionCopy.publicPrivateType as TemplateType,
           url,
           centralData.userProfile?.id || '',
           draftQuestionCopy,
