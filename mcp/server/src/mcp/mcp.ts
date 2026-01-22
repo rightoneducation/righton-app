@@ -9,28 +9,37 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
   const server = new McpServer({
     name: "righton-mcp",
     version: "1.0.0",
-    capabilities: {
-      resources: {
-        "ccss": {
-          "schema": "resources/CCSSDictionary.js",
-          "description": "Structured Dictionary of CCSS Standards",
-          "handlers": {
-            "get": async () => {
-              return ccssDictionary;
-            }
-          }
-        },
-        "referenceSchema": {
-          "schema": "resources/referenceSchema.js",
-          "description": "Reference Schema for the RightOn database",
-          "handlers": {
-            "get": async () => {
-              return referenceSchema;
-            }
-          }
+  });
+
+  // Register resources
+  server.registerResource("ccss", "ccss", {
+    description: "Structured Dictionary of CCSS Standards",
+    mimeType: "application/json",
+  }, async (_uri, _extra) => {
+    return {
+      contents: [
+        {
+          uri: "ccss",
+          mimeType: "application/json",
+          text: JSON.stringify(ccssDictionary),
         }
-      }
-    },
+      ]
+    };
+  });
+
+  server.registerResource("referenceSchema", "referenceSchema", {
+    description: "Reference Schema for the RightOn database",
+    mimeType: "application/json",
+  }, async (_uri, _extra) => {
+    return {
+      contents: [
+        {
+          uri: "referenceSchema",
+          mimeType: "application/json",
+          text: JSON.stringify(referenceSchema),
+        }
+      ]
+    };
   });
 
   //MCP tool registrations
@@ -38,9 +47,6 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     description: "Fetch game sessions for a classroom",
     inputSchema: {
       classroomId: z.string()
-    },
-    annotations: {
-      category: 'game-session'
     }
   }, async ({ classroomId }) => {
     console.log('[MCP Server] getGameSessionsByClassroomId called', {
@@ -123,9 +129,6 @@ export const getServer = (GRAPHQL_ENDPOINT: string) => {
     description: "Fetch student history by globalStudentId",
     inputSchema: {
       globalStudentId: z.string()
-    },
-    annotations: {
-      category: 'student-history'
     }
   }, async ({ globalStudentId }) => {
     const result = await getStudentHistory(GRAPHQL_ENDPOINT || '', globalStudentId);
