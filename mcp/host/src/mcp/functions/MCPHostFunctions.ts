@@ -160,11 +160,14 @@ export async function processQuery (queryString: string){
     };
   }
   
-  if (isCZIEnabled && process.env.EXT_MCP_SERVER_URL) {
-    mcpServers['ext'] = {
+  if (isCZIEnabled && process.env.EXT_MCP_ENDPOINT && process.env.EXT_MCP_KEY && process.env.EXT_MCP_USER) {
+    mcpServers['ext-mcp-server'] = {
       type: 'http' as const,
-      url: process.env.EXT_MCP_SERVER_URL,
-      headers: {}
+      url: process.env.EXT_MCP_ENDPOINT,
+      headers: {
+        'x-api-key': process.env.EXT_MCP_KEY,
+        'x-user': process.env.EXT_MCP_USER
+      }
     };
   }
 
@@ -227,6 +230,7 @@ export async function processQuery (queryString: string){
       disallowedToolsCount: disallowedTools.length
     });
 
+    log('Creating query generator');
     const q = query({
       prompt: optimizedPrompt,
       options: {
@@ -235,7 +239,7 @@ export async function processQuery (queryString: string){
         mcpServers: mcpServers,
         disallowedTools: disallowedTools,
         maxTurns: maxTurnsValue,
-        permissionMode: 'default',
+        permissionMode: 'bypassPermissions',
         settingSources: ['project'],
         outputFormat: {
           type: 'json_schema',
@@ -245,13 +249,17 @@ export async function processQuery (queryString: string){
       }
     });
 
+    log('Query generator created, starting message loop');
     // Process messages from the generator
     let finalResult: string | undefined;
     let structuredData: any = undefined;
     let toolCalls: Array<{name: string, args: any}> = [];
     
     // Main agentic loop from query
+    log('About to await first message from generator');
+    let messageCount = 0;
     for await (const msg of q) {
+      messageCount++;
       
       // Track tool calls
       if (msg.type === 'assistant' && msg.message?.content) {
@@ -261,7 +269,30 @@ export async function processQuery (queryString: string){
               name: content.name,
               args: content.input
             });
-            
+            log('Tool use detected', {
+              toolName: content.name,
+              toolArgs: content.input,
+              toolId: content.id
+            });
+          }
+        }
+      }
+      
+      // Log tool results
+      if (msg.type === 'user' && msg.message?.content) {
+        for (const content of msg.message.content) {
+          if (content.type === 'tool_result') {
+            log('Tool result received', {
+              toolName: content.name,
+              toolId: content.tool_use_id,
+              isError: content.is_error || false,
+              resultPreview: typeof content.content === 'string' 
+                ? content.content.substring(0, 500)
+                : JSON.stringify(content.content).substring(0, 500),
+              resultLength: typeof content.content === 'string'
+                ? content.content.length
+                : JSON.stringify(content.content).length
+            });
           }
         }
       }
@@ -326,6 +357,18 @@ export async function processQuery (queryString: string){
     const writeStart = Date.now();
     
     // Write successful result to DynamoDB via AppSync
+    if (!structuredData) {
+      // If structured data is not available (e.g., permission error or non-JSON response)
+      const errorMessage = finalResult || 'No structured output received';
+      await writeMCPResultToTable({
+        id: responseId,
+        status: 'error',
+        error: errorMessage,
+        toolCalls: toolCalls
+      });
+      throw new Error(errorMessage);
+    }
+    
     await writeMCPResultToTable({
       id: responseId,
       status: 'complete',
