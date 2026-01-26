@@ -1,5 +1,5 @@
 ---
-name: Website QA - Bug Report
+name: SECD QA - Bug Report
 about: QA Bug Report
 title: "[Website QA] - Bug Report - # - Priority - #"
 labels: bug
