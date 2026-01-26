@@ -1,7 +1,7 @@
 ---
 name: SECD QA - Bug Report
 about: QA Bug Report
-title: "[Website QA] - Bug Report - # - Priority - #"
+title: "[SECD QA] - Bug Report - # - Priority - #"
 labels: bug
 assignees: drewjhart
 
