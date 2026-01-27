@@ -53,6 +53,7 @@ interface UseCentralDataManagerReturnProps {
       field: SortType;
       direction: SortDirection | null;
     } | null,
+    gameQuestionOverride?: GameQuestionType,
   ) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -424,7 +425,6 @@ export default function useCentralDataManager({
         const sortDirection = (isFromLibrary && inputSortField === SortType.listGameTemplates)
           ? SortDirection.DESC
           : (inputSortDirection ?? SortDirection.ASC);
-        
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             newPublicPrivate as TemplateType,
@@ -938,7 +938,9 @@ export default function useCentralDataManager({
       field: SortType;
       direction: SortDirection | null;
     } | null,
+    gameQuestionOverride?: GameQuestionType,
   ) => {
+    const effectiveGameQuestion = gameQuestionOverride ?? gameQuestion;
     const getFetchType = (tab: LibraryTabEnum | null) => {
       if (isEditGame || isCloneGame) {
         switch (tab) {
@@ -959,20 +961,20 @@ export default function useCentralDataManager({
       ) {
         switch (tab) {
           case LibraryTabEnum.FAVORITES:
-            return gameQuestion === GameQuestionType.GAME
+            return effectiveGameQuestion === GameQuestionType.GAME
               ? FetchType.FAVORITE_GAMES
               : FetchType.FAVORITE_QUESTIONS;
           case LibraryTabEnum.DRAFTS:
-            return gameQuestion === GameQuestionType.GAME
+            return effectiveGameQuestion === GameQuestionType.GAME
               ? FetchType.DRAFT_GAMES
               : FetchType.DRAFT_QUESTIONS;
           case LibraryTabEnum.PRIVATE:
-            return gameQuestion === GameQuestionType.GAME
+            return effectiveGameQuestion === GameQuestionType.GAME
               ? FetchType.PRIVATE_GAMES
               : FetchType.PRIVATE_QUESTIONS;
           case LibraryTabEnum.PUBLIC:
           default:
-            return gameQuestion === GameQuestionType.GAME
+            return effectiveGameQuestion === GameQuestionType.GAME
               ? FetchType.PUBLIC_GAMES
               : FetchType.PUBLIC_QUESTIONS;
         }

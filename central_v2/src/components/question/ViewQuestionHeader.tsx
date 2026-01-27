@@ -14,6 +14,7 @@ interface ViewQuestionHeaderProps {
   handleEditQuestion: () => void;
   handleCloneQuestion: () => void;
   handleDeleteQuestion: () => void;
+  handleAddToGameClick: () => void;
   isEditEnabled: boolean;
   isOwner: boolean;
   screenSize: ScreenSize;
@@ -24,6 +25,7 @@ export default function ViewQuestionHeader({
   handleEditQuestion,
   handleCloneQuestion,
   handleDeleteQuestion,
+  handleAddToGameClick,
   isEditEnabled,
   isOwner,
   screenSize
@@ -121,7 +123,7 @@ export default function ViewQuestionHeader({
                   buttonType={ButtonType.ADDTOGAMEPINK}
                   isEnabled
                   buttonWidthOverride="auto"
-                  onClick={handleBackClick}
+                  onClick={handleAddToGameClick}
                 />
               </Box>
             </Box>

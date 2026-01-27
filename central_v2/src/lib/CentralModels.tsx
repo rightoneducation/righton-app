@@ -81,7 +81,8 @@ export enum ModalStateType {
   CREATEQUESTION,
   DUPLICATE,
   UPDATE, 
-  GAMEEDITQUESTION
+  GAMEEDITQUESTION,
+  ADDTOGAME
 }
 
 export enum ConfirmStateType {

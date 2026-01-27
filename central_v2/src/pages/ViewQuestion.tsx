@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { PublicPrivateType } from '@righton/networking';
+import { GradeTarget, IGameTemplate, PublicPrivateType, SortDirection, SortType } from '@righton/networking';
 import { Box, CircularProgress, useTheme, Fade, styled } from '@mui/material';
 import DetailedQuestionCardUnified from '../components/cards/detailedquestion/DetailedQuestionCardUnified';
 import {
@@ -29,12 +29,19 @@ import ModalBackground from '../components/modal/ModalBackground';
 import OwnerTag from '../components/profile/OwnerTag';
 import DetailedQuestionSubCard from '../components/cards/detailedquestion/DetailedQuestionSubCard';
 import ViewQuestionHeader from '../components/question/ViewQuestionHeader';
+import LibraryTabsModalContainerGames from '../components/librarytabs/LibraryTabsModalContainerGames';
 
 
 interface ViewQuestionProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: () => void;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => void;
+  handleSearchChange: (searchString: string) => void;
   deleteQuestionTemplate: (
     questionId: string,
     type: PublicPrivateType,
@@ -45,6 +52,9 @@ export default function ViewQuestion({
   screenSize,
   fetchElement,
   fetchElements,
+  handleChooseGrades,
+  handleSortChange,
+  handleSearchChange,
   deleteQuestionTemplate,
 }: ViewQuestionProps) {
   const theme = useTheme();
@@ -57,6 +67,7 @@ export default function ViewQuestion({
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isAddToGameModalOpen, setIsAddToGameModalOpen] = useState<boolean>(false);
 
   const isOwner = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedQuestion?.question?.userId;
 
@@ -139,6 +150,17 @@ export default function ViewQuestion({
     }
   };
 
+  const handleAddToGameClick = () => {
+    setIsAddToGameModalOpen(true);
+  };
+
+
+  const handleAddToGame = (
+    game: IGameTemplate,
+  ) => {
+    navigate(`/edit/game/${game.publicPrivateType}/${game.id}/add/${centralData.selectedQuestion?.question?.id}`);
+  };
+  
   type BodyContainerProps = {
     screenSize: ScreenSize;
   };
@@ -171,6 +193,18 @@ export default function ViewQuestion({
         setIsModalOpen={setIsDeleteModalOpen}
         handleProceedToDelete={handleProceedToDelete}
       />
+      <LibraryTabsModalContainerGames
+        publicPrivateType={ centralData.selectedQuestion?.question?.publicPrivateType ?? PublicPrivateType.PUBLIC}
+        isTabsOpen={isAddToGameModalOpen}
+        handleCloseGamesTabs={() => setIsAddToGameModalOpen(false)}
+        screenSize={screenSize}
+        setIsTabsOpen={setIsAddToGameModalOpen}
+        handleChooseGrades={handleChooseGrades}
+        handleSortChange={handleSortChange}
+        handleSearchChange={handleSearchChange}
+        fetchElements={fetchElements}
+        handleGameView={handleAddToGame}
+      />
       {isLoading ? (
         <Box
           style={{
@@ -193,6 +227,7 @@ export default function ViewQuestion({
               handleEditQuestion={handleEditQuestion}
               handleCloneQuestion={handleCloneQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
+              handleAddToGameClick={handleAddToGameClick}
               isEditEnabled={isEditEnabled}
               screenSize={screenSize}
               isOwner={isOwner}

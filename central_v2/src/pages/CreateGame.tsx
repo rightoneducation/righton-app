@@ -122,6 +122,7 @@ export default function CreateGame({
   const draftAssetHandler = new DraftAssetHandler();
   const route = useMatch('/clone/game/:type/:gameId');
   const editRoute = useMatch('/edit/game/:type/:gameId');
+  const addQuestionRoute = useMatch('/edit/game/:type/:gameId/add/:questionId');
   const isClone =
     route?.params.gameId !== null &&
     route?.params.gameId !== undefined &&
@@ -132,6 +133,10 @@ export default function CreateGame({
     editRoute?.params.gameId.length > 0;
   const isEditDraft = 
     editRoute?.params.type === 'Draft';
+  const isAddQuestion =
+    addQuestionRoute?.params.questionId !== null &&
+    addQuestionRoute?.params.questionId !== undefined &&
+    addQuestionRoute?.params.questionId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [isQuestionBankOpen, setIsQuestionBankOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -1051,7 +1056,7 @@ export default function CreateGame({
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;
-    if (selected !== null && (isClone || isEdit)) {
+    if (selected !== null && (isClone || isEdit || isAddQuestion)) {
       // regex to detect [DUPLICATE OF] in title
       const regex = /\[DUPLICATE OF\]/i;
       if (selected?.game && title && !regex.test(title) && isClone)
@@ -1070,39 +1075,80 @@ export default function CreateGame({
         phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
       });
       setOriginalGameType(selected?.game?.publicPrivateType ?? PublicPrivateType.PUBLIC);
-      const originals = selected?.game?.questionTemplates;
-      if (originals && originals.length > 0) {
-        const oqTemplates = originals.map((q) => q.questionTemplate);
-        setOriginalQuestionTemplates(oqTemplates);
-      }
-      const assembled = originals?.map((q) =>
-        assembleQuestionTemplate(q.questionTemplate),
-      );
-
-      if (originals && assembled && assembled.length > 0) {
-        setDraftQuestionsList(() =>
-          originals.map((orig, i) => {
-            setOriginalQuestionImageUrls((prev) => [
-              ...prev,
-              orig.questionTemplate.imageUrl ?? '',
-            ]);
-            return {
-              ...draftTemplate,
-              question: assembled[i],
-              questionTemplate: orig.questionTemplate,
-              isLibraryViewOnly: true,
-            };
-          }),
+      
+      const getQuestion = async () => {
+        const response = await apiClients?.questionTemplate.getQuestionTemplate(
+          draftGame.gameTemplate.publicPrivateType as TemplateType,
+          addQuestionRoute?.params.questionId ?? '',
         );
+        return response;
+      };
+
+      if (isAddQuestion) {
+        getQuestion().then((addedQuestion) => {
+          const originals = [addedQuestion as IQuestionTemplate, ...(selected?.game?.questionTemplates ?? [])];
+          if (originals && originals.length > 0) {
+            const oqTemplates = originals.map((q) => 'questionTemplate' in q ? q.questionTemplate : q);
+            setOriginalQuestionTemplates(oqTemplates);
+          }
+          const assembled = originals?.map((q) =>
+            assembleQuestionTemplate('questionTemplate' in q ? q.questionTemplate : q),
+          );
+         
+          if (originals && assembled && assembled.length > 0) {
+            setDraftQuestionsList(() =>
+              originals.map((orig, i) => {
+                const questionTemplate = 'questionTemplate' in orig ? orig.questionTemplate : orig;
+                setOriginalQuestionImageUrls((prev) => [
+                  ...prev,
+                  questionTemplate.imageUrl ?? '',
+                ]);
+                return {
+                  ...draftTemplate,
+                  question: assembled[i],
+                  questionTemplate,
+                  isLibraryViewOnly: true,
+                };
+              }),
+            );
+          }
+        });
+      } else {
+        const originals = selected?.game?.questionTemplates;
+        if (originals && originals.length > 0) {
+          const oqTemplates = originals.map((q) => q.questionTemplate);
+          setOriginalQuestionTemplates(oqTemplates);
+        }
+        const assembled = originals?.map((q) =>
+          assembleQuestionTemplate(q.questionTemplate),
+        );
+       
+        if (originals && assembled && assembled.length > 0) {
+          setDraftQuestionsList(() =>
+            originals.map((orig, i) => {
+              setOriginalQuestionImageUrls((prev) => [
+                ...prev,
+                orig.questionTemplate.imageUrl ?? '',
+              ]);
+              return {
+                ...draftTemplate,
+                question: assembled[i],
+                questionTemplate: orig.questionTemplate,
+                isLibraryViewOnly: true,
+              };
+            }),
+          );
+        }
       }
     }
     if (
       !centralData.selectedGame?.game &&
       selectedGameId &&
-      (isClone || isEdit)
+      (isClone || isEdit || isAddQuestion)
     ) {
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, selectedGameId);
+      
     }
   }, [centralData.selectedGame, route, selectedGameId]); // eslint-disable-line
 

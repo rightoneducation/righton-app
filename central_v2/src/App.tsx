@@ -60,6 +60,10 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.EDITGAME} />}
             />
             <Route
+              path="/edit/game/:type/:gameId/add/:questionId"
+              element={<AppSwitch currentScreen={ScreenType.EDITGAME} />}
+            />
+            <Route
               path="/games/:type/:gameId"
               element={<AppSwitch currentScreen={ScreenType.VIEWGAME} />}
             />
