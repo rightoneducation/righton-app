@@ -1034,6 +1034,7 @@ export default function CreateQuestion({
                   isPublic={isPublicQuestion}
                   isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
                   handleAnswerType={handleAnswerType}
+                  handleAnswerSettingsChange={handleAnswerSettingsChange}
                 />
               </Box>
               <Box

@@ -15,6 +15,7 @@ import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
   AnswerType,
+  AnswerPrecision,
   CloudFrontDistributionUrl,
 } from '@righton/networking';
 import {
@@ -36,11 +37,10 @@ import { ButtonType } from '../../button/ButtonModels';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from './ErrorBox';
-import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
-import { SelectArrowContainer } from '../../../lib/styledcomponents/SelectGrade';
 import SelectArrow from '../../../images/SelectArrow.svg';
 import SelectPublicPrivateDropdown from '../creategamecard/SelectPublicPrivateDropdown';
+import AnswerSettingsDropdown from '../creategamecard/AnswerTypeDropDown';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -61,6 +61,10 @@ interface CreateQuestionCardBaseProps {
   isPublic: boolean;
   isMultipleChoice: boolean;
   isCreateGame?: boolean;
+  handleAnswerSettingsChange: (
+    draftQuestion: CentralQuestionTemplateInput, 
+    answerType: AnswerType, answerPrecision?: AnswerPrecision
+  ) => void;
 }
 
 type ImagePlaceholderProps = {
@@ -132,6 +136,7 @@ export default function CreateQuestionCardBase({
   isAIError,
   isPublic,
   isCreateGame,
+  handleAnswerSettingsChange,
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const { imageUrl, image } = draftQuestion.questionCard;
@@ -295,6 +300,13 @@ export default function CreateQuestionCardBase({
               />
             </RadioGroup>
           </RadioContainerStyled>
+          {!isMultipleChoice && (
+            <AnswerSettingsDropdown
+              screenSize={screenSize}
+              draftQuestion={draftQuestion}
+              onHandleAnswerSettingsChange={handleAnswerSettingsChange}
+            />
+          )}
         </Box>
       </ContentContainerStyled>
       <ContentContainerStyled>
