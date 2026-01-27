@@ -184,6 +184,10 @@ export default function CreateGame({
   let label = 'Create';
   let selectedGameId = '';
   switch (true) {
+    case isAddQuestion:
+      label = 'Edit';
+      selectedGameId = addQuestionRoute?.params.gameId || '';
+      break;
     case isEdit:
       label = 'Edit';
       selectedGameId = editRoute?.params.gameId || '';
@@ -1075,10 +1079,9 @@ export default function CreateGame({
         phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
       });
       setOriginalGameType(selected?.game?.publicPrivateType ?? PublicPrivateType.PUBLIC);
-      
       const getQuestion = async () => {
         const response = await apiClients?.questionTemplate.getQuestionTemplate(
-          draftGame.gameTemplate.publicPrivateType as TemplateType,
+          addQuestionRoute?.params.type as TemplateType,
           addQuestionRoute?.params.questionId ?? '',
         );
         return response;
@@ -1148,9 +1151,8 @@ export default function CreateGame({
     ) {
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, selectedGameId);
-      
     }
-  }, [centralData.selectedGame, route, selectedGameId]); // eslint-disable-line
+  }, [centralData.selectedGame, route, editRoute, addQuestionRoute, selectedGameId]); // eslint-disable-line
 
   return (
     <CreateGameMainContainer screenSize={screenSize}>

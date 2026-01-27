@@ -126,9 +126,9 @@ export class QuestionTemplateParser {
           gameTemplatesCount
       } = awsQuestionTemplate || {}
       const awsAnswerSettings = !isNullOrUndefined(answerSettings) ? JSON.parse(answerSettings) : null;
-      if (isNullOrUndefined(id) ||
+      if ((isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
-          isNullOrUndefined(version)) {
+          isNullOrUndefined(version)) && publicPrivate !== PublicPrivateType.PUBLIC) {
           throw new Error(
               "Question Template has null field for the attributes that are not nullable"
           )
@@ -147,10 +147,10 @@ export class QuestionTemplateParser {
           userId,
           publicPrivateType: parsedPublicPrivate,
           finalPublicPrivateType: parsedFinalPublicPrivate,
-          title,
+          title: title ?? '',
           lowerCaseTitle: lowerCaseTitle ?? '',
           owner: owner ?? '',
-          version,
+          version: version ?? 0,
           choices,
           instructions,
           answerSettings: awsAnswerSettings,

@@ -99,11 +99,13 @@ export default function useCentralDataManager({
   const isLibraryExact = useMatch('/library');
   const isLibraryWildcard = useMatch('/library/*');
   const isLibrary = isLibraryExact !== null || isLibraryWildcard !== null;
+  const matchAddQuestion = useMatch('/edit/game/:type/:gameId/add/:questionId');
+  const matchEditGameBase = useMatch('/edit/game/:type/:gameId');
   const callTypeMatches = {
     matchViewGame: useMatch('/games/:type/:gameId'),
     matchLibViewGame: useMatch('/library/games/:type/:gameId'),
     matchCloneGame: useMatch('/clone/:type/:gameId'),
-    matchEditGame: useMatch('/edit/game/:type/:gameId'),
+    matchEditGame: matchAddQuestion || matchEditGameBase,
     matchCloneQuestion: useMatch('/clone/question/:type/:questionId'),
     matchEditQuestion: useMatch('/edit/question/:type/:questionId'),
     matchLibraryTab: useMatch('/library'),
