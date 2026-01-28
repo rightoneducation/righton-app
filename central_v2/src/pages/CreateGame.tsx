@@ -131,8 +131,8 @@ export default function CreateGame({
     editRoute?.params.gameId !== null &&
     editRoute?.params.gameId !== undefined &&
     editRoute?.params.gameId.length > 0;
-  const isEditDraft = 
-    editRoute?.params.type === 'Draft';
+  const isEditDraft =
+    editRoute?.params.type === 'Draft' || addQuestionRoute?.params.type === 'Draft';
   const isAddQuestion =
     addQuestionRoute?.params.questionId !== null &&
     addQuestionRoute?.params.questionId !== undefined &&
@@ -1145,9 +1145,10 @@ export default function CreateGame({
       }
     }
     if (
-      !centralData.selectedGame?.game &&
-      selectedGameId &&
-      (isClone || isEdit || isAddQuestion)
+      (!centralData.selectedGame?.game &&
+      selectedGameId && 
+      (isClone || isEdit || isAddQuestion)) || 
+      (centralData.selectedGame?.game?.id !== selectedGameId)
     ) {
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, selectedGameId);

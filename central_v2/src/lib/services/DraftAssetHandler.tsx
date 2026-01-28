@@ -249,6 +249,20 @@ export class DraftAssetHandler {
     return removedDraftGameQuestions;
   }
 
+  /** Existing draft question template ids that are in the list but not yet linked to the game (newly added). */
+  private static extractAddedDraftQuestionIds(draftQuestionsList: TDraftQuestionsList[], draftGame: TGameTemplateProps): string[] {
+    const linkedIds = new Set(
+      draftGame.gameTemplate.questionTemplates
+        ?.filter((item) => item.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT)
+        ?.map((item) => item.questionTemplate.id) ?? []
+    );
+    const draftIdsFromList = draftQuestionsList
+      .filter((dq) => dq.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT && dq.questionTemplate.id)
+      .map((dq) => dq.questionTemplate.id as string);
+    const added = draftIdsFromList.filter((id) => !linkedIds.has(id));
+    return added;
+  }
+
   private static async updateUserStats(centralData: ICentralDataState, draftQuestionsList: TDraftQuestionsList[], apiClients: IAPIClients): Promise<IUser | null> {
     const existingNumGames = centralData.userProfile?.gamesMade || 0;
     const existingNumQuestions =
@@ -427,7 +441,7 @@ export class DraftAssetHandler {
         isGameCardSubmitted: true,
         isCreatingTemplate: true,
       };
-      
+
       // Step 2: Image Upload and Image URL Return
       const gameImgUrl = await DraftAssetHandler.existingImageHandler(updatedDraftGame, apiClients);
       this.completedUpdateSteps.push(UpdateDraftAssetStep.IMAGE_UPLOAD);
@@ -490,24 +504,22 @@ export class DraftAssetHandler {
           {...createGame, id: draftGame.gameTemplate.id},
         );
       this.completedUpdateSteps.push(UpdateDraftAssetStep.CREATE_GAME_TEMPLATE);
-      // Step 8: Create any new GameQuestions
+      // Step 8: Create any new GameQuestions (newly created + existing draft questions newly added to game)
       const questionTemplateIds = questionTemplateResponse.map((question) =>
         String(question?.id),
       );
-      // make sure we have a gameTemplate id as well as question template ids before creating a game question
-      if (gameTemplateResponse.id && (questionTemplateIds.length > 0)) {
-        // this is only for new questions so we don't write gamequestions that mix draft and public/private questions
+      const addedDraftQuestionIds = DraftAssetHandler.extractAddedDraftQuestionIds(draftQuestionsList, updatedDraftGame);
+      const allDraftQuestionIdsToLink = [...questionTemplateIds, ...addedDraftQuestionIds];
+      if (gameTemplateResponse.id && allDraftQuestionIdsToLink.length > 0) {
         const createGameQuestions = buildGameQuestionPromises(
           updatedDraftGame,
           gameTemplateResponse.id,
-          questionTemplateIds,
+          allDraftQuestionIdsToLink,
           apiClients,
           PublicPrivateType.DRAFT,
         );
-        // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
         await Promise.all(createGameQuestions);
       }
-
 
       // identify draft questions that have been removed from the game and delete the respective gamequestions
       const removedDraftGameQuestions = DraftAssetHandler.extractRemovedDraftQuestionIds(draftQuestionsList, updatedDraftGame);
