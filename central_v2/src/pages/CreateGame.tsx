@@ -1179,6 +1179,7 @@ export default function CreateGame({
       />
       <CreateGameModalSwitch
         modalObject={modalObject}
+        title={draftGame.gameTemplate.title ?? ''}
         screenSize={screenSize}
         publicPrivate={isEditDraft ? draftGame.gameTemplate.finalPublicPrivateType : draftGame.gameTemplate.publicPrivateType}
         handleDiscard={handleDiscard}

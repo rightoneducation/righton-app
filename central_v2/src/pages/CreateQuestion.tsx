@@ -982,6 +982,7 @@ export default function CreateQuestion({
       <CreateQuestionModalSwitch
         modalObject={modalObject}
         screenSize={screenSize}
+        title={draftQuestion.questionCard.title ?? ''}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishQuestion={handlePublishQuestion}

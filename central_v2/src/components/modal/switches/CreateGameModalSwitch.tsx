@@ -12,6 +12,7 @@ import CreateQuestionModal from '../CreateQuestionModal';
 interface CreateGameModalSwitchProps {
   modalObject: ModalObject;
   screenSize: ScreenSize;
+  title: string;
   publicPrivate: PublicPrivateType;
   handleDiscard: () => void;
   handleCloseDiscardModal: () => void;
@@ -30,6 +31,7 @@ interface CreateGameModalSwitchProps {
 export default function CreateGameModalSwitch({ 
   modalObject,
   screenSize,
+  title,
   publicPrivate,
   handleDiscard,
   handleCloseDiscardModal,
@@ -87,6 +89,7 @@ export default function CreateGameModalSwitch({
     case ModalStateType.PUBLISH:
       return <SaveGameModal
         isModalOpen
+        title={title}
         templateType={TemplateType.GAME}
         handlePublishGame={handlePublishGame}
         handleCloseSaveGameModal={handleCloseSaveGameModal}
