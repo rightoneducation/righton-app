@@ -32,6 +32,7 @@ enum CreateDraftAssetStep {
 enum UpdateDraftAssetStep {
   IMAGE_UPLOAD,
   CATEGORIZE_QUESTION_TEMPLATES,
+  UPDATE_EDITED_DRAFT_QUESTIONS,
   CREATE_NEW_QUESTION_TEMPLATES,
   PROCESS_ADDED_QUESTION_TEMPLATES,
   CREATE_GAME_TEMPLATE,
@@ -465,6 +466,45 @@ export class DraftAssetHandler {
       updatedDraftGame.gameTemplate.publicQuestionIds = addedQuestionTemplatePublicIds;
       updatedDraftGame.gameTemplate.privateQuestionIds = addedQuestionTemplatePrivateIds;
       this.completedUpdateSteps.push(UpdateDraftAssetStep.CATEGORIZE_QUESTION_TEMPLATES);
+
+      // Step 4b: Update edited draft question templates (same pattern as handleUpdateEditedGame for public/private)
+      const editedDraftQuestions = draftQuestionsList.filter(
+        (dq) =>
+          dq.isEdited &&
+          dq.questionTemplate.id &&
+          dq.questionTemplate.id.length > 0 &&
+          dq.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT,
+      );
+      if (editedDraftQuestions.length > 0) {
+        try {
+          const updatePromises = editedDraftQuestions.map(async (dq) => {
+            let imageUrl = dq.questionTemplate.imageUrl || '';
+            if (dq.question.questionCard.image || dq.question.questionCard.imageUrl) {
+              if (dq.question.questionCard.image) {
+                const img = await apiClients.questionTemplate.storeImageInS3(dq.question.questionCard.image);
+                const result = await img.result;
+                if (result && result.path && result.path.length > 0) imageUrl = result.path;
+              } else if (
+                dq.question.questionCard.imageUrl &&
+                dq.question.questionCard.imageUrl !== dq.questionTemplate.imageUrl
+              ) {
+                imageUrl = await apiClients.questionTemplate.storeImageUrlInS3(dq.question.questionCard.imageUrl);
+              }
+            }
+            return apiClients.questionTemplate.updateQuestionTemplate(
+              PublicPrivateType.DRAFT as TemplateType,
+              imageUrl,
+              userId,
+              dq.question,
+              dq.questionTemplate.id,
+            );
+          });
+          await Promise.all(updatePromises);
+        } catch (err) {
+          console.error('Failed to update one or more edited draft questions:', err);
+        }
+      }
+      this.completedUpdateSteps.push(UpdateDraftAssetStep.UPDATE_EDITED_DRAFT_QUESTIONS);
 
       // Step 5: Create new Question Templates
       const newQuestionTemplateResponses = buildQuestionTemplatePromises(
