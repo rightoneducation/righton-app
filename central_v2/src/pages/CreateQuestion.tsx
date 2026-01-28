@@ -762,7 +762,7 @@ export default function CreateQuestion({
         setIsCardSubmitted(true);
         setIsCreatingTemplate(true);
         await draftAssetHandler.createDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl);
-        if (initPublicPrivate !== PublicPrivateType.DRAFT) {
+        if (initPublicPrivate !== PublicPrivateType.DRAFT && selectedQuestionId) {
           await apiClients.questionTemplate.deleteQuestionTemplate(
             initPublicPrivate as TemplateType,
             selectedQuestionId
@@ -1090,7 +1090,7 @@ export default function CreateQuestion({
                       </Box>
                     {draftQuestion.incorrectCards.map((card, index) => (
                       <IncorrectAnswerCard
-                        key={index}
+                        key={card.id ?? `incorrect-${index}`}
                         screenSize={screenSize}
                         isClone={false}
                         cardIndex={index}
