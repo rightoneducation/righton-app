@@ -437,6 +437,7 @@ export default function CreateGame({
               draftGame.gameTemplate.id,
               questionTemplateIds,
               apiClients,
+              draftGame.gameTemplate.publicPrivateType,
             );
             // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
             await Promise.all(createGameQuestions);

@@ -71,6 +71,7 @@ export default function CreateGameModalSwitch({
         isModalOpen
         templateType={TemplateType.GAME}
         handleDiscardClick={handleDiscard}
+        handleSaveEditedGame={handleSaveEditedGame}
         handleCloseDiscardModal={handleCloseDiscardModal}
       />;
       break;
