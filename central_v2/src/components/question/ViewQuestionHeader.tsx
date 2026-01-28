@@ -15,6 +15,7 @@ interface ViewQuestionHeaderProps {
   handleCloneQuestion: () => void;
   handleDeleteQuestion: () => void;
   handleAddToGameClick: () => void;
+  handleFavoriteClick: () => void;
   isEditEnabled: boolean;
   isOwner: boolean;
   screenSize: ScreenSize;
@@ -26,6 +27,7 @@ export default function ViewQuestionHeader({
   handleCloneQuestion,
   handleDeleteQuestion,
   handleAddToGameClick,
+  handleFavoriteClick,
   isEditEnabled,
   isOwner,
   screenSize
@@ -107,7 +109,7 @@ export default function ViewQuestionHeader({
                     <CentralButton
                       buttonType={ButtonType.FAVORITE}
                       isEnabled
-                      onClick={handleBackClick}
+                      onClick={handleFavoriteClick}
                     />
                     <CentralButton
                       buttonType={ButtonType.DUPLICATE}

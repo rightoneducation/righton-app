@@ -153,6 +153,15 @@ export default function ViewQuestion({
     setIsAddToGameModalOpen(true);
   };
 
+  const handleFavoriteClick = async () => {
+    const response = await apiClients.centralDataManager?.favoriteQuestionTemplate(
+      centralData.selectedQuestion?.question?.id ?? '',
+      centralData.userProfile,
+    );
+    if (response) {
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
+    }
+  };
 
   const handleAddToGame = (
     game: IGameTemplate,
@@ -227,6 +236,7 @@ export default function ViewQuestion({
               handleCloneQuestion={handleCloneQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
               handleAddToGameClick={handleAddToGameClick}
+              handleFavoriteClick={handleFavoriteClick}
               isEditEnabled={isEditEnabled}
               screenSize={screenSize}
               isOwner={isOwner}

@@ -164,6 +164,16 @@ export default function ViewGame({
     setSelectedQuestionIndex(index);
   };
 
+  const handleFavoriteClick = async () => {
+    const response = await apiClients.centralDataManager?.favoriteGameTemplate(
+      centralData.selectedGame?.game?.id ?? '',
+      centralData.userProfile,
+    );
+    if (response) {
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
+    }
+  };
+
   const handleBackClick = () => {
     if (libRoute) {
       navigate(`/library/games/${centralData.selectedGame?.game?.publicPrivateType}`);
@@ -216,7 +226,7 @@ export default function ViewGame({
       ) : (
         centralData.selectedGame && (
           <CreateGameContentContainer>
-            <ViewGameHeader isOwner={isOwner} isIncompleteDraft={isIncompleteDraft} handleCloneGame={handleCloneGame} handleDuplicate={handleDuplicate}handleBackClick={handleBackClick} handleEditGame={handleEditGame} handleLaunchGame={handleLaunchGame} label="View" screenSize={screenSize} />
+            <ViewGameHeader isOwner={isOwner} isIncompleteDraft={isIncompleteDraft} handleCloneGame={handleCloneGame} handleDuplicate={handleDuplicate}handleBackClick={handleBackClick} handleEditGame={handleEditGame} handleLaunchGame={handleLaunchGame} handleFavoriteClick={handleFavoriteClick} label="View" screenSize={screenSize} />
             <CreateGameBoxContainer screenSize={screenSize}>
             <Box style={{ width: '100%', maxWidth: screenSize !== ScreenSize.LARGE ? '100%' : '410px', display: 'flex', flexDirection: 'column',  gap: `${theme.sizing.smPadding}px` }}>
               <DetailedGameCardBase
