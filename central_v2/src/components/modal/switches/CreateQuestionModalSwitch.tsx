@@ -40,6 +40,7 @@ export default function CreateQuestionModalSwitch({
         templateType={TemplateType.QUESTION}
         handleDiscardClick={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
+        handleSaveEditedGame={handleSaveEditedQuestion}
       />;
       break;
     case ModalStateType.PUBLISH:
