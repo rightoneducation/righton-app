@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { GradeTarget, IGameTemplate, PublicPrivateType, SortDirection, SortType } from '@righton/networking';
 import { Box, CircularProgress, useTheme, Fade, styled } from '@mui/material';
@@ -263,13 +262,6 @@ export default function ViewQuestion({
                   }}
                 >
                   {centralData.selectedQuestion.question && (
-                    <Fade
-                      timeout={500}
-                      in
-                      mountOnEnter
-                      unmountOnExit
-                      style={{ width: '100%' }}
-                    >
                       <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
                         <DetailedQuestionSubCard
                           cardType={CardType.CORRECT}
@@ -290,7 +282,7 @@ export default function ViewQuestion({
                             ?.filter((choice) => !choice.isAnswer)
                             .map((choice, index) => (
                               <DetailedQuestionSubCard
-                                key={uuidv4()}
+                                key={choice.id ?? `incorrect-${index}`}
                                 cardType={CardType.INCORRECT}
                                 answer={choice.text}
                                 answerReason={choice.reason}
@@ -299,7 +291,6 @@ export default function ViewQuestion({
                             ))}
                         </Box>
                       </Box>
-                    </Fade>
                   )}
                 </Box>
               </BodyContainer>

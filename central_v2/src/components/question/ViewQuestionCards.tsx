@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid, Box, useTheme } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import { IQuestionTemplate } from '@righton/networking';
 import { ScreenSize, CardType } from '../../lib/CentralModels';
 import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestionCardBase';
@@ -86,7 +85,7 @@ export default function ViewQuestionCards({
                   ?.filter((choice) => !choice.isAnswer)
                   .map((choice, index) => (
                     <DetailedQuestionSubCard
-                      key={uuidv4()}
+                      key={choice.id ?? `incorrect-${index}`}
                       cardType={CardType.INCORRECT}
                       answer={choice.text}
                       answerReason={choice.reason}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Tabs, Typography } from '@mui/material';
+import { Box, Tabs, Typography, CircularProgress } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ElementType,
@@ -203,23 +203,48 @@ export default function LibraryTabsGames({
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
         />
-        <CardGallery<IGameTemplate>
-          screenSize={screenSize}
-          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-          grades={isSearchResults ? centralData.selectedGrades : undefined}
-          galleryElements={elements as IGameTemplate[]}
-          elementType={ElementType.GAME}
-          galleryType={
-            isSearchResults
-              ? GalleryType.SEARCH_RESULTS
-              : GalleryType.MOST_POPULAR
-          }
-          setIsTabsOpen={setIsTabsOpen}
-          handleView={handleView}
-          isLoading={centralData.isLoading}
-          isMyLibrary
-          isCreateGame
-        />
+        <Box
+          sx={{
+            flexGrow: 1,
+            minHeight: 360,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            overflowY: 'auto',
+          }}
+        >
+          {centralData.isLoading ? (
+            <Box
+              sx={{
+                display: 'flex',
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <CircularProgress style={{ color: '#FFF' }} />
+            </Box>
+          ) : (
+            <CardGallery<IGameTemplate>
+              screenSize={screenSize}
+              searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+              grades={isSearchResults ? centralData.selectedGrades : undefined}
+              galleryElements={elements as IGameTemplate[]}
+              elementType={ElementType.GAME}
+              galleryType={
+                isSearchResults
+                  ? GalleryType.SEARCH_RESULTS
+                  : GalleryType.MOST_POPULAR
+              }
+              setIsTabsOpen={setIsTabsOpen}
+              handleView={handleView}
+              isLoading={centralData.isLoading}
+              isMyLibrary
+              isCreateGame
+            />
+          )}
+        </Box>
       </ContentContainer>
     </TabContent>
   );

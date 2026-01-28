@@ -104,6 +104,7 @@ export default function useCentralDataManager({
   const callTypeMatches = {
     matchViewGame: useMatch('/games/:type/:gameId'),
     matchLibViewGame: useMatch('/library/games/:type/:gameId'),
+    matchLibViewQuestion: useMatch('/library/questions/:type/:questionId'),
     matchCloneGame: useMatch('/clone/:type/:gameId'),
     matchEditGame: matchAddQuestion || matchEditGameBase,
     matchCloneQuestion: useMatch('/clone/question/:type/:questionId'),
@@ -350,6 +351,7 @@ export default function useCentralDataManager({
       field: SortType;
       direction: SortDirection | null;
     } | null,
+    gameQuestionOverride?: GameQuestionType,
   ) => {
     if (!isFromLibrary)
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
@@ -359,7 +361,8 @@ export default function useCentralDataManager({
     });
     const inputSortField = sortOverride?.field ?? centralData.sort.field;
     const inputSortDirection = sortOverride?.direction ?? centralData.sort.direction;
-    switch (gameQuestion) {
+    const effectiveGq = gameQuestionOverride ?? gameQuestion;
+    switch (effectiveGq) {
       case GameQuestionType.QUESTION: {
         const sortField = (isFromLibrary && inputSortField === SortType.listQuestionTemplates)
           ? SortType.listQuestionTemplatesByDate
@@ -576,10 +579,12 @@ export default function useCentralDataManager({
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
+    gameQuestionOverride?: GameQuestionType,
   ) => {
     if (!isFromLibrary)
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    switch (gameQuestion) {
+    const effectiveGq = gameQuestionOverride ?? gameQuestion;
+    switch (effectiveGq) {
       case GameQuestionType.QUESTION: {
         const sortField = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
           ? SortType.listQuestionTemplatesByDate
@@ -661,10 +666,12 @@ export default function useCentralDataManager({
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
+    gameQuestionOverride?: GameQuestionType,
   ) => {
     if (!isFromLibrary)
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    switch (gameQuestion) {
+    const effectiveGq = gameQuestionOverride ?? gameQuestion;
+    switch (effectiveGq) {
       case GameQuestionType.QUESTION:
         if (
           user.favoriteQuestionTemplateIds &&
@@ -995,6 +1002,7 @@ export default function useCentralDataManager({
           nextToken,
           isFromLibray ?? false,
           sortOverride,
+          effectiveGameQuestion,
         );
         break;
       case FetchType.PRIVATE_QUESTIONS:
@@ -1006,11 +1014,12 @@ export default function useCentralDataManager({
           nextToken,
           isFromLibray ?? false,
           sortOverride,
+          effectiveGameQuestion,
         );
         break;
       case FetchType.DRAFT_QUESTIONS:
       case FetchType.DRAFT_GAMES:
-        getDrafts(isLoadMoreLibrary ?? false, libraryTab, searchTerms, nextToken, isFromLibray ?? false);
+        getDrafts(isLoadMoreLibrary ?? false, libraryTab, searchTerms, nextToken, isFromLibray ?? false, effectiveGameQuestion);
         break;
       case FetchType.FAVORITE_QUESTIONS:
       case FetchType.FAVORITE_GAMES:
@@ -1020,6 +1029,7 @@ export default function useCentralDataManager({
           searchTerms,
           nextToken,
           isFromLibray ?? false,
+          effectiveGameQuestion,
         );
         break;
       case FetchType.EXPLORE_QUESTIONS:

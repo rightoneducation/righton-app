@@ -82,6 +82,8 @@ export class QuestionTemplateAPIClient
     try {
       const queryFunction = questionTemplateRuntimeMap[type].get.queryFunction;
       const getType = `get${type}QuestionTemplate`;
+      console.log(getType);
+      console.log(id);
       const result = await this.callGraphQL<QuestionTemplateType<T>['get']['query']>(
         queryFunction,
         { id } as unknown as GraphQLOptions

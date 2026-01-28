@@ -1090,6 +1090,7 @@ export default function CreateQuestion({
                       </Box>
                     {draftQuestion.incorrectCards.map((card, index) => (
                       <IncorrectAnswerCard
+                        key={index}
                         screenSize={screenSize}
                         isClone={false}
                         cardIndex={index}
