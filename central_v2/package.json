@@ -155,7 +155,7 @@
     "@storybook/test": "^8.3.5",
     "@types/lodash": "^4.17.7",
     "@typescript-eslint/parser": "^8.1.0",
-    "eslint": "^9.9.0",
+    "eslint": "^9.26.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
