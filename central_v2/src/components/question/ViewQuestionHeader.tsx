@@ -149,21 +149,21 @@ export default function ViewQuestionHeader({
                 isEnabled
                 iconOnlyOverride
                 buttonWidthOverride='48px'
-                onClick={handleBackClick}
+                onClick={handleFavoriteClick}
               />
               <CentralButton
                 buttonType={ButtonType.DUPLICATE}
                 isEnabled
                 iconOnlyOverride
                 buttonWidthOverride='48px'
-                onClick={handleCloneQuestion}
+                onClick={() => setModalState(ModalStateType.DUPLICATE)}
               />
             </Box>
           )}
           <CentralButton
             buttonType={ButtonType.ADDTOGAMEPINK}
             isEnabled
-            onClick={handleBackClick}
+            onClick={handleAddToGameClick}
           />
         </Box>
       )}

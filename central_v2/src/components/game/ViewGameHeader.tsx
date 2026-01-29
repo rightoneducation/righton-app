@@ -136,7 +136,7 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
                 isEnabled
                 iconOnlyOverride
                 buttonWidthOverride='48px'
-                onClick={handleBackClick}
+                onClick={handleEditGame}
               />
             ) :(
               <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
@@ -145,14 +145,14 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
                   isEnabled
                   iconOnlyOverride
                   buttonWidthOverride='48px'
-                  onClick={handleBackClick}
+                  onClick={handleFavoriteClick}
                 />
                 <CentralButton
                   buttonType={ButtonType.DUPLICATE}
                   isEnabled
                   iconOnlyOverride
                   buttonWidthOverride='48px'
-                  onClick={handleBackClick}
+                  onClick={() => setModalState(ModalStateType.DUPLICATE)}
                 />
               </Box>
             )}
