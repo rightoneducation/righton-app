@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { debounce } from 'lodash';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,6 +29,7 @@ import {
   LibraryTabEnum,
   ScreenSize,
   StorageKey,
+  StorageKeyCreateGame,
   GameQuestionType,
   ModalStateType,
   StorageKeyIsFirstCreate,
@@ -82,6 +84,7 @@ import { ButtonType } from '../components/button/ButtonModels';
 import LibraryTabsModalContainer from '../components/librarytabs/LibraryTabsModalContainer';
 import CreateGameModalSwitch from '../components/modal/switches/CreateGameModalSwitch';
 import { DraftAssetHandler } from '../lib/services/DraftAssetHandler';
+import useCreateGameLoader from '../loaders/useCreateGameLoader';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -137,6 +140,7 @@ export default function CreateGame({
     addQuestionRoute?.params.questionId !== null &&
     addQuestionRoute?.params.questionId !== undefined &&
     addQuestionRoute?.params.questionId.length > 0;
+  const localData = useCreateGameLoader();
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [isQuestionBankOpen, setIsQuestionBankOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -144,7 +148,9 @@ export default function CreateGame({
     modalState: ModalStateType.NULL,
     confirmState: ConfirmStateType.NULL,
   });
-  const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
+  const [draftGame, setDraftGame] = useState<TGameTemplateProps>(() =>
+    localData.draftGame ?? gameTemplate,
+  );
   const [originalGameType, setOriginalGameType] = useState<PublicPrivateType>(gameTemplate.gameTemplate.publicPrivateType);
   const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
   // used when saving an edited game
@@ -156,7 +162,7 @@ export default function CreateGame({
   >([]);
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
-  >([]);
+  >(() => localData.draftQuestionsList ?? []);
   const [originalQuestionImageUrls, setOriginalQuestionImageUrls] = useState<
     string[]
   >([]);
@@ -164,10 +170,9 @@ export default function CreateGame({
   const [editQuestionDraft, setEditQuestionDraft] = useState<CentralQuestionTemplateInput | null>(null);
   const [editQuestionIndex, setEditQuestionIndex] = useState<number | null>(null);
 
-  const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
-    phaseOne: '2:00',
-    phaseTwo: '2:00',
-  });
+  const [phaseTime, setPhaseTime] = useState<TPhaseTime>(() =>
+    localData.phaseTime ?? { phaseOne: '2:00', phaseTwo: '2:00' },
+  );
   
   const [gameFormIsValid, setGameFormIsValid] = useState(false);
   const [allDQAreValid, setAllDQAreValid] = useState(false);
@@ -201,18 +206,63 @@ export default function CreateGame({
       break;
   }
 
+  const isCreate = !isClone && !isEdit && !isAddQuestion;
+
+  const persistGameDraftDebounced = useMemo(
+    () =>
+      debounce(
+        (snapshot: {
+          draftGame: TGameTemplateProps;
+          draftQuestionsList: TDraftQuestionsList[];
+          phaseTime: TPhaseTime;
+        }) => {
+          if (!isCreate) return;
+          const { draftGame: dg, draftQuestionsList: dql, phaseTime: pt } = snapshot;
+          const d = { ...dg, image: undefined };
+          const q = dql.map((item) => ({
+            ...item,
+            question: {
+              ...item.question,
+              questionCard: { ...item.question.questionCard, image: undefined },
+            },
+          }));
+          window.localStorage.setItem(
+            StorageKeyCreateGame,
+            JSON.stringify({ draftGame: d, draftQuestionsList: q, phaseTime: pt }),
+          );
+        },
+        1000,
+      ),
+    [isCreate],
+  );
+
   /** CREATE GAME HANDLERS START HERE */
   const handleGameTitle = (val: string) => {
-    setDraftGame((prev) => updateGameTitle(prev, val));
+    setDraftGame((prev) => {
+      const next = updateGameTitle(prev, val);
+      persistGameDraftDebounced({ draftGame: next, draftQuestionsList, phaseTime });
+      return next;
+    });
   };
 
   const handleGameDescription = (val: string) => {
-    setDraftGame((prev) => updateGameDescription(prev, val));
+    setDraftGame((prev) => {
+      const next = updateGameDescription(prev, val);
+      persistGameDraftDebounced({ draftGame: next, draftQuestionsList, phaseTime });
+      return next;
+    });
   };
 
   const handlePhaseTime = (time: TPhaseTime) => {
-    setDraftGame((prev) => updateGameTemplatePhaseTime(prev, time));
-    setPhaseTime((prev) => updatePhaseTime(time));
+    const nextDraft = updateGameTemplatePhaseTime(draftGame, time);
+    const nextPhase = updatePhaseTime(time);
+    setDraftGame(() => nextDraft);
+    setPhaseTime(() => nextPhase);
+    persistGameDraftDebounced({
+      draftGame: nextDraft,
+      draftQuestionsList,
+      phaseTime: nextPhase,
+    });
   };
 
   const handleOpenCreateQuestion = () => {
@@ -249,31 +299,41 @@ export default function CreateGame({
     // then switch all question types to new type
     if (isEditDraft) {
       setEditedPublicPrivateType(value);
-      setDraftGame((prev) => ({
-        ...prev,
+      const nextDraft = {
+        ...draftGame,
         gameTemplate: {
-          ...prev.gameTemplate,
+          ...draftGame.gameTemplate,
           finalPublicPrivateType: value,
         },
-      }));
-      setEditedPublicPrivateType(value);
+      };
+      setDraftGame(() => nextDraft);
       setDraftQuestionsList(newDraftQuestionList);
+      persistGameDraftDebounced({
+        draftGame: nextDraft,
+        draftQuestionsList: newDraftQuestionList,
+        phaseTime,
+      });
     }
     // case 2, creating/editing a game
     else {
       setDraftQuestionsList(newDraftQuestionList);
       setIconButtons([1]);
       setSelectedQuestionIndex(0);
-      setDraftGame((prev) => ({
-        ...prev,
+      const nextDraft = {
+        ...draftGame,
         gameTemplate: {
-          ...prev.gameTemplate,
+          ...draftGame.gameTemplate,
           publicPrivateType: value,
         },
         questionCount: newDraftQuestionList.length,
-        // isGameCardErrored: false,
-      }));
-  }
+      };
+      setDraftGame(() => nextDraft);
+      persistGameDraftDebounced({
+        draftGame: nextDraft,
+        draftQuestionsList: newDraftQuestionList,
+        phaseTime,
+      });
+    }
   };
   const handleDiscardGame = () => {
     setModalObject({
@@ -289,6 +349,7 @@ export default function CreateGame({
         confirmState: ConfirmStateType.NULL,
       });
       window.localStorage.setItem(StorageKey, '');
+      window.localStorage.setItem(StorageKeyCreateGame, '');
       navigate('/');
       return;
     }
@@ -949,6 +1010,7 @@ export default function CreateGame({
       confirmState: ConfirmStateType.NULL,
     });
     window.localStorage.setItem(StorageKey, '');
+    window.localStorage.setItem(StorageKeyCreateGame, '');
     navigate(`/library/games/${centralData.selectedGame?.game?.publicPrivateType}`);
   };
 
