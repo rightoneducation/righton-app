@@ -1199,6 +1199,7 @@ export default function CreateGame({
       <CreateGameImageUploadModal
         draftGame={draftGame}
         isClone={isClone}
+        isEdit={isEdit}
         isCloneImageChanged={draftGame.isCloneGameImageChanged}
         screenSize={screenSize}
         isModalOpen={draftGame.isGameImageUploadVisible}

@@ -77,6 +77,7 @@ const DashedBox = styled(Box)(({ theme }) => ({
 interface GameImageUploadModalProps {
   screenSize: ScreenSize;
   isClone: boolean;
+  isEdit: boolean;
   isCloneImageChanged: boolean;
   isModalOpen: boolean;
   draftGame: TGameTemplateProps;
@@ -88,6 +89,7 @@ interface GameImageUploadModalProps {
 export default function GameImageUploadModal({
   screenSize,
   isClone,
+  isEdit,
   isCloneImageChanged,
   isModalOpen,
   draftGame,
@@ -103,7 +105,7 @@ export default function GameImageUploadModal({
   let imageLink: string | null = null;
   if (imageUrl) {
     imageLink = imageUrl;
-    if (isClone && !isCloneImageChanged)
+    if ((isClone || isEdit) && !isCloneImageChanged)
       imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   } else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
