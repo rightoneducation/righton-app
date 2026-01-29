@@ -849,27 +849,27 @@ export class DraftAssetHandler {
       const url = await DraftAssetHandler.publishQuestionImageHandler(draftQuestion, apiClients);
       this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.IMAGE_UPLOAD);
       window.localStorage.setItem(StorageKey, '');
-      if (url) {
-        if (draftQuestionCopy.correctCard.isMultipleChoice)
-          draftQuestionCopy.correctCard.answerSettings.answerType =
-            AnswerType.MULTICHOICE;
-        const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
-          draftQuestionCopy.publicPrivateType as TemplateType,
-          url,
-          centralData.userProfile?.id || '',
-          draftQuestionCopy,
+      // Allow publishing even without an image (url can be null or empty string)
+      const imageUrl = url || '';
+      if (draftQuestionCopy.correctCard.isMultipleChoice)
+        draftQuestionCopy.correctCard.answerSettings.answerType =
+          AnswerType.MULTICHOICE;
+      const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
+        draftQuestionCopy.publicPrivateType as TemplateType,
+        imageUrl,
+        centralData.userProfile?.id || '',
+        draftQuestionCopy,
+      );
+      this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
+      if (qtResult && selectedQuestionId){
+        // if the user is saving out their draft, create a public/private question template
+        // and delete the draft question template
+        await apiClients.questionTemplate.deleteQuestionTemplate(
+          PublicPrivateType.DRAFT,
+          selectedQuestionId
         );
-        this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
-        if (qtResult && selectedQuestionId){
-          // if the user is saving out their draft, create a public/private question template
-          // and delete the draft question template
-          await apiClients.questionTemplate.deleteQuestionTemplate(
-            PublicPrivateType.DRAFT,
-            selectedQuestionId
-          );
-        }
-        this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.DELETE_OLD_DRAFT_QUESTION_TEMPLATE);
       }
+      this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.DELETE_OLD_DRAFT_QUESTION_TEMPLATE);
       // update user stats
       const existingNumQuestions =
         centralData.userProfile?.questionsMade || 0;

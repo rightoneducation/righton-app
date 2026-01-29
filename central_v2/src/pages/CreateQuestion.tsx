@@ -695,15 +695,10 @@ export default function CreateQuestion({
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
       if (isQuestionTemplateComplete) {
-        if (
-          draftQuestion.questionCard.image ||
-          draftQuestion.questionCard.imageUrl
-        ) {
-          setIsCreatingTemplate(true);
-          await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId)
-          setIsCreatingTemplate(false);
-          fetchElements();
-        }
+        setIsCreatingTemplate(true);
+        await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId)
+        setIsCreatingTemplate(false);
+        fetchElements();
       } else {
         if (!draftQuestion.questionCard.isCardComplete) {
           setIsBaseCardErrored(true);
