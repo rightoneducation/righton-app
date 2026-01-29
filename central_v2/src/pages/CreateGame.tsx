@@ -601,11 +601,10 @@ export default function CreateGame({
         // check for images on draft game
         let gameImgUrl: string | null = null;
         if (draftGame.image || draftGame.imageUrl) {
-          if (
-            (!draftGame?.imageUrl?.startsWith('https://') ||
-            !draftGame?.imageUrl?.startsWith('http://')) && 
-            draftGame?.imageUrl
-          ) {
+          const isFullUrl =
+            draftGame?.imageUrl?.startsWith('https://') ||
+            draftGame?.imageUrl?.startsWith('http://');
+          if (isFullUrl && draftGame?.imageUrl) {
             gameImgUrl = draftGame.imageUrl;
           } else {
             if ( draftGame && draftGame.imageUrl && draftGame?.imageUrl?.length > 0){
@@ -745,6 +744,16 @@ export default function CreateGame({
           }
         } catch (err) {
           console.error('Error creating game template:', err);
+          setDraftGame((prev) => ({
+            ...prev,
+            isCreatingTemplate: false,
+            isGameCardSubmitted: false,
+          }));
+          setModalObject({
+            modalState: ModalStateType.NULL,
+            confirmState: ConfirmStateType.NULL,
+          });
+          return;
         }
         // update user stats
         const existingNumGames = centralData.userProfile?.gamesMade || 0;
