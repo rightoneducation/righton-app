@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Box } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import {
   IGameTemplate,
   IQuestionTemplate,
@@ -102,7 +101,7 @@ function MostPopularGamesComponent({
             const isFavorite =
               favoriteGameTemplateIds?.includes(game.id) || false;
             return (
-              <Grid item key={`${uuidv4()}${game.id}`}>
+              <Grid item key={game.id}>
                 <StyledGameCard
                   screenSize={screenSize}
                   game={game}
@@ -282,7 +281,7 @@ export default function CardGallery<
           galleryType={galleryType}
         />
       )}
-      {elementType === ElementType.GAME ? (
+      {elementType === ElementType.GAME && (
         <MostPopularGamesComponent
           screenSize={screenSize}
           isLoading={isLoading ?? false}
@@ -297,7 +296,8 @@ export default function CardGallery<
             handleViewButtonClick as (element: IGameTemplate) => void
           }
         />
-      ) : (
+      )}
+      {elementType !== ElementType.GAME && (
         <MostPopularQuestionsComponent
           isLoading={isLoading ?? false}
           isCreateGame={isCreateGame}

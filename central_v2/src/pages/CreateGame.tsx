@@ -1058,7 +1058,6 @@ export default function CreateGame({
         },
       }));
     }
-    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     const selected = centralData.selectedGame;
     const title = selected?.game?.title;
     if (selected !== null && (isClone || isEdit || isAddQuestion)) {

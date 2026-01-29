@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Tabs, Typography, CircularProgress } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import {
   ElementType,
   GalleryType,
@@ -119,7 +118,7 @@ export default function LibraryTabsGames({
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     const newTabEnum = tabIndexToEnum[newValue as number];
     setOpenTab(newTabEnum);
-    fetchElements(newTabEnum, undefined, undefined, undefined, undefined, undefined, GameQuestionType.GAME);
+    // Fetch runs in useEffect when openTab changes.
   };
   const elements = getGameElements(openTab, isSearchResults, centralData);
   return (
@@ -140,7 +139,7 @@ export default function LibraryTabsGames({
           const label = getTabLabel(screenSize, isSelected, value);
           return (
             <LibraryTab
-              key={uuidv4()}
+              key={key}
               icon={
                 <img
                   src={tabIconMap[key]}

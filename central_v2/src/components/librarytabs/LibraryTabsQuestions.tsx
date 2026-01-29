@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Tabs, Typography } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useEffect } from 'react';
+import { Box, Tabs, Typography, CircularProgress } from '@mui/material';
 import {
   ElementType,
   GalleryType,
@@ -86,15 +85,15 @@ export default function LibraryTabsQuestions({
   const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
     isPublic ? LibraryTabEnum.PUBLIC : LibraryTabEnum.PRIVATE,
   );
-  const [hasInitialized, setHasInitialized] = useState(false);
-  if (!hasInitialized) {
+
+  useEffect(() => {
     fetchElements(openTab);
-    setHasInitialized(true);
-  }
+  }, [openTab]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     const newTabEnum = tabIndexToEnum[newValue as number];
     setOpenTab(newTabEnum);
-    fetchElements(newTabEnum);
+    // Fetch runs in useEffect when openTab changes.
   };
 
   const elements = getQuestionElements(openTab, isSearchResults, centralData);
@@ -117,7 +116,7 @@ export default function LibraryTabsQuestions({
           const label = getTabLabel(screenSize, isSelected, value);
           return (
             <LibraryTab
-              key={uuidv4()}
+              key={key}
               icon={
                 <img
                   src={tabIconMap[key]}
