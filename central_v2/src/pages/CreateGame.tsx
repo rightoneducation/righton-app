@@ -1047,6 +1047,7 @@ export default function CreateGame({
   };
 
   useEffect(() => {
+    console.log('creategame useeffect');
     setIsLoading(false);
     if (localStorage.getItem(StorageKeyIsFirstCreate) === null && !isEdit){
       localStorage.setItem(StorageKeyIsFirstCreate, 'false');
@@ -1099,13 +1100,14 @@ export default function CreateGame({
           );
          
           if (originals && assembled && assembled.length > 0) {
+            const imageUrls = originals.map((orig) => {
+              const questionTemplate = 'questionTemplate' in orig ? orig.questionTemplate : orig;
+              return questionTemplate.imageUrl ?? '';
+            });
+            setOriginalQuestionImageUrls(imageUrls);
             setDraftQuestionsList(() =>
               originals.map((orig, i) => {
                 const questionTemplate = 'questionTemplate' in orig ? orig.questionTemplate : orig;
-                setOriginalQuestionImageUrls((prev) => [
-                  ...prev,
-                  questionTemplate.imageUrl ?? '',
-                ]);
                 return {
                   ...draftTemplate,
                   question: assembled[i],
@@ -1127,12 +1129,10 @@ export default function CreateGame({
         );
        
         if (originals && assembled && assembled.length > 0) {
+          const imageUrls = originals.map((orig) => orig.questionTemplate.imageUrl ?? '');
+          setOriginalQuestionImageUrls(imageUrls);
           setDraftQuestionsList(() =>
             originals.map((orig, i) => {
-              setOriginalQuestionImageUrls((prev) => [
-                ...prev,
-                orig.questionTemplate.imageUrl ?? '',
-              ]);
               return {
                 ...draftTemplate,
                 question: assembled[i],
@@ -1153,7 +1153,7 @@ export default function CreateGame({
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, selectedGameId);
     }
-  }, [centralData.selectedGame, route, editRoute, addQuestionRoute, selectedGameId]); // eslint-disable-line
+  }, [ route, editRoute, addQuestionRoute, selectedGameId]); // eslint-disable-line
 
   return (
     <CreateGameMainContainer screenSize={screenSize}>

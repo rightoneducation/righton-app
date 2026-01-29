@@ -179,6 +179,11 @@ export default function LibraryTabsQuestions({
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
         />
+        { centralData.isLoading ? (
+          <Box sx={{display: 'flex', flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}>
+            <CircularProgress style={{ color: '#FFF' }} />
+          </Box>
+        ) : (
         <CardGallery<IQuestionTemplate>
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
@@ -196,6 +201,7 @@ export default function LibraryTabsQuestions({
           isMyLibrary
           isCreateGame
         />
+      )}
       </ContentContainer>
     </TabContent>
   );
