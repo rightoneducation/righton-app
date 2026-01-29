@@ -862,8 +862,19 @@ export class DraftAssetHandler {
       );
       this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
       if (qtResult && selectedQuestionId){
-        // if the user is saving out their draft, create a public/private question template
-        // and delete the draft question template
+        // delete any DraftGameQuestions that reference this draft question (by index on draftQuestionTemplateID)
+        const draftGameQuestionIds = await apiClients.questionTemplate.getQuestionTemplateJoinTableIds(
+          PublicPrivateType.DRAFT as TemplateType,
+          selectedQuestionId
+        );
+        if (draftGameQuestionIds.length > 0) {
+          await Promise.all(
+            draftGameQuestionIds.map((id) =>
+              apiClients.gameQuestions.deleteGameQuestions(PublicPrivateType.DRAFT, id)
+            )
+          );
+        }
+        // then delete the draft question template
         await apiClients.questionTemplate.deleteQuestionTemplate(
           PublicPrivateType.DRAFT,
           selectedQuestionId
