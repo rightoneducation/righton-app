@@ -63,6 +63,7 @@ interface DiscardGameModalProps {
   templateType: TemplateType;
   handleDiscardClick?: () => void;
   handleCloseDiscardModal?: () => void;
+  handleSaveEditedGame?: () => void;
   isUpdatingTemplate?: boolean;
 }
 
@@ -72,6 +73,7 @@ export default function DiscardGameModal({
   handleDiscardClick,
   handleCloseDiscardModal,
   isUpdatingTemplate,
+  handleSaveEditedGame,
 }: DiscardGameModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
@@ -113,6 +115,7 @@ export default function DiscardGameModal({
               <CentralButton
                 buttonType={ButtonType.UPDATE}
                 isEnabled
+                onClick={handleSaveEditedGame}
               />
               <CentralButton
                 buttonType={ButtonType.BACKTOEDIT}

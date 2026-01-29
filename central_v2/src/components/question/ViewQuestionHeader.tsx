@@ -14,6 +14,8 @@ interface ViewQuestionHeaderProps {
   handleEditQuestion: () => void;
   handleCloneQuestion: () => void;
   handleDeleteQuestion: () => void;
+  handleAddToGameClick: () => void;
+  handleFavoriteClick: () => void;
   isEditEnabled: boolean;
   isOwner: boolean;
   screenSize: ScreenSize;
@@ -24,6 +26,8 @@ export default function ViewQuestionHeader({
   handleEditQuestion,
   handleCloneQuestion,
   handleDeleteQuestion,
+  handleAddToGameClick,
+  handleFavoriteClick,
   isEditEnabled,
   isOwner,
   screenSize
@@ -105,7 +109,7 @@ export default function ViewQuestionHeader({
                     <CentralButton
                       buttonType={ButtonType.FAVORITE}
                       isEnabled
-                      onClick={handleBackClick}
+                      onClick={handleFavoriteClick}
                     />
                     <CentralButton
                       buttonType={ButtonType.DUPLICATE}
@@ -121,7 +125,7 @@ export default function ViewQuestionHeader({
                   buttonType={ButtonType.ADDTOGAMEPINK}
                   isEnabled
                   buttonWidthOverride="auto"
-                  onClick={handleBackClick}
+                  onClick={handleAddToGameClick}
                 />
               </Box>
             </Box>
@@ -145,21 +149,21 @@ export default function ViewQuestionHeader({
                 isEnabled
                 iconOnlyOverride
                 buttonWidthOverride='48px'
-                onClick={handleBackClick}
+                onClick={handleFavoriteClick}
               />
               <CentralButton
                 buttonType={ButtonType.DUPLICATE}
                 isEnabled
                 iconOnlyOverride
                 buttonWidthOverride='48px'
-                onClick={handleCloneQuestion}
+                onClick={() => setModalState(ModalStateType.DUPLICATE)}
               />
             </Box>
           )}
           <CentralButton
             buttonType={ButtonType.ADDTOGAMEPINK}
             isEnabled
-            onClick={handleBackClick}
+            onClick={handleAddToGameClick}
           />
         </Box>
       )}

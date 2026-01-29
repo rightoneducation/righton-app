@@ -6,6 +6,7 @@ import {
   Typography,
   styled,
   CircularProgress,
+  Tooltip,
   useTheme,
 } from '@mui/material';
 import { TemplateType } from '../../lib/CentralModels';
@@ -60,6 +61,7 @@ const CloseButton = styled('img')(({ theme }) => ({
 
 interface SaveGameModalProps {
   isModalOpen: boolean;
+  title: string;
   templateType: TemplateType;
   handlePublishGame?: () => void;
   handleCloseSaveGameModal?: () => void;
@@ -71,6 +73,7 @@ interface SaveGameModalProps {
 export default function SaveGameModal({
   isModalOpen,
   templateType,
+  title,
   handlePublishGame,
   handleCloseSaveGameModal,
   handleSaveDraft,
@@ -126,11 +129,42 @@ export default function SaveGameModal({
                 isEnabled={!isCardErrored}
                 onClick={handlePublishGame}
               />
-              <CentralButton
-                buttonType={ButtonType.SAVEDRAFTBLUE}
-                isEnabled
-                onClick={handleSaveDraft}
-              />
+              {title.length > 0 ? (
+                <CentralButton
+                  buttonType={ButtonType.SAVEDRAFTBLUE}
+                  isEnabled
+                  onClick={handleSaveDraft}
+                />
+              ): (
+                <Tooltip 
+                  title='Drafts must include a title'
+                  enterTouchDelay={500}
+                  enterDelay={500} 
+                  enterNextDelay={500} 
+                  placement="top" 
+                  arrow
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: 'offset',
+                          options: {
+                            offset: [0, -10],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <span>
+                    <CentralButton
+                      buttonType={ButtonType.SAVEDRAFTBLUE}
+                      isEnabled={false}
+                      onClick={handleSaveDraft}
+                    />
+                  </span>
+                </Tooltip>
+              )}
               <CentralButton
                 buttonType={ButtonType.BACKTOEDIT}
                 isEnabled

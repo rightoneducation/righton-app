@@ -70,7 +70,6 @@ export default function QuestionTabsContentContainer({
   const isEditEnabled =
     centralData.userStatus === UserStatusType.LOGGEDIN &&
     centralData.userProfile?.id === question?.userId;
-console.log('openTab', openTab);
   const tabContent = [ 
     (question || openTab === LibraryTabEnum.PUBLIC) ? (
         <QuestionTabsSelectedQuestion

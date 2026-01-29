@@ -3,12 +3,12 @@ import { Modal, Slide, Box } from "@mui/material";
 import { GradeTarget, IGameTemplate, IQuestionTemplate, PublicPrivateType, SortType, SortDirection } from "@righton/networking";
 import { TabContainer } from "../../lib/styledcomponents/QuestionTabsStyledComponents";
 import { LibraryTabEnum, ScreenSize, GameQuestionType } from "../../lib/CentralModels";
-import LibraryTabsQuestions from "./LibraryTabsQuestions";
+import LibraryTabsGames from "./LibraryTabsGames";
 
 interface LibraryTabsModalContainerProps {
-  isPublic: boolean;
+  publicPrivateType: PublicPrivateType;
   isTabsOpen: boolean,
-  handleCloseQuestionTabs: () => void,
+  handleCloseGamesTabs: () => void,
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -23,30 +23,34 @@ interface LibraryTabsModalContainerProps {
     nextToken?: string | null,
     isFromLibrary?: boolean,
   ) => void;
-  handleQuestionView: (
-    element: IQuestionTemplate,
-    elements: IQuestionTemplate[],
+  handleGameView: (
+    element: IGameTemplate,
   ) => void;
+  /** When true, fetch user's library games only (e.g. Add to Game modal). Same as /library. */
+  isFromLibrary?: boolean;
+  /** When true, force library-style fetch (user's games) regardless of route. */
+  forceLibrary?: boolean;
 }
 
-export default function LibraryTabsModalContainer({
-  isPublic,
+export default function LibraryTabsModalContainerGames({
+  publicPrivateType,
   isTabsOpen,
-  handleCloseQuestionTabs,
+  handleCloseGamesTabs,
   screenSize,
   setIsTabsOpen,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
   fetchElements,
-  handleQuestionView,
+  handleGameView,
+  isFromLibrary,
+  forceLibrary,
 }: LibraryTabsModalContainerProps) {
-  
   return (
   <Modal
     disableAutoFocus
     open={isTabsOpen}
-    onClose={handleCloseQuestionTabs}
+    onClose={handleCloseGamesTabs}
     closeAfterTransition
     disableScrollLock
   >
@@ -66,16 +70,18 @@ export default function LibraryTabsModalContainer({
             boxSizing: 'border-box',
           }}
         >
-          <LibraryTabsQuestions
-            isPublic={isPublic}
+          <LibraryTabsGames
+            publicPrivateType={publicPrivateType}
             screenSize={screenSize}
             setIsTabsOpen={setIsTabsOpen}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             fetchElements={fetchElements}
-            handleView={handleQuestionView}
-            handleCloseQuestionTabs={handleCloseQuestionTabs}
+            handleView={handleGameView}
+            handleCloseGamesTabs={handleCloseGamesTabs}
+            isFromLibrary={isFromLibrary}
+            forceLibrary={forceLibrary}
           />
         </TabContainer>
       </Slide>

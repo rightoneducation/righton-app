@@ -276,6 +276,16 @@ export default function CreateQuestionModal({
       });
     }
 
+    const handleAnswerSettingsChange = (
+      draftQuestionInput: CentralQuestionTemplateInput, 
+      answerType: AnswerType, answerPrecision?: AnswerPrecision
+    ) => {
+      setDraftQuestion((prev) => {
+        const newDraftQuestion = { ...prev, correctCard: { ...prev.correctCard, answerSettings: { answerType, answerPrecision } } };
+        return newDraftQuestion;
+      });
+    }
+
     const handleCCSSSubmit = (ccss: string) => {
       setDraftQuestion((prev) => {
         const newDraftQuestion = {
@@ -440,6 +450,7 @@ export default function CreateQuestionModal({
                         isAIError={isAIError.some(Boolean)}
                         isPublic={false}
                         isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
+                        handleAnswerSettingsChange={handleAnswerSettingsChange}
                       />
                     </Box>
                   </Box>

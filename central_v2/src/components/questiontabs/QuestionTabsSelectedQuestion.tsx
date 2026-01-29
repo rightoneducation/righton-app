@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Grid, CircularProgress, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { v4 as uuidv4 } from 'uuid';
 import { IQuestionTemplate } from '@righton/networking';
 import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestionCardBase';
 import CentralButton from '../button/Button';
@@ -217,7 +216,7 @@ export default function QuestionTabsSelectedQuestion({
                             ?.filter((choice) => !choice.isAnswer)
                             .map((choice, index) => (
                               <DetailedQuestionSubCard
-                                key={uuidv4()}
+                                key={choice.id ?? `incorrect-${index}`}
                                 cardType={CardType.INCORRECT}
                                 answer={choice.text}
                                 answerReason={choice.reason}

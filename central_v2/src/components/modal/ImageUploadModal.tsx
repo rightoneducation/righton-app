@@ -105,12 +105,13 @@ export default function ImageUploadModal({
   const [isChangeImage, setIsChangeImage] = React.useState<boolean>(false);
 
   let imageLink: string | null = null;
-  if (imageUrl) imageLink = imageUrl;
-  if (image && image instanceof File)
+  if (imageUrl) {
+    imageLink = imageUrl;
+    if ((isClone || isEdit) && !isCloneImageChanged)
+      imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
+  } else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
-  else if ((isClone && !isCloneImageChanged) || isEdit)
-    imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
- 
+
   const handleChangeClick = (newImage: File) => {
     setIsChangeImage(false);
     handleImageChange(newImage);

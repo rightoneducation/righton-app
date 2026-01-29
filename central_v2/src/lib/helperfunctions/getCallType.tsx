@@ -7,6 +7,7 @@ interface CallTypeProps {
   // openTab
   matchViewGame: ReturnType<typeof useMatch>;
   matchLibViewGame: ReturnType<typeof useMatch>;
+  matchLibViewQuestion: ReturnType<typeof useMatch>;
   matchCloneGame: ReturnType<typeof useMatch>;
   matchEditGame: ReturnType<typeof useMatch>;
   matchCloneQuestion: ReturnType<typeof useMatch>;
@@ -30,6 +31,7 @@ interface CallTypeProps {
 export default function getCallType({
   matchViewGame,
   matchLibViewGame,
+  matchLibViewQuestion,
   matchCloneGame,
   matchEditGame,
   matchCloneQuestion,
@@ -71,6 +73,7 @@ export default function getCallType({
   const candidates = [
     { match: matchViewGame, gqType: GameQuestionType.GAME },
     { match: matchLibViewGame, gqType: GameQuestionType.GAME },
+    { match: matchLibViewQuestion, gqType: GameQuestionType.QUESTION },
     { match: matchCloneGame, gqType: GameQuestionType.GAME },
     { match: matchEditGame, gqType: GameQuestionType.GAME },
     { match: matchCloneQuestion, gqType: GameQuestionType.QUESTION },

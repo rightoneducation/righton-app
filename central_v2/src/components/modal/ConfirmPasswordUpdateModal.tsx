@@ -84,7 +84,7 @@ export default function ConfirmPasswordUpdateModal({
       navigate('/password/reset?action=update');
       onClose();
     } catch (err: any) {
-      console.log('error with the email provided: ', err);
+      // TODO: show user-visible error (e.g. "Couldn't send reset email")
     }
   };
 

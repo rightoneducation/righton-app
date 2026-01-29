@@ -7,18 +7,16 @@ import {
   styled,
   useTheme,
   InputAdornment,
-  Button,
 } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
   AnswerType,
   CloudFrontDistributionUrl,
+  AnswerPrecision,
 } from '@righton/networking';
 import {
-  QuestionTitleStyled,
   RadioContainerStyled,
   RadioLabelStyled,
   RadioStyled,
@@ -27,19 +25,17 @@ import {
 import {
   BaseCardStyled,
   TextContainerStyled,
-  CCSSIndicator,
 } from '../../../../lib/styledcomponents/CreateQuestionStyledComponents';
-import { TitleText, HeaderText, CreateGameTitleText } from '../../../../lib/styledcomponents/CreateGameStyledComponent';
+import { HeaderText, CreateGameTitleText } from '../../../../lib/styledcomponents/CreateGameStyledComponent';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
 import CentralButton from '../../../button/Button';
 import { ButtonType } from '../../../button/ButtonModels';
 import { ButtonCCSS } from '../../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../../lib/CentralModels';
 import ErrorBox from '../../createquestion/ErrorBox';
-import PublicPrivateButton from '../../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../../images/errorIcon.svg';
-import { SelectArrowContainer } from '../../../../lib/styledcomponents/SelectGrade';
 import SelectArrow from '../../../../images/SelectArrow.svg';
+import AnswerSettingsDropdown from '../AnswerTypeDropDown';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -61,6 +57,10 @@ interface CreateQuestionCardBaseProps {
   isPublic: boolean;
   isMultipleChoice: boolean;
   isCreateGame?: boolean;
+  handleAnswerSettingsChange: (
+    draftQuestion: CentralQuestionTemplateInput, 
+    answerType: AnswerType, answerPrecision?: AnswerPrecision
+  ) => void;
 }
 
 type ImagePlaceholderProps = {
@@ -133,6 +133,7 @@ export default function CreateQuestionCardBase({
   isAIError,
   isPublic,
   isCreateGame,
+  handleAnswerSettingsChange,
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const { imageUrl, image } = draftQuestion.questionCard;
@@ -330,6 +331,13 @@ export default function CreateQuestionCardBase({
             />
           </RadioGroup>
         </RadioContainerStyled>
+        {!isMultipleChoice && (
+          <AnswerSettingsDropdown
+            screenSize={screenSize}
+            draftQuestion={draftQuestion}
+            onHandleAnswerSettingsChange={handleAnswerSettingsChange}
+          />
+        )}
       </ContentContainerStyled>
       <ContentContainerStyled>
           <HeaderText>

@@ -55,9 +55,9 @@ export const RadioLabelStyled = styled(FormControlLabel, {
 })<RadioLabelProps>(({ theme, isSelected }) => ({
   cursor: 'default',
   margin: 0,
-  color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
+  color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.5)',
   '& .MuiTypography-root': {
-    color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
+    color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.5)',
     fontSize: '14px',
   },
 }));
