@@ -212,6 +212,8 @@ export default function ViewQuestion({
         handleSearchChange={handleSearchChange}
         fetchElements={fetchElements}
         handleGameView={handleAddToGame}
+        isFromLibrary
+        forceLibrary
       />
       {isLoading ? (
         <Box

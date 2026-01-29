@@ -1046,10 +1046,11 @@ export default function CreateGame({
     setEditQuestionIndex(null);
   };
 
+  // Effect 1: Fetch game when missing or wrong, and first-time create (localStorage + initPublicPrivate).
+  // Does NOT depend on centralData.selectedGame to avoid refetch loop when populate runs.
   useEffect(() => {
-    console.log('creategame useeffect');
     setIsLoading(false);
-    if (localStorage.getItem(StorageKeyIsFirstCreate) === null && !isEdit){
+    if (localStorage.getItem(StorageKeyIsFirstCreate) === null && !isEdit) {
       localStorage.setItem(StorageKeyIsFirstCreate, 'false');
       setDraftGame((prev) => ({
         ...prev,
@@ -1059,101 +1060,114 @@ export default function CreateGame({
         },
       }));
     }
-    const selected = centralData.selectedGame;
-    const title = selected?.game?.title;
-    if (selected !== null && (isClone || isEdit || isAddQuestion)) {
-      // regex to detect [DUPLICATE OF] in title
-      const regex = /\[DUPLICATE OF\]/i;
-      if (selected?.game && title && !regex.test(title) && isClone)
-        selected.game.title = `[DUPLICATE OF] ${title}`;
-      if (selected.game) {
-        setDraftGame((prev) => ({
-          ...prev,
-          gameTemplate: selected.game as IGameTemplate,
-          openCreateQuestion: true,
-          imageUrl: selected?.game?.imageUrl ?? '',
-        }));
-      }
-      setOriginalGameImageUrl(selected.game?.imageUrl ?? '');
-      setPhaseTime({
-        phaseOne: timeLookup(selected.game?.phaseOneTime ?? 0),
-        phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
-      });
-      setOriginalGameType(selected?.game?.publicPrivateType ?? PublicPrivateType.PUBLIC);
-      const getQuestion = async () => {
-        const response = await apiClients?.questionTemplate.getQuestionTemplate(
-          addQuestionRoute?.params.type as TemplateType,
-          addQuestionRoute?.params.questionId ?? '',
-        );
-        return response;
-      };
+    const shouldFetch =
+      (!centralData.selectedGame?.game &&
+        selectedGameId &&
+        (isClone || isEdit || isAddQuestion)) ||
+      (centralData.selectedGame?.game?.id !== selectedGameId);
+    if (shouldFetch) {
+      setIsLoading(true);
+      fetchElement(GameQuestionType.GAME, selectedGameId);
+    }
+  }, [route, editRoute, addQuestionRoute, selectedGameId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-      if (isAddQuestion) {
-        getQuestion().then((addedQuestion) => {
-          const originals = [addedQuestion as IQuestionTemplate, ...(selected?.game?.questionTemplates ?? [])];
-          if (originals && originals.length > 0) {
-            const oqTemplates = originals.map((q) => 'questionTemplate' in q ? q.questionTemplate : q);
-            setOriginalQuestionTemplates(oqTemplates);
-          }
-          const assembled = originals?.map((q) =>
-            assembleQuestionTemplate('questionTemplate' in q ? q.questionTemplate : q),
-          );
-         
-          if (originals && assembled && assembled.length > 0) {
-            const imageUrls = originals.map((orig) => {
-              const questionTemplate = 'questionTemplate' in orig ? orig.questionTemplate : orig;
-              return questionTemplate.imageUrl ?? '';
-            });
-            setOriginalQuestionImageUrls(imageUrls);
-            setDraftQuestionsList(() =>
-              originals.map((orig, i) => {
-                const questionTemplate = 'questionTemplate' in orig ? orig.questionTemplate : orig;
-                return {
-                  ...draftTemplate,
-                  question: assembled[i],
-                  questionTemplate,
-                  isLibraryViewOnly: true,
-                };
-              }),
-            );
-          }
-        });
-      } else {
-        const originals = selected?.game?.questionTemplates;
+  // Effect 2: Populate local state from centralData.selectedGame when we have the right game (clone/edit/add).
+  // Depends on centralData.selectedGame so it re-runs after fetch on refresh.
+  useEffect(() => {
+    const selected = centralData.selectedGame;
+    if (!selected || !(isClone || isEdit || isAddQuestion) || selected.game?.id !== selectedGameId) {
+      return;
+    }
+    setIsLoading(false);
+    const title = selected?.game?.title;
+    const regex = /\[DUPLICATE OF\]/i;
+    if (selected?.game && title && !regex.test(title) && isClone) {
+      selected.game.title = `[DUPLICATE OF] ${title}`;
+    }
+    if (selected.game) {
+      setDraftGame((prev) => ({
+        ...prev,
+        gameTemplate: selected.game as IGameTemplate,
+        openCreateQuestion: true,
+        imageUrl: selected?.game?.imageUrl ?? '',
+      }));
+    }
+    setOriginalGameImageUrl(selected.game?.imageUrl ?? '');
+    setPhaseTime({
+      phaseOne: timeLookup(selected.game?.phaseOneTime ?? 0),
+      phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
+    });
+    setOriginalGameType(selected?.game?.publicPrivateType ?? PublicPrivateType.PUBLIC);
+
+    const getQuestion = async () => {
+      const response = await apiClients?.questionTemplate.getQuestionTemplate(
+        addQuestionRoute?.params.type as TemplateType,
+        addQuestionRoute?.params.questionId ?? '',
+      );
+      return response;
+    };
+
+    if (isAddQuestion) {
+      getQuestion().then((addedQuestion) => {
+        const originals = [
+          addedQuestion as IQuestionTemplate,
+          ...(selected?.game?.questionTemplates ?? []),
+        ];
         if (originals && originals.length > 0) {
-          const oqTemplates = originals.map((q) => q.questionTemplate);
+          const oqTemplates = originals.map((q) =>
+            'questionTemplate' in q ? q.questionTemplate : q,
+          );
           setOriginalQuestionTemplates(oqTemplates);
         }
         const assembled = originals?.map((q) =>
-          assembleQuestionTemplate(q.questionTemplate),
+          assembleQuestionTemplate('questionTemplate' in q ? q.questionTemplate : q),
         );
-       
         if (originals && assembled && assembled.length > 0) {
-          const imageUrls = originals.map((orig) => orig.questionTemplate.imageUrl ?? '');
+          const imageUrls = originals.map((orig) => {
+            const questionTemplate =
+              'questionTemplate' in orig ? orig.questionTemplate : orig;
+            return questionTemplate.imageUrl ?? '';
+          });
           setOriginalQuestionImageUrls(imageUrls);
           setDraftQuestionsList(() =>
             originals.map((orig, i) => {
+              const questionTemplate =
+                'questionTemplate' in orig ? orig.questionTemplate : orig;
               return {
                 ...draftTemplate,
                 question: assembled[i],
-                questionTemplate: orig.questionTemplate,
+                questionTemplate,
                 isLibraryViewOnly: true,
               };
             }),
           );
         }
+      });
+    } else {
+      const originals = selected?.game?.questionTemplates;
+      if (originals && originals.length > 0) {
+        const oqTemplates = originals.map((q) => q.questionTemplate);
+        setOriginalQuestionTemplates(oqTemplates);
+      }
+      const assembled = originals?.map((q) =>
+        assembleQuestionTemplate(q.questionTemplate),
+      );
+      if (originals && assembled && assembled.length > 0) {
+        const imageUrls = originals.map(
+          (orig) => orig.questionTemplate.imageUrl ?? '',
+        );
+        setOriginalQuestionImageUrls(imageUrls);
+        setDraftQuestionsList(() =>
+          originals.map((orig, i) => ({
+            ...draftTemplate,
+            question: assembled[i],
+            questionTemplate: orig.questionTemplate,
+            isLibraryViewOnly: true,
+          })),
+        );
       }
     }
-    if (
-      (!centralData.selectedGame?.game &&
-      selectedGameId && 
-      (isClone || isEdit || isAddQuestion)) || 
-      (centralData.selectedGame?.game?.id !== selectedGameId)
-    ) {
-      setIsLoading(true);
-      fetchElement(GameQuestionType.GAME, selectedGameId);
-    }
-  }, [ route, editRoute, addQuestionRoute, selectedGameId]); // eslint-disable-line
+  }, [centralData.selectedGame, route, editRoute, addQuestionRoute, selectedGameId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <CreateGameMainContainer screenSize={screenSize}>

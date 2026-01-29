@@ -26,6 +26,10 @@ interface LibraryTabsModalContainerProps {
   handleGameView: (
     element: IGameTemplate,
   ) => void;
+  /** When true, fetch user's library games only (e.g. Add to Game modal). Same as /library. */
+  isFromLibrary?: boolean;
+  /** When true, force library-style fetch (user's games) regardless of route. */
+  forceLibrary?: boolean;
 }
 
 export default function LibraryTabsModalContainerGames({
@@ -39,6 +43,8 @@ export default function LibraryTabsModalContainerGames({
   handleSearchChange,
   fetchElements,
   handleGameView,
+  isFromLibrary,
+  forceLibrary,
 }: LibraryTabsModalContainerProps) {
   return (
   <Modal
@@ -74,6 +80,8 @@ export default function LibraryTabsModalContainerGames({
             fetchElements={fetchElements}
             handleView={handleGameView}
             handleCloseGamesTabs={handleCloseGamesTabs}
+            isFromLibrary={isFromLibrary}
+            forceLibrary={forceLibrary}
           />
         </TabContainer>
       </Slide>

@@ -54,6 +54,7 @@ interface UseCentralDataManagerReturnProps {
       direction: SortDirection | null;
     } | null,
     gameQuestionOverride?: GameQuestionType,
+    forceLibrary?: boolean,
   ) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -948,6 +949,7 @@ export default function useCentralDataManager({
       direction: SortDirection | null;
     } | null,
     gameQuestionOverride?: GameQuestionType,
+    forceLibrary?: boolean,
   ) => {
     const effectiveGameQuestion = gameQuestionOverride ?? gameQuestion;
     const getFetchType = (tab: LibraryTabEnum | null) => {
@@ -965,7 +967,7 @@ export default function useCentralDataManager({
         }
       }
       if (
-        (isLibrary || isCreateGame || centralData.isTabsOpen) &&
+        (isLibrary || isCreateGame || centralData.isTabsOpen || forceLibrary) &&
         tab !== undefined
       ) {
         switch (tab) {

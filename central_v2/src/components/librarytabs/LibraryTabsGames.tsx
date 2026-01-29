@@ -51,9 +51,14 @@ interface LibraryTabsGamesProps<T extends IGameTemplate> {
       direction: SortDirection | null;
     } | null,
     gameQuestionOverride?: GameQuestionType,
+    forceLibrary?: boolean,
   ) => void;
   handleView: (element: T, elements: T[]) => void;
   handleCloseGamesTabs: () => void;
+  /** When true, pass isFromLibrary to fetch so API returns user's games only (e.g. Add to Game modal). */
+  isFromLibrary?: boolean;
+  /** When true, force library-style fetch regardless of route. */
+  forceLibrary?: boolean;
 }
 
 export default function LibraryTabsGames({
@@ -66,6 +71,8 @@ export default function LibraryTabsGames({
   fetchElements,
   handleView,
   handleCloseGamesTabs,
+  isFromLibrary,
+  forceLibrary,
 }: LibraryTabsGamesProps<IGameTemplate>) {
   const centralData = useCentralDataState();
 
@@ -112,8 +119,21 @@ export default function LibraryTabsGames({
   const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(initialTab);
 
   useEffect(() => {
-    fetchElements(openTab, undefined, undefined, undefined, undefined, undefined, GameQuestionType.GAME);
-  }, [openTab]); // eslint-disable-line react-hooks/exhaustive-deps
+    const sortOverride =
+      (isFromLibrary || forceLibrary)
+        ? { field: SortType.listGameTemplates, direction: SortDirection.DESC }
+        : undefined;
+    fetchElements(
+      openTab,
+      undefined,
+      undefined,
+      isFromLibrary ?? undefined,
+      undefined,
+      sortOverride,
+      GameQuestionType.GAME,
+      forceLibrary ?? undefined,
+    );
+  }, [openTab, isFromLibrary, forceLibrary]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     const newTabEnum = tabIndexToEnum[newValue as number];
