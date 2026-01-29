@@ -133,7 +133,11 @@ export class QuestionTemplateAPIClient
     questionId: string
   ): Promise<IQuestionTemplate> {
     const parsedInput = QuestionTemplateParser.centralQuestionTemplateInputToIQuestionTemplate<T>(imageUrl, userId, updateQuestionTemplateInput, questionId);
-    const variables: GraphQLOptions = { input: parsedInput as QuestionTemplateType<T>['update']['input'] };
+    // For draft questions, set finalPublicPrivateType from the input's publicPrivateType
+    const questionTemplateInput = type === PublicPrivateType.DRAFT
+      ? {...parsedInput, finalPublicPrivateType: updateQuestionTemplateInput.publicPrivateType} as QuestionTemplateType<T>['update']['input']
+      : parsedInput as QuestionTemplateType<T>['update']['input'];
+    const variables: GraphQLOptions = { input: questionTemplateInput };
     const queryFunction = questionTemplateRuntimeMap[type].update.queryFunction;
     const updateType = `update${type}QuestionTemplate`;
     const questionTemplate = await this.callGraphQL<QuestionTemplateType<T>['update']['query']>(
