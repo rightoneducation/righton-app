@@ -103,7 +103,7 @@ export default function DuplicateModal({
                 <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection:'column', gap: `12px`, width: '100%'}}>
                   <Box sx={{ width: '100%'}}>
                     <CentralButton
-                      buttonType={ButtonType.CONFIRM}
+                      buttonType={ButtonType.CONFIRMNOICON}
                       isEnabled
                       onClick={handleConfirmModal}
                       buttonWidthOverride='100%'
@@ -111,7 +111,7 @@ export default function DuplicateModal({
                   </Box>
                   <Box sx={{ width: '100%' }}>
                     <CentralButton
-                      buttonType={ButtonType.BACK}
+                      buttonType={ButtonType.BACKNOARROW}
                       isEnabled
                       onClick={handleCloseDiscardModal}
                     />

@@ -259,7 +259,7 @@ export const buttonContentMap: ButtonContentMapProps = {
     textKey: ButtonType.QUESTIONBANK,
   },
   [ButtonType.BACK]: {
-    // icon: previous,
+    icon: previous,
     textKey: ButtonType.BACK,
     color: ButtonColor.NULL,
   },
