@@ -1055,8 +1055,12 @@ export default function CreateGame({
   };
 
   const handleSave = async () => {
-    if (isEdit && !isEditDraft)
-      return handleSaveEditedGame();
+    if (isEdit && !isEditDraft) {
+      return setModalObject({
+        modalState: ModalStateType.UPDATE,
+        confirmState: ConfirmStateType.NULL,
+      });
+    }
     const isGameFormIsValid = checkGameFormIsValid(draftGame);
     const isDqValid = checkDQsAreValid(draftQuestionsList);
     setAllDQAreValid(isDqValid);
