@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { PublicPrivateType } from '@righton/networking';
+import { GradeTarget, IGameTemplate, PublicPrivateType, SortDirection, SortType } from '@righton/networking';
 import { Box, CircularProgress, useTheme, Fade, styled } from '@mui/material';
 import DetailedQuestionCardUnified from '../components/cards/detailedquestion/DetailedQuestionCardUnified';
 import {
@@ -29,12 +28,19 @@ import ModalBackground from '../components/modal/ModalBackground';
 import OwnerTag from '../components/profile/OwnerTag';
 import DetailedQuestionSubCard from '../components/cards/detailedquestion/DetailedQuestionSubCard';
 import ViewQuestionHeader from '../components/question/ViewQuestionHeader';
+import LibraryTabsModalContainerGames from '../components/librarytabs/LibraryTabsModalContainerGames';
 
 
 interface ViewQuestionProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: () => void;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => void;
+  handleSearchChange: (searchString: string) => void;
   deleteQuestionTemplate: (
     questionId: string,
     type: PublicPrivateType,
@@ -45,6 +51,9 @@ export default function ViewQuestion({
   screenSize,
   fetchElement,
   fetchElements,
+  handleChooseGrades,
+  handleSortChange,
+  handleSearchChange,
   deleteQuestionTemplate,
 }: ViewQuestionProps) {
   const theme = useTheme();
@@ -57,6 +66,7 @@ export default function ViewQuestion({
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isAddToGameModalOpen, setIsAddToGameModalOpen] = useState<boolean>(false);
 
   const isOwner = centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile?.id === centralData.selectedQuestion?.question?.userId;
 
@@ -139,6 +149,26 @@ export default function ViewQuestion({
     }
   };
 
+  const handleAddToGameClick = () => {
+    setIsAddToGameModalOpen(true);
+  };
+
+  const handleFavoriteClick = async () => {
+    const response = await apiClients.centralDataManager?.favoriteQuestionTemplate(
+      centralData.selectedQuestion?.question?.id ?? '',
+      centralData.userProfile,
+    );
+    if (response) {
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
+    }
+  };
+
+  const handleAddToGame = (
+    game: IGameTemplate,
+  ) => {
+    navigate(`/edit/game/${game.publicPrivateType}/${game.id}/add/${centralData.selectedQuestion?.question?.id}`);
+  };
+  
   type BodyContainerProps = {
     screenSize: ScreenSize;
   };
@@ -171,6 +201,20 @@ export default function ViewQuestion({
         setIsModalOpen={setIsDeleteModalOpen}
         handleProceedToDelete={handleProceedToDelete}
       />
+      <LibraryTabsModalContainerGames
+        publicPrivateType={ centralData.selectedQuestion?.question?.publicPrivateType ?? PublicPrivateType.PUBLIC}
+        isTabsOpen={isAddToGameModalOpen}
+        handleCloseGamesTabs={() => setIsAddToGameModalOpen(false)}
+        screenSize={screenSize}
+        setIsTabsOpen={setIsAddToGameModalOpen}
+        handleChooseGrades={handleChooseGrades}
+        handleSortChange={handleSortChange}
+        handleSearchChange={handleSearchChange}
+        fetchElements={fetchElements}
+        handleGameView={handleAddToGame}
+        isFromLibrary
+        forceLibrary
+      />
       {isLoading ? (
         <Box
           style={{
@@ -193,6 +237,8 @@ export default function ViewQuestion({
               handleEditQuestion={handleEditQuestion}
               handleCloneQuestion={handleCloneQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
+              handleAddToGameClick={handleAddToGameClick}
+              handleFavoriteClick={handleFavoriteClick}
               isEditEnabled={isEditEnabled}
               screenSize={screenSize}
               isOwner={isOwner}
@@ -228,13 +274,6 @@ export default function ViewQuestion({
                   }}
                 >
                   {centralData.selectedQuestion.question && (
-                    <Fade
-                      timeout={500}
-                      in
-                      mountOnEnter
-                      unmountOnExit
-                      style={{ width: '100%' }}
-                    >
                       <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.mdPadding}px` }}>
                         <DetailedQuestionSubCard
                           cardType={CardType.CORRECT}
@@ -255,7 +294,7 @@ export default function ViewQuestion({
                             ?.filter((choice) => !choice.isAnswer)
                             .map((choice, index) => (
                               <DetailedQuestionSubCard
-                                key={uuidv4()}
+                                key={choice.id ?? `incorrect-${index}`}
                                 cardType={CardType.INCORRECT}
                                 answer={choice.text}
                                 answerReason={choice.reason}
@@ -264,7 +303,6 @@ export default function ViewQuestion({
                             ))}
                         </Box>
                       </Box>
-                    </Fade>
                   )}
                 </Box>
               </BodyContainer>

@@ -9,6 +9,7 @@ import UpdatingModal from '../UpdatingModal';
 interface CreateQuestionModalSwitchProps {
   modalObject: ModalObject;
   screenSize: ScreenSize;
+  title: string;
   handleDiscard: () => void;
   handleCloseDiscardModal: () => void;
   handlePublishQuestion: () => void;
@@ -23,6 +24,7 @@ interface CreateQuestionModalSwitchProps {
 export default function CreateQuestionModalSwitch({ 
   modalObject,
   screenSize,
+  title,
   handleDiscard,
   handleCloseDiscardModal,
   handlePublishQuestion,
@@ -40,11 +42,13 @@ export default function CreateQuestionModalSwitch({
         templateType={TemplateType.QUESTION}
         handleDiscardClick={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
+        handleSaveEditedGame={handleSaveEditedQuestion}
       />;
       break;
     case ModalStateType.PUBLISH:
       return <SaveGameModal
         isModalOpen
+        title={title}
         templateType={TemplateType.QUESTION}
         handlePublishGame={handlePublishQuestion}
         handleCloseSaveGameModal={handleCloseSaveQuestionModal}

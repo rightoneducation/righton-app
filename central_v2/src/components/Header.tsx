@@ -35,7 +35,8 @@ import {
   ScreenSize,
   GameQuestionType,
   UserStatusType,
-  StorageKey
+  StorageKey,
+  StorageKeyCreateGame,
 } from '../lib/CentralModels';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
@@ -253,6 +254,7 @@ export default function Header({
                 setMenuOpen(false);
                 setIsCreateMenuOpen(false);
                 window.localStorage.setItem(StorageKey, '');
+                window.localStorage.setItem(StorageKeyCreateGame, '');
                 navigate('/create/game');
               }}
             >

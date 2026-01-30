@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { debounce } from 'lodash';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,6 +29,7 @@ import {
   LibraryTabEnum,
   ScreenSize,
   StorageKey,
+  StorageKeyCreateGame,
   GameQuestionType,
   ModalStateType,
   StorageKeyIsFirstCreate,
@@ -82,6 +84,7 @@ import { ButtonType } from '../components/button/ButtonModels';
 import LibraryTabsModalContainer from '../components/librarytabs/LibraryTabsModalContainer';
 import CreateGameModalSwitch from '../components/modal/switches/CreateGameModalSwitch';
 import { DraftAssetHandler } from '../lib/services/DraftAssetHandler';
+import useCreateGameLoader from '../loaders/useCreateGameLoader';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -122,6 +125,7 @@ export default function CreateGame({
   const draftAssetHandler = new DraftAssetHandler();
   const route = useMatch('/clone/game/:type/:gameId');
   const editRoute = useMatch('/edit/game/:type/:gameId');
+  const addQuestionRoute = useMatch('/edit/game/:type/:gameId/add/:questionId');
   const isClone =
     route?.params.gameId !== null &&
     route?.params.gameId !== undefined &&
@@ -130,8 +134,13 @@ export default function CreateGame({
     editRoute?.params.gameId !== null &&
     editRoute?.params.gameId !== undefined &&
     editRoute?.params.gameId.length > 0;
-  const isEditDraft = 
-    editRoute?.params.type === 'Draft';
+  const isEditDraft =
+    editRoute?.params.type === 'Draft' || addQuestionRoute?.params.type === 'Draft';
+  const isAddQuestion =
+    addQuestionRoute?.params.questionId !== null &&
+    addQuestionRoute?.params.questionId !== undefined &&
+    addQuestionRoute?.params.questionId.length > 0;
+  const localData = useCreateGameLoader();
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [isQuestionBankOpen, setIsQuestionBankOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -139,7 +148,9 @@ export default function CreateGame({
     modalState: ModalStateType.NULL,
     confirmState: ConfirmStateType.NULL,
   });
-  const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
+  const [draftGame, setDraftGame] = useState<TGameTemplateProps>(() =>
+    localData.draftGame ?? gameTemplate,
+  );
   const [originalGameType, setOriginalGameType] = useState<PublicPrivateType>(gameTemplate.gameTemplate.publicPrivateType);
   const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
   // used when saving an edited game
@@ -151,7 +162,7 @@ export default function CreateGame({
   >([]);
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
-  >([]);
+  >(() => localData.draftQuestionsList ?? []);
   const [originalQuestionImageUrls, setOriginalQuestionImageUrls] = useState<
     string[]
   >([]);
@@ -159,10 +170,9 @@ export default function CreateGame({
   const [editQuestionDraft, setEditQuestionDraft] = useState<CentralQuestionTemplateInput | null>(null);
   const [editQuestionIndex, setEditQuestionIndex] = useState<number | null>(null);
 
-  const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
-    phaseOne: '2:00',
-    phaseTwo: '2:00',
-  });
+  const [phaseTime, setPhaseTime] = useState<TPhaseTime>(() =>
+    localData.phaseTime ?? { phaseOne: '2:00', phaseTwo: '2:00' },
+  );
   
   const [gameFormIsValid, setGameFormIsValid] = useState(false);
   const [allDQAreValid, setAllDQAreValid] = useState(false);
@@ -179,6 +189,10 @@ export default function CreateGame({
   let label = 'Create';
   let selectedGameId = '';
   switch (true) {
+    case isAddQuestion:
+      label = 'Edit';
+      selectedGameId = addQuestionRoute?.params.gameId || '';
+      break;
     case isEdit:
       label = 'Edit';
       selectedGameId = editRoute?.params.gameId || '';
@@ -192,18 +206,63 @@ export default function CreateGame({
       break;
   }
 
+  const isCreate = !isClone && !isEdit && !isAddQuestion;
+
+  const persistGameDraftDebounced = useMemo(
+    () =>
+      debounce(
+        (snapshot: {
+          draftGame: TGameTemplateProps;
+          draftQuestionsList: TDraftQuestionsList[];
+          phaseTime: TPhaseTime;
+        }) => {
+          if (!isCreate) return;
+          const { draftGame: dg, draftQuestionsList: dql, phaseTime: pt } = snapshot;
+          const d = { ...dg, image: undefined };
+          const q = dql.map((item) => ({
+            ...item,
+            question: {
+              ...item.question,
+              questionCard: { ...item.question.questionCard, image: undefined },
+            },
+          }));
+          window.localStorage.setItem(
+            StorageKeyCreateGame,
+            JSON.stringify({ draftGame: d, draftQuestionsList: q, phaseTime: pt }),
+          );
+        },
+        1000,
+      ),
+    [isCreate],
+  );
+
   /** CREATE GAME HANDLERS START HERE */
   const handleGameTitle = (val: string) => {
-    setDraftGame((prev) => updateGameTitle(prev, val));
+    setDraftGame((prev) => {
+      const next = updateGameTitle(prev, val);
+      persistGameDraftDebounced({ draftGame: next, draftQuestionsList, phaseTime });
+      return next;
+    });
   };
 
   const handleGameDescription = (val: string) => {
-    setDraftGame((prev) => updateGameDescription(prev, val));
+    setDraftGame((prev) => {
+      const next = updateGameDescription(prev, val);
+      persistGameDraftDebounced({ draftGame: next, draftQuestionsList, phaseTime });
+      return next;
+    });
   };
 
   const handlePhaseTime = (time: TPhaseTime) => {
-    setDraftGame((prev) => updateGameTemplatePhaseTime(prev, time));
-    setPhaseTime((prev) => updatePhaseTime(time));
+    const nextDraft = updateGameTemplatePhaseTime(draftGame, time);
+    const nextPhase = updatePhaseTime(time);
+    setDraftGame(() => nextDraft);
+    setPhaseTime(() => nextPhase);
+    persistGameDraftDebounced({
+      draftGame: nextDraft,
+      draftQuestionsList,
+      phaseTime: nextPhase,
+    });
   };
 
   const handleOpenCreateQuestion = () => {
@@ -240,31 +299,41 @@ export default function CreateGame({
     // then switch all question types to new type
     if (isEditDraft) {
       setEditedPublicPrivateType(value);
-      setDraftGame((prev) => ({
-        ...prev,
+      const nextDraft = {
+        ...draftGame,
         gameTemplate: {
-          ...prev.gameTemplate,
+          ...draftGame.gameTemplate,
           finalPublicPrivateType: value,
         },
-      }));
-      setEditedPublicPrivateType(value);
+      };
+      setDraftGame(() => nextDraft);
       setDraftQuestionsList(newDraftQuestionList);
+      persistGameDraftDebounced({
+        draftGame: nextDraft,
+        draftQuestionsList: newDraftQuestionList,
+        phaseTime,
+      });
     }
     // case 2, creating/editing a game
     else {
       setDraftQuestionsList(newDraftQuestionList);
       setIconButtons([1]);
       setSelectedQuestionIndex(0);
-      setDraftGame((prev) => ({
-        ...prev,
+      const nextDraft = {
+        ...draftGame,
         gameTemplate: {
-          ...prev.gameTemplate,
+          ...draftGame.gameTemplate,
           publicPrivateType: value,
         },
         questionCount: newDraftQuestionList.length,
-        // isGameCardErrored: false,
-      }));
-  }
+      };
+      setDraftGame(() => nextDraft);
+      persistGameDraftDebounced({
+        draftGame: nextDraft,
+        draftQuestionsList: newDraftQuestionList,
+        phaseTime,
+      });
+    }
   };
   const handleDiscardGame = () => {
     setModalObject({
@@ -280,6 +349,7 @@ export default function CreateGame({
         confirmState: ConfirmStateType.NULL,
       });
       window.localStorage.setItem(StorageKey, '');
+      window.localStorage.setItem(StorageKeyCreateGame, '');
       navigate('/');
       return;
     }
@@ -531,11 +601,10 @@ export default function CreateGame({
         // check for images on draft game
         let gameImgUrl: string | null = null;
         if (draftGame.image || draftGame.imageUrl) {
-          if (
-            (!draftGame?.imageUrl?.startsWith('https://') ||
-            !draftGame?.imageUrl?.startsWith('http://')) && 
-            draftGame?.imageUrl
-          ) {
+          const isFullUrl =
+            draftGame?.imageUrl?.startsWith('https://') ||
+            draftGame?.imageUrl?.startsWith('http://');
+          if (isFullUrl && draftGame?.imageUrl) {
             gameImgUrl = draftGame.imageUrl;
           } else {
             if ( draftGame && draftGame.imageUrl && draftGame?.imageUrl?.length > 0){
@@ -675,6 +744,16 @@ export default function CreateGame({
           }
         } catch (err) {
           console.error('Error creating game template:', err);
+          setDraftGame((prev) => ({
+            ...prev,
+            isCreatingTemplate: false,
+            isGameCardSubmitted: false,
+          }));
+          setModalObject({
+            modalState: ModalStateType.NULL,
+            confirmState: ConfirmStateType.NULL,
+          });
+          return;
         }
         // update user stats
         const existingNumGames = centralData.userProfile?.gamesMade || 0;
@@ -940,6 +1019,7 @@ export default function CreateGame({
       confirmState: ConfirmStateType.NULL,
     });
     window.localStorage.setItem(StorageKey, '');
+    window.localStorage.setItem(StorageKeyCreateGame, '');
     navigate(`/library/games/${centralData.selectedGame?.game?.publicPrivateType}`);
   };
 
@@ -1041,9 +1121,11 @@ export default function CreateGame({
     setEditQuestionIndex(null);
   };
 
+  // Effect 1: Fetch game when missing or wrong, and first-time create (localStorage + initPublicPrivate).
+  // Does NOT depend on centralData.selectedGame to avoid refetch loop when populate runs.
   useEffect(() => {
     setIsLoading(false);
-    if (localStorage.getItem(StorageKeyIsFirstCreate) === null && !isEdit){
+    if (localStorage.getItem(StorageKeyIsFirstCreate) === null && !isEdit) {
       localStorage.setItem(StorageKeyIsFirstCreate, 'false');
       setDraftGame((prev) => ({
         ...prev,
@@ -1053,28 +1135,90 @@ export default function CreateGame({
         },
       }));
     }
-    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+    const shouldFetch =
+      (!centralData.selectedGame?.game &&
+        selectedGameId &&
+        (isClone || isEdit || isAddQuestion)) ||
+      (centralData.selectedGame?.game?.id !== selectedGameId);
+    if (shouldFetch) {
+      setIsLoading(true);
+      fetchElement(GameQuestionType.GAME, selectedGameId);
+    }
+  }, [route, editRoute, addQuestionRoute, selectedGameId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Effect 2: Populate local state from centralData.selectedGame when we have the right game (clone/edit/add).
+  // Depends on centralData.selectedGame so it re-runs after fetch on refresh.
+  useEffect(() => {
     const selected = centralData.selectedGame;
+    if (!selected || !(isClone || isEdit || isAddQuestion) || selected.game?.id !== selectedGameId) {
+      return;
+    }
+    setIsLoading(false);
     const title = selected?.game?.title;
-    if (selected !== null && (isClone || isEdit)) {
-      // regex to detect [DUPLICATE OF] in title
-      const regex = /\[DUPLICATE OF\]/i;
-      if (selected?.game && title && !regex.test(title) && isClone)
-        selected.game.title = `[DUPLICATE OF] ${title}`;
-      if (selected.game) {
-        setDraftGame((prev) => ({
-          ...prev,
-          gameTemplate: selected.game as IGameTemplate,
-          openCreateQuestion: true,
-          imageUrl: selected?.game?.imageUrl ?? '',
-        }));
-      }
-      setOriginalGameImageUrl(selected.game?.imageUrl ?? '');
-      setPhaseTime({
-        phaseOne: timeLookup(selected.game?.phaseOneTime ?? 0),
-        phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
+    const regex = /\[DUPLICATE OF\]/i;
+    if (selected?.game && title && !regex.test(title) && isClone) {
+      selected.game.title = `[DUPLICATE OF] ${title}`;
+    }
+    if (selected.game) {
+      setDraftGame((prev) => ({
+        ...prev,
+        gameTemplate: selected.game as IGameTemplate,
+        openCreateQuestion: true,
+        imageUrl: selected?.game?.imageUrl ?? '',
+      }));
+    }
+    setOriginalGameImageUrl(selected.game?.imageUrl ?? '');
+    setPhaseTime({
+      phaseOne: timeLookup(selected.game?.phaseOneTime ?? 0),
+      phaseTwo: timeLookup(selected.game?.phaseTwoTime ?? 0),
+    });
+    setOriginalGameType(selected?.game?.publicPrivateType ?? PublicPrivateType.PUBLIC);
+
+    const getQuestion = async () => {
+      const response = await apiClients?.questionTemplate.getQuestionTemplate(
+        addQuestionRoute?.params.type as TemplateType,
+        addQuestionRoute?.params.questionId ?? '',
+      );
+      return response;
+    };
+
+    if (isAddQuestion) {
+      getQuestion().then((addedQuestion) => {
+        const originals = [
+          addedQuestion as IQuestionTemplate,
+          ...(selected?.game?.questionTemplates ?? []),
+        ];
+        if (originals && originals.length > 0) {
+          const oqTemplates = originals.map((q) =>
+            'questionTemplate' in q ? q.questionTemplate : q,
+          );
+          setOriginalQuestionTemplates(oqTemplates);
+        }
+        const assembled = originals?.map((q) =>
+          assembleQuestionTemplate('questionTemplate' in q ? q.questionTemplate : q),
+        );
+        if (originals && assembled && assembled.length > 0) {
+          const imageUrls = originals.map((orig) => {
+            const questionTemplate =
+              'questionTemplate' in orig ? orig.questionTemplate : orig;
+            return questionTemplate.imageUrl ?? '';
+          });
+          setOriginalQuestionImageUrls(imageUrls);
+          setDraftQuestionsList(() =>
+            originals.map((orig, i) => {
+              const questionTemplate =
+                'questionTemplate' in orig ? orig.questionTemplate : orig;
+              return {
+                ...draftTemplate,
+                question: assembled[i],
+                questionTemplate,
+                isLibraryViewOnly: true,
+              };
+            }),
+          );
+        }
       });
-      setOriginalGameType(selected?.game?.publicPrivateType ?? PublicPrivateType.PUBLIC);
+    } else {
       const originals = selected?.game?.questionTemplates;
       if (originals && originals.length > 0) {
         const oqTemplates = originals.map((q) => q.questionTemplate);
@@ -1083,33 +1227,22 @@ export default function CreateGame({
       const assembled = originals?.map((q) =>
         assembleQuestionTemplate(q.questionTemplate),
       );
-
       if (originals && assembled && assembled.length > 0) {
+        const imageUrls = originals.map(
+          (orig) => orig.questionTemplate.imageUrl ?? '',
+        );
+        setOriginalQuestionImageUrls(imageUrls);
         setDraftQuestionsList(() =>
-          originals.map((orig, i) => {
-            setOriginalQuestionImageUrls((prev) => [
-              ...prev,
-              orig.questionTemplate.imageUrl ?? '',
-            ]);
-            return {
-              ...draftTemplate,
-              question: assembled[i],
-              questionTemplate: orig.questionTemplate,
-              isLibraryViewOnly: true,
-            };
-          }),
+          originals.map((orig, i) => ({
+            ...draftTemplate,
+            question: assembled[i],
+            questionTemplate: orig.questionTemplate,
+            isLibraryViewOnly: true,
+          })),
         );
       }
     }
-    if (
-      !centralData.selectedGame?.game &&
-      selectedGameId &&
-      (isClone || isEdit)
-    ) {
-      setIsLoading(true);
-      fetchElement(GameQuestionType.GAME, selectedGameId);
-    }
-  }, [centralData.selectedGame, route, selectedGameId]); // eslint-disable-line
+  }, [centralData.selectedGame, route, editRoute, addQuestionRoute, selectedGameId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <CreateGameMainContainer screenSize={screenSize}>
@@ -1134,6 +1267,7 @@ export default function CreateGame({
       />
       <CreateGameModalSwitch
         modalObject={modalObject}
+        title={draftGame.gameTemplate.title ?? ''}
         screenSize={screenSize}
         publicPrivate={isEditDraft ? draftGame.gameTemplate.finalPublicPrivateType : draftGame.gameTemplate.publicPrivateType}
         handleDiscard={handleDiscard}
@@ -1154,6 +1288,7 @@ export default function CreateGame({
       <CreateGameImageUploadModal
         draftGame={draftGame}
         isClone={isClone}
+        isEdit={isEdit}
         isCloneImageChanged={draftGame.isCloneGameImageChanged}
         screenSize={screenSize}
         isModalOpen={draftGame.isGameImageUploadVisible}

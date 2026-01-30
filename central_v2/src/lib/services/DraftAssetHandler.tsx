@@ -32,6 +32,7 @@ enum CreateDraftAssetStep {
 enum UpdateDraftAssetStep {
   IMAGE_UPLOAD,
   CATEGORIZE_QUESTION_TEMPLATES,
+  UPDATE_EDITED_DRAFT_QUESTIONS,
   CREATE_NEW_QUESTION_TEMPLATES,
   PROCESS_ADDED_QUESTION_TEMPLATES,
   CREATE_GAME_TEMPLATE,
@@ -249,6 +250,20 @@ export class DraftAssetHandler {
     return removedDraftGameQuestions;
   }
 
+  /** Existing draft question template ids that are in the list but not yet linked to the game (newly added). */
+  private static extractAddedDraftQuestionIds(draftQuestionsList: TDraftQuestionsList[], draftGame: TGameTemplateProps): string[] {
+    const linkedIds = new Set(
+      draftGame.gameTemplate.questionTemplates
+        ?.filter((item) => item.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT)
+        ?.map((item) => item.questionTemplate.id) ?? []
+    );
+    const draftIdsFromList = draftQuestionsList
+      .filter((dq) => dq.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT && dq.questionTemplate.id)
+      .map((dq) => dq.questionTemplate.id as string);
+    const added = draftIdsFromList.filter((id) => !linkedIds.has(id));
+    return added;
+  }
+
   private static async updateUserStats(centralData: ICentralDataState, draftQuestionsList: TDraftQuestionsList[], apiClients: IAPIClients): Promise<IUser | null> {
     const existingNumGames = centralData.userProfile?.gamesMade || 0;
     const existingNumQuestions =
@@ -427,7 +442,7 @@ export class DraftAssetHandler {
         isGameCardSubmitted: true,
         isCreatingTemplate: true,
       };
-      
+
       // Step 2: Image Upload and Image URL Return
       const gameImgUrl = await DraftAssetHandler.existingImageHandler(updatedDraftGame, apiClients);
       this.completedUpdateSteps.push(UpdateDraftAssetStep.IMAGE_UPLOAD);
@@ -451,6 +466,45 @@ export class DraftAssetHandler {
       updatedDraftGame.gameTemplate.publicQuestionIds = addedQuestionTemplatePublicIds;
       updatedDraftGame.gameTemplate.privateQuestionIds = addedQuestionTemplatePrivateIds;
       this.completedUpdateSteps.push(UpdateDraftAssetStep.CATEGORIZE_QUESTION_TEMPLATES);
+
+      // Step 4b: Update edited draft question templates (same pattern as handleUpdateEditedGame for public/private)
+      const editedDraftQuestions = draftQuestionsList.filter(
+        (dq) =>
+          dq.isEdited &&
+          dq.questionTemplate.id &&
+          dq.questionTemplate.id.length > 0 &&
+          dq.questionTemplate.publicPrivateType === PublicPrivateType.DRAFT,
+      );
+      if (editedDraftQuestions.length > 0) {
+        try {
+          const updatePromises = editedDraftQuestions.map(async (dq) => {
+            let imageUrl = dq.questionTemplate.imageUrl || '';
+            if (dq.question.questionCard.image || dq.question.questionCard.imageUrl) {
+              if (dq.question.questionCard.image) {
+                const img = await apiClients.questionTemplate.storeImageInS3(dq.question.questionCard.image);
+                const result = await img.result;
+                if (result && result.path && result.path.length > 0) imageUrl = result.path;
+              } else if (
+                dq.question.questionCard.imageUrl &&
+                dq.question.questionCard.imageUrl !== dq.questionTemplate.imageUrl
+              ) {
+                imageUrl = await apiClients.questionTemplate.storeImageUrlInS3(dq.question.questionCard.imageUrl);
+              }
+            }
+            return apiClients.questionTemplate.updateQuestionTemplate(
+              PublicPrivateType.DRAFT as TemplateType,
+              imageUrl,
+              userId,
+              dq.question,
+              dq.questionTemplate.id,
+            );
+          });
+          await Promise.all(updatePromises);
+        } catch (err) {
+          console.error('Failed to update one or more edited draft questions:', err);
+        }
+      }
+      this.completedUpdateSteps.push(UpdateDraftAssetStep.UPDATE_EDITED_DRAFT_QUESTIONS);
 
       // Step 5: Create new Question Templates
       const newQuestionTemplateResponses = buildQuestionTemplatePromises(
@@ -490,24 +544,22 @@ export class DraftAssetHandler {
           {...createGame, id: draftGame.gameTemplate.id},
         );
       this.completedUpdateSteps.push(UpdateDraftAssetStep.CREATE_GAME_TEMPLATE);
-      // Step 8: Create any new GameQuestions
+      // Step 8: Create any new GameQuestions (newly created + existing draft questions newly added to game)
       const questionTemplateIds = questionTemplateResponse.map((question) =>
         String(question?.id),
       );
-      // make sure we have a gameTemplate id as well as question template ids before creating a game question
-      if (gameTemplateResponse.id && (questionTemplateIds.length > 0)) {
-        // this is only for new questions so we don't write gamequestions that mix draft and public/private questions
+      const addedDraftQuestionIds = DraftAssetHandler.extractAddedDraftQuestionIds(draftQuestionsList, updatedDraftGame);
+      const allDraftQuestionIdsToLink = [...questionTemplateIds, ...addedDraftQuestionIds];
+      if (gameTemplateResponse.id && allDraftQuestionIdsToLink.length > 0) {
         const createGameQuestions = buildGameQuestionPromises(
           updatedDraftGame,
           gameTemplateResponse.id,
-          questionTemplateIds,
+          allDraftQuestionIdsToLink,
           apiClients,
           PublicPrivateType.DRAFT,
         );
-        // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
         await Promise.all(createGameQuestions);
       }
-
 
       // identify draft questions that have been removed from the game and delete the respective gamequestions
       const removedDraftGameQuestions = DraftAssetHandler.extractRemovedDraftQuestionIds(draftQuestionsList, updatedDraftGame);
@@ -797,27 +849,40 @@ export class DraftAssetHandler {
       const url = await DraftAssetHandler.publishQuestionImageHandler(draftQuestion, apiClients);
       this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.IMAGE_UPLOAD);
       window.localStorage.setItem(StorageKey, '');
-      if (url) {
-        if (draftQuestionCopy.correctCard.isMultipleChoice)
-          draftQuestionCopy.correctCard.answerSettings.answerType =
-            AnswerType.MULTICHOICE;
-        const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
-          draftQuestionCopy.publicPrivateType as TemplateType,
-          url,
-          centralData.userProfile?.id || '',
-          draftQuestionCopy,
+      // Allow publishing even without an image (url can be null or empty string)
+      const imageUrl = url || '';
+      if (draftQuestionCopy.correctCard.isMultipleChoice)
+        draftQuestionCopy.correctCard.answerSettings.answerType =
+          AnswerType.MULTICHOICE;
+      const qtResult = await apiClients.questionTemplate.createQuestionTemplate(
+        draftQuestionCopy.publicPrivateType as TemplateType,
+        imageUrl,
+        centralData.userProfile?.id || '',
+        draftQuestionCopy,
+      );
+      this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
+      if (qtResult && selectedQuestionId){
+        // if the user is saving out their draft, create a public/private question template
+        // delete any DraftGameQuestions that reference this draft question (by index on draftQuestionTemplateID)
+        // and delete the draft question template
+        const draftGameQuestionIds = await apiClients.questionTemplate.getQuestionTemplateJoinTableIds(
+          PublicPrivateType.DRAFT as TemplateType,
+          selectedQuestionId
         );
-        this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.CREATE_QUESTION_TEMPLATE);
-        if (qtResult && selectedQuestionId){
-          // if the user is saving out their draft, create a public/private question template
-          // and delete the draft question template
-          await apiClients.questionTemplate.deleteQuestionTemplate(
-            PublicPrivateType.DRAFT,
-            selectedQuestionId
+        if (draftGameQuestionIds.length > 0) {
+          await Promise.all(
+            draftGameQuestionIds.map((id) =>
+              apiClients.gameQuestions.deleteGameQuestions(PublicPrivateType.DRAFT, id)
+            )
           );
         }
-        this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.DELETE_OLD_DRAFT_QUESTION_TEMPLATE);
+        // then delete the draft question template
+        await apiClients.questionTemplate.deleteQuestionTemplate(
+          PublicPrivateType.DRAFT,
+          selectedQuestionId
+        );
       }
+      this.completedPublishQuestionSteps.push(PublishDraftQuestionStep.DELETE_OLD_DRAFT_QUESTION_TEMPLATE);
       // update user stats
       const existingNumQuestions =
         centralData.userProfile?.questionsMade || 0;

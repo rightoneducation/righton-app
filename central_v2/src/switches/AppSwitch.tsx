@@ -245,6 +245,9 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
             screenSize={screenSize}
             fetchElement={fetchElement}
             fetchElements={fetchElements}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
             deleteQuestionTemplate={deleteQuestionTemplate}
           />
         </AuthGuard>

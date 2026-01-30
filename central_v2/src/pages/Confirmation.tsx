@@ -155,7 +155,6 @@ function Confirmation({
   };
 
   const handleSubmit = async () => {
-    console.log('UserStatus in here: ', centralData);
     setIsVerifying(true);
     const fullCode = code.join('');
     if (fullCode.length < 6) {
@@ -180,14 +179,6 @@ function Confirmation({
       }
     } catch (error: any) {
       setIsVerifying(false);
-      console.log(error);
-      const errorInfo = Object.getOwnPropertyNames(error).reduce((acc, key) => {
-        acc[key] = error[key];
-        return acc;
-      }, {} as any);
-
-      console.log(errorInfo); // now includes message, stack, etc.
-
       if (
         error.message ===
         'Error: CodeMismatchException: Invalid verification code provided, please try again.'

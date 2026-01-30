@@ -14,13 +14,14 @@ interface ViewGameHeaderProps {
   handleLaunchGame: () => void;
   handleDuplicate: () => void;
   handleCloneGame: () => void;
+  handleFavoriteClick: () => void;
   label: string;
   screenSize: ScreenSize;
   isOwner: boolean;
   isIncompleteDraft: boolean;
 }
 
-export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handleBackClick, handleEditGame, handleLaunchGame,  label, screenSize, isOwner, isIncompleteDraft }: ViewGameHeaderProps) {
+export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handleBackClick, handleEditGame, handleLaunchGame, handleFavoriteClick, label, screenSize, isOwner, isIncompleteDraft }: ViewGameHeaderProps) {
   
   const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
   const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState<boolean>(false);
@@ -100,7 +101,7 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
                   <CentralButton
                     buttonType={ButtonType.FAVORITE}
                     isEnabled
-                    onClick={handleBackClick}
+                    onClick={handleFavoriteClick}
                   />
                   <CentralButton
                     buttonType={ButtonType.DUPLICATE}
@@ -135,7 +136,7 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
                 isEnabled
                 iconOnlyOverride
                 buttonWidthOverride='48px'
-                onClick={handleBackClick}
+                onClick={handleEditGame}
               />
             ) :(
               <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
@@ -144,14 +145,14 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
                   isEnabled
                   iconOnlyOverride
                   buttonWidthOverride='48px'
-                  onClick={handleBackClick}
+                  onClick={handleFavoriteClick}
                 />
                 <CentralButton
                   buttonType={ButtonType.DUPLICATE}
                   isEnabled
                   iconOnlyOverride
                   buttonWidthOverride='48px'
-                  onClick={handleBackClick}
+                  onClick={() => setModalState(ModalStateType.DUPLICATE)}
                 />
               </Box>
             )}

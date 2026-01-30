@@ -12,6 +12,7 @@ import { APIClientsContext } from './lib/context/APIClientsContext';
 import Theme from './lib/Theme';
 import AppSwitch from './switches/AppSwitch';
 import CreateQuestionLoader from './loaders/CreateQuestionLoader';
+import CreateGameLoader from './loaders/CreateGameLoader';
 import { CentralDataProvider } from './lib/context/CentralDataContext';
 import { ScreenType } from './lib/CentralModels';
 
@@ -50,6 +51,7 @@ function App() {
             <Route
               path="/create/game"
               element={<AppSwitch currentScreen={ScreenType.CREATEGAME} />}
+              loader={CreateGameLoader}
             />
             <Route
               path="/clone/game/:type/:gameId"
@@ -57,6 +59,10 @@ function App() {
             />
             <Route
               path="/edit/game/:type/:gameId"
+              element={<AppSwitch currentScreen={ScreenType.EDITGAME} />}
+            />
+            <Route
+              path="/edit/game/:type/:gameId/add/:questionId"
               element={<AppSwitch currentScreen={ScreenType.EDITGAME} />}
             />
             <Route

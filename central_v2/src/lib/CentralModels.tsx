@@ -81,7 +81,8 @@ export enum ModalStateType {
   CREATEQUESTION,
   DUPLICATE,
   UPDATE, 
-  GAMEEDITQUESTION
+  GAMEEDITQUESTION,
+  ADDTOGAME
 }
 
 export enum ConfirmStateType {
@@ -120,6 +121,7 @@ export enum TemplateType {
 // key for storage to localStorage
 export const StorageKey = 'rightOnCentral';
 export const StorageKeyIsFirstCreate = 'isFirstCreate';
+export const StorageKeyCreateGame = 'rightOnCentralCreateGame';
 
 // type that shapes retreived storage for createQuestion
 export type CreateQuestionLocalData = {

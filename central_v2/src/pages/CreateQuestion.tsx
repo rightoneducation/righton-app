@@ -695,15 +695,10 @@ export default function CreateQuestion({
       setIsCardSubmitted(true);
       const isQuestionTemplateComplete = handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
       if (isQuestionTemplateComplete) {
-        if (
-          draftQuestion.questionCard.image ||
-          draftQuestion.questionCard.imageUrl
-        ) {
-          setIsCreatingTemplate(true);
-          await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId)
-          setIsCreatingTemplate(false);
-          fetchElements();
-        }
+        setIsCreatingTemplate(true);
+        await draftAssetHandler.publishDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl, selectedQuestionId)
+        setIsCreatingTemplate(false);
+        fetchElements();
       } else {
         if (!draftQuestion.questionCard.isCardComplete) {
           setIsBaseCardErrored(true);
@@ -762,7 +757,7 @@ export default function CreateQuestion({
         setIsCardSubmitted(true);
         setIsCreatingTemplate(true);
         await draftAssetHandler.createDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl);
-        if (initPublicPrivate !== PublicPrivateType.DRAFT) {
+        if (initPublicPrivate !== PublicPrivateType.DRAFT && selectedQuestionId) {
           await apiClients.questionTemplate.deleteQuestionTemplate(
             initPublicPrivate as TemplateType,
             selectedQuestionId
@@ -982,6 +977,7 @@ export default function CreateQuestion({
       <CreateQuestionModalSwitch
         modalObject={modalObject}
         screenSize={screenSize}
+        title={draftQuestion.questionCard.title ?? ''}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handlePublishQuestion={handlePublishQuestion}
@@ -1034,6 +1030,7 @@ export default function CreateQuestion({
                   isPublic={isPublicQuestion}
                   isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
                   handleAnswerType={handleAnswerType}
+                  handleAnswerSettingsChange={handleAnswerSettingsChange}
                 />
               </Box>
               <Box
@@ -1089,6 +1086,7 @@ export default function CreateQuestion({
                       </Box>
                     {draftQuestion.incorrectCards.map((card, index) => (
                       <IncorrectAnswerCard
+                        key={card.id ?? `incorrect-${index}`}
                         screenSize={screenSize}
                         isClone={false}
                         cardIndex={index}

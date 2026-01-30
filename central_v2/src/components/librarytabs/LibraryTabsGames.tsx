@@ -9,15 +9,16 @@ import {
   GradeTarget,
   SortType,
   SortDirection,
+  IGameTemplate,
 } from '@righton/networking';
 import {
-  getQuestionElements,
+  getGameElements,
   getTabLabel,
 } from '../../lib/helperfunctions/MyLibraryHelperFunctions';
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import CardGallery from '../cardgallery/CardGallery';
 import SearchBar from '../searchbar/SearchBar';
-import { ScreenSize, LibraryTabEnum } from '../../lib/CentralModels';
+import { ScreenSize, LibraryTabEnum, GameQuestionType } from '../../lib/CentralModels';
 import {
   ContentContainer,
   TabContent,
@@ -26,11 +27,12 @@ import { LibraryTab } from '../../lib/styledcomponents/MyLibraryStyledComponent'
 import tabPublicIcon from '../../images/tabPublic.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import tabPrivateIcon from '../../images/tabPrivate.svg';
+import tabDraftsIcon from '../../images/tabDrafts.svg';
 import libraryTabsCloseIcon from '../../images/libraryTabsClose.svg';
 
-interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
+interface LibraryTabsGamesProps<T extends IGameTemplate> {
   screenSize: ScreenSize;
-  isPublic: boolean;
+  publicPrivateType: PublicPrivateType;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
@@ -38,12 +40,29 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
     direction: SortDirection | null;
   }) => void;
   handleSearchChange: (searchString: string) => void;
-  fetchElements: (libraryTab: LibraryTabEnum) => void;
+  fetchElements: (
+    libraryTab?: LibraryTabEnum,
+    searchTerms?: string,
+    nextToken?: string | null,
+    isFromLibrary?: boolean,
+    isLoadMoreLibrary?: boolean,
+    sortOverride?: {
+      field: SortType;
+      direction: SortDirection | null;
+    } | null,
+    gameQuestionOverride?: GameQuestionType,
+    forceLibrary?: boolean,
+  ) => void;
   handleView: (element: T, elements: T[]) => void;
-  handleCloseQuestionTabs: () => void;
+  handleCloseGamesTabs: () => void;
+  /** When true, pass isFromLibrary to fetch so API returns user's games only (e.g. Add to Game modal). */
+  isFromLibrary?: boolean;
+  /** When true, force library-style fetch regardless of route. */
+  forceLibrary?: boolean;
 }
 
-export default function LibraryTabsQuestions({
+export default function LibraryTabsGames({
+  publicPrivateType,
   screenSize,
   setIsTabsOpen,
   handleChooseGrades,
@@ -51,53 +70,77 @@ export default function LibraryTabsQuestions({
   handleSearchChange,
   fetchElements,
   handleView,
-  isPublic,
-  handleCloseQuestionTabs,
-}: LibraryTabsQuestionsProps<IQuestionTemplate>) {
+  handleCloseGamesTabs,
+  isFromLibrary,
+  forceLibrary,
+}: LibraryTabsGamesProps<IGameTemplate>) {
   const centralData = useCentralDataState();
 
   const isSearchResults = centralData?.searchTerms?.length > 0;
+  const isPublic = publicPrivateType === PublicPrivateType.PUBLIC;
+  const isDraft = publicPrivateType === PublicPrivateType.DRAFT;
 
   const tabMap: { [key: number]: string } = {
     [LibraryTabEnum.PUBLIC]: 'Public',
     [LibraryTabEnum.FAVORITES]: 'Favorites',
     [LibraryTabEnum.PRIVATE]: 'Private',
+    [LibraryTabEnum.DRAFTS]: 'Drafts',
   };
 
   const tabIconMap: { [key: number]: string } = {
     [LibraryTabEnum.PUBLIC]: tabPublicIcon,
     [LibraryTabEnum.PRIVATE]: tabPrivateIcon,
     [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
+    [LibraryTabEnum.DRAFTS]: tabDraftsIcon,
   };
 
-  const tabIndexToEnum: { [key: number]: LibraryTabEnum } = isPublic
-    ? { 0: LibraryTabEnum.PUBLIC, 1: LibraryTabEnum.FAVORITES }
-    : { 0: LibraryTabEnum.PRIVATE };
+  let tabIndexToEnum: { [key: number]: LibraryTabEnum };
+  let enumToTabIndex: { [key in LibraryTabEnum]?: number };
+  let tabs: LibraryTabEnum[];
+  let initialTab: LibraryTabEnum;
 
-  const enumToTabIndex: { [key in LibraryTabEnum]?: number } = isPublic
-    ? { [LibraryTabEnum.PUBLIC]: 0, [LibraryTabEnum.FAVORITES]: 1 }
-    : { [LibraryTabEnum.PRIVATE]: 0 };
+  if (isPublic) {
+    tabIndexToEnum = { 0: LibraryTabEnum.PUBLIC, 1: LibraryTabEnum.FAVORITES };
+    enumToTabIndex = { [LibraryTabEnum.PUBLIC]: 0, [LibraryTabEnum.FAVORITES]: 1 };
+    tabs = [LibraryTabEnum.PUBLIC, LibraryTabEnum.FAVORITES];
+    initialTab = LibraryTabEnum.PUBLIC;
+  } else if (isDraft) {
+    tabIndexToEnum = { 0: LibraryTabEnum.DRAFTS };
+    enumToTabIndex = { [LibraryTabEnum.DRAFTS]: 0 };
+    tabs = [LibraryTabEnum.DRAFTS];
+    initialTab = LibraryTabEnum.DRAFTS;
+  } else {
+    tabIndexToEnum = { 0: LibraryTabEnum.PRIVATE };
+    enumToTabIndex = { [LibraryTabEnum.PRIVATE]: 0 };
+    tabs = [LibraryTabEnum.PRIVATE];
+    initialTab = LibraryTabEnum.PRIVATE;
+  }
 
-  const tabs: LibraryTabEnum[] = isPublic
-    ? [LibraryTabEnum.PUBLIC, LibraryTabEnum.FAVORITES]
-    : [LibraryTabEnum.PRIVATE];
-
-  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
-    isPublic ? LibraryTabEnum.PUBLIC : LibraryTabEnum.PRIVATE,
-  );
+  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(initialTab);
 
   useEffect(() => {
-    fetchElements(openTab);
-  }, [openTab]); // eslint-disable-line react-hooks/exhaustive-deps
+    const sortOverride =
+      (isFromLibrary || forceLibrary)
+        ? { field: SortType.listGameTemplates, direction: SortDirection.DESC }
+        : undefined;
+    fetchElements(
+      openTab,
+      undefined,
+      undefined,
+      isFromLibrary ?? undefined,
+      undefined,
+      sortOverride,
+      GameQuestionType.GAME,
+      forceLibrary ?? undefined,
+    );
+  }, [openTab, isFromLibrary, forceLibrary]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     const newTabEnum = tabIndexToEnum[newValue as number];
     setOpenTab(newTabEnum);
     // Fetch runs in useEffect when openTab changes.
   };
-
-  const elements = getQuestionElements(openTab, isSearchResults, centralData);
-
+  const elements = getGameElements(openTab, isSearchResults, centralData);
   return (
     <TabContent>
       <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -158,7 +201,7 @@ export default function LibraryTabsQuestions({
             alignItems: 'center',
             justifyContent: 'center',
           }}
-            onClick={handleCloseQuestionTabs}
+            onClick={handleCloseGamesTabs}
           >
             <img
               src={libraryTabsCloseIcon}
@@ -179,29 +222,48 @@ export default function LibraryTabsQuestions({
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
         />
-        { centralData.isLoading ? (
-          <Box sx={{display: 'flex', flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}>
-            <CircularProgress style={{ color: '#FFF' }} />
-          </Box>
-        ) : (
-        <CardGallery<IQuestionTemplate>
-          screenSize={screenSize}
-          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-          grades={isSearchResults ? centralData.selectedGrades : undefined}
-          galleryElements={elements as IQuestionTemplate[]}
-          elementType={ElementType.GAME}
-          galleryType={
-            isSearchResults
-              ? GalleryType.SEARCH_RESULTS
-              : GalleryType.MOST_POPULAR
-          }
-          setIsTabsOpen={setIsTabsOpen}
-          handleView={handleView}
-          isLoading={centralData.isLoading}
-          isMyLibrary
-          isCreateGame
-        />
-      )}
+        <Box
+          sx={{
+            flexGrow: 1,
+            minHeight: 360,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            overflowY: 'auto',
+          }}
+        >
+          {centralData.isLoading ? (
+            <Box
+              sx={{
+                display: 'flex',
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <CircularProgress style={{ color: '#FFF' }} />
+            </Box>
+          ) : (
+            <CardGallery<IGameTemplate>
+              screenSize={screenSize}
+              searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+              grades={isSearchResults ? centralData.selectedGrades : undefined}
+              galleryElements={elements as IGameTemplate[]}
+              elementType={ElementType.GAME}
+              galleryType={
+                isSearchResults
+                  ? GalleryType.SEARCH_RESULTS
+                  : GalleryType.MOST_POPULAR
+              }
+              setIsTabsOpen={setIsTabsOpen}
+              handleView={handleView}
+              isLoading={centralData.isLoading}
+              isMyLibrary
+              isCreateGame
+            />
+          )}
+        </Box>
       </ContentContainer>
     </TabContent>
   );

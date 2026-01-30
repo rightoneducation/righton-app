@@ -44,7 +44,6 @@ export default function FavouriteButton({
         centralData.userProfile,
       );
     if (response) {
-      if (!isGame) console.log(response.favoriteQuestionTemplateIds);
       centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
     }
     setIsLoading(false);
