@@ -537,10 +537,26 @@ export default function CreateGame({
               questionTemplatesCount: newQuestionTemplateCount,
             },
           };
+          // ensures new question templates are in correct order
+          let newIdIndex = 0;
+          const resolvedDraftQuestionsList = draftQuestionsList.map((dq) => {
+            if (dq.questionTemplate.id) {
+              return dq;
+            }
+            const resolvedId = newQuestionTemplateIds[newIdIndex];
+            newIdIndex += 1;
+            return {
+              ...dq,
+              questionTemplate: {
+                ...dq.questionTemplate,
+                id: resolvedId,
+              },
+            };
+          });
           const updatedGame = buildEditedGameTemplate(
             updatedDraftGame,
             userId,
-            draftQuestionsList,
+            resolvedDraftQuestionsList,
             gameImgUrl,
             newCCSSDescription
           );
