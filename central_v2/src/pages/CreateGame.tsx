@@ -428,6 +428,7 @@ export default function CreateGame({
               draftGame.gameTemplate.id,
               questionTemplateIds,
               apiClients,
+              draftGame.gameTemplate.publicPrivateType,
             );
             // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
             await Promise.all(createGameQuestions);
@@ -974,8 +975,12 @@ export default function CreateGame({
   };
 
   const handleSave = async () => {
-    if (isEdit && !isEditDraft)
-      return handleSaveEditedGame();
+    if (isEdit && !isEditDraft) {
+      return setModalObject({
+        modalState: ModalStateType.UPDATE,
+        confirmState: ConfirmStateType.NULL,
+      });
+    }
     const isGameFormIsValid = checkGameFormIsValid(draftGame);
     const isDqValid = checkDQsAreValid(draftQuestionsList);
     setAllDQAreValid(isDqValid);

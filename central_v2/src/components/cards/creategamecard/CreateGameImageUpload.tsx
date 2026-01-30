@@ -103,8 +103,11 @@ export default function GameImageUploadModal({
   let imageLink: string | null = null;
   if (imageUrl) {
     imageLink = imageUrl;
-    if (isClone && !isCloneImageChanged)
+    // Add CloudFront prefix if the URL is a relative path (not already a full URL)
+    // This handles both clone and edit scenarios where the image comes from the database
+    if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://') && !imageUrl.startsWith('blob:')) {
       imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
+    }
   } else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
 
