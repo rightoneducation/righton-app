@@ -901,7 +901,7 @@ export default function CreateQuestion({
     setIsCorrectCardErrored(!handleCheckQuestionCorrectCardComplete(draftQuestion));
     setIsIncorrectCardErrored(!handleCheckQuestionIncorrectCardsComplete(draftQuestion));
     setModalObject({
-      modalState: ModalStateType.UPDATE,
+      modalState: (isEdit && !isEditDraft) ? ModalStateType.UPDATE : ModalStateType.PUBLISH,
       confirmState: ConfirmStateType.PUBLISHED,
     });
   };
