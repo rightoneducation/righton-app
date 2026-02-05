@@ -18,5 +18,30 @@
       "providerPlugin": "awscloudformation",
       "service": "AppSync"
     }
+  },
+  "function": {
+    "microcoachGetLearningScience": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_microcoachGetLearningScience_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachGetLearningScience"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachGetLearningScience_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachGetLearningScience"
+        }
+      ]
+    }
   }
 }

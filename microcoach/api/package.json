@@ -1,0 +1,21 @@
+{
+  "name": "@righton/microcoach-api",
+  "version": "0.0.1",
+  "dependencies": {
+    "aws-amplify": "^6.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build": "cti s -p ./tsconfig.build.json ./src -s true -b -f index.ts && tsc --build tsconfig.json",
+    "test": "jest"
+  },
+  "files": [
+    "/lib"
+  ],
+  "main": "./lib/src/index.js",
+  "module": "./lib/src/index.js",
+  "types": "./lib/src/index.d.ts"
+}

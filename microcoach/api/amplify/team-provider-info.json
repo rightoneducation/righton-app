@@ -14,6 +14,12 @@
     "categories": {
       "api": {
         "microcoach": {}
+      },
+      "function": {
+        "microcoachGetLearningScience": {
+          "deploymentBucketName": "amplify-microcoach-dev-112447-deployment",
+          "s3Key": "amplify-builds/microcoachGetLearningScience-674d5663346a39675256-build.zip"
+        }
       }
     }
   }

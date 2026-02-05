@@ -1,12 +1,17 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createTeacher = /* GraphQL */ `
-  mutation CreateTeacher(
-    $input: CreateTeacherInput!
-    $condition: ModelTeacherConditionInput
+export const getLearningScience = /* GraphQL */ `
+  mutation GetLearningScience($input: GetLearningScienceInput!) {
+    getLearningScience(input: $input)
+  }
+`;
+export const createClassroom = /* GraphQL */ `
+  mutation CreateClassroom(
+    $input: CreateClassroomInput!
+    $condition: ModelClassroomConditionInput
   ) {
-    createTeacher(input: $input, condition: $condition) {
+    createClassroom(input: $input, condition: $condition) {
       id
       userName
       createdAt
@@ -15,12 +20,12 @@ export const createTeacher = /* GraphQL */ `
     }
   }
 `;
-export const updateTeacher = /* GraphQL */ `
-  mutation UpdateTeacher(
-    $input: UpdateTeacherInput!
-    $condition: ModelTeacherConditionInput
+export const updateClassroom = /* GraphQL */ `
+  mutation UpdateClassroom(
+    $input: UpdateClassroomInput!
+    $condition: ModelClassroomConditionInput
   ) {
-    updateTeacher(input: $input, condition: $condition) {
+    updateClassroom(input: $input, condition: $condition) {
       id
       userName
       createdAt
@@ -29,12 +34,12 @@ export const updateTeacher = /* GraphQL */ `
     }
   }
 `;
-export const deleteTeacher = /* GraphQL */ `
-  mutation DeleteTeacher(
-    $input: DeleteTeacherInput!
-    $condition: ModelTeacherConditionInput
+export const deleteClassroom = /* GraphQL */ `
+  mutation DeleteClassroom(
+    $input: DeleteClassroomInput!
+    $condition: ModelClassroomConditionInput
   ) {
-    deleteTeacher(input: $input, condition: $condition) {
+    deleteClassroom(input: $input, condition: $condition) {
       id
       userName
       createdAt
