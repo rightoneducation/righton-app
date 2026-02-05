@@ -24,7 +24,8 @@ import './App.css';
 function HomePage() {
   const [promptText, setPromptText] = useState('');
   const [rightonSwitch, setRightonSwitch] = useState(true);
-  const [cziSwitch, setCziSwitch] = useState(true);
+  const [learningScienceSwitch, setLearningScienceSwitch] = useState(true);
+  const [cziSwitch, setCziSwitch] = useState(false);
   const [loading, setLoading] = useState(false);
   const subscriptionRef = useRef<{ unsubscribe: () => void } | null>(null);
   
@@ -221,11 +222,20 @@ function HomePage() {
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Typography style={{ fontWeight: 400 }}>
-                      Learning Commons
+                      Learning Science MCP
+                    </Typography>
+                    <StyledSwitch
+                      checked={learningScienceSwitch}
+                      onChange={(e) => {setLearningScienceSwitch(e.target.checked); setCziSwitch(!e.target.checked)}}
+                    />
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography style={{ fontWeight: 400 }}>
+                      Learning Commons MCP
                     </Typography>
                     <StyledSwitch
                       checked={cziSwitch}
-                      onChange={(e) => setCziSwitch(e.target.checked)}
+                      onChange={(e) => {setLearningScienceSwitch(!e.target.checked); setCziSwitch(e.target.checked)}}
                     />
                   </Box>
                 </Box>

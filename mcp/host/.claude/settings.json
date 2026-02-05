@@ -3,7 +3,10 @@
     "allow": [
       "mcp__custom__getGameSessionsByClassroomId",
       "mcp__custom__getStudentHistory",
-      "mcp__ext__getLearningScienceDatabyCCSS"
+      "mcp__ext__getLearningScienceDatabyCCSS",
+      "mcp__ext-mcp-server__find_learning_components_from_standard",
+      "mcp__ext-mcp-server__find_standard_statement",
+      "mcp__ext-mcp-server__find_standards_progression_from_standard"
     ]
   }
 }
