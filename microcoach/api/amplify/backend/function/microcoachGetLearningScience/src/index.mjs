@@ -74,7 +74,7 @@ export const handler = async (event) => {
       
       const { url: requestUrl, options } = await createAndSignRequest(learningScienceDataQuery, variables, apiKey, graphqlEndpoint);
       
-      console.log('[Ext-MCPServerFunctions] Making fetch request', {
+      console.log(' Making fetch request', {
         timestamp: new Date().toISOString(),
         url: requestUrl,
         method: options.method,
