@@ -5,6 +5,35 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 type Classroom @model {
   id: ID!
   userName: String!
+  sessions: [ClassroomSession] @hasMany
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type ClassroomSession @model {
+  id: ID!
+  classroomId: ID!
+  question: String!
+  correctAnswer: String!
+  steps: AWSJSON!
+  incorrectAnswer1: String!
+  incorrectAnswer1Explanation: String!
+  incorrectAnswer2: String!
+  incorrectAnswer2Explanation: String!
+  incorrectAnswer3: String!
+  incorrectAnswer3Explanation: String!
+  studentAnswer: [StudentAnswer] @hasMany
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type StudentAnswer @model {
+  id: ID!
+  classroomSessionId: ID!
+  studentId: String!
+  answer: String!
+  explanation: String!
+  confidenceLevel: Int!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
