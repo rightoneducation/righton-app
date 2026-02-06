@@ -1,0 +1,2 @@
+export const getClassroom: "\n  query GetClassroom($id: ID!) {\n    getClassroom(id: $id) {\n      id\n      userName\n      createdAt\n      updatedAt\n      __typename\n    }\n  }\n";
+export const listClassrooms: "\n  query ListClassrooms(\n    $filter: ModelClassroomFilterInput\n    $limit: Int\n    $nextToken: String\n  ) {\n    listClassrooms(filter: $filter, limit: $limit, nextToken: $nextToken) {\n      items {\n        id\n        userName\n        createdAt\n        updatedAt\n        __typename\n      }\n      nextToken\n      __typename\n    }\n  }\n";

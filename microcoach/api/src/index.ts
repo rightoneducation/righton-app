@@ -4,8 +4,11 @@ import {
 import { GraphQLResult, generateClient } from "@aws-amplify/api";
 import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
 import { GraphQLResponseV6 } from '@aws-amplify/api-graphql';
+// @ts-ignore - generated JS without type declarations
 import { getClassroom } from "./graphql/queries";
+// @ts-ignore - generated JS without type declarations
 import { getLearningScience } from "./graphql/mutations";
+// @ts-ignore - Amplify aws-exports generated at build time
 import awsconfig from "./aws-exports";
 
 export interface GraphQLOptions {
