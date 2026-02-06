@@ -6,42 +6,57 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.APIClient = void 0;
 const aws_amplify_1 = require("aws-amplify");
 const api_1 = require("@aws-amplify/api");
-// @ts-ignore - generated JS without type declarations
 const queries_1 = require("./graphql/queries");
-// @ts-ignore - generated JS without type declarations
 const mutations_1 = require("./graphql/mutations");
-// @ts-ignore - Amplify aws-exports generated at build time
 const aws_exports_1 = __importDefault(require("./aws-exports"));
 class APIClient {
     constructor() {
         this.configAmplify(aws_exports_1.default);
         this.client = (0, api_1.generateClient)({});
     }
-    async callGraphQL(query, options) {
-        const authMode = "iam";
-        const response = this.client.graphql({ query: query, variables: options, authMode: authMode });
+    async callGraphQL(query, variables) {
+        const response = this.client.graphql({ query, variables });
         return response;
     }
     configAmplify(awsconfig) {
         aws_amplify_1.Amplify.configure(awsconfig);
     }
-    async getClassroom(className) {
+    async getClassroom(classId) {
         var _a;
         const classroom = await this.callGraphQL(queries_1.getClassroom, {
-            input: {
-                className: className
-            }
+            id: classId
         });
         return (_a = classroom.data) === null || _a === void 0 ? void 0 : _a.getClassroom;
     }
     async getLearningScienceDataByCCSS(ccss) {
         var _a;
         const learningScienceData = await this.callGraphQL(mutations_1.getLearningScience, {
-            input: {
-                ccss: ccss
-            }
+            input: { ccss }
         });
         return (_a = learningScienceData.data) === null || _a === void 0 ? void 0 : _a.getLearningScience;
+    }
+    async getAnalytics(classroomData, learningScienceData) {
+        var _a;
+        const analytics = await this.callGraphQL(mutations_1.getAnalytics, {
+            input: {
+                classroomData: typeof classroomData === 'string' ? classroomData : JSON.stringify(classroomData),
+                learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
+            }
+        });
+        return (_a = analytics.data) === null || _a === void 0 ? void 0 : _a.getAnalytics;
+    }
+    async updateClassroom(classroomData, analytics) {
+        var _a;
+        const input = {
+            id: classroomData.id,
+            analytics,
+        };
+        if (classroomData.userName != null)
+            input.userName = classroomData.userName;
+        const classroom = await this.callGraphQL(mutations_1.updateClassroom, {
+            input,
+        });
+        return (_a = classroom.data) === null || _a === void 0 ? void 0 : _a.updateClassroom;
     }
 }
 exports.APIClient = APIClient;

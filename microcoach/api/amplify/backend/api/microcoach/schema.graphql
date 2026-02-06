@@ -6,6 +6,7 @@ type Classroom @model {
   id: ID!
   userName: String!
   sessions: [ClassroomSession] @hasMany
+  analytics: AWSJSON
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -42,7 +43,14 @@ input GetLearningScienceInput {
   ccss: String!
 }
 
+input GetAnalyticsInput {
+  classroomData: AWSJSON!
+  learningScienceData: AWSJSON!
+}
+
 type Mutation {
   getLearningScience(input: GetLearningScienceInput!): String 
     @function(name: "microcoachGetLearningScience-${env}")
+  getAnalytics(input: GetAnalyticsInput!): String
+    @function(name: "microcoachLLM-${env}")
 }

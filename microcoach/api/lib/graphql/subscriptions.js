@@ -23,6 +23,22 @@ exports.onCreateClassroom = `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -31,6 +47,7 @@ exports.onCreateClassroom = `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -57,6 +74,22 @@ exports.onUpdateClassroom = `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -65,6 +98,7 @@ exports.onUpdateClassroom = `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -91,6 +125,22 @@ exports.onDeleteClassroom = `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -99,6 +149,7 @@ exports.onDeleteClassroom = `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename

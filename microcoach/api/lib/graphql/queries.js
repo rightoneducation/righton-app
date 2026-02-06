@@ -21,6 +21,22 @@ exports.getClassroom = `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -29,6 +45,7 @@ exports.getClassroom = `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -46,9 +63,31 @@ exports.listClassrooms = `
         id
         userName
         sessions {
+          items {
+            id
+            classroomId
+            question
+            correctAnswer
+            steps
+            incorrectAnswer1
+            incorrectAnswer1Explanation
+            incorrectAnswer2
+            incorrectAnswer2Explanation
+            incorrectAnswer3
+            incorrectAnswer3Explanation
+            studentAnswer {
+              nextToken
+              __typename
+            }
+            createdAt
+            updatedAt
+            classroomSessionsId
+            __typename
+          }
           nextToken
           __typename
         }
+        analytics
         createdAt
         updatedAt
         __typename
@@ -119,6 +158,18 @@ exports.listClassroomSessions = `
         incorrectAnswer3
         incorrectAnswer3Explanation
         studentAnswer {
+          items {
+            id
+            classroomSessionId
+            studentId
+            answer
+            explanation
+            confidenceLevel
+            createdAt
+            updatedAt
+            classroomSessionStudentAnswerId
+            __typename
+          }
           nextToken
           __typename
         }

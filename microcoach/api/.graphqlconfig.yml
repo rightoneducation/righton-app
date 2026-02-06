@@ -14,4 +14,3 @@ projects:
 extensions:
   amplify:
     version: 3
-amplify co

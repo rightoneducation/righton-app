@@ -43,6 +43,7 @@ export const getClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -84,6 +85,7 @@ export const listClassrooms = /* GraphQL */ `
           nextToken
           __typename
         }
+        analytics
         createdAt
         updatedAt
         __typename

@@ -1,18 +1,22 @@
 import { loadSecret } from './util/loadsecrets.mjs';
-import { getLearningComponentsByCCSS } from './util/request.mjs';
+import { createAndSignRequest } from './util/request.mjs';
+import { normalizeCCSSCode } from './util/normalizeCCSS.mjs';
 
 export const handler = async (event) => {
     const endpointSecretName = process.env.ENDPOINT_SECRET_NAME;
     if (!endpointSecretName) throw new Error('SECRET_NAME environment variable is required');
     const apiSecretName = process.env.API_SECRET_NAME;
     if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
-    
-    const apiSecret = await loadSecret(apiSecretName);
-    process.env.API_KEY = JSON.parse(apiSecret)['API'];
-    const endpointSecret = await loadSecret(endpointSecretName);
-    process.env.GRAPHQL_ENDPOINT = JSON.parse(endpointSecret)['ext-endpoint'];
 
-    const possibleCodes = normalizeCCSSCode(ccss);
+    const ccss = event?.arguments?.input?.ccss ?? event?.input?.ccss ?? '';
+    if (!ccss) throw new Error('ccss is required');
+
+    const apiSecret = await loadSecret(apiSecretName);
+    const apiKey = JSON.parse(apiSecret)['API'];
+    const endpointSecret = await loadSecret(endpointSecretName);
+    const graphqlEndpoint = JSON.parse(endpointSecret)['ext-endpoint'];
+
+    const possibleCodes = normalizeCCSSCode(ccss) ?? [ccss];
   
     // Build OR condition for all possible code formats
     const whereConditions = possibleCodes
@@ -69,10 +73,11 @@ export const handler = async (event) => {
         timestamp: new Date().toISOString(),
         ccss,
         normalizedCodes: normalizeCCSSCode(ccss),
-        url: getGraphQLEndpoint() || 'NOT PROVIDED'
+        url: graphqlEndpoint || 'NOT PROVIDED'
       });
       
       const { url: requestUrl, options } = await createAndSignRequest(learningScienceDataQuery, variables, apiKey, graphqlEndpoint);
+      if (!requestUrl || !options) throw new Error('createAndSignRequest did not return url/options');
       
       console.log(' Making fetch request', {
         timestamp: new Date().toISOString(),
@@ -122,15 +127,15 @@ export const handler = async (event) => {
         });
       }
       
-      return data;
+      return JSON.stringify(data);
     } catch (error) {
       console.error('Error making GraphQL request', {
         timestamp: new Date().toISOString(),
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
         ccss,
-        url: getGraphQLEndpoint() || 'NOT PROVIDED'
+        url: graphqlEndpoint || 'NOT PROVIDED'
       });
-      return null;
+      return JSON.stringify({ data: null, errors: [{ message: error instanceof Error ? error.message : String(error) }] });
     }
 }

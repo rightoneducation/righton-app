@@ -1,15 +1,11 @@
 import { GraphQLResult } from "@aws-amplify/api";
-import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
-export interface GraphQLOptions {
-    input?: object;
-    variables?: object;
-    authMode?: GraphQLAuthMode;
-}
 export declare class APIClient {
     private client;
     constructor();
-    protected callGraphQL<T>(query: any, options?: GraphQLOptions): Promise<GraphQLResult<T>>;
+    protected callGraphQL<T>(query: any, variables?: Record<string, unknown>): Promise<GraphQLResult<T>>;
     configAmplify(awsconfig: any): void;
-    getClassroom(className: string): Promise<any>;
+    getClassroom(classId: string): Promise<any>;
     getLearningScienceDataByCCSS(ccss: string): Promise<any>;
+    getAnalytics(classroomData: any, learningScienceData: any): Promise<any>;
+    updateClassroom(classroomData: any, analytics: string): Promise<any>;
 }

@@ -13,11 +13,12 @@ export function normalizeCCSSCode(ccss) {
     const firstDotIndex = code.indexOf('.');
     if (firstDotIndex > 0) {
       const normalized = code.substring(0, firstDotIndex) + '-' + code.substring(firstDotIndex + 1);
-      const result = [
+      return [
         normalized,
         `CCSS.Math.Content.HS${normalized}`  // Also try full format
       ];
-      return result;
     }
   }
+  // Fallback: return the code as-is (e.g. 8.EE.C.7) so the query has at least one option
+  return [code];
 }

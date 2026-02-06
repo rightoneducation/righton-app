@@ -24,6 +24,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "microcoachLLM": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -40,6 +45,22 @@
         {
           "category": "function",
           "resourceName": "microcoachGetLearningScience"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLM_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLM"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLM_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLM"
         }
       ]
     }

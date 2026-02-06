@@ -2,10 +2,15 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudentAnswer = exports.updateStudentAnswer = exports.createStudentAnswer = exports.deleteClassroomSession = exports.updateClassroomSession = exports.createClassroomSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.getLearningScience = void 0;
+exports.deleteStudentAnswer = exports.updateStudentAnswer = exports.createStudentAnswer = exports.deleteClassroomSession = exports.updateClassroomSession = exports.createClassroomSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.getAnalytics = exports.getLearningScience = void 0;
 exports.getLearningScience = `
   mutation GetLearningScience($input: GetLearningScienceInput!) {
     getLearningScience(input: $input)
+  }
+`;
+exports.getAnalytics = `
+  mutation GetAnalytics($input: GetAnalyticsInput!) {
+    getAnalytics(input: $input)
   }
 `;
 exports.createClassroom = `
@@ -29,6 +34,22 @@ exports.createClassroom = `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -37,6 +58,7 @@ exports.createClassroom = `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -64,6 +86,22 @@ exports.updateClassroom = `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -72,6 +110,7 @@ exports.updateClassroom = `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -99,6 +138,22 @@ exports.deleteClassroom = `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -107,6 +162,7 @@ exports.deleteClassroom = `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename

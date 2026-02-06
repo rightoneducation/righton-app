@@ -45,6 +45,7 @@ export const onCreateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -95,6 +96,7 @@ export const onUpdateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -145,6 +147,7 @@ export const onDeleteClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename

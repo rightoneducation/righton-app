@@ -6,6 +6,11 @@ export const getLearningScience = /* GraphQL */ `
     getLearningScience(input: $input)
   }
 `;
+export const getAnalytics = /* GraphQL */ `
+  mutation GetAnalytics($input: GetAnalyticsInput!) {
+    getAnalytics(input: $input)
+  }
+`;
 export const createClassroom = /* GraphQL */ `
   mutation CreateClassroom(
     $input: CreateClassroomInput!
@@ -51,6 +56,7 @@ export const createClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -102,6 +108,7 @@ export const updateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
@@ -153,6 +160,7 @@ export const deleteClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      analytics
       createdAt
       updatedAt
       __typename
