@@ -27,6 +27,22 @@ export const createClassroom = /* GraphQL */ `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -62,6 +78,22 @@ export const updateClassroom = /* GraphQL */ `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
@@ -97,6 +129,22 @@ export const deleteClassroom = /* GraphQL */ `
           incorrectAnswer2Explanation
           incorrectAnswer3
           incorrectAnswer3Explanation
+          studentAnswer {
+            items {
+              id
+              classroomSessionId
+              studentId
+              answer
+              explanation
+              confidenceLevel
+              createdAt
+              updatedAt
+              classroomSessionStudentAnswerId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           classroomSessionsId
