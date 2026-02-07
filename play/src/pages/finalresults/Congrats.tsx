@@ -62,7 +62,6 @@ export default function Congrats({
 }: CongratsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={3}>
