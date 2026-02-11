@@ -6,6 +6,7 @@ import DiscardGameModal from '../DiscardGameModal';
 import ConfirmSaveModal from '../ConfirmSaveModal';
 import EditGameModal from '../EditGameModal';
 import UpdatingModal from '../UpdatingModal';
+import DeleteModal from '../DeleteModal';
 
 interface CreateQuestionModalSwitchProps {
   modalObject: ModalObject;
@@ -13,6 +14,8 @@ interface CreateQuestionModalSwitchProps {
   title: string;
   handleDiscard: () => void;
   handleCloseDiscardModal: () => void;
+  handleDeleteQuestion: () => void;
+  handleCloseDeleteModal: () => void;
   handlePublishQuestion: () => void;
   handleCloseSaveQuestionModal: () => void;
   handleSaveEditedQuestion: () => void;
@@ -31,6 +34,8 @@ export default function CreateQuestionModalSwitch({
   handleDiscard,
   handleCloseDiscardModal,
   handlePublishQuestion,
+  handleDeleteQuestion,
+  handleCloseDeleteModal,
   handleCloseSaveQuestionModal,
   handleSaveEditedQuestion,
   handleContinue,
@@ -41,6 +46,14 @@ export default function CreateQuestionModalSwitch({
   originalQuestion,
 }: CreateQuestionModalSwitchProps) {
   switch (modalObject.modalState) {
+    case ModalStateType.DELETE:
+      return <DeleteModal
+        isModalOpen
+        templateType={TemplateType.QUESTION}
+        handleProceedToDelete={handleDeleteQuestion}
+        handleCloseDeleteModal={handleCloseDeleteModal}
+      />;
+      break;
     case ModalStateType.DISCARD:
       return <DiscardGameModal
         isModalOpen

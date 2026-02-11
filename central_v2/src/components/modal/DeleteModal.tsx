@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { IUserProfile } from '@righton/networking';
-import { GameQuestionType } from '../../lib/CentralModels';
+import { GameQuestionType, TemplateType } from '../../lib/CentralModels';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
@@ -42,6 +42,7 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
 }));
 
 const DragText = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Poppins',
   width: '100%',
   fontSize: '24px',
   lineHeight: '32px',
@@ -49,10 +50,10 @@ const DragText = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
 }));
 
-const SubText = styled(Typography)(({ theme }) => ({
+const BodyText = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Rubik',  
   width: '100%',
-  fontSize: '24px',
-  lineHeight: '32px',
+  fontSize: '16px',
   fontWeight: 400,
   textAlign: 'center',
 }));
@@ -65,25 +66,17 @@ const CloseButton = styled('img')(({ theme }) => ({
 
 interface DeleteModalProps {
   isModalOpen: boolean;
-  gameQuestion: GameQuestionType;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  templateType: TemplateType;
   handleProceedToDelete: () => void;
+  handleCloseDeleteModal: () => void;
 }
 
 export default function DeleteModal({
   isModalOpen,
-  gameQuestion,
-  setIsModalOpen,
+  templateType,
   handleProceedToDelete,
+  handleCloseDeleteModal,
 }: DeleteModalProps) {
-  const handleDelete = () => {
-    setIsModalOpen(false);
-    handleProceedToDelete();
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
@@ -100,24 +93,26 @@ export default function DeleteModal({
           }}
         >
           <DragText>
-            {`Warning: You are about to delete a public ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'}.`}
+            Confirm Deletion
           </DragText>
-          <SubText>
-            {`This will remove the ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'} for anyone that is using it!`}
-          </SubText>
-          <SubText> Do you want to continue? </SubText>
+          <BodyText>
+            Deleted content will be permanently gone.
+          </BodyText>
+          <BodyText>  
+            This action will not be reversible.
+          </BodyText>
           <Box style={{ display: 'flex', gap: '16px' }}>
             <CentralButton
-              buttonType={ButtonType.YES}
+              buttonType={ButtonType.PINKDELETE}
               isEnabled
               smallScreenOverride
-              onClick={handleDelete}
+              onClick={handleProceedToDelete}
             />
             <CentralButton
-              buttonType={ButtonType.NO}
+              buttonType={ButtonType.BACK}
               isEnabled
               smallScreenOverride
-              onClick={handleCancel}
+              onClick={handleCloseDeleteModal}
             />
           </Box>
         </Box>

@@ -56,6 +56,8 @@ import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/Crea
 import { handleCheckQuestionBaseComplete, handleCheckQuestionCorrectCardComplete, handleCheckQuestionIncorrectCardsComplete } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
 import { DraftAssetHandler } from '../lib/services/DraftAssetHandler';
+import { ButtonType } from '../components/button/ButtonModels';
+import CentralButton from '../components/button/Button';
 
 interface CreateQuestionProps {
   screenSize: ScreenSize;
@@ -835,6 +837,35 @@ export default function CreateQuestion({
     }
   }
 
+
+  const handleCloseDeleteModal = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
+
+  // TODO: add support for deleting a draft question and public private question
+  // use delete on ViewGame and ViewQuestion for reference
+  const handleDeleteQuestionSwitch = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+    if (isDraft) {
+      handleDeleteDraftQuestion();
+    } else {
+      handleDeleteQuestionFunction();
+    }
+  };
+
+  const handleDeleteQuestion = () => {
+    setModalObject({
+      modalState: ModalStateType.DELETE,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
+
   const handleDiscardQuestion = () => {
     setIsDiscardModalOpen(true);
   };
@@ -980,6 +1011,8 @@ export default function CreateQuestion({
         title={draftQuestion.questionCard.title ?? ''}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
+        handleDeleteQuestion={handleDeleteQuestionSwitch}
+        handleCloseDeleteModal={handleCloseDeleteModal}
         handlePublishQuestion={handlePublishQuestion}
         handleSaveEditedQuestion={handleSaveEditedQuestionSwitch}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
@@ -1033,6 +1066,12 @@ export default function CreateQuestion({
                   isMultipleChoice={draftQuestion.correctCard.isMultipleChoice}
                   handleAnswerType={handleAnswerType}
                   handleAnswerSettingsChange={handleAnswerSettingsChange}
+                />
+                <CentralButton
+                  buttonType={ButtonType.DELETE}
+                  isEnabled
+                  buttonWidthOverride='100%'
+                  onClick={handleDeleteQuestion}
                 />
               </Box>
               <Box
