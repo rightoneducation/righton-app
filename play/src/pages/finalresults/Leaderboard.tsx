@@ -36,9 +36,9 @@ export default function Leaderboard({
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
   const sortedTeams: ITeam[] = useRef<ITeam[]>(
-    !isNullOrUndefined(teams) ? ModelHelper.teamSorter(teams, 5).filter((team) => team.score > 0) : []
+    !isNullOrUndefined(teams) ? ModelHelper.teamSorter(teams, 5) : []
   ).current;
-  console.log("SORTED TEAMS: ", sortedTeams);
+
   // remove locally stored game info when reaching leaderboard
   useEffect(() => {
     if (currentState !== GameSessionState.TEAMS_JOINING) {
@@ -69,13 +69,13 @@ export default function Leaderboard({
     sortedTeams
       ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
         sortedTeams.map((sortedTeam) => {
-          return sortedTeam.selectedAvatarIndex
+          return sortedTeam === currentTeam
+            ? teamAvatar
+            : Math.floor(Math.random() * 6);
         })
       : // if teams is invalid, then return empty array
         []
   );
-
-  // 
   return (
     <StackContainerStyled
       direction="column"

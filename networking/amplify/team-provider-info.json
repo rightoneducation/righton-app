@@ -27,10 +27,6 @@
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
           "s3Key": "amplify-builds/createGameTest-367277564c5457435a35-build.zip"
         },
-        "expiregamecodes": {
-          "deploymentBucketName": "amplify-mobile-main-153119-deployment",
-          "s3Key": "amplify-builds/expiregamecodes-56787478776432526953-build.zip"
-        },
         "mobile6060603cPreSignup": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
           "s3Key": "amplify-builds/mobile6060603cPreSignup-73733234557a4e704474-build.zip"
@@ -66,6 +62,10 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
+        },
+        "expiregamecodes": {
+          "deploymentBucketName": "amplify-mobile-main-153119-deployment",
+          "s3Key": "amplify-builds/expiregamecodes-56787478776432526953-build.zip"
         }
       },
       "auth": {
@@ -74,6 +74,9 @@
       },
       "storage": {
         "rightoncentralstorage": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }
