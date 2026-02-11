@@ -150,7 +150,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, games: []};
   };
 
-  public searchForQuestionTemplates = async (type: TemplateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null, isLibrary?: boolean, userId?: string) => {
+  public searchForQuestionTemplates = async (type: TemplateType, limit: number | null, nextToken: string | null, search: string | null, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null, isLibrary?: boolean, userId?: string) => {
     switch(sortType){
       case SortType.listQuestionTemplatesByDate: {
         let response;
