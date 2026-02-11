@@ -48,6 +48,7 @@ export default function CreateQuestionModalSwitch({
         handleDiscardClick={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handleSaveEditedGame={handleSaveEditedQuestion}
+        handlePublish={handlePublishQuestion}
       />;
       break;
     case ModalStateType.PUBLISH:
@@ -71,6 +72,7 @@ export default function CreateQuestionModalSwitch({
         handleSaveEditedGame={handleSaveEditedQuestion}
         handleCloseSaveGameModal={handleCloseSaveQuestionModal}
         isCardErrored={isCardErrored}
+        
       />;
       break;
     case ModalStateType.LOADING:

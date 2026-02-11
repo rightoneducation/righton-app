@@ -81,6 +81,7 @@ export default function CreateGameModalSwitch({
         handleDiscardClick={handleDiscard}
         handleSaveEditedGame={handleSaveEditedGame}
         handleCloseDiscardModal={handleCloseDiscardModal}
+        handlePublish={handlePublishGame}
       />;
       break;
     case ModalStateType.UPDATE:
