@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Box,
   Paper,
@@ -9,6 +9,7 @@ import {
   Tooltip,
   useTheme,
 } from '@mui/material';
+import { CentralQuestionTemplateInput, IGameTemplate, IQuestionTemplate } from '@righton/networking';
 import { TemplateType } from '../../lib/CentralModels';
 import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
@@ -68,6 +69,11 @@ interface SaveGameModalProps {
   handleSaveDraft?: () => void;
   isCardErrored?: boolean;
   isDraft?: boolean;
+  draftQuestion?: CentralQuestionTemplateInput;
+  originalQuestion?: CentralQuestionTemplateInput | null;
+  draftGame?: IGameTemplate;
+  originalGame?: IGameTemplate | null;
+  draftQuestionList?: Array<{ questionTemplate: IQuestionTemplate }>;
 }
 
 export default function SaveGameModal({
@@ -78,10 +84,118 @@ export default function SaveGameModal({
   handleCloseSaveGameModal,
   handleSaveDraft,
   isCardErrored,
-  isDraft
+  isDraft,
+  draftQuestion,
+  originalQuestion,
+  draftGame,
+  originalGame,
+  draftQuestionList
 }: SaveGameModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
+
+  
+  const compareQuestions = useCallback((draft: CentralQuestionTemplateInput, original: CentralQuestionTemplateInput) => {
+    return draft.questionCard.title !== original.questionCard.title ||
+      draft.questionCard.ccss !== original.questionCard.ccss ||
+      draft.questionCard.imageUrl !== original.questionCard.imageUrl ||
+      draft.correctCard.answer !== original.correctCard.answer ||
+      draft.correctCard.answerSteps !== original.correctCard.answerSteps ||
+      draft.incorrectCards.some((card, index) => card.answer !== original.incorrectCards[index].answer) ||
+      draft.incorrectCards.some((card, index) => card.explanation !== original.incorrectCards[index].explanation);
+  }, []);
+
+  const compareQuestionTemplates = useCallback((draft: IQuestionTemplate, original: IQuestionTemplate) => {
+    return (
+      draft.id !== original.id ||
+      draft.title !== original.title ||
+      draft.ccss !== original.ccss ||
+      draft.ccssDescription !== original.ccssDescription ||
+      draft.imageUrl !== original.imageUrl ||
+      draft.publicPrivateType !== original.publicPrivateType ||
+      draft.finalPublicPrivateType !== original.finalPublicPrivateType ||
+      draft.answerSettings !== original.answerSettings ||
+      draft.answerSettings?.answerPrecision !== original.answerSettings?.answerPrecision ||
+      (draft.choices?.length ?? 0) !== (original.choices?.length ?? 0) ||
+      draft.choices?.some((c, i) => c.text !== original.choices?.[i]?.text || c.reason !== original.choices?.[i]?.reason) ||
+      (draft.instructions?.length ?? 0) !== (original.instructions?.length ?? 0) ||
+      draft.instructions?.some((inst, i) => inst !== original.instructions?.[i])
+    );
+  }, []);
+
+  const compareGames = useCallback((draft: IGameTemplate, original: IGameTemplate) => {
+    const draftList = draft.questionTemplates ?? null;
+    const originalList = original.questionTemplates ?? null;
+
+    const listLengthDiffer = (draftList?.length ?? 0) !== (originalList?.length ?? 0);
+    if (listLengthDiffer) return true;
+
+    const draftOrder = draft.questionTemplatesOrder ?? [];
+    const originalOrder = original.questionTemplatesOrder ?? [];
+    const orderDiffer =
+      draftOrder.length !== originalOrder.length ||
+      draftOrder.some(
+        (item, i) =>
+          item.questionTemplateId !== originalOrder[i]?.questionTemplateId ||
+          item.index !== originalOrder[i]?.index
+      );
+    if (orderDiffer) return true;
+
+    const questionTemplatesDiffer =
+      draftList?.some((item, index) => {
+        const originalItem = originalList?.[index]?.questionTemplate;
+        if (originalItem == null) return true;
+        return (
+          item.questionTemplate.id !== originalItem.id ||
+          compareQuestionTemplates(item.questionTemplate, originalItem)
+        );
+      }) ?? false;
+    if (questionTemplatesDiffer) return true;
+
+    return (
+      draft.title !== original.title ||
+      draft.description !== original.description ||
+      draft.imageUrl !== original.imageUrl ||
+      draft.publicPrivateType !== original.publicPrivateType ||
+      draft.finalPublicPrivateType !== original.finalPublicPrivateType ||
+      draft.phaseOneTime !== original.phaseOneTime ||
+      draft.phaseTwoTime !== original.phaseTwoTime ||
+      draft.domain !== original.domain ||
+      draft.cluster !== original.cluster ||
+      draft.grade !== original.grade ||
+      draft.standard !== original.standard ||
+      draft.ccss !== original.ccss ||
+      draft.ccssDescription !== original.ccssDescription ||
+      draft.questionTemplatesCount !== original.questionTemplatesCount
+    );
+  }, [compareQuestionTemplates]);
+
+  const contentChanged = useMemo(() => {
+    if (!isModalOpen) return false;
+
+    if (templateType === TemplateType.GAME) {
+      if (draftGame == null) return false;
+      const effectiveDraft: IGameTemplate = draftQuestionList != null
+        ? {
+            ...draftGame,
+            questionTemplates: draftQuestionList.map((item, index) => ({
+              questionTemplate: item.questionTemplate,
+              gameQuestionId: item.questionTemplate.id ?? `temp-${index}`,
+            })),
+            questionTemplatesCount: draftQuestionList.length,
+            questionTemplatesOrder: draftQuestionList.map((item, index) => ({
+              questionTemplateId: item.questionTemplate.id,
+              index,
+            })),
+          }
+        : draftGame;
+      if (originalGame == null) return true;
+      return compareGames(effectiveDraft, originalGame);
+    }
+
+    if (originalQuestion == null) return draftQuestion != null;
+    return draftQuestion != null && compareQuestions(draftQuestion, originalQuestion);
+  }, [isModalOpen, templateType, draftGame, originalGame, draftQuestion, originalQuestion, draftQuestionList, compareGames, compareQuestions]);
 
   return (
     <Fade
@@ -132,7 +246,7 @@ export default function SaveGameModal({
               {title.length > 0 ? (
                 <CentralButton
                   buttonType={ButtonType.SAVEDRAFTBLUE}
-                  isEnabled
+                  isEnabled={contentChanged ?? false}
                   onClick={handleSaveDraft}
                 />
               ): (

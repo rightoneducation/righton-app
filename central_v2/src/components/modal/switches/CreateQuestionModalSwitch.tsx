@@ -1,4 +1,5 @@
 import React from "react";
+import { CentralQuestionTemplateInput } from "@righton/networking";
 import { ConfirmStateType, ModalStateType, ScreenSize, TemplateType, ModalObject } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import DiscardGameModal from '../DiscardGameModal';
@@ -19,6 +20,8 @@ interface CreateQuestionModalSwitchProps {
   handleSaveDraft: () => void;
   isCardErrored: boolean;
   isDraft: boolean;
+  draftQuestion: CentralQuestionTemplateInput;
+  originalQuestion: CentralQuestionTemplateInput | null;
 }
 
 export default function CreateQuestionModalSwitch({ 
@@ -33,7 +36,9 @@ export default function CreateQuestionModalSwitch({
   handleContinue,
   handleSaveDraft,
   isCardErrored,
-  isDraft
+  isDraft,
+  draftQuestion,
+  originalQuestion,
 }: CreateQuestionModalSwitchProps) {
   switch (modalObject.modalState) {
     case ModalStateType.DISCARD:
@@ -55,6 +60,8 @@ export default function CreateQuestionModalSwitch({
         handleSaveDraft={handleSaveDraft}
         isCardErrored={isCardErrored}
         isDraft={isDraft}
+        draftQuestion={draftQuestion}
+        originalQuestion={originalQuestion}
       />;
       break;
     case ModalStateType.UPDATE:

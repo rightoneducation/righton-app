@@ -1,5 +1,5 @@
 import React from "react";
-import { CentralQuestionTemplateInput, PublicPrivateType } from "@righton/networking";
+import { CentralQuestionTemplateInput, PublicPrivateType, IGameTemplate, IQuestionTemplate } from "@righton/networking";
 import { ModalStateType, ScreenSize, TemplateType, ConfirmStateType, ModalObject } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import EditGameModal from '../EditGameModal';
@@ -26,6 +26,9 @@ interface CreateGameModalSwitchProps {
   handleSaveEditedGame: () => void;
   editQuestionDraft?: CentralQuestionTemplateInput | null;
   handleSaveEditedQuestion?: (editedQuestion: CentralQuestionTemplateInput) => void;
+  draftGame?: IGameTemplate;
+  originalGame?: IGameTemplate | null;
+  draftQuestionList?: Array<{ questionTemplate: IQuestionTemplate }>;
 }
 
 export default function CreateGameModalSwitch({ 
@@ -45,6 +48,9 @@ export default function CreateGameModalSwitch({
   handleSaveEditedGame,
   editQuestionDraft,
   handleSaveEditedQuestion,
+  draftGame,
+  originalGame,
+  draftQuestionList
 }: CreateGameModalSwitchProps) {
 
   switch (modalObject.modalState) {
@@ -95,6 +101,9 @@ export default function CreateGameModalSwitch({
         handleCloseSaveGameModal={handleCloseSaveGameModal}
         handleSaveDraft={handleSaveDraft}
         isCardErrored={isCardErrored}
+        draftGame={draftGame}
+        originalGame={originalGame}
+        draftQuestionList={draftQuestionList}
       />;
       break;
     case ModalStateType.LOADING:

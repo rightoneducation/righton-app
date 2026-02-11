@@ -142,6 +142,7 @@ export default function CreateQuestion({
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
     (!isEdit || isPublic) ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE,
   );
+  const [originalQuestion, setOriginalQuestion] = useState<CentralQuestionTemplateInput | null>(null);
   const [originalImageURl, setOriginalImageURL] = useState<string>('');
   const localData = useCreateQuestionLoader();
 
@@ -928,6 +929,7 @@ export default function CreateQuestion({
       if (title && !regex.test(title) && isClone)
         selected.title = `${title} [DUPLICATE]`;
       const draft = assembleQuestionTemplate(selected, isDraft);
+      setOriginalQuestion(draft);
       setInitPublicPrivate(draft.publicPrivateType);
       setDraftQuestion((prev) => ({
         ...prev,
@@ -944,8 +946,6 @@ export default function CreateQuestion({
       fetchElement(GameQuestionType.QUESTION, selectedQuestionId);
     }
   }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
-
-
   
   return (
     <CreateQuestionMainContainer>
@@ -987,6 +987,8 @@ export default function CreateQuestion({
         handleSaveDraft={handleSaveDraft}
         isCardErrored={(isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored)}
         isDraft={isDraft}
+        draftQuestion={draftQuestion}
+        originalQuestion={originalQuestion}
       />
       <CreateQuestionBoxContainer screenSize={screenSize}>
         <CreateQuestionHeader 
