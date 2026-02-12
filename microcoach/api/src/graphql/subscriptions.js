@@ -7,45 +7,60 @@ export const onCreateClassroom = /* GraphQL */ `
   ) {
     onCreateClassroom(filter: $filter) {
       id
-      userName
-      sessions {
+      learningGaps {
         items {
           id
           classroomId
-          question
-          correctAnswer
-          steps
-          incorrectAnswer1
-          incorrectAnswer1Explanation
-          incorrectAnswer2
-          incorrectAnswer2Explanation
-          incorrectAnswer3
-          incorrectAnswer3Explanation
-          studentAnswer {
-            items {
-              id
-              classroomSessionId
-              studentId
-              answer
-              explanation
-              confidenceLevel
-              createdAt
-              updatedAt
-              classroomSessionStudentAnswerId
+          title
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
               __typename
             }
-            nextToken
             __typename
           }
           createdAt
           updatedAt
-          classroomSessionsId
+          classroomLearningGapsId
           __typename
         }
         nextToken
         __typename
       }
-      analytics
+      students {
+        items {
+          id
+          classroomId
+          performanceX
+          performanceY
+          confidenceLevel
+          status
+          createdAt
+          updatedAt
+          classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -58,45 +73,60 @@ export const onUpdateClassroom = /* GraphQL */ `
   ) {
     onUpdateClassroom(filter: $filter) {
       id
-      userName
-      sessions {
+      learningGaps {
         items {
           id
           classroomId
-          question
-          correctAnswer
-          steps
-          incorrectAnswer1
-          incorrectAnswer1Explanation
-          incorrectAnswer2
-          incorrectAnswer2Explanation
-          incorrectAnswer3
-          incorrectAnswer3Explanation
-          studentAnswer {
-            items {
-              id
-              classroomSessionId
-              studentId
-              answer
-              explanation
-              confidenceLevel
-              createdAt
-              updatedAt
-              classroomSessionStudentAnswerId
+          title
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
               __typename
             }
-            nextToken
             __typename
           }
           createdAt
           updatedAt
-          classroomSessionsId
+          classroomLearningGapsId
           __typename
         }
         nextToken
         __typename
       }
-      analytics
+      students {
+        items {
+          id
+          classroomId
+          performanceX
+          performanceY
+          confidenceLevel
+          status
+          createdAt
+          updatedAt
+          classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -109,78 +139,55 @@ export const onDeleteClassroom = /* GraphQL */ `
   ) {
     onDeleteClassroom(filter: $filter) {
       id
-      userName
-      sessions {
+      learningGaps {
         items {
           id
           classroomId
-          question
-          correctAnswer
-          steps
-          incorrectAnswer1
-          incorrectAnswer1Explanation
-          incorrectAnswer2
-          incorrectAnswer2Explanation
-          incorrectAnswer3
-          incorrectAnswer3Explanation
-          studentAnswer {
-            items {
-              id
-              classroomSessionId
-              studentId
-              answer
-              explanation
-              confidenceLevel
-              createdAt
-              updatedAt
-              classroomSessionStudentAnswerId
+          title
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
               __typename
             }
-            nextToken
             __typename
           }
           createdAt
           updatedAt
-          classroomSessionsId
+          classroomLearningGapsId
           __typename
         }
         nextToken
         __typename
       }
-      analytics
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateClassroomSession = /* GraphQL */ `
-  subscription OnCreateClassroomSession(
-    $filter: ModelSubscriptionClassroomSessionFilterInput
-  ) {
-    onCreateClassroomSession(filter: $filter) {
-      id
-      classroomId
-      question
-      correctAnswer
-      steps
-      incorrectAnswer1
-      incorrectAnswer1Explanation
-      incorrectAnswer2
-      incorrectAnswer2Explanation
-      incorrectAnswer3
-      incorrectAnswer3Explanation
-      studentAnswer {
+      students {
         items {
           id
-          classroomSessionId
-          studentId
-          answer
-          explanation
+          classroomId
+          performanceX
+          performanceY
           confidenceLevel
+          status
           createdAt
           updatedAt
-          classroomSessionStudentAnswerId
+          classroomStudentsId
           __typename
         }
         nextToken
@@ -188,139 +195,273 @@ export const onCreateClassroomSession = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      classroomSessionsId
       __typename
     }
   }
 `;
-export const onUpdateClassroomSession = /* GraphQL */ `
-  subscription OnUpdateClassroomSession(
-    $filter: ModelSubscriptionClassroomSessionFilterInput
-  ) {
-    onUpdateClassroomSession(filter: $filter) {
+export const onCreateStudent = /* GraphQL */ `
+  subscription OnCreateStudent($filter: ModelSubscriptionStudentFilterInput) {
+    onCreateStudent(filter: $filter) {
       id
       classroomId
-      question
-      correctAnswer
-      steps
-      incorrectAnswer1
-      incorrectAnswer1Explanation
-      incorrectAnswer2
-      incorrectAnswer2Explanation
-      incorrectAnswer3
-      incorrectAnswer3Explanation
-      studentAnswer {
-        items {
-          id
-          classroomSessionId
-          studentId
-          answer
-          explanation
-          confidenceLevel
-          createdAt
-          updatedAt
-          classroomSessionStudentAnswerId
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      performanceX
+      performanceY
+      confidenceLevel
+      status
       createdAt
       updatedAt
-      classroomSessionsId
+      classroomStudentsId
       __typename
     }
   }
 `;
-export const onDeleteClassroomSession = /* GraphQL */ `
-  subscription OnDeleteClassroomSession(
-    $filter: ModelSubscriptionClassroomSessionFilterInput
-  ) {
-    onDeleteClassroomSession(filter: $filter) {
+export const onUpdateStudent = /* GraphQL */ `
+  subscription OnUpdateStudent($filter: ModelSubscriptionStudentFilterInput) {
+    onUpdateStudent(filter: $filter) {
       id
       classroomId
-      question
-      correctAnswer
-      steps
-      incorrectAnswer1
-      incorrectAnswer1Explanation
-      incorrectAnswer2
-      incorrectAnswer2Explanation
-      incorrectAnswer3
-      incorrectAnswer3Explanation
-      studentAnswer {
-        items {
-          id
-          classroomSessionId
-          studentId
-          answer
-          explanation
-          confidenceLevel
-          createdAt
-          updatedAt
-          classroomSessionStudentAnswerId
+      performanceX
+      performanceY
+      confidenceLevel
+      status
+      createdAt
+      updatedAt
+      classroomStudentsId
+      __typename
+    }
+  }
+`;
+export const onDeleteStudent = /* GraphQL */ `
+  subscription OnDeleteStudent($filter: ModelSubscriptionStudentFilterInput) {
+    onDeleteStudent(filter: $filter) {
+      id
+      classroomId
+      performanceX
+      performanceY
+      confidenceLevel
+      status
+      createdAt
+      updatedAt
+      classroomStudentsId
+      __typename
+    }
+  }
+`;
+export const onCreateLearningGap = /* GraphQL */ `
+  subscription OnCreateLearningGap(
+    $filter: ModelSubscriptionLearningGapFilterInput
+  ) {
+    onCreateLearningGap(filter: $filter) {
+      id
+      classroomId
+      title
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
           __typename
         }
-        nextToken
         __typename
       }
       createdAt
       updatedAt
-      classroomSessionsId
+      classroomLearningGapsId
       __typename
     }
   }
 `;
-export const onCreateStudentAnswer = /* GraphQL */ `
-  subscription OnCreateStudentAnswer(
-    $filter: ModelSubscriptionStudentAnswerFilterInput
+export const onUpdateLearningGap = /* GraphQL */ `
+  subscription OnUpdateLearningGap(
+    $filter: ModelSubscriptionLearningGapFilterInput
   ) {
-    onCreateStudentAnswer(filter: $filter) {
+    onUpdateLearningGap(filter: $filter) {
       id
-      classroomSessionId
-      studentId
-      answer
-      explanation
-      confidenceLevel
+      classroomId
+      title
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
-      classroomSessionStudentAnswerId
+      classroomLearningGapsId
       __typename
     }
   }
 `;
-export const onUpdateStudentAnswer = /* GraphQL */ `
-  subscription OnUpdateStudentAnswer(
-    $filter: ModelSubscriptionStudentAnswerFilterInput
+export const onDeleteLearningGap = /* GraphQL */ `
+  subscription OnDeleteLearningGap(
+    $filter: ModelSubscriptionLearningGapFilterInput
   ) {
-    onUpdateStudentAnswer(filter: $filter) {
+    onDeleteLearningGap(filter: $filter) {
       id
-      classroomSessionId
-      studentId
-      answer
-      explanation
-      confidenceLevel
+      classroomId
+      title
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
-      classroomSessionStudentAnswerId
-      __typename
-    }
-  }
-`;
-export const onDeleteStudentAnswer = /* GraphQL */ `
-  subscription OnDeleteStudentAnswer(
-    $filter: ModelSubscriptionStudentAnswerFilterInput
-  ) {
-    onDeleteStudentAnswer(filter: $filter) {
-      id
-      classroomSessionId
-      studentId
-      answer
-      explanation
-      confidenceLevel
-      createdAt
-      updatedAt
-      classroomSessionStudentAnswerId
+      classroomLearningGapsId
       __typename
     }
   }

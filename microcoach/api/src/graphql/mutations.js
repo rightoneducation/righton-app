@@ -18,45 +18,60 @@ export const createClassroom = /* GraphQL */ `
   ) {
     createClassroom(input: $input, condition: $condition) {
       id
-      userName
-      sessions {
+      learningGaps {
         items {
           id
           classroomId
-          question
-          correctAnswer
-          steps
-          incorrectAnswer1
-          incorrectAnswer1Explanation
-          incorrectAnswer2
-          incorrectAnswer2Explanation
-          incorrectAnswer3
-          incorrectAnswer3Explanation
-          studentAnswer {
-            items {
-              id
-              classroomSessionId
-              studentId
-              answer
-              explanation
-              confidenceLevel
-              createdAt
-              updatedAt
-              classroomSessionStudentAnswerId
+          title
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
               __typename
             }
-            nextToken
             __typename
           }
           createdAt
           updatedAt
-          classroomSessionsId
+          classroomLearningGapsId
           __typename
         }
         nextToken
         __typename
       }
-      analytics
+      students {
+        items {
+          id
+          classroomId
+          performanceX
+          performanceY
+          confidenceLevel
+          status
+          createdAt
+          updatedAt
+          classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -70,45 +85,60 @@ export const updateClassroom = /* GraphQL */ `
   ) {
     updateClassroom(input: $input, condition: $condition) {
       id
-      userName
-      sessions {
+      learningGaps {
         items {
           id
           classroomId
-          question
-          correctAnswer
-          steps
-          incorrectAnswer1
-          incorrectAnswer1Explanation
-          incorrectAnswer2
-          incorrectAnswer2Explanation
-          incorrectAnswer3
-          incorrectAnswer3Explanation
-          studentAnswer {
-            items {
-              id
-              classroomSessionId
-              studentId
-              answer
-              explanation
-              confidenceLevel
-              createdAt
-              updatedAt
-              classroomSessionStudentAnswerId
+          title
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
               __typename
             }
-            nextToken
             __typename
           }
           createdAt
           updatedAt
-          classroomSessionsId
+          classroomLearningGapsId
           __typename
         }
         nextToken
         __typename
       }
-      analytics
+      students {
+        items {
+          id
+          classroomId
+          performanceX
+          performanceY
+          confidenceLevel
+          status
+          createdAt
+          updatedAt
+          classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -122,79 +152,55 @@ export const deleteClassroom = /* GraphQL */ `
   ) {
     deleteClassroom(input: $input, condition: $condition) {
       id
-      userName
-      sessions {
+      learningGaps {
         items {
           id
           classroomId
-          question
-          correctAnswer
-          steps
-          incorrectAnswer1
-          incorrectAnswer1Explanation
-          incorrectAnswer2
-          incorrectAnswer2Explanation
-          incorrectAnswer3
-          incorrectAnswer3Explanation
-          studentAnswer {
-            items {
-              id
-              classroomSessionId
-              studentId
-              answer
-              explanation
-              confidenceLevel
-              createdAt
-              updatedAt
-              classroomSessionStudentAnswerId
+          title
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
               __typename
             }
-            nextToken
             __typename
           }
           createdAt
           updatedAt
-          classroomSessionsId
+          classroomLearningGapsId
           __typename
         }
         nextToken
         __typename
       }
-      analytics
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const createClassroomSession = /* GraphQL */ `
-  mutation CreateClassroomSession(
-    $input: CreateClassroomSessionInput!
-    $condition: ModelClassroomSessionConditionInput
-  ) {
-    createClassroomSession(input: $input, condition: $condition) {
-      id
-      classroomId
-      question
-      correctAnswer
-      steps
-      incorrectAnswer1
-      incorrectAnswer1Explanation
-      incorrectAnswer2
-      incorrectAnswer2Explanation
-      incorrectAnswer3
-      incorrectAnswer3Explanation
-      studentAnswer {
+      students {
         items {
           id
-          classroomSessionId
-          studentId
-          answer
-          explanation
+          classroomId
+          performanceX
+          performanceY
           confidenceLevel
+          status
           createdAt
           updatedAt
-          classroomSessionStudentAnswerId
+          classroomStudentsId
           __typename
         }
         nextToken
@@ -202,144 +208,285 @@ export const createClassroomSession = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      classroomSessionsId
       __typename
     }
   }
 `;
-export const updateClassroomSession = /* GraphQL */ `
-  mutation UpdateClassroomSession(
-    $input: UpdateClassroomSessionInput!
-    $condition: ModelClassroomSessionConditionInput
+export const createStudent = /* GraphQL */ `
+  mutation CreateStudent(
+    $input: CreateStudentInput!
+    $condition: ModelStudentConditionInput
   ) {
-    updateClassroomSession(input: $input, condition: $condition) {
+    createStudent(input: $input, condition: $condition) {
       id
       classroomId
-      question
-      correctAnswer
-      steps
-      incorrectAnswer1
-      incorrectAnswer1Explanation
-      incorrectAnswer2
-      incorrectAnswer2Explanation
-      incorrectAnswer3
-      incorrectAnswer3Explanation
-      studentAnswer {
-        items {
-          id
-          classroomSessionId
-          studentId
-          answer
-          explanation
-          confidenceLevel
-          createdAt
-          updatedAt
-          classroomSessionStudentAnswerId
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      performanceX
+      performanceY
+      confidenceLevel
+      status
       createdAt
       updatedAt
-      classroomSessionsId
+      classroomStudentsId
       __typename
     }
   }
 `;
-export const deleteClassroomSession = /* GraphQL */ `
-  mutation DeleteClassroomSession(
-    $input: DeleteClassroomSessionInput!
-    $condition: ModelClassroomSessionConditionInput
+export const updateStudent = /* GraphQL */ `
+  mutation UpdateStudent(
+    $input: UpdateStudentInput!
+    $condition: ModelStudentConditionInput
   ) {
-    deleteClassroomSession(input: $input, condition: $condition) {
+    updateStudent(input: $input, condition: $condition) {
       id
       classroomId
-      question
-      correctAnswer
-      steps
-      incorrectAnswer1
-      incorrectAnswer1Explanation
-      incorrectAnswer2
-      incorrectAnswer2Explanation
-      incorrectAnswer3
-      incorrectAnswer3Explanation
-      studentAnswer {
-        items {
-          id
-          classroomSessionId
-          studentId
-          answer
-          explanation
-          confidenceLevel
-          createdAt
-          updatedAt
-          classroomSessionStudentAnswerId
+      performanceX
+      performanceY
+      confidenceLevel
+      status
+      createdAt
+      updatedAt
+      classroomStudentsId
+      __typename
+    }
+  }
+`;
+export const deleteStudent = /* GraphQL */ `
+  mutation DeleteStudent(
+    $input: DeleteStudentInput!
+    $condition: ModelStudentConditionInput
+  ) {
+    deleteStudent(input: $input, condition: $condition) {
+      id
+      classroomId
+      performanceX
+      performanceY
+      confidenceLevel
+      status
+      createdAt
+      updatedAt
+      classroomStudentsId
+      __typename
+    }
+  }
+`;
+export const createLearningGap = /* GraphQL */ `
+  mutation CreateLearningGap(
+    $input: CreateLearningGapInput!
+    $condition: ModelLearningGapConditionInput
+  ) {
+    createLearningGap(input: $input, condition: $condition) {
+      id
+      classroomId
+      title
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
           __typename
         }
-        nextToken
         __typename
       }
       createdAt
       updatedAt
-      classroomSessionsId
+      classroomLearningGapsId
       __typename
     }
   }
 `;
-export const createStudentAnswer = /* GraphQL */ `
-  mutation CreateStudentAnswer(
-    $input: CreateStudentAnswerInput!
-    $condition: ModelStudentAnswerConditionInput
+export const updateLearningGap = /* GraphQL */ `
+  mutation UpdateLearningGap(
+    $input: UpdateLearningGapInput!
+    $condition: ModelLearningGapConditionInput
   ) {
-    createStudentAnswer(input: $input, condition: $condition) {
+    updateLearningGap(input: $input, condition: $condition) {
       id
-      classroomSessionId
-      studentId
-      answer
-      explanation
-      confidenceLevel
+      classroomId
+      title
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
-      classroomSessionStudentAnswerId
+      classroomLearningGapsId
       __typename
     }
   }
 `;
-export const updateStudentAnswer = /* GraphQL */ `
-  mutation UpdateStudentAnswer(
-    $input: UpdateStudentAnswerInput!
-    $condition: ModelStudentAnswerConditionInput
+export const deleteLearningGap = /* GraphQL */ `
+  mutation DeleteLearningGap(
+    $input: DeleteLearningGapInput!
+    $condition: ModelLearningGapConditionInput
   ) {
-    updateStudentAnswer(input: $input, condition: $condition) {
+    deleteLearningGap(input: $input, condition: $condition) {
       id
-      classroomSessionId
-      studentId
-      answer
-      explanation
-      confidenceLevel
+      classroomId
+      title
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
-      classroomSessionStudentAnswerId
-      __typename
-    }
-  }
-`;
-export const deleteStudentAnswer = /* GraphQL */ `
-  mutation DeleteStudentAnswer(
-    $input: DeleteStudentAnswerInput!
-    $condition: ModelStudentAnswerConditionInput
-  ) {
-    deleteStudentAnswer(input: $input, condition: $condition) {
-      id
-      classroomSessionId
-      studentId
-      answer
-      explanation
-      confidenceLevel
-      createdAt
-      updatedAt
-      classroomSessionStudentAnswerId
+      classroomLearningGapsId
       __typename
     }
   }

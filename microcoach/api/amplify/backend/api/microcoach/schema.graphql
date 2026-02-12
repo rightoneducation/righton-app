@@ -4,40 +4,97 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 
 type Classroom @model {
   id: ID!
-  userName: String!
-  sessions: [ClassroomSession] @hasMany
-  analytics: AWSJSON
+  learningGaps: [LearningGap] @hasMany
+  students: [Student] @hasMany
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
 
-type ClassroomSession @model {
+type Student @model {
   id: ID!
   classroomId: ID!
-  question: String!
-  correctAnswer: String!
-  steps: AWSJSON!
-  incorrectAnswer1: String!
-  incorrectAnswer1Explanation: String!
-  incorrectAnswer2: String!
-  incorrectAnswer2Explanation: String!
-  incorrectAnswer3: String!
-  incorrectAnswer3Explanation: String!
-  studentAnswer: [StudentAnswer] @hasMany
+  performanceX: String!
+  performanceY: String!
+  confidenceLevel: Int!
+  status: String!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
 
-type StudentAnswer @model {
+type LearningGap @model {
   id: ID!
-  classroomSessionId: ID!
-  studentId: String!
-  answer: String!
-  explanation: String!
-  confidenceLevel: Int!
+  classroomId: ID!
+  title: String
+  priority: String
+  studentCount: Int
+  studentPercent: Int
+  occurrence: String
+  misconceptionSummary: String
+  successIndicators: [String]
+  evidence: Evidence
+  move: Move
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
+
+  type Evidence {
+    source: String
+    mostCommonError: String
+    sampleStudentWork: [String]
+    aiThinkingPattern: String
+  }
+
+  type Move {
+    id: String
+    title: String
+    time: String
+    format: String
+    summary: String
+    aiReasoning: String
+    tabs: Tabs
+  }
+
+  type Tabs {
+    overview: Overview
+    activitySteps: ActivitySteps
+    materials: Materials
+    studentGroupings: StudentGroupings
+  }
+
+    type Overview {
+      whatStudentsDo: String
+      whatYouDo: String
+      importance: String
+    }
+
+    type ActivitySteps {
+      setup: [String]
+      problem: String
+      coreActivity: [String]
+      discussionQuestions: [String]
+    }
+
+    type Materials {
+      required: [String]
+      optional: [String]
+    }
+
+    type StudentGroupings {
+      groups: [StudentGroup]
+      highFlyers: HighFlyers
+      aiRecommendation: String
+    }
+
+      type StudentGroup {
+        name: String
+        description: String
+        students: [String]
+      }
+
+      type HighFlyers {
+        students: [String]
+        description: String
+      }
 
 input GetLearningScienceInput {
   ccss: String!

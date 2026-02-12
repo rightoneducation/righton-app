@@ -5,45 +5,60 @@ export const getClassroom = /* GraphQL */ `
   query GetClassroom($id: ID!) {
     getClassroom(id: $id) {
       id
-      userName
-      sessions {
+      learningGaps {
         items {
           id
           classroomId
-          question
-          correctAnswer
-          steps
-          incorrectAnswer1
-          incorrectAnswer1Explanation
-          incorrectAnswer2
-          incorrectAnswer2Explanation
-          incorrectAnswer3
-          incorrectAnswer3Explanation
-          studentAnswer {
-            items {
-              id
-              classroomSessionId
-              studentId
-              answer
-              explanation
-              confidenceLevel
-              createdAt
-              updatedAt
-              classroomSessionStudentAnswerId
+          title
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
               __typename
             }
-            nextToken
             __typename
           }
           createdAt
           updatedAt
-          classroomSessionsId
+          classroomLearningGapsId
           __typename
         }
         nextToken
         __typename
       }
-      analytics
+      students {
+        items {
+          id
+          classroomId
+          performanceX
+          performanceY
+          confidenceLevel
+          status
+          createdAt
+          updatedAt
+          classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -59,33 +74,57 @@ export const listClassrooms = /* GraphQL */ `
     listClassrooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        userName
-        sessions {
+        learningGaps {
           items {
             id
             classroomId
-            question
-            correctAnswer
-            steps
-            incorrectAnswer1
-            incorrectAnswer1Explanation
-            incorrectAnswer2
-            incorrectAnswer2Explanation
-            incorrectAnswer3
-            incorrectAnswer3Explanation
-            studentAnswer {
-              nextToken
+            title
+            priority
+            studentCount
+            studentPercent
+            occurrence
+            misconceptionSummary
+            successIndicators
+            evidence {
+              source
+              mostCommonError
+              sampleStudentWork
+              aiThinkingPattern
+              __typename
+            }
+            move {
+              id
+              title
+              time
+              format
+              summary
+              aiReasoning
               __typename
             }
             createdAt
             updatedAt
-            classroomSessionsId
+            classroomLearningGapsId
             __typename
           }
           nextToken
           __typename
         }
-        analytics
+        students {
+          items {
+            id
+            classroomId
+            performanceX
+            performanceY
+            confidenceLevel
+            status
+            createdAt
+            updatedAt
+            classroomStudentsId
+            __typename
+          }
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -95,85 +134,39 @@ export const listClassrooms = /* GraphQL */ `
     }
   }
 `;
-export const getClassroomSession = /* GraphQL */ `
-  query GetClassroomSession($id: ID!) {
-    getClassroomSession(id: $id) {
+export const getStudent = /* GraphQL */ `
+  query GetStudent($id: ID!) {
+    getStudent(id: $id) {
       id
       classroomId
-      question
-      correctAnswer
-      steps
-      incorrectAnswer1
-      incorrectAnswer1Explanation
-      incorrectAnswer2
-      incorrectAnswer2Explanation
-      incorrectAnswer3
-      incorrectAnswer3Explanation
-      studentAnswer {
-        items {
-          id
-          classroomSessionId
-          studentId
-          answer
-          explanation
-          confidenceLevel
-          createdAt
-          updatedAt
-          classroomSessionStudentAnswerId
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      performanceX
+      performanceY
+      confidenceLevel
+      status
       createdAt
       updatedAt
-      classroomSessionsId
+      classroomStudentsId
       __typename
     }
   }
 `;
-export const listClassroomSessions = /* GraphQL */ `
-  query ListClassroomSessions(
-    $filter: ModelClassroomSessionFilterInput
+export const listStudents = /* GraphQL */ `
+  query ListStudents(
+    $filter: ModelStudentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomSessions(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         classroomId
-        question
-        correctAnswer
-        steps
-        incorrectAnswer1
-        incorrectAnswer1Explanation
-        incorrectAnswer2
-        incorrectAnswer2Explanation
-        incorrectAnswer3
-        incorrectAnswer3Explanation
-        studentAnswer {
-          items {
-            id
-            classroomSessionId
-            studentId
-            answer
-            explanation
-            confidenceLevel
-            createdAt
-            updatedAt
-            classroomSessionStudentAnswerId
-            __typename
-          }
-          nextToken
-          __typename
-        }
+        performanceX
+        performanceY
+        confidenceLevel
+        status
         createdAt
         updatedAt
-        classroomSessionsId
+        classroomStudentsId
         __typename
       }
       nextToken
@@ -181,39 +174,138 @@ export const listClassroomSessions = /* GraphQL */ `
     }
   }
 `;
-export const getStudentAnswer = /* GraphQL */ `
-  query GetStudentAnswer($id: ID!) {
-    getStudentAnswer(id: $id) {
+export const getLearningGap = /* GraphQL */ `
+  query GetLearningGap($id: ID!) {
+    getLearningGap(id: $id) {
       id
-      classroomSessionId
-      studentId
-      answer
-      explanation
-      confidenceLevel
+      classroomId
+      title
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
-      classroomSessionStudentAnswerId
+      classroomLearningGapsId
       __typename
     }
   }
 `;
-export const listStudentAnswers = /* GraphQL */ `
-  query ListStudentAnswers(
-    $filter: ModelStudentAnswerFilterInput
+export const listLearningGaps = /* GraphQL */ `
+  query ListLearningGaps(
+    $filter: ModelLearningGapFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listStudentAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listLearningGaps(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        classroomSessionId
-        studentId
-        answer
-        explanation
-        confidenceLevel
+        classroomId
+        title
+        priority
+        studentCount
+        studentPercent
+        occurrence
+        misconceptionSummary
+        successIndicators
+        evidence {
+          source
+          mostCommonError
+          sampleStudentWork
+          aiThinkingPattern
+          __typename
+        }
+        move {
+          id
+          title
+          time
+          format
+          summary
+          aiReasoning
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          __typename
+        }
         createdAt
         updatedAt
-        classroomSessionStudentAnswerId
+        classroomLearningGapsId
         __typename
       }
       nextToken
