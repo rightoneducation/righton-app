@@ -42,6 +42,7 @@ const getHoverColor = (
         buttonType === ButtonType.SAVEDRAFT ||
         buttonType === ButtonType.BACKTOEDIT ||
         buttonType === ButtonType.BACKNOARROW ||
+        buttonType === ButtonType.DELETE ||
         buttonType === ButtonType.BACK
       ) {
         return `rgba(0,0,0, 0.1)`;
@@ -101,6 +102,7 @@ export const ButtonStyled = styled(Button, {
           (buttonType === ButtonType.CREATEQUESTION) ||
           (buttonType === ButtonType.EDITQUESTION) ||
           (buttonType === ButtonType.CANCELQUESTION) ||
+          (buttonType === ButtonType.DELETE) ||
           (buttonType === ButtonType.BACK)
           ? `${theme.palette.primary.buttonPrimaryDefault}`
           : `#FFF`
@@ -166,6 +168,7 @@ export const ButtonTypography = styled(Typography, {
     (buttonType === ButtonType.BACKTOEDIT) ||
     (buttonType === ButtonType.CANCELQUESTION) ||
     (buttonType === ButtonType.EDITQUESTION) ||
+    (buttonType === ButtonType.DELETE) ||
     (buttonType === ButtonType.SIGNUP && isReset) ||
     (buttonType === ButtonType.BACK)
       ? `${theme.palette.primary.buttonPrimaryDefault}`

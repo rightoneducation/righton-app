@@ -151,6 +151,7 @@ export default function CreateGame({
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(() =>
     localData.draftGame ?? gameTemplate,
   );
+  const [originalGame, setOriginalGame] = useState<IGameTemplate | null>(null);
   const [originalGameType, setOriginalGameType] = useState<PublicPrivateType>(gameTemplate.gameTemplate.publicPrivateType);
   const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
   // used when saving an edited game
@@ -1176,6 +1177,7 @@ export default function CreateGame({
       selected.game.title = `[DUPLICATE OF] ${title}`;
     }
     if (selected.game) {
+      setOriginalGame(selected.game as IGameTemplate);
       setDraftGame((prev) => ({
         ...prev,
         gameTemplate: selected.game as IGameTemplate,
@@ -1298,6 +1300,9 @@ export default function CreateGame({
         handleSaveEditedGame={handleSaveEditedGame}
         editQuestionDraft={editQuestionDraft}
         handleSaveEditedQuestion={handleSaveEditedQuestion}
+        draftGame={draftGame.gameTemplate}
+        draftQuestionList={draftQuestionsList}
+        originalGame={originalGame}
       />
 
       {/* Create Game Image Upload Modal */}

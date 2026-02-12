@@ -56,6 +56,8 @@ import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/Crea
 import { handleCheckQuestionBaseComplete, handleCheckQuestionCorrectCardComplete, handleCheckQuestionIncorrectCardsComplete } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
 import { DraftAssetHandler } from '../lib/services/DraftAssetHandler';
+import { ButtonType } from '../components/button/ButtonModels';
+import CentralButton from '../components/button/Button';
 
 interface CreateQuestionProps {
   screenSize: ScreenSize;
@@ -142,6 +144,7 @@ export default function CreateQuestion({
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
     (!isEdit || isPublic) ? PublicPrivateType.PUBLIC : PublicPrivateType.PRIVATE,
   );
+  const [originalQuestion, setOriginalQuestion] = useState<CentralQuestionTemplateInput | null>(null);
   const [originalImageURl, setOriginalImageURL] = useState<string>('');
   const localData = useCreateQuestionLoader();
 
@@ -757,7 +760,7 @@ export default function CreateQuestion({
         setIsCardSubmitted(true);
         setIsCreatingTemplate(true);
         await draftAssetHandler.createDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl);
-        if (initPublicPrivate !== PublicPrivateType.DRAFT && selectedQuestionId) {
+        if (initPublicPrivate !== PublicPrivateType.DRAFT && selectedQuestionId && !isClone) {
           await apiClients.questionTemplate.deleteQuestionTemplate(
             initPublicPrivate as TemplateType,
             selectedQuestionId
@@ -833,6 +836,78 @@ export default function CreateQuestion({
       await handleSaveEditedQuestion();
     }
   }
+
+
+  const handleCloseDeleteModal = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
+
+
+  const handleDeleteDraftQuestion = async () => {
+    setModalObject({
+      modalState: ModalStateType.DELETING,
+      confirmState: ConfirmStateType.NULL,
+    });
+    await draftAssetHandler.deleteDraftQuestion(centralData, apiClients, selectedQuestionId);
+    fetchElements(LibraryTabEnum.DRAFTS, '', null , true);
+    navigate(`/library/questions/${PublicPrivateType.DRAFT}`);
+  };
+
+  const handleDeleteQuestion = async () => {
+    setModalObject({
+      modalState: ModalStateType.DELETING,
+      confirmState: ConfirmStateType.NULL,
+    });
+    const { publicPrivateType}  = draftQuestion;
+    const questionId = centralData.selectedQuestion?.question?.id;
+
+    if (questionId) {
+      // find all game questions that reference this question template
+      const gameQuestionIds = await apiClients.questionTemplate.getQuestionTemplateJoinTableIds(
+        publicPrivateType as TemplateType,
+        questionId
+      );
+      // delete all game questions that reference this question template
+      if (gameQuestionIds.length > 0) {
+        await Promise.all(
+          gameQuestionIds.map((id) =>
+            apiClients.gameQuestions.deleteGameQuestions(publicPrivateType, id)
+          )
+        );
+      }
+      // then delete the question template
+      const response =await apiClients.questionTemplate.deleteQuestionTemplate(
+        publicPrivateType as TemplateType,
+        questionId
+      );
+    }
+    const libraryTab = publicPrivateType === PublicPrivateType.PUBLIC ? LibraryTabEnum.PUBLIC : LibraryTabEnum.PRIVATE;
+    fetchElements(libraryTab, '', null , true);
+    navigate(`/library/questions/${draftQuestion.publicPrivateType}`);
+  };
+
+  
+  const handleDeleteQuestionSwitch = () => {
+    setModalObject({
+      modalState: ModalStateType.NULL,
+      confirmState: ConfirmStateType.NULL,
+    });
+    if (isDraft) {
+      handleDeleteDraftQuestion();
+    } else {
+      handleDeleteQuestion();
+    }
+  };
+
+  const handleDeleteQuestionModal = () => {
+    setModalObject({
+      modalState: ModalStateType.DELETE,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
 
   const handleDiscardQuestion = () => {
     setIsDiscardModalOpen(true);
@@ -928,6 +1003,7 @@ export default function CreateQuestion({
       if (title && !regex.test(title) && isClone)
         selected.title = `${title} [DUPLICATE]`;
       const draft = assembleQuestionTemplate(selected, isDraft);
+      setOriginalQuestion(draft);
       setInitPublicPrivate(draft.publicPrivateType);
       setDraftQuestion((prev) => ({
         ...prev,
@@ -944,8 +1020,6 @@ export default function CreateQuestion({
       fetchElement(GameQuestionType.QUESTION, selectedQuestionId);
     }
   }, [centralData.selectedQuestion, route, selectedQuestionId]); // eslint-disable-line
-
-
   
   return (
     <CreateQuestionMainContainer>
@@ -980,6 +1054,8 @@ export default function CreateQuestion({
         title={draftQuestion.questionCard.title ?? ''}
         handleDiscard={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
+        handleDeleteQuestion={handleDeleteQuestionSwitch}
+        handleCloseDeleteModal={handleCloseDeleteModal}
         handlePublishQuestion={handlePublishQuestion}
         handleSaveEditedQuestion={handleSaveEditedQuestionSwitch}
         handleCloseSaveQuestionModal={handleCloseSaveQuestionModal}
@@ -987,6 +1063,8 @@ export default function CreateQuestion({
         handleSaveDraft={handleSaveDraft}
         isCardErrored={(isBaseCardErrored || isCorrectCardErrored || isIncorrectCardErrored)}
         isDraft={isDraft}
+        draftQuestion={draftQuestion}
+        originalQuestion={originalQuestion}
       />
       <CreateQuestionBoxContainer screenSize={screenSize}>
         <CreateQuestionHeader 
@@ -1032,6 +1110,14 @@ export default function CreateQuestion({
                   handleAnswerType={handleAnswerType}
                   handleAnswerSettingsChange={handleAnswerSettingsChange}
                 />
+                {!isCreate &&
+                  <CentralButton
+                    buttonType={ButtonType.DELETE}
+                    isEnabled
+                    buttonWidthOverride='100%'
+                    onClick={handleDeleteQuestionModal}
+                  />
+                }
               </Box>
               <Box
                   style={{

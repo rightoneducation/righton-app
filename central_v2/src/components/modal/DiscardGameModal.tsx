@@ -1,4 +1,5 @@
 import React from 'react';
+import { useMatch } from 'react-router-dom';
 import {
   Box,
   Paper,
@@ -64,6 +65,7 @@ interface DiscardGameModalProps {
   handleDiscardClick?: () => void;
   handleCloseDiscardModal?: () => void;
   handleSaveEditedGame?: () => void;
+  handlePublish?: () => void;
   isUpdatingTemplate?: boolean;
 }
 
@@ -72,13 +74,16 @@ export default function DiscardGameModal({
   templateType,
   handleDiscardClick,
   handleCloseDiscardModal,
-  isUpdatingTemplate,
   handleSaveEditedGame,
+  handlePublish,
+  isUpdatingTemplate,
 }: DiscardGameModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
   const text2 = isUpdatingTemplate ? 'Updating' : 'Creating';
-
+  const text3 = templateType === TemplateType.GAME ? 'game' : 'question';
+  const isClone = useMatch(`/clone/${text3}/:type/:id`);
+  
   return (
     <Fade
       in={isModalOpen}
@@ -115,7 +120,7 @@ export default function DiscardGameModal({
               <CentralButton
                 buttonType={ButtonType.UPDATE}
                 isEnabled
-                onClick={handleSaveEditedGame}
+                onClick={isClone ? handlePublish : handleSaveEditedGame}
               />
               <CentralButton
                 buttonType={ButtonType.BACKTOEDIT}

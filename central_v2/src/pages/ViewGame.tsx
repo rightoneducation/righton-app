@@ -204,12 +204,6 @@ export default function ViewGame({
         handleCloseSaveGameModal={handleCloseEditModal}
         isCardErrored={false}
       />
-      <DeleteModal
-        isModalOpen={isDeleteModalOpen}
-        gameQuestion={GameQuestionType.GAME}
-        setIsModalOpen={setIsDeleteModalOpen}
-        handleProceedToDelete={handleProceedToDelete}
-      />
       {isLoading ? (
         <Box
           style={{
