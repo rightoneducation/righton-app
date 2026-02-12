@@ -856,11 +856,37 @@ export default function CreateQuestion({
     navigate(`/library/questions/${PublicPrivateType.DRAFT}`);
   };
 
-  const handleDeleteQuestionFunction = () => {
+  const handleDeleteQuestion = async () => {
     setModalObject({
-      modalState: ModalStateType.DELETE,
+      modalState: ModalStateType.DELETING,
       confirmState: ConfirmStateType.NULL,
     });
+    const { publicPrivateType}  = draftQuestion;
+    const questionId = centralData.selectedQuestion?.question?.id;
+
+    if (questionId) {
+      // find all game questions that reference this question template
+      const gameQuestionIds = await apiClients.questionTemplate.getQuestionTemplateJoinTableIds(
+        publicPrivateType as TemplateType,
+        questionId
+      );
+      // delete all game questions that reference this question template
+      if (gameQuestionIds.length > 0) {
+        await Promise.all(
+          gameQuestionIds.map((id) =>
+            apiClients.gameQuestions.deleteGameQuestions(publicPrivateType, id)
+          )
+        );
+      }
+      // then delete the question template
+      const response =await apiClients.questionTemplate.deleteQuestionTemplate(
+        publicPrivateType as TemplateType,
+        questionId
+      );
+    }
+    const libraryTab = publicPrivateType === PublicPrivateType.PUBLIC ? LibraryTabEnum.PUBLIC : LibraryTabEnum.PRIVATE;
+    fetchElements(libraryTab, '', null , true);
+    navigate(`/library/questions/${draftQuestion.publicPrivateType}`);
   };
 
   
@@ -872,7 +898,7 @@ export default function CreateQuestion({
     if (isDraft) {
       handleDeleteDraftQuestion();
     } else {
-      handleDeleteQuestionFunction();
+      handleDeleteQuestion();
     }
   };
 
@@ -1084,12 +1110,14 @@ export default function CreateQuestion({
                   handleAnswerType={handleAnswerType}
                   handleAnswerSettingsChange={handleAnswerSettingsChange}
                 />
-                <CentralButton
-                  buttonType={ButtonType.DELETE}
-                  isEnabled
-                  buttonWidthOverride='100%'
-                  onClick={handleDeleteQuestionModal}
-                />
+                {!isCreate &&
+                  <CentralButton
+                    buttonType={ButtonType.DELETE}
+                    isEnabled
+                    buttonWidthOverride='100%'
+                    onClick={handleDeleteQuestionModal}
+                  />
+                }
               </Box>
               <Box
                   style={{
