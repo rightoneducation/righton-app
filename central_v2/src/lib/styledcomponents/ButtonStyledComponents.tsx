@@ -154,7 +154,10 @@ export const ButtonTypography = styled(Typography, {
 })<ButtonStyledProps>(({ theme, buttonColor, buttonType, isReset }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
-  fontWeight: '600',
+  fontWeight:
+    buttonType === ButtonType.BACKTOEDIT
+      ? '700'
+      : '600',
   textTransform: 'none',
   padding: 0,
   color:
