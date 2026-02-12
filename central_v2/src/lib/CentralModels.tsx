@@ -73,6 +73,7 @@ export enum GameQuestionType {
 export enum ModalStateType {
   NULL,
   DELETE,
+  DELETING,
   DISCARD,
   PUBLISH,
   LOADING,

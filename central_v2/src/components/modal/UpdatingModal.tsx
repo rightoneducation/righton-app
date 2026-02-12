@@ -73,6 +73,9 @@ export default function UpdatingModal({
   let text = '';
 
   switch (modalState){
+    case ModalStateType.DELETING:
+      text = 'Deleting...';
+      break;
     case ModalStateType.SAVING:
       text = 'Saving...';
       break;

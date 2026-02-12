@@ -26,12 +26,9 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   maxHeight: '100%',
-  maxWidth: '400px',
+  maxWidth: '430px',
   background: '#FFF',
-  paddingTop: '16px',
-  paddingBottom: '16px',
-  paddingLeft: '24px',
-  paddingRight: '24px',
+  padding: '45px',
   zIndex: 1310,
   display: 'flex',
   flexDirection: 'column',
@@ -54,6 +51,7 @@ const BodyText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Rubik',  
   width: '100%',
   fontSize: '16px',
+  lineHeight: '18px',
   fontWeight: 400,
   textAlign: 'center',
 }));
@@ -88,20 +86,21 @@ export default function DeleteModal({
             justifyContent: 'space-between',
             alignItems: 'center',
             flexDirection: 'column',
-            gap: '16px',
-            padding: '24px',
+            gap: '24px',
           }}
         >
           <DragText>
             Confirm Deletion
           </DragText>
-          <BodyText>
-            Deleted content will be permanently gone.
-          </BodyText>
-          <BodyText>  
-            This action will not be reversible.
-          </BodyText>
-          <Box style={{ display: 'flex', gap: '16px' }}>
+          <Box style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+            <BodyText>
+              Deleted content will be permanently gone.
+            </BodyText>
+            <BodyText>  
+              This action will not be reversible.
+            </BodyText>
+          </Box>
+          <Box style={{ width: '100%', display: 'flex', gap: '9px', flexDirection: 'column' }}>
             <CentralButton
               buttonType={ButtonType.PINKDELETE}
               isEnabled

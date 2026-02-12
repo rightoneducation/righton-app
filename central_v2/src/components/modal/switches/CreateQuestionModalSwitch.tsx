@@ -91,6 +91,7 @@ export default function CreateQuestionModalSwitch({
     case ModalStateType.LOADING:
     case ModalStateType.SAVING:
     case ModalStateType.PUBLISHING:
+    case ModalStateType.DELETING:
       return <UpdatingModal
         modalState={modalObject.modalState}
         isModalOpen

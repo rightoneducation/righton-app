@@ -845,8 +845,25 @@ export default function CreateQuestion({
     });
   };
 
-  // TODO: add support for deleting a draft question and public private question
-  // use delete on ViewGame and ViewQuestion for reference
+
+  const handleDeleteDraftQuestion = async () => {
+    setModalObject({
+      modalState: ModalStateType.DELETING,
+      confirmState: ConfirmStateType.NULL,
+    });
+    await draftAssetHandler.deleteDraftQuestion(centralData, apiClients, selectedQuestionId);
+    fetchElements(LibraryTabEnum.DRAFTS, '', null , true);
+    navigate(`/library/questions/${PublicPrivateType.DRAFT}`);
+  };
+
+  const handleDeleteQuestionFunction = () => {
+    setModalObject({
+      modalState: ModalStateType.DELETE,
+      confirmState: ConfirmStateType.NULL,
+    });
+  };
+
+  
   const handleDeleteQuestionSwitch = () => {
     setModalObject({
       modalState: ModalStateType.NULL,
@@ -859,7 +876,7 @@ export default function CreateQuestion({
     }
   };
 
-  const handleDeleteQuestion = () => {
+  const handleDeleteQuestionModal = () => {
     setModalObject({
       modalState: ModalStateType.DELETE,
       confirmState: ConfirmStateType.NULL,
@@ -1071,7 +1088,7 @@ export default function CreateQuestion({
                   buttonType={ButtonType.DELETE}
                   isEnabled
                   buttonWidthOverride='100%'
-                  onClick={handleDeleteQuestion}
+                  onClick={handleDeleteQuestionModal}
                 />
               </Box>
               <Box
