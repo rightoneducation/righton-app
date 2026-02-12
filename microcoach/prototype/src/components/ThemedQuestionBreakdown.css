@@ -1,0 +1,268 @@
+.themed-question-breakdown {
+  width: 100%;
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.breakdown-header {
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.breakdown-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.breakdown-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+.breakdown-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.questions-column,
+.student-questions-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.column-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.column-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 24px 0;
+}
+
+.theme-section {
+  margin-bottom: 24px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.theme-section:last-child {
+  margin-bottom: 0;
+}
+
+.theme-header {
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.theme-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.theme-description {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.questions-list,
+.student-questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.question-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  gap: 12px;
+}
+
+.question-icon-container {
+  flex-shrink: 0;
+}
+
+.question-icon {
+  font-size: 20px;
+  display: block;
+}
+
+.question-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.question-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+}
+
+.performance-metrics {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.metric {
+  font-size: 12px;
+  color: #666;
+}
+
+.metric strong {
+  color: #333;
+}
+
+.question-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 16px;
+  min-width: 60px;
+}
+
+.incorrect-percentage {
+  font-size: 20px;
+  font-weight: 700;
+  color: #dc3545;
+  line-height: 1;
+}
+
+.incorrect-label {
+  font-size: 10px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.question-actions {
+  flex-shrink: 0;
+}
+
+.see-details-btn,
+.respond-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  text-decoration: underline;
+}
+
+.see-details-btn:hover,
+.respond-btn:hover {
+  background-color: #f0f8ff;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.respond-btn {
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+}
+
+.respond-btn:hover {
+  background-color: #0056b3;
+}
+
+.student-question-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  gap: 16px;
+}
+
+.student-question-item .question-content {
+  flex: 1;
+}
+
+.question-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.student-name {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.timestamp {
+  font-size: 11px;
+  color: #999;
+}
+
+.responses {
+  font-size: 11px;
+  color: #007bff;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .breakdown-columns {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .question-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .question-stats {
+    margin: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .performance-metrics {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .student-question-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

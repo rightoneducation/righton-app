@@ -1,0 +1,115 @@
+.confidence-chart {
+  width: 100%;
+  max-width: 400px;
+  height: 280px;
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.chart-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.chart-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.game-label {
+  width: 60px;
+  font-size: 12px;
+  color: #666;
+  text-align: right;
+  margin-right: 12px;
+}
+
+.bar-container {
+  flex: 1;
+  height: 20px;
+}
+
+.confidence-bar {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 4px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.bar-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.bar-segment.confidence-1 {
+  background-color: #dc3545; /* Red - Not confident at all */
+}
+
+.bar-segment.confidence-2 {
+  background-color: #fd7e14; /* Orange - Slightly confident */
+}
+
+.bar-segment.confidence-3 {
+  background-color: #ffc107; /* Yellow - Moderately confident */
+}
+
+.bar-segment.confidence-4 {
+  background-color: #28a745; /* Green - Very confident */
+}
+
+.bar-segment.confidence-5 {
+  background-color: #007bff; /* Blue - Extremely confident */
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #666;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legend-color.confidence-1 {
+  background-color: #dc3545; /* Red - Not confident at all */
+}
+
+.legend-color.confidence-2 {
+  background-color: #fd7e14; /* Orange - Slightly confident */
+}
+
+.legend-color.confidence-3 {
+  background-color: #ffc107; /* Yellow - Moderately confident */
+}
+
+.legend-color.confidence-4 {
+  background-color: #28a745; /* Green - Very confident */
+}
+
+.legend-color.confidence-5 {
+  background-color: #007bff; /* Blue - Extremely confident */
+}
