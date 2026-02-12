@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { useMatch } from 'react-router-dom';
 import {
   Box,
   Paper,
@@ -93,6 +94,7 @@ export default function SaveGameModal({
 }: SaveGameModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
+  const isClone = useMatch(`/clone/${text.toLowerCase()}/:type/:id`);
 
   
   const compareQuestions = useCallback((draft: CentralQuestionTemplateInput, original: CentralQuestionTemplateInput) => {
@@ -172,6 +174,7 @@ export default function SaveGameModal({
 
   const contentChanged = useMemo(() => {
     if (!isModalOpen) return false;
+    if (isClone) return true;
 
     if (templateType === TemplateType.GAME) {
       if (draftGame == null) return false;
@@ -195,7 +198,7 @@ export default function SaveGameModal({
 
     if (originalQuestion == null) return draftQuestion != null;
     return draftQuestion != null && compareQuestions(draftQuestion, originalQuestion);
-  }, [isModalOpen, templateType, draftGame, originalGame, draftQuestion, originalQuestion, draftQuestionList, compareGames, compareQuestions]);
+  }, [isModalOpen, templateType, draftGame, originalGame, draftQuestion, originalQuestion, draftQuestionList, compareGames, compareQuestions, isClone]);
 
   return (
     <Fade

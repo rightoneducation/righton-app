@@ -760,7 +760,7 @@ export default function CreateQuestion({
         setIsCardSubmitted(true);
         setIsCreatingTemplate(true);
         await draftAssetHandler.createDraftQuestion(centralData, draftQuestion, apiClients, originalImageURl);
-        if (initPublicPrivate !== PublicPrivateType.DRAFT && selectedQuestionId) {
+        if (initPublicPrivate !== PublicPrivateType.DRAFT && selectedQuestionId && !isClone) {
           await apiClients.questionTemplate.deleteQuestionTemplate(
             initPublicPrivate as TemplateType,
             selectedQuestionId
