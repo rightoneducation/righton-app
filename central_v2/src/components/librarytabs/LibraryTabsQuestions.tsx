@@ -56,7 +56,9 @@ export default function LibraryTabsQuestions({
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
   const centralData = useCentralDataState();
 
-  const isSearchResults = centralData?.searchTerms?.length > 0;
+  const isSearchResults =
+    (centralData?.searchTerms?.length ?? 0) > 0 ||
+    (centralData?.selectedGrades?.length ?? 0) > 0;
 
   const tabMap: { [key: number]: string } = {
     [LibraryTabEnum.PUBLIC]: 'Public',

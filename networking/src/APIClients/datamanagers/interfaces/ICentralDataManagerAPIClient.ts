@@ -21,7 +21,7 @@ export interface ICentralDataManagerAPIClient {
     type: TemplateType, 
     limit: number | null, 
     nextToken: string | null, 
-    search: string, 
+    search: string | null, 
     sortDirection: SortDirection, 
     sortType: SortType, 
     gradeTargets: GradeTarget[],

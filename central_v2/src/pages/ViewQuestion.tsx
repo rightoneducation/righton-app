@@ -195,12 +195,6 @@ export default function ViewQuestion({
         setIsModalOpen={setIsModalOpen}
         handleProceedToEdit={handleProceedToEdit}
       />
-      <DeleteModal
-        isModalOpen={isDeleteModalOpen}
-        gameQuestion={GameQuestionType.QUESTION}
-        setIsModalOpen={setIsDeleteModalOpen}
-        handleProceedToDelete={handleProceedToDelete}
-      />
       <LibraryTabsModalContainerGames
         publicPrivateType={ centralData.selectedQuestion?.question?.publicPrivateType ?? PublicPrivateType.PUBLIC}
         isTabsOpen={isAddToGameModalOpen}

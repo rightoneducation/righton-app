@@ -69,6 +69,13 @@ enum PublishDraftQuestionStep{
   UPDATE_USER_STATS,
 }
 
+enum DeleteDraftQuestionStep{
+  FETCH_IDS,
+  DELETE_DRAFT_GAME_QUESTIONS,
+  DELETE_DRAFT_QUESTION_TEMPLATE,
+  UPDATE_USER_STATS,
+}
+
 export class DraftAssetHandler {
   private rollbackActions: Array<() => Promise<void>> = [];
   private completedPublishSteps: PublishDraftAssetStep[] = [];
@@ -77,6 +84,7 @@ export class DraftAssetHandler {
   private completedCreateQuestionSteps: CreateDraftQuestionStep[] = [];
   private completedUpdateQuestionSteps: UpdateDraftQuestionStep[] = [];
   private completedPublishQuestionSteps: PublishDraftQuestionStep[] = [];
+  private completedDeleteQuestionSteps: DeleteDraftQuestionStep[] = [];
 
 
   private static validateDraftGame(draftGame: TGameTemplateProps, draftQuestionsList: TDraftQuestionsList[]): boolean {
@@ -895,6 +903,47 @@ export class DraftAssetHandler {
       return true;
     } catch (err) {
       console.error('Error publishing draft question:', err);
+      return false;
+    }
+  }
+
+  async deleteDraftQuestion(
+    centralData: ICentralDataState,
+    apiClients: IAPIClients,
+    selectedQuestionId: string,
+  ): Promise<boolean> {
+    try {
+      const draftGameQuestionIds = await apiClients.questionTemplate.getQuestionTemplateJoinTableIds(
+        PublicPrivateType.DRAFT as TemplateType,
+        selectedQuestionId
+      );
+      this.completedDeleteQuestionSteps.push(DeleteDraftQuestionStep.FETCH_IDS);
+      if (draftGameQuestionIds.length > 0) {
+        await Promise.all(
+          draftGameQuestionIds.map((id) =>
+            apiClients.gameQuestions.deleteGameQuestions(PublicPrivateType.DRAFT, id)
+          )
+        );
+      }
+      this.completedDeleteQuestionSteps.push(DeleteDraftQuestionStep.DELETE_DRAFT_GAME_QUESTIONS);
+      // then delete the draft question template
+      await apiClients.questionTemplate.deleteQuestionTemplate(
+        PublicPrivateType.DRAFT,
+        selectedQuestionId
+      );
+      this.completedDeleteQuestionSteps.push(DeleteDraftQuestionStep.DELETE_DRAFT_QUESTION_TEMPLATE);
+      // update user stats
+      const existingNumQuestions =
+        centralData.userProfile?.questionsMade || 0;
+      const newNumQuestions = existingNumQuestions - 1;
+      await apiClients.user.updateUser({
+        id: centralData.userProfile?.id || '',
+        questionsMade: newNumQuestions,
+      });
+      this.completedDeleteQuestionSteps.push(DeleteDraftQuestionStep.UPDATE_USER_STATS);
+      return true;
+    } catch (err) {
+      console.error('Error deleting draft question:', err);
       return false;
     }
   }

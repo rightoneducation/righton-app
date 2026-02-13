@@ -74,7 +74,7 @@ export default function ConfirmSaveModal({
   const theme = useTheme();
   const type = templateType === TemplateType.GAME ? 'Game' : 'Question';
   let titleText = '';
-  let subtitleText = '';
+  let subtitleText: React.ReactNode = '';
 
   switch (confirmState) {
     case ConfirmStateType.FAVORITED:
@@ -82,8 +82,12 @@ export default function ConfirmSaveModal({
       subtitleText = `You can view your favorited ${type.toLowerCase()} in My Library.`;
       break;
     case ConfirmStateType.DRAFT:
-      titleText = `${type} saved`;
-      subtitleText = `A draft of your ${type.toLowerCase()} has been saved.`;
+      titleText = `Draft ${type.toLowerCase()} saved`;
+      subtitleText = (
+        <>
+          You can view draft {type.toLowerCase()}s under the <i>Draft</i> in <i>My Library</i>.
+        </>
+      );
       break;
     case ConfirmStateType.PUBLISHED:
       titleText = `${type} published`;
