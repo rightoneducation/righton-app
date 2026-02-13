@@ -58,6 +58,7 @@ export default function CreateQuestionModalSwitch({
       return <DiscardGameModal
         isModalOpen
         templateType={TemplateType.QUESTION}
+        draftQuestion={draftQuestion}
         handleDiscardClick={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handleSaveEditedGame={handleSaveEditedQuestion}
