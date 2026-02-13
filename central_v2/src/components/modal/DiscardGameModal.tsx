@@ -9,6 +9,7 @@ import {
   CircularProgress,
   useTheme,
 } from '@mui/material';
+import { CentralQuestionTemplateInput } from '@righton/networking';
 import { TemplateType } from '../../lib/CentralModels';
 import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
@@ -67,6 +68,7 @@ interface DiscardGameModalProps {
   handleSaveEditedGame?: () => void;
   handlePublish?: () => void;
   isUpdatingTemplate?: boolean;
+  draftQuestion?: CentralQuestionTemplateInput;
 }
 
 export default function DiscardGameModal({
@@ -77,6 +79,7 @@ export default function DiscardGameModal({
   handleSaveEditedGame,
   handlePublish,
   isUpdatingTemplate,
+  draftQuestion
 }: DiscardGameModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
@@ -119,7 +122,7 @@ export default function DiscardGameModal({
               />
               <CentralButton
                 buttonType={ButtonType.UPDATE}
-                isEnabled
+                isEnabled={draftQuestion?.questionCard?.title?.length && draftQuestion?.questionCard?.title?.length > 0 || false}
                 onClick={isClone ? handlePublish : handleSaveEditedGame}
               />
               <CentralButton

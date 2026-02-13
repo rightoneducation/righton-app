@@ -91,7 +91,7 @@ export const ButtonStyled = styled(Button, {
         ? 'none'
         : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
     borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
-    borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
+    borderWidth: buttonType === ButtonType.BACKTOEDIT ? '0.75px' : buttonColor === ButtonColor.NULL ? '2px' : '0px', // eslint-disable-line no-nested-ternary
     borderColor:
       buttonColor === ButtonColor.NULL // eslint-disable-line no-nested-ternary
         ? buttonType === ButtonType.CHANGEIMAGE ||
@@ -156,7 +156,10 @@ export const ButtonTypography = styled(Typography, {
 })<ButtonStyledProps>(({ theme, buttonColor, buttonType, isReset }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
-  fontWeight: '600',
+  fontWeight:
+    buttonType === ButtonType.BACKTOEDIT
+      ? '700'
+      : '600',
   textTransform: 'none',
   padding: 0,
   color:

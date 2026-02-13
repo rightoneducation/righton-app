@@ -237,7 +237,7 @@ export default function SaveGameModal({
               (
                 <>
                   <DragText> Ready to publish! </DragText>
-                  <BodyText> You&apos;re all set. Publish to add it to My Library and make it discoverable if it&apos;s set to public. </BodyText>
+                  <BodyText> You&apos;re all set. Publish to add it to <i>My Library</i> and make it discoverable if it&apos;s set to public. </BodyText>
                 </>
               )}
             <Box style={{ display: 'flex', flexDirection:'column', gap: `${theme.sizing.xSmPadding}px` }}>
