@@ -18,6 +18,7 @@ export const createClassroom = /* GraphQL */ `
   ) {
     createClassroom(input: $input, condition: $condition) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -56,6 +57,38 @@ export const createClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      recommendedActions {
+        items {
+          id
+          classroomId
+          priority
+          title
+          description
+          action
+          timeframe
+          affectedStudents
+          dataSource
+          remediationType
+          ccssStandard
+          targetObjectives {
+            standard
+            description
+            __typename
+          }
+          prerequisiteGaps {
+            standard
+            description
+            gapDescription
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomRecommendedActionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       students {
         items {
           id
@@ -67,6 +100,78 @@ export const createClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      trends {
+        items {
+          keyInsights {
+            finding
+            targetStandard
+            targetDescription
+            gapStandard
+            gapDescription
+            __typename
+          }
+          studentPerformanceGroups {
+            highPerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            averagePerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            strugglingStudents {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            biggestChanges {
+              name
+              masteryChange
+              misconceptionChange
+              topic
+              __typename
+            }
+            __typename
+          }
+          confidenceIssues {
+            overlyConfident {
+              name
+              topic
+              __typename
+            }
+            underlyConfident {
+              name
+              topic
+              __typename
+            }
+            __typename
+          }
+          id
+          createdAt
+          updatedAt
+          classroomTrendsId
           __typename
         }
         nextToken
@@ -85,6 +190,7 @@ export const updateClassroom = /* GraphQL */ `
   ) {
     updateClassroom(input: $input, condition: $condition) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -123,6 +229,38 @@ export const updateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      recommendedActions {
+        items {
+          id
+          classroomId
+          priority
+          title
+          description
+          action
+          timeframe
+          affectedStudents
+          dataSource
+          remediationType
+          ccssStandard
+          targetObjectives {
+            standard
+            description
+            __typename
+          }
+          prerequisiteGaps {
+            standard
+            description
+            gapDescription
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomRecommendedActionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       students {
         items {
           id
@@ -134,6 +272,78 @@ export const updateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      trends {
+        items {
+          keyInsights {
+            finding
+            targetStandard
+            targetDescription
+            gapStandard
+            gapDescription
+            __typename
+          }
+          studentPerformanceGroups {
+            highPerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            averagePerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            strugglingStudents {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            biggestChanges {
+              name
+              masteryChange
+              misconceptionChange
+              topic
+              __typename
+            }
+            __typename
+          }
+          confidenceIssues {
+            overlyConfident {
+              name
+              topic
+              __typename
+            }
+            underlyConfident {
+              name
+              topic
+              __typename
+            }
+            __typename
+          }
+          id
+          createdAt
+          updatedAt
+          classroomTrendsId
           __typename
         }
         nextToken
@@ -152,6 +362,7 @@ export const deleteClassroom = /* GraphQL */ `
   ) {
     deleteClassroom(input: $input, condition: $condition) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -190,6 +401,38 @@ export const deleteClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      recommendedActions {
+        items {
+          id
+          classroomId
+          priority
+          title
+          description
+          action
+          timeframe
+          affectedStudents
+          dataSource
+          remediationType
+          ccssStandard
+          targetObjectives {
+            standard
+            description
+            __typename
+          }
+          prerequisiteGaps {
+            standard
+            description
+            gapDescription
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomRecommendedActionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       students {
         items {
           id
@@ -201,6 +444,78 @@ export const deleteClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      trends {
+        items {
+          keyInsights {
+            finding
+            targetStandard
+            targetDescription
+            gapStandard
+            gapDescription
+            __typename
+          }
+          studentPerformanceGroups {
+            highPerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            averagePerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            strugglingStudents {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            biggestChanges {
+              name
+              masteryChange
+              misconceptionChange
+              topic
+              __typename
+            }
+            __typename
+          }
+          confidenceIssues {
+            overlyConfident {
+              name
+              topic
+              __typename
+            }
+            underlyConfident {
+              name
+              topic
+              __typename
+            }
+            __typename
+          }
+          id
+          createdAt
+          updatedAt
+          classroomTrendsId
           __typename
         }
         nextToken
@@ -487,6 +802,336 @@ export const deleteLearningGap = /* GraphQL */ `
       createdAt
       updatedAt
       classroomLearningGapsId
+      __typename
+    }
+  }
+`;
+export const createRecommendedAction = /* GraphQL */ `
+  mutation CreateRecommendedAction(
+    $input: CreateRecommendedActionInput!
+    $condition: ModelRecommendedActionConditionInput
+  ) {
+    createRecommendedAction(input: $input, condition: $condition) {
+      id
+      classroomId
+      priority
+      title
+      description
+      action
+      timeframe
+      affectedStudents
+      dataSource
+      remediationType
+      ccssStandard
+      targetObjectives {
+        standard
+        description
+        __typename
+      }
+      prerequisiteGaps {
+        standard
+        description
+        gapDescription
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomRecommendedActionsId
+      __typename
+    }
+  }
+`;
+export const updateRecommendedAction = /* GraphQL */ `
+  mutation UpdateRecommendedAction(
+    $input: UpdateRecommendedActionInput!
+    $condition: ModelRecommendedActionConditionInput
+  ) {
+    updateRecommendedAction(input: $input, condition: $condition) {
+      id
+      classroomId
+      priority
+      title
+      description
+      action
+      timeframe
+      affectedStudents
+      dataSource
+      remediationType
+      ccssStandard
+      targetObjectives {
+        standard
+        description
+        __typename
+      }
+      prerequisiteGaps {
+        standard
+        description
+        gapDescription
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomRecommendedActionsId
+      __typename
+    }
+  }
+`;
+export const deleteRecommendedAction = /* GraphQL */ `
+  mutation DeleteRecommendedAction(
+    $input: DeleteRecommendedActionInput!
+    $condition: ModelRecommendedActionConditionInput
+  ) {
+    deleteRecommendedAction(input: $input, condition: $condition) {
+      id
+      classroomId
+      priority
+      title
+      description
+      action
+      timeframe
+      affectedStudents
+      dataSource
+      remediationType
+      ccssStandard
+      targetObjectives {
+        standard
+        description
+        __typename
+      }
+      prerequisiteGaps {
+        standard
+        description
+        gapDescription
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomRecommendedActionsId
+      __typename
+    }
+  }
+`;
+export const createClassroomTrend = /* GraphQL */ `
+  mutation CreateClassroomTrend(
+    $input: CreateClassroomTrendInput!
+    $condition: ModelClassroomTrendConditionInput
+  ) {
+    createClassroomTrend(input: $input, condition: $condition) {
+      keyInsights {
+        finding
+        targetStandard
+        targetDescription
+        gapStandard
+        gapDescription
+        __typename
+      }
+      studentPerformanceGroups {
+        highPerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        averagePerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        strugglingStudents {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        biggestChanges {
+          name
+          masteryChange
+          misconceptionChange
+          topic
+          __typename
+        }
+        __typename
+      }
+      confidenceIssues {
+        overlyConfident {
+          name
+          topic
+          __typename
+        }
+        underlyConfident {
+          name
+          topic
+          __typename
+        }
+        __typename
+      }
+      id
+      createdAt
+      updatedAt
+      classroomTrendsId
+      __typename
+    }
+  }
+`;
+export const updateClassroomTrend = /* GraphQL */ `
+  mutation UpdateClassroomTrend(
+    $input: UpdateClassroomTrendInput!
+    $condition: ModelClassroomTrendConditionInput
+  ) {
+    updateClassroomTrend(input: $input, condition: $condition) {
+      keyInsights {
+        finding
+        targetStandard
+        targetDescription
+        gapStandard
+        gapDescription
+        __typename
+      }
+      studentPerformanceGroups {
+        highPerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        averagePerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        strugglingStudents {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        biggestChanges {
+          name
+          masteryChange
+          misconceptionChange
+          topic
+          __typename
+        }
+        __typename
+      }
+      confidenceIssues {
+        overlyConfident {
+          name
+          topic
+          __typename
+        }
+        underlyConfident {
+          name
+          topic
+          __typename
+        }
+        __typename
+      }
+      id
+      createdAt
+      updatedAt
+      classroomTrendsId
+      __typename
+    }
+  }
+`;
+export const deleteClassroomTrend = /* GraphQL */ `
+  mutation DeleteClassroomTrend(
+    $input: DeleteClassroomTrendInput!
+    $condition: ModelClassroomTrendConditionInput
+  ) {
+    deleteClassroomTrend(input: $input, condition: $condition) {
+      keyInsights {
+        finding
+        targetStandard
+        targetDescription
+        gapStandard
+        gapDescription
+        __typename
+      }
+      studentPerformanceGroups {
+        highPerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        averagePerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        strugglingStudents {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        biggestChanges {
+          name
+          masteryChange
+          misconceptionChange
+          topic
+          __typename
+        }
+        __typename
+      }
+      confidenceIssues {
+        overlyConfident {
+          name
+          topic
+          __typename
+        }
+        underlyConfident {
+          name
+          topic
+          __typename
+        }
+        __typename
+      }
+      id
+      createdAt
+      updatedAt
+      classroomTrendsId
       __typename
     }
   }

@@ -7,6 +7,7 @@ export const onCreateClassroom = /* GraphQL */ `
   ) {
     onCreateClassroom(filter: $filter) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -45,6 +46,38 @@ export const onCreateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      recommendedActions {
+        items {
+          id
+          classroomId
+          priority
+          title
+          description
+          action
+          timeframe
+          affectedStudents
+          dataSource
+          remediationType
+          ccssStandard
+          targetObjectives {
+            standard
+            description
+            __typename
+          }
+          prerequisiteGaps {
+            standard
+            description
+            gapDescription
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomRecommendedActionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       students {
         items {
           id
@@ -56,6 +89,78 @@ export const onCreateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      trends {
+        items {
+          keyInsights {
+            finding
+            targetStandard
+            targetDescription
+            gapStandard
+            gapDescription
+            __typename
+          }
+          studentPerformanceGroups {
+            highPerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            averagePerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            strugglingStudents {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            biggestChanges {
+              name
+              masteryChange
+              misconceptionChange
+              topic
+              __typename
+            }
+            __typename
+          }
+          confidenceIssues {
+            overlyConfident {
+              name
+              topic
+              __typename
+            }
+            underlyConfident {
+              name
+              topic
+              __typename
+            }
+            __typename
+          }
+          id
+          createdAt
+          updatedAt
+          classroomTrendsId
           __typename
         }
         nextToken
@@ -73,6 +178,7 @@ export const onUpdateClassroom = /* GraphQL */ `
   ) {
     onUpdateClassroom(filter: $filter) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -111,6 +217,38 @@ export const onUpdateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      recommendedActions {
+        items {
+          id
+          classroomId
+          priority
+          title
+          description
+          action
+          timeframe
+          affectedStudents
+          dataSource
+          remediationType
+          ccssStandard
+          targetObjectives {
+            standard
+            description
+            __typename
+          }
+          prerequisiteGaps {
+            standard
+            description
+            gapDescription
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomRecommendedActionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       students {
         items {
           id
@@ -122,6 +260,78 @@ export const onUpdateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      trends {
+        items {
+          keyInsights {
+            finding
+            targetStandard
+            targetDescription
+            gapStandard
+            gapDescription
+            __typename
+          }
+          studentPerformanceGroups {
+            highPerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            averagePerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            strugglingStudents {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            biggestChanges {
+              name
+              masteryChange
+              misconceptionChange
+              topic
+              __typename
+            }
+            __typename
+          }
+          confidenceIssues {
+            overlyConfident {
+              name
+              topic
+              __typename
+            }
+            underlyConfident {
+              name
+              topic
+              __typename
+            }
+            __typename
+          }
+          id
+          createdAt
+          updatedAt
+          classroomTrendsId
           __typename
         }
         nextToken
@@ -139,6 +349,7 @@ export const onDeleteClassroom = /* GraphQL */ `
   ) {
     onDeleteClassroom(filter: $filter) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -177,6 +388,38 @@ export const onDeleteClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      recommendedActions {
+        items {
+          id
+          classroomId
+          priority
+          title
+          description
+          action
+          timeframe
+          affectedStudents
+          dataSource
+          remediationType
+          ccssStandard
+          targetObjectives {
+            standard
+            description
+            __typename
+          }
+          prerequisiteGaps {
+            standard
+            description
+            gapDescription
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomRecommendedActionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       students {
         items {
           id
@@ -188,6 +431,78 @@ export const onDeleteClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomStudentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      trends {
+        items {
+          keyInsights {
+            finding
+            targetStandard
+            targetDescription
+            gapStandard
+            gapDescription
+            __typename
+          }
+          studentPerformanceGroups {
+            highPerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            averagePerformers {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            strugglingStudents {
+              name
+              masteryScore
+              previousMastery
+              masteryChange
+              misconceptionScore
+              previousMisconception
+              misconceptionChange
+              __typename
+            }
+            biggestChanges {
+              name
+              masteryChange
+              misconceptionChange
+              topic
+              __typename
+            }
+            __typename
+          }
+          confidenceIssues {
+            overlyConfident {
+              name
+              topic
+              __typename
+            }
+            underlyConfident {
+              name
+              topic
+              __typename
+            }
+            __typename
+          }
+          id
+          createdAt
+          updatedAt
+          classroomTrendsId
           __typename
         }
         nextToken
@@ -462,6 +777,330 @@ export const onDeleteLearningGap = /* GraphQL */ `
       createdAt
       updatedAt
       classroomLearningGapsId
+      __typename
+    }
+  }
+`;
+export const onCreateRecommendedAction = /* GraphQL */ `
+  subscription OnCreateRecommendedAction(
+    $filter: ModelSubscriptionRecommendedActionFilterInput
+  ) {
+    onCreateRecommendedAction(filter: $filter) {
+      id
+      classroomId
+      priority
+      title
+      description
+      action
+      timeframe
+      affectedStudents
+      dataSource
+      remediationType
+      ccssStandard
+      targetObjectives {
+        standard
+        description
+        __typename
+      }
+      prerequisiteGaps {
+        standard
+        description
+        gapDescription
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomRecommendedActionsId
+      __typename
+    }
+  }
+`;
+export const onUpdateRecommendedAction = /* GraphQL */ `
+  subscription OnUpdateRecommendedAction(
+    $filter: ModelSubscriptionRecommendedActionFilterInput
+  ) {
+    onUpdateRecommendedAction(filter: $filter) {
+      id
+      classroomId
+      priority
+      title
+      description
+      action
+      timeframe
+      affectedStudents
+      dataSource
+      remediationType
+      ccssStandard
+      targetObjectives {
+        standard
+        description
+        __typename
+      }
+      prerequisiteGaps {
+        standard
+        description
+        gapDescription
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomRecommendedActionsId
+      __typename
+    }
+  }
+`;
+export const onDeleteRecommendedAction = /* GraphQL */ `
+  subscription OnDeleteRecommendedAction(
+    $filter: ModelSubscriptionRecommendedActionFilterInput
+  ) {
+    onDeleteRecommendedAction(filter: $filter) {
+      id
+      classroomId
+      priority
+      title
+      description
+      action
+      timeframe
+      affectedStudents
+      dataSource
+      remediationType
+      ccssStandard
+      targetObjectives {
+        standard
+        description
+        __typename
+      }
+      prerequisiteGaps {
+        standard
+        description
+        gapDescription
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomRecommendedActionsId
+      __typename
+    }
+  }
+`;
+export const onCreateClassroomTrend = /* GraphQL */ `
+  subscription OnCreateClassroomTrend(
+    $filter: ModelSubscriptionClassroomTrendFilterInput
+  ) {
+    onCreateClassroomTrend(filter: $filter) {
+      keyInsights {
+        finding
+        targetStandard
+        targetDescription
+        gapStandard
+        gapDescription
+        __typename
+      }
+      studentPerformanceGroups {
+        highPerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        averagePerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        strugglingStudents {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        biggestChanges {
+          name
+          masteryChange
+          misconceptionChange
+          topic
+          __typename
+        }
+        __typename
+      }
+      confidenceIssues {
+        overlyConfident {
+          name
+          topic
+          __typename
+        }
+        underlyConfident {
+          name
+          topic
+          __typename
+        }
+        __typename
+      }
+      id
+      createdAt
+      updatedAt
+      classroomTrendsId
+      __typename
+    }
+  }
+`;
+export const onUpdateClassroomTrend = /* GraphQL */ `
+  subscription OnUpdateClassroomTrend(
+    $filter: ModelSubscriptionClassroomTrendFilterInput
+  ) {
+    onUpdateClassroomTrend(filter: $filter) {
+      keyInsights {
+        finding
+        targetStandard
+        targetDescription
+        gapStandard
+        gapDescription
+        __typename
+      }
+      studentPerformanceGroups {
+        highPerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        averagePerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        strugglingStudents {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        biggestChanges {
+          name
+          masteryChange
+          misconceptionChange
+          topic
+          __typename
+        }
+        __typename
+      }
+      confidenceIssues {
+        overlyConfident {
+          name
+          topic
+          __typename
+        }
+        underlyConfident {
+          name
+          topic
+          __typename
+        }
+        __typename
+      }
+      id
+      createdAt
+      updatedAt
+      classroomTrendsId
+      __typename
+    }
+  }
+`;
+export const onDeleteClassroomTrend = /* GraphQL */ `
+  subscription OnDeleteClassroomTrend(
+    $filter: ModelSubscriptionClassroomTrendFilterInput
+  ) {
+    onDeleteClassroomTrend(filter: $filter) {
+      keyInsights {
+        finding
+        targetStandard
+        targetDescription
+        gapStandard
+        gapDescription
+        __typename
+      }
+      studentPerformanceGroups {
+        highPerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        averagePerformers {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        strugglingStudents {
+          name
+          masteryScore
+          previousMastery
+          masteryChange
+          misconceptionScore
+          previousMisconception
+          misconceptionChange
+          __typename
+        }
+        biggestChanges {
+          name
+          masteryChange
+          misconceptionChange
+          topic
+          __typename
+        }
+        __typename
+      }
+      confidenceIssues {
+        overlyConfident {
+          name
+          topic
+          __typename
+        }
+        underlyConfident {
+          name
+          topic
+          __typename
+        }
+        __typename
+      }
+      id
+      createdAt
+      updatedAt
+      classroomTrendsId
       __typename
     }
   }

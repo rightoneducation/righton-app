@@ -4,8 +4,11 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 
 type Classroom @model {
   id: ID!
+  classroomName: String! @index(name: "byClassroomName", queryField: "classroomsByClassroomName")
   learningGaps: [LearningGap] @hasMany
+  recommendedActions: [RecommendedAction] @hasMany
   students: [Student] @hasMany
+  trends: [ClassroomTrend] @hasMany
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -95,6 +98,83 @@ type LearningGap @model {
         students: [String]
         description: String
       }
+
+type RecommendedAction @model {
+  id: ID!
+  classroomId: ID!
+  priority: String
+  title: String
+  description: String
+  action: String
+  timeframe: String
+  affectedStudents: String
+  dataSource: String
+  remediationType: String
+  ccssStandard: String
+  targetObjectives: [TargetObjective]
+  prerequisiteGaps: [PrerequisiteGap]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+  type TargetObjective {
+    standard: String
+    description: String
+  }
+
+  type PrerequisiteGap {
+    standard: String
+    description: String
+    gapDescription: String
+  }
+
+type ClassroomTrend @model {
+  keyInsights: [KeyInsight]
+  studentPerformanceGroups: [StudentPerformanceGroup]
+  confidenceIssues: [ConfidenceIssue]
+}
+
+  type KeyInsight {
+    finding: String
+    targetStandard: String
+    targetDescription: String
+    gapStandard: String
+    gapDescription: String
+  }
+
+  type StudentPerformanceGroup {
+    highPerformers: [StudentPerformanceEntry]
+    averagePerformers: [StudentPerformanceEntry]
+    strugglingStudents: [StudentPerformanceEntry]
+    biggestChanges: [BiggestChangeEntry]
+  }
+
+    type StudentPerformanceEntry {
+      name: String
+      masteryScore: Int
+      previousMastery: Int
+      masteryChange: String
+      misconceptionScore: Int
+      previousMisconception: Int
+      misconceptionChange: String
+    }
+
+    type BiggestChangeEntry {
+      name: String
+      masteryChange: String
+      misconceptionChange: String
+      topic: String
+    }
+
+  type ConfidenceIssue {
+    overlyConfident: [ConfidenceIssueEntry]
+    underlyConfident: [ConfidenceIssueEntry]
+  }
+
+    type ConfidenceIssueEntry {
+      name: String
+      topic: String
+    }
 
 input GetLearningScienceInput {
   ccss: String!
