@@ -78,7 +78,10 @@ export default function CentralButton({
       isOnQuestionTab={isOnQuestionTab ?? false}
       onClick={handleButtonClick}
       isReset={isReset}
-      style={{ width: buttonWidthOverride ?? buttonWidth }}
+      style={{ 
+        width: buttonWidthOverride ?? buttonWidth,
+        ...(buttonType === ButtonType.DELETE && { maxWidth: '410px' })
+      }}
     >
       {buttonObj.icon && (
           <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly} wideButtonOverride={wideButtonOverride ?? false}>
@@ -91,6 +94,7 @@ export default function CentralButton({
                 (buttonType === ButtonType.CREATEQUESTION) ||
                 (buttonType === ButtonType.CANCELQUESTION) ||
                 (buttonType === ButtonType.EDITQUESTION) ||
+                (buttonType === ButtonType.DELETE) ||
             (buttonType === ButtonType.SIGNUP && isReset) ? (
               <ButtonIconBlue src={buttonObj.icon} />
             ) : (

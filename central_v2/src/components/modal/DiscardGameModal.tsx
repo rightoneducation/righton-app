@@ -1,4 +1,5 @@
 import React from 'react';
+import { useMatch } from 'react-router-dom';
 import {
   Box,
   Paper,
@@ -8,6 +9,7 @@ import {
   CircularProgress,
   useTheme,
 } from '@mui/material';
+import { CentralQuestionTemplateInput } from '@righton/networking';
 import { TemplateType } from '../../lib/CentralModels';
 import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
@@ -64,7 +66,9 @@ interface DiscardGameModalProps {
   handleDiscardClick?: () => void;
   handleCloseDiscardModal?: () => void;
   handleSaveEditedGame?: () => void;
+  handlePublish?: () => void;
   isUpdatingTemplate?: boolean;
+  draftQuestion?: CentralQuestionTemplateInput;
 }
 
 export default function DiscardGameModal({
@@ -72,13 +76,17 @@ export default function DiscardGameModal({
   templateType,
   handleDiscardClick,
   handleCloseDiscardModal,
-  isUpdatingTemplate,
   handleSaveEditedGame,
+  handlePublish,
+  isUpdatingTemplate,
+  draftQuestion
 }: DiscardGameModalProps) {
   const theme = useTheme();
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
   const text2 = isUpdatingTemplate ? 'Updating' : 'Creating';
-
+  const text3 = templateType === TemplateType.GAME ? 'game' : 'question';
+  const isClone = useMatch(`/clone/${text3}/:type/:id`);
+  
   return (
     <Fade
       in={isModalOpen}
@@ -114,8 +122,8 @@ export default function DiscardGameModal({
               />
               <CentralButton
                 buttonType={ButtonType.UPDATE}
-                isEnabled
-                onClick={handleSaveEditedGame}
+                isEnabled={draftQuestion?.questionCard?.title?.length && draftQuestion?.questionCard?.title?.length > 0 || false}
+                onClick={isClone ? handlePublish : handleSaveEditedGame}
               />
               <CentralButton
                 buttonType={ButtonType.BACKTOEDIT}

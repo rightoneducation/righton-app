@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useMatch } from "react-router-dom";
 import CentralButton from "../button/Button";
 import { ButtonType } from "../button/ButtonModels";
 import { TitleText } from "../../lib/styledcomponents/CreateGameStyledComponent";
@@ -26,6 +27,9 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
   const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
   const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState<boolean>(false);
 
+  const isDraft = useMatch('library/games/draft/:gameId');
+  const incompleteHeader = isIncompleteDraft || isDraft;
+  
   const handleCloseQuestionModal = () => {
     setModalState(ModalStateType.NULL);
   };
@@ -114,12 +118,12 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
               )}
                 <CentralButton
                   buttonType={ButtonType.LAUNCHPINK}
-                  isEnabled={!isIncompleteDraft}
+                  isEnabled={!incompleteHeader}
                   buttonWidthOverride="140px"
                   onClick={handleLaunchGame}
                 />
               </Box>
-              {isIncompleteDraft && (
+              {incompleteHeader && (
                 <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
                   <Typography style={{ fontSize: '14px', color: '#000', fontFamily: 'Rubik', fontWeight: '400' }}>To launch your game, finish editing by completing all required fields.</Typography>
                 </Box>
@@ -158,7 +162,7 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
             )}
           <CentralButton
             buttonType={ButtonType.LAUNCHPINK}
-            isEnabled={!isIncompleteDraft}
+            isEnabled={!incompleteHeader}
             onClick={handleLaunchGame}
           />
         </Box>

@@ -330,7 +330,7 @@ export const CreateGameTextFieldContainer = styled(TextField, {
       fontSize: '16px',
     }),
     color: '#384466',
-    opacity: isCardError ? 1 : 0.5,
+    opacity: 1,
     '&::placeholder': {
       color: isCardError ? '#D0254D' : '#384466',
       opacity: isCardError ? 1 : 0.5,

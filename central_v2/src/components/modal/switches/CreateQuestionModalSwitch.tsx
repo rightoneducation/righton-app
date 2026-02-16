@@ -1,10 +1,12 @@
 import React from "react";
+import { CentralQuestionTemplateInput } from "@righton/networking";
 import { ConfirmStateType, ModalStateType, ScreenSize, TemplateType, ModalObject } from "../../../lib/CentralModels";
 import SaveGameModal from '../SaveGameModal';
 import DiscardGameModal from '../DiscardGameModal';
 import ConfirmSaveModal from '../ConfirmSaveModal';
 import EditGameModal from '../EditGameModal';
 import UpdatingModal from '../UpdatingModal';
+import DeleteModal from '../DeleteModal';
 
 interface CreateQuestionModalSwitchProps {
   modalObject: ModalObject;
@@ -12,6 +14,8 @@ interface CreateQuestionModalSwitchProps {
   title: string;
   handleDiscard: () => void;
   handleCloseDiscardModal: () => void;
+  handleDeleteQuestion: () => void;
+  handleCloseDeleteModal: () => void;
   handlePublishQuestion: () => void;
   handleCloseSaveQuestionModal: () => void;
   handleSaveEditedQuestion: () => void;
@@ -19,6 +23,8 @@ interface CreateQuestionModalSwitchProps {
   handleSaveDraft: () => void;
   isCardErrored: boolean;
   isDraft: boolean;
+  draftQuestion: CentralQuestionTemplateInput;
+  originalQuestion: CentralQuestionTemplateInput | null;
 }
 
 export default function CreateQuestionModalSwitch({ 
@@ -28,21 +34,35 @@ export default function CreateQuestionModalSwitch({
   handleDiscard,
   handleCloseDiscardModal,
   handlePublishQuestion,
+  handleDeleteQuestion,
+  handleCloseDeleteModal,
   handleCloseSaveQuestionModal,
   handleSaveEditedQuestion,
   handleContinue,
   handleSaveDraft,
   isCardErrored,
-  isDraft
+  isDraft,
+  draftQuestion,
+  originalQuestion,
 }: CreateQuestionModalSwitchProps) {
   switch (modalObject.modalState) {
+    case ModalStateType.DELETE:
+      return <DeleteModal
+        isModalOpen
+        templateType={TemplateType.QUESTION}
+        handleProceedToDelete={handleDeleteQuestion}
+        handleCloseDeleteModal={handleCloseDeleteModal}
+      />;
+      break;
     case ModalStateType.DISCARD:
       return <DiscardGameModal
         isModalOpen
         templateType={TemplateType.QUESTION}
+        draftQuestion={draftQuestion}
         handleDiscardClick={handleDiscard}
         handleCloseDiscardModal={handleCloseDiscardModal}
         handleSaveEditedGame={handleSaveEditedQuestion}
+        handlePublish={handlePublishQuestion}
       />;
       break;
     case ModalStateType.PUBLISH:
@@ -55,6 +75,8 @@ export default function CreateQuestionModalSwitch({
         handleSaveDraft={handleSaveDraft}
         isCardErrored={isCardErrored}
         isDraft={isDraft}
+        draftQuestion={draftQuestion}
+        originalQuestion={originalQuestion}
       />;
       break;
     case ModalStateType.UPDATE:
@@ -64,11 +86,13 @@ export default function CreateQuestionModalSwitch({
         handleSaveEditedGame={handleSaveEditedQuestion}
         handleCloseSaveGameModal={handleCloseSaveQuestionModal}
         isCardErrored={isCardErrored}
+        
       />;
       break;
     case ModalStateType.LOADING:
     case ModalStateType.SAVING:
     case ModalStateType.PUBLISHING:
+    case ModalStateType.DELETING:
       return <UpdatingModal
         modalState={modalObject.modalState}
         isModalOpen
