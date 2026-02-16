@@ -83,6 +83,7 @@ export enum ButtonType {
   STARTCREATING = 'startcreating',
   BACKNOARROW = 'backnoarrow',
   CONFIRMNOICON = 'confirmnoicon',
+  PINKDELETE='pinkdelete'
 }
 
 export enum ButtonColor {
@@ -332,6 +333,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.DELETE]: {
     icon: deleteIcon,
     textKey: ButtonType.DELETE,
+    color: ButtonColor.NULL,
   },
   [ButtonType.OK]: {
     textKey: ButtonType.OK,
@@ -373,5 +375,9 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.CONFIRMNOICON]: {
     textKey: ButtonType.CONFIRM,
   },
-
+  [ButtonType.PINKDELETE]: {
+    icon: deleteIcon,
+    textKey: ButtonType.PINKDELETE,
+    color: ButtonColor.RED,
+  },
 };

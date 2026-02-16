@@ -130,25 +130,43 @@ export default function useCentralDataManager({
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     const libraryTab = centralData.openTab;
+    const trimmedSearch = (centralData.searchTerms ?? '').trim();
+    const shouldNullifySearch =
+      gameQuestion === GameQuestionType.QUESTION &&
+      trimmedSearch.length === 0;
+    const questionSearchTerm = shouldNullifySearch ? null : trimmedSearch;
     const callType = getCallType({
       ...callTypeMatches,
       libraryTab,
       gameQuestion,
     });
+    const isQuestionBankPublicLibrary =
+      gameQuestion === GameQuestionType.QUESTION &&
+      isLibrary &&
+      callType.publicPrivateType === PublicPrivateType.PUBLIC &&
+      centralData.openTab === LibraryTabEnum.PUBLIC;
+    const shouldLimitToUser =
+      isLibrary &&
+      callType.publicPrivateType === PublicPrivateType.PUBLIC &&
+      !isQuestionBankPublicLibrary &&
+      questionSearchTerm !== null;
+    const searchLimit =
+      gameQuestion === GameQuestionType.QUESTION && grades.length > 0 ? 300 : null;
+
     switch (gameQuestion) {
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
             callType.publicPrivateType as TemplateType,
+            searchLimit,
             null,
-            null,
-            centralData.searchTerms,
+            questionSearchTerm,
             centralData.sort.direction ?? SortDirection.ASC,
             centralData.sort.field,
             [...grades],
             null,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? centralData.userProfile.dynamoId : undefined,
+            shouldLimitToUser,
+            shouldLimitToUser ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
