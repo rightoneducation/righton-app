@@ -70,7 +70,7 @@
     "@storybook/react-webpack5": "^7.6.5",
     "@storybook/test": "^7.6.5",
     "chromatic": "^10.1.0",
-    "eslint": "^8.56.0",
+    "eslint": "^9.26.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.8.0",
@@ -84,7 +84,7 @@
     "eslint-plugin-storybook": "^0.6.15",
     "prettier": "^3.1.1",
     "prop-types": "^15.8.1",
-    "webpack": "^5.94.0"
+    "webpack": "^5.105.2"
   },
   "resolutions": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
