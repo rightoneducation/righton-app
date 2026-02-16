@@ -43,7 +43,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/uuid": "^9.0.8",
-    "eslint": "^8.24.0",
+    "eslint": "^9.26.0",
     "eslint-config-prettier": "^8.5.0",
     "file-system-cache": "1.0.5",
     "react-dev-utils": "^12.0.1"
