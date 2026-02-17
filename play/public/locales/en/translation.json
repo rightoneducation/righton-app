@@ -112,8 +112,8 @@
     },
     "startphase2": {
       "title": "Starting Phase 2...",
-      "subtitle1": "where the most popular wrong answer wins the most points!",
-      "subtitle2": "Pick the answer you think tricked most of your classmates!"
+      "subtitle1": "Where identifying the most popular incorrect answer earns the most points!",
+      "subtitle2": "Pick the incorrect answer most of your classmates chose!"
     },
     "button": {
       "submit": "Submit Answer",
