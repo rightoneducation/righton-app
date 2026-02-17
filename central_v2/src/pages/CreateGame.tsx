@@ -615,16 +615,17 @@ export default function CreateGame({
       const isDqValid = checkDQsAreValid(draftQuestionsList);
       setAllDQAreValid(isDqValid);
       if (isGameFormIsValid && isDqValid) {
-        // check for images on draft game
+        // check for images on draft game: upload File or external URL to S3; use existing S3 key as-is
         let gameImgUrl: string | null = null;
         if (draftGame.image || draftGame.imageUrl) {
-          const isFullUrl =
+          const isExternalUrl =
             draftGame?.imageUrl?.startsWith('https://') ||
             draftGame?.imageUrl?.startsWith('http://');
-          if (isFullUrl && draftGame?.imageUrl) {
+          if (!isExternalUrl && draftGame?.imageUrl) {
+            // already an S3 path (e.g. from draft)
             gameImgUrl = draftGame.imageUrl;
           } else {
-            if ( draftGame && draftGame.imageUrl && draftGame?.imageUrl?.length > 0){
+            if (!isExternalUrl && draftGame?.imageUrl && draftGame.imageUrl.length > 0) {
               draftGame.imageUrl = `${CloudFrontDistributionUrl}${draftGame.imageUrl}`;
             }
             gameImgUrl = await createGameImagePath(draftGame, apiClients);
