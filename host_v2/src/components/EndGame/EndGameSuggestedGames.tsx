@@ -9,7 +9,6 @@ import RightOnPlaceHolder from '../../images/RightOnLogo.png';
 
 const PStyled = styled(Typography)({
   color: 'rgba(255, 255, 255, 1)',
-  textAlign: 'center',
   fontSize: '16px',
   width: '100%',
   boxSizing: 'border-box'
@@ -180,7 +179,6 @@ function SuggestedGames ({
       }
       return null;
     };
-    console.log(gameTemplates);
     return (
         <StartEndGameScrollBoxStyled>
             <SearchStyled>
@@ -188,13 +186,13 @@ function SuggestedGames ({
                 <img src={SearchIcon} alt="Search Icon" />
               </SearchIconStyled>
               <InputInputStyled 
-                placeholder = "Search outside suggestions"
+                placeholder = "Search other games"
                 value={searchText}
                 onChange={(e: any) => handleUpdateSearchText(e.target.value)}
               />
             </SearchStyled>
             <BoxStyled>
-                <PStyled>Continue your current session with our suggested games:</PStyled>
+                <PStyled>Start a new game with one of these suggested options:</PStyled>
             </BoxStyled>
             {gameTemplates.length === 0 && 
               <>
