@@ -98,9 +98,9 @@
       "openanswercardplaceholder": "Enter your answer here...",
       "openanswercardkatexpreview": "Expression preview:",
       "openanswercardnumberwarning": "Only the following inputs are allowed: . - % 0-9",
-      "hintcardtitle": "Give a hint (optional)",
-      "hintcarddescription": "Could you give a hint to someone who has made this mistake?",
-      "hintcardplaceholder": "Enter your explanation..."
+      "hintcardtitle": "Share a hint",
+      "hintcarddescription": "What hint would you give a friend to avoid this mistake?",
+      "hintcardplaceholder": "Type your hint here"
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answers",
