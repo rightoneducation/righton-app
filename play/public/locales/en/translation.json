@@ -36,11 +36,11 @@
   },
   "howtoplay": {
     "title": "How to Play!",
-    "slide0": "Read the multiple-choice question",
-    "slide1": "Gain points by choosing the correct answer...",
+    "slide0": "Read the question",
+    "slide1": "Earn points by answering correctly",
     "slide2": "Read step-by-step solutions",
-    "slide3": "Gain more points by guessing the most popular incorrect answer!",
-    "slide4": "The most total points wins!",
+    "slide3": "Earn more points by picking the most popular incorrect answer",
+    "slide4": "The most total points wins",
     "description": "Waiting for the game to start...",
     "loading": "Getting game session..."
   },
