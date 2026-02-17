@@ -9,7 +9,7 @@
     },
     "confidenceCard": {
       "title": "Confidence Meter",
-      "description": "Players are asked how sure they are of their answer for this question.",
+      "description": "Players rated how sure they are of their answer.",
       "instructions": "Tap on a response to see more details.",
       "graph": {
         "title": "Number of Players",
@@ -29,7 +29,7 @@
     "placeholder": "This is some placeholder text.",
     "player": "Player",
     "addtime": "+30s",
-    "answerbar": "Players who have answered",
+    "answerbar": "Number of players who have answered:",
     "nextStateButton": "End Answering"
   },
   "gameinprogress": {
