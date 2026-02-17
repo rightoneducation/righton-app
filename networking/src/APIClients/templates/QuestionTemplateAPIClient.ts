@@ -63,7 +63,6 @@ export class QuestionTemplateAPIClient
   async storeImageUrlInS3 (
     imageUrl: string
   ): Promise<string> {
-    console.log('imageUrl', imageUrl);
     const input: UploadExternalImageToS3Input = {imageUrl};
     const variables: UploadExternalImageToS3MutationVariables = { input }
     const response = await this.callGraphQL<UploadExternalImageToS3Mutation>(

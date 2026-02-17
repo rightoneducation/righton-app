@@ -99,7 +99,6 @@ export default function ViewGame({
   };
 
   const handleProceedToEdit = () => {
-    console.log("HERE")
     navigate(
       `/edit/game/${centralData.selectedGame?.game?.publicPrivateType}/${centralData.selectedGame?.game?.id}`,
     );
