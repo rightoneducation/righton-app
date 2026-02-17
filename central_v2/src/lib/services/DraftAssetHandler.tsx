@@ -143,15 +143,13 @@ export class DraftAssetHandler {
   private static async existingImageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
     let gameImgUrl: string | null = null;
     if (draftGame.image || draftGame.imageUrl) {
-      if (
-        (!draftGame?.imageUrl?.startsWith('https://') ||
-        !draftGame?.imageUrl?.startsWith('http://')) && 
-        draftGame?.imageUrl
-      ) {
+      // Same as question: only use as-is when already S3 path; external URLs go through createGameImagePath (fetch + store in S3)
+      const isExternalUrl = draftGame?.imageUrl?.startsWith('http://') || draftGame?.imageUrl?.startsWith('https://');
+      if (draftGame?.imageUrl && !isExternalUrl) {
         gameImgUrl = draftGame.imageUrl;
       } else {
         let { imageUrl } = draftGame;
-        if (draftGame && imageUrl && imageUrl.length > 0){
+        if (draftGame && imageUrl && imageUrl.length > 0 && !isExternalUrl) {
           imageUrl = `${CloudFrontDistributionUrl}${imageUrl}`;
         }
         const draftGameWithUrl = { ...draftGame, imageUrl };
@@ -164,11 +162,9 @@ export class DraftAssetHandler {
   private static async newImageHandler(draftGame: TGameTemplateProps, apiClients: IAPIClients): Promise<string | null> {
     let gameImgUrl: string | null = null;
     if (draftGame.image || draftGame.imageUrl) {
-      if (
-        (!draftGame?.imageUrl?.startsWith('https://') ||
-        !draftGame?.imageUrl?.startsWith('http://')) && 
-        draftGame?.imageUrl
-      ) {
+      // Same as question: only use as-is when already S3 path; external URLs go through createGameImagePath (fetch + store in S3)
+      const isExternalUrl = draftGame?.imageUrl?.startsWith('http://') || draftGame?.imageUrl?.startsWith('https://');
+      if (draftGame?.imageUrl && !isExternalUrl) {
         gameImgUrl = draftGame.imageUrl;
       } else {
         gameImgUrl = await DraftAssetHandler.createGameImagePath(draftGame, apiClients);

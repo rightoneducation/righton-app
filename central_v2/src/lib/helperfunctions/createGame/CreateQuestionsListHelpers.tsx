@@ -157,15 +157,18 @@ export const buildQuestionTemplatePromises = (
       }
     }
 
-    // image url case
+    // image url case: only fetch+upload external URLs; existing S3 keys (e.g. from draft) use as-is
     else if (dqCopy.question.questionCard.imageUrl) {
-      try {
-        url = await apiClients.questionTemplate.storeImageUrlInS3(
-          dqCopy.question.questionCard.imageUrl,
-        );
-      } catch (err) {
-        console.error('Error storing image URL:', err);
-        throw new Error('Failed to store image URL.');
+      const {imageUrl} = dqCopy.question.questionCard;
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        try {
+          url = await apiClients.questionTemplate.storeImageUrlInS3(imageUrl);
+        } catch (err) {
+          console.error('Error storing image URL:', err);
+          throw new Error('Failed to store image URL.');
+        }
+      } else {
+        url = imageUrl;
       }
     }
     // create question template (images are optional)
