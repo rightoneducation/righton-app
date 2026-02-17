@@ -36,7 +36,6 @@ const TitleStyled = styled(Typography)({
 const SubtitleStyled = styled(Typography)({
   color: '#FFFFFF',
   fontFamily: 'Rubik',
-  textAlign: 'center',
   fontSize: '14px',
   fontWeight: 400,
   width: '100%'
@@ -96,21 +95,18 @@ export default function Hints({
   return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
-        <TitleStyled> Player Thinking</TitleStyled>
-        <SubtitleStyled>Players have optionally submitted hints to help other players.</SubtitleStyled>
+        <TitleStyled>Student Hints</TitleStyled>
       <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16, width: '100%' }}>
         { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? ( // eslint-disable-line
           <>
-            <SubtitleStyledLeftAlign>
-                Players that have submitted a hint:
-            </SubtitleStyledLeftAlign>
+            <SubtitleStyled>Number of players who submitted a hint:</SubtitleStyled>
             <HintsSubmittedBar
                 inputNum={hints ? hints.length : 0}
                 totalNum={numPlayers}
             />
-             <SubtitleStyled style={{fontStyle: 'italic'}}>
+             <SubtitleStyled style={{color: 'rgba(255,255,255,0.5)'}}>
               { hints.length < 3
-                ? `A minimum of 3 submissions are required to generate hints`
+                ? `At least 3 submissions are needed to organize hints into themes`
                 : `Hints will be displayed in the next phase`
               }
             </SubtitleStyled>
@@ -140,9 +136,12 @@ export default function Hints({
               )}
               {(isHintLoading && !isHintError) && (
                 <>
-                  <CircularProgress style={{color:`${theme.palette.primary.circularProgress}`}}/>
+                  <SubtitleStyled>
+                    Players have submitted hints to help others learn.
+                  </SubtitleStyled>
+                  <CircularProgress style={{color: '#FFF'}}/>
                   <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                    The hints are loading ...
+                    Organizing student hints into themes...
                   </Typography>
                   </>
               )}
