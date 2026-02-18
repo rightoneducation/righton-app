@@ -61,7 +61,7 @@ export default function GameInProgressContent({
   const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   // in shortAnswerMode
   if (localGameSession.questions[localGameSession.currentQuestionIndex].isShortAnswerEnabled) {  
-    const mistakes = responses.map((response) => !response.isCorrect && response.multiChoiceCharacter !== '–' ? {
+    const mistakes = responses.map((response) => !response.isCorrect && response.multiChoiceCharacter !== '…' ? {
       answer: response.rawAnswer,
       percent: (response.count/totalAnswers)*100,
       isSelected: false

@@ -27,19 +27,20 @@ const UpperStyled = styled(Box)(({theme}) => ({
 
 const TopLineStyled = styled(Box)({
   display: 'flex',
-  justifyContent: 'space-between', // send the "game lobby" and the icons to opp sides
+  justifyContent: 'center', // send the "game lobby" and the icons to opp sides
   alignItems: 'center', // align items vertically in the center
   width: '100%', // fixed on the figma, but that would look goofy on bigger screens
   padding: '0px 0px 0px 8px', // Adjust padding as needed
   gap: '8px', /* changed the width to 100%, added the display, justify, and align */
-  height: '36px',
+  height: '48px',
 });
 
 const GameLobbyTypographyStyled = styled(Typography)({
-  width: '255px', /* this si for the phase description */
+  width: '100%', /* this si for the phase description */
   height: '36px',
-  fontSize: '24px',
+  fontSize: '32px',
   fontWeight: '700',
+  textAlign: 'center',
   color: 'rgba(255, 255, 255, 1)',
   lineHeight: '36px', /* same everything */
 });
@@ -73,7 +74,6 @@ function GameEndedHostHeader({ gameCode }: GameEndedHostHeaderProps) {
       <TopLineStyled>
         <GameLobbyTypographyStyled>Game End Lobby </GameLobbyTypographyStyled>
       </TopLineStyled>
-      <GameEndedGameCode gameCode={gameCode} />
     </UpperStyled>
   );
 }

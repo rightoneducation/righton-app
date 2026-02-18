@@ -111,7 +111,7 @@ export abstract class ModelHelper {
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0);
         console.log(totalNoChosenAnswer);
-        const totalNumberOfResponses = gameSession.questions[gameSession.currentQuestionIndex].answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== `–`).reduce((previousVal: number, response: IHostTeamAnswersResponse) => {
+        const totalNumberOfResponses = gameSession.questions[gameSession.currentQuestionIndex].answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== `…`).reduce((previousVal: number, response: IHostTeamAnswersResponse) => {
             return previousVal + response.teams.length
         }, 0);
         console.log(totalNumberOfResponses);

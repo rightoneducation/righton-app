@@ -34,7 +34,7 @@ export default function AnswerphaseOneResponsesGraph({
         if (response.teams.find((team) => team === currentTeam.name)){
           return '#19BCFB';
         }
-        if (response.multiChoiceCharacter === '–')
+        if (response.multiChoiceCharacter === '…')
           return '#EAE5F5';
       }
     }

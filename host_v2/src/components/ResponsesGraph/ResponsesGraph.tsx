@@ -53,7 +53,7 @@ export default function ResponsesGraph({
   const theme = useTheme();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef<HTMLElement | null>(null);
-  const noResponseLabel = '–';
+  const noResponseLabel = '…';
   const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - theme.sizing.defaultVictoryPadding : boundingRect.width - (theme.sizing.defaultVictoryPadding + theme.sizing.mdPadding * 2);
   const correctChoiceIndex =
     data.findIndex((element: any) => element.isCorrect);
@@ -175,7 +175,7 @@ export default function ResponsesGraph({
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             style={{ 
               data: { 
-                fill: ({ index, datum }: any) => ((index === numAnswers-1 || statePosition > 6) && datum.multiChoiceCharacter ==='–') || isPrevPhaseResponses ? 'transparent' : '#FFF'
+                fill: ({ index, datum }: any) => ((index === numAnswers-1 || statePosition > 6) && datum.multiChoiceCharacter ==='…') || isPrevPhaseResponses ? 'transparent' : '#FFF'
               } 
             }}
             barWidth={({ datum }) =>

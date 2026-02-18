@@ -36,11 +36,11 @@
   },
   "howtoplay": {
     "title": "How to Play!",
-    "slide0": "Read the multiple-choice question",
-    "slide1": "Gain points by choosing the correct answer...",
+    "slide0": "Read the question",
+    "slide1": "Earn points by answering correctly",
     "slide2": "Read step-by-step solutions",
-    "slide3": "Gain more points by guessing the most popular incorrect answer!",
-    "slide4": "The most total points wins!",
+    "slide3": "Earn more points by picking the most popular incorrect answer",
+    "slide4": "The most total points wins",
     "description": "Waiting for the game to start...",
     "loading": "Getting game session..."
   },
@@ -98,9 +98,9 @@
       "openanswercardplaceholder": "Enter your answer here...",
       "openanswercardkatexpreview": "Expression preview:",
       "openanswercardnumberwarning": "Only the following inputs are allowed: . - % 0-9",
-      "hintcardtitle": "Give a hint (optional)",
-      "hintcarddescription": "Could you give a hint to someone who has made this mistake?",
-      "hintcardplaceholder": "Enter your explanation..."
+      "hintcardtitle": "Share a hint",
+      "hintcarddescription": "What hint would you give a friend to avoid this mistake?",
+      "hintcardplaceholder": "Type your hint here"
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answers",
@@ -112,8 +112,8 @@
     },
     "startphase2": {
       "title": "Starting Phase 2...",
-      "subtitle1": "where the most popular wrong answer wins the most points!",
-      "subtitle2": "Pick the answer you think tricked most of your classmates!"
+      "subtitle1": "Where identifying the most popular incorrect answer earns the most points!",
+      "subtitle2": "Pick the incorrect answer most of your classmates chose!"
     },
     "button": {
       "submit": "Submit Answer",

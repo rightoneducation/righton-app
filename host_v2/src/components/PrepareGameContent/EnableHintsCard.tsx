@@ -77,7 +77,7 @@ export default function EnableHintsCard({
       </TitleContainer>
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <BodyTypography>
-          Players are asked to provide a hint to help others who made the selected mistake.
+          Players share hints to help others learn from mistakes.
         </BodyTypography>
       </Box>
     </StyledContainer>

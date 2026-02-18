@@ -27,9 +27,9 @@ const SafeAreaStyled = styled(Box)({
 });
 
 
-const HeaderAreaStyled = styled(Box)({
-  marginTop: '47px',
-});
+const HeaderAreaStyled = styled(Box)(({ screenSize }: { screenSize: ScreenSize }) => ({
+  marginTop: screenSize !== ScreenSize.LARGE ? '47px' : '0px',
+}));
 
 const BackgroundStyled = styled(Paper)(({ theme }) => ({
   position: 'absolute', // Position it absolutely within StartGameContainer
@@ -104,9 +104,9 @@ function StartGame({teams,
           <motion.div ref={shadowScope} style={{ width: '100%' }}>
             <Shadow />
           </motion.div>
-          <HeaderAreaStyled>
+          <HeaderAreaStyled screenSize={screenSize}>
           <motion.div ref={scope2} exit={{opacity: 0}} >
-            <HostHeader gameCode = {gameCode} />
+            <HostHeader gameCode = {gameCode} screenSize={screenSize}/>
           </motion.div>
           </HeaderAreaStyled>
       <motion.div ref={scope5} style={{ display: 'flex', width: '100%',  overflow: 'hidden', justifyContent: 'center',
