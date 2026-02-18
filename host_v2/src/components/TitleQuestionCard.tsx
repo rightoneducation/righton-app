@@ -85,7 +85,7 @@ export default function TitleQuestionCard({
             standard={standard}
             />
           <TopLineTypography>
-            {questions.length} Questions
+            {questions.length > 1 ? `${questions.length} Questions` : '1 Question'}
           </TopLineTypography>
         </TitleBoxTopStyled>  
         <TitleTypography>{title}</TitleTypography>      
