@@ -109,6 +109,7 @@ const StyledRect = styled(Box)({
 interface PlayersSelectedAnswerProps {
     data: IHostTeamAnswersResponse[];
     graphClickIndex: number;
+    noResponseIndex: number;
     numPlayers: number;
     statePosition: number;
     isShortAnswerEnabled: boolean;
@@ -118,6 +119,7 @@ interface PlayersSelectedAnswerProps {
 export default function PlayersSelectedAnswer({
   data, 
   graphClickIndex, 
+  noResponseIndex,
   numPlayers, 
   statePosition, 
   isShortAnswerEnabled,
@@ -128,11 +130,12 @@ export default function PlayersSelectedAnswer({
   const percentage = (count / numPlayers) * 100;
   console.log(data);
   const teamsWithSelectedAnswer = data[graphClickIndex].teams.map((team: string) => team);
+  const title = graphClickIndex === noResponseIndex ? 'Not yet answered' : `Selected by`;
   return (
     <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding}}>
       <TextContainer>
         <TitleText>
-        { (statePosition < 6 || isPrevPhaseResponses) ? `Players who picked this answer` : `Players who think this is the trickiest answer`}
+          { title }
         </TitleText>
         <NumberContainer>
           <CountText>

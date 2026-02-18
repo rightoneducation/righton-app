@@ -43,7 +43,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     this.teamMemberAPIClient = teamMemberAPIClient;
     this.teamAnswerAPIClient = teamAnswerAPIClient;
     this.hostTeamAnswers = {questions:[]};
-    this.noResponseCharacter = '–';
+    this.noResponseCharacter = '…';
     this.lambdaHintEndpoint = `https://yh5ionr9rg.execute-api.us-east-1.amazonaws.com/groupHints/groupHints`;
   }
 
@@ -447,7 +447,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           if (question[phase].responses){
             const teamsAnswered = question[phase].responses
               .reduce<string[]>((acc, response) => {
-                if (response.multiChoiceCharacter !== '–') {
+                if (response.multiChoiceCharacter !== '…') {
                   acc.push(...response.teams);
                 }
                 return acc;
@@ -455,7 +455,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
             
             const teamsUnanswered = gameSession.teams.map((team) => team.name).filter((team) => !teamsAnswered.includes(team));
             const numNoResponses = numTeams - teamsAnswered.length;
-            const noResponses = question[phase].responses.find((response: any) => response.multiChoiceCharacter === '–');
+            const noResponses = question[phase].responses.find((response: any) => response.multiChoiceCharacter === '…');
             if (noResponses) {
               noResponses.count = numNoResponses ?? 0;
               noResponses.teams = teamsUnanswered;

@@ -53,7 +53,7 @@ export default function GameInProgressContentLeftColumn({
         currentState={localGameSession.currentState}
       />
       { responsesCopy && responsesCopy.map((response, index) => (
-        response.multiChoiceCharacter !== `–` &&
+        response.multiChoiceCharacter !== `…` &&
           <AnswerCard 
             isCorrectAnswer={response.isCorrect}
             isShortAnswerEnabled={isShortAnswerEnabled ?? false}

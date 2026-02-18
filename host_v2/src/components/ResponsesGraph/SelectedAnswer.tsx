@@ -93,6 +93,8 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
   } = props;
   const showCustomTick =
     graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
+
+  const noResponseIndex = data.findIndex((response) => response.multiChoiceCharacter === '…');
   return (
     <Box>
       {graphClickInfo.selectedIndex === null 
@@ -105,38 +107,38 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
         </Text>
       ) : (
         <Box style={{ width: '100%'}}>
-          <TitleText>
-            Showing players who answered:
-          </TitleText>
-          <RectStyle>
-            { !isShortAnswerEnabled &&
-            <ChoiceContainer>
-              { (data[graphClickInfo.selectedIndex] && data[graphClickInfo.selectedIndex].multiChoiceCharacter)?
-              data[graphClickInfo.selectedIndex].multiChoiceCharacter : '-'}
-            </ChoiceContainer>
-            }
-            <TextContainer>
-              {data[graphClickInfo.selectedIndex]?.rawAnswer ? data[graphClickInfo.selectedIndex].rawAnswer : null}
-            </TextContainer>
-            {showCustomTick && (
-              <Tooltip
-                title={
-                  <ToolTip>
-                    This is the {'\n'} correct answer
-                  </ToolTip>
-                }
-                placement="bottom"
-                arrow
-              >
-                <Icon>
-                  <img src={check} alt="correct answer" />
-                </Icon>
-              </Tooltip>
-            )}
-          </RectStyle>
+          { graphClickInfo.selectedIndex !== noResponseIndex && (
+            <RectStyle>
+              { !isShortAnswerEnabled &&
+              <ChoiceContainer>
+                { (data[graphClickInfo.selectedIndex] && data[graphClickInfo.selectedIndex].multiChoiceCharacter)?
+                data[graphClickInfo.selectedIndex].multiChoiceCharacter : '-'}
+              </ChoiceContainer>
+              }
+              <TextContainer>
+                {data[graphClickInfo.selectedIndex]?.rawAnswer ? data[graphClickInfo.selectedIndex].rawAnswer : null}
+              </TextContainer>
+              {showCustomTick && (
+                <Tooltip
+                  title={
+                    <ToolTip>
+                      This is the {'\n'} correct answer
+                    </ToolTip>
+                  }
+                  placement="bottom"
+                  arrow
+                >
+                  <Icon>
+                    <img src={check} alt="correct answer" />
+                  </Icon>
+                </Tooltip>
+              )}
+            </RectStyle>
+          )}
           <PlayersSelectedAnswer
             data={data}
             graphClickIndex={graphClickInfo.selectedIndex}
+            noResponseIndex={noResponseIndex}
             numPlayers={numPlayers}
             statePosition={statePosition}
             isShortAnswerEnabled={isShortAnswerEnabled}

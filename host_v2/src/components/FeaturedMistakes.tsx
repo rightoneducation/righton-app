@@ -90,7 +90,7 @@ export default function FeaturedMistakes({
   // Pure function to build sorted mistakes
   const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]) => {
     const mistakes = inputMistakes
-      .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
+      .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '…')
       .map((response) => ({
         answer: response.rawAnswer,
         percent: Math.trunc((response.count / totalAnswers) * 100),
