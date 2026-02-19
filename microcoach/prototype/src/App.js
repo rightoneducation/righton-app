@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Header from './components/Header';
 import NavigationTabs from './components/NavigationTabs';
 import StudentRoster from './components/StudentRoster';
-import RecommendedNextSteps from './components/RecommendedNextSteps';
+import RecommendedNextSteps, { buildMockGapGroups } from './components/RecommendedNextSteps';
 import YourNextSteps from './components/YourNextSteps';
 import InterventionPatterns from './components/InterventionPatterns';
 import './App.css';
@@ -19,12 +19,61 @@ function App() {
   const [nextStepsSort, setNextStepsSort] = useState('manual');
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
 
+  const enrichSavedNextStep = (item) => {
+    // Backward compatibility:
+    // - Older saved items may not include the rich `move` object (with `tabs`) or
+    //   some gap-group fields needed for the Full View modal.
+    // - We enrich from the current mock catalog when possible.
+    try {
+      const gapGroups = buildMockGapGroups();
+      const match = gapGroups.find((g) => g.id === item?.gapGroupId && g.move?.id === item?.moveId);
+
+      const fallbackMove = item?.move
+        ? item.move
+        : {
+            id: item?.moveId,
+            title: item?.moveTitle,
+            time: item?.moveTime,
+            format: item?.moveFormat,
+            summary: item?.moveSummary,
+            aiReasoning: item?.aiReasoning,
+            tabs: undefined
+          };
+
+      const enrichedMove = match?.move
+        ? {
+            id: match.move.id,
+            title: match.move.title,
+            time: match.move.time,
+            format: match.move.format,
+            summary: match.move.summary,
+            aiReasoning: match.move.aiReasoning,
+            tabs: match.move.tabs
+          }
+        : fallbackMove;
+
+      return {
+        ...item,
+        // Only fill if missing on the saved item
+        occurrence: item?.occurrence ?? match?.occurrence,
+        misconceptionSummary: item?.misconceptionSummary ?? match?.misconceptionSummary,
+        successIndicators: item?.successIndicators ?? match?.successIndicators,
+        targetObjectiveStandard:
+          item?.targetObjectiveStandard ?? match?.ccssStandards?.targetObjective?.standard,
+        // Ensure we always have a `move` object for the modal
+        move: enrichedMove
+      };
+    } catch {
+      return item;
+    }
+  };
+
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(LS_NEXT_STEPS_KEY);
       if (!raw) return;
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) setNextSteps(parsed);
+      if (Array.isArray(parsed)) setNextSteps(parsed.map(enrichSavedNextStep));
     } catch (e) {
       // no-op (corrupt storage should not break the app)
     }
@@ -35,7 +84,14 @@ function App() {
       const raw = window.localStorage.getItem(LS_NEXT_STEPS_HISTORY_KEY);
       if (!raw) return;
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) setNextStepsHistory(parsed);
+      if (Array.isArray(parsed)) {
+        setNextStepsHistory(
+          parsed.map((h) => ({
+            ...h,
+            items: Array.isArray(h?.items) ? h.items.map(enrichSavedNextStep) : h?.items
+          }))
+        );
+      }
     } catch (e) {
       // no-op
     }
@@ -80,15 +136,34 @@ function App() {
       ? gapGroup.gaps
       : (gapGroup?.title ? [gapGroup.title] : []);
 
+    // Ensure we persist the same rich “move” object shape used by Recommended Next Steps
+    // so Saved Next Steps can open the identical Full View modal.
+    const normalizedMove = move
+      ? {
+          id: move.id,
+          title: move.title,
+          time: move.time,
+          format: move.format,
+          summary: move.summary,
+          aiReasoning: move.aiReasoning,
+          tabs: move.tabs
+        }
+      : null;
+
     const newItem = {
       id: `${gapGroup.id}-${move.id}-${Date.now()}`,
       createdAt: Date.now(),
       status: 'planned', // planned | completed
       gapGroupId: gapGroup.id,
       gapGroupTitle: gapGroup.title,
+      // Learning objective standard (e.g., "8.EE.7") used as a pill in Saved Next Steps + Intervention Patterns
+      targetObjectiveStandard: gapGroup?.ccssStandards?.targetObjective?.standard,
       priority: gapGroup.priority,
       studentCount: gapGroup.studentCount,
       studentPercent: gapGroup.studentPercent,
+      occurrence: gapGroup.occurrence,
+      misconceptionSummary: gapGroup.misconceptionSummary,
+      successIndicators: gapGroup.successIndicators,
       gaps: inferredGaps,
       moveId: move.id,
       moveTitle: move.title,
@@ -96,7 +171,8 @@ function App() {
       moveFormat: move.format,
       moveSummary: move.summary,
       aiReasoning: move.aiReasoning,
-      evidence: gapGroup.evidence
+      evidence: gapGroup.evidence,
+      move: normalizedMove
     };
     setNextSteps((prev) => [newItem, ...prev]);
   };
@@ -194,26 +270,35 @@ function App() {
         {activeTab === 'Overview' && (
           <div className="overview-content">
             <div className="overview-navigation">
-              <div className="overview-nav-tabs">
-                <button 
+              <nav className="overview-nav-tabs" aria-label="Overview workflow">
+                <button
                   className={`overview-nav-tab ${activeOverviewSection === 'Recommended Next Steps' ? 'active' : ''}`}
                   onClick={() => handleOverviewSectionChange('Recommended Next Steps')}
+                  type="button"
                 >
-                  Recommended Next Steps
+                  1. Understand & Select
                 </button>
-                <button 
-                  className={`overview-nav-tab ${activeOverviewSection === 'Your Next Steps' ? 'active' : ''}`}
-                  onClick={() => handleOverviewSectionChange('Your Next Steps')}
+                <span className="overview-nav-separator" aria-hidden="true">
+                  &gt;
+                </span>
+                <button
+                  className={`overview-nav-tab ${activeOverviewSection === 'Saved Next Steps' ? 'active' : ''}`}
+                  onClick={() => handleOverviewSectionChange('Saved Next Steps')}
+                  type="button"
                 >
-                  Your Next Steps
+                  2. Prepare
                 </button>
-                <button 
+                <span className="overview-nav-separator" aria-hidden="true">
+                  &gt;
+                </span>
+                <button
                   className={`overview-nav-tab ${activeOverviewSection === 'Your Intervention Patterns' ? 'active' : ''}`}
                   onClick={() => handleOverviewSectionChange('Your Intervention Patterns')}
+                  type="button"
                 >
-                  Your Intervention Patterns
+                  3. Reflect
                 </button>
-              </div>
+              </nav>
             </div>
 
             {activeOverviewSection === 'Recommended Next Steps' && (
@@ -225,10 +310,11 @@ function App() {
               </div>
             )}
 
-            {activeOverviewSection === 'Your Next Steps' && (
+            {activeOverviewSection === 'Saved Next Steps' && (
               <div className="trends-section">
                 <YourNextSteps
                   nextSteps={sortedNextSteps}
+                  completedNextSteps={nextStepsHistory.flatMap((h) => h.items || [])}
                   completedCount={completedNextStepsCount}
                   sort={nextStepsSort}
                   onChangeSort={setNextStepsSort}

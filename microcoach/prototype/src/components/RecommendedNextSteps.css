@@ -44,13 +44,55 @@
 }
 
 .rns-toast {
-  margin: 0 0 12px 0;
-  padding: 10px 12px;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  z-index: 1000;
+  margin: 0;
+  padding: 12px 16px;
   border-radius: 8px;
   background-color: #FFFFFF;
   border: 1px solid #e5e5e5;
   color: #1B376F;
   font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 320px;
+  animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.rns-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.rns-toast.removing {
+  animation: slideOut 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .rns-groups {
@@ -70,6 +112,17 @@
 .main-misconception {
   border: 2px solid #1B376F;
   box-shadow: 0 4px 12px rgba(27, 55, 111, 0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.main-misconception:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 55, 111, 0.25);
+}
+
+.main-misconception:focus {
+  outline: 2px solid #1B376F;
+  outline-offset: 2px;
 }
 
 .alternative-misconceptions-grid {
@@ -175,6 +228,144 @@
   margin-bottom: 0;
 }
 
+/* CCSS Standards for Alternative Misconceptions */
+.alternative-ccss-section {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.alternative-ccss-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alternative-ccss-card {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: left;
+}
+
+/* Header label inside the alternative cards CCSS section */
+.alternative-ccss-header {
+  margin: 0 0 8px 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1B376F;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.alternative-ccss-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.alternative-ccss-gap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alternative-ccss-gap-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alternative-ccss-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Rubik', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #e5e7eb;
+  background-color: #f3f4f6;
+  color: #374151;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.alternative-ccss-tag.target-objective {
+  background-color: #0076AA;
+  color: #FFFFFF;
+  border-color: #0076AA;
+  box-shadow: 0 1px 3px rgba(0, 118, 170, 0.3);
+}
+
+.alternative-ccss-tag.prerequisite-gap {
+  background-color: #CC5500;
+  color: #FFFFFF;
+  border-color: #CC5500;
+  box-shadow: 0 1px 3px rgba(204, 85, 0, 0.3);
+}
+
+.alternative-ccss-tag.impacted-objective {
+  background-color: #6D28D9;
+  color: #FFFFFF;
+  border-color: #6D28D9;
+  box-shadow: 0 1px 3px rgba(109, 40, 217, 0.3);
+}
+
+.alternative-ccss-description {
+  font-size: 13px;
+  color: #1B376F;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Responsive Design for Alternative CCSS Cards */
+@media (max-width: 768px) {
+  .alternative-ccss-grid {
+    flex-direction: column;
+  }
+  
+  /* Keep pill + description left aligned; allow wrapping on narrow widths */
+  .alternative-ccss-content,
+  .alternative-ccss-gap-item {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  
+  .alternative-ccss-description {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .alternative-ccss-card {
+    padding: 8px;
+  }
+  
+  .alternative-ccss-header {
+    font-size: 10px;
+  }
+  
+  .alternative-ccss-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    max-width: 100px;
+  }
+  
+  .alternative-ccss-description {
+    font-size: 11px;
+  }
+}
+
 .alternative-actions {
   display: flex;
   justify-content: flex-end;
@@ -194,6 +385,12 @@
 .gap-group-top {
   padding: 16px 16px 12px 16px;
   border-bottom: 1px solid #e5e5e5;
+}
+
+/* Main card body spacing: provide breathing room between the top section and the
+   recommended activity card, and ensure actions align with the same gutter. */
+.main-misconception-body {
+  padding: 16px;
 }
 
 .gap-group-title-row {
@@ -531,8 +728,9 @@
 .rns-modal {
   background-color: #FFFFFF;
   border-radius: 12px;
-  width: min(720px, 92vw);
-  max-height: 82vh;
+  width: min(1200px, 92vw);
+  max-height: 90vh;
+  height: 85vh;
   overflow: auto;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   border: 1px solid #e5e5e5;
@@ -586,40 +784,30 @@
   margin: 0;
 }
 
-/* Recommended Activity Card - Change 1 */
+/* Recommended Activity Card - Grouped Component */
 .recommended-activity-card {
   border: 1px solid #E5E7EB;
   border-radius: 8px;
-  padding: 16px;
+  background-color: #FFFFFF;
+  margin: 20px;
   margin-bottom: 16px;
-  background-color: #F8FAFC;
 }
 
-/* Header sections for main misconception and full view - Change 1 */
+/* Header sections for main misconception and full view - Grouped Header */
 .main-misconception-header, .full-view-header {
   background-color: #F8FAFC;
-  border: 1px solid #E5E7EB;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  padding: 12px 16px;
+  border-bottom: 1px solid #E5E7EB;
+  padding: 16px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
 }
 
-.main-misconception-header {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.full-view-header {
-  border-bottom: 1px solid #e5e5e5;
-}
-
 .main-misconception-header-content, .full-view-header-content {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
 }
 
@@ -660,10 +848,27 @@
   margin: 0;
 }
 
-/* Tab Navigation Styles */
+/* Alternative Activity Section - Main Misconception Padding Fix */
+.gap-group-card.main-misconception .alternative-activity {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 0;
+}
+
+.gap-group-card.main-misconception .alternative-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 0 0 0;
+  background-color: #FFFFFF;
+}
+
+/* Tab Navigation Styles - Grouped with Content */
 .tab-navigation {
   display: flex;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #E5E7EB;
   background-color: #FFFFFF;
 }
 
@@ -697,9 +902,19 @@
 .tab-content {
   padding: 16px;
   background-color: #FFFFFF;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #E5E7EB;
   border-top: none;
   min-height: 200px;
+}
+
+/* Panel Actions - Grouped with Content */
+.panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px;
+  background-color: #FFFFFF;
+  border-top: 1px solid #E5E7EB;
 }
 
 /* Tab Panel Layout - Change 3: Vertical stacking instead of grid */
@@ -893,8 +1108,9 @@
 
 /* Full View Modal Styles */
 .full-view-modal {
-  width: min(800px, 92vw);
-  max-height: 85vh;
+  width: min(1200px, 92vw);
+  max-height: 90vh;
+  height: 85vh;
 }
 
 .full-view-content {
@@ -929,8 +1145,9 @@
 
 /* AI Prompt Modal Styles */
 .ai-prompt-modal {
-  width: min(900px, 92vw);
+  width: min(1200px, 92vw);
   max-height: 90vh;
+  height: 85vh;
   display: flex;
   flex-direction: column;
 }
@@ -1184,8 +1401,303 @@
 
 /* Evidence Journey Modal Styles */
 .evidence-journey-modal {
-  max-width: 900px;
-  max-height: 85vh;
+  width: min(1200px, 92vw);
+  max-height: 90vh;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive Design for Evidence Journey Modal */
+@media (max-width: 1024px) {
+  .data-visualization {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .chart-container {
+    width: 100%;
+  }
+  
+  .chart-placeholder {
+    height: 250px;
+  }
+  
+  .chart-bar {
+    min-width: 30px;
+  }
+  
+  .chart-labels, .chart-values {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 768px) {
+  .evidence-journey-modal {
+    width: 95vw;
+    height: 90vh;
+  }
+  
+  .evidence-screen {
+    padding: 16px;
+  }
+  
+  .screen-title {
+    font-size: 20px;
+  }
+  
+  .screen-subtitle {
+    font-size: 14px;
+  }
+  
+  .data-visualization {
+    gap: 16px;
+  }
+  
+  .chart-container {
+    padding: 12px;
+  }
+  
+  .chart-placeholder {
+    height: 200px;
+    gap: 8px;
+  }
+  
+  .chart-bar {
+    min-width: 25px;
+  }
+  
+  .chart-labels, .chart-values {
+    font-size: 10px;
+  }
+  
+  .chart-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .sample-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .problem-intro {
+    padding: 12px;
+  }
+  
+  .problem-label {
+    font-size: 16px;
+  }
+  
+  .breakdown-steps {
+    gap: 8px;
+  }
+  
+  .breakdown-step {
+    padding: 8px;
+  }
+  
+  .step-number {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+  
+  .impact-analysis {
+    grid-template-columns: 1fr;
+  }
+  
+  .path-steps {
+    gap: 8px;
+  }
+  
+  .path-step {
+    padding: 8px;
+  }
+  
+  .path-number {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .evidence-journey-modal {
+    width: 98vw;
+    height: 95vh;
+  }
+  
+  .evidence-screen {
+    padding: 12px;
+  }
+  
+  .screen-title {
+    font-size: 18px;
+  }
+  
+  .screen-subtitle {
+    font-size: 12px;
+  }
+  
+  .chart-container {
+    padding: 8px;
+  }
+  
+  .chart-placeholder {
+    height: 180px;
+    gap: 6px;
+  }
+  
+  .chart-bar {
+    min-width: 20px;
+  }
+  
+  .chart-labels, .chart-values {
+    font-size: 9px;
+  }
+  
+  .stat-item {
+    padding: 8px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+  
+  .stat-value {
+    font-size: 16px;
+  }
+  
+  .problem-intro {
+    padding: 8px;
+  }
+  
+  .problem-label {
+    font-size: 14px;
+  }
+  
+  .problem-context {
+    font-size: 12px;
+  }
+  
+  .sample-item {
+    padding: 12px;
+  }
+  
+  .sample-content {
+    padding: 8px;
+  }
+  
+  .sample-content p {
+    font-size: 12px;
+  }
+  
+  .error-highlight {
+    padding: 6px;
+  }
+  
+  .error-label {
+    font-size: 11px;
+  }
+  
+  .error-text {
+    font-size: 12px;
+  }
+  
+  .breakdown-step {
+    padding: 6px;
+  }
+  
+  .step-number {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+  }
+  
+  .step-description {
+    font-size: 12px;
+  }
+  
+  .impact-card, .learning-path {
+    padding: 12px;
+  }
+  
+  .impact-card h5, .learning-path h5 {
+    font-size: 14px;
+  }
+  
+  .impact-card li {
+    font-size: 12px;
+  }
+  
+  .path-step {
+    padding: 6px;
+  }
+  
+  .path-number {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+  }
+  
+  .path-description {
+    font-size: 12px;
+  }
+  
+  .metric-item {
+    padding: 8px;
+  }
+  
+  .metric-label {
+    font-size: 11px;
+  }
+  
+  .metric-value {
+    font-size: 16px;
+  }
+  
+  .evidence-journey-footer {
+    padding: 12px 16px;
+  }
+  
+  .navigation-controls {
+    gap: 8px;
+  }
+  
+  .nav-btn, .back-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+/* Evidence Journey Navigation Responsive Styles */
+@media (max-width: 768px) {
+  .nav-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  
+  .nav-btn span {
+    display: none;
+  }
+  
+  .nav-btn.prev-btn {
+    justify-content: flex-start;
+  }
+  
+  .nav-btn.next-btn {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
 }
 
 .evidence-journey-header {
@@ -1261,6 +1773,9 @@
   color: #6b7280;
   text-align: center;
   max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .progress-step.active .step-label {
@@ -1353,17 +1868,19 @@
 .chart-placeholder {
   display: flex;
   align-items: flex-end;
-  gap: 12px;
+  gap: 10px;
   height: 200px;
   width: 100%;
   margin-bottom: 16px;
+  padding: 0 8px;
 }
 
 .chart-bar {
   flex: 1;
   background: linear-gradient(to top, #3b82f6, #1d4ed8);
   border-radius: 4px 4px 0 0;
-  margin: 0 2px;
+  min-width: 20px;
+  position: relative;
 }
 
 .chart-labels {
@@ -1372,6 +1889,19 @@
   width: 100%;
   font-size: 12px;
   color: #6b7280;
+  margin-top: 8px;
+  padding: 0 8px;
+}
+
+.chart-values {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 12px;
+  color: #111827;
+  font-weight: 700;
+  margin-top: 4px;
+  padding: 0 8px;
 }
 
 .chart-stats {
@@ -1433,6 +1963,16 @@
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
+}
+
+.problem-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
 }
 
 .problem-label {
@@ -1577,6 +2117,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+}
+
+.impact-analysis-full-width {
+  grid-column: 1 / -1;
 }
 
 .impact-card {
@@ -1749,4 +2293,225 @@
   font-size: 14px;
   color: #6b7280;
   font-weight: 600;
+}
+
+/* Back Button Styles */
+.back-controls {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 16px;
+}
+
+.back-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.back-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* CCSS Standards Styling */
+.ccss-standards-section {
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.ccss-standards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Main (top) card: show all 3 CCSS sections side-by-side */
+.gap-group-card.main-misconception .ccss-standards-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.ccss-card {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.ccss-card h4 {
+  margin: 0 0 10px 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1B376F;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ccss-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* List wrapper used by main card sections (prereqs / impacted) */
+.ccss-gap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Single learning objective row used by main card */
+.ccss-objective-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ccss-gap-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Fix horizontal alignment for Related Learning Objectives */
+.ccss-card h4.tab-section-title {
+  margin: 0 0 8px 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1B376F;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* NOTE: Removed old `:first-child` CCSS layout overrides.
+   The CCSS cards are now explicitly structured (Prerequisite Gaps → Learning Objectives → Impacted Objectives)
+   so positional overrides are brittle and can break alignment. */
+
+.ccss-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Rubik', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #e5e7eb;
+  background-color: #f3f4f6;
+  color: #374151;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ccss-tag.target-objective {
+  background-color: #0076AA;
+  color: #FFFFFF;
+  border-color: #0076AA;
+  box-shadow: 0 1px 3px rgba(0, 118, 170, 0.3);
+}
+
+.ccss-tag.prerequisite-gap {
+  background-color: #CC5500;
+  color: #FFFFFF;
+  border-color: #CC5500;
+  box-shadow: 0 1px 3px rgba(204, 85, 0, 0.3);
+}
+
+.ccss-tag.impacted-objective {
+  background-color: #6D28D9;
+  color: #FFFFFF;
+  border-color: #6D28D9;
+  box-shadow: 0 1px 3px rgba(109, 40, 217, 0.3);
+}
+
+.ccss-description {
+  font-size: 13px;
+  color: #1B376F;
+  line-height: 1.4;
+  flex: 1;
+}
+
+/* Responsive Design for CCSS Cards */
+@media (max-width: 768px) {
+  .ccss-standards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gap-group-card.main-misconception .ccss-standards-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ccss-content {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .ccss-gap-item {
+    flex-direction: row;
+  }
+  
+  .ccss-description {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ccss-card {
+    padding: 10px;
+  }
+  
+  .ccss-card h4 {
+    font-size: 12px;
+  }
+  
+  .ccss-tag {
+    font-size: 11px;
+    padding: 2px 6px;
+    max-width: 100px;
+  }
+  
+  .ccss-description {
+    font-size: 12px;
+  }
+}
+
+/* Responsive Design for Back Button */
+@media (max-width: 768px) {
+  .back-controls {
+    margin-top: 12px;
+  }
+  
+  .back-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-controls {
+    margin-top: 8px;
+  }
+  
+  .back-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
 }

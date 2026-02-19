@@ -19,6 +19,24 @@ export const onCreateClassroom = /* GraphQL */ `
           occurrence
           misconceptionSummary
           successIndicators
+          ccssStandards {
+            targetObjective {
+              standard
+              description
+              __typename
+            }
+            impactedObjectives {
+              standard
+              description
+              __typename
+            }
+            prerequisiteGaps {
+              standard
+              description
+              __typename
+            }
+            __typename
+          }
           evidence {
             source
             mostCommonError
@@ -46,33 +64,51 @@ export const onCreateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
-      recommendedActions {
+      savedNextSteps {
         items {
           id
           classroomId
+          status
+          completedAt
+          sortOrder
+          gapGroupId
+          gapGroupTitle
+          targetObjectiveStandard
           priority
-          title
-          description
-          action
-          timeframe
-          affectedStudents
-          dataSource
-          remediationType
-          ccssStandard
-          targetObjectives {
-            standard
-            description
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          gaps
+          moveId
+          moveTitle
+          moveTime
+          moveFormat
+          moveSummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
             __typename
           }
-          prerequisiteGaps {
-            standard
-            description
-            gapDescription
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
+              __typename
+            }
             __typename
           }
           createdAt
           updatedAt
-          classroomRecommendedActionsId
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -82,6 +118,7 @@ export const onCreateClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          name
           performanceX
           performanceY
           confidenceLevel
@@ -190,6 +227,24 @@ export const onUpdateClassroom = /* GraphQL */ `
           occurrence
           misconceptionSummary
           successIndicators
+          ccssStandards {
+            targetObjective {
+              standard
+              description
+              __typename
+            }
+            impactedObjectives {
+              standard
+              description
+              __typename
+            }
+            prerequisiteGaps {
+              standard
+              description
+              __typename
+            }
+            __typename
+          }
           evidence {
             source
             mostCommonError
@@ -217,33 +272,51 @@ export const onUpdateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
-      recommendedActions {
+      savedNextSteps {
         items {
           id
           classroomId
+          status
+          completedAt
+          sortOrder
+          gapGroupId
+          gapGroupTitle
+          targetObjectiveStandard
           priority
-          title
-          description
-          action
-          timeframe
-          affectedStudents
-          dataSource
-          remediationType
-          ccssStandard
-          targetObjectives {
-            standard
-            description
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          gaps
+          moveId
+          moveTitle
+          moveTime
+          moveFormat
+          moveSummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
             __typename
           }
-          prerequisiteGaps {
-            standard
-            description
-            gapDescription
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
+              __typename
+            }
             __typename
           }
           createdAt
           updatedAt
-          classroomRecommendedActionsId
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -253,6 +326,7 @@ export const onUpdateClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          name
           performanceX
           performanceY
           confidenceLevel
@@ -361,6 +435,24 @@ export const onDeleteClassroom = /* GraphQL */ `
           occurrence
           misconceptionSummary
           successIndicators
+          ccssStandards {
+            targetObjective {
+              standard
+              description
+              __typename
+            }
+            impactedObjectives {
+              standard
+              description
+              __typename
+            }
+            prerequisiteGaps {
+              standard
+              description
+              __typename
+            }
+            __typename
+          }
           evidence {
             source
             mostCommonError
@@ -388,33 +480,51 @@ export const onDeleteClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
-      recommendedActions {
+      savedNextSteps {
         items {
           id
           classroomId
+          status
+          completedAt
+          sortOrder
+          gapGroupId
+          gapGroupTitle
+          targetObjectiveStandard
           priority
-          title
-          description
-          action
-          timeframe
-          affectedStudents
-          dataSource
-          remediationType
-          ccssStandard
-          targetObjectives {
-            standard
-            description
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          gaps
+          moveId
+          moveTitle
+          moveTime
+          moveFormat
+          moveSummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
             __typename
           }
-          prerequisiteGaps {
-            standard
-            description
-            gapDescription
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
+              __typename
+            }
             __typename
           }
           createdAt
           updatedAt
-          classroomRecommendedActionsId
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -424,6 +534,7 @@ export const onDeleteClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          name
           performanceX
           performanceY
           confidenceLevel
@@ -519,6 +630,7 @@ export const onCreateStudent = /* GraphQL */ `
     onCreateStudent(filter: $filter) {
       id
       classroomId
+      name
       performanceX
       performanceY
       confidenceLevel
@@ -535,6 +647,7 @@ export const onUpdateStudent = /* GraphQL */ `
     onUpdateStudent(filter: $filter) {
       id
       classroomId
+      name
       performanceX
       performanceY
       confidenceLevel
@@ -551,6 +664,7 @@ export const onDeleteStudent = /* GraphQL */ `
     onDeleteStudent(filter: $filter) {
       id
       classroomId
+      name
       performanceX
       performanceY
       confidenceLevel
@@ -576,6 +690,24 @@ export const onCreateLearningGap = /* GraphQL */ `
       occurrence
       misconceptionSummary
       successIndicators
+      ccssStandards {
+        targetObjective {
+          standard
+          description
+          __typename
+        }
+        impactedObjectives {
+          standard
+          description
+          __typename
+        }
+        prerequisiteGaps {
+          standard
+          description
+          __typename
+        }
+        __typename
+      }
       evidence {
         source
         mostCommonError
@@ -649,6 +781,24 @@ export const onUpdateLearningGap = /* GraphQL */ `
       occurrence
       misconceptionSummary
       successIndicators
+      ccssStandards {
+        targetObjective {
+          standard
+          description
+          __typename
+        }
+        impactedObjectives {
+          standard
+          description
+          __typename
+        }
+        prerequisiteGaps {
+          standard
+          description
+          __typename
+        }
+        __typename
+      }
       evidence {
         source
         mostCommonError
@@ -722,6 +872,24 @@ export const onDeleteLearningGap = /* GraphQL */ `
       occurrence
       misconceptionSummary
       successIndicators
+      ccssStandards {
+        targetObjective {
+          standard
+          description
+          __typename
+        }
+        impactedObjectives {
+          standard
+          description
+          __typename
+        }
+        prerequisiteGaps {
+          standard
+          description
+          __typename
+        }
+        __typename
+      }
       evidence {
         source
         mostCommonError
@@ -781,104 +949,257 @@ export const onDeleteLearningGap = /* GraphQL */ `
     }
   }
 `;
-export const onCreateRecommendedAction = /* GraphQL */ `
-  subscription OnCreateRecommendedAction(
-    $filter: ModelSubscriptionRecommendedActionFilterInput
+export const onCreateSavedNextStep = /* GraphQL */ `
+  subscription OnCreateSavedNextStep(
+    $filter: ModelSubscriptionSavedNextStepFilterInput
   ) {
-    onCreateRecommendedAction(filter: $filter) {
+    onCreateSavedNextStep(filter: $filter) {
       id
       classroomId
+      status
+      completedAt
+      sortOrder
+      gapGroupId
+      gapGroupTitle
+      targetObjectiveStandard
       priority
-      title
-      description
-      action
-      timeframe
-      affectedStudents
-      dataSource
-      remediationType
-      ccssStandard
-      targetObjectives {
-        standard
-        description
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      gaps
+      moveId
+      moveTitle
+      moveTime
+      moveFormat
+      moveSummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
         __typename
       }
-      prerequisiteGaps {
-        standard
-        description
-        gapDescription
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
         __typename
       }
       createdAt
       updatedAt
-      classroomRecommendedActionsId
+      classroomSavedNextStepsId
       __typename
     }
   }
 `;
-export const onUpdateRecommendedAction = /* GraphQL */ `
-  subscription OnUpdateRecommendedAction(
-    $filter: ModelSubscriptionRecommendedActionFilterInput
+export const onUpdateSavedNextStep = /* GraphQL */ `
+  subscription OnUpdateSavedNextStep(
+    $filter: ModelSubscriptionSavedNextStepFilterInput
   ) {
-    onUpdateRecommendedAction(filter: $filter) {
+    onUpdateSavedNextStep(filter: $filter) {
       id
       classroomId
+      status
+      completedAt
+      sortOrder
+      gapGroupId
+      gapGroupTitle
+      targetObjectiveStandard
       priority
-      title
-      description
-      action
-      timeframe
-      affectedStudents
-      dataSource
-      remediationType
-      ccssStandard
-      targetObjectives {
-        standard
-        description
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      gaps
+      moveId
+      moveTitle
+      moveTime
+      moveFormat
+      moveSummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
         __typename
       }
-      prerequisiteGaps {
-        standard
-        description
-        gapDescription
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
         __typename
       }
       createdAt
       updatedAt
-      classroomRecommendedActionsId
+      classroomSavedNextStepsId
       __typename
     }
   }
 `;
-export const onDeleteRecommendedAction = /* GraphQL */ `
-  subscription OnDeleteRecommendedAction(
-    $filter: ModelSubscriptionRecommendedActionFilterInput
+export const onDeleteSavedNextStep = /* GraphQL */ `
+  subscription OnDeleteSavedNextStep(
+    $filter: ModelSubscriptionSavedNextStepFilterInput
   ) {
-    onDeleteRecommendedAction(filter: $filter) {
+    onDeleteSavedNextStep(filter: $filter) {
       id
       classroomId
+      status
+      completedAt
+      sortOrder
+      gapGroupId
+      gapGroupTitle
+      targetObjectiveStandard
       priority
-      title
-      description
-      action
-      timeframe
-      affectedStudents
-      dataSource
-      remediationType
-      ccssStandard
-      targetObjectives {
-        standard
-        description
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      gaps
+      moveId
+      moveTitle
+      moveTime
+      moveFormat
+      moveSummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
         __typename
       }
-      prerequisiteGaps {
-        standard
-        description
-        gapDescription
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
         __typename
       }
       createdAt
       updatedAt
-      classroomRecommendedActionsId
+      classroomSavedNextStepsId
       __typename
     }
   }

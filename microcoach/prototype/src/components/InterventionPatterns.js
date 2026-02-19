@@ -1,5 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import './InterventionPatterns.css';
+import './SharedButtons.css';
+import LearningGapTrendDetailsModal from './LearningGapTrendDetailsModal';
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
@@ -13,30 +15,35 @@ const hashString = (str) => {
   return Math.abs(h);
 };
 
-const formatPercent = (n) => `${Math.round(n)}%`;
-
 const ARROW = '→';
 
 const LearningGapTrendCard = ({
   gapName,
   beforeCount,
-  beforePercent,
   afterCount,
-  afterPercent,
-  improvementPoints
+  improvementPoints,
+  targetObjectiveStandard,
+  onView
 }) => {
   return (
     <div className="ip-gap-card">
       <div className="ip-gap-left">
-        <div className="ip-gap-name">{gapName}</div>
+        <div className="ip-gap-title-row">
+          {targetObjectiveStandard ? (
+            <span
+              className="ccss-tag target-objective"
+              aria-label={`Learning objective standard ${targetObjectiveStandard}`}
+            >
+              {targetObjectiveStandard}
+            </span>
+          ) : null}
+
+          <div className="ip-gap-name">{gapName}</div>
+        </div>
         <div className="ip-gap-meta">
           <span>
             <span className="ip-gap-meta-strong">
-              {beforeCount} {ARROW} {afterCount} students
-            </span>
-            <span className="ip-gap-meta-sep"> | </span>
-            <span>
-              {formatPercent(beforePercent)} {ARROW} {formatPercent(afterPercent)} class mastery
+              {beforeCount} {ARROW} {afterCount} students need addressing
             </span>
           </span>
         </div>
@@ -50,6 +57,17 @@ const LearningGapTrendCard = ({
           +{Math.round(improvementPoints)}%
         </div>
         <div className="ip-gap-change-label">class mastery</div>
+      </div>
+
+      <div className="ip-gap-actions">
+        <button
+          className="yns-btn secondary yns-details-btn"
+          type="button"
+          onClick={onView}
+          aria-label={`View drill-down details for ${gapName}`}
+        >
+          View details
+        </button>
       </div>
     </div>
   );
@@ -70,6 +88,8 @@ const normalizeGaps = (item) => {
 };
 
 const InterventionPatterns = ({ nextSteps = [] }) => {
+  const [selectedTrend, setSelectedTrend] = useState(null); // { gapName, beforeCount, afterCount, improvementPoints }
+
   const gapTrends = useMemo(() => {
     // We treat each *learning gap string* surfaced in “Recommended Next Steps” as its own row.
     // Since we don’t have backend assessment data yet, we generate stable, deterministic
@@ -115,6 +135,7 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
 
       return {
         gapName,
+        targetObjectiveStandard: records.find((r) => r?.targetObjectiveStandard)?.targetObjectiveStandard,
         beforeCount,
         beforePercent,
         afterCount,
@@ -132,18 +153,31 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
 
   return (
     <div className="intervention-patterns">
+      <LearningGapTrendDetailsModal
+        isOpen={!!selectedTrend}
+        gapName={selectedTrend?.gapName}
+        beforeCount={selectedTrend?.beforeCount}
+        afterCount={selectedTrend?.afterCount}
+        improvementPoints={selectedTrend?.improvementPoints}
+        onClose={() => setSelectedTrend(null)}
+      />
+
       <div className="ip-header">
         <h3 className="ip-title">Trends in Learning Goals</h3>
       </div>
 
       {gapTrends.length === 0 ? (
         <div className="ip-empty">
-          No learning gaps yet — add a few items to <strong>Your Next Steps</strong>.
+          No learning gaps yet — add a few items to <strong>Saved Next Steps</strong>.
         </div>
       ) : (
         <div className="ip-trends" aria-label="Trends in learning goals">
           {gapTrends.map((row) => (
-            <LearningGapTrendCard key={row.gapName} {...row} />
+            <LearningGapTrendCard
+              key={row.gapName}
+              {...row}
+              onView={() => setSelectedTrend(row)}
+            />
           ))}
         </div>
       )}

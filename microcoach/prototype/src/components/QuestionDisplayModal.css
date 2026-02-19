@@ -15,9 +15,9 @@
   background-color: white;
   border-radius: 16px;
   padding: 24px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 80vh;
+  width: min(1200px, 92vw);
+  max-height: 90vh;
+  height: 85vh;
   overflow-y: auto;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   border: 3px solid #888;

@@ -2,7 +2,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteClassroomTrend = exports.updateClassroomTrend = exports.createClassroomTrend = exports.deleteRecommendedAction = exports.updateRecommendedAction = exports.createRecommendedAction = exports.deleteLearningGap = exports.updateLearningGap = exports.createLearningGap = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.getAnalytics = exports.getLearningScience = void 0;
+exports.deleteClassroomTrend = exports.updateClassroomTrend = exports.createClassroomTrend = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteLearningGap = exports.updateLearningGap = exports.createLearningGap = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.getAnalytics = exports.getLearningScience = void 0;
 exports.getLearningScience = `
   mutation GetLearningScience($input: GetLearningScienceInput!) {
     getLearningScience(input: $input)
@@ -20,6 +20,7 @@ exports.createClassroom = `
   ) {
     createClassroom(input: $input, condition: $condition) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -31,6 +32,24 @@ exports.createClassroom = `
           occurrence
           misconceptionSummary
           successIndicators
+          ccssStandards {
+            targetObjective {
+              standard
+              description
+              __typename
+            }
+            impactedObjectives {
+              standard
+              description
+              __typename
+            }
+            prerequisiteGaps {
+              standard
+              description
+              __typename
+            }
+            __typename
+          }
           evidence {
             source
             mostCommonError
@@ -58,33 +77,51 @@ exports.createClassroom = `
         nextToken
         __typename
       }
-      recommendedActions {
+      savedNextSteps {
         items {
           id
           classroomId
+          status
+          completedAt
+          sortOrder
+          gapGroupId
+          gapGroupTitle
+          targetObjectiveStandard
           priority
-          title
-          description
-          action
-          timeframe
-          affectedStudents
-          dataSource
-          remediationType
-          ccssStandard
-          targetObjectives {
-            standard
-            description
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          gaps
+          moveId
+          moveTitle
+          moveTime
+          moveFormat
+          moveSummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
             __typename
           }
-          prerequisiteGaps {
-            standard
-            description
-            gapDescription
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
+              __typename
+            }
             __typename
           }
           createdAt
           updatedAt
-          classroomRecommendedActionsId
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -94,6 +131,7 @@ exports.createClassroom = `
         items {
           id
           classroomId
+          name
           performanceX
           performanceY
           confidenceLevel
@@ -191,6 +229,7 @@ exports.updateClassroom = `
   ) {
     updateClassroom(input: $input, condition: $condition) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -202,6 +241,24 @@ exports.updateClassroom = `
           occurrence
           misconceptionSummary
           successIndicators
+          ccssStandards {
+            targetObjective {
+              standard
+              description
+              __typename
+            }
+            impactedObjectives {
+              standard
+              description
+              __typename
+            }
+            prerequisiteGaps {
+              standard
+              description
+              __typename
+            }
+            __typename
+          }
           evidence {
             source
             mostCommonError
@@ -229,33 +286,51 @@ exports.updateClassroom = `
         nextToken
         __typename
       }
-      recommendedActions {
+      savedNextSteps {
         items {
           id
           classroomId
+          status
+          completedAt
+          sortOrder
+          gapGroupId
+          gapGroupTitle
+          targetObjectiveStandard
           priority
-          title
-          description
-          action
-          timeframe
-          affectedStudents
-          dataSource
-          remediationType
-          ccssStandard
-          targetObjectives {
-            standard
-            description
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          gaps
+          moveId
+          moveTitle
+          moveTime
+          moveFormat
+          moveSummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
             __typename
           }
-          prerequisiteGaps {
-            standard
-            description
-            gapDescription
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
+              __typename
+            }
             __typename
           }
           createdAt
           updatedAt
-          classroomRecommendedActionsId
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -265,6 +340,7 @@ exports.updateClassroom = `
         items {
           id
           classroomId
+          name
           performanceX
           performanceY
           confidenceLevel
@@ -362,6 +438,7 @@ exports.deleteClassroom = `
   ) {
     deleteClassroom(input: $input, condition: $condition) {
       id
+      classroomName
       learningGaps {
         items {
           id
@@ -373,6 +450,24 @@ exports.deleteClassroom = `
           occurrence
           misconceptionSummary
           successIndicators
+          ccssStandards {
+            targetObjective {
+              standard
+              description
+              __typename
+            }
+            impactedObjectives {
+              standard
+              description
+              __typename
+            }
+            prerequisiteGaps {
+              standard
+              description
+              __typename
+            }
+            __typename
+          }
           evidence {
             source
             mostCommonError
@@ -400,33 +495,51 @@ exports.deleteClassroom = `
         nextToken
         __typename
       }
-      recommendedActions {
+      savedNextSteps {
         items {
           id
           classroomId
+          status
+          completedAt
+          sortOrder
+          gapGroupId
+          gapGroupTitle
+          targetObjectiveStandard
           priority
-          title
-          description
-          action
-          timeframe
-          affectedStudents
-          dataSource
-          remediationType
-          ccssStandard
-          targetObjectives {
-            standard
-            description
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          gaps
+          moveId
+          moveTitle
+          moveTime
+          moveFormat
+          moveSummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
             __typename
           }
-          prerequisiteGaps {
-            standard
-            description
-            gapDescription
+          move {
+            id
+            title
+            time
+            format
+            summary
+            aiReasoning
+            tabs {
+              __typename
+            }
             __typename
           }
           createdAt
           updatedAt
-          classroomRecommendedActionsId
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -436,6 +549,7 @@ exports.deleteClassroom = `
         items {
           id
           classroomId
+          name
           performanceX
           performanceY
           confidenceLevel
@@ -534,6 +648,7 @@ exports.createStudent = `
     createStudent(input: $input, condition: $condition) {
       id
       classroomId
+      name
       performanceX
       performanceY
       confidenceLevel
@@ -553,6 +668,7 @@ exports.updateStudent = `
     updateStudent(input: $input, condition: $condition) {
       id
       classroomId
+      name
       performanceX
       performanceY
       confidenceLevel
@@ -572,6 +688,7 @@ exports.deleteStudent = `
     deleteStudent(input: $input, condition: $condition) {
       id
       classroomId
+      name
       performanceX
       performanceY
       confidenceLevel
@@ -598,6 +715,24 @@ exports.createLearningGap = `
       occurrence
       misconceptionSummary
       successIndicators
+      ccssStandards {
+        targetObjective {
+          standard
+          description
+          __typename
+        }
+        impactedObjectives {
+          standard
+          description
+          __typename
+        }
+        prerequisiteGaps {
+          standard
+          description
+          __typename
+        }
+        __typename
+      }
       evidence {
         source
         mostCommonError
@@ -672,6 +807,24 @@ exports.updateLearningGap = `
       occurrence
       misconceptionSummary
       successIndicators
+      ccssStandards {
+        targetObjective {
+          standard
+          description
+          __typename
+        }
+        impactedObjectives {
+          standard
+          description
+          __typename
+        }
+        prerequisiteGaps {
+          standard
+          description
+          __typename
+        }
+        __typename
+      }
       evidence {
         source
         mostCommonError
@@ -746,6 +899,24 @@ exports.deleteLearningGap = `
       occurrence
       misconceptionSummary
       successIndicators
+      ccssStandards {
+        targetObjective {
+          standard
+          description
+          __typename
+        }
+        impactedObjectives {
+          standard
+          description
+          __typename
+        }
+        prerequisiteGaps {
+          standard
+          description
+          __typename
+        }
+        __typename
+      }
       evidence {
         source
         mostCommonError
@@ -805,107 +976,260 @@ exports.deleteLearningGap = `
     }
   }
 `;
-exports.createRecommendedAction = `
-  mutation CreateRecommendedAction(
-    $input: CreateRecommendedActionInput!
-    $condition: ModelRecommendedActionConditionInput
+exports.createSavedNextStep = `
+  mutation CreateSavedNextStep(
+    $input: CreateSavedNextStepInput!
+    $condition: ModelSavedNextStepConditionInput
   ) {
-    createRecommendedAction(input: $input, condition: $condition) {
+    createSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      status
+      completedAt
+      sortOrder
+      gapGroupId
+      gapGroupTitle
+      targetObjectiveStandard
       priority
-      title
-      description
-      action
-      timeframe
-      affectedStudents
-      dataSource
-      remediationType
-      ccssStandard
-      targetObjectives {
-        standard
-        description
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      gaps
+      moveId
+      moveTitle
+      moveTime
+      moveFormat
+      moveSummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
         __typename
       }
-      prerequisiteGaps {
-        standard
-        description
-        gapDescription
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
         __typename
       }
       createdAt
       updatedAt
-      classroomRecommendedActionsId
+      classroomSavedNextStepsId
       __typename
     }
   }
 `;
-exports.updateRecommendedAction = `
-  mutation UpdateRecommendedAction(
-    $input: UpdateRecommendedActionInput!
-    $condition: ModelRecommendedActionConditionInput
+exports.updateSavedNextStep = `
+  mutation UpdateSavedNextStep(
+    $input: UpdateSavedNextStepInput!
+    $condition: ModelSavedNextStepConditionInput
   ) {
-    updateRecommendedAction(input: $input, condition: $condition) {
+    updateSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      status
+      completedAt
+      sortOrder
+      gapGroupId
+      gapGroupTitle
+      targetObjectiveStandard
       priority
-      title
-      description
-      action
-      timeframe
-      affectedStudents
-      dataSource
-      remediationType
-      ccssStandard
-      targetObjectives {
-        standard
-        description
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      gaps
+      moveId
+      moveTitle
+      moveTime
+      moveFormat
+      moveSummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
         __typename
       }
-      prerequisiteGaps {
-        standard
-        description
-        gapDescription
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
         __typename
       }
       createdAt
       updatedAt
-      classroomRecommendedActionsId
+      classroomSavedNextStepsId
       __typename
     }
   }
 `;
-exports.deleteRecommendedAction = `
-  mutation DeleteRecommendedAction(
-    $input: DeleteRecommendedActionInput!
-    $condition: ModelRecommendedActionConditionInput
+exports.deleteSavedNextStep = `
+  mutation DeleteSavedNextStep(
+    $input: DeleteSavedNextStepInput!
+    $condition: ModelSavedNextStepConditionInput
   ) {
-    deleteRecommendedAction(input: $input, condition: $condition) {
+    deleteSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      status
+      completedAt
+      sortOrder
+      gapGroupId
+      gapGroupTitle
+      targetObjectiveStandard
       priority
-      title
-      description
-      action
-      timeframe
-      affectedStudents
-      dataSource
-      remediationType
-      ccssStandard
-      targetObjectives {
-        standard
-        description
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      gaps
+      moveId
+      moveTitle
+      moveTime
+      moveFormat
+      moveSummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
         __typename
       }
-      prerequisiteGaps {
-        standard
-        description
-        gapDescription
+      move {
+        id
+        title
+        time
+        format
+        summary
+        aiReasoning
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
         __typename
       }
       createdAt
       updatedAt
-      classroomRecommendedActionsId
+      classroomSavedNextStepsId
       __typename
     }
   }

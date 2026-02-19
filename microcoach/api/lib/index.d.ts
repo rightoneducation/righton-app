@@ -8,4 +8,8 @@ export declare class APIClient {
     getLearningScienceDataByCCSS(ccss: string): Promise<any>;
     getAnalytics(classroomData: any, learningScienceData: any): Promise<any>;
     updateClassroom(classroomData: any, analytics: string): Promise<any>;
+    createSavedNextStep(classroomId: string, item: Record<string, unknown>): Promise<any>;
+    updateSavedNextStep(id: string, updates: Record<string, unknown>): Promise<any>;
+    deleteSavedNextStep(id: string): Promise<void>;
+    listSavedNextSteps(classroomId: string): Promise<any>;
 }

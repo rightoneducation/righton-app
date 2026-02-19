@@ -1,11 +1,18 @@
-import { 
+import {
   Amplify
 } from "aws-amplify";
 import { GraphQLResult, generateClient } from "@aws-amplify/api";
 import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
 import { GraphQLResponseV6 } from '@aws-amplify/api-graphql';
-import { getClassroom } from "./graphql/queries";
-import { getLearningScience, getAnalytics, updateClassroom } from "./graphql/mutations";
+import { getClassroom, savedNextStepsByClassroomId } from "./graphql/queries";
+import {
+  getLearningScience,
+  getAnalytics,
+  updateClassroom,
+  createSavedNextStep,
+  updateSavedNextStep,
+  deleteSavedNextStep,
+} from "./graphql/mutations";
 import awsconfig from "./aws-exports";
 
 export class APIClient {
@@ -61,5 +68,32 @@ export class APIClient {
       input,
     });
     return classroom.data?.updateClassroom;
+  }
+
+  async createSavedNextStep(classroomId: string, item: Record<string, unknown>) {
+    const result = await this.callGraphQL<any>(createSavedNextStep, {
+      input: { ...item, classroomId }
+    });
+    return result.data?.createSavedNextStep;
+  }
+
+  async updateSavedNextStep(id: string, updates: Record<string, unknown>) {
+    const result = await this.callGraphQL<any>(updateSavedNextStep, {
+      input: { id, ...updates }
+    });
+    return result.data?.updateSavedNextStep;
+  }
+
+  async deleteSavedNextStep(id: string) {
+    await this.callGraphQL<any>(deleteSavedNextStep, {
+      input: { id }
+    });
+  }
+
+  async listSavedNextSteps(classroomId: string) {
+    const result = await this.callGraphQL<any>(savedNextStepsByClassroomId, {
+      classroomId
+    });
+    return result.data?.savedNextStepsByClassroomId?.items ?? [];
   }
 }

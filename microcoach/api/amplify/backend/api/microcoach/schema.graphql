@@ -6,7 +6,7 @@ type Classroom @model {
   id: ID!
   classroomName: String! @index(name: "byClassroomName", queryField: "classroomsByClassroomName")
   learningGaps: [LearningGap] @hasMany
-  recommendedActions: [RecommendedAction] @hasMany
+  savedNextSteps: [SavedNextStep] @hasMany
   students: [Student] @hasMany
   trends: [ClassroomTrend] @hasMany
   createdAt: AWSDateTime!
@@ -16,8 +16,9 @@ type Classroom @model {
 type Student @model {
   id: ID!
   classroomId: ID!
-  performanceX: String!
-  performanceY: String!
+  name: String!
+  performanceX: Float
+  performanceY: Float
   confidenceLevel: Int!
   status: String!
   createdAt: AWSDateTime!
@@ -34,10 +35,22 @@ type LearningGap @model {
   occurrence: String
   misconceptionSummary: String
   successIndicators: [String]
+  ccssStandards: CcssStandards
   evidence: Evidence
   move: Move
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+}
+
+type CcssStandards {
+  targetObjective: CcssObjective
+  impactedObjectives: [CcssObjective]
+  prerequisiteGaps: [CcssObjective]
+}
+
+type CcssObjective {
+  standard: String
+  description: String
 }
 
   type Evidence {
@@ -99,34 +112,35 @@ type LearningGap @model {
         description: String
       }
 
-type RecommendedAction @model {
+type SavedNextStep @model {
   id: ID!
-  classroomId: ID!
-  priority: String
-  title: String
-  description: String
-  action: String
-  timeframe: String
-  affectedStudents: String
-  dataSource: String
-  remediationType: String
-  ccssStandard: String
-  targetObjectives: [TargetObjective]
-  prerequisiteGaps: [PrerequisiteGap]
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+  classroomId: ID! @index(name: "byClassroom")
+  status: String!
+  completedAt: AWSDateTime
+  sortOrder: Int
+
+  # Denormalized from GapGroup at save time
+  gapGroupId: String!
+  gapGroupTitle: String!
+  targetObjectiveStandard: String
+  priority: String!
+  studentCount: Int
+  studentPercent: Int
+  occurrence: String
+  misconceptionSummary: String
+  successIndicators: [String]
+  gaps: [String]
+
+  # Denormalized from Move at save time
+  moveId: String!
+  moveTitle: String!
+  moveTime: String
+  moveFormat: String
+  moveSummary: String
+  aiReasoning: String
+  evidence: Evidence
+  move: Move
 }
-
-  type TargetObjective {
-    standard: String
-    description: String
-  }
-
-  type PrerequisiteGap {
-    standard: String
-    description: String
-    gapDescription: String
-  }
 
 type ClassroomTrend @model {
   keyInsights: [KeyInsight]
@@ -186,7 +200,7 @@ input GetAnalyticsInput {
 }
 
 type Mutation {
-  getLearningScience(input: GetLearningScienceInput!): String 
+  getLearningScience(input: GetLearningScienceInput!): String
     @function(name: "microcoachGetLearningScience-${env}")
   getAnalytics(input: GetAnalyticsInput!): String
     @function(name: "microcoachLLM-${env}")

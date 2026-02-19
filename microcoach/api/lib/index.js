@@ -58,5 +58,31 @@ class APIClient {
         });
         return (_a = classroom.data) === null || _a === void 0 ? void 0 : _a.updateClassroom;
     }
+    async createSavedNextStep(classroomId, item) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.createSavedNextStep, {
+            input: { ...item, classroomId }
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.createSavedNextStep;
+    }
+    async updateSavedNextStep(id, updates) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.updateSavedNextStep, {
+            input: { id, ...updates }
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.updateSavedNextStep;
+    }
+    async deleteSavedNextStep(id) {
+        await this.callGraphQL(mutations_1.deleteSavedNextStep, {
+            input: { id }
+        });
+    }
+    async listSavedNextSteps(classroomId) {
+        var _a, _b, _c;
+        const result = await this.callGraphQL(queries_1.savedNextStepsByClassroomId, {
+            classroomId
+        });
+        return (_c = (_b = (_a = result.data) === null || _a === void 0 ? void 0 : _a.savedNextStepsByClassroomId) === null || _b === void 0 ? void 0 : _b.items) !== null && _c !== void 0 ? _c : [];
+    }
 }
 exports.APIClient = APIClient;

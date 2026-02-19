@@ -39,8 +39,17 @@
 
 .overview-nav-tabs {
   display: flex;
+  align-items: center;
   gap: 0;
   border-bottom: 2px solid #e5e5e5;
+}
+
+.overview-nav-separator {
+  padding: 0 8px;
+  color: rgba(27, 55, 111, 0.45);
+  font-size: 14px;
+  font-weight: 600;
+  user-select: none;
 }
 
 .overview-nav-tab {
@@ -160,4 +169,38 @@ p, .body-text {
 /* Global Border Radius Standard */
 .card, .action-card, .overall-trends, .insight-item, .student-performance-item, .confidence-chart {
   border-radius: 8px !important;
+}
+
+/* CCSS / Learning objective pills (shared across pages)
+   Keep this consistent with the styling used in Recommended Next Steps. */
+.ccss-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Rubik', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #e5e7eb;
+  background-color: #f3f4f6;
+  color: #374151;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.ccss-tag.target-objective {
+  background-color: #0076AA;
+  color: #FFFFFF;
+  border-color: #0076AA;
+  box-shadow: 0 1px 3px rgba(0, 118, 170, 0.3);
+}
+
+.ccss-tag.prerequisite-gap {
+  background-color: #CC5500;
+  color: #FFFFFF;
+  border-color: #CC5500;
+  box-shadow: 0 1px 3px rgba(204, 85, 0, 0.3);
 }

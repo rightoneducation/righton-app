@@ -85,6 +85,16 @@
   gap: 12px;
 }
 
+.yns-planned-empty {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 16px;
+  color: #1B376F;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .yns-row {
   display: flex;
   align-items: stretch;
@@ -145,14 +155,15 @@
 }
 
 .yns-grip {
-  width: 14px;
-  display: flex;
-  flex-direction: column;
+  width: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 3px;
 }
 
 .yns-grip span {
-  height: 2px;
+  width: 4px;
+  height: 4px;
   border-radius: 999px;
   background-color: rgba(27, 55, 111, 0.6);
 }
@@ -199,6 +210,7 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 10px;
+  align-items: center;
 }
 
 .yns-meta-pill {
@@ -210,6 +222,9 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+/* Learning objective standard pill now uses the shared `.ccss-tag.target-objective` styling
+   from Recommended Next Steps, so no separate styles are needed here. */
 
 /* NOTE: deprecated: use `.students-pill.yns-students-pill` (to match Recommended Next Steps) */
 .yns-meta-pill--students {
@@ -301,46 +316,15 @@
 }
 
 .yns-icon-btn:focus-visible,
-.yns-details-toggle:focus-visible,
 .yns-drag-handle:focus-visible {
   outline: 3px solid rgba(27, 55, 111, 0.35);
   outline-offset: 2px;
 }
 
-.yns-details-toggle {
-  background: transparent;
-  border: 1px solid transparent;
-  padding: 4px 6px;
-  color: #1B376F;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 8px;
-}
-
-.yns-details-toggle:hover {
-  border-color: rgba(27, 55, 111, 0.15);
-  background-color: rgba(27, 55, 111, 0.06);
-}
-
-.yns-caret {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-}
-
-.yns-caret.down {
-  border-top: 6px solid rgba(27, 55, 111, 0.85);
-}
-
-.yns-caret.up {
-  border-bottom: 6px solid rgba(27, 55, 111, 0.85);
-}
+/* NOTE:
+   Saved Next Steps previously used an inline expand/collapse toggle with a caret.
+   We now open a modal, so the old caret/toggle styles are removed.
+*/
 
 .yns-details {
   padding: 14px 16px;
@@ -431,51 +415,159 @@
   height: 34px;
 }
 
-.yns-btn {
+.yns-toast {
+  /* Match Recommended Next Steps toast style/interaction */
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  z-index: 1000;
+  margin: 0;
+  padding: 12px 16px;
   border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid #e5e5e5;
   background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  color: #1B376F;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 320px;
+  animation: ynsSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.yns-toast.show {
+  /* Keep horizontal centering when switching to the "show" state */
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+@keyframes ynsSlideIn {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ynsSlideOut {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.yns-toast.removing {
+  animation: ynsSlideOut 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Button styles moved to SharedButtons.css */
+
+/* Completed section (Saved Next Steps) */
+/* Completed section should feel like a peer section, not a nested card */
+.yns-completed-section {
+  margin-top: 16px;
+}
+
+.yns-completed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.yns-completed-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Deprecated: completed title-row wrapper removed (standard pill is in the pills row). */
+
+.yns-completed-title {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
   color: #1B376F;
 }
 
-.yns-btn.primary {
-  background-color: #1B376F;
-  border-color: #1B376F;
-  color: #FFFBF6;
+.yns-completed-count {
+  min-width: 26px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 118, 170, 0.12);
+  color: #0076AA;
+  font-weight: 800;
+  font-size: 12px;
+  border: 1px solid rgba(0, 118, 170, 0.18);
 }
 
-.yns-btn.primary:hover {
-  background-color: #153056;
+.yns-completed-panel {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.yns-btn.primary:disabled,
-.yns-btn.primary[aria-disabled="true"] {
-  /* Keep the button visible but clearly disabled via a lighter fill */
-  opacity: 1;
-  background-color: rgba(27, 55, 111, 0.35);
-  border-color: rgba(27, 55, 111, 0.35);
-  color: rgba(255, 251, 246, 0.95);
+.yns-completed-empty {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #1B376F;
+  opacity: 0.85;
 }
 
-.yns-btn.primary:disabled:hover,
-.yns-btn.primary[aria-disabled="true"]:hover {
-  background-color: rgba(27, 55, 111, 0.35);
+.yns-completed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
 }
 
-.yns-btn.secondary:hover {
-  background-color: rgba(27, 55, 111, 0.08);
+.yns-completed-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  background-color: rgba(27, 55, 111, 0.03);
 }
 
-.yns-btn.tiny {
-  padding: 6px 10px;
+.yns-completed-item-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1B376F;
+  line-height: 1.3;
 }
 
-.yns-btn:disabled {
-  cursor: not-allowed;
+.yns-completed-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.yns-completed-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 @media (max-width: 640px) {

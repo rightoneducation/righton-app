@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './RecommendedNextSteps.css';
 
 // Mock: learning-gap groups and their respective next step activities.
@@ -12,12 +12,38 @@ export const buildMockGapGroups = () => {
       studentCount: 18,
       studentPercent: 72,
       occurrence: '1st occurrence',
-      misconceptionSummary: 'Students are making conceptual errors when distributing negative signs in multi-step equations. They treat the negative sign as attached to only one term rather than applying it to all terms within parentheses. For example, in 3(2x - 4), students incorrectly calculate 6x - 4 instead of 6x - 12, showing they don\'t understand that the negative sign must be distributed to both terms.',
+      misconceptionSummary: 'Students incorrectly distribute negative signs, treating them as attached to only one term. In 3(2x - 4), they calculate 6x - 4 instead of 6x - 12.',
       successIndicators: [
         'Correctly distribute negative signs to all terms within parentheses',
         'Accurately combine like terms with proper sign handling',
         'Apply inverse operations correctly in multi-step equations'
       ],
+      ccssStandards: {
+        targetObjective: {
+          standard: '8.EE.7',
+          description: 'Solve linear equations in one variable'
+        },
+        impactedObjectives: [
+          {
+            standard: '8.EE.8',
+            description: 'Analyze and solve systems of linear equations'
+          },
+          {
+            standard: 'A.SSE.1',
+            description: 'Interpret expressions that represent a quantity'
+          }
+        ],
+        prerequisiteGaps: [
+          {
+            standard: '6.EE.3',
+            description: 'Apply properties of operations to generate equivalent expressions'
+          },
+          {
+            standard: '7.NS.1',
+            description: 'Apply properties of operations with rational numbers'
+          }
+        ]
+      },
       evidence: {
         source: 'Daily Practice Problems',
         mostCommonError: '3(2x - 4) → 6x - 4 (missed distribution to -4)',
@@ -102,12 +128,38 @@ export const buildMockGapGroups = () => {
       studentCount: 9,
       studentPercent: 36,
       occurrence: '2nd occurrence',
-      misconceptionSummary: 'Students are making procedural errors when adding fractions by incorrectly adding both numerators and denominators. They apply the rule "add tops and bottoms" which works for some operations but not fraction addition. For example, in x/3 + x/4, students incorrectly calculate 2x/7 instead of finding the common denominator and getting 7x/12, showing they don\'t understand the fundamental concept of equivalent fractions.',
+      misconceptionSummary: 'Students incorrectly add fractions by adding both numerators and denominators. In x/3 + x/4, they calculate 2x/7 instead of finding the common denominator and getting 7x/12.',
       successIndicators: [
         'Correctly find common denominators before adding fractions',
         'Accurately convert fractions to equivalent forms with common denominators',
         'Properly add numerators while keeping the common denominator'
       ],
+      ccssStandards: {
+        targetObjective: {
+          standard: '5.NF.1',
+          description: 'Add and subtract fractions with unlike denominators'
+        },
+        impactedObjectives: [
+          {
+            standard: '5.NF.2',
+            description: 'Solve word problems involving addition and subtraction of fractions'
+          },
+          {
+            standard: '6.NS.1',
+            description: 'Interpret and compute quotients of fractions'
+          }
+        ],
+        prerequisiteGaps: [
+          {
+            standard: '4.NF.1',
+            description: 'Explain why a fraction a/b is equivalent to a fraction (n × a)/(n × b)'
+          },
+          {
+            standard: '4.NF.2',
+            description: 'Compare two fractions with different numerators and different denominators'
+          }
+        ]
+      },
       evidence: {
         source: 'Algebraic Fractions Assessment',
         mostCommonError: 'x/3 + x/4 → 2x/7',
@@ -193,12 +245,38 @@ export const buildMockGapGroups = () => {
       studentCount: 7,
       studentPercent: 28,
       occurrence: '3rd occurrence',
-      misconceptionSummary: 'Students are making procedural errors when applying order of operations, particularly with exponents and multiplication. They often evaluate expressions left-to-right instead of following PEMDAS rules. For example, in 2x² + 3x when x=4, students incorrectly calculate 2×4² + 3×4 = 8² + 12 = 64 + 12 = 76 instead of 2×16 + 12 = 32 + 12 = 44.',
+      misconceptionSummary: 'Students incorrectly apply order of operations, evaluating expressions left-to-right instead of following PEMDAS. In 2x² + 3x when x=4, they calculate 2×4² + 3×4 = 8² + 12 = 76 instead of 2×16 + 12 = 44.',
       successIndicators: [
         'Correctly apply order of operations (PEMDAS) in multi-step expressions',
         'Evaluate exponents before multiplication and addition',
         'Use parentheses to clarify operation order when needed'
       ],
+      ccssStandards: {
+        targetObjective: {
+          standard: '6.EE.1',
+          description: 'Write and evaluate numerical expressions involving whole-number exponents'
+        },
+        impactedObjectives: [
+          {
+            standard: '6.EE.2',
+            description: 'Write, read, and evaluate expressions in which letters stand for numbers'
+          },
+          {
+            standard: '7.EE.3',
+            description: 'Solve multi-step real-life problems using numerical and algebraic expressions'
+          }
+        ],
+        prerequisiteGaps: [
+          {
+            standard: '5.OA.1',
+            description: 'Use parentheses, brackets, or braces in numerical expressions'
+          },
+          {
+            standard: '5.OA.2',
+            description: 'Write simple expressions that record calculations with numbers'
+          }
+        ]
+      },
       evidence: {
         source: 'Order of Operations Quiz',
         mostCommonError: '2x² + 3x → 2×4² + 3×4 = 8² + 12 = 76 (evaluating left-to-right)',
@@ -284,12 +362,38 @@ export const buildMockGapGroups = () => {
       studentCount: 6,
       studentPercent: 24,
       occurrence: '4th occurrence',
-      misconceptionSummary: 'Students are making conceptual errors when isolating variables in equations. They often perform inverse operations incorrectly or forget to apply operations to both sides of the equation. For example, in 4x = 12, students incorrectly calculate x = 12 × 4 = 48 instead of x = 12 ÷ 4 = 3.',
+      misconceptionSummary: 'Students incorrectly isolate variables by performing inverse operations incorrectly or forgetting to apply operations to both sides. In 4x = 12, they calculate x = 12 × 4 = 48 instead of x = 12 ÷ 4 = 3.',
       successIndicators: [
         'Correctly apply inverse operations to isolate variables',
         'Perform the same operation on both sides of the equation',
         'Verify solutions by substitution'
       ],
+      ccssStandards: {
+        targetObjective: {
+          standard: '6.EE.5',
+          description: 'Understand solving an equation as a process of answering a question'
+        },
+        impactedObjectives: [
+          {
+            standard: '6.EE.7',
+            description: 'Solve real-world problems by writing and solving equations'
+          },
+          {
+            standard: '7.EE.4',
+            description: 'Use variables to represent quantities in real-world problems'
+          }
+        ],
+        prerequisiteGaps: [
+          {
+            standard: '3.OA.4',
+            description: 'Determine the unknown whole number in a multiplication or division equation'
+          },
+          {
+            standard: '3.OA.6',
+            description: 'Understand division as an unknown-factor problem'
+          }
+        ]
+      },
       evidence: {
         source: 'Equation Solving Assessment',
         mostCommonError: '4x = 12 → x = 12 × 4 = 48 (multiplying instead of dividing)',
@@ -374,14 +478,12 @@ export const buildMockGapGroups = () => {
 const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
   const [gapGroups, setGapGroups] = useState(buildMockGapGroups);
   const [toast, setToast] = useState(null);
+  const toastTimeoutRef = useRef(null);
   const [reasoningGroupId, setReasoningGroupId] = useState(null);
   const [fullViewGroupId, setFullViewGroupId] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [evidenceScreen, setEvidenceScreen] = useState(1);
-  const [aiPromptGroupId, setAiPromptGroupId] = useState(null);
-  const [aiPromptText, setAiPromptText] = useState('');
-  const [isRegenerating, setIsRegenerating] = useState(false);
-  const [regenerationChanges, setRegenerationChanges] = useState(null);
+  const [cameFromFullView, setCameFromFullView] = useState(false);
 
   const existingIndex = useMemo(() => {
     // Used only for subtle UI cues (do we already have something saved for this gap group?)
@@ -396,6 +498,15 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
     return 'priority-low';
   };
 
+  useEffect(() => {
+    return () => {
+      const timeoutId = toastTimeoutRef.current;
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
 
   const handleAdd = (group) => {
     const move = group.move;
@@ -403,176 +514,50 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
 
     if (existingIndex.has(`${group.id}:${move.id}`)) {
       setToast('Already in "Your Next Steps"');
-      window.setTimeout(() => setToast(null), 1400);
+      // Trigger animation for existing toast
+      const toastElement = document.querySelector('.rns-toast');
+      if (toastElement) {
+        toastElement.classList.add('show');
+        setTimeout(() => {
+          toastElement.classList.add('removing');
+          setTimeout(() => setToast(null), 300);
+        }, 1400);
+      } else {
+        window.setTimeout(() => setToast(null), 1400);
+      }
       return;
     }
 
     onAddNextStep?.(group, move);
     setToast('Added to "Your Next Steps"');
-    window.setTimeout(() => setToast(null), 1400);
-  };
-
-  const handleRefineWithAI = (group) => {
-    setAiPromptGroupId(group.id);
-    setAiPromptText('');
-    setRegenerationChanges(null);
-  };
-
-  const handleAIPromptSubmit = () => {
-    if (!aiPromptText.trim()) return;
     
-    setIsRegenerating(true);
-    setToast('Regenerating activity...');
+    // Remove the added group from the list and promote the next most critical one
+    setGapGroups(prevGroups => {
+      // Filter out the group that was just added
+      const filteredGroups = prevGroups.filter(g => g.id !== group.id);
+      
+      // If there are remaining groups, the next one becomes the new main misconception
+      // If no groups remain, keep the current state (empty)
+      return filteredGroups;
+    });
     
-    // Simulate AI processing time
+    // Trigger animation for new toast
     setTimeout(() => {
-      const group = gapGroups.find(g => g.id === aiPromptGroupId);
-      if (group) {
-        // Mock AI regeneration with changes tracking
-        const originalTitle = group.move.title;
-        const originalSummary = group.move.summary;
-        const originalTime = group.move.time;
-        const originalFormat = group.move.format;
-        
-        // Generate new content based on prompt
-        const newTitle = generateNewTitle(aiPromptText, originalTitle);
-        const newSummary = generateNewSummary(aiPromptText, originalSummary);
-        const newTime = generateNewTime(aiPromptText, originalTime);
-        const newFormat = generateNewFormat(aiPromptText, originalFormat);
-        
-        // Track changes for display
-        const changes = [];
-        if (newTitle !== originalTitle) changes.push(`Updated activity title: "${newTitle}"`);
-        if (newSummary !== originalSummary) changes.push(`Modified activity summary`);
-        if (newTime !== originalTime) changes.push(`Changed time allocation: ${newTime}`);
-        if (newFormat !== originalFormat) changes.push(`Updated format: ${newFormat}`);
-        
-        setGapGroups((prev) =>
-          prev.map((g) => 
-            g.id === aiPromptGroupId 
-              ? {
-                  ...g,
-                  move: {
-                    ...g.move,
-                    title: newTitle,
-                    summary: newSummary,
-                    time: newTime,
-                    format: newFormat
-                  }
-                }
-              : g
-          )
-        );
-        
-        setRegenerationChanges(changes);
-        setIsRegenerating(false);
-        setToast('Activity regenerated successfully');
-        window.setTimeout(() => setToast(null), 2000);
+      const toastElement = document.querySelector('.rns-toast');
+      if (toastElement) {
+        toastElement.classList.add('show');
+        setTimeout(() => {
+          toastElement.classList.add('removing');
+          setTimeout(() => setToast(null), 300);
+        }, 2000);
       }
-    }, 1500);
-  };
-
-  const generateNewTitle = (prompt, originalTitle) => {
-    const promptLower = prompt.toLowerCase();
-    if (promptLower.includes('simplify') || promptLower.includes('shorter')) {
-      return originalTitle.includes('Whole-class') ? 'Quick whole-class error spotlight' : 
-             originalTitle.includes('Visual') ? 'Simple visual fraction model' :
-             originalTitle.includes('Error analysis') ? 'Quick error analysis' :
-             originalTitle.includes('Balance scale') ? 'Simple balance scale demo' :
-             `${originalTitle} (simplified)`;
-    }
-    if (promptLower.includes('extend') || promptLower.includes('longer')) {
-      return originalTitle.includes('Whole-class') ? 'Extended whole-class worked example + error spotlight' : 
-             originalTitle.includes('Visual') ? 'Comprehensive visual fraction model + LCD routine' :
-             originalTitle.includes('Error analysis') ? 'Extended order of operations error analysis debate' :
-             originalTitle.includes('Balance scale') ? 'Extended balance scale visualization + algebraic connection' :
-             `${originalTitle} (extended)`;
-    }
-    if (promptLower.includes('technology') || promptLower.includes('digital')) {
-      return originalTitle.includes('Whole-class') ? 'Digital whole-class worked example + error spotlight' : 
-             originalTitle.includes('Visual') ? 'Interactive visual fraction model + LCD routine' :
-             originalTitle.includes('Error analysis') ? 'Digital order of operations error analysis debate' :
-             originalTitle.includes('Balance scale') ? 'Virtual balance scale visualization + algebraic connection' :
-             `${originalTitle} (digital)`;
-    }
-    return `${originalTitle} (refined)`;
-  };
-
-  const generateNewSummary = (prompt, originalSummary) => {
-    const promptLower = prompt.toLowerCase();
-    if (promptLower.includes('simplify') || promptLower.includes('shorter')) {
-      return originalSummary.includes('Solve one canonical problem') ? 'Solve one problem together and compare correct vs incorrect steps.' :
-             originalSummary.includes('Use bar models') ? 'Use bar models to justify LCD before symbolic steps.' :
-             originalSummary.includes('Present both correct') ? 'Present correct and incorrect solutions side by side.' :
-             originalSummary.includes('Use physical') ? 'Use balance scales to demonstrate equation solving.' :
-             `${originalSummary} (simplified)`;
-    }
-    if (promptLower.includes('extend') || promptLower.includes('longer')) {
-      return originalSummary.includes('Solve one canonical problem') ? 'Solve multiple problems together and compare correct vs incorrect steps with detailed explanations.' :
-             originalSummary.includes('Use bar models') ? 'Use bar models to justify LCD before symbolic steps, then extend to complex fractions.' :
-             originalSummary.includes('Present both correct') ? 'Present correct and incorrect solutions side by side, then facilitate detailed debate and practice.' :
-             originalSummary.includes('Use physical') ? 'Use balance scales to demonstrate equation solving, then connect to algebraic notation with multiple examples.' :
-             `${originalSummary} (extended)`;
-    }
-    if (promptLower.includes('technology') || promptLower.includes('digital')) {
-      return originalSummary.includes('Solve one canonical problem') ? 'Solve one problem together digitally and compare correct vs incorrect steps using interactive tools.' :
-             originalSummary.includes('Use bar models') ? 'Use digital bar models to justify LCD before symbolic steps.' :
-             originalSummary.includes('Present both correct') ? 'Present correct and incorrect solutions digitally side by side.' :
-             originalSummary.includes('Use physical') ? 'Use digital balance scales to demonstrate equation solving.' :
-             `${originalSummary} (digital)`;
-    }
-    return `${originalSummary} (refined)`;
-  };
-
-  const generateNewTime = (prompt, originalTime) => {
-    const promptLower = prompt.toLowerCase();
-    if (promptLower.includes('simplify') || promptLower.includes('shorter')) {
-      return originalTime.includes('20–30') ? '15–20 min' :
-             originalTime.includes('20') ? '15 min' :
-             originalTime.includes('15') ? '10 min' :
-             originalTime.includes('20 min') ? '15 min' :
-             '15 min';
-    }
-    if (promptLower.includes('extend') || promptLower.includes('longer')) {
-      return originalTime.includes('20–30') ? '30–45 min' :
-             originalTime.includes('20') ? '30 min' :
-             originalTime.includes('15') ? '25 min' :
-             originalTime.includes('20 min') ? '30 min' :
-             '30 min';
-    }
-    return originalTime;
-  };
-
-  const generateNewFormat = (prompt, originalFormat) => {
-    const promptLower = prompt.toLowerCase();
-    if (promptLower.includes('technology') || promptLower.includes('digital')) {
-      return originalFormat.includes('Whole class') ? 'Whole class → digital pairs' :
-             originalFormat.includes('Whole class') ? 'Whole class → digital groups' :
-             originalFormat.includes('Small groups') ? 'Small groups → digital collaboration' :
-             'Whole class → digital';
-    }
-    return originalFormat;
-  };
-
-  const handleAddFromAIPrompt = () => {
-    const group = gapGroups.find(g => g.id === aiPromptGroupId);
-    if (group) {
-      handleAdd(group);
-      setAiPromptGroupId(null);
-      setAiPromptText('');
-      setRegenerationChanges(null);
-    }
+    }, 50);
   };
 
   const reasoningGroup = useMemo(() => {
     if (!reasoningGroupId) return null;
     return gapGroups.find((g) => g.id === reasoningGroupId) ?? null;
   }, [gapGroups, reasoningGroupId]);
-
-  const aiPromptGroup = useMemo(() => {
-    if (!aiPromptGroupId) return null;
-    return gapGroups.find((g) => g.id === aiPromptGroupId) ?? null;
-  }, [gapGroups, aiPromptGroupId]);
 
   const mainMisconception = gapGroups[0];
   const alternativeMisconceptions = gapGroups.slice(1);
@@ -584,8 +569,8 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
           <div className="rns-modal evidence-journey-modal" onClick={(e) => e.stopPropagation()}>
             <div className="evidence-journey-header">
               <div className="evidence-journey-title-section">
-                <h3 className="evidence-journey-title">Evidence Journey</h3>
-                <p className="evidence-journey-subtitle">{reasoningGroup.title}</p>
+                <h3 className="evidence-journey-title">{reasoningGroup.title}</h3>
+                <p className="evidence-journey-subtitle">Evidence Journey</p>
               </div>
               
               <div className="evidence-journey-progress">
@@ -627,7 +612,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                   <div className="screen-content">
                     <div className="data-visualization">
                       <div className="chart-container">
-                        <h5 className="chart-title">Students Displaying Distribution Error Pattern</h5>
+                        <h5 className="chart-title">Students Who Made Distribution Errors</h5>
                         <div className="chart-placeholder">
                           <div className="chart-bar" style={{height: '80%'}}></div>
                           <div className="chart-bar" style={{height: '60%'}}></div>
@@ -704,7 +689,8 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                   
                   <div className="screen-content">
                     <div className="problem-intro">
-                      <h5 className="problem-label">Problem: 3(2x - 4) = 18</h5>
+                      <div className="problem-eyebrow">Question 8</div>
+                      <h5 className="problem-label">3(2x - 4) = 18</h5>
                       <p className="problem-context">This problem was used to assess students' understanding of distributing negative signs in multi-step equations.</p>
                     </div>
 
@@ -811,7 +797,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                   </div>
                   
                   <div className="screen-content">
-                    <div className="impact-analysis">
+                    <div className="impact-analysis-full-width">
                       <div className="impact-card">
                         <h5>Long-term Consequences</h5>
                         <ul>
@@ -845,24 +831,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                         </div>
                       </div>
                     </div>
-
-                    <div className="success-metrics">
-                      <h5>Expected Outcomes</h5>
-                      <div className="metrics-grid">
-                        <div className="metric-item">
-                          <span className="metric-label">Error Reduction</span>
-                          <span className="metric-value">72% → 10%</span>
-                        </div>
-                        <div className="metric-item">
-                          <span className="metric-label">Confidence Boost</span>
-                          <span className="metric-value">Significant</span>
-                        </div>
-                        <div className="metric-item">
-                          <span className="metric-label">Foundation Strength</span>
-                          <span className="metric-value">Solid</span>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
@@ -870,24 +838,34 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
 
             <div className="evidence-journey-footer">
               <div className="navigation-controls">
-                <button
-                  className="nav-btn prev-btn"
-                  onClick={() => setEvidenceScreen(Math.max(1, evidenceScreen - 1))}
-                  disabled={evidenceScreen === 1}
-                >
-                  ← Back
-                </button>
+                {evidenceScreen === 1 ? (
+                  <button
+                    className="back-btn"
+                    onClick={() => {
+                      setReasoningGroupId(null);
+                      if (cameFromFullView) {
+                        setFullViewGroupId(reasoningGroup.id);
+                      }
+                    }}
+                  >
+                    ← Back
+                  </button>
+                ) : (
+                  <button
+                    className="nav-btn prev-btn"
+                    onClick={() => setEvidenceScreen(Math.max(1, evidenceScreen - 1))}
+                    disabled={evidenceScreen === 1}
+                  >
+                    ← What Happened
+                  </button>
+                )}
                 
-                <div className="screen-indicator">
-                  <span>Screen {evidenceScreen} of 3</span>
-                </div>
-
                 <button
                   className="nav-btn next-btn"
                   onClick={() => setEvidenceScreen(Math.min(3, evidenceScreen + 1))}
                   disabled={evidenceScreen === 3}
                 >
-                  Next →
+                  {evidenceScreen === 1 ? 'Where & How →' : 'Why It Matters →'}
                 </button>
               </div>
             </div>
@@ -929,14 +907,49 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                         <span className={`students-pill ${getPriorityClass(group.priority)}`}>
                           {group.studentCount} students ({group.studentPercent}%)
                         </span>
-                        <span className="occurrence-pill">
-                          {group.occurrence}
-                        </span>
+                    {group.occurrence && <span className="occurrence-pill">{group.occurrence}</span>}
                       </div>
 
                       {group.misconceptionSummary && (
                         <div className="misconception-summary">
                           {group.misconceptionSummary}
+                        </div>
+                      )}
+
+                      {/* CCSS Standards Section for Full View Modal */}
+                      {group.ccssStandards && (
+                        <div className="ccss-standards-section">
+                          <div className="ccss-standards-grid">
+                            <div className="ccss-card">
+                              <h4 className="tab-section-title">Students are struggling with...</h4>
+                              <div className="ccss-content">
+                                <span className="ccss-tag target-objective">
+                                  {group.ccssStandards.targetObjective.standard}
+                                </span>
+                                <span className="ccss-description">
+                                  {group.ccssStandards.targetObjective.description}
+                                </span>
+                              </div>
+                            </div>
+                            
+                            {group.ccssStandards.prerequisiteGaps && group.ccssStandards.prerequisiteGaps.length > 0 && (
+                              <div className="ccss-card">
+                                <h4 className="tab-section-title">The underlying issue may be...</h4>
+                                <div className="ccss-content">
+                                  {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
+                                    <div key={idx} className="ccss-gap-item">
+                                      <span className="ccss-tag prerequisite-gap">
+                                        {gap.standard}
+                                      </span>
+                                      <span className="ccss-description">
+                                        {gap.description}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
@@ -1151,6 +1164,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                         className="reasoning-btn"
                         onClick={() => {
                           setFullViewGroupId(null);
+                          setCameFromFullView(true);
                           setReasoningGroupId(group.id);
                         }}
                       >
@@ -1160,7 +1174,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                         setFullViewGroupId(null);
                         handleAdd(group);
                       }}>
-                        Add to Your Next Steps
+                        Add to Saved Next Steps
                       </button>
                     </div>
                   </div>
@@ -1171,304 +1185,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
         </div>
       )}
 
-      {/* AI Prompt Modal for Refine with AI */}
-      {aiPromptGroupId && (
-        <div className="rns-modal-overlay" onClick={() => setAiPromptGroupId(null)}>
-          <div className="rns-modal ai-prompt-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="ai-prompt-header">
-              <div>
-                <div className="ai-prompt-title">Refine with AI</div>
-                <div className="ai-prompt-subtitle">{gapGroups.find(g => g.id === aiPromptGroupId)?.title}</div>
-              </div>
-
-              <button
-                className="ai-prompt-close"
-                onClick={() => setAiPromptGroupId(null)}
-                aria-label="Close AI prompt"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="ai-prompt-body">
-              {/* Full Activity Content - Same as Full View Modal */}
-              <div className="gap-group-top">
-                <div className="gap-group-title-row">
-                  <h4 className="gap-group-title">{aiPromptGroup?.title}</h4>
-                </div>
-
-                <div className="gap-group-meta-row">
-                  <span className={`students-pill ${getPriorityClass(aiPromptGroup?.priority)}`}>
-                    {aiPromptGroup?.studentCount} students ({aiPromptGroup?.studentPercent}%)
-                  </span>
-                  <span className="occurrence-pill">
-                    {aiPromptGroup?.occurrence}
-                  </span>
-                </div>
-
-                {aiPromptGroup?.misconceptionSummary && (
-                  <div className="misconception-summary">
-                    {aiPromptGroup?.misconceptionSummary}
-                  </div>
-                )}
-              </div>
-
-              {/* Header section for AI prompt modal - Same as Full View */}
-              <div className="full-view-header">
-                <div className="full-view-header-content">
-                  <div className="full-view-header-eyebrow">Recommended Activity</div>
-                  <h4 className="full-view-header-title">{aiPromptGroup?.move?.title}</h4>
-                  <div className="full-view-header-meta">
-                    <span>{aiPromptGroup?.move?.time}</span>
-                    <span className="meta-sep">|</span>
-                    <span>{aiPromptGroup?.move?.format}</span>
-                  </div>
-                  <p className="full-view-header-subtitle">{aiPromptGroup?.move?.summary}</p>
-                </div>
-              </div>
-
-              {/* Tab Navigation - Same as Full View */}
-              <div className="tab-navigation" role="tablist">
-                <button
-                  className={`tab-button ${activeTab === 'overview' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('overview')}
-                  role="tab"
-                  aria-selected={activeTab === 'overview'}
-                  aria-controls="tab-panel-overview"
-                  id="tab-overview"
-                >
-                  Overview
-                </button>
-                <button
-                  className={`tab-button ${activeTab === 'activity-steps' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('activity-steps')}
-                  role="tab"
-                  aria-selected={activeTab === 'activity-steps'}
-                  aria-controls="tab-panel-activity-steps"
-                  id="tab-activity-steps"
-                >
-                  Activity Steps
-                </button>
-                <button
-                  className={`tab-button ${activeTab === 'student-groupings' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('student-groupings')}
-                  role="tab"
-                  aria-selected={activeTab === 'student-groupings'}
-                  aria-controls="tab-panel-student-groupings"
-                  id="tab-student-groupings"
-                >
-                  Student Groupings
-                </button>
-                <button
-                  className={`tab-button ${activeTab === 'materials' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('materials')}
-                  role="tab"
-                  aria-selected={activeTab === 'materials'}
-                  aria-controls="tab-panel-materials"
-                  id="tab-materials"
-                >
-                  Materials
-                </button>
-              </div>
-
-              {/* Tab Content - Same as Full View */}
-              <div className="tab-content">
-                {activeTab === 'overview' && (
-                  <div className="tab-panel">
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">What will students do</h4>
-                      <p className="tab-section-content">{aiPromptGroup?.move?.tabs?.overview?.whatStudentsDo}</p>
-                    </div>
-                    
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">What you'll do</h4>
-                      <p className="tab-section-content">{aiPromptGroup?.move?.tabs?.overview?.whatYouDo}</p>
-                    </div>
-
-                    {aiPromptGroup?.successIndicators && (
-                      <div className="tab-section">
-                        <h4 className="tab-section-title">Success indicators</h4>
-                        <ul className="success-list">
-                          {aiPromptGroup?.successIndicators.map((indicator, idx) => (
-                            <li key={idx}>{indicator}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Why this matters</h4>
-                      <div className="importance-tooltip">
-                        <span className="importance-text">{aiPromptGroup?.move?.tabs?.overview?.importance}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'activity-steps' && (
-                  <div className="tab-panel">
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Setup</h4>
-                      <ul className="tab-list">
-                        {aiPromptGroup?.move?.tabs?.activitySteps?.setup?.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Problem</h4>
-                      <p className="tab-section-content">{aiPromptGroup?.move?.tabs?.activitySteps?.problem}</p>
-                    </div>
-
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Core Activity</h4>
-                      <ol className="tab-list">
-                        {aiPromptGroup?.move?.tabs?.activitySteps?.coreActivity?.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ol>
-                    </div>
-
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Discussion Questions</h4>
-                      <ul className="discussion-questions">
-                        {aiPromptGroup?.move?.tabs?.activitySteps?.discussionQuestions?.map((question, idx) => (
-                          <li key={idx}>
-                            <strong>Q{idx + 1}:</strong> {question}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'student-groupings' && (
-                  <div className="tab-panel">
-                    {aiPromptGroup?.move?.tabs?.studentGroupings?.groups?.map((grouping, idx) => (
-                      <div key={idx} className="grouping-card">
-                        <div className="grouping-header">
-                          <h4 className="grouping-title">{grouping.name}</h4>
-                          <p className="grouping-description">{grouping.description}</p>
-                        </div>
-                        <div className="grouping-students">
-                          <h5 className="grouping-subtitle">Students:</h5>
-                          <ul className="student-list">
-                            {grouping.students.map((student, studentIdx) => (
-                              <li key={studentIdx}>{student}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    ))}
-
-                    {aiPromptGroup?.move?.tabs?.studentGroupings?.highFlyers && (
-                      <div className="high-flyers-card">
-                        <div className="high-flyers-header">
-                          <h4 className="high-flyers-title">High Flyers</h4>
-                          <p className="high-flyers-description">
-                            {aiPromptGroup?.move?.tabs?.studentGroupings?.highFlyers?.description}
-                          </p>
-                        </div>
-                        <div className="high-flyers-students">
-                          <h5 className="high-flyers-subtitle">Students:</h5>
-                          <ul className="student-list">
-                            {aiPromptGroup?.move?.tabs?.studentGroupings?.highFlyers?.students?.map((student, idx) => (
-                              <li key={idx}>{student}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-
-                    {aiPromptGroup?.move?.tabs?.studentGroupings?.aiRecommendation && (
-                      <div className="ai-recommendation-card">
-                        <h4 className="ai-recommendation-title">AI Recommendation</h4>
-                        <p className="ai-recommendation-content">
-                          {aiPromptGroup?.move?.tabs?.studentGroupings?.aiRecommendation}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {activeTab === 'materials' && (
-                  <div className="tab-panel">
-                    <div className="materials-section">
-                      <h4 className="materials-title">Required Materials</h4>
-                      <ul className="materials-list">
-                        {aiPromptGroup?.move?.tabs?.materials?.required?.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {aiPromptGroup?.move?.tabs?.materials?.optional?.length > 0 && (
-                      <div className="materials-section">
-                        <h4 className="materials-title">Optional Materials</h4>
-                        <ul className="materials-list">
-                          {aiPromptGroup?.move?.tabs?.materials?.optional?.map((item, idx) => (
-                            <li key={idx}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Regeneration Changes Display */}
-              {regenerationChanges && regenerationChanges.length > 0 && (
-                <div className="changes-section">
-                  <h4 className="section-title">Changes Made</h4>
-                  <div className="changes-card">
-                    <ul className="changes-list">
-                      {regenerationChanges.map((change, idx) => (
-                        <li key={idx} className="change-item">
-                          <span className="change-icon">✓</span>
-                          <span className="change-text">{change}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* AI Prompt Card - Fixed to bottom */}
-            <div className="ai-prompt-card">
-              <div className="prompt-section">
-                <h4 className="section-title">AI Prompt</h4>
-                <div className="prompt-input-container">
-                  <textarea
-                    value={aiPromptText}
-                    onChange={(e) => setAiPromptText(e.target.value)}
-                    placeholder="Enter your prompt to refine this activity. For example: 'Make this activity shorter for a 15-minute class period' or 'Add more technology integration' or 'Simplify for struggling learners'"
-                    className="prompt-textarea"
-                    rows="4"
-                  />
-                  <div className="prompt-actions">
-                    <button
-                      className="regenerate-btn"
-                      onClick={handleAIPromptSubmit}
-                      disabled={!aiPromptText.trim() || isRegenerating}
-                    >
-                      {isRegenerating ? 'Regenerating...' : 'Regenerate'}
-                    </button>
-                    <button
-                      className="add-btn"
-                      onClick={handleAddFromAIPrompt}
-                      disabled={isRegenerating}
-                    >
-                      Add to Your Next Steps
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="rns-header">
         <div>
@@ -1484,7 +1200,14 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
       <div className="rns-groups">
         {/* Main (Critical) Misconception */}
         {mainMisconception && (
-          <div key={mainMisconception.id} className="gap-group-card main-misconception">
+          <div 
+            key={mainMisconception.id} 
+            className="gap-group-card main-misconception clickable-card"
+            onClick={() => setFullViewGroupId(mainMisconception.id)}
+            role="button"
+            tabIndex={0}
+            aria-label={`View full details for ${mainMisconception.title}`}
+          >
             <div className="gap-group-top">
               <div className="gap-group-title-row">
                 <h4 className="gap-group-title">{mainMisconception.title}</h4>
@@ -1494,9 +1217,9 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                 <span className={`students-pill ${getPriorityClass(mainMisconception.priority)}`}>
                   {mainMisconception.studentCount} students ({mainMisconception.studentPercent}%)
                 </span>
-                <span className="occurrence-pill">
-                  {mainMisconception.occurrence}
-                </span>
+                {mainMisconception.occurrence && (
+                  <span className="occurrence-pill">{mainMisconception.occurrence}</span>
+                )}
               </div>
 
               {mainMisconception.misconceptionSummary && (
@@ -1504,242 +1227,100 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                   {mainMisconception.misconceptionSummary}
                 </div>
               )}
+
+              {/* CCSS Standards Section - Change 1: Move under misconception description */}
+              {mainMisconception.ccssStandards && (
+                <div className="ccss-standards-section">
+                  <div className="ccss-standards-grid">
+                    {mainMisconception.ccssStandards.prerequisiteGaps && mainMisconception.ccssStandards.prerequisiteGaps.length > 0 && (
+                      <div className="ccss-card">
+                        <h4 className="tab-section-title">The underlying issue may be...</h4>
+                        <div className="ccss-gap-list">
+                          {mainMisconception.ccssStandards.prerequisiteGaps.map((gap, idx) => (
+                            <div key={idx} className="ccss-gap-item">
+                              <span className="ccss-tag prerequisite-gap">
+                                {gap.standard}
+                              </span>
+                              <span className="ccss-description">
+                                {gap.description}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="ccss-card">
+                      <h4 className="tab-section-title">Students are struggling with...</h4>
+                      <div className="ccss-objective-row">
+                        <span className="ccss-tag target-objective">
+                          {mainMisconception.ccssStandards.targetObjective.standard}
+                        </span>
+                        <span className="ccss-description">
+                          {mainMisconception.ccssStandards.targetObjective.description}
+                        </span>
+                      </div>
+                    </div>
+
+                    {mainMisconception.ccssStandards.impactedObjectives && mainMisconception.ccssStandards.impactedObjectives.length > 0 && (
+                      <div className="ccss-card">
+                        <h4 className="tab-section-title">Future topics that may be impacted...</h4>
+                        <div className="ccss-gap-list">
+                          {mainMisconception.ccssStandards.impactedObjectives.map((obj, idx) => (
+                            <div key={idx} className="ccss-gap-item">
+                              <span className="ccss-tag impacted-objective">
+                                {obj.standard}
+                              </span>
+                              <span className="ccss-description">
+                                {obj.description}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Recommended Activity Card - Change 1 */}
-            <div className="recommended-activity-card">
-              {/* Header section for main misconception - Change 1 */}
-              <div className="main-misconception-header">
-                <div className="main-misconception-header-content">
-                  <div className="main-misconception-header-eyebrow">Recommended Activity</div>
-                  <h4 className="main-misconception-header-title">{mainMisconception.move?.title}</h4>
-                  <div className="main-misconception-header-meta">
-                    <span>{mainMisconception.move?.time}</span>
-                    <span className="meta-sep">|</span>
-                    <span>{mainMisconception.move?.format}</span>
-                  </div>
-                  <p className="main-misconception-header-subtitle">{mainMisconception.move?.summary}</p>
+            {/* Main card body: add outer padding around the recommended activity section */}
+            <div className="main-misconception-body">
+              {/* Recommended Activity Card - Simplified to match alternative cards */}
+              <div className="alternative-activity">
+                <div className="alternative-label">Recommended activity</div>
+                <div className="alternative-activity-title">{mainMisconception.move?.title}</div>
+                <div className="alternative-meta">
+                  <span>{mainMisconception.move?.time}</span>
+                  <span className="meta-sep">|</span>
+                  <span>{mainMisconception.move?.format}</span>
                 </div>
-                <div className="main-misconception-header-actions">
-                  <button 
-                    className="refine-btn"
-                    onClick={() => handleRefineWithAI(mainMisconception)}
-                  >
-                    Refine with AI
-                  </button>
-                </div>
+                <div className="alternative-summary">{mainMisconception.move?.summary}</div>
               </div>
 
-              {/* Tab Navigation */}
-              <div className="tab-navigation" role="tablist">
+              <div className="alternative-actions">
                 <button
-                  className={`tab-button ${activeTab === 'overview' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('overview')}
-                  role="tab"
-                  aria-selected={activeTab === 'overview'}
-                  aria-controls="tab-panel-overview"
-                  id="tab-overview"
+                  className="reasoning-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCameFromFullView(false);
+                    setReasoningGroupId(mainMisconception.id);
+                  }}
                 >
-                  Overview
+                  View Reasoning
                 </button>
-                <button
-                  className={`tab-button ${activeTab === 'activity-steps' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('activity-steps')}
-                  role="tab"
-                  aria-selected={activeTab === 'activity-steps'}
-                  aria-controls="tab-panel-activity-steps"
-                  id="tab-activity-steps"
+                <button 
+                  className="add-btn" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAdd(mainMisconception);
+                  }}
                 >
-                  Activity Steps
-                </button>
-                <button
-                  className={`tab-button ${activeTab === 'student-groupings' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('student-groupings')}
-                  role="tab"
-                  aria-selected={activeTab === 'student-groupings'}
-                  aria-controls="tab-panel-student-groupings"
-                  id="tab-student-groupings"
-                >
-                  Student Groupings
-                </button>
-                <button
-                  className={`tab-button ${activeTab === 'materials' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('materials')}
-                  role="tab"
-                  aria-selected={activeTab === 'materials'}
-                  aria-controls="tab-panel-materials"
-                  id="tab-materials"
-                >
-                  Materials
+                  Add to Saved Next Steps
                 </button>
               </div>
-
-              {/* Tab Content */}
-              <div className="tab-content">
-                {activeTab === 'overview' && (
-                  <div className="tab-panel">
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">What will students do</h4>
-                      <p className="tab-section-content">{mainMisconception.move?.tabs?.overview?.whatStudentsDo}</p>
-                    </div>
-                    
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">What you'll do</h4>
-                      <p className="tab-section-content">{mainMisconception.move?.tabs?.overview?.whatYouDo}</p>
-                    </div>
-
-                    {mainMisconception.successIndicators && (
-                      <div className="tab-section">
-                        <h4 className="tab-section-title">Success indicators</h4>
-                        <ul className="success-list">
-                          {mainMisconception.successIndicators.map((indicator, idx) => (
-                            <li key={idx}>{indicator}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Why this matters</h4>
-                      <div className="importance-tooltip">
-                        <span className="importance-text">{mainMisconception.move?.tabs?.overview?.importance}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'activity-steps' && (
-                  <div className="tab-panel">
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Setup</h4>
-                      <ul className="tab-list">
-                        {mainMisconception.move?.tabs?.activitySteps?.setup?.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Problem</h4>
-                      <p className="tab-section-content">{mainMisconception.move?.tabs?.activitySteps?.problem}</p>
-                    </div>
-
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Core Activity</h4>
-                      <ol className="tab-list">
-                        {mainMisconception.move?.tabs?.activitySteps?.coreActivity?.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ol>
-                    </div>
-
-                    <div className="tab-section">
-                      <h4 className="tab-section-title">Discussion Questions</h4>
-                      <ul className="discussion-questions">
-                        {mainMisconception.move?.tabs?.activitySteps?.discussionQuestions?.map((question, idx) => (
-                          <li key={idx}>
-                            <strong>Q{idx + 1}:</strong> {question}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'student-groupings' && (
-                  <div className="tab-panel">
-                    {mainMisconception.move?.tabs?.studentGroupings?.groups?.map((group, idx) => (
-                      <div key={idx} className="grouping-card">
-                        <div className="grouping-header">
-                          <h4 className="grouping-title">{group.name}</h4>
-                          <p className="grouping-description">{group.description}</p>
-                        </div>
-                        <div className="grouping-students">
-                          <h5 className="grouping-subtitle">Students:</h5>
-                          <ul className="student-list">
-                            {group.students.map((student, studentIdx) => (
-                              <li key={studentIdx}>{student}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    ))}
-
-                    {mainMisconception.move?.tabs?.studentGroupings?.highFlyers && (
-                      <div className="high-flyers-card">
-                        <div className="high-flyers-header">
-                          <h4 className="high-flyers-title">High Flyers</h4>
-                          <p className="high-flyers-description">
-                            {mainMisconception.move?.tabs?.studentGroupings?.highFlyers?.description}
-                          </p>
-                        </div>
-                        <div className="high-flyers-students">
-                          <h5 className="high-flyers-subtitle">Students:</h5>
-                          <ul className="student-list">
-                            {mainMisconception.move?.tabs?.studentGroupings?.highFlyers?.students?.map((student, idx) => (
-                              <li key={idx}>{student}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-
-                    {mainMisconception.move?.tabs?.studentGroupings?.aiRecommendation && (
-                      <div className="ai-recommendation-card">
-                        <h4 className="ai-recommendation-title">AI Recommendation</h4>
-                        <p className="ai-recommendation-content">
-                          {mainMisconception.move?.tabs?.studentGroupings?.aiRecommendation}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {activeTab === 'materials' && (
-                  <div className="tab-panel">
-                    <div className="materials-section">
-                      <h4 className="materials-title">Required Materials</h4>
-                      <ul className="materials-list">
-                        {mainMisconception.move?.tabs?.materials?.required?.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {mainMisconception.move?.tabs?.materials?.optional?.length > 0 && (
-                      <div className="materials-section">
-                        <h4 className="materials-title">Optional Materials</h4>
-                        <ul className="materials-list">
-                          {mainMisconception.move?.tabs?.materials?.optional?.map((item, idx) => (
-                            <li key={idx}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-            {/* Actions */}
-            <div className="panel-actions">
-              <button
-                className="reasoning-btn"
-                onClick={() => setReasoningGroupId(mainMisconception.id)}
-              >
-                View Reasoning
-              </button>
-              <button 
-                className="refine-btn"
-                onClick={() => handleRefineWithAI(mainMisconception)}
-              >
-                Refine with AI
-              </button>
-              <button className="add-btn" onClick={() => handleAdd(mainMisconception)}>
-                Add to Your Next Steps
-              </button>
             </div>
           </div>
-        </div>
         )}
 
         {/* Alternative Misconceptions Grid */}
@@ -1763,11 +1344,64 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                     <span className={`students-pill ${getPriorityClass(group.priority)}`}>
                       {group.studentCount} students ({group.studentPercent}%)
                     </span>
-                    <span className="occurrence-pill">
-                      {group.occurrence}
-                    </span>
+                    {group.occurrence && <span className="occurrence-pill">{group.occurrence}</span>}
                   </div>
                 </div>
+
+                {/* CCSS Standards Section - Change 1: Add to alternative cards */}
+                {group.ccssStandards && (
+                  <div className="alternative-ccss-section">
+                    <div className="alternative-ccss-grid">
+                      {group.ccssStandards.prerequisiteGaps && group.ccssStandards.prerequisiteGaps.length > 0 && (
+                        <div className="alternative-ccss-card">
+                          <h4 className="alternative-ccss-header">The underlying issue may be...</h4>
+                          <div className="alternative-ccss-gap-list">
+                            {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
+                              <div key={idx} className="alternative-ccss-gap-item">
+                                <span className="alternative-ccss-tag prerequisite-gap">
+                                  {gap.standard}
+                                </span>
+                                <span className="alternative-ccss-description">
+                                  {gap.description}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="alternative-ccss-card">
+                        <h4 className="alternative-ccss-header">Students are struggling with...</h4>
+                        <div className="alternative-ccss-content">
+                          <span className="alternative-ccss-tag target-objective">
+                            {group.ccssStandards.targetObjective.standard}
+                          </span>
+                          <span className="alternative-ccss-description">
+                            {group.ccssStandards.targetObjective.description}
+                          </span>
+                        </div>
+                      </div>
+
+                      {group.ccssStandards.impactedObjectives && group.ccssStandards.impactedObjectives.length > 0 && (
+                        <div className="alternative-ccss-card">
+                          <h4 className="alternative-ccss-header">Future topics that may be impacted...</h4>
+                          <div className="alternative-ccss-gap-list">
+                            {group.ccssStandards.impactedObjectives.map((obj, idx) => (
+                              <div key={idx} className="alternative-ccss-gap-item">
+                                <span className="alternative-ccss-tag impacted-objective">
+                                  {obj.standard}
+                                </span>
+                                <span className="alternative-ccss-description">
+                                  {obj.description}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="alternative-activity">
                   <div className="alternative-label">Recommended activity</div>
@@ -1785,19 +1419,11 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                     className="reasoning-btn"
                     onClick={(e) => {
                       e.stopPropagation();
+                      setCameFromFullView(false);
                       setReasoningGroupId(group.id);
                     }}
                   >
                     View Reasoning
-                  </button>
-                  <button 
-                    className="refine-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRefineWithAI(group);
-                    }}
-                  >
-                    Refine with AI
                   </button>
                   <button 
                     className="add-btn" 
@@ -1806,7 +1432,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                       handleAdd(group);
                     }}
                   >
-                    Add to Your Next Steps
+                    Add to Saved Next Steps
                   </button>
                 </div>
               </div>

@@ -90,7 +90,8 @@
   padding: 18px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
-  justify-content: space-between;
+  /* Use margin-left:auto on the right-side metrics so the View button can sit flush to the far right */
+  justify-content: flex-start;
   align-items: center;
   gap: 18px;
 }
@@ -109,6 +110,15 @@
   line-height: 1.25;
 }
 
+.ip-gap-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+/* Learning objective pill uses shared `.ccss-tag.target-objective` styling (Recommended Next Steps) */
+
 .ip-gap-meta {
   display: flex;
   flex-wrap: wrap;
@@ -120,7 +130,7 @@
 }
 
 .ip-gap-meta-strong {
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .ip-gap-meta-sep {
@@ -129,7 +139,134 @@
 
 .ip-gap-right {
   min-width: 92px;
+  margin-left: auto;
   text-align: right;
+}
+
+.ip-gap-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.ip-view-btn {
+  /* Deprecated: Intervention Patterns now reuses Saved Next Steps button styles
+     (`.yns-btn.secondary.yns-details-btn`) to ensure consistent design.
+     Keeping an empty rule avoids breaking older builds if markup is reverted. */
+}
+
+.ip-view-btn:hover {
+  /* Deprecated */
+}
+
+.ip-view-btn:focus-visible {
+  /* Deprecated */
+}
+
+/* Modal specifics for Intervention Patterns */
+.ip-modal {
+  width: min(880px, 92vw);
+  height: auto;
+  max-height: 90vh;
+}
+
+.ip-modal-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ip-modal-metric {
+  background-color: rgba(27, 55, 111, 0.06);
+  border: 1px solid rgba(27, 55, 111, 0.12);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.ip-modal-metric-value {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1B376F;
+}
+
+.ip-modal-metric-label {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1B376F;
+  opacity: 0.85;
+}
+
+.ip-modal-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ip-modal-section {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.ip-modal-section-title {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1B376F;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ip-modal-section-subtitle {
+  margin: 8px 0 10px 0;
+  font-size: 13px;
+  color: #1B376F;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.ip-modal-empty {
+  font-size: 13px;
+  color: #1B376F;
+  opacity: 0.85;
+}
+
+.ip-student-pills {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ip-student-pills li {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  font-size: 13px;
+  color: #1B376F;
+  font-weight: 700;
+}
+
+.ip-student-pills.warning li {
+  background-color: rgba(204, 85, 0, 0.10);
+  border-color: rgba(204, 85, 0, 0.25);
+  color: #8A3D05;
+}
+
+.ip-student-pills.info li {
+  background-color: rgba(0, 118, 170, 0.10);
+  border-color: rgba(0, 118, 170, 0.22);
+  color: #0B4D6B;
 }
 
 .ip-gap-change {
@@ -205,5 +342,14 @@
 
   .ip-gap-right {
     text-align: left;
+  }
+
+  .ip-gap-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .ip-modal-summary {
+    grid-template-columns: 1fr;
   }
 }

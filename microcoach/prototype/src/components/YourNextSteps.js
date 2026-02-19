@@ -1,16 +1,11 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './YourNextSteps.css';
-
-const formatTime = (ms) => {
-  try {
-    return new Date(ms).toLocaleString();
-  } catch {
-    return '';
-  }
-};
+import './SharedButtons.css';
+import NextStepDetailsModal from './NextStepDetailsModal';
 
 const YourNextSteps = ({
   nextSteps = [],
+  completedNextSteps = [],
   completedCount = 0,
   sort = 'manual',
   onChangeSort,
@@ -25,10 +20,60 @@ const YourNextSteps = ({
     return 'priority-low';
   };
 
-  const [expandedId, setExpandedId] = useState(null);
+  const [detailsModalId, setDetailsModalId] = useState(null);
+  const [detailsActiveTab, setDetailsActiveTab] = useState('overview');
   const draggingIdRef = useRef(null);
   const [draggingId, setDraggingId] = useState(null);
   const [dropTarget, setDropTarget] = useState(null); // { id: string, position: 'above' | 'below' }
+
+  const [toast, setToast] = useState(null); // { id: number, message: string } | null
+  const toastTimersRef = useRef({ show: null, remove: null, clear: null });
+
+  const clearToastTimers = () => {
+    const timers = toastTimersRef.current;
+    if (timers.show) window.clearTimeout(timers.show);
+    if (timers.remove) window.clearTimeout(timers.remove);
+    if (timers.clear) window.clearTimeout(timers.clear);
+    toastTimersRef.current = { show: null, remove: null, clear: null };
+  };
+
+  const showToast = (message) => {
+    // Force a remount so we can reliably re-trigger the slide/opacity animation,
+    // matching the interaction style from Recommended Next Steps.
+    setToast({ id: Date.now(), message });
+    clearToastTimers();
+
+    // Let React paint the toast first, then apply the show/removing classes.
+    toastTimersRef.current.show = window.setTimeout(() => {
+      const el = document.querySelector('.yns-toast');
+      if (!el) return;
+      el.classList.remove('removing');
+      el.classList.add('show');
+    }, 50);
+
+    toastTimersRef.current.remove = window.setTimeout(() => {
+      const el = document.querySelector('.yns-toast');
+      if (el) el.classList.add('removing');
+      toastTimersRef.current.clear = window.setTimeout(() => setToast(null), 300);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    return () => {
+      clearToastTimers();
+    };
+  }, []);
+
+  const allItemsForDetails = useMemo(() => {
+    // Completed items live in `completedNextSteps` now, so the details modal
+    // needs to search both lists.
+    return [...(nextSteps || []), ...(completedNextSteps || [])];
+  }, [nextSteps, completedNextSteps]);
+
+  const detailsItem = useMemo(() => {
+    if (!detailsModalId) return null;
+    return allItemsForDetails.find((x) => x.id === detailsModalId) ?? null;
+  }, [detailsModalId, allItemsForDetails]);
 
   const setDropTargetIfChanged = (next) => {
     setDropTarget((prev) => {
@@ -39,19 +84,73 @@ const YourNextSteps = ({
   };
 
   const summary = useMemo(() => {
-    const planned = nextSteps.filter((x) => x.status !== 'completed').length;
-    const completedInList = nextSteps.filter((x) => x.status === 'completed').length;
-    const completed = nextSteps.length === 0 ? completedCount : completedInList;
-    return { planned, completed, total: nextSteps.length };
-  }, [nextSteps, completedCount]);
+    const planned = (nextSteps || []).filter((x) => x.status !== 'completed').length;
+    // Completed items are now shown in a separate section (completedNextSteps)
+    // and also tracked historically via `completedCount`.
+    const completed = (completedNextSteps?.length ?? 0) || completedCount;
+    return { planned, completed, total: planned + completed };
+  }, [nextSteps, completedNextSteps, completedCount]);
+
+  const plannedItems = useMemo(() => {
+    // Be defensive: `nextSteps` should already be planned-only, but older
+    // localStorage shapes may still include `status: 'completed'`.
+    return (nextSteps || []).filter((x) => x?.status !== 'completed');
+  }, [nextSteps]);
+
+  const renderStandardPill = (standard) => {
+    if (!standard) return null;
+    return (
+      <span
+        className="ccss-tag target-objective"
+        aria-label={`Learning objective standard ${standard}`}
+      >
+        {standard}
+      </span>
+    );
+  };
+
+  const handleRemove = (item) => {
+    onRemove?.(item.id);
+    showToast(`Deleted "${item.moveTitle}" from Saved Next Steps`);
+  };
+
+  const handleComplete = (item) => {
+    onMarkComplete?.(item.id);
+    showToast(`Completed "${item.moveTitle}"`);
+  };
 
   return (
     <div className="your-next-steps">
+      <NextStepDetailsModal
+        isOpen={!!detailsItem}
+        title={detailsItem?.gapGroupTitle}
+        priority={detailsItem?.priority}
+        studentCount={detailsItem?.studentCount}
+        studentPercent={detailsItem?.studentPercent}
+        occurrence={detailsItem?.occurrence}
+        misconceptionSummary={detailsItem?.misconceptionSummary}
+        successIndicators={detailsItem?.successIndicators}
+        move={detailsItem?.move}
+        activeTab={detailsActiveTab}
+        onChangeTab={setDetailsActiveTab}
+        onClose={() => {
+          setDetailsModalId(null);
+          setDetailsActiveTab('overview');
+        }}
+        actions={null}
+      />
+
+      {toast && (
+        <div key={toast.id} className="yns-toast" role="status" aria-live="polite">
+          {toast.message}
+        </div>
+      )}
+
       <div className="yns-header">
         <div>
-          <h3 className="yns-title">Your Next Steps</h3>
+          <h3 className="yns-title">Saved Next Steps</h3>
           <p className="yns-subtitle">
-            Saved instructional moves you plan to run. ({summary.planned} planned • {summary.completed} completed)
+            Save instructional moves you plan to run. When you click <strong>Complete</strong>, you’re telling Microcoach you executed that activity—so our algorithm can track progress and surface trends in learning goals in <em>3. Reflect</em>.
           </p>
         </div>
 
@@ -67,17 +166,20 @@ const YourNextSteps = ({
         </div>
       </div>
 
-      {nextSteps.length === 0 ? (
+      {plannedItems.length === 0 && (!completedNextSteps || completedNextSteps.length === 0) ? (
         <div className="yns-empty">
           <div className="yns-empty-title">No next steps yet</div>
           <div className="yns-empty-body">
-            Go to <strong>Recommended Next Steps</strong> and click <strong>Add to Your Next Steps</strong>.
+            Go to <strong>Recommended Next Steps</strong> and click <strong>Add to Saved Next Steps</strong>.
           </div>
         </div>
       ) : (
         <div className="yns-list">
-          {nextSteps.map((item) => {
-            const expanded = expandedId === item.id;
+          {plannedItems.length === 0 ? (
+            <div className="yns-planned-empty">
+              No planned next steps right now.
+            </div>
+          ) : plannedItems.map((item) => {
             const isCompleted = item.status === 'completed';
             const showDropAbove =
               sort === 'manual' &&
@@ -161,6 +263,10 @@ const YourNextSteps = ({
                           }
                         >
                           <span className="yns-grip" aria-hidden="true">
+                            {/* 6-dot grip icon (2 columns × 3 rows) */}
+                            <span />
+                            <span />
+                            <span />
                             <span />
                             <span />
                             <span />
@@ -182,6 +288,7 @@ const YourNextSteps = ({
                         </div>
 
                         <div className="yns-item-meta">
+                          {renderStandardPill(item.targetObjectiveStandard)}
                           <span className={`students-pill ${getPriorityClass(item.priority)} yns-students-pill`}>
                             {item.studentCount} students ({item.studentPercent}%)
                           </span>
@@ -193,20 +300,21 @@ const YourNextSteps = ({
                       <div className="yns-item-actions">
                         <div className="yns-item-actions-top">
                           <button
-                            className="yns-details-toggle"
+                            className="yns-btn secondary yns-details-btn"
                             type="button"
-                            onClick={() => setExpandedId(expanded ? null : item.id)}
-                            aria-expanded={expanded}
-                            aria-controls={`yns-details-${item.id}`}
+                            onClick={() => {
+                              setDetailsModalId(item.id);
+                              setDetailsActiveTab('overview');
+                            }}
+                            aria-label={`View details for saved next step: ${item.moveTitle}`}
                           >
-                            <span>{expanded ? 'Hide details' : 'View details'}</span>
-                            <span className={`yns-caret ${expanded ? 'up' : 'down'}`} aria-hidden="true" />
+                            View details
                           </button>
 
                           <button
                             className="yns-btn primary yns-complete-btn"
                             type="button"
-                            onClick={() => onMarkComplete?.(item.id)}
+                            onClick={() => handleComplete(item)}
                             aria-label={`Complete next step: ${item.moveTitle}`}
                             title="Complete"
                           >
@@ -215,67 +323,12 @@ const YourNextSteps = ({
                         </div>
                       </div>
                     </div>
-
-                    {expanded && (
-                      <div className="yns-details" id={`yns-details-${item.id}`}>
-                        <div className="yns-details-row">
-                          <div className="yns-details-label">Summary</div>
-                          <div className="yns-details-value">{item.moveSummary}</div>
-                        </div>
-
-                        <div className="yns-details-row">
-                          <div className="yns-details-label">AI reasoning</div>
-                          <div className="yns-details-value">{item.aiReasoning}</div>
-                        </div>
-
-                        <div className="yns-details-row">
-                          <div className="yns-details-label">Addresses</div>
-                          <div className="yns-details-value">
-                            <ul className="yns-gap-list">
-                              {(item.gaps || []).map((g, idx) => <li key={idx}>{g}</li>)}
-                            </ul>
-                          </div>
-                        </div>
-
-                        {item.evidence && (
-                          <div className="yns-details-evidence">
-                            <div className="yns-evidence-title">Evidence</div>
-                            <div className="yns-evidence-grid">
-                              <div>
-                                <div className="yns-ev-label">Data source</div>
-                                <div className="yns-ev-value">{item.evidence.source}</div>
-                              </div>
-                              <div>
-                                <div className="yns-ev-label">Most common error</div>
-                                <div className="yns-ev-value">{item.evidence.mostCommonError}</div>
-                              </div>
-                              <div className="yns-ev-wide">
-                                <div className="yns-ev-label">AI thinking pattern</div>
-                                <div className="yns-ev-value">{item.evidence.aiThinkingPattern}</div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="yns-details-row">
-                          <div className="yns-details-label">Created</div>
-                          <div className="yns-details-value">{formatTime(item.createdAt)}</div>
-                        </div>
-
-                        {item.completedAt && (
-                          <div className="yns-details-row">
-                            <div className="yns-details-label">Completed</div>
-                            <div className="yns-details-value">{formatTime(item.completedAt)}</div>
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
 
                   <button
                     className="yns-icon-btn yns-trash-btn yns-trash-outside"
                     type="button"
-                    onClick={() => onRemove?.(item.id)}
+                    onClick={() => handleRemove(item)}
                     aria-label={`Delete next step: ${item.moveTitle}`}
                     title="Delete"
                   >
@@ -300,10 +353,10 @@ const YourNextSteps = ({
           })}
 
           {/* Drop zone to allow reordering to the end, with a clear slot indicator line */}
-          {sort === 'manual' && draggingId && dropTarget?.id === '__end__' && (
+          {sort === 'manual' && plannedItems.length > 0 && draggingId && dropTarget?.id === '__end__' && (
             <div className="yns-drop-indicator" aria-hidden="true" />
           )}
-          {sort === 'manual' && (
+          {sort === 'manual' && plannedItems.length > 0 && (
             <div
               className="yns-drop-end-zone"
               onDragOver={(e) => {
@@ -325,6 +378,57 @@ const YourNextSteps = ({
           )}
         </div>
       )}
+
+      {/* Completed section */}
+      <div className="yns-completed-section" aria-label="Completed next steps">
+        {/* Header should read like a top-level section title (same visual weight as “Saved Next Steps”) */}
+        <div className="yns-completed-header">
+          <div className="yns-completed-title-row">
+            <h3 className="yns-completed-title">Completed</h3>
+            <div className="yns-completed-count">{completedNextSteps?.length ?? 0}</div>
+          </div>
+        </div>
+
+        <div className="yns-completed-panel">
+          {(!completedNextSteps || completedNextSteps.length === 0) ? (
+            <div className="yns-completed-empty">
+              Completed items will appear here.
+            </div>
+          ) : (
+            <div className="yns-completed-list">
+              {completedNextSteps
+                .slice()
+                .sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0))
+                .map((item) => (
+                  <div key={item.id} className="yns-completed-item">
+                    <div className="yns-completed-item-main">
+                      <div className="yns-completed-item-title">{item.moveTitle}</div>
+                      <div className="yns-completed-item-meta">
+                        {renderStandardPill(item.targetObjectiveStandard)}
+                        <span className="yns-meta-pill">{item.gapGroupTitle}</span>
+                        {item.moveFormat && <span className="yns-meta-pill">{item.moveFormat}</span>}
+                      </div>
+                    </div>
+
+                    <div className="yns-completed-actions">
+                      <button
+                        className="yns-btn secondary yns-details-btn"
+                        type="button"
+                        onClick={() => {
+                          setDetailsModalId(item.id);
+                          setDetailsActiveTab('overview');
+                        }}
+                        aria-label={`View details for completed next step: ${item.moveTitle}`}
+                      >
+                        View details
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
