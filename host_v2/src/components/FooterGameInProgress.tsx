@@ -9,6 +9,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { trackEvent, HostEvent } from '../lib/analytics';
 import { IGraphClickInfo, ScreenSize } from '../lib/HostModels';
 
 const ButtonStyled = styled(Button)({
@@ -132,6 +133,13 @@ function FooterGameInProgress({
         console.log(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id));
         await apiClients.question.updateQuestion({id, order, gameSessionId, answerData: JSON.stringify(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id))});
     }
+    trackEvent(HostEvent.GAME_PHASE_ADVANCED, {
+      gameSessionId: localGameSession.id,
+      fromState: currentState,
+      toState: nextState,
+      questionIndex: localGameSession.currentQuestionIndex,
+      trigger: 'teacher_button',
+    });
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
     apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime, sessionData: JSON.stringify(apiClients.hostDataManager.getHostTeamAnswers())});
   };

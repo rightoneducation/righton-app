@@ -18,6 +18,7 @@ import {
   StorageKey,
 } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
+import { identifyStudent, trackEvent, trackError, PlayEvent } from '../lib/analytics';
 
 interface PregameFinished {
   apiClients: IAPIClients;
@@ -55,6 +56,14 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       ...rejoinGameObject!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
       hasRejoined: true,
     };
+    identifyStudent(rejoinGameObject!.teamId, { // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      gameSessionId: rejoinGameObject!.gameSessionId, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      avatarIndex: rejoinGameObject!.selectedAvatar, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    });
+    trackEvent(PlayEvent.GAME_REJOIN_STARTED, {
+      gameSessionId: rejoinGameObject!.gameSessionId, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      teamId: rejoinGameObject!.teamId, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    });
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
     navigate(`/game`);
   };
@@ -71,6 +80,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     try {
       if (inputGameSession.teams.some(team => team.name === teamName)){
         setIsShowNameError(true);
+        trackEvent(PlayEvent.GAME_JOIN_FAILURE, { reason: 'duplicate_name', gameSessionId: inputGameSession.id });
         throw new Error('User already joined with this name');
       }
       const team = await apiClients.team.addTeamToGameSessionId(
@@ -81,6 +91,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       );
       if (!team) {
         setIsShowCodeError(true);
+        trackEvent(PlayEvent.GAME_JOIN_FAILURE, { reason: 'api_error', gameSessionId: inputGameSession.id });
       } else {
         try {
           const teamMember = await apiClients.teamMember.addTeamMemberToTeam(
@@ -90,15 +101,18 @@ export function PregameContainer({ apiClients }: PregameFinished) {
           );
           if (!teamMember) {
             setIsShowCodeError(true);
+            trackEvent(PlayEvent.GAME_JOIN_FAILURE, { reason: 'api_error', gameSessionId: inputGameSession.id });
           }
           return { teamId: team.id, teamMemberAnswersId: teamMember.id };
         } catch (error) {
           setIsShowCodeError(true);
+          trackError(PlayEvent.GAME_JOIN_FAILURE, error, { reason: 'api_error', gameSessionId: inputGameSession.id });
           throw new Error ('error');
         }
       }
     } catch (error) {
       setIsShowCodeError(true);
+      trackError(PlayEvent.GAME_JOIN_FAILURE, error, { reason: 'api_error', gameSessionId: inputGameSession.id });
       throw new Error ('error');
     }
     return undefined;
@@ -113,6 +127,15 @@ export function PregameContainer({ apiClients }: PregameFinished) {
           setIsShowCodeError(true);
           return;
         }
+        identifyStudent(teamInfo.teamId, {
+          gameSessionId: gameSessionResponse.id,
+          avatarIndex: selectedAvatar,
+        });
+        trackEvent(PlayEvent.GAME_JOIN_SUCCESS, {
+          gameSessionId: gameSessionResponse.id,
+          teamId: teamInfo.teamId,
+          avatarIndex: selectedAvatar,
+        });
         const storageObject: LocalModel = {
           currentTime: new Date().getTime() / 60000,
           gameSessionId: gameSessionResponse.id,

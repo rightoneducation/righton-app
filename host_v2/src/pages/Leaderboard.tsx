@@ -5,6 +5,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import { ITeam, IQuestion, GameSessionState } from '@righton/networking';
 import {motion} from 'framer-motion';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { trackEvent, HostEvent } from '../lib/analytics';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
@@ -72,6 +73,13 @@ export default function Leaderboard({
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);  
   const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
+    trackEvent(HostEvent.GAME_PHASE_ADVANCED, {
+      gameSessionId: localGameSession.id,
+      fromState: localGameSession.currentState,
+      toState: nextState,
+      questionIndex: localGameSession.currentQuestionIndex,
+      trigger: nextState === GameSessionState.FINISHED ? 'game_ended' : 'next_question',
+    });
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentQuestionIndex:  localGameSession.questions.length-1 > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex, currentState: nextState}});
     apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: localGameSession.questions.length-1 > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex});
   };

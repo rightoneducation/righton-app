@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   IAPIClients,
@@ -9,6 +9,7 @@ import {
 } from '@righton/networking';
 import { StorageKey, StorageKeyAnswer} from '../lib/PlayModels';
 import { calculateCurrentTime } from '../lib/HelperFunctions';
+import { trackEvent, trackError, flushAndRedirect, PlayEvent } from '../lib/analytics';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -33,6 +34,7 @@ export default function useFetchAndSubscribeGameSession(
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const [newPoints, setNewPoints] = useState<number>(0);
+  const previousStateRef = useRef<GameSessionState | null>(null);
 
   const handleVisibilityChange = () => {
     if (!document.hidden) {
@@ -92,15 +94,42 @@ export default function useFetchAndSubscribeGameSession(
         if (!ignore) setGameSession(fetchedGame);
         setIsLoading(false);
         setCurrentTime(calculateCurrentTime(fetchedGame));
+        trackEvent(PlayEvent.GAME_STATE_CHANGED, {
+          previousState: previousStateRef.current,
+          newState: fetchedGame.currentState,
+          gameSessionId,
+          teamId,
+          questionIndex: fetchedGame.currentQuestionIndex,
+          trigger: 'initial_fetch',
+        });
+        previousStateRef.current = fetchedGame.currentState;
         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
             console.log(response);
             if (!response) {
               setError(`${t('error.connect.subscriptionerror')}`);
+              trackEvent(PlayEvent.SUBSCRIPTION_ERROR, {
+                gameSessionId,
+                teamId,
+                retryCount: retry,
+                errorMessage: 'Subscription callback received null response',
+                trigger: 'null_response',
+              });
               return;
             }
             if (!ignore) setHasRejoined(false);
+            if (response.currentState !== previousStateRef.current) {
+              trackEvent(PlayEvent.GAME_STATE_CHANGED, {
+                previousState: previousStateRef.current,
+                newState: response.currentState,
+                gameSessionId,
+                teamId,
+                questionIndex: response.currentQuestionIndex,
+                trigger: 'subscription_update',
+              });
+              previousStateRef.current = response.currentState;
+            }
             // checks if host has added time via button
             const prevTime = gameSession?.startTime ?? 0;
             const newTime = response.startTime;
@@ -142,20 +171,40 @@ export default function useFetchAndSubscribeGameSession(
           }
         );
 
-        teamsSubscription = apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => { 
+        teamsSubscription = apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => {
           if (deletedTeam.id === teamId) {
             setHasRejoined(false);
+            trackEvent(PlayEvent.STUDENT_DROPPED, {
+              gameSessionId,
+              teamId,
+              trigger: 'team_deleted_by_teacher',
+              currentState: fetchedGame.currentState,
+              questionIndex: fetchedGame.currentQuestionIndex,
+            });
             window.localStorage.removeItem(StorageKey);
             window.localStorage.removeItem(StorageKeyAnswer);
             teamsSubscription.unsubscribe();
-            window.location.replace((`https://play.rightoneducation.com`));
+            flushAndRedirect('https://play.rightoneducation.com');
           }
-      })
+      });
+        trackEvent(PlayEvent.SUBSCRIPTION_ESTABLISHED, {
+          gameSessionId,
+          teamId,
+          retryCount: retry,
+          currentState: fetchedGame.currentState,
+          questionIndex: fetchedGame.currentQuestionIndex,
+        });
       })
       .catch((e) => {
         setIsLoading(false);
         if (e instanceof Error) setError(e.message);
         else setError(`${t('error.connect.gamesessionerror')}`);
+        trackError(PlayEvent.SUBSCRIPTION_ERROR, e, {
+          gameSessionId,
+          teamId,
+          retryCount: retry,
+          trigger: 'fetch_failed',
+        });
       });
 
     // eslint-disable-next-line consistent-return
