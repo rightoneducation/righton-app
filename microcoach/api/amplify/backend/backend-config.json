@@ -1,0 +1,68 @@
+{
+  "api": {
+    "microcoach": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2026-08-04T17:14:01.142Z",
+              "apiKeyExpirationDays": 180,
+              "description": ""
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "function": {
+    "microcoachGetLearningScience": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachLLM": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_microcoachGetLearningScience_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachGetLearningScience"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachGetLearningScience_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachGetLearningScience"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLM_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLM"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLM_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLM"
+        }
+      ]
+    }
+  }
+}

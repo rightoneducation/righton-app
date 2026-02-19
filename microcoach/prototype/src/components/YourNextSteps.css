@@ -1,0 +1,589 @@
+.your-next-steps {
+  width: 100%;
+  font-family: 'Rubik', sans-serif;
+}
+
+.yns-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.yns-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1B376F;
+  margin: 0 0 6px 0;
+}
+
+.yns-subtitle {
+  font-size: 14px;
+  color: #1B376F;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.yns-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.yns-mark-complete-all {
+  white-space: nowrap;
+}
+
+.yns-complete-btn {
+  white-space: nowrap;
+}
+
+.yns-sort {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1B376F;
+  font-family: 'Poppins', sans-serif;
+}
+
+.yns-sort select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  background-color: #FFFFFF;
+  font-family: 'Rubik', sans-serif;
+  color: #1B376F;
+}
+
+.yns-empty {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  color: #1B376F;
+}
+
+.yns-empty-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.yns-empty-body {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.yns-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.yns-planned-empty {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 16px;
+  color: #1B376F;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.yns-row {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.yns-item {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  flex: 1;
+}
+
+.yns-item.draggable {
+  position: relative;
+  cursor: grab;
+}
+
+.yns-item.completed {
+  opacity: 0.92;
+}
+
+.yns-item-top {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.yns-drag-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yns-drag-handle {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: grab;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.yns-drag-handle:active {
+  cursor: grabbing;
+}
+
+.yns-drag-handle:hover {
+  background-color: rgba(27, 55, 111, 0.06);
+  border-color: rgba(27, 55, 111, 0.15);
+}
+
+.yns-grip {
+  width: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+}
+
+.yns-grip span {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background-color: rgba(27, 55, 111, 0.6);
+}
+
+.yns-item-main {
+  flex: 1;
+}
+
+.yns-item-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.yns-item-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1B376F;
+  line-height: 1.3;
+}
+
+.yns-title-time {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+/* Make the separator a light, thin-looking glyph */
+.yns-title-sep {
+  font-weight: 300;
+  opacity: 0.55;
+}
+
+.yns-title-time-text {
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.yns-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.yns-meta-pill {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background-color: rgba(27, 55, 111, 0.08);
+  color: #1B376F;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Learning objective standard pill now uses the shared `.ccss-tag.target-objective` styling
+   from Recommended Next Steps, so no separate styles are needed here. */
+
+/* NOTE: deprecated: use `.students-pill.yns-students-pill` (to match Recommended Next Steps) */
+.yns-meta-pill--students {
+  background-color: #CC5500;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* Match the students pill styling from Recommended Next Steps */
+.students-pill.yns-students-pill {
+  display: inline-block;
+  padding: 6px 10px;
+  color: #FFFFFF;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.students-pill.yns-students-pill.priority-critical {
+  background-color: #CC5500;
+}
+
+.students-pill.yns-students-pill.priority-high {
+  background-color: #1B376F;
+}
+
+.students-pill.yns-students-pill.priority-medium {
+  background-color: #6B7280;
+}
+
+.students-pill.yns-students-pill.priority-low {
+  background-color: #9CA3AF;
+}
+
+.yns-item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.yns-item-actions-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* .yns-item-time removed (time is now shown in the title as "Title | X min") */
+
+.yns-icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(27, 55, 111, 0.15);
+  background-color: #FFFFFF;
+  color: rgba(27, 55, 111, 0.9);
+  cursor: pointer;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yns-trash-btn {
+  padding: 0;
+}
+
+.yns-trash-outside {
+  flex: 0 0 auto;
+  align-self: center;
+  width: 44px;
+  height: 56px;
+}
+
+.yns-trash-outside .yns-trash-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.yns-trash-icon {
+  display: block;
+}
+
+.yns-icon-btn:hover {
+  background-color: rgba(204, 85, 0, 0.08);
+  border-color: rgba(204, 85, 0, 0.35);
+  color: #CC5500;
+}
+
+.yns-icon-btn:focus-visible,
+.yns-drag-handle:focus-visible {
+  outline: 3px solid rgba(27, 55, 111, 0.35);
+  outline-offset: 2px;
+}
+
+/* NOTE:
+   Saved Next Steps previously used an inline expand/collapse toggle with a caret.
+   We now open a modal, so the old caret/toggle styles are removed.
+*/
+
+.yns-details {
+  padding: 14px 16px;
+  border-top: 1px solid #e5e5e5;
+  background-color: #FFFBF6;
+}
+
+.yns-details-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.yns-details-row:last-child {
+  margin-bottom: 0;
+}
+
+.yns-details-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1B376F;
+}
+
+.yns-details-value {
+  font-size: 13px;
+  color: #1B376F;
+  line-height: 1.45;
+}
+
+.yns-gap-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.yns-details-evidence {
+  margin: 12px 0;
+  border: 1px solid #e5e5e5;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.yns-evidence-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1B376F;
+  margin-bottom: 10px;
+}
+
+.yns-evidence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.yns-ev-wide {
+  grid-column: 1 / -1;
+}
+
+.yns-ev-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1B376F;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.yns-ev-value {
+  font-size: 12px;
+  color: #1B376F;
+  line-height: 1.4;
+}
+
+
+.yns-drop-indicator {
+  height: 3px;
+  border-radius: 999px;
+  background-color: rgba(27, 55, 111, 0.9);
+  margin: -4px 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.yns-drop-end-zone {
+  height: 34px;
+}
+
+.yns-toast {
+  /* Match Recommended Next Steps toast style/interaction */
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  z-index: 1000;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  color: #1B376F;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 320px;
+  animation: ynsSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.yns-toast.show {
+  /* Keep horizontal centering when switching to the "show" state */
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+@keyframes ynsSlideIn {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ynsSlideOut {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.yns-toast.removing {
+  animation: ynsSlideOut 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Button styles moved to SharedButtons.css */
+
+/* Completed section (Saved Next Steps) */
+/* Completed section should feel like a peer section, not a nested card */
+.yns-completed-section {
+  margin-top: 16px;
+}
+
+.yns-completed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.yns-completed-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Deprecated: completed title-row wrapper removed (standard pill is in the pills row). */
+
+.yns-completed-title {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1B376F;
+}
+
+.yns-completed-count {
+  min-width: 26px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 118, 170, 0.12);
+  color: #0076AA;
+  font-weight: 800;
+  font-size: 12px;
+  border: 1px solid rgba(0, 118, 170, 0.18);
+}
+
+.yns-completed-panel {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.yns-completed-empty {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #1B376F;
+  opacity: 0.85;
+}
+
+.yns-completed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+
+.yns-completed-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  background-color: rgba(27, 55, 111, 0.03);
+}
+
+.yns-completed-item-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1B376F;
+  line-height: 1.3;
+}
+
+.yns-completed-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.yns-completed-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .yns-header {
+    flex-direction: column;
+  }
+
+  .yns-controls {
+    align-items: flex-start;
+  }
+
+  .yns-details-row {
+    grid-template-columns: 1fr;
+  }
+
+  .yns-evidence-grid {
+    grid-template-columns: 1fr;
+  }
+}

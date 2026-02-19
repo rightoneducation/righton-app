@@ -1,0 +1,207 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type Classroom @model {
+  id: ID!
+  classroomName: String! @index(name: "byClassroomName", queryField: "classroomsByClassroomName")
+  learningGaps: [LearningGap] @hasMany
+  savedNextSteps: [SavedNextStep] @hasMany
+  students: [Student] @hasMany
+  trends: [ClassroomTrend] @hasMany
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Student @model {
+  id: ID!
+  classroomId: ID!
+  name: String!
+  performanceX: Float
+  performanceY: Float
+  confidenceLevel: Int!
+  status: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type LearningGap @model {
+  id: ID!
+  classroomId: ID!
+  title: String
+  priority: String
+  studentCount: Int
+  studentPercent: Int
+  occurrence: String
+  misconceptionSummary: String
+  successIndicators: [String]
+  ccssStandards: CcssStandards
+  evidence: Evidence
+  move: Move
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type CcssStandards {
+  targetObjective: CcssObjective
+  impactedObjectives: [CcssObjective]
+  prerequisiteGaps: [CcssObjective]
+}
+
+type CcssObjective {
+  standard: String
+  description: String
+}
+
+  type Evidence {
+    source: String
+    mostCommonError: String
+    sampleStudentWork: [String]
+    aiThinkingPattern: String
+  }
+
+  type Move {
+    id: String
+    title: String
+    time: String
+    format: String
+    summary: String
+    aiReasoning: String
+    tabs: Tabs
+  }
+
+  type Tabs {
+    overview: Overview
+    activitySteps: ActivitySteps
+    materials: Materials
+    studentGroupings: StudentGroupings
+  }
+
+    type Overview {
+      whatStudentsDo: String
+      whatYouDo: String
+      importance: String
+    }
+
+    type ActivitySteps {
+      setup: [String]
+      problem: String
+      coreActivity: [String]
+      discussionQuestions: [String]
+    }
+
+    type Materials {
+      required: [String]
+      optional: [String]
+    }
+
+    type StudentGroupings {
+      groups: [StudentGroup]
+      highFlyers: HighFlyers
+      aiRecommendation: String
+    }
+
+      type StudentGroup {
+        name: String
+        description: String
+        students: [String]
+      }
+
+      type HighFlyers {
+        students: [String]
+        description: String
+      }
+
+type SavedNextStep @model {
+  id: ID!
+  classroomId: ID! @index(name: "byClassroom")
+  status: String!
+  completedAt: AWSDateTime
+  sortOrder: Int
+
+  # Denormalized from GapGroup at save time
+  gapGroupId: String!
+  gapGroupTitle: String!
+  targetObjectiveStandard: String
+  priority: String!
+  studentCount: Int
+  studentPercent: Int
+  occurrence: String
+  misconceptionSummary: String
+  successIndicators: [String]
+  gaps: [String]
+
+  # Denormalized from Move at save time
+  moveId: String!
+  moveTitle: String!
+  moveTime: String
+  moveFormat: String
+  moveSummary: String
+  aiReasoning: String
+  evidence: Evidence
+  move: Move
+}
+
+type ClassroomTrend @model {
+  keyInsights: [KeyInsight]
+  studentPerformanceGroups: [StudentPerformanceGroup]
+  confidenceIssues: [ConfidenceIssue]
+}
+
+  type KeyInsight {
+    finding: String
+    targetStandard: String
+    targetDescription: String
+    gapStandard: String
+    gapDescription: String
+  }
+
+  type StudentPerformanceGroup {
+    highPerformers: [StudentPerformanceEntry]
+    averagePerformers: [StudentPerformanceEntry]
+    strugglingStudents: [StudentPerformanceEntry]
+    biggestChanges: [BiggestChangeEntry]
+  }
+
+    type StudentPerformanceEntry {
+      name: String
+      masteryScore: Int
+      previousMastery: Int
+      masteryChange: String
+      misconceptionScore: Int
+      previousMisconception: Int
+      misconceptionChange: String
+    }
+
+    type BiggestChangeEntry {
+      name: String
+      masteryChange: String
+      misconceptionChange: String
+      topic: String
+    }
+
+  type ConfidenceIssue {
+    overlyConfident: [ConfidenceIssueEntry]
+    underlyConfident: [ConfidenceIssueEntry]
+  }
+
+    type ConfidenceIssueEntry {
+      name: String
+      topic: String
+    }
+
+input GetLearningScienceInput {
+  ccss: String!
+}
+
+input GetAnalyticsInput {
+  classroomData: AWSJSON!
+  learningScienceData: AWSJSON!
+}
+
+type Mutation {
+  getLearningScience(input: GetLearningScienceInput!): String
+    @function(name: "microcoachGetLearningScience-${env}")
+  getAnalytics(input: GetAnalyticsInput!): String
+    @function(name: "microcoachLLM-${env}")
+}

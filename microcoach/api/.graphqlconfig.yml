@@ -1,0 +1,16 @@
+projects:
+  microcoach:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+        maxDepth: 5
+extensions:
+  amplify:
+    version: 3

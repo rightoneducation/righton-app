@@ -1,0 +1,206 @@
+.app {
+  min-height: 100vh;
+  background-color: #FFFBF6;
+  background-image: url('./mathSymbolsBackground5.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #1B376F;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1200px;
+  padding: 24px;
+  box-sizing: border-box;
+  margin-top: 128px; /* 80px header + 48px navigation */
+}
+
+.overview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.overview-navigation {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.overview-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.overview-nav-separator {
+  padding: 0 8px;
+  color: rgba(27, 55, 111, 0.45);
+  font-size: 14px;
+  font-weight: 600;
+  user-select: none;
+}
+
+.overview-nav-tab {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1B376F;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: 'Rubik', sans-serif;
+}
+
+.overview-nav-tab:hover {
+  color: #1B376F;
+  background-color: rgba(27, 55, 111, 0.1);
+}
+
+.overview-nav-tab.active {
+  color: #1B376F;
+  border-bottom-color: #1B376F;
+  font-weight: 600;
+}
+
+.remediation-section,
+.trends-section,
+.question-analysis-section {
+  width: 100%;
+}
+
+.top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.top-left {
+  width: 100%;
+}
+
+.top-right {
+  width: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .top-section {
+    gap: 16px;
+  }
+}
+
+
+.reports-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 16px;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  justify-items: center;
+}
+
+.frequently-missed-section {
+  width: 100%;
+}
+
+.stats-card,
+.activity-card,
+.metrics-card,
+.reports-card,
+.export-card {
+  min-height: 200px;
+}
+
+/* Reset default margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Typography Standards */
+h1, .h1-style {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1B376F;
+  margin: 0;
+}
+
+p, .body-text {
+  font-family: 'Rubik', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #1B376F;
+  margin: 0;
+}
+
+/* Global Border Radius Standard */
+.card, .action-card, .overall-trends, .insight-item, .student-performance-item, .confidence-chart {
+  border-radius: 8px !important;
+}
+
+/* CCSS / Learning objective pills (shared across pages)
+   Keep this consistent with the styling used in Recommended Next Steps. */
+.ccss-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Rubik', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #e5e7eb;
+  background-color: #f3f4f6;
+  color: #374151;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.ccss-tag.target-objective {
+  background-color: #0076AA;
+  color: #FFFFFF;
+  border-color: #0076AA;
+  box-shadow: 0 1px 3px rgba(0, 118, 170, 0.3);
+}
+
+.ccss-tag.prerequisite-gap {
+  background-color: #CC5500;
+  color: #FFFFFF;
+  border-color: #CC5500;
+  box-shadow: 0 1px 3px rgba(204, 85, 0, 0.3);
+}
