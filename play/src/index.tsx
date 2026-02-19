@@ -5,6 +5,9 @@ import App from './App';
 
 // import react-i18n to support internationalisation
 import './i18n';
+import { initAnalytics } from './lib/analytics';
+
+initAnalytics();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

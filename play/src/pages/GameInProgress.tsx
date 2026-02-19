@@ -38,6 +38,7 @@ import {
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
+import { trackEvent, trackError, PlayEvent } from '../lib/analytics';
 
 interface GameInProgressProps {
   apiClients: IAPIClients;
@@ -187,8 +188,21 @@ export default function GameInProgress({
       setTeamAnswerId(response.id ?? '');
       setBackendAnswer(answer);
       setDisplaySubmitted(true);
+      trackEvent(PlayEvent.ANSWER_SUBMITTED, {
+        gameSessionId: localModel.gameSessionId,
+        teamId,
+        questionIndex: currentQuestionIndex,
+        phase: currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2',
+        isCorrect: answer.isCorrect,
+      });
     } catch (e) {
       setIsAnswerError(true);
+      trackError(PlayEvent.ERROR_MODAL_SHOWN, e, {
+        errorType: 'ANSWER',
+        gameSessionId: localModel.gameSessionId,
+        teamId,
+        questionIndex: currentQuestionIndex,
+      });
     }
   };
 
