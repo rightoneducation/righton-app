@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useMatch } from "react-router-dom";
 import CentralButton from "../button/Button";
@@ -26,6 +26,8 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
   
   const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
   const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState<boolean>(false);
+  // breakpoint for <1500px 
+  const isMediumLargeScreen = useMediaQuery('(max-width: 1500px)');
 
   const isDraft = useMatch('library/games/draft/:gameId');
   const incompleteHeader = isIncompleteDraft || isDraft;
@@ -97,18 +99,26 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
                 <CentralButton
                   buttonType={ButtonType.EDIT}
                   isEnabled
-                  buttonWidthOverride='127px'
+                  buttonWidthOverride={isMediumLargeScreen ? '40px' : 'auto'}
+                  iconOnlyOverride={isMediumLargeScreen}
+                  smallScreenOverride={isMediumLargeScreen}
                   onClick={handleEditGame}
                 />
               ) :(
                 <Box style={{ display: 'flex', gap: `${theme.sizing.xSmPadding}px` }}>
                   <CentralButton
                     buttonType={ButtonType.FAVORITE}
+                    buttonWidthOverride={isMediumLargeScreen ? '40px' : 'auto'}
+                    iconOnlyOverride={isMediumLargeScreen}
+                    smallScreenOverride={isMediumLargeScreen}
                     isEnabled
                     onClick={handleFavoriteClick}
                   />
                   <CentralButton
                     buttonType={ButtonType.DUPLICATE}
+                    buttonWidthOverride={isMediumLargeScreen ? '40px' : 'auto'}
+                    iconOnlyOverride={isMediumLargeScreen}
+                    smallScreenOverride={isMediumLargeScreen}
                     isEnabled
                     onClick={() =>{
                       setModalState(ModalStateType.DUPLICATE)
@@ -119,7 +129,9 @@ export default function ViewGameHeader({handleCloneGame,  handleDuplicate, handl
                 <CentralButton
                   buttonType={ButtonType.LAUNCHPINK}
                   isEnabled={!incompleteHeader}
-                  buttonWidthOverride="140px"
+                  buttonWidthOverride={isMediumLargeScreen ? '40px' : 'auto'}
+                  iconOnlyOverride={isMediumLargeScreen}
+                  smallScreenOverride={isMediumLargeScreen}
                   onClick={handleLaunchGame}
                 />
               </Box>

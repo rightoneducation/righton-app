@@ -52,6 +52,8 @@ export default function CentralButton({
   const isSmallScreenIconButtonOnly =
     (useMediaQuery(theme.breakpoints.down('lg')) && !smallScreenOverride && iconOnlyOverride) ?? false;
 
+  const headerOverride = smallScreenOverride && iconOnlyOverride;
+
   const handleButtonClick = () => {
     if (type === 'file') {
       const fileInput = document.createElement('input');
@@ -80,11 +82,18 @@ export default function CentralButton({
       isReset={isReset}
       style={{ 
         width: buttonWidthOverride ?? buttonWidth,
-        ...(buttonType === ButtonType.DELETE && { maxWidth: '410px' })
+        ...(buttonType === ButtonType.DELETE && { maxWidth: '410px' }),
+        ...(iconOnlyOverride && { minWidth: '40px', boxSizing: 'border-box' })
       }}
     >
       {buttonObj.icon && (
-          <ButtonIconContainer isSmallScreen={isSmallScreenIconButtonOnly} wideButtonOverride={wideButtonOverride ?? false}>
+          <ButtonIconContainer 
+          isSmallScreen={isSmallScreenIconButtonOnly} 
+          wideButtonOverride={wideButtonOverride ?? false}
+          style={{
+            ...(iconOnlyOverride && { minWidth: '40px', boxSizing: 'border-box', paddingLeft: '0px' })
+          }}
+          >
             {(buttonColor === ButtonColor.NULL &&
               (buttonType === ButtonType.CHANGEIMAGE ||
                 buttonType === ButtonType.SAVEDRAFT)) ||
@@ -102,7 +111,7 @@ export default function CentralButton({
             )}
           </ButtonIconContainer>
         )}
-      {!isSmallScreenIconButtonOnly && (
+      {(!isSmallScreenIconButtonOnly && !headerOverride) && (
         <ButtonContent>
           <Box />
           {buttonText && !iconOnlyOverride && (

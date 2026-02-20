@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import CentralButton from "../button/Button";
 import { ButtonType } from "../button/ButtonModels";
@@ -35,6 +35,8 @@ export default function ViewQuestionHeader({
   const theme = useTheme();
   const [modalState, setModalState] = useState<ModalStateType>(ModalStateType.NULL);
   const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState<boolean>(false);
+  // breakpoint for <1500px 
+  const isMediumLargeScreen = useMediaQuery('(max-width: 1500px)');
 
 
   const handleCloseDiscardModal = () => {
@@ -101,7 +103,9 @@ export default function ViewQuestionHeader({
                   <CentralButton
                     buttonType={ButtonType.EDIT}
                     isEnabled
-                    buttonWidthOverride='127px'
+                    buttonWidthOverride={isMediumLargeScreen ? '40px' : 'auto'}
+                    iconOnlyOverride={isMediumLargeScreen}
+                    smallScreenOverride={isMediumLargeScreen}
                     onClick={handleEditQuestion}
                   />
                 ) :(
@@ -109,14 +113,19 @@ export default function ViewQuestionHeader({
                     <CentralButton
                       buttonType={ButtonType.FAVORITE}
                       isEnabled
+                      buttonWidthOverride={isMediumLargeScreen ? '40px' : 'auto'}
+                      iconOnlyOverride={isMediumLargeScreen}
+                      smallScreenOverride={isMediumLargeScreen}
                       onClick={handleFavoriteClick}
                     />
                     <CentralButton
                       buttonType={ButtonType.DUPLICATE}
                       isEnabled
+                      buttonWidthOverride={isMediumLargeScreen ? '40px' : 'auto'}
+                      iconOnlyOverride={isMediumLargeScreen}
+                      smallScreenOverride={isMediumLargeScreen}
                       onClick={() =>{
                         setModalState(ModalStateType.DUPLICATE)
-                        // handleCloneQuestion()
                       }}
                     />
                   </Box>
@@ -124,7 +133,9 @@ export default function ViewQuestionHeader({
                 <CentralButton
                   buttonType={ButtonType.ADDTOGAMEPINK}
                   isEnabled
-                  buttonWidthOverride="auto"
+                  buttonWidthOverride={isMediumLargeScreen ? '40px' : 'auto'}
+                  iconOnlyOverride={isMediumLargeScreen}
+                  smallScreenOverride={isMediumLargeScreen}
                   onClick={handleAddToGameClick}
                 />
               </Box>
