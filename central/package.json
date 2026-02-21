@@ -30,7 +30,7 @@
     "react-responsive": "^9.0.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^5.0.1",
-    "swiper": "^9.0.3",
+    "swiper": "^12.1.2",
     "trim": "^1.0.1",
     "trim-newlines": "^4.0.2",
     "typescript": "^4.3.0",
