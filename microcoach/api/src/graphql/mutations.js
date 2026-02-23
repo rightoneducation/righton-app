@@ -19,6 +19,11 @@ export const createClassroom = /* GraphQL */ `
     createClassroom(input: $input, condition: $condition) {
       id
       classroomName
+      grade
+      subject
+      state
+      schoolYear
+      cohortSize
       learningGaps {
         items {
           id
@@ -130,6 +135,7 @@ export const createClassroom = /* GraphQL */ `
           id
           classroomId
           name
+          externalId
           performanceX
           performanceY
           confidenceLevel
@@ -209,6 +215,51 @@ export const createClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomTrendsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      assessments {
+        items {
+          id
+          classroomId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          sourceAssessmentId
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomAssessmentsId
           __typename
         }
         nextToken
@@ -228,6 +279,11 @@ export const updateClassroom = /* GraphQL */ `
     updateClassroom(input: $input, condition: $condition) {
       id
       classroomName
+      grade
+      subject
+      state
+      schoolYear
+      cohortSize
       learningGaps {
         items {
           id
@@ -339,6 +395,7 @@ export const updateClassroom = /* GraphQL */ `
           id
           classroomId
           name
+          externalId
           performanceX
           performanceY
           confidenceLevel
@@ -418,6 +475,51 @@ export const updateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomTrendsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      assessments {
+        items {
+          id
+          classroomId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          sourceAssessmentId
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomAssessmentsId
           __typename
         }
         nextToken
@@ -437,6 +539,11 @@ export const deleteClassroom = /* GraphQL */ `
     deleteClassroom(input: $input, condition: $condition) {
       id
       classroomName
+      grade
+      subject
+      state
+      schoolYear
+      cohortSize
       learningGaps {
         items {
           id
@@ -548,6 +655,7 @@ export const deleteClassroom = /* GraphQL */ `
           id
           classroomId
           name
+          externalId
           performanceX
           performanceY
           confidenceLevel
@@ -627,6 +735,51 @@ export const deleteClassroom = /* GraphQL */ `
           createdAt
           updatedAt
           classroomTrendsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      assessments {
+        items {
+          id
+          classroomId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          sourceAssessmentId
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomAssessmentsId
           __typename
         }
         nextToken
@@ -647,6 +800,7 @@ export const createStudent = /* GraphQL */ `
       id
       classroomId
       name
+      externalId
       performanceX
       performanceY
       confidenceLevel
@@ -667,6 +821,7 @@ export const updateStudent = /* GraphQL */ `
       id
       classroomId
       name
+      externalId
       performanceX
       performanceY
       confidenceLevel
@@ -687,6 +842,7 @@ export const deleteStudent = /* GraphQL */ `
       id
       classroomId
       name
+      externalId
       performanceX
       performanceY
       confidenceLevel
@@ -1453,6 +1609,486 @@ export const deleteClassroomTrend = /* GraphQL */ `
       createdAt
       updatedAt
       classroomTrendsId
+      __typename
+    }
+  }
+`;
+export const createAssessment = /* GraphQL */ `
+  mutation CreateAssessment(
+    $input: CreateAssessmentInput!
+    $condition: ModelAssessmentConditionInput
+  ) {
+    createAssessment(input: $input, condition: $condition) {
+      id
+      classroomId
+      assessmentCode
+      type
+      weekNumber
+      administeredAt
+      topic
+      ccssStandards
+      durationMinutes
+      calculatorAllowed
+      classPercentCorrect
+      questions {
+        questionNumber
+        questionType
+        correctAnswer
+        pointValue
+        ccssStandard
+        classPercentCorrect
+        __typename
+      }
+      sourceAssessmentId
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            __typename
+          }
+          createdAt
+          updatedAt
+          assessmentStudentResponsesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomAssessmentsId
+      __typename
+    }
+  }
+`;
+export const updateAssessment = /* GraphQL */ `
+  mutation UpdateAssessment(
+    $input: UpdateAssessmentInput!
+    $condition: ModelAssessmentConditionInput
+  ) {
+    updateAssessment(input: $input, condition: $condition) {
+      id
+      classroomId
+      assessmentCode
+      type
+      weekNumber
+      administeredAt
+      topic
+      ccssStandards
+      durationMinutes
+      calculatorAllowed
+      classPercentCorrect
+      questions {
+        questionNumber
+        questionType
+        correctAnswer
+        pointValue
+        ccssStandard
+        classPercentCorrect
+        __typename
+      }
+      sourceAssessmentId
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            __typename
+          }
+          createdAt
+          updatedAt
+          assessmentStudentResponsesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomAssessmentsId
+      __typename
+    }
+  }
+`;
+export const deleteAssessment = /* GraphQL */ `
+  mutation DeleteAssessment(
+    $input: DeleteAssessmentInput!
+    $condition: ModelAssessmentConditionInput
+  ) {
+    deleteAssessment(input: $input, condition: $condition) {
+      id
+      classroomId
+      assessmentCode
+      type
+      weekNumber
+      administeredAt
+      topic
+      ccssStandards
+      durationMinutes
+      calculatorAllowed
+      classPercentCorrect
+      questions {
+        questionNumber
+        questionType
+        correctAnswer
+        pointValue
+        ccssStandard
+        classPercentCorrect
+        __typename
+      }
+      sourceAssessmentId
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            __typename
+          }
+          createdAt
+          updatedAt
+          assessmentStudentResponsesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomAssessmentsId
+      __typename
+    }
+  }
+`;
+export const createStudentResponse = /* GraphQL */ `
+  mutation CreateStudentResponse(
+    $input: CreateStudentResponseInput!
+    $condition: ModelStudentResponseConditionInput
+  ) {
+    createStudentResponse(input: $input, condition: $condition) {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        __typename
+      }
+      createdAt
+      updatedAt
+      assessmentStudentResponsesId
+      __typename
+    }
+  }
+`;
+export const updateStudentResponse = /* GraphQL */ `
+  mutation UpdateStudentResponse(
+    $input: UpdateStudentResponseInput!
+    $condition: ModelStudentResponseConditionInput
+  ) {
+    updateStudentResponse(input: $input, condition: $condition) {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        __typename
+      }
+      createdAt
+      updatedAt
+      assessmentStudentResponsesId
+      __typename
+    }
+  }
+`;
+export const deleteStudentResponse = /* GraphQL */ `
+  mutation DeleteStudentResponse(
+    $input: DeleteStudentResponseInput!
+    $condition: ModelStudentResponseConditionInput
+  ) {
+    deleteStudentResponse(input: $input, condition: $condition) {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        __typename
+      }
+      createdAt
+      updatedAt
+      assessmentStudentResponsesId
+      __typename
+    }
+  }
+`;
+export const createContextData = /* GraphQL */ `
+  mutation CreateContextData(
+    $input: CreateContextDataInput!
+    $condition: ModelContextDataConditionInput
+  ) {
+    createContextData(input: $input, condition: $condition) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      rtdLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateContextData = /* GraphQL */ `
+  mutation UpdateContextData(
+    $input: UpdateContextDataInput!
+    $condition: ModelContextDataConditionInput
+  ) {
+    updateContextData(input: $input, condition: $condition) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      rtdLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteContextData = /* GraphQL */ `
+  mutation DeleteContextData(
+    $input: DeleteContextDataInput!
+    $condition: ModelContextDataConditionInput
+  ) {
+    deleteContextData(input: $input, condition: $condition) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      rtdLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
       __typename
     }
   }

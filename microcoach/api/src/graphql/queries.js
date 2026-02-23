@@ -6,6 +6,11 @@ export const getClassroom = /* GraphQL */ `
     getClassroom(id: $id) {
       id
       classroomName
+      grade
+      subject
+      state
+      schoolYear
+      cohortSize
       learningGaps {
         items {
           id
@@ -117,6 +122,7 @@ export const getClassroom = /* GraphQL */ `
           id
           classroomId
           name
+          externalId
           performanceX
           performanceY
           confidenceLevel
@@ -201,6 +207,51 @@ export const getClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
+      assessments {
+        items {
+          id
+          classroomId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          sourceAssessmentId
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomAssessmentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -217,6 +268,11 @@ export const listClassrooms = /* GraphQL */ `
       items {
         id
         classroomName
+        grade
+        subject
+        state
+        schoolYear
+        cohortSize
         learningGaps {
           items {
             id
@@ -307,6 +363,7 @@ export const listClassrooms = /* GraphQL */ `
             id
             classroomId
             name
+            externalId
             performanceX
             performanceY
             confidenceLevel
@@ -344,6 +401,41 @@ export const listClassrooms = /* GraphQL */ `
           nextToken
           __typename
         }
+        assessments {
+          items {
+            id
+            classroomId
+            assessmentCode
+            type
+            weekNumber
+            administeredAt
+            topic
+            ccssStandards
+            durationMinutes
+            calculatorAllowed
+            classPercentCorrect
+            questions {
+              questionNumber
+              questionType
+              correctAnswer
+              pointValue
+              ccssStandard
+              classPercentCorrect
+              __typename
+            }
+            sourceAssessmentId
+            studentResponses {
+              nextToken
+              __typename
+            }
+            createdAt
+            updatedAt
+            classroomAssessmentsId
+            __typename
+          }
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -359,6 +451,7 @@ export const getStudent = /* GraphQL */ `
       id
       classroomId
       name
+      externalId
       performanceX
       performanceY
       confidenceLevel
@@ -381,6 +474,7 @@ export const listStudents = /* GraphQL */ `
         id
         classroomId
         name
+        externalId
         performanceX
         performanceY
         confidenceLevel
@@ -885,6 +979,336 @@ export const listClassroomTrends = /* GraphQL */ `
     }
   }
 `;
+export const getAssessment = /* GraphQL */ `
+  query GetAssessment($id: ID!) {
+    getAssessment(id: $id) {
+      id
+      classroomId
+      assessmentCode
+      type
+      weekNumber
+      administeredAt
+      topic
+      ccssStandards
+      durationMinutes
+      calculatorAllowed
+      classPercentCorrect
+      questions {
+        questionNumber
+        questionType
+        correctAnswer
+        pointValue
+        ccssStandard
+        classPercentCorrect
+        __typename
+      }
+      sourceAssessmentId
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            __typename
+          }
+          createdAt
+          updatedAt
+          assessmentStudentResponsesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomAssessmentsId
+      __typename
+    }
+  }
+`;
+export const listAssessments = /* GraphQL */ `
+  query ListAssessments(
+    $filter: ModelAssessmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAssessments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        classroomId
+        assessmentCode
+        type
+        weekNumber
+        administeredAt
+        topic
+        ccssStandards
+        durationMinutes
+        calculatorAllowed
+        classPercentCorrect
+        questions {
+          questionNumber
+          questionType
+          correctAnswer
+          pointValue
+          ccssStandard
+          classPercentCorrect
+          __typename
+        }
+        sourceAssessmentId
+        studentResponses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            questionResponses {
+              questionNumber
+              response
+              isCorrect
+              pointsEarned
+              __typename
+            }
+            createdAt
+            updatedAt
+            assessmentStudentResponsesId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        classroomAssessmentsId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getStudentResponse = /* GraphQL */ `
+  query GetStudentResponse($id: ID!) {
+    getStudentResponse(id: $id) {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        __typename
+      }
+      createdAt
+      updatedAt
+      assessmentStudentResponsesId
+      __typename
+    }
+  }
+`;
+export const listStudentResponses = /* GraphQL */ `
+  query ListStudentResponses(
+    $filter: ModelStudentResponseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStudentResponses(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          __typename
+        }
+        createdAt
+        updatedAt
+        assessmentStudentResponsesId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getContextData = /* GraphQL */ `
+  query GetContextData($id: ID!) {
+    getContextData(id: $id) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      rtdLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listContextData = /* GraphQL */ `
+  query ListContextData(
+    $filter: ModelContextDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listContextData(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        title
+        gradeLevel
+        weekNumber
+        ccssStandards
+        assessmentCode
+        rtdLesson {
+          targetAssessmentCode
+          targetQuestionNumbers
+          topic
+          targetProblem
+          errorScenarios {
+            studentLabel
+            isCorrect
+            approach
+            reasoning
+            __typename
+          }
+          phases {
+            phaseName
+            durationMinutes
+            steps
+            teacherPrompts
+            __typename
+          }
+          keyTakeaways
+          independentProblems
+          exitTicket
+          __typename
+        }
+        exemplarQuestions {
+          questionNumber
+          questionText
+          ccssStandard
+          correctAnswer
+          pointValue
+          answerChoices {
+            label
+            text
+            __typename
+          }
+          misconceptions {
+            description
+            targetAnswer
+            __typename
+          }
+          sourceNote
+          __typename
+        }
+        strategy {
+          name
+          description
+          steps
+          applicableGrades
+          applicableStandards
+          examples
+          __typename
+        }
+        walkthroughData {
+          quarter
+          schools {
+            schoolCode
+            rubricScores
+            notes
+            __typename
+          }
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const classroomsByClassroomName = /* GraphQL */ `
   query ClassroomsByClassroomName(
     $classroomName: String!
@@ -903,6 +1327,11 @@ export const classroomsByClassroomName = /* GraphQL */ `
       items {
         id
         classroomName
+        grade
+        subject
+        state
+        schoolYear
+        cohortSize
         learningGaps {
           items {
             id
@@ -993,6 +1422,7 @@ export const classroomsByClassroomName = /* GraphQL */ `
             id
             classroomId
             name
+            externalId
             performanceX
             performanceY
             confidenceLevel
@@ -1025,6 +1455,41 @@ export const classroomsByClassroomName = /* GraphQL */ `
             createdAt
             updatedAt
             classroomTrendsId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        assessments {
+          items {
+            id
+            classroomId
+            assessmentCode
+            type
+            weekNumber
+            administeredAt
+            topic
+            ccssStandards
+            durationMinutes
+            calculatorAllowed
+            classPercentCorrect
+            questions {
+              questionNumber
+              questionType
+              correctAnswer
+              pointValue
+              ccssStandard
+              classPercentCorrect
+              __typename
+            }
+            sourceAssessmentId
+            studentResponses {
+              nextToken
+              __typename
+            }
+            createdAt
+            updatedAt
+            classroomAssessmentsId
             __typename
           }
           nextToken
@@ -1120,6 +1585,148 @@ export const savedNextStepsByClassroomId = /* GraphQL */ `
         createdAt
         updatedAt
         classroomSavedNextStepsId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const assessmentsByClassroomId = /* GraphQL */ `
+  query AssessmentsByClassroomId(
+    $classroomId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAssessmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    assessmentsByClassroomId(
+      classroomId: $classroomId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classroomId
+        assessmentCode
+        type
+        weekNumber
+        administeredAt
+        topic
+        ccssStandards
+        durationMinutes
+        calculatorAllowed
+        classPercentCorrect
+        questions {
+          questionNumber
+          questionType
+          correctAnswer
+          pointValue
+          ccssStandard
+          classPercentCorrect
+          __typename
+        }
+        sourceAssessmentId
+        studentResponses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            questionResponses {
+              questionNumber
+              response
+              isCorrect
+              pointsEarned
+              __typename
+            }
+            createdAt
+            updatedAt
+            assessmentStudentResponsesId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        classroomAssessmentsId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const studentResponsesByAssessmentId = /* GraphQL */ `
+  query StudentResponsesByAssessmentId(
+    $assessmentId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStudentResponseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    studentResponsesByAssessmentId(
+      assessmentId: $assessmentId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          __typename
+        }
+        createdAt
+        updatedAt
+        assessmentStudentResponsesId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const studentResponsesByStudentId = /* GraphQL */ `
+  query StudentResponsesByStudentId(
+    $studentId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStudentResponseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    studentResponsesByStudentId(
+      studentId: $studentId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          __typename
+        }
+        createdAt
+        updatedAt
+        assessmentStudentResponsesId
         __typename
       }
       nextToken

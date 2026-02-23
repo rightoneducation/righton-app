@@ -5,10 +5,16 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 type Classroom @model {
   id: ID!
   classroomName: String! @index(name: "byClassroomName", queryField: "classroomsByClassroomName")
+  grade: Int
+  subject: String
+  state: String
+  schoolYear: String
+  cohortSize: Int
   learningGaps: [LearningGap] @hasMany
   savedNextSteps: [SavedNextStep] @hasMany
   students: [Student] @hasMany
   trends: [ClassroomTrend] @hasMany
+  assessments: [Assessment] @hasMany
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -17,6 +23,7 @@ type Student @model {
   id: ID!
   classroomId: ID!
   name: String!
+  externalId: String
   performanceX: Float
   performanceY: Float
   confidenceLevel: Int!
@@ -204,4 +211,169 @@ type Mutation {
     @function(name: "microcoachGetLearningScience-${env}")
   getAnalytics(input: GetAnalyticsInput!): String
     @function(name: "microcoachLLM-${env}")
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Assessment — one PPQ or RTD event per classroom per week
+# ─────────────────────────────────────────────────────────────────────────────
+
+enum AssessmentType {
+  PPQ
+  RTD
+  QUIZ
+}
+
+enum QuestionType {
+  MC
+  OER
+  RUBRIC
+}
+
+type Assessment @model {
+  id: ID!
+  classroomId: ID! @index(name: "byClassroomAssessment")
+  assessmentCode: String!       # e.g. "MAT.06.PPQZ.W19.25-26"
+  type: AssessmentType!         # PPQ | RTD | QUIZ
+  weekNumber: Int!
+  administeredAt: AWSDate
+  topic: String
+  ccssStandards: [String]!
+  durationMinutes: Int
+  calculatorAllowed: Boolean
+  classPercentCorrect: Float
+  questions: [AssessmentQuestion]
+  sourceAssessmentId: ID        # for RTD: the ID of the originating PPQ Assessment
+  studentResponses: [StudentResponse] @hasMany
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type AssessmentQuestion {
+  questionNumber: Int!
+  questionType: QuestionType!
+  correctAnswer: String         # "A" | "B" | "C" | "D" | null for OER
+  pointValue: Int!
+  ccssStandard: String
+  classPercentCorrect: Float
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# StudentResponse — one record per student per assessment
+# ─────────────────────────────────────────────────────────────────────────────
+
+type StudentResponse @model {
+  id: ID!
+  assessmentId: ID! @index(name: "byAssessment")
+  studentId: ID!    @index(name: "byStudentResponse")
+  totalScore: Float               # 0.0–1.0 (percentage correct)
+  questionResponses: [QuestionResponse]!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type QuestionResponse {
+  questionNumber: Int!
+  response: String                # "A" | "B" | "C" | "D" | numeric string | null (blank)
+  isCorrect: Boolean!
+  pointsEarned: Float!
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ContextData — knowledge library consumed by the AI coaching layer
+# ─────────────────────────────────────────────────────────────────────────────
+
+enum ContextDataType {
+  RTD_LESSON
+  EXEMPLAR
+  STRATEGY
+  WALKTHROUGH
+  STUDENT_WORK_SAMPLE
+  LESSON_PLAN
+}
+
+type ContextData @model {
+  id: ID!
+  type: ContextDataType!
+  title: String!
+  gradeLevel: Int
+  weekNumber: Int
+  ccssStandards: [String]
+  assessmentCode: String          # links to Assessment.assessmentCode where relevant
+  rtdLesson: RTDLesson
+  exemplarQuestions: [ExemplarQuestion]
+  strategy: InstructionalStrategy
+  walkthroughData: WalkthroughData
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+# Full question text + misconception analysis (from exemplar docs)
+type ExemplarQuestion {
+  questionNumber: Int!
+  questionText: String!
+  ccssStandard: String!
+  correctAnswer: String!
+  pointValue: Int!
+  answerChoices: [AnswerChoice]
+  misconceptions: [Misconception]
+  sourceNote: String
+}
+
+type AnswerChoice {
+  label: String!                  # "A" | "B" | "C" | "D"
+  text: String!
+}
+
+type Misconception {
+  description: String!
+  targetAnswer: String            # which wrong answer choice this produces
+}
+
+# RTD intervention lesson plan
+type RTDLesson {
+  targetAssessmentCode: String!
+  targetQuestionNumbers: [Int]
+  topic: String!
+  targetProblem: String!
+  errorScenarios: [ErrorScenario]
+  phases: [LessonPhase]
+  keyTakeaways: [String]
+  independentProblems: [String]
+  exitTicket: String
+}
+
+type ErrorScenario {
+  studentLabel: String!           # e.g. "Student A" | "Student B"
+  isCorrect: Boolean!
+  approach: String!
+  reasoning: [String]
+}
+
+type LessonPhase {
+  phaseName: String!              # "LAUNCH" | "CHART_ERROR" | "GUIDED_PRACTICE" | "INDEPENDENT_PRACTICE" | "EXIT_TICKET"
+  durationMinutes: Int
+  steps: [String]
+  teacherPrompts: [String]
+}
+
+# Named reusable instructional strategies
+type InstructionalStrategy {
+  name: String!                   # "Keep-Switch-Flip" | "GST Key" | "Error Analysis"
+  description: String!
+  steps: [String]
+  applicableGrades: [Int]
+  applicableStandards: [String]
+  examples: [String]
+}
+
+# Teacher walkthrough / observation data
+type WalkthroughData {
+  quarter: String
+  schools: [SchoolObservation]
+}
+
+type SchoolObservation {
+  schoolCode: String!
+  rubricScores: AWSJSON
+  notes: String
 }
