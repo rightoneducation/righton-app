@@ -41,22 +41,22 @@ export function initAnalytics(): void {
   posthog.init(key, {
     api_host: host ?? 'https://us.i.posthog.com',
 
-    // Session recording — privacy settings for minors/COPPA
+    // Session recording
     session_recording: {
-      maskAllInputs: true,               // masks game code, name fields
-      maskTextSelector: '[data-ph-mask]', // opt-in for dynamic text (e.g. teamName display)
+      maskAllInputs: true,
+      maskTextSelector: '[data-ph-mask]',
     },
 
     autocapture: true,
     capture_pageview: true,
 
-    // localStorage persistence avoids cookies (simpler COPPA posture than cookie consent)
+    // localStorage persistence
     persistence: 'localStorage',
 
-    // Honor browser Do Not Track
+    // Do Not Track
     respect_dnt: true,
 
-    // Strip query params from URLs before sending (defense-in-depth for PII)
+    // Sanitize properties
     sanitize_properties: (properties) => {
       if (properties.$current_url) {
         try {
@@ -66,18 +66,23 @@ export function initAnalytics(): void {
           properties.$current_url = url.toString();
         } catch { /* leave as-is */ }
       }
+      // eslint-disable-next-line no-param-reassign
+      properties.$geoip_disable = true;
+      // eslint-disable-next-line no-param-reassign
+      delete properties.$ip;
+      // eslint-disable-next-line no-param-reassign
+      delete properties.$timezone;
+      // eslint-disable-next-line no-param-reassign
+      delete properties.$raw_user_agent;
       return properties;
     },
   });
   } catch (e) {
-    // posthog.init can throw if localStorage is blocked (managed school devices,
-    // content blockers, Safari ITP). Swallow the error so the app still renders.
     console.error('[analytics] PostHog failed to initialize. Analytics disabled.', e);
   }
 }
 
 // ── Identity ─────────────────────────────────────────────────────────────────
-// teamId is a UUID — never include real names or PII
 
 export function identifyStudent(
   teamId: string,

@@ -37,7 +37,7 @@ export function initAnalytics(): void {
     posthog.init(key, {
       api_host: host ?? 'https://us.i.posthog.com',
 
-      // Session recording — mask inputs by default
+      // Session recording
       session_recording: {
         maskAllInputs: true,
         maskTextSelector: '[data-ph-mask]',
@@ -46,13 +46,13 @@ export function initAnalytics(): void {
       autocapture: true,
       capture_pageview: true,
 
-      // localStorage persistence avoids cookies
+      // localStorage persistence
       persistence: 'localStorage',
 
-      // Honor browser Do Not Track
+      // Do Not Track
       respect_dnt: true,
 
-      // Strip query params from URLs before sending
+      // Sanitize properties
       sanitize_properties: (properties) => {
         if (properties.$current_url) {
           try {
@@ -62,6 +62,14 @@ export function initAnalytics(): void {
             properties.$current_url = url.toString();
           } catch { /* leave as-is */ }
         }
+        // eslint-disable-next-line no-param-reassign
+        properties.$geoip_disable = true;
+        // eslint-disable-next-line no-param-reassign
+        delete properties.$ip;
+        // eslint-disable-next-line no-param-reassign
+        delete properties.$timezone;
+        // eslint-disable-next-line no-param-reassign
+        delete properties.$raw_user_agent;
         return properties;
       },
     });
@@ -72,7 +80,6 @@ export function initAnalytics(): void {
 }
 
 // ── Identity ─────────────────────────────────────────────────────────────────
-// Uses gameSessionId (UUID) as distinct ID — no teacher email or real name
 
 export function identifySession(
   gameSessionId: string,
