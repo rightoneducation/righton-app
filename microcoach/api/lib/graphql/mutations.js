@@ -2,7 +2,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteClassroomTrend = exports.updateClassroomTrend = exports.createClassroomTrend = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteLearningGap = exports.updateLearningGap = exports.createLearningGap = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.getAnalytics = exports.getLearningScience = void 0;
+exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.getAnalytics = exports.getLearningScience = void 0;
 exports.getLearningScience = `
   mutation GetLearningScience($input: GetLearningScienceInput!) {
     getLearningScience(input: $input)
@@ -21,117 +21,17 @@ exports.createClassroom = `
     createClassroom(input: $input, condition: $condition) {
       id
       classroomName
-      learningGaps {
-        items {
-          id
-          classroomId
-          title
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          ccssStandards {
-            targetObjective {
-              standard
-              description
-              __typename
-            }
-            impactedObjectives {
-              standard
-              description
-              __typename
-            }
-            prerequisiteGaps {
-              standard
-              description
-              __typename
-            }
-            __typename
-          }
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomLearningGapsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      savedNextSteps {
-        items {
-          id
-          classroomId
-          status
-          completedAt
-          sortOrder
-          gapGroupId
-          gapGroupTitle
-          targetObjectiveStandard
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          gaps
-          moveId
-          moveTitle
-          moveTime
-          moveFormat
-          moveSummary
-          aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomSavedNextStepsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      grade
+      subject
+      state
+      schoolYear
+      cohortSize
       students {
         items {
           id
           classroomId
           name
+          externalId
           performanceX
           performanceY
           confidenceLevel
@@ -144,73 +44,196 @@ exports.createClassroom = `
         nextToken
         __typename
       }
-      trends {
+      sessions {
         items {
-          keyInsights {
-            finding
-            targetStandard
-            targetDescription
-            gapStandard
-            gapDescription
-            __typename
-          }
-          studentPerformanceGroups {
-            highPerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            averagePerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            strugglingStudents {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            biggestChanges {
-              name
-              masteryChange
-              misconceptionChange
-              topic
-              __typename
-            }
-            __typename
-          }
-          confidenceIssues {
-            overlyConfident {
-              name
-              topic
-              __typename
-            }
-            underlyConfident {
-              name
-              topic
-              __typename
-            }
-            __typename
-          }
           id
+          classroomId
+          sessionLabel
+          weekNumber
+          topic
+          ccssStandards
+          status
+          ppqAssessmentId
+          postPpqAssessmentId
+          assessments {
+            items {
+              id
+              classroomId
+              sessionId
+              assessmentCode
+              type
+              weekNumber
+              administeredAt
+              topic
+              ccssStandards
+              durationMinutes
+              calculatorAllowed
+              classPercentCorrect
+              sourceAssessmentId
+              createdAt
+              updatedAt
+              sessionAssessmentsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          misconceptions {
+            items {
+              id
+              classroomId
+              sessionId
+              ccssStandard
+              title
+              description
+              aiReasoning
+              studentCount
+              studentPercent
+              severity
+              priority
+              occurrence
+              successIndicators
+              postPpqImprovement
+              createdAt
+              updatedAt
+              classroomMisconceptionsId
+              sessionMisconceptionsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
-          classroomTrendsId
+          classroomSessionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      savedNextSteps {
+        items {
+          id
+          classroomId
+          activityId
+          status
+          completedAt
+          sortOrder
+          misconceptionId
+          misconceptionTitle
+          targetObjectiveStandard
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          activityTitle
+          activityTime
+          activityFormat
+          activitySummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -230,117 +253,17 @@ exports.updateClassroom = `
     updateClassroom(input: $input, condition: $condition) {
       id
       classroomName
-      learningGaps {
-        items {
-          id
-          classroomId
-          title
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          ccssStandards {
-            targetObjective {
-              standard
-              description
-              __typename
-            }
-            impactedObjectives {
-              standard
-              description
-              __typename
-            }
-            prerequisiteGaps {
-              standard
-              description
-              __typename
-            }
-            __typename
-          }
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomLearningGapsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      savedNextSteps {
-        items {
-          id
-          classroomId
-          status
-          completedAt
-          sortOrder
-          gapGroupId
-          gapGroupTitle
-          targetObjectiveStandard
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          gaps
-          moveId
-          moveTitle
-          moveTime
-          moveFormat
-          moveSummary
-          aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomSavedNextStepsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      grade
+      subject
+      state
+      schoolYear
+      cohortSize
       students {
         items {
           id
           classroomId
           name
+          externalId
           performanceX
           performanceY
           confidenceLevel
@@ -353,73 +276,196 @@ exports.updateClassroom = `
         nextToken
         __typename
       }
-      trends {
+      sessions {
         items {
-          keyInsights {
-            finding
-            targetStandard
-            targetDescription
-            gapStandard
-            gapDescription
-            __typename
-          }
-          studentPerformanceGroups {
-            highPerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            averagePerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            strugglingStudents {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            biggestChanges {
-              name
-              masteryChange
-              misconceptionChange
-              topic
-              __typename
-            }
-            __typename
-          }
-          confidenceIssues {
-            overlyConfident {
-              name
-              topic
-              __typename
-            }
-            underlyConfident {
-              name
-              topic
-              __typename
-            }
-            __typename
-          }
           id
+          classroomId
+          sessionLabel
+          weekNumber
+          topic
+          ccssStandards
+          status
+          ppqAssessmentId
+          postPpqAssessmentId
+          assessments {
+            items {
+              id
+              classroomId
+              sessionId
+              assessmentCode
+              type
+              weekNumber
+              administeredAt
+              topic
+              ccssStandards
+              durationMinutes
+              calculatorAllowed
+              classPercentCorrect
+              sourceAssessmentId
+              createdAt
+              updatedAt
+              sessionAssessmentsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          misconceptions {
+            items {
+              id
+              classroomId
+              sessionId
+              ccssStandard
+              title
+              description
+              aiReasoning
+              studentCount
+              studentPercent
+              severity
+              priority
+              occurrence
+              successIndicators
+              postPpqImprovement
+              createdAt
+              updatedAt
+              classroomMisconceptionsId
+              sessionMisconceptionsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
-          classroomTrendsId
+          classroomSessionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      savedNextSteps {
+        items {
+          id
+          classroomId
+          activityId
+          status
+          completedAt
+          sortOrder
+          misconceptionId
+          misconceptionTitle
+          targetObjectiveStandard
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          activityTitle
+          activityTime
+          activityFormat
+          activitySummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -439,117 +485,17 @@ exports.deleteClassroom = `
     deleteClassroom(input: $input, condition: $condition) {
       id
       classroomName
-      learningGaps {
-        items {
-          id
-          classroomId
-          title
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          ccssStandards {
-            targetObjective {
-              standard
-              description
-              __typename
-            }
-            impactedObjectives {
-              standard
-              description
-              __typename
-            }
-            prerequisiteGaps {
-              standard
-              description
-              __typename
-            }
-            __typename
-          }
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomLearningGapsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      savedNextSteps {
-        items {
-          id
-          classroomId
-          status
-          completedAt
-          sortOrder
-          gapGroupId
-          gapGroupTitle
-          targetObjectiveStandard
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          gaps
-          moveId
-          moveTitle
-          moveTime
-          moveFormat
-          moveSummary
-          aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomSavedNextStepsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      grade
+      subject
+      state
+      schoolYear
+      cohortSize
       students {
         items {
           id
           classroomId
           name
+          externalId
           performanceX
           performanceY
           confidenceLevel
@@ -562,73 +508,196 @@ exports.deleteClassroom = `
         nextToken
         __typename
       }
-      trends {
+      sessions {
         items {
-          keyInsights {
-            finding
-            targetStandard
-            targetDescription
-            gapStandard
-            gapDescription
-            __typename
-          }
-          studentPerformanceGroups {
-            highPerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            averagePerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            strugglingStudents {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            biggestChanges {
-              name
-              masteryChange
-              misconceptionChange
-              topic
-              __typename
-            }
-            __typename
-          }
-          confidenceIssues {
-            overlyConfident {
-              name
-              topic
-              __typename
-            }
-            underlyConfident {
-              name
-              topic
-              __typename
-            }
-            __typename
-          }
           id
+          classroomId
+          sessionLabel
+          weekNumber
+          topic
+          ccssStandards
+          status
+          ppqAssessmentId
+          postPpqAssessmentId
+          assessments {
+            items {
+              id
+              classroomId
+              sessionId
+              assessmentCode
+              type
+              weekNumber
+              administeredAt
+              topic
+              ccssStandards
+              durationMinutes
+              calculatorAllowed
+              classPercentCorrect
+              sourceAssessmentId
+              createdAt
+              updatedAt
+              sessionAssessmentsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          misconceptions {
+            items {
+              id
+              classroomId
+              sessionId
+              ccssStandard
+              title
+              description
+              aiReasoning
+              studentCount
+              studentPercent
+              severity
+              priority
+              occurrence
+              successIndicators
+              postPpqImprovement
+              createdAt
+              updatedAt
+              classroomMisconceptionsId
+              sessionMisconceptionsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
-          classroomTrendsId
+          classroomSessionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      savedNextSteps {
+        items {
+          id
+          classroomId
+          activityId
+          status
+          completedAt
+          sortOrder
+          misconceptionId
+          misconceptionTitle
+          targetObjectiveStandard
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          activityTitle
+          activityTime
+          activityFormat
+          activitySummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -636,6 +705,408 @@ exports.deleteClassroom = `
       }
       createdAt
       updatedAt
+      __typename
+    }
+  }
+`;
+exports.createSession = `
+  mutation CreateSession(
+    $input: CreateSessionInput!
+    $condition: ModelSessionConditionInput
+  ) {
+    createSession(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionLabel
+      weekNumber
+      topic
+      ccssStandards
+      status
+      ppqAssessmentId
+      postPpqAssessmentId
+      assessments {
+        items {
+          id
+          classroomId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          sourceAssessmentId
+          createdAt
+          updatedAt
+          sessionAssessmentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomSessionsId
+      __typename
+    }
+  }
+`;
+exports.updateSession = `
+  mutation UpdateSession(
+    $input: UpdateSessionInput!
+    $condition: ModelSessionConditionInput
+  ) {
+    updateSession(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionLabel
+      weekNumber
+      topic
+      ccssStandards
+      status
+      ppqAssessmentId
+      postPpqAssessmentId
+      assessments {
+        items {
+          id
+          classroomId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          sourceAssessmentId
+          createdAt
+          updatedAt
+          sessionAssessmentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomSessionsId
+      __typename
+    }
+  }
+`;
+exports.deleteSession = `
+  mutation DeleteSession(
+    $input: DeleteSessionInput!
+    $condition: ModelSessionConditionInput
+  ) {
+    deleteSession(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionLabel
+      weekNumber
+      topic
+      ccssStandards
+      status
+      ppqAssessmentId
+      postPpqAssessmentId
+      assessments {
+        items {
+          id
+          classroomId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          sourceAssessmentId
+          createdAt
+          updatedAt
+          sessionAssessmentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomSessionsId
       __typename
     }
   }
@@ -649,6 +1120,7 @@ exports.createStudent = `
       id
       classroomId
       name
+      externalId
       performanceX
       performanceY
       confidenceLevel
@@ -669,6 +1141,7 @@ exports.updateStudent = `
       id
       classroomId
       name
+      externalId
       performanceX
       performanceY
       confidenceLevel
@@ -689,6 +1162,7 @@ exports.deleteStudent = `
       id
       classroomId
       name
+      externalId
       performanceX
       performanceY
       confidenceLevel
@@ -700,223 +1174,265 @@ exports.deleteStudent = `
     }
   }
 `;
-exports.createLearningGap = `
-  mutation CreateLearningGap(
-    $input: CreateLearningGapInput!
-    $condition: ModelLearningGapConditionInput
+exports.createAssessment = `
+  mutation CreateAssessment(
+    $input: CreateAssessmentInput!
+    $condition: ModelAssessmentConditionInput
   ) {
-    createLearningGap(input: $input, condition: $condition) {
+    createAssessment(input: $input, condition: $condition) {
       id
       classroomId
-      title
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      ccssStandards {
-        targetObjective {
-          standard
-          description
-          __typename
-        }
-        impactedObjectives {
-          standard
-          description
-          __typename
-        }
-        prerequisiteGaps {
-          standard
-          description
-          __typename
-        }
+      sessionId
+      assessmentCode
+      type
+      weekNumber
+      administeredAt
+      topic
+      ccssStandards
+      durationMinutes
+      calculatorAllowed
+      classPercentCorrect
+      questions {
+        questionNumber
+        questionType
+        correctAnswer
+        pointValue
+        ccssStandard
+        classPercentCorrect
         __typename
       }
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
             __typename
           }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
+          createdAt
+          updatedAt
+          assessmentStudentResponsesId
           __typename
         }
+        nextToken
         __typename
       }
+      sourceAssessmentId
       createdAt
       updatedAt
-      classroomLearningGapsId
+      sessionAssessmentsId
       __typename
     }
   }
 `;
-exports.updateLearningGap = `
-  mutation UpdateLearningGap(
-    $input: UpdateLearningGapInput!
-    $condition: ModelLearningGapConditionInput
+exports.updateAssessment = `
+  mutation UpdateAssessment(
+    $input: UpdateAssessmentInput!
+    $condition: ModelAssessmentConditionInput
   ) {
-    updateLearningGap(input: $input, condition: $condition) {
+    updateAssessment(input: $input, condition: $condition) {
       id
       classroomId
-      title
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      ccssStandards {
-        targetObjective {
-          standard
-          description
-          __typename
-        }
-        impactedObjectives {
-          standard
-          description
-          __typename
-        }
-        prerequisiteGaps {
-          standard
-          description
-          __typename
-        }
+      sessionId
+      assessmentCode
+      type
+      weekNumber
+      administeredAt
+      topic
+      ccssStandards
+      durationMinutes
+      calculatorAllowed
+      classPercentCorrect
+      questions {
+        questionNumber
+        questionType
+        correctAnswer
+        pointValue
+        ccssStandard
+        classPercentCorrect
         __typename
       }
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
             __typename
           }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
+          createdAt
+          updatedAt
+          assessmentStudentResponsesId
           __typename
         }
+        nextToken
         __typename
       }
+      sourceAssessmentId
       createdAt
       updatedAt
-      classroomLearningGapsId
+      sessionAssessmentsId
       __typename
     }
   }
 `;
-exports.deleteLearningGap = `
-  mutation DeleteLearningGap(
-    $input: DeleteLearningGapInput!
-    $condition: ModelLearningGapConditionInput
+exports.deleteAssessment = `
+  mutation DeleteAssessment(
+    $input: DeleteAssessmentInput!
+    $condition: ModelAssessmentConditionInput
   ) {
-    deleteLearningGap(input: $input, condition: $condition) {
+    deleteAssessment(input: $input, condition: $condition) {
       id
       classroomId
-      title
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      ccssStandards {
-        targetObjective {
-          standard
-          description
-          __typename
-        }
-        impactedObjectives {
-          standard
-          description
-          __typename
-        }
-        prerequisiteGaps {
-          standard
-          description
-          __typename
-        }
+      sessionId
+      assessmentCode
+      type
+      weekNumber
+      administeredAt
+      topic
+      ccssStandards
+      durationMinutes
+      calculatorAllowed
+      classPercentCorrect
+      questions {
+        questionNumber
+        questionType
+        correctAnswer
+        pointValue
+        ccssStandard
+        classPercentCorrect
         __typename
       }
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            __typename
+          }
+          createdAt
+          updatedAt
+          assessmentStudentResponsesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      sourceAssessmentId
+      createdAt
+      updatedAt
+      sessionAssessmentsId
+      __typename
+    }
+  }
+`;
+exports.createStudentResponse = `
+  mutation CreateStudentResponse(
+    $input: CreateStudentResponseInput!
+    $condition: ModelStudentResponseConditionInput
+  ) {
+    createStudentResponse(input: $input, condition: $condition) {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        __typename
+      }
+      createdAt
+      updatedAt
+      assessmentStudentResponsesId
+      __typename
+    }
+  }
+`;
+exports.updateStudentResponse = `
+  mutation UpdateStudentResponse(
+    $input: UpdateStudentResponseInput!
+    $condition: ModelStudentResponseConditionInput
+  ) {
+    updateStudentResponse(input: $input, condition: $condition) {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        __typename
+      }
+      createdAt
+      updatedAt
+      assessmentStudentResponsesId
+      __typename
+    }
+  }
+`;
+exports.deleteStudentResponse = `
+  mutation DeleteStudentResponse(
+    $input: DeleteStudentResponseInput!
+    $condition: ModelStudentResponseConditionInput
+  ) {
+    deleteStudentResponse(input: $input, condition: $condition) {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        __typename
+      }
+      createdAt
+      updatedAt
+      assessmentStudentResponsesId
+      __typename
+    }
+  }
+`;
+exports.createMisconception = `
+  mutation CreateMisconception(
+    $input: CreateMisconceptionInput!
+    $condition: ModelMisconceptionConditionInput
+  ) {
+    createMisconception(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionId
+      ccssStandard
+      title
+      description
+      aiReasoning
+      studentCount
+      studentPercent
+      severity
+      priority
+      occurrence
+      successIndicators
       evidence {
         source
         mostCommonError
@@ -924,54 +1440,450 @@ exports.deleteLearningGap = `
         aiThinkingPattern
         __typename
       }
-      move {
-        id
+      cziComponents {
+        componentId
         title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
-            __typename
-          }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
+        description
+        gradeLevel
+        moduleIds
+        prerequisiteStandards
+        __typename
+      }
+      activities {
+        items {
+          id
+          misconceptionId
+          classroomId
+          sessionId
+          type
+          status
+          title
+          summary
+          durationMinutes
+          format
+          aiReasoning
+          aiGenerated
+          sourceContextDataIds
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
               __typename
             }
-            highFlyers {
-              students
-              description
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
               __typename
             }
-            aiRecommendation
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
             __typename
           }
+          completedAt
+          postPpqImprovement
+          createdAt
+          updatedAt
+          misconceptionActivitiesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      postPpqImprovement
+      createdAt
+      updatedAt
+      classroomMisconceptionsId
+      sessionMisconceptionsId
+      __typename
+    }
+  }
+`;
+exports.updateMisconception = `
+  mutation UpdateMisconception(
+    $input: UpdateMisconceptionInput!
+    $condition: ModelMisconceptionConditionInput
+  ) {
+    updateMisconception(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionId
+      ccssStandard
+      title
+      description
+      aiReasoning
+      studentCount
+      studentPercent
+      severity
+      priority
+      occurrence
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      cziComponents {
+        componentId
+        title
+        description
+        gradeLevel
+        moduleIds
+        prerequisiteStandards
+        __typename
+      }
+      activities {
+        items {
+          id
+          misconceptionId
+          classroomId
+          sessionId
+          type
+          status
+          title
+          summary
+          durationMinutes
+          format
+          aiReasoning
+          aiGenerated
+          sourceContextDataIds
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          completedAt
+          postPpqImprovement
+          createdAt
+          updatedAt
+          misconceptionActivitiesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      postPpqImprovement
+      createdAt
+      updatedAt
+      classroomMisconceptionsId
+      sessionMisconceptionsId
+      __typename
+    }
+  }
+`;
+exports.deleteMisconception = `
+  mutation DeleteMisconception(
+    $input: DeleteMisconceptionInput!
+    $condition: ModelMisconceptionConditionInput
+  ) {
+    deleteMisconception(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionId
+      ccssStandard
+      title
+      description
+      aiReasoning
+      studentCount
+      studentPercent
+      severity
+      priority
+      occurrence
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      cziComponents {
+        componentId
+        title
+        description
+        gradeLevel
+        moduleIds
+        prerequisiteStandards
+        __typename
+      }
+      activities {
+        items {
+          id
+          misconceptionId
+          classroomId
+          sessionId
+          type
+          status
+          title
+          summary
+          durationMinutes
+          format
+          aiReasoning
+          aiGenerated
+          sourceContextDataIds
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          completedAt
+          postPpqImprovement
+          createdAt
+          updatedAt
+          misconceptionActivitiesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      postPpqImprovement
+      createdAt
+      updatedAt
+      classroomMisconceptionsId
+      sessionMisconceptionsId
+      __typename
+    }
+  }
+`;
+exports.createActivity = `
+  mutation CreateActivity(
+    $input: CreateActivityInput!
+    $condition: ModelActivityConditionInput
+  ) {
+    createActivity(input: $input, condition: $condition) {
+      id
+      misconceptionId
+      classroomId
+      sessionId
+      type
+      status
+      title
+      summary
+      durationMinutes
+      format
+      aiReasoning
+      aiGenerated
+      sourceContextDataIds
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
           __typename
         }
         __typename
       }
+      completedAt
+      postPpqImprovement
       createdAt
       updatedAt
-      classroomLearningGapsId
+      misconceptionActivitiesId
+      __typename
+    }
+  }
+`;
+exports.updateActivity = `
+  mutation UpdateActivity(
+    $input: UpdateActivityInput!
+    $condition: ModelActivityConditionInput
+  ) {
+    updateActivity(input: $input, condition: $condition) {
+      id
+      misconceptionId
+      classroomId
+      sessionId
+      type
+      status
+      title
+      summary
+      durationMinutes
+      format
+      aiReasoning
+      aiGenerated
+      sourceContextDataIds
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
+          __typename
+        }
+        __typename
+      }
+      completedAt
+      postPpqImprovement
+      createdAt
+      updatedAt
+      misconceptionActivitiesId
+      __typename
+    }
+  }
+`;
+exports.deleteActivity = `
+  mutation DeleteActivity(
+    $input: DeleteActivityInput!
+    $condition: ModelActivityConditionInput
+  ) {
+    deleteActivity(input: $input, condition: $condition) {
+      id
+      misconceptionId
+      classroomId
+      sessionId
+      type
+      status
+      title
+      summary
+      durationMinutes
+      format
+      aiReasoning
+      aiGenerated
+      sourceContextDataIds
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
+          __typename
+        }
+        __typename
+      }
+      completedAt
+      postPpqImprovement
+      createdAt
+      updatedAt
+      misconceptionActivitiesId
       __typename
     }
   }
@@ -984,11 +1896,12 @@ exports.createSavedNextStep = `
     createSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      activityId
       status
       completedAt
       sortOrder
-      gapGroupId
-      gapGroupTitle
+      misconceptionId
+      misconceptionTitle
       targetObjectiveStandard
       priority
       studentCount
@@ -996,12 +1909,10 @@ exports.createSavedNextStep = `
       occurrence
       misconceptionSummary
       successIndicators
-      gaps
-      moveId
-      moveTitle
-      moveTime
-      moveFormat
-      moveSummary
+      activityTitle
+      activityTime
+      activityFormat
+      activitySummary
       aiReasoning
       evidence {
         source
@@ -1010,47 +1921,38 @@ exports.createSavedNextStep = `
         aiThinkingPattern
         __typename
       }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
             __typename
           }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
+          highFlyers {
+            students
+            description
             __typename
           }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
+          aiRecommendation
           __typename
         }
         __typename
@@ -1070,11 +1972,12 @@ exports.updateSavedNextStep = `
     updateSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      activityId
       status
       completedAt
       sortOrder
-      gapGroupId
-      gapGroupTitle
+      misconceptionId
+      misconceptionTitle
       targetObjectiveStandard
       priority
       studentCount
@@ -1082,12 +1985,10 @@ exports.updateSavedNextStep = `
       occurrence
       misconceptionSummary
       successIndicators
-      gaps
-      moveId
-      moveTitle
-      moveTime
-      moveFormat
-      moveSummary
+      activityTitle
+      activityTime
+      activityFormat
+      activitySummary
       aiReasoning
       evidence {
         source
@@ -1096,47 +1997,38 @@ exports.updateSavedNextStep = `
         aiThinkingPattern
         __typename
       }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
             __typename
           }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
+          highFlyers {
+            students
+            description
             __typename
           }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
+          aiRecommendation
           __typename
         }
         __typename
@@ -1156,11 +2048,12 @@ exports.deleteSavedNextStep = `
     deleteSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      activityId
       status
       completedAt
       sortOrder
-      gapGroupId
-      gapGroupTitle
+      misconceptionId
+      misconceptionTitle
       targetObjectiveStandard
       priority
       studentCount
@@ -1168,12 +2061,10 @@ exports.deleteSavedNextStep = `
       occurrence
       misconceptionSummary
       successIndicators
-      gaps
-      moveId
-      moveTitle
-      moveTime
-      moveFormat
-      moveSummary
+      activityTitle
+      activityTime
+      activityFormat
+      activitySummary
       aiReasoning
       evidence {
         source
@@ -1182,47 +2073,38 @@ exports.deleteSavedNextStep = `
         aiThinkingPattern
         __typename
       }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
             __typename
           }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
+          highFlyers {
+            students
+            description
             __typename
           }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
+          aiRecommendation
           __typename
         }
         __typename
@@ -1234,227 +2116,248 @@ exports.deleteSavedNextStep = `
     }
   }
 `;
-exports.createClassroomTrend = `
-  mutation CreateClassroomTrend(
-    $input: CreateClassroomTrendInput!
-    $condition: ModelClassroomTrendConditionInput
+exports.createContextData = `
+  mutation CreateContextData(
+    $input: CreateContextDataInput!
+    $condition: ModelContextDataConditionInput
   ) {
-    createClassroomTrend(input: $input, condition: $condition) {
-      keyInsights {
-        finding
-        targetStandard
-        targetDescription
-        gapStandard
-        gapDescription
-        __typename
-      }
-      studentPerformanceGroups {
-        highPerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        averagePerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        strugglingStudents {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        biggestChanges {
-          name
-          masteryChange
-          misconceptionChange
-          topic
-          __typename
-        }
-        __typename
-      }
-      confidenceIssues {
-        overlyConfident {
-          name
-          topic
-          __typename
-        }
-        underlyConfident {
-          name
-          topic
-          __typename
-        }
-        __typename
-      }
+    createContextData(input: $input, condition: $condition) {
       id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      rtdLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
-      classroomTrendsId
       __typename
     }
   }
 `;
-exports.updateClassroomTrend = `
-  mutation UpdateClassroomTrend(
-    $input: UpdateClassroomTrendInput!
-    $condition: ModelClassroomTrendConditionInput
+exports.updateContextData = `
+  mutation UpdateContextData(
+    $input: UpdateContextDataInput!
+    $condition: ModelContextDataConditionInput
   ) {
-    updateClassroomTrend(input: $input, condition: $condition) {
-      keyInsights {
-        finding
-        targetStandard
-        targetDescription
-        gapStandard
-        gapDescription
-        __typename
-      }
-      studentPerformanceGroups {
-        highPerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        averagePerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        strugglingStudents {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        biggestChanges {
-          name
-          masteryChange
-          misconceptionChange
-          topic
-          __typename
-        }
-        __typename
-      }
-      confidenceIssues {
-        overlyConfident {
-          name
-          topic
-          __typename
-        }
-        underlyConfident {
-          name
-          topic
-          __typename
-        }
-        __typename
-      }
+    updateContextData(input: $input, condition: $condition) {
       id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      rtdLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
-      classroomTrendsId
       __typename
     }
   }
 `;
-exports.deleteClassroomTrend = `
-  mutation DeleteClassroomTrend(
-    $input: DeleteClassroomTrendInput!
-    $condition: ModelClassroomTrendConditionInput
+exports.deleteContextData = `
+  mutation DeleteContextData(
+    $input: DeleteContextDataInput!
+    $condition: ModelContextDataConditionInput
   ) {
-    deleteClassroomTrend(input: $input, condition: $condition) {
-      keyInsights {
-        finding
-        targetStandard
-        targetDescription
-        gapStandard
-        gapDescription
-        __typename
-      }
-      studentPerformanceGroups {
-        highPerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        averagePerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        strugglingStudents {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        biggestChanges {
-          name
-          masteryChange
-          misconceptionChange
-          topic
-          __typename
-        }
-        __typename
-      }
-      confidenceIssues {
-        overlyConfident {
-          name
-          topic
-          __typename
-        }
-        underlyConfident {
-          name
-          topic
-          __typename
-        }
-        __typename
-      }
+    deleteContextData(input: $input, condition: $condition) {
       id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      rtdLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
-      classroomTrendsId
       __typename
     }
   }

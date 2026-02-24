@@ -21,17 +21,72 @@ class APIClient {
     configAmplify(awsconfig) {
         aws_amplify_1.Amplify.configure(awsconfig);
     }
+    // ── Classroom ──────────────────────────────────────────────────────────────
+    async listClassrooms() {
+        var _a, _b, _c;
+        const result = await this.callGraphQL(queries_1.listClassrooms);
+        return (_c = (_b = (_a = result.data) === null || _a === void 0 ? void 0 : _a.listClassrooms) === null || _b === void 0 ? void 0 : _b.items) !== null && _c !== void 0 ? _c : [];
+    }
     async getClassroom(classId) {
         var _a;
-        const classroom = await this.callGraphQL(queries_1.getClassroom, {
-            id: classId
-        });
+        const classroom = await this.callGraphQL(queries_1.getClassroom, { id: classId });
         return (_a = classroom.data) === null || _a === void 0 ? void 0 : _a.getClassroom;
     }
+    // ── Session ────────────────────────────────────────────────────────────────
+    async listSessions(classroomId) {
+        var _a, _b, _c;
+        const result = await this.callGraphQL(queries_1.sessionsByClassroomId, { classroomId });
+        return (_c = (_b = (_a = result.data) === null || _a === void 0 ? void 0 : _a.sessionsByClassroomId) === null || _b === void 0 ? void 0 : _b.items) !== null && _c !== void 0 ? _c : [];
+    }
+    async getSession(sessionId) {
+        var _a, _b;
+        const result = await this.callGraphQL(queries_1.getSession, { id: sessionId });
+        return (_b = (_a = result.data) === null || _a === void 0 ? void 0 : _a.getSession) !== null && _b !== void 0 ? _b : null;
+    }
+    // ── Misconception ──────────────────────────────────────────────────────────
+    async createMisconception(sessionId, item) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.createMisconception, {
+            input: { ...item, sessionId },
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.createMisconception;
+    }
+    async updateMisconception(id, updates) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.updateMisconception, {
+            input: { id, ...updates },
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.updateMisconception;
+    }
+    // ── Activity ───────────────────────────────────────────────────────────────
+    async listActivities(misconceptionId) {
+        var _a, _b, _c;
+        const result = await this.callGraphQL(queries_1.activitiesByMisconceptionId, { misconceptionId });
+        return (_c = (_b = (_a = result.data) === null || _a === void 0 ? void 0 : _a.activitiesByMisconceptionId) === null || _b === void 0 ? void 0 : _b.items) !== null && _c !== void 0 ? _c : [];
+    }
+    async createActivity(misconceptionId, item) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.createActivity, {
+            input: {
+                ...item,
+                misconceptionId,
+                misconceptionActivitiesId: misconceptionId,
+            },
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.createActivity;
+    }
+    async updateActivity(id, updates) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.updateActivity, {
+            input: { id, ...updates },
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.updateActivity;
+    }
+    // ── Learning Science / Analytics ───────────────────────────────────────────
     async getLearningScienceDataByCCSS(ccss) {
         var _a;
         const learningScienceData = await this.callGraphQL(mutations_1.getLearningScience, {
-            input: { ccss }
+            input: { ccss },
         });
         return (_a = learningScienceData.data) === null || _a === void 0 ? void 0 : _a.getLearningScience;
     }
@@ -40,8 +95,10 @@ class APIClient {
         const analytics = await this.callGraphQL(mutations_1.getAnalytics, {
             input: {
                 classroomData: typeof classroomData === 'string' ? classroomData : JSON.stringify(classroomData),
-                learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
-            }
+                learningScienceData: typeof learningScienceData === 'string'
+                    ? learningScienceData
+                    : JSON.stringify(learningScienceData),
+            },
         });
         return (_a = analytics.data) === null || _a === void 0 ? void 0 : _a.getAnalytics;
     }
@@ -53,35 +110,30 @@ class APIClient {
         };
         if (classroomData.userName != null)
             input.userName = classroomData.userName;
-        const classroom = await this.callGraphQL(mutations_1.updateClassroom, {
-            input,
-        });
+        const classroom = await this.callGraphQL(mutations_1.updateClassroom, { input });
         return (_a = classroom.data) === null || _a === void 0 ? void 0 : _a.updateClassroom;
     }
+    // ── SavedNextStep ──────────────────────────────────────────────────────────
     async createSavedNextStep(classroomId, item) {
         var _a;
         const result = await this.callGraphQL(mutations_1.createSavedNextStep, {
-            input: { ...item, classroomId }
+            input: { ...item, classroomId },
         });
         return (_a = result.data) === null || _a === void 0 ? void 0 : _a.createSavedNextStep;
     }
     async updateSavedNextStep(id, updates) {
         var _a;
         const result = await this.callGraphQL(mutations_1.updateSavedNextStep, {
-            input: { id, ...updates }
+            input: { id, ...updates },
         });
         return (_a = result.data) === null || _a === void 0 ? void 0 : _a.updateSavedNextStep;
     }
     async deleteSavedNextStep(id) {
-        await this.callGraphQL(mutations_1.deleteSavedNextStep, {
-            input: { id }
-        });
+        await this.callGraphQL(mutations_1.deleteSavedNextStep, { input: { id } });
     }
     async listSavedNextSteps(classroomId) {
         var _a, _b, _c;
-        const result = await this.callGraphQL(queries_1.savedNextStepsByClassroomId, {
-            classroomId
-        });
+        const result = await this.callGraphQL(queries_1.savedNextStepsByClassroomId, { classroomId });
         return (_c = (_b = (_a = result.data) === null || _a === void 0 ? void 0 : _a.savedNextStepsByClassroomId) === null || _b === void 0 ? void 0 : _b.items) !== null && _c !== void 0 ? _c : [];
     }
 }

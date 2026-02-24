@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { APIClient } from '@righton/microcoach-api';
 import Header from './components/Header';
 import NavigationTabs from './components/NavigationTabs';
 import StudentRoster from './components/StudentRoster';
@@ -18,6 +19,43 @@ function App() {
   const [nextSteps, setNextSteps] = useState([]);
   const [nextStepsSort, setNextStepsSort] = useState('manual');
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
+
+  useEffect(() => {
+    async function runMicrocoachTest() {
+      const client = new APIClient();
+
+      // 1. Find Grade 6 classroom
+      const classrooms = await client.listClassrooms();
+      const gr6 = classrooms.find((c) => c.grade === 6);
+      console.log('[Microcoach] Grade 6 classroom:', gr6);
+      if (!gr6) { console.warn('[Microcoach] No Grade 6 classroom found'); return; }
+
+      // 2. Get sessions → first session → PPQ assessment
+      const sessions = await client.listSessions(gr6.id);
+      console.log('[Microcoach] Sessions:', sessions);
+      if (!sessions.length) { console.warn('[Microcoach] No sessions found'); return; }
+
+      const session = await client.getSession(sessions[0].id);
+      console.log('[Microcoach] Session (full):', session);
+
+      const ppq = session?.assessments?.items?.find((a) => a.type === 'PPQ');
+      console.log('[Microcoach] PPQ:', ppq);
+
+      // 3. Query CZI knowledge graph using CCSS from PPQ (or session fallback)
+      const ccss = ppq?.ccssStandards?.[0] ?? session?.ccssStandards?.[0];
+      console.log('[Microcoach] CCSS standard:', ccss);
+      if (!ccss) { console.warn('[Microcoach] No CCSS standard found'); return; }
+
+      const learningScienceData = await client.getLearningScienceDataByCCSS(ccss);
+      console.log('[Microcoach] Learning Science data:', learningScienceData);
+
+      // 4. Call microcoachLLM with classroom + learning science data
+      const analytics = await client.getAnalytics({ classroom: gr6, session, ppq }, learningScienceData);
+      console.log('[Microcoach] Analytics (LLM response):', analytics);
+    }
+
+    runMicrocoachTest().catch((err) => console.error('[Microcoach] Error:', err));
+  }, []);
 
   const enrichSavedNextStep = (item) => {
     // Backward compatibility:

@@ -24,112 +24,6 @@ export const createClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
-      learningGaps {
-        items {
-          id
-          classroomId
-          title
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          ccssStandards {
-            targetObjective {
-              standard
-              description
-              __typename
-            }
-            impactedObjectives {
-              standard
-              description
-              __typename
-            }
-            prerequisiteGaps {
-              standard
-              description
-              __typename
-            }
-            __typename
-          }
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomLearningGapsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      savedNextSteps {
-        items {
-          id
-          classroomId
-          status
-          completedAt
-          sortOrder
-          gapGroupId
-          gapGroupTitle
-          targetObjectiveStandard
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          gaps
-          moveId
-          moveTitle
-          moveTime
-          moveFormat
-          moveSummary
-          aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomSavedNextStepsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
       students {
         items {
           id
@@ -148,110 +42,60 @@ export const createClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
-      trends {
-        items {
-          keyInsights {
-            finding
-            targetStandard
-            targetDescription
-            gapStandard
-            gapDescription
-            __typename
-          }
-          studentPerformanceGroups {
-            highPerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            averagePerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            strugglingStudents {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            biggestChanges {
-              name
-              masteryChange
-              misconceptionChange
-              topic
-              __typename
-            }
-            __typename
-          }
-          confidenceIssues {
-            overlyConfident {
-              name
-              topic
-              __typename
-            }
-            underlyConfident {
-              name
-              topic
-              __typename
-            }
-            __typename
-          }
-          id
-          createdAt
-          updatedAt
-          classroomTrendsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      assessments {
+      sessions {
         items {
           id
           classroomId
-          assessmentCode
-          type
+          sessionLabel
           weekNumber
-          administeredAt
           topic
           ccssStandards
-          durationMinutes
-          calculatorAllowed
-          classPercentCorrect
-          questions {
-            questionNumber
-            questionType
-            correctAnswer
-            pointValue
-            ccssStandard
-            classPercentCorrect
-            __typename
-          }
-          sourceAssessmentId
-          studentResponses {
+          status
+          ppqAssessmentId
+          postPpqAssessmentId
+          assessments {
             items {
               id
-              assessmentId
-              studentId
-              totalScore
+              classroomId
+              sessionId
+              assessmentCode
+              type
+              weekNumber
+              administeredAt
+              topic
+              ccssStandards
+              durationMinutes
+              calculatorAllowed
+              classPercentCorrect
+              sourceAssessmentId
               createdAt
               updatedAt
-              assessmentStudentResponsesId
+              sessionAssessmentsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          misconceptions {
+            items {
+              id
+              classroomId
+              sessionId
+              ccssStandard
+              title
+              description
+              aiReasoning
+              studentCount
+              studentPercent
+              severity
+              priority
+              occurrence
+              successIndicators
+              postPpqImprovement
+              createdAt
+              updatedAt
+              classroomMisconceptionsId
+              sessionMisconceptionsId
               __typename
             }
             nextToken
@@ -259,7 +103,135 @@ export const createClassroom = /* GraphQL */ `
           }
           createdAt
           updatedAt
-          classroomAssessmentsId
+          classroomSessionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      savedNextSteps {
+        items {
+          id
+          classroomId
+          activityId
+          status
+          completedAt
+          sortOrder
+          misconceptionId
+          misconceptionTitle
+          targetObjectiveStandard
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          activityTitle
+          activityTime
+          activityFormat
+          activitySummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -284,112 +256,6 @@ export const updateClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
-      learningGaps {
-        items {
-          id
-          classroomId
-          title
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          ccssStandards {
-            targetObjective {
-              standard
-              description
-              __typename
-            }
-            impactedObjectives {
-              standard
-              description
-              __typename
-            }
-            prerequisiteGaps {
-              standard
-              description
-              __typename
-            }
-            __typename
-          }
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomLearningGapsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      savedNextSteps {
-        items {
-          id
-          classroomId
-          status
-          completedAt
-          sortOrder
-          gapGroupId
-          gapGroupTitle
-          targetObjectiveStandard
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          gaps
-          moveId
-          moveTitle
-          moveTime
-          moveFormat
-          moveSummary
-          aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomSavedNextStepsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
       students {
         items {
           id
@@ -408,110 +274,60 @@ export const updateClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
-      trends {
-        items {
-          keyInsights {
-            finding
-            targetStandard
-            targetDescription
-            gapStandard
-            gapDescription
-            __typename
-          }
-          studentPerformanceGroups {
-            highPerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            averagePerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            strugglingStudents {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            biggestChanges {
-              name
-              masteryChange
-              misconceptionChange
-              topic
-              __typename
-            }
-            __typename
-          }
-          confidenceIssues {
-            overlyConfident {
-              name
-              topic
-              __typename
-            }
-            underlyConfident {
-              name
-              topic
-              __typename
-            }
-            __typename
-          }
-          id
-          createdAt
-          updatedAt
-          classroomTrendsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      assessments {
+      sessions {
         items {
           id
           classroomId
-          assessmentCode
-          type
+          sessionLabel
           weekNumber
-          administeredAt
           topic
           ccssStandards
-          durationMinutes
-          calculatorAllowed
-          classPercentCorrect
-          questions {
-            questionNumber
-            questionType
-            correctAnswer
-            pointValue
-            ccssStandard
-            classPercentCorrect
-            __typename
-          }
-          sourceAssessmentId
-          studentResponses {
+          status
+          ppqAssessmentId
+          postPpqAssessmentId
+          assessments {
             items {
               id
-              assessmentId
-              studentId
-              totalScore
+              classroomId
+              sessionId
+              assessmentCode
+              type
+              weekNumber
+              administeredAt
+              topic
+              ccssStandards
+              durationMinutes
+              calculatorAllowed
+              classPercentCorrect
+              sourceAssessmentId
               createdAt
               updatedAt
-              assessmentStudentResponsesId
+              sessionAssessmentsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          misconceptions {
+            items {
+              id
+              classroomId
+              sessionId
+              ccssStandard
+              title
+              description
+              aiReasoning
+              studentCount
+              studentPercent
+              severity
+              priority
+              occurrence
+              successIndicators
+              postPpqImprovement
+              createdAt
+              updatedAt
+              classroomMisconceptionsId
+              sessionMisconceptionsId
               __typename
             }
             nextToken
@@ -519,7 +335,135 @@ export const updateClassroom = /* GraphQL */ `
           }
           createdAt
           updatedAt
-          classroomAssessmentsId
+          classroomSessionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      savedNextSteps {
+        items {
+          id
+          classroomId
+          activityId
+          status
+          completedAt
+          sortOrder
+          misconceptionId
+          misconceptionTitle
+          targetObjectiveStandard
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          activityTitle
+          activityTime
+          activityFormat
+          activitySummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomSavedNextStepsId
           __typename
         }
         nextToken
@@ -544,112 +488,6 @@ export const deleteClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
-      learningGaps {
-        items {
-          id
-          classroomId
-          title
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          ccssStandards {
-            targetObjective {
-              standard
-              description
-              __typename
-            }
-            impactedObjectives {
-              standard
-              description
-              __typename
-            }
-            prerequisiteGaps {
-              standard
-              description
-              __typename
-            }
-            __typename
-          }
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomLearningGapsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      savedNextSteps {
-        items {
-          id
-          classroomId
-          status
-          completedAt
-          sortOrder
-          gapGroupId
-          gapGroupTitle
-          targetObjectiveStandard
-          priority
-          studentCount
-          studentPercent
-          occurrence
-          misconceptionSummary
-          successIndicators
-          gaps
-          moveId
-          moveTitle
-          moveTime
-          moveFormat
-          moveSummary
-          aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          move {
-            id
-            title
-            time
-            format
-            summary
-            aiReasoning
-            tabs {
-              __typename
-            }
-            __typename
-          }
-          createdAt
-          updatedAt
-          classroomSavedNextStepsId
-          __typename
-        }
-        nextToken
-        __typename
-      }
       students {
         items {
           id
@@ -668,82 +506,227 @@ export const deleteClassroom = /* GraphQL */ `
         nextToken
         __typename
       }
-      trends {
+      sessions {
         items {
-          keyInsights {
-            finding
-            targetStandard
-            targetDescription
-            gapStandard
-            gapDescription
-            __typename
-          }
-          studentPerformanceGroups {
-            highPerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            averagePerformers {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            strugglingStudents {
-              name
-              masteryScore
-              previousMastery
-              masteryChange
-              misconceptionScore
-              previousMisconception
-              misconceptionChange
-              __typename
-            }
-            biggestChanges {
-              name
-              masteryChange
-              misconceptionChange
-              topic
-              __typename
-            }
-            __typename
-          }
-          confidenceIssues {
-            overlyConfident {
-              name
-              topic
-              __typename
-            }
-            underlyConfident {
-              name
-              topic
-              __typename
-            }
-            __typename
-          }
           id
+          classroomId
+          sessionLabel
+          weekNumber
+          topic
+          ccssStandards
+          status
+          ppqAssessmentId
+          postPpqAssessmentId
+          assessments {
+            items {
+              id
+              classroomId
+              sessionId
+              assessmentCode
+              type
+              weekNumber
+              administeredAt
+              topic
+              ccssStandards
+              durationMinutes
+              calculatorAllowed
+              classPercentCorrect
+              sourceAssessmentId
+              createdAt
+              updatedAt
+              sessionAssessmentsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          misconceptions {
+            items {
+              id
+              classroomId
+              sessionId
+              ccssStandard
+              title
+              description
+              aiReasoning
+              studentCount
+              studentPercent
+              severity
+              priority
+              occurrence
+              successIndicators
+              postPpqImprovement
+              createdAt
+              updatedAt
+              classroomMisconceptionsId
+              sessionMisconceptionsId
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
-          classroomTrendsId
+          classroomSessionsId
           __typename
         }
         nextToken
         __typename
       }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      savedNextSteps {
+        items {
+          id
+          classroomId
+          activityId
+          status
+          completedAt
+          sortOrder
+          misconceptionId
+          misconceptionTitle
+          targetObjectiveStandard
+          priority
+          studentCount
+          studentPercent
+          occurrence
+          misconceptionSummary
+          successIndicators
+          activityTitle
+          activityTime
+          activityFormat
+          activitySummary
+          aiReasoning
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          createdAt
+          updatedAt
+          classroomSavedNextStepsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createSession = /* GraphQL */ `
+  mutation CreateSession(
+    $input: CreateSessionInput!
+    $condition: ModelSessionConditionInput
+  ) {
+    createSession(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionLabel
+      weekNumber
+      topic
+      ccssStandards
+      status
+      ppqAssessmentId
+      postPpqAssessmentId
       assessments {
         items {
           id
           classroomId
+          sessionId
           assessmentCode
           type
           weekNumber
@@ -762,7 +745,6 @@ export const deleteClassroom = /* GraphQL */ `
             classPercentCorrect
             __typename
           }
-          sourceAssessmentId
           studentResponses {
             items {
               id
@@ -777,9 +759,76 @@ export const deleteClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
+          sourceAssessmentId
           createdAt
           updatedAt
-          classroomAssessmentsId
+          sessionAssessmentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
           __typename
         }
         nextToken
@@ -787,6 +836,275 @@ export const deleteClassroom = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      classroomSessionsId
+      __typename
+    }
+  }
+`;
+export const updateSession = /* GraphQL */ `
+  mutation UpdateSession(
+    $input: UpdateSessionInput!
+    $condition: ModelSessionConditionInput
+  ) {
+    updateSession(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionLabel
+      weekNumber
+      topic
+      ccssStandards
+      status
+      ppqAssessmentId
+      postPpqAssessmentId
+      assessments {
+        items {
+          id
+          classroomId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          sourceAssessmentId
+          createdAt
+          updatedAt
+          sessionAssessmentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomSessionsId
+      __typename
+    }
+  }
+`;
+export const deleteSession = /* GraphQL */ `
+  mutation DeleteSession(
+    $input: DeleteSessionInput!
+    $condition: ModelSessionConditionInput
+  ) {
+    deleteSession(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionLabel
+      weekNumber
+      topic
+      ccssStandards
+      status
+      ppqAssessmentId
+      postPpqAssessmentId
+      assessments {
+        items {
+          id
+          classroomId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          administeredAt
+          topic
+          ccssStandards
+          durationMinutes
+          calculatorAllowed
+          classPercentCorrect
+          questions {
+            questionNumber
+            questionType
+            correctAnswer
+            pointValue
+            ccssStandard
+            classPercentCorrect
+            __typename
+          }
+          studentResponses {
+            items {
+              id
+              assessmentId
+              studentId
+              totalScore
+              createdAt
+              updatedAt
+              assessmentStudentResponsesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          sourceAssessmentId
+          createdAt
+          updatedAt
+          sessionAssessmentsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          classroomId
+          sessionId
+          ccssStandard
+          title
+          description
+          aiReasoning
+          studentCount
+          studentPercent
+          severity
+          priority
+          occurrence
+          successIndicators
+          evidence {
+            source
+            mostCommonError
+            sampleStudentWork
+            aiThinkingPattern
+            __typename
+          }
+          cziComponents {
+            componentId
+            title
+            description
+            gradeLevel
+            moduleIds
+            prerequisiteStandards
+            __typename
+          }
+          activities {
+            items {
+              id
+              misconceptionId
+              classroomId
+              sessionId
+              type
+              status
+              title
+              summary
+              durationMinutes
+              format
+              aiReasoning
+              aiGenerated
+              sourceContextDataIds
+              completedAt
+              postPpqImprovement
+              createdAt
+              updatedAt
+              misconceptionActivitiesId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          postPpqImprovement
+          createdAt
+          updatedAt
+          classroomMisconceptionsId
+          sessionMisconceptionsId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomSessionsId
       __typename
     }
   }
@@ -854,765 +1172,6 @@ export const deleteStudent = /* GraphQL */ `
     }
   }
 `;
-export const createLearningGap = /* GraphQL */ `
-  mutation CreateLearningGap(
-    $input: CreateLearningGapInput!
-    $condition: ModelLearningGapConditionInput
-  ) {
-    createLearningGap(input: $input, condition: $condition) {
-      id
-      classroomId
-      title
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      ccssStandards {
-        targetObjective {
-          standard
-          description
-          __typename
-        }
-        impactedObjectives {
-          standard
-          description
-          __typename
-        }
-        prerequisiteGaps {
-          standard
-          description
-          __typename
-        }
-        __typename
-      }
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
-            __typename
-          }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
-          __typename
-        }
-        __typename
-      }
-      createdAt
-      updatedAt
-      classroomLearningGapsId
-      __typename
-    }
-  }
-`;
-export const updateLearningGap = /* GraphQL */ `
-  mutation UpdateLearningGap(
-    $input: UpdateLearningGapInput!
-    $condition: ModelLearningGapConditionInput
-  ) {
-    updateLearningGap(input: $input, condition: $condition) {
-      id
-      classroomId
-      title
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      ccssStandards {
-        targetObjective {
-          standard
-          description
-          __typename
-        }
-        impactedObjectives {
-          standard
-          description
-          __typename
-        }
-        prerequisiteGaps {
-          standard
-          description
-          __typename
-        }
-        __typename
-      }
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
-            __typename
-          }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
-          __typename
-        }
-        __typename
-      }
-      createdAt
-      updatedAt
-      classroomLearningGapsId
-      __typename
-    }
-  }
-`;
-export const deleteLearningGap = /* GraphQL */ `
-  mutation DeleteLearningGap(
-    $input: DeleteLearningGapInput!
-    $condition: ModelLearningGapConditionInput
-  ) {
-    deleteLearningGap(input: $input, condition: $condition) {
-      id
-      classroomId
-      title
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      ccssStandards {
-        targetObjective {
-          standard
-          description
-          __typename
-        }
-        impactedObjectives {
-          standard
-          description
-          __typename
-        }
-        prerequisiteGaps {
-          standard
-          description
-          __typename
-        }
-        __typename
-      }
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
-            __typename
-          }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
-          __typename
-        }
-        __typename
-      }
-      createdAt
-      updatedAt
-      classroomLearningGapsId
-      __typename
-    }
-  }
-`;
-export const createSavedNextStep = /* GraphQL */ `
-  mutation CreateSavedNextStep(
-    $input: CreateSavedNextStepInput!
-    $condition: ModelSavedNextStepConditionInput
-  ) {
-    createSavedNextStep(input: $input, condition: $condition) {
-      id
-      classroomId
-      status
-      completedAt
-      sortOrder
-      gapGroupId
-      gapGroupTitle
-      targetObjectiveStandard
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      gaps
-      moveId
-      moveTitle
-      moveTime
-      moveFormat
-      moveSummary
-      aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
-            __typename
-          }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
-          __typename
-        }
-        __typename
-      }
-      createdAt
-      updatedAt
-      classroomSavedNextStepsId
-      __typename
-    }
-  }
-`;
-export const updateSavedNextStep = /* GraphQL */ `
-  mutation UpdateSavedNextStep(
-    $input: UpdateSavedNextStepInput!
-    $condition: ModelSavedNextStepConditionInput
-  ) {
-    updateSavedNextStep(input: $input, condition: $condition) {
-      id
-      classroomId
-      status
-      completedAt
-      sortOrder
-      gapGroupId
-      gapGroupTitle
-      targetObjectiveStandard
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      gaps
-      moveId
-      moveTitle
-      moveTime
-      moveFormat
-      moveSummary
-      aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
-            __typename
-          }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
-          __typename
-        }
-        __typename
-      }
-      createdAt
-      updatedAt
-      classroomSavedNextStepsId
-      __typename
-    }
-  }
-`;
-export const deleteSavedNextStep = /* GraphQL */ `
-  mutation DeleteSavedNextStep(
-    $input: DeleteSavedNextStepInput!
-    $condition: ModelSavedNextStepConditionInput
-  ) {
-    deleteSavedNextStep(input: $input, condition: $condition) {
-      id
-      classroomId
-      status
-      completedAt
-      sortOrder
-      gapGroupId
-      gapGroupTitle
-      targetObjectiveStandard
-      priority
-      studentCount
-      studentPercent
-      occurrence
-      misconceptionSummary
-      successIndicators
-      gaps
-      moveId
-      moveTitle
-      moveTime
-      moveFormat
-      moveSummary
-      aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      move {
-        id
-        title
-        time
-        format
-        summary
-        aiReasoning
-        tabs {
-          overview {
-            whatStudentsDo
-            whatYouDo
-            importance
-            __typename
-          }
-          activitySteps {
-            setup
-            problem
-            coreActivity
-            discussionQuestions
-            __typename
-          }
-          materials {
-            required
-            optional
-            __typename
-          }
-          studentGroupings {
-            groups {
-              name
-              description
-              students
-              __typename
-            }
-            highFlyers {
-              students
-              description
-              __typename
-            }
-            aiRecommendation
-            __typename
-          }
-          __typename
-        }
-        __typename
-      }
-      createdAt
-      updatedAt
-      classroomSavedNextStepsId
-      __typename
-    }
-  }
-`;
-export const createClassroomTrend = /* GraphQL */ `
-  mutation CreateClassroomTrend(
-    $input: CreateClassroomTrendInput!
-    $condition: ModelClassroomTrendConditionInput
-  ) {
-    createClassroomTrend(input: $input, condition: $condition) {
-      keyInsights {
-        finding
-        targetStandard
-        targetDescription
-        gapStandard
-        gapDescription
-        __typename
-      }
-      studentPerformanceGroups {
-        highPerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        averagePerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        strugglingStudents {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        biggestChanges {
-          name
-          masteryChange
-          misconceptionChange
-          topic
-          __typename
-        }
-        __typename
-      }
-      confidenceIssues {
-        overlyConfident {
-          name
-          topic
-          __typename
-        }
-        underlyConfident {
-          name
-          topic
-          __typename
-        }
-        __typename
-      }
-      id
-      createdAt
-      updatedAt
-      classroomTrendsId
-      __typename
-    }
-  }
-`;
-export const updateClassroomTrend = /* GraphQL */ `
-  mutation UpdateClassroomTrend(
-    $input: UpdateClassroomTrendInput!
-    $condition: ModelClassroomTrendConditionInput
-  ) {
-    updateClassroomTrend(input: $input, condition: $condition) {
-      keyInsights {
-        finding
-        targetStandard
-        targetDescription
-        gapStandard
-        gapDescription
-        __typename
-      }
-      studentPerformanceGroups {
-        highPerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        averagePerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        strugglingStudents {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        biggestChanges {
-          name
-          masteryChange
-          misconceptionChange
-          topic
-          __typename
-        }
-        __typename
-      }
-      confidenceIssues {
-        overlyConfident {
-          name
-          topic
-          __typename
-        }
-        underlyConfident {
-          name
-          topic
-          __typename
-        }
-        __typename
-      }
-      id
-      createdAt
-      updatedAt
-      classroomTrendsId
-      __typename
-    }
-  }
-`;
-export const deleteClassroomTrend = /* GraphQL */ `
-  mutation DeleteClassroomTrend(
-    $input: DeleteClassroomTrendInput!
-    $condition: ModelClassroomTrendConditionInput
-  ) {
-    deleteClassroomTrend(input: $input, condition: $condition) {
-      keyInsights {
-        finding
-        targetStandard
-        targetDescription
-        gapStandard
-        gapDescription
-        __typename
-      }
-      studentPerformanceGroups {
-        highPerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        averagePerformers {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        strugglingStudents {
-          name
-          masteryScore
-          previousMastery
-          masteryChange
-          misconceptionScore
-          previousMisconception
-          misconceptionChange
-          __typename
-        }
-        biggestChanges {
-          name
-          masteryChange
-          misconceptionChange
-          topic
-          __typename
-        }
-        __typename
-      }
-      confidenceIssues {
-        overlyConfident {
-          name
-          topic
-          __typename
-        }
-        underlyConfident {
-          name
-          topic
-          __typename
-        }
-        __typename
-      }
-      id
-      createdAt
-      updatedAt
-      classroomTrendsId
-      __typename
-    }
-  }
-`;
 export const createAssessment = /* GraphQL */ `
   mutation CreateAssessment(
     $input: CreateAssessmentInput!
@@ -1621,6 +1180,7 @@ export const createAssessment = /* GraphQL */ `
     createAssessment(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       assessmentCode
       type
       weekNumber
@@ -1639,7 +1199,6 @@ export const createAssessment = /* GraphQL */ `
         classPercentCorrect
         __typename
       }
-      sourceAssessmentId
       studentResponses {
         items {
           id
@@ -1661,9 +1220,10 @@ export const createAssessment = /* GraphQL */ `
         nextToken
         __typename
       }
+      sourceAssessmentId
       createdAt
       updatedAt
-      classroomAssessmentsId
+      sessionAssessmentsId
       __typename
     }
   }
@@ -1676,6 +1236,7 @@ export const updateAssessment = /* GraphQL */ `
     updateAssessment(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       assessmentCode
       type
       weekNumber
@@ -1694,7 +1255,6 @@ export const updateAssessment = /* GraphQL */ `
         classPercentCorrect
         __typename
       }
-      sourceAssessmentId
       studentResponses {
         items {
           id
@@ -1716,9 +1276,10 @@ export const updateAssessment = /* GraphQL */ `
         nextToken
         __typename
       }
+      sourceAssessmentId
       createdAt
       updatedAt
-      classroomAssessmentsId
+      sessionAssessmentsId
       __typename
     }
   }
@@ -1731,6 +1292,7 @@ export const deleteAssessment = /* GraphQL */ `
     deleteAssessment(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       assessmentCode
       type
       weekNumber
@@ -1749,7 +1311,6 @@ export const deleteAssessment = /* GraphQL */ `
         classPercentCorrect
         __typename
       }
-      sourceAssessmentId
       studentResponses {
         items {
           id
@@ -1771,9 +1332,10 @@ export const deleteAssessment = /* GraphQL */ `
         nextToken
         __typename
       }
+      sourceAssessmentId
       createdAt
       updatedAt
-      classroomAssessmentsId
+      sessionAssessmentsId
       __typename
     }
   }
@@ -1850,6 +1412,708 @@ export const deleteStudentResponse = /* GraphQL */ `
     }
   }
 `;
+export const createMisconception = /* GraphQL */ `
+  mutation CreateMisconception(
+    $input: CreateMisconceptionInput!
+    $condition: ModelMisconceptionConditionInput
+  ) {
+    createMisconception(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionId
+      ccssStandard
+      title
+      description
+      aiReasoning
+      studentCount
+      studentPercent
+      severity
+      priority
+      occurrence
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      cziComponents {
+        componentId
+        title
+        description
+        gradeLevel
+        moduleIds
+        prerequisiteStandards
+        __typename
+      }
+      activities {
+        items {
+          id
+          misconceptionId
+          classroomId
+          sessionId
+          type
+          status
+          title
+          summary
+          durationMinutes
+          format
+          aiReasoning
+          aiGenerated
+          sourceContextDataIds
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          completedAt
+          postPpqImprovement
+          createdAt
+          updatedAt
+          misconceptionActivitiesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      postPpqImprovement
+      createdAt
+      updatedAt
+      classroomMisconceptionsId
+      sessionMisconceptionsId
+      __typename
+    }
+  }
+`;
+export const updateMisconception = /* GraphQL */ `
+  mutation UpdateMisconception(
+    $input: UpdateMisconceptionInput!
+    $condition: ModelMisconceptionConditionInput
+  ) {
+    updateMisconception(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionId
+      ccssStandard
+      title
+      description
+      aiReasoning
+      studentCount
+      studentPercent
+      severity
+      priority
+      occurrence
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      cziComponents {
+        componentId
+        title
+        description
+        gradeLevel
+        moduleIds
+        prerequisiteStandards
+        __typename
+      }
+      activities {
+        items {
+          id
+          misconceptionId
+          classroomId
+          sessionId
+          type
+          status
+          title
+          summary
+          durationMinutes
+          format
+          aiReasoning
+          aiGenerated
+          sourceContextDataIds
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          completedAt
+          postPpqImprovement
+          createdAt
+          updatedAt
+          misconceptionActivitiesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      postPpqImprovement
+      createdAt
+      updatedAt
+      classroomMisconceptionsId
+      sessionMisconceptionsId
+      __typename
+    }
+  }
+`;
+export const deleteMisconception = /* GraphQL */ `
+  mutation DeleteMisconception(
+    $input: DeleteMisconceptionInput!
+    $condition: ModelMisconceptionConditionInput
+  ) {
+    deleteMisconception(input: $input, condition: $condition) {
+      id
+      classroomId
+      sessionId
+      ccssStandard
+      title
+      description
+      aiReasoning
+      studentCount
+      studentPercent
+      severity
+      priority
+      occurrence
+      successIndicators
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      cziComponents {
+        componentId
+        title
+        description
+        gradeLevel
+        moduleIds
+        prerequisiteStandards
+        __typename
+      }
+      activities {
+        items {
+          id
+          misconceptionId
+          classroomId
+          sessionId
+          type
+          status
+          title
+          summary
+          durationMinutes
+          format
+          aiReasoning
+          aiGenerated
+          sourceContextDataIds
+          tabs {
+            overview {
+              whatStudentsDo
+              whatYouDo
+              importance
+              __typename
+            }
+            activitySteps {
+              setup
+              problem
+              coreActivity
+              discussionQuestions
+              __typename
+            }
+            materials {
+              required
+              optional
+              __typename
+            }
+            studentGroupings {
+              aiRecommendation
+              __typename
+            }
+            __typename
+          }
+          completedAt
+          postPpqImprovement
+          createdAt
+          updatedAt
+          misconceptionActivitiesId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      postPpqImprovement
+      createdAt
+      updatedAt
+      classroomMisconceptionsId
+      sessionMisconceptionsId
+      __typename
+    }
+  }
+`;
+export const createActivity = /* GraphQL */ `
+  mutation CreateActivity(
+    $input: CreateActivityInput!
+    $condition: ModelActivityConditionInput
+  ) {
+    createActivity(input: $input, condition: $condition) {
+      id
+      misconceptionId
+      classroomId
+      sessionId
+      type
+      status
+      title
+      summary
+      durationMinutes
+      format
+      aiReasoning
+      aiGenerated
+      sourceContextDataIds
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
+          __typename
+        }
+        __typename
+      }
+      completedAt
+      postPpqImprovement
+      createdAt
+      updatedAt
+      misconceptionActivitiesId
+      __typename
+    }
+  }
+`;
+export const updateActivity = /* GraphQL */ `
+  mutation UpdateActivity(
+    $input: UpdateActivityInput!
+    $condition: ModelActivityConditionInput
+  ) {
+    updateActivity(input: $input, condition: $condition) {
+      id
+      misconceptionId
+      classroomId
+      sessionId
+      type
+      status
+      title
+      summary
+      durationMinutes
+      format
+      aiReasoning
+      aiGenerated
+      sourceContextDataIds
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
+          __typename
+        }
+        __typename
+      }
+      completedAt
+      postPpqImprovement
+      createdAt
+      updatedAt
+      misconceptionActivitiesId
+      __typename
+    }
+  }
+`;
+export const deleteActivity = /* GraphQL */ `
+  mutation DeleteActivity(
+    $input: DeleteActivityInput!
+    $condition: ModelActivityConditionInput
+  ) {
+    deleteActivity(input: $input, condition: $condition) {
+      id
+      misconceptionId
+      classroomId
+      sessionId
+      type
+      status
+      title
+      summary
+      durationMinutes
+      format
+      aiReasoning
+      aiGenerated
+      sourceContextDataIds
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
+          __typename
+        }
+        __typename
+      }
+      completedAt
+      postPpqImprovement
+      createdAt
+      updatedAt
+      misconceptionActivitiesId
+      __typename
+    }
+  }
+`;
+export const createSavedNextStep = /* GraphQL */ `
+  mutation CreateSavedNextStep(
+    $input: CreateSavedNextStepInput!
+    $condition: ModelSavedNextStepConditionInput
+  ) {
+    createSavedNextStep(input: $input, condition: $condition) {
+      id
+      classroomId
+      activityId
+      status
+      completedAt
+      sortOrder
+      misconceptionId
+      misconceptionTitle
+      targetObjectiveStandard
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      activityTitle
+      activityTime
+      activityFormat
+      activitySummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomSavedNextStepsId
+      __typename
+    }
+  }
+`;
+export const updateSavedNextStep = /* GraphQL */ `
+  mutation UpdateSavedNextStep(
+    $input: UpdateSavedNextStepInput!
+    $condition: ModelSavedNextStepConditionInput
+  ) {
+    updateSavedNextStep(input: $input, condition: $condition) {
+      id
+      classroomId
+      activityId
+      status
+      completedAt
+      sortOrder
+      misconceptionId
+      misconceptionTitle
+      targetObjectiveStandard
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      activityTitle
+      activityTime
+      activityFormat
+      activitySummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomSavedNextStepsId
+      __typename
+    }
+  }
+`;
+export const deleteSavedNextStep = /* GraphQL */ `
+  mutation DeleteSavedNextStep(
+    $input: DeleteSavedNextStepInput!
+    $condition: ModelSavedNextStepConditionInput
+  ) {
+    deleteSavedNextStep(input: $input, condition: $condition) {
+      id
+      classroomId
+      activityId
+      status
+      completedAt
+      sortOrder
+      misconceptionId
+      misconceptionTitle
+      targetObjectiveStandard
+      priority
+      studentCount
+      studentPercent
+      occurrence
+      misconceptionSummary
+      successIndicators
+      activityTitle
+      activityTime
+      activityFormat
+      activitySummary
+      aiReasoning
+      evidence {
+        source
+        mostCommonError
+        sampleStudentWork
+        aiThinkingPattern
+        __typename
+      }
+      tabs {
+        overview {
+          whatStudentsDo
+          whatYouDo
+          importance
+          __typename
+        }
+        activitySteps {
+          setup
+          problem
+          coreActivity
+          discussionQuestions
+          __typename
+        }
+        materials {
+          required
+          optional
+          __typename
+        }
+        studentGroupings {
+          groups {
+            name
+            description
+            students
+            __typename
+          }
+          highFlyers {
+            students
+            description
+            __typename
+          }
+          aiRecommendation
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      classroomSavedNextStepsId
+      __typename
+    }
+  }
+`;
 export const createContextData = /* GraphQL */ `
   mutation CreateContextData(
     $input: CreateContextDataInput!
@@ -1863,6 +2127,7 @@ export const createContextData = /* GraphQL */ `
       weekNumber
       ccssStandards
       assessmentCode
+      isReference
       rtdLesson {
         targetAssessmentCode
         targetQuestionNumbers
@@ -1944,6 +2209,7 @@ export const updateContextData = /* GraphQL */ `
       weekNumber
       ccssStandards
       assessmentCode
+      isReference
       rtdLesson {
         targetAssessmentCode
         targetQuestionNumbers
@@ -2025,6 +2291,7 @@ export const deleteContextData = /* GraphQL */ `
       weekNumber
       ccssStandards
       assessmentCode
+      isReference
       rtdLesson {
         targetAssessmentCode
         targetQuestionNumbers

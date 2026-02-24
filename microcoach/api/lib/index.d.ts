@@ -4,7 +4,15 @@ export declare class APIClient {
     constructor();
     protected callGraphQL<T>(query: any, variables?: Record<string, unknown>): Promise<GraphQLResult<T>>;
     configAmplify(awsconfig: any): void;
+    listClassrooms(): Promise<any>;
     getClassroom(classId: string): Promise<any>;
+    listSessions(classroomId: string): Promise<any>;
+    getSession(sessionId: string): Promise<any>;
+    createMisconception(sessionId: string, item: Record<string, unknown>): Promise<any>;
+    updateMisconception(id: string, updates: Record<string, unknown>): Promise<any>;
+    listActivities(misconceptionId: string): Promise<any>;
+    createActivity(misconceptionId: string, item: Record<string, unknown>): Promise<any>;
+    updateActivity(id: string, updates: Record<string, unknown>): Promise<any>;
     getLearningScienceDataByCCSS(ccss: string): Promise<any>;
     getAnalytics(classroomData: any, learningScienceData: any): Promise<any>;
     updateClassroom(classroomData: any, analytics: string): Promise<any>;
