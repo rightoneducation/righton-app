@@ -66,6 +66,58 @@ export const CLASSROOMS: ClassroomConfig[] = [
           },
         ],
       },
+      {
+        label: 'Session2',
+        weekNumber: 20,
+        topic: 'Dividing Fractions',
+        ccssStandards: ['6.NS.A.1'],
+        ppqFile: 'Classroom1/Session2/PPQ-StudentData.xlsx',
+        postPpqFile: 'Classroom1/Session2/PostPPQ-StudentData.xlsx',
+        rtdFile: null,
+        misconceptions: [
+          {
+            title: 'Inverting the Wrong Fraction',
+            description:
+              'Students invert the dividend (first fraction) instead of the divisor (second fraction) when applying the Keep-Change-Flip strategy for fraction division.',
+            ccssStandard: '6.NS.A.1',
+            severity: 'high',
+            priority: '1',
+            occurrence: 'recurring',
+            successIndicators: [
+              'Student correctly identifies which fraction to invert',
+              'Student writes the reciprocal of the divisor (second fraction)',
+              'Student solves ÷ b/c = a × c/b accurately',
+            ],
+          },
+          {
+            title: 'Skipping Mixed Number Conversion',
+            description:
+              'Students attempt to divide fractions without first converting mixed numbers to improper fractions, leading to computational errors.',
+            ccssStandard: '6.NS.A.1',
+            severity: 'high',
+            priority: '2',
+            occurrence: 'recurring',
+            successIndicators: [
+              'Student converts all mixed numbers to improper fractions before dividing',
+              'Student applies the whole-number × denominator + numerator formula correctly',
+            ],
+          },
+          {
+            title: 'Incorrect Simplification After Division',
+            description:
+              'Students fail to simplify fractions to lowest terms after completing the division operation, or simplify incorrectly by dividing numerator and denominator by different values.',
+            ccssStandard: '6.NS.A.1',
+            severity: 'medium',
+            priority: '3',
+            occurrence: 'recurring',
+            successIndicators: [
+              'Student finds the GCF of numerator and denominator',
+              'Student simplifies both by dividing by the same factor',
+              'Final answer is in simplest form',
+            ],
+          },
+        ],
+      },
     ],
   },
   {

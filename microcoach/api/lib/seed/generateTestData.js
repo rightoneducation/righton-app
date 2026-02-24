@@ -273,7 +273,9 @@ function buildWorksheet(assessmentCode, questions, students, tiers, actualClassP
 // ── Main ─────────────────────────────────────────────────────────────────────
 function main() {
     var _a, _b;
-    const outDir = path.join(seedData_1.DATA_ROOT, 'Classroom1', 'Session1');
+    const outDir = process.argv[2]
+        ? path.resolve(process.argv[2])
+        : path.join(seedData_1.DATA_ROOT, 'Classroom1', 'Session1');
     if (!fs.existsSync(outDir)) {
         fs.mkdirSync(outDir, { recursive: true });
     }

@@ -30,28 +30,51 @@ function App() {
       console.log('[Microcoach] Grade 6 classroom:', gr6);
       if (!gr6) { console.warn('[Microcoach] No Grade 6 classroom found'); return; }
 
-      // 2. Get sessions → first session → PPQ assessment
-      const sessions = await client.listSessions(gr6.id);
-      console.log('[Microcoach] Sessions:', sessions);
-      if (!sessions.length) { console.warn('[Microcoach] No sessions found'); return; }
+      // 2. Get all sessions sorted by weekNumber — last is current, rest are history
+      const sessionStubs = await client.listSessions(gr6.id);
+      console.log('[Microcoach] Session stubs:', sessionStubs);
+      if (!sessionStubs.length) { console.warn('[Microcoach] No sessions found'); return; }
 
-      const session = await client.getSession(sessions[0].id);
-      console.log('[Microcoach] Session (full):', session);
+      const sorted = [...sessionStubs].sort((a, b) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
+      const currentStub = sorted[sorted.length - 1];
+      const historyStubs = sorted.slice(0, sorted.length - 1);
+      console.log('[Microcoach] Current session stub:', currentStub);
+      console.log('[Microcoach] History session stubs:', historyStubs);
 
-      const ppq = session?.assessments?.items?.find((a) => a.type === 'PPQ');
-      console.log('[Microcoach] PPQ:', ppq);
+      // 3. Fetch full details for current session and all history sessions in parallel
+      const [currentSession, ...historySessions] = await Promise.all(
+        [currentStub, ...historyStubs].map((s) => client.getSession(s.id))
+      );
+      console.log('[Microcoach] Current session (full):', currentSession);
+      console.log('[Microcoach] History sessions (full):', historySessions);
 
-      // 3. Query CZI knowledge graph using CCSS from PPQ (or session fallback)
-      const ccss = ppq?.ccssStandards?.[0] ?? session?.ccssStandards?.[0];
+      // 4. Pull PPQ from current session
+      const ppq = currentSession?.assessments?.items?.find((a) => a.type === 'PPQ');
+      console.log('[Microcoach] Current PPQ:', ppq);
+
+      // 5. Query CZI knowledge graph using CCSS from current PPQ (or session fallback)
+      const ccss = ppq?.ccssStandards?.[0] ?? currentSession?.ccssStandards?.[0];
       console.log('[Microcoach] CCSS standard:', ccss);
       if (!ccss) { console.warn('[Microcoach] No CCSS standard found'); return; }
 
-      const learningScienceData = await client.getLearningScienceDataByCCSS(ccss);
+      const learningScienceRaw = await client.getLearningScienceDataByCCSS(ccss);
+      const learningScienceData = typeof learningScienceRaw === 'string' ? JSON.parse(learningScienceRaw) : learningScienceRaw;
       console.log('[Microcoach] Learning Science data:', learningScienceData);
 
-      // 4. Call microcoachLLM with classroom + learning science data
-      const analytics = await client.getAnalytics({ classroom: gr6, session, ppq }, learningScienceData);
-      console.log('[Microcoach] Analytics (LLM response):', analytics);
+      // 6. Call microcoachLLM with classroom + current session + history + learning science
+      const analyticsRaw = await client.getAnalytics(
+        { classroom: gr6, currentSession, sessionHistory: historySessions, ppq },
+        learningScienceData
+      );
+      const analytics = typeof analyticsRaw === 'string' ? JSON.parse(analyticsRaw) : analyticsRaw;
+      console.log('[Microcoach] Analytics — synthesis:', analytics?.synthesis);
+      console.log('[Microcoach] Analytics — keyFindings:', analytics?.keyFindings);
+      console.log('[Microcoach] Analytics — trends:', analytics?.trends);
+      console.log('[Microcoach] Analytics — misconceptions:', analytics?.misconceptions);
+      analytics?.misconceptions?.forEach((m, i) => {
+        console.log(`[Microcoach] Misconception ${i + 1}: ${m.title}`, m);
+        console.log(`[Microcoach] Misconception ${i + 1} RTD Activity:`, m.activity);
+      });
     }
 
     runMicrocoachTest().catch((err) => console.error('[Microcoach] Error:', err));

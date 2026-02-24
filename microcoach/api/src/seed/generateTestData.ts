@@ -293,7 +293,9 @@ function buildWorksheet(
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 function main() {
-  const outDir = path.join(DATA_ROOT, 'Classroom1', 'Session1');
+  const outDir = process.argv[2]
+    ? path.resolve(process.argv[2])
+    : path.join(DATA_ROOT, 'Classroom1', 'Session1');
 
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
