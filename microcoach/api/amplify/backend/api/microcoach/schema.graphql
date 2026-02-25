@@ -277,6 +277,7 @@ input GenerateRTDInput {
   misconception: AWSJSON!
   learningScienceData: AWSJSON!
   classroomContext: AWSJSON
+  contextData: AWSJSON          # Array of ContextData RTD_LESSON records as few-shot examples
 }
 
 type Mutation {

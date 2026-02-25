@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { APIClient } from '@righton/microcoach-api';
+import CircularProgress from '@mui/material/CircularProgress';
 import Header from './components/Header';
 import NavigationTabs from './components/NavigationTabs';
 import StudentRoster from './components/StudentRoster';
-import RecommendedNextSteps, { buildMockGapGroups } from './components/RecommendedNextSteps';
+import RecommendedNextSteps from './components/RecommendedNextSteps';
 import YourNextSteps from './components/YourNextSteps';
 import InterventionPatterns from './components/InterventionPatterns';
 import './App.css';
@@ -19,120 +20,144 @@ function App() {
   const [nextSteps, setNextSteps] = useState([]);
   const [nextStepsSort, setNextStepsSort] = useState('manual');
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState('');
+  const [aiGapGroups, setAiGapGroups] = useState(null);
+  const [classroomStudents, setClassroomStudents] = useState(null);
+
+  const priorityLabel = (p) => ({ '1': 'Critical', '2': 'High', '3': 'Medium', '4': 'Low' }[p] ?? 'Medium');
+  const occurrenceLabel = (o) => o === 'recurring' ? 'Recurring' : '1st occurrence';
+  const formatLabel = (f) => ({ small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' }[f] ?? f);
+
+  const buildGapGroups = (misconceptions, activities, ppqQuestions) => {
+    const questionErrorRates = (ppqQuestions ?? [])
+      .filter((q) => q.questionNumber != null && q.classPercentCorrect != null)
+      .sort((a, b) => a.questionNumber - b.questionNumber)
+      .map((q) => ({
+        label: `Q${q.questionNumber}`,
+        errorRate: Math.round((1 - q.classPercentCorrect) * 100),
+      }));
+
+    return misconceptions.map((m, i) => {
+      const activity = activities[i];
+      return {
+        id: `gapgroup-ai-${i + 1}`,
+        title: m.title,
+        priority: priorityLabel(m.priority),
+        studentCount: m.studentCount ?? 0,
+        studentPercent: Math.round((m.studentPercent ?? 0) * 100),
+        occurrence: occurrenceLabel(m.occurrence),
+        misconceptionSummary: m.description,
+        successIndicators: m.successIndicators ?? [],
+        ccssStandards: {
+          targetObjective: { standard: m.ccssStandard, description: m.description },
+          impactedObjectives: [],
+          prerequisiteGaps: [],
+        },
+        evidence: m.evidence ?? null,
+        questionErrorRates,
+        move: activity ? {
+          id: `move-ai-${i + 1}`,
+          title: activity.title,
+          time: `${activity.durationMinutes} min`,
+          format: formatLabel(activity.format),
+          summary: activity.summary,
+          aiReasoning: activity.aiReasoning,
+          tabs: activity.tabs ?? null,
+        } : null,
+      };
+    });
+  };
 
   useEffect(() => {
-    async function runMicrocoachTest() {
-      const client = new APIClient();
+    let cancelled = false;
 
-      // 1. Find Grade 6 classroom
-      const classrooms = await client.listClassrooms();
-      const gr6 = classrooms.find((c) => c.grade === 6);
-      console.log('[Microcoach] Grade 6 classroom:', gr6);
-      if (!gr6) { console.warn('[Microcoach] No Grade 6 classroom found'); return; }
+    async function runMicrocoachFetch() {
+      setIsLoading(true);
+      setLoadingStatus('Analyzing Class Data...');
+      try {
+        const client = new APIClient();
 
-      // 2. Get all sessions sorted by weekNumber — last is current, rest are history
-      const sessionStubs = await client.listSessions(gr6.id);
-      console.log('[Microcoach] Session stubs:', sessionStubs);
-      if (!sessionStubs.length) { console.warn('[Microcoach] No sessions found'); return; }
+        const classrooms = await client.listClassrooms();
+        const gr6 = classrooms.find((c) => c.grade === 6);
+        if (!gr6) return;
 
-      const sorted = [...sessionStubs].sort((a, b) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
-      const currentStub = sorted[sorted.length - 1];
-      const historyStubs = sorted.slice(0, sorted.length - 1);
-      console.log('[Microcoach] Current session stub:', currentStub);
-      console.log('[Microcoach] History session stubs:', historyStubs);
+        if (cancelled) return;
+        if (gr6.students?.items?.length) {
+          setClassroomStudents(gr6.students.items);
+        }
 
-      // 3. Fetch full details for current session and all history sessions in parallel
-      const [currentSession, ...historySessions] = await Promise.all(
-        [currentStub, ...historyStubs].map((s) => client.getSession(s.id))
-      );
-      console.log('[Microcoach] Current session (full):', currentSession);
-      console.log('[Microcoach] History sessions (full):', historySessions);
+        const sessionStubs = await client.listSessions(gr6.id);
+        if (!sessionStubs.length) return;
 
-      // 4. Pull PPQ from current session
-      const ppq = currentSession?.assessments?.items?.find((a) => a.type === 'PPQ');
-      console.log('[Microcoach] Current PPQ:', ppq);
+        const sorted = [...sessionStubs].sort((a, b) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
+        const currentStub = sorted[sorted.length - 1];
+        const historyStubs = sorted.slice(0, sorted.length - 1);
 
-      // 5. Query CZI knowledge graph using CCSS from current PPQ (or session fallback)
-      const ccss = ppq?.ccssStandards?.[0] ?? currentSession?.ccssStandards?.[0];
-      console.log('[Microcoach] CCSS standard:', ccss);
-      if (!ccss) { console.warn('[Microcoach] No CCSS standard found'); return; }
+        const [currentSession, ...historySessions] = await Promise.all(
+          [currentStub, ...historyStubs].map((s) => client.getSession(s.id))
+        );
 
-      const learningScienceRaw = await client.getLearningScienceDataByCCSS(ccss);
-      const learningScienceData = typeof learningScienceRaw === 'string' ? JSON.parse(learningScienceRaw) : learningScienceRaw;
-      console.log('[Microcoach] Learning Science data:', learningScienceData);
+        const ppq = currentSession?.assessments?.items?.find((a) => a.type === 'PPQ');
+        const ccss = ppq?.ccssStandards?.[0] ?? currentSession?.ccssStandards?.[0];
+        if (!ccss) return;
 
-      // 6. Stage 1 — analyze classroom data → synthesis + misconceptions (no activities yet)
-      const analysisRaw = await client.getAnalysis(
-        { classroom: gr6, currentSession, sessionHistory: historySessions, ppq },
-        learningScienceData
-      );
-      const analysis = typeof analysisRaw === 'string' ? JSON.parse(analysisRaw) : analysisRaw;
-      console.log('[Microcoach] Analysis — synthesis:', analysis?.synthesis);
-      console.log('[Microcoach] Analysis — keyFindings:', analysis?.keyFindings);
-      console.log('[Microcoach] Analysis — trends:', analysis?.trends);
-      console.log('[Microcoach] Analysis — misconceptions:', analysis?.misconceptions);
+        const learningScienceRaw = await client.getLearningScienceDataByCCSS(ccss);
+        const learningScienceData = typeof learningScienceRaw === 'string' ? JSON.parse(learningScienceRaw) : learningScienceRaw;
 
-      // 7. Stage 2 — generate RTD activity for each misconception in parallel
-      const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
-      const misconceptions = analysis?.misconceptions ?? [];
-      const activities = await Promise.all(
-        misconceptions.map((m) => client.generateRTD(m, learningScienceData, classroomContext)
-          .then((raw) => typeof raw === 'string' ? JSON.parse(raw) : raw)
-          .catch((err) => { console.error(`[Microcoach] RTD generation failed for "${m.title}":`, err); return null; })
-        )
-      );
-      misconceptions.forEach((m, i) => {
-        console.log(`[Microcoach] Misconception ${i + 1}: ${m.title}`, m);
-        console.log(`[Microcoach] Misconception ${i + 1} RTD Activity:`, activities[i]);
-      });
+        if (cancelled) return;
+        setLoadingStatus('Detecting Misconceptions...');
+        const analysisRaw = await client.getAnalysis(
+          { classroom: gr6, currentSession, sessionHistory: historySessions, ppq },
+          learningScienceData
+        );
+        const analysis = typeof analysisRaw === 'string' ? JSON.parse(analysisRaw) : analysisRaw;
+
+        const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
+        const misconceptions = analysis?.misconceptions ?? [];
+
+        if (cancelled) return;
+        setLoadingStatus("Generating RTD's...");
+        const rtdExamples = await client.listRTDExamples();
+
+        const activities = await Promise.all(
+          misconceptions.map((m) => {
+            const relevant = rtdExamples.filter((ex) =>
+              !ex.ccssStandards?.length ||
+              ex.ccssStandards.some((s) => s === m.ccssStandard || s.startsWith(m.ccssStandard?.split('.')[0]))
+            );
+            return client.generateRTD(m, learningScienceData, classroomContext, relevant.length ? relevant : rtdExamples)
+              .then((raw) => typeof raw === 'string' ? JSON.parse(raw) : raw)
+              .catch(() => null);
+          })
+        );
+
+        if (!cancelled) setAiGapGroups(buildGapGroups(misconceptions, activities, ppq?.questions));
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+          setLoadingStatus('');
+        }
+      }
     }
 
-    runMicrocoachTest().catch((err) => console.error('[Microcoach] Error:', err));
+    runMicrocoachFetch();
+    return () => { cancelled = true; };
   }, []);
 
   const enrichSavedNextStep = (item) => {
-    // Backward compatibility:
-    // - Older saved items may not include the rich `move` object (with `tabs`) or
-    //   some gap-group fields needed for the Full View modal.
-    // - We enrich from the current mock catalog when possible.
     try {
-      const gapGroups = buildMockGapGroups();
-      const match = gapGroups.find((g) => g.id === item?.gapGroupId && g.move?.id === item?.moveId);
-
-      const fallbackMove = item?.move
-        ? item.move
-        : {
-            id: item?.moveId,
-            title: item?.moveTitle,
-            time: item?.moveTime,
-            format: item?.moveFormat,
-            summary: item?.moveSummary,
-            aiReasoning: item?.aiReasoning,
-            tabs: undefined
-          };
-
-      const enrichedMove = match?.move
-        ? {
-            id: match.move.id,
-            title: match.move.title,
-            time: match.move.time,
-            format: match.move.format,
-            summary: match.move.summary,
-            aiReasoning: match.move.aiReasoning,
-            tabs: match.move.tabs
-          }
-        : fallbackMove;
-
       return {
         ...item,
-        // Only fill if missing on the saved item
-        occurrence: item?.occurrence ?? match?.occurrence,
-        misconceptionSummary: item?.misconceptionSummary ?? match?.misconceptionSummary,
-        successIndicators: item?.successIndicators ?? match?.successIndicators,
-        targetObjectiveStandard:
-          item?.targetObjectiveStandard ?? match?.ccssStandards?.targetObjective?.standard,
-        // Ensure we always have a `move` object for the modal
-        move: enrichedMove
+        move: item?.move ?? {
+          id: item?.moveId,
+          title: item?.moveTitle,
+          time: item?.moveTime,
+          format: item?.moveFormat,
+          summary: item?.moveSummary,
+          aiReasoning: item?.aiReasoning,
+          tabs: undefined,
+        },
       };
     } catch {
       return item;
@@ -310,7 +335,6 @@ function App() {
 
   const handleExportSummary = () => {
     // Handle export functionality
-    console.log('Exporting summary...');
   };
 
   const handleTabChange = (tab) => {
@@ -374,10 +398,21 @@ function App() {
 
             {activeOverviewSection === 'Recommended Next Steps' && (
               <div className="remediation-section">
-                <RecommendedNextSteps
-                  onAddNextStep={addNextStep}
-                  existingNextSteps={nextSteps}
-                />
+                {isLoading && (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '48px 0' }}>
+                    <CircularProgress />
+                    {loadingStatus && (
+                      <span style={{ fontSize: '14px', color: '#6b7280' }}>{loadingStatus}</span>
+                    )}
+                  </div>
+                )}
+                {!isLoading && (
+                  <RecommendedNextSteps
+                    onAddNextStep={addNextStep}
+                    existingNextSteps={nextSteps}
+                    gapGroups={aiGapGroups ?? undefined}
+                  />
+                )}
               </div>
             )}
 
@@ -409,7 +444,7 @@ function App() {
         
         {activeTab === 'Students' && (
           <div className="students-content">
-            <StudentRoster />
+            <StudentRoster students={classroomStudents} />
           </div>
         )}
         

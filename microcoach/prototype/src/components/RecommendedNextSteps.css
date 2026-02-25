@@ -2509,9 +2509,156 @@
   .back-controls {
     margin-top: 8px;
   }
-  
+
   .back-btn {
     padding: 6px 10px;
     font-size: 13px;
   }
+}
+
+/* Evidence Journey — Data-driven screen styles */
+.impact-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.stat-card-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.stat-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.stat-card-sub {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.misconception-description,
+.thinking-pattern,
+.most-common-error,
+.ai-analysis,
+.why-matters,
+.ai-reasoning {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.misconception-description h5,
+.thinking-pattern h5,
+.most-common-error h5,
+.ai-analysis h5,
+.why-matters h5,
+.ai-reasoning h5 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.misconception-description p,
+.thinking-pattern p,
+.most-common-error p,
+.ai-analysis p,
+.why-matters p,
+.ai-reasoning p {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.work-samples h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.no-samples {
+  font-size: 13px;
+  color: #9ca3af;
+  font-style: italic;
+  margin: 0;
+}
+
+.success-indicators {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.success-indicators h5 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #166534;
+}
+
+.success-checklist {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.success-indicator-item {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #166534;
+  line-height: 1.5;
+}
+
+.target-standard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.target-standard h5 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.chart-bar-flagged {
+  background: linear-gradient(to top, #dc2626, #ef4444) !important;
+}
+
+.chart-label-flagged {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.target-standard-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.standard-description {
+  font-size: 13px;
+  color: #475569;
 }

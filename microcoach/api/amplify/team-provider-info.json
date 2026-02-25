@@ -26,7 +26,7 @@
         },
         "microcoachLLMGeneration": {
           "deploymentBucketName": "amplify-microcoach-dev-112447-deployment",
-          "s3Key": "amplify-builds/microcoachLLMGeneration-4965482b522f354b3542-build.zip"
+          "s3Key": "amplify-builds/microcoachLLMGeneration-69704d596c4862422f77-build.zip"
         }
       }
     }

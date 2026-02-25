@@ -1,482 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './RecommendedNextSteps.css';
 
-// Mock: learning-gap groups and their respective next step activities.
-// This is intentionally frontend-only scaffolding that we can later swap to real API/CSV-backed data.
-export const buildMockGapGroups = () => {
-  return [
-    {
-      id: 'gapgroup-1',
-      title: 'Negative signs & distribution errors',
-      priority: 'Critical',
-      studentCount: 18,
-      studentPercent: 72,
-      occurrence: '1st occurrence',
-      misconceptionSummary: 'Students incorrectly distribute negative signs, treating them as attached to only one term. In 3(2x - 4), they calculate 6x - 4 instead of 6x - 12.',
-      successIndicators: [
-        'Correctly distribute negative signs to all terms within parentheses',
-        'Accurately combine like terms with proper sign handling',
-        'Apply inverse operations correctly in multi-step equations'
-      ],
-      ccssStandards: {
-        targetObjective: {
-          standard: '8.EE.7',
-          description: 'Solve linear equations in one variable'
-        },
-        impactedObjectives: [
-          {
-            standard: '8.EE.8',
-            description: 'Analyze and solve systems of linear equations'
-          },
-          {
-            standard: 'A.SSE.1',
-            description: 'Interpret expressions that represent a quantity'
-          }
-        ],
-        prerequisiteGaps: [
-          {
-            standard: '6.EE.3',
-            description: 'Apply properties of operations to generate equivalent expressions'
-          },
-          {
-            standard: '7.NS.1',
-            description: 'Apply properties of operations with rational numbers'
-          }
-        ]
-      },
-      evidence: {
-        source: 'Daily Practice Problems',
-        mostCommonError: '3(2x - 4) → 6x - 4 (missed distribution to -4)',
-        sampleStudentWork: [
-          'Student A: 3(2x - 4) = 18 → 6x - 4 = 18 → 6x = 22',
-          'Student B: 3(2x - 4) = 18 → 6x - 12 = 18 → 6x = 30 → x = 5 ✓'
-        ],
-        aiThinkingPattern: 'Students appear to treat the negative as "attached" to the 4, rather than a term that also must be multiplied.'
-      },
-      move: {
-        id: 'move-1',
-        title: 'Whole-class worked example + error spotlight',
-        time: '20–30 min',
-        format: 'Whole class → pairs',
-        summary: 'Solve one canonical problem together and explicitly compare the common incorrect step to the correct one.',
-        aiReasoning: 'A single high-frequency misconception suggests a worked example with targeted error analysis will give the fastest correction.',
-        // New tab content
-        tabs: {
-          overview: {
-            whatStudentsDo: 'Students will observe a worked example of distributing negative signs, then identify and correct common errors in similar problems.',
-            whatYouDo: 'Model the correct distribution process step-by-step, explicitly highlighting where the negative sign applies to all terms.',
-            importance: 'This misconception prevents students from correctly solving multi-step equations, which is foundational for all higher-level algebra.'
-          },
-          activitySteps: {
-            setup: [
-              'Prepare whiteboard or digital display with example problems',
-              'Create error analysis worksheet with common mistakes',
-              'Prepare student response cards or digital polling'
-            ],
-            problem: '3(2x - 4) = 18',
-            coreActivity: [
-              'Solve the problem correctly step-by-step on the board',
-              'Show the common incorrect approach (6x - 4 = 18)',
-              'Have students identify where the error occurs',
-              'Practice additional problems in pairs with error analysis'
-            ],
-            discussionQuestions: [
-              'Why does the negative sign need to be distributed to both terms?',
-              'What happens if we only distribute to the first term?',
-              'How can we check our work to ensure we distributed correctly?'
-            ]
-          },
-          studentGroupings: {
-            groups: [
-              {
-                name: 'Distribution Confusion (12 students)',
-                description: 'Students who multiply the coefficient by only the first term inside parentheses',
-                students: ['Alex J.', 'Brianna M.', 'Carlos S.', 'Diana L.', 'Ethan K.', 'Fiona P.', 'George R.', 'Hannah T.', 'Isaac W.', 'Julia B.', 'Kevin D.', 'Laura F.']
-              },
-              {
-                name: 'Sign Neglect (6 students)',
-                description: 'Students who forget to distribute the negative sign entirely',
-                students: ['Michael C.', 'Natalie G.', 'Oliver H.', 'Patricia N.', 'Quentin O.', 'Rachel V.']
-              }
-            ],
-            highFlyers: {
-              students: ['Samuel A.', 'Tina E.', 'Victor M.'],
-              description: 'These students can work on extension problems involving multiple distributions or create their own error analysis examples.'
-            },
-            aiRecommendation: 'Start with whole-class instruction, then have high flyers work with struggling students in pairs. Focus on the Distribution Confusion group first, as they have the most fundamental misunderstanding.'
-          },
-          materials: {
-            required: [
-              'Whiteboard or digital display',
-              'Error analysis worksheets',
-              'Student response cards or digital polling tools',
-              'Practice problems with answer key'
-            ],
-            optional: [
-              'Algebra tiles for visual representation',
-              'Online interactive distribution tools',
-              'Exit tickets for formative assessment'
-            ]
-          }
-        }
-      }
-    },
-    {
-      id: 'gapgroup-2',
-      title: 'Adding fractions & finding common denominators',
-      priority: 'High',
-      studentCount: 9,
-      studentPercent: 36,
-      occurrence: '2nd occurrence',
-      misconceptionSummary: 'Students incorrectly add fractions by adding both numerators and denominators. In x/3 + x/4, they calculate 2x/7 instead of finding the common denominator and getting 7x/12.',
-      successIndicators: [
-        'Correctly find common denominators before adding fractions',
-        'Accurately convert fractions to equivalent forms with common denominators',
-        'Properly add numerators while keeping the common denominator'
-      ],
-      ccssStandards: {
-        targetObjective: {
-          standard: '5.NF.1',
-          description: 'Add and subtract fractions with unlike denominators'
-        },
-        impactedObjectives: [
-          {
-            standard: '5.NF.2',
-            description: 'Solve word problems involving addition and subtraction of fractions'
-          },
-          {
-            standard: '6.NS.1',
-            description: 'Interpret and compute quotients of fractions'
-          }
-        ],
-        prerequisiteGaps: [
-          {
-            standard: '4.NF.1',
-            description: 'Explain why a fraction a/b is equivalent to a fraction (n × a)/(n × b)'
-          },
-          {
-            standard: '4.NF.2',
-            description: 'Compare two fractions with different numerators and different denominators'
-          }
-        ]
-      },
-      evidence: {
-        source: 'Algebraic Fractions Assessment',
-        mostCommonError: 'x/3 + x/4 → 2x/7',
-        sampleStudentWork: [
-          'Student C: x/3 + x/4 = (x+x)/(3+4) = 2x/7',
-          'Student D: x/3 + x/4 = 4x/12 + 3x/12 = 7x/12 ✓'
-        ],
-        aiThinkingPattern: 'Students are over-generalizing "add tops and bottoms" from other fraction contexts.'
-      },
-      move: {
-        id: 'move-2',
-        title: 'Visual fraction model + LCD routine',
-        time: '20 min',
-        format: 'Whole class',
-        summary: 'Use bar models to justify LCD before symbolic steps.',
-        aiReasoning: 'Models make denominator meaning explicit and reduce procedural "shortcutting."',
-        // New tab content
-        tabs: {
-          overview: {
-            whatStudentsDo: 'Students will use visual fraction models to understand why common denominators are necessary, then practice the LCD procedure.',
-            whatYouDo: 'Demonstrate fraction addition using bar models, explicitly showing why denominators must be the same before adding.',
-            importance: 'Without understanding common denominators, students cannot add fractions correctly, which is essential for algebraic operations and higher math.'
-          },
-          activitySteps: {
-            setup: [
-              'Prepare fraction bar templates or digital fraction models',
-              'Create practice problems with varying denominators',
-              'Prepare guided notes with LCD procedure'
-            ],
-            problem: 'x/3 + x/4',
-            coreActivity: [
-              'Show fraction bars representing 1/3 and 1/4',
-              'Demonstrate why we need twelfths to add them',
-              'Guide students through finding LCD of 3 and 4',
-              'Practice converting fractions to equivalent forms',
-              'Add the numerators while keeping the common denominator'
-            ],
-            discussionQuestions: [
-              'Why can\'t we add 1/3 + 1/4 directly?',
-              'What does the common denominator represent?',
-              'How do we know our answer is in simplest form?'
-            ]
-          },
-          studentGroupings: {
-            groups: [
-              {
-                name: 'Denominator Addition (5 students)',
-                description: 'Students who add both numerators and denominators together',
-                students: ['Andrew L.', 'Bethany R.', 'Christopher M.', 'Danielle S.', 'Eric T.']
-              },
-              {
-                name: 'Random Denominator (4 students)',
-                description: 'Students who pick one of the denominators without finding LCD',
-                students: ['Faith K.', 'Gregory P.', 'Haley W.', 'Ian B.']
-              }
-            ],
-            highFlyers: {
-              students: ['Julia C.', 'Kevin D.', 'Laura E.'],
-              description: 'These students can work on problems with three or more fractions or create visual models for the class.'
-            },
-            aiRecommendation: 'Use visual models extensively with the Denominator Addition group. Have high flyers create their own fraction addition problems for the class to solve.'
-          },
-          materials: {
-            required: [
-              'Fraction bar templates or digital fraction models',
-              'Practice worksheets with answer key',
-              'Guided notes with LCD procedure',
-              'Colored pencils or markers'
-            ],
-            optional: [
-              'Fraction manipulatives',
-              'Online fraction addition games',
-              'Exit tickets for assessment'
-            ]
-          }
-        }
-      }
-    },
-    {
-      id: 'gapgroup-3',
-      title: 'Order of operations confusion',
-      priority: 'Medium',
-      studentCount: 7,
-      studentPercent: 28,
-      occurrence: '3rd occurrence',
-      misconceptionSummary: 'Students incorrectly apply order of operations, evaluating expressions left-to-right instead of following PEMDAS. In 2x² + 3x when x=4, they calculate 2×4² + 3×4 = 8² + 12 = 76 instead of 2×16 + 12 = 44.',
-      successIndicators: [
-        'Correctly apply order of operations (PEMDAS) in multi-step expressions',
-        'Evaluate exponents before multiplication and addition',
-        'Use parentheses to clarify operation order when needed'
-      ],
-      ccssStandards: {
-        targetObjective: {
-          standard: '6.EE.1',
-          description: 'Write and evaluate numerical expressions involving whole-number exponents'
-        },
-        impactedObjectives: [
-          {
-            standard: '6.EE.2',
-            description: 'Write, read, and evaluate expressions in which letters stand for numbers'
-          },
-          {
-            standard: '7.EE.3',
-            description: 'Solve multi-step real-life problems using numerical and algebraic expressions'
-          }
-        ],
-        prerequisiteGaps: [
-          {
-            standard: '5.OA.1',
-            description: 'Use parentheses, brackets, or braces in numerical expressions'
-          },
-          {
-            standard: '5.OA.2',
-            description: 'Write simple expressions that record calculations with numbers'
-          }
-        ]
-      },
-      evidence: {
-        source: 'Order of Operations Quiz',
-        mostCommonError: '2x² + 3x → 2×4² + 3×4 = 8² + 12 = 76 (evaluating left-to-right)',
-        sampleStudentWork: [
-          'Student E: 2(4)² + 3(4) = 8² + 12 = 64 + 12 = 76',
-          'Student F: 2(4)² + 3(4) = 2(16) + 12 = 32 + 12 = 44 ✓'
-        ],
-        aiThinkingPattern: 'Students are applying operations in left-to-right order rather than following the correct hierarchy of operations.'
-      },
-      move: {
-        id: 'move-3',
-        title: 'Order of operations error analysis debate',
-        time: '15 min',
-        format: 'Whole class',
-        summary: 'Present both correct and incorrect solutions side by side. Have students debate which is right and explain their reasoning using mathematical evidence.',
-        aiReasoning: 'Explicit comparison of correct vs incorrect approaches helps students internalize the proper order of operations.',
-        // New tab content
-        tabs: {
-          overview: {
-            whatStudentsDo: 'Students will analyze correct and incorrect solutions, identify the errors, and defend the correct approach using mathematical reasoning.',
-            whatYouDo: 'Present side-by-side solutions, facilitate debate, and guide students to discover the correct order of operations.',
-            importance: 'Order of operations is fundamental to all mathematical calculations and prevents ambiguity in expressions.'
-          },
-          activitySteps: {
-            setup: [
-              'Prepare problem sets with common order of operations errors',
-              'Create debate format with clear roles',
-              'Prepare visual aids showing correct order'
-            ],
-            problem: '2x² + 3x when x=4',
-            coreActivity: [
-              'Show both correct and incorrect solutions side by side',
-              'Have students identify where the error occurs',
-              'Facilitate debate between "correct" and "incorrect" approaches',
-              'Guide students to discover why exponents come before multiplication',
-              'Practice additional problems with immediate feedback'
-            ],
-            discussionQuestions: [
-              'Why does 2(4)² equal 32 and not 64?',
-              'What would happen if we always went left to right?',
-              'How do parentheses change the order of operations?'
-            ]
-          },
-          studentGroupings: {
-            groups: [
-              {
-                name: 'Left-to-Right (4 students)',
-                description: 'Students who evaluate expressions strictly from left to right',
-                students: ['Jack M.', 'Karen L.', 'Mark R.', 'Nancy S.']
-              },
-              {
-                name: 'Exponent Confusion (3 students)',
-                description: 'Students who don\'t understand that exponents apply only to their base',
-                students: ['Oliver P.', 'Patricia W.', 'Quentin B.']
-              }
-            ],
-            highFlyers: {
-              students: ['Rachel C.', 'Steven D.', 'Tina E.'],
-              description: 'These students can create their own order of operations problems with intentional errors for classmates to find.'
-            },
-            aiRecommendation: 'Focus on the Left-to-Right group with explicit PEMDAS instruction. Use the Exponent Confusion group for targeted practice with exponent rules.'
-          },
-          materials: {
-            required: [
-              'Problem sets with common errors',
-              'Debate format guidelines',
-              'Visual aids showing correct order',
-              'Practice worksheets'
-            ],
-            optional: [
-              'Order of operations games',
-              'Digital interactive tools',
-              'Exit tickets for assessment'
-            ]
-          }
-        }
-      }
-    },
-    {
-      id: 'gapgroup-4',
-      title: 'Variable isolation errors',
-      priority: 'Medium',
-      studentCount: 6,
-      studentPercent: 24,
-      occurrence: '4th occurrence',
-      misconceptionSummary: 'Students incorrectly isolate variables by performing inverse operations incorrectly or forgetting to apply operations to both sides. In 4x = 12, they calculate x = 12 × 4 = 48 instead of x = 12 ÷ 4 = 3.',
-      successIndicators: [
-        'Correctly apply inverse operations to isolate variables',
-        'Perform the same operation on both sides of the equation',
-        'Verify solutions by substitution'
-      ],
-      ccssStandards: {
-        targetObjective: {
-          standard: '6.EE.5',
-          description: 'Understand solving an equation as a process of answering a question'
-        },
-        impactedObjectives: [
-          {
-            standard: '6.EE.7',
-            description: 'Solve real-world problems by writing and solving equations'
-          },
-          {
-            standard: '7.EE.4',
-            description: 'Use variables to represent quantities in real-world problems'
-          }
-        ],
-        prerequisiteGaps: [
-          {
-            standard: '3.OA.4',
-            description: 'Determine the unknown whole number in a multiplication or division equation'
-          },
-          {
-            standard: '3.OA.6',
-            description: 'Understand division as an unknown-factor problem'
-          }
-        ]
-      },
-      evidence: {
-        source: 'Equation Solving Assessment',
-        mostCommonError: '4x = 12 → x = 12 × 4 = 48 (multiplying instead of dividing)',
-        sampleStudentWork: [
-          'Student G: 4x = 12 → x = 12 × 4 = 48',
-          'Student H: 4x = 12 → x = 12 ÷ 4 = 3 ✓'
-        ],
-        aiThinkingPattern: 'Students are confusing inverse operations and not maintaining equation balance.'
-      },
-      move: {
-        id: 'move-4',
-        title: 'Balance scale visualization + algebraic connection',
-        time: '20 min',
-        format: 'Small groups',
-        summary: 'Use physical or visual balance scales to demonstrate equation solving, then connect to algebraic notation.',
-        aiReasoning: 'Concrete representations help students understand the abstract concept of equation balance and inverse operations.',
-        // New tab content
-        tabs: {
-          overview: {
-            whatStudentsDo: 'Students will use balance scale models to understand equation balance, then translate this understanding to algebraic notation.',
-            whatYouDo: 'Demonstrate equation solving with balance scales, explicitly showing that operations must be performed on both sides.',
-            importance: 'Understanding equation balance is fundamental to solving all types of equations and maintaining mathematical equality.'
-          },
-          activitySteps: {
-            setup: [
-              'Prepare balance scale models or digital balance simulations',
-              'Create equation cards for practice',
-              'Prepare guided practice worksheets'
-            ],
-            problem: '4x = 12',
-            coreActivity: [
-              'Show balance scale with 4x on one side and 12 on the other',
-              'Demonstrate dividing both sides by 4 to isolate x',
-              'Connect physical action to algebraic notation',
-              'Practice additional problems in small groups',
-              'Verify solutions by substitution'
-            ],
-            discussionQuestions: [
-              'Why must we do the same thing to both sides of the equation?',
-              'What does the balance scale represent?',
-              'How do we know our solution is correct?'
-            ]
-          },
-          studentGroupings: {
-            groups: [
-              {
-                name: 'Inverse Operation Confusion (4 students)',
-                description: 'Students who apply the wrong inverse operation',
-                students: ['Uma J.', 'Victor K.', 'Wendy L.', 'Xavier M.']
-              },
-              {
-                name: 'One-Sided Operations (2 students)',
-                description: 'Students who forget to apply operations to both sides',
-                students: ['Yvonne N.', 'Zachary O.']
-              }
-            ],
-            highFlyers: {
-              students: ['Alice P.', 'Brian Q.', 'Catherine R.'],
-              description: 'These students can work on multi-step equations or create balance scale models for the class.'
-            },
-            aiRecommendation: 'Use extensive visual aids with the Inverse Operation Confusion group. Pair high flyers with struggling students for peer teaching.'
-          },
-          materials: {
-            required: [
-              'Balance scale models or digital simulations',
-              'Equation practice cards',
-              'Guided practice worksheets',
-              'Algebra tiles (optional)'
-            ],
-            optional: [
-              'Interactive equation solving apps',
-              'Exit tickets for assessment',
-              'Extension problems for advanced students'
-            ]
-          }
-        }
-      }
-    }
-  ];
-};
-
-const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
-  const [gapGroups, setGapGroups] = useState(buildMockGapGroups);
+const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups: gapGroupsProp }) => {
+  const [gapGroups, setGapGroups] = useState(gapGroupsProp ?? []);
   const [toast, setToast] = useState(null);
   const toastTimeoutRef = useRef(null);
   const [reasoningGroupId, setReasoningGroupId] = useState(null);
@@ -497,6 +23,10 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
     if (priority === 'Medium') return 'priority-medium';
     return 'priority-low';
   };
+
+  useEffect(() => {
+    if (gapGroupsProp) setGapGroups(gapGroupsProp);
+  }, [gapGroupsProp]);
 
   useEffect(() => {
     return () => {
@@ -608,74 +138,67 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                     <h4 className="screen-title">What Happened</h4>
                     <p className="screen-subtitle">Data visualization and analysis</p>
                   </div>
-                  
+
                   <div className="screen-content">
-                    <div className="data-visualization">
-                      <div className="chart-container">
-                        <h5 className="chart-title">Students Who Made Distribution Errors</h5>
-                        <div className="chart-placeholder">
-                          <div className="chart-bar" style={{height: '80%'}}></div>
-                          <div className="chart-bar" style={{height: '60%'}}></div>
-                          <div className="chart-bar" style={{height: '90%'}}></div>
-                          <div className="chart-bar" style={{height: '40%'}}></div>
-                          <div className="chart-bar" style={{height: '70%'}}></div>
-                          <div className="chart-bar" style={{height: '85%'}}></div>
-                          <div className="chart-bar" style={{height: '50%'}}></div>
-                          <div className="chart-bar" style={{height: '95%'}}></div>
-                          <div className="chart-bar" style={{height: '30%'}}></div>
-                          <div className="chart-bar" style={{height: '75%'}}></div>
+                    {(() => {
+                      const flaggedQs = new Set(
+                        (reasoningGroup.evidence?.source || '')
+                          .match(/Q(\d+)/gi)
+                          ?.map((q) => q.toUpperCase()) ?? []
+                      );
+                      const bars = reasoningGroup.questionErrorRates ?? [];
+                      return (
+                        <div className="data-visualization">
+                          <div className="chart-container">
+                            <h5 className="chart-title">Error Rate by Question</h5>
+                            <div className="chart-placeholder">
+                              {bars.map((q) => (
+                                <div
+                                  key={q.label}
+                                  className={`chart-bar${flaggedQs.has(q.label.toUpperCase()) ? ' chart-bar-flagged' : ''}`}
+                                  style={{ height: `${q.errorRate}%` }}
+                                  title={`${q.label}: ${q.errorRate}% error rate`}
+                                />
+                              ))}
+                            </div>
+                            <div className="chart-labels">
+                              {bars.map((q) => (
+                                <span key={q.label} className={flaggedQs.has(q.label.toUpperCase()) ? 'chart-label-flagged' : ''}>
+                                  {q.label}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="chart-stats">
+                            <div className="stat-item">
+                              <span className="stat-label">Students Affected</span>
+                              <span className="stat-value">{reasoningGroup.studentCount} ({reasoningGroup.studentPercent}%)</span>
+                            </div>
+                            <div className="stat-item">
+                              <span className="stat-label">Questions Flagged</span>
+                              <span className="stat-value">{reasoningGroup.evidence?.source || '—'}</span>
+                            </div>
+                            <div className="stat-item">
+                              <span className="stat-label">Occurrence</span>
+                              <span className="stat-value">{reasoningGroup.occurrence || '—'}</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="chart-labels">
-                          <span>Q1</span>
-                          <span>Q2</span>
-                          <span>Q3</span>
-                          <span>Q4</span>
-                          <span>Q5</span>
-                          <span>Q6</span>
-                          <span>Q7</span>
-                          <span>Q8</span>
-                          <span>Q9</span>
-                          <span>Q10</span>
-                        </div>
-                        <div className="chart-values">
-                          <span>14</span>
-                          <span>11</span>
-                          <span>16</span>
-                          <span>7</span>
-                          <span>13</span>
-                          <span>15</span>
-                          <span>9</span>
-                          <span>17</span>
-                          <span>5</span>
-                          <span>14</span>
-                        </div>
-                      </div>
-                      
-                      <div className="chart-stats">
-                        <div className="stat-item">
-                          <span className="stat-label">Error Rate</span>
-                          <span className="stat-value">72%</span>
-                        </div>
-                        <div className="stat-item">
-                          <span className="stat-label">Students Affected</span>
-                          <span className="stat-value">18</span>
-                        </div>
-                        <div className="stat-item">
-                          <span className="stat-label">Most Problematic</span>
-                          <span className="stat-value">Q8 (95%)</span>
-                        </div>
-                      </div>
+                      );
+                    })()}
+
+                    <div className="misconception-description">
+                      <h5>Misconception</h5>
+                      <p>{reasoningGroup.misconceptionSummary}</p>
                     </div>
 
-                    <div className="data-insights">
-                      <h5>Key Insights</h5>
-                      <ul>
-                        <li>72% of students made the same distribution error across 10 questions</li>
-                        <li>Q8 had the highest error rate at 95% (17 out of 18 students)</li>
-                        <li>Pattern consistent across multiple problem types with similar structure</li>
-                        <li>Indicates fundamental misunderstanding of negative distribution</li>
-                      </ul>
-                    </div>
+                    {reasoningGroup.evidence?.aiThinkingPattern && (
+                      <div className="thinking-pattern">
+                        <h5>AI Thinking Pattern</h5>
+                        <p>{reasoningGroup.evidence.aiThinkingPattern}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -686,105 +209,39 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                     <h4 className="screen-title">Where & How</h4>
                     <p className="screen-subtitle">Work samples and breakdown</p>
                   </div>
-                  
+
                   <div className="screen-content">
-                    <div className="problem-intro">
-                      <div className="problem-eyebrow">Question 8</div>
-                      <h5 className="problem-label">3(2x - 4) = 18</h5>
-                      <p className="problem-context">This problem was used to assess students' understanding of distributing negative signs in multi-step equations.</p>
-                    </div>
+                    {reasoningGroup.evidence?.mostCommonError && (
+                      <div className="most-common-error">
+                        <h5>Most Common Error</h5>
+                        <p>{reasoningGroup.evidence.mostCommonError}</p>
+                      </div>
+                    )}
 
                     <div className="work-samples">
-                      <div className="sample-grid">
-                        <div className="sample-item incorrect">
-                          <h6>Student A</h6>
-                          <div className="sample-content">
-                            <p>3(2x - 4) = 18</p>
-                            <p>6x - 4 = 18</p>
-                            <p>6x = 22</p>
-                            <p>x = 22/6</p>
-                          </div>
-                          <div className="error-highlight">
-                            <span className="error-label">Error:</span>
-                            <span className="error-text">Forgot to distribute to -4</span>
-                          </div>
+                      <h5>Student Work Samples</h5>
+                      {reasoningGroup.evidence?.sampleStudentWork?.length > 0 ? (
+                        <div className="sample-list">
+                          {reasoningGroup.evidence.sampleStudentWork.map((sample, idx) => (
+                            <div className="sample-item" key={idx}>
+                              <h6>Sample {idx + 1}</h6>
+                              <div className="sample-content">
+                                <p>{sample}</p>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                        
-                        <div className="sample-item incorrect">
-                          <h6>Student B</h6>
-                          <div className="sample-content">
-                            <p>3(2x - 4) = 18</p>
-                            <p>6x - 4 = 18</p>
-                            <p>6x = 22</p>
-                            <p>x = 11/3</p>
-                          </div>
-                          <div className="error-highlight">
-                            <span className="error-label">Error:</span>
-                            <span className="error-text">Missed distribution, simplified incorrectly</span>
-                          </div>
-                        </div>
+                      ) : (
+                        <p className="no-samples">No sample work recorded.</p>
+                      )}
+                    </div>
 
-                        <div className="sample-item incorrect">
-                          <h6>Student C</h6>
-                          <div className="sample-content">
-                            <p>3(2x - 4) = 18</p>
-                            <p>6x - 4 = 18</p>
-                            <p>6x = 14</p>
-                            <p>x = 7/3</p>
-                          </div>
-                          <div className="error-highlight">
-                            <span className="error-label">Error:</span>
-                            <span className="error-text">Distributed incorrectly, subtracted instead of added</span>
-                          </div>
-                        </div>
-
-                        <div className="sample-item incorrect">
-                          <h6>Student D</h6>
-                          <div className="sample-content">
-                            <p>3(2x - 4) = 18</p>
-                            <p>6x - 4 = 18</p>
-                            <p>6x = 22</p>
-                            <p>x = 3.67</p>
-                          </div>
-                          <div className="error-highlight">
-                            <span className="error-label">Error:</span>
-                            <span className="error-text">Missed distribution, decimal conversion error</span>
-                          </div>
-                        </div>
+                    {reasoningGroup.evidence?.aiThinkingPattern && (
+                      <div className="ai-analysis">
+                        <h5>AI Analysis</h5>
+                        <p>{reasoningGroup.evidence.aiThinkingPattern}</p>
                       </div>
-                    </div>
-
-                    <div className="breakdown-analysis">
-                      <h5>Where Students Got Stuck</h5>
-                      <div className="breakdown-steps">
-                        <div className="breakdown-step">
-                          <span className="step-number">1</span>
-                          <span className="step-description">Identified the distribution needed</span>
-                        </div>
-                        <div className="breakdown-step">
-                          <span className="step-number">2</span>
-                          <span className="step-description">Multiplied coefficient by first term (2x)</span>
-                        </div>
-                        <div className="breakdown-step error-step">
-                          <span className="step-number">3</span>
-                          <span className="step-description">Forgot to distribute to second term (-4) - This is where 72% of students made their critical error</span>
-                        </div>
-                        <div className="breakdown-step">
-                          <span className="step-number">4</span>
-                          <span className="step-description">Continued solving with incorrect expression</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="error-summary">
-                      <h5>Common Error Patterns</h5>
-                      <ul>
-                        <li><strong>Partial Distribution:</strong> Students multiplied 3 by 2x but forgot to multiply 3 by -4</li>
-                        <li><strong>Sign Confusion:</strong> Students treated the negative sign as attached only to the 4, not as part of the term being distributed</li>
-                        <li><strong>Procedural Shortcut:</strong> Students applied a "multiply first, ignore negative" pattern that works in some contexts but not here</li>
-                        <li><strong>Arithmetic Errors:</strong> Even when distribution was attempted, many made calculation mistakes with negative numbers</li>
-                      </ul>
-                    </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -795,42 +252,44 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                     <h4 className="screen-title">Why It Matters</h4>
                     <p className="screen-subtitle">Impact and consequences</p>
                   </div>
-                  
+
                   <div className="screen-content">
-                    <div className="impact-analysis-full-width">
-                      <div className="impact-card">
-                        <h5>Long-term Consequences</h5>
-                        <ul>
-                          <li><strong>Algebraic Foundation Weakness:</strong> Students will struggle with factoring, polynomial operations, and simplifying complex expressions</li>
-                          <li><strong>Function Transformation Difficulties:</strong> Understanding how functions change when multiplied by constants or shifted becomes nearly impossible</li>
-                          <li><strong>Calculus Readiness Issues:</strong> Derivatives and integrals of polynomial functions require solid distribution skills</li>
-                          <li><strong>Problem-Solving Confidence Erosion:</strong> Repeated failures with basic algebraic manipulation discourages students from pursuing STEM fields</li>
-                          <li><strong>Test Performance Impact:</strong> Standardized tests heavily feature distribution problems, affecting college admissions and placement</li>
+                    {reasoningGroup.move?.tabs?.overview?.importance && (
+                      <div className="why-matters">
+                        <h5>Why This Matters</h5>
+                        <p>{reasoningGroup.move.tabs.overview.importance}</p>
+                      </div>
+                    )}
+
+                    {reasoningGroup.move?.aiReasoning && (
+                      <div className="ai-reasoning">
+                        <h5>AI Reasoning for Intervention</h5>
+                        <p>{reasoningGroup.move.aiReasoning}</p>
+                      </div>
+                    )}
+
+                    {reasoningGroup.successIndicators?.length > 0 && (
+                      <div className="success-indicators">
+                        <h5>Success Indicators</h5>
+                        <ul className="success-checklist">
+                          {reasoningGroup.successIndicators.map((indicator, idx) => (
+                            <li key={idx} className="success-indicator-item">{indicator}</li>
+                          ))}
                         </ul>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="learning-path">
-                      <h5>Learning Path Forward</h5>
-                      <div className="path-steps">
-                        <div className="path-step">
-                          <span className="path-number">1</span>
-                          <span className="path-description">Master distribution with negatives</span>
-                        </div>
-                        <div className="path-step">
-                          <span className="path-number">2</span>
-                          <span className="path-description">Apply to multi-step equations</span>
-                        </div>
-                        <div className="path-step">
-                          <span className="path-number">3</span>
-                          <span className="path-description">Extend to polynomial operations</span>
-                        </div>
-                        <div className="path-step">
-                          <span className="path-number">4</span>
-                          <span className="path-description">Build foundation for advanced math</span>
+                    {reasoningGroup.ccssStandards?.targetObjective?.standard && (
+                      <div className="target-standard">
+                        <h5>Target Standard</h5>
+                        <div className="target-standard-row">
+                          <span className="ccss-tag target-objective">{reasoningGroup.ccssStandards.targetObjective.standard}</span>
+                          {reasoningGroup.ccssStandards.targetObjective.description && (
+                            <span className="standard-description">{reasoningGroup.ccssStandards.targetObjective.description}</span>
+                          )}
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -1092,14 +551,16 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [] }) => {
                                 <h4 className="grouping-title">{grouping.name}</h4>
                                 <p className="grouping-description">{grouping.description}</p>
                               </div>
-                              <div className="grouping-students">
-                                <h5 className="grouping-subtitle">Students:</h5>
-                                <ul className="student-list">
-                                  {grouping.students.map((student, studentIdx) => (
-                                    <li key={studentIdx}>{student}</li>
-                                  ))}
-                                </ul>
-                              </div>
+                              {grouping.students?.length > 0 && (
+                                <div className="grouping-students">
+                                  <h5 className="grouping-subtitle">Students:</h5>
+                                  <ul className="student-list">
+                                    {grouping.students.map((student, studentIdx) => (
+                                      <li key={studentIdx}>{student}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
                             </div>
                           ))}
 

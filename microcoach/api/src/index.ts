@@ -9,6 +9,7 @@ import {
   sessionsByClassroomId,
   activitiesByMisconceptionId,
   savedNextStepsByClassroomId,
+  listContextData,
 } from "./graphql/queries";
 import {
   getLearningScience,
@@ -130,13 +131,24 @@ export class APIClient {
     return result.data?.getAnalysis;
   }
 
-  async generateRTD(misconception: any, learningScienceData: any, classroomContext?: any) {
+  async listRTDExamples(): Promise<any[]> {
+    const result = await this.callGraphQL<any>(listContextData, {
+      filter: { type: { eq: 'RTD_LESSON' } },
+      limit: 20,
+    });
+    return result.data?.listContextData?.items ?? [];
+  }
+
+  async generateRTD(misconception: any, learningScienceData: any, classroomContext?: any, contextData?: any[]) {
     const result = await this.callGraphQL<any>(generateRTD, {
       input: {
         misconception: typeof misconception === 'string' ? misconception : JSON.stringify(misconception),
         learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
         ...(classroomContext != null && {
           classroomContext: typeof classroomContext === 'string' ? classroomContext : JSON.stringify(classroomContext),
+        }),
+        ...(contextData != null && contextData.length > 0 && {
+          contextData: JSON.stringify(contextData),
         }),
       },
     });

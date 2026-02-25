@@ -100,7 +100,15 @@ class APIClient {
         });
         return (_a = result.data) === null || _a === void 0 ? void 0 : _a.getAnalysis;
     }
-    async generateRTD(misconception, learningScienceData, classroomContext) {
+    async listRTDExamples() {
+        var _a, _b, _c;
+        const result = await this.callGraphQL(queries_1.listContextData, {
+            filter: { type: { eq: 'RTD_LESSON' } },
+            limit: 20,
+        });
+        return (_c = (_b = (_a = result.data) === null || _a === void 0 ? void 0 : _a.listContextData) === null || _b === void 0 ? void 0 : _b.items) !== null && _c !== void 0 ? _c : [];
+    }
+    async generateRTD(misconception, learningScienceData, classroomContext, contextData) {
         var _a;
         const result = await this.callGraphQL(mutations_1.generateRTD, {
             input: {
@@ -108,6 +116,9 @@ class APIClient {
                 learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
                 ...(classroomContext != null && {
                     classroomContext: typeof classroomContext === 'string' ? classroomContext : JSON.stringify(classroomContext),
+                }),
+                ...(contextData != null && contextData.length > 0 && {
+                    contextData: JSON.stringify(contextData),
                 }),
             },
         });

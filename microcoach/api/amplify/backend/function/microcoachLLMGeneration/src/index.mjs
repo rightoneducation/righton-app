@@ -63,12 +63,14 @@ export const handler = async (event) => {
   const rawMisconception       = event?.arguments?.input?.misconception       ?? event?.input?.misconception;
   const rawLearningScienceData = event?.arguments?.input?.learningScienceData ?? event?.input?.learningScienceData;
   const rawClassroomContext    = event?.arguments?.input?.classroomContext     ?? event?.input?.classroomContext;
+  const rawContextData         = event?.arguments?.input?.contextData         ?? event?.input?.contextData;
 
   if (rawMisconception == null)       throw new Error('misconception is required');
   if (rawLearningScienceData == null) throw new Error('learningScienceData is required');
 
   const misconception    = typeof rawMisconception    === 'string' ? JSON.parse(rawMisconception)    : rawMisconception;
   const classroomContext = typeof rawClassroomContext === 'string' ? JSON.parse(rawClassroomContext) : (rawClassroomContext ?? {});
+  const contextDataItems = rawContextData ? (typeof rawContextData === 'string' ? JSON.parse(rawContextData) : rawContextData) : [];
 
   const apiSecret = await loadSecret(apiSecretName);
   const { openai_api, OPENAI_API_KEY, API } = JSON.parse(apiSecret);
@@ -77,10 +79,55 @@ export const handler = async (event) => {
 
   const openai = new OpenAI({ apiKey });
 
+  // Format RTD_LESSON ContextData records as few-shot examples for the prompt
+  const formatRTDExample = (item, index) => {
+    const l = item.rtdLesson;
+    if (!l) return null;
+    const lines = [`### Example ${index + 1}: ${item.title}`];
+    if (item.ccssStandards?.length) lines.push(`CCSS: ${item.ccssStandards.join(', ')}`);
+    if (l.topic)          lines.push(`Topic: ${l.topic}`);
+    if (l.targetProblem)  lines.push(`Target Problem: ${l.targetProblem}`);
+    if (l.errorScenarios?.length) {
+      lines.push('Error Scenarios:');
+      l.errorScenarios.forEach((s) => {
+        lines.push(`  - ${s.studentLabel} (${s.isCorrect ? 'correct' : 'incorrect'}): ${s.approach}`);
+        if (s.reasoning?.length) s.reasoning.forEach((r) => lines.push(`      ${r}`));
+      });
+    }
+    if (l.phases?.length) {
+      lines.push('Lesson Phases:');
+      l.phases.forEach((p) => {
+        lines.push(`  - ${p.phaseName}${p.durationMinutes ? ` (${p.durationMinutes} min)` : ''}`);
+        p.steps?.forEach((step) => lines.push(`      • ${step}`));
+        p.teacherPrompts?.forEach((tp) => lines.push(`      > ${tp}`));
+      });
+    }
+    if (l.keyTakeaways?.length) lines.push(`Key Takeaways: ${l.keyTakeaways.join(' | ')}`);
+    if (l.exitTicket)    lines.push(`Exit Ticket: ${l.exitTicket}`);
+    return lines.join('\n');
+  };
+
+  const rtdExamplesSection = (() => {
+    const formatted = contextDataItems
+      .filter((item) => item.type === 'RTD_LESSON' && item.rtdLesson)
+      .map(formatRTDExample)
+      .filter(Boolean);
+    if (!formatted.length) return '';
+    return `
+## Reference RTD Examples
+The following are real RTD lessons used in similar classrooms. Study their structure, \
+depth, phase design, and problem choices — your output should match this level of quality and specificity.
+
+${formatted.join('\n\n')}
+
+---
+`;
+  })();
+
   const userContent = `
 You are an expert K-12 math instructional coach generating a targeted RTD (Re-Teaching and \
 Differentiation) intervention activity.
-
+${rtdExamplesSection}
 ## Misconception to Address
 ${JSON.stringify(misconception, null, 2)}
 
