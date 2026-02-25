@@ -330,6 +330,23 @@
   box-shadow: 0 1px 3px rgba(109, 40, 217, 0.3);
 }
 
+/* Clickable Standard Styles */
+.clickable-standard {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.clickable-standard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.clickable-standard:focus {
+  outline: 2px solid #1B376F;
+  outline-offset: 2px;
+}
+
 .alternative-ccss-description {
   font-size: 13px;
   color: #1B376F;

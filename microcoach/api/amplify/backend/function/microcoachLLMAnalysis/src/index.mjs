@@ -26,6 +26,8 @@ const Misconception = z.object({
   occurrence: z.enum(['first', 'recurring']).describe('"recurring" only if this pattern appeared in session history'),
   successIndicators: z.array(z.string()).optional().describe('Observable behaviors showing the student has overcome this misconception'),
   evidence: MisconceptionEvidence.optional(),
+  prerequisiteGapCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `prerequisiteStandards` list (earlier-grade topics students must know first). Must be lower grade level than ccssStandard. Only include codes where a gap in that earlier skill would specifically cause this misconception."),
+  impactedObjectiveCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `futureDependentStandards` list (later-grade topics that build on this standard). Must be higher grade level than ccssStandard. Only include codes that this specific misconception would specifically threaten."),
 });
 
 const AnalysisResponse = z.object({
@@ -136,6 +138,8 @@ which have improved, which are newly emerging.
 - evidence.source: cite specific question numbers (e.g. "PPQ Q3, Q5")
 - successIndicators: 2-4 specific, observable student behaviors that demonstrate mastery
 - Order by priority ("1" = most critical)
+- prerequisiteGapCodes: Look at the standard's 'prerequisiteStandards' list in the learning science data — these are EARLIER-GRADE topics (lower grade level than ccssStandard). Select ONLY codes where a gap in that earlier skill would DIRECTLY cause this specific error pattern. Ask yourself: "Would a student who hasn't mastered this prerequisite make exactly this mistake?" Only include codes that clearly pass this test.
+- impactedObjectiveCodes: Look at the standard's 'futureDependentStandards' list in the learning science data — these are LATER-GRADE topics (higher grade level than ccssStandard). Select ONLY codes that this specific misconception would DIRECTLY threaten. Ask yourself: "Would a student carrying this misunderstanding specifically struggle with this future topic?" Only include codes that clearly pass this test.
 
 Return JSON matching the schema.
 `.trim();

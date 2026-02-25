@@ -109,7 +109,7 @@ export const handler = async (event) => {
       }
       
       const data = await response.json();
-      
+
       console.log('[Ext-MCPServerFunctions] GraphQL response parsed', {
         timestamp: new Date().toISOString(),
         hasData: !!data?.data,
@@ -118,7 +118,7 @@ export const handler = async (event) => {
         dataKeys: data ? Object.keys(data) : [],
         responsePreview: JSON.stringify(data).substring(0, 500)
       });
-      
+
       if (data?.errors) {
         console.error('GraphQL errors in response', {
           timestamp: new Date().toISOString(),
@@ -126,8 +126,35 @@ export const handler = async (event) => {
           errorCount: Array.isArray(data.errors) ? data.errors.length : 0
         });
       }
-      
-      return JSON.stringify(data);
+
+      // Normalize field names before returning.
+      // Field name semantics:
+      //   standardsFrameworkItemsbuildsTowards  = "these items build towards THIS standard"
+      //                                         → they come BEFORE this standard = prerequisites
+      //   buildsTowardsStandardsFrameworkItems  = "THIS standard builds towards these items"
+      //                                         → they come AFTER this standard = future/downstream
+      const rawItems = data?.data?.standardsFrameworkItems ?? [];
+      const normalized = {
+        standards: rawItems.map((item) => ({
+          code: item.statementCode,
+          description: item.description,
+          // Topics students must master first — items that build toward this standard
+          prerequisiteStandards: (item.standardsFrameworkItemsbuildsTowards ?? []).map((r) => ({
+            code: r.statementCode,
+            description: r.description,
+          })),
+          // Topics that depend on this standard — items this standard builds toward
+          futureDependentStandards: (item.buildsTowardsStandardsFrameworkItems ?? []).map((r) => ({
+            code: r.statementCode,
+            description: r.description,
+          })),
+          learningComponents: (item.learningComponentssupports ?? []).map((c) => ({
+            description: c.description,
+          })),
+        })),
+      };
+
+      return JSON.stringify(normalized);
     } catch (error) {
       console.error('Error making GraphQL request', {
         timestamp: new Date().toISOString(),

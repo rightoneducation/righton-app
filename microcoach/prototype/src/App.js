@@ -35,7 +35,7 @@ function App() {
   const occurrenceLabel = (o) => o === 'recurring' ? 'Recurring' : '1st occurrence';
   const formatLabel = (f) => ({ small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' }[f] ?? f);
 
-  const buildGapGroups = (misconceptions, activities, ppqQuestions) => {
+  const buildGapGroups = (misconceptions, activities, ppqQuestions, learningScienceData) => {
     const questionErrorRates = (ppqQuestions ?? [])
       .filter((q) => q.questionNumber != null && q.classPercentCorrect != null)
       .sort((a, b) => a.questionNumber - b.questionNumber)
@@ -44,8 +44,33 @@ function App() {
         errorRate: Math.round((1 - q.classPercentCorrect) * 100),
       }));
 
+    const frameworkItems = learningScienceData?.standards ?? [];
+    const normalize = (s) => s?.replace(/\s/g, '').toLowerCase() ?? '';
+
+    // Build a flat code→description lookup from all standards in the graph
+    const standardsDescMap = new Map();
+    for (const item of frameworkItems) {
+      if (item.code) standardsDescMap.set(item.code, item.description);
+      for (const rel of [...(item.prerequisiteStandards ?? []), ...(item.futureDependentStandards ?? [])]) {
+        if (rel.code && !standardsDescMap.has(rel.code)) standardsDescMap.set(rel.code, rel.description);
+      }
+    }
+
     return misconceptions.map((m, i) => {
       const activity = activities[i];
+
+      // Use LLM-selected codes when available (filtered for relevance to this misconception).
+      // Fall back to the full graph connections if the LLM didn't return them.
+      const frameworkItem = frameworkItems.find((item) => normalize(item.code) === normalize(m.ccssStandard));
+
+      const prerequisiteGaps = m.prerequisiteGapCodes?.length
+        ? m.prerequisiteGapCodes.map((code) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
+        : (frameworkItem?.prerequisiteStandards ?? []).map((r) => ({ standard: r.code, description: r.description }));
+
+      const impactedObjectives = m.impactedObjectiveCodes?.length
+        ? m.impactedObjectiveCodes.map((code) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
+        : (frameworkItem?.futureDependentStandards ?? []).map((r) => ({ standard: r.code, description: r.description }));
+
       return {
         id: `gapgroup-ai-${i + 1}`,
         title: m.title,
@@ -57,8 +82,8 @@ function App() {
         successIndicators: m.successIndicators ?? [],
         ccssStandards: {
           targetObjective: { standard: m.ccssStandard, description: m.description },
-          impactedObjectives: [],
-          prerequisiteGaps: [],
+          impactedObjectives,
+          prerequisiteGaps,
         },
         evidence: m.evidence ?? null,
         questionErrorRates,
@@ -138,7 +163,7 @@ function App() {
           })
         );
 
-        if (!cancelled) setAiGapGroups(buildGapGroups(misconceptions, activities, ppq?.questions));
+        if (!cancelled) setAiGapGroups(buildGapGroups(misconceptions, activities, ppq?.questions, learningScienceData));
       } finally {
         if (!cancelled) {
           setIsLoading(false);
