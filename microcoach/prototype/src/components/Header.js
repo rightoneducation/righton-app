@@ -5,7 +5,7 @@ const Header = ({ dateRange = "Last 30 days", onDateRangeChange, onExportSummary
   return (
     <header className="header">
       <div className="header-content">
-        <h1 className="header-title">Microcoach</h1>
+        <h1 className="header-title">MicroCoach</h1>
         
         <div className="class-selector">
           <select 

@@ -2,6 +2,12 @@ import { loadSecret } from './util/loadsecrets.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
+import config from './util/config.json' assert { type: 'json' };
+
+const rtdConfig = config?.rtd ?? {};
+const RUNTIME_MAX_DURATION_MINUTES = rtdConfig.maxDurationMinutes ?? 30;
+const RUNTIME_DEFAULT_DURATION_MINUTES = rtdConfig.defaultDurationMinutes ?? 30;
+const RUNTIME_SUPPORTED_FORMATS = rtdConfig.supportedFormats ?? ['whole_class', 'small_group'];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 // Generates a single fully-populated RTD Activity for one misconception.
@@ -47,7 +53,11 @@ const RTDActivity = z.object({
   status: z.literal('GENERATED'),
   title: z.string().describe('Short, action-oriented activity title'),
   summary: z.string().describe('1-2 sentence description of the activity'),
-  durationMinutes: z.number().int().describe('Estimated time in minutes (typically 15-25 for small group RTD)'),
+  durationMinutes: z
+    .number()
+    .int()
+    .max(RUNTIME_MAX_DURATION_MINUTES)
+    .describe('Estimated time in minutes for this RTD activity; must not exceed the configured maximum.'),
   format: z.enum(['small_group', 'whole_class', 'individual']),
   aiReasoning: z.string().describe('Why this specific activity design targets this specific misconception'),
   aiGenerated: z.literal(true),
@@ -145,11 +155,12 @@ ${JSON.stringify(classroomContext, null, 2)}
 
 Generate ONE fully classroom-ready RTD activity that directly targets the misconception above.
 
-Requirements:
+Requirements (aligned to Uncommon RTD guidelines):
 - **title**: Short, action-oriented (e.g. "Keep-Change-Flip Error Analysis")
 - **summary**: 1-2 sentences describing the activity
-- **durationMinutes**: 15-25 minutes for small group; up to 40 for whole class
-- **format**: prefer "small_group" for targeted misconceptions unless the evidence shows it's class-wide (>60%)
+- **disallowedTeachingMethods**: ${rtdConfig.disallowedTeachingMethods?.join(', ')} do not use these methods in the activity.
+- **durationMinutes**: Must be <= ${RUNTIME_MAX_DURATION_MINUTES} minutes and designed to fit within a ${RUNTIME_DEFAULT_DURATION_MINUTES}-minute intervention block (shorter is fine; never longer).
+- **format**: choose one of ${RUNTIME_SUPPORTED_FORMATS.map((f) => `"${f}"`).join(', ')}. Whole-class and small-group formats should be the primary options.
 - **aiReasoning**: Explain specifically WHY this activity design addresses this particular misconception — \
   connect the activity mechanics to the cognitive error pattern
 - **tabs.overview**: what students do, what the teacher facilitates, why it matters for THIS misconception

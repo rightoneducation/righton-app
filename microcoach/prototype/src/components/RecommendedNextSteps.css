@@ -65,7 +65,8 @@
 }
 
 .rns-toast.show {
-  transform: translateY(0);
+  /* Keep horizontal centering when switching to the "show" state */
+  transform: translateX(-50%) translateY(0);
   opacity: 1;
 }
 
@@ -129,6 +130,12 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .alternative-misconceptions-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .alternative-misconception-card {
@@ -282,11 +289,14 @@
 }
 
 .alternative-ccss-tag {
-  display: inline-block;
-  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 400;
+  line-height: 1;
   font-family: 'Rubik', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -2403,8 +2413,10 @@
    so positional overrides are brittle and can break alignment. */
 
 .ccss-tag {
-  display: inline-block;
-  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 400;
@@ -2419,6 +2431,7 @@
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1;
 }
 
 .ccss-tag.target-objective {

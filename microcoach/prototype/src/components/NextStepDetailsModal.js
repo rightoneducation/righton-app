@@ -15,6 +15,7 @@ const NextStepDetailsModal = ({
   studentPercent,
   occurrence,
   misconceptionSummary,
+  ccssStandards,
   successIndicators,
   move,
   activeTab,
@@ -65,6 +66,39 @@ const NextStepDetailsModal = ({
 
               {misconceptionSummary && (
                 <div className="misconception-summary">{misconceptionSummary}</div>
+              )}
+
+              {/* CCSS Standards Section (kept identical to Recommended Next Steps "Full View") */}
+              {ccssStandards && (
+                <div className="ccss-standards-section">
+                  <div className="ccss-standards-grid">
+                    <div className="ccss-card">
+                      <h4 className="tab-section-title">Students are struggling with...</h4>
+                      <div className="ccss-content">
+                        <span className="ccss-tag target-objective">
+                          {ccssStandards?.targetObjective?.standard}
+                        </span>
+                        <span className="ccss-description">
+                          {ccssStandards?.targetObjective?.description}
+                        </span>
+                      </div>
+                    </div>
+
+                    {ccssStandards?.prerequisiteGaps && ccssStandards.prerequisiteGaps.length > 0 && (
+                      <div className="ccss-card">
+                        <h4 className="tab-section-title">The underlying issue may be...</h4>
+                        <div className="ccss-content">
+                          {ccssStandards.prerequisiteGaps.map((gap, idx) => (
+                            <div key={idx} className="ccss-gap-item">
+                              <span className="ccss-tag prerequisite-gap">{gap.standard}</span>
+                              <span className="ccss-description">{gap.description}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
 

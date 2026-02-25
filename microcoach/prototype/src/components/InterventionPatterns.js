@@ -166,6 +166,26 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
         <h3 className="ip-title">Trends in Learning Goals</h3>
       </div>
 
+      <div className="ip-upload-pilot" aria-live="polite">
+        <p className="ip-upload-pilot-message" id="ip-upload-pilot-message">
+          Post-intervention data will be uploaded here. Teachers will be able to upload CSV files
+          of student work and related artifacts to analyze trends in learning goals. This upload
+          feature is disabled for the pilot.
+        </p>
+        <button
+          className="yns-btn secondary ip-upload-btn"
+          type="button"
+          disabled
+          aria-disabled="true"
+          aria-describedby="ip-upload-pilot-message"
+        >
+          <svg className="ip-upload-btn-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
+            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-2 8v-4H9l3-3 3 3h-2v4h-2z"/>
+          </svg>
+          <span>Upload Data</span>
+        </button>
+      </div>
+
       {gapTrends.length === 0 ? (
         <div className="ip-empty">
           No learning gaps yet — add a few items to <strong>Saved Next Steps</strong>.

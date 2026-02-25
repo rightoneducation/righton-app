@@ -3,6 +3,29 @@ import './YourNextSteps.css';
 import './SharedButtons.css';
 import NextStepDetailsModal from './NextStepDetailsModal';
 
+const STANDARD_COMPONENTS_MAP = {
+  '8.EE.7': [
+    'Represent one-variable equations',
+    'Apply inverse operations',
+    'Check solution validity'
+  ],
+  '5.NF.1': [
+    'Find least common denominator',
+    'Build equivalent fractions',
+    'Add/subtract numerators correctly'
+  ],
+  '6.EE.1': [
+    'Follow order of operations',
+    'Evaluate exponents first',
+    'Substitute values into expressions'
+  ],
+  '6.EE.5': [
+    'Interpret equation balance',
+    'Use inverse operations on both sides',
+    'Verify solution by substitution'
+  ]
+};
+
 const YourNextSteps = ({
   nextSteps = [],
   completedNextSteps = [],
@@ -13,6 +36,26 @@ const YourNextSteps = ({
   onMarkComplete,
   onReorder
 }) => {
+  const getStandardComponents = (item) => {
+    const standard = item?.targetObjectiveStandard;
+    if (!standard) return [];
+
+    if (STANDARD_COMPONENTS_MAP[standard]) {
+      return STANDARD_COMPONENTS_MAP[standard];
+    }
+
+    const description = item?.ccssStandards?.targetObjective?.description || '';
+    if (!description) {
+      return ['Concept understanding', 'Procedural fluency', 'Application'];
+    }
+
+    return description
+      .split(/,| and /i)
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .slice(0, 3);
+  };
+
   const getPriorityClass = (priority) => {
     if (priority === 'Critical') return 'priority-critical';
     if (priority === 'High') return 'priority-high';
@@ -28,6 +71,9 @@ const YourNextSteps = ({
 
   const [toast, setToast] = useState(null); // { id: number, message: string } | null
   const toastTimersRef = useRef({ show: null, remove: null, clear: null });
+  const completionTimersRef = useRef({ complete: null });
+  const [movingToReflectId, setMovingToReflectId] = useState(null);
+  const [movingVector, setMovingVector] = useState({ dx: 220, dy: -170 });
 
   const clearToastTimers = () => {
     const timers = toastTimersRef.current;
@@ -59,8 +105,13 @@ const YourNextSteps = ({
   };
 
   useEffect(() => {
+    const completionTimers = completionTimersRef.current;
+
     return () => {
       clearToastTimers();
+      if (completionTimers.complete) {
+        window.clearTimeout(completionTimers.complete);
+      }
     };
   }, []);
 
@@ -97,14 +148,40 @@ const YourNextSteps = ({
     return (nextSteps || []).filter((x) => x?.status !== 'completed');
   }, [nextSteps]);
 
-  const renderStandardPill = (standard) => {
+  const renderStandardPill = (item) => {
+    const standard = item?.targetObjectiveStandard;
     if (!standard) return null;
+
+    const learningComponents = getStandardComponents(item);
+    const standardName = item?.ccssStandards?.targetObjective?.description || standard;
+
     return (
-      <span
-        className="ccss-tag target-objective"
-        aria-label={`Learning objective standard ${standard}`}
-      >
-        {standard}
+      <span className="yns-standard-pill-wrap">
+        <span
+          className="ccss-tag target-objective yns-standard-pill"
+          aria-label={`Learning objective standard ${standard}`}
+          tabIndex={0}
+        >
+          {standard}
+        </span>
+
+        <div className="yns-standard-hover-card" role="tooltip">
+          <div className="yns-standard-hover-title">{standardName}</div>
+          <div className="yns-standard-hover-subtitle">Learning Components Diagram</div>
+
+          <div className="yns-kg-diagram" aria-label={`Relationship diagram for ${standard}`}>
+            <span className="ccss-tag target-objective yns-kg-standard-node">{standard}</span>
+
+            <div className="yns-kg-right">
+              {learningComponents.map((component) => (
+                <div key={`${standard}-${component}`} className="yns-kg-row">
+                  <span className="yns-kg-link" aria-hidden="true" />
+                  <span className="yns-kg-component-node">{component}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </span>
     );
   };
@@ -114,9 +191,51 @@ const YourNextSteps = ({
     showToast(`Deleted "${item.moveTitle}" from Saved Next Steps`);
   };
 
-  const handleComplete = (item) => {
-    onMarkComplete?.(item.id);
-    showToast(`Completed "${item.moveTitle}"`);
+  const getReflectVector = (fromElement) => {
+    const reflectTab = document.querySelector('[data-reflect-tab-target="true"]');
+    const fromRect = fromElement?.getBoundingClientRect?.();
+    const toRect = reflectTab?.getBoundingClientRect?.();
+
+    if (!fromRect || !toRect) {
+      return { dx: 220, dy: -170 };
+    }
+
+    // Animation transform-origin is `top right`, so compute the motion vector from
+    // the card's top-right anchor to a point inside the Reflect tab.
+    const fromAnchorX = fromRect.right;
+    const fromAnchorY = fromRect.top;
+
+    // Aim for the tab's center-left area (instead of dead-center) so the item
+    // visually gets sucked into the tab body rather than overshooting right.
+    const toAnchorX = toRect.left + (toRect.width * 0.42);
+    const toAnchorY = toRect.top + (toRect.height * 0.5);
+
+    return {
+      dx: Math.round(toAnchorX - fromAnchorX),
+      dy: Math.round(toAnchorY - fromAnchorY)
+    };
+  };
+
+  const pulseReflectTab = () => {
+    const reflectTab = document.querySelector('[data-reflect-tab-target="true"]');
+    if (!reflectTab) return;
+    reflectTab.classList.add('yns-reflect-target-glow');
+    window.setTimeout(() => reflectTab.classList.remove('yns-reflect-target-glow'), 520);
+  };
+
+  const handleComplete = (item, event) => {
+    if (movingToReflectId) return;
+
+    const itemElement = event?.currentTarget?.closest('.yns-item');
+    setMovingVector(getReflectVector(itemElement));
+    pulseReflectTab();
+    setMovingToReflectId(item.id);
+    showToast(`Moving "${item.moveTitle}" to 3. Reflect...`);
+
+    completionTimersRef.current.complete = window.setTimeout(() => {
+      onMarkComplete?.(item.id);
+      setMovingToReflectId(null);
+    }, 780);
   };
 
   return (
@@ -129,6 +248,7 @@ const YourNextSteps = ({
         studentPercent={detailsItem?.studentPercent}
         occurrence={detailsItem?.occurrence}
         misconceptionSummary={detailsItem?.misconceptionSummary}
+        ccssStandards={detailsItem?.ccssStandards}
         successIndicators={detailsItem?.successIndicators}
         move={detailsItem?.move}
         activeTab={detailsActiveTab}
@@ -150,7 +270,7 @@ const YourNextSteps = ({
         <div>
           <h3 className="yns-title">Saved Next Steps</h3>
           <p className="yns-subtitle">
-            Save instructional moves you plan to run. When you click <strong>Complete</strong>, you’re telling Microcoach you executed that activity—so our algorithm can track progress and surface trends in learning goals in <em>3. Reflect</em>.
+            Save instructional moves you plan to run. When you click <strong>Complete</strong>, you're telling MicroCoach you executed that activity—so our algorithm can track progress and surface trends in learning goals in <em>3. Reflect</em>.
           </p>
         </div>
 
@@ -180,6 +300,7 @@ const YourNextSteps = ({
               No planned next steps right now.
             </div>
           ) : plannedItems.map((item) => {
+            const isMovingToReflect = movingToReflectId === item.id;
             const isCompleted = item.status === 'completed';
             const showDropAbove =
               sort === 'manual' &&
@@ -200,10 +321,19 @@ const YourNextSteps = ({
 
                 <div className="yns-row" data-itemid={item.id}>
                   <div
-                    className={`yns-item ${isCompleted ? 'completed' : ''} ${sort === 'manual' ? 'draggable' : ''}`}
-                    draggable={sort === 'manual'}
+                    className={`yns-item ${isCompleted ? 'completed' : ''} ${isMovingToReflect ? 'moving-to-reflect' : ''} ${sort === 'manual' ? 'draggable' : ''}`}
+                    style={
+                      isMovingToReflect
+                        ? {
+                            '--yns-move-x': `${movingVector.dx}px`,
+                            '--yns-move-y': `${movingVector.dy}px`
+                          }
+                        : undefined
+                    }
+                    draggable={sort === 'manual' && !isMovingToReflect}
                     onDragStart={(e) => {
                       if (sort !== 'manual') return;
+                      if (isMovingToReflect) return;
 
                       // Avoid starting a drag when interacting with buttons/controls.
                       const isInteractive = !!e.target.closest('button, a, input, select, textarea');
@@ -288,7 +418,7 @@ const YourNextSteps = ({
                         </div>
 
                         <div className="yns-item-meta">
-                          {renderStandardPill(item.targetObjectiveStandard)}
+                          {renderStandardPill(item)}
                           <span className={`students-pill ${getPriorityClass(item.priority)} yns-students-pill`}>
                             {item.studentCount} students ({item.studentPercent}%)
                           </span>
@@ -314,11 +444,13 @@ const YourNextSteps = ({
                           <button
                             className="yns-btn primary yns-complete-btn"
                             type="button"
-                            onClick={() => handleComplete(item)}
+                            onClick={(e) => handleComplete(item, e)}
+                            disabled={!!movingToReflectId}
+                            aria-disabled={!!movingToReflectId}
                             aria-label={`Complete next step: ${item.moveTitle}`}
                             title="Complete"
                           >
-                            Complete
+                            {isMovingToReflect ? 'Moving to Reflect...' : 'Complete'}
                           </button>
                         </div>
                       </div>
@@ -329,6 +461,8 @@ const YourNextSteps = ({
                     className="yns-icon-btn yns-trash-btn yns-trash-outside"
                     type="button"
                     onClick={() => handleRemove(item)}
+                    disabled={!!movingToReflectId}
+                    aria-disabled={!!movingToReflectId}
                     aria-label={`Delete next step: ${item.moveTitle}`}
                     title="Delete"
                   >
@@ -346,7 +480,7 @@ const YourNextSteps = ({
                     </svg>
                   </button>
                 </div>
-              
+
                 {showDropBelow && <div className="yns-drop-indicator" aria-hidden="true" />}
               </React.Fragment>
             );
@@ -381,7 +515,7 @@ const YourNextSteps = ({
 
       {/* Completed section */}
       <div className="yns-completed-section" aria-label="Completed next steps">
-        {/* Header should read like a top-level section title (same visual weight as “Saved Next Steps”) */}
+        {/* Header should read like a top-level section title (same visual weight as "Saved Next Steps") */}
         <div className="yns-completed-header">
           <div className="yns-completed-title-row">
             <h3 className="yns-completed-title">Completed</h3>
@@ -404,7 +538,7 @@ const YourNextSteps = ({
                     <div className="yns-completed-item-main">
                       <div className="yns-completed-item-title">{item.moveTitle}</div>
                       <div className="yns-completed-item-meta">
-                        {renderStandardPill(item.targetObjectiveStandard)}
+                        {renderStandardPill(item)}
                         <span className="yns-meta-pill">{item.gapGroupTitle}</span>
                         {item.moveFormat && <span className="yns-meta-pill">{item.moveFormat}</span>}
                       </div>

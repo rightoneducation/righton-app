@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
 
 test('renders learn react link', () => {
@@ -28,6 +28,7 @@ test('renders misconception summaries and occurrence indicators', () => {
 });
 
 test('Intervention Patterns shows trends after completing next steps', () => {
+  jest.useFakeTimers();
   render(<App />);
 
   // Add a recommended activity to “Saved Next Steps”.
@@ -41,17 +42,21 @@ test('Intervention Patterns shows trends after completing next steps', () => {
   expect(completeBtn).toBeEnabled();
   fireEvent.click(completeBtn);
 
-  // The completed item should appear in the new Completed section.
-  expect(screen.getByRole('heading', { name: /completed/i })).toBeInTheDocument();
-  expect(screen.queryByText(/completed items will appear here/i)).not.toBeInTheDocument();
-  expect(screen.getByText(/^Whole-class worked example \+ error spotlight$/i)).toBeInTheDocument();
-  // Standard pill (learning objective)
-  expect(screen.getByLabelText(/learning objective standard 8\.EE\.7/i)).toBeInTheDocument();
+  // Completion now animates out toward “3. Reflect”.
+  expect(screen.getByText(/moving to reflect/i)).toBeInTheDocument();
+  act(() => {
+    jest.advanceTimersByTime(800);
+  });
+  // User stays on Prepare after completion (no auto-navigation).
+  expect(screen.getByText(/saved next steps/i)).toBeInTheDocument();
+  expect(screen.queryByText(/trends in learning goals/i)).not.toBeInTheDocument();
 
-  // Navigate to “Your Intervention Patterns” and verify a trend card renders.
+  // Navigate to Reflect manually and verify the completed item is reflected in trends.
   fireEvent.click(screen.getByRole('button', { name: /^3\. reflect$/i }));
   expect(screen.getByText(/trends in learning goals/i)).toBeInTheDocument();
   expect(screen.queryByText(/no learning gaps yet/i)).not.toBeInTheDocument();
   expect(screen.getByText(/negative signs & distribution errors/i)).toBeInTheDocument();
   expect(screen.getByLabelText(/learning objective standard 8\.EE\.7/i)).toBeInTheDocument();
+
+  jest.useRealTimers();
 });

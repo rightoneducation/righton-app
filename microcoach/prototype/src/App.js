@@ -12,6 +12,12 @@ import './App.css';
 const LS_NEXT_STEPS_KEY = 'microcoach.nextSteps.v1';
 const LS_NEXT_STEPS_HISTORY_KEY = 'microcoach.nextSteps.history.v1';
 
+const LOADING_STEPS = [
+  'Analyzing Class Data...',
+  'Detecting Misconceptions...',
+  "Generating RTD's...",
+];
+
 function App() {
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeOverviewSection, setActiveOverviewSection] = useState('Recommended Next Steps');
@@ -21,7 +27,7 @@ function App() {
   const [nextStepsSort, setNextStepsSort] = useState('manual');
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingStatus, setLoadingStatus] = useState('');
+  const [loadingStepIndex, setLoadingStepIndex] = useState(0);
   const [aiGapGroups, setAiGapGroups] = useState(null);
   const [classroomStudents, setClassroomStudents] = useState(null);
 
@@ -74,7 +80,7 @@ function App() {
 
     async function runMicrocoachFetch() {
       setIsLoading(true);
-      setLoadingStatus('Analyzing Class Data...');
+      setLoadingStepIndex(0);
       try {
         const client = new APIClient();
 
@@ -106,7 +112,7 @@ function App() {
         const learningScienceData = typeof learningScienceRaw === 'string' ? JSON.parse(learningScienceRaw) : learningScienceRaw;
 
         if (cancelled) return;
-        setLoadingStatus('Detecting Misconceptions...');
+        setLoadingStepIndex(1);
         const analysisRaw = await client.getAnalysis(
           { classroom: gr6, currentSession, sessionHistory: historySessions, ppq },
           learningScienceData
@@ -117,7 +123,7 @@ function App() {
         const misconceptions = analysis?.misconceptions ?? [];
 
         if (cancelled) return;
-        setLoadingStatus("Generating RTD's...");
+        setLoadingStepIndex(2);
         const rtdExamples = await client.listRTDExamples();
 
         const activities = await Promise.all(
@@ -136,7 +142,7 @@ function App() {
       } finally {
         if (!cancelled) {
           setIsLoading(false);
-          setLoadingStatus('');
+          setLoadingStepIndex(0);
         }
       }
     }
@@ -260,6 +266,7 @@ function App() {
       occurrence: gapGroup.occurrence,
       misconceptionSummary: gapGroup.misconceptionSummary,
       successIndicators: gapGroup.successIndicators,
+      ccssStandards: gapGroup.ccssStandards,
       gaps: inferredGaps,
       moveId: move.id,
       moveTitle: move.title,
@@ -390,6 +397,7 @@ function App() {
                   className={`overview-nav-tab ${activeOverviewSection === 'Your Intervention Patterns' ? 'active' : ''}`}
                   onClick={() => handleOverviewSectionChange('Your Intervention Patterns')}
                   type="button"
+                  data-reflect-tab-target="true"
                 >
                   3. Reflect
                 </button>
@@ -399,11 +407,53 @@ function App() {
             {activeOverviewSection === 'Recommended Next Steps' && (
               <div className="remediation-section">
                 {isLoading && (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '48px 0' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '16px',
+                      padding: '48px 0',
+                    }}
+                  >
                     <CircularProgress />
-                    {loadingStatus && (
-                      <span style={{ fontSize: '14px', color: '#6b7280' }}>{loadingStatus}</span>
-                    )}
+                    <div style={{ fontSize: '14px', color: '#6b7280' }} aria-live="polite">
+                      {LOADING_STEPS.map((label, i) => {
+                        const completed = i < loadingStepIndex;
+                        const current = i === loadingStepIndex;
+                        return (
+                          <div
+                            key={label}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 8,
+                            }}
+                          >
+                            <span
+                              style={{
+                                width: 14,
+                                display: 'inline-block',
+                                textAlign: 'center',
+                                color: completed ? '#22c55e' : '#9ca3af',
+                                fontWeight: completed ? 700 : 400,
+                              }}
+                              aria-hidden="true"
+                            >
+                              {completed ? '✓' : ''}
+                            </span>
+                            <span
+                              style={{
+                                fontWeight: current ? 600 : 400,
+                                fontStyle: completed ? 'italic' : 'normal',
+                              }}
+                            >
+                              {label}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
                 {!isLoading && (

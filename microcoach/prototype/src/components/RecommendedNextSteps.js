@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './RecommendedNextSteps.css';
+import CCSSStandardsModal from './CCSSStandardsModal';
 
 const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups: gapGroupsProp }) => {
   const [gapGroups, setGapGroups] = useState(gapGroupsProp ?? []);
@@ -10,6 +11,9 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   const [activeTab, setActiveTab] = useState('overview');
   const [evidenceScreen, setEvidenceScreen] = useState(1);
   const [cameFromFullView, setCameFromFullView] = useState(false);
+  const [ccssModalOpen, setCcssModalOpen] = useState(false);
+  const [ccssModalGroup, setCcssModalGroup] = useState(null);
+  const [selectedCcssStandard, setSelectedCcssStandard] = useState(null);
 
   const existingIndex = useMemo(() => {
     // Used only for subtle UI cues (do we already have something saved for this gap group?)
@@ -88,9 +92,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
     if (!reasoningGroupId) return null;
     return gapGroups.find((g) => g.id === reasoningGroupId) ?? null;
   }, [gapGroups, reasoningGroupId]);
-
-  const mainMisconception = gapGroups[0];
-  const alternativeMisconceptions = gapGroups.slice(1);
 
   return (
     <div className="recommended-next-steps">
@@ -647,6 +648,14 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
       )}
 
 
+      <CCSSStandardsModal
+        isOpen={ccssModalOpen}
+        onClose={() => { setCcssModalOpen(false); setCcssModalGroup(null); setSelectedCcssStandard(null); }}
+        ccssStandards={ccssModalGroup?.ccssStandards}
+        selectedStandard={selectedCcssStandard}
+        onStandardSelect={setSelectedCcssStandard}
+      />
+
       <div className="rns-header">
         <div>
           <h3 className="rns-title">Recommended Next Steps</h3>
@@ -659,135 +668,10 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
       {toast && <div className="rns-toast" role="status">{toast}</div>}
 
       <div className="rns-groups">
-        {/* Main (Critical) Misconception */}
-        {mainMisconception && (
-          <div 
-            key={mainMisconception.id} 
-            className="gap-group-card main-misconception clickable-card"
-            onClick={() => setFullViewGroupId(mainMisconception.id)}
-            role="button"
-            tabIndex={0}
-            aria-label={`View full details for ${mainMisconception.title}`}
-          >
-            <div className="gap-group-top">
-              <div className="gap-group-title-row">
-                <h4 className="gap-group-title">{mainMisconception.title}</h4>
-              </div>
-
-              <div className="gap-group-meta-row">
-                <span className={`students-pill ${getPriorityClass(mainMisconception.priority)}`}>
-                  {mainMisconception.studentCount} students ({mainMisconception.studentPercent}%)
-                </span>
-                {mainMisconception.occurrence && (
-                  <span className="occurrence-pill">{mainMisconception.occurrence}</span>
-                )}
-              </div>
-
-              {mainMisconception.misconceptionSummary && (
-                <div className="misconception-summary">
-                  {mainMisconception.misconceptionSummary}
-                </div>
-              )}
-
-              {/* CCSS Standards Section - Change 1: Move under misconception description */}
-              {mainMisconception.ccssStandards && (
-                <div className="ccss-standards-section">
-                  <div className="ccss-standards-grid">
-                    {mainMisconception.ccssStandards.prerequisiteGaps && mainMisconception.ccssStandards.prerequisiteGaps.length > 0 && (
-                      <div className="ccss-card">
-                        <h4 className="tab-section-title">The underlying issue may be...</h4>
-                        <div className="ccss-gap-list">
-                          {mainMisconception.ccssStandards.prerequisiteGaps.map((gap, idx) => (
-                            <div key={idx} className="ccss-gap-item">
-                              <span className="ccss-tag prerequisite-gap">
-                                {gap.standard}
-                              </span>
-                              <span className="ccss-description">
-                                {gap.description}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="ccss-card">
-                      <h4 className="tab-section-title">Students are struggling with...</h4>
-                      <div className="ccss-objective-row">
-                        <span className="ccss-tag target-objective">
-                          {mainMisconception.ccssStandards.targetObjective.standard}
-                        </span>
-                        <span className="ccss-description">
-                          {mainMisconception.ccssStandards.targetObjective.description}
-                        </span>
-                      </div>
-                    </div>
-
-                    {mainMisconception.ccssStandards.impactedObjectives && mainMisconception.ccssStandards.impactedObjectives.length > 0 && (
-                      <div className="ccss-card">
-                        <h4 className="tab-section-title">Future topics that may be impacted...</h4>
-                        <div className="ccss-gap-list">
-                          {mainMisconception.ccssStandards.impactedObjectives.map((obj, idx) => (
-                            <div key={idx} className="ccss-gap-item">
-                              <span className="ccss-tag impacted-objective">
-                                {obj.standard}
-                              </span>
-                              <span className="ccss-description">
-                                {obj.description}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Main card body: add outer padding around the recommended activity section */}
-            <div className="main-misconception-body">
-              {/* Recommended Activity Card - Simplified to match alternative cards */}
-              <div className="alternative-activity">
-                <div className="alternative-label">Recommended activity</div>
-                <div className="alternative-activity-title">{mainMisconception.move?.title}</div>
-                <div className="alternative-meta">
-                  <span>{mainMisconception.move?.time}</span>
-                  <span className="meta-sep">|</span>
-                  <span>{mainMisconception.move?.format}</span>
-                </div>
-                <div className="alternative-summary">{mainMisconception.move?.summary}</div>
-              </div>
-
-              <div className="alternative-actions">
-                <button
-                  className="reasoning-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setCameFromFullView(false);
-                    setReasoningGroupId(mainMisconception.id);
-                  }}
-                >
-                  View Reasoning
-                </button>
-                <button 
-                  className="add-btn" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAdd(mainMisconception);
-                  }}
-                >
-                  Add to Saved Next Steps
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Alternative Misconceptions Grid */}
-        {alternativeMisconceptions.length > 0 && (
+        {/* Render all recommendations with the same (smaller) card size/format */}
+        {gapGroups.length > 0 && (
           <div className="alternative-misconceptions-grid">
-            {alternativeMisconceptions.map((group) => (
+            {gapGroups.map((group) => (
               <div 
                 key={group.id} 
                 className="alternative-misconception-card clickable-card"
@@ -819,7 +703,15 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                           <div className="alternative-ccss-gap-list">
                             {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
                               <div key={idx} className="alternative-ccss-gap-item">
-                                <span className="alternative-ccss-tag prerequisite-gap">
+                                <span
+                                  className="alternative-ccss-tag prerequisite-gap clickable-standard"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCcssModalGroup(group);
+                                    setSelectedCcssStandard(gap);
+                                    setCcssModalOpen(true);
+                                  }}
+                                >
                                   {gap.standard}
                                 </span>
                                 <span className="alternative-ccss-description">
@@ -834,7 +726,15 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                       <div className="alternative-ccss-card">
                         <h4 className="alternative-ccss-header">Students are struggling with...</h4>
                         <div className="alternative-ccss-content">
-                          <span className="alternative-ccss-tag target-objective">
+                          <span
+                            className="alternative-ccss-tag target-objective clickable-standard"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCcssModalGroup(group);
+                              setSelectedCcssStandard(group.ccssStandards.targetObjective);
+                              setCcssModalOpen(true);
+                            }}
+                          >
                             {group.ccssStandards.targetObjective.standard}
                           </span>
                           <span className="alternative-ccss-description">
@@ -849,7 +749,15 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                           <div className="alternative-ccss-gap-list">
                             {group.ccssStandards.impactedObjectives.map((obj, idx) => (
                               <div key={idx} className="alternative-ccss-gap-item">
-                                <span className="alternative-ccss-tag impacted-objective">
+                                <span
+                                  className="alternative-ccss-tag impacted-objective clickable-standard"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCcssModalGroup(group);
+                                    setSelectedCcssStandard(obj);
+                                    setCcssModalOpen(true);
+                                  }}
+                                >
                                   {obj.standard}
                                 </span>
                                 <span className="alternative-ccss-description">
