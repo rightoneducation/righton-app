@@ -20,9 +20,13 @@
           "deploymentBucketName": "amplify-microcoach-dev-112447-deployment",
           "s3Key": "amplify-builds/microcoachGetLearningScience-6e572b4939426955536c-build.zip"
         },
-        "microcoachLLM": {
+        "microcoachLLMAnalysis": {
           "deploymentBucketName": "amplify-microcoach-dev-112447-deployment",
-          "s3Key": "amplify-builds/microcoachLLM-31436a572f4639764f2b-build.zip"
+          "s3Key": "amplify-builds/microcoachLLMAnalysis-3973484d2b6e4d427466-build.zip"
+        },
+        "microcoachLLMGeneration": {
+          "deploymentBucketName": "amplify-microcoach-dev-112447-deployment",
+          "s3Key": "amplify-builds/microcoachLLMGeneration-4965482b522f354b3542-build.zip"
         }
       }
     }

@@ -61,19 +61,29 @@ function App() {
       const learningScienceData = typeof learningScienceRaw === 'string' ? JSON.parse(learningScienceRaw) : learningScienceRaw;
       console.log('[Microcoach] Learning Science data:', learningScienceData);
 
-      // 6. Call microcoachLLM with classroom + current session + history + learning science
-      const analyticsRaw = await client.getAnalytics(
+      // 6. Stage 1 — analyze classroom data → synthesis + misconceptions (no activities yet)
+      const analysisRaw = await client.getAnalysis(
         { classroom: gr6, currentSession, sessionHistory: historySessions, ppq },
         learningScienceData
       );
-      const analytics = typeof analyticsRaw === 'string' ? JSON.parse(analyticsRaw) : analyticsRaw;
-      console.log('[Microcoach] Analytics — synthesis:', analytics?.synthesis);
-      console.log('[Microcoach] Analytics — keyFindings:', analytics?.keyFindings);
-      console.log('[Microcoach] Analytics — trends:', analytics?.trends);
-      console.log('[Microcoach] Analytics — misconceptions:', analytics?.misconceptions);
-      analytics?.misconceptions?.forEach((m, i) => {
+      const analysis = typeof analysisRaw === 'string' ? JSON.parse(analysisRaw) : analysisRaw;
+      console.log('[Microcoach] Analysis — synthesis:', analysis?.synthesis);
+      console.log('[Microcoach] Analysis — keyFindings:', analysis?.keyFindings);
+      console.log('[Microcoach] Analysis — trends:', analysis?.trends);
+      console.log('[Microcoach] Analysis — misconceptions:', analysis?.misconceptions);
+
+      // 7. Stage 2 — generate RTD activity for each misconception in parallel
+      const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
+      const misconceptions = analysis?.misconceptions ?? [];
+      const activities = await Promise.all(
+        misconceptions.map((m) => client.generateRTD(m, learningScienceData, classroomContext)
+          .then((raw) => typeof raw === 'string' ? JSON.parse(raw) : raw)
+          .catch((err) => { console.error(`[Microcoach] RTD generation failed for "${m.title}":`, err); return null; })
+        )
+      );
+      misconceptions.forEach((m, i) => {
         console.log(`[Microcoach] Misconception ${i + 1}: ${m.title}`, m);
-        console.log(`[Microcoach] Misconception ${i + 1} RTD Activity:`, m.activity);
+        console.log(`[Microcoach] Misconception ${i + 1} RTD Activity:`, activities[i]);
       });
     }
 

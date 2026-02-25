@@ -268,11 +268,26 @@ input GetAnalyticsInput {
   learningScienceData: AWSJSON!
 }
 
+input GetAnalysisInput {
+  classroomData: AWSJSON!
+  learningScienceData: AWSJSON!
+}
+
+input GenerateRTDInput {
+  misconception: AWSJSON!
+  learningScienceData: AWSJSON!
+  classroomContext: AWSJSON
+}
+
 type Mutation {
   getLearningScience(input: GetLearningScienceInput!): String
     @function(name: "microcoachGetLearningScience-${env}")
   getAnalytics(input: GetAnalyticsInput!): String
     @function(name: "microcoachLLM-${env}")
+  getAnalysis(input: GetAnalysisInput!): String
+    @function(name: "microcoachLLMAnalysis-${env}")
+  generateRTD(input: GenerateRTDInput!): String
+    @function(name: "microcoachLLMGeneration-${env}")
 }
 
 # ── ContextData ────────────────────────────────────────────────────────

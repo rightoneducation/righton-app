@@ -11,6 +11,16 @@ export const getAnalytics = /* GraphQL */ `
     getAnalytics(input: $input)
   }
 `;
+export const getAnalysis = /* GraphQL */ `
+  mutation GetAnalysis($input: GetAnalysisInput!) {
+    getAnalysis(input: $input)
+  }
+`;
+export const generateRTD = /* GraphQL */ `
+  mutation GenerateRTD($input: GenerateRTDInput!) {
+    generateRTD(input: $input)
+  }
+`;
 export const createClassroom = /* GraphQL */ `
   mutation CreateClassroom(
     $input: CreateClassroomInput!

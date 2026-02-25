@@ -13,6 +13,8 @@ import {
 import {
   getLearningScience,
   getAnalytics,
+  getAnalysis,
+  generateRTD,
   updateClassroom,
   createMisconception,
   updateMisconception,
@@ -116,6 +118,29 @@ export class APIClient {
       input: { ccss },
     });
     return learningScienceData.data?.getLearningScience;
+  }
+
+  async getAnalysis(classroomData: any, learningScienceData: any) {
+    const result = await this.callGraphQL<any>(getAnalysis, {
+      input: {
+        classroomData: typeof classroomData === 'string' ? classroomData : JSON.stringify(classroomData),
+        learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
+      },
+    });
+    return result.data?.getAnalysis;
+  }
+
+  async generateRTD(misconception: any, learningScienceData: any, classroomContext?: any) {
+    const result = await this.callGraphQL<any>(generateRTD, {
+      input: {
+        misconception: typeof misconception === 'string' ? misconception : JSON.stringify(misconception),
+        learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
+        ...(classroomContext != null && {
+          classroomContext: typeof classroomContext === 'string' ? classroomContext : JSON.stringify(classroomContext),
+        }),
+      },
+    });
+    return result.data?.generateRTD;
   }
 
   async getAnalytics(classroomData: any, learningScienceData: any) {

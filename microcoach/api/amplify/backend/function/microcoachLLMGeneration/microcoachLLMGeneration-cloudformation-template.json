@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "microcoachLLM",
+            "microcoachLLMGeneration",
             {
               "Fn::Join": [
                 "",
                 [
-                  "microcoachLLM",
+                  "microcoachLLMGeneration",
                   "-",
                   {
                     "Ref": "env"
@@ -78,7 +78,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs20.x",
         "Layers": [],
         "Timeout": 120
       }
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "microcoachLambdaRole9eab5bd0",
+            "microcoachLambdaRole8dfeb44d",
             {
               "Fn::Join": [
                 "",
                 [
-                  "microcoachLambdaRole9eab5bd0",
+                  "microcoachLambdaRole8dfeb44d",
                   "-",
                   {
                     "Ref": "env"
@@ -164,6 +164,32 @@
           ]
         }
       }
+    },
+    "CustomLambdaExecutionPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "custom-lambda-execution-policy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "secretsmanager:GetSecretValue"
+              ],
+              "Resource": [
+                "arn:aws:secretsmanager:us-east-1:*:secret:*"
+              ],
+              "Effect": "Allow"
+            }
+          ]
+        },
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ]
+      },
+      "DependsOn": "LambdaExecutionRole"
     }
   },
   "Outputs": {

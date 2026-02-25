@@ -90,6 +90,29 @@ class APIClient {
         });
         return (_a = learningScienceData.data) === null || _a === void 0 ? void 0 : _a.getLearningScience;
     }
+    async getAnalysis(classroomData, learningScienceData) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.getAnalysis, {
+            input: {
+                classroomData: typeof classroomData === 'string' ? classroomData : JSON.stringify(classroomData),
+                learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
+            },
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.getAnalysis;
+    }
+    async generateRTD(misconception, learningScienceData, classroomContext) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.generateRTD, {
+            input: {
+                misconception: typeof misconception === 'string' ? misconception : JSON.stringify(misconception),
+                learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
+                ...(classroomContext != null && {
+                    classroomContext: typeof classroomContext === 'string' ? classroomContext : JSON.stringify(classroomContext),
+                }),
+            },
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.generateRTD;
+    }
     async getAnalytics(classroomData, learningScienceData) {
         var _a;
         const analytics = await this.callGraphQL(mutations_1.getAnalytics, {

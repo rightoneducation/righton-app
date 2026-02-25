@@ -25,7 +25,12 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "microcoachLLM": {
+    "microcoachLLMAnalysis": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachLLMGeneration": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -48,19 +53,35 @@
         }
       ]
     },
-    "AMPLIFY_function_microcoachLLM_deploymentBucketName": {
+    "AMPLIFY_function_microcoachLLMAnalysis_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "microcoachLLM"
+          "resourceName": "microcoachLLMAnalysis"
         }
       ]
     },
-    "AMPLIFY_function_microcoachLLM_s3Key": {
+    "AMPLIFY_function_microcoachLLMAnalysis_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "microcoachLLM"
+          "resourceName": "microcoachLLMAnalysis"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLMGeneration_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLMGeneration"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLMGeneration_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLMGeneration"
         }
       ]
     }
