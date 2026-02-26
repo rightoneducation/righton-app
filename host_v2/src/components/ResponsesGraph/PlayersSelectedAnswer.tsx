@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { IHostTeamAnswersResponse } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
+import ArrowIcon from '../../images/Arrow.svg';
 
 const TitleText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'statePosition',
@@ -128,22 +129,27 @@ export default function PlayersSelectedAnswer({
   const percentage = (count / numPlayers) * 100;
   console.log(data);
   const teamsWithSelectedAnswer = data[graphClickIndex].teams.map((team: string) => team);
+  const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding}}>
-      <TextContainer>
-        <TitleText>
-        { (statePosition < 6 || isPrevPhaseResponses) ? `Players who picked this answer` : `Players who think this is the trickiest answer`}
-        </TitleText>
-        <NumberContainer>
-          <CountText>
+    <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding, paddingTop: '8px'}}>
+      <TextContainer
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{ height: '25px', cursor: 'pointer',alignItems: 'center', borderRadius: '8px', padding: '8px 12px', backgroundColor: '#FFFFFF33' }}
+      >
+        <Typography sx={{ color: '#FFFFFF', textAlign: 'center', fontSize: '14px', fontWeight: 700, fontFamily: 'Rubik'}}>
+          Selected by
+        </Typography>
+        <NumberContainer style={{ gap: '4px' }}>
+          <CountText style={{ paddingTop: 0 }}>
             {count}
           </CountText>
-          <PercentageText>
+          <PercentageText style={{ paddingTop: 0 }}>
             ({Math.round(percentage)}%)
           </PercentageText>
+          <img src={ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </NumberContainer>
       </TextContainer>
-      {teamsWithSelectedAnswer.map((team: string) => (
+      {isExpanded && teamsWithSelectedAnswer.map((team: string) => (
         <StyledRect key={uuidv4()} >
           <NameText>
             {team}

@@ -33,32 +33,48 @@ interface TimerProps {
   totalTime: number;
   isAddTime?: boolean;
   localGameSession: IGameSession;
+  activeStates?: GameSessionState[];
+  barGradient?: string;
+  barBackground?: string;
+  fillLeftToRight?: boolean;
+  onTimerComplete?: () => void;
+  width?: string;
+  hideTimerText?: boolean;
 }
 
 export default function Timer({
   totalTime,
   isAddTime,
-  localGameSession
+  localGameSession,
+  activeStates,
+  barGradient,
+  barBackground,
+  fillLeftToRight,
+  onTimerComplete,
+  width,
+  hideTimerText,
 }: TimerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
-  const [timerString, setTimerString] = useState<string>('0:00');
-  const [progress, setProgress] = useState<number>(0);
-
   const calculateCurrentTime = (startTime: number) => {
     if (startTime) {
         const difference = Date.now() - startTime;
         if (difference >= totalTime * 1000) {
           return 0;
-        } 
+        }
         const remainingTime = totalTime - Math.trunc(difference / 1000);
         return remainingTime;
     }
     return 0;
   };
-  const currentTimeMilli = useRef<number>(calculateCurrentTime(Number(localGameSession.startTime)) * 1000);
+
+  const initialRemainingSeconds = calculateCurrentTime(Number(localGameSession.startTime));
+  const [timerString, setTimerString] = useState<string>('0:00');
+  const [progress, setProgress] = useState<number>((initialRemainingSeconds / totalTime) * 100);
+
+  const currentTimeMilli = useRef<number>(initialRemainingSeconds * 1000);
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
   const originalTimeRef = useRef<number | null>(null);
@@ -89,8 +105,8 @@ export default function Timer({
         originalTimeRef.current = timestamp;
       }
       if (currentTimeMilli.current <= 0) {
-        // dont do anything if less than 0
-      } 
+        onTimerComplete?.();
+      }
       else {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
@@ -108,10 +124,11 @@ export default function Timer({
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, startTime: newStartTime}});
   }
 
+  const defaultActiveStates = [GameSessionState.CHOOSE_CORRECT_ANSWER, GameSessionState.CHOOSE_TRICKIEST_ANSWER];
+  const resolvedActiveStates = activeStates ?? defaultActiveStates;
+
   useEffect(() => {
-    if ( localGameSession.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
-      && localGameSession.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER
-    ) {
+    if (!resolvedActiveStates.includes(localGameSession.currentState)) {
       isTimerActiveRef.current = false;
       currentTimeMilli.current = 0;
       setTimerString('0:00');
@@ -128,20 +145,30 @@ export default function Timer({
    return () => cancelAnimationFrame(animationRef.current ?? 0);
   }, [localGameSession.currentState, localGameSession.startTime]); // eslint-disable-line
   return (
-    <TimerContainer>
+    <TimerContainer sx={width ? { width } : undefined}>
       <Box style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%',  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px)`, opacity: isTimerActiveRef.current ? 1 : 0.4,  }}>
-        <TimerBar value={progress} variant="determinate"/>
-        <Box style={{minWidth: '30px'}}>
-          <Typography
-            alignSelf="center"
-            variant="h6"
-            style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik', lineHeight: '14px' }}
-          >
-            {timerString}
-          </Typography>
-        </Box>
+        <TimerBar
+          value={fillLeftToRight ? 100 - progress : progress}
+          initial={0}
+          variant="determinate"
+          sx={{
+            ...(barBackground && { backgroundColor: barBackground }),
+            ...(barGradient && { '& .MuiLinearProgress-bar': { background: barGradient } }),
+          }}
+        />
+        {!hideTimerText && (
+          <Box style={{minWidth: '30px'}}>
+            <Typography
+              alignSelf="center"
+              variant="h6"
+              style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik', lineHeight: '14px' }}
+            >
+              {timerString}
+            </Typography>
+          </Box>
+        )}
       </Box>
-      { localGameSession.currentState !== GameSessionState.TEAMS_JOINING &&
+      { isAddTime !== false && localGameSession.currentState !== GameSessionState.TEAMS_JOINING &&
         <TimerAddButton onClick={handleAddTime} disabled={currentTimeMilli.current <= 0}>
           <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
             {t('gamesession.addtime')}
