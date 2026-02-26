@@ -1,0 +1,60 @@
+/* Shared button styles (used across multiple pages)
+   Extracted from YourNextSteps so pages like Intervention Patterns can reuse the
+   exact same "View details" button design without depending on unrelated CSS imports.
+*/
+
+.yns-btn {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #e5e5e5;
+  background-color: #FFFFFF;
+  color: #1B376F;
+}
+
+.yns-btn.primary {
+  background-color: #1B376F;
+  border-color: #1B376F;
+  color: #FFFBF6;
+}
+
+.yns-btn.primary:hover {
+  background-color: #153056;
+}
+
+.yns-btn.primary:disabled,
+.yns-btn.primary[aria-disabled="true"] {
+  /* Keep the button visible but clearly disabled via a lighter fill */
+  opacity: 1;
+  background-color: rgba(27, 55, 111, 0.35);
+  border-color: rgba(27, 55, 111, 0.35);
+  color: rgba(255, 251, 246, 0.95);
+}
+
+.yns-btn.primary:disabled:hover,
+.yns-btn.primary[aria-disabled="true"]:hover {
+  background-color: rgba(27, 55, 111, 0.35);
+}
+
+.yns-btn.secondary:hover {
+  background-color: rgba(27, 55, 111, 0.08);
+}
+
+.yns-btn.tiny {
+  padding: 6px 10px;
+}
+
+.yns-btn:disabled {
+  cursor: not-allowed;
+}
+
+.yns-details-btn {
+  white-space: nowrap;
+}
+
+.yns-details-btn:focus-visible {
+  outline: 3px solid rgba(27, 55, 111, 0.35);
+  outline-offset: 2px;
+}

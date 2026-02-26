@@ -1,0 +1,116 @@
+
+.header {
+  width: 100vw;
+  height: 80px;
+  background-color: #1B376F;
+  background-image: url('../mathSymbolsBackground.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.header-title {
+  color: #FFFBF6;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.total-games {
+  display: flex;
+  align-items: center;
+}
+
+.games-count {
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.date-range-selector {
+  display: flex;
+  align-items: center;
+}
+
+.date-dropdown {
+  background-color: transparent;
+  color: #FFFBF6;
+  border: 1px solid #FFFBF6;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: 'Rubik', sans-serif;
+}
+
+.date-dropdown option {
+  background-color: #1B376F;
+  color: #FFFBF6;
+}
+
+.export-button {
+  width: 120px;
+  height: 32px;
+  background-color: transparent;
+  color: #FFFBF6;
+  border: 1px solid #FFFBF6;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'Rubik', sans-serif;
+}
+
+.export-button:hover {
+  background-color: rgba(255, 251, 246, 0.1);
+}
+
+.class-selector {
+  margin-left: 32px;
+}
+
+.class-dropdown {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 251, 246, 0.3);
+  border-radius: 4px;
+  background-color: rgba(255, 251, 246, 0.1);
+  color: #FFFBF6;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 180px;
+  font-family: 'Rubik', sans-serif;
+}
+
+.class-dropdown option {
+  background-color: #1B376F;
+  color: #FFFBF6;
+}
+
+.class-dropdown:focus {
+  outline: none;
+  border-color: white;
+}

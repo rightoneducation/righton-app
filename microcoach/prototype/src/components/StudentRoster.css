@@ -1,0 +1,135 @@
+.student-roster {
+  width: 100%;
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.roster-header {
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.roster-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.roster-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.roster-table-container {
+  overflow-x: auto;
+}
+
+.roster-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.roster-table th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 2px solid #e5e5e5;
+  white-space: nowrap;
+}
+
+.roster-table th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.roster-table th:last-child {
+  border-top-right-radius: 8px;
+}
+
+.student-row {
+  transition: background-color 0.2s ease;
+}
+
+.student-row:hover {
+  background-color: #f8f9fa;
+}
+
+.roster-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e5e5;
+  vertical-align: middle;
+}
+
+.student-name {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.performance-score,
+.confidence-score {
+  font-weight: 500;
+  color: #555;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.student-status {
+  text-align: center;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .roster-table {
+    font-size: 12px;
+  }
+  
+  .roster-table th,
+  .roster-table td {
+    padding: 8px 12px;
+  }
+  
+  .status-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
+/* Scrollbar styling for table container */
+.roster-table-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.roster-table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.roster-table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.roster-table-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

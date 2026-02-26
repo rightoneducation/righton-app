@@ -1,0 +1,62 @@
+.navigation-tabs {
+  width: 100vw;
+  height: 48px;
+  background-color: #1B376F;
+  background-image: url('../mathSymbolsBackground.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  z-index: 999;
+}
+
+.tabs-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.tab {
+  height: calc(100% - 8px);
+  padding: 0 24px;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  font-family: 'Rubik', sans-serif;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  margin-top: 8px;
+  position: relative;
+}
+
+.tab-active {
+  background-color: #FFFBF6;
+  color: #1B376F;
+  border-bottom: none;
+  font-weight: 500;
+  margin-bottom: -3px;
+  z-index: 1;
+}
+
+.tab-inactive {
+  background-color: transparent;
+  color: #FFFBF6;
+}
+
+.tab-inactive:hover {
+  background-color: rgba(255, 251, 246, 0.1);
+  color: #FFFBF6;
+}
