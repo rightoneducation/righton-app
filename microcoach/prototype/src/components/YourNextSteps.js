@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 import './YourNextSteps.css';
 import './SharedButtons.css';
 import NextStepDetailsModal from './NextStepDetailsModal';
@@ -34,7 +35,8 @@ const YourNextSteps = ({
   onChangeSort,
   onRemove,
   onMarkComplete,
-  onReorder
+  onReorder,
+  isLoading = false,
 }) => {
   const getStandardComponents = (item) => {
     const standard = item?.targetObjectiveStandard;
@@ -286,7 +288,11 @@ const YourNextSteps = ({
         </div>
       </div>
 
-      {plannedItems.length === 0 && (!completedNextSteps || completedNextSteps.length === 0) ? (
+      {isLoading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+          <CircularProgress />
+        </div>
+      ) : plannedItems.length === 0 && (!completedNextSteps || completedNextSteps.length === 0) ? (
         <div className="yns-empty">
           <div className="yns-empty-title">No next steps yet</div>
           <div className="yns-empty-body">

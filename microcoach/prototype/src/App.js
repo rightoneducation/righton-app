@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { APIClient } from '@righton/microcoach-api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Header from './components/Header';
@@ -9,8 +9,6 @@ import YourNextSteps from './components/YourNextSteps';
 import InterventionPatterns from './components/InterventionPatterns';
 import './App.css';
 
-const LS_NEXT_STEPS_KEY = 'microcoach.nextSteps.v1';
-const LS_NEXT_STEPS_HISTORY_KEY = 'microcoach.nextSteps.history.v1';
 
 const LOADING_STEPS = [
   'Analyzing Class Data...',
@@ -27,9 +25,50 @@ function App() {
   const [nextStepsSort, setNextStepsSort] = useState('manual');
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingNextSteps, setIsLoadingNextSteps] = useState(true);
   const [loadingStepIndex, setLoadingStepIndex] = useState(0);
   const [aiGapGroups, setAiGapGroups] = useState(null);
   const [classroomStudents, setClassroomStudents] = useState(null);
+
+  // Refs so CRUD handlers can reach the API without being inside the fetch useEffect
+  const apiClientRef = useRef(null);
+  const classroomIdRef = useRef(null);
+
+  // Map a backend SavedNextStep record back to the local item shape used by the UI
+  const dbItemToLocal = (db) => ({
+    id: db.id,
+    createdAt: db.createdAt ? new Date(db.createdAt).getTime() : Date.now(),
+    completedAt: db.completedAt ? new Date(db.completedAt).getTime() : undefined,
+    status: db.status ?? 'planned',
+    gapGroupId: db.misconceptionId,
+    gapGroupTitle: db.misconceptionTitle,
+    targetObjectiveStandard: db.targetObjectiveStandard,
+    priority: db.priority,
+    studentCount: db.studentCount,
+    studentPercent: db.studentPercent,
+    occurrence: db.occurrence,
+    misconceptionSummary: db.misconceptionSummary,
+    successIndicators: db.successIndicators ?? [],
+    ccssStandards: db.targetObjectiveStandard
+      ? { targetObjective: { standard: db.targetObjectiveStandard, description: '' }, prerequisiteGaps: [], impactedObjectives: [] }
+      : undefined,
+    moveId: db.activityId,
+    moveTitle: db.activityTitle,
+    moveTime: db.activityTime,
+    moveFormat: db.activityFormat,
+    moveSummary: db.activitySummary,
+    aiReasoning: db.aiReasoning,
+    evidence: db.evidence ?? null,
+    move: {
+      id: db.activityId,
+      title: db.activityTitle,
+      time: db.activityTime,
+      format: db.activityFormat,
+      summary: db.activitySummary,
+      aiReasoning: db.aiReasoning,
+      tabs: db.tabs ?? null,
+    },
+  });
 
   const priorityLabel = (p) => ({ '1': 'Critical', '2': 'High', '3': 'Medium', '4': 'Low' }[p] ?? 'Medium');
   const occurrenceLabel = (o) => o === 'recurring' ? 'Recurring' : '1st occurrence';
@@ -118,6 +157,29 @@ function App() {
           setClassroomStudents(gr6.students.items);
         }
 
+        // Store refs so CRUD handlers outside this effect can reach the API
+        apiClientRef.current = client;
+        classroomIdRef.current = gr6.id;
+
+        // Load persisted next steps from the backend early — before the slow AI calls —
+        // so the user sees their saved items immediately.
+        const savedItems = (await client.listSavedNextSteps(gr6.id)) ?? [];
+        if (!cancelled) {
+          if (savedItems.length) {
+            const active = savedItems.filter((x) => x.status !== 'completed').map(dbItemToLocal);
+            const completed = savedItems.filter((x) => x.status === 'completed').map(dbItemToLocal);
+            setNextSteps(active);
+            setNextStepsHistory(
+              completed.map((item) => ({
+                id: `yns-item-${item.id}-${item.completedAt}`,
+                completedAt: item.completedAt,
+                items: [item],
+              }))
+            );
+          }
+          setIsLoadingNextSteps(false);
+        }
+
         const sessionStubs = await client.listSessions(gr6.id);
         if (!sessionStubs.length) return;
 
@@ -167,6 +229,7 @@ function App() {
       } finally {
         if (!cancelled) {
           setIsLoading(false);
+          setIsLoadingNextSteps(false);
           setLoadingStepIndex(0);
         }
       }
@@ -176,69 +239,7 @@ function App() {
     return () => { cancelled = true; };
   }, []);
 
-  const enrichSavedNextStep = (item) => {
-    try {
-      return {
-        ...item,
-        move: item?.move ?? {
-          id: item?.moveId,
-          title: item?.moveTitle,
-          time: item?.moveTime,
-          format: item?.moveFormat,
-          summary: item?.moveSummary,
-          aiReasoning: item?.aiReasoning,
-          tabs: undefined,
-        },
-      };
-    } catch {
-      return item;
-    }
-  };
 
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(LS_NEXT_STEPS_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) setNextSteps(parsed.map(enrichSavedNextStep));
-    } catch (e) {
-      // no-op (corrupt storage should not break the app)
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(LS_NEXT_STEPS_HISTORY_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        setNextStepsHistory(
-          parsed.map((h) => ({
-            ...h,
-            items: Array.isArray(h?.items) ? h.items.map(enrichSavedNextStep) : h?.items
-          }))
-        );
-      }
-    } catch (e) {
-      // no-op
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(LS_NEXT_STEPS_KEY, JSON.stringify(nextSteps));
-    } catch (e) {
-      // no-op (storage may be disabled)
-    }
-  }, [nextSteps]);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(LS_NEXT_STEPS_HISTORY_KEY, JSON.stringify(nextStepsHistory));
-    } catch (e) {
-      // no-op
-    }
-  }, [nextStepsHistory]);
 
   const sortedNextSteps = useMemo(() => {
     if (nextStepsSort === 'manual') return nextSteps;
@@ -280,10 +281,9 @@ function App() {
     const newItem = {
       id: `${gapGroup.id}-${move.id}-${Date.now()}`,
       createdAt: Date.now(),
-      status: 'planned', // planned | completed
+      status: 'planned',
       gapGroupId: gapGroup.id,
       gapGroupTitle: gapGroup.title,
-      // Learning objective standard (e.g., "8.EE.7") used as a pill in Saved Next Steps + Intervention Patterns
       targetObjectiveStandard: gapGroup?.ccssStandards?.targetObjective?.standard,
       priority: gapGroup.priority,
       studentCount: gapGroup.studentCount,
@@ -300,13 +300,48 @@ function App() {
       moveSummary: move.summary,
       aiReasoning: move.aiReasoning,
       evidence: gapGroup.evidence,
-      move: normalizedMove
+      move: normalizedMove,
     };
+
     setNextSteps((prev) => [newItem, ...prev]);
+
+    // Persist to backend (fire-and-forget — UI is already updated optimistically)
+    const client = apiClientRef.current;
+    const classroomId = classroomIdRef.current;
+    if (client && classroomId) {
+      client.createSavedNextStep(classroomId, {
+        id: newItem.id,
+        classroomId,
+        status: 'planned',
+        misconceptionId: gapGroup.id,
+        misconceptionTitle: gapGroup.title,
+        targetObjectiveStandard: newItem.targetObjectiveStandard,
+        priority: gapGroup.priority,
+        studentCount: gapGroup.studentCount,
+        studentPercent: gapGroup.studentPercent,
+        occurrence: gapGroup.occurrence,
+        misconceptionSummary: gapGroup.misconceptionSummary,
+        successIndicators: gapGroup.successIndicators ?? [],
+        activityId: move.id,
+        activityTitle: move.title,
+        activityTime: move.time,
+        activityFormat: move.format,
+        activitySummary: move.summary,
+        aiReasoning: move.aiReasoning,
+        evidence: gapGroup.evidence ?? undefined,
+        tabs: normalizedMove?.tabs ?? undefined,
+      }).catch((err) => console.error('[addNextStep] backend save failed', err));
+    }
   };
 
   const removeNextStep = (id) => {
     setNextSteps((prev) => prev.filter((x) => x.id !== id));
+
+    const client = apiClientRef.current;
+    if (client) {
+      client.deleteSavedNextStep(id)
+        .catch((err) => console.error('[removeNextStep] backend delete failed', err));
+    }
   };
 
   const completeNextStep = (id) => {
@@ -317,16 +352,18 @@ function App() {
     const completedItem = { ...existing, status: 'completed', completedAt };
 
     setNextStepsHistory((prev) => [
-      {
-        id: `yns-item-${id}-${completedAt}`,
-        completedAt,
-        items: [completedItem]
-      },
+      { id: `yns-item-${id}-${completedAt}`, completedAt, items: [completedItem] },
       ...(prev || [])
     ]);
-
-    // Remove from active list after archiving.
     setNextSteps((prev) => prev.filter((x) => x.id !== id));
+
+    const client = apiClientRef.current;
+    if (client) {
+      client.updateSavedNextStep(id, {
+        status: 'completed',
+        completedAt: new Date(completedAt).toISOString(),
+      }).catch((err) => console.error('[completeNextStep] backend update failed', err));
+    }
   };
 
   const reorderNextSteps = (dragId, dropId, position = 'below') => {
@@ -502,6 +539,7 @@ function App() {
                   onRemove={removeNextStep}
                   onMarkComplete={completeNextStep}
                   onReorder={reorderNextSteps}
+                  isLoading={isLoadingNextSteps}
                 />
               </div>
             )}
