@@ -171,18 +171,20 @@ function FooterGameInProgress({
           </Typography>
         )}
         {buttonText === 'Continue' && (
-          <Timer
-            totalTime={currentState === GameSessionState.PHASE_1_DISCUSS ? 6 : 8}
-            isAddTime={false}
-            localGameSession={localGameSession}
-            activeStates={[GameSessionState.PHASE_1_DISCUSS, GameSessionState.PHASE_2_DISCUSS]}
-            barGradient="linear-gradient(to right, #1C94C3, #3153C7)"
-            barBackground="#08458F33"
-            fillLeftToRight
-            onTimerComplete={() => setIsTimerComplete(true)}
-            width="300px"
-            hideTimerText
-          />
+          <Box style={{ opacity: isTimerComplete ? 0 : 1, transition: 'opacity 0.5s ease' }}>
+            <Timer
+              totalTime={currentState === GameSessionState.PHASE_1_DISCUSS ? 6 : 8}
+              isAddTime={false}
+              localGameSession={localGameSession}
+              activeStates={[GameSessionState.PHASE_1_DISCUSS, GameSessionState.PHASE_2_DISCUSS]}
+              barGradient="linear-gradient(to right, #1C94C3, #3153C7)"
+              barBackground="#08458F33"
+              fillLeftToRight
+              onTimerComplete={() => setIsTimerComplete(true)}
+              width="300px"
+              hideTimerText
+            />
+          </Box>
         )}
         <ButtonStyled
           disabled={teamsLength <= 0 || (buttonText === 'Continue' && !isTimerComplete)}
