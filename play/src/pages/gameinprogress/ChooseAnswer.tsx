@@ -128,6 +128,43 @@ export default function ChooseAnswer({
     )
   );
 
+  const belowCardMessage = (() => {
+    if (isTimeUp) {
+      return (
+        <Typography
+          sx={{
+            fontWeight: 700,
+            marginTop: `${theme.sizing.largePadding}px`,
+            marginX: `${theme.sizing.largePadding}px`,
+            fontSize: `${theme.typography.h4.fontSize}px`,
+            textAlign: 'center',
+          }}
+        >
+          {t('gameinprogress.chooseanswer.answertimeup')}
+        </Typography>
+      );
+    }
+    if (!isConfidenceEnabled) {
+      return (
+        <>
+          {displaySubmitted ? onSubmitDisplay : null}
+          <Typography
+            sx={{
+              fontWeight: 700,
+              marginTop: `${theme.sizing.largePadding}px`,
+              marginX: `${theme.sizing.largePadding}px`,
+              fontSize: `${theme.typography.h4.fontSize}px`,
+              textAlign: 'center',
+            }}
+          >
+            {t('gameinprogress.chooseanswer.answerthankyou2')}
+          </Typography>
+        </>
+      );
+    }
+    return null;
+  })();
+
   const answerContents = (
     <Grid item xs={12} sm style={{ 
       width: '100%',
@@ -197,34 +234,7 @@ export default function ChooseAnswer({
               </Fade>
             )}
 
-            {isTimeUp ? (
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                  marginTop: `${theme.sizing.largePadding}px`,
-                  marginX: `${theme.sizing.largePadding}px`,
-                  fontSize: `${theme.typography.h4.fontSize}px`,
-                  textAlign: 'center',
-                }}
-              >
-                {t('gameinprogress.chooseanswer.answertimeup')}
-              </Typography>
-            ) : !isConfidenceEnabled ? (
-              <>
-                {displaySubmitted ? onSubmitDisplay : null}
-                <Typography
-                  sx={{
-                    fontWeight: 700,
-                    marginTop: `${theme.sizing.largePadding}px`,
-                    marginX: `${theme.sizing.largePadding}px`,
-                    fontSize: `${theme.typography.h4.fontSize}px`,
-                    textAlign: 'center',
-                  }}
-                >
-                  {t('gameinprogress.chooseanswer.answerthankyou2')}
-                </Typography>
-              </>
-            ) : null}
+            {belowCardMessage}
           </>
         ) : null}
       </ScrollBoxStyled>
