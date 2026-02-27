@@ -61,6 +61,34 @@ export const handler = async (event) => {
         identifier
         description
       }
+      factorsrelevantToStandard {
+        identifier
+        name
+        description
+        category
+        gradeLevel
+        academicSubject
+        strategiestargetsFactor {
+          identifier
+          name
+          description
+          category
+          gradeLevel
+          academicSubject
+        }
+        learnerModelshasFactor {
+          identifier
+          name
+          description
+          gradeLevel
+          academicSubject
+        }
+        interactsWithFactorFactors {
+          identifier
+          name
+          description
+        }
+      }
     }
   }
   `;
@@ -118,6 +146,8 @@ export const handler = async (event) => {
         dataKeys: data ? Object.keys(data) : [],
         responsePreview: JSON.stringify(data).substring(0, 500)
       });
+
+      console.log('[LVN] Raw GraphQL response:', JSON.stringify(data, null, 2));
 
       if (data?.errors) {
         console.error('GraphQL errors in response', {
