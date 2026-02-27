@@ -127,6 +127,7 @@ export default function ChooseAnswer({
       </Typography>
     )
   );
+
   const answerContents = (
     <Grid item xs={12} sm style={{ 
       width: '100%',
@@ -208,7 +209,7 @@ export default function ChooseAnswer({
               >
                 {t('gameinprogress.chooseanswer.answertimeup')}
               </Typography>
-            ) : (
+            ) : !isConfidenceEnabled ? (
               <>
                 {displaySubmitted ? onSubmitDisplay : null}
                 <Typography
@@ -223,7 +224,7 @@ export default function ChooseAnswer({
                   {t('gameinprogress.chooseanswer.answerthankyou2')}
                 </Typography>
               </>
-            )}
+            ) : null}
           </>
         ) : null}
       </ScrollBoxStyled>
