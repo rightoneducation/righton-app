@@ -76,7 +76,7 @@ export default function EnableConfidenceCard({
       </TitleContainer>
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <BodyTypography>
-          You may allow players to indicate how sure they are of their answer.
+          Players rate how sure they are of their answer.
         </BodyTypography>
       </Box>
     </StyledContainer>

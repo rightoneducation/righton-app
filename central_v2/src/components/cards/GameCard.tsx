@@ -98,7 +98,7 @@ const ButtonContainer = styled(ContentContainer)({
 
 const TitleTextTypography = styled(Typography)(({ theme }) => ({
   width: '100%',
-  lineHeight: '23px',
+  lineHeight: '26px',
   gap: `${theme.sizing.xSmPadding}px`,
   fontFamily: 'Poppins',
   fontWeight: '700',

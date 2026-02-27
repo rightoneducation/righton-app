@@ -34,7 +34,7 @@ function ProgressBarGroup({ submittedAnswers, teamsLength }: ProgressBarProps) {
   const theme = useTheme();
   return (
     <PBContainer>
-      <LabelTypography style={{color: theme.palette.primary.darkBlue}}>Players who have answered</LabelTypography>
+      <LabelTypography style={{color: theme.palette.primary.darkBlue}}>Number of players who have answered:</LabelTypography>
       <ProgressBar inputNum={submittedAnswers} totalNum={teamsLength}/>
     </PBContainer>
   );

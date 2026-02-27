@@ -60,7 +60,7 @@ export default function GameInProgress({
     console.log(currentQuestion);
     console.log(currentPhase);
     console.log(currentPhaseTeamAnswers);
-    const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
+    const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '…' ? acc + response.count : acc, 0) ?? 0;
     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const screenSize = isLargeScreen  // eslint-disable-line

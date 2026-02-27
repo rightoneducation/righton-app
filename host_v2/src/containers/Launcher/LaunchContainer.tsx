@@ -3,6 +3,7 @@ import { Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IAPIClients, GameSessionState, PublicPrivateType } from '@righton/networking';
 import LoadingPage from '../../pages/LoadingPage';
+import { trackEvent, trackError, HostEvent } from '../../lib/analytics';
 
 interface LaunchContainerProps {
   apiClients: IAPIClients;
@@ -25,12 +26,18 @@ export default function LaunchContainer({apiClients, gameId, publicPrivate}: Lau
           currentState: GameSessionState.TEAMS_JOINING,
         })
         .then((updatedResponse) => {
+          trackEvent(HostEvent.GAME_SESSION_CREATED, {
+            gameSessionId: updatedResponse.id,
+            gameId,
+            publicPrivate,
+          });
           window.location.replace(`/host/${updatedResponse.id}`);
         });
-      
+
     })
     .catch((error) => {
       console.error(error);
+      trackError(HostEvent.GAME_SESSION_CREATION_FAILED, error, { gameId, publicPrivate });
     });
   }, []); // eslint-disable-line
 

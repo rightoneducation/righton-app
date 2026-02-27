@@ -16,6 +16,7 @@ import {
   LocalModelLoader,
 } from './containers/GameInProgressContainer';
 import Theme from './lib/Theme';
+import AppErrorBoundary from './components/AppErrorBoundary';
 
 function RedirectToPlayIfMissing() {
   window.location.href = 'http://play.rightoneducation.com/';
@@ -49,9 +50,11 @@ function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>
-        {apiClients &&
-          <RouterProvider router={router} />
-        }
+        <AppErrorBoundary>
+          {apiClients &&
+            <RouterProvider router={router} />
+          }
+        </AppErrorBoundary>
       </ThemeProvider>
     </StyledEngineProvider>
   );

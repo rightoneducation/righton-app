@@ -55,7 +55,7 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const phaseOneResponses = currentQuestion?.answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== '–' || response.isCorrect).reverse();
+  const phaseOneResponses = currentQuestion?.answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== '…' || response.isCorrect).reverse();
   let phaseTwoResponses = null;
   let otherResponses = null;
   if (currentState === GameSessionState.PHASE_2_DISCUSS){
@@ -67,7 +67,7 @@ export default function DiscussAnswer({
     otherResponses = currentQuestion?.answerData.phase1.responses
       .filter(response2 => !selectedRawAnswers.has(response2.rawAnswer) && response2.count > 0 && !response2.isCorrect).reverse();
     } else {
-      phaseTwoResponses = currentQuestion?.answerData.phase2.responses.filter((response) => response.multiChoiceCharacter !== '–' || response.isCorrect).reverse(); 
+      phaseTwoResponses = currentQuestion?.answerData.phase2.responses.filter((response) => response.multiChoiceCharacter !== '…' || response.isCorrect).reverse(); 
     }
   }
   const correctResponse = currentQuestion.answerData.phase1.responses.find((response) => response.isCorrect);

@@ -11,6 +11,7 @@ import {useAPIClients, Environment, AppType, APIClients} from '@righton/networki
 import LaunchWrapper from './containers/Launcher/LaunchWrapper';
 import GameSessionWrapper from './containers/GameSession/GameSessionWrapper';
 import Theme from './lib/Theme';
+import AppErrorBoundary from './components/AppErrorBoundary';
 
 function RedirectToCentralIfMissing() {
   window.location.href = 'http://central.rightoneducation.com/';
@@ -36,7 +37,9 @@ function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>
-        <RouterProvider router={router} />
+        <AppErrorBoundary>
+          <RouterProvider router={router} />
+        </AppErrorBoundary>
       </ThemeProvider>
     </StyledEngineProvider>
   );

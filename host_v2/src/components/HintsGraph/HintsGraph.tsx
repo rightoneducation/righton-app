@@ -44,7 +44,7 @@ export default function HintsGraph({
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef<HTMLElement | null>(null);
 
-  const noResponseLabel = '–';
+  const noResponseLabel = '…';
   const labelOffset = 3;
   const barThickness = 18;
   const barThicknessZero = 26;

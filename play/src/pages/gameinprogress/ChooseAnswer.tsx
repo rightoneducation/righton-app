@@ -38,8 +38,7 @@ interface ChooseAnswerProps {
   selectedConfidenceOption: string;
   handleSelectConfidence: (confidence: ConfidenceLevel) => void;
   isConfidenceSelected: boolean;
-  timeOfLastConfidenceSelect: number;
-  setTimeOfLastConfidenceSelect: (time: number) => void;
+  isTimeUp: boolean;
   isShortAnswerEnabled: boolean;
   backendAnswer: BackendAnswer;
   currentQuestionIndex: number;
@@ -67,8 +66,7 @@ export default function ChooseAnswer({
   selectedConfidenceOption,
   handleSelectConfidence,
   isConfidenceSelected,
-  timeOfLastConfidenceSelect,
-  setTimeOfLastConfidenceSelect,
+  isTimeUp,
   isShortAnswerEnabled,
   backendAnswer,
   currentQuestionIndex,
@@ -129,6 +127,44 @@ export default function ChooseAnswer({
       </Typography>
     )
   );
+
+  const belowCardMessage = (() => {
+    if (isTimeUp) {
+      return (
+        <Typography
+          sx={{
+            fontWeight: 700,
+            marginTop: `${theme.sizing.largePadding}px`,
+            marginX: `${theme.sizing.largePadding}px`,
+            fontSize: `${theme.typography.h4.fontSize}px`,
+            textAlign: 'center',
+          }}
+        >
+          {t('gameinprogress.chooseanswer.answertimeup')}
+        </Typography>
+      );
+    }
+    if (!isConfidenceEnabled) {
+      return (
+        <>
+          {displaySubmitted ? onSubmitDisplay : null}
+          <Typography
+            sx={{
+              fontWeight: 700,
+              marginTop: `${theme.sizing.largePadding}px`,
+              marginX: `${theme.sizing.largePadding}px`,
+              fontSize: `${theme.typography.h4.fontSize}px`,
+              textAlign: 'center',
+            }}
+          >
+            {t('gameinprogress.chooseanswer.answerthankyou2')}
+          </Typography>
+        </>
+      );
+    }
+    return null;
+  })();
+
   const answerContents = (
     <Grid item xs={12} sm style={{ 
       width: '100%',
@@ -175,8 +211,7 @@ export default function ChooseAnswer({
                     handleSelectOption={handleSelectConfidence}
                     isSelected={isConfidenceSelected}
                     isSmallDevice={isSmallDevice}
-                    timeOfLastSelect={timeOfLastConfidenceSelect}
-                    setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+                    isTimeUp={isTimeUp}
                   />
                 </Box>
               </Fade>
@@ -199,18 +234,7 @@ export default function ChooseAnswer({
               </Fade>
             )}
 
-            {displaySubmitted ? onSubmitDisplay : null}
-            <Typography
-              sx={{
-                fontWeight: 700,
-                marginTop: `${theme.sizing.largePadding}px`,
-                marginX: `${theme.sizing.largePadding}px`,
-                fontSize: `${theme.typography.h4.fontSize}px`,
-                textAlign: 'center',
-              }}
-            >
-              {t('gameinprogress.chooseanswer.answerthankyou2')}
-            </Typography>
+            {belowCardMessage}
           </>
         ) : null}
       </ScrollBoxStyled>
@@ -271,8 +295,7 @@ export default function ChooseAnswer({
                         handleSelectOption={handleSelectConfidence}
                         isSelected={isConfidenceSelected}
                         isSmallDevice={isSmallDevice}
-                        timeOfLastSelect={timeOfLastConfidenceSelect}
-                        setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+                        isTimeUp={isTimeUp}
                       />
                    }
                    {isHintEnabled && currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER  &&

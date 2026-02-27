@@ -110,6 +110,7 @@ const StyledRect = styled(Box)({
 interface PlayersSelectedAnswerProps {
     data: IHostTeamAnswersResponse[];
     graphClickIndex: number;
+    noResponseIndex: number;
     numPlayers: number;
     statePosition: number;
     isShortAnswerEnabled: boolean;
@@ -119,6 +120,7 @@ interface PlayersSelectedAnswerProps {
 export default function PlayersSelectedAnswer({
   data, 
   graphClickIndex, 
+  noResponseIndex,
   numPlayers, 
   statePosition, 
   isShortAnswerEnabled,

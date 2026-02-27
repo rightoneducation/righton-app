@@ -2,6 +2,7 @@ import { useState, useEffect, useReducer } from 'react';
 import { IAPIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient, ITeam, GameSessionState } from '@righton/networking';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
 import { HostTeamAnswersReducer } from '../lib/reducer/HostTeamAnswersReducer';
+import { identifySession, trackEvent, trackError, HostEvent } from '../lib/analytics';
 
 export default function useInitHostContainer(apiClients: IAPIClients, gameSessionId: string): { gameSession: IGameSession | null, hostTeamAnswers: IHostTeamAnswers | null, dispatch: any, dispatchHostTeamAnswers: any } {
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
@@ -13,8 +14,12 @@ export default function useInitHostContainer(apiClients: IAPIClients, gameSessio
         const initGameSession = dataManager.getGameSession(); // eslint-disable-line
         const initHostTeamAnswers = dataManager.initHostTeamAnswers(initGameSession); // eslint-disable-line
         console.log('initHostTeamAnswers', initHostTeamAnswers);
-        dispatch({type: 'synch_local_gameSession', payload: {...initGameSession}}); 
+        dispatch({type: 'synch_local_gameSession', payload: {...initGameSession}});
         dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...initHostTeamAnswers}});
+        identifySession(initGameSession.id, {
+          gameCode: initGameSession.gameCode,
+          questionCount: initGameSession.questions.length,
+        });
       });
 
       dataManager.subscribeToCreateTeam((updatedGameSession: IGameSession | null) => {
@@ -23,6 +28,10 @@ export default function useInitHostContainer(apiClients: IAPIClients, gameSessio
           dispatch({
             type: 'synch_local_gameSession',
             payload: { ...updatedGameSession }
+          });
+          trackEvent(HostEvent.TEAM_JOINED, {
+            gameSessionId: updatedGameSession.id,
+            teamCount: updatedGameSession.teams.length,
           });
         } else {
           console.error('Received null or undefined updatedGameSession');
@@ -65,6 +74,7 @@ export default function useInitHostContainer(apiClients: IAPIClients, gameSessio
 
     } catch (error) {
       console.log('Error:', error);
+      trackError(HostEvent.GAME_SESSION_INIT_ERROR, error, { gameSessionId });
     }
 
     // eslint-disable-next-line consistent-return

@@ -78,7 +78,7 @@ export default function GameEndedHostBody({
               style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
             > 
               <SwiperSlide style={{width: '100%', height: '100%'}}>
-                {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {teams.length === 0 ? <NoPlayersLobby questions={[]} screenSize={screenSize}/> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
               </SwiperSlide>
               <SwiperSlide style={{width: '100%', height: '100%'}}>
                 <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
@@ -91,7 +91,7 @@ export default function GameEndedHostBody({
         return (
           <EndGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {teams.length === 0 || !teams ? <NoPlayersLobby questions={[]} screenSize={screenSize}/> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
                <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>

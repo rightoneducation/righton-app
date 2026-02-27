@@ -51,7 +51,7 @@ export default function Responses({
   // if game is short answer, we don't want to see all answers as they include m/c answers
   const trimmedResponses =
    (isShortAnswerEnabled || (statePosition > 6 && isPrevPhaseResponses)) 
-    ? [...responses.filter((response) => response.multiChoiceCharacter !== '–' && response.count !== 0),...responses.filter((response) => response.multiChoiceCharacter === '–' && response.count !== 0)]
+    ? [...responses.filter((response) => response.multiChoiceCharacter !== '…' && response.count !== 0),...responses.filter((response) => response.multiChoiceCharacter === '…' && response.count !== 0)]
     : responses;
   return (
     <HostDefaultCardStyled>

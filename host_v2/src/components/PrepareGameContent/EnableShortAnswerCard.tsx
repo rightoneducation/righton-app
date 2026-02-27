@@ -141,7 +141,7 @@ export default function EnableShortAnswerCard ({
         <BodyTypography>
           {isShortAnswerEnabled ? 
               `Players will be asked to provide a short answer.`
-            : `Players will be asked to pick from a list of possible answers.`}
+            : `Players choose from a list of answers.`}
         </BodyTypography>
       </StyledAnswerContainer>
    </StyledContainer>

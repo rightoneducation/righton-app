@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, Tooltip } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
+import { ScreenSize } from '../lib/HostModels';
 import GameCode from './GameCode';
 import HelpModal from './HelpModal';
 import { ReactComponent as HelpIcon } from '../images/Help.svg';
@@ -8,6 +9,7 @@ import { ReactComponent as CloseIcon } from '../images/Close.svg';
 
 interface HostHeaderProps {
   gameCode: number;
+  screenSize: ScreenSize;
 }
 
 
@@ -27,10 +29,9 @@ const UpperStyled = styled(Box)(({theme}) => ({
 
 const TopLineStyled = styled(Box)({
   display: 'flex',
-  justifyContent: 'space-between', // send the "game lobby" and the icons to opp sides
+  justifyContent: 'center', // send the "game lobby" and the icons to opp sides
   alignItems: 'center', // align items vertically in the center
   width: '100%', // fixed on the figma, but that would look goofy on bigger screens
-  padding: '0px 0px 0px 8px', 
   gap: '8px', 
   height: '36px',
 });
@@ -42,6 +43,7 @@ const GameLobbyTypographyStyled = styled(Typography)({
   fontWeight: '700',
   color: 'rgba(255, 255, 255, 1)',
   lineHeight: '36px', 
+  textAlign: 'center',
 });
 
 const IconsContainer = styled(Box)({
@@ -58,8 +60,9 @@ const CloseSvg = styled(CloseIcon)({
   cursor: 'pointer', 
 });
 
-function HostHeader({ gameCode }: HostHeaderProps) {
+function HostHeader({ gameCode, screenSize }: HostHeaderProps) {
   const theme = useTheme();
+  
   const [isHelpDisplayed, setIsHelpDisplayed] = useState<boolean>(false);
   const handleHelpClick = () => {
     setIsHelpDisplayed(true);
@@ -69,15 +72,14 @@ function HostHeader({ gameCode }: HostHeaderProps) {
     window.location.href = 'http://central.rightoneducation.com/';
   };
   return (
-    <UpperStyled>
-        {isHelpDisplayed && 
-        <HelpModal isHelpDisplayed={isHelpDisplayed} setIsHelpDisplayed={setIsHelpDisplayed}/>
-      }
-      <TopLineStyled>
-        <Box>
-          <GameLobbyTypographyStyled>Game Lobby </GameLobbyTypographyStyled> 
-        </Box>
-        <IconsContainer>
+    <>
+      <Box style={{
+        position: 'absolute',
+        top: screenSize !== ScreenSize.LARGE ? '56px' : '0px',
+        right: 0,
+        paddingTop: '24px',
+        paddingRight: '24px'
+      }}>
         <Tooltip
               title="Help"
               placement="top"
@@ -99,31 +101,22 @@ function HostHeader({ gameCode }: HostHeaderProps) {
             >
           <HelpSvg onClick={handleHelpClick}/>
         </Tooltip>
-        <Tooltip
-              title="Return to Central"
-              placement="top"
-              arrow
-              enterTouchDelay={0}
-              leaveTouchDelay={300}
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: 'offset',
-                      options: {
-                        offset: [0, -12],
-                      },
-                    },
-                  ],
-                },
-              }}
+      </Box>
+      <UpperStyled>
+        {isHelpDisplayed && 
+          <HelpModal isHelpDisplayed={isHelpDisplayed} setIsHelpDisplayed={setIsHelpDisplayed}/>
+        }
+        <TopLineStyled>
+          <Box>
+            <GameLobbyTypographyStyled
+              style={{fontSize: screenSize !== ScreenSize.LARGE ? '24px' : '32px'}}
             >
-          <CloseSvg onClick={handleCloseClick}/>
-        </Tooltip>
-        </IconsContainer>
-      </TopLineStyled>
-      <GameCode gameCode={gameCode} />
-    </UpperStyled>
+              Game Lobby </GameLobbyTypographyStyled> 
+          </Box>
+        </TopLineStyled>
+        <GameCode gameCode={gameCode} />
+      </UpperStyled>
+    </>
   );
 }
 

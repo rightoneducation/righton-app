@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAnimate } from 'framer-motion';
 import { GameSessionState, IGameSession, IAPIClients, IHostTeamAnswers } from '@righton/networking';
+import { trackEvent, HostEvent } from '../../lib/analytics';
 import GameInProgress from '../../pages/GameInProgress';
 import StartGame from '../../pages/StartGame';
 import Leaderboard from '../../pages/Leaderboard';
@@ -18,6 +19,21 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
   const [isTimerVisible, setIsTimerVisible] = useState<boolean>(false);
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
   const [scope, animate] = useAnimate();
+  const previousStateRef = useRef<GameSessionState | null>(null);
+
+  useEffect(() => {
+    const { currentState } = gameSession;
+    if (previousStateRef.current !== null && previousStateRef.current !== currentState) {
+      trackEvent(HostEvent.GAME_STATE_CHANGED, {
+        previousState: previousStateRef.current,
+        newState: currentState,
+        gameSessionId: gameSession.id,
+        questionIndex: gameSession.currentQuestionIndex,
+        trigger: 'subscription_update',
+      });
+    }
+    previousStateRef.current = currentState;
+  }, [gameSession.currentState]); // eslint-disable-line react-hooks/exhaustive-deps
   const [scope2, animate2] = useAnimate();
   const [scope3, animate3] = useAnimate();
   const gameTemplates = null;

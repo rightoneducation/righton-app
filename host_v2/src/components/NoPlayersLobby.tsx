@@ -1,18 +1,21 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ITeam } from '@righton/networking';
+import { IQuestion } from '@righton/networking';
+import { ScreenSize } from '../lib/HostModels';
 
 
 const EmptyLobbyBodyStyled = styled(Box)({
     overflowY: 'scroll', // Enable vertical scrolling if needed
     flexGrow: 1,
+    height: '100%',
     scrollbarWidth: 'none',
     padding: '16px 12px 16px 12px',
     gap: '12px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'space-between',
 });
 
 const WaitingForPlayersTypographyStyled = styled(Typography)({
@@ -47,17 +50,19 @@ const SwipeTypographyStyled = styled(Typography)({
     color: 'rgba(255, 255, 255, 1)',
     lineHeight: '16.37px', /* same everything */
   });
-export default function NoPlayersLobby() {
+export default function NoPlayersLobby({ questions, screenSize }: { questions: IQuestion[], screenSize: ScreenSize }) {
     return (
     <EmptyLobbyBodyStyled>
       <WaitingForPlayersTypographyStyled>
         Waiting for players to join...
       </WaitingForPlayersTypographyStyled>
+      {questions.length > 1 && screenSize !== ScreenSize.LARGE && (
         <InternalEmptyLobbyBodyStyled>
             <SwipeTypographyStyled>
-                Swipe to the left to show the questions in this game.
+              Swipe left to view game questions.
             </SwipeTypographyStyled>
         </InternalEmptyLobbyBodyStyled>
+      )}
     </EmptyLobbyBodyStyled>
   );
 }

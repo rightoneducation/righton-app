@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   IAPIClients,
   isNullOrUndefined,
@@ -18,6 +18,7 @@ import {
   ErrorType,
 } from '../lib/PlayModels';
 import { calculateCurrentTime } from '../lib/HelperFunctions';
+import { trackEvent, PlayEvent } from '../lib/analytics';
 
 interface GameInProgressContainerProps {
   apiClients: IAPIClients;
@@ -26,14 +27,20 @@ interface GameInProgressContainerProps {
 export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const { apiClients } = props;
   const [retry, setRetry] = useState<number>(0);
-  
-  // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
-  const handleRetry = () => {
-    setRetry(retry + 1);
-  };
+  const errorTrackingRef = useRef(false);
   // retreives game data from react-router loader
   // if no game data, redirects to splashscreen
   const localModel = useLoaderData() as LocalModel;
+
+  // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
+  const handleRetry = () => {
+    trackEvent(PlayEvent.RETRY_ATTEMPTED, {
+      gameSessionId: localModel?.gameSessionId,
+      teamId: localModel?.teamId,
+      retryCount: retry,
+    });
+    setRetry(retry + 1);
+  };
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
 
@@ -45,6 +52,23 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.teamId,
   );
   console.log(subscription.newPoints);
+
+  useEffect(() => {
+    if (subscription.error) {
+      if (!errorTrackingRef.current) {
+        trackEvent(PlayEvent.ERROR_MODAL_SHOWN, {
+          gameSessionId: localModel?.gameSessionId,
+          teamId: localModel?.teamId,
+          errorType: 'CONNECT',
+          errorText: subscription.error,
+          retryCount: retry,
+        });
+        errorTrackingRef.current = true;
+      }
+    } else {
+      errorTrackingRef.current = false;
+    }
+  }, [subscription.error]); // eslint-disable-line react-hooks/exhaustive-deps
 
 
   // if there isn't data in localstorage automatically redirect to the splashscreen
