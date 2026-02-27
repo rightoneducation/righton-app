@@ -140,14 +140,9 @@ export const checkForSelectedConfidenceOnRejoin = (
 ): {
   selectedConfidenceOption: string;
   isSelected: boolean;
-  timeOfLastSelect: number;
 } => {
   let selectedConfidenceOption = ConfidenceLevel.NOT_RATED;
   let isSelected = false;
-  // here, since we do not store time of last select in the backend (5 seconds would be negligible on refresh),
-  // we set the timeOfLastSelect to null to re-initialize the value instead of populating it with the previous value
-  const timeOfLastSelect = 0;
-  // adding dictionary to account for string casting for material UI components
   if (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
@@ -157,7 +152,7 @@ export const checkForSelectedConfidenceOnRejoin = (
     isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
     selectedConfidenceOption = currentAnswer.confidenceLevel;
   }
-  return { selectedConfidenceOption, isSelected, timeOfLastSelect };
+  return { selectedConfidenceOption, isSelected };
 };
 
 /**
