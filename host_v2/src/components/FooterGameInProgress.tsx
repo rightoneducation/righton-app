@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { GameSessionState, IHostTeamAnswersPerPhase, IPhase } from '@righton/networking';
@@ -11,6 +11,7 @@ import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/
 import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { trackEvent, HostEvent } from '../lib/analytics';
 import { IGraphClickInfo, ScreenSize } from '../lib/HostModels';
+import Timer from './Timer';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -50,7 +51,7 @@ const FooterContainer = styled(Box)(({theme}) => ({
   flexDirection: 'column',
   justifyContent: 'flex-end',
   padding: '16px 16px 24px',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
 }));
 
 const InnerFooterContainer = styled(Box)({
@@ -90,11 +91,18 @@ function FooterGameInProgress({
   setIsAnimating,
   setGraphClickInfo
 }: FootGameInProgressProps) {
+  
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
+  const timerTotalTime = currentState === GameSessionState.PHASE_1_DISCUSS ? 6 : 8;
+  const isTimerPhase = currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_DISCUSS;
+  const [isTimerComplete, setIsTimerComplete] = useState(
+    isTimerPhase && (Date.now() - Number(localGameSession.startTime)) >= timerTotalTime * 1000
+  );
+  console.log(isTimerComplete);
   const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     const startTime = Date.now(); 
@@ -133,6 +141,7 @@ function FooterGameInProgress({
         console.log(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id));
         await apiClients.question.updateQuestion({id, order, gameSessionId, answerData: JSON.stringify(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id))});
     }
+    setIsTimerComplete(false);
     trackEvent(HostEvent.GAME_PHASE_ADVANCED, {
       gameSessionId: localGameSession.id,
       fromState: currentState,
@@ -170,7 +179,41 @@ function FooterGameInProgress({
         { (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
           <ProgressBarGroup submittedAnswers={submittedAnswers} teamsLength={teamsLength} />
         }
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>{buttonText}</ButtonStyled>
+        {buttonText === 'Continue' && (
+          <Typography sx={{fontFamily: 'Rubik', fontWeight: '600', fontSize: '16px', color: '#384466'}}>
+            Students are reviewing the correct answer and solution steps
+          </Typography>
+        )}
+        {buttonText === 'Continue' && (
+          <Box style={{ opacity: isTimerComplete ? 0 : 1, transition: 'opacity 0.2s ease' }}>
+            <Timer
+              totalTime={currentState === GameSessionState.PHASE_1_DISCUSS ? 6 : 8}
+              isAddTime={false}
+              localGameSession={localGameSession}
+              activeStates={[GameSessionState.PHASE_1_DISCUSS, GameSessionState.PHASE_2_DISCUSS]}
+              barGradient="linear-gradient(to right, #1C94C3, #3153C7)"
+              barBackground="#08458F33"
+              fillLeftToRight
+              onTimerComplete={() => setIsTimerComplete(true)}
+              width="300px"
+              hideTimerText
+            />
+          </Box>
+        )}
+        <ButtonStyled
+          disabled={teamsLength <= 0 || (buttonText === 'Continue' && !isTimerComplete)}
+          onClick={handleButtonClick}
+          sx={buttonText === 'Continue' && !isTimerComplete ? {
+            '&:disabled': {
+              background: '#75757538',
+              border: 'none',
+              color: 'white',
+              boxShadow: 'none',
+            }
+          } : undefined}
+        >
+          {buttonText}
+        </ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );

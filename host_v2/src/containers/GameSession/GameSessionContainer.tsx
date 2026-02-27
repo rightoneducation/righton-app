@@ -99,6 +99,7 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
     case GameSessionState.FINISHED:
       return (
         <EndGameLobby 
+          currentID={gameSession.id}
           teams={gameSession.teams} 
           gameTemplates={gameTemplates} 
           gameCode={gameSession.gameCode} 

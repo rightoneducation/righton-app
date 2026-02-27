@@ -19,8 +19,8 @@ const BackgroundStyled = styled(Paper)({
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '24px',
-  padding: `16px`,
   backgroundColor: 'rgba(0,0,0,0)',
+  paddingTop: '8px',
   gap: 16
 });
 

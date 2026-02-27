@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { IHostTeamAnswersConfidence, IHostTeamAnswersConfidenceResponse } from '@righton/networking';
-import check from '../../img/Pickedcheck_white.svg';
+import ArrowIcon from '../../images/Arrow.svg';
 
 
 interface DropdownProps {
@@ -14,6 +14,10 @@ interface DropdownProps {
 const Container = styled(Box)(({ theme }) => ({
   paddingTop: `${theme.sizing.smPadding}px`,
   paddingBottom: `${theme.sizing.smPadding}px`,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '7px',
+
 }));
 
 const HeaderContainer = styled(Box)(({ theme }) => ({
@@ -30,12 +34,6 @@ const DropDownContainer = styled(Box)(({ theme }) => ({
   alignSelf: 'stretch',
 }));
 
-const AnswerDataContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: `${theme.sizing.xSmPadding}px`,
-}));
 
 const PlayerCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -58,16 +56,12 @@ const HeaderText = styled(Typography)(({ theme }) => ({
 const ConfidenceLevelText = styled(Typography)(({ theme }) => ({
   color: `${theme.palette.primary.main}`,
   textAlign: 'left',
-  fontSize: `${theme.typography.h5.fontSize}`,
-  fontWeight: `${theme.typography.h6.fontWeight}`,
+  fontSize: '16px',
+  fontWeight: 700,
+  fontFamily: 'Rubik',
+  lineHeight: '100%'
 }));
 
-const AnswerLabelText = styled(Typography)(({ theme }) => ({
-  color: `${theme.palette.primary.playerFeedbackLabelColor}`,
-  textAlign: 'right',
-  fontSize: `${theme.typography.caption.fontSize}`,
-  fontWeight: `${theme.typography.body1.fontWeight}`,
-}));
 
 const NameText = styled(Typography)(({ theme }) => ({
   overflow: 'hidden',
@@ -79,17 +73,14 @@ const NameText = styled(Typography)(({ theme }) => ({
   minWidth: '32px'
 }));
 
-const AnswerText = styled(Typography)(({ theme }) => ({
-  fontSize: `${theme.typography.h5.fontSize}`,
-  color: `${theme.palette.primary.main}`,
-  fontWeight: `${theme.typography.h5.fontWeight}`
-}));
 
 export default function ConfidenceResponseDropdown({
   graphClickIndex,
   selectedConfidence,
 }: DropdownProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const [isExpanded, setIsExpanded] = useState(false);
   const ConfidenceLevelDictionary: { [key: number]: string } = {
     0: 'Not Rated',
     1: 'Not At All Confident',
@@ -98,14 +89,10 @@ export default function ConfidenceResponseDropdown({
     4: 'Very Confident',
     5: 'Totally Confident',
   };
-  const playerResponse = (team: string, answer: string, isCorrect: boolean): React.ReactNode => {
+  const playerResponse = (team: string): React.ReactNode => {
     return (
       <PlayerCard>
         <NameText>{team}</NameText>
-        <AnswerDataContainer>
-          {isCorrect && <img src={check} width={18} height={24} alt="" />}
-          <AnswerText>{answer}</AnswerText>
-        </AnswerDataContainer>
       </PlayerCard>
     );
   };
@@ -146,22 +133,27 @@ export default function ConfidenceResponseDropdown({
                 'gamesession.confidenceCard.graph.dropdown.header.containsResponses',
               )}
             </HeaderText>
-            <ConfidenceLevelText>
-              {graphClickIndex !== null &&
-                ConfidenceLevelDictionary[graphClickIndex]}
-            </ConfidenceLevelText>
-            <AnswerLabelText>
-              {t('gamesession.confidenceCard.graph.dropdown.answerLabel')}
-            </AnswerLabelText>
+            <Box
+              onClick={() => setIsExpanded(!isExpanded)}
+              style={{  display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', borderRadius: '8px', padding: '8px 12px', backgroundColor: '#FFFFFF33' }}
+            >
+              <ConfidenceLevelText>
+                {graphClickIndex !== null &&
+                  ConfidenceLevelDictionary[graphClickIndex]}
+              </ConfidenceLevelText>
+              <img src={ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+            </Box>
           </HeaderContainer>
-          <DropDownContainer>
-            {sortedPlayers.correct.map((playerData) =>
-              playerResponse(playerData.team, playerData.rawAnswer, true),
-            )}
-            {sortedPlayers.incorrect.map((playerData) =>
-              playerResponse(playerData.team, playerData.rawAnswer, false),
-            )}
-          </DropDownContainer>
+          {isExpanded && (
+            <DropDownContainer>
+              {sortedPlayers.correct.map((playerData) =>
+                playerResponse(playerData.team),
+              )}
+              {sortedPlayers.incorrect.map((playerData) =>
+                playerResponse(playerData.team),
+              )}
+            </DropDownContainer>
+          )}
         </>
       )}
     </Container>

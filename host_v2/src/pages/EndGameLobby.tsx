@@ -21,6 +21,7 @@ interface EndGameLobbyProps {
   teams: ITeam[]
   gameCode: number,
   currentQuestionIndex: number,
+  currentID: string
 }  
 
 const BackgroundStyled = styled(Paper)({
@@ -42,7 +43,7 @@ const SafeAreaStyled = styled(Box)({
   boxSizing: 'border-box',
   gap: '16px',
 });
-function EndGameLobby({teams,
+function EndGameLobby({currentID, teams,
   gameTemplates,
   gameCode,
   currentQuestionIndex,
@@ -60,7 +61,7 @@ function EndGameLobby({teams,
       apiClients.gameTemplate.listGameTemplatesByGrade(publicPrivate, 5, null, null, null, [], []).then((response) => {
         console.log(response);
         if (response && setSuggestedGameTemplates)
-          setSuggestedGameTemplates(response.gameTemplates);
+          setSuggestedGameTemplates(response.gameTemplates.filter((template: IGameTemplate) => template.id !== currentID));
       });
     },[]) // eslint-disable-line
 
