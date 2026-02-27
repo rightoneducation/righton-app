@@ -91,12 +91,18 @@ function FooterGameInProgress({
   setIsAnimating,
   setGraphClickInfo
 }: FootGameInProgressProps) {
+  
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
-  const [isTimerComplete, setIsTimerComplete] = useState(false);
+  const timerTotalTime = currentState === GameSessionState.PHASE_1_DISCUSS ? 6 : 8;
+  const isTimerPhase = currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_DISCUSS;
+  const [isTimerComplete, setIsTimerComplete] = useState(
+    isTimerPhase && (Date.now() - Number(localGameSession.startTime)) >= timerTotalTime * 1000
+  );
+  console.log(isTimerComplete);
   const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     const startTime = Date.now(); 
@@ -179,7 +185,7 @@ function FooterGameInProgress({
           </Typography>
         )}
         {buttonText === 'Continue' && (
-          <Box style={{ opacity: isTimerComplete ? 0 : 1, transition: 'opacity 0.5s ease' }}>
+          <Box style={{ opacity: isTimerComplete ? 0 : 1, transition: 'opacity 0.2s ease' }}>
             <Timer
               totalTime={currentState === GameSessionState.PHASE_1_DISCUSS ? 6 : 8}
               isAddTime={false}

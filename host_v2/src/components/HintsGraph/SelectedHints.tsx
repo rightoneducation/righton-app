@@ -15,7 +15,7 @@ const TitleText = styled(Typography)({
   textAlign: 'left',
   fontFamily: 'Rubik',
   fontSize: '14px',
-  fontWeight: '400',
+  fontWeight: 700,
   paddingTop: '16px',
 });
 
@@ -58,7 +58,7 @@ export default function SelectedHints(props: any) {
   console.log(graphClickIndex);
   console.log(gptHints[graphClickIndex]);
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column', gap: '7px'}}>
+    <Box sx={{display: 'flex', flexDirection: 'column', gap: '8px', paddingTop: '8px', width: '100%'}}>
       <SelectedHintsContainer>
         <Box
           onClick={() => setIsExpanded(!isExpanded)}

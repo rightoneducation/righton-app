@@ -136,10 +136,15 @@ export default function Timer({
       prevTimeRef.current = null;
     } else {
       currentTimeMilli.current = calculateCurrentTime(Number(localGameSession.startTime) ?? 0) * 1000;
+      if (currentTimeMilli.current <= 0) {
+        // Timer already elapsed (e.g. page refresh, or RAF was cancelled before reaching 0)
+        onTimerComplete?.();
+      }
     }
     console.log('triggered');
     if (currentTimeMilli.current > 0) {
       isTimerActiveRef.current = true;
+      prevTimeRef.current = null;
       animationRef.current = requestAnimationFrame(updateTimer);
     }
    return () => cancelAnimationFrame(animationRef.current ?? 0);
