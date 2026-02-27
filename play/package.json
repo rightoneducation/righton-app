@@ -23,6 +23,7 @@
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.2.1",
     "katex": "^0.16.21",
+    "lodash": "^4.17.23",
     "luxon": "^3.4.4",
     "mathjs": "^11.11.1",
     "posthog-js": "^1.351.1",

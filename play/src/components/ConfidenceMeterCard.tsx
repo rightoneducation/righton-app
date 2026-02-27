@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import {
   Typography,
@@ -9,7 +9,8 @@ import {
   FormControl,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ConfidenceLevel, isNullOrUndefined } from '@righton/networking';
+import { debounce } from 'lodash';
+import { ConfidenceLevel } from '@righton/networking';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface ConfidenceMeterCardProps {
@@ -17,8 +18,7 @@ interface ConfidenceMeterCardProps {
   handleSelectOption: (confidence: ConfidenceLevel) => void;
   isSelected: boolean;
   isSmallDevice: boolean;
-  timeOfLastSelect: number;
-  setTimeOfLastSelect: (time: number) => void;
+  isTimeUp: boolean;
 }
 
 export default function ConfidenceMeterCard({
@@ -26,11 +26,23 @@ export default function ConfidenceMeterCard({
   handleSelectOption,
   isSelected,
   isSmallDevice,
-  timeOfLastSelect,
-  setTimeOfLastSelect,
+  isTimeUp,
 }: ConfidenceMeterCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [localSelectedOption, setLocalSelectedOption] = useState(selectedOption);
+
+  // Keep a ref to the latest handleSelectOption so the debounced function
+  // never holds a stale closure, without recreating the debounce each render.
+  const handleSelectOptionRef = useRef(handleSelectOption);
+  handleSelectOptionRef.current = handleSelectOption;
+
+  const debouncedSelectRef = useRef(
+    debounce((confidence: ConfidenceLevel) => {
+      handleSelectOptionRef.current(confidence);
+    }, 800)
+  );
+
   interface IConfidenceOption {
     text: string;
     value: ConfidenceLevel;
@@ -72,8 +84,8 @@ export default function ConfidenceMeterCard({
       display="inline"
       sx={{
         textAlign: 'left',
-        marginX: `${theme.sizing.extraSmallPadding}px`,
         width: '100%',
+        paddingLeft: `${theme.sizing.smallPadding}px`,
         marginBottom: `${theme.sizing.smallPadding}px`,
       }}
     >
@@ -82,11 +94,9 @@ export default function ConfidenceMeterCard({
       </ConfidenceTitleTypography>
     </Box>
   );
+
   const chooseConfidenceText = (
     <Box display="inline" sx={{ textAlign: 'center' }}>
-      <Typography variant="body1">
-        {t('gameinprogress.chooseanswer.answerthankyou1')}
-      </Typography>
       <Typography variant="body1">
         {t('gameinprogress.chooseanswer.confidencetext')}
       </Typography>
@@ -123,47 +133,46 @@ export default function ConfidenceMeterCard({
       </Box>
     );
   };
-  const sendingResponseText = (
-    <Box
-      display="inline"
-      sx={{
-        textAlign: 'center',
-        marginBottom: `${theme.sizing.smallPadding}px`,
-      }}
-    >
-      <Typography
-        variant="body1"
-        sx={{ color: `${theme.palette.primary.darkBlue}`, opacity: '0.5' }}
+
+  const statusText = (() => {
+    if (!isSelected) return null;
+    return (
+      <Box
+        display="inline"
+        sx={{
+          textAlign: 'center',
+          marginBottom: `${theme.sizing.smallPadding}px`,
+        }}
       >
-        {isSelected
-          ? t('gameinprogress.chooseanswer.submittedconfidenceresponse')
-          : t('gameinprogress.chooseanswer.sendingconfidenceresponse')}
-      </Typography>
-    </Box>
-  );
+        <Typography
+          variant="body1"
+          sx={{ color: `${theme.palette.primary.darkBlue}`, opacity: '0.5' }}
+        >
+          {isTimeUp
+            ? t('gameinprogress.chooseanswer.timeupconfidenceresponse')
+            : t('gameinprogress.chooseanswer.submittedconfidenceresponse')}
+        </Typography>
+      </Box>
+    );
+  })();
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const currentEpochTimeInSeconds = new Date().getTime() / 1000;
-    if (
-      isNullOrUndefined(timeOfLastSelect) ||
-      currentEpochTimeInSeconds - timeOfLastSelect > 5
-    ) {
-      const confidence =
-        confidenceOptionArray.find(
-          (option) => option.value === event.target.value
-        )?.value ?? ConfidenceLevel.NOT_RATED;
-      setTimeOfLastSelect(currentEpochTimeInSeconds);
-      handleSelectOption(confidence);
-    }
+    if (isTimeUp) return;
+    const newValue =
+      confidenceOptionArray.find(
+        (option) => option.value === event.target.value
+      )?.value ?? ConfidenceLevel.NOT_RATED;
+    setLocalSelectedOption(newValue);
+    debouncedSelectRef.current(newValue);
   };
 
   const responseOptions = (
-    <FormControl fullWidth>
+    <FormControl fullWidth disabled={isTimeUp}>
       <RadioGroup
         row
         aria-labelledby="demo-controlled-radio-buttons-group"
         name="controlled-radio-buttons-group"
-        value={selectedOption}
+        value={localSelectedOption}
         onChange={handleRadioChange}
         sx={{
           textAlign: 'center',
@@ -179,6 +188,7 @@ export default function ConfidenceMeterCard({
   return (
     <BodyCardStyled
       sx={{
+        paddingTop: `${theme.sizing.mediumPadding}px`,
         paddingLeft: `${theme.sizing.extraSmallPadding}px`,
         paddingRight: `${theme.sizing.extraSmallPadding}px`
       }}
@@ -186,9 +196,7 @@ export default function ConfidenceMeterCard({
       {confidenceHeader}
       {chooseConfidenceText}
       {responseOptions}
-      {!isNullOrUndefined(timeOfLastSelect) || isSelected
-        ? sendingResponseText
-        : null}
+      {statusText}
     </BodyCardStyled>
   );
 }

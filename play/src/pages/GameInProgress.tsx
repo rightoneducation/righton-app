@@ -148,7 +148,6 @@ export default function GameInProgress({
   const [selectConfidence, setSelectConfidence] = useState<{
     selectedConfidenceOption: string;
     isSelected: boolean;
-    timeOfLastSelect: number;
   }>(() => {
     let rejoinSelectedConfidence = null;
     rejoinSelectedConfidence = checkForSelectedConfidenceOnRejoin(
@@ -224,7 +223,6 @@ export default function GameInProgress({
     if (isConfidenceError) {
       setIsConfidenceError(false);
       setSelectConfidence({
-        timeOfLastSelect: 0,
         selectedConfidenceOption: ConfidenceLevel.NOT_RATED,
         isSelected: false,
       });
@@ -253,17 +251,15 @@ export default function GameInProgress({
     setBackendAnswer((prev) => ({ ...prev, ...answer }));
   };
 
-  const setTimeOfLastConfidenceSelect = (time: number) => {
-    setSelectConfidence((prev) => ({ ...prev, timeOfLastSelect: time }));
-  };
-
   const handleSelectConfidence = async (confidence: ConfidenceLevel) => {
     try {
-      // since subscription.isLoading does not update when user selects answer,
-      // set isSelected to false when user selects or reselects confidence so
-      // that the loading message can display while we wait for apiClient. Then
-      // after await, set isSelected to true again
-      setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
+      // Only show the "Sending..." loading state on the very first submission.
+      // Subsequent re-selections keep isSelected: true so the status message
+      // never flickers back to "Sending..." while the API call is in flight.
+      const wasAlreadySelected = selectConfidence.isSelected;
+      if (!wasAlreadySelected) {
+        setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
+      }
       await apiClients.teamAnswer.updateTeamAnswerConfidence(teamAnswerId, confidence);
       setSelectConfidence((prev) => ({
         ...prev,
@@ -326,8 +322,7 @@ export default function GameInProgress({
             handleSelectConfidence={handleSelectConfidence}
             isConfidenceSelected={selectConfidence.isSelected}
             selectedConfidenceOption={selectConfidence.selectedConfidenceOption}
-            timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
-            setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
+            isTimeUp={timerIsPaused}
             isShortAnswerEnabled={isShortAnswerEnabled}
             backendAnswer={backendAnswer}
             currentQuestionIndex={currentQuestionIndex ?? 0}
