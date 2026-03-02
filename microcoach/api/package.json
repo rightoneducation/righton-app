@@ -5,7 +5,7 @@
     "aws-amplify": "^6.8.0"
   },
   "devDependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.0.0",
+    "@aws-sdk/client-secrets-manager": "^3.1000.0",
     "@types/node": "^24.7.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
