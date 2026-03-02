@@ -15,7 +15,7 @@ import {
   getLearningScience,
   getAnalytics,
   getAnalysis,
-  generateRTD,
+  generateNextStep,
   updateClassroom,
   createMisconception,
   updateMisconception,
@@ -131,16 +131,16 @@ export class APIClient {
     return result.data?.getAnalysis;
   }
 
-  async listRTDExamples(): Promise<any[]> {
+  async listNextStepExamples(): Promise<any[]> {
     const result = await this.callGraphQL<any>(listContextData, {
-      filter: { type: { eq: 'RTD_LESSON' } },
+      filter: { type: { eq: 'NEXT_STEP_LESSON' } },
       limit: 20,
     });
     return result.data?.listContextData?.items ?? [];
   }
 
-  async generateRTD(misconception: any, learningScienceData: any, classroomContext?: any, contextData?: any[]) {
-    const result = await this.callGraphQL<any>(generateRTD, {
+  async generateNextStep(misconception: any, learningScienceData: any, classroomContext?: any, contextData?: any[]) {
+    const result = await this.callGraphQL<any>(generateNextStep, {
       input: {
         misconception: typeof misconception === 'string' ? misconception : JSON.stringify(misconception),
         learningScienceData: typeof learningScienceData === 'string' ? learningScienceData : JSON.stringify(learningScienceData),
@@ -152,7 +152,7 @@ export class APIClient {
         }),
       },
     });
-    return result.data?.generateRTD;
+    return result.data?.generateNextStep;
   }
 
   async getAnalytics(classroomData: any, learningScienceData: any) {

@@ -15,7 +15,7 @@ export interface SessionConfig {
     ccssStandards: string[];
     ppqFile: string;
     postPpqFile: string;
-    rtdFile: string | null;
+    nextStepFile: string | null;
     misconceptions: MisconceptionPlaceholder[];
 }
 export interface MisconceptionPlaceholder {

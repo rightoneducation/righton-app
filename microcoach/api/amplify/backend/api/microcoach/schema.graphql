@@ -10,7 +10,7 @@ type Classroom @model {
   state: String
   schoolYear: String
   cohortSize: Int
-  currentWeek: Int                  # weekNumber of the active Session; set by generate-gap-groups script
+  currentWeek: Int                  # weekNumber of the active Session; set by generate-next-steps script
   students: [Student] @hasMany
   sessions: [Session] @hasMany
   # NOTE: misconceptions also appear here (via classroomId GSI on Misconception)
@@ -22,11 +22,11 @@ type Classroom @model {
 }
 
 # ── Session ────────────────────────────────────────────────────────────
-# One record per weekly cycle: PPQ → LLM analysis → RTD generation → teacher use.
+# One record per weekly cycle: PPQ → LLM analysis → next step generation → teacher use.
 #
 # Lifecycle (status field):
 #   "data_ingested"  — PPQ data uploaded, ready for generate script
-#   "generated"      — generate script has run; pregeneratedGapGroups is populated
+#   "generated"      — generate script has run; pregeneratedNextSteps is populated
 #   "completed"      — teachers have finished acting on this week's content
 type Session @model {
   id: ID!
@@ -40,9 +40,9 @@ type Session @model {
   postPpqAssessmentId: ID           # FK to PostPPQ Assessment record
   assessments: [Assessment] @hasMany
   misconceptions: [Misconception] @hasMany
-  # Precomputed frontend view — set by the generate-gap-groups script.
+  # Precomputed frontend view — set by the generate-next-steps script.
   # Cached here so the app fetches it in a single listClassrooms call with no extra LLM cost.
-  pregeneratedGapGroups: AWSJSON
+  pregeneratedNextSteps: AWSJSON
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -122,7 +122,7 @@ type QuestionResponse {
 }
 
 # ── Misconception ──────────────────────────────────────────────────────
-# AI-detected learning gap for one Session. Created by the generate-gap-groups script.
+# AI-detected misconception for one Session. Created by the generate-next-steps script.
 type Misconception @model {
   id: ID!
   classroomId: ID! @index(name: "byClassroom")
@@ -138,7 +138,7 @@ type Misconception @model {
   occurrence: String                # "first" | "recurring"
   successIndicators: [String]
   evidence: MisconceptionEvidence
-  # LLM-selected standard codes for the CCSS learning graph (used in gap group display)
+  # LLM-selected standard codes for the CCSS learning graph (used in next step display)
   prerequisiteGapCodes: [String]
   impactedObjectiveCodes: [String]
   activities: [Activity] @hasMany
@@ -155,9 +155,9 @@ type MisconceptionEvidence {
 }
 
 # ── Activity ───────────────────────────────────────────────────────────
-# AI-generated RTD intervention per Misconception. Created by the generate-gap-groups script.
+# AI-generated next step per Misconception. Created by the generate-next-steps script.
 enum ActivityType {
-  RTD
+  NEXT_STEP
   LESSON_PLAN
   STRATEGY
 }
@@ -282,11 +282,11 @@ input GetAnalysisInput {
   learningScienceData: AWSJSON!
 }
 
-input GenerateRTDInput {
+input GenerateNextStepInput {
   misconception: AWSJSON!
   learningScienceData: AWSJSON!
   classroomContext: AWSJSON
-  contextData: AWSJSON          # Array of ContextData RTD_LESSON records as few-shot examples
+  contextData: AWSJSON          # Array of ContextData NEXT_STEP_LESSON records as few-shot examples
 }
 
 type Mutation {
@@ -296,14 +296,14 @@ type Mutation {
     @function(name: "microcoachLLM-${env}")
   getAnalysis(input: GetAnalysisInput!): String
     @function(name: "microcoachLLMAnalysis-${env}")
-  generateRTD(input: GenerateRTDInput!): String
+  generateNextStep(input: GenerateNextStepInput!): String
     @function(name: "microcoachLLMGeneration-${env}")
 }
 
 # ── ContextData ────────────────────────────────────────────────────────
-# Knowledge library for AI coaching layer (RTD reference docs, strategies)
+# Knowledge library for AI coaching layer (next step reference docs, strategies)
 enum ContextDataType {
-  RTD_LESSON
+  NEXT_STEP_LESSON
   EXEMPLAR
   STRATEGY
   WALKTHROUGH
@@ -320,7 +320,7 @@ type ContextData @model {
   ccssStandards: [String]
   assessmentCode: String
   isReference: Boolean              # true for References/ folder docs (shared across classrooms)
-  rtdLesson: RTDLesson
+  nextStepLesson: NextStepLesson
   exemplarQuestions: [ExemplarQuestion]
   strategy: InstructionalStrategy
   walkthroughData: WalkthroughData
@@ -349,7 +349,7 @@ type ExemplarMisconception {
   targetAnswer: String
 }
 
-type RTDLesson {
+type NextStepLesson {
   targetAssessmentCode: String!
   targetQuestionNumbers: [Int]
   topic: String!

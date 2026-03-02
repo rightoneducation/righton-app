@@ -1,15 +1,15 @@
 /**
- * generate-gap-groups.ts — run the LLM pipeline offline and save pregenerated data
+ * generate-next-steps.ts — run the LLM pipeline offline and save pregenerated data
  *
  * Run from the api/ directory:
- *   npx ts-node src/seed/generate-gap-groups.ts
+ *   npx ts-node src/seed/generate-next-steps.ts
  *
- * Output: saves pregeneratedGapGroups to the Session record and sets currentWeek on Classroom
+ * Output: saves pregeneratedNextSteps to the Session record and sets currentWeek on Classroom
  *
  * This script replicates the data-fetch + LLM pipeline that previously ran on
  * every page load in App.js. Run it each week after ingesting new PPQ data;
  * the frontend reads currentWeek from Classroom, finds the matching Session,
- * and renders its pregeneratedGapGroups — no LLM calls at page-load time.
+ * and renders its pregeneratedNextSteps — no LLM calls at page-load time.
  */
 
 import { createGqlClient, GqlFn } from './appsync-config';
@@ -147,9 +147,9 @@ const GET_ANALYSIS = /* GraphQL */ `
   }
 `;
 
-const GENERATE_RTD = /* GraphQL */ `
-  mutation GenerateRTD($input: GenerateRTDInput!) {
-    generateRTD(input: $input)
+const GENERATE_NEXT_STEP = /* GraphQL */ `
+  mutation GenerateNextStep($input: GenerateNextStepInput!) {
+    generateNextStep(input: $input)
   }
 `;
 
@@ -158,7 +158,7 @@ const UPDATE_SESSION = /* GraphQL */ `
     updateSession(input: $input) {
       id
       status
-      pregeneratedGapGroups
+      pregeneratedNextSteps
     }
   }
 `;
@@ -172,7 +172,7 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
   }
 `;
 
-// ── Gap group builder (mirrors App.js buildGapGroups) ────────────────────────
+// ── Next step builder ─────────────────────────────────────────────────────────
 
 function priorityLabel(p: string): string {
   return ({ '1': 'Critical', '2': 'High', '3': 'Medium', '4': 'Low' } as Record<string, string>)[p] ?? 'Medium';
@@ -188,7 +188,7 @@ function formatLabel(f: string): string {
   );
 }
 
-function buildGapGroups(
+function buildNextSteps(
   misconceptions: any[],
   activities: any[],
   ppqQuestions: any[],
@@ -228,7 +228,7 @@ function buildGapGroups(
       : (frameworkItem?.futureDependentStandards ?? []).map((r: any) => ({ standard: r.code, description: r.description }));
 
     return {
-      id: `gapgroup-ai-${i + 1}`,
+      id: `nextstep-ai-${i + 1}`,
       title: m.title,
       priority: priorityLabel(m.priority),
       studentCount: m.studentCount ?? 0,
@@ -245,7 +245,7 @@ function buildGapGroups(
       questionErrorRates,
       move: activity
         ? {
-            id: `move-ai-${i + 1}`,
+            id: `nextstep-move-ai-${i + 1}`,
             title: activity.title,
             time: `${activity.durationMinutes} min`,
             format: formatLabel(activity.format),
@@ -265,7 +265,7 @@ function parseJson(raw: any): any {
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('=== Microcoach Gap Group Generator ===\n');
+  console.log('=== Microcoach Next Step Generator ===\n');
 
   const gql: GqlFn = await createGqlClient();
 
@@ -319,21 +319,21 @@ async function main() {
   const misconceptions: any[] = analysis?.misconceptions ?? [];
   console.log(` ✓  ${misconceptions.length} misconceptions identified`);
 
-  // 6. RTD examples
-  process.stdout.write('Fetching RTD examples...');
-  const rtdData = await gql(LIST_CONTEXT_DATA, {
-    filter: { type: { eq: 'RTD_LESSON' } },
+  // 6. Next step examples
+  process.stdout.write('Fetching next step examples...');
+  const nextStepData = await gql(LIST_CONTEXT_DATA, {
+    filter: { type: { eq: 'NEXT_STEP_LESSON' } },
     limit: 20,
   });
-  const rtdExamples: any[] = rtdData.listContextData?.items ?? [];
-  console.log(` ✓  ${rtdExamples.length} examples`);
+  const nextStepExamples: any[] = nextStepData.listContextData?.items ?? [];
+  console.log(` ✓  ${nextStepExamples.length} examples`);
 
-  // 7. Generate RTDs (LLM, one per misconception)
+  // 7. Generate next steps (LLM, one per misconception)
   const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
   const activities: any[] = await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
-      process.stdout.write(`Generating RTD [${i + 1}/${misconceptions.length}]: ${m.title}...`);
-      const relevant = rtdExamples.filter(
+      process.stdout.write(`Generating next step [${i + 1}/${misconceptions.length}]: ${m.title}...`);
+      const relevant = nextStepExamples.filter(
         (ex: any) =>
           !ex.ccssStandards?.length ||
           ex.ccssStandards.some(
@@ -341,7 +341,7 @@ async function main() {
           )
       );
       try {
-        const raw = await gql(GENERATE_RTD, {
+        const raw = await gql(GENERATE_NEXT_STEP, {
           input: {
             misconception: JSON.stringify(m),
             learningScienceData: JSON.stringify(learningScienceData),
@@ -349,7 +349,7 @@ async function main() {
             ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
           },
         });
-        const result = parseJson(raw.generateRTD);
+        const result = parseJson(raw.generateNextStep);
         console.log(' ✓');
         return result;
       } catch (err) {
@@ -359,16 +359,16 @@ async function main() {
     })
   );
 
-  // 8. Build gap groups
-  const gapGroups = buildGapGroups(misconceptions, activities, ppq?.questions, learningScienceData);
-  console.log(`\nBuilt ${gapGroups.length} gap groups`);
+  // 8. Build next steps
+  const nextSteps = buildNextSteps(misconceptions, activities, ppq?.questions, learningScienceData);
+  console.log(`\nBuilt ${nextSteps.length} next steps`);
 
-  // 9. Persist gap groups to the session and mark the classroom's active week
-  process.stdout.write(`Saving gap groups to session ${currentStub.id} (week ${currentStub.weekNumber})...`);
+  // 9. Persist next steps to the session and mark the classroom's active week
+  process.stdout.write(`Saving next steps to session ${currentStub.id} (week ${currentStub.weekNumber})...`);
   await gql(UPDATE_SESSION, {
     input: {
       id: currentStub.id,
-      pregeneratedGapGroups: JSON.stringify(gapGroups),
+      pregeneratedNextSteps: JSON.stringify(nextSteps),
       status: 'generated',
     },
   });

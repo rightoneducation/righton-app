@@ -4,13 +4,13 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
-const rtdConfig = config?.rtd ?? {};
-const RUNTIME_MAX_DURATION_MINUTES = rtdConfig.maxDurationMinutes ?? 30;
-const RUNTIME_DEFAULT_DURATION_MINUTES = rtdConfig.defaultDurationMinutes ?? 30;
-const RUNTIME_SUPPORTED_FORMATS = rtdConfig.supportedFormats ?? ['whole_class', 'small_group'];
+const nextStepConfig = config?.nextStep ?? {};
+const RUNTIME_MAX_DURATION_MINUTES = nextStepConfig.maxDurationMinutes ?? 30;
+const RUNTIME_DEFAULT_DURATION_MINUTES = nextStepConfig.defaultDurationMinutes ?? 30;
+const RUNTIME_SUPPORTED_FORMATS = nextStepConfig.supportedFormats ?? ['whole_class', 'small_group'];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
-// Generates a single fully-populated RTD Activity for one misconception.
+// Generates a single fully-populated next step Activity for one misconception.
 // Called once per misconception, in parallel, after microcoachLLMAnalysis.
 
 const Overview = z.object({
@@ -48,8 +48,8 @@ const Tabs = z.object({
   studentGroupings: StudentGroupings.optional(),
 });
 
-const RTDActivity = z.object({
-  type: z.literal('RTD'),
+const NextStepActivity = z.object({
+  type: z.literal('NEXT_STEP'),
   status: z.literal('GENERATED'),
   title: z.string().describe('Short, action-oriented activity title'),
   summary: z.string().describe('1-2 sentence description of the activity'),
@@ -57,7 +57,7 @@ const RTDActivity = z.object({
     .number()
     .int()
     .max(RUNTIME_MAX_DURATION_MINUTES)
-    .describe('Estimated time in minutes for this RTD activity; must not exceed the configured maximum.'),
+    .describe('Estimated time in minutes for this next step activity; must not exceed the configured maximum.'),
   format: z.enum(['small_group', 'whole_class', 'individual']),
   aiReasoning: z.string().describe('Why this specific activity design targets this specific misconception'),
   aiGenerated: z.literal(true),
@@ -90,8 +90,8 @@ export const handler = async (event) => {
   const openai = new OpenAI({ apiKey });
 
   // Format RTD_LESSON ContextData records as few-shot examples for the prompt
-  const formatRTDExample = (item, index) => {
-    const l = item.rtdLesson;
+  const formatNextStepExample = (item, index) => {
+    const l = item.nextStepLesson;
     if (!l) return null;
     const lines = [`### Example ${index + 1}: ${item.title}`];
     if (item.ccssStandards?.length) lines.push(`CCSS: ${item.ccssStandards.join(', ')}`);
@@ -117,15 +117,15 @@ export const handler = async (event) => {
     return lines.join('\n');
   };
 
-  const rtdExamplesSection = (() => {
+  const nextStepExamplesSection = (() => {
     const formatted = contextDataItems
-      .filter((item) => item.type === 'RTD_LESSON' && item.rtdLesson)
-      .map(formatRTDExample)
+      .filter((item) => item.type === 'NEXT_STEP_LESSON' && item.nextStepLesson)
+      .map(formatNextStepExample)
       .filter(Boolean);
     if (!formatted.length) return '';
     return `
-## Reference RTD Examples
-The following are real RTD lessons used in similar classrooms. Study their structure, \
+## Reference Next Step Examples
+The following are real next step lessons used in similar classrooms. Study their structure, \
 depth, phase design, and problem choices — your output should match this level of quality and specificity.
 
 ${formatted.join('\n\n')}
@@ -135,9 +135,8 @@ ${formatted.join('\n\n')}
   })();
 
   const userContent = `
-You are an expert K-12 math instructional coach generating a targeted RTD (Re-Teaching and \
-Differentiation) intervention activity.
-${rtdExamplesSection}
+You are an expert K-12 math instructional coach generating a targeted next step intervention activity.
+${nextStepExamplesSection}
 ## Misconception to Address
 ${JSON.stringify(misconception, null, 2)}
 
@@ -153,12 +152,12 @@ ${JSON.stringify(classroomContext, null, 2)}
 
 ## Your Task
 
-Generate ONE fully classroom-ready RTD activity that directly targets the misconception above.
+Generate ONE fully classroom-ready next step activity that directly targets the misconception above.
 
-Requirements (aligned to Uncommon RTD guidelines):
+Requirements:
 - **title**: Short, action-oriented (e.g. "Keep-Change-Flip Error Analysis")
 - **summary**: 1-2 sentences describing the activity
-- **disallowedTeachingMethods**: ${rtdConfig.disallowedTeachingMethods?.join(', ')} do not use these methods in the activity.
+- **disallowedTeachingMethods**: ${nextStepConfig.disallowedTeachingMethods?.join(', ')} do not use these methods in the activity.
 - **durationMinutes**: Must be <= ${RUNTIME_MAX_DURATION_MINUTES} minutes and designed to fit within a ${RUNTIME_DEFAULT_DURATION_MINUTES}-minute intervention block (shorter is fine; never longer).
 - **format**: choose one of ${RUNTIME_SUPPORTED_FORMATS.map((f) => `"${f}"`).join(', ')}. Whole-class and small-group formats should be the primary options.
 - **aiReasoning**: Explain specifically WHY this activity design addresses this particular misconception — \
@@ -185,13 +184,13 @@ Return JSON matching the schema.
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },
       ],
-      response_format: zodResponseFormat(RTDActivity, 'rtdActivity'),
+      response_format: zodResponseFormat(NextStepActivity, 'nextStepActivity'),
     });
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
 
-    const structured = RTDActivity.parse(JSON.parse(raw));
+    const structured = NextStepActivity.parse(JSON.parse(raw));
     return JSON.stringify(structured);
   } catch (error) {
     console.error('[microcoachLLMGeneration] Error', {

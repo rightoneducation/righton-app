@@ -14,7 +14,7 @@
  *   7. StudentResponses/PostPPQ
  *   8. Misconceptions (classroomMisconceptionsId, sessionMisconceptionsId)
  *   9. Activities (misconceptionActivitiesId)
- *  10. ContextData (isReference: false for classroom RTDs, true for References/)
+ *  10. ContextData (isReference: false for classroom next steps, true for References/)
  */
 
 import * as path from 'path';
@@ -30,7 +30,7 @@ import {
   CreatedStudent,
   CreatedMisconception,
 } from './types';
-import { CLASSROOMS, DATA_ROOT, REFERENCE_RTDS } from './seedData';
+import { CLASSROOMS, DATA_ROOT, REFERENCE_NEXT_STEPS } from './seedData';
 import { createGqlClient, GqlFn } from './appsync-config';
 
 let gql: GqlFn;
@@ -477,10 +477,10 @@ async function uploadMisconceptions(
         misconceptionActivitiesId: misconception.id,
         classroomId,
         sessionId,
-        type: 'RTD',
+        type: 'NEXT_STEP',
         status: 'GENERATED',
-        title: `RTD: ${m.title}`,
-        summary: `AI-generated RTD activity targeting the misconception: ${m.title}`,
+        title: `Next Step: ${m.title}`,
+        summary: `AI-generated next step activity targeting the misconception: ${m.title}`,
         aiGenerated: true,
         format: 'small_group',
       },
@@ -509,14 +509,14 @@ async function uploadContextData(
 
   await gql(CREATE_CONTEXT_DATA, {
     input: {
-      type: 'RTD_LESSON',
+      type: 'NEXT_STEP_LESSON',
       title,
       gradeLevel,
       weekNumber,
       ccssStandards,
       assessmentCode,
       isReference,
-      rtdLesson: {
+      nextStepLesson: {
         targetAssessmentCode: assessmentCode ?? 'REFERENCE',
         topic: deriveTopic(ccssStandards[0] ?? ''),
         targetProblem: 'See source document',
@@ -629,13 +629,13 @@ async function main() {
       await uploadMisconceptions(classroomId, sessionId, sessionConfig.misconceptions);
     }
 
-    // Classroom RTD ContextData
+    // Classroom next step ContextData
     const session = classroomConfig.sessions[0];
     if (session) {
       console.log('');
-      const rtdTitle = `${classroomConfig.key} Session1 RTD - ${session.topic}`;
+      const nextStepTitle = `${classroomConfig.key} Session1 Next Step - ${session.topic}`;
       await uploadContextData(
-        rtdTitle, classroomConfig.grade, session.ccssStandards, session.weekNumber, false
+        nextStepTitle, classroomConfig.grade, session.ccssStandards, session.weekNumber, false
       );
     }
 
@@ -644,9 +644,9 @@ async function main() {
 
   // Reference ContextData
   console.log(`\n${'─'.repeat(60)}`);
-  console.log('Reference RTD ContextData');
+  console.log('Reference Next Step ContextData');
   console.log('─'.repeat(60));
-  for (const ref of REFERENCE_RTDS) {
+  for (const ref of REFERENCE_NEXT_STEPS) {
     await uploadContextData(
       ref.title, ref.gradeLevel, ref.ccssStandards, ref.weekNumber, true
     );

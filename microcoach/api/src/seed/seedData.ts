@@ -21,7 +21,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         ccssStandards: ['6.NS.A.1'],
         ppqFile: 'Classroom1/Session1/PPQ-StudentData.xlsx',
         postPpqFile: 'Classroom1/Session1/PostPPQ-StudentData.xlsx',
-        rtdFile: 'Classroom1/Session1/RTD.docx',
+        nextStepFile: 'Classroom1/Session1/RTD.docx',
         misconceptions: [
           {
             title: 'Inverting the Wrong Fraction',
@@ -73,7 +73,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         ccssStandards: ['6.NS.A.1'],
         ppqFile: 'Classroom1/Session2/PPQ-StudentData.xlsx',
         postPpqFile: 'Classroom1/Session2/PostPPQ-StudentData.xlsx',
-        rtdFile: null,
+        nextStepFile: null,
         misconceptions: [
           {
             title: 'Inverting the Wrong Fraction',
@@ -136,7 +136,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         ccssStandards: ['8.EE.C.7', '8.EE.C.8'],
         ppqFile: 'Classroom2/Session1/PPQ-StudentData.xlsx',
         postPpqFile: 'Classroom2/Session1/PostPPQ-StudentData.xlsx',
-        rtdFile: 'Classroom2/Session1/RTD.docx',
+        nextStepFile: 'Classroom2/Session1/RTD.docx',
         misconceptions: [
           {
             title: 'Sign Errors in Distribution',
@@ -200,7 +200,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         ccssStandards: ['8.F.A.1', '8.F.B.4'],
         ppqFile: 'Classroom3/Session1/PPQ-StudentData.xlsx',
         postPpqFile: 'Classroom3/Session1/PostPPQ-StudentData.xlsx',
-        rtdFile: null, // no RTD.docx for Classroom3
+        nextStepFile: null, // no RTD.docx for Classroom3
         misconceptions: [
           {
             title: 'Confusing Linear and Non-Linear Functions',
@@ -250,9 +250,9 @@ export const CLASSROOMS: ClassroomConfig[] = [
   },
 ];
 
-// Reference RTD files from Data/References/RTD/
+// Reference next step files from Data/References/RTD/
 // Metadata derived from filenames since we don't parse docx content
-export const REFERENCE_RTDS: ReferenceConfig[] = [
+export const REFERENCE_NEXT_STEPS: ReferenceConfig[] = [
   {
     file: 'References/RTD/Gr6_Math_PPQ_W19_RTD_6NS1_FractionDivision.USI_v2.docx',
     title: 'Gr6 Math PPQ W19 RTD 6NS1 Fraction Division',

@@ -18,7 +18,7 @@ export interface SessionConfig {
   ccssStandards: string[];
   ppqFile: string;       // relative path from DATA_ROOT
   postPpqFile: string;   // relative path from DATA_ROOT
-  rtdFile: string | null; // null if no RTD doc for this classroom
+  nextStepFile: string | null; // null if no next step doc for this classroom
   misconceptions: MisconceptionPlaceholder[];
 }
 

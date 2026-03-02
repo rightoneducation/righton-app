@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "generate": "npx ts-node src/seed/generate-gap-groups.ts",
+    "generate": "npx ts-node src/seed/generate-next-steps.ts",
     "test": "jest"
   },
   "files": [
