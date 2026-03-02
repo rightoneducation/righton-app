@@ -17,7 +17,6 @@
  *  10. ContextData (isReference: false for classroom RTDs, true for References/)
  */
 
-import * as https from 'https';
 import * as path from 'path';
 import * as XLSX from 'xlsx';
 import {
@@ -32,45 +31,9 @@ import {
   CreatedMisconception,
 } from './types';
 import { CLASSROOMS, DATA_ROOT, REFERENCE_RTDS } from './seedData';
+import { createGqlClient, GqlFn } from './appsync-config';
 
-// ── AppSync config ───────────────────────────────────────────────────────────
-const ENDPOINT = 'https://gn4bxdp4xzfg3lmj4ypy2foxj4.appsync-api.us-east-1.amazonaws.com/graphql';
-const API_KEY = 'da2-d5xh446mcrctnfy6pi57onc6ra';
-
-async function gql(query: string, variables: Record<string, unknown>): Promise<any> {
-  const urlParts = new URL(ENDPOINT);
-  const body = JSON.stringify({ query, variables });
-
-  return new Promise((resolve, reject) => {
-    const req = https.request(
-      {
-        hostname: urlParts.hostname,
-        path: urlParts.pathname,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'Content-Length': Buffer.byteLength(body),
-        },
-      },
-      (res) => {
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
-        res.on('end', () => {
-          const json = JSON.parse(data);
-          if (json.errors) {
-            reject(new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`));
-          } else {
-            resolve(json.data);
-          }
-        });
-      }
-    );
-    req.on('error', reject);
-    req.write(body);
-    req.end();
-  });
-}
+let gql: GqlFn;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -569,6 +532,7 @@ async function uploadContextData(
 async function main() {
   const totalStart = Date.now();
   console.log('=== Microcoach Seed Upload ===\n');
+  gql = await createGqlClient();
   console.log(`DATA_ROOT: ${DATA_ROOT}\n`);
 
   for (const classroomConfig of CLASSROOMS) {

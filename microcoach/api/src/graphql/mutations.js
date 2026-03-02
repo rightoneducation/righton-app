@@ -34,6 +34,7 @@ export const createClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -101,6 +102,8 @@ export const createClassroom = /* GraphQL */ `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -111,6 +114,7 @@ export const createClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -141,15 +145,8 @@ export const createClassroom = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -189,6 +186,7 @@ export const createClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -266,6 +264,7 @@ export const updateClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -333,6 +332,8 @@ export const updateClassroom = /* GraphQL */ `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -343,6 +344,7 @@ export const updateClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -373,15 +375,8 @@ export const updateClassroom = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -421,6 +416,7 @@ export const updateClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -498,6 +494,7 @@ export const deleteClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -565,6 +562,8 @@ export const deleteClassroom = /* GraphQL */ `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -575,6 +574,7 @@ export const deleteClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -605,15 +605,8 @@ export const deleteClassroom = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -653,6 +646,7 @@ export const deleteClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -800,15 +794,8 @@ export const createSession = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -844,6 +831,7 @@ export const createSession = /* GraphQL */ `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -934,15 +922,8 @@ export const updateSession = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -978,6 +959,7 @@ export const updateSession = /* GraphQL */ `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -1068,15 +1050,8 @@ export const deleteSession = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -1112,6 +1087,7 @@ export const deleteSession = /* GraphQL */ `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -1448,15 +1424,8 @@ export const createMisconception = /* GraphQL */ `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1542,15 +1511,8 @@ export const updateMisconception = /* GraphQL */ `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1636,15 +1598,8 @@ export const deleteMisconception = /* GraphQL */ `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1904,6 +1859,7 @@ export const createSavedNextStep = /* GraphQL */ `
     createSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt
@@ -1980,6 +1936,7 @@ export const updateSavedNextStep = /* GraphQL */ `
     updateSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt
@@ -2056,6 +2013,7 @@ export const deleteSavedNextStep = /* GraphQL */ `
     deleteSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt

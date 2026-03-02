@@ -16,46 +16,9 @@
  *   9. ContextData
  */
 
-import * as https from 'https';
+import { createGqlClient, GqlFn } from './appsync-config';
 
-const ENDPOINT = 'https://gn4bxdp4xzfg3lmj4ypy2foxj4.appsync-api.us-east-1.amazonaws.com/graphql';
-const API_KEY = 'da2-d5xh446mcrctnfy6pi57onc6ra';
-
-async function gql(query: string, variables: Record<string, unknown> = {}): Promise<any> {
-  const urlParts = new URL(ENDPOINT);
-  const body = JSON.stringify({ query, variables });
-
-  return new Promise((resolve, reject) => {
-    const req = https.request(
-      {
-        hostname: urlParts.hostname,
-        path: urlParts.pathname,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'Content-Length': Buffer.byteLength(body),
-        },
-      },
-      (res) => {
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
-        res.on('end', () => {
-          const json = JSON.parse(data);
-          if (json.errors) {
-            console.warn('\n  GraphQL warning:', JSON.stringify(json.errors));
-            resolve(json.data ?? {});
-          } else {
-            resolve(json.data);
-          }
-        });
-      }
-    );
-    req.on('error', reject);
-    req.write(body);
-    req.end();
-  });
-}
+let gql: GqlFn;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -145,7 +108,8 @@ async function deleteAll(
   const deleteStart = Date.now();
   for (let i = 0; i < items.length; i++) {
     progress(`  Deleting ${label} [${i + 1}/${items.length}]`);
-    await gql(deleteMutation, { input: { id: items[i].id } });
+    await gql(deleteMutation, { input: { id: items[i].id } })
+      .catch((e: Error) => console.warn(`\n  ✗ delete warning: ${e.message}`));
     await sleep(50);
   }
   progress(`  ✓ ${label.padEnd(18)} ${items.length} deleted  (${elapsed(deleteStart)})`, true);
@@ -213,6 +177,7 @@ const DELETE_CONTEXT_DATA     = `mutation DeleteContextData($input: DeleteContex
 
 async function main() {
   const totalStart = Date.now();
+  gql = await createGqlClient();
   console.log('=== Microcoach Database Cleanup ===\n');
 
   // Fetch counts sequentially so each table shows progress

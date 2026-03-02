@@ -9,7 +9,6 @@
  * existing classroom identified by --classroomId.
  */
 
-import * as https from 'https';
 import * as path from 'path';
 import * as XLSX from 'xlsx';
 import {
@@ -55,40 +54,9 @@ if (!sessionConfig) {
   process.exit(1);
 }
 
-// ── AppSync config ────────────────────────────────────────────────────────────
-const ENDPOINT = 'https://gn4bxdp4xzfg3lmj4ypy2foxj4.appsync-api.us-east-1.amazonaws.com/graphql';
-const API_KEY  = 'da2-d5xh446mcrctnfy6pi57onc6ra';
+import { createGqlClient, GqlFn } from './appsync-config';
 
-async function gql(query: string, variables: Record<string, unknown>): Promise<any> {
-  const urlParts = new URL(ENDPOINT);
-  const body = JSON.stringify({ query, variables });
-  return new Promise((resolve, reject) => {
-    const req = https.request(
-      {
-        hostname: urlParts.hostname,
-        path: urlParts.pathname,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'Content-Length': Buffer.byteLength(body),
-        },
-      },
-      (res) => {
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
-        res.on('end', () => {
-          const json = JSON.parse(data);
-          if (json.errors) reject(new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`));
-          else resolve(json.data);
-        });
-      }
-    );
-    req.on('error', reject);
-    req.write(body);
-    req.end();
-  });
-}
+let gql: GqlFn;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -396,6 +364,7 @@ async function uploadMisconceptions(sessionId: string): Promise<void> {
 
 async function main() {
   const totalStart = Date.now();
+  gql = await createGqlClient();
   console.log(`=== Upload Session: ${classroomKey} / ${sessionLabel} ===\n`);
   console.log(`  Classroom ID : ${classroomId}`);
   console.log(`  Session      : ${sessionLabel}`);

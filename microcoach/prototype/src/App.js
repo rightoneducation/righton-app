@@ -10,12 +10,6 @@ import InterventionPatterns from './components/InterventionPatterns';
 import './App.css';
 
 
-const LOADING_STEPS = [
-  'Analyzing Class Data...',
-  'Detecting Misconceptions...',
-  "Generating RTD's...",
-];
-
 function App() {
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeOverviewSection, setActiveOverviewSection] = useState('Recommended Next Steps');
@@ -26,7 +20,6 @@ function App() {
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingNextSteps, setIsLoadingNextSteps] = useState(true);
-  const [loadingStepIndex, setLoadingStepIndex] = useState(0);
   const [aiGapGroups, setAiGapGroups] = useState(null);
   const [classroomStudents, setClassroomStudents] = useState(null);
 
@@ -70,89 +63,18 @@ function App() {
     },
   });
 
-  const priorityLabel = (p) => ({ '1': 'Critical', '2': 'High', '3': 'Medium', '4': 'Low' }[p] ?? 'Medium');
-  const occurrenceLabel = (o) => o === 'recurring' ? 'Recurring' : '1st occurrence';
-  const formatLabel = (f) => ({ small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' }[f] ?? f);
-
-  const buildGapGroups = (misconceptions, activities, ppqQuestions, learningScienceData) => {
-    const questionErrorRates = (ppqQuestions ?? [])
-      .filter((q) => q.questionNumber != null && q.classPercentCorrect != null)
-      .sort((a, b) => a.questionNumber - b.questionNumber)
-      .map((q) => ({
-        label: `Q${q.questionNumber}`,
-        errorRate: Math.round((1 - q.classPercentCorrect) * 100),
-      }));
-
-    const frameworkItems = learningScienceData?.standards ?? [];
-    const normalize = (s) => s?.replace(/\s/g, '').toLowerCase() ?? '';
-
-    // Build a flat code→description lookup from all standards in the graph
-    const standardsDescMap = new Map();
-    for (const item of frameworkItems) {
-      if (item.code) standardsDescMap.set(item.code, item.description);
-      for (const rel of [...(item.prerequisiteStandards ?? []), ...(item.futureDependentStandards ?? [])]) {
-        if (rel.code && !standardsDescMap.has(rel.code)) standardsDescMap.set(rel.code, rel.description);
-      }
-    }
-
-    return misconceptions.map((m, i) => {
-      const activity = activities[i];
-
-      // Use LLM-selected codes when available (filtered for relevance to this misconception).
-      // Fall back to the full graph connections if the LLM didn't return them.
-      const frameworkItem = frameworkItems.find((item) => normalize(item.code) === normalize(m.ccssStandard));
-
-      const prerequisiteGaps = m.prerequisiteGapCodes?.length
-        ? m.prerequisiteGapCodes.map((code) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
-        : (frameworkItem?.prerequisiteStandards ?? []).map((r) => ({ standard: r.code, description: r.description }));
-
-      const impactedObjectives = m.impactedObjectiveCodes?.length
-        ? m.impactedObjectiveCodes.map((code) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
-        : (frameworkItem?.futureDependentStandards ?? []).map((r) => ({ standard: r.code, description: r.description }));
-
-      return {
-        id: `gapgroup-ai-${i + 1}`,
-        title: m.title,
-        priority: priorityLabel(m.priority),
-        studentCount: m.studentCount ?? 0,
-        studentPercent: Math.round((m.studentPercent ?? 0) * 100),
-        occurrence: occurrenceLabel(m.occurrence),
-        misconceptionSummary: m.description,
-        successIndicators: m.successIndicators ?? [],
-        ccssStandards: {
-          targetObjective: { standard: m.ccssStandard, description: m.description },
-          impactedObjectives,
-          prerequisiteGaps,
-        },
-        evidence: m.evidence ?? null,
-        questionErrorRates,
-        move: activity ? {
-          id: `move-ai-${i + 1}`,
-          title: activity.title,
-          time: `${activity.durationMinutes} min`,
-          format: formatLabel(activity.format),
-          summary: activity.summary,
-          aiReasoning: activity.aiReasoning,
-          tabs: activity.tabs ?? null,
-        } : null,
-      };
-    });
-  };
-
   useEffect(() => {
     let cancelled = false;
 
-    async function runMicrocoachFetch() {
+    async function loadData() {
       setIsLoading(true);
-      setLoadingStepIndex(0);
       try {
         const client = new APIClient();
 
         const classrooms = await client.listClassrooms();
         const gr6 = classrooms.find((c) => c.grade === 6);
-        if (!gr6) return;
+        if (!gr6 || cancelled) return;
 
-        if (cancelled) return;
         if (gr6.students?.items?.length) {
           setClassroomStudents(gr6.students.items);
         }
@@ -161,8 +83,7 @@ function App() {
         apiClientRef.current = client;
         classroomIdRef.current = gr6.id;
 
-        // Load persisted next steps from the backend early — before the slow AI calls —
-        // so the user sees their saved items immediately.
+        // Load persisted next steps
         const savedItems = (await client.listSavedNextSteps(gr6.id)) ?? [];
         if (!cancelled) {
           if (savedItems.length) {
@@ -180,62 +101,22 @@ function App() {
           setIsLoadingNextSteps(false);
         }
 
-        const sessionStubs = await client.listSessions(gr6.id);
-        if (!sessionStubs.length) return;
-
-        const sorted = [...sessionStubs].sort((a, b) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
-        const currentStub = sorted[sorted.length - 1];
-        const historyStubs = sorted.slice(0, sorted.length - 1);
-
-        const [currentSession, ...historySessions] = await Promise.all(
-          [currentStub, ...historyStubs].map((s) => client.getSession(s.id))
-        );
-
-        const ppq = currentSession?.assessments?.items?.find((a) => a.type === 'PPQ');
-        const ccss = ppq?.ccssStandards?.[0] ?? currentSession?.ccssStandards?.[0];
-        if (!ccss) return;
-
-        const learningScienceRaw = await client.getLearningScienceDataByCCSS(ccss);
-        const learningScienceData = typeof learningScienceRaw === 'string' ? JSON.parse(learningScienceRaw) : learningScienceRaw;
-
-        if (cancelled) return;
-        setLoadingStepIndex(1);
-        const analysisRaw = await client.getAnalysis(
-          { classroom: gr6, currentSession, sessionHistory: historySessions, ppq },
-          learningScienceData
-        );
-        const analysis = typeof analysisRaw === 'string' ? JSON.parse(analysisRaw) : analysisRaw;
-
-        const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
-        const misconceptions = analysis?.misconceptions ?? [];
-
-        if (cancelled) return;
-        setLoadingStepIndex(2);
-        const rtdExamples = await client.listRTDExamples();
-
-        const activities = await Promise.all(
-          misconceptions.map((m) => {
-            const relevant = rtdExamples.filter((ex) =>
-              !ex.ccssStandards?.length ||
-              ex.ccssStandards.some((s) => s === m.ccssStandard || s.startsWith(m.ccssStandard?.split('.')[0]))
-            );
-            return client.generateRTD(m, learningScienceData, classroomContext, relevant.length ? relevant : rtdExamples)
-              .then((raw) => typeof raw === 'string' ? JSON.parse(raw) : raw)
-              .catch(() => null);
-          })
-        );
-
-        if (!cancelled) setAiGapGroups(buildGapGroups(misconceptions, activities, ppq?.questions, learningScienceData));
+        // Load pregenerated gap groups for the active week
+        const activeSession = (gr6.sessions?.items ?? [])
+          .find((s) => s.weekNumber === gr6.currentWeek);
+        if (!cancelled && activeSession?.pregeneratedGapGroups) {
+          const groups = activeSession.pregeneratedGapGroups;
+          setAiGapGroups(typeof groups === 'string' ? JSON.parse(groups) : groups);
+        }
       } finally {
         if (!cancelled) {
           setIsLoading(false);
           setIsLoadingNextSteps(false);
-          setLoadingStepIndex(0);
         }
       }
     }
 
-    runMicrocoachFetch();
+    loadData();
     return () => { cancelled = true; };
   }, []);
 
@@ -469,53 +350,8 @@ function App() {
             {activeOverviewSection === 'Recommended Next Steps' && (
               <div className="remediation-section">
                 {isLoading && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '16px',
-                      padding: '48px 0',
-                    }}
-                  >
+                  <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
                     <CircularProgress />
-                    <div style={{ fontSize: '14px', color: '#6b7280' }} aria-live="polite">
-                      {LOADING_STEPS.map((label, i) => {
-                        const completed = i < loadingStepIndex;
-                        const current = i === loadingStepIndex;
-                        return (
-                          <div
-                            key={label}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 8,
-                            }}
-                          >
-                            <span
-                              style={{
-                                width: 14,
-                                display: 'inline-block',
-                                textAlign: 'center',
-                                color: completed ? '#22c55e' : '#9ca3af',
-                                fontWeight: completed ? 700 : 400,
-                              }}
-                              aria-hidden="true"
-                            >
-                              {completed ? '✓' : ''}
-                            </span>
-                            <span
-                              style={{
-                                fontWeight: current ? 600 : 400,
-                                fontStyle: completed ? 'italic' : 'normal',
-                              }}
-                            >
-                              {label}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
                   </div>
                 )}
                 {!isLoading && (
