@@ -13,6 +13,7 @@ export const onCreateClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -80,6 +81,8 @@ export const onCreateClassroom = /* GraphQL */ `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -90,6 +93,7 @@ export const onCreateClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -120,15 +124,8 @@ export const onCreateClassroom = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -168,6 +165,7 @@ export const onCreateClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -244,6 +242,7 @@ export const onUpdateClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -311,6 +310,8 @@ export const onUpdateClassroom = /* GraphQL */ `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -321,6 +322,7 @@ export const onUpdateClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -351,15 +353,8 @@ export const onUpdateClassroom = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -399,6 +394,7 @@ export const onUpdateClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -475,6 +471,7 @@ export const onDeleteClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -542,6 +539,8 @@ export const onDeleteClassroom = /* GraphQL */ `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -552,6 +551,7 @@ export const onDeleteClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -582,15 +582,8 @@ export const onDeleteClassroom = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -630,6 +623,7 @@ export const onDeleteClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -774,15 +768,8 @@ export const onCreateSession = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -818,6 +805,7 @@ export const onCreateSession = /* GraphQL */ `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -905,15 +893,8 @@ export const onUpdateSession = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -949,6 +930,7 @@ export const onUpdateSession = /* GraphQL */ `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -1036,15 +1018,8 @@ export const onDeleteSession = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -1080,6 +1055,7 @@ export const onDeleteSession = /* GraphQL */ `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -1400,15 +1376,8 @@ export const onCreateMisconception = /* GraphQL */ `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1493,15 +1462,8 @@ export const onUpdateMisconception = /* GraphQL */ `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1586,15 +1548,8 @@ export const onDeleteMisconception = /* GraphQL */ `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1844,6 +1799,7 @@ export const onCreateSavedNextStep = /* GraphQL */ `
     onCreateSavedNextStep(filter: $filter) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt
@@ -1919,6 +1875,7 @@ export const onUpdateSavedNextStep = /* GraphQL */ `
     onUpdateSavedNextStep(filter: $filter) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt
@@ -1994,6 +1951,7 @@ export const onDeleteSavedNextStep = /* GraphQL */ `
     onDeleteSavedNextStep(filter: $filter) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt

@@ -11,6 +11,7 @@ export const getClassroom = /* GraphQL */ `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -78,6 +79,8 @@ export const getClassroom = /* GraphQL */ `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -88,6 +91,7 @@ export const getClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -118,15 +122,8 @@ export const getClassroom = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -166,6 +163,7 @@ export const getClassroom = /* GraphQL */ `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -245,6 +243,7 @@ export const listClassrooms = /* GraphQL */ `
         state
         schoolYear
         cohortSize
+        currentWeek
         students {
           items {
             id
@@ -282,6 +281,7 @@ export const listClassrooms = /* GraphQL */ `
               nextToken
               __typename
             }
+            pregeneratedGapGroups
             createdAt
             updatedAt
             classroomSessionsId
@@ -312,15 +312,8 @@ export const listClassrooms = /* GraphQL */ `
               aiThinkingPattern
               __typename
             }
-            cziComponents {
-              componentId
-              title
-              description
-              gradeLevel
-              moduleIds
-              prerequisiteStandards
-              __typename
-            }
+            prerequisiteGapCodes
+            impactedObjectiveCodes
             activities {
               nextToken
               __typename
@@ -339,6 +332,7 @@ export const listClassrooms = /* GraphQL */ `
           items {
             id
             classroomId
+            sessionId
             activityId
             status
             completedAt
@@ -464,15 +458,8 @@ export const getSession = /* GraphQL */ `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -508,6 +495,7 @@ export const getSession = /* GraphQL */ `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -590,15 +578,8 @@ export const listSessions = /* GraphQL */ `
               aiThinkingPattern
               __typename
             }
-            cziComponents {
-              componentId
-              title
-              description
-              gradeLevel
-              moduleIds
-              prerequisiteStandards
-              __typename
-            }
+            prerequisiteGapCodes
+            impactedObjectiveCodes
             activities {
               nextToken
               __typename
@@ -613,6 +594,7 @@ export const listSessions = /* GraphQL */ `
           nextToken
           __typename
         }
+        pregeneratedGapGroups
         createdAt
         updatedAt
         classroomSessionsId
@@ -858,15 +840,8 @@ export const getMisconception = /* GraphQL */ `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -954,15 +929,8 @@ export const listMisconceptions = /* GraphQL */ `
           aiThinkingPattern
           __typename
         }
-        cziComponents {
-          componentId
-          title
-          description
-          gradeLevel
-          moduleIds
-          prerequisiteStandards
-          __typename
-        }
+        prerequisiteGapCodes
+        impactedObjectiveCodes
         activities {
           items {
             id
@@ -1138,6 +1106,7 @@ export const getSavedNextStep = /* GraphQL */ `
     getSavedNextStep(id: $id) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt
@@ -1216,6 +1185,7 @@ export const listSavedNextSteps = /* GraphQL */ `
       items {
         id
         classroomId
+        sessionId
         activityId
         status
         completedAt
@@ -1476,6 +1446,7 @@ export const classroomsByClassroomName = /* GraphQL */ `
         state
         schoolYear
         cohortSize
+        currentWeek
         students {
           items {
             id
@@ -1513,6 +1484,7 @@ export const classroomsByClassroomName = /* GraphQL */ `
               nextToken
               __typename
             }
+            pregeneratedGapGroups
             createdAt
             updatedAt
             classroomSessionsId
@@ -1543,15 +1515,8 @@ export const classroomsByClassroomName = /* GraphQL */ `
               aiThinkingPattern
               __typename
             }
-            cziComponents {
-              componentId
-              title
-              description
-              gradeLevel
-              moduleIds
-              prerequisiteStandards
-              __typename
-            }
+            prerequisiteGapCodes
+            impactedObjectiveCodes
             activities {
               nextToken
               __typename
@@ -1570,6 +1535,7 @@ export const classroomsByClassroomName = /* GraphQL */ `
           items {
             id
             classroomId
+            sessionId
             activityId
             status
             completedAt
@@ -1698,15 +1664,8 @@ export const sessionsByClassroomId = /* GraphQL */ `
               aiThinkingPattern
               __typename
             }
-            cziComponents {
-              componentId
-              title
-              description
-              gradeLevel
-              moduleIds
-              prerequisiteStandards
-              __typename
-            }
+            prerequisiteGapCodes
+            impactedObjectiveCodes
             activities {
               nextToken
               __typename
@@ -1721,6 +1680,7 @@ export const sessionsByClassroomId = /* GraphQL */ `
           nextToken
           __typename
         }
+        pregeneratedGapGroups
         createdAt
         updatedAt
         classroomSessionsId
@@ -1979,15 +1939,8 @@ export const misconceptionsByClassroomId = /* GraphQL */ `
           aiThinkingPattern
           __typename
         }
-        cziComponents {
-          componentId
-          title
-          description
-          gradeLevel
-          moduleIds
-          prerequisiteStandards
-          __typename
-        }
+        prerequisiteGapCodes
+        impactedObjectiveCodes
         activities {
           items {
             id
@@ -2064,15 +2017,8 @@ export const misconceptionsBySessionId = /* GraphQL */ `
           aiThinkingPattern
           __typename
         }
-        cziComponents {
-          componentId
-          title
-          description
-          gradeLevel
-          moduleIds
-          prerequisiteStandards
-          __typename
-        }
+        prerequisiteGapCodes
+        impactedObjectiveCodes
         activities {
           items {
             id
@@ -2362,6 +2308,97 @@ export const savedNextStepsByClassroomId = /* GraphQL */ `
       items {
         id
         classroomId
+        sessionId
+        activityId
+        status
+        completedAt
+        sortOrder
+        misconceptionId
+        misconceptionTitle
+        targetObjectiveStandard
+        priority
+        studentCount
+        studentPercent
+        occurrence
+        misconceptionSummary
+        successIndicators
+        activityTitle
+        activityTime
+        activityFormat
+        activitySummary
+        aiReasoning
+        evidence {
+          source
+          mostCommonError
+          sampleStudentWork
+          aiThinkingPattern
+          __typename
+        }
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
+        createdAt
+        updatedAt
+        classroomSavedNextStepsId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const savedNextStepsBySessionId = /* GraphQL */ `
+  query SavedNextStepsBySessionId(
+    $sessionId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelSavedNextStepFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    savedNextStepsBySessionId(
+      sessionId: $sessionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classroomId
+        sessionId
         activityId
         status
         completedAt

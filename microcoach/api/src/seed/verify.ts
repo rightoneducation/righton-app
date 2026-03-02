@@ -15,45 +15,7 @@
  *   ContextData:      8  (3 classroom RTDs + 5 reference RTDs)
  */
 
-import * as https from 'https';
-
-const ENDPOINT = 'https://gn4bxdp4xzfg3lmj4ypy2foxj4.appsync-api.us-east-1.amazonaws.com/graphql';
-const API_KEY = 'da2-d5xh446mcrctnfy6pi57onc6ra';
-
-async function gql(query: string, variables: Record<string, unknown> = {}): Promise<any> {
-  const urlParts = new URL(ENDPOINT);
-  const body = JSON.stringify({ query, variables });
-
-  return new Promise((resolve, reject) => {
-    const req = https.request(
-      {
-        hostname: urlParts.hostname,
-        path: urlParts.pathname,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'Content-Length': Buffer.byteLength(body),
-        },
-      },
-      (res) => {
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
-        res.on('end', () => {
-          const json = JSON.parse(data);
-          if (json.errors) {
-            reject(new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`));
-          } else {
-            resolve(json.data);
-          }
-        });
-      }
-    );
-    req.on('error', reject);
-    req.write(body);
-    req.end();
-  });
-}
+import { createGqlClient, GqlFn } from './appsync-config';
 
 // ── Status utilities ─────────────────────────────────────────────────────────
 
@@ -155,6 +117,7 @@ function check(label: string, actual: number, expected: number): boolean {
 
 async function main() {
   const totalStart = Date.now();
+  const gql: GqlFn = await createGqlClient();
   console.log('=== Microcoach Seed Verification ===\n');
   console.log('Querying all tables:\n');
 
