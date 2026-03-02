@@ -2,7 +2,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.savedNextStepsByClassroomId = exports.activitiesBySessionId = exports.activitiesByClassroomId = exports.activitiesByMisconceptionId = exports.misconceptionsBySessionId = exports.misconceptionsByClassroomId = exports.studentResponsesByStudentId = exports.studentResponsesByAssessmentId = exports.assessmentsBySessionId = exports.assessmentsByClassroomId = exports.sessionsByClassroomId = exports.classroomsByClassroomName = exports.listContextData = exports.getContextData = exports.listSavedNextSteps = exports.getSavedNextStep = exports.listActivities = exports.getActivity = exports.listMisconceptions = exports.getMisconception = exports.listStudentResponses = exports.getStudentResponse = exports.listAssessments = exports.getAssessment = exports.listStudents = exports.getStudent = exports.listSessions = exports.getSession = exports.listClassrooms = exports.getClassroom = void 0;
+exports.savedNextStepsBySessionId = exports.savedNextStepsByClassroomId = exports.activitiesBySessionId = exports.activitiesByClassroomId = exports.activitiesByMisconceptionId = exports.misconceptionsBySessionId = exports.misconceptionsByClassroomId = exports.studentResponsesByStudentId = exports.studentResponsesByAssessmentId = exports.assessmentsBySessionId = exports.assessmentsByClassroomId = exports.sessionsByClassroomId = exports.classroomsByClassroomName = exports.listContextData = exports.getContextData = exports.listSavedNextSteps = exports.getSavedNextStep = exports.listActivities = exports.getActivity = exports.listMisconceptions = exports.getMisconception = exports.listStudentResponses = exports.getStudentResponse = exports.listAssessments = exports.getAssessment = exports.listStudents = exports.getStudent = exports.listSessions = exports.getSession = exports.listClassrooms = exports.getClassroom = void 0;
 exports.getClassroom = `
   query GetClassroom($id: ID!) {
     getClassroom(id: $id) {
@@ -13,6 +13,7 @@ exports.getClassroom = `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -80,6 +81,8 @@ exports.getClassroom = `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -90,6 +93,7 @@ exports.getClassroom = `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -120,15 +124,8 @@ exports.getClassroom = `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -168,6 +165,7 @@ exports.getClassroom = `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -247,6 +245,7 @@ exports.listClassrooms = `
         state
         schoolYear
         cohortSize
+        currentWeek
         students {
           items {
             id
@@ -284,6 +283,7 @@ exports.listClassrooms = `
               nextToken
               __typename
             }
+            pregeneratedGapGroups
             createdAt
             updatedAt
             classroomSessionsId
@@ -314,15 +314,8 @@ exports.listClassrooms = `
               aiThinkingPattern
               __typename
             }
-            cziComponents {
-              componentId
-              title
-              description
-              gradeLevel
-              moduleIds
-              prerequisiteStandards
-              __typename
-            }
+            prerequisiteGapCodes
+            impactedObjectiveCodes
             activities {
               nextToken
               __typename
@@ -341,6 +334,7 @@ exports.listClassrooms = `
           items {
             id
             classroomId
+            sessionId
             activityId
             status
             completedAt
@@ -466,15 +460,8 @@ exports.getSession = `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -510,6 +497,7 @@ exports.getSession = `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -592,15 +580,8 @@ exports.listSessions = `
               aiThinkingPattern
               __typename
             }
-            cziComponents {
-              componentId
-              title
-              description
-              gradeLevel
-              moduleIds
-              prerequisiteStandards
-              __typename
-            }
+            prerequisiteGapCodes
+            impactedObjectiveCodes
             activities {
               nextToken
               __typename
@@ -615,6 +596,7 @@ exports.listSessions = `
           nextToken
           __typename
         }
+        pregeneratedGapGroups
         createdAt
         updatedAt
         classroomSessionsId
@@ -860,15 +842,8 @@ exports.getMisconception = `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -956,15 +931,8 @@ exports.listMisconceptions = `
           aiThinkingPattern
           __typename
         }
-        cziComponents {
-          componentId
-          title
-          description
-          gradeLevel
-          moduleIds
-          prerequisiteStandards
-          __typename
-        }
+        prerequisiteGapCodes
+        impactedObjectiveCodes
         activities {
           items {
             id
@@ -1140,6 +1108,7 @@ exports.getSavedNextStep = `
     getSavedNextStep(id: $id) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt
@@ -1218,6 +1187,7 @@ exports.listSavedNextSteps = `
       items {
         id
         classroomId
+        sessionId
         activityId
         status
         completedAt
@@ -1478,6 +1448,7 @@ exports.classroomsByClassroomName = `
         state
         schoolYear
         cohortSize
+        currentWeek
         students {
           items {
             id
@@ -1515,6 +1486,7 @@ exports.classroomsByClassroomName = `
               nextToken
               __typename
             }
+            pregeneratedGapGroups
             createdAt
             updatedAt
             classroomSessionsId
@@ -1545,15 +1517,8 @@ exports.classroomsByClassroomName = `
               aiThinkingPattern
               __typename
             }
-            cziComponents {
-              componentId
-              title
-              description
-              gradeLevel
-              moduleIds
-              prerequisiteStandards
-              __typename
-            }
+            prerequisiteGapCodes
+            impactedObjectiveCodes
             activities {
               nextToken
               __typename
@@ -1572,6 +1537,7 @@ exports.classroomsByClassroomName = `
           items {
             id
             classroomId
+            sessionId
             activityId
             status
             completedAt
@@ -1700,15 +1666,8 @@ exports.sessionsByClassroomId = `
               aiThinkingPattern
               __typename
             }
-            cziComponents {
-              componentId
-              title
-              description
-              gradeLevel
-              moduleIds
-              prerequisiteStandards
-              __typename
-            }
+            prerequisiteGapCodes
+            impactedObjectiveCodes
             activities {
               nextToken
               __typename
@@ -1723,6 +1682,7 @@ exports.sessionsByClassroomId = `
           nextToken
           __typename
         }
+        pregeneratedGapGroups
         createdAt
         updatedAt
         classroomSessionsId
@@ -1981,15 +1941,8 @@ exports.misconceptionsByClassroomId = `
           aiThinkingPattern
           __typename
         }
-        cziComponents {
-          componentId
-          title
-          description
-          gradeLevel
-          moduleIds
-          prerequisiteStandards
-          __typename
-        }
+        prerequisiteGapCodes
+        impactedObjectiveCodes
         activities {
           items {
             id
@@ -2066,15 +2019,8 @@ exports.misconceptionsBySessionId = `
           aiThinkingPattern
           __typename
         }
-        cziComponents {
-          componentId
-          title
-          description
-          gradeLevel
-          moduleIds
-          prerequisiteStandards
-          __typename
-        }
+        prerequisiteGapCodes
+        impactedObjectiveCodes
         activities {
           items {
             id
@@ -2364,6 +2310,97 @@ exports.savedNextStepsByClassroomId = `
       items {
         id
         classroomId
+        sessionId
+        activityId
+        status
+        completedAt
+        sortOrder
+        misconceptionId
+        misconceptionTitle
+        targetObjectiveStandard
+        priority
+        studentCount
+        studentPercent
+        occurrence
+        misconceptionSummary
+        successIndicators
+        activityTitle
+        activityTime
+        activityFormat
+        activitySummary
+        aiReasoning
+        evidence {
+          source
+          mostCommonError
+          sampleStudentWork
+          aiThinkingPattern
+          __typename
+        }
+        tabs {
+          overview {
+            whatStudentsDo
+            whatYouDo
+            importance
+            __typename
+          }
+          activitySteps {
+            setup
+            problem
+            coreActivity
+            discussionQuestions
+            __typename
+          }
+          materials {
+            required
+            optional
+            __typename
+          }
+          studentGroupings {
+            groups {
+              name
+              description
+              students
+              __typename
+            }
+            highFlyers {
+              students
+              description
+              __typename
+            }
+            aiRecommendation
+            __typename
+          }
+          __typename
+        }
+        createdAt
+        updatedAt
+        classroomSavedNextStepsId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+exports.savedNextStepsBySessionId = `
+  query SavedNextStepsBySessionId(
+    $sessionId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelSavedNextStepFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    savedNextStepsBySessionId(
+      sessionId: $sessionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classroomId
+        sessionId
         activityId
         status
         completedAt

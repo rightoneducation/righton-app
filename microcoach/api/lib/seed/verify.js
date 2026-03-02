@@ -15,74 +15,9 @@
  *   Activities:       9  (1 per misconception)
  *   ContextData:      8  (3 classroom RTDs + 5 reference RTDs)
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const https = __importStar(require("https"));
-const ENDPOINT = 'https://gn4bxdp4xzfg3lmj4ypy2foxj4.appsync-api.us-east-1.amazonaws.com/graphql';
-const API_KEY = 'da2-d5xh446mcrctnfy6pi57onc6ra';
-async function gql(query, variables = {}) {
-    const urlParts = new URL(ENDPOINT);
-    const body = JSON.stringify({ query, variables });
-    return new Promise((resolve, reject) => {
-        const req = https.request({
-            hostname: urlParts.hostname,
-            path: urlParts.pathname,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': API_KEY,
-                'Content-Length': Buffer.byteLength(body),
-            },
-        }, (res) => {
-            let data = '';
-            res.on('data', (chunk) => (data += chunk));
-            res.on('end', () => {
-                const json = JSON.parse(data);
-                if (json.errors) {
-                    reject(new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`));
-                }
-                else {
-                    resolve(json.data);
-                }
-            });
-        });
-        req.on('error', reject);
-        req.write(body);
-        req.end();
-    });
-}
+const appsync_config_1 = require("./appsync-config");
+let gql;
 // ── Status utilities ─────────────────────────────────────────────────────────
 function elapsed(startMs) {
     const ms = Date.now() - startMs;
@@ -170,6 +105,7 @@ function check(label, actual, expected) {
 async function main() {
     var _a, _b, _c;
     const totalStart = Date.now();
+    gql = await (0, appsync_config_1.createGqlClient)();
     console.log('=== Microcoach Seed Verification ===\n');
     console.log('Querying all tables:\n');
     // Run queries sequentially so each line shows its own status

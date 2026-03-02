@@ -285,7 +285,8 @@ async function main() {
   const sorted = [...sessionStubs].sort((a: any, b: any) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
   const currentStub = sorted[sorted.length - 1];
   const historyStubs = sorted.slice(0, sorted.length - 1);
-  console.log(` ✓  ${sessionStubs.length} sessions, current: ${currentStub.sessionLabel}`);
+  const historyNote = historyStubs.length ? `, ${historyStubs.length} historical` : ', no historical data (week 1)';
+  console.log(` ✓  ${sessionStubs.length} session(s), current: ${currentStub.sessionLabel}${historyNote}`);
 
   // 3. Fetch full session details
   process.stdout.write('Fetching session details...');

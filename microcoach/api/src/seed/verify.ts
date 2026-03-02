@@ -17,6 +17,8 @@
 
 import { createGqlClient, GqlFn } from './appsync-config';
 
+let gql: GqlFn;
+
 // ── Status utilities ─────────────────────────────────────────────────────────
 
 function elapsed(startMs: number): string {
@@ -117,7 +119,7 @@ function check(label: string, actual: number, expected: number): boolean {
 
 async function main() {
   const totalStart = Date.now();
-  const gql: GqlFn = await createGqlClient();
+  gql = await createGqlClient();
   console.log('=== Microcoach Seed Verification ===\n');
   console.log('Querying all tables:\n');
 

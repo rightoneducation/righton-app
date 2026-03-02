@@ -36,6 +36,7 @@ exports.createClassroom = `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -103,6 +104,8 @@ exports.createClassroom = `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -113,6 +116,7 @@ exports.createClassroom = `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -143,15 +147,8 @@ exports.createClassroom = `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -191,6 +188,7 @@ exports.createClassroom = `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -268,6 +266,7 @@ exports.updateClassroom = `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -335,6 +334,8 @@ exports.updateClassroom = `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -345,6 +346,7 @@ exports.updateClassroom = `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -375,15 +377,8 @@ exports.updateClassroom = `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -423,6 +418,7 @@ exports.updateClassroom = `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -500,6 +496,7 @@ exports.deleteClassroom = `
       state
       schoolYear
       cohortSize
+      currentWeek
       students {
         items {
           id
@@ -567,6 +564,8 @@ exports.deleteClassroom = `
               priority
               occurrence
               successIndicators
+              prerequisiteGapCodes
+              impactedObjectiveCodes
               postPpqImprovement
               createdAt
               updatedAt
@@ -577,6 +576,7 @@ exports.deleteClassroom = `
             nextToken
             __typename
           }
+          pregeneratedGapGroups
           createdAt
           updatedAt
           classroomSessionsId
@@ -607,15 +607,8 @@ exports.deleteClassroom = `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -655,6 +648,7 @@ exports.deleteClassroom = `
         items {
           id
           classroomId
+          sessionId
           activityId
           status
           completedAt
@@ -802,15 +796,8 @@ exports.createSession = `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -846,6 +833,7 @@ exports.createSession = `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -936,15 +924,8 @@ exports.updateSession = `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -980,6 +961,7 @@ exports.updateSession = `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -1070,15 +1052,8 @@ exports.deleteSession = `
             aiThinkingPattern
             __typename
           }
-          cziComponents {
-            componentId
-            title
-            description
-            gradeLevel
-            moduleIds
-            prerequisiteStandards
-            __typename
-          }
+          prerequisiteGapCodes
+          impactedObjectiveCodes
           activities {
             items {
               id
@@ -1114,6 +1089,7 @@ exports.deleteSession = `
         nextToken
         __typename
       }
+      pregeneratedGapGroups
       createdAt
       updatedAt
       classroomSessionsId
@@ -1450,15 +1426,8 @@ exports.createMisconception = `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1544,15 +1513,8 @@ exports.updateMisconception = `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1638,15 +1600,8 @@ exports.deleteMisconception = `
         aiThinkingPattern
         __typename
       }
-      cziComponents {
-        componentId
-        title
-        description
-        gradeLevel
-        moduleIds
-        prerequisiteStandards
-        __typename
-      }
+      prerequisiteGapCodes
+      impactedObjectiveCodes
       activities {
         items {
           id
@@ -1906,6 +1861,7 @@ exports.createSavedNextStep = `
     createSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt
@@ -1982,6 +1938,7 @@ exports.updateSavedNextStep = `
     updateSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt
@@ -2058,6 +2015,7 @@ exports.deleteSavedNextStep = `
     deleteSavedNextStep(input: $input, condition: $condition) {
       id
       classroomId
+      sessionId
       activityId
       status
       completedAt

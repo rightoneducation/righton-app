@@ -43,7 +43,6 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-const https = __importStar(require("https"));
 const path = __importStar(require("path"));
 const XLSX = __importStar(require("xlsx"));
 const seedData_1 = require("./seedData");
@@ -70,38 +69,8 @@ if (!sessionConfig) {
     console.error(`No session config found for label "${sessionLabel}" in ${classroomKey}. Check seedData.ts.`);
     process.exit(1);
 }
-// ── AppSync config ────────────────────────────────────────────────────────────
-const ENDPOINT = 'https://gn4bxdp4xzfg3lmj4ypy2foxj4.appsync-api.us-east-1.amazonaws.com/graphql';
-const API_KEY = 'da2-d5xh446mcrctnfy6pi57onc6ra';
-async function gql(query, variables) {
-    const urlParts = new URL(ENDPOINT);
-    const body = JSON.stringify({ query, variables });
-    return new Promise((resolve, reject) => {
-        const req = https.request({
-            hostname: urlParts.hostname,
-            path: urlParts.pathname,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': API_KEY,
-                'Content-Length': Buffer.byteLength(body),
-            },
-        }, (res) => {
-            let data = '';
-            res.on('data', (chunk) => (data += chunk));
-            res.on('end', () => {
-                const json = JSON.parse(data);
-                if (json.errors)
-                    reject(new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`));
-                else
-                    resolve(json.data);
-            });
-        });
-        req.on('error', reject);
-        req.write(body);
-        req.end();
-    });
-}
+const appsync_config_1 = require("./appsync-config");
+let gql;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 function elapsed(startMs) {
     const ms = Date.now() - startMs;
@@ -392,6 +361,7 @@ async function uploadMisconceptions(sessionId) {
 // ── Main ──────────────────────────────────────────────────────────────────────
 async function main() {
     const totalStart = Date.now();
+    gql = await (0, appsync_config_1.createGqlClient)();
     console.log(`=== Upload Session: ${classroomKey} / ${sessionLabel} ===\n`);
     console.log(`  Classroom ID : ${classroomId}`);
     console.log(`  Session      : ${sessionLabel}`);
