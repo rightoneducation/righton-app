@@ -289,6 +289,10 @@ input GenerateNextStepInput {
   contextData: AWSJSON          # Array of ContextData NEXT_STEP_LESSON records as few-shot examples
 }
 
+input GenerateSubMisconceptionsInput {
+  misconception: AWSJSON!       # Single misconception object from analysis
+}
+
 type Mutation {
   getLearningScience(input: GetLearningScienceInput!): String
     @function(name: "microcoachGetLearningScience-${env}")
@@ -298,6 +302,8 @@ type Mutation {
     @function(name: "microcoachLLMAnalysis-${env}")
   generateNextStep(input: GenerateNextStepInput!): String
     @function(name: "microcoachLLMGeneration-${env}")
+  generateSubMisconceptions(input: GenerateSubMisconceptionsInput!): String
+    @function(name: "microcoachSubMisconceptions-${env}")
 }
 
 # ── ContextData ────────────────────────────────────────────────────────

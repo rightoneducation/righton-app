@@ -21,6 +21,11 @@ export const generateNextStep = /* GraphQL */ `
     generateNextStep(input: $input)
   }
 `;
+export const generateSubMisconceptions = /* GraphQL */ `
+  mutation GenerateSubMisconceptions($input: GenerateSubMisconceptionsInput!) {
+    generateSubMisconceptions(input: $input)
+  }
+`;
 export const createClassroom = /* GraphQL */ `
   mutation CreateClassroom(
     $input: CreateClassroomInput!

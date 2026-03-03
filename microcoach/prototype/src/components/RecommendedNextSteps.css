@@ -3,12 +3,31 @@
   font-family: 'Rubik', sans-serif;
 }
 
+.rns-subtitle.rns-subtitle-secondary {
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.88;
+}
+
 .rns-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
   margin-bottom: 16px;
+}
+
+.rns-upload-row {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rns-upload-note {
+  font-size: 12px;
+  color: #6B7280;
 }
 
 .rns-title {
@@ -110,26 +129,12 @@
   overflow: hidden;
 }
 
-.main-misconception {
-  border: 2px solid #1B376F;
-  box-shadow: 0 4px 12px rgba(27, 55, 111, 0.15);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-}
-
-.main-misconception:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(27, 55, 111, 0.25);
-}
-
-.main-misconception:focus {
-  outline: 2px solid #1B376F;
-  outline-offset: 2px;
-}
-
 .alternative-misconceptions-grid {
+  /* Show recommended next-step cards side-by-side in one row */
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  align-items: start;
 }
 
 @media (max-width: 768px) {
@@ -144,8 +149,57 @@
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  padding: 12px;
+  padding: 16px;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.alternative-misconception-card.selected-group {
+  border-color: #1B376F;
+  box-shadow: 0 0 0 2px rgba(27, 55, 111, 0.12);
+}
+
+/* Collapse toggle (top-right chevron) */
+.rns-collapse-toggle {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(27, 55, 111, 0.18);
+  background-color: #FFFFFF;
+  color: rgba(27, 55, 111, 0.9);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.rns-collapse-toggle:hover {
+  background-color: rgba(27, 55, 111, 0.06);
+  border-color: rgba(27, 55, 111, 0.35);
+}
+
+.rns-collapse-toggle:focus-visible {
+  outline: 3px solid rgba(27, 55, 111, 0.35);
+  outline-offset: 2px;
+}
+
+.rns-collapse-icon {
+  transition: transform 0.18s ease;
+}
+
+.rns-collapse-icon.collapsed {
+  /* Collapsed state should point UP */
+  transform: rotate(180deg);
+}
+
+.rns-collapse-icon.expanded {
+  transform: rotate(0deg);
+}
+
+/* Slightly simplify the collapsed card visual density */
+.alternative-misconception-card.rns-collapsed .misconception-summary {
+  margin-top: 10px;
 }
 
 .alternative-misconception-card:hover {
@@ -171,12 +225,133 @@
   margin-bottom: 12px;
 }
 
+/* Learning objective box that sits under the misconception-group header */
+.rns-learning-objective-box {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rns-learning-objective-box:hover {
+  border-color: rgba(27, 55, 111, 0.35);
+  box-shadow: 0 1px 4px rgba(27, 55, 111, 0.12);
+}
+
+.rns-learning-objective-box.expanded {
+  border-color: rgba(27, 55, 111, 0.42);
+}
+
+.rns-learning-objective-box:focus-visible {
+  outline: 2px solid rgba(27, 55, 111, 0.35);
+  outline-offset: 2px;
+}
+
+.rns-learning-objective-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rns-learning-objective-toggle {
+  position: absolute;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(27, 55, 111, 0.28);
+  color: #1B376F;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rns-learning-objective-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1B376F;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.rns-learning-objective-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.rns-learning-objective-description {
+  font-size: 13px;
+  color: #1B376F;
+  line-height: 1.4;
+  flex: 0 1 auto;
+  min-width: 0;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .rns-learning-objective-row {
+    flex-wrap: wrap;
+  }
+}
+
+/* Header layout: title + misconception (left), student pill (right) */
+.rns-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.rns-top-left {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.rns-top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.rns-top-right-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Ensure the student pill doesn’t wrap (keeps chevron anchored at the corner) */
+.students-pill {
+  white-space: nowrap;
+}
+
 .alternative-title-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .alternative-title {
@@ -187,6 +362,179 @@
   color: #1B376F;
 }
 
+.rns-title-objective {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rns-title-objective-description {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1B376F;
+  line-height: 1.3;
+}
+
+@media (max-width: 720px) {
+  .rns-top-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rns-top-right {
+    width: 100%;
+    align-items: flex-end;
+  }
+}
+
+/* Activity option row (3-up) */
+.rns-activity-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.rns-activity-option {
+  text-align: left;
+  border: 1px solid #e5e5e5;
+  /* Paler/lighter blue for the activity cards.
+     NOTE: use an opaque color so it stays lighter even when nested inside the container. */
+  background-color: #F3F9FD;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.rns-activity-option:hover {
+  border-color: rgba(27, 55, 111, 0.5);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+
+.rns-activity-option.selected {
+  border-color: #1B376F;
+  box-shadow: 0 0 0 2px rgba(27, 55, 111, 0.12);
+}
+
+.rns-activity-option-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1B376F;
+  line-height: 1.35;
+}
+
+.rns-activity-option-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.rns-activity-option.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+}
+
+.rns-activity-option.disabled:hover {
+  border-color: #e5e5e5;
+  box-shadow: none;
+}
+
+.rns-activity-added-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background-color: rgba(0, 118, 170, 0.12);
+  border: 1px solid rgba(0, 118, 170, 0.25);
+  color: #0076AA;
+  white-space: nowrap;
+}
+
+.rns-activity-option-meta {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1B376F;
+  opacity: 0.9;
+}
+
+.rns-activity-option-summary {
+  font-size: 12px;
+  color: #1B376F;
+  line-height: 1.4;
+}
+
+/* New styles for additional activity card fields */
+.rns-activity-option-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.rns-activity-option-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rns-activity-option-field-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1B376F;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.rns-activity-option-field-value {
+  font-size: 12px;
+  color: #1B376F;
+  line-height: 1.4;
+  font-weight: 400;
+  margin: 0;
+}
+
+.rns-activity-option-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.rns-activity-add-btn {
+  padding: 7px 10px;
+  font-size: 12px;
+  /* Less bold than the default `.add-btn` */
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rns-activity-add-btn .rns-bookmark-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 980px) {
+  .rns-activity-options {
+    grid-template-columns: 1fr;
+  }
+}
+
 .alternative-meta-row {
   display: flex;
   justify-content: space-between;
@@ -195,21 +543,52 @@
 }
 
 .alternative-activity {
-  background-color: #FFFFFF;
+  /* Slightly darker blue than the activity cards (opaque to avoid alpha blending issues). */
+  background-color: #E6F2FA;
   border: 1px solid #e5e5e5;
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 12px;
 }
 
+.rns-next-step-section {
+  background-color: #E6F2FA;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
 .alternative-label {
-  font-size: 11px;
+  font-size: 18px;
   font-weight: 700;
   color: #1B376F;
   font-family: 'Poppins', sans-serif;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.rns-selected-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #1B376F;
+  background-color: rgba(27, 55, 111, 0.12);
+  border: 1px solid rgba(27, 55, 111, 0.25);
+  white-space: nowrap;
+}
+
+.alternative-sublabel {
+  font-size: 14px;
+  color: #1B376F;
+  line-height: 1.4;
+  margin-bottom: 10px;
 }
 
 .alternative-activity-title {
@@ -245,9 +624,23 @@
 }
 
 .alternative-ccss-grid {
-  display: flex;
-  flex-direction: column;
+  /* Desktop: show the 3 CCSS sub-sections in one row */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+/* Target objective inline block inside the blue misconception summary box */
+
+.rns-misconception-text {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #1B376F;
+  line-height: 1.5;
+}
+
+.rns-misconception-text + .rns-learning-objective-box {
+  margin-top: 12px;
 }
 
 .alternative-ccss-card {
@@ -296,7 +689,6 @@
   border-radius: 12px;
   font-size: 12px;
   font-weight: 400;
-  line-height: 1;
   font-family: 'Rubik', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -307,6 +699,7 @@
   white-space: nowrap;
   width: fit-content;
   max-width: 100%;
+  line-height: 1;
 }
 
 .alternative-ccss-tag.target-objective {
@@ -330,23 +723,6 @@
   box-shadow: 0 1px 3px rgba(109, 40, 217, 0.3);
 }
 
-/* Clickable Standard Styles */
-.clickable-standard {
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.clickable-standard:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.clickable-standard:focus {
-  outline: 2px solid #1B376F;
-  outline-offset: 2px;
-}
-
 .alternative-ccss-description {
   font-size: 13px;
   color: #1B376F;
@@ -358,7 +734,7 @@
 /* Responsive Design for Alternative CCSS Cards */
 @media (max-width: 768px) {
   .alternative-ccss-grid {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
   
   /* Keep pill + description left aligned; allow wrapping on narrow widths */
@@ -461,15 +837,12 @@
   border: 1px solid rgba(27, 55, 111, 0.25);
 }
 
+/* Deprecated: previous blue misconception summary box */
 .misconception-summary {
   margin-top: 10px;
-  padding: 12px;
-  background-color: rgba(0, 118, 170, 0.06);
-  border: 1px solid rgba(0, 118, 170, 0.18);
-  border-radius: 8px;
-  font-size: 13px;
-  color: #1B376F;
-  line-height: 1.5;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
 .gap-group-meta-row {
@@ -773,6 +1146,21 @@
   background-color: #FFFBF6;
 }
 
+.rns-modal-header-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+/* When `actions` includes a primary button, make it slightly more compact in the modal header. */
+.rns-modal-header-actions .add-btn {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .rns-modal-title {
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
@@ -875,23 +1263,6 @@
   margin: 0;
 }
 
-/* Alternative Activity Section - Main Misconception Padding Fix */
-.gap-group-card.main-misconception .alternative-activity {
-  background-color: #FFFFFF;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 0;
-}
-
-.gap-group-card.main-misconception .alternative-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 16px 0 0 0;
-  background-color: #FFFFFF;
-}
-
 /* Tab Navigation Styles - Grouped with Content */
 .tab-navigation {
   display: flex;
@@ -942,6 +1313,38 @@
   padding: 16px;
   background-color: #FFFFFF;
   border-top: 1px solid #E5E7EB;
+}
+
+/* Sticky Actions - Change 1: Make the Add to list button stick to the bottom */
+.sticky-actions {
+  position: sticky;
+  bottom: 0;
+  background-color: #FFFFFF;
+  border-top: 1px solid #E5E7EB;
+  padding: 16px 0 0 0;
+  margin: 0;
+  z-index: 10;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+
+/* Override modal padding for sticky actions */
+.rns-modal-body {
+  padding: 16px 16px 24px 16px;
+  position: relative;
+}
+
+.rns-modal-body .sticky-actions {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 16px 16px 8px 16px;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 /* Tab Panel Layout - Change 3: Vertical stacking instead of grid */
@@ -1084,6 +1487,11 @@
   border: 1px solid #e5e5e5;
   border-radius: 8px;
   padding: 12px;
+}
+
+.ai-recommendation-card.blue-background {
+  background-color: #E6F2FA;
+  border: 1px solid #e5e5e5;
 }
 
 .ai-recommendation-title {
@@ -1368,11 +1776,6 @@
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-}
-
-.main-misconception {
-  border: 2px solid #1B376F;
-  box-shadow: 0 4px 12px rgba(27, 55, 111, 0.15);
 }
 
 /* Adjust spacing around buttons and tabs */
@@ -2096,6 +2499,36 @@
   color: #111827;
 }
 
+.error-summary {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.error-summary h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.error-summary ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.error-summary li {
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 .breakdown-steps {
   display: grid;
   gap: 12px;
@@ -2322,6 +2755,49 @@
   font-weight: 600;
 }
 
+/* Activity Card Header Styles */
+.activity-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 20px;
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+/* Enhanced activity card styling for better prominence */
+.activity-card-header .rns-activity-option {
+  padding: 16px;
+  font-size: 14px; /* Increased from 12px */
+}
+
+.activity-card-header .rns-activity-option-title {
+  font-size: 16px; /* Increased from 12px */
+  font-weight: 800; /* Reverted back from 700 */
+}
+
+.activity-card-header .rns-activity-option-meta {
+  font-size: 13px; /* Increased from 11px */
+  font-weight: 600; /* Maintained */
+}
+
+.activity-card-header .rns-activity-option-field-label {
+  font-size: 12px; /* Increased from 11px */
+  font-weight: 700; /* Reverted back from 600 */
+}
+
+.activity-card-header .rns-activity-option-field-value {
+  font-size: 14px; /* Increased from 12px */
+  font-weight: 400; /* Maintained */
+}
+
+.activity-card-header .rns-activity-option-details {
+  gap: 12px; /* Increased from 8px */
+  margin-top: 14px; /* Increased from 10px */
+}
+
 /* Back Button Styles */
 .back-controls {
   display: flex;
@@ -2353,6 +2829,246 @@
   cursor: not-allowed;
 }
 
+/* Sub-misconceptions Section Styles */
+.sub-misconceptions-section {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.sub-misconceptions-header {
+  margin-bottom: 16px;
+}
+
+.sub-misconceptions-title {
+  margin: 0 0 8px 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1B376F;
+}
+
+.sub-misconceptions-description {
+  margin: 0;
+  font-size: 14px;
+  color: #1B376F;
+  line-height: 1.5;
+}
+
+.sub-misconceptions-carousel {
+  overflow-x: auto;
+  padding-bottom: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.sub-misconceptions-carousel::-webkit-scrollbar {
+  height: 8px;
+}
+
+.sub-misconceptions-carousel::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.sub-misconceptions-carousel::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.sub-misconceptions-carousel::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.sub-misconceptions-track {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 8px;
+}
+
+.sub-misconception-card {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 0 320px;
+  min-width: 320px;
+}
+
+.sub-misconception-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sub-misconception-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1B376F;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.core-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Rubik', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: #0076AA;
+  color: #FFFFFF;
+  border: 1px solid #0076AA;
+  box-shadow: 0 1px 3px rgba(0, 118, 170, 0.3);
+}
+
+.sub-misconception-name {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1B376F;
+}
+
+.sub-misconception-meta {
+  display: flex;
+  gap: 8px;
+}
+
+.many-students-pill, .some-students-pill, .medium-students-pill, .few-students-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Rubik', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #e5e7eb;
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.many-students-pill {
+  background-color: #0076AA;
+  color: #FFFFFF;
+  border-color: #0076AA;
+  box-shadow: 0 1px 3px rgba(0, 118, 170, 0.3);
+}
+
+.some-students-pill {
+  background-color: #6D28D9;
+  color: #FFFFFF;
+  border-color: #6D28D9;
+  box-shadow: 0 1px 3px rgba(109, 40, 217, 0.3);
+}
+
+.medium-students-pill {
+  background-color: #CC5500;
+  color: #FFFFFF;
+  border-color: #CC5500;
+  box-shadow: 0 1px 3px rgba(204, 85, 0, 0.3);
+}
+
+.few-students-pill {
+  background-color: #6B7280;
+  color: #FFFFFF;
+  border-color: #6B7280;
+  box-shadow: 0 1px 3px rgba(107, 114, 128, 0.3);
+}
+
+.sub-misconception-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #1B376F;
+  line-height: 1.5;
+}
+
+.sub-misconception-example {
+  background-color: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.sub-misconception-example strong {
+  font-size: 12px;
+  color: #1B376F;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.example-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.incorrect-example {
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 600;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.correct-example {
+  font-size: 12px;
+  color: #059669;
+  font-weight: 600;
+  background-color: #ecfdf5;
+  border: 1px solid #d1fae5;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.correct-answer {
+  font-size: 12px;
+  color: #059669;
+  font-weight: 700;
+  background-color: #ecfdf5;
+  border: 1px solid #d1fae5;
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  text-align: center;
+}
+
+.view-thinking-btn {
+  margin-top: auto;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #1B376F;
+  background-color: #FFFFFF;
+  color: #1B376F;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.view-thinking-btn:hover {
+  background-color: rgba(27, 55, 111, 0.08);
+  border-color: rgba(27, 55, 111, 0.5);
+}
+
 /* CCSS Standards Styling */
 .ccss-standards-section {
   margin-top: 16px;
@@ -2366,9 +3082,8 @@
 }
 
 /* Main (top) card: show all 3 CCSS sections side-by-side */
-.gap-group-card.main-misconception .ccss-standards-grid {
-  grid-template-columns: repeat(3, 1fr);
-}
+/* NOTE: formerly the top recommendation used a wider "featured" layout.
+   We intentionally removed that hierarchy, so there is no special-case grid here. */
 
 .ccss-card {
   background-color: #FFFFFF;
@@ -2479,6 +3194,23 @@
   flex: 1;
 }
 
+/* Clickable Standard Styles */
+.clickable-standard {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.clickable-standard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.clickable-standard:focus {
+  outline: 2px solid #1B376F;
+  outline-offset: 2px;
+}
+
 /* Responsive Design for CCSS Cards */
 @media (max-width: 768px) {
   .ccss-standards-grid {
@@ -2539,156 +3271,527 @@
   .back-controls {
     margin-top: 8px;
   }
-
+  
   .back-btn {
     padding: 6px 10px;
     font-size: 13px;
   }
 }
 
-/* Evidence Journey — Data-driven screen styles */
-.impact-stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+/* Close Button Styles */
+.rns-modal-close-button {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rns-modal-close-button:hover {
+  background: #f5f5f5;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+.rns-modal-close-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  border-color: #007bff;
+}
+
+.rns-modal-close-icon {
+  color: #666;
+  font-size: 16px;
+}
+
+.rns-modal-close-button:hover .rns-modal-close-icon {
+  color: #333;
+}
+
+/* Collapsible CCSS Sections Styles */
+.alternative-ccss-section.collapsed {
+  display: none;
+}
+
+.alternative-ccss-section.expanded {
+  display: block;
+}
+
+/* Carousel Navigation Controls */
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-bottom: 8px;
+}
+
+.carousel-btn {
+  background-color: #FFFFFF;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1B376F;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-btn:hover {
+  background-color: rgba(27, 55, 111, 0.08);
+  border-color: rgba(27, 55, 111, 0.35);
+  transform: translateY(-1px);
+}
+
+.carousel-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.carousel-btn-prev {
+  order: 1;
+}
+
+.carousel-btn-next {
+  order: 2;
+}
+
+/* CCSS Standards Section */
+.alternative-ccss-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.alternative-ccss-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1B376F;
+  margin: 0;
+}
+
+.alternative-ccss-toggle {
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  color: #1B376F;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.alternative-ccss-toggle:hover {
+  background-color: #F3F4F6;
+  border-color: #D1D5DB;
+}
+
+.alternative-ccss-content {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
-.stat-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 16px;
+/* Knowledge Map Styles */
+.knowledge-map {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+  min-height: 120px;
+}
+
+.map-column {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px;
+}
+
+.map-column-header {
+  margin: 0 0 8px 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1B376F;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   text-align: center;
+}
+
+.prerequisite-header {
+  color: #CC5500;
+}
+
+.assessed-header {
+  color: #0076AA;
+}
+
+.at-risk-header {
+  color: #6D28D9;
+}
+
+.map-standards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+
+.map-standard {
+  width: 100%;
+  max-width: 200px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
   gap: 4px;
 }
 
-.stat-card-value {
-  font-size: 22px;
-  font-weight: 700;
-  color: #111827;
+.map-standard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.stat-card-label {
+.map-standard.prerequisite-gap {
+  border-color: #CC5500;
+  background-color: #FFF7ED;
+}
+
+.map-standard.assessed-standard {
+  border-color: #0076AA;
+  background-color: #EFF6FF;
+}
+
+.map-standard.at-risk-standard {
+  border-color: #6D28D9;
+  background-color: #F3E8FF;
+}
+
+.standard-code {
   font-size: 12px;
-  font-weight: 600;
-  color: #6b7280;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  color: #1B376F;
+  text-transform: uppercase;
 }
 
-.stat-card-sub {
-  font-size: 11px;
-  color: #9ca3af;
+/* Responsive Design for Sub-misconceptions */
+@media (max-width: 768px) {
+  .sub-misconceptions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sub-misconception-card {
+    padding: 12px;
+  }
+  
+  .sub-misconception-name {
+    font-size: 13px;
+  }
+  
+  .sub-misconception-desc {
+    font-size: 12px;
+  }
+  
+  .incorrect-example, .correct-example, .correct-answer {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+  
+  .view-thinking-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .carousel-controls {
+    margin-top: 8px;
+  }
+  
+  .carousel-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
 }
 
-.misconception-description,
-.thinking-pattern,
-.most-common-error,
-.ai-analysis,
-.why-matters,
-.ai-reasoning {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+@media (max-width: 480px) {
+  .sub-misconceptions-section {
+    padding: 12px;
+  }
+  
+  .sub-misconceptions-title {
+    font-size: 14px;
+  }
+  
+  .sub-misconceptions-description {
+    font-size: 12px;
+  }
+  
+  .sub-misconception-card {
+    padding: 10px;
+  }
+  
+  .sub-misconception-name {
+    font-size: 12px;
+  }
+  
+  .sub-misconception-desc {
+    font-size: 11px;
+  }
+  
+  .incorrect-example, .correct-example, .correct-answer {
+    font-size: 10px;
+    padding: 3px 5px;
+  }
+  
+  .view-thinking-btn {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+  
+  .carousel-controls {
+    margin-top: 6px;
+  }
+  
+  .carousel-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+/* New CCSS Standards Section Styles - Based on sketch design */
+.ccss-standards-section {
+  margin-top: 24px;
   padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
 }
 
-.misconception-description h5,
-.thinking-pattern h5,
-.most-common-error h5,
-.ai-analysis h5,
-.why-matters h5,
-.ai-reasoning h5 {
+.ccss-standards-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ccss-standards-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1B376F;
+  font-family: 'Poppins', sans-serif;
+}
+
+.ccss-standards-toggle {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ccss-standards-toggle:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.ccss-standards-content {
+  margin-top: 8px;
+}
+
+/* Full-width assessed standard section */
+.assessed-full-width {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.column-header {
   margin: 0 0 8px 0;
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: #333;
+  text-align: center;
 }
 
-.misconception-description p,
-.thinking-pattern p,
-.most-common-error p,
-.ai-analysis p,
-.why-matters p,
-.ai-reasoning p {
-  margin: 0;
-  font-size: 14px;
-  color: #475569;
-  line-height: 1.6;
+.assessed-header {
+  color: #1565c0;
+  border-bottom: 2px solid #90caf9;
+  padding-bottom: 4px;
 }
 
-.work-samples h5 {
-  margin: 0 0 12px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
+/* Side-by-side prerequisite and at-risk sections */
+.standards-grid.side-by-side {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
-.no-samples {
-  font-size: 13px;
-  color: #9ca3af;
-  font-style: italic;
-  margin: 0;
-}
-
-.success-indicators {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+.standards-column {
+  background: white;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 16px;
+  padding: 12px;
 }
 
-.success-indicators h5 {
-  margin: 0 0 10px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #166534;
+.prerequisite-header {
+  color: #e65100;
+  border-bottom: 2px solid #ffd54f;
+  padding-bottom: 4px;
 }
 
-.success-checklist {
-  margin: 0;
-  padding-left: 20px;
+.at-risk-header {
+  color: #7b1fa2;
+  border-bottom: 2px solid #ce93d8;
+  padding-bottom: 4px;
 }
 
-.success-indicator-item {
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: #166534;
-  line-height: 1.5;
-}
-
-.target-standard {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.target-standard h5 {
-  margin: 0 0 10px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-}
-
-.chart-bar-flagged {
-  background: linear-gradient(to top, #dc2626, #ef4444) !important;
-}
-
-.chart-label-flagged {
-  color: #dc2626;
-  font-weight: 700;
-}
-
-.target-standard-row {
+.standards-list {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.standard-card {
+  background: #f9f9f9;
+  border: 1px solid #e8e8e8;
+  border-radius: 20px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.standard-card:hover {
+  background-color: #e3f2fd;
+  border-color: #90caf9;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.standard-card.prerequisite-card:hover {
+  background-color: #fff3e0;
+  border-color: #ffd54f;
+}
+
+.standard-card.at-risk-card:hover {
+  background-color: #f3e5f5;
+  border-color: #ce93d8;
+}
+
+.standard-code {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+  background: #e8e8e8;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-bottom: 4px;
 }
 
 .standard-description {
-  font-size: 13px;
-  color: #475569;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Responsive Design for CCSS Standards Section */
+@media (max-width: 900px) {
+  .standards-grid.side-by-side {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .ccss-standards-section {
+    padding: 12px;
+  }
+  
+  .ccss-standards-title {
+    font-size: 14px;
+  }
+  
+  .standard-card {
+    padding: 8px;
+  }
+  
+  .standard-code {
+    font-size: 11px;
+  }
+  
+  .standard-description {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 400px) {
+  .ccss-standards-section {
+    padding: 8px;
+  }
+  
+  .ccss-standards-title {
+    font-size: 13px;
+  }
+  
+  .standard-card {
+    padding: 6px;
+  }
+  
+  .standard-code {
+    font-size: 10px;
+  }
+  
+  .standard-description {
+    font-size: 10px;
+  }
 }

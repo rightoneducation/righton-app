@@ -28,6 +28,12 @@ const Misconception = z.object({
   evidence: MisconceptionEvidence.optional(),
   prerequisiteGapCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `prerequisiteStandards` list (earlier-grade topics students must know first). Must be lower grade level than ccssStandard. Only include codes where a gap in that earlier skill would specifically cause this misconception."),
   impactedObjectiveCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `futureDependentStandards` list (later-grade topics that build on this standard). Must be higher grade level than ccssStandard. Only include codes that this specific misconception would specifically threaten."),
+  subMisconceptions: z.array(z.object({
+    name: z.string(),
+    frequency: z.enum(['many', 'some', 'medium', 'few']),
+    isCore: z.boolean().optional(),
+    description: z.string(),
+  })).optional(),
 });
 
 const AnalysisResponse = z.object({

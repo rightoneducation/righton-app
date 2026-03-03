@@ -153,6 +153,12 @@ const GENERATE_NEXT_STEP = /* GraphQL */ `
   }
 `;
 
+const GENERATE_SUB_MISCONCEPTIONS = /* GraphQL */ `
+  mutation GenerateSubMisconceptions($input: GenerateSubMisconceptionsInput!) {
+    generateSubMisconceptions(input: $input)
+  }
+`;
+
 const UPDATE_SESSION = /* GraphQL */ `
   mutation UpdateSession($input: UpdateSessionInput!) {
     updateSession(input: $input) {
@@ -190,7 +196,8 @@ function formatLabel(f: string): string {
 
 function buildNextSteps(
   misconceptions: any[],
-  activities: any[],
+  activitiesPerGroup: any[][],
+  subMisconceptionsPerGroup: any[][],
   ppqQuestions: any[],
   learningScienceData: any
 ): any[] {
@@ -214,7 +221,8 @@ function buildNextSteps(
   }
 
   return misconceptions.map((m: any, i: number) => {
-    const activity = activities[i];
+    const activityList: any[] = (activitiesPerGroup[i] ?? []).filter(Boolean);
+    const subMisconceptions = subMisconceptionsPerGroup[i] ?? [];
     const frameworkItem = frameworkItems.find(
       (item: any) => normalize(item.code) === normalize(m.ccssStandard)
     );
@@ -242,18 +250,17 @@ function buildNextSteps(
         prerequisiteGaps,
       },
       evidence: m.evidence ?? null,
+      subMisconceptions,
       questionErrorRates,
-      move: activity
-        ? {
-            id: `nextstep-move-ai-${i + 1}`,
-            title: activity.title,
-            time: `${activity.durationMinutes} min`,
-            format: formatLabel(activity.format),
-            summary: activity.summary,
-            aiReasoning: activity.aiReasoning,
-            tabs: activity.tabs ?? null,
-          }
-        : null,
+      moveOptions: activityList.map((activity, j) => ({
+        id: `nextstep-move-ai-${i + 1}-${j + 1}`,
+        title: activity.title,
+        time: `${activity.durationMinutes} min`,
+        format: formatLabel(activity.format),
+        summary: activity.summary,
+        aiReasoning: activity.aiReasoning,
+        tabs: activity.tabs ?? null,
+      })),
     };
   });
 }
@@ -328,11 +335,11 @@ async function main() {
   const nextStepExamples: any[] = nextStepData.listContextData?.items ?? [];
   console.log(` ✓  ${nextStepExamples.length} examples`);
 
-  // 7. Generate next steps (LLM, one per misconception)
+  // 7. Generate next steps (LLM, one call per misconception → returns 2-3 activities)
   const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
-  const activities: any[] = await Promise.all(
+  const activitiesPerGroup: any[][] = await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
-      process.stdout.write(`Generating next step [${i + 1}/${misconceptions.length}]: ${m.title}...`);
+      process.stdout.write(`Generating next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
       const relevant = nextStepExamples.filter(
         (ex: any) =>
           !ex.ccssStandards?.length ||
@@ -350,20 +357,40 @@ async function main() {
           },
         });
         const result = parseJson(raw.generateNextStep);
-        console.log(' ✓');
-        return result;
+        // Lambda now returns an array of activities; guard against legacy single-object response
+        const resultList: any[] = Array.isArray(result) ? result : [result];
+        console.log(` ✓  ${resultList.length} activities`);
+        return resultList;
       } catch (err) {
         console.log(` ✗ (${err})`);
-        return null;
+        return [];
       }
     })
   );
 
-  // 8. Build next steps
-  const nextSteps = buildNextSteps(misconceptions, activities, ppq?.questions, learningScienceData);
+  // 8. Generate sub-misconceptions (one per misconception, in parallel)
+  const subMisconceptionsPerGroup: any[][] = await Promise.all(
+    misconceptions.map(async (m: any, i: number) => {
+      process.stdout.write(`Generating sub-misconceptions [${i + 1}/${misconceptions.length}]: ${m.title}...`);
+      try {
+        const raw = await gql(GENERATE_SUB_MISCONCEPTIONS, {
+          input: { misconception: JSON.stringify(m) },
+        });
+        const result = parseJson(raw.generateSubMisconceptions);
+        console.log(` ✓  ${result.length} sub-misconceptions`);
+        return result;
+      } catch (err) {
+        console.log(` ✗ (${err})`);
+        return [];
+      }
+    })
+  );
+
+  // 9. Build next steps
+  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, subMisconceptionsPerGroup, ppq?.questions, learningScienceData);
   console.log(`\nBuilt ${nextSteps.length} next steps`);
 
-  // 9. Persist next steps to the session and mark the classroom's active week
+  // 10. Persist next steps to the session and mark the classroom's active week
   process.stdout.write(`Saving next steps to session ${currentStub.id} (week ${currentStub.weekNumber})...`);
   await gql(UPDATE_SESSION, {
     input: {

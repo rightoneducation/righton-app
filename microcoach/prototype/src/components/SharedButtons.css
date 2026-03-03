@@ -58,3 +58,33 @@
   outline: 3px solid rgba(27, 55, 111, 0.35);
   outline-offset: 2px;
 }
+
+/* Shared (pilot) upload button styling
+   Used in InterventionPatterns (Reflect tab) and other pages that need the same
+   disabled Upload Data control.
+*/
+
+.ip-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ip-upload-btn-icon {
+  font-size: 16px;
+}
+
+.ip-upload-btn:disabled,
+.ip-upload-btn[aria-disabled="true"] {
+  opacity: 1;
+  background-color: #F3F4F6;
+  border-color: #D1D5DB;
+  color: #6B7280;
+}
+
+.ip-upload-btn:disabled:hover,
+.ip-upload-btn[aria-disabled="true"]:hover {
+  background-color: #F3F4F6;
+}

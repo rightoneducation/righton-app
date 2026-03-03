@@ -150,7 +150,7 @@ const UPDATE_SESSION = /* GraphQL */ `
     updateSession(input: $input) {
       id
       status
-      pregeneratedGapGroups
+      pregeneratedNextSteps
     }
   }
 `;
@@ -219,6 +219,7 @@ function buildGapGroups(misconceptions, activities, ppqQuestions, learningScienc
                 prerequisiteGaps,
             },
             evidence: (_h = m.evidence) !== null && _h !== void 0 ? _h : null,
+            subMisconceptions: activity && activity.subMisconceptions ? activity.subMisconceptions : [],
             questionErrorRates,
             move: activity
                 ? {
@@ -322,12 +323,15 @@ async function main() {
     // 8. Build gap groups
     const gapGroups = buildGapGroups(misconceptions, activities, ppq === null || ppq === void 0 ? void 0 : ppq.questions, learningScienceData);
     console.log(`\nBuilt ${gapGroups.length} gap groups`);
+    gapGroups.forEach((g, i) => {
+        console.log(`  [${i + 1}] ${g.title}: subMisconceptions=${g.subMisconceptions.length}, move=${g.move ? 'yes' : 'null'}`);
+    });
     // 9. Persist gap groups to the session and mark the classroom's active week
     process.stdout.write(`Saving gap groups to session ${currentStub.id} (week ${currentStub.weekNumber})...`);
     await gql(UPDATE_SESSION, {
         input: {
             id: currentStub.id,
-            pregeneratedGapGroups: JSON.stringify(gapGroups),
+            pregeneratedNextSteps: JSON.stringify(gapGroups),
             status: 'generated',
         },
     });

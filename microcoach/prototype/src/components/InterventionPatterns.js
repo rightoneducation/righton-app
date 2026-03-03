@@ -5,16 +5,6 @@ import LearningGapTrendDetailsModal from './LearningGapTrendDetailsModal';
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
-const hashString = (str) => {
-  // Small deterministic hash for stable UI “mock” analytics.
-  let h = 0;
-  for (let i = 0; i < str.length; i += 1) {
-    // eslint-disable-next-line no-bitwise
-    h = (h * 31 + str.charCodeAt(i)) | 0;
-  }
-  return Math.abs(h);
-};
-
 const ARROW = '→';
 
 const LearningGapTrendCard = ({
@@ -111,21 +101,21 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
     });
 
     const rows = [...byGap.entries()].map(([gapName, records]) => {
-      // Simulate a stable class size (until real mastery data is wired in).
-      const classSize = 30;
-
       // Baseline record is the earliest created. It represents the number of students who *do not*
       // yet understand the concept (gap count).
       const baseline = [...records].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0))[0];
-      const derivedGapCount = (baseline?.studentCount ??
-        Math.round((classSize * clamp(baseline?.studentPercent ?? 0, 0, 100)) / 100));
-      const beforeCount = clamp(derivedGapCount, 0, classSize);
+      const beforeCount = baseline?.studentCount ?? 0;
+
+      // Derive class size from real studentCount + studentPercent when available.
+      const pct = baseline?.studentPercent;
+      const classSize = (pct && pct > 0 && beforeCount > 0)
+        ? Math.round(beforeCount / (pct / 100))
+        : Math.max(beforeCount, 1);
 
       const completedCount = records.filter((r) => r.status === 'completed').length;
-      const noise = hashString(gapName) % 2; // 0..1 (deterministic)
 
       // The more completed interventions, the more the gap count shrinks.
-      const reduction = clamp(completedCount * 2 + noise, 0, beforeCount);
+      const reduction = clamp(completedCount * 2, 0, beforeCount);
       const afterCount = clamp(beforeCount - reduction, 0, classSize);
 
       // Class mastery = % who understand = (classSize - gapCount) / classSize
@@ -164,26 +154,6 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
 
       <div className="ip-header">
         <h3 className="ip-title">Trends in Learning Goals</h3>
-      </div>
-
-      <div className="ip-upload-pilot" aria-live="polite">
-        <p className="ip-upload-pilot-message" id="ip-upload-pilot-message">
-          Post-intervention data will be uploaded here. Teachers will be able to upload CSV files
-          of student work and related artifacts to analyze trends in learning goals. This upload
-          feature is disabled for the pilot.
-        </p>
-        <button
-          className="yns-btn secondary ip-upload-btn"
-          type="button"
-          disabled
-          aria-disabled="true"
-          aria-describedby="ip-upload-pilot-message"
-        >
-          <svg className="ip-upload-btn-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
-            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-2 8v-4H9l3-3 3 3h-2v4h-2z"/>
-          </svg>
-          <span>Upload Data</span>
-        </button>
       </div>
 
       {gapTrends.length === 0 ? (

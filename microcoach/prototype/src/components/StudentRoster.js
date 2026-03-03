@@ -1,19 +1,6 @@
 import React from 'react';
 import './StudentRoster.css';
 
-const MOCK_STUDENTS = [
-  { id: 1,  name: "Alex K.",    performanceX: 78, performanceY: 82, confidenceLevel: 85, status: "On Track"      },
-  { id: 2,  name: "Sarah M.",   performanceX: 92, performanceY: 88, confidenceLevel: 90, status: "Excelling"     },
-  { id: 3,  name: "Jamie L.",   performanceX: 65, performanceY: 58, confidenceLevel: 45, status: "Needs Support" },
-  { id: 4,  name: "Chris B.",   performanceX: 71, performanceY: 84, confidenceLevel: 62, status: "Improving"     },
-  { id: 5,  name: "Taylor M.",  performanceX: 95, performanceY: 93, confidenceLevel: 88, status: "Excelling"     },
-  { id: 6,  name: "Jordan P.",  performanceX: 83, performanceY: 79, confidenceLevel: 75, status: "On Track"      },
-  { id: 7,  name: "Sam R.",     performanceX: 69, performanceY: 72, confidenceLevel: 68, status: "On Track"      },
-  { id: 8,  name: "Casey L.",   performanceX: 58, performanceY: 61, confidenceLevel: 52, status: "Needs Support" },
-  { id: 9,  name: "Morgan T.",  performanceX: 87, performanceY: 85, confidenceLevel: 82, status: "On Track"      },
-  { id: 10, name: "Riley H.",   performanceX: 76, performanceY: 80, confidenceLevel: 78, status: "On Track"      },
-];
-
 // confidenceLevel may be stored as 1–3 (low/med/high) or 0–100
 const normalizeConfidence = (level) => {
   if (level == null) return null;
@@ -33,7 +20,7 @@ const deriveStatus = (student) => {
 };
 
 const StudentRoster = ({ students: studentsProp }) => {
-  const students = studentsProp?.length ? studentsProp : MOCK_STUDENTS;
+  const students = studentsProp || [];
 
   const getStatusColor = (status) => {
     switch (status) {

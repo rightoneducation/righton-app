@@ -4,29 +4,6 @@ import './YourNextSteps.css';
 import './SharedButtons.css';
 import NextStepDetailsModal from './NextStepDetailsModal';
 
-const STANDARD_COMPONENTS_MAP = {
-  '8.EE.7': [
-    'Represent one-variable equations',
-    'Apply inverse operations',
-    'Check solution validity'
-  ],
-  '5.NF.1': [
-    'Find least common denominator',
-    'Build equivalent fractions',
-    'Add/subtract numerators correctly'
-  ],
-  '6.EE.1': [
-    'Follow order of operations',
-    'Evaluate exponents first',
-    'Substitute values into expressions'
-  ],
-  '6.EE.5': [
-    'Interpret equation balance',
-    'Use inverse operations on both sides',
-    'Verify solution by substitution'
-  ]
-};
-
 const YourNextSteps = ({
   nextSteps = [],
   completedNextSteps = [],
@@ -39,18 +16,8 @@ const YourNextSteps = ({
   isLoading = false,
 }) => {
   const getStandardComponents = (item) => {
-    const standard = item?.targetObjectiveStandard;
-    if (!standard) return [];
-
-    if (STANDARD_COMPONENTS_MAP[standard]) {
-      return STANDARD_COMPONENTS_MAP[standard];
-    }
-
     const description = item?.ccssStandards?.targetObjective?.description || '';
-    if (!description) {
-      return ['Concept understanding', 'Procedural fluency', 'Application'];
-    }
-
+    if (!description) return [];
     return description
       .split(/,| and /i)
       .map((part) => part.trim())
@@ -118,8 +85,6 @@ const YourNextSteps = ({
   }, []);
 
   const allItemsForDetails = useMemo(() => {
-    // Completed items live in `completedNextSteps` now, so the details modal
-    // needs to search both lists.
     return [...(nextSteps || []), ...(completedNextSteps || [])];
   }, [nextSteps, completedNextSteps]);
 
@@ -135,14 +100,6 @@ const YourNextSteps = ({
       return next;
     });
   };
-
-  const summary = useMemo(() => {
-    const planned = (nextSteps || []).filter((x) => x.status !== 'completed').length;
-    // Completed items are now shown in a separate section (completedNextSteps)
-    // and also tracked historically via `completedCount`.
-    const completed = (completedNextSteps?.length ?? 0) || completedCount;
-    return { planned, completed, total: planned + completed };
-  }, [nextSteps, completedNextSteps, completedCount]);
 
   const plannedItems = useMemo(() => {
     // Be defensive: `nextSteps` should already be planned-only, but older
@@ -270,9 +227,9 @@ const YourNextSteps = ({
 
       <div className="yns-header">
         <div>
-          <h3 className="yns-title">Saved Next Steps</h3>
+          <h3 className="yns-title">Saved Activities</h3>
           <p className="yns-subtitle">
-            Save instructional moves you plan to run. When you click <strong>Complete</strong>, you're telling MicroCoach you executed that activity—so our algorithm can track progress and surface trends in learning goals in <em>3. Reflect</em>.
+            Review the instructional moves you’ve saved for your class. Mark activities complete after you run them so MicroCoach can track progress over time.
           </p>
         </div>
 
@@ -307,7 +264,6 @@ const YourNextSteps = ({
             </div>
           ) : plannedItems.map((item) => {
             const isMovingToReflect = movingToReflectId === item.id;
-            const isCompleted = item.status === 'completed';
             const showDropAbove =
               sort === 'manual' &&
               !!draggingId &&
@@ -327,7 +283,7 @@ const YourNextSteps = ({
 
                 <div className="yns-row" data-itemid={item.id}>
                   <div
-                    className={`yns-item ${isCompleted ? 'completed' : ''} ${isMovingToReflect ? 'moving-to-reflect' : ''} ${sort === 'manual' ? 'draggable' : ''}`}
+                    className={`yns-item ${isMovingToReflect ? 'moving-to-reflect' : ''} ${sort === 'manual' ? 'draggable' : ''}`}
                     style={
                       isMovingToReflect
                         ? {
@@ -486,7 +442,7 @@ const YourNextSteps = ({
                     </svg>
                   </button>
                 </div>
-
+              
                 {showDropBelow && <div className="yns-drop-indicator" aria-hidden="true" />}
               </React.Fragment>
             );
@@ -521,7 +477,6 @@ const YourNextSteps = ({
 
       {/* Completed section */}
       <div className="yns-completed-section" aria-label="Completed next steps">
-        {/* Header should read like a top-level section title (same visual weight as "Saved Next Steps") */}
         <div className="yns-completed-header">
           <div className="yns-completed-title-row">
             <h3 className="yns-completed-title">Completed</h3>

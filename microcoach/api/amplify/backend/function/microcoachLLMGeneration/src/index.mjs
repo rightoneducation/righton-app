@@ -10,7 +10,7 @@ const RUNTIME_DEFAULT_DURATION_MINUTES = nextStepConfig.defaultDurationMinutes ?
 const RUNTIME_SUPPORTED_FORMATS = nextStepConfig.supportedFormats ?? ['whole_class', 'small_group'];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
-// Generates a single fully-populated next step Activity for one misconception.
+// Generates 2-3 fully-populated next step Activities for one misconception.
 // Called once per misconception, in parallel, after microcoachLLMAnalysis.
 
 const Overview = z.object({
@@ -62,6 +62,10 @@ const NextStepActivity = z.object({
   aiReasoning: z.string().describe('Why this specific activity design targets this specific misconception'),
   aiGenerated: z.literal(true),
   tabs: Tabs.describe('Full structured activity content'),
+});
+
+const NextStepActivities = z.object({
+  activities: z.array(NextStepActivity).describe('2-3 distinct next step activities, each with a different format or pedagogical approach'),
 });
 
 // ── Handler ───────────────────────────────────────────────────────────────────
@@ -152,16 +156,15 @@ ${JSON.stringify(classroomContext, null, 2)}
 
 ## Your Task
 
-Generate ONE fully classroom-ready next step activity that directly targets the misconception above.
+Generate 2-3 classroom-ready next step activities that target the misconception above. Each activity must use a DIFFERENT format and/or pedagogical approach, giving the teacher meaningful options to choose from (e.g. one whole-class launch, one small-group practice, one individual or partner work).
 
-Requirements:
+Requirements for EACH activity:
 - **title**: Short, action-oriented (e.g. "Keep-Change-Flip Error Analysis")
 - **summary**: 1-2 sentences describing the activity
-- **disallowedTeachingMethods**: ${nextStepConfig.disallowedTeachingMethods?.join(', ')} do not use these methods in the activity.
+- **disallowedTeachingMethods**: ${nextStepConfig.disallowedTeachingMethods?.join(', ')} do not use these methods in any activity.
 - **durationMinutes**: Must be <= ${RUNTIME_MAX_DURATION_MINUTES} minutes and designed to fit within a ${RUNTIME_DEFAULT_DURATION_MINUTES}-minute intervention block (shorter is fine; never longer).
-- **format**: choose one of ${RUNTIME_SUPPORTED_FORMATS.map((f) => `"${f}"`).join(', ')}. Whole-class and small-group formats should be the primary options.
-- **aiReasoning**: Explain specifically WHY this activity design addresses this particular misconception — \
-  connect the activity mechanics to the cognitive error pattern
+- **format**: choose from ${RUNTIME_SUPPORTED_FORMATS.map((f) => `"${f}"`).join(', ')}. Activities in the set must vary — do NOT repeat the same format.
+- **aiReasoning**: Explain specifically WHY this activity design addresses this particular misconception
 - **tabs.overview**: what students do, what the teacher facilitates, why it matters for THIS misconception
 - **tabs.activitySteps**:
   - setup: 2-3 teacher prep steps
@@ -174,7 +177,7 @@ Requirements:
     "ready for abstract practice" / "extension")
   - aiRecommendation: overall grouping strategy guidance for the teacher
 
-Return JSON matching the schema.
+Return JSON matching the schema with an "activities" array containing 2-3 entries.
 `.trim();
 
   try {
@@ -184,14 +187,14 @@ Return JSON matching the schema.
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },
       ],
-      response_format: zodResponseFormat(NextStepActivity, 'nextStepActivity'),
+      response_format: zodResponseFormat(NextStepActivities, 'nextStepActivities'),
     });
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
 
-    const structured = NextStepActivity.parse(JSON.parse(raw));
-    return JSON.stringify(structured);
+    const structured = NextStepActivities.parse(JSON.parse(raw));
+    return JSON.stringify(structured.activities);
   } catch (error) {
     console.error('[microcoachLLMGeneration] Error', {
       timestamp: new Date().toISOString(),
