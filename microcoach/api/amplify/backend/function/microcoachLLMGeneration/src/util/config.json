@@ -1,5 +1,5 @@
 {
-  "nextStep": {
+  "rtd": {
     "minRecommendedNextSteps": 2,
     "maxRecommendedNextSteps": 4,
     "supportedFormats": ["whole_class", "small_group"],

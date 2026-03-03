@@ -2,7 +2,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.generateRTD = exports.getAnalysis = exports.getAnalytics = exports.getLearningScience = void 0;
+exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.generateNextStep = exports.getAnalysis = exports.getAnalytics = exports.getLearningScience = void 0;
 exports.getLearningScience = `
   mutation GetLearningScience($input: GetLearningScienceInput!) {
     getLearningScience(input: $input)
@@ -18,9 +18,9 @@ exports.getAnalysis = `
     getAnalysis(input: $input)
   }
 `;
-exports.generateRTD = `
-  mutation GenerateRTD($input: GenerateRTDInput!) {
-    generateRTD(input: $input)
+exports.generateNextStep = `
+  mutation GenerateNextStep($input: GenerateNextStepInput!) {
+    generateNextStep(input: $input)
   }
 `;
 exports.createClassroom = `
@@ -116,7 +116,7 @@ exports.createClassroom = `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -346,7 +346,7 @@ exports.updateClassroom = `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -576,7 +576,7 @@ exports.deleteClassroom = `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -833,7 +833,7 @@ exports.createSession = `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -961,7 +961,7 @@ exports.updateSession = `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -1089,7 +1089,7 @@ exports.deleteSession = `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -2098,7 +2098,7 @@ exports.createContextData = `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -2180,7 +2180,7 @@ exports.updateContextData = `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -2262,7 +2262,7 @@ exports.deleteContextData = `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic

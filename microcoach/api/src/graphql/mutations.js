@@ -16,9 +16,9 @@ export const getAnalysis = /* GraphQL */ `
     getAnalysis(input: $input)
   }
 `;
-export const generateRTD = /* GraphQL */ `
-  mutation GenerateRTD($input: GenerateRTDInput!) {
-    generateRTD(input: $input)
+export const generateNextStep = /* GraphQL */ `
+  mutation GenerateNextStep($input: GenerateNextStepInput!) {
+    generateNextStep(input: $input)
   }
 `;
 export const createClassroom = /* GraphQL */ `
@@ -114,7 +114,7 @@ export const createClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -344,7 +344,7 @@ export const updateClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -574,7 +574,7 @@ export const deleteClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -831,7 +831,7 @@ export const createSession = /* GraphQL */ `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -959,7 +959,7 @@ export const updateSession = /* GraphQL */ `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -1087,7 +1087,7 @@ export const deleteSession = /* GraphQL */ `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -2096,7 +2096,7 @@ export const createContextData = /* GraphQL */ `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -2178,7 +2178,7 @@ export const updateContextData = /* GraphQL */ `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -2260,7 +2260,7 @@ export const deleteContextData = /* GraphQL */ `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic

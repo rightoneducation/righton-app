@@ -93,7 +93,7 @@ exports.getClassroom = `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -283,7 +283,7 @@ exports.listClassrooms = `
               nextToken
               __typename
             }
-            pregeneratedGapGroups
+            pregeneratedNextSteps
             createdAt
             updatedAt
             classroomSessionsId
@@ -497,7 +497,7 @@ exports.getSession = `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -596,7 +596,7 @@ exports.listSessions = `
           nextToken
           __typename
         }
-        pregeneratedGapGroups
+        pregeneratedNextSteps
         createdAt
         updatedAt
         classroomSessionsId
@@ -1270,7 +1270,7 @@ exports.getContextData = `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -1354,7 +1354,7 @@ exports.listContextData = `
         ccssStandards
         assessmentCode
         isReference
-        rtdLesson {
+        nextStepLesson {
           targetAssessmentCode
           targetQuestionNumbers
           topic
@@ -1486,7 +1486,7 @@ exports.classroomsByClassroomName = `
               nextToken
               __typename
             }
-            pregeneratedGapGroups
+            pregeneratedNextSteps
             createdAt
             updatedAt
             classroomSessionsId
@@ -1682,7 +1682,7 @@ exports.sessionsByClassroomId = `
           nextToken
           __typename
         }
-        pregeneratedGapGroups
+        pregeneratedNextSteps
         createdAt
         updatedAt
         classroomSessionsId

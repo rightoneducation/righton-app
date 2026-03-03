@@ -2925,7 +2925,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -4783,7 +4783,7 @@
         "inputFields" : null,
         "interfaces" : null,
         "enumValues" : [ {
-          "name" : "RTD",
+          "name" : "NEXT_STEP",
           "description" : null,
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -5734,7 +5734,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -6694,12 +6694,12 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "rtdLesson",
+          "name" : "nextStepLesson",
           "description" : null,
           "args" : [ ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "RTDLesson",
+            "name" : "NextStepLesson",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -6784,7 +6784,7 @@
         "inputFields" : null,
         "interfaces" : null,
         "enumValues" : [ {
-          "name" : "RTD_LESSON",
+          "name" : "NEXT_STEP_LESSON",
           "description" : null,
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -6817,7 +6817,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "RTDLesson",
+        "name" : "NextStepLesson",
         "description" : null,
         "fields" : [ {
           "name" : "targetAssessmentCode",
@@ -7745,7 +7745,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "generateRTD",
+          "name" : "generateNextStep",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -7755,7 +7755,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "GenerateRTDInput",
+                "name" : "GenerateNextStepInput",
                 "ofType" : null
               }
             },
@@ -8758,7 +8758,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "GenerateRTDInput",
+        "name" : "GenerateNextStepInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -9257,7 +9257,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -9374,7 +9374,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -9543,7 +9543,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -13455,11 +13455,11 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "rtdLesson",
+          "name" : "nextStepLesson",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "RTDLessonInput",
+            "name" : "NextStepLessonInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -13518,7 +13518,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "RTDLessonInput",
+        "name" : "NextStepLessonInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -14300,11 +14300,11 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "rtdLesson",
+          "name" : "nextStepLesson",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "RTDLessonInput",
+            "name" : "NextStepLessonInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -15504,7 +15504,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -17591,12 +17591,12 @@
         "onFragment" : false,
         "onField" : true
       }, {
-        "name" : "aws_auth",
-        "description" : "Directs the schema to enforce authorization on a field",
+        "name" : "aws_publish",
+        "description" : "Tells the service which subscriptions will be published to when this mutation is called. This directive is deprecated use @aws_susbscribe directive instead.",
         "locations" : [ "FIELD_DEFINITION" ],
         "args" : [ {
-          "name" : "cognito_groups",
-          "description" : "List of cognito user pool groups which have access on this field",
+          "name" : "subscriptions",
+          "description" : "List of subscriptions which will be published to when this mutation is called.",
           "type" : {
             "kind" : "LIST",
             "name" : null,
@@ -17612,10 +17612,23 @@
         "onFragment" : false,
         "onField" : false
       }, {
-        "name" : "aws_oidc",
-        "description" : "Tells the service this field/object has access authorized by an OIDC token.",
-        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
-        "args" : [ ],
+        "name" : "aws_subscribe",
+        "description" : "Tells the service which mutation triggers this subscription.",
+        "locations" : [ "FIELD_DEFINITION" ],
+        "args" : [ {
+          "name" : "mutations",
+          "description" : "List of mutations which will trigger this subscription when they are called.",
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false
@@ -17641,12 +17654,28 @@
         "onFragment" : false,
         "onField" : false
       }, {
-        "name" : "aws_publish",
-        "description" : "Tells the service which subscriptions will be published to when this mutation is called. This directive is deprecated use @aws_susbscribe directive instead.",
+        "name" : "aws_iam",
+        "description" : "Tells the service this field/object has access authorized by sigv4 signing.",
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "aws_oidc",
+        "description" : "Tells the service this field/object has access authorized by an OIDC token.",
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "aws_auth",
+        "description" : "Directs the schema to enforce authorization on a field",
         "locations" : [ "FIELD_DEFINITION" ],
         "args" : [ {
-          "name" : "subscriptions",
-          "description" : "List of subscriptions which will be published to when this mutation is called.",
+          "name" : "cognito_groups",
+          "description" : "List of cognito user pool groups which have access on this field",
           "type" : {
             "kind" : "LIST",
             "name" : null,
@@ -17658,22 +17687,6 @@
           },
           "defaultValue" : null
         } ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "aws_api_key",
-        "description" : "Tells the service this field/object has access authorized by an API key.",
-        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
-        "args" : [ ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "aws_iam",
-        "description" : "Tells the service this field/object has access authorized by sigv4 signing.",
-        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
-        "args" : [ ],
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false
@@ -17703,23 +17716,10 @@
         "onFragment" : false,
         "onField" : false
       }, {
-        "name" : "aws_subscribe",
-        "description" : "Tells the service which mutation triggers this subscription.",
-        "locations" : [ "FIELD_DEFINITION" ],
-        "args" : [ {
-          "name" : "mutations",
-          "description" : "List of mutations which will trigger this subscription when they are called.",
-          "type" : {
-            "kind" : "LIST",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
-          },
-          "defaultValue" : null
-        } ],
+        "name" : "aws_api_key",
+        "description" : "Tells the service this field/object has access authorized by an API key.",
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ ],
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false

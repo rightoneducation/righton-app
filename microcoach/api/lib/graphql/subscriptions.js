@@ -95,7 +95,7 @@ exports.onCreateClassroom = `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -324,7 +324,7 @@ exports.onUpdateClassroom = `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -553,7 +553,7 @@ exports.onDeleteClassroom = `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -807,7 +807,7 @@ exports.onCreateSession = `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -932,7 +932,7 @@ exports.onUpdateSession = `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -1057,7 +1057,7 @@ exports.onDeleteSession = `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -2035,7 +2035,7 @@ exports.onCreateContextData = `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -2116,7 +2116,7 @@ exports.onUpdateContextData = `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -2197,7 +2197,7 @@ exports.onDeleteContextData = `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic

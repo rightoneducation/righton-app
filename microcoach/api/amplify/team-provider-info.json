@@ -1,33 +1,33 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-microcoach-dev-112447-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-microcoach-dev-112447-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-microcoach-dev-112447-authRole",
+      "AuthRoleName": "amplify-microcoach-dev-93833-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-microcoach-dev-93833-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-microcoach-dev-93833-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-microcoach-dev-112447-deployment",
-      "UnauthRoleName": "amplify-microcoach-dev-112447-unauthRole",
-      "StackName": "amplify-microcoach-dev-112447",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-microcoach-dev-112447/931343a0-02b7-11f1-9590-0eaec32e3c91",
+      "DeploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+      "UnauthRoleName": "amplify-microcoach-dev-93833-unauthRole",
+      "StackName": "amplify-microcoach-dev-93833",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-microcoach-dev-93833/16226400-16aa-11f1-95ec-0affd4b28b0d",
       "AmplifyAppId": "d2qcx18zz1o3fm"
     },
     "categories": {
-      "api": {
-        "microcoach": {}
-      },
       "function": {
         "microcoachGetLearningScience": {
-          "deploymentBucketName": "amplify-microcoach-dev-112447-deployment",
-          "s3Key": "amplify-builds/microcoachGetLearningScience-43525148336e43486f6d-build.zip"
+          "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+          "s3Key": "amplify-builds/microcoachGetLearningScience-495278334c636f554664-build.zip"
         },
         "microcoachLLMAnalysis": {
-          "deploymentBucketName": "amplify-microcoach-dev-112447-deployment",
+          "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
           "s3Key": "amplify-builds/microcoachLLMAnalysis-486b3771696f70466b6c-build.zip"
         },
         "microcoachLLMGeneration": {
-          "deploymentBucketName": "amplify-microcoach-dev-112447-deployment",
-          "s3Key": "amplify-builds/microcoachLLMGeneration-4a50685177674863742b-build.zip"
+          "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+          "s3Key": "amplify-builds/microcoachLLMGeneration-6a35436a386458635542-build.zip"
         }
+      },
+      "api": {
+        "microcoach": {}
       }
     }
   }
