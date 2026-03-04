@@ -145,6 +145,11 @@ const GENERATE_NEXT_STEP = /* GraphQL */ `
     generateNextStep(input: $input)
   }
 `;
+const GENERATE_NEXT_STEP_OPTION = /* GraphQL */ `
+  mutation GenerateNextStepOption($input: GenerateNextStepOptionInput!) {
+    generateNextStepOption(input: $input)
+  }
+`;
 const GENERATE_SUB_MISCONCEPTIONS = /* GraphQL */ `
   mutation GenerateSubMisconceptions($input: GenerateSubMisconceptionsInput!) {
     generateSubMisconceptions(input: $input)
@@ -228,15 +233,18 @@ function buildNextSteps(misconceptions, activitiesPerGroup, subMisconceptionsPer
             subMisconceptions,
             questionErrorRates,
             moveOptions: activityList.map((activity, j) => {
-                var _a;
+                var _a, _b, _c, _d;
                 return ({
                     id: `nextstep-move-ai-${i + 1}-${j + 1}`,
                     title: activity.title,
                     time: `${activity.durationMinutes} min`,
                     format: formatLabel(activity.format),
                     summary: activity.summary,
+                    targets: (_a = activity.targets) !== null && _a !== void 0 ? _a : null,
+                    instructionalMove: (_b = activity.instructionalMove) !== null && _b !== void 0 ? _b : null,
+                    strategyTag: (_c = activity.strategyTag) !== null && _c !== void 0 ? _c : null,
                     aiReasoning: activity.aiReasoning,
-                    tabs: (_a = activity.tabs) !== null && _a !== void 0 ? _a : null,
+                    tabs: (_d = activity.tabs) !== null && _d !== void 0 ? _d : null,
                 });
             }),
         };
@@ -301,8 +309,11 @@ async function main() {
     });
     const nextStepExamples = (_m = (_l = nextStepData.listContextData) === null || _l === void 0 ? void 0 : _l.items) !== null && _m !== void 0 ? _m : [];
     console.log(` ✓  ${nextStepExamples.length} examples`);
-    // 7. Generate next steps (LLM, one call per misconception → returns 2-3 activities)
+    // 7. Generate next step options — one dedicated Lambda call per format per misconception.
+    //    Each call generates ONE activity grounded in the knowledge graph and misconception data.
+    //    Calls per misconception run in parallel; all misconceptions run in parallel.
     const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
+    const NEXT_STEP_FORMATS = ['small_group', 'whole_class'];
     const activitiesPerGroup = await Promise.all(misconceptions.map(async (m, i) => {
         process.stdout.write(`Generating next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
         const relevant = nextStepExamples.filter((ex) => {
@@ -310,25 +321,27 @@ async function main() {
             return !((_a = ex.ccssStandards) === null || _a === void 0 ? void 0 : _a.length) ||
                 ex.ccssStandards.some((s) => { var _a; return s === m.ccssStandard || s.startsWith((_a = m.ccssStandard) === null || _a === void 0 ? void 0 : _a.split('.')[0]); });
         });
-        try {
-            const raw = await gql(GENERATE_NEXT_STEP, {
-                input: {
-                    misconception: JSON.stringify(m),
-                    learningScienceData: JSON.stringify(learningScienceData),
-                    classroomContext: JSON.stringify(classroomContext),
-                    ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
-                },
-            });
-            const result = parseJson(raw.generateNextStep);
-            // Lambda now returns an array of activities; guard against legacy single-object response
-            const resultList = Array.isArray(result) ? result : [result];
-            console.log(` ✓  ${resultList.length} activities`);
-            return resultList;
-        }
-        catch (err) {
-            console.log(` ✗ (${err})`);
-            return [];
-        }
+        const baseInput = {
+            misconception: JSON.stringify(m),
+            learningScienceData: JSON.stringify(learningScienceData),
+            classroomContext: JSON.stringify(classroomContext),
+            ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
+        };
+        const results = await Promise.all(NEXT_STEP_FORMATS.map(async (fmt) => {
+            try {
+                const raw = await gql(GENERATE_NEXT_STEP_OPTION, {
+                    input: { ...baseInput, preferredFormat: fmt },
+                });
+                return parseJson(raw.generateNextStepOption);
+            }
+            catch (err) {
+                console.error(`\n  ✗ format=${fmt} for ${m.title}: ${err}`);
+                return null;
+            }
+        }));
+        const resultList = results.filter(Boolean);
+        console.log(` ✓  ${resultList.length} activities`);
+        return resultList;
     }));
     // 8. Generate sub-misconceptions (one per misconception, in parallel)
     const subMisconceptionsPerGroup = await Promise.all(misconceptions.map(async (m, i) => {

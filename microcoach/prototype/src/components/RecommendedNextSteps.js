@@ -817,7 +817,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
             {/* Assessed Standard (always visible, full width) */}
             {selectedRecommendationGroup.ccssStandards.targetObjective && (
               <div className="standards-column assessed-full-width">
-                <h5 className="column-header assessed-header">Assessed Standard</h5>
+                <h5 className="column-header assessed-header">Focus Skill</h5>
                 <div className="standards-list">
                   <button
                     className="standard-card assessed-card"

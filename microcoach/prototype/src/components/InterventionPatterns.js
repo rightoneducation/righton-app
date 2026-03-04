@@ -15,6 +15,8 @@ const LearningGapTrendCard = ({
   targetObjectiveStandard,
   onView
 }) => {
+
+  const improvedCount = beforeCount - afterCount;
   return (
     <div className="ip-gap-card">
       <div className="ip-gap-left">
@@ -33,7 +35,10 @@ const LearningGapTrendCard = ({
         <div className="ip-gap-meta">
           <span>
             <span className="ip-gap-meta-strong">
-              {beforeCount} {ARROW} {afterCount} students need addressing
+              {improvedCount === 1 
+                ? `${improvedCount} student have shown improvement` 
+                : `${improvedCount} students have shown improvement`
+              }
             </span>
           </span>
         </div>

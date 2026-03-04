@@ -1,0 +1,10 @@
+{
+  "rtd": {
+    "minRecommendedNextSteps": 2,
+    "maxRecommendedNextSteps": 4,
+    "supportedFormats": ["whole_class", "small_group"],
+    "maxDurationMinutes": 30,
+    "defaultDurationMinutes": 30,
+    "disallowedTeachingMethods": []
+  }
+}

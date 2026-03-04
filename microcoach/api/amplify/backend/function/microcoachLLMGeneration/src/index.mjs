@@ -53,6 +53,9 @@ const NextStepActivity = z.object({
   status: z.literal('GENERATED'),
   title: z.string().describe('Short, action-oriented activity title'),
   summary: z.string().describe('1-2 sentence description of the activity'),
+  targets: z.string().describe('The specific skill or concept this activity targets (1 sentence, e.g. "Distributing multiplication across subtraction with attention to sign structure")'),
+  instructionalMove: z.string().describe('The concrete teacher action or pedagogical move — what the teacher does, says, or demonstrates to address the misconception (2-3 sentences)'),
+  strategyTag: z.string().describe('A short 2-4 word label for the instructional strategy (e.g. "Make Structure Visible", "Error Analysis", "Concrete-Representational-Abstract")'),
   durationMinutes: z
     .number()
     .int()
@@ -62,10 +65,6 @@ const NextStepActivity = z.object({
   aiReasoning: z.string().describe('Why this specific activity design targets this specific misconception'),
   aiGenerated: z.literal(true),
   tabs: Tabs.describe('Full structured activity content'),
-});
-
-const NextStepActivities = z.object({
-  activities: z.array(NextStepActivity).describe('2-3 distinct next step activities, each with a different format or pedagogical approach'),
 });
 
 // ── Handler ───────────────────────────────────────────────────────────────────
@@ -83,7 +82,8 @@ export const handler = async (event) => {
   if (rawLearningScienceData == null) throw new Error('learningScienceData is required');
 
   const misconception    = typeof rawMisconception    === 'string' ? JSON.parse(rawMisconception)    : rawMisconception;
-  const classroomContext = typeof rawClassroomContext === 'string' ? JSON.parse(rawClassroomContext) : (rawClassroomContext ?? {});
+  const rawCtx           = typeof rawClassroomContext === 'string' ? JSON.parse(rawClassroomContext) : (rawClassroomContext ?? {});
+  const { preferredFormat, ...classroomContext } = rawCtx;
   const contextDataItems = rawContextData ? (typeof rawContextData === 'string' ? JSON.parse(rawContextData) : rawContextData) : [];
 
   const apiSecret = await loadSecret(apiSecretName);
@@ -156,15 +156,19 @@ ${JSON.stringify(classroomContext, null, 2)}
 
 ## Your Task
 
-Generate 2-3 classroom-ready next step activities that target the misconception above. Each activity must use a DIFFERENT format and/or pedagogical approach, giving the teacher meaningful options to choose from (e.g. one whole-class launch, one small-group practice, one individual or partner work).
+Generate ONE fully classroom-ready next step activity that directly targets the misconception above.
 
-Requirements for EACH activity:
+Requirements:
 - **title**: Short, action-oriented (e.g. "Keep-Change-Flip Error Analysis")
 - **summary**: 1-2 sentences describing the activity
-- **disallowedTeachingMethods**: ${nextStepConfig.disallowedTeachingMethods?.join(', ')} do not use these methods in any activity.
+- **targets**: The specific skill or concept this activity addresses (1 sentence, e.g. "Distributing multiplication across subtraction with attention to sign structure")
+- **instructionalMove**: The concrete teacher action or pedagogical move — what the teacher does, says, or demonstrates (2-3 sentences, e.g. "Model distribution step-by-step using color-coded sign tracking. Circle the negative coefficient and draw arrows to both terms. Require students to verbalize what happens to each term before calculating.")
+- **strategyTag**: A short 2-4 word label for the instructional strategy (e.g. "Make Structure Visible", "Error Analysis", "Concrete-Representational-Abstract")
+- **disallowedTeachingMethods**: ${nextStepConfig.disallowedTeachingMethods?.join(', ')} do not use these methods in the activity.
 - **durationMinutes**: Must be <= ${RUNTIME_MAX_DURATION_MINUTES} minutes and designed to fit within a ${RUNTIME_DEFAULT_DURATION_MINUTES}-minute intervention block (shorter is fine; never longer).
-- **format**: choose from ${RUNTIME_SUPPORTED_FORMATS.map((f) => `"${f}"`).join(', ')}. Activities in the set must vary — do NOT repeat the same format.
-- **aiReasoning**: Explain specifically WHY this activity design addresses this particular misconception
+- **format**: MUST be "${preferredFormat ?? RUNTIME_SUPPORTED_FORMATS[0]}". Do not use any other format.
+- **aiReasoning**: Explain specifically WHY this activity design addresses this particular misconception — \
+  connect the activity mechanics to the cognitive error pattern
 - **tabs.overview**: what students do, what the teacher facilitates, why it matters for THIS misconception
 - **tabs.activitySteps**:
   - setup: 2-3 teacher prep steps
@@ -177,7 +181,7 @@ Requirements for EACH activity:
     "ready for abstract practice" / "extension")
   - aiRecommendation: overall grouping strategy guidance for the teacher
 
-Return JSON matching the schema with an "activities" array containing 2-3 entries.
+Return JSON matching the schema.
 `.trim();
 
   try {
@@ -187,14 +191,14 @@ Return JSON matching the schema with an "activities" array containing 2-3 entrie
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },
       ],
-      response_format: zodResponseFormat(NextStepActivities, 'nextStepActivities'),
+      response_format: zodResponseFormat(NextStepActivity, 'nextStepActivity'),
     });
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
 
-    const structured = NextStepActivities.parse(JSON.parse(raw));
-    return JSON.stringify(structured.activities);
+    const structured = NextStepActivity.parse(JSON.parse(raw));
+    return JSON.stringify(structured);
   } catch (error) {
     console.error('[microcoachLLMGeneration] Error', {
       timestamp: new Date().toISOString(),

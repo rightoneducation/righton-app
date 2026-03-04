@@ -153,6 +153,12 @@ const GENERATE_NEXT_STEP = /* GraphQL */ `
   }
 `;
 
+const GENERATE_NEXT_STEP_OPTION = /* GraphQL */ `
+  mutation GenerateNextStepOption($input: GenerateNextStepOptionInput!) {
+    generateNextStepOption(input: $input)
+  }
+`;
+
 const GENERATE_SUB_MISCONCEPTIONS = /* GraphQL */ `
   mutation GenerateSubMisconceptions($input: GenerateSubMisconceptionsInput!) {
     generateSubMisconceptions(input: $input)
@@ -258,6 +264,9 @@ function buildNextSteps(
         time: `${activity.durationMinutes} min`,
         format: formatLabel(activity.format),
         summary: activity.summary,
+        targets: activity.targets ?? null,
+        instructionalMove: activity.instructionalMove ?? null,
+        strategyTag: activity.strategyTag ?? null,
         aiReasoning: activity.aiReasoning,
         tabs: activity.tabs ?? null,
       })),
@@ -335,8 +344,12 @@ async function main() {
   const nextStepExamples: any[] = nextStepData.listContextData?.items ?? [];
   console.log(` ✓  ${nextStepExamples.length} examples`);
 
-  // 7. Generate next steps (LLM, one call per misconception → returns 2-3 activities)
+  // 7. Generate next step options — one dedicated Lambda call per format per misconception.
+  //    Each call generates ONE activity grounded in the knowledge graph and misconception data.
+  //    Calls per misconception run in parallel; all misconceptions run in parallel.
   const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
+  const NEXT_STEP_FORMATS = ['small_group', 'whole_class'];
+
   const activitiesPerGroup: any[][] = await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
       process.stdout.write(`Generating next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
@@ -347,24 +360,28 @@ async function main() {
             (s: string) => s === m.ccssStandard || s.startsWith(m.ccssStandard?.split('.')[0])
           )
       );
-      try {
-        const raw = await gql(GENERATE_NEXT_STEP, {
-          input: {
-            misconception: JSON.stringify(m),
-            learningScienceData: JSON.stringify(learningScienceData),
-            classroomContext: JSON.stringify(classroomContext),
-            ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
-          },
-        });
-        const result = parseJson(raw.generateNextStep);
-        // Lambda now returns an array of activities; guard against legacy single-object response
-        const resultList: any[] = Array.isArray(result) ? result : [result];
-        console.log(` ✓  ${resultList.length} activities`);
-        return resultList;
-      } catch (err) {
-        console.log(` ✗ (${err})`);
-        return [];
-      }
+      const baseInput = {
+        misconception: JSON.stringify(m),
+        learningScienceData: JSON.stringify(learningScienceData),
+        classroomContext: JSON.stringify(classroomContext),
+        ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
+      };
+      const results = await Promise.all(
+        NEXT_STEP_FORMATS.map(async (fmt) => {
+          try {
+            const raw = await gql(GENERATE_NEXT_STEP_OPTION, {
+              input: { ...baseInput, preferredFormat: fmt },
+            });
+            return parseJson(raw.generateNextStepOption);
+          } catch (err) {
+            console.error(`\n  ✗ format=${fmt} for ${m.title}: ${err}`);
+            return null;
+          }
+        })
+      );
+      const resultList = results.filter(Boolean);
+      console.log(` ✓  ${resultList.length} activities`);
+      return resultList;
     })
   );
 

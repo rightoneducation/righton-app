@@ -35,6 +35,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachNextStepOption": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachSubMisconceptions": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -87,6 +92,22 @@
         {
           "category": "function",
           "resourceName": "microcoachLLMGeneration"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachNextStepOption_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachNextStepOption"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachNextStepOption_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachNextStepOption"
         }
       ]
     },
