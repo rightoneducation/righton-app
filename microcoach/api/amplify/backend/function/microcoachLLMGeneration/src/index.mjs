@@ -4,7 +4,7 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
-const nextStepConfig = config?.nextStep ?? {};
+const nextStepConfig = config?.nextStepOption ?? {};
 const RUNTIME_MAX_DURATION_MINUTES = nextStepConfig.maxDurationMinutes ?? 30;
 const RUNTIME_DEFAULT_DURATION_MINUTES = nextStepConfig.defaultDurationMinutes ?? 30;
 const RUNTIME_SUPPORTED_FORMATS = nextStepConfig.supportedFormats ?? ['whole_class', 'small_group'];

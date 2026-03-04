@@ -4,10 +4,19 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
-const rtdConfig = config?.rtd ?? {};
-const MAX_DURATION = rtdConfig.maxDurationMinutes ?? 30;
-const DEFAULT_DURATION = rtdConfig.defaultDurationMinutes ?? 30;
-const DISALLOWED_METHODS = rtdConfig.disallowedTeachingMethods ?? [];
+const nso = config?.nextStepOption ?? {};
+const MODEL              = nso.model ?? 'gpt-4o';
+const MAX_DURATION       = nso.maxDurationMinutes ?? 30;
+const DEFAULT_DURATION   = nso.targetDurationMinutes ?? 30;
+const DISALLOWED_METHODS = nso.disallowedTeachingMethods ?? [];
+const ACTIVITY_STEPS_MIN = nso.activitySteps?.min ?? 4;
+const ACTIVITY_STEPS_MAX = nso.activitySteps?.max ?? 6;
+const SETUP_STEPS_MIN    = nso.setupSteps?.min ?? 2;
+const SETUP_STEPS_MAX    = nso.setupSteps?.max ?? 3;
+const DISCUSSION_Q_MIN   = nso.discussionQuestions?.min ?? 2;
+const DISCUSSION_Q_MAX   = nso.discussionQuestions?.max ?? 3;
+const GROUPS_MIN         = nso.studentGroups?.min ?? 2;
+const GROUPS_MAX         = nso.studentGroups?.max ?? 3;
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 // Generates ONE next step activity option for a single misconception + format.
@@ -199,16 +208,16 @@ Requirements for each field:
 - **strategyTag**: 2-4 word label for the pedagogical approach (e.g. "Make Structure Visible", "Error Analysis", "CRA Sequence", "Productive Struggle")
 - **aiReasoning**: Explain specifically WHY the activity mechanics address this cognitive error
 - **tabs.overview**: what students do, what the teacher facilitates, why it matters for THIS misconception
-- **tabs.activitySteps**: setup (2-3 steps), concrete math problem, 4-6 core activity steps, 2-3 discussion questions that surface and resolve the error
+- **tabs.activitySteps**: setup (${SETUP_STEPS_MIN}-${SETUP_STEPS_MAX} steps), concrete math problem, ${ACTIVITY_STEPS_MIN}-${ACTIVITY_STEPS_MAX} core activity steps, ${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX} discussion questions that surface and resolve the error
 - **tabs.materials**: what must be prepared or printed
-- **tabs.studentGroupings**: 2-3 groups differentiated by misconception severity + grouping strategy guidance
+- **tabs.studentGroupings**: ${GROUPS_MIN}-${GROUPS_MAX} groups differentiated by misconception severity + grouping strategy guidance
 
 Return JSON matching the schema.
 `.trim();
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: MODEL,
       messages: [
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },

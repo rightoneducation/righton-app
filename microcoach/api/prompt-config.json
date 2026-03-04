@@ -2,54 +2,32 @@
   "analysis": {
     "description": "microcoachLLMAnalysis — identifies misconceptions from PPQ assessment data",
     "model": "gpt-4o",
-    "keyFindingsCount": {
-      "min": 3,
-      "max": 5
-    },
-    "successIndicatorsPerMisconception": {
-      "min": 2,
-      "max": 4
-    },
+    "keyFindingsCount": { "min": 3, "max": 5 },
+    "successIndicatorsPerMisconception": { "min": 2, "max": 4 },
     "severityThresholds": {
       "description": "Percent of students affected to classify a misconception's severity",
       "highPercent": 40,
       "mediumPercent": 20
     }
   },
+
   "nextStepOption": {
     "description": "microcoachNextStepOption — generates one classroom activity per format per misconception",
     "model": "gpt-4o",
-    "formatsToGenerate": [
-      "small_group",
-      "whole_class"
-    ],
+    "formatsToGenerate": ["small_group", "whole_class"],
     "maxDurationMinutes": 30,
     "targetDurationMinutes": 30,
     "disallowedTeachingMethods": [],
-    "activitySteps": {
-      "min": 4,
-      "max": 6
-    },
-    "setupSteps": {
-      "min": 2,
-      "max": 3
-    },
-    "discussionQuestions": {
-      "min": 2,
-      "max": 3
-    },
-    "studentGroups": {
-      "min": 2,
-      "max": 3
-    }
+    "activitySteps": { "min": 4, "max": 6 },
+    "setupSteps": { "min": 2, "max": 3 },
+    "discussionQuestions": { "min": 2, "max": 3 },
+    "studentGroups": { "min": 2, "max": 3 }
   },
+
   "subMisconceptions": {
     "description": "microcoachSubMisconceptions — identifies specific error variants within each misconception",
     "model": "gpt-4o-mini",
-    "countPerMisconception": {
-      "min": 2,
-      "max": 4
-    },
+    "countPerMisconception": { "min": 2, "max": 4 },
     "frequencyThresholds": {
       "description": "Percent of students showing this misconception who exhibit each error variant",
       "manyPercent": 60,

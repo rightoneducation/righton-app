@@ -2,6 +2,16 @@ import { loadSecret } from './util/loadsecrets.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
+import config from './util/config.json' assert { type: 'json' };
+
+const ac = config?.analysis ?? {};
+const MODEL                  = ac.model ?? 'gpt-4o';
+const KEY_FINDINGS_MIN       = ac.keyFindingsCount?.min ?? 3;
+const KEY_FINDINGS_MAX       = ac.keyFindingsCount?.max ?? 5;
+const SUCCESS_IND_MIN        = ac.successIndicatorsPerMisconception?.min ?? 2;
+const SUCCESS_IND_MAX        = ac.successIndicatorsPerMisconception?.max ?? 4;
+const SEVERITY_HIGH_PCT      = ac.severityThresholds?.highPercent ?? 40;
+const SEVERITY_MEDIUM_PCT    = ac.severityThresholds?.mediumPercent ?? 20;
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 // Returns identified misconceptions (with evidence + metadata) but NO activities.
@@ -21,7 +31,7 @@ const Misconception = z.object({
   aiReasoning: z.string().optional().describe('How the assessment data supports identifying this misconception'),
   studentCount: z.number().int().optional().describe('Estimated number of students affected'),
   studentPercent: z.number().optional().describe('Estimated proportion of students affected (0–1)'),
-  severity: z.enum(['high', 'medium', 'low']).describe('high if >40% affected, medium 20–40%, low <20%'),
+  severity: z.enum(['high', 'medium', 'low']).describe(`high if >${SEVERITY_HIGH_PCT}% affected, medium ${SEVERITY_MEDIUM_PCT}–${SEVERITY_HIGH_PCT}%, low <${SEVERITY_MEDIUM_PCT}%`),
   priority: z.enum(['1', '2', '3', '4']).describe('"1" = most urgent to address'),
   occurrence: z.enum(['first', 'recurring']).describe('"recurring" only if this pattern appeared in session history'),
   successIndicators: z.array(z.string()).optional().describe('Observable behaviors showing the student has overcome this misconception'),
@@ -130,7 +140,7 @@ ${payload.sessionHistory.length ? JSON.stringify(payload.sessionHistory, null, 2
 **1. Synthesize** — Write a concise analysis of the current session connected to the learning science \
 progressions and components above.
 
-**2. Key Findings** — List 3-5 bullet points about what the current session data reveals (lowest-scoring \
+**2. Key Findings** — List ${KEY_FINDINGS_MIN}-${KEY_FINDINGS_MAX} bullet points about what the current session data reveals (lowest-scoring \
 questions, patterns in errors, notable student performance).
 
 **3. Trends** — If session history exists, compare to prior sessions: which misconceptions are recurring, \
@@ -138,11 +148,11 @@ which have improved, which are newly emerging.
 
 **4. Misconceptions** — Identify ALL significant misconceptions evidenced by the assessment data:
 - Ground each misconception in specific question numbers and performance rates
-- severity: high if >40% students missed that question pattern, medium 20–40%, low <20%
+- severity: high if >${SEVERITY_HIGH_PCT}% students missed that question pattern, medium ${SEVERITY_MEDIUM_PCT}–${SEVERITY_HIGH_PCT}%, low <${SEVERITY_MEDIUM_PCT}%
 - occurrence: "recurring" ONLY if the same pattern appears in session history misconceptions; otherwise "first"
 - Estimate studentCount and studentPercent from classPercentCorrect values and cohortSize
 - evidence.source: cite specific question numbers (e.g. "PPQ Q3, Q5")
-- successIndicators: 2-4 specific, observable student behaviors that demonstrate mastery
+- successIndicators: ${SUCCESS_IND_MIN}-${SUCCESS_IND_MAX} specific, observable student behaviors that demonstrate mastery
 - Order by priority ("1" = most critical)
 - prerequisiteGapCodes: Look at the standard's 'prerequisiteStandards' list in the learning science data — these are EARLIER-GRADE topics (lower grade level than ccssStandard). Select ONLY codes where a gap in that earlier skill would DIRECTLY cause this specific error pattern. Ask yourself: "Would a student who hasn't mastered this prerequisite make exactly this mistake?" Only include codes that clearly pass this test.
 - impactedObjectiveCodes: Look at the standard's 'futureDependentStandards' list in the learning science data — these are LATER-GRADE topics (higher grade level than ccssStandard). Select ONLY codes that this specific misconception would DIRECTLY threaten. Ask yourself: "Would a student carrying this misunderstanding specifically struggle with this future topic?" Only include codes that clearly pass this test.
@@ -152,7 +162,7 @@ Return JSON matching the schema.
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: MODEL,
       messages: [
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },
