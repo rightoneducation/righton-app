@@ -22,7 +22,7 @@
   max-width: 1200px;
   padding: 24px;
   box-sizing: border-box;
-  margin-top: 128px; /* 80px header + 48px navigation */
+  margin-top: 80px; /* 80px fixed header */
 }
 
 .overview-content {
@@ -209,81 +209,4 @@ p, .body-text {
   color: #FFFFFF;
   border-color: #CC5500;
   box-shadow: 0 1px 3px rgba(204, 85, 0, 0.3);
-}
-
-/* Loading steps (all three visible; checkmark + font change for completed) */
-.loading-steps {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  padding: 48px 0;
-}
-
-.loading-steps-spinner {
-  flex-shrink: 0;
-}
-
-.loading-steps-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 260px;
-}
-
-.loading-step {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: #6b7280;
-  font-family: 'Rubik', sans-serif;
-}
-
-.loading-step-icon {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  color: #22c55e;
-}
-
-.loading-step-dot {
-  flex-shrink: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #1B376F;
-  animation: loading-step-pulse 1s ease-in-out infinite;
-}
-
-@keyframes loading-step-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.loading-step-empty {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  border: 2px solid #e5e7eb;
-  border-radius: 50%;
-  box-sizing: border-box;
-}
-
-.loading-step-label {
-  flex: 1;
-}
-
-.loading-step--completed .loading-step-label {
-  color: #22c55e;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.loading-step--current .loading-step-label {
-  color: #1B376F;
-  font-weight: 700;
 }

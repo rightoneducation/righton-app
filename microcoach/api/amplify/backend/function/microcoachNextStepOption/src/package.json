@@ -1,0 +1,10 @@
+{
+  "name": "microcoach-next-step-option",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.0.0",
+    "openai": "^4.0.0",
+    "zod": "^3.0.0"
+  }
+}

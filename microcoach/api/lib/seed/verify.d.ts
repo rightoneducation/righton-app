@@ -12,6 +12,6 @@
  *   StudentResponses: ~823 (PPQ: 617; PostPPQ: ~206)
  *   Misconceptions:   9  (3 per session)
  *   Activities:       9  (1 per misconception)
- *   ContextData:      8  (3 classroom RTDs + 5 reference RTDs)
+ *   ContextData:      8  (3 classroom next steps + 5 reference next steps)
  */
 export {};

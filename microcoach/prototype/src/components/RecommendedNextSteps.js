@@ -1,19 +1,33 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './RecommendedNextSteps.css';
+import './SharedButtons.css';
 import CCSSStandardsModal from './CCSSStandardsModal';
+import NextStepDetailsModal from './NextStepDetailsModal';
+
 
 const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups: gapGroupsProp }) => {
-  const [gapGroups, setGapGroups] = useState(gapGroupsProp ?? []);
+  const [gapGroups, setGapGroups] = useState(() => gapGroupsProp ?? []);
   const [toast, setToast] = useState(null);
   const toastTimeoutRef = useRef(null);
   const [reasoningGroupId, setReasoningGroupId] = useState(null);
-  const [fullViewGroupId, setFullViewGroupId] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview');
   const [evidenceScreen, setEvidenceScreen] = useState(1);
-  const [cameFromFullView, setCameFromFullView] = useState(false);
   const [ccssModalOpen, setCcssModalOpen] = useState(false);
-  const [ccssModalGroup, setCcssModalGroup] = useState(null);
   const [selectedCcssStandard, setSelectedCcssStandard] = useState(null);
+  const [ccssModalGroup, setCcssModalGroup] = useState(null);
+  // Focus Skills sub-section expansion state per group.
+  // Collapsed (default): show only Focus Skills.
+  // Expanded: also show Prerequisite Gaps + Upcoming Skills.
+  const [focusSkillsExpandedByGroupId, setFocusSkillsExpandedByGroupId] = useState({});
+  // Which recommendation card is currently active for the standalone next-step section.
+  const [selectedRecommendationGroupId, setSelectedRecommendationGroupId] = useState(null);
+  // Which activity option is selected per gap group.
+  const [selectedMoveIdByGroupId, setSelectedMoveIdByGroupId] = useState({});
+
+  // Activity details modal state.
+  const [activityDetailsOpen, setActivityDetailsOpen] = useState(false);
+  const [activityDetailsGroup, setActivityDetailsGroup] = useState(null);
+  const [activityDetailsMove, setActivityDetailsMove] = useState(null);
+  const [activityDetailsActiveTab, setActivityDetailsActiveTab] = useState('overview');
 
   const existingIndex = useMemo(() => {
     // Used only for subtle UI cues (do we already have something saved for this gap group?)
@@ -22,28 +36,30 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   }, [existingNextSteps]);
 
   const getPriorityClass = (priority) => {
-    if (priority === 'Critical') return 'priority-critical';
+    if (priority === 'Critical') return 'priority-critical'; // legacy — kept for static seed data
     if (priority === 'High') return 'priority-high';
     if (priority === 'Medium') return 'priority-medium';
     return 'priority-low';
   };
 
   useEffect(() => {
-    if (gapGroupsProp) setGapGroups(gapGroupsProp);
-  }, [gapGroupsProp]);
-
-  useEffect(() => {
+    const timeoutId = toastTimeoutRef.current;
     return () => {
-      const timeoutId = toastTimeoutRef.current;
       if (timeoutId) {
         window.clearTimeout(timeoutId);
       }
     };
   }, []);
 
+  useEffect(() => {
+    if (gapGroupsProp) setGapGroups(gapGroupsProp);
+  }, [gapGroupsProp]);
 
-  const handleAdd = (group) => {
-    const move = group.move;
+
+  const handleAdd = (group, explicitMove = null) => {
+    const options = Array.isArray(group?.moveOptions) ? group.moveOptions : [];
+    const selectedMoveId = selectedMoveIdByGroupId?.[group.id] ?? options?.[0]?.id;
+    const move = explicitMove ?? options.find((m) => m.id === selectedMoveId) ?? options?.[0];
     if (!move) return;
 
     if (existingIndex.has(`${group.id}:${move.id}`)) {
@@ -65,16 +81,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
     onAddNextStep?.(group, move);
     setToast('Added to "Your Next Steps"');
     
-    // Remove the added group from the list and promote the next most critical one
-    setGapGroups(prevGroups => {
-      // Filter out the group that was just added
-      const filteredGroups = prevGroups.filter(g => g.id !== group.id);
-      
-      // If there are remaining groups, the next one becomes the new main misconception
-      // If no groups remain, keep the current state (empty)
-      return filteredGroups;
-    });
-    
     // Trigger animation for new toast
     setTimeout(() => {
       const toastElement = document.querySelector('.rns-toast');
@@ -93,8 +99,80 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
     return gapGroups.find((g) => g.id === reasoningGroupId) ?? null;
   }, [gapGroups, reasoningGroupId]);
 
+  const visibleGapGroups = useMemo(() => {
+    return (gapGroups || []).slice(0, 4);
+  }, [gapGroups]);
+
+  const toggleFocusSkillsExpanded = (groupId) => {
+    setFocusSkillsExpandedByGroupId((prev) => ({
+      ...prev,
+      [groupId]: !prev?.[groupId]
+    }));
+  };
+
+  const getSelectedMoveForGroup = (group) => {
+    const options = Array.isArray(group?.moveOptions) ? group.moveOptions : [];
+    const selectedMoveId = selectedMoveIdByGroupId?.[group.id] ?? options?.[0]?.id;
+    return options.find((m) => m.id === selectedMoveId) ?? options?.[0] ?? null;
+  };
+
+  const openActivityDetails = (group, move) => {
+    setActivityDetailsGroup(group);
+    setActivityDetailsMove(move);
+    setActivityDetailsOpen(true);
+    setActivityDetailsActiveTab('overview');
+  };
+
+  const closeActivityDetails = () => {
+    setActivityDetailsOpen(false);
+    setActivityDetailsGroup(null);
+    setActivityDetailsMove(null);
+    setActivityDetailsActiveTab('overview');
+  };
+
+  const selectedRecommendationGroup = useMemo(() => {
+    return (
+      visibleGapGroups.find((group) => group.id === selectedRecommendationGroupId) ??
+      visibleGapGroups[0] ??
+      null
+    );
+  }, [visibleGapGroups, selectedRecommendationGroupId]);
+
   return (
     <div className="recommended-next-steps">
+      {/* Use the same modal as Saved Next Steps (View details) */}
+      <NextStepDetailsModal
+        isOpen={activityDetailsOpen}
+        title={activityDetailsGroup?.title}
+        priority={activityDetailsGroup?.priority}
+        studentCount={activityDetailsGroup?.studentCount}
+        studentPercent={activityDetailsGroup?.studentPercent}
+        occurrence={activityDetailsGroup?.occurrence}
+        misconceptionSummary={activityDetailsGroup?.misconceptionSummary}
+        ccssStandards={activityDetailsGroup?.ccssStandards}
+        successIndicators={activityDetailsGroup?.successIndicators}
+        move={activityDetailsMove}
+        activeTab={activityDetailsActiveTab}
+        onChangeTab={setActivityDetailsActiveTab}
+        onClose={closeActivityDetails}
+        actions={
+          activityDetailsGroup &&
+          activityDetailsMove &&
+          !existingIndex.has(`${activityDetailsGroup.id}:${activityDetailsMove.id}`) ? (
+            <button
+              className="add-btn"
+              type="button"
+              onClick={() => {
+                handleAdd(activityDetailsGroup, activityDetailsMove);
+                closeActivityDetails();
+              }}
+            >
+              Save to List
+            </button>
+          ) : null
+        }
+      />
+
       {reasoningGroup && (
         <div className="rns-modal-overlay" onClick={() => setReasoningGroupId(null)}>
           <div className="rns-modal evidence-journey-modal" onClick={(e) => e.stopPropagation()}>
@@ -141,65 +219,70 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                   </div>
 
                   <div className="screen-content">
-                    {(() => {
-                      const flaggedQs = new Set(
-                        (reasoningGroup.evidence?.source || '')
-                          .match(/Q(\d+)/gi)
-                          ?.map((q) => q.toUpperCase()) ?? []
-                      );
-                      const bars = reasoningGroup.questionErrorRates ?? [];
-                      return (
-                        <div className="data-visualization">
-                          <div className="chart-container">
-                            <h5 className="chart-title">Error Rate by Question</h5>
-                            <div className="chart-placeholder">
-                              {bars.map((q) => (
-                                <div
-                                  key={q.label}
-                                  className={`chart-bar${flaggedQs.has(q.label.toUpperCase()) ? ' chart-bar-flagged' : ''}`}
-                                  style={{ height: `${q.errorRate}%` }}
-                                  title={`${q.label}: ${q.errorRate}% error rate`}
-                                />
-                              ))}
-                            </div>
-                            <div className="chart-labels">
-                              {bars.map((q) => (
-                                <span key={q.label} className={flaggedQs.has(q.label.toUpperCase()) ? 'chart-label-flagged' : ''}>
-                                  {q.label}
-                                </span>
-                              ))}
-                            </div>
+                    {reasoningGroup.questionErrorRates?.length > 0 && (
+                      <div className="data-visualization">
+                        <div className="chart-container">
+                          <h5 className="chart-title">Error Rate by Question</h5>
+                          <div className="chart-placeholder">
+                            {reasoningGroup.questionErrorRates.map((q) => (
+                              <div
+                                key={q.label}
+                                className="chart-bar"
+                                style={{ height: `${Math.max(q.errorRate, 4)}%` }}
+                                title={`${q.label}: ${q.errorRate}%`}
+                              ></div>
+                            ))}
                           </div>
-
-                          <div className="chart-stats">
-                            <div className="stat-item">
-                              <span className="stat-label">Students Affected</span>
-                              <span className="stat-value">{reasoningGroup.studentCount} ({reasoningGroup.studentPercent}%)</span>
-                            </div>
-                            <div className="stat-item">
-                              <span className="stat-label">Questions Flagged</span>
-                              <span className="stat-value">{reasoningGroup.evidence?.source || '—'}</span>
-                            </div>
-                            <div className="stat-item">
-                              <span className="stat-label">Occurrence</span>
-                              <span className="stat-value">{reasoningGroup.occurrence || '—'}</span>
-                            </div>
+                          <div className="chart-labels">
+                            {reasoningGroup.questionErrorRates.map((q) => (
+                              <span key={q.label}>{q.label}</span>
+                            ))}
+                          </div>
+                          <div className="chart-values">
+                            {reasoningGroup.questionErrorRates.map((q) => (
+                              <span key={q.label}>{q.errorRate}%</span>
+                            ))}
                           </div>
                         </div>
-                      );
-                    })()}
 
-                    <div className="misconception-description">
-                      <h5>Misconception</h5>
-                      <p>{reasoningGroup.misconceptionSummary}</p>
-                    </div>
-
-                    {reasoningGroup.evidence?.aiThinkingPattern && (
-                      <div className="thinking-pattern">
-                        <h5>AI Thinking Pattern</h5>
-                        <p>{reasoningGroup.evidence.aiThinkingPattern}</p>
+                        <div className="chart-stats">
+                          <div className="stat-item">
+                            <span className="stat-label">Frequency</span>
+                            <span className="stat-value">
+                              {reasoningGroup.frequency
+                                ? reasoningGroup.frequency.charAt(0).toUpperCase() + reasoningGroup.frequency.slice(1) + ' students'
+                                : '—'}
+                            </span>
+                          </div>
+                          {reasoningGroup.evidence?.source && (
+                            <div className="stat-item">
+                              <span className="stat-label">Questions</span>
+                              <span className="stat-value">{reasoningGroup.evidence.source}</span>
+                            </div>
+                          )}
+                          {(() => {
+                            const rates = reasoningGroup.questionErrorRates;
+                            const max = rates.reduce((a, b) => b.errorRate > a.errorRate ? b : a, rates[0]);
+                            return max ? (
+                              <div className="stat-item">
+                                <span className="stat-label">Highest Error</span>
+                                <span className="stat-value">{max.label} ({max.errorRate}%)</span>
+                              </div>
+                            ) : null;
+                          })()}
+                        </div>
                       </div>
                     )}
+
+                    <div className="data-insights">
+                      <h5>Key Insights</h5>
+                      {reasoningGroup.aiReasoning
+                        ? <p>{reasoningGroup.aiReasoning}</p>
+                        : reasoningGroup.evidence?.mostCommonError
+                          ? <p>{reasoningGroup.evidence.mostCommonError}</p>
+                          : <p>{reasoningGroup.misconceptionSummary}</p>
+                      }
+                    </div>
                   </div>
                 </div>
               )}
@@ -212,36 +295,45 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                   </div>
 
                   <div className="screen-content">
-                    {reasoningGroup.evidence?.mostCommonError && (
-                      <div className="most-common-error">
-                        <h5>Most Common Error</h5>
-                        <p>{reasoningGroup.evidence.mostCommonError}</p>
+                    {reasoningGroup.example && (
+                      <div className="problem-intro">
+                        <div className="problem-eyebrow">Example Error</div>
+                        <h5 className="problem-label">{reasoningGroup.example.incorrect}</h5>
+                        <p className="problem-context">Correct form: {reasoningGroup.example.correct}</p>
                       </div>
                     )}
 
-                    <div className="work-samples">
-                      <h5>Student Work Samples</h5>
-                      {reasoningGroup.evidence?.sampleStudentWork?.length > 0 ? (
-                        <div className="sample-list">
+                    {reasoningGroup.evidence?.sampleStudentWork?.length > 0 && (
+                      <div className="work-samples">
+                        <div className="sample-grid">
                           {reasoningGroup.evidence.sampleStudentWork.map((sample, idx) => (
-                            <div className="sample-item" key={idx}>
-                              <h6>Sample {idx + 1}</h6>
+                            <div key={idx} className="sample-item incorrect">
+                              <h6>Student {String.fromCharCode(65 + idx)}</h6>
                               <div className="sample-content">
                                 <p>{sample}</p>
                               </div>
                             </div>
                           ))}
                         </div>
-                      ) : (
-                        <p className="no-samples">No sample work recorded.</p>
-                      )}
-                    </div>
+                      </div>
+                    )}
 
                     {reasoningGroup.evidence?.aiThinkingPattern && (
-                      <div className="ai-analysis">
-                        <h5>AI Analysis</h5>
-                        <p>{reasoningGroup.evidence.aiThinkingPattern}</p>
+                      <div className="breakdown-analysis">
+                        <h5>Underlying Thinking Pattern</h5>
+                        <p className="thinking-pattern-text">{reasoningGroup.evidence.aiThinkingPattern}</p>
                       </div>
+                    )}
+
+                    {reasoningGroup.evidence?.mostCommonError && (
+                      <div className="error-summary">
+                        <h5>Most Common Error</h5>
+                        <p>{reasoningGroup.evidence.mostCommonError}</p>
+                      </div>
+                    )}
+
+                    {!reasoningGroup.example && !reasoningGroup.evidence && (
+                      <p className="no-data-text">No detailed work samples available for this misconception.</p>
                     )}
                   </div>
                 </div>
@@ -255,41 +347,53 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                   </div>
 
                   <div className="screen-content">
-                    {reasoningGroup.move?.tabs?.overview?.importance && (
-                      <div className="why-matters">
-                        <h5>Why This Matters</h5>
-                        <p>{reasoningGroup.move.tabs.overview.importance}</p>
+                    {reasoningGroup.ccssStandards?.impactedObjectives?.length > 0 && (
+                      <div className="impact-analysis-full-width">
+                        <div className="impact-card">
+                          <h5>Future Skills at Risk</h5>
+                          <ul>
+                            {reasoningGroup.ccssStandards.impactedObjectives.map((obj, idx) => (
+                              <li key={idx}>
+                                <strong>{obj.standard}:</strong> {obj.description}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     )}
 
-                    {reasoningGroup.move?.aiReasoning && (
-                      <div className="ai-reasoning">
-                        <h5>AI Reasoning for Intervention</h5>
-                        <p>{reasoningGroup.move.aiReasoning}</p>
+                    {reasoningGroup.ccssStandards?.prerequisiteGaps?.length > 0 && (
+                      <div className="impact-analysis-full-width">
+                        <div className="impact-card">
+                          <h5>Prerequisite Gaps</h5>
+                          <ul>
+                            {reasoningGroup.ccssStandards.prerequisiteGaps.map((gap, idx) => (
+                              <li key={idx}>
+                                <strong>{gap.standard}:</strong> {gap.description}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     )}
 
                     {reasoningGroup.successIndicators?.length > 0 && (
-                      <div className="success-indicators">
-                        <h5>Success Indicators</h5>
-                        <ul className="success-checklist">
+                      <div className="learning-path">
+                        <h5>Signs of Mastery</h5>
+                        <div className="path-steps">
                           {reasoningGroup.successIndicators.map((indicator, idx) => (
-                            <li key={idx} className="success-indicator-item">{indicator}</li>
+                            <div key={idx} className="path-step">
+                              <span className="path-number">{idx + 1}</span>
+                              <span className="path-description">{indicator}</span>
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     )}
 
-                    {reasoningGroup.ccssStandards?.targetObjective?.standard && (
-                      <div className="target-standard">
-                        <h5>Target Standard</h5>
-                        <div className="target-standard-row">
-                          <span className="ccss-tag target-objective">{reasoningGroup.ccssStandards.targetObjective.standard}</span>
-                          {reasoningGroup.ccssStandards.targetObjective.description && (
-                            <span className="standard-description">{reasoningGroup.ccssStandards.targetObjective.description}</span>
-                          )}
-                        </div>
-                      </div>
+                    {!reasoningGroup.ccssStandards?.impactedObjectives?.length &&
+                     !reasoningGroup.successIndicators?.length && (
+                      <p className="no-data-text">No impact data available for this misconception.</p>
                     )}
                   </div>
                 </div>
@@ -303,9 +407,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                     className="back-btn"
                     onClick={() => {
                       setReasoningGroupId(null);
-                      if (cameFromFullView) {
-                        setFullViewGroupId(reasoningGroup.id);
-                      }
                     }}
                   >
                     ← Back
@@ -316,7 +417,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                     onClick={() => setEvidenceScreen(Math.max(1, evidenceScreen - 1))}
                     disabled={evidenceScreen === 1}
                   >
-                    ← What Happened
+                    ← {evidenceScreen === 3 ? 'Where & How' : 'What Happened'}
                   </button>
                 )}
                 
@@ -333,334 +434,24 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
         </div>
       )}
 
-      {fullViewGroupId && (
-        <div className="rns-modal-overlay" onClick={() => setFullViewGroupId(null)}>
-          <div className="rns-modal full-view-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="rns-modal-header">
-              <div>
-                <div className="rns-modal-title">Full View</div>
-                <div className="rns-modal-subtitle">{gapGroups.find(g => g.id === fullViewGroupId)?.title}</div>
-              </div>
-
-              <button
-                className="rns-modal-close"
-                onClick={() => setFullViewGroupId(null)}
-                aria-label="Close full view"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="rns-modal-body">
-              {(() => {
-                const group = gapGroups.find(g => g.id === fullViewGroupId);
-                if (!group) return null;
-
-                return (
-                  <div className="full-view-content">
-                    <div className="gap-group-top">
-                      <div className="gap-group-title-row">
-                        <h4 className="gap-group-title">{group.title}</h4>
-                      </div>
-
-                      <div className="gap-group-meta-row">
-                        <span className={`students-pill ${getPriorityClass(group.priority)}`}>
-                          {group.studentCount} students ({group.studentPercent}%)
-                        </span>
-                    {group.occurrence && <span className="occurrence-pill">{group.occurrence}</span>}
-                      </div>
-
-                      {group.misconceptionSummary && (
-                        <div className="misconception-summary">
-                          {group.misconceptionSummary}
-                        </div>
-                      )}
-
-                      {/* CCSS Standards Section for Full View Modal */}
-                      {group.ccssStandards && (
-                        <div className="ccss-standards-section">
-                          <div className="ccss-standards-grid">
-                            <div className="ccss-card">
-                              <h4 className="tab-section-title">Students are struggling with...</h4>
-                              <div className="ccss-content">
-                                <span className="ccss-tag target-objective">
-                                  {group.ccssStandards.targetObjective.standard}
-                                </span>
-                                <span className="ccss-description">
-                                  {group.ccssStandards.targetObjective.description}
-                                </span>
-                              </div>
-                            </div>
-                            
-                            {group.ccssStandards.prerequisiteGaps && group.ccssStandards.prerequisiteGaps.length > 0 && (
-                              <div className="ccss-card">
-                                <h4 className="tab-section-title">The underlying issue may be...</h4>
-                                <div className="ccss-content">
-                                  {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
-                                    <div key={idx} className="ccss-gap-item">
-                                      <span className="ccss-tag prerequisite-gap">
-                                        {gap.standard}
-                                      </span>
-                                      <span className="ccss-description">
-                                        {gap.description}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Header section for full view - Change 1 */}
-                    <div className="full-view-header">
-                      <div className="full-view-header-content">
-                        <div className="full-view-header-eyebrow">Recommended Activity</div>
-                        <h4 className="full-view-header-title">{group.move?.title}</h4>
-                        <div className="full-view-header-meta">
-                          <span>{group.move?.time}</span>
-                          <span className="meta-sep">|</span>
-                          <span>{group.move?.format}</span>
-                        </div>
-                        <p className="full-view-header-subtitle">{group.move?.summary}</p>
-                      </div>
-                    </div>
-
-                    {/* Tab Navigation for Full View */}
-                    <div className="tab-navigation" role="tablist">
-                      <button
-                        className={`tab-button ${activeTab === 'overview' ? 'tab-active' : ''}`}
-                        onClick={() => setActiveTab('overview')}
-                        role="tab"
-                        aria-selected={activeTab === 'overview'}
-                        aria-controls="tab-panel-overview"
-                        id="tab-overview"
-                      >
-                        Overview
-                      </button>
-                      <button
-                        className={`tab-button ${activeTab === 'activity-steps' ? 'tab-active' : ''}`}
-                        onClick={() => setActiveTab('activity-steps')}
-                        role="tab"
-                        aria-selected={activeTab === 'activity-steps'}
-                        aria-controls="tab-panel-activity-steps"
-                        id="tab-activity-steps"
-                      >
-                        Activity Steps
-                      </button>
-                      <button
-                        className={`tab-button ${activeTab === 'student-groupings' ? 'tab-active' : ''}`}
-                        onClick={() => setActiveTab('student-groupings')}
-                        role="tab"
-                        aria-selected={activeTab === 'student-groupings'}
-                        aria-controls="tab-panel-student-groupings"
-                        id="tab-student-groupings"
-                      >
-                        Student Groupings
-                      </button>
-                      <button
-                        className={`tab-button ${activeTab === 'materials' ? 'tab-active' : ''}`}
-                        onClick={() => setActiveTab('materials')}
-                        role="tab"
-                        aria-selected={activeTab === 'materials'}
-                        aria-controls="tab-panel-materials"
-                        id="tab-materials"
-                      >
-                        Materials
-                      </button>
-                    </div>
-
-                    {/* Tab Content for Full View */}
-                    <div className="tab-content">
-                      {activeTab === 'overview' && (
-                        <div className="tab-panel">
-                          <div className="tab-section">
-                            <h4 className="tab-section-title">What will students do</h4>
-                            <p className="tab-section-content">{group.move?.tabs?.overview?.whatStudentsDo}</p>
-                          </div>
-                          
-                          <div className="tab-section">
-                            <h4 className="tab-section-title">What you'll do</h4>
-                            <p className="tab-section-content">{group.move?.tabs?.overview?.whatYouDo}</p>
-                          </div>
-
-                          {group.successIndicators && (
-                            <div className="tab-section">
-                              <h4 className="tab-section-title">Success indicators</h4>
-                              <ul className="success-list">
-                                {group.successIndicators.map((indicator, idx) => (
-                                  <li key={idx}>{indicator}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          <div className="tab-section">
-                            <h4 className="tab-section-title">Why this matters</h4>
-                            <div className="importance-tooltip">
-                              <span className="importance-text">{group.move?.tabs?.overview?.importance}</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {activeTab === 'activity-steps' && (
-                        <div className="tab-panel">
-                          <div className="tab-section">
-                            <h4 className="tab-section-title">Setup</h4>
-                            <ul className="tab-list">
-                              {group.move?.tabs?.activitySteps?.setup?.map((item, idx) => (
-                                <li key={idx}>{item}</li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="tab-section">
-                            <h4 className="tab-section-title">Problem</h4>
-                            <p className="tab-section-content">{group.move?.tabs?.activitySteps?.problem}</p>
-                          </div>
-
-                          <div className="tab-section">
-                            <h4 className="tab-section-title">Core Activity</h4>
-                            <ol className="tab-list">
-                              {group.move?.tabs?.activitySteps?.coreActivity?.map((item, idx) => (
-                                <li key={idx}>{item}</li>
-                              ))}
-                            </ol>
-                          </div>
-
-                          <div className="tab-section">
-                            <h4 className="tab-section-title">Discussion Questions</h4>
-                            <ul className="discussion-questions">
-                              {group.move?.tabs?.activitySteps?.discussionQuestions?.map((question, idx) => (
-                                <li key={idx}>
-                                  <strong>Q{idx + 1}:</strong> {question}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      )}
-
-                      {activeTab === 'student-groupings' && (
-                        <div className="tab-panel">
-                          {group.move?.tabs?.studentGroupings?.groups?.map((grouping, idx) => (
-                            <div key={idx} className="grouping-card">
-                              <div className="grouping-header">
-                                <h4 className="grouping-title">{grouping.name}</h4>
-                                <p className="grouping-description">{grouping.description}</p>
-                              </div>
-                              {grouping.students?.length > 0 && (
-                                <div className="grouping-students">
-                                  <h5 className="grouping-subtitle">Students:</h5>
-                                  <ul className="student-list">
-                                    {grouping.students.map((student, studentIdx) => (
-                                      <li key={studentIdx}>{student}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-
-                          {group.move?.tabs?.studentGroupings?.highFlyers && (
-                            <div className="high-flyers-card">
-                              <div className="high-flyers-header">
-                                <h4 className="high-flyers-title">High Flyers</h4>
-                                <p className="high-flyers-description">
-                                  {group.move?.tabs?.studentGroupings?.highFlyers?.description}
-                                </p>
-                              </div>
-                              <div className="high-flyers-students">
-                                <h5 className="high-flyers-subtitle">Students:</h5>
-                                <ul className="student-list">
-                                  {group.move?.tabs?.studentGroupings?.highFlyers?.students?.map((student, idx) => (
-                                    <li key={idx}>{student}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          )}
-
-                          {group.move?.tabs?.studentGroupings?.aiRecommendation && (
-                            <div className="ai-recommendation-card">
-                              <h4 className="ai-recommendation-title">AI Recommendation</h4>
-                              <p className="ai-recommendation-content">
-                                {group.move?.tabs?.studentGroupings?.aiRecommendation}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {activeTab === 'materials' && (
-                        <div className="tab-panel">
-                          <div className="materials-section">
-                            <h4 className="materials-title">Required Materials</h4>
-                            <ul className="materials-list">
-                              {group.move?.tabs?.materials?.required?.map((item, idx) => (
-                                <li key={idx}>{item}</li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          {group.move?.tabs?.materials?.optional?.length > 0 && (
-                            <div className="materials-section">
-                              <h4 className="materials-title">Optional Materials</h4>
-                              <ul className="materials-list">
-                                {group.move?.tabs?.materials?.optional?.map((item, idx) => (
-                                  <li key={idx}>{item}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Actions for Full View */}
-                    <div className="panel-actions">
-                      <button
-                        className="reasoning-btn"
-                        onClick={() => {
-                          setFullViewGroupId(null);
-                          setCameFromFullView(true);
-                          setReasoningGroupId(group.id);
-                        }}
-                      >
-                        View Reasoning
-                      </button>
-                      <button className="add-btn" onClick={() => {
-                        setFullViewGroupId(null);
-                        handleAdd(group);
-                      }}>
-                        Add to Saved Next Steps
-                      </button>
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-          </div>
-        </div>
-      )}
-
-
       <CCSSStandardsModal
         isOpen={ccssModalOpen}
-        onClose={() => { setCcssModalOpen(false); setCcssModalGroup(null); setSelectedCcssStandard(null); }}
+        onClose={() => {
+          setCcssModalOpen(false);
+          setCcssModalGroup(null);
+          setSelectedCcssStandard(null);
+        }}
         ccssStandards={ccssModalGroup?.ccssStandards}
         selectedStandard={selectedCcssStandard}
         onStandardSelect={setSelectedCcssStandard}
       />
 
+
       <div className="rns-header">
         <div>
-          <h3 className="rns-title">Recommended Next Steps</h3>
+          <h3 className="rns-title">Understand Your Students' Thinking</h3>
           <p className="rns-subtitle">
-            AI-surfaced learning gap groups and 4 instructional moves you can choose from.
+            Insights and misconception patterns from your classroom data
           </p>
         </div>
       </div>
@@ -668,146 +459,363 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
       {toast && <div className="rns-toast" role="status">{toast}</div>}
 
       <div className="rns-groups">
-        {/* Render all recommendations with the same (smaller) card size/format */}
+        {/* All recommendations are rendered with the same (smaller) card size/format. */}
         {gapGroups.length > 0 && (
-          <div className="alternative-misconceptions-grid">
-            {gapGroups.map((group) => (
-              <div 
-                key={group.id} 
-                className="alternative-misconception-card clickable-card"
-                onClick={() => setFullViewGroupId(group.id)}
-                role="button"
-                tabIndex={0}
-                aria-label={`View full details for ${group.title}`}
-              >
-                <div className="alternative-top">
-                  <div className="alternative-title-row">
-                    <h4 className="alternative-title">{group.title}</h4>
-                  </div>
+          <div className="misconceptions-carousel-wrapper">
+            <div className="alternative-misconceptions-grid">
+              {visibleGapGroups.map((group) => {
+                const isFocusSkillsExpanded = !!focusSkillsExpandedByGroupId?.[group.id];
+                const isSelectedGroup = selectedRecommendationGroup?.id === group.id;
 
-                  <div className="alternative-meta-row">
-                    <span className={`students-pill ${getPriorityClass(group.priority)}`}>
-                      {group.studentCount} students ({group.studentPercent}%)
-                    </span>
-                    {group.occurrence && <span className="occurrence-pill">{group.occurrence}</span>}
-                  </div>
-                </div>
-
-                {/* CCSS Standards Section - Change 1: Add to alternative cards */}
-                {group.ccssStandards && (
-                  <div className="alternative-ccss-section">
-                    <div className="alternative-ccss-grid">
-                      {group.ccssStandards.prerequisiteGaps && group.ccssStandards.prerequisiteGaps.length > 0 && (
-                        <div className="alternative-ccss-card">
-                          <h4 className="alternative-ccss-header">The underlying issue may be...</h4>
-                          <div className="alternative-ccss-gap-list">
-                            {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
-                              <div key={idx} className="alternative-ccss-gap-item">
-                                <span
-                                  className="alternative-ccss-tag prerequisite-gap clickable-standard"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setCcssModalGroup(group);
-                                    setSelectedCcssStandard(gap);
-                                    setCcssModalOpen(true);
-                                  }}
-                                >
-                                  {gap.standard}
-                                </span>
-                                <span className="alternative-ccss-description">
-                                  {gap.description}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="alternative-ccss-card">
-                        <h4 className="alternative-ccss-header">Students are struggling with...</h4>
-                        <div className="alternative-ccss-content">
-                          <span
-                            className="alternative-ccss-tag target-objective clickable-standard"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setCcssModalGroup(group);
-                              setSelectedCcssStandard(group.ccssStandards.targetObjective);
-                              setCcssModalOpen(true);
-                            }}
-                          >
-                            {group.ccssStandards.targetObjective.standard}
-                          </span>
-                          <span className="alternative-ccss-description">
-                            {group.ccssStandards.targetObjective.description}
-                          </span>
-                        </div>
+                return (
+                  <div
+                    key={group.id}
+                    className={`alternative-misconception-card clickable-card ${isSelectedGroup ? 'selected-group' : ''} ${group.isCore ? 'core-group' : ''}`}
+                    onClick={() => setSelectedRecommendationGroupId(group.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedRecommendationGroupId(group.id);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Select ${group.title} to view next steps`}
+                  >
+                    <div className="alternative-top">
+                      <div className="card-pills-row">
+                        {group.isCore && <span className="core-pill">CORE</span>}
+                        {isSelectedGroup && <span className="rns-selected-pill">Selected</span>}
                       </div>
 
-                      {group.ccssStandards.impactedObjectives && group.ccssStandards.impactedObjectives.length > 0 && (
-                        <div className="alternative-ccss-card">
-                          <h4 className="alternative-ccss-header">Future topics that may be impacted...</h4>
-                          <div className="alternative-ccss-gap-list">
-                            {group.ccssStandards.impactedObjectives.map((obj, idx) => (
-                              <div key={idx} className="alternative-ccss-gap-item">
-                                <span
-                                  className="alternative-ccss-tag impacted-objective clickable-standard"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setCcssModalGroup(group);
-                                    setSelectedCcssStandard(obj);
-                                    setCcssModalOpen(true);
-                                  }}
-                                >
-                                  {obj.standard}
-                                </span>
-                                <span className="alternative-ccss-description">
-                                  {obj.description}
-                                </span>
-                              </div>
-                            ))}
+                      <h4 className="alternative-title">{group.title}</h4>
+
+                      <div className="card-frequency-row">
+                        {group.frequency && (() => {
+                          const freq = group.frequency === 'medium' ? 'some' : group.frequency;
+                          return (
+                            <span className={`${freq}-students-pill`}>
+                              {freq.charAt(0).toUpperCase() + freq.slice(1)} students
+                            </span>
+                          );
+                        })()}
+                      </div>
+
+                      {group.misconceptionSummary && (
+                        <div className="rns-misconception-text">{group.misconceptionSummary}</div>
+                      )}
+
+                      {group.example && (
+                        <div className="sub-misconception-example">
+                          <strong>Example:</strong>
+                          <div className="example-content">
+                            <span className="incorrect-example">{group.example.incorrect}</span>
+                            <span className="correct-example">{group.example.correct}</span>
                           </div>
                         </div>
                       )}
                     </div>
-                  </div>
-                )}
 
-                <div className="alternative-activity">
-                  <div className="alternative-label">Recommended activity</div>
-                  <div className="alternative-activity-title">{group.move?.title}</div>
-                  <div className="alternative-meta">
-                    <span>{group.move?.time}</span>
+                    {/* CCSS Standards Section */}
+                    {group.ccssStandards && isFocusSkillsExpanded && (
+                      <div className="alternative-ccss-section">
+                        <div className="alternative-ccss-grid">
+                          {group.ccssStandards.prerequisiteGaps && group.ccssStandards.prerequisiteGaps.length > 0 && (
+                            <div className="alternative-ccss-card">
+                              <h4 className="alternative-ccss-header">Prerequisite Gaps</h4>
+                              <div className="alternative-ccss-gap-list">
+                                {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
+                                  <div key={idx} className="alternative-ccss-gap-item">
+                                    <span
+                                      className="alternative-ccss-tag prerequisite-gap clickable-standard"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCcssModalGroup(group);
+                                        setSelectedCcssStandard(gap);
+                                        setCcssModalOpen(true);
+                                      }}
+                                    >
+                                      {gap.standard}
+                                    </span>
+                                    <span className="alternative-ccss-description">
+                                      {gap.description}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {group.ccssStandards.impactedObjectives && group.ccssStandards.impactedObjectives.length > 0 && (
+                            <div className="alternative-ccss-card">
+                              <h4 className="alternative-ccss-header">Upcoming Skills</h4>
+                              <div className="alternative-ccss-gap-list">
+                                {group.ccssStandards.impactedObjectives.map((obj, idx) => (
+                                  <div key={idx} className="alternative-ccss-gap-item">
+                                    <span
+                                      className="alternative-ccss-tag impacted-objective clickable-standard"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCcssModalGroup(group);
+                                        setSelectedCcssStandard(obj);
+                                        setCcssModalOpen(true);
+                                      }}
+                                    >
+                                      {obj.standard}
+                                    </span>
+                                    <span className="alternative-ccss-description">
+                                      {obj.description}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="alternative-actions">
+                      <button
+                        className="view-thinking-btn"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEvidenceScreen(1);
+                          setReasoningGroupId(group.id);
+                        }}
+                      >
+                        See Student Thinking
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="carousel-controls">
+              <button
+                className="carousel-btn carousel-btn-prev"
+                onClick={() => {
+                  const grid = document.querySelector('.alternative-misconceptions-grid');
+                  if (grid) grid.scrollBy({ left: -320, behavior: 'smooth' });
+                }}
+                aria-label="Previous misconception"
+              >‹</button>
+              <button
+                className="carousel-btn carousel-btn-next"
+                onClick={() => {
+                  const grid = document.querySelector('.alternative-misconceptions-grid');
+                  if (grid) grid.scrollBy({ left: 320, behavior: 'smooth' });
+                }}
+                aria-label="Next misconception"
+              >›</button>
+            </div>
+          </div>
+        )}
+
+      {selectedRecommendationGroup && (
+        <div className="rns-next-step-section">
+          <div className="alternative-label">Choose a Next Step</div>
+          <p className="alternative-sublabel">
+            Recommended next steps aligned to {selectedRecommendationGroup.title}
+          </p>
+          <div className="rns-activity-options" role="radiogroup" aria-label="Choose a Next Step">
+            {(selectedRecommendationGroup.moveOptions || []).slice(0, 3).map((opt) => {
+              const selectedMove = getSelectedMoveForGroup(selectedRecommendationGroup);
+              const isSelected = selectedMove?.id === opt.id;
+              const alreadyAdded = existingIndex.has(`${selectedRecommendationGroup.id}:${opt.id}`);
+
+              return (
+                <div
+                  key={opt.id}
+                  className={`rns-activity-option ${isSelected ? 'selected' : ''} ${alreadyAdded ? 'disabled' : ''}`}
+                  role="radio"
+                  aria-checked={isSelected}
+                  aria-disabled={alreadyAdded ? 'true' : undefined}
+                  tabIndex={alreadyAdded ? -1 : 0}
+                  onClick={alreadyAdded ? undefined : () => {
+                    openActivityDetails(selectedRecommendationGroup, opt);
+                    setSelectedMoveIdByGroupId((prev) => ({
+                      ...prev,
+                      [selectedRecommendationGroup.id]: opt.id
+                    }));
+                  }}
+                  onKeyDown={alreadyAdded ? undefined : (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openActivityDetails(selectedRecommendationGroup, opt);
+                      setSelectedMoveIdByGroupId((prev) => ({
+                        ...prev,
+                        [selectedRecommendationGroup.id]: opt.id
+                      }));
+                    }
+                  }}
+                >
+                  <div className="rns-activity-option-title-row">
+                    <div className="rns-activity-option-title">{opt.title}</div>
+                  </div>
+                  <div className="rns-activity-option-meta">
+                    <span>{opt.time}</span>
                     <span className="meta-sep">|</span>
-                    <span>{group.move?.format}</span>
+                    <span>{opt.format}</span>
                   </div>
-                  <div className="alternative-summary">{group.move?.summary}</div>
-                </div>
 
-                <div className="alternative-actions">
+                  {/* Display additional fields if they exist */}
+                  <div className="rns-activity-option-details">
+                    {opt.targets && (
+                      <div className="rns-activity-option-field">
+                        <span className="rns-activity-option-field-label">Targets</span>
+                        <span className="rns-activity-option-field-value">{opt.targets}</span>
+                      </div>
+                    )}
+
+                    {opt.instructionalMove && (
+                      <div className="rns-activity-option-field">
+                        <span className="rns-activity-option-field-label">Instructional Move</span>
+                        <span className="rns-activity-option-field-value">{opt.instructionalMove}</span>
+                      </div>
+                    )}
+
+                    {opt.strategyTag && (
+                      <div className="rns-activity-option-field">
+                        <span className="rns-activity-option-field-label">Strategy Tag</span>
+                        <span className="rns-activity-option-field-value">{opt.strategyTag}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="rns-activity-option-actions">
+                    {alreadyAdded ? (
+                      <span className="rns-activity-added-pill" aria-label="Already added to your next steps">
+                        Already added
+                      </span>
+                    ) : (
+                      <button
+                        className="add-btn rns-activity-add-btn"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAdd(selectedRecommendationGroup, opt);
+                        }}
+                      >
+                        <svg
+                          className="rns-bookmark-icon"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                            d="M7 3h10a2 2 0 0 1 2 2v16l-7-3-7 3V5a2 2 0 0 1 2-2Z"
+                          />
+                        </svg>
+                        <span>Save to List</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* New CCSS Standards Section - Based on sketch design */}
+      {selectedRecommendationGroup && selectedRecommendationGroup.ccssStandards && (
+        <div className="ccss-standards-section">
+          <div className="ccss-standards-header">
+            <h4 className="ccss-standards-title">Instructional context</h4>
+            <button
+              className="ccss-standards-toggle"
+              onClick={() => toggleFocusSkillsExpanded(selectedRecommendationGroup.id)}
+              aria-expanded={focusSkillsExpandedByGroupId?.[selectedRecommendationGroup.id] || false}
+              aria-controls="ccss-standards-content"
+            >
+              {focusSkillsExpandedByGroupId?.[selectedRecommendationGroup.id] ? '−' : '+'}
+            </button>
+          </div>
+          
+          <div className="ccss-standards-content">
+            {/* Assessed Standard (always visible, full width) */}
+            {selectedRecommendationGroup.ccssStandards.targetObjective && (
+              <div className="standards-column assessed-full-width">
+                <h5 className="column-header assessed-header">Focus Skill</h5>
+                <div className="standards-list">
                   <button
-                    className="reasoning-btn"
+                    className="standard-card assessed-card"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setCameFromFullView(false);
-                      setReasoningGroupId(group.id);
+                      setCcssModalGroup(selectedRecommendationGroup);
+                      setSelectedCcssStandard(selectedRecommendationGroup.ccssStandards.targetObjective);
+                      setCcssModalOpen(true);
                     }}
                   >
-                    View Reasoning
-                  </button>
-                  <button 
-                    className="add-btn" 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAdd(group);
-                    }}
-                  >
-                    Add to Saved Next Steps
+                    <span className="standard-code">{selectedRecommendationGroup.ccssStandards.targetObjective.standard}</span>
+                    <span className="standard-description">{selectedRecommendationGroup.ccssStandards.targetObjective.description}</span>
                   </button>
                 </div>
               </div>
-            ))}
+            )}
+
+            {/* Prerequisite Gaps and At Risk Standards (only when expanded, side by side) */}
+            {(focusSkillsExpandedByGroupId?.[selectedRecommendationGroup.id] || false) && (
+              <div className="standards-grid side-by-side">
+                {selectedRecommendationGroup.ccssStandards.prerequisiteGaps && selectedRecommendationGroup.ccssStandards.prerequisiteGaps.length > 0 && (
+                  <div className="standards-column">
+                    <h5 className="column-header prerequisite-header">Prerequisite Gaps</h5>
+                    <div className="standards-list">
+                      {selectedRecommendationGroup.ccssStandards.prerequisiteGaps.map((standard, idx) => (
+                        <button
+                          key={idx}
+                          className="standard-card prerequisite-card"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCcssModalGroup(selectedRecommendationGroup);
+                            setSelectedCcssStandard(standard);
+                            setCcssModalOpen(true);
+                          }}
+                        >
+                          <span className="standard-code">{standard.standard}</span>
+                          <span className="standard-description">{standard.description}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedRecommendationGroup.ccssStandards.impactedObjectives && selectedRecommendationGroup.ccssStandards.impactedObjectives.length > 0 && (
+                  <div className="standards-column">
+                    <h5 className="column-header at-risk-header">Upcoming Skills</h5>
+                    <div className="standards-list">
+                      {selectedRecommendationGroup.ccssStandards.impactedObjectives.map((standard, idx) => (
+                        <button
+                          key={idx}
+                          className="standard-card at-risk-card"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCcssModalGroup(selectedRecommendationGroup);
+                            setSelectedCcssStandard(standard);
+                            setCcssModalOpen(true);
+                          }}
+                        >
+                          <span className="standard-code">{standard.standard}</span>
+                          <span className="standard-description">{standard.description}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        )}
+        </div>
+      )}
+
       </div>
     </div>
   );

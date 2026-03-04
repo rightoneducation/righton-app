@@ -7,7 +7,7 @@
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2026-08-04T17:14:01.142Z",
+              "apiKeyExpirationDate": "2026-08-30T02:40:14.204Z",
               "apiKeyExpirationDays": 180,
               "description": ""
             },
@@ -30,7 +30,7 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "microcoachLLMGeneration": {
+    "microcoachNextStepOption": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -69,19 +69,19 @@
         }
       ]
     },
-    "AMPLIFY_function_microcoachLLMGeneration_deploymentBucketName": {
+    "AMPLIFY_function_microcoachNextStepOption_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "microcoachLLMGeneration"
+          "resourceName": "microcoachNextStepOption"
         }
       ]
     },
-    "AMPLIFY_function_microcoachLLMGeneration_s3Key": {
+    "AMPLIFY_function_microcoachNextStepOption_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "microcoachLLMGeneration"
+          "resourceName": "microcoachNextStepOption"
         }
       ]
     }

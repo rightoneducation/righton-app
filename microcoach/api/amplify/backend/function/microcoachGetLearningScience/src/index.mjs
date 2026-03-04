@@ -181,6 +181,36 @@ export const handler = async (event) => {
           learningComponents: (item.learningComponentssupports ?? []).map((c) => ({
             description: c.description,
           })),
+          // LVN: research-backed factors linked to this standard via relevantToStandard
+          lvnFactors: (item.factorsrelevantToStandard ?? []).map((f) => ({
+            id: f.identifier,
+            name: f.name,
+            description: f.description,
+            category: f.category,
+            content: f.content ?? null,
+            gradeLevel: f.gradeLevel ?? [],
+            academicSubject: f.academicSubject ?? null,
+            citations: f.citations ?? [],
+            strategies: (f.strategiestargetsFactor ?? []).map((s) => ({
+              id: s.identifier,
+              name: s.name,
+              description: s.description,
+              category: s.category ?? null,
+              content: s.content ?? null,
+              citations: s.citations ?? [],
+            })),
+            learnerModels: (f.learnerModelshasFactor ?? []).map((m) => ({
+              id: m.identifier,
+              name: m.name,
+              gradeLevel: m.gradeLevel ?? [],
+              academicSubject: m.academicSubject ?? null,
+            })),
+            interactsWith: (f.interactsWithFactorFactors ?? []).map((i) => ({
+              id: i.identifier,
+              name: i.name,
+              category: i.category ?? null,
+            })),
+          })),
         })),
       };
 

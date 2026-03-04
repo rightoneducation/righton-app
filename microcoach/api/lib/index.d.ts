@@ -15,9 +15,8 @@ export declare class APIClient {
     updateActivity(id: string, updates: Record<string, unknown>): Promise<any>;
     getLearningScienceDataByCCSS(ccss: string): Promise<any>;
     getAnalysis(classroomData: any, learningScienceData: any): Promise<any>;
-    listRTDExamples(): Promise<any[]>;
-    generateRTD(misconception: any, learningScienceData: any, classroomContext?: any, contextData?: any[]): Promise<any>;
-    getAnalytics(classroomData: any, learningScienceData: any): Promise<any>;
+    listNextStepExamples(): Promise<any[]>;
+    generateNextStep(misconception: any, learningScienceData: any, classroomContext?: any, contextData?: any[]): Promise<any>;
     updateClassroom(classroomData: any, analytics: string): Promise<any>;
     createSavedNextStep(classroomId: string, item: Record<string, unknown>): Promise<any>;
     updateSavedNextStep(id: string, updates: Record<string, unknown>): Promise<any>;

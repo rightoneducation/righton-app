@@ -2,8 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { APIClient } from '@righton/microcoach-api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Header from './components/Header';
-import NavigationTabs from './components/NavigationTabs';
-import StudentRoster from './components/StudentRoster';
 import RecommendedNextSteps from './components/RecommendedNextSteps';
 import YourNextSteps from './components/YourNextSteps';
 import InterventionPatterns from './components/InterventionPatterns';
@@ -11,9 +9,7 @@ import './App.css';
 
 
 function App() {
-  const [activeTab, setActiveTab] = useState('Overview');
   const [activeOverviewSection, setActiveOverviewSection] = useState('Recommended Next Steps');
-  const [dateRange, setDateRange] = useState('Last 30 days');
 
   const [nextSteps, setNextSteps] = useState([]);
   const [nextStepsSort, setNextStepsSort] = useState('manual');
@@ -21,7 +17,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingNextSteps, setIsLoadingNextSteps] = useState(true);
   const [aiGapGroups, setAiGapGroups] = useState(null);
-  const [classroomStudents, setClassroomStudents] = useState(null);
 
   // Refs so CRUD handlers can reach the API without being inside the fetch useEffect
   const apiClientRef = useRef(null);
@@ -75,10 +70,6 @@ function App() {
         const gr6 = classrooms.find((c) => c.grade === 6);
         if (!gr6 || cancelled) return;
 
-        if (gr6.students?.items?.length) {
-          setClassroomStudents(gr6.students.items);
-        }
-
         // Store refs so CRUD handlers outside this effect can reach the API
         apiClientRef.current = client;
         classroomIdRef.current = gr6.id;
@@ -104,9 +95,15 @@ function App() {
         // Load pregenerated gap groups for the active week
         const activeSession = (gr6.sessions?.items ?? [])
           .find((s) => s.weekNumber === gr6.currentWeek);
-        if (!cancelled && activeSession?.pregeneratedGapGroups) {
-          const groups = activeSession.pregeneratedGapGroups;
-          setAiGapGroups(typeof groups === 'string' ? JSON.parse(groups) : groups);
+        if (!cancelled && activeSession?.pregeneratedNextSteps) {
+          const groups = activeSession.pregeneratedNextSteps;
+          const parsed = typeof groups === 'string' ? JSON.parse(groups) : groups;
+          // Normalize: if a group has a single `move` but no `moveOptions`, wrap it
+          const normalized = parsed.map((g) => ({
+            ...g,
+            moveOptions: g.moveOptions ?? (g.move ? [g.move] : []),
+          }));
+          setAiGapGroups(normalized);
         }
       } finally {
         if (!cancelled) {
@@ -278,125 +275,90 @@ function App() {
     });
   };
 
-  const handleDateRangeChange = (newRange) => {
-    setDateRange(newRange);
-    // Here you would typically fetch new data based on the date range
-  };
-
-  const handleExportSummary = () => {
-    // Handle export functionality
-  };
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    if (tab === 'Overview') {
-      setActiveOverviewSection('Recommended Next Steps');
-    }
-  };
-
   const handleOverviewSectionChange = (section) => {
     setActiveOverviewSection(section);
   };
 
   return (
     <div className="app">
-      <Header 
-        dateRange={dateRange}
-        onDateRangeChange={handleDateRangeChange}
-        onExportSummary={handleExportSummary}
-      />
-      
-      <NavigationTabs 
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-      />
-      
+      <Header />
+
       <main className="main-content">
-        {activeTab === 'Overview' && (
-          <div className="overview-content">
-            <div className="overview-navigation">
-              <nav className="overview-nav-tabs" aria-label="Overview workflow">
-                <button
-                  className={`overview-nav-tab ${activeOverviewSection === 'Recommended Next Steps' ? 'active' : ''}`}
-                  onClick={() => handleOverviewSectionChange('Recommended Next Steps')}
-                  type="button"
-                >
-                  1. Understand & Select
-                </button>
-                <span className="overview-nav-separator" aria-hidden="true">
-                  &gt;
-                </span>
-                <button
-                  className={`overview-nav-tab ${activeOverviewSection === 'Saved Next Steps' ? 'active' : ''}`}
-                  onClick={() => handleOverviewSectionChange('Saved Next Steps')}
-                  type="button"
-                >
-                  2. Prepare
-                </button>
-                <span className="overview-nav-separator" aria-hidden="true">
-                  &gt;
-                </span>
-                <button
-                  className={`overview-nav-tab ${activeOverviewSection === 'Your Intervention Patterns' ? 'active' : ''}`}
-                  onClick={() => handleOverviewSectionChange('Your Intervention Patterns')}
-                  type="button"
-                  data-reflect-tab-target="true"
-                >
-                  3. Reflect
-                </button>
-              </nav>
+        <div className="overview-content">
+          <div className="overview-navigation">
+            <nav className="overview-nav-tabs" aria-label="Overview workflow">
+              <button
+                className={`overview-nav-tab ${activeOverviewSection === 'Recommended Next Steps' ? 'active' : ''}`}
+                onClick={() => handleOverviewSectionChange('Recommended Next Steps')}
+                type="button"
+              >
+                Understand & Act
+              </button>
+              <span className="overview-nav-separator" aria-hidden="true">
+                &gt;
+              </span>
+              <button
+                className={`overview-nav-tab ${activeOverviewSection === 'Saved Next Steps' ? 'active' : ''}`}
+                onClick={() => handleOverviewSectionChange('Saved Next Steps')}
+                type="button"
+              >
+                Prepare
+              </button>
+              <span className="overview-nav-separator" aria-hidden="true">
+                &gt;
+              </span>
+              <button
+                className={`overview-nav-tab ${activeOverviewSection === 'Your Intervention Patterns' ? 'active' : ''}`}
+                onClick={() => handleOverviewSectionChange('Your Intervention Patterns')}
+                type="button"
+                data-reflect-tab-target="true"
+              >
+                Reflect
+              </button>
+            </nav>
+          </div>
+
+          {activeOverviewSection === 'Recommended Next Steps' && (
+            <div className="remediation-section">
+              {isLoading && (
+                <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+                  <CircularProgress />
+                </div>
+              )}
+              {!isLoading && (
+                <RecommendedNextSteps
+                  onAddNextStep={addNextStep}
+                  existingNextSteps={nextSteps}
+                  gapGroups={aiGapGroups ?? undefined}
+                />
+              )}
             </div>
+          )}
 
-            {activeOverviewSection === 'Recommended Next Steps' && (
-              <div className="remediation-section">
-                {isLoading && (
-                  <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
-                    <CircularProgress />
-                  </div>
-                )}
-                {!isLoading && (
-                  <RecommendedNextSteps
-                    onAddNextStep={addNextStep}
-                    existingNextSteps={nextSteps}
-                    gapGroups={aiGapGroups ?? undefined}
-                  />
-                )}
-              </div>
-            )}
+          {activeOverviewSection === 'Saved Next Steps' && (
+            <div className="trends-section">
+              <YourNextSteps
+                nextSteps={sortedNextSteps}
+                completedNextSteps={nextStepsHistory.flatMap((h) => h.items || [])}
+                completedCount={completedNextStepsCount}
+                sort={nextStepsSort}
+                onChangeSort={setNextStepsSort}
+                onRemove={removeNextStep}
+                onMarkComplete={completeNextStep}
+                onReorder={reorderNextSteps}
+                isLoading={isLoadingNextSteps}
+              />
+            </div>
+          )}
 
-            {activeOverviewSection === 'Saved Next Steps' && (
-              <div className="trends-section">
-                <YourNextSteps
-                  nextSteps={sortedNextSteps}
-                  completedNextSteps={nextStepsHistory.flatMap((h) => h.items || [])}
-                  completedCount={completedNextStepsCount}
-                  sort={nextStepsSort}
-                  onChangeSort={setNextStepsSort}
-                  onRemove={removeNextStep}
-                  onMarkComplete={completeNextStep}
-                  onReorder={reorderNextSteps}
-                  isLoading={isLoadingNextSteps}
-                />
-              </div>
-            )}
-
-            {activeOverviewSection === 'Your Intervention Patterns' && (
-              <div className="trends-section">
-                <InterventionPatterns
-                  nextSteps={[...nextSteps, ...(nextStepsHistory.flatMap((h) => h.items || []))]}
-                />
-              </div>
-            )}
-
-          </div>
-        )}
-        
-        {activeTab === 'Students' && (
-          <div className="students-content">
-            <StudentRoster students={classroomStudents} />
-          </div>
-        )}
-        
+          {activeOverviewSection === 'Your Intervention Patterns' && (
+            <div className="trends-section">
+              <InterventionPatterns
+                nextSteps={[...nextSteps, ...(nextStepsHistory.flatMap((h) => h.items || []))]}
+              />
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

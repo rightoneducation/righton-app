@@ -14,6 +14,6 @@
  *   7. StudentResponses/PostPPQ
  *   8. Misconceptions (classroomMisconceptionsId, sessionMisconceptionsId)
  *   9. Activities (misconceptionActivitiesId)
- *  10. ContextData (isReference: false for classroom RTDs, true for References/)
+ *  10. ContextData (isReference: false for classroom next steps, true for References/)
  */
 export {};

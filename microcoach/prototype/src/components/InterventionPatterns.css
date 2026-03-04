@@ -55,6 +55,18 @@
   background-color: #F3F4F6;
 }
 
+.ip-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ip-upload-note {
+  font-size: 12px;
+  color: #6B7280;
+}
+
 .ip-subtitle {
   font-size: 14px;
   color: #1B376F;

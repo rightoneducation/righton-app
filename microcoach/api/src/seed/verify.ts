@@ -12,10 +12,12 @@
  *   StudentResponses: ~823 (PPQ: 617; PostPPQ: ~206)
  *   Misconceptions:   9  (3 per session)
  *   Activities:       9  (1 per misconception)
- *   ContextData:      8  (3 classroom RTDs + 5 reference RTDs)
+ *   ContextData:      8  (3 classroom next steps + 5 reference next steps)
  */
 
 import { createGqlClient, GqlFn } from './appsync-config';
+
+let gql: GqlFn;
 
 // ── Status utilities ─────────────────────────────────────────────────────────
 
@@ -117,7 +119,7 @@ function check(label: string, actual: number, expected: number): boolean {
 
 async function main() {
   const totalStart = Date.now();
-  const gql: GqlFn = await createGqlClient();
+  gql = await createGqlClient();
   console.log('=== Microcoach Seed Verification ===\n');
   console.log('Querying all tables:\n');
 

@@ -93,7 +93,7 @@ export const onCreateClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -322,7 +322,7 @@ export const onUpdateClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -551,7 +551,7 @@ export const onDeleteClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -805,7 +805,7 @@ export const onCreateSession = /* GraphQL */ `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -930,7 +930,7 @@ export const onUpdateSession = /* GraphQL */ `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -1055,7 +1055,7 @@ export const onDeleteSession = /* GraphQL */ `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -2033,7 +2033,7 @@ export const onCreateContextData = /* GraphQL */ `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -2114,7 +2114,7 @@ export const onUpdateContextData = /* GraphQL */ `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -2195,7 +2195,7 @@ export const onDeleteContextData = /* GraphQL */ `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic

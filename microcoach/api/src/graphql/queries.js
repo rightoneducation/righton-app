@@ -91,7 +91,7 @@ export const getClassroom = /* GraphQL */ `
             nextToken
             __typename
           }
-          pregeneratedGapGroups
+          pregeneratedNextSteps
           createdAt
           updatedAt
           classroomSessionsId
@@ -281,7 +281,7 @@ export const listClassrooms = /* GraphQL */ `
               nextToken
               __typename
             }
-            pregeneratedGapGroups
+            pregeneratedNextSteps
             createdAt
             updatedAt
             classroomSessionsId
@@ -495,7 +495,7 @@ export const getSession = /* GraphQL */ `
         nextToken
         __typename
       }
-      pregeneratedGapGroups
+      pregeneratedNextSteps
       createdAt
       updatedAt
       classroomSessionsId
@@ -594,7 +594,7 @@ export const listSessions = /* GraphQL */ `
           nextToken
           __typename
         }
-        pregeneratedGapGroups
+        pregeneratedNextSteps
         createdAt
         updatedAt
         classroomSessionsId
@@ -1268,7 +1268,7 @@ export const getContextData = /* GraphQL */ `
       ccssStandards
       assessmentCode
       isReference
-      rtdLesson {
+      nextStepLesson {
         targetAssessmentCode
         targetQuestionNumbers
         topic
@@ -1352,7 +1352,7 @@ export const listContextData = /* GraphQL */ `
         ccssStandards
         assessmentCode
         isReference
-        rtdLesson {
+        nextStepLesson {
           targetAssessmentCode
           targetQuestionNumbers
           topic
@@ -1484,7 +1484,7 @@ export const classroomsByClassroomName = /* GraphQL */ `
               nextToken
               __typename
             }
-            pregeneratedGapGroups
+            pregeneratedNextSteps
             createdAt
             updatedAt
             classroomSessionsId
@@ -1680,7 +1680,7 @@ export const sessionsByClassroomId = /* GraphQL */ `
           nextToken
           __typename
         }
-        pregeneratedGapGroups
+        pregeneratedNextSteps
         createdAt
         updatedAt
         classroomSessionsId

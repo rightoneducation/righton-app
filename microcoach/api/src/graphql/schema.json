@@ -2925,7 +2925,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -4783,7 +4783,7 @@
         "inputFields" : null,
         "interfaces" : null,
         "enumValues" : [ {
-          "name" : "RTD",
+          "name" : "NEXT_STEP",
           "description" : null,
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -5734,7 +5734,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -6694,12 +6694,12 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "rtdLesson",
+          "name" : "nextStepLesson",
           "description" : null,
           "args" : [ ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "RTDLesson",
+            "name" : "NextStepLesson",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -6784,7 +6784,7 @@
         "inputFields" : null,
         "interfaces" : null,
         "enumValues" : [ {
-          "name" : "RTD_LESSON",
+          "name" : "NEXT_STEP_LESSON",
           "description" : null,
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -6817,7 +6817,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "RTDLesson",
+        "name" : "NextStepLesson",
         "description" : null,
         "fields" : [ {
           "name" : "targetAssessmentCode",
@@ -7697,30 +7697,6 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "getAnalytics",
-          "description" : null,
-          "args" : [ {
-            "name" : "input",
-            "description" : null,
-            "type" : {
-              "kind" : "NON_NULL",
-              "name" : null,
-              "ofType" : {
-                "kind" : "INPUT_OBJECT",
-                "name" : "GetAnalyticsInput",
-                "ofType" : null
-              }
-            },
-            "defaultValue" : null
-          } ],
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
           "name" : "getAnalysis",
           "description" : null,
           "args" : [ {
@@ -7745,7 +7721,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "generateRTD",
+          "name" : "generateNextStep",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -7755,7 +7731,31 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "GenerateRTDInput",
+                "name" : "GenerateNextStepInput",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "generateNextStepOption",
+          "description" : null,
+          "args" : [ {
+            "name" : "input",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "INPUT_OBJECT",
+                "name" : "GenerateNextStepOptionInput",
                 "ofType" : null
               }
             },
@@ -8688,41 +8688,6 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "GetAnalyticsInput",
-        "description" : null,
-        "fields" : null,
-        "inputFields" : [ {
-          "name" : "classroomData",
-          "description" : null,
-          "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "AWSJSON",
-              "ofType" : null
-            }
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "learningScienceData",
-          "description" : null,
-          "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "AWSJSON",
-              "ofType" : null
-            }
-          },
-          "defaultValue" : null
-        } ],
-        "interfaces" : null,
-        "enumValues" : null,
-        "possibleTypes" : null
-      }, {
-        "kind" : "INPUT_OBJECT",
         "name" : "GetAnalysisInput",
         "description" : null,
         "fields" : null,
@@ -8758,7 +8723,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "GenerateRTDInput",
+        "name" : "GenerateNextStepInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -8803,6 +8768,72 @@
             "kind" : "SCALAR",
             "name" : "AWSJSON",
             "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "GenerateNextStepOptionInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "misconception",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "AWSJSON",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "learningScienceData",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "AWSJSON",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "classroomContext",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSJSON",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "contextData",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSJSON",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "preferredFormat",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
           },
           "defaultValue" : null
         } ],
@@ -9257,7 +9288,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -9374,7 +9405,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -9543,7 +9574,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -13455,11 +13486,11 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "rtdLesson",
+          "name" : "nextStepLesson",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "RTDLessonInput",
+            "name" : "NextStepLessonInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -13518,7 +13549,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "RTDLessonInput",
+        "name" : "NextStepLessonInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -14300,11 +14331,11 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "rtdLesson",
+          "name" : "nextStepLesson",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "RTDLessonInput",
+            "name" : "NextStepLessonInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -15504,7 +15535,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "pregeneratedGapGroups",
+          "name" : "pregeneratedNextSteps",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -17670,22 +17701,6 @@
         "onFragment" : false,
         "onField" : false
       }, {
-        "name" : "aws_iam",
-        "description" : "Tells the service this field/object has access authorized by sigv4 signing.",
-        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
-        "args" : [ ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "aws_lambda",
-        "description" : "Tells the service this field/object has access authorized by a Lambda Authorizer.",
-        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
-        "args" : [ ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
         "name" : "deprecated",
         "description" : null,
         "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
@@ -17699,6 +17714,22 @@
           },
           "defaultValue" : "\"No longer supported\""
         } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "aws_iam",
+        "description" : "Tells the service this field/object has access authorized by sigv4 signing.",
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "aws_lambda",
+        "description" : "Tells the service this field/object has access authorized by a Lambda Authorizer.",
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ ],
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false

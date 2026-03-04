@@ -15,7 +15,7 @@
  *   7. StudentResponses/PostPPQ
  *   8. Misconceptions (classroomMisconceptionsId, sessionMisconceptionsId)
  *   9. Activities (misconceptionActivitiesId)
- *  10. ContextData (isReference: false for classroom RTDs, true for References/)
+ *  10. ContextData (isReference: false for classroom next steps, true for References/)
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -51,44 +51,11 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-const https = __importStar(require("https"));
 const path = __importStar(require("path"));
 const XLSX = __importStar(require("xlsx"));
 const seedData_1 = require("./seedData");
-// ── AppSync config ───────────────────────────────────────────────────────────
-const ENDPOINT = 'https://gn4bxdp4xzfg3lmj4ypy2foxj4.appsync-api.us-east-1.amazonaws.com/graphql';
-const API_KEY = 'da2-d5xh446mcrctnfy6pi57onc6ra';
-async function gql(query, variables) {
-    const urlParts = new URL(ENDPOINT);
-    const body = JSON.stringify({ query, variables });
-    return new Promise((resolve, reject) => {
-        const req = https.request({
-            hostname: urlParts.hostname,
-            path: urlParts.pathname,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': API_KEY,
-                'Content-Length': Buffer.byteLength(body),
-            },
-        }, (res) => {
-            let data = '';
-            res.on('data', (chunk) => (data += chunk));
-            res.on('end', () => {
-                const json = JSON.parse(data);
-                if (json.errors) {
-                    reject(new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`));
-                }
-                else {
-                    resolve(json.data);
-                }
-            });
-        });
-        req.on('error', reject);
-        req.write(body);
-        req.end();
-    });
-}
+const appsync_config_1 = require("./appsync-config");
+let gql;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // ── Status utilities ─────────────────────────────────────────────────────────
 function elapsed(startMs) {
@@ -486,10 +453,10 @@ async function uploadMisconceptions(classroomId, sessionId, misconceptions) {
                 misconceptionActivitiesId: misconception.id,
                 classroomId,
                 sessionId,
-                type: 'RTD',
+                type: 'NEXT_STEP',
                 status: 'GENERATED',
-                title: `RTD: ${m.title}`,
-                summary: `AI-generated RTD activity targeting the misconception: ${m.title}`,
+                title: `Next Step: ${m.title}`,
+                summary: `AI-generated next step activity targeting the misconception: ${m.title}`,
                 aiGenerated: true,
                 format: 'small_group',
             },
@@ -506,14 +473,14 @@ async function uploadContextData(title, gradeLevel, ccssStandards, weekNumber, i
     const start = Date.now();
     await gql(CREATE_CONTEXT_DATA, {
         input: {
-            type: 'RTD_LESSON',
+            type: 'NEXT_STEP_LESSON',
             title,
             gradeLevel,
             weekNumber,
             ccssStandards,
             assessmentCode,
             isReference,
-            rtdLesson: {
+            nextStepLesson: {
                 targetAssessmentCode: assessmentCode !== null && assessmentCode !== void 0 ? assessmentCode : 'REFERENCE',
                 topic: deriveTopic((_a = ccssStandards[0]) !== null && _a !== void 0 ? _a : ''),
                 targetProblem: 'See source document',
@@ -527,6 +494,7 @@ async function uploadContextData(title, gradeLevel, ccssStandards, weekNumber, i
 async function main() {
     const totalStart = Date.now();
     console.log('=== Microcoach Seed Upload ===\n');
+    gql = await (0, appsync_config_1.createGqlClient)();
     console.log(`DATA_ROOT: ${seedData_1.DATA_ROOT}\n`);
     for (const classroomConfig of seedData_1.CLASSROOMS) {
         const classroomStart = Date.now();
@@ -603,20 +571,20 @@ async function main() {
             console.log('');
             await uploadMisconceptions(classroomId, sessionId, sessionConfig.misconceptions);
         }
-        // Classroom RTD ContextData
+        // Classroom next step ContextData
         const session = classroomConfig.sessions[0];
         if (session) {
             console.log('');
-            const rtdTitle = `${classroomConfig.key} Session1 RTD - ${session.topic}`;
-            await uploadContextData(rtdTitle, classroomConfig.grade, session.ccssStandards, session.weekNumber, false);
+            const nextStepTitle = `${classroomConfig.key} Session1 Next Step - ${session.topic}`;
+            await uploadContextData(nextStepTitle, classroomConfig.grade, session.ccssStandards, session.weekNumber, false);
         }
         console.log(`\n  ${classroomConfig.key} complete  (${elapsed(classroomStart)})`);
     }
     // Reference ContextData
     console.log(`\n${'─'.repeat(60)}`);
-    console.log('Reference RTD ContextData');
+    console.log('Reference Next Step ContextData');
     console.log('─'.repeat(60));
-    for (const ref of seedData_1.REFERENCE_RTDS) {
+    for (const ref of seedData_1.REFERENCE_NEXT_STEPS) {
         await uploadContextData(ref.title, ref.gradeLevel, ref.ccssStandards, ref.weekNumber, true);
     }
     console.log(`\n${'═'.repeat(60)}`);

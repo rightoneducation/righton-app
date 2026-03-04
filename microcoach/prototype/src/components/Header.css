@@ -40,57 +40,9 @@
   gap: 24px;
 }
 
-.total-games {
-  display: flex;
-  align-items: center;
-}
-
-.games-count {
-  color: white;
-  font-size: 48px;
-  font-weight: bold;
-}
-
-.date-range-selector {
-  display: flex;
-  align-items: center;
-}
-
-.date-dropdown {
-  background-color: transparent;
-  color: #FFFBF6;
-  border: 1px solid #FFFBF6;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  font-family: 'Rubik', sans-serif;
-}
-
-.date-dropdown option {
-  background-color: #1B376F;
-  color: #FFFBF6;
-}
-
-.export-button {
-  width: 120px;
-  height: 32px;
-  background-color: transparent;
-  color: #FFFBF6;
-  border: 1px solid #FFFBF6;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-family: 'Rubik', sans-serif;
-}
-
-.export-button:hover {
-  background-color: rgba(255, 251, 246, 0.1);
-}
-
 .class-selector {
-  margin-left: 32px;
+  display: flex;
+  align-items: center;
 }
 
 .class-dropdown {
