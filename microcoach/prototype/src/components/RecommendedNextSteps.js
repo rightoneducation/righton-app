@@ -629,7 +629,9 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
           </div>
           <div className="sub-misconceptions-carousel">
             <div className="sub-misconceptions-track">
-              {selectedRecommendationGroup.subMisconceptions.map((sub, i) => (
+              {[...selectedRecommendationGroup.subMisconceptions]
+                .sort((a, b) => (b.isCore ? 1 : 0) - (a.isCore ? 1 : 0))
+                .map((sub, i) => (
                 <div key={i} className="sub-misconception-card">
                   <div className="sub-misconception-header">
                     {sub.isCore && <span className="core-pill">[CORE]</span>}
