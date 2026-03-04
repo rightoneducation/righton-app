@@ -27,7 +27,7 @@
         },
         "microcoachSubMisconceptions": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
-          "s3Key": "amplify-builds/microcoachSubMisconceptions-476963502b5357693931-build.zip"
+          "s3Key": "amplify-builds/microcoachSubMisconceptions-4979464b78314c7a786b-build.zip"
         },
         "microcoachNextStepOption": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",

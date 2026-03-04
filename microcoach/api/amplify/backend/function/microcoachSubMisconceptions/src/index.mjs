@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 const SubMisconception = z.object({
   name: z.string().describe('Short, specific label for the exact error variant'),
-  frequency: z.enum(['many', 'some', 'medium', 'few']).describe('"many" >40%, "some" 20-40%, "medium" 10-20%, "few" <10% of students showing this misconception'),
+  frequency: z.enum(['many', 'some', 'few']).describe('"many" >60%, "some" 30-60%, "few" <30% of students showing this misconception'),
   isCore: z.boolean().describe('true for the single most fundamental/most common pattern — exactly one per misconception must be true'),
   description: z.string().describe('One sentence describing the cognitive error'),
   example: z.object({
@@ -50,7 +50,7 @@ Identify 2-4 specific error variants or sub-patterns that students exhibit withi
 
 For each sub-misconception:
 - **name**: Short, specific label for the exact error (e.g. "Forgetting to invert at all", "Inverting both fractions")
-- **frequency**: How common among students showing this misconception — "many" (>40%), "some" (20-40%), "medium" (10-20%), "few" (<10%)
+- **frequency**: How common among students showing this misconception — "many" (>60%), "some" (30-60%), "few" (<30%)
 - **isCore**: true for the single most fundamental/most common pattern — exactly ONE must be true
 - **description**: One sentence describing the cognitive error students are making
 - **example**: A concrete math example with the incorrect student work and the correct answer
