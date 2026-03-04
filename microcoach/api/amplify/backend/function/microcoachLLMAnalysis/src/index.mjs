@@ -10,8 +10,16 @@ const KEY_FINDINGS_MIN       = ac.keyFindingsCount?.min ?? 3;
 const KEY_FINDINGS_MAX       = ac.keyFindingsCount?.max ?? 5;
 const SUCCESS_IND_MIN        = ac.successIndicatorsPerMisconception?.min ?? 2;
 const SUCCESS_IND_MAX        = ac.successIndicatorsPerMisconception?.max ?? 4;
-const SEVERITY_HIGH_PCT      = ac.severityThresholds?.highPercent ?? 40;
-const SEVERITY_MEDIUM_PCT    = ac.severityThresholds?.mediumPercent ?? 20;
+const FREQUENCY_MANY_PCT     = ac.frequencyThresholds?.manyPercent ?? 60;
+const FREQUENCY_SOME_PCT     = ac.frequencyThresholds?.somePercent ?? 20;
+const PREVALENCE_WEIGHT      = ac.misconceptionScoring?.prevalenceWeight ?? 0.40;
+const CONCEPTUAL_WEIGHT      = ac.misconceptionScoring?.conceptualSeverityWeight ?? 0.30;
+const PREREQ_WEIGHT          = ac.misconceptionScoring?.prerequisiteLeverageWeight ?? 0.15;
+const FORWARD_WEIGHT         = ac.misconceptionScoring?.forwardImpactWeight ?? 0.15;
+const MIN_PREVALENCE         = ac.coreSelection?.minimumPrevalencePercent ?? 20;
+const ALT_CONCEPTUAL         = ac.coreSelection?.alternativeQualifier?.minConceptualSeverity ?? 0.8;
+const ALT_FORWARD            = ac.coreSelection?.alternativeQualifier?.minForwardImpact ?? 0.7;
+const MAX_MISCONCEPTIONS     = ac.coreSelection?.maxMisconceptions ?? 4;
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 // Returns identified misconceptions (with evidence + metadata) but NO activities.
@@ -29,21 +37,14 @@ const Misconception = z.object({
   title: z.string().describe('Short name for the misconception'),
   description: z.string().describe('Full explanation of the misconception and why students hold it'),
   aiReasoning: z.string().optional().describe('How the assessment data supports identifying this misconception'),
-  studentCount: z.number().int().optional().describe('Estimated number of students affected'),
-  studentPercent: z.number().optional().describe('Estimated proportion of students affected (0–1)'),
-  severity: z.enum(['high', 'medium', 'low']).describe(`high if >${SEVERITY_HIGH_PCT}% affected, medium ${SEVERITY_MEDIUM_PCT}–${SEVERITY_HIGH_PCT}%, low <${SEVERITY_MEDIUM_PCT}%`),
-  priority: z.enum(['1', '2', '3', '4']).describe('"1" = most urgent to address'),
+  frequency: z.enum(['many', 'some', 'few']).describe(`"many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%`),
+  isCore: z.boolean().describe('true for the single highest-priority misconception only; false for all others'),
   occurrence: z.enum(['first', 'recurring']).describe('"recurring" only if this pattern appeared in session history'),
+  example: z.object({ incorrect: z.string(), correct: z.string() }).optional().describe('A representative student error: "incorrect" shows a typical wrong expression/answer, "correct" shows the right form'),
   successIndicators: z.array(z.string()).optional().describe('Observable behaviors showing the student has overcome this misconception'),
   evidence: MisconceptionEvidence.optional(),
   prerequisiteGapCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `prerequisiteStandards` list (earlier-grade topics students must know first). Must be lower grade level than ccssStandard. Only include codes where a gap in that earlier skill would specifically cause this misconception."),
   impactedObjectiveCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `futureDependentStandards` list (later-grade topics that build on this standard). Must be higher grade level than ccssStandard. Only include codes that this specific misconception would specifically threaten."),
-  subMisconceptions: z.array(z.object({
-    name: z.string(),
-    frequency: z.enum(['many', 'some', 'medium', 'few']),
-    isCore: z.boolean().optional(),
-    description: z.string(),
-  })).optional(),
 });
 
 const AnalysisResponse = z.object({
@@ -148,12 +149,32 @@ which have improved, which are newly emerging.
 
 **4. Misconceptions** — Identify ALL significant misconceptions evidenced by the assessment data:
 - Ground each misconception in specific question numbers and performance rates
-- severity: high if >${SEVERITY_HIGH_PCT}% students missed that question pattern, medium ${SEVERITY_MEDIUM_PCT}–${SEVERITY_HIGH_PCT}%, low <${SEVERITY_MEDIUM_PCT}%
-- occurrence: "recurring" ONLY if the same pattern appears in session history misconceptions; otherwise "first"
-- Estimate studentCount and studentPercent from classPercentCorrect values and cohortSize
 - evidence.source: cite specific question numbers (e.g. "PPQ Q3, Q5")
 - successIndicators: ${SUCCESS_IND_MIN}-${SUCCESS_IND_MAX} specific, observable student behaviors that demonstrate mastery
-- Order by priority ("1" = most critical)
+
+**Core Selection** — Set \`isCore: true\` on the single highest-leverage misconception using this weighted model:
+
+Composite Score = (Prevalence × ${PREVALENCE_WEIGHT}) + (Conceptual Severity × ${CONCEPTUAL_WEIGHT}) + (Prerequisite Leverage × ${PREREQ_WEIGHT}) + (Forward Impact × ${FORWARD_WEIGHT})
+
+Scoring guidance for each dimension (normalize each to 0–1):
+- **Prevalence** (${PREVALENCE_WEIGHT * 100}% weight): % of students affected. The most influential factor but not the only one.
+- **Conceptual Severity** (${CONCEPTUAL_WEIGHT * 100}% weight): 1.0 = structural conceptual misunderstanding (student has the wrong mental model of the math); 0.6 = mixed conceptual and procedural; 0.3 = procedural slip or execution error only. Conceptual errors should outrank procedural ones even at slightly lower prevalence.
+- **Prerequisite Leverage** (${PREREQ_WEIGHT * 100}% weight): Does this misconception reveal a missing foundational skill? Does fixing it unblock multiple downstream standards? Higher if yes.
+- **Forward Impact** (${FORWARD_WEIGHT * 100}% weight): Will this error severely interfere with upcoming must-master content or cascade across the next 2–3 standards? Higher if yes.
+
+**Core eligibility**: The top-ranked misconception must meet AT LEAST ONE of:
+- Prevalence ≥ ${MIN_PREVALENCE}% of students
+- OR: Conceptual Severity ≥ ${ALT_CONCEPTUAL} AND Forward Impact ≥ ${ALT_FORWARD}
+
+**Tiebreakers**: Prefer conceptual over procedural errors; prefer broader downstream impact.
+
+**Filter**: Exclude patterns affecting fewer than ${MIN_PREVALENCE}% of students UNLESS they meet the alternative qualifier above. Exclude patterns that are clearly one-time careless mistakes with no repeatable reasoning error.
+
+**Secondary misconceptions**: Must exceed the minimum threshold, must be meaningfully distinct from the core (not a minor variant of it), and must represent a separate reasoning error. Set \`isCore: false\` on all secondary misconceptions. Cap total at ${MAX_MISCONCEPTIONS} misconceptions.
+
+- frequency: "many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%
+- example: provide a concrete, representative student error. "incorrect" is a typical wrong expression or answer students write; "correct" is the right form with minimal annotation (e.g. "-6x + 12" not a full solution).
+- occurrence: "recurring" ONLY if the same pattern appears in session history misconceptions; otherwise "first"
 - prerequisiteGapCodes: Look at the standard's 'prerequisiteStandards' list in the learning science data — these are EARLIER-GRADE topics (lower grade level than ccssStandard). Select ONLY codes where a gap in that earlier skill would DIRECTLY cause this specific error pattern. Ask yourself: "Would a student who hasn't mastered this prerequisite make exactly this mistake?" Only include codes that clearly pass this test.
 - impactedObjectiveCodes: Look at the standard's 'futureDependentStandards' list in the learning science data — these are LATER-GRADE topics (higher grade level than ccssStandard). Select ONLY codes that this specific misconception would DIRECTLY threaten. Ask yourself: "Would a student carrying this misunderstanding specifically struggle with this future topic?" Only include codes that clearly pass this test.
 

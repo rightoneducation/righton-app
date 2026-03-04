@@ -159,12 +159,6 @@ const GENERATE_NEXT_STEP_OPTION = /* GraphQL */ `
   }
 `;
 
-const GENERATE_SUB_MISCONCEPTIONS = /* GraphQL */ `
-  mutation GenerateSubMisconceptions($input: GenerateSubMisconceptionsInput!) {
-    generateSubMisconceptions(input: $input)
-  }
-`;
-
 const UPDATE_SESSION = /* GraphQL */ `
   mutation UpdateSession($input: UpdateSessionInput!) {
     updateSession(input: $input) {
@@ -186,14 +180,6 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
 
 // ── Next step builder ─────────────────────────────────────────────────────────
 
-function priorityLabel(p: string): string {
-  return ({ '1': 'Critical', '2': 'High', '3': 'Medium', '4': 'Low' } as Record<string, string>)[p] ?? 'Medium';
-}
-
-function occurrenceLabel(o: string): string {
-  return o === 'recurring' ? 'Recurring' : '1st occurrence';
-}
-
 function formatLabel(f: string): string {
   return (
     ({ small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' } as Record<string, string>)[f] ?? f
@@ -203,7 +189,6 @@ function formatLabel(f: string): string {
 function buildNextSteps(
   misconceptions: any[],
   activitiesPerGroup: any[][],
-  subMisconceptionsPerGroup: any[][],
   ppqQuestions: any[],
   learningScienceData: any
 ): any[] {
@@ -228,7 +213,6 @@ function buildNextSteps(
 
   return misconceptions.map((m: any, i: number) => {
     const activityList: any[] = (activitiesPerGroup[i] ?? []).filter(Boolean);
-    const subMisconceptions = subMisconceptionsPerGroup[i] ?? [];
     const frameworkItem = frameworkItems.find(
       (item: any) => normalize(item.code) === normalize(m.ccssStandard)
     );
@@ -244,11 +228,12 @@ function buildNextSteps(
     return {
       id: `nextstep-ai-${i + 1}`,
       title: m.title,
-      priority: priorityLabel(m.priority),
-      studentCount: m.studentCount ?? 0,
-      studentPercent: Math.round((m.studentPercent ?? 0) * 100),
-      occurrence: occurrenceLabel(m.occurrence),
+      frequency: m.frequency,
+      isCore: m.isCore ?? false,
+      occurrence: m.occurrence,
+      example: m.example ?? null,
       misconceptionSummary: m.description,
+      aiReasoning: m.aiReasoning ?? null,
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
         targetObjective: { standard: m.ccssStandard, description: m.description },
@@ -256,7 +241,6 @@ function buildNextSteps(
         prerequisiteGaps,
       },
       evidence: m.evidence ?? null,
-      subMisconceptions,
       questionErrorRates,
       moveOptions: activityList.map((activity, j) => ({
         id: `nextstep-move-ai-${i + 1}-${j + 1}`,
@@ -385,29 +369,11 @@ async function main() {
     })
   );
 
-  // 8. Generate sub-misconceptions (one per misconception, in parallel)
-  const subMisconceptionsPerGroup: any[][] = await Promise.all(
-    misconceptions.map(async (m: any, i: number) => {
-      process.stdout.write(`Generating sub-misconceptions [${i + 1}/${misconceptions.length}]: ${m.title}...`);
-      try {
-        const raw = await gql(GENERATE_SUB_MISCONCEPTIONS, {
-          input: { misconception: JSON.stringify(m) },
-        });
-        const result = parseJson(raw.generateSubMisconceptions);
-        console.log(` ✓  ${result.length} sub-misconceptions`);
-        return result;
-      } catch (err) {
-        console.log(` ✗ (${err})`);
-        return [];
-      }
-    })
-  );
-
-  // 9. Build next steps
-  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, subMisconceptionsPerGroup, ppq?.questions, learningScienceData);
+  // 8. Build next steps
+  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData);
   console.log(`\nBuilt ${nextSteps.length} next steps`);
 
-  // 10. Persist next steps to the session and mark the classroom's active week
+  // 9. Persist next steps to the session and mark the classroom's active week
   process.stdout.write(`Saving next steps to session ${currentStub.id} (week ${currentStub.weekNumber})...`);
   await gql(UPDATE_SESSION, {
     input: {

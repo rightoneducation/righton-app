@@ -4,10 +4,37 @@
     "model": "gpt-4o",
     "keyFindingsCount": { "min": 3, "max": 5 },
     "successIndicatorsPerMisconception": { "min": 2, "max": 4 },
-    "severityThresholds": {
-      "description": "Percent of students affected to classify a misconception's severity",
-      "highPercent": 40,
-      "mediumPercent": 20
+    "frequencyThresholds": {
+      "description": "Percent of class affected to classify a misconception's frequency label (3 tiers: many/some/few)",
+      "manyPercent": 60,
+      "somePercent": 20
+    },
+    "misconceptionScoring": {
+      "description": "Weights for the composite score that determines which misconception is isCore. Weights should sum to 1.0.",
+      "prevalenceWeight": 0.40,
+      "conceptualSeverityWeight": 0.30,
+      "prerequisiteLeverageWeight": 0.15,
+      "forwardImpactWeight": 0.15,
+      "conceptualSeverityScale": {
+        "description": "Guide for the LLM when estimating conceptual severity: 1.0 = structural conceptual misunderstanding of the math concept; 0.6 = mixed conceptual and procedural; 0.3 = procedural/execution error only"
+      }
+    },
+    "coreSelection": {
+      "description": "Rules for designating the isCore misconception and filtering secondary misconceptions",
+      "minimumPrevalencePercent": 20,
+      "alternativeQualifier": {
+        "description": "A misconception below minimum prevalence can still be priority 1 if BOTH conditions are met",
+        "minConceptualSeverity": 0.8,
+        "minForwardImpact": 0.7
+      },
+      "maxMisconceptions": 4,
+      "secondaryMustBeMeaningfullyDistinct": true,
+      "tiebreakers": ["prefer_conceptual_over_procedural", "prefer_broader_downstream_impact"]
+    },
+    "futureScoringSignals": {
+      "description": "Placeholder for future data not yet in model. When PPQ confidence ratings and student reflection responses become available, incorporate them as additional scoring signals.",
+      "ppqConfidenceRatings": false,
+      "studentReflectionResponses": false
     }
   },
 
@@ -24,14 +51,4 @@
     "studentGroups": { "min": 2, "max": 3 }
   },
 
-  "subMisconceptions": {
-    "description": "microcoachSubMisconceptions — identifies specific error variants within each misconception",
-    "model": "gpt-4o-mini",
-    "countPerMisconception": { "min": 2, "max": 4 },
-    "frequencyThresholds": {
-      "description": "Percent of students showing this misconception who exhibit each error variant",
-      "manyPercent": 60,
-      "somePercent": 30
-    }
-  }
 }

@@ -14,8 +14,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "generate": "npx ts-node src/seed/generate-next-steps.ts",
-    "sync-config": "node scripts/sync-prompt-config.js",
-    "test": "jest"
+    "sync-prompt-config": "node scripts/sync-prompt-config.mjs",
+"test": "jest"
   },
   "files": [
     "lib"

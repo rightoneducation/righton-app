@@ -129,18 +129,31 @@
   overflow: hidden;
 }
 
-.alternative-misconceptions-grid {
-  /* Show recommended next-step cards side-by-side in one row */
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
+.misconceptions-carousel-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-@media (max-width: 768px) {
-  .alternative-misconceptions-grid {
-    grid-template-columns: 1fr;
-  }
+.alternative-misconceptions-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 8px 4px;
+  margin: -8px -4px;
+}
+
+.alternative-misconceptions-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.alternative-misconceptions-grid .alternative-misconception-card {
+  flex: 0 0 360px;
+  min-width: 0;
 }
 
 .alternative-misconception-card {
@@ -151,11 +164,17 @@
   overflow: hidden;
   padding: 16px;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .alternative-misconception-card.selected-group {
   border-color: #1B376F;
   box-shadow: 0 0 0 2px rgba(27, 55, 111, 0.12);
+}
+
+.alternative-misconception-card.core-group {
+  background-color: #F0F4FB;
 }
 
 /* Collapse toggle (top-right chevron) */
@@ -360,6 +379,9 @@
   font-size: 14px;
   font-weight: 700;
   color: #1B376F;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .rns-title-objective {
@@ -565,8 +587,6 @@
   color: #1B376F;
   font-family: 'Poppins', sans-serif;
   margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .rns-selected-pill {
@@ -773,6 +793,8 @@
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
 }
 
 .alternative-actions .reasoning-btn {
@@ -2829,91 +2851,7 @@
   cursor: not-allowed;
 }
 
-/* Sub-misconceptions Section Styles */
-.sub-misconceptions-section {
-  background-color: #FFFFFF;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  padding: 16px;
-  margin-top: 16px;
-}
-
-.sub-misconceptions-header {
-  margin-bottom: 16px;
-}
-
-.sub-misconceptions-title {
-  margin: 0 0 8px 0;
-  font-family: 'Poppins', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: #1B376F;
-}
-
-.sub-misconceptions-description {
-  margin: 0;
-  font-size: 14px;
-  color: #1B376F;
-  line-height: 1.5;
-}
-
-.sub-misconceptions-carousel {
-  overflow-x: auto;
-  padding-bottom: 16px;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f1f5f9;
-}
-
-.sub-misconceptions-carousel::-webkit-scrollbar {
-  height: 8px;
-}
-
-.sub-misconceptions-carousel::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
-}
-
-.sub-misconceptions-carousel::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-
-.sub-misconceptions-carousel::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-.sub-misconceptions-track {
-  display: flex;
-  gap: 16px;
-  padding-bottom: 8px;
-}
-
-.sub-misconception-card {
-  background-color: #FFFFFF;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 0 0 320px;
-  min-width: 320px;
-}
-
-.sub-misconception-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.sub-misconception-label {
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: #1B376F;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+/* Misconception card — frequency pills, core pill, example, carousel */
 
 .core-pill {
   display: inline-flex;
@@ -2932,19 +2870,6 @@
   box-shadow: 0 1px 3px rgba(0, 118, 170, 0.3);
 }
 
-.sub-misconception-name {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: #1B376F;
-}
-
-.sub-misconception-meta {
-  display: flex;
-  gap: 8px;
-}
-
 .many-students-pill, .some-students-pill, .medium-students-pill, .few-students-pill {
   display: inline-flex;
   align-items: center;
@@ -2956,44 +2881,32 @@
   font-family: 'Rubik', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border: 1px solid #e5e7eb;
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: #EDE9FE;
+  color: #5B21B6;
+  border: 1px solid #DDD6FE;
 }
 
-.many-students-pill {
-  background-color: #0076AA;
-  color: #FFFFFF;
-  border-color: #0076AA;
-  box-shadow: 0 1px 3px rgba(0, 118, 170, 0.3);
+.sub-misconception-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
-.some-students-pill {
-  background-color: #6D28D9;
-  color: #FFFFFF;
-  border-color: #6D28D9;
-  box-shadow: 0 1px 3px rgba(109, 40, 217, 0.3);
+.card-pills-row {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.medium-students-pill {
-  background-color: #CC5500;
-  color: #FFFFFF;
-  border-color: #CC5500;
-  box-shadow: 0 1px 3px rgba(204, 85, 0, 0.3);
-}
-
-.few-students-pill {
-  background-color: #6B7280;
-  color: #FFFFFF;
-  border-color: #6B7280;
-  box-shadow: 0 1px 3px rgba(107, 114, 128, 0.3);
-}
-
-.sub-misconception-desc {
-  margin: 0;
-  font-size: 13px;
-  color: #1B376F;
-  line-height: 1.5;
+.card-frequency-row {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  margin-bottom: 12px;
 }
 
 .sub-misconception-example {
@@ -3001,6 +2914,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 12px;
+  margin-top: 8px;
 }
 
 .sub-misconception-example strong {
@@ -3019,6 +2933,7 @@
 }
 
 .incorrect-example {
+  display: block;
   font-size: 13px;
   color: #dc2626;
   font-weight: 600;
@@ -3029,25 +2944,14 @@
 }
 
 .correct-example {
-  font-size: 12px;
+  display: block;
+  font-size: 13px;
   color: #059669;
   font-weight: 600;
   background-color: #ecfdf5;
   border: 1px solid #d1fae5;
   border-radius: 6px;
   padding: 6px 8px;
-}
-
-.correct-answer {
-  font-size: 12px;
-  color: #059669;
-  font-weight: 700;
-  background-color: #ecfdf5;
-  border: 1px solid #d1fae5;
-  border-radius: 6px;
-  padding: 8px;
-  margin-top: 6px;
-  text-align: center;
 }
 
 .view-thinking-btn {
@@ -3067,6 +2971,32 @@
 .view-thinking-btn:hover {
   background-color: rgba(27, 55, 111, 0.08);
   border-color: rgba(27, 55, 111, 0.5);
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.carousel-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background-color: #FFFFFF;
+  color: #1B376F;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.carousel-btn:hover {
+  background-color: #f3f4f6;
+  border-color: #1B376F;
 }
 
 /* CCSS Standards Styling */
@@ -3513,90 +3443,6 @@
   text-transform: uppercase;
 }
 
-/* Responsive Design for Sub-misconceptions */
-@media (max-width: 768px) {
-  .sub-misconceptions-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .sub-misconception-card {
-    padding: 12px;
-  }
-  
-  .sub-misconception-name {
-    font-size: 13px;
-  }
-  
-  .sub-misconception-desc {
-    font-size: 12px;
-  }
-  
-  .incorrect-example, .correct-example, .correct-answer {
-    font-size: 11px;
-    padding: 4px 6px;
-  }
-  
-  .view-thinking-btn {
-    padding: 6px 10px;
-    font-size: 12px;
-  }
-  
-  .carousel-controls {
-    margin-top: 8px;
-  }
-  
-  .carousel-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .sub-misconceptions-section {
-    padding: 12px;
-  }
-  
-  .sub-misconceptions-title {
-    font-size: 14px;
-  }
-  
-  .sub-misconceptions-description {
-    font-size: 12px;
-  }
-  
-  .sub-misconception-card {
-    padding: 10px;
-  }
-  
-  .sub-misconception-name {
-    font-size: 12px;
-  }
-  
-  .sub-misconception-desc {
-    font-size: 11px;
-  }
-  
-  .incorrect-example, .correct-example, .correct-answer {
-    font-size: 10px;
-    padding: 3px 5px;
-  }
-  
-  .view-thinking-btn {
-    padding: 6px 8px;
-    font-size: 11px;
-  }
-  
-  .carousel-controls {
-    margin-top: 6px;
-  }
-  
-  .carousel-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
-  }
-}
 
 /* New CCSS Standards Section Styles - Based on sketch design */
 .ccss-standards-section {

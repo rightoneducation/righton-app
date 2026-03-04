@@ -150,11 +150,6 @@ const GENERATE_NEXT_STEP_OPTION = /* GraphQL */ `
     generateNextStepOption(input: $input)
   }
 `;
-const GENERATE_SUB_MISCONCEPTIONS = /* GraphQL */ `
-  mutation GenerateSubMisconceptions($input: GenerateSubMisconceptionsInput!) {
-    generateSubMisconceptions(input: $input)
-  }
-`;
 const UPDATE_SESSION = /* GraphQL */ `
   mutation UpdateSession($input: UpdateSessionInput!) {
     updateSession(input: $input) {
@@ -173,18 +168,11 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
   }
 `;
 // ── Next step builder ─────────────────────────────────────────────────────────
-function priorityLabel(p) {
-    var _a;
-    return (_a = { '1': 'Critical', '2': 'High', '3': 'Medium', '4': 'Low' }[p]) !== null && _a !== void 0 ? _a : 'Medium';
-}
-function occurrenceLabel(o) {
-    return o === 'recurring' ? 'Recurring' : '1st occurrence';
-}
 function formatLabel(f) {
     var _a;
     return ((_a = { small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' }[f]) !== null && _a !== void 0 ? _a : f);
 }
-function buildNextSteps(misconceptions, activitiesPerGroup, subMisconceptionsPerGroup, ppqQuestions, learningScienceData) {
+function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learningScienceData) {
     var _a, _b, _c;
     const questionErrorRates = (ppqQuestions !== null && ppqQuestions !== void 0 ? ppqQuestions : [])
         .filter((q) => q.questionNumber != null && q.classPercentCorrect != null)
@@ -207,22 +195,22 @@ function buildNextSteps(misconceptions, activitiesPerGroup, subMisconceptionsPer
     return misconceptions.map((m, i) => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         const activityList = ((_a = activitiesPerGroup[i]) !== null && _a !== void 0 ? _a : []).filter(Boolean);
-        const subMisconceptions = (_b = subMisconceptionsPerGroup[i]) !== null && _b !== void 0 ? _b : [];
         const frameworkItem = frameworkItems.find((item) => normalize(item.code) === normalize(m.ccssStandard));
-        const prerequisiteGaps = ((_c = m.prerequisiteGapCodes) === null || _c === void 0 ? void 0 : _c.length)
+        const prerequisiteGaps = ((_b = m.prerequisiteGapCodes) === null || _b === void 0 ? void 0 : _b.length)
             ? m.prerequisiteGapCodes.map((code) => { var _a; return ({ standard: code, description: (_a = standardsDescMap.get(code)) !== null && _a !== void 0 ? _a : '' }); })
-            : ((_d = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.prerequisiteStandards) !== null && _d !== void 0 ? _d : []).map((r) => ({ standard: r.code, description: r.description }));
-        const impactedObjectives = ((_e = m.impactedObjectiveCodes) === null || _e === void 0 ? void 0 : _e.length)
+            : ((_c = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.prerequisiteStandards) !== null && _c !== void 0 ? _c : []).map((r) => ({ standard: r.code, description: r.description }));
+        const impactedObjectives = ((_d = m.impactedObjectiveCodes) === null || _d === void 0 ? void 0 : _d.length)
             ? m.impactedObjectiveCodes.map((code) => { var _a; return ({ standard: code, description: (_a = standardsDescMap.get(code)) !== null && _a !== void 0 ? _a : '' }); })
-            : ((_f = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.futureDependentStandards) !== null && _f !== void 0 ? _f : []).map((r) => ({ standard: r.code, description: r.description }));
+            : ((_e = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.futureDependentStandards) !== null && _e !== void 0 ? _e : []).map((r) => ({ standard: r.code, description: r.description }));
         return {
             id: `nextstep-ai-${i + 1}`,
             title: m.title,
-            priority: priorityLabel(m.priority),
-            studentCount: (_g = m.studentCount) !== null && _g !== void 0 ? _g : 0,
-            studentPercent: Math.round(((_h = m.studentPercent) !== null && _h !== void 0 ? _h : 0) * 100),
-            occurrence: occurrenceLabel(m.occurrence),
+            frequency: m.frequency,
+            isCore: (_f = m.isCore) !== null && _f !== void 0 ? _f : false,
+            occurrence: m.occurrence,
+            example: (_g = m.example) !== null && _g !== void 0 ? _g : null,
             misconceptionSummary: m.description,
+            aiReasoning: (_h = m.aiReasoning) !== null && _h !== void 0 ? _h : null,
             successIndicators: (_j = m.successIndicators) !== null && _j !== void 0 ? _j : [],
             ccssStandards: {
                 targetObjective: { standard: m.ccssStandard, description: m.description },
@@ -230,7 +218,6 @@ function buildNextSteps(misconceptions, activitiesPerGroup, subMisconceptionsPer
                 prerequisiteGaps,
             },
             evidence: (_k = m.evidence) !== null && _k !== void 0 ? _k : null,
-            subMisconceptions,
             questionErrorRates,
             moveOptions: activityList.map((activity, j) => {
                 var _a, _b, _c, _d;
@@ -343,26 +330,10 @@ async function main() {
         console.log(` ✓  ${resultList.length} activities`);
         return resultList;
     }));
-    // 8. Generate sub-misconceptions (one per misconception, in parallel)
-    const subMisconceptionsPerGroup = await Promise.all(misconceptions.map(async (m, i) => {
-        process.stdout.write(`Generating sub-misconceptions [${i + 1}/${misconceptions.length}]: ${m.title}...`);
-        try {
-            const raw = await gql(GENERATE_SUB_MISCONCEPTIONS, {
-                input: { misconception: JSON.stringify(m) },
-            });
-            const result = parseJson(raw.generateSubMisconceptions);
-            console.log(` ✓  ${result.length} sub-misconceptions`);
-            return result;
-        }
-        catch (err) {
-            console.log(` ✗ (${err})`);
-            return [];
-        }
-    }));
-    // 9. Build next steps
-    const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, subMisconceptionsPerGroup, ppq === null || ppq === void 0 ? void 0 : ppq.questions, learningScienceData);
+    // 8. Build next steps
+    const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq === null || ppq === void 0 ? void 0 : ppq.questions, learningScienceData);
     console.log(`\nBuilt ${nextSteps.length} next steps`);
-    // 10. Persist next steps to the session and mark the classroom's active week
+    // 9. Persist next steps to the session and mark the classroom's active week
     process.stdout.write(`Saving next steps to session ${currentStub.id} (week ${currentStub.weekNumber})...`);
     await gql(UPDATE_SESSION, {
         input: {

@@ -36,7 +36,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   }, [existingNextSteps]);
 
   const getPriorityClass = (priority) => {
-    if (priority === 'Critical') return 'priority-critical';
+    if (priority === 'Critical') return 'priority-critical'; // legacy — kept for static seed data
     if (priority === 'High') return 'priority-high';
     if (priority === 'Medium') return 'priority-medium';
     return 'priority-low';
@@ -100,8 +100,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   }, [gapGroups, reasoningGroupId]);
 
   const visibleGapGroups = useMemo(() => {
-    // Layout constraint: show at most 2 recommended next-step components at a time.
-    return (gapGroups || []).slice(0, 2);
+    return (gapGroups || []).slice(0, 4);
   }, [gapGroups]);
 
   const toggleFocusSkillsExpanded = (groupId) => {
@@ -218,61 +217,71 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                     <h4 className="screen-title">What Happened</h4>
                     <p className="screen-subtitle">Data visualization and analysis</p>
                   </div>
-                  
+
                   <div className="screen-content">
-                    <div className="data-visualization">
-                      <div className="chart-container">
-                        <h5 className="chart-title">Students Who Made Distribution Errors</h5>
-                        <div className="chart-placeholder">
-                        <div className="chart-bar" style={{height: '80%'}}></div>
-                        <div className="chart-bar" style={{height: '60%'}}></div>
-                        <div className="chart-bar" style={{height: '90%'}}></div>
-                        <div className="chart-bar" style={{height: '40%'}}></div>
-                        <div className="chart-bar" style={{height: '70%'}}></div>
-                        <div className="chart-bar" style={{height: '85%'}}></div>
+                    {reasoningGroup.questionErrorRates?.length > 0 && (
+                      <div className="data-visualization">
+                        <div className="chart-container">
+                          <h5 className="chart-title">Error Rate by Question</h5>
+                          <div className="chart-placeholder">
+                            {reasoningGroup.questionErrorRates.map((q) => (
+                              <div
+                                key={q.label}
+                                className="chart-bar"
+                                style={{ height: `${Math.max(q.errorRate, 4)}%` }}
+                                title={`${q.label}: ${q.errorRate}%`}
+                              ></div>
+                            ))}
+                          </div>
+                          <div className="chart-labels">
+                            {reasoningGroup.questionErrorRates.map((q) => (
+                              <span key={q.label}>{q.label}</span>
+                            ))}
+                          </div>
+                          <div className="chart-values">
+                            {reasoningGroup.questionErrorRates.map((q) => (
+                              <span key={q.label}>{q.errorRate}%</span>
+                            ))}
+                          </div>
                         </div>
-                        <div className="chart-labels">
-                          <span>Q1</span>
-                          <span>Q2</span>
-                          <span>Q3</span>
-                          <span>Q4</span>
-                          <span>Q5</span>
-                          <span>Q6</span>
-                        </div>
-                        <div className="chart-values">
-                          <span>14</span>
-                          <span>11</span>
-                          <span>16</span>
-                          <span>7</span>
-                          <span>13</span>
-                          <span>15</span>
+
+                        <div className="chart-stats">
+                          <div className="stat-item">
+                            <span className="stat-label">Frequency</span>
+                            <span className="stat-value">
+                              {reasoningGroup.frequency
+                                ? reasoningGroup.frequency.charAt(0).toUpperCase() + reasoningGroup.frequency.slice(1) + ' students'
+                                : '—'}
+                            </span>
+                          </div>
+                          {reasoningGroup.evidence?.source && (
+                            <div className="stat-item">
+                              <span className="stat-label">Questions</span>
+                              <span className="stat-value">{reasoningGroup.evidence.source}</span>
+                            </div>
+                          )}
+                          {(() => {
+                            const rates = reasoningGroup.questionErrorRates;
+                            const max = rates.reduce((a, b) => b.errorRate > a.errorRate ? b : a, rates[0]);
+                            return max ? (
+                              <div className="stat-item">
+                                <span className="stat-label">Highest Error</span>
+                                <span className="stat-value">{max.label} ({max.errorRate}%)</span>
+                              </div>
+                            ) : null;
+                          })()}
                         </div>
                       </div>
-                      
-                      <div className="chart-stats">
-                        <div className="stat-item">
-                          <span className="stat-label">Error Rate</span>
-                          <span className="stat-value">72%</span>
-                        </div>
-                        <div className="stat-item">
-                          <span className="stat-label">Students Affected</span>
-                          <span className="stat-value">18</span>
-                        </div>
-                        <div className="stat-item">
-                          <span className="stat-label">Most Problematic</span>
-                          <span className="stat-value">Q6 (85%)</span>
-                        </div>
-                      </div>
-                    </div>
+                    )}
 
                     <div className="data-insights">
                       <h5>Key Insights</h5>
-                      <ul>
-                        <li>72% of students made the same distribution error across 6 questions</li>
-                        <li>Q6 had the highest error rate at 85% (15 out of 18 students)</li>
-                        <li>Pattern consistent across multiple problem types with similar structure</li>
-                        <li>Indicates fundamental misunderstanding of negative distribution</li>
-                      </ul>
+                      {reasoningGroup.aiReasoning
+                        ? <p>{reasoningGroup.aiReasoning}</p>
+                        : reasoningGroup.evidence?.mostCommonError
+                          ? <p>{reasoningGroup.evidence.mostCommonError}</p>
+                          : <p>{reasoningGroup.misconceptionSummary}</p>
+                      }
                     </div>
                   </div>
                 </div>
@@ -284,105 +293,48 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                     <h4 className="screen-title">Where & How</h4>
                     <p className="screen-subtitle">Work samples and breakdown</p>
                   </div>
-                  
+
                   <div className="screen-content">
-                    <div className="problem-intro">
-                      <div className="problem-eyebrow">Question 6</div>
-                      <h5 className="problem-label">3(2x - 4) = 18</h5>
-                      <p className="problem-context">This problem was used to assess students' understanding of distributing negative signs in multi-step equations.</p>
-                    </div>
+                    {reasoningGroup.example && (
+                      <div className="problem-intro">
+                        <div className="problem-eyebrow">Example Error</div>
+                        <h5 className="problem-label">{reasoningGroup.example.incorrect}</h5>
+                        <p className="problem-context">Correct form: {reasoningGroup.example.correct}</p>
+                      </div>
+                    )}
 
-                    <div className="work-samples">
-                      <div className="sample-grid">
-                        <div className="sample-item incorrect">
-                          <h6>Student A</h6>
-                          <div className="sample-content">
-                            <p>3(2x - 4) = 18</p>
-                            <p>6x - 4 = 18</p>
-                            <p>6x = 22</p>
-                            <p>x = 22/6</p>
-                          </div>
-                          <div className="error-highlight">
-                            <span className="error-label">Error:</span>
-                            <span className="error-text">Forgot to distribute to -4</span>
-                          </div>
-                        </div>
-                        
-                        <div className="sample-item incorrect">
-                          <h6>Student B</h6>
-                          <div className="sample-content">
-                            <p>3(2x - 4) = 18</p>
-                            <p>6x - 4 = 18</p>
-                            <p>6x = 22</p>
-                            <p>x = 11/3</p>
-                          </div>
-                          <div className="error-highlight">
-                            <span className="error-label">Error:</span>
-                            <span className="error-text">Missed distribution, simplified incorrectly</span>
-                          </div>
-                        </div>
-
-                        <div className="sample-item incorrect">
-                          <h6>Student C</h6>
-                          <div className="sample-content">
-                            <p>3(2x - 4) = 18</p>
-                            <p>6x - 4 = 18</p>
-                            <p>6x = 14</p>
-                            <p>x = 7/3</p>
-                          </div>
-                          <div className="error-highlight">
-                            <span className="error-label">Error:</span>
-                            <span className="error-text">Distributed incorrectly, subtracted instead of added</span>
-                          </div>
-                        </div>
-
-                        <div className="sample-item incorrect">
-                          <h6>Student D</h6>
-                          <div className="sample-content">
-                            <p>3(2x - 4) = 18</p>
-                            <p>6x - 4 = 18</p>
-                            <p>6x = 22</p>
-                            <p>x = 3.67</p>
-                          </div>
-                          <div className="error-highlight">
-                            <span className="error-label">Error:</span>
-                            <span className="error-text">Missed distribution, decimal conversion error</span>
-                          </div>
+                    {reasoningGroup.evidence?.sampleStudentWork?.length > 0 && (
+                      <div className="work-samples">
+                        <div className="sample-grid">
+                          {reasoningGroup.evidence.sampleStudentWork.map((sample, idx) => (
+                            <div key={idx} className="sample-item incorrect">
+                              <h6>Student {String.fromCharCode(65 + idx)}</h6>
+                              <div className="sample-content">
+                                <p>{sample}</p>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="breakdown-analysis">
-                      <h5>Where Students Got Stuck</h5>
-                      <div className="breakdown-steps">
-                        <div className="breakdown-step">
-                          <span className="step-number">1</span>
-                          <span className="step-description">Identified the distribution needed</span>
-                        </div>
-                        <div className="breakdown-step">
-                          <span className="step-number">2</span>
-                          <span className="step-description">Multiplied coefficient by first term (2x)</span>
-                        </div>
-                        <div className="breakdown-step error-step">
-                          <span className="step-number">3</span>
-                          <span className="step-description">Forgot to distribute to second term (-4) - This is where 72% of students made their critical error</span>
-                        </div>
-                        <div className="breakdown-step">
-                          <span className="step-number">4</span>
-                          <span className="step-description">Continued solving with incorrect expression</span>
-                        </div>
+                    {reasoningGroup.evidence?.aiThinkingPattern && (
+                      <div className="breakdown-analysis">
+                        <h5>Underlying Thinking Pattern</h5>
+                        <p className="thinking-pattern-text">{reasoningGroup.evidence.aiThinkingPattern}</p>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="error-summary">
-                      <h5>Common Error Patterns</h5>
-                      <ul>
-                        <li><strong>Partial Distribution:</strong> Students multiplied 3 by 2x but forgot to multiply 3 by -4</li>
-                        <li><strong>Sign Confusion:</strong> Students treated the negative sign as attached only to the 4, not as part of the term being distributed</li>
-                        <li><strong>Procedural Shortcut:</strong> Students applied a "multiply first, ignore negative" pattern that works in some contexts but not here</li>
-                        <li><strong>Arithmetic Errors:</strong> Even when distribution was attempted, many made calculation mistakes with negative numbers</li>
-                      </ul>
-                    </div>
+                    {reasoningGroup.evidence?.mostCommonError && (
+                      <div className="error-summary">
+                        <h5>Most Common Error</h5>
+                        <p>{reasoningGroup.evidence.mostCommonError}</p>
+                      </div>
+                    )}
+
+                    {!reasoningGroup.example && !reasoningGroup.evidence && (
+                      <p className="no-data-text">No detailed work samples available for this misconception.</p>
+                    )}
                   </div>
                 </div>
               )}
@@ -393,42 +345,56 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                     <h4 className="screen-title">Why It Matters</h4>
                     <p className="screen-subtitle">Impact and consequences</p>
                   </div>
-                  
-                  <div className="screen-content">
-                    <div className="impact-analysis-full-width">
-                      <div className="impact-card">
-                        <h5>Long-term Consequences</h5>
-                        <ul>
-                          <li><strong>Algebraic Foundation Weakness:</strong> Students will struggle with factoring, polynomial operations, and simplifying complex expressions</li>
-                          <li><strong>Function Transformation Difficulties:</strong> Understanding how functions change when multiplied by constants or shifted becomes nearly impossible</li>
-                          <li><strong>Calculus Readiness Issues:</strong> Derivatives and integrals of polynomial functions require solid distribution skills</li>
-                          <li><strong>Problem-Solving Confidence Erosion:</strong> Repeated failures with basic algebraic manipulation discourages students from pursuing STEM fields</li>
-                          <li><strong>Test Performance Impact:</strong> Standardized tests heavily feature distribution problems, affecting college admissions and placement</li>
-                        </ul>
-                      </div>
-                    </div>
 
-                    <div className="learning-path">
-                      <h5>Learning Path Forward</h5>
-                      <div className="path-steps">
-                        <div className="path-step">
-                          <span className="path-number">1</span>
-                          <span className="path-description">Master distribution with negatives</span>
-                        </div>
-                        <div className="path-step">
-                          <span className="path-number">2</span>
-                          <span className="path-description">Apply to multi-step equations</span>
-                        </div>
-                        <div className="path-step">
-                          <span className="path-number">3</span>
-                          <span className="path-description">Extend to polynomial operations</span>
-                        </div>
-                        <div className="path-step">
-                          <span className="path-number">4</span>
-                          <span className="path-description">Build foundation for advanced math</span>
+                  <div className="screen-content">
+                    {reasoningGroup.ccssStandards?.impactedObjectives?.length > 0 && (
+                      <div className="impact-analysis-full-width">
+                        <div className="impact-card">
+                          <h5>Future Skills at Risk</h5>
+                          <ul>
+                            {reasoningGroup.ccssStandards.impactedObjectives.map((obj, idx) => (
+                              <li key={idx}>
+                                <strong>{obj.standard}:</strong> {obj.description}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
-                    </div>
+                    )}
+
+                    {reasoningGroup.ccssStandards?.prerequisiteGaps?.length > 0 && (
+                      <div className="impact-analysis-full-width">
+                        <div className="impact-card">
+                          <h5>Prerequisite Gaps</h5>
+                          <ul>
+                            {reasoningGroup.ccssStandards.prerequisiteGaps.map((gap, idx) => (
+                              <li key={idx}>
+                                <strong>{gap.standard}:</strong> {gap.description}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+
+                    {reasoningGroup.successIndicators?.length > 0 && (
+                      <div className="learning-path">
+                        <h5>Signs of Mastery</h5>
+                        <div className="path-steps">
+                          {reasoningGroup.successIndicators.map((indicator, idx) => (
+                            <div key={idx} className="path-step">
+                              <span className="path-number">{idx + 1}</span>
+                              <span className="path-description">{indicator}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {!reasoningGroup.ccssStandards?.impactedObjectives?.length &&
+                     !reasoningGroup.successIndicators?.length && (
+                      <p className="no-data-text">No impact data available for this misconception.</p>
+                    )}
                   </div>
                 </div>
               )}
@@ -495,198 +461,157 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
       <div className="rns-groups">
         {/* All recommendations are rendered with the same (smaller) card size/format. */}
         {gapGroups.length > 0 && (
-          <div className="alternative-misconceptions-grid">
-            {visibleGapGroups.map((group) => {
-              const isFocusSkillsExpanded = !!focusSkillsExpandedByGroupId?.[group.id];
-              const isSelectedGroup = selectedRecommendationGroup?.id === group.id;
+          <div className="misconceptions-carousel-wrapper">
+            <div className="alternative-misconceptions-grid">
+              {visibleGapGroups.map((group) => {
+                const isFocusSkillsExpanded = !!focusSkillsExpandedByGroupId?.[group.id];
+                const isSelectedGroup = selectedRecommendationGroup?.id === group.id;
 
-              return (
-                <div 
-                  key={group.id} 
-                  className={`alternative-misconception-card clickable-card ${isSelectedGroup ? 'selected-group' : ''}`}
-                  onClick={() => setSelectedRecommendationGroupId(group.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelectedRecommendationGroupId(group.id);
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Select ${group.title} to view next steps`}
-                >
-                  <div className="alternative-top">
-                    <div className="rns-top-row">
-                      <div className="rns-top-left">
-                        <div className="alternative-title-row">
-                          <h4 className="alternative-title">{group.title}</h4>
-                        </div>
+                return (
+                  <div
+                    key={group.id}
+                    className={`alternative-misconception-card clickable-card ${isSelectedGroup ? 'selected-group' : ''} ${group.isCore ? 'core-group' : ''}`}
+                    onClick={() => setSelectedRecommendationGroupId(group.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedRecommendationGroupId(group.id);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Select ${group.title} to view next steps`}
+                  >
+                    <div className="alternative-top">
+                      <div className="card-pills-row">
+                        {group.isCore && <span className="core-pill">CORE</span>}
+                        {isSelectedGroup && <span className="rns-selected-pill">Selected</span>}
                       </div>
 
-                      <div className="rns-top-right">
-                        <div className="rns-top-right-controls">
-                          <span className={`students-pill ${getPriorityClass(group.priority)}`}>
-                            {group.studentCount} students ({group.studentPercent}%)
-                          </span>
-                          {isSelectedGroup && <span className="rns-selected-pill">Selected</span>}
-                        </div>
+                      <h4 className="alternative-title">{group.title}</h4>
 
-                        {/* Occurrence pills removed (per updated UI spec). */}
+                      <div className="card-frequency-row">
+                        {group.frequency && (() => {
+                          const freq = group.frequency === 'medium' ? 'some' : group.frequency;
+                          return (
+                            <span className={`${freq}-students-pill`}>
+                              {freq.charAt(0).toUpperCase() + freq.slice(1)} students
+                            </span>
+                          );
+                        })()}
                       </div>
+
+                      {group.misconceptionSummary && (
+                        <div className="rns-misconception-text">{group.misconceptionSummary}</div>
+                      )}
+
+                      {group.example && (
+                        <div className="sub-misconception-example">
+                          <strong>Example:</strong>
+                          <div className="example-content">
+                            <span className="incorrect-example">{group.example.incorrect}</span>
+                            <span className="correct-example">{group.example.correct}</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    {group.misconceptionSummary && (
-                      <div className="rns-misconception-text">{group.misconceptionSummary}</div>
+                    {/* CCSS Standards Section */}
+                    {group.ccssStandards && isFocusSkillsExpanded && (
+                      <div className="alternative-ccss-section">
+                        <div className="alternative-ccss-grid">
+                          {group.ccssStandards.prerequisiteGaps && group.ccssStandards.prerequisiteGaps.length > 0 && (
+                            <div className="alternative-ccss-card">
+                              <h4 className="alternative-ccss-header">Prerequisite Gaps</h4>
+                              <div className="alternative-ccss-gap-list">
+                                {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
+                                  <div key={idx} className="alternative-ccss-gap-item">
+                                    <span
+                                      className="alternative-ccss-tag prerequisite-gap clickable-standard"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCcssModalGroup(group);
+                                        setSelectedCcssStandard(gap);
+                                        setCcssModalOpen(true);
+                                      }}
+                                    >
+                                      {gap.standard}
+                                    </span>
+                                    <span className="alternative-ccss-description">
+                                      {gap.description}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {group.ccssStandards.impactedObjectives && group.ccssStandards.impactedObjectives.length > 0 && (
+                            <div className="alternative-ccss-card">
+                              <h4 className="alternative-ccss-header">Upcoming Skills</h4>
+                              <div className="alternative-ccss-gap-list">
+                                {group.ccssStandards.impactedObjectives.map((obj, idx) => (
+                                  <div key={idx} className="alternative-ccss-gap-item">
+                                    <span
+                                      className="alternative-ccss-tag impacted-objective clickable-standard"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCcssModalGroup(group);
+                                        setSelectedCcssStandard(obj);
+                                        setCcssModalOpen(true);
+                                      }}
+                                    >
+                                      {obj.standard}
+                                    </span>
+                                    <span className="alternative-ccss-description">
+                                      {obj.description}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     )}
 
-                  </div>
-
-                  {/* CCSS Standards Section - Change 1: Add to alternative cards */}
-                  {group.ccssStandards && isFocusSkillsExpanded && (
-                    <div className="alternative-ccss-section">
-                      <div className="alternative-ccss-grid">
-                        {group.ccssStandards.prerequisiteGaps && group.ccssStandards.prerequisiteGaps.length > 0 && (
-                          <div className="alternative-ccss-card">
-                            <h4 className="alternative-ccss-header">Prerequisite Gaps</h4>
-                            <div className="alternative-ccss-gap-list">
-                              {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
-                                <div key={idx} className="alternative-ccss-gap-item">
-                                  <span 
-                                    className="alternative-ccss-tag prerequisite-gap clickable-standard"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setCcssModalGroup(group);
-                                      setSelectedCcssStandard(gap);
-                                      setCcssModalOpen(true);
-                                    }}
-                                  >
-                                    {gap.standard}
-                                  </span>
-                                  <span className="alternative-ccss-description">
-                                    {gap.description}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {group.ccssStandards.impactedObjectives && group.ccssStandards.impactedObjectives.length > 0 && (
-                          <div className="alternative-ccss-card">
-                            <h4 className="alternative-ccss-header">Upcoming Skills</h4>
-                            <div className="alternative-ccss-gap-list">
-                              {group.ccssStandards.impactedObjectives.map((obj, idx) => (
-                                <div key={idx} className="alternative-ccss-gap-item">
-                                  <span 
-                                    className="alternative-ccss-tag impacted-objective clickable-standard"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setCcssModalGroup(group);
-                                      setSelectedCcssStandard(obj);
-                                      setCcssModalOpen(true);
-                                    }}
-                                  >
-                                    {obj.standard}
-                                  </span>
-                                  <span className="alternative-ccss-description">
-                                    {obj.description}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                    <div className="alternative-actions">
+                      <button
+                        className="view-thinking-btn"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEvidenceScreen(1);
+                          setReasoningGroupId(group.id);
+                        }}
+                      >
+                        See Student Thinking
+                      </button>
                     </div>
-                  )}
-
-                  <div className="alternative-actions">
-                    <button
-                      className="reasoning-btn"
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEvidenceScreen(1);
-                        setReasoningGroupId(group.id);
-                      }}
-                    >
-                      View Reasoning
-                    </button>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-
-      {console.log('[RNS] selectedGroup subMisconceptions:', selectedRecommendationGroup?.subMisconceptions)}
-      {selectedRecommendationGroup?.subMisconceptions?.length > 0 && (
-        <div className="sub-misconceptions-section">
-          <div className="sub-misconceptions-header">
-            <h4 className="sub-misconceptions-title">{selectedRecommendationGroup.title}</h4>
-            <p className="sub-misconceptions-description">{selectedRecommendationGroup.misconceptionSummary}</p>
-          </div>
-          <div className="sub-misconceptions-carousel">
-            <div className="sub-misconceptions-track">
-              {[...selectedRecommendationGroup.subMisconceptions]
-                .sort((a, b) => (b.isCore ? 1 : 0) - (a.isCore ? 1 : 0))
-                .map((sub, i) => (
-                <div key={i} className="sub-misconception-card">
-                  <div className="sub-misconception-header">
-                    {sub.isCore && <span className="core-pill">[CORE]</span>}
-                  </div>
-                  <h5 className="sub-misconception-name">{sub.name}</h5>
-                  <div className="sub-misconception-meta">
-                    <span className={`${sub.frequency}-students-pill`}>
-                      {sub.frequency.charAt(0).toUpperCase() + sub.frequency.slice(1)} students
-                    </span>
-                  </div>
-                  <p className="sub-misconception-desc">{sub.description}</p>
-                  {sub.example && (
-                    <div className="sub-misconception-example">
-                      <strong>Example:</strong>
-                      <div className="example-content">
-                        <span className="incorrect-example">{sub.example.incorrect}</span>
-                        <span className="correct-example">(correct: {sub.example.correct})</span>
-                      </div>
-                    </div>
-                  )}
-                  <button
-                    className="view-thinking-btn"
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEvidenceScreen(1);
-                      setReasoningGroupId(selectedRecommendationGroup.id);
-                    }}
-                  >
-                    See Student Thinking
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
             <div className="carousel-controls">
               <button
                 className="carousel-btn carousel-btn-prev"
                 onClick={() => {
-                  const track = document.querySelector('.sub-misconceptions-track');
-                  if (track) track.scrollBy({ left: -340, behavior: 'smooth' });
+                  const grid = document.querySelector('.alternative-misconceptions-grid');
+                  if (grid) grid.scrollBy({ left: -320, behavior: 'smooth' });
                 }}
-                aria-label="Previous sub-misconception"
+                aria-label="Previous misconception"
               >‹</button>
               <button
                 className="carousel-btn carousel-btn-next"
                 onClick={() => {
-                  const track = document.querySelector('.sub-misconceptions-track');
-                  if (track) track.scrollBy({ left: 340, behavior: 'smooth' });
+                  const grid = document.querySelector('.alternative-misconceptions-grid');
+                  if (grid) grid.scrollBy({ left: 320, behavior: 'smooth' });
                 }}
-                aria-label="Next sub-misconception"
+                aria-label="Next misconception"
               >›</button>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       {selectedRecommendationGroup && (
         <div className="rns-next-step-section">
