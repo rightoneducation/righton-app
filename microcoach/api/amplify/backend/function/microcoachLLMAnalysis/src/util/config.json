@@ -10,13 +10,13 @@
       "min": 2,
       "max": 4
     },
-    "severityThresholds": {
-      "description": "Percent of students affected to classify a misconception's severity",
-      "highPercent": 40,
-      "mediumPercent": 20
+    "frequencyThresholds": {
+      "description": "Percent of class affected to classify a misconception's frequency label (3 tiers: many/some/few)",
+      "manyPercent": 60,
+      "somePercent": 20
     },
     "misconceptionScoring": {
-      "description": "Weights for the composite score that determines which misconception is core (priority 1). Weights should sum to 1.0.",
+      "description": "Weights for the composite score that determines which misconception is isCore. Weights should sum to 1.0.",
       "prevalenceWeight": 0.4,
       "conceptualSeverityWeight": 0.3,
       "prerequisiteLeverageWeight": 0.15,
@@ -26,7 +26,7 @@
       }
     },
     "coreSelection": {
-      "description": "Rules for designating priority 1 (core) misconception and filtering secondary misconceptions",
+      "description": "Rules for designating the isCore misconception and filtering secondary misconceptions",
       "minimumPrevalencePercent": 20,
       "alternativeQualifier": {
         "description": "A misconception below minimum prevalence can still be priority 1 if BOTH conditions are met",

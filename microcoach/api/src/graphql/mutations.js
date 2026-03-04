@@ -6,11 +6,6 @@ export const getLearningScience = /* GraphQL */ `
     getLearningScience(input: $input)
   }
 `;
-export const getAnalytics = /* GraphQL */ `
-  mutation GetAnalytics($input: GetAnalyticsInput!) {
-    getAnalytics(input: $input)
-  }
-`;
 export const getAnalysis = /* GraphQL */ `
   mutation GetAnalysis($input: GetAnalysisInput!) {
     getAnalysis(input: $input)

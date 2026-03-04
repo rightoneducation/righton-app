@@ -13,7 +13,6 @@ import {
 } from "./graphql/queries";
 import {
   getLearningScience,
-  getAnalytics,
   getAnalysis,
   generateNextStep,
   updateClassroom,
@@ -155,21 +154,7 @@ export class APIClient {
     return result.data?.generateNextStep;
   }
 
-  async getAnalytics(classroomData: any, learningScienceData: any) {
-    const analytics = await this.callGraphQL<any>(getAnalytics, {
-      input: {
-        classroomData:
-          typeof classroomData === 'string' ? classroomData : JSON.stringify(classroomData),
-        learningScienceData:
-          typeof learningScienceData === 'string'
-            ? learningScienceData
-            : JSON.stringify(learningScienceData),
-      },
-    });
-    return analytics.data?.getAnalytics;
-  }
-
-  async updateClassroom(classroomData: any, analytics: string) {
+async updateClassroom(classroomData: any, analytics: string) {
     const input: { id: string; analytics: string; userName?: string } = {
       id: classroomData.id,
       analytics,

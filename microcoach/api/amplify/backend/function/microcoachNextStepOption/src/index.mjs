@@ -5,22 +5,29 @@ import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
 const nso = config?.nextStepOption ?? {};
-const MODEL              = nso.model ?? 'gpt-4o';
-const MAX_DURATION       = nso.maxDurationMinutes ?? 30;
-const DEFAULT_DURATION   = nso.targetDurationMinutes ?? 30;
-const DISALLOWED_METHODS = nso.disallowedTeachingMethods ?? [];
-const ACTIVITY_STEPS_MIN = nso.activitySteps?.min ?? 4;
-const ACTIVITY_STEPS_MAX = nso.activitySteps?.max ?? 6;
-const SETUP_STEPS_MIN    = nso.setupSteps?.min ?? 2;
-const SETUP_STEPS_MAX    = nso.setupSteps?.max ?? 3;
-const DISCUSSION_Q_MIN   = nso.discussionQuestions?.min ?? 2;
-const DISCUSSION_Q_MAX   = nso.discussionQuestions?.max ?? 3;
-const GROUPS_MIN         = nso.studentGroups?.min ?? 2;
-const GROUPS_MAX         = nso.studentGroups?.max ?? 3;
+const MODEL                  = nso.model ?? 'gpt-4o';
+const MAX_DURATION            = nso.maxDurationMinutes ?? 30;
+const DEFAULT_DURATION        = nso.targetDurationMinutes ?? 30;
+const DISALLOWED_METHODS      = nso.disallowedTeachingMethods ?? [];
+const ACTIVITY_STEPS_MIN      = nso.activitySteps?.min ?? 4;
+const ACTIVITY_STEPS_MAX      = nso.activitySteps?.max ?? 6;
+const SETUP_STEPS_MIN         = nso.setupSteps?.min ?? 2;
+const SETUP_STEPS_MAX         = nso.setupSteps?.max ?? 3;
+const DISCUSSION_Q_MIN        = nso.discussionQuestions?.min ?? 2;
+const DISCUSSION_Q_MAX        = nso.discussionQuestions?.max ?? 3;
+const GROUPS_MIN              = nso.studentGroups?.min ?? 2;
+const GROUPS_MAX              = nso.studentGroups?.max ?? 3;
+const STRATEGY_TAGS           = nso.strategyTags ?? [];
+const ALLOWED_DURATION_BUCKETS = nso.allowedDurationBuckets ?? [];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 // Generates ONE next step activity option for a single misconception + format.
 // Called once per format per misconception in parallel by the seed script.
+
+// Build enum dynamically from config; fall back to string if list is empty
+const strategyTagSchema = STRATEGY_TAGS.length >= 2
+  ? z.enum(STRATEGY_TAGS.map(t => t.name))
+  : z.string();
 
 const Overview = z.object({
   whatStudentsDo: z.string().describe('What the student does during this activity'),
@@ -62,10 +69,24 @@ const NextStepActivity = z.object({
   status: z.literal('GENERATED'),
   title: z.string().describe('Short, action-oriented activity title'),
   summary: z.string().describe('1-2 sentence description of the activity'),
-  targets: z.string().describe('The specific skill or concept this activity targets (1 sentence)'),
-  instructionalMove: z.string().describe('The concrete teacher action — what the teacher does, says, or demonstrates to address the misconception (2-3 sentences)'),
-  strategyTag: z.string().describe('A short 2-4 word label for the instructional strategy (e.g. "Make Structure Visible", "Error Analysis", "CRA Sequence")'),
-  durationMinutes: z.number().int().max(MAX_DURATION).describe('Estimated time in minutes; must not exceed the configured maximum'),
+  targets: z.string().describe(
+    'The specific skill this activity targets, expressed in plain skill language ' +
+    '(e.g. "Distributing multiplication across addition/subtraction", ' +
+    '"Applying integer sign rules in algebraic expressions"). Not ontology IDs.'
+  ),
+  instructionalMove: z.string().describe(
+    'What the teacher concretely does to address the misconception. ' +
+    'Begin with a verb (Model, Facilitate, Guide, Compare, Have students…). ' +
+    '2–4 sentences max. Executable without additional prep documents. ' +
+    'Must explicitly reference the misconception error pattern.'
+  ),
+  strategyTag: strategyTagSchema.describe(
+    `Exactly one of the allowed strategy tags: ${STRATEGY_TAGS.map(t => t.name).join(', ')}`
+  ),
+  durationMinutes: z.number().int().max(MAX_DURATION).describe(
+    `Duration in minutes. Choose a value within one of these allowed buckets: ` +
+    ALLOWED_DURATION_BUCKETS.map(b => b.label).join(', ')
+  ),
   format: z.enum(['small_group', 'whole_class', 'individual']),
   aiReasoning: z.string().describe('Why this specific activity design targets this specific misconception'),
   aiGenerated: z.literal(true),
@@ -110,6 +131,7 @@ export const handler = async (event) => {
   const prerequisiteStandards = targetStandard?.prerequisiteStandards ?? [];
   const futureStandards       = targetStandard?.futureDependentStandards ?? [];
   const standardDescription   = targetStandard?.description ?? misconception.description ?? '';
+  const lvnFactors            = targetStandard?.lvnFactors ?? [];
 
   // ── Format knowledge graph section ────────────────────────────────────────
   const knowledgeGraphSection = `
@@ -126,6 +148,18 @@ ${futureStandards.length > 0 ? `**At-Risk Standards** (what students will strugg
 ${futureStandards.map((s) => `  - ${s.code}: ${s.description}`).join('\n')}
 Framing the importance of this fix in terms of these downstream skills can motivate students.` : ''}
 `.trim();
+
+  // ── Format LVN learning science section ───────────────────────────────────
+  const lvnSection = lvnFactors.length > 0 ? `
+## LVN Learning Science Factors
+
+The following research-backed factors are linked to ${misconception.ccssStandard}. Use them to guide your strategy selection.
+
+${lvnFactors.map(f => `- **${f.name}** (${f.category}): ${f.description}`).join('\n')}
+
+Strategy selection guidance (choose the strategy tag that best fits the factors above):
+${STRATEGY_TAGS.map(t => `- ${t.whenToUse} → **"${t.name}"**`).join('\n')}
+`.trim() : '';
 
   // ── Format few-shot examples ───────────────────────────────────────────────
   const formatExample = (item, index) => {
@@ -173,13 +207,14 @@ ${formatted.join('\n\n')}
 You are an expert K-12 math instructional coach designing a targeted intervention activity.
 ${examplesSection}
 ${knowledgeGraphSection}
+${lvnSection ? lvnSection + '\n' : ''}
 
 ## Misconception to Address
 
 **Title**: ${misconception.title}
 **Cognitive Error**: ${misconception.description}
-**Priority**: ${misconception.priority}
-**Student Impact**: ${misconception.studentCount ?? '?'} students (${Math.round((misconception.studentPercent ?? 0) * 100)}%)
+${misconception.isCore ? '**[Core misconception]**' : ''}
+**Frequency**: ${misconception.frequency ?? 'unknown'} students affected
 ${misconception.evidence?.mostCommonError ? `**Most Common Error**: ${misconception.evidence.mostCommonError}` : ''}
 ${misconception.evidence?.aiThinkingPattern ? `**Student Thinking Pattern**: ${misconception.evidence.aiThinkingPattern}` : ''}
 ${misconception.successIndicators?.length ? `**Success Indicators** (what mastery looks like):\n${misconception.successIndicators.map((s) => `  - ${s}`).join('\n')}` : ''}
@@ -203,9 +238,10 @@ ${DISALLOWED_METHODS.length ? `- NOT use these teaching methods: ${DISALLOWED_ME
 Requirements for each field:
 - **title**: Short, action-oriented (e.g. "Keep-Change-Flip Error Analysis")
 - **summary**: 1-2 sentences; what the activity is and why it targets this error
-- **targets**: The specific skill this activity builds (1 sentence grounded in the standard and knowledge graph)
-- **instructionalMove**: What the teacher concretely does, says, or demonstrates to surface and resolve the error (2-3 sentences)
-- **strategyTag**: 2-4 word label for the pedagogical approach (e.g. "Make Structure Visible", "Error Analysis", "CRA Sequence", "Productive Struggle")
+- **targets**: The specific skill this activity builds, in plain skill language (not ontology IDs)
+- **instructionalMove**: What the teacher concretely does to address the misconception — begin with a verb, 2–4 sentences, must reference the error pattern
+- **strategyTag**: Must be exactly one of: ${STRATEGY_TAGS.map(t => `"${t.name}"`).join(', ')}${lvnFactors.length ? '. Use the LVN factors above to select the best fit.' : ''}
+- **durationMinutes**: Choose a value within one of these buckets: ${ALLOWED_DURATION_BUCKETS.map(b => b.label).join(', ')}
 - **aiReasoning**: Explain specifically WHY the activity mechanics address this cognitive error
 - **tabs.overview**: what students do, what the teacher facilitates, why it matters for THIS misconception
 - **tabs.activitySteps**: setup (${SETUP_STEPS_MIN}-${SETUP_STEPS_MAX} steps), concrete math problem, ${ACTIVITY_STEPS_MIN}-${ACTIVITY_STEPS_MAX} core activity steps, ${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX} discussion questions that surface and resolve the error

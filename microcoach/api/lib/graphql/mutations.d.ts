@@ -1,5 +1,4 @@
 export const getLearningScience: "\n  mutation GetLearningScience($input: GetLearningScienceInput!) {\n    getLearningScience(input: $input)\n  }\n";
-export const getAnalytics: "\n  mutation GetAnalytics($input: GetAnalyticsInput!) {\n    getAnalytics(input: $input)\n  }\n";
 export const getAnalysis: "\n  mutation GetAnalysis($input: GetAnalysisInput!) {\n    getAnalysis(input: $input)\n  }\n";
 export const generateNextStep: "\n  mutation GenerateNextStep($input: GenerateNextStepInput!) {\n    generateNextStep(input: $input)\n  }\n";
 export const generateNextStepOption: "\n  mutation GenerateNextStepOption($input: GenerateNextStepOptionInput!) {\n    generateNextStepOption(input: $input)\n  }\n";

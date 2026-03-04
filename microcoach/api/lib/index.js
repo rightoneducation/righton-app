@@ -124,18 +124,6 @@ class APIClient {
         });
         return (_a = result.data) === null || _a === void 0 ? void 0 : _a.generateNextStep;
     }
-    async getAnalytics(classroomData, learningScienceData) {
-        var _a;
-        const analytics = await this.callGraphQL(mutations_1.getAnalytics, {
-            input: {
-                classroomData: typeof classroomData === 'string' ? classroomData : JSON.stringify(classroomData),
-                learningScienceData: typeof learningScienceData === 'string'
-                    ? learningScienceData
-                    : JSON.stringify(learningScienceData),
-            },
-        });
-        return (_a = analytics.data) === null || _a === void 0 ? void 0 : _a.getAnalytics;
-    }
     async updateClassroom(classroomData, analytics) {
         var _a;
         const input = {

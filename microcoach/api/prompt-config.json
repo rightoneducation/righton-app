@@ -48,7 +48,23 @@
     "activitySteps": { "min": 4, "max": 6 },
     "setupSteps": { "min": 2, "max": 3 },
     "discussionQuestions": { "min": 2, "max": 3 },
-    "studentGroups": { "min": 2, "max": 3 }
-  },
+    "studentGroups": { "min": 2, "max": 3 },
+    "allowedDurationBuckets": [
+      { "label": "10–15 min", "min": 10, "max": 15 },
+      { "label": "15–20 min", "min": 15, "max": 20 },
+      { "label": "20–25 min", "min": 20, "max": 25 },
+      { "label": "25–30 min", "min": 25, "max": 30 }
+    ],
+    "strategyTags": [
+      { "name": "Make Structure Visible",        "whenToUse": "Structural conceptual misunderstanding — expose the underlying math structure explicitly" },
+      { "name": "Guided Error Analysis",         "whenToUse": "Rule confusion — examine and correct a worked example containing the target error" },
+      { "name": "Contrast Correct vs Incorrect", "whenToUse": "Overgeneralization — compare a correct and incorrect example side-by-side" },
+      { "name": "Use Concrete Representation",   "whenToUse": "Conceptual gap — use manipulatives or visual models to ground abstract reasoning" },
+      { "name": "Targeted Practice",             "whenToUse": "Partial procedural fluency — focused repetition on the specific error pattern" },
+      { "name": "Peer Explanation",              "whenToUse": "Solidifying understanding — students articulate reasoning to each other" },
+      { "name": "Whole-Class Reset",             "whenToUse": "Whole-class misunderstanding — reteach from a different angle for the full class" },
+      { "name": "Small-Group Reteach",           "whenToUse": "Subset misconception — targeted small-group intervention" }
+    ]
+  }
 
 }

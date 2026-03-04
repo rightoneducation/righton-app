@@ -272,11 +272,6 @@ input GetLearningScienceInput {
   ccss: String!
 }
 
-input GetAnalyticsInput {
-  classroomData: AWSJSON!
-  learningScienceData: AWSJSON!
-}
-
 input GetAnalysisInput {
   classroomData: AWSJSON!
   learningScienceData: AWSJSON!
@@ -300,8 +295,6 @@ input GenerateNextStepOptionInput {
 type Mutation {
   getLearningScience(input: GetLearningScienceInput!): String
     @function(name: "microcoachGetLearningScience-${env}")
-  getAnalytics(input: GetAnalyticsInput!): String
-    @function(name: "microcoachLLM-${env}")
   getAnalysis(input: GetAnalysisInput!): String
     @function(name: "microcoachLLMAnalysis-${env}")
   generateNextStep(input: GenerateNextStepInput!): String
