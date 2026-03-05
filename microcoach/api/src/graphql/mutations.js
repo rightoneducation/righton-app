@@ -21,6 +21,11 @@ export const generateNextStepOption = /* GraphQL */ `
     generateNextStepOption(input: $input)
   }
 `;
+export const ingestPPQ = /* GraphQL */ `
+  mutation IngestPPQ($input: IngestPPQInput!) {
+    ingestPPQ(input: $input)
+  }
+`;
 export const createClassroom = /* GraphQL */ `
   mutation CreateClassroom(
     $input: CreateClassroomInput!

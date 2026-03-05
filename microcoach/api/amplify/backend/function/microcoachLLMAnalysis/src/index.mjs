@@ -5,6 +5,7 @@ import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
 const ac = config?.analysis ?? {};
+const ws = config?.writingStyle ?? {};
 const MODEL                  = ac.model ?? 'gpt-4o';
 const KEY_FINDINGS_MIN       = ac.keyFindingsCount?.min ?? 3;
 const KEY_FINDINGS_MAX       = ac.keyFindingsCount?.max ?? 5;
@@ -40,7 +41,7 @@ const Misconception = z.object({
   frequency: z.enum(['many', 'some', 'few']).describe(`"many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%`),
   isCore: z.boolean().describe('true for the single highest-priority misconception only; false for all others'),
   occurrence: z.enum(['first', 'recurring']).describe('"recurring" only if this pattern appeared in session history'),
-  example: z.object({ incorrect: z.string(), correct: z.string() }).optional().describe('A representative student error: "incorrect" shows a typical wrong expression/answer, "correct" shows the right form'),
+  example: z.object({ incorrect: z.string(), correct: z.string() }).optional().describe('A representative student error: "incorrect" shows a typical wrong expression/answer, "correct" shows the right form. Use plain Unicode math (e.g. 2/3 ÷ 3/4, -6x + 12) — never LaTeX.'),
   successIndicators: z.array(z.string()).optional().describe('Observable behaviors showing the student has overcome this misconception'),
   evidence: MisconceptionEvidence.optional(),
   prerequisiteGapCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `prerequisiteStandards` list (earlier-grade topics students must know first). Must be lower grade level than ccssStandard. Only include codes where a gap in that earlier skill would specifically cause this misconception."),
@@ -119,6 +120,12 @@ export const handler = async (event) => {
   const userContent = `
 You are an expert K-12 math instructional coach analyzing classroom assessment data.
 
+## Writing Style Requirements
+Apply these rules to every string you generate:
+- **Titles**: ${ws.titles ?? 'Short noun phrase. No parentheticals.'}
+- **Descriptions**: ${ws.descriptions ?? 'Short sentences. Plain language. No run-ons.'}
+- **Success indicators**: ${ws.successIndicators ?? 'Start with action verb. Observable behavior only.'}
+
 ## Learning Science Data
 ${typeof rawLearningScienceData === 'string' ? rawLearningScienceData : JSON.stringify(rawLearningScienceData, null, 2)}
 
@@ -173,7 +180,7 @@ Scoring guidance for each dimension (normalize each to 0–1):
 **Secondary misconceptions**: Must exceed the minimum threshold, must be meaningfully distinct from the core (not a minor variant of it), and must represent a separate reasoning error. Set \`isCore: false\` on all secondary misconceptions. Cap total at ${MAX_MISCONCEPTIONS} misconceptions.
 
 - frequency: "many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%
-- example: provide a concrete, representative student error. "incorrect" is a typical wrong expression or answer students write; "correct" is the right form with minimal annotation (e.g. "-6x + 12" not a full solution).
+- example: provide a concrete, representative student error. "incorrect" is a typical wrong expression or answer students write; "correct" is the right form with minimal annotation (e.g. "-6x + 12" not a full solution). Use plain Unicode math symbols (×, ÷, /, −, etc.) — never LaTeX notation like \frac or \times.
 - occurrence: "recurring" ONLY if the same pattern appears in session history misconceptions; otherwise "first"
 - prerequisiteGapCodes: Look at the standard's 'prerequisiteStandards' list in the learning science data — these are EARLIER-GRADE topics (lower grade level than ccssStandard). Select ONLY codes where a gap in that earlier skill would DIRECTLY cause this specific error pattern. Ask yourself: "Would a student who hasn't mastered this prerequisite make exactly this mistake?" Only include codes that clearly pass this test.
 - impactedObjectiveCodes: Look at the standard's 'futureDependentStandards' list in the learning science data — these are LATER-GRADE topics (higher grade level than ccssStandard). Select ONLY codes that this specific misconception would DIRECTLY threaten. Ask yourself: "Would a student carrying this misunderstanding specifically struggle with this future topic?" Only include codes that clearly pass this test.

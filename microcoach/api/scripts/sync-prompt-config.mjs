@@ -21,15 +21,15 @@ const master = JSON.parse(readFileSync(resolve(root, 'prompt-config.json'), 'utf
 
 const lambdas = [
   { name: 'microcoachLLMAnalysis',    key: 'analysis' },
-  { name: 'microcoachLLMGeneration',  key: 'nextStepOption' },
   { name: 'microcoachNextStepOption', key: 'nextStepOption' },
+  { name: 'microcoachIngestPPQ',      key: 'ingestPPQ' },
 ];
 
 let ok = 0;
 for (const { name, key } of lambdas) {
   const dest = resolve(root, 'amplify/backend/function', name, 'src/util/config.json');
   try {
-    const slice = { [key]: master[key] };
+    const slice = { writingStyle: master.writingStyle, [key]: master[key] };
     writeFileSync(dest, JSON.stringify(slice, null, 2) + '\n');
     console.log(`✓  ${name}  (${key})`);
     ok++;

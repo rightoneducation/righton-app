@@ -16,7 +16,7 @@ export interface SessionConfig {
     ppqFile: string;
     postPpqFile: string;
     nextStepFile: string | null;
-    misconceptions: MisconceptionPlaceholder[];
+    misconceptions?: MisconceptionPlaceholder[];
 }
 export interface MisconceptionPlaceholder {
     title: string;

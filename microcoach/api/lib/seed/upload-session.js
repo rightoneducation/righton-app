@@ -320,7 +320,8 @@ async function uploadStudentResponses(label, assessmentId, students, studentMap)
     progress(`  ✓ ${count} ${label} responses uploaded  (${elapsed(start)})${skipNote}`, true);
 }
 async function uploadMisconceptions(sessionId) {
-    const misconceptions = sessionConfig.misconceptions;
+    var _a;
+    const misconceptions = (_a = sessionConfig.misconceptions) !== null && _a !== void 0 ? _a : [];
     const start = Date.now();
     for (let i = 0; i < misconceptions.length; i++) {
         const m = misconceptions[i];

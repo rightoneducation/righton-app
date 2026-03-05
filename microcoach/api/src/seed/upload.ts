@@ -17,6 +17,7 @@
  *  10. ContextData (isReference: false for classroom next steps, true for References/)
  */
 
+import * as fs from 'fs';
 import * as path from 'path';
 import * as XLSX from 'xlsx';
 import {
@@ -444,7 +445,7 @@ async function uploadStudentResponses(
 async function uploadMisconceptions(
   classroomId: string,
   sessionId: string,
-  misconceptions: (typeof CLASSROOMS)[0]['sessions'][0]['misconceptions']
+  misconceptions: NonNullable<(typeof CLASSROOMS)[0]['sessions'][0]['misconceptions']>
 ): Promise<CreatedMisconception[]> {
   const created: CreatedMisconception[] = [];
   const start = Date.now();
@@ -625,8 +626,23 @@ async function main() {
       }
 
       // Create misconceptions + stub activities
+      // Primary source: Data/{classroom.key}/{session.label}/misconceptions.json (written by ingest-ppq.js)
+      // Fallback: seedData misconceptions array
       console.log('');
-      await uploadMisconceptions(classroomId, sessionId, sessionConfig.misconceptions);
+      const jsonPath = path.join(DATA_ROOT, classroomConfig.key, sessionConfig.label, 'misconceptions.json');
+      let misconceptions = sessionConfig.misconceptions ?? [];
+      try {
+        const raw = fs.readFileSync(jsonPath, 'utf8');
+        misconceptions = JSON.parse(raw).misconceptions;
+        console.log(`  Loading misconceptions from ${path.relative(process.cwd(), jsonPath)}`);
+      } catch {
+        if (misconceptions.length > 0) {
+          console.log(`  No misconceptions.json found — using seedData fallback`);
+        } else {
+          console.log(`  No misconceptions.json found and no seedData fallback — skipping`);
+        }
+      }
+      await uploadMisconceptions(classroomId, sessionId, misconceptions);
     }
 
     // Classroom next step ContextData

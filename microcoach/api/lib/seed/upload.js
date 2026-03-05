@@ -51,6 +51,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const XLSX = __importStar(require("xlsx"));
 const seedData_1 = require("./seedData");
@@ -492,6 +493,7 @@ async function uploadContextData(title, gradeLevel, ccssStandards, weekNumber, i
 }
 // ── Main ─────────────────────────────────────────────────────────────────────
 async function main() {
+    var _a;
     const totalStart = Date.now();
     console.log('=== Microcoach Seed Upload ===\n');
     gql = await (0, appsync_config_1.createGqlClient)();
@@ -568,8 +570,25 @@ async function main() {
                 console.error(`\n  ERROR processing PostPPQ: ${err}`);
             }
             // Create misconceptions + stub activities
+            // Primary source: Data/{classroom.key}/{session.label}/misconceptions.json (written by ingest-ppq.js)
+            // Fallback: seedData misconceptions array
             console.log('');
-            await uploadMisconceptions(classroomId, sessionId, sessionConfig.misconceptions);
+            const jsonPath = path.join(seedData_1.DATA_ROOT, classroomConfig.key, sessionConfig.label, 'misconceptions.json');
+            let misconceptions = (_a = sessionConfig.misconceptions) !== null && _a !== void 0 ? _a : [];
+            try {
+                const raw = fs.readFileSync(jsonPath, 'utf8');
+                misconceptions = JSON.parse(raw).misconceptions;
+                console.log(`  Loading misconceptions from ${path.relative(process.cwd(), jsonPath)}`);
+            }
+            catch {
+                if (misconceptions.length > 0) {
+                    console.log(`  No misconceptions.json found — using seedData fallback`);
+                }
+                else {
+                    console.log(`  No misconceptions.json found and no seedData fallback — skipping`);
+                }
+            }
+            await uploadMisconceptions(classroomId, sessionId, misconceptions);
         }
         // Classroom next step ContextData
         const session = classroomConfig.sessions[0];

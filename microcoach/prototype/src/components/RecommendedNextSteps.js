@@ -348,38 +348,22 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
 
                   <div className="screen-content">
                     {reasoningGroup.ccssStandards?.impactedObjectives?.length > 0 && (
-                      <div className="impact-analysis-full-width">
-                        <div className="impact-card">
-                          <h5>Future Skills at Risk</h5>
-                          <ul>
-                            {reasoningGroup.ccssStandards.impactedObjectives.map((obj, idx) => (
-                              <li key={idx}>
-                                <strong>{obj.standard}:</strong> {obj.description}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-
-                    {reasoningGroup.ccssStandards?.prerequisiteGaps?.length > 0 && (
-                      <div className="impact-analysis-full-width">
-                        <div className="impact-card">
-                          <h5>Prerequisite Gaps</h5>
-                          <ul>
-                            {reasoningGroup.ccssStandards.prerequisiteGaps.map((gap, idx) => (
-                              <li key={idx}>
-                                <strong>{gap.standard}:</strong> {gap.description}
-                              </li>
-                            ))}
-                          </ul>
+                      <div className="long-term-consequences">
+                        <h5 className="consequences-heading">Long-term Consequences</h5>
+                        <div className="consequence-list">
+                          {reasoningGroup.ccssStandards.impactedObjectives.map((obj, idx) => (
+                            <div key={idx} className="consequence-item">
+                              <span className="consequence-standard">{obj.standard}</span>
+                              <span className="consequence-description">{obj.description}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     )}
 
                     {reasoningGroup.successIndicators?.length > 0 && (
                       <div className="learning-path">
-                        <h5>Signs of Mastery</h5>
+                        <h5 className="learning-path-heading">Learning Path Forward</h5>
                         <div className="path-steps">
                           {reasoningGroup.successIndicators.map((indicator, idx) => (
                             <div key={idx} className="path-step">
@@ -485,7 +469,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                     <div className="alternative-top">
                       <div className="card-pills-row">
                         {group.isCore && <span className="core-pill">CORE</span>}
-                        {isSelectedGroup && <span className="rns-selected-pill">Selected</span>}
                       </div>
 
                       <h4 className="alternative-title">{group.title}</h4>
@@ -507,10 +490,15 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
 
                       {group.example && (
                         <div className="sub-misconception-example">
-                          <strong>Example:</strong>
                           <div className="example-content">
-                            <span className="incorrect-example">{group.example.incorrect}</span>
-                            <span className="correct-example">{group.example.correct}</span>
+                            <div className="incorrect-example">
+                              <span className="example-label">Incorrect</span>
+                              <span className="example-value">{group.example.incorrect}</span>
+                            </div>
+                            <div className="correct-example">
+                              <span className="example-label">Correct</span>
+                              <span className="example-value">{group.example.correct}</span>
+                            </div>
                           </div>
                         </div>
                       )}
@@ -617,7 +605,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
         <div className="rns-next-step-section">
           <div className="alternative-label">Choose a Next Step</div>
           <p className="alternative-sublabel">
-            Recommended next steps aligned to {selectedRecommendationGroup.title}
+            Recommended next steps aligned to: <strong>{selectedRecommendationGroup.title}</strong>
           </p>
           <div className="rns-activity-options" role="radiogroup" aria-label="Choose a Next Step">
             {(selectedRecommendationGroup.moveOptions || []).slice(0, 3).map((opt) => {

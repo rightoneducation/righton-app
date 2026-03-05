@@ -292,6 +292,19 @@ input GenerateNextStepOptionInput {
   preferredFormat: String!          # "small_group" or "whole_class"
 }
 
+input IngestPPQInput {
+  ppqText: String!                  # Raw text extracted from PPQ.docx via mammoth
+  classroomKey: String!             # e.g. "Classroom4"
+  grade: Int!
+  subject: String!
+  state: String!
+  schoolYear: String!
+  cohortSize: Int!
+  sessionLabel: String!             # e.g. "Session1"
+  weekNumber: Int!
+  occurrence: String!               # "first" | "recurring"
+}
+
 type Mutation {
   getLearningScience(input: GetLearningScienceInput!): String
     @function(name: "microcoachGetLearningScience-${env}")
@@ -301,6 +314,8 @@ type Mutation {
     @function(name: "microcoachLLMGeneration-${env}")
   generateNextStepOption(input: GenerateNextStepOptionInput!): String
     @function(name: "microcoachNextStepOption-${env}")
+  ingestPPQ(input: IngestPPQInput!): String
+    @function(name: "microcoachIngestPPQ-${env}")
 }
 
 # ── ContextData ────────────────────────────────────────────────────────

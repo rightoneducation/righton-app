@@ -25,6 +25,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachIngestPPQ": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachLLMAnalysis": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -50,6 +55,22 @@
         {
           "category": "function",
           "resourceName": "microcoachGetLearningScience"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachIngestPPQ_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachIngestPPQ"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachIngestPPQ_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachIngestPPQ"
         }
       ]
     },

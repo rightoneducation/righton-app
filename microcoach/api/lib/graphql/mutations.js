@@ -2,7 +2,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.generateNextStepOption = exports.generateNextStep = exports.getAnalysis = exports.getLearningScience = void 0;
+exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.ingestPPQ = exports.generateNextStepOption = exports.generateNextStep = exports.getAnalysis = exports.getLearningScience = void 0;
 exports.getLearningScience = `
   mutation GetLearningScience($input: GetLearningScienceInput!) {
     getLearningScience(input: $input)
@@ -21,6 +21,11 @@ exports.generateNextStep = `
 exports.generateNextStepOption = `
   mutation GenerateNextStepOption($input: GenerateNextStepOptionInput!) {
     generateNextStepOption(input: $input)
+  }
+`;
+exports.ingestPPQ = `
+  mutation IngestPPQ($input: IngestPPQInput!) {
+    ingestPPQ(input: $input)
   }
 `;
 exports.createClassroom = `

@@ -5,6 +5,7 @@ import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
 const nso = config?.nextStepOption ?? {};
+const ws  = config?.writingStyle ?? {};
 const MODEL                  = nso.model ?? 'gpt-4o';
 const MAX_DURATION            = nso.maxDurationMinutes ?? 30;
 const DEFAULT_DURATION        = nso.targetDurationMinutes ?? 30;
@@ -205,6 +206,11 @@ ${formatted.join('\n\n')}
 
   const userContent = `
 You are an expert K-12 math instructional coach designing a targeted intervention activity.
+
+## Writing Style Requirements
+Apply these rules to every string you generate:
+- **Instructional moves and steps**: ${ws.instructionalMoves ?? 'Short sentences. One action per sentence. Plain conversational language. Active voice.'}
+- **Descriptions**: ${ws.descriptions ?? 'Short sentences. Plain language. No run-ons.'}
 ${examplesSection}
 ${knowledgeGraphSection}
 ${lvnSection ? lvnSection + '\n' : ''}
