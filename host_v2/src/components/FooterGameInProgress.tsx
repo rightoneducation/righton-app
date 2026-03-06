@@ -181,7 +181,7 @@ function FooterGameInProgress({
         }
         {buttonText === 'Continue' && (
           <Typography sx={{fontFamily: 'Rubik', fontWeight: '600', fontSize: '16px', color: '#384466'}}>
-            Students are reviewing the correct answer and solution steps
+            {isTimerComplete ? 'Continue when students are ready' : 'Students are reviewing the correct answer and solution steps'}
           </Typography>
         )}
         {buttonText === 'Continue' && (

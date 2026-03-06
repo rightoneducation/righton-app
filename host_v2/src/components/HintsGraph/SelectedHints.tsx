@@ -53,7 +53,7 @@ export default function SelectedHints(props: any) {
     selectedGPTTeams = gptHints[graphClickIndex].teams;
     getSelectedHints = hints.filter((hint: any) => selectedGPTTeams.includes(hint.teamName));
   }
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   console.log(gptHints);
   console.log(graphClickIndex);
   console.log(gptHints[graphClickIndex]);
