@@ -19,7 +19,7 @@ export interface SessionConfig {
   ppqFile: string;       // relative path from DATA_ROOT
   postPpqFile: string;   // relative path from DATA_ROOT
   nextStepFile: string | null; // null if no next step doc for this classroom
-  misconceptions: MisconceptionPlaceholder[];
+  misconceptions?: MisconceptionPlaceholder[];  // optional; primary source is Data/{key}/{label}/misconceptions.json
 }
 
 export interface MisconceptionPlaceholder {
@@ -71,6 +71,7 @@ export interface ParsedQuestionResponse {
   response: string;
   isCorrect: boolean;
   pointsEarned: number;
+  confidence?: number;
 }
 
 // AppSync record IDs returned after creation

@@ -1,0 +1,69 @@
+{
+  "topic": "Algebraic Expressions and Equations",
+  "ccssStandards": [
+    "A.REI.C.6",
+    "A.APR.A.1",
+    "A.SSE.A.2",
+    "F.IF.C.8",
+    "A.CED.A.3",
+    "N.RN.A.2"
+  ],
+  "misconceptions": [
+    {
+      "title": "Integer Arithmetic Errors",
+      "description": "Students make mistakes with integer operations such as addition, subtraction, multiplication, or division, leading to incorrect results when simplifying expressions or solving equations.",
+      "ccssStandard": "A.REI.C.6",
+      "severity": "low",
+      "priority": "1",
+      "occurrence": "first",
+      "successIndicators": [
+        "Correctly identify the operations necessary for each step.",
+        "Accurately perform addition or subtraction with positive and negative integers.",
+        "Execute multiplication and division without errors.",
+        "Consistently check work for computational accuracy."
+      ]
+    },
+    {
+      "title": "Incorrect Factoring Steps",
+      "description": "Students struggle to choose factors that correctly multiply to the appropriate c-value and add to the b-value, often leading to partial or incorrect factorization of expressions.",
+      "ccssStandard": "A.SSE.A.2",
+      "severity": "high",
+      "priority": "2",
+      "occurrence": "first",
+      "successIndicators": [
+        "Accurately identify and write all factors of the c-value.",
+        "Check that selected factors also add to the b-value.",
+        "Write completely factored expressions without missing terms.",
+        "Verify by expanding the factors to ensure correctness."
+      ]
+    },
+    {
+      "title": "Misapplication of Operations in Polynomial Simplification",
+      "description": "Students erroneously add constant terms as if they were absolute values or multiply the first and last terms only, indicating a misunderstanding of polynomial operations.",
+      "ccssStandard": "A.APR.A.1",
+      "severity": "medium",
+      "priority": "3",
+      "occurrence": "first",
+      "successIndicators": [
+        "Correctly distribute terms across a polynomial.",
+        "Maintain correct sign of terms while simplifying.",
+        "Identify and combine like terms accurately.",
+        "Correctly follow the order of operations in expressions."
+      ]
+    },
+    {
+      "title": "Incorrect Translation of Word Problems into Equations",
+      "description": "Students incorrectly assign values to variables or misunderstand the relationship between variables, leading to errors when solving word problems involving systems of equations or linear relationships.",
+      "ccssStandard": "A.CED.A.3",
+      "severity": "medium",
+      "priority": "4",
+      "occurrence": "first",
+      "successIndicators": [
+        "Accurately assign variables to match the context of the problem.",
+        "Set up equations that correctly represent the problem’s situation.",
+        "Identify relationships between quantities (e.g., differences, totals).",
+        "Correctly interpret results in the context of the problem."
+      ]
+    }
+  ]
+}

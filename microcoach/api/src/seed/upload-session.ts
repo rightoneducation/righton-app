@@ -321,7 +321,7 @@ async function uploadStudentResponses(
 }
 
 async function uploadMisconceptions(sessionId: string): Promise<void> {
-  const misconceptions = sessionConfig!.misconceptions;
+  const misconceptions = sessionConfig!.misconceptions ?? [];
   const start = Date.now();
   for (let i = 0; i < misconceptions.length; i++) {
     const m = misconceptions[i];

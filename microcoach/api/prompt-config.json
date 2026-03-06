@@ -1,7 +1,15 @@
 {
+  "writingStyle": {
+    "description": "Language quality guidance injected into all LLM prompts",
+    "titles": "3-6 words. Plain noun phrase that names the specific error. No parentheticals or clarifications inside parentheses. Write the error directly: 'Did Not Flip the Second Fraction' — never 'Did Not Flip the Second Fraction (no reciprocal)'.",
+    "descriptions": "2-3 sentences maximum. Keep it concrete and specific. Do NOT start every sentence with 'Students' — vary the subject. Good openers: the error itself ('Slope and intercept get swapped...'), a conditional ('When reading y = mx + b, the two numbers...'), or the consequence ('The result is...'). One idea per sentence. No hedging words (often, typically, usually, tend to). Do not restate the same idea in different words. Write for a classroom teacher, not a researcher.",
+    "instructionalMoves": "Write in short, scannable chunks. Use plain conversational language — imagine a teacher reading this quickly between classes. Break steps into separate sentences. Avoid dense paragraphs. No academic or clinical language. Active voice. Each instruction should be one action: 'Show students two worked examples side by side.' not 'Teachers should consider presenting students with two worked examples simultaneously for comparison purposes.'",
+    "successIndicators": "Start each with an action verb. Describe observable student behavior only. 10 words max per indicator."
+  },
+
   "analysis": {
     "description": "microcoachLLMAnalysis — identifies misconceptions from PPQ assessment data",
-    "model": "gpt-4o",
+    "model": "gpt-5-mini",
     "keyFindingsCount": { "min": 3, "max": 5 },
     "successIndicatorsPerMisconception": { "min": 2, "max": 4 },
     "frequencyThresholds": {
@@ -32,15 +40,23 @@
       "tiebreakers": ["prefer_conceptual_over_procedural", "prefer_broader_downstream_impact"]
     },
     "futureScoringSignals": {
-      "description": "Placeholder for future data not yet in model. When PPQ confidence ratings and student reflection responses become available, incorporate them as additional scoring signals.",
-      "ppqConfidenceRatings": false,
-      "studentReflectionResponses": false
+      "ppqConfidenceRatings": true,
+      "studentReflectionResponses": false,
+      "confidenceScoring": {
+        "description": "Confidence modifies existing scoring dimensions rather than adding a new one.",
+        "highConfWrongThreshold": 0.25,
+        "highConfidenceMinRating": 4,
+        "lowConfidenceMaxRating": 2,
+        "lowAvgConfidenceCorrectThreshold": 2.5,
+        "conceptualSeverityBoost": "raise toward 1.0 when highConfWrongPct >= highConfWrongThreshold",
+        "prevalenceAdjustment": "discount correct rate when avgConfidenceCorrect < lowAvgConfidenceCorrectThreshold"
+      }
     }
   },
 
   "nextStepOption": {
     "description": "microcoachNextStepOption — generates one classroom activity per format per misconception",
-    "model": "gpt-4o",
+    "model": "gpt-5-mini",
     "formatsToGenerate": ["small_group", "whole_class"],
     "maxDurationMinutes": 30,
     "targetDurationMinutes": 30,
@@ -65,6 +81,13 @@
       { "name": "Whole-Class Reset",             "whenToUse": "Whole-class misunderstanding — reteach from a different angle for the full class" },
       { "name": "Small-Group Reteach",           "whenToUse": "Subset misconception — targeted small-group intervention" }
     ]
+  },
+
+  "ingestPPQ": {
+    "description": "microcoachIngestPPQ — extracts misconceptions from PPQ assessment text",
+    "model": "gpt-4o",
+    "maxMisconceptions": 4,
+    "successIndicatorsPerMisconception": { "min": 2, "max": 4 }
   }
 
 }

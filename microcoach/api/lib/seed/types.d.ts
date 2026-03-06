@@ -16,7 +16,7 @@ export interface SessionConfig {
     ppqFile: string;
     postPpqFile: string;
     nextStepFile: string | null;
-    misconceptions: MisconceptionPlaceholder[];
+    misconceptions?: MisconceptionPlaceholder[];
 }
 export interface MisconceptionPlaceholder {
     title: string;
@@ -60,6 +60,7 @@ export interface ParsedQuestionResponse {
     response: string;
     isCorrect: boolean;
     pointsEarned: number;
+    confidence?: number;
 }
 export interface CreatedClassroom {
     id: string;

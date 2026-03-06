@@ -17,6 +17,7 @@
  *  10. ContextData (isReference: false for classroom next steps, true for References/)
  */
 
+import * as fs from 'fs';
 import * as path from 'path';
 import * as XLSX from 'xlsx';
 import {
@@ -127,6 +128,16 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
     }
   }
 
+  // ── Confidence columns from row 2 (Q1_Conf, Q2_Conf, …) ──────────────────
+  const confColByQNumber: Record<number, number> = {};
+  for (let col = 1; col < headerRow.length; col++) {
+    const cell = String(headerRow[col] ?? '').trim();
+    const cMatch = cell.match(/^Q?(\d+)_Conf$/i);
+    if (cMatch) {
+      confColByQNumber[parseInt(cMatch[1], 10)] = col;
+    }
+  }
+
   // ── Class % correct per question (row 3) ─────────────────────────────────────
   const classRow = rows[3] ?? [];
   const classPercentByCol: Record<number, number> = {};
@@ -187,32 +198,39 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
     const questionResponses: ParsedQuestionResponse[] = questionColumns.map((col, i) => {
       const rawResponse = String(row[col] ?? '').trim().toUpperCase();
       const correctAnswer = answerKeyByCol[col] ?? '';
+      const qNum = questionNumbers[i];
+      const confCol = confColByQNumber[qNum];
+      const rawConf = confCol != null ? parseInt(String(row[confCol] ?? ''), 10) : NaN;
+      const confidence = !isNaN(rawConf) && rawConf >= 1 && rawConf <= 5 ? rawConf : undefined;
 
       if (isAssessmentMatrix) {
         // Sparse encoding: empty cell = student answered correctly
         if (rawResponse === '') {
           return {
-            questionNumber: questionNumbers[i],
+            questionNumber: qNum,
             response: correctAnswer,
             isCorrect: true,
             pointsEarned: 1,
+            confidence,
           };
         }
         return {
-          questionNumber: questionNumbers[i],
+          questionNumber: qNum,
           response: rawResponse,
           isCorrect: false,
           pointsEarned: 0,
+          confidence,
         };
       }
 
       // Generated format: response always present
       const isCorrect = rawResponse !== '' && rawResponse === correctAnswer;
       return {
-        questionNumber: questionNumbers[i],
+        questionNumber: qNum,
         response: rawResponse,
         isCorrect,
         pointsEarned: isCorrect ? 1 : 0,
+        confidence,
       };
     });
 
@@ -322,13 +340,21 @@ async function uploadStudents(
     const anonName = `Student ${i + 1}`;
     const externalId = s.externalId || `S${String(i + 1).padStart(3, '0')}`;
     progress(`  Creating students [${i + 1}/${students.length}]  ${anonName}`);
+    const confValues = s.questionResponses
+      .map((qr) => qr.confidence)
+      .filter((c): c is number => c != null && c >= 1 && c <= 5);
+    const avgConfidence =
+      confValues.length > 0
+        ? confValues.reduce((sum, c) => sum + c, 0) / confValues.length
+        : 0;
+
     const data = await gql(CREATE_STUDENT, {
       input: {
         classroomId,
         classroomStudentsId: classroomId,
         name: anonName,
         externalId,
-        confidenceLevel: 0,
+        confidenceLevel: Math.round(avgConfidence) || 0,
         status: 'active',
       },
     });
@@ -429,6 +455,7 @@ async function uploadStudentResponses(
           response: qr.response,
           isCorrect: qr.isCorrect,
           pointsEarned: qr.pointsEarned,
+          confidence: qr.confidence ?? null,
         })),
       },
     });
@@ -444,7 +471,7 @@ async function uploadStudentResponses(
 async function uploadMisconceptions(
   classroomId: string,
   sessionId: string,
-  misconceptions: (typeof CLASSROOMS)[0]['sessions'][0]['misconceptions']
+  misconceptions: NonNullable<(typeof CLASSROOMS)[0]['sessions'][0]['misconceptions']>
 ): Promise<CreatedMisconception[]> {
   const created: CreatedMisconception[] = [];
   const start = Date.now();
@@ -588,6 +615,7 @@ async function main() {
       // Parse & upload PostPPQ
       const postPpqPath = path.join(DATA_ROOT, sessionConfig.postPpqFile);
       process.stdout.write(`\n  Parsing PostPPQ Excel...`);
+      let postPpqAssessmentId: string | undefined;
       try {
         const postPpqData = parseExcelFile(postPpqPath);
         process.stdout.write(
@@ -607,26 +635,42 @@ async function main() {
         const postPpqAssessment = await uploadAssessment(
           classroomId, sessionId, postPpqAssessmentData, 'POST_PPQ', ppqAssessment.id
         );
+        postPpqAssessmentId = postPpqAssessment.id;
 
         await uploadStudentResponses('PostPPQ', postPpqAssessment.id, postPpqData.students, studentMap);
-
-        // Link both assessment IDs back onto the session
-        process.stdout.write(`  Linking assessments to session...`);
-        await gql(UPDATE_SESSION, {
-          input: {
-            id: sessionId,
-            ppqAssessmentId: ppqAssessment.id,
-            postPpqAssessmentId: postPpqAssessment.id,
-          },
-        });
-        process.stdout.write(`  ✓\n`);
       } catch (err) {
         console.error(`\n  ERROR processing PostPPQ: ${err}`);
       }
 
+      // Link PPQ (always) and PostPPQ (if it exists) back onto the session
+      process.stdout.write(`  Linking assessments to session...`);
+      await gql(UPDATE_SESSION, {
+        input: {
+          id: sessionId,
+          ppqAssessmentId: ppqAssessment.id,
+          ...(postPpqAssessmentId && { postPpqAssessmentId }),
+        },
+      });
+      process.stdout.write(`  ✓\n`);
+
       // Create misconceptions + stub activities
+      // Primary source: Data/{classroom.key}/{session.label}/misconceptions.json (written by ingest-ppq.js)
+      // Fallback: seedData misconceptions array
       console.log('');
-      await uploadMisconceptions(classroomId, sessionId, sessionConfig.misconceptions);
+      const jsonPath = path.join(DATA_ROOT, classroomConfig.key, sessionConfig.label, 'misconceptions.json');
+      let misconceptions = sessionConfig.misconceptions ?? [];
+      try {
+        const raw = fs.readFileSync(jsonPath, 'utf8');
+        misconceptions = JSON.parse(raw).misconceptions;
+        console.log(`  Loading misconceptions from ${path.relative(process.cwd(), jsonPath)}`);
+      } catch {
+        if (misconceptions.length > 0) {
+          console.log(`  No misconceptions.json found — using seedData fallback`);
+        } else {
+          console.log(`  No misconceptions.json found and no seedData fallback — skipping`);
+        }
+      }
+      await uploadMisconceptions(classroomId, sessionId, misconceptions);
     }
 
     // Classroom next step ContextData

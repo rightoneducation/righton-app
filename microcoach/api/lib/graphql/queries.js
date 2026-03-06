@@ -686,6 +686,7 @@ exports.getAssessment = `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -744,6 +745,7 @@ exports.listAssessments = `
               response
               isCorrect
               pointsEarned
+              confidence
               __typename
             }
             createdAt
@@ -777,6 +779,7 @@ exports.getStudentResponse = `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -807,6 +810,7 @@ exports.listStudentResponses = `
           response
           isCorrect
           pointsEarned
+          confidence
           __typename
         }
         createdAt
@@ -1741,6 +1745,7 @@ exports.assessmentsByClassroomId = `
               response
               isCorrect
               pointsEarned
+              confidence
               __typename
             }
             createdAt
@@ -1810,6 +1815,7 @@ exports.assessmentsBySessionId = `
               response
               isCorrect
               pointsEarned
+              confidence
               __typename
             }
             createdAt
@@ -1856,6 +1862,7 @@ exports.studentResponsesByAssessmentId = `
           response
           isCorrect
           pointsEarned
+          confidence
           __typename
         }
         createdAt
@@ -1893,6 +1900,7 @@ exports.studentResponsesByStudentId = `
           response
           isCorrect
           pointsEarned
+          confidence
           __typename
         }
         createdAt

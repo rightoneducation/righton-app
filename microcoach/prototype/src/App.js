@@ -11,12 +11,18 @@ import './App.css';
 function App() {
   const [activeOverviewSection, setActiveOverviewSection] = useState('Recommended Next Steps');
 
+  const [classrooms, setClassrooms] = useState([]);
+  const [selectedClassroomId, setSelectedClassroomId] = useState('');
   const [nextSteps, setNextSteps] = useState([]);
   const [nextStepsSort, setNextStepsSort] = useState('manual');
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoadingNextSteps, setIsLoadingNextSteps] = useState(true);
   const [aiGapGroups, setAiGapGroups] = useState(null);
+
+  // All classroom data pre-fetched on init, keyed by classroomId.
+  // { [classroomId]: { gapGroups: [...] | null, savedNextSteps: [...] } }
+  const classroomDataMapRef = useRef({});
 
   // Refs so CRUD handlers can reach the API without being inside the fetch useEffect
   const apiClientRef = useRef(null);
@@ -58,62 +64,73 @@ function App() {
     },
   });
 
+  // Switch to a classroom using pre-fetched data — synchronous, no loading state.
+  const selectClassroom = (classroom) => {
+    if (!classroom) return;
+    classroomIdRef.current = classroom.id;
+    const data = classroomDataMapRef.current[classroom.id] ?? { gapGroups: null, savedNextSteps: [] };
+    const savedItems = data.savedNextSteps;
+    const active = savedItems.filter((x) => x.status !== 'completed').map(dbItemToLocal);
+    const completed = savedItems.filter((x) => x.status === 'completed').map(dbItemToLocal);
+    setNextSteps(active);
+    setNextStepsHistory(
+      completed.map((item) => ({
+        id: `yns-item-${item.id}-${item.completedAt}`,
+        completedAt: item.completedAt,
+        items: [item],
+      }))
+    );
+    setAiGapGroups(data.gapGroups);
+  };
+
   useEffect(() => {
     let cancelled = false;
+    async function init() {
+      const client = new APIClient();
+      apiClientRef.current = client;
 
-    async function loadData() {
-      setIsLoading(true);
-      try {
-        const client = new APIClient();
+      // Fetch all classrooms (includes sessions + pregeneratedNextSteps).
+      const all = await client.listClassrooms();
+      if (cancelled) return;
+      const unique = [...new Map(all.map((c) => [c.id, c])).values()];
+      const sorted = unique.sort((a, b) => a.classroomName.localeCompare(b.classroomName));
 
-        const classrooms = await client.listClassrooms();
-        const gr6 = classrooms.find((c) => c.grade === 6);
-        if (!gr6 || cancelled) return;
+      // Fetch saved next steps for all classrooms in parallel.
+      const savedByClassroom = await Promise.all(
+        sorted.map((c) => client.listSavedNextSteps(c.id).then((items) => ({ id: c.id, items: items ?? [] })))
+      );
+      if (cancelled) return;
 
-        // Store refs so CRUD handlers outside this effect can reach the API
-        apiClientRef.current = client;
-        classroomIdRef.current = gr6.id;
-
-        // Load persisted next steps
-        const savedItems = (await client.listSavedNextSteps(gr6.id)) ?? [];
-        if (!cancelled) {
-          if (savedItems.length) {
-            const active = savedItems.filter((x) => x.status !== 'completed').map(dbItemToLocal);
-            const completed = savedItems.filter((x) => x.status === 'completed').map(dbItemToLocal);
-            setNextSteps(active);
-            setNextStepsHistory(
-              completed.map((item) => ({
-                id: `yns-item-${item.id}-${item.completedAt}`,
-                completedAt: item.completedAt,
-                items: [item],
-              }))
-            );
-          }
-          setIsLoadingNextSteps(false);
-        }
-
-        // Load pregenerated gap groups for the active week
-        const activeSession = (gr6.sessions?.items ?? [])
-          .find((s) => s.weekNumber === gr6.currentWeek);
-        if (!cancelled && activeSession?.pregeneratedNextSteps) {
-          const groups = activeSession.pregeneratedNextSteps;
-          const parsed = typeof groups === 'string' ? JSON.parse(groups) : groups;
-          // Normalize: if a group has a single `move` but no `moveOptions`, wrap it
-          const normalized = parsed.map((g) => ({
+      // Build the data map.
+      const map = {};
+      for (const classroom of sorted) {
+        const activeSession = (classroom.sessions?.items ?? [])
+          .find((s) => s.weekNumber === classroom.currentWeek);
+        let gapGroups = null;
+        if (activeSession?.pregeneratedNextSteps) {
+          const parsed = typeof activeSession.pregeneratedNextSteps === 'string'
+            ? JSON.parse(activeSession.pregeneratedNextSteps)
+            : activeSession.pregeneratedNextSteps;
+          gapGroups = parsed.map((g) => ({
             ...g,
             moveOptions: g.moveOptions ?? (g.move ? [g.move] : []),
           }));
-          setAiGapGroups(normalized);
         }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-          setIsLoadingNextSteps(false);
-        }
+        const entry = savedByClassroom.find((x) => x.id === classroom.id);
+        map[classroom.id] = { gapGroups, savedNextSteps: entry?.items ?? [] };
+      }
+      classroomDataMapRef.current = map;
+
+      setClassrooms(sorted);
+      setIsLoading(false);
+      setIsLoadingNextSteps(false);
+
+      if (sorted[0]) {
+        setSelectedClassroomId(sorted[0].id);
+        selectClassroom(sorted[0]);
       }
     }
-
-    loadData();
+    init().catch(console.error);
     return () => { cancelled = true; };
   }, []);
 
@@ -181,7 +198,14 @@ function App() {
       move: normalizedMove,
     };
 
-    setNextSteps((prev) => [newItem, ...prev]);
+    setNextSteps((prev) => {
+      const next = [newItem, ...prev];
+      const cid = classroomIdRef.current;
+      if (cid && classroomDataMapRef.current[cid]) {
+        classroomDataMapRef.current[cid].savedNextSteps = next;
+      }
+      return next;
+    });
 
     // Persist to backend (fire-and-forget — UI is already updated optimistically)
     const client = apiClientRef.current;
@@ -213,7 +237,14 @@ function App() {
   };
 
   const removeNextStep = (id) => {
-    setNextSteps((prev) => prev.filter((x) => x.id !== id));
+    setNextSteps((prev) => {
+      const next = prev.filter((x) => x.id !== id);
+      const cid = classroomIdRef.current;
+      if (cid && classroomDataMapRef.current[cid]) {
+        classroomDataMapRef.current[cid].savedNextSteps = next;
+      }
+      return next;
+    });
 
     const client = apiClientRef.current;
     if (client) {
@@ -233,7 +264,14 @@ function App() {
       { id: `yns-item-${id}-${completedAt}`, completedAt, items: [completedItem] },
       ...(prev || [])
     ]);
-    setNextSteps((prev) => prev.filter((x) => x.id !== id));
+    setNextSteps((prev) => {
+      const next = prev.filter((x) => x.id !== id);
+      const cid = classroomIdRef.current;
+      if (cid && classroomDataMapRef.current[cid]) {
+        classroomDataMapRef.current[cid].savedNextSteps = next;
+      }
+      return next;
+    });
 
     const client = apiClientRef.current;
     if (client) {
@@ -281,7 +319,14 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
+      <Header
+        classrooms={classrooms}
+        selectedClassroomId={selectedClassroomId}
+        onClassChange={(id) => {
+          setSelectedClassroomId(id);
+          selectClassroom(classrooms.find((c) => c.id === id));
+        }}
+      />
 
       <main className="main-content">
         <div className="overview-content">
