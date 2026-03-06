@@ -126,6 +126,21 @@ Apply these rules to every string you generate:
 - **Descriptions**: ${ws.descriptions ?? 'Short sentences. Plain language. No run-ons.'}
 - **Success indicators**: ${ws.successIndicators ?? 'Start with action verb. Observable behavior only.'}
 
+## Math Formatting Requirements
+Always use Unicode. Never use LaTeX or caret/underscore ASCII notation. Specific rules:
+- Exponents: x² x³ 10⁴ (never x^2 or x^3)
+- Subscripts: x₁ x₂ xₙ (never x_1 or x_n)
+- Fractions: use / inline (e.g. 1/2, 3/4) or a÷b form — never \frac
+- Multiplication: × (never \times or *)
+- Division: ÷ (never \div)
+- Square root: √x (never \sqrt or sqrt())
+- Inequalities: ≤ ≥ ≠ (never <=, >=, !=)
+- Approximately equal: ≈ (never ~= or approx)
+- Negative numbers: use Unicode minus − (U+2212), not a hyphen-minus -
+- Pi: π (never "pi")
+- Angle/theta: ∠ABC, θ (never "angle ABC" or "theta")
+- Absolute value: |x| (pipe characters, never abs(x))
+
 ## Learning Science Data
 ${typeof rawLearningScienceData === 'string' ? rawLearningScienceData : JSON.stringify(rawLearningScienceData, null, 2)}
 
@@ -180,7 +195,7 @@ Scoring guidance for each dimension (normalize each to 0–1):
 **Secondary misconceptions**: Must exceed the minimum threshold, must be meaningfully distinct from the core (not a minor variant of it), and must represent a separate reasoning error. Set \`isCore: false\` on all secondary misconceptions. Cap total at ${MAX_MISCONCEPTIONS} misconceptions.
 
 - frequency: "many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%
-- example: provide a concrete, representative student error. "incorrect" is a typical wrong expression or answer students write; "correct" is the right form with minimal annotation (e.g. "-6x + 12" not a full solution). Use plain Unicode math symbols (×, ÷, /, −, etc.) — never LaTeX notation like \frac or \times.
+- example: provide a concrete, representative student error. "incorrect" is a typical wrong expression or answer students write; "correct" is the right form with minimal annotation (e.g. "−6x + 12" not a full solution). Apply the Math Formatting Requirements above.
 - occurrence: "recurring" ONLY if the same pattern appears in session history misconceptions; otherwise "first"
 - prerequisiteGapCodes: Look at the standard's 'prerequisiteStandards' list in the learning science data — these are EARLIER-GRADE topics (lower grade level than ccssStandard). Select ONLY codes where a gap in that earlier skill would DIRECTLY cause this specific error pattern. Ask yourself: "Would a student who hasn't mastered this prerequisite make exactly this mistake?" Only include codes that clearly pass this test.
 - impactedObjectiveCodes: Look at the standard's 'futureDependentStandards' list in the learning science data — these are LATER-GRADE topics (higher grade level than ccssStandard). Select ONLY codes that this specific misconception would DIRECTLY threaten. Ask yourself: "Would a student carrying this misunderstanding specifically struggle with this future topic?" Only include codes that clearly pass this test.

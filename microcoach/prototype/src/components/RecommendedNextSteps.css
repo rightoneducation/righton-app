@@ -3514,9 +3514,10 @@
 
 .ccss-standards-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .ccss-standards-title {
@@ -3527,49 +3528,56 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.ccss-standards-toggle {
-  background: none;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 24px;
-  height: 24px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.ccss-standards-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid #1B376F;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
 }
 
-.ccss-standards-toggle:hover {
-  background-color: #f0f0f0;
-  border-color: #999;
+.ccss-standards-arrow.expanded {
+  transform: rotate(90deg);
 }
 
 .ccss-standards-content {
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 /* Full-width assessed standard section */
-.assessed-full-width {
-  background: white;
+.standards-column.assessed-full-width {
+  margin-bottom: 16px;
+  background: #f5f5f5;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 16px;
-}
-
-.column-header {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  padding: 16px;
   text-align: center;
 }
 
-.assessed-header {
-  color: #1565c0;
-  border-bottom: 2px solid #90caf9;
-  padding-bottom: 4px;
+.assessed-full-width .standard-card {
+  justify-content: center;
+}
+
+.ccss-standards-section .column-header {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1B376F;
+  text-transform: uppercase;
+}
+
+.ccss-standards-section .assessed-header,
+.ccss-standards-section .prerequisite-header,
+.ccss-standards-section .at-risk-header {
+  color: #1B376F;
+}
+
+.ccss-standards-section .prerequisite-header,
+.ccss-standards-section .at-risk-header {
+  text-align: left;
 }
 
 /* Side-by-side prerequisite and at-risk sections */
@@ -3580,22 +3588,7 @@
 }
 
 .standards-column {
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 12px;
-}
-
-.prerequisite-header {
-  color: #e65100;
-  border-bottom: 2px solid #ffd54f;
-  padding-bottom: 4px;
-}
-
-.at-risk-header {
-  color: #7b1fa2;
-  border-bottom: 2px solid #ce93d8;
-  padding-bottom: 4px;
+  padding: 0;
 }
 
 .standards-list {
@@ -3605,49 +3598,51 @@
 }
 
 .standard-card {
-  background: #f9f9f9;
-  border: 1px solid #e8e8e8;
-  border-radius: 20px;
-  padding: 12px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 4px 0;
   cursor: pointer;
-  transition: all 0.2s ease;
   text-align: left;
   width: 100%;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.standard-card:hover {
-  background-color: #e3f2fd;
-  border-color: #90caf9;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.standard-card:hover .standard-description {
+  color: #1B376F;
 }
 
-.standard-card.prerequisite-card:hover {
-  background-color: #fff3e0;
-  border-color: #ffd54f;
-}
-
-.standard-card.at-risk-card:hover {
-  background-color: #f3e5f5;
-  border-color: #ce93d8;
-}
-
-.standard-code {
+.ccss-standards-section .standard-code {
   display: inline-block;
+  flex-shrink: 0;
   font-size: 12px;
-  font-weight: 700;
-  color: #333;
-  background: #e8e8e8;
+  font-weight: 400;
+  color: white;
+  background: #1B376F;
   padding: 2px 8px;
   border-radius: 12px;
-  margin-bottom: 4px;
+  text-transform: none;
+}
+
+.ccss-standards-section .assessed-card .standard-code {
+  background: #0076AA;
+}
+
+.ccss-standards-section .prerequisite-card .standard-code {
+  background: #e65100;
+}
+
+.ccss-standards-section .at-risk-card .standard-code {
+  background: #7b1fa2;
 }
 
 .standard-description {
   font-size: 12px;
   color: #666;
-  line-height: 1.4;
+  line-height: 1.5;
+  transition: color 0.15s ease;
 }
 
 /* Responsive Design for CCSS Standards Section */

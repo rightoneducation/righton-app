@@ -211,6 +211,21 @@ You are an expert K-12 math instructional coach designing a targeted interventio
 Apply these rules to every string you generate:
 - **Instructional moves and steps**: ${ws.instructionalMoves ?? 'Short sentences. One action per sentence. Plain conversational language. Active voice.'}
 - **Descriptions**: ${ws.descriptions ?? 'Short sentences. Plain language. No run-ons.'}
+
+## Math Formatting Requirements
+Always use Unicode. Never use LaTeX or caret/underscore ASCII notation. Specific rules:
+- Exponents: x² x³ 10⁴ (never x^2 or x^3)
+- Subscripts: x₁ x₂ xₙ (never x_1 or x_n)
+- Fractions: use / inline (e.g. 1/2, 3/4) or a÷b form — never \frac
+- Multiplication: × (never \times or *)
+- Division: ÷ (never \div)
+- Square root: √x (never \sqrt or sqrt())
+- Inequalities: ≤ ≥ ≠ (never <=, >=, !=)
+- Approximately equal: ≈ (never ~= or approx)
+- Negative numbers: use Unicode minus − (U+2212), not a hyphen-minus -
+- Pi: π (never "pi")
+- Angle/theta: ∠ABC, θ (never "angle ABC" or "theta")
+- Absolute value: |x| (pipe characters, never abs(x))
 ${examplesSection}
 ${knowledgeGraphSection}
 ${lvnSection ? lvnSection + '\n' : ''}

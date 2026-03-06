@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Collapse from '@mui/material/Collapse';
 import './RecommendedNextSteps.css';
 import './SharedButtons.css';
 import CCSSStandardsModal from './CCSSStandardsModal';
@@ -20,6 +21,8 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   const [focusSkillsExpandedByGroupId, setFocusSkillsExpandedByGroupId] = useState({});
   // Which recommendation card is currently active for the standalone next-step section.
   const [selectedRecommendationGroupId, setSelectedRecommendationGroupId] = useState(null);
+  // Instructional Context section expand/collapse — separate from card-level focus skills state.
+  const [isInstructionalContextExpanded, setIsInstructionalContextExpanded] = useState(false);
   // Which activity option is selected per gap group.
   const [selectedMoveIdByGroupId, setSelectedMoveIdByGroupId] = useState({});
 
@@ -137,6 +140,10 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
       null
     );
   }, [visibleGapGroups, selectedRecommendationGroupId]);
+
+  useEffect(() => {
+    setIsInstructionalContextExpanded(false);
+  }, [selectedRecommendationGroup?.id]);
 
   return (
     <div className="recommended-next-steps">
@@ -605,7 +612,10 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
         <div className="rns-next-step-section">
           <div className="alternative-label">Choose a Next Step</div>
           <p className="alternative-sublabel">
-            Recommended next steps aligned to: <strong>{selectedRecommendationGroup.title}</strong>
+            {selectedRecommendationGroup.isCore
+              ? <>Recommended next steps for the core misconception: <strong>{selectedRecommendationGroup.title}</strong></>
+              : <>Recommended next steps for: <strong>{selectedRecommendationGroup.title}</strong></>
+            }
           </p>
           <div className="rns-activity-options" role="radiogroup" aria-label="Choose a Next Step">
             {(selectedRecommendationGroup.moveOptions || []).slice(0, 3).map((opt) => {
@@ -716,18 +726,21 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
       {/* New CCSS Standards Section - Based on sketch design */}
       {selectedRecommendationGroup && selectedRecommendationGroup.ccssStandards && (
         <div className="ccss-standards-section">
-          <div className="ccss-standards-header">
-            <h4 className="ccss-standards-title">Instructional context</h4>
-            <button
-              className="ccss-standards-toggle"
-              onClick={() => toggleFocusSkillsExpanded(selectedRecommendationGroup.id)}
-              aria-expanded={focusSkillsExpandedByGroupId?.[selectedRecommendationGroup.id] || false}
-              aria-controls="ccss-standards-content"
-            >
-              {focusSkillsExpandedByGroupId?.[selectedRecommendationGroup.id] ? '−' : '+'}
-            </button>
+          <div
+            className="ccss-standards-header"
+            onClick={() => setIsInstructionalContextExpanded((prev) => !prev)}
+            role="button"
+            aria-expanded={isInstructionalContextExpanded}
+            aria-controls="ccss-standards-content"
+          >
+            <span
+              className={`ccss-standards-arrow ${isInstructionalContextExpanded ? 'expanded' : ''}`}
+              aria-hidden="true"
+            />
+            <h4 className="ccss-standards-title">Instructional Context</h4>
           </div>
-          
+
+          <Collapse in={isInstructionalContextExpanded}>
           <div className="ccss-standards-content">
             {/* Assessed Standard (always visible, full width) */}
             {selectedRecommendationGroup.ccssStandards.targetObjective && (
@@ -736,8 +749,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                 <div className="standards-list">
                   <button
                     className="standard-card assessed-card"
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={() => {
                       setCcssModalGroup(selectedRecommendationGroup);
                       setSelectedCcssStandard(selectedRecommendationGroup.ccssStandards.targetObjective);
                       setCcssModalOpen(true);
@@ -750,9 +762,8 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
               </div>
             )}
 
-            {/* Prerequisite Gaps and At Risk Standards (only when expanded, side by side) */}
-            {(focusSkillsExpandedByGroupId?.[selectedRecommendationGroup.id] || false) && (
-              <div className="standards-grid side-by-side">
+            {/* Prerequisite Gaps and At Risk Standards (side by side) */}
+            <div className="standards-grid side-by-side">
                 {selectedRecommendationGroup.ccssStandards.prerequisiteGaps && selectedRecommendationGroup.ccssStandards.prerequisiteGaps.length > 0 && (
                   <div className="standards-column">
                     <h5 className="column-header prerequisite-header">Prerequisite Gaps</h5>
@@ -761,8 +772,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                         <button
                           key={idx}
                           className="standard-card prerequisite-card"
-                          onClick={(e) => {
-                            e.stopPropagation();
+                          onClick={() => {
                             setCcssModalGroup(selectedRecommendationGroup);
                             setSelectedCcssStandard(standard);
                             setCcssModalOpen(true);
@@ -784,8 +794,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                         <button
                           key={idx}
                           className="standard-card at-risk-card"
-                          onClick={(e) => {
-                            e.stopPropagation();
+                          onClick={() => {
                             setCcssModalGroup(selectedRecommendationGroup);
                             setSelectedCcssStandard(standard);
                             setCcssModalOpen(true);
@@ -799,8 +808,8 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                   </div>
                 )}
               </div>
-            )}
           </div>
+          </Collapse>
         </div>
       )}
 

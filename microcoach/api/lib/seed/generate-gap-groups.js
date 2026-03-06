@@ -184,6 +184,31 @@ function formatLabel(f) {
 }
 // activitiesPerMisconception: array of arrays — activitiesPerMisconception[i] is the list of
 // generated activity options for misconceptions[i] (one per format).
+function sanitizeDescription(text) {
+    if (!text) return text;
+    return text
+        // \frac{a}{b} → a/b
+        .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '$1/$2')
+        // \sqrt{x} → √x
+        .replace(/\\sqrt\{([^}]*)\}/g, '√$1')
+        // common symbols
+        .replace(/\\times/g, '×')
+        .replace(/\\div/g, '÷')
+        .replace(/\\pm/g, '±')
+        .replace(/\\leq/g, '≤')
+        .replace(/\\geq/g, '≥')
+        .replace(/\\neq/g, '≠')
+        .replace(/\\cdot/g, '·')
+        .replace(/\\Box/g, '□')
+        // strip $ math delimiters
+        .replace(/\$/g, '')
+        // strip *italic* markdown asterisks
+        .replace(/\*([^*]*)\*/g, '$1')
+        // clean up any remaining lone backslash commands
+        .replace(/\\[a-zA-Z]+/g, '')
+        .trim();
+}
+
 function buildGapGroups(misconceptions, activitiesPerMisconception, ppqQuestions, learningScienceData) {
     var _a, _b, _c;
     const questionErrorRates = (ppqQuestions !== null && ppqQuestions !== void 0 ? ppqQuestions : [])
@@ -198,10 +223,10 @@ function buildGapGroups(misconceptions, activitiesPerMisconception, ppqQuestions
     const standardsDescMap = new Map();
     for (const item of frameworkItems) {
         if (item.code)
-            standardsDescMap.set(item.code, item.description);
+            standardsDescMap.set(item.code, sanitizeDescription(item.description));
         for (const rel of [...((_b = item.prerequisiteStandards) !== null && _b !== void 0 ? _b : []), ...((_c = item.futureDependentStandards) !== null && _c !== void 0 ? _c : [])]) {
             if (rel.code && !standardsDescMap.has(rel.code))
-                standardsDescMap.set(rel.code, rel.description);
+                standardsDescMap.set(rel.code, sanitizeDescription(rel.description));
         }
     }
     return misconceptions.map((m, i) => {
@@ -242,7 +267,7 @@ function buildGapGroups(misconceptions, activitiesPerMisconception, ppqQuestions
             misconceptionSummary: m.description,
             successIndicators: (_g = m.successIndicators) !== null && _g !== void 0 ? _g : [],
             ccssStandards: {
-                targetObjective: { standard: m.ccssStandard, description: m.description },
+                targetObjective: { standard: m.ccssStandard, description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '' },
                 impactedObjectives,
                 prerequisiteGaps,
             },
