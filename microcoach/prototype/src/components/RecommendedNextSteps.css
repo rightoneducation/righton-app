@@ -3690,8 +3690,241 @@
   .standard-code {
     font-size: 10px;
   }
-  
+
   .standard-description {
     font-size: 10px;
   }
+}
+
+/* ── View Details Modal ────────────────────────────────────────────────────── */
+
+.view-details-modal {
+  width: min(780px, 92vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.view-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.view-details-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.view-details-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.view-details-footer {
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* Section blocks */
+.vd-section {
+  padding: 20px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.vd-section:last-child {
+  border-bottom: none;
+}
+
+.vd-section-header {
+  margin: 0 0 14px 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+}
+
+/* Example blocks inside vd-section */
+.vd-example-block {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.vd-example-block.correct-example {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.vd-example-block.incorrect-example {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+/* Field rows */
+.vd-field {
+  margin-top: 12px;
+}
+
+.vd-field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.vd-field-value {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* Example answer box (shown before solution steps) */
+.vd-example-answer {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(27, 55, 111, 0.05);
+  border-left: 3px solid #1B376F;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.vd-example-answer-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #1B376F;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.vd-example-answer-value {
+  font-size: 14px;
+  color: #1B376F;
+  font-weight: 600;
+}
+
+/* Correct answer solution steps */
+.vd-solution-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vd-solution-step {
+  font-size: 14px;
+  color: #1B376F;
+  line-height: 1.5;
+}
+
+/* Wrong answer explanations */
+.vd-wrong-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vd-wrong-answer-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.vd-wrong-answer-badge {
+  flex-shrink: 0;
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(220, 38, 38, 0.1);
+  color: #DC2626;
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: center;
+}
+
+.vd-wrong-answer-explanation {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* Student response groups */
+.vd-student-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vd-student-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.vd-student-group-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1B376F;
+}
+
+.vd-student-group-count {
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.vd-student-group-sub {
+  font-size: 12px;
+  color: #9CA3AF;
+  margin: 0 0 8px 0;
+}
+
+.vd-student-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.vd-student-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(27, 55, 111, 0.08);
+  border: 1px solid rgba(27, 55, 111, 0.2);
+  color: #1B376F;
 }

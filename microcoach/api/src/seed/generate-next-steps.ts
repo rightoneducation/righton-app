@@ -13,6 +13,24 @@
  */
 
 import { createGqlClient, GqlFn } from './appsync-config';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+
+const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
+
+async function invokeLambda(functionName: string, payload: unknown): Promise<any> {
+  const client = new LambdaClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
+  const cmd = new InvokeCommand({
+    FunctionName: functionName,
+    InvocationType: 'RequestResponse',
+    Payload: Buffer.from(JSON.stringify(payload)),
+  });
+  const resp = await client.send(cmd);
+  if (resp.FunctionError) {
+    const errBody = Buffer.from(resp.Payload as Uint8Array).toString('utf8');
+    throw new Error(`Lambda ${functionName} error: ${errBody}`);
+  }
+  return JSON.parse(Buffer.from(resp.Payload as Uint8Array).toString('utf8'));
+}
 
 // ── GraphQL queries & mutations ───────────────────────────────────────────────
 
@@ -135,27 +153,19 @@ const LIST_CONTEXT_DATA = /* GraphQL */ `
   }
 `;
 
-const GET_LEARNING_SCIENCE = /* GraphQL */ `
-  mutation GetLearningScience($input: GetLearningScienceInput!) {
-    getLearningScience(input: $input)
-  }
-`;
-
-const GET_ANALYSIS = /* GraphQL */ `
-  mutation GetAnalysis($input: GetAnalysisInput!) {
-    getAnalysis(input: $input)
-  }
-`;
-
-const GENERATE_NEXT_STEP = /* GraphQL */ `
-  mutation GenerateNextStep($input: GenerateNextStepInput!) {
-    generateNextStep(input: $input)
-  }
-`;
-
-const GENERATE_NEXT_STEP_OPTION = /* GraphQL */ `
-  mutation GenerateNextStepOption($input: GenerateNextStepOptionInput!) {
-    generateNextStepOption(input: $input)
+const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
+  query StudentResponsesByAssessmentId($assessmentId: ID!) {
+    studentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
+      items {
+        studentId
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          confidence
+        }
+      }
+    }
   }
 `;
 
@@ -178,6 +188,109 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
   }
 `;
 
+// ── Confidence stats aggregator ───────────────────────────────────────────────
+
+function computeConfidenceStats(studentResponses: any[], questions: any[]): any[] {
+  const qStats: Record<number, any> = {};
+  for (const q of questions) {
+    qStats[q.questionNumber] = {
+      questionNumber: q.questionNumber,
+      totalConf: 0, countConf: 0,
+      totalConfCorrect: 0, countConfCorrect: 0,
+      totalConfIncorrect: 0, countConfIncorrect: 0,
+      highConfWrong: 0, totalHighConf: 0,
+    };
+  }
+  for (const sr of studentResponses) {
+    for (const qr of (sr.questionResponses ?? [])) {
+      const s = qStats[qr.questionNumber];
+      if (!s || qr.confidence == null) continue;
+      const conf = qr.confidence;
+      s.totalConf += conf;
+      s.countConf++;
+      if (qr.isCorrect) {
+        s.totalConfCorrect += conf;
+        s.countConfCorrect++;
+      } else {
+        s.totalConfIncorrect += conf;
+        s.countConfIncorrect++;
+        if (conf >= 4) s.highConfWrong++;
+      }
+      if (conf >= 4) s.totalHighConf++;
+    }
+  }
+  return Object.values(qStats).map((s: any) => ({
+    questionNumber: s.questionNumber,
+    avgConfidence:          s.countConf > 0          ? parseFloat((s.totalConf / s.countConf).toFixed(2))                  : null,
+    avgConfidenceCorrect:   s.countConfCorrect > 0   ? parseFloat((s.totalConfCorrect / s.countConfCorrect).toFixed(2))    : null,
+    avgConfidenceIncorrect: s.countConfIncorrect > 0 ? parseFloat((s.totalConfIncorrect / s.countConfIncorrect).toFixed(2)) : null,
+    highConfWrongPct:       s.totalHighConf > 0      ? parseFloat((s.highConfWrong / s.totalHighConf).toFixed(3))          : null,
+  }));
+}
+
+// ── PPQ enrichment helpers ────────────────────────────────────────────────────
+
+/** Extract question numbers from a string like "PPQ Q3, Q5" or "Q1 and Q4" → [1, 3, 4, 5] */
+function parseQuestionNumbers(source: string): number[] {
+  const matches = (source ?? '').matchAll(/Q(\d+)/gi);
+  const nums = new Set<number>();
+  for (const m of matches) nums.add(parseInt(m[1], 10));
+  return [...nums].sort((a, b) => a - b);
+}
+
+/** Per question, count occurrences of each wrong response string. */
+function computeWrongAnswerDist(studentResponses: any[]): Record<number, Record<string, number>> {
+  const dist: Record<number, Record<string, number>> = {};
+  for (const sr of studentResponses) {
+    for (const qr of (sr.questionResponses ?? [])) {
+      if (qr.isCorrect || qr.response == null) continue;
+      const qn: number = qr.questionNumber;
+      if (!dist[qn]) dist[qn] = {};
+      const ans = String(qr.response).trim();
+      dist[qn][ans] = (dist[qn][ans] ?? 0) + 1;
+    }
+  }
+  return dist;
+}
+
+/**
+ * Split students into two groups for a given set of question numbers:
+ *   buildingUnderstanding — got at least one question wrong (sorted by wrong count desc, then alpha)
+ *   understoodConcept     — got all relevant questions correct (sorted alphabetically)
+ * Students with no responses for these questions are excluded.
+ */
+function getStudentGroups(
+  studentResponses: any[],
+  questionNumbers: number[],
+  studentNameMap: Map<string, string>,
+): { buildingUnderstanding: string[]; understoodConcept: string[] } {
+  if (!questionNumbers.length) return { buildingUnderstanding: [], understoodConcept: [] };
+  const qSet = new Set(questionNumbers);
+  const wrongCount = new Map<string, number>();
+  const correctOnly = new Set<string>();
+
+  for (const sr of studentResponses) {
+    const name = studentNameMap.get(sr.studentId);
+    if (!name) continue;
+    const relevant = (sr.questionResponses ?? []).filter((qr: any) => qSet.has(qr.questionNumber));
+    if (!relevant.length) continue;
+    const wrongs = relevant.filter((qr: any) => !qr.isCorrect).length;
+    if (wrongs > 0) {
+      wrongCount.set(name, (wrongCount.get(name) ?? 0) + wrongs);
+    } else {
+      correctOnly.add(name);
+    }
+  }
+
+  const buildingUnderstanding = [...wrongCount.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([name]) => name);
+
+  const understoodConcept = [...correctOnly].sort((a, b) => a.localeCompare(b));
+
+  return { buildingUnderstanding, understoodConcept };
+}
+
 // ── Next step builder ─────────────────────────────────────────────────────────
 
 function formatLabel(f: string): string {
@@ -190,7 +303,13 @@ function buildNextSteps(
   misconceptions: any[],
   activitiesPerGroup: any[][],
   ppqQuestions: any[],
-  learningScienceData: any
+  learningScienceData: any,
+  misconceptionExtras: Array<{
+    ppqQuestions: any[];
+    studentGroups: { buildingUnderstanding: string[]; understoodConcept: string[] };
+    wrongAnswerExplanations: Array<{ answer: string; explanation: string }>;
+    correctAnswerSolution: string[];
+  }> = [],
 ): any[] {
   const questionErrorRates = (ppqQuestions ?? [])
     .filter((q: any) => q.questionNumber != null && q.classPercentCorrect != null)
@@ -212,6 +331,7 @@ function buildNextSteps(
   }
 
   return misconceptions.map((m: any, i: number) => {
+    const extras = misconceptionExtras[i] ?? {};
     const activityList: any[] = (activitiesPerGroup[i] ?? []).filter(Boolean);
     const frameworkItem = frameworkItems.find(
       (item: any) => normalize(item.code) === normalize(m.ccssStandard)
@@ -242,6 +362,10 @@ function buildNextSteps(
       },
       evidence: m.evidence ?? null,
       questionErrorRates,
+      ppqQuestions: extras.ppqQuestions ?? [],
+      studentGroups: extras.studentGroups ?? { buildingUnderstanding: [], understoodConcept: [] },
+      wrongAnswerExplanations: extras.wrongAnswerExplanations ?? [],
+      correctAnswerSolution: extras.correctAnswerSolution ?? [],
       moveOptions: activityList.map((activity, j) => ({
         id: `nextstep-move-ai-${i + 1}-${j + 1}`,
         title: activity.title,
@@ -301,23 +425,78 @@ async function main() {
   const ccss = ppq?.ccssStandards?.[0] ?? currentSession?.ccssStandards?.[0];
   if (!ccss) throw new Error('No CCSS standard found in current session');
 
-  // 4. Learning science data (LLM)
+  // 4. Learning science data (direct Lambda — bypasses AppSync 30s timeout)
   process.stdout.write(`Fetching learning science data for ${ccss}...`);
-  const lsRaw = await gql(GET_LEARNING_SCIENCE, { input: { ccss } });
-  const learningScienceData = parseJson(lsRaw.getLearningScience);
+  const lsResult = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } });
+  const learningScienceData = parseJson(lsResult);
   console.log(' ✓');
 
-  // 5. Analysis (LLM)
+  // 4b. Fetch student responses — used for confidence stats and PPQ enrichment
+  let augmentedPpq = ppq;
+  let studentResponses: any[] = [];
+  if (ppq?.id) {
+    process.stdout.write('Fetching student responses...');
+    try {
+      const srData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: ppq.id });
+      studentResponses = srData?.studentResponsesByAssessmentId?.items ?? [];
+      const hasConfidence = studentResponses.some((sr: any) =>
+        (sr.questionResponses ?? []).some((qr: any) => qr.confidence != null));
+      if (hasConfidence) {
+        const confidenceStats = computeConfidenceStats(studentResponses, ppq.questions ?? []);
+        augmentedPpq = { ...ppq, confidenceStats };
+        console.log(` ✓  (${studentResponses.length} responses, with confidence data)`);
+      } else {
+        console.log(` ✓  (${studentResponses.length} responses, no confidence data)`);
+      }
+    } catch (err) {
+      console.log(` ✗ (${err}) — continuing without student responses`);
+    }
+  }
+
+  // Build student name map from classroom students (fetched in step 1)
+  const studentNameMap = new Map<string, string>();
+  for (const s of (gr6.students?.items ?? [])) {
+    if (s.id && s.name) studentNameMap.set(s.id, s.name);
+  }
+  const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
+
+  // 5. Analysis (direct Lambda — bypasses AppSync 30s timeout)
+  //    wrongAnswerDist is forwarded so the Lambda can expand distractor explanations internally.
   process.stdout.write('Running misconception analysis...');
-  const analysisRaw = await gql(GET_ANALYSIS, {
+  const analysisResult = await invokeLambda(`microcoachLLMAnalysis-${AMPLIFY_ENV}`, {
     input: {
-      classroomData: JSON.stringify({ classroom: gr6, currentSession, sessionHistory: historySessions, ppq }),
+      classroomData: JSON.stringify({
+        classroom: gr6,
+        currentSession,
+        sessionHistory: historySessions,
+        ppq: augmentedPpq,
+        wrongAnswerDist,
+      }),
       learningScienceData: JSON.stringify(learningScienceData),
     },
   });
-  const analysis = parseJson(analysisRaw.getAnalysis);
+  const analysis = parseJson(analysisResult);
   const misconceptions: any[] = analysis?.misconceptions ?? [];
   console.log(` ✓  ${misconceptions.length} misconceptions identified`);
+
+  // 5b. Build per-misconception extras: ppqQuestions and affectedStudents computed locally;
+  //     wrongAnswerExplanations come back from the analysis Lambda (no direct OpenAI calls here).
+  const ppqQs = (ppq?.questions ?? []).map((q: any) => ({
+    questionNumber: q.questionNumber,
+    correctAnswer: q.correctAnswer ?? null,
+    classPercentCorrect: q.classPercentCorrect ?? null,
+  }));
+
+  const misconceptionExtras = misconceptions.map((m: any) => {
+    const qNums = parseQuestionNumbers(m.evidence?.source ?? '');
+    return {
+      ppqQuestions: ppqQs,
+      studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
+      wrongAnswerExplanations: m.wrongAnswerExplanations ?? [],
+      correctAnswerSolution: m.correctAnswerSolution ?? [],
+    };
+  });
+  console.log(`Enriched ${misconceptionExtras.length} misconceptions with PPQ data`);
 
   // 6. Next step examples
   process.stdout.write('Fetching next step examples...');
@@ -353,10 +532,10 @@ async function main() {
       const results = await Promise.all(
         NEXT_STEP_FORMATS.map(async (fmt) => {
           try {
-            const raw = await gql(GENERATE_NEXT_STEP_OPTION, {
+            const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
               input: { ...baseInput, preferredFormat: fmt },
             });
-            return parseJson(raw.generateNextStepOption);
+            return parseJson(raw);
           } catch (err) {
             console.error(`\n  ✗ format=${fmt} for ${m.title}: ${err}`);
             return null;
@@ -370,7 +549,7 @@ async function main() {
   );
 
   // 8. Build next steps
-  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData);
+  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras);
   console.log(`\nBuilt ${nextSteps.length} next steps`);
 
   // 9. Persist next steps to the session and mark the classroom's active week

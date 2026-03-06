@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Collapse from '@mui/material/Collapse';
 import './RecommendedNextSteps.css';
 import './SharedButtons.css';
 import CCSSStandardsModal from './CCSSStandardsModal';
@@ -11,7 +10,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   const [toast, setToast] = useState(null);
   const toastTimeoutRef = useRef(null);
   const [reasoningGroupId, setReasoningGroupId] = useState(null);
-  const [evidenceScreen, setEvidenceScreen] = useState(1);
   const [ccssModalOpen, setCcssModalOpen] = useState(false);
   const [selectedCcssStandard, setSelectedCcssStandard] = useState(null);
   const [ccssModalGroup, setCcssModalGroup] = useState(null);
@@ -21,8 +19,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   const [focusSkillsExpandedByGroupId, setFocusSkillsExpandedByGroupId] = useState({});
   // Which recommendation card is currently active for the standalone next-step section.
   const [selectedRecommendationGroupId, setSelectedRecommendationGroupId] = useState(null);
-  // Instructional Context section expand/collapse — separate from card-level focus skills state.
-  const [isInstructionalContextExpanded, setIsInstructionalContextExpanded] = useState(false);
   // Which activity option is selected per gap group.
   const [selectedMoveIdByGroupId, setSelectedMoveIdByGroupId] = useState({});
 
@@ -141,10 +137,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
     );
   }, [visibleGapGroups, selectedRecommendationGroupId]);
 
-  useEffect(() => {
-    setIsInstructionalContextExpanded(false);
-  }, [selectedRecommendationGroup?.id]);
-
   return (
     <div className="recommended-next-steps">
       {/* Use the same modal as Saved Next Steps (View details) */}
@@ -182,244 +174,194 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
 
       {reasoningGroup && (
         <div className="rns-modal-overlay" onClick={() => setReasoningGroupId(null)}>
-          <div className="rns-modal evidence-journey-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="evidence-journey-header">
-              <div className="evidence-journey-title-section">
-                <h3 className="evidence-journey-title">{reasoningGroup.title}</h3>
-                <p className="evidence-journey-subtitle">Evidence Journey</p>
-              </div>
-              
-              <div className="evidence-journey-progress">
-                <div className="progress-steps">
-                  <div className={`progress-step ${evidenceScreen >= 1 ? 'active' : ''}`}>
-                    <span className="step-number">1</span>
-                    <span className="step-label">What Happened</span>
-                  </div>
-                  <div className="progress-line"></div>
-                  <div className={`progress-step ${evidenceScreen >= 2 ? 'active' : ''}`}>
-                    <span className="step-number">2</span>
-                    <span className="step-label">Where & How</span>
-                  </div>
-                  <div className="progress-line"></div>
-                  <div className={`progress-step ${evidenceScreen >= 3 ? 'active' : ''}`}>
-                    <span className="step-number">3</span>
-                    <span className="step-label">Why It Matters</span>
-                  </div>
-                </div>
-              </div>
-
+          <div className="rns-modal view-details-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="view-details-header">
+              <h3 className="view-details-title">{reasoningGroup.title}</h3>
               <button
                 className="evidence-journey-close"
                 onClick={() => setReasoningGroupId(null)}
-                aria-label="Close evidence journey"
+                aria-label="Close"
               >
                 ×
               </button>
             </div>
 
-            <div className="evidence-journey-body">
-              {evidenceScreen === 1 && (
-                <div className="evidence-screen screen-1">
-                  <div className="screen-header">
-                    <h4 className="screen-title">What Happened</h4>
-                    <p className="screen-subtitle">Data visualization and analysis</p>
+            <div className="view-details-body">
+
+              {/* Correct Answer and Solution */}
+              <div className="vd-section">
+                <h4 className="vd-section-header">Correct Answer and Solution</h4>
+                {reasoningGroup.example?.correct && (
+                  <div className="vd-example-answer">
+                    <span className="vd-example-answer-label">Example</span>
+                    <span className="vd-example-answer-value">{reasoningGroup.example.correct}</span>
                   </div>
+                )}
+                {reasoningGroup.correctAnswerSolution?.length > 0 ? (
+                  <ol className="vd-solution-steps">
+                    {reasoningGroup.correctAnswerSolution.map((step, idx) => (
+                      <li key={idx} className="vd-solution-step">{step}</li>
+                    ))}
+                  </ol>
+                ) : !reasoningGroup.example && (
+                  <p className="no-data-text">No correct answer data available.</p>
+                )}
+              </div>
 
-                  <div className="screen-content">
-                    {reasoningGroup.questionErrorRates?.length > 0 && (
-                      <div className="data-visualization">
-                        <div className="chart-container">
-                          <h5 className="chart-title">Error Rate by Question</h5>
-                          <div className="chart-placeholder">
-                            {reasoningGroup.questionErrorRates.map((q) => (
-                              <div
-                                key={q.label}
-                                className="chart-bar"
-                                style={{ height: `${Math.max(q.errorRate, 4)}%` }}
-                                title={`${q.label}: ${q.errorRate}%`}
-                              ></div>
-                            ))}
-                          </div>
-                          <div className="chart-labels">
-                            {reasoningGroup.questionErrorRates.map((q) => (
-                              <span key={q.label}>{q.label}</span>
-                            ))}
-                          </div>
-                          <div className="chart-values">
-                            {reasoningGroup.questionErrorRates.map((q) => (
-                              <span key={q.label}>{q.errorRate}%</span>
-                            ))}
-                          </div>
-                        </div>
+              {/* Wrong Answer Explanation */}
+              <div className="vd-section">
+                <h4 className="vd-section-header">Wrong Answer Explanation</h4>
+                {reasoningGroup.wrongAnswerExplanations?.length > 0 ? (
+                  <div className="vd-wrong-answers">
+                    {reasoningGroup.wrongAnswerExplanations.map((item, idx) => (
+                      <div key={idx} className="vd-wrong-answer-row">
+                        <span className="vd-wrong-answer-badge">{item.answer}</span>
+                        <p className="vd-wrong-answer-explanation">{item.explanation}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    {reasoningGroup.evidence?.mostCommonError && (
+                      <div className="vd-field">
+                        <span className="vd-field-label">Most Common Error</span>
+                        <p className="vd-field-value">{reasoningGroup.evidence.mostCommonError}</p>
+                      </div>
+                    )}
+                    {reasoningGroup.evidence?.aiThinkingPattern && (
+                      <div className="vd-field">
+                        <span className="vd-field-label">Thinking Pattern</span>
+                        <p className="vd-field-value">{reasoningGroup.evidence.aiThinkingPattern}</p>
+                      </div>
+                    )}
+                    {!reasoningGroup.evidence && (
+                      <p className="no-data-text">No wrong answer explanation available.</p>
+                    )}
+                  </>
+                )}
+              </div>
 
-                        <div className="chart-stats">
-                          <div className="stat-item">
-                            <span className="stat-label">Frequency</span>
-                            <span className="stat-value">
-                              {reasoningGroup.frequency
-                                ? reasoningGroup.frequency.charAt(0).toUpperCase() + reasoningGroup.frequency.slice(1) + ' students'
-                                : '—'}
-                            </span>
-                          </div>
-                          {reasoningGroup.evidence?.source && (
-                            <div className="stat-item">
-                              <span className="stat-label">Questions</span>
-                              <span className="stat-value">{reasoningGroup.evidence.source}</span>
-                            </div>
-                          )}
-                          {(() => {
-                            const rates = reasoningGroup.questionErrorRates;
-                            const max = rates.reduce((a, b) => b.errorRate > a.errorRate ? b : a, rates[0]);
-                            return max ? (
-                              <div className="stat-item">
-                                <span className="stat-label">Highest Error</span>
-                                <span className="stat-value">{max.label} ({max.errorRate}%)</span>
-                              </div>
-                            ) : null;
-                          })()}
+              {/* Instructional Context */}
+              {reasoningGroup.ccssStandards && (
+                <div className="vd-section">
+                  <h4 className="vd-section-header">Instructional Context</h4>
+                  <div className="ccss-standards-content">
+                    {reasoningGroup.ccssStandards.targetObjective && (
+                      <div className="standards-column assessed-full-width">
+                        <h5 className="column-header assessed-header">Focus Skill</h5>
+                        <div className="standards-list">
+                          <button
+                            className="standard-card assessed-card"
+                            onClick={() => {
+                              setCcssModalGroup(reasoningGroup);
+                              setSelectedCcssStandard(reasoningGroup.ccssStandards.targetObjective);
+                              setCcssModalOpen(true);
+                            }}
+                          >
+                            <span className="standard-code">{reasoningGroup.ccssStandards.targetObjective.standard}</span>
+                            <span className="standard-description">{reasoningGroup.ccssStandards.targetObjective.description}</span>
+                          </button>
                         </div>
                       </div>
                     )}
-
-                    <div className="data-insights">
-                      <h5>Key Insights</h5>
-                      {reasoningGroup.aiReasoning
-                        ? <p>{reasoningGroup.aiReasoning}</p>
-                        : reasoningGroup.evidence?.mostCommonError
-                          ? <p>{reasoningGroup.evidence.mostCommonError}</p>
-                          : <p>{reasoningGroup.misconceptionSummary}</p>
-                      }
+                    <div className="standards-grid side-by-side">
+                      {reasoningGroup.ccssStandards.prerequisiteGaps?.length > 0 && (
+                        <div className="standards-column">
+                          <h5 className="column-header prerequisite-header">Prerequisite Gaps</h5>
+                          <div className="standards-list">
+                            {reasoningGroup.ccssStandards.prerequisiteGaps.map((standard, idx) => (
+                              <button
+                                key={idx}
+                                className="standard-card prerequisite-card"
+                                onClick={() => {
+                                  setCcssModalGroup(reasoningGroup);
+                                  setSelectedCcssStandard(standard);
+                                  setCcssModalOpen(true);
+                                }}
+                              >
+                                <span className="standard-code">{standard.standard}</span>
+                                <span className="standard-description">{standard.description}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {reasoningGroup.ccssStandards.impactedObjectives?.length > 0 && (
+                        <div className="standards-column">
+                          <h5 className="column-header at-risk-header">Upcoming Skills</h5>
+                          <div className="standards-list">
+                            {reasoningGroup.ccssStandards.impactedObjectives.map((standard, idx) => (
+                              <button
+                                key={idx}
+                                className="standard-card at-risk-card"
+                                onClick={() => {
+                                  setCcssModalGroup(reasoningGroup);
+                                  setSelectedCcssStandard(standard);
+                                  setCcssModalOpen(true);
+                                }}
+                              >
+                                <span className="standard-code">{standard.standard}</span>
+                                <span className="standard-description">{standard.description}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               )}
 
-              {evidenceScreen === 2 && (
-                <div className="evidence-screen screen-2">
-                  <div className="screen-header">
-                    <h4 className="screen-title">Where & How</h4>
-                    <p className="screen-subtitle">Work samples and breakdown</p>
-                  </div>
-
-                  <div className="screen-content">
-                    {reasoningGroup.example && (
-                      <div className="problem-intro">
-                        <div className="problem-eyebrow">Example Error</div>
-                        <h5 className="problem-label">{reasoningGroup.example.incorrect}</h5>
-                        <p className="problem-context">Correct form: {reasoningGroup.example.correct}</p>
-                      </div>
-                    )}
-
-                    {reasoningGroup.evidence?.sampleStudentWork?.length > 0 && (
-                      <div className="work-samples">
-                        <div className="sample-grid">
-                          {reasoningGroup.evidence.sampleStudentWork.map((sample, idx) => (
-                            <div key={idx} className="sample-item incorrect">
-                              <h6>Student {String.fromCharCode(65 + idx)}</h6>
-                              <div className="sample-content">
-                                <p>{sample}</p>
-                              </div>
-                            </div>
+              {/* Student Responses */}
+              <div className="vd-section">
+                <h4 className="vd-section-header">Student Responses</h4>
+                {(reasoningGroup.studentGroups?.buildingUnderstanding?.length > 0 ||
+                  reasoningGroup.studentGroups?.understoodConcept?.length > 0) ? (
+                  <div className="vd-student-groups">
+                    {reasoningGroup.studentGroups.buildingUnderstanding?.length > 0 && (
+                      <div className="vd-student-group">
+                        <div className="vd-student-group-header">
+                          <span className="vd-student-group-label building">Building Understanding</span>
+                          <span className="vd-student-group-count">
+                            {reasoningGroup.studentGroups.buildingUnderstanding.length} students
+                          </span>
+                        </div>
+                        <p className="vd-student-group-sub">Incorrect answers</p>
+                        <div className="vd-student-pills">
+                          {reasoningGroup.studentGroups.buildingUnderstanding.map((name) => (
+                            <span key={name} className="vd-student-pill">{name}</span>
                           ))}
                         </div>
                       </div>
                     )}
-
-                    {reasoningGroup.evidence?.aiThinkingPattern && (
-                      <div className="breakdown-analysis">
-                        <h5>Underlying Thinking Pattern</h5>
-                        <p className="thinking-pattern-text">{reasoningGroup.evidence.aiThinkingPattern}</p>
-                      </div>
-                    )}
-
-                    {reasoningGroup.evidence?.mostCommonError && (
-                      <div className="error-summary">
-                        <h5>Most Common Error</h5>
-                        <p>{reasoningGroup.evidence.mostCommonError}</p>
-                      </div>
-                    )}
-
-                    {!reasoningGroup.example && !reasoningGroup.evidence && (
-                      <p className="no-data-text">No detailed work samples available for this misconception.</p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {evidenceScreen === 3 && (
-                <div className="evidence-screen screen-3">
-                  <div className="screen-header">
-                    <h4 className="screen-title">Why It Matters</h4>
-                    <p className="screen-subtitle">Impact and consequences</p>
-                  </div>
-
-                  <div className="screen-content">
-                    {reasoningGroup.ccssStandards?.impactedObjectives?.length > 0 && (
-                      <div className="long-term-consequences">
-                        <h5 className="consequences-heading">Long-term Consequences</h5>
-                        <div className="consequence-list">
-                          {reasoningGroup.ccssStandards.impactedObjectives.map((obj, idx) => (
-                            <div key={idx} className="consequence-item">
-                              <span className="consequence-standard">{obj.standard}</span>
-                              <span className="consequence-description">{obj.description}</span>
-                            </div>
+                    {reasoningGroup.studentGroups.understoodConcept?.length > 0 && (
+                      <div className="vd-student-group">
+                        <div className="vd-student-group-header">
+                          <span className="vd-student-group-label understood">Understood Concept</span>
+                          <span className="vd-student-group-count">
+                            {reasoningGroup.studentGroups.understoodConcept.length} students
+                          </span>
+                        </div>
+                        <p className="vd-student-group-sub">Correct answers</p>
+                        <div className="vd-student-pills">
+                          {reasoningGroup.studentGroups.understoodConcept.map((name) => (
+                            <span key={name} className="vd-student-pill">{name}</span>
                           ))}
                         </div>
                       </div>
                     )}
-
-                    {reasoningGroup.successIndicators?.length > 0 && (
-                      <div className="learning-path">
-                        <h5 className="learning-path-heading">Learning Path Forward</h5>
-                        <div className="path-steps">
-                          {reasoningGroup.successIndicators.map((indicator, idx) => (
-                            <div key={idx} className="path-step">
-                              <span className="path-number">{idx + 1}</span>
-                              <span className="path-description">{indicator}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {!reasoningGroup.ccssStandards?.impactedObjectives?.length &&
-                     !reasoningGroup.successIndicators?.length && (
-                      <p className="no-data-text">No impact data available for this misconception.</p>
-                    )}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <p className="no-data-text">No student response data available.</p>
+                )}
+              </div>
+
             </div>
 
-            <div className="evidence-journey-footer">
-              <div className="navigation-controls">
-                {evidenceScreen === 1 ? (
-                  <button
-                    className="back-btn"
-                    onClick={() => {
-                      setReasoningGroupId(null);
-                    }}
-                  >
-                    ← Back
-                  </button>
-                ) : (
-                  <button
-                    className="nav-btn prev-btn"
-                    onClick={() => setEvidenceScreen(Math.max(1, evidenceScreen - 1))}
-                    disabled={evidenceScreen === 1}
-                  >
-                    ← {evidenceScreen === 3 ? 'Where & How' : 'What Happened'}
-                  </button>
-                )}
-                
-                <button
-                  className="nav-btn next-btn"
-                  onClick={() => setEvidenceScreen(Math.min(3, evidenceScreen + 1))}
-                  disabled={evidenceScreen === 3}
-                >
-                  {evidenceScreen === 1 ? 'Where & How →' : 'Why It Matters →'}
-                </button>
-              </div>
+            <div className="view-details-footer">
+              <button className="nav-btn" onClick={() => setReasoningGroupId(null)}>
+                Close
+              </button>
             </div>
           </div>
         </div>
@@ -576,11 +518,10 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setEvidenceScreen(1);
                           setReasoningGroupId(group.id);
                         }}
                       >
-                        See Student Thinking
+                        View Details
                       </button>
                     </div>
                   </div>
@@ -720,96 +661,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
               );
             })}
           </div>
-        </div>
-      )}
-
-      {/* New CCSS Standards Section - Based on sketch design */}
-      {selectedRecommendationGroup && selectedRecommendationGroup.ccssStandards && (
-        <div className="ccss-standards-section">
-          <div
-            className="ccss-standards-header"
-            onClick={() => setIsInstructionalContextExpanded((prev) => !prev)}
-            role="button"
-            aria-expanded={isInstructionalContextExpanded}
-            aria-controls="ccss-standards-content"
-          >
-            <span
-              className={`ccss-standards-arrow ${isInstructionalContextExpanded ? 'expanded' : ''}`}
-              aria-hidden="true"
-            />
-            <h4 className="ccss-standards-title">Instructional Context</h4>
-          </div>
-
-          <Collapse in={isInstructionalContextExpanded}>
-          <div className="ccss-standards-content">
-            {/* Assessed Standard (always visible, full width) */}
-            {selectedRecommendationGroup.ccssStandards.targetObjective && (
-              <div className="standards-column assessed-full-width">
-                <h5 className="column-header assessed-header">Focus Skill</h5>
-                <div className="standards-list">
-                  <button
-                    className="standard-card assessed-card"
-                    onClick={() => {
-                      setCcssModalGroup(selectedRecommendationGroup);
-                      setSelectedCcssStandard(selectedRecommendationGroup.ccssStandards.targetObjective);
-                      setCcssModalOpen(true);
-                    }}
-                  >
-                    <span className="standard-code">{selectedRecommendationGroup.ccssStandards.targetObjective.standard}</span>
-                    <span className="standard-description">{selectedRecommendationGroup.ccssStandards.targetObjective.description}</span>
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Prerequisite Gaps and At Risk Standards (side by side) */}
-            <div className="standards-grid side-by-side">
-                {selectedRecommendationGroup.ccssStandards.prerequisiteGaps && selectedRecommendationGroup.ccssStandards.prerequisiteGaps.length > 0 && (
-                  <div className="standards-column">
-                    <h5 className="column-header prerequisite-header">Prerequisite Gaps</h5>
-                    <div className="standards-list">
-                      {selectedRecommendationGroup.ccssStandards.prerequisiteGaps.map((standard, idx) => (
-                        <button
-                          key={idx}
-                          className="standard-card prerequisite-card"
-                          onClick={() => {
-                            setCcssModalGroup(selectedRecommendationGroup);
-                            setSelectedCcssStandard(standard);
-                            setCcssModalOpen(true);
-                          }}
-                        >
-                          <span className="standard-code">{standard.standard}</span>
-                          <span className="standard-description">{standard.description}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {selectedRecommendationGroup.ccssStandards.impactedObjectives && selectedRecommendationGroup.ccssStandards.impactedObjectives.length > 0 && (
-                  <div className="standards-column">
-                    <h5 className="column-header at-risk-header">Upcoming Skills</h5>
-                    <div className="standards-list">
-                      {selectedRecommendationGroup.ccssStandards.impactedObjectives.map((standard, idx) => (
-                        <button
-                          key={idx}
-                          className="standard-card at-risk-card"
-                          onClick={() => {
-                            setCcssModalGroup(selectedRecommendationGroup);
-                            setSelectedCcssStandard(standard);
-                            setCcssModalOpen(true);
-                          }}
-                        >
-                          <span className="standard-code">{standard.standard}</span>
-                          <span className="standard-description">{standard.description}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-          </div>
-          </Collapse>
         </div>
       )}
 

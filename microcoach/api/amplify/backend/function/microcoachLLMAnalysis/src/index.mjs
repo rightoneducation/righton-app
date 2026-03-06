@@ -67,7 +67,7 @@ export const handler = async (event) => {
   if (rawClassroomData == null)       throw new Error('classroomData is required');
   if (rawLearningScienceData == null) throw new Error('learningScienceData is required');
 
-  const { classroom, currentSession, sessionHistory, ppq } =
+  const { classroom, currentSession, sessionHistory, ppq, wrongAnswerDist } =
     typeof rawClassroomData === 'string' ? JSON.parse(rawClassroomData) : rawClassroomData;
 
   // ── Trim payload ─────────────────────────────────────────────────────────
@@ -225,6 +225,78 @@ When two misconceptions have similar composite scores, prefer the one with highe
 Return JSON matching the schema.
 `.trim();
 
+  // ── Distractor expansion helpers ─────────────────────────────────────────
+  const parseQuestionNumbers = (source = '') => {
+    const nums = new Set();
+    for (const m of source.matchAll(/Q(\d+)/gi)) nums.add(parseInt(m[1], 10));
+    return [...nums].sort((a, b) => a - b);
+  };
+
+  const enrichMisconception = async (misconception, ppqQuestions = []) => {
+    const qNums = parseQuestionNumbers(misconception.evidence?.source ?? '');
+    const relevantQs = ppqQuestions.filter((q) => qNums.includes(q.questionNumber));
+    const correctLines = relevantQs
+      .map((q) => `Q${q.questionNumber}: correct answer = ${q.correctAnswer}`)
+      .join('\n');
+
+    // Collect top wrong answers if distribution data is available
+    let topAnswers = [];
+    if (wrongAnswerDist && qNums.length) {
+      const combined = {};
+      for (const qn of qNums) {
+        for (const [ans, count] of Object.entries(wrongAnswerDist[qn] ?? {})) {
+          combined[ans] = (combined[ans] ?? 0) + count;
+        }
+      }
+      topAnswers = Object.entries(combined)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4)
+        .map(([ans]) => ans);
+    }
+
+    const wrongAnswerBlock = topAnswers.length
+      ? `Students commonly gave these wrong answers: ${topAnswers.join(', ')}\n\nFor each wrong answer, provide a brief explanation of the likely thinking pattern or conceptual error. The "answer" field must be the actual mathematical value or expression the student wrote (e.g. "8/6", "−2", "multiplied instead of divided") — never a letter like "A" or "B". If the raw value is a letter, infer the likely mathematical expression from the misconception context and correct answer.`
+      : `No wrong answer distribution is available. Omit the "wrongAnswerExplanations" array (return []).`;
+
+    const prompt = `You are a math education expert analyzing a student misconception.
+
+Misconception: "${misconception.title}"
+${misconception.description ? `Description: ${misconception.description}\n` : ''}
+CCSS Standard: ${misconception.ccssStandard ?? 'unknown'}
+${correctLines ? `Relevant questions and correct answers:\n${correctLines}` : ''}
+
+## Task 1 — Correct answer solution
+Write a worked solution showing how to arrive at the correct answer for this type of problem. Use 2–4 concise steps. Each step should be a plain string. Use Unicode math symbols (×, ÷, ², √, etc.). If multiple question numbers are relevant and they share the same solution path, write one unified solution.
+
+## Task 2 — Wrong answer explanations
+${wrongAnswerBlock}
+
+Return a JSON object with exactly these keys:
+{
+  "correctAnswerSolution": ["step 1 text", "step 2 text", ...],
+  "wrongAnswerExplanations": [{ "answer": "...", "explanation": "..." }, ...]
+}`;
+
+    try {
+      const result = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        response_format: { type: 'json_object' },
+        max_tokens: 900,
+        temperature: 0.3,
+      });
+      const content = result.choices[0]?.message?.content ?? '{}';
+      const parsed = JSON.parse(content);
+      return {
+        wrongAnswerExplanations: Array.isArray(parsed.wrongAnswerExplanations) ? parsed.wrongAnswerExplanations : [],
+        correctAnswerSolution: Array.isArray(parsed.correctAnswerSolution) ? parsed.correctAnswerSolution : [],
+      };
+    } catch (err) {
+      console.warn('[microcoachLLMAnalysis] enrichMisconception failed:', err?.message);
+      return { wrongAnswerExplanations: [], correctAnswerSolution: [] };
+    }
+  };
+
   try {
     const completion = await openai.chat.completions.create({
       model: MODEL,
@@ -239,6 +311,18 @@ Return JSON matching the schema.
     if (!raw) throw new Error('Empty completion content');
 
     const structured = AnalysisResponse.parse(JSON.parse(raw));
+
+    // Secondary pass: enrich each misconception with solution steps + distractor expansions
+    const ppqQs = payload.ppq?.questions ?? [];
+    const enrichments = await Promise.all(
+      structured.misconceptions.map((m) => enrichMisconception(m, ppqQs))
+    );
+    structured.misconceptions = structured.misconceptions.map((m, i) => ({
+      ...m,
+      wrongAnswerExplanations: enrichments[i]?.wrongAnswerExplanations ?? [],
+      correctAnswerSolution: enrichments[i]?.correctAnswerSolution ?? [],
+    }));
+
     return JSON.stringify(structured);
   } catch (error) {
     console.error('[microcoachLLMAnalysis] Error', {

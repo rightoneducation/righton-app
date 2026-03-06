@@ -615,6 +615,7 @@ async function main() {
       // Parse & upload PostPPQ
       const postPpqPath = path.join(DATA_ROOT, sessionConfig.postPpqFile);
       process.stdout.write(`\n  Parsing PostPPQ Excel...`);
+      let postPpqAssessmentId: string | undefined;
       try {
         const postPpqData = parseExcelFile(postPpqPath);
         process.stdout.write(
@@ -634,22 +635,23 @@ async function main() {
         const postPpqAssessment = await uploadAssessment(
           classroomId, sessionId, postPpqAssessmentData, 'POST_PPQ', ppqAssessment.id
         );
+        postPpqAssessmentId = postPpqAssessment.id;
 
         await uploadStudentResponses('PostPPQ', postPpqAssessment.id, postPpqData.students, studentMap);
-
-        // Link both assessment IDs back onto the session
-        process.stdout.write(`  Linking assessments to session...`);
-        await gql(UPDATE_SESSION, {
-          input: {
-            id: sessionId,
-            ppqAssessmentId: ppqAssessment.id,
-            postPpqAssessmentId: postPpqAssessment.id,
-          },
-        });
-        process.stdout.write(`  ✓\n`);
       } catch (err) {
         console.error(`\n  ERROR processing PostPPQ: ${err}`);
       }
+
+      // Link PPQ (always) and PostPPQ (if it exists) back onto the session
+      process.stdout.write(`  Linking assessments to session...`);
+      await gql(UPDATE_SESSION, {
+        input: {
+          id: sessionId,
+          ppqAssessmentId: ppqAssessment.id,
+          ...(postPpqAssessmentId && { postPpqAssessmentId }),
+        },
+      });
+      process.stdout.write(`  ✓\n`);
 
       // Create misconceptions + stub activities
       // Primary source: Data/{classroom.key}/{session.label}/misconceptions.json (written by ingest-ppq.js)

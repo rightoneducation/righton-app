@@ -12,8 +12,26 @@
  * the frontend reads currentWeek from Classroom, finds the matching Session,
  * and renders its pregeneratedNextSteps — no LLM calls at page-load time.
  */
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const appsync_config_1 = require("./appsync-config");
+const client_lambda_1 = require("@aws-sdk/client-lambda");
+const AMPLIFY_ENV = (_a = process.env.AMPLIFY_ENV) !== null && _a !== void 0 ? _a : 'dev';
+async function invokeLambda(functionName, payload) {
+    var _a;
+    const client = new client_lambda_1.LambdaClient({ region: (_a = process.env.AWS_REGION) !== null && _a !== void 0 ? _a : 'us-east-1' });
+    const cmd = new client_lambda_1.InvokeCommand({
+        FunctionName: functionName,
+        InvocationType: 'RequestResponse',
+        Payload: Buffer.from(JSON.stringify(payload)),
+    });
+    const resp = await client.send(cmd);
+    if (resp.FunctionError) {
+        const errBody = Buffer.from(resp.Payload).toString('utf8');
+        throw new Error(`Lambda ${functionName} error: ${errBody}`);
+    }
+    return JSON.parse(Buffer.from(resp.Payload).toString('utf8'));
+}
 // ── GraphQL queries & mutations ───────────────────────────────────────────────
 const LIST_CLASSROOMS = /* GraphQL */ `
   query ListClassrooms {
@@ -130,24 +148,19 @@ const LIST_CONTEXT_DATA = /* GraphQL */ `
     }
   }
 `;
-const GET_LEARNING_SCIENCE = /* GraphQL */ `
-  mutation GetLearningScience($input: GetLearningScienceInput!) {
-    getLearningScience(input: $input)
-  }
-`;
-const GET_ANALYSIS = /* GraphQL */ `
-  mutation GetAnalysis($input: GetAnalysisInput!) {
-    getAnalysis(input: $input)
-  }
-`;
-const GENERATE_NEXT_STEP = /* GraphQL */ `
-  mutation GenerateNextStep($input: GenerateNextStepInput!) {
-    generateNextStep(input: $input)
-  }
-`;
-const GENERATE_NEXT_STEP_OPTION = /* GraphQL */ `
-  mutation GenerateNextStepOption($input: GenerateNextStepOptionInput!) {
-    generateNextStepOption(input: $input)
+const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
+  query StudentResponsesByAssessmentId($assessmentId: ID!) {
+    studentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
+      items {
+        studentId
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          confidence
+        }
+      }
+    }
   }
 `;
 const UPDATE_SESSION = /* GraphQL */ `
@@ -167,12 +180,115 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
     }
   }
 `;
+// ── Confidence stats aggregator ───────────────────────────────────────────────
+function computeConfidenceStats(studentResponses, questions) {
+    var _a;
+    const qStats = {};
+    for (const q of questions) {
+        qStats[q.questionNumber] = {
+            questionNumber: q.questionNumber,
+            totalConf: 0, countConf: 0,
+            totalConfCorrect: 0, countConfCorrect: 0,
+            totalConfIncorrect: 0, countConfIncorrect: 0,
+            highConfWrong: 0, totalHighConf: 0,
+        };
+    }
+    for (const sr of studentResponses) {
+        for (const qr of ((_a = sr.questionResponses) !== null && _a !== void 0 ? _a : [])) {
+            const s = qStats[qr.questionNumber];
+            if (!s || qr.confidence == null)
+                continue;
+            const conf = qr.confidence;
+            s.totalConf += conf;
+            s.countConf++;
+            if (qr.isCorrect) {
+                s.totalConfCorrect += conf;
+                s.countConfCorrect++;
+            }
+            else {
+                s.totalConfIncorrect += conf;
+                s.countConfIncorrect++;
+                if (conf >= 4)
+                    s.highConfWrong++;
+            }
+            if (conf >= 4)
+                s.totalHighConf++;
+        }
+    }
+    return Object.values(qStats).map((s) => ({
+        questionNumber: s.questionNumber,
+        avgConfidence: s.countConf > 0 ? parseFloat((s.totalConf / s.countConf).toFixed(2)) : null,
+        avgConfidenceCorrect: s.countConfCorrect > 0 ? parseFloat((s.totalConfCorrect / s.countConfCorrect).toFixed(2)) : null,
+        avgConfidenceIncorrect: s.countConfIncorrect > 0 ? parseFloat((s.totalConfIncorrect / s.countConfIncorrect).toFixed(2)) : null,
+        highConfWrongPct: s.totalHighConf > 0 ? parseFloat((s.highConfWrong / s.totalHighConf).toFixed(3)) : null,
+    }));
+}
+// ── PPQ enrichment helpers ────────────────────────────────────────────────────
+/** Extract question numbers from a string like "PPQ Q3, Q5" or "Q1 and Q4" → [1, 3, 4, 5] */
+function parseQuestionNumbers(source) {
+    const matches = (source !== null && source !== void 0 ? source : '').matchAll(/Q(\d+)/gi);
+    const nums = new Set();
+    for (const m of matches)
+        nums.add(parseInt(m[1], 10));
+    return [...nums].sort((a, b) => a - b);
+}
+/** Per question, count occurrences of each wrong response string. */
+function computeWrongAnswerDist(studentResponses) {
+    var _a, _b;
+    const dist = {};
+    for (const sr of studentResponses) {
+        for (const qr of ((_a = sr.questionResponses) !== null && _a !== void 0 ? _a : [])) {
+            if (qr.isCorrect || qr.response == null)
+                continue;
+            const qn = qr.questionNumber;
+            if (!dist[qn])
+                dist[qn] = {};
+            const ans = String(qr.response).trim();
+            dist[qn][ans] = ((_b = dist[qn][ans]) !== null && _b !== void 0 ? _b : 0) + 1;
+        }
+    }
+    return dist;
+}
+/**
+ * Split students into two groups for a given set of question numbers:
+ *   buildingUnderstanding — got at least one question wrong (sorted by wrong count desc, then alpha)
+ *   understoodConcept     — got all relevant questions correct (sorted alphabetically)
+ * Students with no responses for these questions are excluded.
+ */
+function getStudentGroups(studentResponses, questionNumbers, studentNameMap) {
+    var _a, _b;
+    if (!questionNumbers.length)
+        return { buildingUnderstanding: [], understoodConcept: [] };
+    const qSet = new Set(questionNumbers);
+    const wrongCount = new Map();
+    const correctOnly = new Set();
+    for (const sr of studentResponses) {
+        const name = studentNameMap.get(sr.studentId);
+        if (!name)
+            continue;
+        const relevant = ((_a = sr.questionResponses) !== null && _a !== void 0 ? _a : []).filter((qr) => qSet.has(qr.questionNumber));
+        if (!relevant.length)
+            continue;
+        const wrongs = relevant.filter((qr) => !qr.isCorrect).length;
+        if (wrongs > 0) {
+            wrongCount.set(name, ((_b = wrongCount.get(name)) !== null && _b !== void 0 ? _b : 0) + wrongs);
+        }
+        else {
+            correctOnly.add(name);
+        }
+    }
+    const buildingUnderstanding = [...wrongCount.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([name]) => name);
+    const understoodConcept = [...correctOnly].sort((a, b) => a.localeCompare(b));
+    return { buildingUnderstanding, understoodConcept };
+}
 // ── Next step builder ─────────────────────────────────────────────────────────
 function formatLabel(f) {
     var _a;
     return ((_a = { small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' }[f]) !== null && _a !== void 0 ? _a : f);
 }
-function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learningScienceData) {
+function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learningScienceData, misconceptionExtras = []) {
     var _a, _b, _c;
     const questionErrorRates = (ppqQuestions !== null && ppqQuestions !== void 0 ? ppqQuestions : [])
         .filter((q) => q.questionNumber != null && q.classPercentCorrect != null)
@@ -193,32 +309,37 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
         }
     }
     return misconceptions.map((m, i) => {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-        const activityList = ((_a = activitiesPerGroup[i]) !== null && _a !== void 0 ? _a : []).filter(Boolean);
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+        const extras = (_a = misconceptionExtras[i]) !== null && _a !== void 0 ? _a : {};
+        const activityList = ((_b = activitiesPerGroup[i]) !== null && _b !== void 0 ? _b : []).filter(Boolean);
         const frameworkItem = frameworkItems.find((item) => normalize(item.code) === normalize(m.ccssStandard));
-        const prerequisiteGaps = ((_b = m.prerequisiteGapCodes) === null || _b === void 0 ? void 0 : _b.length)
+        const prerequisiteGaps = ((_c = m.prerequisiteGapCodes) === null || _c === void 0 ? void 0 : _c.length)
             ? m.prerequisiteGapCodes.map((code) => { var _a; return ({ standard: code, description: (_a = standardsDescMap.get(code)) !== null && _a !== void 0 ? _a : '' }); })
-            : ((_c = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.prerequisiteStandards) !== null && _c !== void 0 ? _c : []).map((r) => ({ standard: r.code, description: r.description }));
-        const impactedObjectives = ((_d = m.impactedObjectiveCodes) === null || _d === void 0 ? void 0 : _d.length)
+            : ((_d = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.prerequisiteStandards) !== null && _d !== void 0 ? _d : []).map((r) => ({ standard: r.code, description: r.description }));
+        const impactedObjectives = ((_e = m.impactedObjectiveCodes) === null || _e === void 0 ? void 0 : _e.length)
             ? m.impactedObjectiveCodes.map((code) => { var _a; return ({ standard: code, description: (_a = standardsDescMap.get(code)) !== null && _a !== void 0 ? _a : '' }); })
-            : ((_e = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.futureDependentStandards) !== null && _e !== void 0 ? _e : []).map((r) => ({ standard: r.code, description: r.description }));
+            : ((_f = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.futureDependentStandards) !== null && _f !== void 0 ? _f : []).map((r) => ({ standard: r.code, description: r.description }));
         return {
             id: `nextstep-ai-${i + 1}`,
             title: m.title,
             frequency: m.frequency,
-            isCore: (_f = m.isCore) !== null && _f !== void 0 ? _f : false,
+            isCore: (_g = m.isCore) !== null && _g !== void 0 ? _g : false,
             occurrence: m.occurrence,
-            example: (_g = m.example) !== null && _g !== void 0 ? _g : null,
+            example: (_h = m.example) !== null && _h !== void 0 ? _h : null,
             misconceptionSummary: m.description,
-            aiReasoning: (_h = m.aiReasoning) !== null && _h !== void 0 ? _h : null,
-            successIndicators: (_j = m.successIndicators) !== null && _j !== void 0 ? _j : [],
+            aiReasoning: (_j = m.aiReasoning) !== null && _j !== void 0 ? _j : null,
+            successIndicators: (_k = m.successIndicators) !== null && _k !== void 0 ? _k : [],
             ccssStandards: {
                 targetObjective: { standard: m.ccssStandard, description: m.description },
                 impactedObjectives,
                 prerequisiteGaps,
             },
-            evidence: (_k = m.evidence) !== null && _k !== void 0 ? _k : null,
+            evidence: (_l = m.evidence) !== null && _l !== void 0 ? _l : null,
             questionErrorRates,
+            ppqQuestions: (_m = extras.ppqQuestions) !== null && _m !== void 0 ? _m : [],
+            studentGroups: (_o = extras.studentGroups) !== null && _o !== void 0 ? _o : { buildingUnderstanding: [], understoodConcept: [] },
+            wrongAnswerExplanations: (_p = extras.wrongAnswerExplanations) !== null && _p !== void 0 ? _p : [],
+            correctAnswerSolution: (_q = extras.correctAnswerSolution) !== null && _q !== void 0 ? _q : [],
             moveOptions: activityList.map((activity, j) => {
                 var _a, _b, _c, _d;
                 return ({
@@ -242,7 +363,7 @@ function parseJson(raw) {
 }
 // ── Main ─────────────────────────────────────────────────────────────────────
 async function main() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t;
     console.log('=== Microcoach Next Step Generator ===\n');
     const gql = await (0, appsync_config_1.createGqlClient)();
     // 1. Find grade 6 classroom
@@ -272,29 +393,86 @@ async function main() {
     const ccss = (_h = (_g = ppq === null || ppq === void 0 ? void 0 : ppq.ccssStandards) === null || _g === void 0 ? void 0 : _g[0]) !== null && _h !== void 0 ? _h : (_j = currentSession === null || currentSession === void 0 ? void 0 : currentSession.ccssStandards) === null || _j === void 0 ? void 0 : _j[0];
     if (!ccss)
         throw new Error('No CCSS standard found in current session');
-    // 4. Learning science data (LLM)
+    // 4. Learning science data (direct Lambda — bypasses AppSync 30s timeout)
     process.stdout.write(`Fetching learning science data for ${ccss}...`);
-    const lsRaw = await gql(GET_LEARNING_SCIENCE, { input: { ccss } });
-    const learningScienceData = parseJson(lsRaw.getLearningScience);
+    const lsResult = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } });
+    const learningScienceData = parseJson(lsResult);
     console.log(' ✓');
-    // 5. Analysis (LLM)
+    // 4b. Fetch student responses — used for confidence stats and PPQ enrichment
+    let augmentedPpq = ppq;
+    let studentResponses = [];
+    if (ppq === null || ppq === void 0 ? void 0 : ppq.id) {
+        process.stdout.write('Fetching student responses...');
+        try {
+            const srData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: ppq.id });
+            studentResponses = (_l = (_k = srData === null || srData === void 0 ? void 0 : srData.studentResponsesByAssessmentId) === null || _k === void 0 ? void 0 : _k.items) !== null && _l !== void 0 ? _l : [];
+            const hasConfidence = studentResponses.some((sr) => { var _a; return ((_a = sr.questionResponses) !== null && _a !== void 0 ? _a : []).some((qr) => qr.confidence != null); });
+            if (hasConfidence) {
+                const confidenceStats = computeConfidenceStats(studentResponses, (_m = ppq.questions) !== null && _m !== void 0 ? _m : []);
+                augmentedPpq = { ...ppq, confidenceStats };
+                console.log(` ✓  (${studentResponses.length} responses, with confidence data)`);
+            }
+            else {
+                console.log(` ✓  (${studentResponses.length} responses, no confidence data)`);
+            }
+        }
+        catch (err) {
+            console.log(` ✗ (${err}) — continuing without student responses`);
+        }
+    }
+    // Build student name map from classroom students (fetched in step 1)
+    const studentNameMap = new Map();
+    for (const s of ((_p = (_o = gr6.students) === null || _o === void 0 ? void 0 : _o.items) !== null && _p !== void 0 ? _p : [])) {
+        if (s.id && s.name)
+            studentNameMap.set(s.id, s.name);
+    }
+    const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
+    // 5. Analysis (direct Lambda — bypasses AppSync 30s timeout)
+    //    wrongAnswerDist is forwarded so the Lambda can expand distractor explanations internally.
     process.stdout.write('Running misconception analysis...');
-    const analysisRaw = await gql(GET_ANALYSIS, {
+    const analysisResult = await invokeLambda(`microcoachLLMAnalysis-${AMPLIFY_ENV}`, {
         input: {
-            classroomData: JSON.stringify({ classroom: gr6, currentSession, sessionHistory: historySessions, ppq }),
+            classroomData: JSON.stringify({
+                classroom: gr6,
+                currentSession,
+                sessionHistory: historySessions,
+                ppq: augmentedPpq,
+                wrongAnswerDist,
+            }),
             learningScienceData: JSON.stringify(learningScienceData),
         },
     });
-    const analysis = parseJson(analysisRaw.getAnalysis);
-    const misconceptions = (_k = analysis === null || analysis === void 0 ? void 0 : analysis.misconceptions) !== null && _k !== void 0 ? _k : [];
+    const analysis = parseJson(analysisResult);
+    const misconceptions = (_q = analysis === null || analysis === void 0 ? void 0 : analysis.misconceptions) !== null && _q !== void 0 ? _q : [];
     console.log(` ✓  ${misconceptions.length} misconceptions identified`);
+    // 5b. Build per-misconception extras: ppqQuestions and affectedStudents computed locally;
+    //     wrongAnswerExplanations come back from the analysis Lambda (no direct OpenAI calls here).
+    const ppqQs = ((_r = ppq === null || ppq === void 0 ? void 0 : ppq.questions) !== null && _r !== void 0 ? _r : []).map((q) => {
+        var _a, _b;
+        return ({
+            questionNumber: q.questionNumber,
+            correctAnswer: (_a = q.correctAnswer) !== null && _a !== void 0 ? _a : null,
+            classPercentCorrect: (_b = q.classPercentCorrect) !== null && _b !== void 0 ? _b : null,
+        });
+    });
+    const misconceptionExtras = misconceptions.map((m) => {
+        var _a, _b, _c, _d;
+        const qNums = parseQuestionNumbers((_b = (_a = m.evidence) === null || _a === void 0 ? void 0 : _a.source) !== null && _b !== void 0 ? _b : '');
+        return {
+            ppqQuestions: ppqQs,
+            studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
+            wrongAnswerExplanations: (_c = m.wrongAnswerExplanations) !== null && _c !== void 0 ? _c : [],
+            correctAnswerSolution: (_d = m.correctAnswerSolution) !== null && _d !== void 0 ? _d : [],
+        };
+    });
+    console.log(`Enriched ${misconceptionExtras.length} misconceptions with PPQ data`);
     // 6. Next step examples
     process.stdout.write('Fetching next step examples...');
     const nextStepData = await gql(LIST_CONTEXT_DATA, {
         filter: { type: { eq: 'NEXT_STEP_LESSON' } },
         limit: 20,
     });
-    const nextStepExamples = (_m = (_l = nextStepData.listContextData) === null || _l === void 0 ? void 0 : _l.items) !== null && _m !== void 0 ? _m : [];
+    const nextStepExamples = (_t = (_s = nextStepData.listContextData) === null || _s === void 0 ? void 0 : _s.items) !== null && _t !== void 0 ? _t : [];
     console.log(` ✓  ${nextStepExamples.length} examples`);
     // 7. Generate next step options — one dedicated Lambda call per format per misconception.
     //    Each call generates ONE activity grounded in the knowledge graph and misconception data.
@@ -316,10 +494,10 @@ async function main() {
         };
         const results = await Promise.all(NEXT_STEP_FORMATS.map(async (fmt) => {
             try {
-                const raw = await gql(GENERATE_NEXT_STEP_OPTION, {
+                const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
                     input: { ...baseInput, preferredFormat: fmt },
                 });
-                return parseJson(raw.generateNextStepOption);
+                return parseJson(raw);
             }
             catch (err) {
                 console.error(`\n  ✗ format=${fmt} for ${m.title}: ${err}`);
@@ -331,7 +509,7 @@ async function main() {
         return resultList;
     }));
     // 8. Build next steps
-    const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq === null || ppq === void 0 ? void 0 : ppq.questions, learningScienceData);
+    const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq === null || ppq === void 0 ? void 0 : ppq.questions, learningScienceData, misconceptionExtras);
     console.log(`\nBuilt ${nextSteps.length} next steps`);
     // 9. Persist next steps to the session and mark the classroom's active week
     process.stdout.write(`Saving next steps to session ${currentStub.id} (week ${currentStub.weekNumber})...`);

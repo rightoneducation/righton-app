@@ -60,6 +60,7 @@ export interface ParsedQuestionResponse {
     response: string;
     isCorrect: boolean;
     pointsEarned: number;
+    confidence?: number;
 }
 export interface CreatedClassroom {
     id: string;

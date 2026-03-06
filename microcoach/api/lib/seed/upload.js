@@ -97,7 +97,7 @@ function progress(msg, done = false) {
  *   Responses: empty cell = student answered correctly; non-empty = wrong answer selected
  */
 function parseExcelFile(filePath) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
@@ -141,8 +141,17 @@ function parseExcelFile(filePath) {
             questionNumbers.push(parseInt(qMatch[1], 10));
         }
     }
+    // ── Confidence columns from row 2 (Q1_Conf, Q2_Conf, …) ──────────────────
+    const confColByQNumber = {};
+    for (let col = 1; col < headerRow.length; col++) {
+        const cell = String((_h = headerRow[col]) !== null && _h !== void 0 ? _h : '').trim();
+        const cMatch = cell.match(/^Q?(\d+)_Conf$/i);
+        if (cMatch) {
+            confColByQNumber[parseInt(cMatch[1], 10)] = col;
+        }
+    }
     // ── Class % correct per question (row 3) ─────────────────────────────────────
-    const classRow = (_h = rows[3]) !== null && _h !== void 0 ? _h : [];
+    const classRow = (_j = rows[3]) !== null && _j !== void 0 ? _j : [];
     const classPercentByCol = {};
     for (const col of questionColumns) {
         const val = classRow[col];
@@ -156,10 +165,10 @@ function parseExcelFile(filePath) {
     // ── Answer key ───────────────────────────────────────────────────────────────
     // Generated: row 7 (index 7).  Assessment Matrix: row 6 (index 6).
     const answerKeyRowIdx = isAssessmentMatrix ? 6 : 7;
-    const keyRow = (_j = rows[answerKeyRowIdx]) !== null && _j !== void 0 ? _j : [];
+    const keyRow = (_k = rows[answerKeyRowIdx]) !== null && _k !== void 0 ? _k : [];
     const answerKeyByCol = {};
     for (const col of questionColumns) {
-        const val = String((_k = keyRow[col]) !== null && _k !== void 0 ? _k : '').trim().toUpperCase();
+        const val = String((_l = keyRow[col]) !== null && _l !== void 0 ? _l : '').trim().toUpperCase();
         if (val.length === 1 && 'ABCDE'.includes(val)) {
             answerKeyByCol[col] = val;
         }
@@ -183,13 +192,13 @@ function parseExcelFile(filePath) {
     const studentRows = [];
     for (let r = studentStartRow; r < rows.length; r++) {
         const row = rows[r];
-        const name = String((_l = row[nameCol]) !== null && _l !== void 0 ? _l : '').trim();
+        const name = String((_m = row[nameCol]) !== null && _m !== void 0 ? _m : '').trim();
         if (!name)
             continue;
         if (name.toLowerCase().includes('total') || name.toLowerCase().includes('average'))
             continue;
-        const externalId = String((_m = row[externalIdCol]) !== null && _m !== void 0 ? _m : '').trim();
-        const rawScore = parseFloat(String((_o = row[scoreCol]) !== null && _o !== void 0 ? _o : '0'));
+        const externalId = String((_o = row[externalIdCol]) !== null && _o !== void 0 ? _o : '').trim();
+        const rawScore = parseFloat(String((_p = row[scoreCol]) !== null && _p !== void 0 ? _p : '0'));
         let totalScore = isNaN(rawScore) ? 0 : rawScore;
         if (isAssessmentMatrix) {
             totalScore = totalScore / 100; // convert 0–100 → 0–1
@@ -198,40 +207,47 @@ function parseExcelFile(filePath) {
             totalScore = totalScore / 100; // handle accidental percent in generated data
         }
         const questionResponses = questionColumns.map((col, i) => {
-            var _a, _b;
+            var _a, _b, _c;
             const rawResponse = String((_a = row[col]) !== null && _a !== void 0 ? _a : '').trim().toUpperCase();
             const correctAnswer = (_b = answerKeyByCol[col]) !== null && _b !== void 0 ? _b : '';
+            const qNum = questionNumbers[i];
+            const confCol = confColByQNumber[qNum];
+            const rawConf = confCol != null ? parseInt(String((_c = row[confCol]) !== null && _c !== void 0 ? _c : ''), 10) : NaN;
+            const confidence = !isNaN(rawConf) && rawConf >= 1 && rawConf <= 5 ? rawConf : undefined;
             if (isAssessmentMatrix) {
                 // Sparse encoding: empty cell = student answered correctly
                 if (rawResponse === '') {
                     return {
-                        questionNumber: questionNumbers[i],
+                        questionNumber: qNum,
                         response: correctAnswer,
                         isCorrect: true,
                         pointsEarned: 1,
+                        confidence,
                     };
                 }
                 return {
-                    questionNumber: questionNumbers[i],
+                    questionNumber: qNum,
                     response: rawResponse,
                     isCorrect: false,
                     pointsEarned: 0,
+                    confidence,
                 };
             }
             // Generated format: response always present
             const isCorrect = rawResponse !== '' && rawResponse === correctAnswer;
             return {
-                questionNumber: questionNumbers[i],
+                questionNumber: qNum,
                 response: rawResponse,
                 isCorrect,
                 pointsEarned: isCorrect ? 1 : 0,
+                confidence,
             };
         });
         studentRows.push({ name, externalId, totalScore, questionResponses });
     }
     const weekMatch = assessmentCode.match(/W(\d+)/i);
     const weekNumber = weekMatch ? parseInt(weekMatch[1], 10) : 0;
-    const topic = deriveTopic((_p = ccssStandards[0]) !== null && _p !== void 0 ? _p : '');
+    const topic = deriveTopic((_q = ccssStandards[0]) !== null && _q !== void 0 ? _q : '');
     return {
         assessmentCode,
         ccssStandards, // empty array for Assessment Matrix; caller fills from sessionConfig
@@ -327,13 +343,19 @@ async function uploadStudents(classroomId, students) {
         const anonName = `Student ${i + 1}`;
         const externalId = s.externalId || `S${String(i + 1).padStart(3, '0')}`;
         progress(`  Creating students [${i + 1}/${students.length}]  ${anonName}`);
+        const confValues = s.questionResponses
+            .map((qr) => qr.confidence)
+            .filter((c) => c != null && c >= 1 && c <= 5);
+        const avgConfidence = confValues.length > 0
+            ? confValues.reduce((sum, c) => sum + c, 0) / confValues.length
+            : 0;
         const data = await gql(CREATE_STUDENT, {
             input: {
                 classroomId,
                 classroomStudentsId: classroomId,
                 name: anonName,
                 externalId,
-                confidenceLevel: 0,
+                confidenceLevel: Math.round(avgConfidence) || 0,
                 status: 'active',
             },
         });
@@ -410,12 +432,16 @@ async function uploadStudentResponses(label, assessmentId, students, studentMap 
                 assessmentStudentResponsesId: assessmentId,
                 studentId,
                 totalScore: s.totalScore,
-                questionResponses: s.questionResponses.map((qr) => ({
-                    questionNumber: qr.questionNumber,
-                    response: qr.response,
-                    isCorrect: qr.isCorrect,
-                    pointsEarned: qr.pointsEarned,
-                })),
+                questionResponses: s.questionResponses.map((qr) => {
+                    var _a;
+                    return ({
+                        questionNumber: qr.questionNumber,
+                        response: qr.response,
+                        isCorrect: qr.isCorrect,
+                        pointsEarned: qr.pointsEarned,
+                        confidence: (_a = qr.confidence) !== null && _a !== void 0 ? _a : null,
+                    });
+                }),
             },
         });
         count++;
@@ -542,6 +568,7 @@ async function main() {
             // Parse & upload PostPPQ
             const postPpqPath = path.join(seedData_1.DATA_ROOT, sessionConfig.postPpqFile);
             process.stdout.write(`\n  Parsing PostPPQ Excel...`);
+            let postPpqAssessmentId;
             try {
                 const postPpqData = parseExcelFile(postPpqPath);
                 process.stdout.write(`  ✓  ${postPpqData.students.length} students, ${postPpqData.questionMeta.length} questions\n`);
@@ -554,21 +581,22 @@ async function main() {
                         : sessionConfig.ccssStandards,
                 };
                 const postPpqAssessment = await uploadAssessment(classroomId, sessionId, postPpqAssessmentData, 'POST_PPQ', ppqAssessment.id);
+                postPpqAssessmentId = postPpqAssessment.id;
                 await uploadStudentResponses('PostPPQ', postPpqAssessment.id, postPpqData.students, studentMap);
-                // Link both assessment IDs back onto the session
-                process.stdout.write(`  Linking assessments to session...`);
-                await gql(UPDATE_SESSION, {
-                    input: {
-                        id: sessionId,
-                        ppqAssessmentId: ppqAssessment.id,
-                        postPpqAssessmentId: postPpqAssessment.id,
-                    },
-                });
-                process.stdout.write(`  ✓\n`);
             }
             catch (err) {
                 console.error(`\n  ERROR processing PostPPQ: ${err}`);
             }
+            // Link PPQ (always) and PostPPQ (if it exists) back onto the session
+            process.stdout.write(`  Linking assessments to session...`);
+            await gql(UPDATE_SESSION, {
+                input: {
+                    id: sessionId,
+                    ppqAssessmentId: ppqAssessment.id,
+                    ...(postPpqAssessmentId && { postPpqAssessmentId }),
+                },
+            });
+            process.stdout.write(`  ✓\n`);
             // Create misconceptions + stub activities
             // Primary source: Data/{classroom.key}/{session.label}/misconceptions.json (written by ingest-ppq.js)
             // Fallback: seedData misconceptions array

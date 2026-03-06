@@ -1156,6 +1156,7 @@ exports.onCreateAssessment = `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1211,6 +1212,7 @@ exports.onUpdateAssessment = `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1266,6 +1268,7 @@ exports.onDeleteAssessment = `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1298,6 +1301,7 @@ exports.onCreateStudentResponse = `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1321,6 +1325,7 @@ exports.onUpdateStudentResponse = `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1344,6 +1349,7 @@ exports.onDeleteStudentResponse = `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
