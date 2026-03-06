@@ -40,9 +40,17 @@
       "tiebreakers": ["prefer_conceptual_over_procedural", "prefer_broader_downstream_impact"]
     },
     "futureScoringSignals": {
-      "description": "Placeholder for future data not yet in model. When PPQ confidence ratings and student reflection responses become available, incorporate them as additional scoring signals.",
-      "ppqConfidenceRatings": false,
-      "studentReflectionResponses": false
+      "ppqConfidenceRatings": true,
+      "studentReflectionResponses": false,
+      "confidenceScoring": {
+        "description": "Confidence modifies existing scoring dimensions rather than adding a new one.",
+        "highConfWrongThreshold": 0.25,
+        "highConfidenceMinRating": 4,
+        "lowConfidenceMaxRating": 2,
+        "lowAvgConfidenceCorrectThreshold": 2.5,
+        "conceptualSeverityBoost": "raise toward 1.0 when highConfWrongPct >= highConfWrongThreshold",
+        "prevalenceAdjustment": "discount correct rate when avgConfidenceCorrect < lowAvgConfidenceCorrectThreshold"
+      }
     }
   },
 

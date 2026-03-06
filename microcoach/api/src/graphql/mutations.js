@@ -1201,6 +1201,7 @@ export const createAssessment = /* GraphQL */ `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1257,6 +1258,7 @@ export const updateAssessment = /* GraphQL */ `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1313,6 +1315,7 @@ export const deleteAssessment = /* GraphQL */ `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1346,6 +1349,7 @@ export const createStudentResponse = /* GraphQL */ `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1370,6 +1374,7 @@ export const updateStudentResponse = /* GraphQL */ `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1394,6 +1399,7 @@ export const deleteStudentResponse = /* GraphQL */ `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt

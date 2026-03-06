@@ -684,6 +684,7 @@ export const getAssessment = /* GraphQL */ `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -742,6 +743,7 @@ export const listAssessments = /* GraphQL */ `
               response
               isCorrect
               pointsEarned
+              confidence
               __typename
             }
             createdAt
@@ -775,6 +777,7 @@ export const getStudentResponse = /* GraphQL */ `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -805,6 +808,7 @@ export const listStudentResponses = /* GraphQL */ `
           response
           isCorrect
           pointsEarned
+          confidence
           __typename
         }
         createdAt
@@ -1739,6 +1743,7 @@ export const assessmentsByClassroomId = /* GraphQL */ `
               response
               isCorrect
               pointsEarned
+              confidence
               __typename
             }
             createdAt
@@ -1808,6 +1813,7 @@ export const assessmentsBySessionId = /* GraphQL */ `
               response
               isCorrect
               pointsEarned
+              confidence
               __typename
             }
             createdAt
@@ -1854,6 +1860,7 @@ export const studentResponsesByAssessmentId = /* GraphQL */ `
           response
           isCorrect
           pointsEarned
+          confidence
           __typename
         }
         createdAt
@@ -1891,6 +1898,7 @@ export const studentResponsesByStudentId = /* GraphQL */ `
           response
           isCorrect
           pointsEarned
+          confidence
           __typename
         }
         createdAt

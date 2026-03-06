@@ -119,6 +119,7 @@ type QuestionResponse {
   response: String
   isCorrect: Boolean!
   pointsEarned: Float!
+  confidence: Int           # 1–5; null if not collected
 }
 
 # ── Misconception ──────────────────────────────────────────────────────

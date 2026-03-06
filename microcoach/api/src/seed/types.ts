@@ -71,6 +71,7 @@ export interface ParsedQuestionResponse {
   response: string;
   isCorrect: boolean;
   pointsEarned: number;
+  confidence?: number;
 }
 
 // AppSync record IDs returned after creation

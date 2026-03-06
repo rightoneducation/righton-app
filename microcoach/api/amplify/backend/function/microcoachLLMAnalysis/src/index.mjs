@@ -80,6 +80,7 @@ export const handler = async (event) => {
     ccssStandards: a.ccssStandards,
     classPercentCorrect: a.classPercentCorrect,
     questions: a.questions,
+    ...(a.confidenceStats != null && { confidenceStats: a.confidenceStats }),
   }) : null;
 
   const trimSession = (s) => s ? ({
@@ -191,6 +192,27 @@ Scoring guidance for each dimension (normalize each to 0–1):
 **Tiebreakers**: Prefer conceptual over procedural errors; prefer broader downstream impact.
 
 **Filter**: Exclude patterns affecting fewer than ${MIN_PREVALENCE}% of students UNLESS they meet the alternative qualifier above. Exclude patterns that are clearly one-time careless mistakes with no repeatable reasoning error.
+
+## Confidence Signal Interpretation
+PPQ confidence ratings (1–5 per student per question) are available when the PPQ assessment includes a \`confidenceStats\` array. Use them as modifiers to the existing scoring dimensions — not as a separate dimension.
+
+Per-question confidence aggregates provided (when present):
+- avgConfidenceCorrect: avg confidence of students who answered correctly
+- avgConfidenceIncorrect: avg confidence of students who answered incorrectly
+- highConfWrongPct: fraction of students with confidence ≥4 who answered wrong
+
+How to apply them:
+
+**Adjusting Conceptual Severity:**
+- highConfWrongPct ≥ 0.25 on a question: students believe they understand but have the wrong mental model → strong structural misconception signal → raise conceptualSeverity toward 1.0
+- highConfWrongPct < 0.10 with high error rate: students know they don't know → likely procedural/execution gap → conceptualSeverity stays lower (0.3–0.5)
+
+**Adjusting effective Prevalence:**
+- Low avgConfidenceCorrect (< 2.5) on a question: correct answers are likely guesses, not mastery. Discount that question's correct rate when estimating true prevalence of the gap.
+- This means a 60% correct rate with avgConfidenceCorrect = 2.0 may represent a weaker foundation than a 50% correct rate with avgConfidenceCorrect = 4.2.
+
+**Tiebreakers with confidence:**
+When two misconceptions have similar composite scores, prefer the one with higher highConfWrongPct — it represents students who think they are right but aren't, making it both harder to self-correct and more instructionally urgent.
 
 **Secondary misconceptions**: Must exceed the minimum threshold, must be meaningfully distinct from the core (not a minor variant of it), and must represent a separate reasoning error. Set \`isCore: false\` on all secondary misconceptions. Cap total at ${MAX_MISCONCEPTIONS} misconceptions.
 

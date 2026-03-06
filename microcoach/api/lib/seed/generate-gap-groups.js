@@ -138,6 +138,19 @@ const GET_SESSION = /* GraphQL */ `
     }
   }
 `;
+const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
+  query StudentResponsesByAssessmentId($assessmentId: ID!) {
+    studentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
+      items {
+        questionResponses {
+          questionNumber
+          isCorrect
+          confidence
+        }
+      }
+    }
+  }
+`;
 const LIST_CONTEXT_DATA = /* GraphQL */ `
   query ListContextData($filter: ModelContextDataFilterInput, $limit: Int) {
     listContextData(filter: $filter, limit: $limit) {
@@ -170,6 +183,45 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
     }
   }
 `;
+// ── Confidence stats aggregator ───────────────────────────────────────────────
+function computeConfidenceStats(studentResponses, questions) {
+    const qStats = {};
+    for (const q of questions) {
+        qStats[q.questionNumber] = {
+            questionNumber: q.questionNumber,
+            totalConf: 0, countConf: 0,
+            totalConfCorrect: 0, countConfCorrect: 0,
+            totalConfIncorrect: 0, countConfIncorrect: 0,
+            highConfWrong: 0, totalHighConf: 0,
+        };
+    }
+    for (const sr of studentResponses) {
+        for (const qr of (sr.questionResponses ?? [])) {
+            const s = qStats[qr.questionNumber];
+            if (!s || qr.confidence == null) continue;
+            const conf = qr.confidence;
+            s.totalConf += conf;
+            s.countConf++;
+            if (qr.isCorrect) {
+                s.totalConfCorrect += conf;
+                s.countConfCorrect++;
+            } else {
+                s.totalConfIncorrect += conf;
+                s.countConfIncorrect++;
+                if (conf >= 4) s.highConfWrong++;
+            }
+            if (conf >= 4) s.totalHighConf++;
+        }
+    }
+    return Object.values(qStats).map((s) => ({
+        questionNumber: s.questionNumber,
+        avgConfidence:         s.countConf > 0         ? parseFloat((s.totalConf / s.countConf).toFixed(2))                 : null,
+        avgConfidenceCorrect:  s.countConfCorrect > 0  ? parseFloat((s.totalConfCorrect / s.countConfCorrect).toFixed(2))   : null,
+        avgConfidenceIncorrect:s.countConfIncorrect > 0? parseFloat((s.totalConfIncorrect / s.countConfIncorrect).toFixed(2)): null,
+        highConfWrongPct:      s.totalHighConf > 0     ? parseFloat((s.highConfWrong / s.totalHighConf).toFixed(3))         : null,
+    }));
+}
+
 // ── Gap group builder (mirrors App.js buildGapGroups) ────────────────────────
 function priorityLabel(p) {
     var _a;
@@ -315,11 +367,31 @@ async function processClassroom(gql, classroom) {
     const lsResult = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } });
     const learningScienceData = parseJson(lsResult);
     console.log(' ✓');
+    // 3b. Confidence stats — fetch student responses for PPQ and compute per-question aggregates
+    let augmentedPpq = ppq;
+    if (ppq?.id) {
+        process.stdout.write('  Computing confidence stats...');
+        try {
+            const srData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: ppq.id });
+            const studentResponses = srData?.studentResponsesByAssessmentId?.items ?? [];
+            const hasConfidence = studentResponses.some((sr) =>
+                (sr.questionResponses ?? []).some((qr) => qr.confidence != null));
+            if (hasConfidence) {
+                const confidenceStats = computeConfidenceStats(studentResponses, ppq.questions ?? []);
+                augmentedPpq = { ...ppq, confidenceStats };
+                console.log(` ✓  (${studentResponses.length} responses)`);
+            } else {
+                console.log(' (no confidence data — skipping)');
+            }
+        } catch (err) {
+            console.log(` ✗ (${err}) — continuing without confidence stats`);
+        }
+    }
     // 4. Analysis
     process.stdout.write('  Running misconception analysis...');
     const analysisResult = await invokeLambda(`microcoachLLMAnalysis-${AMPLIFY_ENV}`, {
         input: {
-            classroomData: JSON.stringify({ classroom, currentSession, sessionHistory: historySessions, ppq }),
+            classroomData: JSON.stringify({ classroom, currentSession, sessionHistory: historySessions, ppq: augmentedPpq }),
             learningScienceData: JSON.stringify(learningScienceData),
         },
     });
