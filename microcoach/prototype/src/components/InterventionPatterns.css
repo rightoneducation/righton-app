@@ -142,7 +142,6 @@
   padding: 18px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
-  /* Use margin-left:auto on the right-side metrics so the View button can sit flush to the far right */
   justify-content: flex-start;
   align-items: center;
   gap: 18px;
@@ -158,35 +157,44 @@
   font-size: 15px;
   font-weight: 700;
   color: #1B376F;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   line-height: 1.25;
 }
 
-.ip-gap-title-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-/* Learning objective pill uses shared `.ccss-tag.target-objective` styling (Recommended Next Steps) */
-
-.ip-gap-meta {
+.ip-gap-addresses {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.ip-gap-addresses-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1B376F;
+}
+
+.ip-gap-ccss {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1B376F;
+  opacity: 0.75;
+}
+
+.ip-gap-misconception {
   font-size: 13px;
   color: #1B376F;
-  opacity: 0.92;
 }
 
-.ip-gap-meta-strong {
-  font-weight: 400;
+.ip-gap-meta {
+  font-size: 13px;
+  color: #1B376F;
 }
 
-.ip-gap-meta-sep {
-  opacity: 0.6;
+.ip-gap-pending {
+  color: #6B7280;
+  font-style: italic;
 }
 
 .ip-gap-right {
@@ -390,6 +398,11 @@
 
   .ip-grid {
     grid-template-columns: 1fr;
+  }
+
+  .ip-gap-card {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .ip-gap-card {

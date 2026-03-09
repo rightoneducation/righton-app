@@ -227,9 +227,9 @@ const YourNextSteps = ({
 
       <div className="yns-header">
         <div>
-          <h3 className="yns-title">Saved Activities</h3>
+          <h3 className="yns-title">Saved Next Steps</h3>
           <p className="yns-subtitle">
-            Review the instructional moves you’ve saved for your class. Mark activities complete after you run them so MicroCoach can track progress over time.
+            Review the next steps you’ve saved for your class. After running an activity, mark it complete so MicroCoach can help track student progress over time.
           </p>
         </div>
 
@@ -251,9 +251,9 @@ const YourNextSteps = ({
         </div>
       ) : plannedItems.length === 0 && (!completedNextSteps || completedNextSteps.length === 0) ? (
         <div className="yns-empty">
-          <div className="yns-empty-title">No next steps yet</div>
+          <div className="yns-empty-title">No Next Steps Yet</div>
           <div className="yns-empty-body">
-            Go to <strong>Recommended Next Steps</strong> and click <strong>Add to Saved Next Steps</strong>.
+            Go to the <strong>Understand & Act</strong> tab, choose a next step, and click <strong>Save to Next Steps.</strong>
           </div>
         </div>
       ) : (
@@ -487,7 +487,7 @@ const YourNextSteps = ({
         <div className="yns-completed-panel">
           {(!completedNextSteps || completedNextSteps.length === 0) ? (
             <div className="yns-completed-empty">
-              Completed items will appear here.
+              Completed next steps will appear here.
             </div>
           ) : (
             <div className="yns-completed-list">

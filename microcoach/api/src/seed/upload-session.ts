@@ -218,13 +218,13 @@ async function uploadStudents(students: ParsedStudentRow[]): Promise<CreatedStud
   const created: CreatedStudent[] = [];
   for (let i = 0; i < students.length; i++) {
     const s = students[i];
-    const anonName = `Student ${i + 1}`;
+    const studentName = s.name || `Student ${i + 1}`;
     const externalId = s.externalId || `S${String(i + 1).padStart(3, '0')}`;
-    progress(`  Creating students [${i + 1}/${students.length}]  ${anonName}`);
+    progress(`  Creating students [${i + 1}/${students.length}]  ${studentName}`);
     const data = await gql(CREATE_STUDENT, {
-      input: { classroomId, classroomStudentsId: classroomId, name: anonName, externalId, confidenceLevel: 0, status: 'active' },
+      input: { classroomId, classroomStudentsId: classroomId, name: studentName, externalId, confidenceLevel: 0, status: 'active' },
     });
-    created.push({ id: data.createStudent.id, name: anonName, externalId, classroomId: classroomId! });
+    created.push({ id: data.createStudent.id, name: studentName, externalId, classroomId: classroomId! });
     await sleep(50);
   }
   progress(`  ✓ ${created.length} students created  (${elapsed(start)})`, true);

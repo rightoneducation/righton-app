@@ -282,11 +282,15 @@ function getStudentGroups(
     }
   }
 
-  const buildingUnderstanding = [...wrongCount.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .map(([name]) => name);
+  const sortByName = (a: string, b: string) => {
+    const [aFirst = '', ...aRest] = a.split(' ');
+    const [bFirst = '', ...bRest] = b.split(' ');
+    const firstCmp = aFirst.localeCompare(bFirst);
+    return firstCmp !== 0 ? firstCmp : aRest.join(' ').localeCompare(bRest.join(' '));
+  };
 
-  const understoodConcept = [...correctOnly].sort((a, b) => a.localeCompare(b));
+  const buildingUnderstanding = [...wrongCount.keys()].sort(sortByName);
+  const understoodConcept = [...correctOnly].sort(sortByName);
 
   return { buildingUnderstanding, understoodConcept };
 }
@@ -386,34 +390,26 @@ function parseJson(raw: any): any {
   return typeof raw === 'string' ? JSON.parse(raw) : raw;
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
+// ── Per-classroom pipeline ────────────────────────────────────────────────────
 
-async function main() {
-  console.log('=== Microcoach Next Step Generator ===\n');
-
-  const gql: GqlFn = await createGqlClient();
-
-  // 1. Find grade 6 classroom
-  process.stdout.write('Fetching classrooms...');
-  const classroomsData = await gql(LIST_CLASSROOMS);
-  const classrooms: any[] = classroomsData.listClassrooms?.items ?? [];
-  const gr6 = classrooms.find((c: any) => c.grade === 6);
-  if (!gr6) throw new Error('No grade 6 classroom found');
-  console.log(` ✓  ${gr6.classroomName} (id: ${gr6.id})`);
+async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: any[]): Promise<void> {
+  const label = `${classroom.classroomName} (grade ${classroom.grade})`;
 
   // 2. List sessions
-  process.stdout.write('Fetching sessions...');
-  const sessionsData = await gql(SESSIONS_BY_CLASSROOM, { classroomId: gr6.id });
+  process.stdout.write(`  Sessions...`);
+  const sessionsData = await gql(SESSIONS_BY_CLASSROOM, { classroomId: classroom.id });
   const sessionStubs: any[] = sessionsData.sessionsByClassroomId?.items ?? [];
-  if (!sessionStubs.length) throw new Error('No sessions found for this classroom');
+  if (!sessionStubs.length) {
+    console.log(' — no sessions, skipping');
+    return;
+  }
   const sorted = [...sessionStubs].sort((a: any, b: any) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
   const currentStub = sorted[sorted.length - 1];
   const historyStubs = sorted.slice(0, sorted.length - 1);
-  const historyNote = historyStubs.length ? `, ${historyStubs.length} historical` : ', no historical data (week 1)';
-  console.log(` ✓  ${sessionStubs.length} session(s), current: ${currentStub.sessionLabel}${historyNote}`);
+  console.log(` ✓  current: ${currentStub.sessionLabel}${historyStubs.length ? `, ${historyStubs.length} historical` : ''}`);
 
   // 3. Fetch full session details
-  process.stdout.write('Fetching session details...');
+  process.stdout.write(`  Session details...`);
   const [currentSession, ...historySessions] = await Promise.all(
     [currentStub, ...historyStubs].map((s: any) =>
       gql(GET_SESSION, { id: s.id }).then((d: any) => d.getSession)
@@ -423,19 +419,22 @@ async function main() {
 
   const ppq = currentSession?.assessments?.items?.find((a: any) => a.type === 'PPQ');
   const ccss = ppq?.ccssStandards?.[0] ?? currentSession?.ccssStandards?.[0];
-  if (!ccss) throw new Error('No CCSS standard found in current session');
+  if (!ccss) {
+    console.log(`  ✗ No CCSS standard found — skipping`);
+    return;
+  }
 
-  // 4. Learning science data (direct Lambda — bypasses AppSync 30s timeout)
-  process.stdout.write(`Fetching learning science data for ${ccss}...`);
+  // 4. Learning science data
+  process.stdout.write(`  Learning science (${ccss})...`);
   const lsResult = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } });
   const learningScienceData = parseJson(lsResult);
   console.log(' ✓');
 
-  // 4b. Fetch student responses — used for confidence stats and PPQ enrichment
+  // 4b. Student responses — confidence stats + PPQ enrichment
   let augmentedPpq = ppq;
   let studentResponses: any[] = [];
   if (ppq?.id) {
-    process.stdout.write('Fetching student responses...');
+    process.stdout.write(`  Student responses...`);
     try {
       const srData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: ppq.id });
       studentResponses = srData?.studentResponsesByAssessmentId?.items ?? [];
@@ -444,29 +443,27 @@ async function main() {
       if (hasConfidence) {
         const confidenceStats = computeConfidenceStats(studentResponses, ppq.questions ?? []);
         augmentedPpq = { ...ppq, confidenceStats };
-        console.log(` ✓  (${studentResponses.length} responses, with confidence data)`);
+        console.log(` ✓  (${studentResponses.length}, with confidence)`);
       } else {
-        console.log(` ✓  (${studentResponses.length} responses, no confidence data)`);
+        console.log(` ✓  (${studentResponses.length}, no confidence)`);
       }
     } catch (err) {
-      console.log(` ✗ (${err}) — continuing without student responses`);
+      console.log(` ✗ ${err} — continuing`);
     }
   }
 
-  // Build student name map from classroom students (fetched in step 1)
   const studentNameMap = new Map<string, string>();
-  for (const s of (gr6.students?.items ?? [])) {
+  for (const s of (classroom.students?.items ?? [])) {
     if (s.id && s.name) studentNameMap.set(s.id, s.name);
   }
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
 
-  // 5. Analysis (direct Lambda — bypasses AppSync 30s timeout)
-  //    wrongAnswerDist is forwarded so the Lambda can expand distractor explanations internally.
-  process.stdout.write('Running misconception analysis...');
+  // 5. Misconception analysis
+  process.stdout.write(`  Misconception analysis...`);
   const analysisResult = await invokeLambda(`microcoachLLMAnalysis-${AMPLIFY_ENV}`, {
     input: {
       classroomData: JSON.stringify({
-        classroom: gr6,
+        classroom,
         currentSession,
         sessionHistory: historySessions,
         ppq: augmentedPpq,
@@ -477,16 +474,14 @@ async function main() {
   });
   const analysis = parseJson(analysisResult);
   const misconceptions: any[] = analysis?.misconceptions ?? [];
-  console.log(` ✓  ${misconceptions.length} misconceptions identified`);
+  console.log(` ✓  ${misconceptions.length} misconceptions`);
 
-  // 5b. Build per-misconception extras: ppqQuestions and affectedStudents computed locally;
-  //     wrongAnswerExplanations come back from the analysis Lambda (no direct OpenAI calls here).
+  // 5b. Per-misconception extras
   const ppqQs = (ppq?.questions ?? []).map((q: any) => ({
     questionNumber: q.questionNumber,
     correctAnswer: q.correctAnswer ?? null,
     classPercentCorrect: q.classPercentCorrect ?? null,
   }));
-
   const misconceptionExtras = misconceptions.map((m: any) => {
     const qNums = parseQuestionNumbers(m.evidence?.source ?? '');
     return {
@@ -496,26 +491,14 @@ async function main() {
       correctAnswerSolution: m.correctAnswerSolution ?? [],
     };
   });
-  console.log(`Enriched ${misconceptionExtras.length} misconceptions with PPQ data`);
 
-  // 6. Next step examples
-  process.stdout.write('Fetching next step examples...');
-  const nextStepData = await gql(LIST_CONTEXT_DATA, {
-    filter: { type: { eq: 'NEXT_STEP_LESSON' } },
-    limit: 20,
-  });
-  const nextStepExamples: any[] = nextStepData.listContextData?.items ?? [];
-  console.log(` ✓  ${nextStepExamples.length} examples`);
-
-  // 7. Generate next step options — one dedicated Lambda call per format per misconception.
-  //    Each call generates ONE activity grounded in the knowledge graph and misconception data.
-  //    Calls per misconception run in parallel; all misconceptions run in parallel.
-  const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
+  // 6. Generate next step activities (parallel per misconception × format)
+  const classroomContext = { grade: classroom.grade, subject: classroom.subject, cohortSize: classroom.cohortSize };
   const NEXT_STEP_FORMATS = ['small_group', 'whole_class'];
 
   const activitiesPerGroup: any[][] = await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
-      process.stdout.write(`Generating next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
+      process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
       const relevant = nextStepExamples.filter(
         (ex: any) =>
           !ex.ccssStandards?.length ||
@@ -537,7 +520,7 @@ async function main() {
             });
             return parseJson(raw);
           } catch (err) {
-            console.error(`\n  ✗ format=${fmt} for ${m.title}: ${err}`);
+            console.error(`\n    ✗ format=${fmt}: ${err}`);
             return null;
           }
         })
@@ -548,12 +531,9 @@ async function main() {
     })
   );
 
-  // 8. Build next steps
+  // 7. Build + save
   const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras);
-  console.log(`\nBuilt ${nextSteps.length} next steps`);
-
-  // 9. Persist next steps to the session and mark the classroom's active week
-  process.stdout.write(`Saving next steps to session ${currentStub.id} (week ${currentStub.weekNumber})...`);
+  process.stdout.write(`  Saving ${nextSteps.length} next steps to session ${currentStub.id}...`);
   await gql(UPDATE_SESSION, {
     input: {
       id: currentStub.id,
@@ -563,14 +543,46 @@ async function main() {
   });
   console.log(' ✓');
 
-  process.stdout.write(`Setting classroom currentWeek to ${currentStub.weekNumber}...`);
-  await gql(UPDATE_CLASSROOM_WEEK, {
-    input: {
-      id: gr6.id,
-      currentWeek: currentStub.weekNumber,
-    },
-  });
+  process.stdout.write(`  Setting currentWeek to ${currentStub.weekNumber}...`);
+  await gql(UPDATE_CLASSROOM_WEEK, { input: { id: classroom.id, currentWeek: currentStub.weekNumber } });
   console.log(' ✓');
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────────
+
+async function main() {
+  console.log('=== Microcoach Next Step Generator ===\n');
+
+  const gql: GqlFn = await createGqlClient();
+
+  // 1. Fetch all classrooms
+  process.stdout.write('Fetching classrooms...');
+  const classroomsData = await gql(LIST_CLASSROOMS);
+  const classrooms: any[] = classroomsData.listClassrooms?.items ?? [];
+  if (!classrooms.length) throw new Error('No classrooms found');
+  console.log(` ✓  ${classrooms.length} classroom(s)`);
+
+  // 2. Fetch shared next step examples once (used by all classrooms)
+  process.stdout.write('Fetching next step examples...');
+  const nextStepData = await gql(LIST_CONTEXT_DATA, {
+    filter: { type: { eq: 'NEXT_STEP_LESSON' } },
+    limit: 20,
+  });
+  const nextStepExamples: any[] = nextStepData.listContextData?.items ?? [];
+  console.log(` ✓  ${nextStepExamples.length} examples\n`);
+
+  // 3. Process each classroom sequentially
+  for (const classroom of classrooms) {
+    console.log(`── ${classroom.classroomName} (grade ${classroom.grade}) ──`);
+    try {
+      await processClassroom(gql, classroom, nextStepExamples);
+    } catch (err) {
+      console.error(`  ✗ Failed: ${err}`);
+    }
+    console.log();
+  }
+
+  console.log('=== Done ===');
 }
 
 main().catch((err) => {

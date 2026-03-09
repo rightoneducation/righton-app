@@ -3916,6 +3916,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
 }
 
 .vd-student-pill {

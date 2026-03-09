@@ -166,7 +166,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                 closeActivityDetails();
               }}
             >
-              Save to List
+              Save to Next Steps
             </button>
           ) : null
         }
@@ -188,7 +188,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
 
             <div className="view-details-body">
 
-              {/* Correct Answer and Solution */}
+              {/* Correct Answer and Solution
               <div className="vd-section">
                 <h4 className="vd-section-header">Correct Answer and Solution</h4>
                 {reasoningGroup.example?.correct && (
@@ -207,8 +207,8 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                   <p className="no-data-text">No correct answer data available.</p>
                 )}
               </div>
-
-              {/* Wrong Answer Explanation */}
+          
+              {/* Wrong Answer Explanation 
               <div className="vd-section">
                 <h4 className="vd-section-header">Wrong Answer Explanation</h4>
                 {reasoningGroup.wrongAnswerExplanations?.length > 0 ? (
@@ -239,7 +239,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                     )}
                   </>
                 )}
-              </div>
+              </div> */}
 
               {/* Instructional Context */}
               {reasoningGroup.ccssStandards && (
@@ -625,8 +625,8 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
 
                   <div className="rns-activity-option-actions">
                     {alreadyAdded ? (
-                      <span className="rns-activity-added-pill" aria-label="Already added to your next steps">
-                        Already added
+                      <span className="rns-activity-added-pill" aria-label="Saved">
+                        Saved
                       </span>
                     ) : (
                       <button
@@ -653,7 +653,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                             d="M7 3h10a2 2 0 0 1 2 2v16l-7-3-7 3V5a2 2 0 0 1 2-2Z"
                           />
                         </svg>
-                        <span>Save to List</span>
+                        <span>Save to Next Steps</span>
                       </button>
                     )}
                   </div>

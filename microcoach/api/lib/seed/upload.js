@@ -340,9 +340,9 @@ async function uploadStudents(classroomId, students) {
     const created = [];
     for (let i = 0; i < students.length; i++) {
         const s = students[i];
-        const anonName = `Student ${i + 1}`;
+        const studentName = s.name || `Student ${i + 1}`;
         const externalId = s.externalId || `S${String(i + 1).padStart(3, '0')}`;
-        progress(`  Creating students [${i + 1}/${students.length}]  ${anonName}`);
+        progress(`  Creating students [${i + 1}/${students.length}]  ${studentName}`);
         const confValues = s.questionResponses
             .map((qr) => qr.confidence)
             .filter((c) => c != null && c >= 1 && c <= 5);
@@ -353,13 +353,13 @@ async function uploadStudents(classroomId, students) {
             input: {
                 classroomId,
                 classroomStudentsId: classroomId,
-                name: anonName,
+                name: studentName,
                 externalId,
                 confidenceLevel: Math.round(avgConfidence) || 0,
                 status: 'active',
             },
         });
-        created.push({ id: data.createStudent.id, name: anonName, externalId, classroomId });
+        created.push({ id: data.createStudent.id, name: studentName, externalId, classroomId });
         await sleep(50);
     }
     progress(`  ✓ ${created.length} students created  (${elapsed(start)})`, true);
