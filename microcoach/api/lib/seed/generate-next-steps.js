@@ -250,6 +250,34 @@ function computeWrongAnswerDist(studentResponses) {
     return dist;
 }
 /**
+ * Build a flat list of student performance records for the questions tied to a misconception.
+ * Each entry has the student's name, their score on the relevant questions, and which specific
+ * answers they gave (with correct/incorrect flag). Passed to the lambda so the AI can assign
+ * students to its generated groups.
+ */
+function getStudentPerformanceData(studentResponses, questionNumbers, studentNameMap) {
+    var _a;
+    if (!questionNumbers.length)
+        return [];
+    const qSet = new Set(questionNumbers);
+    const result = [];
+    for (const sr of studentResponses) {
+        const name = studentNameMap.get(sr.studentId);
+        if (!name)
+            continue;
+        const relevant = ((_a = sr.questionResponses) !== null && _a !== void 0 ? _a : []).filter((qr) => qSet.has(qr.questionNumber));
+        if (!relevant.length)
+            continue;
+        const correct = relevant.filter((qr) => qr.isCorrect).length;
+        result.push({
+            name,
+            score: Math.round((correct / relevant.length) * 100) / 100,
+            answers: relevant.map((qr) => ({ q: qr.questionNumber, response: qr.response, correct: qr.isCorrect })),
+        });
+    }
+    return result.sort((a, b) => a.name.localeCompare(b.name));
+}
+/**
  * Split students into two groups for a given set of question numbers:
  *   buildingUnderstanding — got at least one question wrong (sorted by wrong count desc, then alpha)
  *   understoodConcept     — got all relevant questions correct (sorted alphabetically)
@@ -362,6 +390,42 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
         };
     });
 }
+/**
+ * Inject real student names into the AI-generated studentGroupings.
+ * The AI generates group criteria (name + description); we assign students
+ * deterministically by score rank so every student appears in exactly one group.
+ * Groups are assumed to be ordered from lowest to highest performance
+ * (Group A = weakest, last group = strongest).
+ */
+function injectStudentsIntoGroups(activity, studentData) {
+    var _a, _b;
+    const groups = (_b = (_a = activity === null || activity === void 0 ? void 0 : activity.tabs) === null || _a === void 0 ? void 0 : _a.studentGroupings) === null || _b === void 0 ? void 0 : _b.groups;
+    if (!(groups === null || groups === void 0 ? void 0 : groups.length) || !studentData.length)
+        return activity;
+    // Sort students lowest score → highest score
+    const sorted = [...studentData].sort((a, b) => a.score - b.score || a.name.localeCompare(b.name));
+    // Divide students as evenly as possible across groups (lowest scores → first group)
+    const n = groups.length;
+    const base = Math.floor(sorted.length / n);
+    const remainder = sorted.length % n;
+    let offset = 0;
+    const assigned = groups.map((_, i) => {
+        const size = base + (i < remainder ? 1 : 0);
+        const slice = sorted.slice(offset, offset + size).map(s => s.name);
+        offset += size;
+        return slice;
+    });
+    return {
+        ...activity,
+        tabs: {
+            ...activity.tabs,
+            studentGroupings: {
+                ...activity.tabs.studentGroupings,
+                groups: groups.map((g, i) => { var _a; return ({ ...g, students: (_a = assigned[i]) !== null && _a !== void 0 ? _a : [] }); }),
+            },
+        },
+    };
+}
 function parseJson(raw) {
     return typeof raw === 'string' ? JSON.parse(raw) : raw;
 }
@@ -456,6 +520,7 @@ async function processClassroom(gql, classroom, nextStepExamples) {
         return {
             ppqQuestions: ppqQs,
             studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
+            studentData: getStudentPerformanceData(studentResponses, qNums, studentNameMap),
             wrongAnswerExplanations: (_c = m.wrongAnswerExplanations) !== null && _c !== void 0 ? _c : [],
             correctAnswerSolution: (_d = m.correctAnswerSolution) !== null && _d !== void 0 ? _d : [],
         };
@@ -464,6 +529,7 @@ async function processClassroom(gql, classroom, nextStepExamples) {
     const classroomContext = { grade: classroom.grade, subject: classroom.subject, cohortSize: classroom.cohortSize };
     const NEXT_STEP_FORMATS = ['small_group', 'whole_class'];
     const activitiesPerGroup = await Promise.all(misconceptions.map(async (m, i) => {
+        var _a, _b;
         process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
         const relevant = nextStepExamples.filter((ex) => {
             var _a;
@@ -476,12 +542,14 @@ async function processClassroom(gql, classroom, nextStepExamples) {
             classroomContext: JSON.stringify(classroomContext),
             ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
         };
+        const sd = (_b = (_a = misconceptionExtras[i]) === null || _a === void 0 ? void 0 : _a.studentData) !== null && _b !== void 0 ? _b : [];
         const results = await Promise.all(NEXT_STEP_FORMATS.map(async (fmt) => {
             try {
                 const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
                     input: { ...baseInput, preferredFormat: fmt },
                 });
-                return parseJson(raw);
+                const parsed = parseJson(raw);
+                return injectStudentsIntoGroups(parsed, sd);
             }
             catch (err) {
                 console.error(`\n    ✗ format=${fmt}: ${err}`);

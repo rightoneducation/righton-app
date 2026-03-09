@@ -35,6 +35,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachLLMVerify": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachNextStepOption": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -87,6 +92,22 @@
         {
           "category": "function",
           "resourceName": "microcoachLLMAnalysis"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLMVerify_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLMVerify"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLMVerify_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLMVerify"
         }
       ]
     },

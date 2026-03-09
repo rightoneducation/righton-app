@@ -136,14 +136,16 @@ const NextStepDetailsModal = ({
                             <h4 className="grouping-title">{grouping.name}</h4>
                             <p className="grouping-description">{grouping.description}</p>
                           </div>
-                          <div className="grouping-students">
-                            <h5 className="grouping-subtitle">Students:</h5>
-                            <ul className="student-list">
-                              {grouping.students?.map((student, studentIdx) => (
-                                <li key={studentIdx}>{student}</li>
-                              ))}
-                            </ul>
-                          </div>
+                          {grouping.students?.length > 0 && (
+                            <div className="grouping-students">
+                              <h5 className="grouping-subtitle">Students:</h5>
+                              <ul className="student-list">
+                                {grouping.students.map((student, studentIdx) => (
+                                  <li key={studentIdx}>{student}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       ))}
 
@@ -155,14 +157,16 @@ const NextStepDetailsModal = ({
                               {move?.tabs?.studentGroupings?.highFlyers?.description}
                             </p>
                           </div>
-                          <div className="high-flyers-students">
-                            <h5 className="high-flyers-subtitle">Students:</h5>
-                            <ul className="student-list">
-                              {move?.tabs?.studentGroupings?.highFlyers?.students?.map((student, idx) => (
-                                <li key={idx}>{student}</li>
-                              ))}
-                            </ul>
-                          </div>
+                          {move?.tabs?.studentGroupings?.highFlyers?.students?.length > 0 && (
+                            <div className="high-flyers-students">
+                              <h5 className="high-flyers-subtitle">Students:</h5>
+                              <ul className="student-list">
+                                {move.tabs.studentGroupings.highFlyers.students.map((student, idx) => (
+                                  <li key={idx}>{student}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -170,12 +174,20 @@ const NextStepDetailsModal = ({
 
                   <div className="tab-section">
                     <h4 className="tab-section-title">What will students do</h4>
-                    <p className="tab-section-content">{move?.tabs?.overview?.whatStudentsDo}</p>
+                    <ul className="tab-section-bullets">
+                      {(move?.tabs?.overview?.whatStudentsDo ?? []).map((bullet, i) => (
+                        <li key={i}><strong>{bullet.label}:</strong> {bullet.detail}</li>
+                      ))}
+                    </ul>
                   </div>
 
                   <div className="tab-section">
                     <h4 className="tab-section-title">What you'll do</h4>
-                    <p className="tab-section-content">{move?.tabs?.overview?.whatYouDo}</p>
+                    <ul className="tab-section-bullets">
+                      {(move?.tabs?.overview?.whatYouDo ?? []).map((bullet, i) => (
+                        <li key={i}><strong>{bullet.label}:</strong> {bullet.detail}</li>
+                      ))}
+                    </ul>
                   </div>
 
                   {successIndicators && (
@@ -206,6 +218,18 @@ const NextStepDetailsModal = ({
                     <h4 className="tab-section-title">Problem</h4>
                     <p className="tab-section-content">{move?.tabs?.activitySteps?.problem}</p>
                   </div>
+
+                  {move?.tabs?.activitySteps?.incorrectWorkedExamples?.length > 0 && (
+                    <div className="tab-section">
+                      <h4 className="tab-section-title">Incorrect Worked Examples</h4>
+                      {move.tabs.activitySteps.incorrectWorkedExamples.map((ex, i) => (
+                        <div key={i} className="worked-example">
+                          <p className="worked-example-problem">{ex.problem}</p>
+                          <p className="worked-example-work">{ex.incorrectWork}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="tab-section">
                     <h4 className="tab-section-title">Core Activity</h4>

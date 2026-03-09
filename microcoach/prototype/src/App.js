@@ -117,7 +117,9 @@ function App() {
           }));
         }
         const entry = savedByClassroom.find((x) => x.id === classroom.id);
-        map[classroom.id] = { gapGroups, savedNextSteps: entry?.items ?? [] };
+        const rawItems = entry?.items ?? [];
+        const sortedItems = [...rawItems].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+        map[classroom.id] = { gapGroups, savedNextSteps: sortedItems };
       }
       classroomDataMapRef.current = map;
 
@@ -198,14 +200,42 @@ function App() {
       move: normalizedMove,
     };
 
-    setNextSteps((prev) => {
-      const next = [newItem, ...prev];
-      const cid = classroomIdRef.current;
-      if (cid && classroomDataMapRef.current[cid]) {
-        classroomDataMapRef.current[cid].savedNextSteps = next;
-      }
-      return next;
-    });
+    // DB-shaped record — mirrors createSavedNextStep input shape
+    const dbRecord = {
+      id: newItem.id,
+      createdAt: new Date(newItem.createdAt).toISOString(),
+      status: 'planned',
+      misconceptionId: gapGroup.id,
+      misconceptionTitle: gapGroup.title,
+      targetObjectiveStandard: newItem.targetObjectiveStandard,
+      priority: gapGroup.priority,
+      studentCount: gapGroup.studentCount,
+      studentPercent: gapGroup.studentPercent,
+      occurrence: gapGroup.occurrence,
+      misconceptionSummary: gapGroup.misconceptionSummary,
+      successIndicators: gapGroup.successIndicators ?? [],
+      activityId: move.id,
+      activityTitle: move.title,
+      activityTime: move.time,
+      activityFormat: move.format,
+      activitySummary: move.summary,
+      aiReasoning: move.aiReasoning,
+      evidence: gapGroup.evidence ?? null,
+      tabs: normalizedMove?.tabs ?? null,
+      sortOrder: 0,
+    };
+
+    // Update UI state (local-shaped)
+    setNextSteps((prev) => [newItem, ...prev]);
+
+    // Update ref (DB-shaped) separately
+    const cid = classroomIdRef.current;
+    if (cid && classroomDataMapRef.current[cid]) {
+      classroomDataMapRef.current[cid].savedNextSteps = [
+        dbRecord,
+        ...classroomDataMapRef.current[cid].savedNextSteps,
+      ];
+    }
 
     // Persist to backend (fire-and-forget — UI is already updated optimistically)
     const client = apiClientRef.current;
@@ -237,20 +267,16 @@ function App() {
   };
 
   const removeNextStep = (id) => {
-    setNextSteps((prev) => {
-      const next = prev.filter((x) => x.id !== id);
-      const cid = classroomIdRef.current;
-      if (cid && classroomDataMapRef.current[cid]) {
-        classroomDataMapRef.current[cid].savedNextSteps = next;
-      }
-      return next;
-    });
+    setNextSteps((prev) => prev.filter((x) => x.id !== id));
 
-    const client = apiClientRef.current;
-    if (client) {
-      client.deleteSavedNextStep(id)
-        .catch((err) => console.error('[removeNextStep] backend delete failed', err));
+    const cid = classroomIdRef.current;
+    if (cid && classroomDataMapRef.current[cid]) {
+      classroomDataMapRef.current[cid].savedNextSteps =
+        classroomDataMapRef.current[cid].savedNextSteps.filter((x) => x.id !== id);
     }
+
+    apiClientRef.current?.deleteSavedNextStep(id)
+      .catch((err) => console.error('[removeNextStep] backend delete failed', err));
   };
 
   const completeNextStep = (id) => {
@@ -264,14 +290,17 @@ function App() {
       { id: `yns-item-${id}-${completedAt}`, completedAt, items: [completedItem] },
       ...(prev || [])
     ]);
-    setNextSteps((prev) => {
-      const next = prev.filter((x) => x.id !== id);
-      const cid = classroomIdRef.current;
-      if (cid && classroomDataMapRef.current[cid]) {
-        classroomDataMapRef.current[cid].savedNextSteps = next;
-      }
-      return next;
-    });
+    setNextSteps((prev) => prev.filter((x) => x.id !== id));
+
+    const cid = classroomIdRef.current;
+    if (cid && classroomDataMapRef.current[cid]) {
+      classroomDataMapRef.current[cid].savedNextSteps =
+        classroomDataMapRef.current[cid].savedNextSteps.map((x) =>
+          x.id === id
+            ? { ...x, status: 'completed', completedAt: new Date(completedAt).toISOString() }
+            : x
+        );
+    }
 
     const client = apiClientRef.current;
     if (client) {
@@ -309,6 +338,24 @@ function App() {
 
       insertIdx = Math.min(Math.max(insertIdx, 0), copy.length);
       copy.splice(insertIdx, 0, dragItem);
+
+      const client = apiClientRef.current;
+      if (client) {
+        copy.forEach((item, index) => {
+          client.updateSavedNextStep(item.id, { sortOrder: index })
+            .catch((err) => console.error('[reorderNextSteps] sortOrder update failed', err));
+        });
+      }
+
+      const rcid = classroomIdRef.current;
+      if (rcid && classroomDataMapRef.current[rcid]) {
+        const idToOrder = Object.fromEntries(copy.map((x, i) => [x.id, i]));
+        classroomDataMapRef.current[rcid].savedNextSteps =
+          classroomDataMapRef.current[rcid].savedNextSteps.map((x) =>
+            idToOrder[x.id] !== undefined ? { ...x, sortOrder: idToOrder[x.id] } : x
+          );
+      }
+
       return copy;
     });
   };

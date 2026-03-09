@@ -24,6 +24,12 @@ const GROUPS_MIN              = nso.studentGroups?.min ?? 2;
 const GROUPS_MAX              = nso.studentGroups?.max ?? 3;
 const STRATEGY_TAGS           = nso.strategyTags ?? [];
 const ALLOWED_DURATION_BUCKETS = nso.allowedDurationBuckets ?? [];
+const OVERVIEW_BULLETS_MIN    = nso.overviewBullets?.min ?? 2;
+const OVERVIEW_BULLETS_MAX    = nso.overviewBullets?.max ?? 4;
+const INCORRECT_EXAMPLES_COUNT     = nso.incorrectWorkedExamplesCount ?? 3;
+const INCORRECT_EXAMPLE_RULES      = nso.incorrectWorkedExampleRules ?? [];
+const INCORRECT_EXAMPLE_FEW_SHOT   = nso.incorrectWorkedExampleFewShot ?? [];
+const DESIGN_PRINCIPLES            = nso.designPrinciples ?? [];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 // Generates ONE next step activity option for a single misconception + format.
@@ -34,15 +40,26 @@ const strategyTagSchema = STRATEGY_TAGS.length >= 2
   ? z.enum(STRATEGY_TAGS.map(t => t.name))
   : z.string();
 
+const OverviewBullet = z.object({
+  label: z.string().describe('Short bolded action phrase (e.g. "Think", "Discuss", "Compare")'),
+  detail: z.string().describe('1-2 sentences describing the action'),
+});
+
 const Overview = z.object({
-  whatStudentsDo: z.string().describe('What the student does during this activity'),
-  whatYouDo: z.string().describe('What the teacher does / facilitates'),
+  whatStudentsDo: z.array(OverviewBullet).describe(`${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets describing what students do`),
+  whatYouDo: z.array(OverviewBullet).describe(`${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets describing what the teacher does`),
   importance: z.string().describe('Why this activity directly addresses this misconception'),
+});
+
+const IncorrectWorkedExample = z.object({
+  problem: z.string().describe('The math problem statement'),
+  incorrectWork: z.string().describe('Student incorrect work showing the misconception reasoning step-by-step'),
 });
 
 const ActivitySteps = z.object({
   setup: z.array(z.string()).describe('Teacher preparation steps before the activity begins'),
   problem: z.string().describe('The central problem or prompt students work on'),
+  incorrectWorkedExamples: z.array(IncorrectWorkedExample).describe(`${INCORRECT_EXAMPLES_COUNT} incorrect worked examples reflecting the misconception, ready for board/slide display`),
   coreActivity: z.array(z.string()).describe('Step-by-step activity instructions (4-6 steps)'),
   discussionQuestions: z.array(z.string()).describe('2-3 questions for debrief / whole-class discussion'),
 });
@@ -55,6 +72,7 @@ const Materials = z.object({
 const StudentGroup = z.object({
   name: z.string().describe('Group label — e.g. "Group A: Needs Concrete Support"'),
   description: z.string().describe('Who belongs in this group and what they focus on'),
+  students: z.array(z.string()).optional().describe('Student names — populated post-generation'),
 });
 
 const StudentGroupings = z.object({
@@ -216,6 +234,11 @@ Apply these rules to every string you generate:
 - **Instructional moves and steps**: ${ws.instructionalMoves ?? 'Short sentences. One action per sentence. Plain conversational language. Active voice.'}
 - **Descriptions**: ${ws.descriptions ?? 'Short sentences. Plain language. No run-ons.'}
 
+## RightOn Design Principles
+Every activity MUST explicitly follow these principles. Name them by name in your output.
+
+${DESIGN_PRINCIPLES.map((p, i) => `${i + 1}. **${p.split(':')[0]}**: ${p.split(':').slice(1).join(':').trim()}`).join('\n')}
+
 ## Math Formatting Requirements
 Always use Unicode. Never use LaTeX or caret/underscore ASCII notation. Specific rules:
 - Exponents: x² x³ 10⁴ (never x^2 or x^3)
@@ -268,13 +291,70 @@ Requirements for each field:
 - **strategyTag**: Must be exactly one of: ${STRATEGY_TAGS.map(t => `"${t.name}"`).join(', ')}${lvnFactors.length ? '. Use the LVN factors above to select the best fit.' : ''}
 - **durationMinutes**: Choose a value within one of these buckets: ${ALLOWED_DURATION_BUCKETS.map(b => b.label).join(', ')}
 - **aiReasoning**: Explain specifically WHY the activity mechanics address this cognitive error
-- **tabs.overview**: what students do, what the teacher facilitates, why it matters for THIS misconception
+- **tabs.overview.whatStudentsDo**: ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Think", "Discuss", "Compare") + 1-2 sentences. ${ws.overviewBullets ?? ''}
+- **tabs.overview.whatYouDo**: ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Present", "Facilitate", "Highlight") + 1-2 sentences. ${ws.overviewBullets ?? ''}
+- **tabs.overview.importance**: Why this specific activity addresses this specific misconception
 - **tabs.activitySteps**: setup (${SETUP_STEPS_MIN}-${SETUP_STEPS_MAX} steps), concrete math problem, ${ACTIVITY_STEPS_MIN}-${ACTIVITY_STEPS_MAX} core activity steps, ${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX} discussion questions that surface and resolve the error
+- **tabs.activitySteps.incorrectWorkedExamples**: Exactly ${INCORRECT_EXAMPLES_COUNT} incorrect worked examples. Each must:
+  - Show a complete problem and the full incorrect student work step-by-step (not just the wrong answer)
+  - Reflect the specific misconception error pattern (not a random mistake)
+  - Use grade-appropriate language for middle school
+  - Be self-contained — immediately usable on a board or slide with no additional prep
+
+**Critical rules for incorrect worked examples** (these are the most common failure mode):
+${INCORRECT_EXAMPLE_RULES.map((r, i) => `  ${i + 1}. ${r}`).join('\n')}
+${INCORRECT_EXAMPLE_FEW_SHOT.length ? `
+**Few-shot examples** — study the difference between CORRECT and INCORRECT example design:
+${INCORRECT_EXAMPLE_FEW_SHOT.map(ex => `
+Misconception: ${ex.misconception}
+✓ ${ex.good.label}
+  Problem: ${ex.good.problem}
+  Incorrect work: ${ex.good.incorrectWork}
+✗ ${ex.bad.label}
+  Problem: ${ex.bad.problem}
+  Incorrect work: ${ex.bad.incorrectWork}
+`).join('\n')}` : ''}
 - **tabs.materials**: what must be prepared or printed
 - **tabs.studentGroupings**: ${GROUPS_MIN}-${GROUPS_MAX} groups differentiated by misconception severity + grouping strategy guidance
 
 Return JSON matching the schema.
 `.trim();
+
+  const validateWorkedExamples = async (examples, misconceptionTitle, ccssStandard) => {
+    if (!examples?.length) return examples;
+    const prompt = `You are a K-12 math accuracy reviewer checking incorrect worked examples for a ${ccssStandard} intervention on "${misconceptionTitle}".
+
+Each example is INTENTIONALLY wrong at exactly one step — the misconception step. Your job is to fix any UNINTENTIONAL arithmetic errors in the surrounding steps while preserving the intentional misconception error.
+
+Rules:
+- Do NOT fix or remove the misconception error (the one step that shows the wrong conceptual move)
+- DO fix any arithmetic slippage in other steps (wrong multiplication, wrong simplification, wrong sign, wrong intermediate result)
+- If an example is already correct (one error only, no arithmetic slippage), return it unchanged
+- Return a JSON array with the same length as the input, each item: { "problem": "...", "incorrectWork": "..." }
+
+Examples to review:
+${JSON.stringify(examples, null, 2)}`;
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: VALIDATOR_MODEL,
+        messages: [
+          { role: 'system', content: VALIDATOR_SYSTEM_PROMPT },
+          { role: 'user', content: prompt },
+        ],
+      });
+      const raw = completion.choices[0]?.message?.content ?? '[]';
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed) || parsed.length !== examples.length) return examples;
+      return parsed.map((v, i) => ({
+        problem:       (typeof v?.problem      === 'string' && v.problem.trim())      ? v.problem      : examples[i].problem,
+        incorrectWork: (typeof v?.incorrectWork === 'string' && v.incorrectWork.trim()) ? v.incorrectWork : examples[i].incorrectWork,
+      }));
+    } catch (err) {
+      console.warn('[microcoachNextStepOption] validateWorkedExamples failed:', err?.message);
+      return examples;
+    }
+  };
 
   const validateActivityProblem = async (problem, misconceptionTitle, ccssStandard) => {
     try {
@@ -316,6 +396,14 @@ Return JSON matching the schema.
     // Validate the central student-facing math problem
     structured.tabs.activitySteps.problem = await validateActivityProblem(
       structured.tabs.activitySteps.problem,
+      misconception.title,
+      misconception.ccssStandard
+    );
+
+    // Validate incorrect worked examples — fix unintentional arithmetic errors
+    // while preserving the intentional misconception error in each example
+    structured.tabs.activitySteps.incorrectWorkedExamples = await validateWorkedExamples(
+      structured.tabs.activitySteps.incorrectWorkedExamples,
       misconception.title,
       misconception.ccssStandard
     );

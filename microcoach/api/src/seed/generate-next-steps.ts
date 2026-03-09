@@ -254,6 +254,37 @@ function computeWrongAnswerDist(studentResponses: any[]): Record<number, Record<
 }
 
 /**
+ * Build a flat list of student performance records for the questions tied to a misconception.
+ * Each entry has the student's name, their score on the relevant questions, and which specific
+ * answers they gave (with correct/incorrect flag). Passed to the lambda so the AI can assign
+ * students to its generated groups.
+ */
+function getStudentPerformanceData(
+  studentResponses: any[],
+  questionNumbers: number[],
+  studentNameMap: Map<string, string>,
+): Array<{ name: string; score: number; answers: Array<{ q: number; response: string; correct: boolean }> }> {
+  if (!questionNumbers.length) return [];
+  const qSet = new Set(questionNumbers);
+  const result: Array<{ name: string; score: number; answers: Array<{ q: number; response: string; correct: boolean }> }> = [];
+
+  for (const sr of studentResponses) {
+    const name = studentNameMap.get(sr.studentId);
+    if (!name) continue;
+    const relevant = (sr.questionResponses ?? []).filter((qr: any) => qSet.has(qr.questionNumber));
+    if (!relevant.length) continue;
+    const correct = relevant.filter((qr: any) => qr.isCorrect).length;
+    result.push({
+      name,
+      score: Math.round((correct / relevant.length) * 100) / 100,
+      answers: relevant.map((qr: any) => ({ q: qr.questionNumber, response: qr.response, correct: qr.isCorrect })),
+    });
+  }
+
+  return result.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
  * Split students into two groups for a given set of question numbers:
  *   buildingUnderstanding — got at least one question wrong (sorted by wrong count desc, then alpha)
  *   understoodConcept     — got all relevant questions correct (sorted alphabetically)
@@ -386,6 +417,47 @@ function buildNextSteps(
   });
 }
 
+/**
+ * Inject real student names into the AI-generated studentGroupings.
+ * The AI generates group criteria (name + description); we assign students
+ * deterministically by score rank so every student appears in exactly one group.
+ * Groups are assumed to be ordered from lowest to highest performance
+ * (Group A = weakest, last group = strongest).
+ */
+function injectStudentsIntoGroups(
+  activity: any,
+  studentData: Array<{ name: string; score: number }>,
+): any {
+  const groups: any[] = activity?.tabs?.studentGroupings?.groups;
+  if (!groups?.length || !studentData.length) return activity;
+
+  // Sort students lowest score → highest score
+  const sorted = [...studentData].sort((a, b) => a.score - b.score || a.name.localeCompare(b.name));
+
+  // Divide students as evenly as possible across groups (lowest scores → first group)
+  const n = groups.length;
+  const base = Math.floor(sorted.length / n);
+  const remainder = sorted.length % n;
+  let offset = 0;
+  const assigned = groups.map((_: any, i: number) => {
+    const size = base + (i < remainder ? 1 : 0);
+    const slice = sorted.slice(offset, offset + size).map(s => s.name);
+    offset += size;
+    return slice;
+  });
+
+  return {
+    ...activity,
+    tabs: {
+      ...activity.tabs,
+      studentGroupings: {
+        ...activity.tabs.studentGroupings,
+        groups: groups.map((g: any, i: number) => ({ ...g, students: assigned[i] ?? [] })),
+      },
+    },
+  };
+}
+
 function parseJson(raw: any): any {
   return typeof raw === 'string' ? JSON.parse(raw) : raw;
 }
@@ -487,6 +559,7 @@ async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: an
     return {
       ppqQuestions: ppqQs,
       studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
+      studentData: getStudentPerformanceData(studentResponses, qNums, studentNameMap),
       wrongAnswerExplanations: m.wrongAnswerExplanations ?? [],
       correctAnswerSolution: m.correctAnswerSolution ?? [],
     };
@@ -512,13 +585,15 @@ async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: an
         classroomContext: JSON.stringify(classroomContext),
         ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
       };
+      const sd = misconceptionExtras[i]?.studentData ?? [];
       const results = await Promise.all(
         NEXT_STEP_FORMATS.map(async (fmt) => {
           try {
             const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
               input: { ...baseInput, preferredFormat: fmt },
             });
-            return parseJson(raw);
+            const parsed = parseJson(raw);
+            return injectStudentsIntoGroups(parsed, sd);
           } catch (err) {
             console.error(`\n    ✗ format=${fmt}: ${err}`);
             return null;

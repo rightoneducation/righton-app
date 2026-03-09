@@ -19,15 +19,19 @@
         },
         "microcoachLLMAnalysis": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
-          "s3Key": "amplify-builds/microcoachLLMAnalysis-4d31364842334151686b-build.zip"
+          "s3Key": "amplify-builds/microcoachLLMAnalysis-73746d447134464d6b69-build.zip"
         },
         "microcoachNextStepOption": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
-          "s3Key": "amplify-builds/microcoachNextStepOption-78544a4d312f57667863-build.zip"
+          "s3Key": "amplify-builds/microcoachNextStepOption-5035534f41584b787646-build.zip"
         },
         "microcoachIngestPPQ": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
-          "s3Key": "amplify-builds/microcoachIngestPPQ-39495733717067534556-build.zip"
+          "s3Key": "amplify-builds/microcoachIngestPPQ-6a535068305035736c43-build.zip"
+        },
+        "microcoachLLMVerify": {
+          "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+          "s3Key": "amplify-builds/microcoachLLMVerify-336f6c2f575655505576-build.zip"
         }
       },
       "api": {

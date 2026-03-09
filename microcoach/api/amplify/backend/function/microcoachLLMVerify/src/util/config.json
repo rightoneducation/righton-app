@@ -61,40 +61,6 @@
       "Connection to student responses: The activity must reference or build on the specific error patterns observed in the class data (e.g. the core misconception, or a 'Favorite No' the teacher could highlight)."
     ],
     "incorrectWorkedExamplesCount": 3,
-    "incorrectWorkedExampleRules": [
-      "Each example contains exactly ONE intentional error: the specific misconception step. All other arithmetic and setup must be mathematically correct.",
-      "Trace the incorrect reasoning honestly: after the misconception step, continue computing correctly from that wrong intermediate value.",
-      "Never introduce arithmetic slippage (wrong multiplication, wrong simplification, wrong sign) in steps that are not the misconception itself.",
-      "Self-check each example: imagine a student who understands all the math but makes only this one specific conceptual error. Would they produce exactly this work? If not, fix the surrounding arithmetic."
-    ],
-    "incorrectWorkedExampleFewShot": [
-      {
-        "misconception": "Student multiplies fractions without flipping the divisor (does not apply keep-change-flip)",
-        "good": {
-          "label": "CORRECT — only the misconception step has an error; all arithmetic from that point is correct",
-          "problem": "3/4 ÷ 2/5",
-          "incorrectWork": "3/4 ÷ 2/5\n= 3/4 × 2/5  ← does not flip 2/5 to 5/2\n= 6/20\n= 3/10"
-        },
-        "bad": {
-          "label": "INCORRECT — introduces unintentional arithmetic error outside the misconception step",
-          "problem": "3/4 ÷ 2/5",
-          "incorrectWork": "3/4 ÷ 2/5\n= 3/4 × 2/5  ← does not flip\n= 6/20\n= 2/5  ✗ wrong simplification; 6/20 = 3/10, not 2/5"
-        }
-      },
-      {
-        "misconception": "Student swaps slope and y-intercept when reading y = mx + b",
-        "good": {
-          "label": "CORRECT — only the swap step is wrong; everything else follows correctly from it",
-          "problem": "Find the slope and y-intercept of y = 3x + 5.",
-          "incorrectWork": "y = 3x + 5\nSlope = 5, y-intercept = 3  ← swaps m and b\nThe line rises 5 for every 1 right, and crosses the y-axis at (0, 3)."
-        },
-        "bad": {
-          "label": "INCORRECT — adds a second unrelated error after the swap",
-          "problem": "Find the slope and y-intercept of y = 3x + 5.",
-          "incorrectWork": "y = 3x + 5\nSlope = 5, y-intercept = 3  ← swaps m and b\nThe line rises 5 for every 2 right  ✗ wrong — slope of 5 means 5 per 1 unit, not per 2"
-        }
-      }
-    ],
     "overviewBullets": { "min": 2, "max": 4 },
     "strategyTags": [
       {
