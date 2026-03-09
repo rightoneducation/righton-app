@@ -640,6 +640,7 @@
 
 .rns-misconception-text {
   margin-top: 6px;
+  margin-bottom: 16px;
   font-size: 13px;
   color: #1B376F;
   line-height: 1.5;
@@ -3929,4 +3930,29 @@
   background: rgba(27, 55, 111, 0.08);
   border: 1px solid rgba(27, 55, 111, 0.2);
   color: #1B376F;
+}
+
+.nsdm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nsdm-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.nsdm-targets-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.nsdm-misconception-label {
+  font-size: 13px;
+  color: #374151;
 }

@@ -5,8 +5,12 @@ import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
 const nso = config?.nextStepOption ?? {};
+const vco = nso.validator ?? {};
 const ws  = config?.writingStyle ?? {};
-const MODEL                  = nso.model ?? 'gpt-4o';
+const MODEL                          = nso.model ?? 'gpt-4o';
+const VALIDATOR_MODEL                = vco.model ?? 'o3-mini';
+const VALIDATOR_SYSTEM_PROMPT        = vco.systemPrompt ?? 'You are a math accuracy reviewer. Output only valid JSON.';
+const VALIDATOR_PROBLEM_INSTRUCTIONS = vco.problemReviewInstructions ?? 'Is the problem mathematically correct? If it contains errors, return the corrected version. If correct, return it unchanged. Return JSON: { "problem": "<corrected or original problem>" }';
 const MAX_DURATION            = nso.maxDurationMinutes ?? 30;
 const DEFAULT_DURATION        = nso.targetDurationMinutes ?? 30;
 const DISALLOWED_METHODS      = nso.disallowedTeachingMethods ?? [];
@@ -272,6 +276,28 @@ Requirements for each field:
 Return JSON matching the schema.
 `.trim();
 
+  const validateActivityProblem = async (problem, misconceptionTitle, ccssStandard) => {
+    try {
+      const completion = await openai.chat.completions.create({
+        model: VALIDATOR_MODEL,
+        messages: [
+          { role: 'system', content: VALIDATOR_SYSTEM_PROMPT },
+          {
+            role: 'user',
+            content: `Review this math problem for a ${ccssStandard} (${misconceptionTitle}) intervention activity.\nProblem: "${problem}"\n${VALIDATOR_PROBLEM_INSTRUCTIONS}`,
+          },
+        ],
+      });
+      const raw = completion.choices[0]?.message?.content ?? '{}';
+      const result = JSON.parse(raw).problem;
+      if (typeof result === 'string' && result.trim()) return result;
+      return problem;
+    } catch (err) {
+      console.warn('[microcoachNextStepOption] validateActivityProblem failed:', err?.message);
+      return problem;
+    }
+  };
+
   try {
     const completion = await openai.chat.completions.create({
       model: MODEL,
@@ -286,6 +312,14 @@ Return JSON matching the schema.
     if (!raw) throw new Error('Empty completion content');
 
     const structured = NextStepActivity.parse(JSON.parse(raw));
+
+    // Validate the central student-facing math problem
+    structured.tabs.activitySteps.problem = await validateActivityProblem(
+      structured.tabs.activitySteps.problem,
+      misconception.title,
+      misconception.ccssStandard
+    );
+
     return JSON.stringify(structured);
   } catch (error) {
     console.error('[microcoachNextStepOption] Error', {

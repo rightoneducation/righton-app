@@ -5,8 +5,13 @@ import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
 const ac = config?.analysis ?? {};
+const vc = ac.validator ?? {};
 const ws = config?.writingStyle ?? {};
 const MODEL                  = ac.model ?? 'gpt-4o';
+const VALIDATOR_MODEL        = vc.model ?? 'o3-mini';
+const VALIDATOR_SYSTEM_PROMPT = vc.systemPrompt ?? 'You are a math accuracy reviewer. Output only valid JSON array.';
+const VALIDATOR_FIELDS       = vc.fieldsToReview ?? [];
+const VALIDATOR_RULES        = vc.rules ?? [];
 const KEY_FINDINGS_MIN       = ac.keyFindingsCount?.min ?? 3;
 const KEY_FINDINGS_MAX       = ac.keyFindingsCount?.max ?? 5;
 const SUCCESS_IND_MIN        = ac.successIndicatorsPerMisconception?.min ?? 2;
@@ -297,6 +302,53 @@ Return a JSON object with exactly these keys:
     }
   };
 
+  const validateMathContent = async (misconceptions) => {
+    const payload = misconceptions.map((m, i) => ({
+      index: i,
+      ccssStandard: m.ccssStandard,
+      description: m.description,
+      exampleIncorrect: m.example?.incorrect,
+      exampleCorrect: m.example?.correct,
+      mostCommonError: m.evidence?.mostCommonError,
+      correctAnswerSolution: m.correctAnswerSolution,
+      wrongAnswerExplanations: m.wrongAnswerExplanations,
+    }));
+
+    const fieldsBlock = VALIDATOR_FIELDS.length
+      ? VALIDATOR_FIELDS.map((f, i) => `${i + 1}. ${f}`).join('\n')
+      : '';
+    const rulesBlock = VALIDATOR_RULES.length
+      ? VALIDATOR_RULES.map((r) => `- ${r}`).join('\n')
+      : '';
+
+    const validatorPrompt = [
+      'You are a K-12 math accuracy reviewer. You will receive a list of misconception descriptions',
+      'and associated mathematical content. Your job is to identify and correct any mathematical errors.',
+      '',
+      ...(fieldsBlock ? ['For each item, review:', fieldsBlock, ''] : []),
+      ...(rulesBlock ? ['Rules:', rulesBlock, ''] : []),
+      'Input:',
+      JSON.stringify(payload, null, 2),
+    ].join('\n');
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: VALIDATOR_MODEL,
+        messages: [
+          { role: 'system', content: VALIDATOR_SYSTEM_PROMPT },
+          { role: 'user', content: validatorPrompt },
+        ],
+      });
+      const raw = completion.choices[0]?.message?.content ?? '[]';
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) throw new Error('Validator returned non-array');
+      return parsed;
+    } catch (err) {
+      console.warn('[microcoachLLMAnalysis] validateMathContent failed:', err?.message);
+      return [];
+    }
+  };
+
   try {
     const completion = await openai.chat.completions.create({
       model: MODEL,
@@ -322,6 +374,38 @@ Return a JSON object with exactly these keys:
       wrongAnswerExplanations: enrichments[i]?.wrongAnswerExplanations ?? [],
       correctAnswerSolution: enrichments[i]?.correctAnswerSolution ?? [],
     }));
+
+    // Third pass: validate and correct math-critical fields
+    const validatedItems = await validateMathContent(structured.misconceptions);
+    let correctionCount = 0;
+    structured.misconceptions = structured.misconceptions.map((m, i) => {
+      const v = validatedItems[i];
+      if (!v) return m;
+      const corrected = {
+        ...m,
+        description: v.description ?? m.description,
+        example: {
+          incorrect: v.exampleIncorrect ?? m.example?.incorrect,
+          correct: v.exampleCorrect ?? m.example?.correct,
+        },
+        evidence: {
+          ...m.evidence,
+          mostCommonError: v.mostCommonError ?? m.evidence?.mostCommonError,
+        },
+        correctAnswerSolution: v.correctAnswerSolution ?? m.correctAnswerSolution,
+        wrongAnswerExplanations: v.wrongAnswerExplanations ?? m.wrongAnswerExplanations,
+      };
+      const changed =
+        corrected.description !== m.description ||
+        corrected.example?.incorrect !== m.example?.incorrect ||
+        corrected.example?.correct !== m.example?.correct ||
+        corrected.evidence?.mostCommonError !== m.evidence?.mostCommonError;
+      if (changed) correctionCount++;
+      return corrected;
+    });
+    if (correctionCount > 0) {
+      console.log(`[microcoachLLMAnalysis] validator corrected ${correctionCount} misconception(s)`);
+    }
 
     return JSON.stringify(structured);
   } catch (error) {

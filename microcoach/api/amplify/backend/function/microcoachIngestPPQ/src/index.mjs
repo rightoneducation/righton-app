@@ -10,6 +10,7 @@ const MODEL                = ic.model ?? 'gpt-4o';
 const MAX_MISCONCEPTIONS   = ic.maxMisconceptions ?? 4;
 const SUCCESS_IND_MIN      = ic.successIndicatorsPerMisconception?.min ?? 2;
 const SUCCESS_IND_MAX      = ic.successIndicatorsPerMisconception?.max ?? 4;
+const ACCURACY_INSTRUCTIONS = ic.accuracyInstructions ?? [];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 
@@ -111,7 +112,7 @@ Analyze the PPQ questions, their answer choices, and the correct answers to iden
 - priority: "1" for the most common/impactful error pattern across the quiz; "2", "3", "4" for subsequent
 - occurrence: Set to "${occurrence}" for all misconceptions unless clearly this is a recurring pattern (use the occurrence context above)
 - successIndicators: ${SUCCESS_IND_MIN}-${SUCCESS_IND_MAX} specific, observable behaviors a student would demonstrate when they have overcome this misconception
-
+${ACCURACY_INSTRUCTIONS.length ? `\n**Before finalizing each description:**\n${ACCURACY_INSTRUCTIONS.map((i) => `- ${i}`).join('\n')}\n` : ''}
 Return JSON matching the schema.
 `.trim();
 
