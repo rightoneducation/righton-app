@@ -548,7 +548,7 @@ async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: an
   const misconceptions: any[] = analysis?.misconceptions ?? [];
   console.log(` ✓  ${misconceptions.length} misconceptions`);
 
-  // 5b. Per-misconception extras
+  // 5c. Per-misconception extras
   const ppqQs = (ppq?.questions ?? []).map((q: any) => ({
     questionNumber: q.questionNumber,
     correctAnswer: q.correctAnswer ?? null,

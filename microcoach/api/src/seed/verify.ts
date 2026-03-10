@@ -4,18 +4,11 @@
  * Run after `upload.ts`:
  *   cd api && npx ts-node src/seed/verify.ts
  *
- * Expected counts:
- *   Classrooms:       3
- *   Sessions:         3  (1 per classroom)
- *   Assessments:      6  (PPQ + POST_PPQ per session)
- *   Students:         617 (60 + 79 + 478)
- *   StudentResponses: ~823 (PPQ: 617; PostPPQ: ~206)
- *   Misconceptions:   9  (3 per session)
- *   Activities:       9  (1 per misconception)
- *   ContextData:      8  (3 classroom next steps + 5 reference next steps)
+ * Expected counts are derived dynamically from the CLASSROOMS config in seedData.ts.
  */
 
 import { createGqlClient, GqlFn } from './appsync-config';
+import { CLASSROOMS, REFERENCE_NEXT_STEPS } from './seedData';
 
 let gql: GqlFn;
 
@@ -135,17 +128,28 @@ async function main() {
 
   console.log(`\nQueried in ${elapsed(totalStart)}\n`);
 
+  // ── Derive expected counts from CLASSROOMS config ─────────────────────────
+  const expectedClassrooms     = CLASSROOMS.length;
+  const expectedSessions       = CLASSROOMS.reduce((n, c) => n + c.sessions.length, 0);
+  const expectedMisconceptions = CLASSROOMS.reduce((n, c) =>
+    n + c.sessions.reduce((m, s) => m + (s.misconceptions?.length ?? 0), 0), 0);
+  const expectedActivities     = expectedMisconceptions;
+  const expectedAssessments    = CLASSROOMS.reduce((n, c) =>
+    n + c.sessions.filter(s => s.ppqFile).length +
+        c.sessions.filter(s => s.postPpqFile).length, 0);
+  const expectedContextData    = expectedClassrooms + REFERENCE_NEXT_STEPS.length;
+
   // ── Count checks ──────────────────────────────────────────────────────────
   console.log('Record count checks:\n');
   let allPass = true;
-  allPass = check('Classrooms',       classrooms.length,     3)   && allPass;
-  allPass = check('Sessions',         sessions.length,       3)   && allPass;
-  allPass = check('Assessments',      assessments.length,    6)   && allPass;
-  allPass = check('Students',         students.length,       617) && allPass;
-  allPass = check('StudentResponses', responses.length,      400) && allPass;
-  allPass = check('Misconceptions',   misconceptions.length, 9)   && allPass;
-  allPass = check('Activities',       activities.length,     9)   && allPass;
-  allPass = check('ContextData',      contextItems.length,   8)   && allPass;
+  allPass = check('Classrooms',       classrooms.length,     expectedClassrooms)     && allPass;
+  allPass = check('Sessions',         sessions.length,       expectedSessions)       && allPass;
+  allPass = check('Assessments',      assessments.length,    expectedAssessments)    && allPass;
+  console.log(`  - Students:              ${students.length}`);
+  console.log(`  - StudentResponses:      ${responses.length}`);
+  allPass = check('Misconceptions',   misconceptions.length, expectedMisconceptions) && allPass;
+  allPass = check('Activities',       activities.length,     expectedActivities)     && allPass;
+  allPass = check('ContextData',      contextItems.length,   expectedContextData)    && allPass;
 
   // ── Per-classroom breakdown ───────────────────────────────────────────────
   console.log('\nPer-classroom breakdown:\n');

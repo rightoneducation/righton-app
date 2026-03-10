@@ -61,7 +61,7 @@ function progress(msg: string, done = false) {
  *
  * Supports two layouts detected automatically:
  *
- * GENERATED (Classroom1 synthetic):
+ * GENERATED (synthetic):
  *   Row 0: assessmentCode at col 0
  *   Row 1: CCSS standards at question columns
  *   Row 2: "Name", "Student ID", "Score", "Q1", "Q2", ...
@@ -69,15 +69,41 @@ function progress(msg: string, done = false) {
  *   Row 7: "Answer Key", correct answers per question column
  *   Row 8+: name(col0), externalId(col1), score 0–1(col2), responses per question column
  *
- * ASSESSMENT MATRIX (real district data):
+ * ASSESSMENT MATRIX (real district data — two sub-variants):
  *   Row 0: empty
  *   Row 1: "Assessment Matrix Report: {code}" at col 0
- *   Row 2: "Question" at col 0, question numbers (1,2,3…) at sparse columns starting ~col 7
+ *   Row 2: "Question" at col 0, question numbers at sparse columns
  *   Row 3: "Class Percent Correct" at col 0, per-Q decimals at question columns
  *   Row 6: "Points Possible/Correct Answer", answer key (A–E) at question columns
- *   Row 7+: rowNum(col0), name(col1), externalId(col2), score 0–100(col5), responses per question column
- *   Responses: empty cell = student answered correctly; non-empty = wrong answer selected
+ *   Row 7+: rowNum(col0), name(col1), externalId(col2), score 0–100(col5), responses per Q col
+ *
+ *   Legacy sub-variant: appended Q1_Conf columns carry numeric (1–5) confidence.
+ *   Interleaved sub-variant (pilot): confidence values are in alternating columns
+ *     immediately after each quiz column; encoded as letters A–D (or doubles AB/BC/CD).
+ *     Detected when no Q_Conf headers exist and the answer key row has alternating
+ *     letter / blank pattern among numeric-header columns.
  */
+
+/**
+ * Convert a confidence letter (A–D, or adjacent pair AB/BC/CD) to a numeric value.
+ * Non-contiguous pairs (AC, AD, BD, etc.) return undefined.
+ * Empty string returns undefined.
+ */
+function parseConfidenceLetter(raw: string): number | undefined {
+  const val = raw.trim().toUpperCase();
+  if (!val) return undefined;
+  const map: Record<string, number> = { A: 5, B: 4, C: 3, D: 1 };
+  if (val.length === 1) return map[val];
+  if (val.length === 2) {
+    const s1 = map[val[0]], s2 = map[val[1]];
+    if (s1 == null || s2 == null) return undefined;
+    const order = 'ABCD';
+    if (order.indexOf(val[1]) === order.indexOf(val[0]) + 1) return (s1 + s2) / 2;
+    return undefined; // non-contiguous
+  }
+  return undefined;
+}
+
 function parseExcelFile(filePath: string): ParsedAssessmentData {
   const workbook = XLSX.readFile(filePath);
   const sheetName = workbook.SheetNames[0];
@@ -94,7 +120,6 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
   // ── Assessment code ────────────────────────────────────────────────────────
   let assessmentCode: string;
   if (isAssessmentMatrix) {
-    // "Assessment Matrix Report: ALG.08.PPQZ.W15.25-26.USI " → extract after ":"
     const title = String(rows[1][0] ?? '');
     const colonIdx = title.indexOf(':');
     assessmentCode = (colonIdx >= 0 ? title.slice(colonIdx + 1) : title).trim();
@@ -104,7 +129,7 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
     ).trim();
   }
 
-  // ── CCSS standards (generated format only; real format has none in the file) ─
+  // ── CCSS standards (generated format only; Assessment Matrix has none in file) ─
   const ccssRow = rows[1] ?? [];
   const ccssStandards: string[] = isAssessmentMatrix
     ? []
@@ -113,32 +138,63 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
         .map((v: any) => String(v ?? '').trim())
         .filter((v: string) => v.length > 0 && /\d/.test(v));
 
-  // ── Question columns from row 2 ─────────────────────────────────────────────
-  // Both formats have numeric question numbers (e.g. "Q1" or "1") in row 2.
+  // ── All numeric-header columns from row 2 ───────────────────────────────────
   const headerRow = rows[2] ?? [];
-  const questionColumns: number[] = [];
-  const questionNumbers: number[] = [];
+  const allNumericCols: number[] = [];
   for (let col = 1; col < headerRow.length; col++) {
     const cell = String(headerRow[col] ?? '').trim();
-    if (cell === '') continue;
-    const qMatch = cell.match(/^q?(\d+)$/i);
-    if (qMatch) {
-      questionColumns.push(col);
-      questionNumbers.push(parseInt(qMatch[1], 10));
-    }
+    if (cell.match(/^q?(\d+)$/i)) allNumericCols.push(col);
   }
 
-  // ── Confidence columns from row 2 (Q1_Conf, Q2_Conf, …) ──────────────────
+  // ── Legacy confidence columns (Q1_Conf style) ──────────────────────────────
   const confColByQNumber: Record<number, number> = {};
   for (let col = 1; col < headerRow.length; col++) {
     const cell = String(headerRow[col] ?? '').trim();
     const cMatch = cell.match(/^Q?(\d+)_Conf$/i);
-    if (cMatch) {
-      confColByQNumber[parseInt(cMatch[1], 10)] = col;
+    if (cMatch) confColByQNumber[parseInt(cMatch[1], 10)] = col;
+  }
+
+  // ── Answer key (needed early for interleaved detection) ─────────────────────
+  // Generated: row 7 (index 7).  Assessment Matrix: row 6 (index 6).
+  const answerKeyRowIdx = isAssessmentMatrix ? 6 : 7;
+  const keyRow = rows[answerKeyRowIdx] ?? [];
+
+  // ── Interleaved confidence detection ────────────────────────────────────────
+  // Triggered when: Assessment Matrix AND no legacy Q_Conf headers exist.
+  // Quiz columns have a letter A–E in the key row; confidence columns have blank.
+  let isInterleaved = false;
+  let questionColumns = [...allNumericCols];
+  let questionNumbers = allNumericCols.map((col) => {
+    const cell = String(headerRow[col] ?? '').trim();
+    return parseInt(cell.replace(/^q/i, ''), 10);
+  });
+
+  if (isAssessmentMatrix && Object.keys(confColByQNumber).length === 0) {
+    const quizCols: number[] = [];
+    const quizNums: number[] = [];
+    const newConfColByQNumber: Record<number, number> = {};
+    let quizSeq = 0;
+
+    for (const col of allNumericCols) {
+      const keyVal = String(keyRow[col] ?? '').trim().toUpperCase();
+      if (keyVal.length === 1 && 'ABCDE'.includes(keyVal)) {
+        quizSeq++;
+        quizCols.push(col);
+        quizNums.push(quizSeq);
+      } else if (keyVal === '' && quizSeq > 0 && newConfColByQNumber[quizSeq] == null) {
+        newConfColByQNumber[quizSeq] = col;
+      }
+    }
+
+    if (quizCols.length > 0 && Object.keys(newConfColByQNumber).length > 0) {
+      isInterleaved = true;
+      questionColumns = quizCols;
+      questionNumbers = quizNums;
+      Object.assign(confColByQNumber, newConfColByQNumber);
     }
   }
 
-  // ── Class % correct per question (row 3) ─────────────────────────────────────
+  // ── Class % correct per question (row 3) — quiz columns only ────────────────
   const classRow = rows[3] ?? [];
   const classPercentByCol: Record<number, number> = {};
   for (const col of questionColumns) {
@@ -152,10 +208,7 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
   const classPercentCorrect =
     pctValues.length > 0 ? pctValues.reduce((a, b) => a + b, 0) / pctValues.length : 0;
 
-  // ── Answer key ───────────────────────────────────────────────────────────────
-  // Generated: row 7 (index 7).  Assessment Matrix: row 6 (index 6).
-  const answerKeyRowIdx = isAssessmentMatrix ? 6 : 7;
-  const keyRow = rows[answerKeyRowIdx] ?? [];
+  // ── Answer key by column (quiz columns only) ─────────────────────────────────
   const answerKeyByCol: Record<number, string> = {};
   for (const col of questionColumns) {
     const val = String(keyRow[col] ?? '').trim().toUpperCase();
@@ -190,9 +243,9 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
     const rawScore = parseFloat(String(row[scoreCol] ?? '0'));
     let totalScore = isNaN(rawScore) ? 0 : rawScore;
     if (isAssessmentMatrix) {
-      totalScore = totalScore / 100;   // convert 0–100 → 0–1
+      totalScore = totalScore / 100;
     } else if (totalScore > 1) {
-      totalScore = totalScore / 100;   // handle accidental percent in generated data
+      totalScore = totalScore / 100;
     }
 
     const questionResponses: ParsedQuestionResponse[] = questionColumns.map((col, i) => {
@@ -200,38 +253,27 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
       const correctAnswer = answerKeyByCol[col] ?? '';
       const qNum = questionNumbers[i];
       const confCol = confColByQNumber[qNum];
-      const rawConf = confCol != null ? parseFloat(String(row[confCol] ?? '')) : NaN;
-      const confidence = !isNaN(rawConf) && rawConf >= 1 && rawConf <= 5 ? rawConf : undefined;
 
-      if (isAssessmentMatrix) {
-        // Sparse encoding: empty cell = student answered correctly
-        if (rawResponse === '') {
-          return {
-            questionNumber: qNum,
-            response: correctAnswer,
-            isCorrect: true,
-            pointsEarned: 1,
-            confidence,
-          };
+      let confidence: number | undefined;
+      if (confCol != null) {
+        const rawConf = String(row[confCol] ?? '').trim();
+        if (isInterleaved) {
+          confidence = parseConfidenceLetter(rawConf);
+        } else {
+          const n = parseFloat(rawConf);
+          confidence = !isNaN(n) && n >= 1 && n <= 5 ? n : undefined;
         }
-        return {
-          questionNumber: qNum,
-          response: rawResponse,
-          isCorrect: false,
-          pointsEarned: 0,
-          confidence,
-        };
       }
 
-      // Generated format: response always present
+      if (isAssessmentMatrix) {
+        if (rawResponse === '') {
+          return { questionNumber: qNum, response: correctAnswer, isCorrect: true, pointsEarned: 1, confidence };
+        }
+        return { questionNumber: qNum, response: rawResponse, isCorrect: false, pointsEarned: 0, confidence };
+      }
+
       const isCorrect = rawResponse !== '' && rawResponse === correctAnswer;
-      return {
-        questionNumber: qNum,
-        response: rawResponse,
-        isCorrect,
-        pointsEarned: isCorrect ? 1 : 0,
-        confidence,
-      };
+      return { questionNumber: qNum, response: rawResponse, isCorrect, pointsEarned: isCorrect ? 1 : 0, confidence };
     });
 
     studentRows.push({ name, externalId, totalScore, questionResponses });
@@ -243,7 +285,7 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
 
   return {
     assessmentCode,
-    ccssStandards,   // empty array for Assessment Matrix; caller fills from sessionConfig
+    ccssStandards,
     weekNumber,
     topic,
     classPercentCorrect,
@@ -613,33 +655,37 @@ async function main() {
       await uploadStudentResponses('PPQ', ppqAssessment.id, ppqData.students, studentMap);
 
       // Parse & upload PostPPQ
-      const postPpqPath = path.join(DATA_ROOT, sessionConfig.postPpqFile);
-      process.stdout.write(`\n  Parsing PostPPQ Excel...`);
       let postPpqAssessmentId: string | undefined;
-      try {
-        const postPpqData = parseExcelFile(postPpqPath);
-        process.stdout.write(
-          `  ✓  ${postPpqData.students.length} students, ${postPpqData.questionMeta.length} questions\n`
-        );
+      if (sessionConfig.postPpqFile == null) {
+        console.log(`\n  PostPPQ: skipped (not yet available)`);
+      } else {
+        const postPpqPath = path.join(DATA_ROOT, sessionConfig.postPpqFile);
+        process.stdout.write(`\n  Parsing PostPPQ Excel...`);
+        try {
+          const postPpqData = parseExcelFile(postPpqPath);
+          process.stdout.write(
+            `  ✓  ${postPpqData.students.length} students, ${postPpqData.questionMeta.length} questions\n`
+          );
 
-        const postPpqAssessmentData: ParsedAssessmentData = {
-          ...postPpqData,
-          weekNumber: postPpqData.weekNumber || sessionConfig.weekNumber,
-          topic: sessionConfig.topic,
-          ccssStandards:
-            postPpqData.ccssStandards.filter((s) => /\d/.test(s)).length > 0
-              ? postPpqData.ccssStandards
-              : sessionConfig.ccssStandards,
-        };
+          const postPpqAssessmentData: ParsedAssessmentData = {
+            ...postPpqData,
+            weekNumber: postPpqData.weekNumber || sessionConfig.weekNumber,
+            topic: sessionConfig.topic,
+            ccssStandards:
+              postPpqData.ccssStandards.filter((s) => /\d/.test(s)).length > 0
+                ? postPpqData.ccssStandards
+                : sessionConfig.ccssStandards,
+          };
 
-        const postPpqAssessment = await uploadAssessment(
-          classroomId, sessionId, postPpqAssessmentData, 'POST_PPQ', ppqAssessment.id
-        );
-        postPpqAssessmentId = postPpqAssessment.id;
+          const postPpqAssessment = await uploadAssessment(
+            classroomId, sessionId, postPpqAssessmentData, 'POST_PPQ', ppqAssessment.id
+          );
+          postPpqAssessmentId = postPpqAssessment.id;
 
-        await uploadStudentResponses('PostPPQ', postPpqAssessment.id, postPpqData.students, studentMap);
-      } catch (err) {
-        console.error(`\n  ERROR processing PostPPQ: ${err}`);
+          await uploadStudentResponses('PostPPQ', postPpqAssessment.id, postPpqData.students, studentMap);
+        } catch (err) {
+          console.error(`\n  ERROR processing PostPPQ: ${err}`);
+        }
       }
 
       // Link PPQ (always) and PostPPQ (if it exists) back onto the session

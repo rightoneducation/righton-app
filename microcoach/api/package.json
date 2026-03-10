@@ -16,6 +16,10 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "cleanup": "npx ts-node src/seed/cleanup.ts",
+    "ingest": "npx ts-node src/seed/ingest-ppq.ts",
+    "upload": "npx ts-node src/seed/upload.ts",
+    "verify": "npx ts-node src/seed/verify.ts",
     "generate": "npx ts-node src/seed/generate-next-steps.ts",
     "validate": "npx ts-node src/seed/validate-next-steps.ts",
     "sync-prompt-config": "node scripts/sync-prompt-config.mjs",
