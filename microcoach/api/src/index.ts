@@ -26,6 +26,21 @@ import {
 } from "./graphql/mutations";
 import awsconfig from "./aws-exports";
 
+export {
+  GapGroupParser,
+  SavedNextStepParser,
+  MisconceptionEvidenceParser,
+  TabsParser,
+} from './Parsers';
+export type {
+  IGapGroup,
+  ILocalSavedNextStep,
+  IDBSavedNextStep,
+  ISavedNextStepMutationInput,
+  IMisconceptionEvidence,
+  ITabs,
+} from './Parsers';
+
 export class APIClient {
   private client: any;
 

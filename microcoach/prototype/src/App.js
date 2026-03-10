@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { APIClient } from '@righton/microcoach-api';
+import { APIClient, GapGroupParser, SavedNextStepParser } from '@righton/microcoach-api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Header from './components/Header';
 import RecommendedNextSteps from './components/RecommendedNextSteps';
@@ -28,41 +28,6 @@ function App() {
   const apiClientRef = useRef(null);
   const classroomIdRef = useRef(null);
 
-  // Map a backend SavedNextStep record back to the local item shape used by the UI
-  const dbItemToLocal = (db) => ({
-    id: db.id,
-    createdAt: db.createdAt ? new Date(db.createdAt).getTime() : Date.now(),
-    completedAt: db.completedAt ? new Date(db.completedAt).getTime() : undefined,
-    status: db.status ?? 'planned',
-    gapGroupId: db.misconceptionId,
-    gapGroupTitle: db.misconceptionTitle,
-    targetObjectiveStandard: db.targetObjectiveStandard,
-    priority: db.priority,
-    studentCount: db.studentCount,
-    studentPercent: db.studentPercent,
-    occurrence: db.occurrence,
-    misconceptionSummary: db.misconceptionSummary,
-    successIndicators: db.successIndicators ?? [],
-    ccssStandards: db.targetObjectiveStandard
-      ? { targetObjective: { standard: db.targetObjectiveStandard, description: '' }, prerequisiteGaps: [], impactedObjectives: [] }
-      : undefined,
-    moveId: db.activityId,
-    moveTitle: db.activityTitle,
-    moveTime: db.activityTime,
-    moveFormat: db.activityFormat,
-    moveSummary: db.activitySummary,
-    aiReasoning: db.aiReasoning,
-    evidence: db.evidence ?? null,
-    move: {
-      id: db.activityId,
-      title: db.activityTitle,
-      time: db.activityTime,
-      format: db.activityFormat,
-      summary: db.activitySummary,
-      aiReasoning: db.aiReasoning,
-      tabs: db.tabs ?? null,
-    },
-  });
 
   // Switch to a classroom using pre-fetched data — synchronous, no loading state.
   const selectClassroom = (classroom) => {
@@ -70,8 +35,8 @@ function App() {
     classroomIdRef.current = classroom.id;
     const data = classroomDataMapRef.current[classroom.id] ?? { gapGroups: null, savedNextSteps: [] };
     const savedItems = data.savedNextSteps;
-    const active = savedItems.filter((x) => x.status !== 'completed').map(dbItemToLocal);
-    const completed = savedItems.filter((x) => x.status === 'completed').map(dbItemToLocal);
+    const active = savedItems.filter((x) => x.status !== 'completed').map((db) => SavedNextStepParser.dbToLocal(db));
+    const completed = savedItems.filter((x) => x.status === 'completed').map((db) => SavedNextStepParser.dbToLocal(db));
     setNextSteps(active);
     setNextStepsHistory(
       completed.map((item) => ({
@@ -108,13 +73,7 @@ function App() {
           .find((s) => s.weekNumber === classroom.currentWeek);
         let gapGroups = null;
         if (activeSession?.pregeneratedNextSteps) {
-          const parsed = typeof activeSession.pregeneratedNextSteps === 'string'
-            ? JSON.parse(activeSession.pregeneratedNextSteps)
-            : activeSession.pregeneratedNextSteps;
-          gapGroups = parsed.map((g) => ({
-            ...g,
-            moveOptions: g.moveOptions ?? (g.move ? [g.move] : []),
-          }));
+          gapGroups = GapGroupParser.fromPregeneratedJson(activeSession.pregeneratedNextSteps);
         }
         const entry = savedByClassroom.find((x) => x.id === classroom.id);
         const rawItems = entry?.items ?? [];
@@ -182,7 +141,7 @@ function App() {
       gapGroupId: gapGroup.id,
       gapGroupTitle: gapGroup.title,
       targetObjectiveStandard: gapGroup?.ccssStandards?.targetObjective?.standard,
-      priority: gapGroup.priority,
+      priority: gapGroup.priority ?? 'Low',
       studentCount: gapGroup.studentCount,
       studentPercent: gapGroup.studentPercent,
       occurrence: gapGroup.occurrence,
@@ -208,7 +167,7 @@ function App() {
       misconceptionId: gapGroup.id,
       misconceptionTitle: gapGroup.title,
       targetObjectiveStandard: newItem.targetObjectiveStandard,
-      priority: gapGroup.priority,
+      priority: gapGroup.priority ?? 'Low',
       studentCount: gapGroup.studentCount,
       studentPercent: gapGroup.studentPercent,
       occurrence: gapGroup.occurrence,
@@ -241,28 +200,9 @@ function App() {
     const client = apiClientRef.current;
     const classroomId = classroomIdRef.current;
     if (client && classroomId) {
-      client.createSavedNextStep(classroomId, {
-        id: newItem.id,
-        classroomId,
-        status: 'planned',
-        misconceptionId: gapGroup.id,
-        misconceptionTitle: gapGroup.title,
-        targetObjectiveStandard: newItem.targetObjectiveStandard,
-        priority: gapGroup.priority,
-        studentCount: gapGroup.studentCount,
-        studentPercent: gapGroup.studentPercent,
-        occurrence: gapGroup.occurrence,
-        misconceptionSummary: gapGroup.misconceptionSummary,
-        successIndicators: gapGroup.successIndicators ?? [],
-        activityId: move.id,
-        activityTitle: move.title,
-        activityTime: move.time,
-        activityFormat: move.format,
-        activitySummary: move.summary,
-        aiReasoning: move.aiReasoning,
-        evidence: gapGroup.evidence ?? undefined,
-        tabs: normalizedMove?.tabs ?? undefined,
-      }).catch((err) => console.error('[addNextStep] backend save failed', err));
+      const mutationInput = SavedNextStepParser.toMutationInput(classroomId, newItem);
+      client.createSavedNextStep(classroomId, mutationInput)
+        .catch((err) => console.error('[addNextStep] backend save failed', err));
     }
   };
 

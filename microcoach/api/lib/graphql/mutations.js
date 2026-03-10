@@ -212,38 +212,8 @@ exports.createClassroom = `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -442,38 +412,8 @@ exports.updateClassroom = `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -672,38 +612,8 @@ exports.deleteClassroom = `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -1466,6 +1376,7 @@ exports.createMisconception = `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1553,6 +1464,7 @@ exports.updateMisconception = `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1640,6 +1552,7 @@ exports.deleteMisconception = `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1703,6 +1616,7 @@ exports.createActivity = `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1767,6 +1681,7 @@ exports.updateActivity = `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1831,6 +1746,7 @@ exports.deleteActivity = `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1891,49 +1807,8 @@ exports.createSavedNextStep = `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId
@@ -1968,49 +1843,8 @@ exports.updateSavedNextStep = `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId
@@ -2045,49 +1879,8 @@ exports.deleteSavedNextStep = `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId

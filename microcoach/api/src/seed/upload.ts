@@ -200,7 +200,7 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
       const correctAnswer = answerKeyByCol[col] ?? '';
       const qNum = questionNumbers[i];
       const confCol = confColByQNumber[qNum];
-      const rawConf = confCol != null ? parseInt(String(row[confCol] ?? ''), 10) : NaN;
+      const rawConf = confCol != null ? parseFloat(String(row[confCol] ?? '')) : NaN;
       const confidence = !isNaN(rawConf) && rawConf >= 1 && rawConf <= 5 ? rawConf : undefined;
 
       if (isAssessmentMatrix) {
@@ -345,7 +345,7 @@ async function uploadStudents(
       .filter((c): c is number => c != null && c >= 1 && c <= 5);
     const avgConfidence =
       confValues.length > 0
-        ? confValues.reduce((sum, c) => sum + c, 0) / confValues.length
+        ? parseFloat((confValues.reduce((sum, c) => sum + c, 0) / confValues.length).toFixed(1))
         : 0;
 
     const data = await gql(CREATE_STUDENT, {
@@ -354,7 +354,7 @@ async function uploadStudents(
         classroomStudentsId: classroomId,
         name: studentName,
         externalId,
-        confidenceLevel: Math.round(avgConfidence) || 0,
+        confidenceLevel: avgConfidence || 0,
         status: 'active',
       },
     });

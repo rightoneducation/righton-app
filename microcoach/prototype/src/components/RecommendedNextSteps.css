@@ -434,8 +434,9 @@
 }
 
 .rns-activity-option:hover {
-  border-color: rgba(27, 55, 111, 0.5);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  border-color: #1B376F;
+  box-shadow: 0 4px 12px rgba(27, 55, 111, 0.15);
+  transform: translateY(-2px);
 }
 
 .rns-activity-option.selected {
@@ -532,6 +533,8 @@
   margin-top: auto;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
   padding-top: 8px;
 }
 

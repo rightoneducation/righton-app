@@ -1,4 +1,6 @@
 import { GraphQLResult } from "@aws-amplify/api";
+export { GapGroupParser, SavedNextStepParser, MisconceptionEvidenceParser, TabsParser, } from './Parsers';
+export type { IGapGroup, ILocalSavedNextStep, IDBSavedNextStep, ISavedNextStepMutationInput, IMisconceptionEvidence, ITabs, } from './Parsers';
 export declare class APIClient {
     private client;
     constructor();

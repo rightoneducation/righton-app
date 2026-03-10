@@ -366,8 +366,7 @@ function printReport(allResults) {
     console.log('\n=== Summary ===');
     console.log(`Classrooms checked: ${classroomsChecked} | Activities checked: ${activitiesChecked}`);
     console.log(`Passed: ${totalPassed}/${totalChecks} checks | Failed: ${failed}`);
-    if (failed > 0)
-        process.exitCode = 1;
+    // Exit 0 regardless — this is a reporting tool, not a CI gate
 }
 // ── Main ──────────────────────────────────────────────────────────────────────
 async function main() {

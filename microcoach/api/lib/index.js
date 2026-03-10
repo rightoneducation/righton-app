@@ -3,12 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.APIClient = void 0;
+exports.APIClient = exports.TabsParser = exports.MisconceptionEvidenceParser = exports.SavedNextStepParser = exports.GapGroupParser = void 0;
 const aws_amplify_1 = require("aws-amplify");
 const api_1 = require("@aws-amplify/api");
 const queries_1 = require("./graphql/queries");
 const mutations_1 = require("./graphql/mutations");
 const aws_exports_1 = __importDefault(require("./aws-exports"));
+var Parsers_1 = require("./Parsers");
+Object.defineProperty(exports, "GapGroupParser", { enumerable: true, get: function () { return Parsers_1.GapGroupParser; } });
+Object.defineProperty(exports, "SavedNextStepParser", { enumerable: true, get: function () { return Parsers_1.SavedNextStepParser; } });
+Object.defineProperty(exports, "MisconceptionEvidenceParser", { enumerable: true, get: function () { return Parsers_1.MisconceptionEvidenceParser; } });
+Object.defineProperty(exports, "TabsParser", { enumerable: true, get: function () { return Parsers_1.TabsParser; } });
 class APIClient {
     constructor() {
         this.configAmplify(aws_exports_1.default);

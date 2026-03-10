@@ -23,7 +23,7 @@
         },
         "microcoachNextStepOption": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
-          "s3Key": "amplify-builds/microcoachNextStepOption-5035534f41584b787646-build.zip"
+          "s3Key": "amplify-builds/microcoachNextStepOption-557346364b6d63685737-build.zip"
         },
         "microcoachIngestPPQ": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
@@ -31,7 +31,7 @@
         },
         "microcoachLLMVerify": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
-          "s3Key": "amplify-builds/microcoachLLMVerify-336f6c2f575655505576-build.zip"
+          "s3Key": "amplify-builds/microcoachLLMVerify-3962712f786f636e6f76-build.zip"
         }
       },
       "api": {

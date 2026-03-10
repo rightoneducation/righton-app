@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Tooltip from '@mui/material/Tooltip';
 import './RecommendedNextSteps.css';
 import './SharedButtons.css';
 import CCSSStandardsModal from './CCSSStandardsModal';
@@ -33,6 +34,13 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
     const set = new Set(existingNextSteps.map((x) => `${x.gapGroupId}:${x.moveId}`));
     return set;
   }, [existingNextSteps]);
+
+  const getFrequencyTooltip = (frequency) => {
+    if (frequency === 'many') return 'Many students: >60% of class';
+    if (frequency === 'medium' || frequency === 'some') return 'Some students: 30–60% of class';
+    if (frequency === 'few') return 'Few students: <30% of class';
+    return '';
+  };
 
   const getPriorityClass = (priority) => {
     if (priority === 'Critical') return 'priority-critical'; // legacy — kept for static seed data
@@ -426,9 +434,19 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                         {group.frequency && (() => {
                           const freq = group.frequency === 'medium' ? 'some' : group.frequency;
                           return (
-                            <span className={`${freq}-students-pill`}>
-                              {freq.charAt(0).toUpperCase() + freq.slice(1)} students
-                            </span>
+                            <Tooltip
+                              title={getFrequencyTooltip(group.frequency)}
+                              arrow
+                              placement="top"
+                              slotProps={{
+                                tooltip: { sx: { backgroundColor: '#1B376F', fontSize: '12px' } },
+                                arrow: { sx: { color: '#1B376F' } },
+                              }}
+                            >
+                              <span className={`${freq}-students-pill`}>
+                                {freq.charAt(0).toUpperCase() + freq.slice(1)} students
+                              </span>
+                            </Tooltip>
                           );
                         })()}
                       </div>
@@ -573,7 +591,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                   aria-disabled={alreadyAdded ? 'true' : undefined}
                   tabIndex={alreadyAdded ? -1 : 0}
                   onClick={alreadyAdded ? undefined : () => {
-                    openActivityDetails(selectedRecommendationGroup, opt);
                     setSelectedMoveIdByGroupId((prev) => ({
                       ...prev,
                       [selectedRecommendationGroup.id]: opt.id
@@ -582,7 +599,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                   onKeyDown={alreadyAdded ? undefined : (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      openActivityDetails(selectedRecommendationGroup, opt);
                       setSelectedMoveIdByGroupId((prev) => ({
                         ...prev,
                         [selectedRecommendationGroup.id]: opt.id
@@ -624,6 +640,16 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                   </div>
 
                   <div className="rns-activity-option-actions">
+                    <button
+                      className="view-thinking-btn"
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openActivityDetails(selectedRecommendationGroup, opt);
+                      }}
+                    >
+                      View Details
+                    </button>
                     {alreadyAdded ? (
                       <span className="rns-activity-added-pill" aria-label="Saved">
                         Saved

@@ -34,13 +34,19 @@ function makePrng(seed: number): () => number {
   };
 }
 
-function randBetween(rng: () => number, lo: number, hi: number): number {
-  return lo + Math.floor(rng() * (hi - lo + 1));
+/** Pick a random value from the half-step scale (1, 1.5, 2, …, 5) within [lo, hi]. */
+function randHalfStep(rng: () => number, lo: number, hi: number): number {
+  const steps: number[] = [];
+  for (let v = lo; v <= hi + 0.001; v += 0.5) {
+    steps.push(parseFloat(v.toFixed(1)));
+  }
+  return steps[Math.floor(rng() * steps.length)];
 }
 
 // ── Confidence generation ────────────────────────────────────────────────────
 /**
- * Returns a confidence value (1–5) for one student×question pair.
+ * Returns a confidence value on the half-step scale (1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5)
+ * for one student×question pair. 0 means not answered (handled upstream).
  *
  * First 5% of students (minimum 4) get deterministic profile assignments that
  * guarantee all four meaningful pattern combinations appear at class scale:
@@ -50,8 +56,8 @@ function randBetween(rng: () => number, lo: number, hi: number): number {
  * HC+W, and LC+W across the seeded population.
  *
  * Remaining students use probabilistic assignment:
- *   Correct:  60% HC(4–5), 15% LC(1–2), 25% MC(3)
- *   Wrong:    45% LC(1–2), 30% HC(4–5), 25% MC(3)
+ *   Correct:  60% HC(4–5), 15% LC(1–2), 25% MC(2.5–3.5)
+ *   Wrong:    45% LC(1–2), 30% HC(4–5), 25% MC(2.5–3.5)
  */
 function generateConfidence(
   rng: () => number,
@@ -64,19 +70,19 @@ function generateConfidence(
   if (studentIdx < seedCount) {
     const profile = studentIdx % 4;
     return profile === 0 || profile === 2
-      ? randBetween(rng, 4, 5)   // HC profiles
-      : randBetween(rng, 1, 2);  // LC profiles
+      ? randHalfStep(rng, 4, 5)   // HC profiles
+      : randHalfStep(rng, 1, 2);  // LC profiles
   }
 
   const r = rng();
   if (isCorrect) {
-    if (r < 0.60) return randBetween(rng, 4, 5);  // HC+C: 60%
-    if (r < 0.75) return randBetween(rng, 1, 2);  // LC+C: 15%
-    return 3;                                       // MC+C: 25%
+    if (r < 0.60) return randHalfStep(rng, 4, 5);    // HC+C: 60%
+    if (r < 0.75) return randHalfStep(rng, 1, 2);    // LC+C: 15%
+    return randHalfStep(rng, 2.5, 3.5);               // MC+C: 25%
   } else {
-    if (r < 0.45) return randBetween(rng, 1, 2);  // LC+W: 45%
-    if (r < 0.75) return randBetween(rng, 4, 5);  // HC+W: 30%
-    return 3;                                       // MC+W: 25%
+    if (r < 0.45) return randHalfStep(rng, 1, 2);    // LC+W: 45%
+    if (r < 0.75) return randHalfStep(rng, 4, 5);    // HC+W: 30%
+    return randHalfStep(rng, 2.5, 3.5);               // MC+W: 25%
   }
 }
 

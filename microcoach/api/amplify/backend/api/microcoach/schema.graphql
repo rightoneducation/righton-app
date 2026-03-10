@@ -55,7 +55,7 @@ type Student @model {
   externalId: String
   performanceX: Float
   performanceY: Float
-  confidenceLevel: Int!
+  confidenceLevel: Float!
   status: String!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -119,7 +119,7 @@ type QuestionResponse {
   response: String
   isCorrect: Boolean!
   pointsEarned: Float!
-  confidence: Int           # 1–5; null if not collected
+  confidence: Float         # 1–5 in 0.5 steps; null if not collected
 }
 
 # ── Misconception ──────────────────────────────────────────────────────
@@ -210,6 +210,7 @@ type ActivitySteps {
   problem: String
   coreActivity: [String]
   discussionQuestions: [String]
+  incorrectWorkedExamples: [String]
 }
 
 type Materials {
@@ -264,8 +265,8 @@ type SavedNextStep @model {
   activityFormat: String
   activitySummary: String
   aiReasoning: String
-  evidence: MisconceptionEvidence
-  tabs: Tabs
+  evidence: AWSJSON
+  tabs: AWSJSON
 }
 
 # ── Custom mutations (Lambda-backed LLM calls) ─────────────────────────
