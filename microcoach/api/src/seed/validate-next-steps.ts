@@ -64,15 +64,17 @@ const VALID_FORMATS = ['Small groups', 'Whole class', 'Individual'];
 
 // ── CLI args ──────────────────────────────────────────────────────────────────
 
-function parseArgs(): { weekMin?: number; weekMax?: number } {
+function parseArgs(): { weekMin?: number; weekMax?: number; verbose: boolean } {
   const argv = process.argv.slice(2);
   let weekMin: number | undefined;
   let weekMax: number | undefined;
+  let verbose = false;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--week-min' && argv[i + 1]) weekMin = parseInt(argv[++i], 10);
     if (argv[i] === '--week-max' && argv[i + 1]) weekMax = parseInt(argv[++i], 10);
+    if (argv[i] === '--verbose' || argv[i] === '-v') verbose = true;
   }
-  return { weekMin, weekMax };
+  return { weekMin, weekMax, verbose };
 }
 
 // ── GraphQL queries ───────────────────────────────────────────────────────────
@@ -195,6 +197,57 @@ interface TestResult {
   check: string;
   pass: boolean;
   detail?: string;
+}
+
+// ── Misconception-level structural checks ─────────────────────────────────────
+
+const HEDGING_WORDS = ['often', 'typically', 'usually', 'tend to'];
+
+function runMisconceptionStructuralChecks(misconception: any, sessionLabel: string): TestResult[] {
+  const results: TestResult[] = [];
+  const base = { classroom: sessionLabel, misconception: '', activity: '' };
+
+  function check(checkName: string, pass: boolean, detail?: string): void {
+    results.push({ ...base, check: checkName, pass, detail });
+  }
+
+  // misconceptionSummary non-empty
+  const summary = misconception.misconceptionSummary;
+  check('misconceptionSummary non-empty', typeof summary === 'string' && summary.trim().length > 0);
+
+  // successIndicators present (≥1 item, each non-empty string)
+  const si: any[] = misconception.successIndicators ?? [];
+  const siOk = Array.isArray(si) && si.length >= 1 && si.every((x: any) => typeof x === 'string' && x.trim().length > 0);
+  check('successIndicators present (≥1 item)', siOk, !Array.isArray(si) ? 'not an array' : si.length === 0 ? 'empty array' : 'item(s) not non-empty strings');
+
+  // wrongAnswerExplanations present (≥1 item, each {answer, explanation} non-empty)
+  const wae: any[] = misconception.wrongAnswerExplanations ?? [];
+  const waeBad = !Array.isArray(wae) || wae.length === 0 || wae.some((x: any) => !x?.answer || !x?.explanation);
+  check(
+    'wrongAnswerExplanations present (≥1 item)',
+    !waeBad,
+    !Array.isArray(wae) ? 'not an array' : wae.length === 0 ? 'empty array' : 'item(s) missing answer or explanation',
+  );
+
+  // correctAnswerSolution present (≥1 item, each non-empty string)
+  const cas: any[] = misconception.correctAnswerSolution ?? [];
+  const casOk = Array.isArray(cas) && cas.length >= 1 && cas.every((x: any) => typeof x === 'string' && x.trim().length > 0);
+  check('correctAnswerSolution present (≥1 item)', casOk, !Array.isArray(cas) ? 'not an array' : cas.length === 0 ? 'empty array' : 'item(s) not non-empty strings');
+
+  // evidence.mostCommonError non-empty
+  const mce = misconception.evidence?.mostCommonError;
+  check('evidence.mostCommonError non-empty', typeof mce === 'string' && mce.trim().length > 0);
+
+  // No hedging words in misconceptionSummary
+  if (typeof summary === 'string') {
+    const lc = summary.toLowerCase();
+    const found = HEDGING_WORDS.find(w => lc.includes(w));
+    check('no hedging words in misconceptionSummary', !found, found ? `found hedging: "${found}" in misconceptionSummary` : undefined);
+  } else {
+    check('no hedging words in misconceptionSummary', true);
+  }
+
+  return results;
 }
 
 // ── Structural checks ─────────────────────────────────────────────────────────
@@ -385,6 +438,8 @@ interface LlmCheckResult {
   worked_examples_show_misconception_details: string;
   worked_examples_math_valid: boolean;
   worked_examples_math_valid_details: string;
+  worked_examples_not_accidentally_correct: boolean;
+  worked_examples_not_accidentally_correct_details: string;
 }
 
 function llmResultsToTestResults(
@@ -398,6 +453,7 @@ function llmResultsToTestResults(
     ['problem_math_correct', 'math: central problem is correct'],
     ['worked_examples_show_misconception', 'math: incorrect worked examples show target misconception error'],
     ['worked_examples_math_valid', 'math: worked examples are mathematically valid'],
+    ['worked_examples_not_accidentally_correct', 'math: incorrect worked examples are not accidentally correct'],
   ];
 
   return checks.map(([key, checkName]) => {
@@ -409,15 +465,14 @@ function llmResultsToTestResults(
 
 // ── Report printer ────────────────────────────────────────────────────────────
 
-function printReport(allResults: TestResult[]): void {
+function printReport(allResults: TestResult[], verbose: boolean): void {
   // Group by classroom → misconception → activity
   const byClassroom = new Map<string, Map<string, Map<string, TestResult[]>>>();
   for (const r of allResults) {
     if (!byClassroom.has(r.classroom)) byClassroom.set(r.classroom, new Map());
     const byMisco = byClassroom.get(r.classroom)!;
-    const miscoKey = r.misconception;
-    if (!byMisco.has(miscoKey)) byMisco.set(miscoKey, new Map());
-    const byActivity = byMisco.get(miscoKey)!;
+    if (!byMisco.has(r.misconception)) byMisco.set(r.misconception, new Map());
+    const byActivity = byMisco.get(r.misconception)!;
     if (!byActivity.has(r.activity)) byActivity.set(r.activity, []);
     byActivity.get(r.activity)!.push(r);
   }
@@ -429,28 +484,59 @@ function printReport(allResults: TestResult[]): void {
 
   for (const [classroom, miscoMap] of byClassroom) {
     classroomsChecked++;
-    console.log(`\n── ${classroom} ──`);
+    const classroomResults = [...miscoMap.values()].flatMap(m => [...m.values()].flat());
+    const classroomFails = classroomResults.filter(r => !r.pass);
+
+    if (verbose) {
+      console.log(`\n── ${classroom} ──`);
+    } else {
+      const checksInClass = classroomResults.length;
+      const passedInClass = classroomResults.filter(r => r.pass).length;
+      const failCount = checksInClass - passedInClass;
+      const status = failCount === 0 ? '✓' : `✗ ${failCount} fail(s)`;
+      console.log(`\n── ${classroom} — ${passedInClass}/${checksInClass} checks ${status}`);
+    }
+
     for (const [misco, actMap] of miscoMap) {
-      console.log(`  Misconception: ${misco}`);
+      const miscoResults = [...actMap.values()].flat();
+      const miscoFails = miscoResults.filter(r => !r.pass);
+
+      if (verbose) {
+        console.log(`  Misconception: ${misco}`);
+      } else if (miscoFails.length > 0) {
+        console.log(`  [${misco}]`);
+      }
+
       for (const [activity, results] of actMap) {
         activitiesChecked++;
-        console.log(`    Activity: ${activity}`);
-        for (const r of results) {
-          const tag = r.pass ? '[PASS]' : '[FAIL]';
-          const detail = !r.pass && r.detail ? ` — ${r.detail}` : '';
-          console.log(`      ${tag} ${r.check}${detail}`);
-          totalChecks++;
-          if (r.pass) totalPassed++;
+        const actFails = results.filter(r => !r.pass);
+
+        if (verbose) {
+          console.log(`    Activity: ${activity}`);
+          for (const r of results) {
+            const tag = r.pass ? '[PASS]' : '[FAIL]';
+            const detail = !r.pass && r.detail ? ` — ${r.detail}` : '';
+            console.log(`      ${tag} ${r.check}${detail}`);
+          }
+        } else if (actFails.length > 0) {
+          const actLabel = activity || '(misconception-level)';
+          console.log(`    ${actLabel} — ${results.filter(r => r.pass).length}/${results.length} passed`);
+          for (const r of actFails) {
+            const detail = r.detail ? ` — ${r.detail}` : '';
+            console.log(`      [FAIL] ${r.check}${detail}`);
+          }
         }
+
+        totalChecks += results.length;
+        totalPassed += results.filter(r => r.pass).length;
       }
     }
   }
 
   const failed = totalChecks - totalPassed;
   console.log('\n=== Summary ===');
-  console.log(`Classrooms checked: ${classroomsChecked} | Activities checked: ${activitiesChecked}`);
-  console.log(`Passed: ${totalPassed}/${totalChecks} checks | Failed: ${failed}`);
-  // Exit 0 regardless — this is a reporting tool, not a CI gate
+  console.log(`Classrooms: ${classroomsChecked} | Activities: ${activitiesChecked} | Checks: ${totalPassed}/${totalChecks} passed | Failed: ${failed}`);
+  if (!verbose && failed > 0) console.log('Run with --verbose to see all checks');
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -459,6 +545,7 @@ async function main(): Promise<void> {
   console.log('=== Microcoach Content Validator ===');
 
   const args = parseArgs();
+  const { verbose } = args;
   const gql: GqlFn = await createGqlClient();
   console.log(`✓  LLM checks via microcoachLLMVerify-${AMPLIFY_ENV}\n`);
 
@@ -550,6 +637,11 @@ async function main(): Promise<void> {
         const studentData = getStudentPerformanceData(studentResponses, qNums, studentNameMap);
         const allGroupStudents = new Set(studentData.map(s => s.name));
 
+        // Misconception-level structural checks
+        const miscoChecks = runMisconceptionStructuralChecks(misconception, sessionLabel);
+        for (const r of miscoChecks) { r.misconception = misconception.isCore ? `${miscoTitle} [CORE]` : miscoTitle; }
+        allResults.push(...miscoChecks);
+
         for (const activity of (misconception.moveOptions ?? [])) {
           const resultBase = {
             classroom: sessionLabel,
@@ -585,9 +677,19 @@ async function main(): Promise<void> {
         }
       }
 
-      // Run all LLM checks for this session in parallel
+      // Run all LLM checks for this session in parallel, with live progress
       if (llmTasks.length > 0) {
-        const llmResultGroups = await Promise.all(llmTasks.map(t => t.promise));
+        let completed = 0;
+        const total = llmTasks.length;
+        const tick = (title: string) => {
+          completed++;
+          process.stdout.write(`\r  LLM ${completed}/${total}: ${title.slice(0, 40).padEnd(40)}`);
+        };
+        process.stdout.write(`  LLM 0/${total}...`);
+        const llmResultGroups = await Promise.all(
+          llmTasks.map(t => t.promise.then(result => { tick(t.activityTitle ?? ''); return result; }))
+        );
+        process.stdout.write(`\r  LLM ${total}/${total} done${' '.repeat(50)}\n`);
         for (const group of llmResultGroups) {
           allResults.push(...group);
         }
@@ -595,7 +697,7 @@ async function main(): Promise<void> {
     }
   }
 
-  printReport(allResults);
+  printReport(allResults, verbose);
 }
 
 main().catch((err) => {

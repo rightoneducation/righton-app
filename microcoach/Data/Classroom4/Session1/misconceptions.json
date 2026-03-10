@@ -1,0 +1,58 @@
+{
+  "topic": "Systems of Equations and Inequalities",
+  "ccssStandards": [
+    "A.REI.3",
+    "8.EE.8.B",
+    "A.REI.12"
+  ],
+  "misconceptions": [
+    {
+      "title": "Misinterpreting Inequality Symbols",
+      "description": "Students incorrectly match strict inequalities (> or <) with inclusive inequality symbols (≥ or ≤). They may not recognize the importance of dashed versus solid lines to indicate these distinctions.",
+      "ccssStandard": "A.REI.12",
+      "severity": "high",
+      "priority": "1",
+      "occurrence": "first",
+      "successIndicators": [
+        "Draw correct boundary lines",
+        "Shade correctly for all inequalities"
+      ]
+    },
+    {
+      "title": "Switching Variables With Wrong Signs",
+      "description": "Students switch the roles of x and y or flip the signs either by misunderstanding substitutions or by procedural errors in solving systems of equations. This results in incorrect solutions to the system.",
+      "ccssStandard": "8.EE.8.B",
+      "severity": "medium",
+      "priority": "2",
+      "occurrence": "first",
+      "successIndicators": [
+        "Substitute correctly involves both variables",
+        "Maintain variable roles throughout solving"
+      ]
+    },
+    {
+      "title": "Incorrect Graphical Representation",
+      "description": "When converting standard form to slope-intercept form, students graph equations without converting, often assuming initial coefficients represent slope and intercept.",
+      "ccssStandard": "A.REI.12",
+      "severity": "high",
+      "priority": "3",
+      "occurrence": "first",
+      "successIndicators": [
+        "Convert inequalities to slope-intercept",
+        "Identify slope and intercept accurately"
+      ]
+    },
+    {
+      "title": "Incorrect Operations for Solving",
+      "description": "Mistakes occur using wrong inverse operations, such as adding instead of subtracting, leading to incorrect solutions for equations.",
+      "ccssStandard": "8.EE.8.B",
+      "severity": "medium",
+      "priority": "4",
+      "occurrence": "first",
+      "successIndicators": [
+        "Select correct inverse operations",
+        "Check solutions consistently"
+      ]
+    }
+  ]
+}

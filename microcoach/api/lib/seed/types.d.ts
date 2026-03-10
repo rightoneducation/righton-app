@@ -14,7 +14,7 @@ export interface SessionConfig {
     topic: string;
     ccssStandards: string[];
     ppqFile: string;
-    postPpqFile: string;
+    postPpqFile: string | null;
     nextStepFile: string | null;
     misconceptions?: MisconceptionPlaceholder[];
 }

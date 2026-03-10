@@ -7,6 +7,10 @@
     "successIndicators": "Start each with an action verb. Describe observable student behavior only. 10 words max per indicator.",
     "overviewBullets": "Each bullet starts with a short bolded action verb phrase (e.g. 'Think', 'Discuss', 'Present'). Follow with 1-2 sentences max. Write for a teacher skimming between classes."
   },
+  "llmVerify": {
+    "designModel": "gpt-4o-mini",
+    "mathModel": "o3-mini"
+  },
   "nextStepOption": {
     "description": "microcoachNextStepOption — generates one classroom activity per format per misconception",
     "model": "gpt-5-mini",

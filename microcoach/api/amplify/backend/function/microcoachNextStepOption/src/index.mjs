@@ -59,7 +59,9 @@ const IncorrectWorkedExample = z.object({
 const ActivitySteps = z.object({
   setup: z.array(z.string()).describe('Teacher preparation steps before the activity begins'),
   problem: z.string().describe('The central problem or prompt students work on'),
-  incorrectWorkedExamples: z.array(IncorrectWorkedExample).describe(`${INCORRECT_EXAMPLES_COUNT} incorrect worked examples reflecting the misconception, ready for board/slide display`),
+  incorrectWorkedExample1: IncorrectWorkedExample.describe('First incorrect worked example showing the misconception step-by-step'),
+  incorrectWorkedExample2: IncorrectWorkedExample.describe('Second incorrect worked example showing the misconception step-by-step'),
+  incorrectWorkedExample3: IncorrectWorkedExample.describe('Third incorrect worked example showing the misconception step-by-step'),
   coreActivity: z.array(z.string()).describe('Step-by-step activity instructions (4-6 steps)'),
   discussionQuestions: z.array(z.string()).describe('2-3 questions for debrief / whole-class discussion'),
 });
@@ -90,7 +92,7 @@ const Tabs = z.object({
 const NextStepActivity = z.object({
   type: z.literal('NEXT_STEP'),
   status: z.literal('GENERATED'),
-  title: z.string().describe('Short, action-oriented activity title'),
+  title: z.string().describe('Short, action-oriented activity title. Do NOT include format name, parentheticals, or any label beyond the title itself.'),
   summary: z.string().describe('1-2 sentence description of the activity'),
   targets: z.string().describe(
     'The specific skill this activity targets, expressed in plain skill language ' +
@@ -284,7 +286,7 @@ The activity MUST:
 ${DISALLOWED_METHODS.length ? `- NOT use these teaching methods: ${DISALLOWED_METHODS.join(', ')}` : ''}
 
 Requirements for each field:
-- **title**: Short, action-oriented (e.g. "Keep-Change-Flip Error Analysis")
+- **title**: Short, action-oriented title only (e.g. "Keep-Change-Flip Error Analysis"). Do NOT append the format name, a parenthetical, or any other label — just the title.
 - **summary**: 1-2 sentences; what the activity is and why it targets this error
 - **targets**: The specific skill this activity builds, in plain skill language (not ontology IDs)
 - **instructionalMove**: What the teacher concretely does to address the misconception — begin with a verb, 2–4 sentences, must reference the error pattern
@@ -295,7 +297,7 @@ Requirements for each field:
 - **tabs.overview.whatYouDo**: ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Present", "Facilitate", "Highlight") + 1-2 sentences. ${ws.overviewBullets ?? ''}
 - **tabs.overview.importance**: Why this specific activity addresses this specific misconception
 - **tabs.activitySteps**: setup (${SETUP_STEPS_MIN}-${SETUP_STEPS_MAX} steps), concrete math problem, ${ACTIVITY_STEPS_MIN}-${ACTIVITY_STEPS_MAX} core activity steps, ${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX} discussion questions that surface and resolve the error
-- **tabs.activitySteps.incorrectWorkedExamples**: Exactly ${INCORRECT_EXAMPLES_COUNT} incorrect worked examples. Each must:
+- **tabs.activitySteps.incorrectWorkedExample1**, **incorrectWorkedExample2**, **incorrectWorkedExample3**: Three separate required fields, one incorrect worked example each. Every field must be populated. Each must:
   - Show a complete problem and the full incorrect student work step-by-step (not just the wrong answer)
   - Reflect the specific misconception error pattern (not a random mistake)
   - Use grade-appropriate language for middle school
@@ -330,6 +332,7 @@ Rules:
 - Do NOT fix or remove the misconception error (the one step that shows the wrong conceptual move)
 - DO fix any arithmetic slippage in other steps (wrong multiplication, wrong simplification, wrong sign, wrong intermediate result)
 - If an example is already correct (one error only, no arithmetic slippage), return it unchanged
+- CRITICAL: For each example, solve the problem correctly to find the true correct answer. Then trace the incorrect path shown in incorrectWork to find the incorrect answer. If the incorrect path arrives at the SAME final answer as the correct solution, the example fails — replace the ENTIRE example (both "problem" and "incorrectWork") with a new problem of the same misconception type where the error leads to a clearly wrong final answer.
 - Return a JSON array with the same length as the input, each item: { "problem": "...", "incorrectWork": "..." }
 
 Examples to review:
@@ -392,6 +395,14 @@ ${JSON.stringify(examples, null, 2)}`;
     if (!raw) throw new Error('Empty completion content');
 
     const structured = NextStepActivity.parse(JSON.parse(raw));
+
+    // Merge named example properties into the array the frontend expects
+    const rawSteps = structured.tabs.activitySteps;
+    rawSteps.incorrectWorkedExamples = [
+      rawSteps.incorrectWorkedExample1,
+      rawSteps.incorrectWorkedExample2,
+      rawSteps.incorrectWorkedExample3,
+    ].filter(Boolean);
 
     // Validate the central student-facing math problem
     structured.tabs.activitySteps.problem = await validateActivityProblem(

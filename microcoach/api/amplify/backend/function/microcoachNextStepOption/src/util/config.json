@@ -65,7 +65,8 @@
       "Each example contains exactly ONE intentional error: the specific misconception step. All other arithmetic and setup must be mathematically correct.",
       "Trace the incorrect reasoning honestly: after the misconception step, continue computing correctly from that wrong intermediate value.",
       "Never introduce arithmetic slippage (wrong multiplication, wrong simplification, wrong sign) in steps that are not the misconception itself.",
-      "Self-check each example: imagine a student who understands all the math but makes only this one specific conceptual error. Would they produce exactly this work? If not, fix the surrounding arithmetic."
+      "Self-check each example: imagine a student who understands all the math but makes only this one specific conceptual error. Would they produce exactly this work? If not, fix the surrounding arithmetic.",
+      "The error MUST produce a wrong final answer. After you trace the incorrect path, verify that the final answer differs from the correct answer. If the problem you chose happens to produce the correct answer despite the misconception error, choose a different problem where the same conceptual error leads to a clearly wrong final answer."
     ],
     "incorrectWorkedExampleFewShot": [
       {

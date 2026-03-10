@@ -1,0 +1,59 @@
+{
+  "topic": "Solving Systems and Graphing Inequalities",
+  "ccssStandards": [
+    "A.REI.12",
+    "A.REI.3",
+    "8.EE.8.b",
+    "8.EE.8.c"
+  ],
+  "misconceptions": [
+    {
+      "title": "Incorrect Boundary Line Type",
+      "description": "Students graph inequalities with solid lines when they require dashed lines or vice versa. Without proper distinction between strict and inclusive inequalities, the solution set is wrong.",
+      "ccssStandard": "A.REI.12",
+      "severity": "medium",
+      "priority": "1",
+      "occurrence": "first",
+      "successIndicators": [
+        "Draws dashed lines for strict inequalities",
+        "Draws solid lines for inclusive inequalities"
+      ]
+    },
+    {
+      "title": "Improper Slope Identification",
+      "description": "Confusion arises when converting an inequality into slope-intercept form. Errors occur if coefficients are treated directly as slopes without isolating y.",
+      "ccssStandard": "A.REI.12",
+      "severity": "high",
+      "priority": "2",
+      "occurrence": "first",
+      "successIndicators": [
+        "Correctly isolates y in inequalities",
+        "Identifies slope from y=mx+b form"
+      ]
+    },
+    {
+      "title": "Wrong Variable Substitution",
+      "description": "In solving systems algebraically, incorrect variables are substituted into equations. This happens when students solve for one variable but substitute incorrectly for another.",
+      "ccssStandard": "8.EE.8.B",
+      "severity": "medium",
+      "priority": "3",
+      "occurrence": "first",
+      "successIndicators": [
+        "Substitutes solved variable correctly",
+        "Verifies both variables in final solution"
+      ]
+    },
+    {
+      "title": "Fraction Mismanagement",
+      "description": "During equation solving, students either fail to clear fractions or do so improperly, leading to incorrect results when combining terms.",
+      "ccssStandard": "A.REI.3",
+      "severity": "low",
+      "priority": "4",
+      "occurrence": "first",
+      "successIndicators": [
+        "Clears fractions from both sides",
+        "Simplifies fractions correctly"
+      ]
+    }
+  ]
+}

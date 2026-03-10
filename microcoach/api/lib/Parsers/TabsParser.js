@@ -72,7 +72,7 @@ class TabsParser {
             problem: typeof obj.problem === 'string' ? obj.problem : '',
             coreActivity: this.parseStringArray(obj.coreActivity),
             discussionQuestions: this.parseStringArray(obj.discussionQuestions),
-            incorrectWorkedExamples: this.parseStringArray(obj.incorrectWorkedExamples),
+            incorrectWorkedExamples: this.parseWorkedExamples(obj.incorrectWorkedExamples),
         };
     }
     static parseMaterials(raw) {
@@ -116,6 +116,19 @@ class TabsParser {
             students: this.parseStringArray(obj.students),
             description: typeof obj.description === 'string' ? obj.description : '',
         };
+    }
+    static parseWorkedExamples(raw) {
+        if (!Array.isArray(raw))
+            return [];
+        return raw
+            .filter((item) => item && typeof item === 'object')
+            .map((item) => {
+            const o = item;
+            return {
+                problem: typeof o.problem === 'string' ? o.problem : '',
+                incorrectWork: typeof o.incorrectWork === 'string' ? o.incorrectWork : '',
+            };
+        });
     }
     static parseStringArray(raw) {
         if (!Array.isArray(raw))

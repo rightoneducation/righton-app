@@ -505,7 +505,7 @@ async function processClassroom(gql, classroom, nextStepExamples) {
     const analysis = parseJson(analysisResult);
     const misconceptions = (_o = analysis === null || analysis === void 0 ? void 0 : analysis.misconceptions) !== null && _o !== void 0 ? _o : [];
     console.log(` ✓  ${misconceptions.length} misconceptions`);
-    // 5b. Per-misconception extras
+    // 5c. Per-misconception extras
     const ppqQs = ((_p = ppq === null || ppq === void 0 ? void 0 : ppq.questions) !== null && _p !== void 0 ? _p : []).map((q) => {
         var _a, _b;
         return ({

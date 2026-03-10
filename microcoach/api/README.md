@@ -8,7 +8,7 @@ yarn ingest    # PPQ.docx → LLM → misconceptions.json per classroom
 yarn upload    # Excel + misconceptions.json → AppSync DB
 yarn verify    # check record counts and structure
 yarn generate  # DB + student responses → pregeneratedNextSteps per session
-yarn validate  # quality-check pregeneratedNextSteps
+yarn validate  # quality-check pregeneratedNextSteps, use --verbose for full list of checks
 ```
 
 Run in order each week after new PPQ data is added to `Data/`.

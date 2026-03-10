@@ -1,0 +1,64 @@
+{
+  "topic": "Solving Systems and Graphing Inequalities",
+  "ccssStandards": [
+    "A.REI.12",
+    "A.REI.3",
+    "8.EE.8.b",
+    "8.EE.8.c"
+  ],
+  "misconceptions": [
+    {
+      "title": "Graph Inequalities Incorrect Slope",
+      "description": "When graphing inequalities, students interpret the inequality without converting it to slope-intercept form first. This mistake leads to choosing a boundary line with the wrong slope and incorrect graphing.",
+      "ccssStandard": "A.REI.12",
+      "severity": "high",
+      "priority": "1",
+      "occurrence": "first",
+      "successIndicators": [
+        "Convert inequality to slope-intercept form",
+        "Identify correct boundary slope",
+        "Draw accurate graph line",
+        "Shade correct region after graphing"
+      ]
+    },
+    {
+      "title": "Boundary Line Solid/Dash Confusion",
+      "description": "Students use a solid line for strict inequalities or misinterpret the inequality symbols, leading to an incorrect boundary line inclusion.",
+      "ccssStandard": "A.REI.12",
+      "severity": "medium",
+      "priority": "2",
+      "occurrence": "first",
+      "successIndicators": [
+        "Distinguish between strict and inclusive symbols",
+        "Draw dash line for strict inequalities",
+        "Use solid line for inclusive inequalities"
+      ]
+    },
+    {
+      "title": "Incorrect Variable Substitution in Systems",
+      "description": "When solving systems, students find variables correctly but substitute incorrectly into equations, leading to wrong final values.",
+      "ccssStandard": "8.EE.8.B",
+      "severity": "medium",
+      "priority": "3",
+      "occurrence": "first",
+      "successIndicators": [
+        "Solve for correct variables",
+        "Substitute into original equations correctly",
+        "Check variable validity after substitution"
+      ]
+    },
+    {
+      "title": "Mistake in Clearing Fractions",
+      "description": "An incorrect method is used to clear fractions from equations, leading to wrong equivalent equations when trying to solve for variables.",
+      "ccssStandard": "A.REI.3",
+      "severity": "medium",
+      "priority": "4",
+      "occurrence": "first",
+      "successIndicators": [
+        "Multiply each term by common denominator",
+        "Check equations after clearing fractions",
+        "Verify solutions fit original equations"
+      ]
+    }
+  ]
+}

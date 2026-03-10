@@ -18,12 +18,17 @@ export interface IOverview {
   importance:     string
 }
 
+export interface IIncorrectWorkedExample {
+  problem:       string
+  incorrectWork: string
+}
+
 export interface IActivitySteps {
   setup:                   string[]
   problem:                 string
   coreActivity:            string[]
   discussionQuestions:     string[]
-  incorrectWorkedExamples: string[]
+  incorrectWorkedExamples: IIncorrectWorkedExample[]
 }
 
 export interface IMaterials {
@@ -124,7 +129,7 @@ export class TabsParser {
       problem:                 typeof obj.problem === 'string' ? obj.problem : '',
       coreActivity:            this.parseStringArray(obj.coreActivity),
       discussionQuestions:     this.parseStringArray(obj.discussionQuestions),
-      incorrectWorkedExamples: this.parseStringArray(obj.incorrectWorkedExamples),
+      incorrectWorkedExamples: this.parseWorkedExamples(obj.incorrectWorkedExamples),
     }
   }
 
@@ -168,6 +173,19 @@ export class TabsParser {
       students:    this.parseStringArray(obj.students),
       description: typeof obj.description === 'string' ? obj.description : '',
     }
+  }
+
+  private static parseWorkedExamples(raw: unknown): IIncorrectWorkedExample[] {
+    if (!Array.isArray(raw)) return []
+    return raw
+      .filter((item) => item && typeof item === 'object')
+      .map((item) => {
+        const o = item as Record<string, unknown>
+        return {
+          problem:       typeof o.problem       === 'string' ? o.problem       : '',
+          incorrectWork: typeof o.incorrectWork === 'string' ? o.incorrectWork : '',
+        }
+      })
   }
 
   private static parseStringArray(raw: unknown): string[] {

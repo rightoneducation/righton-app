@@ -12,12 +12,16 @@ export interface IOverview {
     whatYouDo: string | IOverviewBullet[];
     importance: string;
 }
+export interface IIncorrectWorkedExample {
+    problem: string;
+    incorrectWork: string;
+}
 export interface IActivitySteps {
     setup: string[];
     problem: string;
     coreActivity: string[];
     discussionQuestions: string[];
-    incorrectWorkedExamples: string[];
+    incorrectWorkedExamples: IIncorrectWorkedExample[];
 }
 export interface IMaterials {
     required: string[];
@@ -60,6 +64,7 @@ export declare class TabsParser {
     private static parseStudentGroupings;
     private static parseStudentGroups;
     private static parseHighFlyers;
+    private static parseWorkedExamples;
     private static parseStringArray;
     /**
      * Serialize a tabs object to a JSON string for an AWSJSON field.
