@@ -1,58 +1,61 @@
 {
-  "topic": "Solving Systems and Graphing Inequalities",
+  "topic": "Graphing Linear Inequalities and Solving Systems",
   "ccssStandards": [
-    "A.REI.12",
-    "A.REI.3",
-    "8.EE.8.b",
-    "8.EE.8.c"
+    "HSA-REI.D.12",
+    "HSA-REI.B.3",
+    "8.EE.C.8"
   ],
   "misconceptions": [
     {
-      "title": "Incorrect Boundary Line Type",
-      "description": "Students graph inequalities with solid lines when they require dashed lines or vice versa. Without proper distinction between strict and inclusive inequalities, the solution set is wrong.",
-      "ccssStandard": "A.REI.12",
-      "severity": "medium",
+      "title": "Incorrect Slope Conversion",
+      "description": "Some students interpret the coefficients in inequalities as the slope without converting them to slope-intercept form. This leads them to graph equations with incorrect slopes, resulting in misrepresentation of inequalities.",
+      "ccssStandard": "HSA-REI.D.12",
+      "severity": "high",
       "priority": "1",
       "occurrence": "first",
       "successIndicators": [
-        "Draws dashed lines for strict inequalities",
-        "Draws solid lines for inclusive inequalities"
+        "Graph correct slope-intercept form",
+        "Identify boundary line as dashed or solid",
+        "Shade correct solution region"
       ]
     },
     {
-      "title": "Improper Slope Identification",
-      "description": "Confusion arises when converting an inequality into slope-intercept form. Errors occur if coefficients are treated directly as slopes without isolating y.",
-      "ccssStandard": "A.REI.12",
-      "severity": "high",
+      "title": "Inclusive vs. Exclusive Boundaries",
+      "description": "The error occurs when inequalities are graphed with solid lines regardless of whether they are inclusive. Misunderstanding leads to incorrectly including or excluding the boundary in the solution set.",
+      "ccssStandard": "HSA-REI.D.12",
+      "severity": "medium",
       "priority": "2",
       "occurrence": "first",
       "successIndicators": [
-        "Correctly isolates y in inequalities",
-        "Identifies slope from y=mx+b form"
+        "Draw solid lines for inclusive inequalities",
+        "Draw dashed lines for strict inequalities",
+        "Shade appropriately based on inequality type"
       ]
     },
     {
-      "title": "Wrong Variable Substitution",
-      "description": "In solving systems algebraically, incorrect variables are substituted into equations. This happens when students solve for one variable but substitute incorrectly for another.",
-      "ccssStandard": "8.EE.8.B",
-      "severity": "medium",
+      "title": "Switching X and Y Coordinates",
+      "description": "In solving systems of equations, students swap x and y coordinates, leading to incorrect solutions. This misunderstanding results from confusion over variable placement in the ordered pair.",
+      "ccssStandard": "8.EE.C.8",
+      "severity": "high",
       "priority": "3",
       "occurrence": "first",
       "successIndicators": [
-        "Substitutes solved variable correctly",
-        "Verifies both variables in final solution"
+        "Substitute coordinates correctly into equations",
+        "Check order of (x, y) in solutions",
+        "Verify solutions in both equations"
       ]
     },
     {
-      "title": "Fraction Mismanagement",
-      "description": "During equation solving, students either fail to clear fractions or do so improperly, leading to incorrect results when combining terms.",
-      "ccssStandard": "A.REI.3",
-      "severity": "low",
+      "title": "Failure to Clear Fractions",
+      "description": "Errors arise when students do not correctly clear fractions from equations. This may lead to unnecessary complexity or incorrect combining of terms, causing inaccurate solutions.",
+      "ccssStandard": "HSA-REI.B.3",
+      "severity": "medium",
       "priority": "4",
       "occurrence": "first",
       "successIndicators": [
-        "Clears fractions from both sides",
-        "Simplifies fractions correctly"
+        "Clear fractions before solving equations",
+        "Combine like terms correctly",
+        "Distribute correctly across equation"
       ]
     }
   ]

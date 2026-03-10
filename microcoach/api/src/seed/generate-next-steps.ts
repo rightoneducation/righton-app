@@ -285,31 +285,31 @@ function getStudentPerformanceData(
 }
 
 /**
- * Split students into two groups for a given set of question numbers:
- *   buildingUnderstanding — got at least one question wrong (sorted by wrong count desc, then alpha)
- *   understoodConcept     — got all relevant questions correct (sorted alphabetically)
- * Students with no responses for these questions are excluded.
+ * Split students into two groups based on overall quiz performance:
+ *   buildingUnderstanding — scored below threshold across all answered questions
+ *   understoodConcept     — scored at or above threshold across all answered questions
+ * questionNumbers is retained for API compatibility but no longer used for the split.
  */
 function getStudentGroups(
   studentResponses: any[],
-  questionNumbers: number[],
+  questionNumbers: number[],   // retained for API compat, no longer used for split
   studentNameMap: Map<string, string>,
+  threshold = 0.6,
 ): { buildingUnderstanding: string[]; understoodConcept: string[] } {
-  if (!questionNumbers.length) return { buildingUnderstanding: [], understoodConcept: [] };
-  const qSet = new Set(questionNumbers);
-  const wrongCount = new Map<string, number>();
-  const correctOnly = new Set<string>();
+  const buildingUnderstanding: string[] = [];
+  const understoodConcept: string[] = [];
 
   for (const sr of studentResponses) {
     const name = studentNameMap.get(sr.studentId);
     if (!name) continue;
-    const relevant = (sr.questionResponses ?? []).filter((qr: any) => qSet.has(qr.questionNumber));
-    if (!relevant.length) continue;
-    const wrongs = relevant.filter((qr: any) => !qr.isCorrect).length;
-    if (wrongs > 0) {
-      wrongCount.set(name, (wrongCount.get(name) ?? 0) + wrongs);
+    const all = (sr.questionResponses ?? []) as any[];
+    if (!all.length) continue;
+    // Score = fraction of answered questions that are correct
+    const score = all.filter((qr: any) => qr.isCorrect).length / all.length;
+    if (score >= threshold) {
+      understoodConcept.push(name);
     } else {
-      correctOnly.add(name);
+      buildingUnderstanding.push(name);
     }
   }
 
@@ -320,10 +320,10 @@ function getStudentGroups(
     return firstCmp !== 0 ? firstCmp : aRest.join(' ').localeCompare(bRest.join(' '));
   };
 
-  const buildingUnderstanding = [...wrongCount.keys()].sort(sortByName);
-  const understoodConcept = [...correctOnly].sort(sortByName);
-
-  return { buildingUnderstanding, understoodConcept };
+  return {
+    buildingUnderstanding: buildingUnderstanding.sort(sortByName),
+    understoodConcept: understoodConcept.sort(sortByName),
+  };
 }
 
 // ── Next step builder ─────────────────────────────────────────────────────────
@@ -490,17 +490,37 @@ async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: an
   console.log(' ✓');
 
   const ppq = currentSession?.assessments?.items?.find((a: any) => a.type === 'PPQ');
-  const ccss = ppq?.ccssStandards?.[0] ?? currentSession?.ccssStandards?.[0];
-  if (!ccss) {
-    console.log(`  ✗ No CCSS standard found — skipping`);
+  const allCcss: string[] = [
+    ...new Set([
+      ...(ppq?.ccssStandards ?? []),
+      ...(currentSession?.ccssStandards ?? []),
+    ])
+  ].filter(Boolean);
+
+  if (!allCcss.length) {
+    console.log(`  ✗ No CCSS standards found — skipping`);
     return;
   }
 
   // 4. Learning science data
-  process.stdout.write(`  Learning science (${ccss})...`);
-  const lsResult = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } });
-  const learningScienceData = parseJson(lsResult);
-  console.log(' ✓');
+  process.stdout.write(`  Learning science (${allCcss.join(', ')})...`);
+  const lsResults = await Promise.all(
+    allCcss.map((ccss: string) =>
+      invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } })
+        .then((r: any) => parseJson(r))
+        .catch(() => ({ standards: [] }))
+    )
+  );
+  const learningScienceData = {
+    standards: lsResults.flatMap((r: any) => r?.standards ?? []),
+  };
+  console.log(` ✓  (${learningScienceData.standards.length} standards)`);
+  console.log(`  [LS] standards returned: ${learningScienceData.standards.length}`);
+  for (const s of learningScienceData.standards) {
+    console.log(`  [LS]   ${s.code}: ${s.prerequisiteStandards?.length ?? 0} prereqs, ${s.futureDependentStandards?.length ?? 0} future`);
+    if (s.prerequisiteStandards?.length) console.log(`  [LS]     prereqs:`, s.prerequisiteStandards.map((r: any) => r.code));
+    if (s.futureDependentStandards?.length) console.log(`  [LS]     future:`, s.futureDependentStandards.map((r: any) => r.code));
+  }
 
   // 4b. Student responses — confidence stats + PPQ enrichment
   let augmentedPpq = ppq;

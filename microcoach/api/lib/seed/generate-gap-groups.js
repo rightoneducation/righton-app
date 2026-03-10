@@ -365,6 +365,7 @@ async function processClassroom(gql, classroom) {
     // 3. Learning science data
     process.stdout.write(`  Fetching learning science data for ${ccss}...`);
     const lsResult = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } });
+    console.log(lsResult);
     const learningScienceData = parseJson(lsResult);
     console.log(' ✓');
     // 3b. Confidence stats — fetch student responses for PPQ and compute per-question aggregates

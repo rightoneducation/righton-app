@@ -214,6 +214,17 @@ export const handler = async (event) => {
         })),
       };
 
+      console.log('[GetLearningScience] Normalized result:', JSON.stringify({
+        standardCount: normalized.standards.length,
+        standards: normalized.standards.map(s => ({
+          code: s.code,
+          prerequisiteCount: s.prerequisiteStandards.length,
+          prerequisiteStandards: s.prerequisiteStandards,
+          futureDependentCount: s.futureDependentStandards.length,
+          futureDependentStandards: s.futureDependentStandards,
+        })),
+      }, null, 2));
+
       return JSON.stringify(normalized);
     } catch (error) {
       console.error('Error making GraphQL request', {

@@ -248,7 +248,7 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
       totalScore = totalScore / 100;
     }
 
-    const questionResponses: ParsedQuestionResponse[] = questionColumns.map((col, i) => {
+    const questionResponses: ParsedQuestionResponse[] = questionColumns.map((col, i): ParsedQuestionResponse | null => {
       const rawResponse = String(row[col] ?? '').trim().toUpperCase();
       const correctAnswer = answerKeyByCol[col] ?? '';
       const qNum = questionNumbers[i];
@@ -266,15 +266,14 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
       }
 
       if (isAssessmentMatrix) {
-        if (rawResponse === '') {
-          return { questionNumber: qNum, response: correctAnswer, isCorrect: true, pointsEarned: 1, confidence };
-        }
-        return { questionNumber: qNum, response: rawResponse, isCorrect: false, pointsEarned: 0, confidence };
+        if (rawResponse === '') return null;  // no response — exclude from storage
+        const isCorrect = correctAnswer !== '' && rawResponse === correctAnswer;
+        return { questionNumber: qNum, response: rawResponse, isCorrect, pointsEarned: isCorrect ? 1 : 0, confidence };
       }
 
       const isCorrect = rawResponse !== '' && rawResponse === correctAnswer;
       return { questionNumber: qNum, response: rawResponse, isCorrect, pointsEarned: isCorrect ? 1 : 0, confidence };
-    });
+    }).filter((r): r is ParsedQuestionResponse => r !== null);
 
     studentRows.push({ name, externalId, totalScore, questionResponses });
   }

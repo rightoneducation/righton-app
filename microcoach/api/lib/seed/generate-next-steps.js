@@ -278,31 +278,28 @@ function getStudentPerformanceData(studentResponses, questionNumbers, studentNam
     return result.sort((a, b) => a.name.localeCompare(b.name));
 }
 /**
- * Split students into two groups for a given set of question numbers:
- *   buildingUnderstanding — got at least one question wrong (sorted by wrong count desc, then alpha)
- *   understoodConcept     — got all relevant questions correct (sorted alphabetically)
- * Students with no responses for these questions are excluded.
+ * Split students into two groups based on overall quiz performance:
+ *   buildingUnderstanding — scored below threshold across all answered questions
+ *   understoodConcept     — scored at or above threshold across all answered questions
+ * questionNumbers is retained for API compatibility but no longer used for the split.
  */
-function getStudentGroups(studentResponses, questionNumbers, studentNameMap) {
-    var _a, _b;
-    if (!questionNumbers.length)
-        return { buildingUnderstanding: [], understoodConcept: [] };
-    const qSet = new Set(questionNumbers);
-    const wrongCount = new Map();
-    const correctOnly = new Set();
+function getStudentGroups(studentResponses, questionNumbers, studentNameMap, threshold = 0.6) {
+    var _a;
+    const buildingUnderstanding = [];
+    const understoodConcept = [];
     for (const sr of studentResponses) {
         const name = studentNameMap.get(sr.studentId);
         if (!name)
             continue;
-        const relevant = ((_a = sr.questionResponses) !== null && _a !== void 0 ? _a : []).filter((qr) => qSet.has(qr.questionNumber));
-        if (!relevant.length)
+        const all = (_a = sr.questionResponses) !== null && _a !== void 0 ? _a : [];
+        if (!all.length)
             continue;
-        const wrongs = relevant.filter((qr) => !qr.isCorrect).length;
-        if (wrongs > 0) {
-            wrongCount.set(name, ((_b = wrongCount.get(name)) !== null && _b !== void 0 ? _b : 0) + wrongs);
+        const score = all.filter((qr) => qr.isCorrect).length / all.length;
+        if (score >= threshold) {
+            understoodConcept.push(name);
         }
         else {
-            correctOnly.add(name);
+            buildingUnderstanding.push(name);
         }
     }
     const sortByName = (a, b) => {
@@ -311,9 +308,10 @@ function getStudentGroups(studentResponses, questionNumbers, studentNameMap) {
         const firstCmp = aFirst.localeCompare(bFirst);
         return firstCmp !== 0 ? firstCmp : aRest.join(' ').localeCompare(bRest.join(' '));
     };
-    const buildingUnderstanding = [...wrongCount.keys()].sort(sortByName);
-    const understoodConcept = [...correctOnly].sort(sortByName);
-    return { buildingUnderstanding, understoodConcept };
+    return {
+        buildingUnderstanding: buildingUnderstanding.sort(sortByName),
+        understoodConcept: understoodConcept.sort(sortByName),
+    };
 }
 // ── Next step builder ─────────────────────────────────────────────────────────
 function formatLabel(f) {
@@ -431,7 +429,7 @@ function parseJson(raw) {
 }
 // ── Per-classroom pipeline ────────────────────────────────────────────────────
 async function processClassroom(gql, classroom, nextStepExamples) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u;
     const label = `${classroom.classroomName} (grade ${classroom.grade})`;
     // 2. List sessions
     process.stdout.write(`  Sessions...`);
@@ -450,16 +448,33 @@ async function processClassroom(gql, classroom, nextStepExamples) {
     const [currentSession, ...historySessions] = await Promise.all([currentStub, ...historyStubs].map((s) => gql(GET_SESSION, { id: s.id }).then((d) => d.getSession)));
     console.log(' ✓');
     const ppq = (_d = (_c = currentSession === null || currentSession === void 0 ? void 0 : currentSession.assessments) === null || _c === void 0 ? void 0 : _c.items) === null || _d === void 0 ? void 0 : _d.find((a) => a.type === 'PPQ');
-    const ccss = (_f = (_e = ppq === null || ppq === void 0 ? void 0 : ppq.ccssStandards) === null || _e === void 0 ? void 0 : _e[0]) !== null && _f !== void 0 ? _f : (_g = currentSession === null || currentSession === void 0 ? void 0 : currentSession.ccssStandards) === null || _g === void 0 ? void 0 : _g[0];
-    if (!ccss) {
-        console.log(`  ✗ No CCSS standard found — skipping`);
+    const allCcss = [
+        ...new Set([
+            ...((_e = ppq === null || ppq === void 0 ? void 0 : ppq.ccssStandards) !== null && _e !== void 0 ? _e : []),
+            ...((_f = currentSession === null || currentSession === void 0 ? void 0 : currentSession.ccssStandards) !== null && _f !== void 0 ? _f : []),
+        ])
+    ].filter(Boolean);
+    if (!allCcss.length) {
+        console.log(`  ✗ No CCSS standards found — skipping`);
         return;
     }
     // 4. Learning science data
-    process.stdout.write(`  Learning science (${ccss})...`);
-    const lsResult = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } });
-    const learningScienceData = parseJson(lsResult);
-    console.log(' ✓');
+    process.stdout.write(`  Learning science (${allCcss.join(', ')})...`);
+    const lsResults = await Promise.all(allCcss.map((ccss) => invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } })
+        .then((r) => parseJson(r))
+        .catch(() => ({ standards: [] }))));
+    const learningScienceData = {
+        standards: lsResults.flatMap((r) => { var _a; return (_a = r === null || r === void 0 ? void 0 : r.standards) !== null && _a !== void 0 ? _a : []; }),
+    };
+    console.log(` ✓  (${learningScienceData.standards.length} standards)`);
+    console.log(`  [LS] standards returned: ${learningScienceData.standards.length}`);
+    for (const s of learningScienceData.standards) {
+        console.log(`  [LS]   ${s.code}: ${(_h = (_g = s.prerequisiteStandards) === null || _g === void 0 ? void 0 : _g.length) !== null && _h !== void 0 ? _h : 0} prereqs, ${(_k = (_j = s.futureDependentStandards) === null || _j === void 0 ? void 0 : _j.length) !== null && _k !== void 0 ? _k : 0} future`);
+        if ((_l = s.prerequisiteStandards) === null || _l === void 0 ? void 0 : _l.length)
+            console.log(`  [LS]     prereqs:`, s.prerequisiteStandards.map((r) => r.code));
+        if ((_m = s.futureDependentStandards) === null || _m === void 0 ? void 0 : _m.length)
+            console.log(`  [LS]     future:`, s.futureDependentStandards.map((r) => r.code));
+    }
     // 4b. Student responses — confidence stats + PPQ enrichment
     let augmentedPpq = ppq;
     let studentResponses = [];
@@ -467,10 +482,10 @@ async function processClassroom(gql, classroom, nextStepExamples) {
         process.stdout.write(`  Student responses...`);
         try {
             const srData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: ppq.id });
-            studentResponses = (_j = (_h = srData === null || srData === void 0 ? void 0 : srData.studentResponsesByAssessmentId) === null || _h === void 0 ? void 0 : _h.items) !== null && _j !== void 0 ? _j : [];
+            studentResponses = (_p = (_o = srData === null || srData === void 0 ? void 0 : srData.studentResponsesByAssessmentId) === null || _o === void 0 ? void 0 : _o.items) !== null && _p !== void 0 ? _p : [];
             const hasConfidence = studentResponses.some((sr) => { var _a; return ((_a = sr.questionResponses) !== null && _a !== void 0 ? _a : []).some((qr) => qr.confidence != null); });
             if (hasConfidence) {
-                const confidenceStats = computeConfidenceStats(studentResponses, (_k = ppq.questions) !== null && _k !== void 0 ? _k : []);
+                const confidenceStats = computeConfidenceStats(studentResponses, (_q = ppq.questions) !== null && _q !== void 0 ? _q : []);
                 augmentedPpq = { ...ppq, confidenceStats };
                 console.log(` ✓  (${studentResponses.length}, with confidence)`);
             }
@@ -483,7 +498,7 @@ async function processClassroom(gql, classroom, nextStepExamples) {
         }
     }
     const studentNameMap = new Map();
-    for (const s of ((_m = (_l = classroom.students) === null || _l === void 0 ? void 0 : _l.items) !== null && _m !== void 0 ? _m : [])) {
+    for (const s of ((_s = (_r = classroom.students) === null || _r === void 0 ? void 0 : _r.items) !== null && _s !== void 0 ? _s : [])) {
         if (s.id && s.name)
             studentNameMap.set(s.id, s.name);
     }
@@ -503,10 +518,10 @@ async function processClassroom(gql, classroom, nextStepExamples) {
         },
     });
     const analysis = parseJson(analysisResult);
-    const misconceptions = (_o = analysis === null || analysis === void 0 ? void 0 : analysis.misconceptions) !== null && _o !== void 0 ? _o : [];
+    const misconceptions = (_t = analysis === null || analysis === void 0 ? void 0 : analysis.misconceptions) !== null && _t !== void 0 ? _t : [];
     console.log(` ✓  ${misconceptions.length} misconceptions`);
     // 5c. Per-misconception extras
-    const ppqQs = ((_p = ppq === null || ppq === void 0 ? void 0 : ppq.questions) !== null && _p !== void 0 ? _p : []).map((q) => {
+    const ppqQs = ((_u = ppq === null || ppq === void 0 ? void 0 : ppq.questions) !== null && _u !== void 0 ? _u : []).map((q) => {
         var _a, _b;
         return ({
             questionNumber: q.questionNumber,

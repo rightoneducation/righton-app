@@ -107,12 +107,18 @@ Analyze the PPQ questions, their answer choices, and the correct answers to iden
 **For each misconception:**
 - title: A short, descriptive name (e.g. "Inverting the Wrong Fraction", "Sign Errors in Distribution")
 - description: Explain the specific cognitive error — what wrong mental model does the student have, and why do they make this mistake?
-- ccssStandard: The specific CCSS standard this misconception violates
+- ccssStandard: The specific CCSS standard this misconception violates (use full format — see CCSS Format below)
 - severity: "high" for conceptual misunderstandings (wrong mental model); "medium" for mixed conceptual/procedural; "low" for procedural slips
 - priority: "1" for the most common/impactful error pattern across the quiz; "2", "3", "4" for subsequent
 - occurrence: Set to "${occurrence}" for all misconceptions unless clearly this is a recurring pattern (use the occurrence context above)
 - successIndicators: ${SUCCESS_IND_MIN}-${SUCCESS_IND_MAX} specific, observable behaviors a student would demonstrate when they have overcome this misconception
 ${ACCURACY_INSTRUCTIONS.length ? `\n**Before finalizing each description:**\n${ACCURACY_INSTRUCTIONS.map((i) => `- ${i}`).join('\n')}\n` : ''}
+## CCSS Format
+CCSS standard codes must use the full format with cluster letter:
+- K-8: grade.domain.cluster.standard (e.g. "8.EE.C.8", "7.EE.B.4", "6.NS.A.1")
+- High school: HS prefix + domain-cluster.standard (e.g. "HSA-REI.B.3", "HSA-REI.D.12", "HSF-IF.C.7", "HSA-CED.A.1")
+Do NOT use abbreviated forms like "A.REI.3" or "A.REI.12". Apply to both ccssStandard on each misconception and the top-level ccssStandards array.
+
 Return JSON matching the schema.
 `.trim();
 

@@ -1,57 +1,62 @@
 {
   "topic": "Systems of Equations and Inequalities",
   "ccssStandards": [
-    "A.REI.3",
-    "8.EE.8.B",
-    "A.REI.12"
+    "HSA-REI.D.12",
+    "HSA-REI.B.3",
+    "8.EE.C.8",
+    "8.EE.C.8"
   ],
   "misconceptions": [
     {
-      "title": "Misinterpreting Inequality Symbols",
-      "description": "Students incorrectly match strict inequalities (> or <) with inclusive inequality symbols (≥ or ≤). They may not recognize the importance of dashed versus solid lines to indicate these distinctions.",
-      "ccssStandard": "A.REI.12",
+      "title": "Graphing Incorrect Boundary Lines",
+      "description": "Incorrectly using a solid line for strict inequalities shows a mistaken belief that points on the boundary are included in the solution set. This error often stems from not fully understanding the difference between strict and inclusive inequalities.",
+      "ccssStandard": "HSA-REI.D.12",
       "severity": "high",
       "priority": "1",
       "occurrence": "first",
       "successIndicators": [
-        "Draw correct boundary lines",
-        "Shade correctly for all inequalities"
+        "Shade correct region for inequalities",
+        "Use dashed line for strict inequalities",
+        "Identify correct boundary line equations"
       ]
     },
     {
-      "title": "Switching Variables With Wrong Signs",
-      "description": "Students switch the roles of x and y or flip the signs either by misunderstanding substitutions or by procedural errors in solving systems of equations. This results in incorrect solutions to the system.",
-      "ccssStandard": "8.EE.8.B",
-      "severity": "medium",
+      "title": "Switching X and Y in Equations",
+      "description": "Switching x and y indicates confusion about the role of variables in an equation, leading to incorrect solutions. Students might believe repositioning has no significant effect on the solution.",
+      "ccssStandard": "8.EE.C.8",
+      "severity": "high",
       "priority": "2",
       "occurrence": "first",
       "successIndicators": [
-        "Substitute correctly involves both variables",
-        "Maintain variable roles throughout solving"
+        "Maintain variable positions consistently",
+        "Identify roles of x and y correctly",
+        "Verify solutions by substitution"
       ]
     },
     {
-      "title": "Incorrect Graphical Representation",
-      "description": "When converting standard form to slope-intercept form, students graph equations without converting, often assuming initial coefficients represent slope and intercept.",
-      "ccssStandard": "A.REI.12",
-      "severity": "high",
+      "title": "Clearing Fractions Incorrectly",
+      "description": "Attempting to clear fractions by incorrectly multiplying terms is a procedural error that results from misunderstanding fraction operations and equation balance.",
+      "ccssStandard": "HSA-REI.B.3",
+      "severity": "medium",
       "priority": "3",
       "occurrence": "first",
       "successIndicators": [
-        "Convert inequalities to slope-intercept",
-        "Identify slope and intercept accurately"
+        "Simplify fractions correctly in equations",
+        "Multiply all terms by appropriate common factor",
+        "Check equivalent equations post-adjustment"
       ]
     },
     {
-      "title": "Incorrect Operations for Solving",
-      "description": "Mistakes occur using wrong inverse operations, such as adding instead of subtracting, leading to incorrect solutions for equations.",
-      "ccssStandard": "8.EE.8.B",
+      "title": "Using Incorrect Inverse Operations",
+      "description": "Using addition instead of subtraction as the inverse operation suggests a procedural confusion about maintaining equation equality, especially when solving for variables.",
+      "ccssStandard": "8.EE.C.8",
       "severity": "medium",
       "priority": "4",
       "occurrence": "first",
       "successIndicators": [
-        "Select correct inverse operations",
-        "Check solutions consistently"
+        "Select correct inverse operation consistently",
+        "Demonstrate clear steps in manipulation",
+        "Verify equivalent equations post-operation"
       ]
     }
   ]

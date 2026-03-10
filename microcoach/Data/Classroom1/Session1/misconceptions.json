@@ -1,62 +1,62 @@
 {
-  "topic": "Solving and Graphing Linear Equations and Inequalities",
+  "topic": "Solving Linear Inequalities and Equations",
   "ccssStandards": [
-    "A.REI.12",
-    "A.REI.3",
-    "8.EE.8.b",
-    "8.EE.8.c"
+    "HSA-REI.D.12",
+    "HSA-REI.B.3",
+    "8.EE.C.8"
   ],
   "misconceptions": [
     {
-      "title": "Wrong Slope in Graphs",
-      "description": "Mistakes slope by directly mapping coefficients without converting to slope-intercept. Results in an incorrect boundary line on inequality graphs.",
-      "ccssStandard": "A.REI.12",
+      "title": "Slope Misidentification in Inequalities",
+      "description": "Students confuse the slope of an inequality after failing to convert it into slope-intercept form. They often treat the coefficients of x and y as the slope without solving for y first.",
+      "ccssStandard": "HSA-REI.D.12",
       "severity": "high",
       "priority": "1",
       "occurrence": "first",
       "successIndicators": [
-        "Convert to y=mx+b form correctly",
-        "Identify correct slope on graphs",
-        "Explain graph transformation from equation"
+        "Convert inequality to y=mx+b form",
+        "Identify and graph correct slope",
+        "Use dashed lines for strict inequalities",
+        "Shade accurate solution region"
       ]
     },
     {
-      "title": "Inclusive vs. Exclusive Boundary Error",
-      "description": "Fails to distinguish between inclusive and exclusive inequalities. Uses solid lines incorrectly for strict inequalities.",
-      "ccssStandard": "A.REI.12",
-      "severity": "medium",
+      "title": "Improper Fraction Handling in Equations",
+      "description": "Students incorrectly combine fractions or fail to factor them out before combining terms. They either neglect to clear fractions or improperly apply operations, resulting in inaccurate equations.",
+      "ccssStandard": "HSA-REI.B.3",
+      "severity": "high",
       "priority": "2",
       "occurrence": "first",
       "successIndicators": [
-        "Choose dashed lines for strict inequalities",
-        "Shade regions without boundary errors",
-        "Explain logic behind boundary type"
+        "Clear fractions correctly in equations",
+        "Combine like terms accurately",
+        "Simplify fractions logically"
       ]
     },
     {
-      "title": "Incorrect Sign Reversal in Equations",
-      "description": "Mistakenly maintains incorrect sign while switching x and y or while solving inequalities, leading to wrong solution.",
-      "ccssStandard": "8.EE.8.b",
-      "severity": "high",
+      "title": "Switching Variables with Wrong Signs",
+      "description": "Students switch variables x and y in systems of equations and apply the wrong sign to them. They fail to maintain the integrity of each variable in the equations.",
+      "ccssStandard": "8.EE.C.8",
+      "severity": "medium",
       "priority": "3",
       "occurrence": "first",
       "successIndicators": [
-        "Rewrite equations with correct sign",
-        "Identify errors in sign reversal",
-        "Justify solution steps involving signs"
+        "Correctly identify variables and their functions",
+        "Maintain consistent variable signs",
+        "Solve systems accurately"
       ]
     },
     {
-      "title": "Failing to Solve After Substitution",
-      "description": "Substitutes correctly for one variable but fails to find the complete solution by not substituting back to find other variables.",
-      "ccssStandard": "8.EE.8.b",
+      "title": "Mistaking Inequality Type from Boundary Line Style",
+      "description": "Students mistakenly interpret solid and dashed lines as inclusive or exclusive inequalities without considering the inequality symbol. They err in shading the proper solution region.",
+      "ccssStandard": "HSA-REI.D.12",
       "severity": "medium",
       "priority": "4",
       "occurrence": "first",
       "successIndicators": [
-        "Find solutions for all variables",
-        "Check solutions in original system",
-        "Use substitution again if necessary"
+        "Match line style to inequality type",
+        "Use symbols to determine line style",
+        "Shade correct region for the inequality"
       ]
     }
   ]

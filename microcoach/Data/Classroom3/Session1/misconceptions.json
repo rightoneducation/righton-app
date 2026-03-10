@@ -1,63 +1,66 @@
 {
-  "topic": "Solving Systems and Graphing Inequalities",
+  "topic": "Systems of Equations and Inequalities",
   "ccssStandards": [
-    "A.REI.12",
-    "A.REI.3",
-    "8.EE.8.b",
-    "8.EE.8.c"
+    "HSA-REI.D.12",
+    "HSA-REI.B.3",
+    "8.EE.C.8",
+    "8.EE.C.8"
   ],
   "misconceptions": [
     {
-      "title": "Graph Inequalities Incorrect Slope",
-      "description": "When graphing inequalities, students interpret the inequality without converting it to slope-intercept form first. This mistake leads to choosing a boundary line with the wrong slope and incorrect graphing.",
-      "ccssStandard": "A.REI.12",
+      "title": "Incorrect Boundary Line Style",
+      "description": "Students confuse when to use dashed versus solid lines to represent strict versus inclusive inequalities. This error stems from not understanding the visual representation of inequality symbols on a graph.",
+      "ccssStandard": "HSA-REI.D.12",
       "severity": "high",
       "priority": "1",
       "occurrence": "first",
       "successIndicators": [
-        "Convert inequality to slope-intercept form",
-        "Identify correct boundary slope",
-        "Draw accurate graph line",
-        "Shade correct region after graphing"
+        "Plot appropriate boundary line style",
+        "Explain inequality symbols visually",
+        "Use dashed lines for strict inequalities",
+        "Use solid lines for inclusive inequalities"
       ]
     },
     {
-      "title": "Boundary Line Solid/Dash Confusion",
-      "description": "Students use a solid line for strict inequalities or misinterpret the inequality symbols, leading to an incorrect boundary line inclusion.",
-      "ccssStandard": "A.REI.12",
+      "title": "Sign Errors in Equation Manipulation",
+      "description": "Mistakes arise when students switch signs improperly, affecting the equation outcome. This error occurs due to misunderstanding when sign changes are necessary, like during multiplication or division of inequalities.",
+      "ccssStandard": "8.EE.C.8",
       "severity": "medium",
       "priority": "2",
       "occurrence": "first",
       "successIndicators": [
-        "Distinguish between strict and inclusive symbols",
-        "Draw dash line for strict inequalities",
-        "Use solid line for inclusive inequalities"
+        "Evaluate sign correctly during manipulation",
+        "Adjust inequalities by sign changes",
+        "Identify sign change situations",
+        "Solve inequalities with correct operations"
       ]
     },
     {
-      "title": "Incorrect Variable Substitution in Systems",
-      "description": "When solving systems, students find variables correctly but substitute incorrectly into equations, leading to wrong final values.",
-      "ccssStandard": "8.EE.8.B",
-      "severity": "medium",
+      "title": "Incorrect Shading Region for Inequalities",
+      "description": "Shading errors result from misidentification of solution regions on a graph. Students fail to establish which part of the graph satisfies the inequality conditions.",
+      "ccssStandard": "HSA-REI.D.12",
+      "severity": "high",
       "priority": "3",
       "occurrence": "first",
       "successIndicators": [
-        "Solve for correct variables",
-        "Substitute into original equations correctly",
-        "Check variable validity after substitution"
+        "Determine correct shaded region",
+        "Shade solution area accurately",
+        "Justify shading with inequalities",
+        "Analyze points in shaded region"
       ]
     },
     {
-      "title": "Mistake in Clearing Fractions",
-      "description": "An incorrect method is used to clear fractions from equations, leading to wrong equivalent equations when trying to solve for variables.",
-      "ccssStandard": "A.REI.3",
+      "title": "Misapplication of Inverse Operations",
+      "description": "Incorrect use of inverse operations, like adding instead of subtracting, indicates a misunderstanding of how to maintain equation balance.",
+      "ccssStandard": "8.EE.C.8",
       "severity": "medium",
       "priority": "4",
       "occurrence": "first",
       "successIndicators": [
-        "Multiply each term by common denominator",
-        "Check equations after clearing fractions",
-        "Verify solutions fit original equations"
+        "Apply correct inverse operations",
+        "Balance equations consistently",
+        "Demonstrate correct operation use",
+        "Solve equations accurately"
       ]
     }
   ]
