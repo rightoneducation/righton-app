@@ -330,7 +330,7 @@ function getStudentGroups(
 
 function formatLabel(f: string): string {
   return (
-    ({ small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' } as Record<string, string>)[f] ?? f
+    ({ whole_class: 'Whole class', split_class: 'Split class' } as Record<string, string>)[f] ?? f
   );
 }
 
@@ -406,6 +406,7 @@ function buildNextSteps(
         title: activity.title,
         time: `${activity.durationMinutes} min`,
         format: formatLabel(activity.format),
+        activityStructure: activity.activityStructure ?? null,
         summary: activity.summary,
         targets: activity.targets ?? null,
         instructionalMove: activity.instructionalMove ?? null,
@@ -585,10 +586,36 @@ async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: an
     };
   });
 
-  // 6. Generate next step activities (parallel per misconception × format)
+  // 6. Generate next step activities
   const classroomContext = { grade: classroom.grade, subject: classroom.subject, cohortSize: classroom.cohortSize };
-  const NEXT_STEP_FORMATS = ['small_group', 'whole_class'];
+  const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
 
+  // 6a. Planning call — one cheap LLM call assigns diverse structures across all
+  //     misconceptions before parallel generation begins.
+  type StructurePlan = { misconceptionTitle: string; whole_class: string; split_class: string };
+  let structurePlan: StructurePlan[] = [];
+  process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
+  try {
+    const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
+      input: {
+        planStructures: true,
+        misconceptions: JSON.stringify(misconceptions.map((m: any) => ({ title: m.title, description: m.description, ccssStandard: m.ccssStandard }))),
+        classroomContext: JSON.stringify(classroomContext),
+      },
+    });
+    structurePlan = parseJson(raw) ?? [];
+    console.log(` ✓  ${structurePlan.length} assignments`);
+  } catch (err) {
+    console.warn(`\n  ⚠ Structure planning failed, generating without suggestions: ${err}`);
+  }
+
+  // Helper to look up a misconception's suggested structure for a given format
+  const getSuggestedStructure = (title: string, fmt: string): string | null => {
+    const plan = structurePlan.find(p => p.misconceptionTitle === title);
+    return plan ? (plan as any)[fmt] ?? null : null;
+  };
+
+  // 6b. Generate activities — misconceptions in parallel, formats sequential within each
   const activitiesPerGroup: any[][] = await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
       process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
@@ -606,21 +633,36 @@ async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: an
         ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
       };
       const sd = misconceptionExtras[i]?.studentData ?? [];
-      const results = await Promise.all(
-        NEXT_STEP_FORMATS.map(async (fmt) => {
-          try {
-            const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
-              input: { ...baseInput, preferredFormat: fmt },
-            });
-            const parsed = parseJson(raw);
-            return injectStudentsIntoGroups(parsed, sd);
-          } catch (err) {
-            console.error(`\n    ✗ format=${fmt}: ${err}`);
-            return null;
-          }
-        })
-      );
-      const resultList = results.filter(Boolean);
+      const resultList: any[] = [];
+
+      // Sequential within misconception so each format sees what was already generated
+      for (const fmt of NEXT_STEP_FORMATS) {
+        const existingActivities = resultList.map(a => ({
+          title: a.title,
+          format: a.format,
+          activityStructure: a.activityStructure,
+          strategyTag: a.strategyTag,
+          summary: a.summary,
+          instructionalMove: a.instructionalMove,
+          targets: a.targets,
+        }));
+        const suggestedStructure = getSuggestedStructure(m.title, fmt);
+        try {
+          const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
+            input: {
+              ...baseInput,
+              preferredFormat: fmt,
+              ...(suggestedStructure && { suggestedStructure }),
+              ...(existingActivities.length > 0 && { existingActivities: JSON.stringify(existingActivities) }),
+            },
+          });
+          const parsed = parseJson(raw);
+          resultList.push(injectStudentsIntoGroups(parsed, sd));
+        } catch (err) {
+          console.error(`\n    ✗ format=${fmt}: ${err}`);
+        }
+      }
+
       console.log(` ✓  ${resultList.length} activities`);
       return resultList;
     })

@@ -10,13 +10,16 @@
   "nextStepOption": {
     "description": "microcoachNextStepOption — generates one classroom activity per format per misconception",
     "model": "gpt-5-mini",
+
     "formatsToGenerate": [
-      "small_group",
-      "whole_class"
+      "whole_class",
+      "split_class"
     ],
+
     "maxDurationMinutes": 30,
     "targetDurationMinutes": 30,
     "disallowedTeachingMethods": [],
+
     "activitySteps": {
       "min": 4,
       "max": 6
@@ -33,33 +36,97 @@
       "min": 2,
       "max": 3
     },
+
     "allowedDurationBuckets": [
-      {
-        "label": "10–15 min",
-        "min": 10,
-        "max": 15
-      },
-      {
-        "label": "15–20 min",
-        "min": 15,
-        "max": 20
-      },
-      {
-        "label": "20–25 min",
-        "min": 20,
-        "max": 25
-      },
-      {
-        "label": "25–30 min",
-        "min": 25,
-        "max": 30
-      }
+      { "label": "10–15 min", "min": 10, "max": 15 },
+      { "label": "15–20 min", "min": 15, "max": 20 },
+      { "label": "20–25 min", "min": 20, "max": 25 },
+      { "label": "25–30 min", "min": 25, "max": 30 }
     ],
+
     "designPrinciples": [
       "Misconception-driven: The activity must directly address the identified cognitive error — not provide generic practice on the standard.",
       "Error-first instruction: Students must encounter and analyze incorrect reasoning before seeing the correct method.",
       "Connection to student responses: The activity must reference or build on the specific error patterns observed in the class data (e.g. the core misconception, or a 'Favorite No' the teacher could highlight)."
     ],
+
+    "activityStructures": {
+      "description": "Each activity must have a clearly named structure. The following are examples of strong structures — use them or invent other distinct structures that fit the misconception and format. The structure must be meaningfully different from any other activity generated for the same misconception.",
+      "structures": [
+        {
+          "name": "Incorrect Worked Example Analysis",
+          "description": "Students examine a complete incorrect solution step-by-step, identify exactly where the reasoning goes wrong, and justify a correction."
+        },
+        {
+          "name": "Compare / Debate / Evaluate Strategies",
+          "description": "Students evaluate two or more solution methods to determine which is correct or more efficient. May include structured debate or discussion to justify reasoning."
+        },
+        {
+          "name": "Favorite No",
+          "description": "Analyze a real or hypothetical student error (anonymous): identify what the student understood, name the misconception, and explain the correct reasoning."
+        },
+        {
+          "name": "Math Hospital / Diagnose & Repair",
+          "description": "Students 'treat' an incorrect solution: identify the error, propose a correction, and explain why it works. Can be framed as a cartoon character's incorrect solution to highlight reasoning errors."
+        },
+        {
+          "name": "Predict Misconceptions / Error Forecasting",
+          "description": "Students anticipate where errors are likely to occur in a problem before solving, then discuss strategies to prevent them."
+        },
+        {
+          "name": "Strategy Construction / Corrective Pathway",
+          "description": "After analyzing errors, students generate a correct solution pathway from scratch, articulating each step."
+        },
+        {
+          "name": "Multiple Entry Points / Representations",
+          "description": "Students engage with the misconception through visual, symbolic, or verbal representations — e.g. graph, number line, table, equation — to surface where the error appears in each form."
+        }
+      ]
+    },
+
+    "distinctnessRules": [
+      "Each activity generated for a misconception must use a different activityStructure.",
+      "Activities must differ meaningfully in at least one of: instructional approach, activity structure, strategy tag, or representation/explanation strategy.",
+      "Do not rephrase the same activity with minor wording changes (e.g. 'Clear Denominators First' vs 'Clear the Denominators First' is not distinct).",
+      "Do not generate the same structure in two different formats (e.g. Incorrect Worked Example Analysis | Whole Class and Incorrect Worked Example Analysis | Split Class is not distinct enough)."
+    ],
+
+    "classroomFeasibility": [
+      "Require minimal setup — activity should be implementable within 30–60 seconds of classroom transition.",
+      "Use simple, familiar instructional routines that early-career teachers can execute without extensive prep.",
+      "Avoid complex classroom logistics: no multiple rounds of regrouping, no complicated grouping structures, no detailed classroom management procedures.",
+      "Focus on instructional moves rather than logistics — describe what the teacher says and does, not how to move furniture."
+    ],
+
+    "formatConstraints": {
+      "description": "Only two formats are allowed. Do not generate Small Groups.",
+      "wholeClass": {
+        "label": "whole_class",
+        "description": "All students engage in the same activity led by the teacher. Common structures: analyzing incorrect worked examples, teacher modeling and student critique, whole-class discussion, quick formative responses (whiteboards, hand signals, polling). May briefly include turn-and-talk or think-pair-share, but the activity must remain primarily teacher-led whole-class instruction."
+      },
+      "splitClass": {
+        "label": "split_class",
+        "description": "The class is divided into exactly TWO groups based on a response pattern or misconception — e.g. students who chose answers A/B vs. C/D, or students who showed misconception X vs. misconception Y.",
+        "structures": [
+          "Teacher Rotation: Teacher alternates between the two groups providing targeted support.",
+          "Parallel Error Analysis: Each group analyzes a different incorrect example, then the class reconvenes to compare reasoning.",
+          "Partner Discussion Within Groups: Students may think-pair-share within their half of the class."
+        ],
+        "avoid": [
+          "Creating 3 or more groups",
+          "Regrouping students again within groups",
+          "Ability-based pairings or trios"
+        ]
+      }
+    },
+
+    "udlRequirements": [
+      "Visual representations: specify exactly what the teacher should draw or write on the board.",
+      "Discussion prompts: include 2–3 example questions the teacher can ask to surface student reasoning.",
+      "Comparison of strategies: include 2–3 solution strategies or reasoning approaches students can compare.",
+      "Incorrect solution analysis: activities should include 2–3 incorrect worked examples that illustrate the misconception."
+    ],
+
     "incorrectWorkedExamplesCount": 3,
     "incorrectWorkedExampleRules": [
       "Each example contains exactly ONE intentional error: the specific misconception step. All other arithmetic and setup must be mathematically correct.",
@@ -96,7 +163,9 @@
         }
       }
     ],
+
     "overviewBullets": { "min": 2, "max": 4 },
+
     "strategyTags": [
       {
         "name": "Make Structure Visible",
@@ -125,11 +194,16 @@
       {
         "name": "Whole-Class Reset",
         "whenToUse": "Whole-class misunderstanding — reteach from a different angle for the full class"
-      },
-      {
-        "name": "Small-Group Reteach",
-        "whenToUse": "Subset misconception — targeted small-group intervention"
       }
-    ]
+    ],
+
+    "planner": {
+      "model": "gpt-4o-mini",
+      "description": "Cheap planning call that assigns diverse activity structures across all misconceptions before parallel generation begins"
+    },
+    "validator": {
+      "model": "o3-mini",
+      "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON."
+    }
   }
 }

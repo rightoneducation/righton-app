@@ -82,15 +82,11 @@ function App() {
       }
       classroomDataMapRef.current = map;
 
-      // console.log('[App] === CLASSROOM DATA DUMP ===');
-      // sorted.forEach((classroom) => {
-      //   console.log(`[App] ${classroom.classroomName} (id: ${classroom.id})`, JSON.parse(JSON.stringify({
-      //     classroom,
-      //     gapGroups: map[classroom.id]?.gapGroups,
-      //     savedNextSteps: map[classroom.id]?.savedNextSteps,
-      //   })));
-      // });
-      // console.log('[App] === END DUMP ===');
+      const output = sorted.map((classroom) => ({
+        classroom,
+        data: map[classroom.id],
+      }));
+      console.log("[App]", JSON.parse(JSON.stringify(output)));
 
       setClassrooms(sorted);
       setIsLoading(false);

@@ -87,7 +87,7 @@ const GROUPS_MIN = (_w = (_v = nso.studentGroups) === null || _v === void 0 ? vo
 const GROUPS_MAX = (_y = (_x = nso.studentGroups) === null || _x === void 0 ? void 0 : _x.max) !== null && _y !== void 0 ? _y : 3;
 const ALLOWED_DURATION_BUCKETS = (_z = nso.allowedDurationBuckets) !== null && _z !== void 0 ? _z : [];
 const DESIGN_PRINCIPLES = (_0 = nso.designPrinciples) !== null && _0 !== void 0 ? _0 : [];
-const VALID_FORMATS = ['Small groups', 'Whole class', 'Individual'];
+const VALID_FORMATS = ['Whole class', 'Split class'];
 // ── CLI args ──────────────────────────────────────────────────────────────────
 function parseArgs() {
     const argv = process.argv.slice(2);

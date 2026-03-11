@@ -60,7 +60,7 @@ const GROUPS_MAX              = nso.studentGroups?.max ?? 3;
 const ALLOWED_DURATION_BUCKETS: Array<{ label: string; min: number; max: number }> =
   nso.allowedDurationBuckets ?? [];
 const DESIGN_PRINCIPLES: string[] = nso.designPrinciples ?? [];
-const VALID_FORMATS = ['Small groups', 'Whole class', 'Individual'];
+const VALID_FORMATS = ['Whole class', 'Split class'];
 
 // ── CLI args ──────────────────────────────────────────────────────────────────
 

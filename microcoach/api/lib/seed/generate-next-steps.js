@@ -318,7 +318,7 @@ studentNameMap, threshold = 0.6) {
 // ── Next step builder ─────────────────────────────────────────────────────────
 function formatLabel(f) {
     var _a;
-    return ((_a = { small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' }[f]) !== null && _a !== void 0 ? _a : f);
+    return ((_a = { whole_class: 'Whole class', split_class: 'Split class' }[f]) !== null && _a !== void 0 ? _a : f);
 }
 function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learningScienceData, misconceptionExtras = []) {
     var _a, _b, _c;
@@ -379,12 +379,13 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
                     title: activity.title,
                     time: `${activity.durationMinutes} min`,
                     format: formatLabel(activity.format),
+                    activityStructure: (_a = activity.activityStructure) !== null && _a !== void 0 ? _a : null,
                     summary: activity.summary,
-                    targets: (_a = activity.targets) !== null && _a !== void 0 ? _a : null,
-                    instructionalMove: (_b = activity.instructionalMove) !== null && _b !== void 0 ? _b : null,
-                    strategyTag: (_c = activity.strategyTag) !== null && _c !== void 0 ? _c : null,
+                    targets: (_b = activity.targets) !== null && _b !== void 0 ? _b : null,
+                    instructionalMove: (_c = activity.instructionalMove) !== null && _c !== void 0 ? _c : null,
+                    strategyTag: (_d = activity.strategyTag) !== null && _d !== void 0 ? _d : null,
                     aiReasoning: activity.aiReasoning,
-                    tabs: (_d = activity.tabs) !== null && _d !== void 0 ? _d : null,
+                    tabs: activity.tabs ?? null,
                 });
             }),
         };
@@ -431,7 +432,7 @@ function parseJson(raw) {
 }
 // ── Per-classroom pipeline ────────────────────────────────────────────────────
 async function processClassroom(gql, classroom, nextStepExamples) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
     const label = `${classroom.classroomName} (grade ${classroom.grade})`;
     // 2. List sessions
     process.stdout.write(`  Sessions...`);
@@ -542,9 +543,32 @@ async function processClassroom(gql, classroom, nextStepExamples) {
             correctAnswerSolution: (_d = m.correctAnswerSolution) !== null && _d !== void 0 ? _d : [],
         };
     });
-    // 6. Generate next step activities (parallel per misconception × format)
+    // 6. Generate next step activities
     const classroomContext = { grade: classroom.grade, subject: classroom.subject, cohortSize: classroom.cohortSize };
-    const NEXT_STEP_FORMATS = ['small_group', 'whole_class'];
+    const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
+    let structurePlan = [];
+    process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
+    try {
+        const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
+            input: {
+                planStructures: true,
+                misconceptions: JSON.stringify(misconceptions.map((m) => ({ title: m.title, description: m.description, ccssStandard: m.ccssStandard }))),
+                classroomContext: JSON.stringify(classroomContext),
+            },
+        });
+        structurePlan = (_v = parseJson(raw)) !== null && _v !== void 0 ? _v : [];
+        console.log(` ✓  ${structurePlan.length} assignments`);
+    }
+    catch (err) {
+        console.warn(`\n  ⚠ Structure planning failed, generating without suggestions: ${err}`);
+    }
+    // Helper to look up a misconception's suggested structure for a given format
+    const getSuggestedStructure = (title, fmt) => {
+        var _a;
+        const plan = structurePlan.find(p => p.misconceptionTitle === title);
+        return plan ? (_a = plan[fmt]) !== null && _a !== void 0 ? _a : null : null;
+    };
+    // 6b. Generate activities — misconceptions in parallel, formats sequential within each
     const activitiesPerGroup = await Promise.all(misconceptions.map(async (m, i) => {
         var _a, _b;
         process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
@@ -560,20 +584,35 @@ async function processClassroom(gql, classroom, nextStepExamples) {
             ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
         };
         const sd = (_b = (_a = misconceptionExtras[i]) === null || _a === void 0 ? void 0 : _a.studentData) !== null && _b !== void 0 ? _b : [];
-        const results = await Promise.all(NEXT_STEP_FORMATS.map(async (fmt) => {
+        const resultList = [];
+        // Sequential within misconception so each format sees what was already generated
+        for (const fmt of NEXT_STEP_FORMATS) {
+            const existingActivities = resultList.map(a => ({
+                title: a.title,
+                format: a.format,
+                activityStructure: a.activityStructure,
+                strategyTag: a.strategyTag,
+                summary: a.summary,
+                instructionalMove: a.instructionalMove,
+                targets: a.targets,
+            }));
+            const suggestedStructure = getSuggestedStructure(m.title, fmt);
             try {
                 const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
-                    input: { ...baseInput, preferredFormat: fmt },
+                    input: {
+                        ...baseInput,
+                        preferredFormat: fmt,
+                        ...(suggestedStructure && { suggestedStructure }),
+                        ...(existingActivities.length > 0 && { existingActivities: JSON.stringify(existingActivities) }),
+                    },
                 });
                 const parsed = parseJson(raw);
-                return injectStudentsIntoGroups(parsed, sd);
+                resultList.push(injectStudentsIntoGroups(parsed, sd));
             }
             catch (err) {
                 console.error(`\n    ✗ format=${fmt}: ${err}`);
-                return null;
             }
-        }));
-        const resultList = results.filter(Boolean);
+        }
         console.log(` ✓  ${resultList.length} activities`);
         return resultList;
     }));
