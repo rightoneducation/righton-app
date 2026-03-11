@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { sortStudentNames } from '../util/sortStudentNames';
 
 /**
  * Shared "Full View" modal used by both RecommendedNextSteps and YourNextSteps.
@@ -7,6 +8,60 @@ import React from 'react';
  * - This intentionally reuses the existing CSS selectors from RecommendedNextSteps.css
  *   (rns-modal-overlay, rns-modal, full-view-modal, etc.) to keep visuals consistent.
  */
+/**
+ * Renders a worked example's incorrectWork string with error lines highlighted.
+ * Lines containing ← are the "teacher" annotation lines.
+ * teacherView=true  → show annotations highlighted in orange
+ * teacherView=false → strip the ← annotation and show just the math line
+ */
+function WorkedExampleText({ text, teacherView }) {
+  if (!text) return null;
+  const lines = text.split('\n');
+
+  // Find the last non-empty line index — that's the final answer, hidden in student view
+  let lastNonEmptyIdx = -1;
+  for (let i = lines.length - 1; i >= 0; i--) {
+    if (lines[i].trim() !== '') { lastNonEmptyIdx = i; break; }
+  }
+
+  return (
+    <span style={{ display: 'block', whiteSpace: 'pre-wrap' }}>
+      {lines.map((line, i) => {
+        const isAnswer = i === lastNonEmptyIdx;
+        const hasAnnotation = line.includes('←');
+
+        // Student view: hide the final answer line entirely
+        if (!teacherView && isAnswer) return null;
+
+        if (hasAnnotation) {
+          if (!teacherView) {
+            // Strip the annotation — keep only the math portion before the ←
+            const mathPart = line.split('←')[0].trimEnd();
+            return <span key={i} style={{ display: 'block' }}>{mathPart}</span>;
+          }
+          // Teacher view: highlight the whole line
+          return (
+            <span key={i} style={{ display: 'block', backgroundColor: '#FFF3CD', borderLeft: '3px solid #E8A200', paddingLeft: '6px', marginLeft: '-6px', color: '#7A4600', fontWeight: 600 }}>
+              {line}
+            </span>
+          );
+        }
+
+        // Teacher view: highlight the answer line so it's easy to spot
+        if (teacherView && isAnswer) {
+          return (
+            <span key={i} style={{ display: 'block', fontWeight: 700, color: '#1B376F' }}>
+              {line}
+            </span>
+          );
+        }
+
+        return <span key={i} style={{ display: 'block' }}>{line}</span>;
+      })}
+    </span>
+  );
+}
+
 const NextStepDetailsModal = ({
   isOpen,
   title,
@@ -19,6 +74,8 @@ const NextStepDetailsModal = ({
   onClose,
   actions
 }) => {
+  const [teacherView, setTeacherView] = useState(true);
+
   if (!isOpen) return null;
 
   return (
@@ -140,7 +197,7 @@ const NextStepDetailsModal = ({
                             <div className="grouping-students">
                               <h5 className="grouping-subtitle">Students:</h5>
                               <ul className="student-list">
-                                {grouping.students.map((student, studentIdx) => (
+                                {sortStudentNames(grouping.students).map((student, studentIdx) => (
                                   <li key={studentIdx}>{student}</li>
                                 ))}
                               </ul>
@@ -161,7 +218,7 @@ const NextStepDetailsModal = ({
                             <div className="high-flyers-students">
                               <h5 className="high-flyers-subtitle">Students:</h5>
                               <ul className="student-list">
-                                {move.tabs.studentGroupings.highFlyers.students.map((student, idx) => (
+                                {sortStudentNames(move.tabs.studentGroupings.highFlyers.students).map((student, idx) => (
                                   <li key={idx}>{student}</li>
                                 ))}
                               </ul>
@@ -221,13 +278,55 @@ const NextStepDetailsModal = ({
 
                   {move?.tabs?.activitySteps?.incorrectWorkedExamples?.length > 0 && (
                     <div className="tab-section">
-                      <h4 className="tab-section-title">Incorrect Worked Examples</h4>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <h4 className="tab-section-title" style={{ margin: 0 }}>Incorrect Worked Examples</h4>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px' }}>
+                          <button
+                            onClick={() => setTeacherView(false)}
+                            style={{
+                              padding: '3px 10px',
+                              borderRadius: '12px',
+                              border: '1px solid #C0C8D8',
+                              background: !teacherView ? '#1B376F' : '#fff',
+                              color: !teacherView ? '#fff' : '#555',
+                              cursor: 'pointer',
+                              fontWeight: !teacherView ? 600 : 400,
+                            }}
+                          >
+                            Student
+                          </button>
+                          <button
+                            onClick={() => setTeacherView(true)}
+                            style={{
+                              padding: '3px 10px',
+                              borderRadius: '12px',
+                              border: '1px solid #C0C8D8',
+                              background: teacherView ? '#1B376F' : '#fff',
+                              color: teacherView ? '#fff' : '#555',
+                              cursor: 'pointer',
+                              fontWeight: teacherView ? 600 : 400,
+                            }}
+                          >
+                            Teacher
+                          </button>
+                        </div>
+                      </div>
                       {move.tabs.activitySteps.incorrectWorkedExamples.map((ex, i) => (
                         <div key={i} className="worked-example">
+                          <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                            Incorrect Worked Example {i + 1}
+                          </p>
                           <p className="worked-example-problem">{ex.problem}</p>
-                          <p className="worked-example-work">{ex.incorrectWork}</p>
+                          <p className="worked-example-work" style={{ whiteSpace: 'normal' }}>
+                            <WorkedExampleText text={ex.incorrectWork} teacherView={teacherView} />
+                          </p>
                         </div>
                       ))}
+                      <p style={{ fontSize: '11px', color: '#888', marginTop: '6px' }}>
+                        {teacherView
+                          ? 'Highlighted lines show where the misconception error occurs. Final answer shown in bold.'
+                          : 'Student view hides the error annotation and final answer.'}
+                      </p>
                     </div>
                   )}
 

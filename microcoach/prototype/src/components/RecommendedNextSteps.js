@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { sortStudentNames } from '../util/sortStudentNames';
 import Tooltip from '@mui/material/Tooltip';
 import './RecommendedNextSteps.css';
 import './SharedButtons.css';
-import CCSSStandardsModal from './CCSSStandardsModal';
+
 import NextStepDetailsModal from './NextStepDetailsModal';
 
 
@@ -11,13 +12,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   const [toast, setToast] = useState(null);
   const toastTimeoutRef = useRef(null);
   const [reasoningGroupId, setReasoningGroupId] = useState(null);
-  const [ccssModalOpen, setCcssModalOpen] = useState(false);
-  const [selectedCcssStandard, setSelectedCcssStandard] = useState(null);
-  const [ccssModalGroup, setCcssModalGroup] = useState(null);
-  // Focus Skills sub-section expansion state per group.
-  // Collapsed (default): show only Focus Skills.
-  // Expanded: also show Prerequisite Gaps + Upcoming Skills.
-  const [focusSkillsExpandedByGroupId, setFocusSkillsExpandedByGroupId] = useState({});
   // Which recommendation card is currently active for the standalone next-step section.
   const [selectedRecommendationGroupId, setSelectedRecommendationGroupId] = useState(null);
   // Which activity option is selected per gap group.
@@ -109,13 +103,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   const visibleGapGroups = useMemo(() => {
     return (gapGroups || []).slice(0, 4);
   }, [gapGroups]);
-
-  const toggleFocusSkillsExpanded = (groupId) => {
-    setFocusSkillsExpandedByGroupId((prev) => ({
-      ...prev,
-      [groupId]: !prev?.[groupId]
-    }));
-  };
 
   const getSelectedMoveForGroup = (group) => {
     const options = Array.isArray(group?.moveOptions) ? group.moveOptions : [];
@@ -258,17 +245,10 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                       <div className="standards-column assessed-full-width">
                         <h5 className="column-header assessed-header">Focus Skill</h5>
                         <div className="standards-list">
-                          <button
-                            className="standard-card assessed-card"
-                            onClick={() => {
-                              setCcssModalGroup(reasoningGroup);
-                              setSelectedCcssStandard(reasoningGroup.ccssStandards.targetObjective);
-                              setCcssModalOpen(true);
-                            }}
-                          >
+                          <div className="standard-card assessed-card">
                             <span className="standard-code">{reasoningGroup.ccssStandards.targetObjective.standard}</span>
                             <span className="standard-description">{reasoningGroup.ccssStandards.targetObjective.description}</span>
-                          </button>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -278,18 +258,10 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                           <h5 className="column-header prerequisite-header">Prerequisite Gaps</h5>
                           <div className="standards-list">
                             {reasoningGroup.ccssStandards.prerequisiteGaps.map((standard, idx) => (
-                              <button
-                                key={idx}
-                                className="standard-card prerequisite-card"
-                                onClick={() => {
-                                  setCcssModalGroup(reasoningGroup);
-                                  setSelectedCcssStandard(standard);
-                                  setCcssModalOpen(true);
-                                }}
-                              >
+                              <div key={idx} className="standard-card prerequisite-card">
                                 <span className="standard-code">{standard.standard}</span>
                                 <span className="standard-description">{standard.description}</span>
-                              </button>
+                              </div>
                             ))}
                           </div>
                         </div>
@@ -299,18 +271,10 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                           <h5 className="column-header at-risk-header">Upcoming Skills</h5>
                           <div className="standards-list">
                             {reasoningGroup.ccssStandards.impactedObjectives.map((standard, idx) => (
-                              <button
-                                key={idx}
-                                className="standard-card at-risk-card"
-                                onClick={() => {
-                                  setCcssModalGroup(reasoningGroup);
-                                  setSelectedCcssStandard(standard);
-                                  setCcssModalOpen(true);
-                                }}
-                              >
+                              <div key={idx} className="standard-card at-risk-card">
                                 <span className="standard-code">{standard.standard}</span>
                                 <span className="standard-description">{standard.description}</span>
-                              </button>
+                              </div>
                             ))}
                           </div>
                         </div>
@@ -336,7 +300,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                         </div>
                         <p className="vd-student-group-sub">Incorrect answers</p>
                         <div className="vd-student-pills">
-                          {reasoningGroup.studentGroups.buildingUnderstanding.map((name) => (
+                          {sortStudentNames(reasoningGroup.studentGroups.buildingUnderstanding).map((name) => (
                             <span key={name} className="vd-student-pill">{name}</span>
                           ))}
                         </div>
@@ -352,7 +316,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                         </div>
                         <p className="vd-student-group-sub">Correct answers</p>
                         <div className="vd-student-pills">
-                          {reasoningGroup.studentGroups.understoodConcept.map((name) => (
+                          {sortStudentNames(reasoningGroup.studentGroups.understoodConcept).map((name) => (
                             <span key={name} className="vd-student-pill">{name}</span>
                           ))}
                         </div>
@@ -375,19 +339,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
         </div>
       )}
 
-      <CCSSStandardsModal
-        isOpen={ccssModalOpen}
-        onClose={() => {
-          setCcssModalOpen(false);
-          setCcssModalGroup(null);
-          setSelectedCcssStandard(null);
-        }}
-        ccssStandards={ccssModalGroup?.ccssStandards}
-        selectedStandard={selectedCcssStandard}
-        onStandardSelect={setSelectedCcssStandard}
-      />
-
-
       <div className="rns-header">
         <div>
           <h3 className="rns-title">Understand Your Students' Thinking</h3>
@@ -405,7 +356,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
           <div className="misconceptions-carousel-wrapper">
             <div className="alternative-misconceptions-grid">
               {visibleGapGroups.map((group) => {
-                const isFocusSkillsExpanded = !!focusSkillsExpandedByGroupId?.[group.id];
                 const isSelectedGroup = selectedRecommendationGroup?.id === group.id;
 
                 return (
@@ -470,65 +420,6 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
                         </div>
                       )}
                     </div>
-
-                    {/* CCSS Standards Section */}
-                    {group.ccssStandards && isFocusSkillsExpanded && (
-                      <div className="alternative-ccss-section">
-                        <div className="alternative-ccss-grid">
-                          {group.ccssStandards.prerequisiteGaps && group.ccssStandards.prerequisiteGaps.length > 0 && (
-                            <div className="alternative-ccss-card">
-                              <h4 className="alternative-ccss-header">Prerequisite Gaps</h4>
-                              <div className="alternative-ccss-gap-list">
-                                {group.ccssStandards.prerequisiteGaps.map((gap, idx) => (
-                                  <div key={idx} className="alternative-ccss-gap-item">
-                                    <span
-                                      className="alternative-ccss-tag prerequisite-gap clickable-standard"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCcssModalGroup(group);
-                                        setSelectedCcssStandard(gap);
-                                        setCcssModalOpen(true);
-                                      }}
-                                    >
-                                      {gap.standard}
-                                    </span>
-                                    <span className="alternative-ccss-description">
-                                      {gap.description}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {group.ccssStandards.impactedObjectives && group.ccssStandards.impactedObjectives.length > 0 && (
-                            <div className="alternative-ccss-card">
-                              <h4 className="alternative-ccss-header">Upcoming Skills</h4>
-                              <div className="alternative-ccss-gap-list">
-                                {group.ccssStandards.impactedObjectives.map((obj, idx) => (
-                                  <div key={idx} className="alternative-ccss-gap-item">
-                                    <span
-                                      className="alternative-ccss-tag impacted-objective clickable-standard"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCcssModalGroup(group);
-                                        setSelectedCcssStandard(obj);
-                                        setCcssModalOpen(true);
-                                      }}
-                                    >
-                                      {obj.standard}
-                                    </span>
-                                    <span className="alternative-ccss-description">
-                                      {obj.description}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
 
                     <div className="alternative-actions">
                       <button

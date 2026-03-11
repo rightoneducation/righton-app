@@ -3225,22 +3225,7 @@
   flex: 1;
 }
 
-/* Clickable Standard Styles */
-.clickable-standard {
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
 
-.clickable-standard:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.clickable-standard:focus {
-  outline: 2px solid #1B376F;
-  outline-offset: 2px;
-}
 
 /* Responsive Design for CCSS Cards */
 @media (max-width: 768px) {
@@ -3647,13 +3632,8 @@
   border: none;
   border-radius: 0;
   padding: 4px 0;
-  cursor: pointer;
   text-align: left;
   width: 100%;
-}
-
-.standard-card:hover .standard-description {
-  color: #1B376F;
 }
 
 .ccss-standards-section .standard-code {
