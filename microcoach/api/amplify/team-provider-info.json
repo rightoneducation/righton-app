@@ -23,7 +23,7 @@
         },
         "microcoachNextStepOption": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
-          "s3Key": "amplify-builds/microcoachNextStepOption-4436504f64504641327a-build.zip"
+          "s3Key": "amplify-builds/microcoachNextStepOption-47433269423177794b2f-build.zip"
         },
         "microcoachIngestPPQ": {
           "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",

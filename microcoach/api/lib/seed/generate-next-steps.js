@@ -283,7 +283,8 @@ function getStudentPerformanceData(studentResponses, questionNumbers, studentNam
  *   understoodConcept     — scored at or above threshold across all answered questions
  * questionNumbers is retained for API compatibility but no longer used for the split.
  */
-function getStudentGroups(studentResponses, questionNumbers, studentNameMap, threshold = 0.6) {
+function getStudentGroups(studentResponses, questionNumbers, // retained for API compat, no longer used for split
+studentNameMap, threshold = 0.6) {
     var _a;
     const buildingUnderstanding = [];
     const understoodConcept = [];
@@ -291,9 +292,10 @@ function getStudentGroups(studentResponses, questionNumbers, studentNameMap, thr
         const name = studentNameMap.get(sr.studentId);
         if (!name)
             continue;
-        const all = (_a = sr.questionResponses) !== null && _a !== void 0 ? _a : [];
+        const all = ((_a = sr.questionResponses) !== null && _a !== void 0 ? _a : []);
         if (!all.length)
             continue;
+        // Score = fraction of answered questions that are correct
         const score = all.filter((qr) => qr.isCorrect).length / all.length;
         if (score >= threshold) {
             understoodConcept.push(name);

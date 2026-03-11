@@ -332,7 +332,7 @@ Rules:
 - Do NOT fix or remove the misconception error (the one step that shows the wrong conceptual move)
 - DO fix any arithmetic slippage in other steps (wrong multiplication, wrong simplification, wrong sign, wrong intermediate result)
 - If an example is already correct (one error only, no arithmetic slippage), return it unchanged
-- CRITICAL: For each example, solve the problem correctly to find the true correct answer. Then trace the incorrect path shown in incorrectWork to find the incorrect answer. If the incorrect path arrives at the SAME final answer as the correct solution, the example fails — replace the ENTIRE example (both "problem" and "incorrectWork") with a new problem of the same misconception type where the error leads to a clearly wrong final answer.
+- CRITICAL: For each example, solve the problem correctly to find the true correct answer. Then trace the incorrect path shown in incorrectWork to find the STATED answer (the value the student writes as their solution — not their final conclusion about whether it is right or wrong). If the stated answer matches the correct solution, the example fails — the misconception error is inconsequential. Replace the ENTIRE example (both "problem" and "incorrectWork") with a new problem of the same misconception type where the misconception error causes the student to state a clearly wrong final answer. Note: an error that only appears in a checking/verification step but not in the solve step also fails this test, because the student's stated solution is still correct.
 - Return a JSON array with the same length as the input, each item: { "problem": "...", "incorrectWork": "..." }
 
 Examples to review:
