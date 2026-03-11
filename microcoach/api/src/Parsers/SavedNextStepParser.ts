@@ -122,7 +122,7 @@ export class SavedNextStepParser {
 
     const ccssStandards: ICCSSStandards | undefined = db.targetObjectiveStandard
       ? {
-          targetObjective:    { standard: db.targetObjectiveStandard, description: '' },
+          targetObjective:    { standard: db.targetObjectiveStandard, description: '', learningComponents: [] },
           prerequisiteGaps:   [],
           impactedObjectives: [],
         }

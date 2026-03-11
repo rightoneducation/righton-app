@@ -22,7 +22,7 @@ class SavedNextStepParser {
         const tabs = TabsParser_1.TabsParser.fromRaw(db.tabs);
         const ccssStandards = db.targetObjectiveStandard
             ? {
-                targetObjective: { standard: db.targetObjectiveStandard, description: '' },
+                targetObjective: { standard: db.targetObjectiveStandard, description: '', learningComponents: [] },
                 prerequisiteGaps: [],
                 impactedObjectives: [],
             }

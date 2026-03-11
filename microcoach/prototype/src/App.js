@@ -148,6 +148,7 @@ function App() {
       gapGroupTitle: gapGroup.title,
       targetObjectiveStandard: gapGroup?.ccssStandards?.targetObjective?.standard,
       priority: gapGroup.priority ?? 'Low',
+      frequency: gapGroup.frequency ?? null,
       studentCount: gapGroup.studentCount,
       studentPercent: gapGroup.studentPercent,
       occurrence: gapGroup.occurrence,

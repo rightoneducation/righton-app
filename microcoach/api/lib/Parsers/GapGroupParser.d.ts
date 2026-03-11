@@ -3,6 +3,7 @@ import { ITabs } from './TabsParser';
 export interface ICCSSStandard {
     standard: string;
     description: string;
+    learningComponents: string[];
 }
 export interface ICCSSStandards {
     targetObjective: ICCSSStandard;

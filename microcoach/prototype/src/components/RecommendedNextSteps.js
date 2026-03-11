@@ -30,8 +30,8 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
   }, [existingNextSteps]);
 
   const getFrequencyTooltip = (frequency) => {
-    if (frequency === 'many') return 'Many students: >60% of class';
-    if (frequency === 'medium' || frequency === 'some') return 'Some students: 30–60% of class';
+    if (frequency === 'many') return 'Many students: ≥50% of class';
+    if (frequency === 'medium' || frequency === 'some') return 'Some students: 30–49% of class';
     if (frequency === 'few') return 'Few students: <30% of class';
     return '';
   };

@@ -3667,6 +3667,26 @@
   transition: color 0.15s ease;
 }
 
+/* Instructional Context pill styles — scoped to ccss-standards-content */
+.ccss-standards-content .standard-code {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 400;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #0076AA;
+}
+
+.ccss-standards-content .prerequisite-card .standard-code {
+  background: #CC5500;
+}
+
+.ccss-standards-content .at-risk-card .standard-code {
+  background: #6D28D9;
+}
+
 /* Responsive Design for CCSS Standards Section */
 @media (max-width: 900px) {
   .standards-grid.side-by-side {

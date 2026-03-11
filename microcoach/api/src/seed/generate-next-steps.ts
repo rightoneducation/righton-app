@@ -391,7 +391,7 @@ function buildNextSteps(
       aiReasoning: m.aiReasoning ?? null,
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
-        targetObjective: { standard: m.ccssStandard, description: m.description },
+        targetObjective: { standard: m.ccssStandard, description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '', learningComponents: (frameworkItem?.learningComponents ?? []).map((c: any) => c.description).filter(Boolean) },
         impactedObjectives,
         prerequisiteGaps,
       },

@@ -78,7 +78,7 @@ class GapGroupParser {
     // ── Private helpers ─────────────────────────────────────────────────────────
     static parseCCSSStandards(raw) {
         const empty = {
-            targetObjective: { standard: '', description: '' },
+            targetObjective: { standard: '', description: '', learningComponents: [] },
             prerequisiteGaps: [],
             impactedObjectives: [],
         };
@@ -87,12 +87,15 @@ class GapGroupParser {
         const obj = raw;
         const parseStandard = (s) => {
             if ((0, global_1.isNullOrUndefined)(s) || typeof s !== 'object' || Array.isArray(s)) {
-                return { standard: '', description: '' };
+                return { standard: '', description: '', learningComponents: [] };
             }
             const o = s;
             return {
                 standard: typeof o.standard === 'string' ? o.standard : '',
                 description: typeof o.description === 'string' ? o.description : '',
+                learningComponents: Array.isArray(o.learningComponents)
+                    ? o.learningComponents.filter((c) => typeof c === 'string')
+                    : [],
             };
         };
         const parseStandardArray = (a) => Array.isArray(a) ? a.map(parseStandard) : [];

@@ -5,8 +5,9 @@ import { ITabs, TabsParser } from './TabsParser'
 // ── Interfaces ────────────────────────────────────────────────────────────────
 
 export interface ICCSSStandard {
-  standard:    string
-  description: string
+  standard:          string
+  description:       string
+  learningComponents: string[]
 }
 
 export interface ICCSSStandards {
@@ -148,7 +149,7 @@ export class GapGroupParser {
 
   private static parseCCSSStandards(raw: unknown): ICCSSStandards {
     const empty: ICCSSStandards = {
-      targetObjective:    { standard: '', description: '' },
+      targetObjective:    { standard: '', description: '', learningComponents: [] },
       prerequisiteGaps:   [],
       impactedObjectives: [],
     }
@@ -157,12 +158,15 @@ export class GapGroupParser {
 
     const parseStandard = (s: unknown): ICCSSStandard => {
       if (isNullOrUndefined(s) || typeof s !== 'object' || Array.isArray(s)) {
-        return { standard: '', description: '' }
+        return { standard: '', description: '', learningComponents: [] }
       }
       const o = s as Record<string, unknown>
       return {
-        standard:    typeof o.standard    === 'string' ? o.standard    : '',
-        description: typeof o.description === 'string' ? o.description : '',
+        standard:           typeof o.standard    === 'string' ? o.standard    : '',
+        description:        typeof o.description === 'string' ? o.description : '',
+        learningComponents: Array.isArray(o.learningComponents)
+          ? (o.learningComponents as unknown[]).filter((c): c is string => typeof c === 'string')
+          : [],
       }
     }
 

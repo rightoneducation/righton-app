@@ -341,7 +341,7 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
         }
     }
     return misconceptions.map((m, i) => {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t;
         const extras = (_a = misconceptionExtras[i]) !== null && _a !== void 0 ? _a : {};
         const activityList = ((_b = activitiesPerGroup[i]) !== null && _b !== void 0 ? _b : []).filter(Boolean);
         const frameworkItem = frameworkItems.find((item) => normalize(item.code) === normalize(m.ccssStandard));
@@ -362,18 +362,18 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
             aiReasoning: (_j = m.aiReasoning) !== null && _j !== void 0 ? _j : null,
             successIndicators: (_k = m.successIndicators) !== null && _k !== void 0 ? _k : [],
             ccssStandards: {
-                targetObjective: { standard: m.ccssStandard, description: m.description },
+                targetObjective: { standard: m.ccssStandard, description: (_m = (_l = standardsDescMap.get(m.ccssStandard)) !== null && _l !== void 0 ? _l : frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.description) !== null && _m !== void 0 ? _m : '', learningComponents: ((_o = frameworkItem === null || frameworkItem === void 0 ? void 0 : frameworkItem.learningComponents) !== null && _o !== void 0 ? _o : []).map((c) => c.description).filter(Boolean) },
                 impactedObjectives,
                 prerequisiteGaps,
             },
-            evidence: (_l = m.evidence) !== null && _l !== void 0 ? _l : null,
+            evidence: (_p = m.evidence) !== null && _p !== void 0 ? _p : null,
             questionErrorRates,
-            ppqQuestions: (_m = extras.ppqQuestions) !== null && _m !== void 0 ? _m : [],
-            studentGroups: (_o = extras.studentGroups) !== null && _o !== void 0 ? _o : { buildingUnderstanding: [], understoodConcept: [] },
-            wrongAnswerExplanations: (_p = extras.wrongAnswerExplanations) !== null && _p !== void 0 ? _p : [],
-            correctAnswerSolution: (_q = extras.correctAnswerSolution) !== null && _q !== void 0 ? _q : [],
+            ppqQuestions: (_q = extras.ppqQuestions) !== null && _q !== void 0 ? _q : [],
+            studentGroups: (_r = extras.studentGroups) !== null && _r !== void 0 ? _r : { buildingUnderstanding: [], understoodConcept: [] },
+            wrongAnswerExplanations: (_s = extras.wrongAnswerExplanations) !== null && _s !== void 0 ? _s : [],
+            correctAnswerSolution: (_t = extras.correctAnswerSolution) !== null && _t !== void 0 ? _t : [],
             moveOptions: activityList.map((activity, j) => {
-                var _a, _b, _c, _d;
+                var _a, _b, _c, _d, _e;
                 return ({
                     id: `nextstep-move-ai-${i + 1}-${j + 1}`,
                     title: activity.title,
@@ -385,7 +385,7 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
                     instructionalMove: (_c = activity.instructionalMove) !== null && _c !== void 0 ? _c : null,
                     strategyTag: (_d = activity.strategyTag) !== null && _d !== void 0 ? _d : null,
                     aiReasoning: activity.aiReasoning,
-                    tabs: activity.tabs ?? null,
+                    tabs: (_e = activity.tabs) !== null && _e !== void 0 ? _e : null,
                 });
             }),
         };

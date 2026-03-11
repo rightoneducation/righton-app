@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import './YourNextSteps.css';
 import './SharedButtons.css';
+import './RecommendedNextSteps.css';
 import NextStepDetailsModal from './NextStepDetailsModal';
 
 const YourNextSteps = ({
@@ -16,13 +17,7 @@ const YourNextSteps = ({
   isLoading = false,
 }) => {
   const getStandardComponents = (item) => {
-    const description = item?.ccssStandards?.targetObjective?.description || '';
-    if (!description) return [];
-    return description
-      .split(/,| and /i)
-      .map((part) => part.trim())
-      .filter(Boolean)
-      .slice(0, 3);
+    return (item?.ccssStandards?.targetObjective?.learningComponents ?? []).slice(0, 3);
   };
 
   const getPriorityClass = (priority) => {
@@ -126,7 +121,6 @@ const YourNextSteps = ({
 
         <div className="yns-standard-hover-card" role="tooltip">
           <div className="yns-standard-hover-title">{standardName}</div>
-          <div className="yns-standard-hover-subtitle">Learning Components Diagram</div>
 
           <div className="yns-kg-diagram" aria-label={`Relationship diagram for ${standard}`}>
             <span className="ccss-tag target-objective yns-kg-standard-node">{standard}</span>
@@ -381,10 +375,15 @@ const YourNextSteps = ({
 
                         <div className="yns-item-meta">
                           {renderStandardPill(item)}
-                          <span className={`students-pill ${getPriorityClass(item.priority)} yns-students-pill`}>
-                            {item.studentCount} students ({item.studentPercent}%)
-                          </span>
-                          <span className="yns-meta-pill">{item.gapGroupTitle}</span>
+                          <span className="yns-item-misconception-title">{item.gapGroupTitle}</span>
+                          {item.frequency && (() => {
+                            const freq = item.frequency === 'medium' ? 'some' : item.frequency === 'high' ? 'many' : 'few';
+                            return (
+                              <span className={`${freq}-students-pill`}>
+                                {freq.charAt(0).toUpperCase() + freq.slice(1)} students
+                              </span>
+                            );
+                          })()}
                           {item.moveFormat && <span className="yns-meta-pill">{item.moveFormat}</span>}
                         </div>
                       </div>
@@ -500,7 +499,15 @@ const YourNextSteps = ({
                       <div className="yns-completed-item-title">{item.moveTitle}</div>
                       <div className="yns-completed-item-meta">
                         {renderStandardPill(item)}
-                        <span className="yns-meta-pill">{item.gapGroupTitle}</span>
+                        {item.frequency && (() => {
+                          const freq = item.frequency === 'medium' ? 'some' : item.frequency === 'high' ? 'many' : 'few';
+                          return (
+                            <span className={`${freq}-students-pill`}>
+                              {freq.charAt(0).toUpperCase() + freq.slice(1)} students
+                            </span>
+                          );
+                        })()}
+                        <span className="yns-item-misconception-title">{item.gapGroupTitle}</span>
                         {item.moveFormat && <span className="yns-meta-pill">{item.moveFormat}</span>}
                       </div>
                     </div>
