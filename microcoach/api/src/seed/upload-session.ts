@@ -71,7 +71,22 @@ function progress(msg: string, done = false) {
   else process.stdout.write(`\r${padded}`);
 }
 
-// ── Excel parser (copied from upload.ts) ─────────────────────────────────────
+// ── Excel parser (kept in sync with upload.ts) ───────────────────────────────
+
+function parseConfidenceLetter(raw: string): number | undefined {
+  const val = raw.trim().toUpperCase();
+  if (!val) return undefined;
+  const map: Record<string, number> = { A: 5, B: 4, C: 3, D: 1 };
+  if (val.length === 1) return map[val];
+  if (val.length === 2) {
+    const s1 = map[val[0]], s2 = map[val[1]];
+    if (s1 == null || s2 == null) return undefined;
+    const order = 'ABCD';
+    if (order.indexOf(val[1]) === order.indexOf(val[0]) + 1) return (s1 + s2) / 2;
+    return undefined;
+  }
+  return undefined;
+}
 
 function parseExcelFile(filePath: string): ParsedAssessmentData {
   const workbook = XLSX.readFile(filePath);
@@ -100,13 +115,50 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
     : ccssRow.slice(1).map((v: any) => String(v ?? '').trim()).filter((v: string) => v.length > 0 && /\d/.test(v));
 
   const headerRow = rows[2] ?? [];
-  const questionColumns: number[] = [];
-  const questionNumbers: number[] = [];
+  const allNumericCols: number[] = [];
   for (let col = 1; col < headerRow.length; col++) {
+    if (String(headerRow[col] ?? '').trim().match(/^q?(\d+)$/i)) allNumericCols.push(col);
+  }
+
+  const confColByQNumber: Record<number, number> = {};
+  for (let col = 1; col < headerRow.length; col++) {
+    const cMatch = String(headerRow[col] ?? '').trim().match(/^Q?(\d+)_Conf$/i);
+    if (cMatch) confColByQNumber[parseInt(cMatch[1], 10)] = col;
+  }
+
+  const answerKeyRowIdx = isAssessmentMatrix ? 6 : 7;
+  const keyRow = rows[answerKeyRowIdx] ?? [];
+
+  let isInterleaved = false;
+  let questionColumns = [...allNumericCols];
+  let questionNumbers = allNumericCols.map((col) => {
     const cell = String(headerRow[col] ?? '').trim();
-    if (cell === '') continue;
-    const qMatch = cell.match(/^q?(\d+)$/i);
-    if (qMatch) { questionColumns.push(col); questionNumbers.push(parseInt(qMatch[1], 10)); }
+    return parseInt(cell.replace(/^q/i, ''), 10);
+  });
+
+  if (isAssessmentMatrix && Object.keys(confColByQNumber).length === 0) {
+    const quizCols: number[] = [];
+    const quizNums: number[] = [];
+    const newConfColByQNumber: Record<number, number> = {};
+    let quizSeq = 0;
+
+    for (const col of allNumericCols) {
+      const keyVal = String(keyRow[col] ?? '').trim().toUpperCase();
+      if (keyVal.length === 1 && 'ABCDE'.includes(keyVal)) {
+        quizSeq++;
+        quizCols.push(col);
+        quizNums.push(quizSeq);
+      } else if (keyVal === '' && quizSeq > 0 && newConfColByQNumber[quizSeq] == null) {
+        newConfColByQNumber[quizSeq] = col;
+      }
+    }
+
+    if (quizCols.length > 0 && Object.keys(newConfColByQNumber).length > 0) {
+      isInterleaved = true;
+      questionColumns = quizCols;
+      questionNumbers = quizNums;
+      Object.assign(confColByQNumber, newConfColByQNumber);
+    }
   }
 
   const classRow = rows[3] ?? [];
@@ -121,8 +173,6 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
   const pctValues = Object.values(classPercentByCol);
   const classPercentCorrect = pctValues.length > 0 ? pctValues.reduce((a, b) => a + b, 0) / pctValues.length : 0;
 
-  const answerKeyRowIdx = isAssessmentMatrix ? 6 : 7;
-  const keyRow = rows[answerKeyRowIdx] ?? [];
   const answerKeyByCol: Record<number, string> = {};
   for (const col of questionColumns) {
     const val = String(keyRow[col] ?? '').trim().toUpperCase();
@@ -157,12 +207,26 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
     const questionResponses: ParsedQuestionResponse[] = questionColumns.map((col, i) => {
       const rawResponse = String(row[col] ?? '').trim().toUpperCase();
       const correctAnswer = answerKeyByCol[col] ?? '';
+      const qNum = questionNumbers[i];
+      const confCol = confColByQNumber[qNum];
+
+      let confidence: number | undefined;
+      if (confCol != null) {
+        const rawConf = String(row[confCol] ?? '').trim();
+        if (isInterleaved) {
+          confidence = parseConfidenceLetter(rawConf);
+        } else {
+          const n = parseFloat(rawConf);
+          confidence = !isNaN(n) && n >= 1 && n <= 5 ? n : undefined;
+        }
+      }
+
       if (isAssessmentMatrix) {
-        if (rawResponse === '') return { questionNumber: questionNumbers[i], response: correctAnswer, isCorrect: true, pointsEarned: 1 };
-        return { questionNumber: questionNumbers[i], response: rawResponse, isCorrect: false, pointsEarned: 0 };
+        if (rawResponse === '') return { questionNumber: qNum, response: correctAnswer, isCorrect: true, pointsEarned: 1, confidence };
+        return { questionNumber: qNum, response: rawResponse, isCorrect: false, pointsEarned: 0, confidence };
       }
       const isCorrect = rawResponse !== '' && rawResponse === correctAnswer;
-      return { questionNumber: questionNumbers[i], response: rawResponse, isCorrect, pointsEarned: isCorrect ? 1 : 0 };
+      return { questionNumber: qNum, response: rawResponse, isCorrect, pointsEarned: isCorrect ? 1 : 0, confidence };
     });
 
     studentRows.push({ name, externalId, totalScore, questionResponses });
@@ -218,13 +282,13 @@ async function uploadStudents(students: ParsedStudentRow[]): Promise<CreatedStud
   const created: CreatedStudent[] = [];
   for (let i = 0; i < students.length; i++) {
     const s = students[i];
-    const anonName = `Student ${i + 1}`;
+    const studentName = s.name || `Student ${i + 1}`;
     const externalId = s.externalId || `S${String(i + 1).padStart(3, '0')}`;
-    progress(`  Creating students [${i + 1}/${students.length}]  ${anonName}`);
+    progress(`  Creating students [${i + 1}/${students.length}]  ${studentName}`);
     const data = await gql(CREATE_STUDENT, {
-      input: { classroomId, classroomStudentsId: classroomId, name: anonName, externalId, confidenceLevel: 0, status: 'active' },
+      input: { classroomId, classroomStudentsId: classroomId, name: studentName, externalId, confidenceLevel: 0, status: 'active' },
     });
-    created.push({ id: data.createStudent.id, name: anonName, externalId, classroomId: classroomId! });
+    created.push({ id: data.createStudent.id, name: studentName, externalId, classroomId: classroomId! });
     await sleep(50);
   }
   progress(`  ✓ ${created.length} students created  (${elapsed(start)})`, true);
@@ -310,6 +374,7 @@ async function uploadStudentResponses(
           response: qr.response,
           isCorrect: qr.isCorrect,
           pointsEarned: qr.pointsEarned,
+          confidence: qr.confidence ?? null,
         })),
       },
     });
@@ -321,7 +386,7 @@ async function uploadStudentResponses(
 }
 
 async function uploadMisconceptions(sessionId: string): Promise<void> {
-  const misconceptions = sessionConfig!.misconceptions;
+  const misconceptions = sessionConfig!.misconceptions ?? [];
   const start = Date.now();
   for (let i = 0; i < misconceptions.length; i++) {
     const m = misconceptions[i];
@@ -369,7 +434,7 @@ async function main() {
   console.log(`  Classroom ID : ${classroomId}`);
   console.log(`  Session      : ${sessionLabel}`);
   console.log(`  PPQ file     : ${sessionConfig!.ppqFile}`);
-  console.log(`  PostPPQ file : ${sessionConfig!.postPpqFile}\n`);
+  console.log(`  PostPPQ file : ${sessionConfig!.postPpqFile ?? '(none — skipped)'}\n`);
 
   // Parse PPQ
   const ppqPath = path.join(DATA_ROOT, sessionConfig!.ppqFile);
@@ -397,21 +462,28 @@ async function main() {
   await uploadStudentResponses('PPQ', ppqAssessment.id, ppqData.students, studentMap);
 
   // Parse + upload PostPPQ
-  const postPpqPath = path.join(DATA_ROOT, sessionConfig!.postPpqFile);
-  process.stdout.write(`\n  Parsing PostPPQ Excel...`);
-  try {
-    const postPpqData = parseExcelFile(postPpqPath);
-    process.stdout.write(`  ✓  ${postPpqData.students.length} students, ${postPpqData.questionMeta.length} questions\n`);
-    const postPpqAssessment = await uploadAssessment(sessionId, postPpqData, 'POST_PPQ', ppqAssessment.id);
-    await uploadStudentResponses('PostPPQ', postPpqAssessment.id, postPpqData.students, studentMap);
-
-    process.stdout.write(`  Linking assessments to session...`);
-    await gql(UPDATE_SESSION, {
-      input: { id: sessionId, ppqAssessmentId: ppqAssessment.id, postPpqAssessmentId: postPpqAssessment.id },
-    });
+  if (sessionConfig!.postPpqFile == null) {
+    console.log(`\n  PostPPQ: skipped (not yet available)`);
+    process.stdout.write(`  Linking PPQ assessment to session...`);
+    await gql(UPDATE_SESSION, { input: { id: sessionId, ppqAssessmentId: ppqAssessment.id } });
     process.stdout.write(`  ✓\n`);
-  } catch (err) {
-    console.error(`\n  ERROR processing PostPPQ: ${err}`);
+  } else {
+    const postPpqPath = path.join(DATA_ROOT, sessionConfig!.postPpqFile);
+    process.stdout.write(`\n  Parsing PostPPQ Excel...`);
+    try {
+      const postPpqData = parseExcelFile(postPpqPath);
+      process.stdout.write(`  ✓  ${postPpqData.students.length} students, ${postPpqData.questionMeta.length} questions\n`);
+      const postPpqAssessment = await uploadAssessment(sessionId, postPpqData, 'POST_PPQ', ppqAssessment.id);
+      await uploadStudentResponses('PostPPQ', postPpqAssessment.id, postPpqData.students, studentMap);
+
+      process.stdout.write(`  Linking assessments to session...`);
+      await gql(UPDATE_SESSION, {
+        input: { id: sessionId, ppqAssessmentId: ppqAssessment.id, postPpqAssessmentId: postPpqAssessment.id },
+      });
+      process.stdout.write(`  ✓\n`);
+    } catch (err) {
+      console.error(`\n  ERROR processing PostPPQ: ${err}`);
+    }
   }
 
   // Misconceptions + activities

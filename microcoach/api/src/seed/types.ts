@@ -16,10 +16,10 @@ export interface SessionConfig {
   weekNumber: number;
   topic: string;
   ccssStandards: string[];
-  ppqFile: string;       // relative path from DATA_ROOT
-  postPpqFile: string;   // relative path from DATA_ROOT
+  ppqFile: string;            // relative path from DATA_ROOT
+  postPpqFile: string | null; // null when PostPPQ data not yet available
   nextStepFile: string | null; // null if no next step doc for this classroom
-  misconceptions: MisconceptionPlaceholder[];
+  misconceptions?: MisconceptionPlaceholder[];  // optional; primary source is Data/{key}/{label}/misconceptions.json
 }
 
 export interface MisconceptionPlaceholder {
@@ -71,6 +71,7 @@ export interface ParsedQuestionResponse {
   response: string;
   isCorrect: boolean;
   pointsEarned: number;
+  confidence?: number;
 }
 
 // AppSync record IDs returned after creation

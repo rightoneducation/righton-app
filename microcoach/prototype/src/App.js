@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { APIClient } from '@righton/microcoach-api';
+import { APIClient, GapGroupParser, SavedNextStepParser } from '@righton/microcoach-api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Header from './components/Header';
 import RecommendedNextSteps from './components/RecommendedNextSteps';
@@ -11,109 +11,93 @@ import './App.css';
 function App() {
   const [activeOverviewSection, setActiveOverviewSection] = useState('Recommended Next Steps');
 
+  const [classrooms, setClassrooms] = useState([]);
+  const [selectedClassroomId, setSelectedClassroomId] = useState('');
   const [nextSteps, setNextSteps] = useState([]);
   const [nextStepsSort, setNextStepsSort] = useState('manual');
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoadingNextSteps, setIsLoadingNextSteps] = useState(true);
   const [aiGapGroups, setAiGapGroups] = useState(null);
+
+  // All classroom data pre-fetched on init, keyed by classroomId.
+  // { [classroomId]: { gapGroups: [...] | null, savedNextSteps: [...] } }
+  const classroomDataMapRef = useRef({});
 
   // Refs so CRUD handlers can reach the API without being inside the fetch useEffect
   const apiClientRef = useRef(null);
   const classroomIdRef = useRef(null);
 
-  // Map a backend SavedNextStep record back to the local item shape used by the UI
-  const dbItemToLocal = (db) => ({
-    id: db.id,
-    createdAt: db.createdAt ? new Date(db.createdAt).getTime() : Date.now(),
-    completedAt: db.completedAt ? new Date(db.completedAt).getTime() : undefined,
-    status: db.status ?? 'planned',
-    gapGroupId: db.misconceptionId,
-    gapGroupTitle: db.misconceptionTitle,
-    targetObjectiveStandard: db.targetObjectiveStandard,
-    priority: db.priority,
-    studentCount: db.studentCount,
-    studentPercent: db.studentPercent,
-    occurrence: db.occurrence,
-    misconceptionSummary: db.misconceptionSummary,
-    successIndicators: db.successIndicators ?? [],
-    ccssStandards: db.targetObjectiveStandard
-      ? { targetObjective: { standard: db.targetObjectiveStandard, description: '' }, prerequisiteGaps: [], impactedObjectives: [] }
-      : undefined,
-    moveId: db.activityId,
-    moveTitle: db.activityTitle,
-    moveTime: db.activityTime,
-    moveFormat: db.activityFormat,
-    moveSummary: db.activitySummary,
-    aiReasoning: db.aiReasoning,
-    evidence: db.evidence ?? null,
-    move: {
-      id: db.activityId,
-      title: db.activityTitle,
-      time: db.activityTime,
-      format: db.activityFormat,
-      summary: db.activitySummary,
-      aiReasoning: db.aiReasoning,
-      tabs: db.tabs ?? null,
-    },
-  });
+
+  // Switch to a classroom using pre-fetched data — synchronous, no loading state.
+  const selectClassroom = (classroom) => {
+    if (!classroom) return;
+    classroomIdRef.current = classroom.id;
+    const data = classroomDataMapRef.current[classroom.id] ?? { gapGroups: null, savedNextSteps: [] };
+    const savedItems = data.savedNextSteps;
+    const active = savedItems.filter((x) => x.status !== 'completed').map((db) => SavedNextStepParser.dbToLocal(db));
+    const completed = savedItems.filter((x) => x.status === 'completed').map((db) => SavedNextStepParser.dbToLocal(db));
+    setNextSteps(active);
+    setNextStepsHistory(
+      completed.map((item) => ({
+        id: `yns-item-${item.id}-${item.completedAt}`,
+        completedAt: item.completedAt,
+        items: [item],
+      }))
+    );
+    setAiGapGroups(data.gapGroups);
+  };
 
   useEffect(() => {
     let cancelled = false;
+    async function init() {
+      const client = new APIClient();
+      apiClientRef.current = client;
 
-    async function loadData() {
-      setIsLoading(true);
-      try {
-        const client = new APIClient();
+      // Fetch all classrooms (includes sessions + pregeneratedNextSteps).
+      const all = await client.listClassrooms();
+      if (cancelled) return;
+      const unique = [...new Map(all.map((c) => [c.id, c])).values()];
+      const sorted = unique.sort((a, b) => a.classroomName.localeCompare(b.classroomName));
 
-        const classrooms = await client.listClassrooms();
-        const gr6 = classrooms.find((c) => c.grade === 6);
-        if (!gr6 || cancelled) return;
+      // Fetch saved next steps for all classrooms in parallel.
+      const savedByClassroom = await Promise.all(
+        sorted.map((c) => client.listSavedNextSteps(c.id).then((items) => ({ id: c.id, items: items ?? [] })))
+      );
+      if (cancelled) return;
 
-        // Store refs so CRUD handlers outside this effect can reach the API
-        apiClientRef.current = client;
-        classroomIdRef.current = gr6.id;
-
-        // Load persisted next steps
-        const savedItems = (await client.listSavedNextSteps(gr6.id)) ?? [];
-        if (!cancelled) {
-          if (savedItems.length) {
-            const active = savedItems.filter((x) => x.status !== 'completed').map(dbItemToLocal);
-            const completed = savedItems.filter((x) => x.status === 'completed').map(dbItemToLocal);
-            setNextSteps(active);
-            setNextStepsHistory(
-              completed.map((item) => ({
-                id: `yns-item-${item.id}-${item.completedAt}`,
-                completedAt: item.completedAt,
-                items: [item],
-              }))
-            );
-          }
-          setIsLoadingNextSteps(false);
+      // Build the data map.
+      const map = {};
+      for (const classroom of sorted) {
+        const activeSession = (classroom.sessions?.items ?? [])
+          .find((s) => s.weekNumber === classroom.currentWeek);
+        let gapGroups = null;
+        if (activeSession?.pregeneratedNextSteps) {
+          gapGroups = GapGroupParser.fromPregeneratedJson(activeSession.pregeneratedNextSteps);
         }
+        const entry = savedByClassroom.find((x) => x.id === classroom.id);
+        const rawItems = entry?.items ?? [];
+        const sortedItems = [...rawItems].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+        map[classroom.id] = { gapGroups, savedNextSteps: sortedItems };
+      }
+      classroomDataMapRef.current = map;
 
-        // Load pregenerated gap groups for the active week
-        const activeSession = (gr6.sessions?.items ?? [])
-          .find((s) => s.weekNumber === gr6.currentWeek);
-        if (!cancelled && activeSession?.pregeneratedNextSteps) {
-          const groups = activeSession.pregeneratedNextSteps;
-          const parsed = typeof groups === 'string' ? JSON.parse(groups) : groups;
-          // Normalize: if a group has a single `move` but no `moveOptions`, wrap it
-          const normalized = parsed.map((g) => ({
-            ...g,
-            moveOptions: g.moveOptions ?? (g.move ? [g.move] : []),
-          }));
-          setAiGapGroups(normalized);
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-          setIsLoadingNextSteps(false);
-        }
+      const output = sorted.map((classroom) => ({
+        classroom,
+        data: map[classroom.id],
+      }));
+      console.log("[App]", JSON.parse(JSON.stringify(output)));
+
+      setClassrooms(sorted);
+      setIsLoading(false);
+      setIsLoadingNextSteps(false);
+
+      if (sorted[0]) {
+        setSelectedClassroomId(sorted[0].id);
+        selectClassroom(sorted[0]);
       }
     }
-
-    loadData();
+    init().catch(console.error);
     return () => { cancelled = true; };
   }, []);
 
@@ -163,7 +147,8 @@ function App() {
       gapGroupId: gapGroup.id,
       gapGroupTitle: gapGroup.title,
       targetObjectiveStandard: gapGroup?.ccssStandards?.targetObjective?.standard,
-      priority: gapGroup.priority,
+      priority: gapGroup.priority ?? 'Low',
+      frequency: gapGroup.frequency ?? null,
       studentCount: gapGroup.studentCount,
       studentPercent: gapGroup.studentPercent,
       occurrence: gapGroup.occurrence,
@@ -181,45 +166,64 @@ function App() {
       move: normalizedMove,
     };
 
+    // DB-shaped record — mirrors createSavedNextStep input shape
+    const dbRecord = {
+      id: newItem.id,
+      createdAt: new Date(newItem.createdAt).toISOString(),
+      status: 'planned',
+      misconceptionId: gapGroup.id,
+      misconceptionTitle: gapGroup.title,
+      targetObjectiveStandard: newItem.targetObjectiveStandard,
+      priority: gapGroup.priority ?? 'Low',
+      studentCount: gapGroup.studentCount,
+      studentPercent: gapGroup.studentPercent,
+      occurrence: gapGroup.occurrence,
+      misconceptionSummary: gapGroup.misconceptionSummary,
+      successIndicators: gapGroup.successIndicators ?? [],
+      activityId: move.id,
+      activityTitle: move.title,
+      activityTime: move.time,
+      activityFormat: move.format,
+      activitySummary: move.summary,
+      aiReasoning: move.aiReasoning,
+      evidence: gapGroup.evidence ?? null,
+      tabs: normalizedMove?.tabs ?? null,
+      sortOrder: 0,
+    };
+
+    // Update UI state (local-shaped)
     setNextSteps((prev) => [newItem, ...prev]);
+
+    // Update ref (DB-shaped) separately
+    const cid = classroomIdRef.current;
+    if (cid && classroomDataMapRef.current[cid]) {
+      classroomDataMapRef.current[cid].savedNextSteps = [
+        dbRecord,
+        ...classroomDataMapRef.current[cid].savedNextSteps,
+      ];
+    }
 
     // Persist to backend (fire-and-forget — UI is already updated optimistically)
     const client = apiClientRef.current;
     const classroomId = classroomIdRef.current;
     if (client && classroomId) {
-      client.createSavedNextStep(classroomId, {
-        id: newItem.id,
-        classroomId,
-        status: 'planned',
-        misconceptionId: gapGroup.id,
-        misconceptionTitle: gapGroup.title,
-        targetObjectiveStandard: newItem.targetObjectiveStandard,
-        priority: gapGroup.priority,
-        studentCount: gapGroup.studentCount,
-        studentPercent: gapGroup.studentPercent,
-        occurrence: gapGroup.occurrence,
-        misconceptionSummary: gapGroup.misconceptionSummary,
-        successIndicators: gapGroup.successIndicators ?? [],
-        activityId: move.id,
-        activityTitle: move.title,
-        activityTime: move.time,
-        activityFormat: move.format,
-        activitySummary: move.summary,
-        aiReasoning: move.aiReasoning,
-        evidence: gapGroup.evidence ?? undefined,
-        tabs: normalizedMove?.tabs ?? undefined,
-      }).catch((err) => console.error('[addNextStep] backend save failed', err));
+      const mutationInput = SavedNextStepParser.toMutationInput(classroomId, newItem);
+      client.createSavedNextStep(classroomId, mutationInput)
+        .catch((err) => console.error('[addNextStep] backend save failed', err));
     }
   };
 
   const removeNextStep = (id) => {
     setNextSteps((prev) => prev.filter((x) => x.id !== id));
 
-    const client = apiClientRef.current;
-    if (client) {
-      client.deleteSavedNextStep(id)
-        .catch((err) => console.error('[removeNextStep] backend delete failed', err));
+    const cid = classroomIdRef.current;
+    if (cid && classroomDataMapRef.current[cid]) {
+      classroomDataMapRef.current[cid].savedNextSteps =
+        classroomDataMapRef.current[cid].savedNextSteps.filter((x) => x.id !== id);
     }
+
+    apiClientRef.current?.deleteSavedNextStep(id)
+      .catch((err) => console.error('[removeNextStep] backend delete failed', err));
   };
 
   const completeNextStep = (id) => {
@@ -234,6 +238,16 @@ function App() {
       ...(prev || [])
     ]);
     setNextSteps((prev) => prev.filter((x) => x.id !== id));
+
+    const cid = classroomIdRef.current;
+    if (cid && classroomDataMapRef.current[cid]) {
+      classroomDataMapRef.current[cid].savedNextSteps =
+        classroomDataMapRef.current[cid].savedNextSteps.map((x) =>
+          x.id === id
+            ? { ...x, status: 'completed', completedAt: new Date(completedAt).toISOString() }
+            : x
+        );
+    }
 
     const client = apiClientRef.current;
     if (client) {
@@ -271,6 +285,24 @@ function App() {
 
       insertIdx = Math.min(Math.max(insertIdx, 0), copy.length);
       copy.splice(insertIdx, 0, dragItem);
+
+      const client = apiClientRef.current;
+      if (client) {
+        copy.forEach((item, index) => {
+          client.updateSavedNextStep(item.id, { sortOrder: index })
+            .catch((err) => console.error('[reorderNextSteps] sortOrder update failed', err));
+        });
+      }
+
+      const rcid = classroomIdRef.current;
+      if (rcid && classroomDataMapRef.current[rcid]) {
+        const idToOrder = Object.fromEntries(copy.map((x, i) => [x.id, i]));
+        classroomDataMapRef.current[rcid].savedNextSteps =
+          classroomDataMapRef.current[rcid].savedNextSteps.map((x) =>
+            idToOrder[x.id] !== undefined ? { ...x, sortOrder: idToOrder[x.id] } : x
+          );
+      }
+
       return copy;
     });
   };
@@ -281,7 +313,14 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
+      <Header
+        classrooms={classrooms}
+        selectedClassroomId={selectedClassroomId}
+        onClassChange={(id) => {
+          setSelectedClassroomId(id);
+          selectClassroom(classrooms.find((c) => c.id === id));
+        }}
+      />
 
       <main className="main-content">
         <div className="overview-content">

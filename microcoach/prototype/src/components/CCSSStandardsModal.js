@@ -36,8 +36,8 @@ const CCSSStandardsModal = ({
   const getStandardTypeLabel = (type) => {
     switch (type) {
       case 'prerequisite-gap': return 'Prerequisite Gaps';
-      case 'assessed-standard': return 'Assessed Standard';
-      case 'at-risk-standard': return 'At Risk Standard';
+      case 'assessed-standard': return 'Focus Skill';
+      case 'at-risk-standard': return 'Upcoming Skills';
       default: return 'Standard';
     }
   };
@@ -83,7 +83,7 @@ const CCSSStandardsModal = ({
               {/* Assessed Standard */}
               {ccssStandards?.targetObjective && (
                 <div className="map-column">
-                  <h5 className="map-column-header assessed-header">Assessed Standard</h5>
+                  <h5 className="map-column-header assessed-header">Focus Skill</h5>
                   <div className="map-standards">
                     <button
                       className={`map-standard assessed-standard ${currentSelectedStandard.standard === ccssStandards.targetObjective.standard ? 'selected' : ''}`}
@@ -98,7 +98,7 @@ const CCSSStandardsModal = ({
               {/* At Risk Standards */}
               {ccssStandards?.impactedObjectives && ccssStandards.impactedObjectives.length > 0 && (
                 <div className="map-column">
-                  <h5 className="map-column-header at-risk-header">At Risk Standards</h5>
+                  <h5 className="map-column-header at-risk-header">Upcoming Skills</h5>
                   <div className="map-standards">
                     {ccssStandards.impactedObjectives.map((standard, idx) => (
                       <button

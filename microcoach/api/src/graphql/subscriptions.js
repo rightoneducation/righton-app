@@ -184,38 +184,8 @@ export const onCreateClassroom = /* GraphQL */ `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -413,38 +383,8 @@ export const onUpdateClassroom = /* GraphQL */ `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -642,38 +582,8 @@ export const onDeleteClassroom = /* GraphQL */ `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -1154,6 +1064,7 @@ export const onCreateAssessment = /* GraphQL */ `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1209,6 +1120,7 @@ export const onUpdateAssessment = /* GraphQL */ `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1264,6 +1176,7 @@ export const onDeleteAssessment = /* GraphQL */ `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1296,6 +1209,7 @@ export const onCreateStudentResponse = /* GraphQL */ `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1319,6 +1233,7 @@ export const onUpdateStudentResponse = /* GraphQL */ `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1342,6 +1257,7 @@ export const onDeleteStudentResponse = /* GraphQL */ `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1405,6 +1321,7 @@ export const onCreateMisconception = /* GraphQL */ `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1491,6 +1408,7 @@ export const onUpdateMisconception = /* GraphQL */ `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1577,6 +1495,7 @@ export const onDeleteMisconception = /* GraphQL */ `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1637,6 +1556,7 @@ export const onCreateActivity = /* GraphQL */ `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1698,6 +1618,7 @@ export const onUpdateActivity = /* GraphQL */ `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1759,6 +1680,7 @@ export const onDeleteActivity = /* GraphQL */ `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1818,49 +1740,8 @@ export const onCreateSavedNextStep = /* GraphQL */ `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId
@@ -1894,49 +1775,8 @@ export const onUpdateSavedNextStep = /* GraphQL */ `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId
@@ -1970,49 +1810,8 @@ export const onDeleteSavedNextStep = /* GraphQL */ `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId

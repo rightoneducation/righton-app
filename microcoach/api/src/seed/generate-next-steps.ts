@@ -13,6 +13,24 @@
  */
 
 import { createGqlClient, GqlFn } from './appsync-config';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+
+const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
+
+async function invokeLambda(functionName: string, payload: unknown): Promise<any> {
+  const client = new LambdaClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
+  const cmd = new InvokeCommand({
+    FunctionName: functionName,
+    InvocationType: 'RequestResponse',
+    Payload: Buffer.from(JSON.stringify(payload)),
+  });
+  const resp = await client.send(cmd);
+  if (resp.FunctionError) {
+    const errBody = Buffer.from(resp.Payload as Uint8Array).toString('utf8');
+    throw new Error(`Lambda ${functionName} error: ${errBody}`);
+  }
+  return JSON.parse(Buffer.from(resp.Payload as Uint8Array).toString('utf8'));
+}
 
 // ── GraphQL queries & mutations ───────────────────────────────────────────────
 
@@ -135,27 +153,19 @@ const LIST_CONTEXT_DATA = /* GraphQL */ `
   }
 `;
 
-const GET_LEARNING_SCIENCE = /* GraphQL */ `
-  mutation GetLearningScience($input: GetLearningScienceInput!) {
-    getLearningScience(input: $input)
-  }
-`;
-
-const GET_ANALYSIS = /* GraphQL */ `
-  mutation GetAnalysis($input: GetAnalysisInput!) {
-    getAnalysis(input: $input)
-  }
-`;
-
-const GENERATE_NEXT_STEP = /* GraphQL */ `
-  mutation GenerateNextStep($input: GenerateNextStepInput!) {
-    generateNextStep(input: $input)
-  }
-`;
-
-const GENERATE_NEXT_STEP_OPTION = /* GraphQL */ `
-  mutation GenerateNextStepOption($input: GenerateNextStepOptionInput!) {
-    generateNextStepOption(input: $input)
+const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
+  query StudentResponsesByAssessmentId($assessmentId: ID!) {
+    studentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
+      items {
+        studentId
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          confidence
+        }
+      }
+    }
   }
 `;
 
@@ -178,11 +188,149 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
   }
 `;
 
+// ── Confidence stats aggregator ───────────────────────────────────────────────
+
+function computeConfidenceStats(studentResponses: any[], questions: any[]): any[] {
+  const qStats: Record<number, any> = {};
+  for (const q of questions) {
+    qStats[q.questionNumber] = {
+      questionNumber: q.questionNumber,
+      totalConf: 0, countConf: 0,
+      totalConfCorrect: 0, countConfCorrect: 0,
+      totalConfIncorrect: 0, countConfIncorrect: 0,
+      highConfWrong: 0, totalHighConf: 0,
+    };
+  }
+  for (const sr of studentResponses) {
+    for (const qr of (sr.questionResponses ?? [])) {
+      const s = qStats[qr.questionNumber];
+      if (!s || qr.confidence == null) continue;
+      const conf = qr.confidence;
+      s.totalConf += conf;
+      s.countConf++;
+      if (qr.isCorrect) {
+        s.totalConfCorrect += conf;
+        s.countConfCorrect++;
+      } else {
+        s.totalConfIncorrect += conf;
+        s.countConfIncorrect++;
+        if (conf >= 4) s.highConfWrong++;
+      }
+      if (conf >= 4) s.totalHighConf++;
+    }
+  }
+  return Object.values(qStats).map((s: any) => ({
+    questionNumber: s.questionNumber,
+    avgConfidence:          s.countConf > 0          ? parseFloat((s.totalConf / s.countConf).toFixed(2))                  : null,
+    avgConfidenceCorrect:   s.countConfCorrect > 0   ? parseFloat((s.totalConfCorrect / s.countConfCorrect).toFixed(2))    : null,
+    avgConfidenceIncorrect: s.countConfIncorrect > 0 ? parseFloat((s.totalConfIncorrect / s.countConfIncorrect).toFixed(2)) : null,
+    highConfWrongPct:       s.totalHighConf > 0      ? parseFloat((s.highConfWrong / s.totalHighConf).toFixed(3))          : null,
+  }));
+}
+
+// ── PPQ enrichment helpers ────────────────────────────────────────────────────
+
+/** Extract question numbers from a string like "PPQ Q3, Q5" or "Q1 and Q4" → [1, 3, 4, 5] */
+function parseQuestionNumbers(source: string): number[] {
+  const matches = (source ?? '').matchAll(/Q(\d+)/gi);
+  const nums = new Set<number>();
+  for (const m of matches) nums.add(parseInt(m[1], 10));
+  return [...nums].sort((a, b) => a - b);
+}
+
+/** Per question, count occurrences of each wrong response string. */
+function computeWrongAnswerDist(studentResponses: any[]): Record<number, Record<string, number>> {
+  const dist: Record<number, Record<string, number>> = {};
+  for (const sr of studentResponses) {
+    for (const qr of (sr.questionResponses ?? [])) {
+      if (qr.isCorrect || qr.response == null) continue;
+      const qn: number = qr.questionNumber;
+      if (!dist[qn]) dist[qn] = {};
+      const ans = String(qr.response).trim();
+      dist[qn][ans] = (dist[qn][ans] ?? 0) + 1;
+    }
+  }
+  return dist;
+}
+
+/**
+ * Build a flat list of student performance records for the questions tied to a misconception.
+ * Each entry has the student's name, their score on the relevant questions, and which specific
+ * answers they gave (with correct/incorrect flag). Passed to the lambda so the AI can assign
+ * students to its generated groups.
+ */
+function getStudentPerformanceData(
+  studentResponses: any[],
+  questionNumbers: number[],
+  studentNameMap: Map<string, string>,
+): Array<{ name: string; score: number; answers: Array<{ q: number; response: string; correct: boolean }> }> {
+  if (!questionNumbers.length) return [];
+  const qSet = new Set(questionNumbers);
+  const result: Array<{ name: string; score: number; answers: Array<{ q: number; response: string; correct: boolean }> }> = [];
+
+  for (const sr of studentResponses) {
+    const name = studentNameMap.get(sr.studentId);
+    if (!name) continue;
+    const relevant = (sr.questionResponses ?? []).filter((qr: any) => qSet.has(qr.questionNumber));
+    if (!relevant.length) continue;
+    const correct = relevant.filter((qr: any) => qr.isCorrect).length;
+    result.push({
+      name,
+      score: Math.round((correct / relevant.length) * 100) / 100,
+      answers: relevant.map((qr: any) => ({ q: qr.questionNumber, response: qr.response, correct: qr.isCorrect })),
+    });
+  }
+
+  return result.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * Split students into two groups based on overall quiz performance:
+ *   buildingUnderstanding — scored below threshold across all answered questions
+ *   understoodConcept     — scored at or above threshold across all answered questions
+ * questionNumbers is retained for API compatibility but no longer used for the split.
+ */
+function getStudentGroups(
+  studentResponses: any[],
+  questionNumbers: number[],   // retained for API compat, no longer used for split
+  studentNameMap: Map<string, string>,
+  threshold = 0.6,
+): { buildingUnderstanding: string[]; understoodConcept: string[] } {
+  const buildingUnderstanding: string[] = [];
+  const understoodConcept: string[] = [];
+
+  for (const sr of studentResponses) {
+    const name = studentNameMap.get(sr.studentId);
+    if (!name) continue;
+    const all = (sr.questionResponses ?? []) as any[];
+    if (!all.length) continue;
+    // Score = fraction of answered questions that are correct
+    const score = all.filter((qr: any) => qr.isCorrect).length / all.length;
+    if (score >= threshold) {
+      understoodConcept.push(name);
+    } else {
+      buildingUnderstanding.push(name);
+    }
+  }
+
+  const sortByName = (a: string, b: string) => {
+    const [aFirst = '', ...aRest] = a.split(' ');
+    const [bFirst = '', ...bRest] = b.split(' ');
+    const firstCmp = aFirst.localeCompare(bFirst);
+    return firstCmp !== 0 ? firstCmp : aRest.join(' ').localeCompare(bRest.join(' '));
+  };
+
+  return {
+    buildingUnderstanding: buildingUnderstanding.sort(sortByName),
+    understoodConcept: understoodConcept.sort(sortByName),
+  };
+}
+
 // ── Next step builder ─────────────────────────────────────────────────────────
 
 function formatLabel(f: string): string {
   return (
-    ({ small_group: 'Small groups', whole_class: 'Whole class', individual: 'Individual' } as Record<string, string>)[f] ?? f
+    ({ whole_class: 'Whole class', split_class: 'Split class' } as Record<string, string>)[f] ?? f
   );
 }
 
@@ -190,7 +338,13 @@ function buildNextSteps(
   misconceptions: any[],
   activitiesPerGroup: any[][],
   ppqQuestions: any[],
-  learningScienceData: any
+  learningScienceData: any,
+  misconceptionExtras: Array<{
+    ppqQuestions: any[];
+    studentGroups: { buildingUnderstanding: string[]; understoodConcept: string[] };
+    wrongAnswerExplanations: Array<{ answer: string; explanation: string }>;
+    correctAnswerSolution: string[];
+  }> = [],
 ): any[] {
   const questionErrorRates = (ppqQuestions ?? [])
     .filter((q: any) => q.questionNumber != null && q.classPercentCorrect != null)
@@ -212,6 +366,7 @@ function buildNextSteps(
   }
 
   return misconceptions.map((m: any, i: number) => {
+    const extras = misconceptionExtras[i] ?? {};
     const activityList: any[] = (activitiesPerGroup[i] ?? []).filter(Boolean);
     const frameworkItem = frameworkItems.find(
       (item: any) => normalize(item.code) === normalize(m.ccssStandard)
@@ -236,17 +391,22 @@ function buildNextSteps(
       aiReasoning: m.aiReasoning ?? null,
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
-        targetObjective: { standard: m.ccssStandard, description: m.description },
+        targetObjective: { standard: m.ccssStandard, description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '', learningComponents: (frameworkItem?.learningComponents ?? []).map((c: any) => c.description).filter(Boolean) },
         impactedObjectives,
         prerequisiteGaps,
       },
       evidence: m.evidence ?? null,
       questionErrorRates,
+      ppqQuestions: extras.ppqQuestions ?? [],
+      studentGroups: extras.studentGroups ?? { buildingUnderstanding: [], understoodConcept: [] },
+      wrongAnswerExplanations: extras.wrongAnswerExplanations ?? [],
+      correctAnswerSolution: extras.correctAnswerSolution ?? [],
       moveOptions: activityList.map((activity, j) => ({
         id: `nextstep-move-ai-${i + 1}-${j + 1}`,
         title: activity.title,
         time: `${activity.durationMinutes} min`,
         format: formatLabel(activity.format),
+        activityStructure: activity.activityStructure ?? null,
         summary: activity.summary,
         targets: activity.targets ?? null,
         instructionalMove: activity.instructionalMove ?? null,
@@ -258,38 +418,71 @@ function buildNextSteps(
   });
 }
 
+/**
+ * Inject real student names into the AI-generated studentGroupings.
+ * The AI generates group criteria (name + description); we assign students
+ * deterministically by score rank so every student appears in exactly one group.
+ * Groups are assumed to be ordered from lowest to highest performance
+ * (Group A = weakest, last group = strongest).
+ */
+function injectStudentsIntoGroups(
+  activity: any,
+  studentData: Array<{ name: string; score: number }>,
+): any {
+  const groups: any[] = activity?.tabs?.studentGroupings?.groups;
+  if (!groups?.length || !studentData.length) return activity;
+
+  // Sort students lowest score → highest score
+  const sorted = [...studentData].sort((a, b) => a.score - b.score || a.name.localeCompare(b.name));
+
+  // Divide students as evenly as possible across groups (lowest scores → first group)
+  const n = groups.length;
+  const base = Math.floor(sorted.length / n);
+  const remainder = sorted.length % n;
+  let offset = 0;
+  const assigned = groups.map((_: any, i: number) => {
+    const size = base + (i < remainder ? 1 : 0);
+    const slice = sorted.slice(offset, offset + size).map(s => s.name);
+    offset += size;
+    return slice;
+  });
+
+  return {
+    ...activity,
+    tabs: {
+      ...activity.tabs,
+      studentGroupings: {
+        ...activity.tabs.studentGroupings,
+        groups: groups.map((g: any, i: number) => ({ ...g, students: assigned[i] ?? [] })),
+      },
+    },
+  };
+}
+
 function parseJson(raw: any): any {
   return typeof raw === 'string' ? JSON.parse(raw) : raw;
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
+// ── Per-classroom pipeline ────────────────────────────────────────────────────
 
-async function main() {
-  console.log('=== Microcoach Next Step Generator ===\n');
-
-  const gql: GqlFn = await createGqlClient();
-
-  // 1. Find grade 6 classroom
-  process.stdout.write('Fetching classrooms...');
-  const classroomsData = await gql(LIST_CLASSROOMS);
-  const classrooms: any[] = classroomsData.listClassrooms?.items ?? [];
-  const gr6 = classrooms.find((c: any) => c.grade === 6);
-  if (!gr6) throw new Error('No grade 6 classroom found');
-  console.log(` ✓  ${gr6.classroomName} (id: ${gr6.id})`);
+async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: any[]): Promise<void> {
+  const label = `${classroom.classroomName} (grade ${classroom.grade})`;
 
   // 2. List sessions
-  process.stdout.write('Fetching sessions...');
-  const sessionsData = await gql(SESSIONS_BY_CLASSROOM, { classroomId: gr6.id });
+  process.stdout.write(`  Sessions...`);
+  const sessionsData = await gql(SESSIONS_BY_CLASSROOM, { classroomId: classroom.id });
   const sessionStubs: any[] = sessionsData.sessionsByClassroomId?.items ?? [];
-  if (!sessionStubs.length) throw new Error('No sessions found for this classroom');
+  if (!sessionStubs.length) {
+    console.log(' — no sessions, skipping');
+    return;
+  }
   const sorted = [...sessionStubs].sort((a: any, b: any) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
   const currentStub = sorted[sorted.length - 1];
   const historyStubs = sorted.slice(0, sorted.length - 1);
-  const historyNote = historyStubs.length ? `, ${historyStubs.length} historical` : ', no historical data (week 1)';
-  console.log(` ✓  ${sessionStubs.length} session(s), current: ${currentStub.sessionLabel}${historyNote}`);
+  console.log(` ✓  current: ${currentStub.sessionLabel}${historyStubs.length ? `, ${historyStubs.length} historical` : ''}`);
 
   // 3. Fetch full session details
-  process.stdout.write('Fetching session details...');
+  process.stdout.write(`  Session details...`);
   const [currentSession, ...historySessions] = await Promise.all(
     [currentStub, ...historyStubs].map((s: any) =>
       gql(GET_SESSION, { id: s.id }).then((d: any) => d.getSession)
@@ -298,45 +491,134 @@ async function main() {
   console.log(' ✓');
 
   const ppq = currentSession?.assessments?.items?.find((a: any) => a.type === 'PPQ');
-  const ccss = ppq?.ccssStandards?.[0] ?? currentSession?.ccssStandards?.[0];
-  if (!ccss) throw new Error('No CCSS standard found in current session');
+  const allCcss: string[] = [
+    ...new Set([
+      ...(ppq?.ccssStandards ?? []),
+      ...(currentSession?.ccssStandards ?? []),
+    ])
+  ].filter(Boolean);
 
-  // 4. Learning science data (LLM)
-  process.stdout.write(`Fetching learning science data for ${ccss}...`);
-  const lsRaw = await gql(GET_LEARNING_SCIENCE, { input: { ccss } });
-  const learningScienceData = parseJson(lsRaw.getLearningScience);
-  console.log(' ✓');
+  if (!allCcss.length) {
+    console.log(`  ✗ No CCSS standards found — skipping`);
+    return;
+  }
 
-  // 5. Analysis (LLM)
-  process.stdout.write('Running misconception analysis...');
-  const analysisRaw = await gql(GET_ANALYSIS, {
+  // 4. Learning science data
+  process.stdout.write(`  Learning science (${allCcss.join(', ')})...`);
+  const lsResults = await Promise.all(
+    allCcss.map((ccss: string) =>
+      invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } })
+        .then((r: any) => parseJson(r))
+        .catch(() => ({ standards: [] }))
+    )
+  );
+  const learningScienceData = {
+    standards: lsResults.flatMap((r: any) => r?.standards ?? []),
+  };
+  console.log(` ✓  (${learningScienceData.standards.length} standards)`);
+  console.log(`  [LS] standards returned: ${learningScienceData.standards.length}`);
+  for (const s of learningScienceData.standards) {
+    console.log(`  [LS]   ${s.code}: ${s.prerequisiteStandards?.length ?? 0} prereqs, ${s.futureDependentStandards?.length ?? 0} future`);
+    if (s.prerequisiteStandards?.length) console.log(`  [LS]     prereqs:`, s.prerequisiteStandards.map((r: any) => r.code));
+    if (s.futureDependentStandards?.length) console.log(`  [LS]     future:`, s.futureDependentStandards.map((r: any) => r.code));
+  }
+
+  // 4b. Student responses — confidence stats + PPQ enrichment
+  let augmentedPpq = ppq;
+  let studentResponses: any[] = [];
+  if (ppq?.id) {
+    process.stdout.write(`  Student responses...`);
+    try {
+      const srData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: ppq.id });
+      studentResponses = srData?.studentResponsesByAssessmentId?.items ?? [];
+      const hasConfidence = studentResponses.some((sr: any) =>
+        (sr.questionResponses ?? []).some((qr: any) => qr.confidence != null));
+      if (hasConfidence) {
+        const confidenceStats = computeConfidenceStats(studentResponses, ppq.questions ?? []);
+        augmentedPpq = { ...ppq, confidenceStats };
+        console.log(` ✓  (${studentResponses.length}, with confidence)`);
+      } else {
+        console.log(` ✓  (${studentResponses.length}, no confidence)`);
+      }
+    } catch (err) {
+      console.log(` ✗ ${err} — continuing`);
+    }
+  }
+
+  const studentNameMap = new Map<string, string>();
+  for (const s of (classroom.students?.items ?? [])) {
+    if (s.id && s.name) studentNameMap.set(s.id, s.name);
+  }
+  const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
+
+  // 5. Misconception analysis
+  process.stdout.write(`  Misconception analysis...`);
+  const analysisResult = await invokeLambda(`microcoachLLMAnalysis-${AMPLIFY_ENV}`, {
     input: {
-      classroomData: JSON.stringify({ classroom: gr6, currentSession, sessionHistory: historySessions, ppq }),
+      classroomData: JSON.stringify({
+        classroom,
+        currentSession,
+        sessionHistory: historySessions,
+        ppq: augmentedPpq,
+        wrongAnswerDist,
+      }),
       learningScienceData: JSON.stringify(learningScienceData),
     },
   });
-  const analysis = parseJson(analysisRaw.getAnalysis);
+  const analysis = parseJson(analysisResult);
   const misconceptions: any[] = analysis?.misconceptions ?? [];
-  console.log(` ✓  ${misconceptions.length} misconceptions identified`);
+  console.log(` ✓  ${misconceptions.length} misconceptions`);
 
-  // 6. Next step examples
-  process.stdout.write('Fetching next step examples...');
-  const nextStepData = await gql(LIST_CONTEXT_DATA, {
-    filter: { type: { eq: 'NEXT_STEP_LESSON' } },
-    limit: 20,
+  // 5c. Per-misconception extras
+  const ppqQs = (ppq?.questions ?? []).map((q: any) => ({
+    questionNumber: q.questionNumber,
+    correctAnswer: q.correctAnswer ?? null,
+    classPercentCorrect: q.classPercentCorrect ?? null,
+  }));
+  const misconceptionExtras = misconceptions.map((m: any) => {
+    const qNums = parseQuestionNumbers(m.evidence?.source ?? '');
+    return {
+      ppqQuestions: ppqQs,
+      studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
+      studentData: getStudentPerformanceData(studentResponses, qNums, studentNameMap),
+      wrongAnswerExplanations: m.wrongAnswerExplanations ?? [],
+      correctAnswerSolution: m.correctAnswerSolution ?? [],
+    };
   });
-  const nextStepExamples: any[] = nextStepData.listContextData?.items ?? [];
-  console.log(` ✓  ${nextStepExamples.length} examples`);
 
-  // 7. Generate next step options — one dedicated Lambda call per format per misconception.
-  //    Each call generates ONE activity grounded in the knowledge graph and misconception data.
-  //    Calls per misconception run in parallel; all misconceptions run in parallel.
-  const classroomContext = { grade: gr6.grade, subject: gr6.subject, cohortSize: gr6.cohortSize };
-  const NEXT_STEP_FORMATS = ['small_group', 'whole_class'];
+  // 6. Generate next step activities
+  const classroomContext = { grade: classroom.grade, subject: classroom.subject, cohortSize: classroom.cohortSize };
+  const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
 
+  // 6a. Planning call — one cheap LLM call assigns diverse structures across all
+  //     misconceptions before parallel generation begins.
+  type StructurePlan = { misconceptionTitle: string; whole_class: string; split_class: string };
+  let structurePlan: StructurePlan[] = [];
+  process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
+  try {
+    const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
+      input: {
+        planStructures: true,
+        misconceptions: JSON.stringify(misconceptions.map((m: any) => ({ title: m.title, description: m.description, ccssStandard: m.ccssStandard }))),
+        classroomContext: JSON.stringify(classroomContext),
+      },
+    });
+    structurePlan = parseJson(raw) ?? [];
+    console.log(` ✓  ${structurePlan.length} assignments`);
+  } catch (err) {
+    console.warn(`\n  ⚠ Structure planning failed, generating without suggestions: ${err}`);
+  }
+
+  // Helper to look up a misconception's suggested structure for a given format
+  const getSuggestedStructure = (title: string, fmt: string): string | null => {
+    const plan = structurePlan.find(p => p.misconceptionTitle === title);
+    return plan ? (plan as any)[fmt] ?? null : null;
+  };
+
+  // 6b. Generate activities — misconceptions in parallel, formats sequential within each
   const activitiesPerGroup: any[][] = await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
-      process.stdout.write(`Generating next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
+      process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
       const relevant = nextStepExamples.filter(
         (ex: any) =>
           !ex.ccssStandards?.length ||
@@ -350,31 +632,45 @@ async function main() {
         classroomContext: JSON.stringify(classroomContext),
         ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
       };
-      const results = await Promise.all(
-        NEXT_STEP_FORMATS.map(async (fmt) => {
-          try {
-            const raw = await gql(GENERATE_NEXT_STEP_OPTION, {
-              input: { ...baseInput, preferredFormat: fmt },
-            });
-            return parseJson(raw.generateNextStepOption);
-          } catch (err) {
-            console.error(`\n  ✗ format=${fmt} for ${m.title}: ${err}`);
-            return null;
-          }
-        })
-      );
-      const resultList = results.filter(Boolean);
+      const sd = misconceptionExtras[i]?.studentData ?? [];
+      const resultList: any[] = [];
+
+      // Sequential within misconception so each format sees what was already generated
+      for (const fmt of NEXT_STEP_FORMATS) {
+        const existingActivities = resultList.map(a => ({
+          title: a.title,
+          format: a.format,
+          activityStructure: a.activityStructure,
+          strategyTag: a.strategyTag,
+          summary: a.summary,
+          instructionalMove: a.instructionalMove,
+          targets: a.targets,
+        }));
+        const suggestedStructure = getSuggestedStructure(m.title, fmt);
+        try {
+          const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
+            input: {
+              ...baseInput,
+              preferredFormat: fmt,
+              ...(suggestedStructure && { suggestedStructure }),
+              ...(existingActivities.length > 0 && { existingActivities: JSON.stringify(existingActivities) }),
+            },
+          });
+          const parsed = parseJson(raw);
+          resultList.push(injectStudentsIntoGroups(parsed, sd));
+        } catch (err) {
+          console.error(`\n    ✗ format=${fmt}: ${err}`);
+        }
+      }
+
       console.log(` ✓  ${resultList.length} activities`);
       return resultList;
     })
   );
 
-  // 8. Build next steps
-  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData);
-  console.log(`\nBuilt ${nextSteps.length} next steps`);
-
-  // 9. Persist next steps to the session and mark the classroom's active week
-  process.stdout.write(`Saving next steps to session ${currentStub.id} (week ${currentStub.weekNumber})...`);
+  // 7. Build + save
+  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras);
+  process.stdout.write(`  Saving ${nextSteps.length} next steps to session ${currentStub.id}...`);
   await gql(UPDATE_SESSION, {
     input: {
       id: currentStub.id,
@@ -384,14 +680,46 @@ async function main() {
   });
   console.log(' ✓');
 
-  process.stdout.write(`Setting classroom currentWeek to ${currentStub.weekNumber}...`);
-  await gql(UPDATE_CLASSROOM_WEEK, {
-    input: {
-      id: gr6.id,
-      currentWeek: currentStub.weekNumber,
-    },
-  });
+  process.stdout.write(`  Setting currentWeek to ${currentStub.weekNumber}...`);
+  await gql(UPDATE_CLASSROOM_WEEK, { input: { id: classroom.id, currentWeek: currentStub.weekNumber } });
   console.log(' ✓');
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────────
+
+async function main() {
+  console.log('=== Microcoach Next Step Generator ===\n');
+
+  const gql: GqlFn = await createGqlClient();
+
+  // 1. Fetch all classrooms
+  process.stdout.write('Fetching classrooms...');
+  const classroomsData = await gql(LIST_CLASSROOMS);
+  const classrooms: any[] = classroomsData.listClassrooms?.items ?? [];
+  if (!classrooms.length) throw new Error('No classrooms found');
+  console.log(` ✓  ${classrooms.length} classroom(s)`);
+
+  // 2. Fetch shared next step examples once (used by all classrooms)
+  process.stdout.write('Fetching next step examples...');
+  const nextStepData = await gql(LIST_CONTEXT_DATA, {
+    filter: { type: { eq: 'NEXT_STEP_LESSON' } },
+    limit: 20,
+  });
+  const nextStepExamples: any[] = nextStepData.listContextData?.items ?? [];
+  console.log(` ✓  ${nextStepExamples.length} examples\n`);
+
+  // 3. Process each classroom sequentially
+  for (const classroom of classrooms) {
+    console.log(`── ${classroom.classroomName} (grade ${classroom.grade}) ──`);
+    try {
+      await processClassroom(gql, classroom, nextStepExamples);
+    } catch (err) {
+      console.error(`  ✗ Failed: ${err}`);
+    }
+    console.log();
+  }
+
+  console.log('=== Done ===');
 }
 
 main().catch((err) => {

@@ -2,20 +2,28 @@
   "name": "@righton/microcoach-api",
   "version": "0.0.1",
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.1002.0",
     "aws-amplify": "^6.8.0"
   },
   "devDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.1000.0",
     "@types/node": "^24.7.2",
+    "mammoth": "^1.11.0",
+    "openai": "^4.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "xlsx": "^0.18.5"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "cleanup": "npx ts-node src/seed/cleanup.ts",
+    "ingest": "npx ts-node src/seed/ingest-ppq.ts",
+    "upload": "npx ts-node src/seed/upload.ts",
+    "verify": "npx ts-node src/seed/verify.ts",
     "generate": "npx ts-node src/seed/generate-next-steps.ts",
+    "validate": "npx ts-node src/seed/validate-next-steps.ts",
     "sync-prompt-config": "node scripts/sync-prompt-config.mjs",
-"test": "jest"
+    "test": "jest"
   },
   "files": [
     "lib"

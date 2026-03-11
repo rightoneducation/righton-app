@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import './YourNextSteps.css';
 import './SharedButtons.css';
+import './RecommendedNextSteps.css';
 import NextStepDetailsModal from './NextStepDetailsModal';
 
 const YourNextSteps = ({
@@ -16,13 +17,7 @@ const YourNextSteps = ({
   isLoading = false,
 }) => {
   const getStandardComponents = (item) => {
-    const description = item?.ccssStandards?.targetObjective?.description || '';
-    if (!description) return [];
-    return description
-      .split(/,| and /i)
-      .map((part) => part.trim())
-      .filter(Boolean)
-      .slice(0, 3);
+    return (item?.ccssStandards?.targetObjective?.learningComponents ?? []).slice(0, 3);
   };
 
   const getPriorityClass = (priority) => {
@@ -126,7 +121,6 @@ const YourNextSteps = ({
 
         <div className="yns-standard-hover-card" role="tooltip">
           <div className="yns-standard-hover-title">{standardName}</div>
-          <div className="yns-standard-hover-subtitle">Learning Components Diagram</div>
 
           <div className="yns-kg-diagram" aria-label={`Relationship diagram for ${standard}`}>
             <span className="ccss-tag target-objective yns-kg-standard-node">{standard}</span>
@@ -227,9 +221,9 @@ const YourNextSteps = ({
 
       <div className="yns-header">
         <div>
-          <h3 className="yns-title">Saved Activities</h3>
+          <h3 className="yns-title">Saved Next Steps</h3>
           <p className="yns-subtitle">
-            Review the instructional moves you’ve saved for your class. Mark activities complete after you run them so MicroCoach can track progress over time.
+            Review the next steps you’ve saved for your class. After running an activity, mark it complete so MicroCoach can help track student progress over time.
           </p>
         </div>
 
@@ -251,9 +245,9 @@ const YourNextSteps = ({
         </div>
       ) : plannedItems.length === 0 && (!completedNextSteps || completedNextSteps.length === 0) ? (
         <div className="yns-empty">
-          <div className="yns-empty-title">No next steps yet</div>
+          <div className="yns-empty-title">No Next Steps Yet</div>
           <div className="yns-empty-body">
-            Go to <strong>Recommended Next Steps</strong> and click <strong>Add to Saved Next Steps</strong>.
+            Go to the <strong>Understand & Act</strong> tab, choose a next step, and click <strong>Save to Next Steps.</strong>
           </div>
         </div>
       ) : (
@@ -381,10 +375,15 @@ const YourNextSteps = ({
 
                         <div className="yns-item-meta">
                           {renderStandardPill(item)}
-                          <span className={`students-pill ${getPriorityClass(item.priority)} yns-students-pill`}>
-                            {item.studentCount} students ({item.studentPercent}%)
-                          </span>
-                          <span className="yns-meta-pill">{item.gapGroupTitle}</span>
+                          <span className="yns-item-misconception-title">{item.gapGroupTitle}</span>
+                          {item.frequency && (() => {
+                            const freq = item.frequency === 'medium' ? 'some' : item.frequency === 'high' ? 'many' : 'few';
+                            return (
+                              <span className={`${freq}-students-pill`}>
+                                {freq.charAt(0).toUpperCase() + freq.slice(1)} students
+                              </span>
+                            );
+                          })()}
                           {item.moveFormat && <span className="yns-meta-pill">{item.moveFormat}</span>}
                         </div>
                       </div>
@@ -487,7 +486,7 @@ const YourNextSteps = ({
         <div className="yns-completed-panel">
           {(!completedNextSteps || completedNextSteps.length === 0) ? (
             <div className="yns-completed-empty">
-              Completed items will appear here.
+              Completed next steps will appear here.
             </div>
           ) : (
             <div className="yns-completed-list">
@@ -500,7 +499,15 @@ const YourNextSteps = ({
                       <div className="yns-completed-item-title">{item.moveTitle}</div>
                       <div className="yns-completed-item-meta">
                         {renderStandardPill(item)}
-                        <span className="yns-meta-pill">{item.gapGroupTitle}</span>
+                        {item.frequency && (() => {
+                          const freq = item.frequency === 'medium' ? 'some' : item.frequency === 'high' ? 'many' : 'few';
+                          return (
+                            <span className={`${freq}-students-pill`}>
+                              {freq.charAt(0).toUpperCase() + freq.slice(1)} students
+                            </span>
+                          );
+                        })()}
+                        <span className="yns-item-misconception-title">{item.gapGroupTitle}</span>
                         {item.moveFormat && <span className="yns-meta-pill">{item.moveFormat}</span>}
                       </div>
                     </div>

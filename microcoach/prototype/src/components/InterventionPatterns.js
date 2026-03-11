@@ -5,175 +5,142 @@ import LearningGapTrendDetailsModal from './LearningGapTrendDetailsModal';
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
-const ARROW = '→';
-
 const LearningGapTrendCard = ({
-  gapName,
-  beforeCount,
-  afterCount,
+  moveTitle,
+  ccssStandard,
+  misconceptionTitle,
+  hasResults,
+  improvedCount,
   improvementPoints,
-  targetObjectiveStandard,
-  onView
-}) => {
-
-  const improvedCount = beforeCount - afterCount;
-  return (
-    <div className="ip-gap-card">
-      <div className="ip-gap-left">
-        <div className="ip-gap-title-row">
-          {targetObjectiveStandard ? (
-            <span
-              className="ccss-tag target-objective"
-              aria-label={`Learning objective standard ${targetObjectiveStandard}`}
-            >
-              {targetObjectiveStandard}
-            </span>
-          ) : null}
-
-          <div className="ip-gap-name">{gapName}</div>
-        </div>
-        <div className="ip-gap-meta">
-          <span>
-            <span className="ip-gap-meta-strong">
-              {improvedCount === 1 
-                ? `${improvedCount} student have shown improvement` 
-                : `${improvedCount} students have shown improvement`
-              }
-            </span>
+  onView,
+}) => (
+  <div className="ip-gap-card">
+    <div className="ip-gap-left">
+      <div className="ip-gap-name">{moveTitle}</div>
+      <div className="ip-gap-addresses">
+        <span className="ip-gap-addresses-label">Addresses:</span>
+        {ccssStandard && (
+          <span
+            className="ccss-tag target-objective"
+            aria-label={'Learning objective standard ' + ccssStandard}
+          >
+            {ccssStandard}
           </span>
-        </div>
+        )}
+        <span className="ip-gap-misconception">{misconceptionTitle}</span>
       </div>
-
-      <div
-        className="ip-gap-right"
-        aria-label={`Class mastery change: ${Math.round(improvementPoints)} percentage points`}
-      >
-        <div className="ip-gap-change">
-          +{Math.round(improvementPoints)}%
-        </div>
-        <div className="ip-gap-change-label">class mastery</div>
-      </div>
-
-      <div className="ip-gap-actions">
-        <button
-          className="yns-btn secondary yns-details-btn"
-          type="button"
-          onClick={onView}
-          aria-label={`View drill-down details for ${gapName}`}
-        >
-          View details
-        </button>
+      <div className="ip-gap-meta">
+        {hasResults ? (
+          <span>
+            <strong>{improvedCount}</strong>
+            {' '}
+            {improvedCount === 1 ? 'student' : 'students'} showed improvement
+          </span>
+        ) : (
+          <span className="ip-gap-pending">
+            Once follow-up quiz results are available, a summary of student learning outcomes will be displayed here.
+          </span>
+        )}
       </div>
     </div>
-  );
-};
 
-const normalizeGaps = (item) => {
-  // Backward/forward compatible parsing:
-  // - Newer items: `gaps: string[]`
-  // - Older/buggy items: gaps missing, but `gapGroupTitle` exists
-  // - Sometimes a single string sneaks in
-  const raw = item?.gaps;
-  if (Array.isArray(raw)) return raw.filter(Boolean);
-  if (typeof raw === 'string' && raw.trim()) return [raw.trim()];
-  if (typeof item?.gapGroupTitle === 'string' && item.gapGroupTitle.trim()) {
-    return [item.gapGroupTitle.trim()];
-  }
-  return [];
-};
+    {hasResults && (
+      <>
+        <div
+          className="ip-gap-right"
+          aria-label={'Class mastery change: ' + Math.round(improvementPoints) + ' percentage points'}
+        >
+          <div className="ip-gap-change">
+            +{Math.round(improvementPoints)}%
+          </div>
+          <div className="ip-gap-change-label">class mastery</div>
+        </div>
+
+        <div className="ip-gap-actions">
+          <button
+            className="yns-btn secondary yns-details-btn"
+            type="button"
+            onClick={onView}
+            aria-label={'View drill-down details for ' + misconceptionTitle}
+          >
+            View details
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+);
 
 const InterventionPatterns = ({ nextSteps = [] }) => {
-  const [selectedTrend, setSelectedTrend] = useState(null); // { gapName, beforeCount, afterCount, improvementPoints }
+  const [selectedTrend, setSelectedTrend] = useState(null);
 
-  const gapTrends = useMemo(() => {
-    // We treat each *learning gap string* surfaced in “Recommended Next Steps” as its own row.
-    // Since we don’t have backend assessment data yet, we generate stable, deterministic
-    // “before → after” impact numbers based on whether interventions were completed.
-    // In the intervention patterns tab we should reflect *completed* next steps only.
-    // (Planned items represent intent; completed items represent interventions actually run.)
-    const items = (nextSteps || [])
-      .filter((x) => x?.status === 'completed')
-      .map((x) => ({ ...x, __normalizedGaps: normalizeGaps(x) }))
-      .filter((x) => x.__normalizedGaps.length > 0);
-
-    const byGap = new Map();
-    items.forEach((item) => {
-      item.__normalizedGaps.forEach((g) => {
-        const prev = byGap.get(g) || [];
-        prev.push(item);
-        byGap.set(g, prev);
+  const completedItems = useMemo(() => {
+    const seen = new Set();
+    return (nextSteps || [])
+      .filter((x) => x != null && x.status === 'completed' && x.moveTitle)
+      .filter((x) => {
+        const key = x.moveId != null ? x.moveId : (x.moveTitle + '__' + x.gapGroupTitle);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .map((item) => {
+        const beforeCount = item.studentCount != null ? item.studentCount : 0;
+        const pct = item.studentPercent;
+        const classSize = (pct && pct > 0 && beforeCount > 0)
+          ? Math.round(beforeCount / (pct / 100))
+          : Math.max(beforeCount, 1);
+        const reduction = clamp(2, 0, beforeCount);
+        const afterCount = clamp(beforeCount - reduction, 0, classSize);
+        const beforePercent = ((classSize - beforeCount) / classSize) * 100;
+        const afterPercent = ((classSize - afterCount) / classSize) * 100;
+        const improvementPoints = clamp(afterPercent - beforePercent, 0, 100);
+        return {
+          ...item,
+          beforeCount,
+          afterCount,
+          improvementPoints,
+          improvedCount: beforeCount - afterCount,
+        };
       });
-    });
-
-    const rows = [...byGap.entries()].map(([gapName, records]) => {
-      // Baseline record is the earliest created. It represents the number of students who *do not*
-      // yet understand the concept (gap count).
-      const baseline = [...records].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0))[0];
-      const beforeCount = baseline?.studentCount ?? 0;
-
-      // Derive class size from real studentCount + studentPercent when available.
-      const pct = baseline?.studentPercent;
-      const classSize = (pct && pct > 0 && beforeCount > 0)
-        ? Math.round(beforeCount / (pct / 100))
-        : Math.max(beforeCount, 1);
-
-      const completedCount = records.filter((r) => r.status === 'completed').length;
-
-      // The more completed interventions, the more the gap count shrinks.
-      const reduction = clamp(completedCount * 2, 0, beforeCount);
-      const afterCount = clamp(beforeCount - reduction, 0, classSize);
-
-      // Class mastery = % who understand = (classSize - gapCount) / classSize
-      const beforePercent = ((classSize - beforeCount) / classSize) * 100;
-      const afterPercent = ((classSize - afterCount) / classSize) * 100;
-      const improvementPoints = clamp(afterPercent - beforePercent, 0, 100);
-
-      return {
-        gapName,
-        targetObjectiveStandard: records.find((r) => r?.targetObjectiveStandard)?.targetObjectiveStandard,
-        beforeCount,
-        beforePercent,
-        afterCount,
-        afterPercent,
-        improvementPoints,
-        // Sort by lowest mastery first (largest need)
-        sortKey: beforePercent
-      };
-    });
-
-    // Show the “biggest needs” first (lowest mastery first).
-    rows.sort((a, b) => (a.sortKey || 0) - (b.sortKey || 0));
-    return rows;
   }, [nextSteps]);
 
   return (
     <div className="intervention-patterns">
       <LearningGapTrendDetailsModal
-        isOpen={!!selectedTrend}
-        gapName={selectedTrend?.gapName}
-        beforeCount={selectedTrend?.beforeCount}
-        afterCount={selectedTrend?.afterCount}
-        improvementPoints={selectedTrend?.improvementPoints}
+        isOpen={selectedTrend != null}
+        gapName={selectedTrend != null ? selectedTrend.gapGroupTitle : null}
+        beforeCount={selectedTrend != null ? selectedTrend.beforeCount : 0}
+        afterCount={selectedTrend != null ? selectedTrend.afterCount : 0}
+        improvementPoints={selectedTrend != null ? selectedTrend.improvementPoints : 0}
         onClose={() => setSelectedTrend(null)}
       />
 
       <div className="ip-header">
-        <h3 className="ip-title">Trends in Learning Goals</h3>
+        <h3 className="ip-title">Next Steps You Implemented</h3>
       </div>
 
-      {gapTrends.length === 0 ? (
+      {completedItems.length === 0 ? (
         <div className="ip-empty">
-          No learning gaps yet — add a few items to <strong>Saved Next Steps</strong>.
+          Once next steps in the <strong>Prepare</strong> tab have been marked complete and follow-up quiz results are available, a summary of student learning outcomes will be displayed here.
         </div>
       ) : (
         <div className="ip-trends" aria-label="Trends in learning goals">
-          {gapTrends.map((row) => (
-            <LearningGapTrendCard
-              key={row.gapName}
-              {...row}
-              onView={() => setSelectedTrend(row)}
-            />
-          ))}
+          {completedItems.map((item) => {
+            const key = item.moveId != null ? item.moveId : (item.moveTitle + '__' + item.gapGroupTitle);
+            return (
+              <LearningGapTrendCard
+                key={key}
+                moveTitle={item.moveTitle}
+                ccssStandard={item.targetObjectiveStandard}
+                misconceptionTitle={item.gapGroupTitle}
+                hasResults={false}
+                improvedCount={item.improvedCount}
+                improvementPoints={item.improvementPoints}
+                onView={() => setSelectedTrend(item)}
+              />
+            );
+          })}
         </div>
       )}
     </div>

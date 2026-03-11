@@ -2,7 +2,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.generateNextStepOption = exports.generateNextStep = exports.getAnalysis = exports.getLearningScience = void 0;
+exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.ingestPPQ = exports.generateNextStepOption = exports.generateNextStep = exports.getAnalysis = exports.getLearningScience = void 0;
 exports.getLearningScience = `
   mutation GetLearningScience($input: GetLearningScienceInput!) {
     getLearningScience(input: $input)
@@ -21,6 +21,11 @@ exports.generateNextStep = `
 exports.generateNextStepOption = `
   mutation GenerateNextStepOption($input: GenerateNextStepOptionInput!) {
     generateNextStepOption(input: $input)
+  }
+`;
+exports.ingestPPQ = `
+  mutation IngestPPQ($input: IngestPPQInput!) {
+    ingestPPQ(input: $input)
   }
 `;
 exports.createClassroom = `
@@ -207,38 +212,8 @@ exports.createClassroom = `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -437,38 +412,8 @@ exports.updateClassroom = `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -667,38 +612,8 @@ exports.deleteClassroom = `
           activityFormat
           activitySummary
           aiReasoning
-          evidence {
-            source
-            mostCommonError
-            sampleStudentWork
-            aiThinkingPattern
-            __typename
-          }
-          tabs {
-            overview {
-              whatStudentsDo
-              whatYouDo
-              importance
-              __typename
-            }
-            activitySteps {
-              setup
-              problem
-              coreActivity
-              discussionQuestions
-              __typename
-            }
-            materials {
-              required
-              optional
-              __typename
-            }
-            studentGroupings {
-              aiRecommendation
-              __typename
-            }
-            __typename
-          }
+          evidence
+          tabs
           createdAt
           updatedAt
           classroomSavedNextStepsId
@@ -1198,6 +1113,7 @@ exports.createAssessment = `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1254,6 +1170,7 @@ exports.updateAssessment = `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1310,6 +1227,7 @@ exports.deleteAssessment = `
             response
             isCorrect
             pointsEarned
+            confidence
             __typename
           }
           createdAt
@@ -1343,6 +1261,7 @@ exports.createStudentResponse = `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1367,6 +1286,7 @@ exports.updateStudentResponse = `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1391,6 +1311,7 @@ exports.deleteStudentResponse = `
         response
         isCorrect
         pointsEarned
+        confidence
         __typename
       }
       createdAt
@@ -1455,6 +1376,7 @@ exports.createMisconception = `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1542,6 +1464,7 @@ exports.updateMisconception = `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1629,6 +1552,7 @@ exports.deleteMisconception = `
               problem
               coreActivity
               discussionQuestions
+              incorrectWorkedExamples
               __typename
             }
             materials {
@@ -1692,6 +1616,7 @@ exports.createActivity = `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1756,6 +1681,7 @@ exports.updateActivity = `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1820,6 +1746,7 @@ exports.deleteActivity = `
           problem
           coreActivity
           discussionQuestions
+          incorrectWorkedExamples
           __typename
         }
         materials {
@@ -1880,49 +1807,8 @@ exports.createSavedNextStep = `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId
@@ -1957,49 +1843,8 @@ exports.updateSavedNextStep = `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId
@@ -2034,49 +1879,8 @@ exports.deleteSavedNextStep = `
       activityFormat
       activitySummary
       aiReasoning
-      evidence {
-        source
-        mostCommonError
-        sampleStudentWork
-        aiThinkingPattern
-        __typename
-      }
-      tabs {
-        overview {
-          whatStudentsDo
-          whatYouDo
-          importance
-          __typename
-        }
-        activitySteps {
-          setup
-          problem
-          coreActivity
-          discussionQuestions
-          __typename
-        }
-        materials {
-          required
-          optional
-          __typename
-        }
-        studentGroupings {
-          groups {
-            name
-            description
-            students
-            __typename
-          }
-          highFlyers {
-            students
-            description
-            __typename
-          }
-          aiRecommendation
-          __typename
-        }
-        __typename
-      }
+      evidence
+      tabs
       createdAt
       updatedAt
       classroomSavedNextStepsId

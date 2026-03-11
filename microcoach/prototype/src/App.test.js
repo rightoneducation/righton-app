@@ -49,11 +49,11 @@ test('Intervention Patterns shows trends after completing next steps', () => {
   });
   // User stays on Prepare after completion (no auto-navigation).
   expect(screen.getByText(/saved next steps/i)).toBeInTheDocument();
-  expect(screen.queryByText(/trends in learning goals/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/next steps you implemented/i)).not.toBeInTheDocument();
 
   // Navigate to Reflect manually and verify the completed item is reflected in trends.
   fireEvent.click(screen.getByRole('button', { name: /^3\. reflect$/i }));
-  expect(screen.getByText(/trends in learning goals/i)).toBeInTheDocument();
+  expect(screen.getByText(/next steps you implemented/i)).toBeInTheDocument();
   expect(screen.queryByText(/no learning gaps yet/i)).not.toBeInTheDocument();
   expect(screen.getByText(/negative signs & distribution errors/i)).toBeInTheDocument();
   expect(screen.getByLabelText(/learning objective standard 8\.EE\.7/i)).toBeInTheDocument();
