@@ -85,7 +85,7 @@ export default function HintsGraph({
   return (
      <ResponseGraphContainer>
       <TitleContainer>
-        <TitleText>Responses aggregated by common phrases</TitleText>
+        <TitleText>Student hints organized by common themes</TitleText>
       </TitleContainer>
       <Box ref={graphRef}>
         {data.length >= 1 && (
