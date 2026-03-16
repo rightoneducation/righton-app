@@ -181,7 +181,11 @@ function FooterGameInProgress({
         }
         {buttonText === 'Continue' && (
           <Typography sx={{fontFamily: 'Rubik', fontWeight: '600', fontSize: '16px', color: '#384466'}}>
-            {isTimerComplete ? 'Continue when students are ready' : 'Students are reviewing the correct answer and solution steps'}
+            {isTimerComplete
+              ? 'Continue when students are ready'
+              : currentState === GameSessionState.PHASE_1_DISCUSS
+                ? 'Students are reviewing the correct answer and solution steps'
+                : 'Students are reviewing explanations for incorrect answers'}
           </Typography>
         )}
         {buttonText === 'Continue' && (

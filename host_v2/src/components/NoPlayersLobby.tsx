@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { ScreenSize } from '../lib/HostModels';
 
 const EmptyLobbyBodyStyled = styled(Box)({
     overflowY: 'scroll', // Enable vertical scrolling if needed
@@ -49,15 +50,16 @@ const SwipeTypographyStyled = styled(Typography)({
   });
 interface NoPlayersLobbyProps {
   questionsCount?: number;
+  screenSize?: ScreenSize;
 }
 
-export default function NoPlayersLobby({ questionsCount }: NoPlayersLobbyProps) {
+export default function NoPlayersLobby({ questionsCount, screenSize }: NoPlayersLobbyProps) {
     return (
     <EmptyLobbyBodyStyled>
       <WaitingForPlayersTypographyStyled>
         Waiting for players to join...
       </WaitingForPlayersTypographyStyled>
-        {(questionsCount ?? 0) > 1 && (
+        {(questionsCount ?? 0) > 1 && screenSize !== ScreenSize.LARGE && (
           <InternalEmptyLobbyBodyStyled>
               <SwipeTypographyStyled>
                 Swipe left to view game questions.
