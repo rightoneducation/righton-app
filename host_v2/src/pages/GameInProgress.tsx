@@ -49,7 +49,7 @@ export default function GameInProgress({
   animate3
 }: GameInProgressProps) {
     const theme = useTheme();
-    const [isAddTime, setIsAddTime] = useState<boolean>(false);
+    const [isAddTime, setIsAddTime] = useState<boolean>(true);
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
     const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
     const localGameSession = useTSGameSessionContext(GameSessionContext); 

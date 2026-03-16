@@ -131,7 +131,7 @@ export default function PlayersSelectedAnswer({
   const percentage = (count / numPlayers) * 100;
   console.log(data);
   const teamsWithSelectedAnswer = data[graphClickIndex].teams.map((team: string) => team);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   return (
     <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding, paddingTop: '8px'}}>
       <TextContainer

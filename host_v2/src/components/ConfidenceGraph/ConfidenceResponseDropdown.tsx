@@ -80,7 +80,7 @@ export default function ConfidenceResponseDropdown({
 }: DropdownProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const ConfidenceLevelDictionary: { [key: number]: string } = {
     0: 'Not Rated',
     1: 'Not At All Confident',

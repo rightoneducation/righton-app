@@ -1,9 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { IQuestion } from '@righton/networking';
 import { ScreenSize } from '../lib/HostModels';
-
 
 const EmptyLobbyBodyStyled = styled(Box)({
     overflowY: 'scroll', // Enable vertical scrolling if needed
@@ -50,19 +48,24 @@ const SwipeTypographyStyled = styled(Typography)({
     color: 'rgba(255, 255, 255, 1)',
     lineHeight: '16.37px', /* same everything */
   });
-export default function NoPlayersLobby({ questions, screenSize }: { questions: IQuestion[], screenSize: ScreenSize }) {
+interface NoPlayersLobbyProps {
+  questionsCount?: number;
+  screenSize?: ScreenSize;
+}
+
+export default function NoPlayersLobby({ questionsCount, screenSize }: NoPlayersLobbyProps) {
     return (
     <EmptyLobbyBodyStyled>
       <WaitingForPlayersTypographyStyled>
         Waiting for players to join...
       </WaitingForPlayersTypographyStyled>
-      {questions.length > 1 && screenSize !== ScreenSize.LARGE && (
-        <InternalEmptyLobbyBodyStyled>
-            <SwipeTypographyStyled>
-              Swipe left to view game questions.
-            </SwipeTypographyStyled>
-        </InternalEmptyLobbyBodyStyled>
-      )}
+        {(questionsCount ?? 0) > 1 && screenSize !== ScreenSize.LARGE && (
+          <InternalEmptyLobbyBodyStyled>
+              <SwipeTypographyStyled>
+                Swipe left to view game questions.
+              </SwipeTypographyStyled>
+          </InternalEmptyLobbyBodyStyled>
+        )}
     </EmptyLobbyBodyStyled>
   );
 }
