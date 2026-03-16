@@ -167,6 +167,9 @@ function FooterGameInProgress({
     }
   }
   const buttonText = GetButtonText();
+  let timerMessage = 'Students are reviewing explanations for incorrect answers';
+  if (isTimerComplete) timerMessage = 'Continue when students are ready';
+  else if (currentState === GameSessionState.PHASE_1_DISCUSS) timerMessage = 'Students are reviewing the correct answer and solution steps';
   return (
     <FooterContainer>
       <InnerFooterContainer>
@@ -181,11 +184,7 @@ function FooterGameInProgress({
         }
         {buttonText === 'Continue' && (
           <Typography sx={{fontFamily: 'Rubik', fontWeight: '600', fontSize: '16px', color: '#384466'}}>
-            {isTimerComplete
-              ? 'Continue when students are ready'
-              : currentState === GameSessionState.PHASE_1_DISCUSS
-                ? 'Students are reviewing the correct answer and solution steps'
-                : 'Students are reviewing explanations for incorrect answers'}
+            {timerMessage}
           </Typography>
         )}
         {buttonText === 'Continue' && (
