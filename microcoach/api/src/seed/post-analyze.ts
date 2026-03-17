@@ -26,6 +26,13 @@ import {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+/** Convert "Last, First M." → "First M. Last" so DB names match activity group names. */
+function normalizeName(name: string): string {
+  if (!name.includes(',')) return name;
+  const [last, ...rest] = name.split(',');
+  return `${rest.join(',').trim()} ${last.trim()}`;
+}
+
 // ── Excel parser (copied from upload.ts to keep this self-contained) ────────
 
 function parseConfidenceLetter(raw: string): number | undefined {
@@ -261,7 +268,9 @@ const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
   query StudentResponsesByAssessmentId($assessmentId: ID!) {
     studentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
       items {
+        id
         studentId
+        totalScore
         questionResponses {
           questionNumber
           response
@@ -285,6 +294,12 @@ const CREATE_STUDENT_RESPONSE = /* GraphQL */ `
   }
 `;
 
+const DELETE_STUDENT_RESPONSE = /* GraphQL */ `
+  mutation DeleteStudentResponse($input: DeleteStudentResponseInput!) {
+    deleteStudentResponse(input: $input) { id }
+  }
+`;
+
 const UPDATE_SESSION = /* GraphQL */ `
   mutation UpdateSession($input: UpdateSessionInput!) {
     updateSession(input: $input) {
@@ -300,15 +315,6 @@ const UPDATE_MISCONCEPTION = /* GraphQL */ `
     updateMisconception(input: $input) { id postPpqImprovement }
   }
 `;
-
-// ── Helpers ─────────────────────────────────────────────────────────────────
-
-function parseQuestionNumbers(source: string): number[] {
-  const matches = (source ?? '').matchAll(/Q(\d+)/gi);
-  const nums = new Set<number>();
-  for (const m of matches) nums.add(parseInt(m[1], 10));
-  return [...nums].sort((a, b) => a - b);
-}
 
 // ── Main pipeline ───────────────────────────────────────────────────────────
 
@@ -375,8 +381,49 @@ async function main() {
 
       let postPpqAssessmentId = dbSession.postPpqAssessmentId;
 
+      // Check if existing POST_PPQ data has actual question responses
       if (postPpqAssessmentId) {
-        console.log(`  POST_PPQ already uploaded (${postPpqAssessmentId}) — skipping upload`);
+        const checkData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: postPpqAssessmentId });
+        const checkItems: any[] = checkData.studentResponsesByAssessmentId?.items ?? [];
+        const hasQrs = checkItems.some((sr: any) => (sr.questionResponses ?? []).length > 0);
+        if (hasQrs) {
+          console.log(`  POST_PPQ already uploaded (${postPpqAssessmentId}) with valid data — skipping upload`);
+        } else {
+          console.log(`  POST_PPQ exists (${postPpqAssessmentId}) but has empty questionResponses — re-uploading responses`);
+          // Delete existing empty responses and re-upload
+          for (const sr of checkItems) {
+            await gql(DELETE_STUDENT_RESPONSE, { input: { id: sr.id } });
+          }
+          console.log(`  Deleted ${checkItems.length} empty response records`);
+          // Fall through to re-upload responses with the existing assessment
+          const postPpqPath = path.join(DATA_ROOT, sessionConfig.postPpqFile);
+          const postPpqData = parseExcelFile(postPpqPath);
+          let responseCount = 0;
+          for (const student of postPpqData.students) {
+            let studentId = studentExternalIdToId.get(student.externalId);
+            if (!studentId) studentId = studentNameToId.get(student.name);
+            if (!studentId) continue;
+
+            await gql(CREATE_STUDENT_RESPONSE, {
+              input: {
+                assessmentId: postPpqAssessmentId,
+                assessmentStudentResponsesId: postPpqAssessmentId,
+                studentId,
+                totalScore: student.totalScore,
+                questionResponses: student.questionResponses.map((qr) => ({
+                  questionNumber: qr.questionNumber,
+                  response: qr.response,
+                  isCorrect: qr.isCorrect,
+                  pointsEarned: qr.pointsEarned,
+                  confidence: qr.confidence ?? null,
+                })),
+              },
+            });
+            responseCount++;
+            await sleep(50);
+          }
+          console.log(`  ✓ Re-uploaded ${responseCount} POST_PPQ student responses`);
+        }
       } else {
         const postPpqPath = path.join(DATA_ROOT, sessionConfig.postPpqFile);
         process.stdout.write(`  Parsing PostPPQ Excel...`);
@@ -472,19 +519,23 @@ async function main() {
       const misconceptions: any[] = dbSession.misconceptions?.items ?? [];
       const totalStudents = students.length || 1;
 
-      console.log(`\n  Analyzing ${misconceptions.length} misconceptions against ${totalStudents} students...`);
-
       // Build lookup: studentId → PPQ score on specific questions
       const ppqByStudent = new Map<string, any[]>();
       for (const sr of ppqResponses) {
         ppqByStudent.set(sr.studentId, sr.questionResponses ?? []);
       }
 
-      // Build lookup: studentId → POST_PPQ score (all questions)
-      const postByStudent = new Map<string, any[]>();
+      // Build lookup: studentId → POST_PPQ overall score (0–1)
+      const postScoreByStudent = new Map<string, number>();
       for (const sr of postResponses) {
-        postByStudent.set(sr.studentId, sr.questionResponses ?? []);
+        const qrs = sr.questionResponses ?? [];
+        if (qrs.length > 0) {
+          postScoreByStudent.set(sr.studentId, qrs.filter((qr: any) => qr.isCorrect).length / qrs.length);
+        }
       }
+
+      console.log(`\n  Analyzing ${misconceptions.length} misconceptions against ${totalStudents} students...`);
+      console.log(`  POST_PPQ scores: ${postScoreByStudent.size} students with computable scores`);
 
       // Parse existing pregeneratedNextSteps
       let gapGroups: any[] = [];
@@ -502,63 +553,102 @@ async function main() {
         postPpqResults: any;
       }> = [];
 
-      // Build gap group lookup by title for evidence.source Q-numbers
+      // Build gap group lookup by title
       const gapGroupByTitle = new Map<string, any>();
       for (const g of gapGroups) {
         if (g.title) gapGroupByTitle.set(g.title, g);
       }
 
-      for (const misconception of misconceptions) {
-        // Evidence with Q-numbers lives on the gap group, not the Misconception DB record
-        const matchingGapGroup = gapGroupByTitle.get(misconception.title);
-        const evidenceSource = matchingGapGroup?.evidence?.source ?? misconception.evidence?.source ?? '';
-        const sourceQNums = parseQuestionNumbers(evidenceSource);
-        const threshold = 0.6;
+      // Build reverse name→id lookup for matching activity group names to DB student IDs.
+      // DB names are "Last, First M." but activity groups use "First M. Last".
+      // We index both the raw DB name and a normalized "First Last" form so either format matches.
+      const nameToStudentId = new Map<string, string>();
+      for (const [id, name] of studentIdToName) {
+        nameToStudentId.set(name, id);
+        // Also add normalized "First M. Last" form
+        const normalized = normalizeName(name);
+        if (normalized !== name) {
+          nameToStudentId.set(normalized, id);
+        }
+      }
 
-        if (!sourceQNums.length) {
-          console.log(`    ⚠ ${misconception.title}: no source Q-numbers found (evidence.source: "${evidenceSource}") — skipping`);
+      // Students who took the POST_PPQ and have a computable score
+      const postPpqStudentIds = new Set(postScoreByStudent.keys());
+
+      const threshold = 0.6;
+
+      for (const misconception of misconceptions) {
+        const matchingGapGroup = gapGroupByTitle.get(misconception.title);
+        if (!matchingGapGroup) {
+          console.log(`    ⚠ ${misconception.title}: no matching gap group — skipping`);
           continue;
         }
 
-        // PPQ: flagged if score < threshold on source questions
-        const ppqFlagged = new Set<string>();
-        for (const [studentId, qrs] of ppqByStudent) {
-          if (sourceQNums.length === 0) continue;
-          const qSet = new Set(sourceQNums);
-          const relevant = qrs.filter((qr: any) => qSet.has(qr.questionNumber));
-          if (!relevant.length) continue;
-          const score = relevant.filter((qr: any) => qr.isCorrect).length / relevant.length;
-          if (score < threshold) ppqFlagged.add(studentId);
+        // ── "Before" set: students from activity Groups A + B (all except last group) ──
+        // Groups are ordered weakest → strongest by injectStudentsIntoGroups.
+        // Last group = "Ready to Generalize" (understood). All others need help.
+        const allGroups: any[] = [];
+        for (const move of (matchingGapGroup.moveOptions ?? [])) {
+          const groups = move?.tabs?.studentGroupings?.groups;
+          if (Array.isArray(groups) && groups.length > 0) {
+            allGroups.push(...groups);
+            break; // use the first activity that has groupings
+          }
         }
 
-        // POST_PPQ: flagged if score < threshold across ALL post questions
-        const postFlagged = new Set<string>();
-        for (const [studentId, qrs] of postByStudent) {
-          if (!qrs.length) continue;
-          const score = qrs.filter((qr: any) => qr.isCorrect).length / qrs.length;
-          if (score < threshold) postFlagged.add(studentId);
+        if (allGroups.length < 2) {
+          console.log(`    ⚠ ${misconception.title}: no student groupings found on activity — skipping`);
+          continue;
         }
 
-        // Classify students — only those who took BOTH assessments
+        // All groups except the last = students needing help before intervention
+        const needHelpGroups = allGroups.slice(0, -1);
+        const beforeNames = new Set<string>();
+        for (const group of needHelpGroups) {
+          for (const name of (group.students ?? [])) {
+            beforeNames.add(name);
+          }
+        }
+
+        console.log(`    ${misconception.title}:`);
+        console.log(`      Groups used: ${needHelpGroups.map((g: any) => g.name).join(', ')} (${beforeNames.size} students)`);
+
+        // ── Classify against POST_PPQ ──
         const studentsImproved: string[] = [];
         const studentsStillNeedHelp: string[] = [];
         const studentsNewlySurfaced: string[] = [];
 
-        const tookBoth = new Set(
-          [...ppqByStudent.keys()].filter((id) => postByStudent.has(id))
-        );
-        for (const studentId of tookBoth) {
-          const name = studentIdToName.get(studentId);
-          if (!name) continue;
+        // Check each "before" student against POST_PPQ
+        for (const name of beforeNames) {
+          const studentId = nameToStudentId.get(name);
+          if (!studentId) {
+            console.log(`      ⚠ "${name}": no DB student match — skipping`);
+            continue;
+          }
 
-          const wasFlagged = ppqFlagged.has(studentId);
-          const isFlagged = postFlagged.has(studentId);
+          const postScore = postScoreByStudent.get(studentId);
+          if (postScore == null) {
+            console.log(`      ⚠ "${name}": no POST_PPQ score — skipping`);
+            continue; // didn't take POST_PPQ
+          }
 
-          if (wasFlagged && !isFlagged) {
+          if (postScore >= threshold) {
             studentsImproved.push(name);
-          } else if (wasFlagged && isFlagged) {
+          } else {
             studentsStillNeedHelp.push(name);
-          } else if (!wasFlagged && isFlagged) {
+          }
+        }
+
+        // Check for newly surfaced: students in the last group (understood) who now score < threshold
+        const understoodGroup = allGroups[allGroups.length - 1];
+        for (const name of (understoodGroup.students ?? [])) {
+          const studentId = nameToStudentId.get(name);
+          if (!studentId) continue;
+
+          const postScore = postScoreByStudent.get(studentId);
+          if (postScore == null) continue;
+
+          if (postScore < threshold) {
             studentsNewlySurfaced.push(name);
           }
         }
@@ -568,10 +658,22 @@ async function main() {
         studentsStillNeedHelp.sort(sortByName);
         studentsNewlySurfaced.sort(sortByName);
 
-        // Counts scoped to students who took both assessments
-        const beforeCount = [...ppqFlagged].filter((id) => tookBoth.has(id)).length;
-        const afterCount = [...postFlagged].filter((id) => tookBoth.has(id)).length;
-        const comparableStudents = tookBoth.size || 1;
+        // Counts: "before" = students in help groups who took POST_PPQ
+        // "after" = those still flagged + newly surfaced
+        const beforeStudentsWhoTookPost = [...beforeNames].filter((name) => {
+          const id = nameToStudentId.get(name);
+          return id && postPpqStudentIds.has(id);
+        });
+        const beforeCount = beforeStudentsWhoTookPost.length;
+        const afterCount = studentsStillNeedHelp.length + studentsNewlySurfaced.length;
+
+        // Comparable = all students from any group who took the POST_PPQ
+        const allGroupStudents = allGroups.flatMap((g: any) => g.students ?? []);
+        const comparableStudents = allGroupStudents.filter((name: string) => {
+          const id = nameToStudentId.get(name);
+          return id && postPpqStudentIds.has(id);
+        }).length || 1;
+
         const classMasteryBefore = Math.round(((comparableStudents - beforeCount) / comparableStudents) * 100);
         const classMasteryAfter = Math.round(((comparableStudents - afterCount) / comparableStudents) * 100);
         const improvementPoints = classMasteryAfter - classMasteryBefore;
@@ -596,8 +698,7 @@ async function main() {
           postPpqResults,
         });
 
-        console.log(`    ${misconception.title}:`);
-        console.log(`      Before: ${beforeCount} flagged → After: ${afterCount} flagged`);
+        console.log(`      Before: ${beforeCount} needing help → After: ${afterCount} still flagged`);
         console.log(`      Class mastery: ${classMasteryBefore}% → ${classMasteryAfter}% (+${improvementPoints}%)`);
         console.log(`      Improved: ${studentsImproved.length}, Still need help: ${studentsStillNeedHelp.length}, Newly surfaced: ${studentsNewlySurfaced.length}`);
       }
