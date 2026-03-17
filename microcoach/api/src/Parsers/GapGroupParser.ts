@@ -31,6 +31,19 @@ export interface IWrongAnswerExplanation {
   explanation: string
 }
 
+export interface IPostPpqResults {
+  hasResults:             boolean
+  beforeCount:            number
+  afterCount:             number
+  improvedCount:          number
+  classMasteryBefore:     number
+  classMasteryAfter:      number
+  improvementPoints:      number
+  studentsImproved:       string[]
+  studentsStillNeedHelp:  string[]
+  studentsNewlySurfaced:  string[]
+}
+
 export interface IActivityMove {
   id:               string
   title:            string
@@ -69,6 +82,7 @@ export interface IGapGroup {
   studentCount:            number | null
   studentPercent:          number | null
   moveOptions:             IActivityMove[]
+  postPpqResults:          IPostPpqResults | null
 }
 
 // ── Parser ────────────────────────────────────────────────────────────────────
@@ -112,6 +126,7 @@ export class GapGroupParser {
       studentCount:         typeof obj.studentCount  === 'number' ? obj.studentCount  : null,
       studentPercent:       typeof obj.studentPercent === 'number' ? obj.studentPercent : null,
       moveOptions:          this.parseMoveOptions(obj.moveOptions, obj.move),
+      postPpqResults:       this.parsePostPpqResults(obj.postPpqResults),
     }
   }
 
@@ -244,6 +259,24 @@ export class GapGroupParser {
       strategyTag:      typeof obj.strategyTag      === 'string' ? obj.strategyTag      : null,
       aiReasoning:      typeof obj.aiReasoning === 'string' ? obj.aiReasoning : '',
       tabs:             TabsParser.fromRaw(obj.tabs),
+    }
+  }
+
+  private static parsePostPpqResults(raw: unknown): IPostPpqResults | null {
+    if (isNullOrUndefined(raw) || typeof raw !== 'object' || Array.isArray(raw)) return null
+    const obj = raw as Record<string, unknown>
+    if (typeof obj.hasResults !== 'boolean' || !obj.hasResults) return null
+    return {
+      hasResults:            true,
+      beforeCount:           typeof obj.beforeCount           === 'number' ? obj.beforeCount           : 0,
+      afterCount:            typeof obj.afterCount            === 'number' ? obj.afterCount            : 0,
+      improvedCount:         typeof obj.improvedCount         === 'number' ? obj.improvedCount         : 0,
+      classMasteryBefore:    typeof obj.classMasteryBefore    === 'number' ? obj.classMasteryBefore    : 0,
+      classMasteryAfter:     typeof obj.classMasteryAfter     === 'number' ? obj.classMasteryAfter     : 0,
+      improvementPoints:     typeof obj.improvementPoints     === 'number' ? obj.improvementPoints     : 0,
+      studentsImproved:      this.parseStringArray(obj.studentsImproved),
+      studentsStillNeedHelp: this.parseStringArray(obj.studentsStillNeedHelp),
+      studentsNewlySurfaced: this.parseStringArray(obj.studentsNewlySurfaced),
     }
   }
 

@@ -41,6 +41,7 @@ class GapGroupParser {
             studentCount: typeof obj.studentCount === 'number' ? obj.studentCount : null,
             studentPercent: typeof obj.studentPercent === 'number' ? obj.studentPercent : null,
             moveOptions: this.parseMoveOptions(obj.moveOptions, obj.move),
+            postPpqResults: this.parsePostPpqResults(obj.postPpqResults),
         };
     }
     /**
@@ -164,6 +165,25 @@ class GapGroupParser {
             strategyTag: typeof obj.strategyTag === 'string' ? obj.strategyTag : null,
             aiReasoning: typeof obj.aiReasoning === 'string' ? obj.aiReasoning : '',
             tabs: TabsParser_1.TabsParser.fromRaw(obj.tabs),
+        };
+    }
+    static parsePostPpqResults(raw) {
+        if ((0, global_1.isNullOrUndefined)(raw) || typeof raw !== 'object' || Array.isArray(raw))
+            return null;
+        const obj = raw;
+        if (typeof obj.hasResults !== 'boolean' || !obj.hasResults)
+            return null;
+        return {
+            hasResults: true,
+            beforeCount: typeof obj.beforeCount === 'number' ? obj.beforeCount : 0,
+            afterCount: typeof obj.afterCount === 'number' ? obj.afterCount : 0,
+            improvedCount: typeof obj.improvedCount === 'number' ? obj.improvedCount : 0,
+            classMasteryBefore: typeof obj.classMasteryBefore === 'number' ? obj.classMasteryBefore : 0,
+            classMasteryAfter: typeof obj.classMasteryAfter === 'number' ? obj.classMasteryAfter : 0,
+            improvementPoints: typeof obj.improvementPoints === 'number' ? obj.improvementPoints : 0,
+            studentsImproved: this.parseStringArray(obj.studentsImproved),
+            studentsStillNeedHelp: this.parseStringArray(obj.studentsStillNeedHelp),
+            studentsNewlySurfaced: this.parseStringArray(obj.studentsNewlySurfaced),
         };
     }
     static parseStringArray(raw) {

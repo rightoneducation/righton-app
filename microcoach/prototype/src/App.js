@@ -394,6 +394,7 @@ function App() {
             <div className="trends-section">
               <InterventionPatterns
                 nextSteps={[...nextSteps, ...(nextStepsHistory.flatMap((h) => h.items || []))]}
+                gapGroups={aiGapGroups ?? []}
               />
             </div>
           )}
