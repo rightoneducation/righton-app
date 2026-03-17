@@ -38,6 +38,7 @@ export type {
   IDBSavedNextStep,
   ISavedNextStepMutationInput,
   IMisconceptionEvidence,
+  IPostPpqResults,
   ITabs,
 } from './Parsers';
 

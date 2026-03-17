@@ -217,7 +217,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         topic: PILOT_TOPIC,
         ccssStandards: PILOT_CCSS,
         ppqFile: 'Classroom4/Session1/PPQ-StudentData.xlsx',
-        postPpqFile: null,
+        postPpqFile: 'Classroom4/Session1/post/RTD_ClearingTheFraction_Data_Walsh.xlsx',
         nextStepFile: null,
         misconceptions: [
           {

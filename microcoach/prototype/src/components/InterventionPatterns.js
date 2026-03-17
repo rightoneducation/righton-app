@@ -71,8 +71,17 @@ const LearningGapTrendCard = ({
   </div>
 );
 
-const InterventionPatterns = ({ nextSteps = [] }) => {
+const InterventionPatterns = ({ nextSteps = [], gapGroups = [] }) => {
   const [selectedTrend, setSelectedTrend] = useState(null);
+
+  // Build a lookup from gap group title to its postPpqResults
+  const postPpqByTitle = useMemo(() => {
+    const map = {};
+    for (const g of gapGroups) {
+      if (g && g.title && g.postPpqResults) map[g.title] = g.postPpqResults;
+    }
+    return map;
+  }, [gapGroups]);
 
   const completedItems = useMemo(() => {
     const seen = new Set();
@@ -85,6 +94,21 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
         return true;
       })
       .map((item) => {
+        // Check for real post-PPQ results via gap group title
+        const ppqResults = item.gapGroupTitle ? postPpqByTitle[item.gapGroupTitle] : null;
+
+        if (ppqResults && ppqResults.hasResults) {
+          return {
+            ...item,
+            postPpqResults: ppqResults,
+            beforeCount: ppqResults.beforeCount,
+            afterCount: ppqResults.afterCount,
+            improvementPoints: ppqResults.improvementPoints,
+            improvedCount: ppqResults.improvedCount,
+          };
+        }
+
+        // Fallback: mock math
         const beforeCount = item.studentCount != null ? item.studentCount : 0;
         const pct = item.studentPercent;
         const classSize = (pct && pct > 0 && beforeCount > 0)
@@ -97,13 +121,14 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
         const improvementPoints = clamp(afterPercent - beforePercent, 0, 100);
         return {
           ...item,
+          postPpqResults: null,
           beforeCount,
           afterCount,
           improvementPoints,
           improvedCount: beforeCount - afterCount,
         };
       });
-  }, [nextSteps]);
+  }, [nextSteps, postPpqByTitle]);
 
   return (
     <div className="intervention-patterns">
@@ -113,6 +138,9 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
         beforeCount={selectedTrend != null ? selectedTrend.beforeCount : 0}
         afterCount={selectedTrend != null ? selectedTrend.afterCount : 0}
         improvementPoints={selectedTrend != null ? selectedTrend.improvementPoints : 0}
+        studentsImproved={selectedTrend?.postPpqResults?.studentsImproved ?? []}
+        studentsStillNeedHelp={selectedTrend?.postPpqResults?.studentsStillNeedHelp ?? []}
+        studentsNewlySurfaced={selectedTrend?.postPpqResults?.studentsNewlySurfaced ?? []}
         onClose={() => setSelectedTrend(null)}
       />
 
@@ -134,7 +162,7 @@ const InterventionPatterns = ({ nextSteps = [] }) => {
                 moveTitle={item.moveTitle}
                 ccssStandard={item.targetObjectiveStandard}
                 misconceptionTitle={item.gapGroupTitle}
-                hasResults={false}
+                hasResults={!!item.postPpqResults?.hasResults}
                 improvedCount={item.improvedCount}
                 improvementPoints={item.improvementPoints}
                 onView={() => setSelectedTrend(item)}

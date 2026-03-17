@@ -20,6 +20,7 @@ export type {
   IWrongAnswerExplanation,
   IActivityMove,
   IGapGroup,
+  IPostPpqResults,
 } from './GapGroupParser'
 export { GapGroupParser } from './GapGroupParser'
 export type {

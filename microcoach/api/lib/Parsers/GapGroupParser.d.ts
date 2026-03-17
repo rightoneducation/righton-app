@@ -22,6 +22,18 @@ export interface IWrongAnswerExplanation {
     answer: string;
     explanation: string;
 }
+export interface IPostPpqResults {
+    hasResults: boolean;
+    beforeCount: number;
+    afterCount: number;
+    improvedCount: number;
+    classMasteryBefore: number;
+    classMasteryAfter: number;
+    improvementPoints: number;
+    studentsImproved: string[];
+    studentsStillNeedHelp: string[];
+    studentsNewlySurfaced: string[];
+}
 export interface IActivityMove {
     id: string;
     title: string;
@@ -59,6 +71,7 @@ export interface IGapGroup {
     studentCount: number | null;
     studentPercent: number | null;
     moveOptions: IActivityMove[];
+    postPpqResults: IPostPpqResults | null;
 }
 export declare class GapGroupParser {
     /**
@@ -80,5 +93,6 @@ export declare class GapGroupParser {
      */
     private static parseMoveOptions;
     private static parseActivityMove;
+    private static parsePostPpqResults;
     private static parseStringArray;
 }
