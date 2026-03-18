@@ -232,10 +232,12 @@
 }
 
 .ip-modal-summary {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  display: flex;
   margin-bottom: 16px;
+}
+
+.ip-modal-metric-full {
+  flex: 1;
 }
 
 .ip-modal-metric {
@@ -252,9 +254,22 @@
   color: #1B376F;
 }
 
+.ip-modal-metric-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
 .ip-modal-metric-label {
-  margin-top: 4px;
   font-size: 12px;
+  font-weight: 700;
+  color: #1B376F;
+  opacity: 0.85;
+}
+
+.ip-modal-metric-secondary {
+  margin-top: 6px;
+  font-size: 13px;
   font-weight: 700;
   color: #1B376F;
   opacity: 0.85;
@@ -318,12 +333,18 @@
   background-color: #9CA3AF;
 }
 
+.ip-modal-section-improved .ip-modal-section-count-zero {
+  background-color: #E5E7EB;
+  color: #111827;
+}
+
 .ip-modal-section-improved .ip-modal-section-count {
   background-color: #059669;
 }
 
 .ip-modal-section-needhelp .ip-modal-section-count {
-  background-color: #D97706;
+  background-color: #E5E7EB;
+  color: #111827;
 }
 
 .ip-modal-section-newsurfaced .ip-modal-section-count {
@@ -408,7 +429,7 @@
 .ip-gap-change {
   font-family: 'Poppins', sans-serif;
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 600;
   color: #0076AA;
   line-height: 1;
 }

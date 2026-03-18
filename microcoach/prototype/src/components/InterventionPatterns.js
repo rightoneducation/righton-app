@@ -11,7 +11,8 @@ const LearningGapTrendCard = ({
   misconceptionTitle,
   hasResults,
   improvedCount,
-  improvementPoints,
+  classMasteryBefore,
+  classMasteryAfter,
   onView,
 }) => (
   <div className="ip-gap-card">
@@ -48,12 +49,12 @@ const LearningGapTrendCard = ({
       <>
         <div
           className="ip-gap-right"
-          aria-label={'Class mastery change: ' + Math.round(improvementPoints) + ' percentage points'}
+          aria-label={`Class mastery: ${classMasteryBefore}% to ${classMasteryAfter}%`}
         >
           <div className="ip-gap-change">
-            +{Math.round(improvementPoints)}%
+            {classMasteryBefore}% → {classMasteryAfter}%
           </div>
-          <div className="ip-gap-change-label">class mastery</div>
+          <div className="ip-gap-change-label">Class mastery improvement</div>
         </div>
 
         <div className="ip-gap-actions">
@@ -138,6 +139,8 @@ const InterventionPatterns = ({ nextSteps = [], gapGroups = [] }) => {
         beforeCount={selectedTrend != null ? selectedTrend.beforeCount : 0}
         afterCount={selectedTrend != null ? selectedTrend.afterCount : 0}
         improvementPoints={selectedTrend != null ? selectedTrend.improvementPoints : 0}
+        classMasteryBefore={selectedTrend?.postPpqResults?.classMasteryBefore ?? null}
+        classMasteryAfter={selectedTrend?.postPpqResults?.classMasteryAfter ?? null}
         studentsImproved={selectedTrend?.postPpqResults?.studentsImproved ?? []}
         studentsStillNeedHelp={selectedTrend?.postPpqResults?.studentsStillNeedHelp ?? []}
         studentsNewlySurfaced={selectedTrend?.postPpqResults?.studentsNewlySurfaced ?? []}
@@ -164,7 +167,8 @@ const InterventionPatterns = ({ nextSteps = [], gapGroups = [] }) => {
                 misconceptionTitle={item.gapGroupTitle}
                 hasResults={!!item.postPpqResults?.hasResults}
                 improvedCount={item.improvedCount}
-                improvementPoints={item.improvementPoints}
+                classMasteryBefore={item.postPpqResults?.classMasteryBefore ?? null}
+                classMasteryAfter={item.postPpqResults?.classMasteryAfter ?? null}
                 onView={() => setSelectedTrend(item)}
               />
             );
