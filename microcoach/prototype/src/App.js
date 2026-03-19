@@ -59,6 +59,7 @@ function App() {
         items: [item],
       }))
     );
+    setCompletedThisSession(new Set(completed.map((item) => `${item.gapGroupId}:${item.moveId}`)));
     setAiGapGroups(data.gapGroups);
   };
 
