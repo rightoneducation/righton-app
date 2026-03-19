@@ -1,13 +1,57 @@
 import React, { useMemo, useState } from 'react';
 import './InterventionPatterns.css';
 import './SharedButtons.css';
+import './YourNextSteps.css';
+import './RecommendedNextSteps.css';
 import LearningGapTrendDetailsModal from './LearningGapTrendDetailsModal';
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
+const getStandardComponents = (ccssStandards) => {
+  return (ccssStandards?.targetObjective?.learningComponents ?? []).slice(0, 3);
+};
+
+const renderStandardPill = (ccssStandard, ccssStandards) => {
+  if (!ccssStandard) return null;
+
+  const learningComponents = getStandardComponents(ccssStandards);
+  const standardName = ccssStandards?.targetObjective?.description || ccssStandard;
+
+  return (
+    <span className="yns-standard-pill-wrap">
+      <span
+        className="ccss-tag target-objective yns-standard-pill"
+        aria-label={`Learning objective standard ${ccssStandard}`}
+        tabIndex={0}
+      >
+        {ccssStandard}
+      </span>
+
+      <div className="yns-standard-hover-card" role="tooltip">
+        <div className="yns-standard-hover-title">{standardName}</div>
+        <div className="yns-standard-hover-subtitle">Related Learning Components</div>
+
+        <div className="yns-kg-diagram" aria-label={`Relationship diagram for ${ccssStandard}`}>
+          <span className="ccss-tag target-objective yns-kg-standard-node">{ccssStandard}</span>
+
+          <div className="yns-kg-right">
+            {learningComponents.map((component) => (
+              <div key={`${ccssStandard}-${component}`} className="yns-kg-row">
+                <span className="yns-kg-link" aria-hidden="true" />
+                <span className="yns-kg-component-node">{component}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </span>
+  );
+};
+
 const LearningGapTrendCard = ({
   moveTitle,
   ccssStandard,
+  ccssStandards,
   misconceptionTitle,
   hasResults,
   improvedCount,
@@ -20,14 +64,7 @@ const LearningGapTrendCard = ({
       <div className="ip-gap-name">{moveTitle}</div>
       <div className="ip-gap-addresses">
         <span className="ip-gap-addresses-label">Addresses:</span>
-        {ccssStandard && (
-          <span
-            className="ccss-tag target-objective"
-            aria-label={'Learning objective standard ' + ccssStandard}
-          >
-            {ccssStandard}
-          </span>
-        )}
+        {renderStandardPill(ccssStandard, ccssStandards)}
         <span className="ip-gap-misconception">{misconceptionTitle}</span>
       </div>
       <div className="ip-gap-meta">
@@ -164,6 +201,7 @@ const InterventionPatterns = ({ nextSteps = [], gapGroups = [] }) => {
                 key={key}
                 moveTitle={item.moveTitle}
                 ccssStandard={item.targetObjectiveStandard}
+                ccssStandards={item.ccssStandards}
                 misconceptionTitle={item.gapGroupTitle}
                 hasResults={!!item.postPpqResults?.hasResults}
                 improvedCount={item.improvedCount}

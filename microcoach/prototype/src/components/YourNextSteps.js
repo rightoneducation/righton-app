@@ -121,6 +121,7 @@ const YourNextSteps = ({
 
         <div className="yns-standard-hover-card" role="tooltip">
           <div className="yns-standard-hover-title">{standardName}</div>
+          <div className="yns-standard-hover-subtitle">Related Learning Components</div>
 
           <div className="yns-kg-diagram" aria-label={`Relationship diagram for ${standard}`}>
             <span className="ccss-tag target-objective yns-kg-standard-node">{standard}</span>
