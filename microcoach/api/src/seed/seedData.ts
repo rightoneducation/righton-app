@@ -25,7 +25,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         topic: PILOT_TOPIC,
         ccssStandards: PILOT_CCSS,
         ppqFile: 'Classroom1/Session1/PPQ-StudentData.xlsx',
-        postPpqFile: null,
+        postPpqFile: 'Classroom1/Session1/post/PostPPQ.xlsx',
         nextStepFile: null,
         misconceptions: [
           {
@@ -89,7 +89,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         topic: PILOT_TOPIC,
         ccssStandards: PILOT_CCSS,
         ppqFile: 'Classroom2/Session1/PPQ-StudentData.xlsx',
-        postPpqFile: null,
+        postPpqFile: 'Classroom2/Session1/post/PostPPQ.xlsx',
         nextStepFile: null,
         misconceptions: [
           {
@@ -153,7 +153,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         topic: PILOT_TOPIC,
         ccssStandards: PILOT_CCSS,
         ppqFile: 'Classroom3/Session1/PPQ-StudentData.xlsx',
-        postPpqFile: null,
+        postPpqFile: 'Classroom3/Session1/post/PostPPQ.xlsx',
         nextStepFile: null,
         misconceptions: [
           {
@@ -217,7 +217,7 @@ export const CLASSROOMS: ClassroomConfig[] = [
         topic: PILOT_TOPIC,
         ccssStandards: PILOT_CCSS,
         ppqFile: 'Classroom4/Session1/PPQ-StudentData.xlsx',
-        postPpqFile: 'Classroom4/Session1/post/RTD_ClearingTheFraction_Data_Walsh.xlsx',
+        postPpqFile: 'Classroom4/Session1/post/PostPPQ.xlsx',
         nextStepFile: null,
         misconceptions: [
           {
