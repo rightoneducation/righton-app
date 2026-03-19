@@ -372,6 +372,20 @@ async function main() {
                 continue;
             }
             // ── Step 1: Upload POST_PPQ data (idempotent) ──────────────────────
+            // Parse Excel upfront — needed for upload and for unmatched student detection in Step 2
+            const postPpqPath = path.join(seedData_1.DATA_ROOT, sessionConfig.postPpqFile);
+            process.stdout.write(`  Parsing PostPPQ Excel...`);
+            const postPpqData = parseExcelFile(postPpqPath);
+            console.log(` ✓  ${postPpqData.students.length} students, ${postPpqData.questionMeta.length} questions`);
+            // Students in POST_PPQ Excel not matched to any DB roster student (e.g. absent from original PPQ)
+            const unmatchedPostStudents = postPpqData.students.filter((student) => {
+                const byExternalId = studentExternalIdToId.get(student.externalId);
+                const byName = studentNameToId.get(student.name);
+                return !byExternalId && !byName;
+            });
+            if (unmatchedPostStudents.length > 0) {
+                console.log(`  ⚠ ${unmatchedPostStudents.length} POST_PPQ students not in DB roster: ${unmatchedPostStudents.map((s) => normalizeName(s.name)).join(', ')}`);
+            }
             let postPpqAssessmentId = dbSession.postPpqAssessmentId;
             // Check if existing POST_PPQ data has actual question responses
             if (postPpqAssessmentId) {
@@ -388,9 +402,6 @@ async function main() {
                         await gql(DELETE_STUDENT_RESPONSE, { input: { id: sr.id } });
                     }
                     console.log(`  Deleted ${checkItems.length} empty response records`);
-                    // Fall through to re-upload responses with the existing assessment
-                    const postPpqPath = path.join(seedData_1.DATA_ROOT, sessionConfig.postPpqFile);
-                    const postPpqData = parseExcelFile(postPpqPath);
                     let responseCount = 0;
                     for (const student of postPpqData.students) {
                         let studentId = studentExternalIdToId.get(student.externalId);
@@ -423,10 +434,6 @@ async function main() {
                 }
             }
             else {
-                const postPpqPath = path.join(seedData_1.DATA_ROOT, sessionConfig.postPpqFile);
-                process.stdout.write(`  Parsing PostPPQ Excel...`);
-                const postPpqData = parseExcelFile(postPpqPath);
-                console.log(` ✓  ${postPpqData.students.length} students, ${postPpqData.questionMeta.length} questions`);
                 const assessmentInput = {
                     classroomId: dbClassroom.id,
                     sessionId: dbSession.id,
@@ -585,8 +592,18 @@ async function main() {
                         beforeNames.add(name);
                     }
                 }
+                // Students in the class roster who were absent from PPQ (not in any group) but took POST_PPQ
+                const allGroupStudentNames = new Set(allGroups.flatMap((g) => { var _a; return ((_a = g.students) !== null && _a !== void 0 ? _a : []); }));
+                const absentPostStudents = students.filter((s) => {
+                    const displayName = normalizeName(s.name);
+                    return !allGroupStudentNames.has(s.name) && !allGroupStudentNames.has(displayName)
+                        && postPpqStudentIds.has(s.id);
+                });
                 console.log(`    ${misconception.title}:`);
                 console.log(`      Groups used: ${needHelpGroups.map((g) => g.name).join(', ')} (${beforeNames.size} students)`);
+                if (absentPostStudents.length > 0) {
+                    console.log(`      Absent from PPQ but took POST_PPQ: ${absentPostStudents.map((s) => normalizeName(s.name)).join(', ')}`);
+                }
                 // ── Classify against POST_PPQ ──
                 const studentsImproved = [];
                 const studentsStillNeedHelp = [];
@@ -623,6 +640,23 @@ async function main() {
                         studentsNewlySurfaced.push(name);
                     }
                 }
+                // Students absent from original PPQ who took POST_PPQ and scored below threshold
+                for (const s of absentPostStudents) {
+                    const postScore = postScoreByStudent.get(s.id);
+                    if (postScore != null && postScore < threshold) {
+                        studentsStillNeedHelp.push(normalizeName(s.name));
+                    }
+                }
+                // Students not in DB roster at all (absent from original PPQ upload) who scored below threshold
+                for (const student of unmatchedPostStudents) {
+                    const qrs = student.questionResponses;
+                    if (qrs.length === 0)
+                        continue;
+                    const postScore = qrs.filter((qr) => qr.isCorrect).length / qrs.length;
+                    if (postScore < threshold) {
+                        studentsStillNeedHelp.push(normalizeName(student.name));
+                    }
+                }
                 const sortByName = (a, b) => a.localeCompare(b);
                 studentsImproved.sort(sortByName);
                 studentsStillNeedHelp.sort(sortByName);
@@ -635,12 +669,14 @@ async function main() {
                 });
                 const beforeCount = beforeStudentsWhoTookPost.length;
                 const afterCount = studentsStillNeedHelp.length + studentsNewlySurfaced.length;
-                // Comparable = all students from any group who took the POST_PPQ
+                // Comparable = grouped students who took POST_PPQ + absent DB students who took it + unmatched students with responses
                 const allGroupStudents = allGroups.flatMap((g) => { var _a; return (_a = g.students) !== null && _a !== void 0 ? _a : []; });
-                const comparableStudents = allGroupStudents.filter((name) => {
+                const groupComparable = allGroupStudents.filter((name) => {
                     const id = nameToStudentId.get(name);
                     return id && postPpqStudentIds.has(id);
-                }).length || 1;
+                }).length;
+                const unmatchedWithResponses = unmatchedPostStudents.filter((s) => s.questionResponses.length > 0).length;
+                const comparableStudents = (groupComparable + absentPostStudents.length + unmatchedWithResponses) || 1;
                 const classMasteryBefore = Math.round(((comparableStudents - beforeCount) / comparableStudents) * 100);
                 const classMasteryAfter = Math.round(((comparableStudents - afterCount) / comparableStudents) * 100);
                 const improvementPoints = classMasteryAfter - classMasteryBefore;

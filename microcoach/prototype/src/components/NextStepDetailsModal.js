@@ -1,6 +1,50 @@
 import React, { useState } from 'react';
 import { sortStudentNames } from '../util/sortStudentNames';
 
+// Known technical field names → user-friendly labels.
+// Numbered patterns handle any trailing digit (e.g. incorrectWorkedExample1, 2, 3…).
+// Order: longer/more-specific patterns first to avoid partial matches.
+const FIELD_REPLACEMENTS = [
+  [/incorrectWorkedExamples/, () => 'Incorrect Worked Examples'],
+  [/incorrectWorkedExample(\d+)/, (_, n) => `Incorrect Worked Example ${n}`],
+  [/coreActivity/, () => 'Core Activity'],
+  [/discussionQuestions/, () => 'Discussion Questions'],
+  [/studentGroupings/, () => 'Student Groupings'],
+  [/whatStudentsDo/, () => 'What Students Do'],
+  [/whatYouDo/, () => "What You'll Do"],
+  [/aiRecommendation/, () => 'AI Recommendation'],
+  [/highFlyers/, () => 'High Flyers'],
+];
+
+const FIELD_PATTERN = new RegExp(
+  '(' + FIELD_REPLACEMENTS.map(([re]) => re.source).join('|') + ')',
+  'g'
+);
+
+function getLabel(matched) {
+  for (const [re, labelFn] of FIELD_REPLACEMENTS) {
+    const m = new RegExp('^' + re.source + '$').exec(matched);
+    if (m) return labelFn(...m);
+  }
+  return matched;
+}
+
+function formatText(text) {
+  if (!text || typeof text !== 'string') return text;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  FIELD_PATTERN.lastIndex = 0;
+  while ((match = FIELD_PATTERN.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    parts.push(<strong key={match.index}>{getLabel(match[0])}</strong>);
+    lastIndex = FIELD_PATTERN.lastIndex;
+  }
+  if (parts.length === 0) return text;
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
+}
+
 /**
  * Shared "Full View" modal used by both RecommendedNextSteps and YourNextSteps.
  *
@@ -98,6 +142,12 @@ const NextStepDetailsModal = ({
               <div className="rns-misconception-text">{misconceptionSummary}</div>
             )}
 
+            {ccssStandards?.targetObjective?.learningComponents?.length > 0 && (
+              <div className="nsdm-learning-components">
+                Related Learning Components: {ccssStandards.targetObjective.learningComponents.join(', ')}
+              </div>
+            )}
+
             {/* Activity Card Header - Always visible above tabs */}
             {move && (
               <div className="activity-card-header">
@@ -182,7 +232,7 @@ const NextStepDetailsModal = ({
                         <div className="ai-recommendation-card blue-background">
                           <h4 className="ai-recommendation-title">Recommendation</h4>
                           <p className="ai-recommendation-content">
-                            {move?.tabs?.studentGroupings?.aiRecommendation}
+                            {formatText(move?.tabs?.studentGroupings?.aiRecommendation)}
                           </p>
                         </div>
                       )}
@@ -191,7 +241,7 @@ const NextStepDetailsModal = ({
                         <div key={idx} className="grouping-card" style={{ marginTop: '16px' }}>
                           <div className="grouping-header">
                             <h4 className="grouping-title">{grouping.name}</h4>
-                            <p className="grouping-description">{grouping.description}</p>
+                            <p className="grouping-description">{formatText(grouping.description)}</p>
                           </div>
                           {grouping.students?.length > 0 && (
                             <div className="grouping-students">
@@ -233,7 +283,7 @@ const NextStepDetailsModal = ({
                     <h4 className="tab-section-title">What will students do</h4>
                     <ul className="tab-section-bullets">
                       {(move?.tabs?.overview?.whatStudentsDo ?? []).map((bullet, i) => (
-                        <li key={i}><strong>{bullet.label}:</strong> {bullet.detail}</li>
+                        <li key={i}><strong>{formatText(bullet.label)}:</strong> {formatText(bullet.detail)}</li>
                       ))}
                     </ul>
                   </div>
@@ -242,7 +292,7 @@ const NextStepDetailsModal = ({
                     <h4 className="tab-section-title">What you'll do</h4>
                     <ul className="tab-section-bullets">
                       {(move?.tabs?.overview?.whatYouDo ?? []).map((bullet, i) => (
-                        <li key={i}><strong>{bullet.label}:</strong> {bullet.detail}</li>
+                        <li key={i}><strong>{formatText(bullet.label)}:</strong> {formatText(bullet.detail)}</li>
                       ))}
                     </ul>
                   </div>
@@ -266,14 +316,14 @@ const NextStepDetailsModal = ({
                     <h4 className="tab-section-title">Setup</h4>
                     <ul className="tab-list">
                       {move?.tabs?.activitySteps?.setup?.map((item, idx) => (
-                        <li key={idx}>{item}</li>
+                        <li key={idx}>{formatText(item)}</li>
                       ))}
                     </ul>
                   </div>
 
                   <div className="tab-section">
                     <h4 className="tab-section-title">Problem</h4>
-                    <p className="tab-section-content">{move?.tabs?.activitySteps?.problem}</p>
+                    <p className="tab-section-content">{formatText(move?.tabs?.activitySteps?.problem)}</p>
                   </div>
 
                   {move?.tabs?.activitySteps?.incorrectWorkedExamples?.length > 0 && (
@@ -334,7 +384,7 @@ const NextStepDetailsModal = ({
                     <h4 className="tab-section-title">Core Activity</h4>
                     <ol className="tab-list">
                       {move?.tabs?.activitySteps?.coreActivity?.map((item, idx) => (
-                        <li key={idx}>{item}</li>
+                        <li key={idx}>{formatText(item)}</li>
                       ))}
                     </ol>
                   </div>
@@ -344,7 +394,7 @@ const NextStepDetailsModal = ({
                     <ul className="discussion-questions">
                       {move?.tabs?.activitySteps?.discussionQuestions?.map((question, idx) => (
                         <li key={idx}>
-                          <strong>Q{idx + 1}:</strong> {question}
+                          <strong>Q{idx + 1}:</strong> {formatText(question)}
                         </li>
                       ))}
                     </ul>

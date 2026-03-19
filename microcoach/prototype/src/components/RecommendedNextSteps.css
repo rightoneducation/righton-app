@@ -460,14 +460,22 @@
 }
 
 .rns-activity-option.disabled {
-  opacity: 0.45;
   cursor: not-allowed;
-  filter: grayscale(0.35);
 }
 
 .rns-activity-option.disabled:hover {
   border-color: #e5e5e5;
   box-shadow: none;
+}
+
+.rns-activity-option.disabled > *:not(.rns-activity-option-actions),
+.rns-activity-option.disabled .rns-activity-added-pill {
+  opacity: 0.45;
+  filter: grayscale(0.35);
+}
+
+.rns-activity-option.disabled .view-thinking-btn {
+  cursor: pointer;
 }
 
 .rns-activity-added-pill {
@@ -3996,4 +4004,11 @@
 .nsdm-misconception-label {
   font-size: 13px;
   color: #374151;
+}
+
+.nsdm-learning-components {
+  font-size: 13px;
+  font-weight: 400;
+  color: #4B5563;
+  margin-top: -4px;
 }

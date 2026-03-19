@@ -16,6 +16,7 @@ function App() {
   const [nextSteps, setNextSteps] = useState([]);
   const [nextStepsSort, setNextStepsSort] = useState('manual');
   const [nextStepsHistory, setNextStepsHistory] = useState([]);
+  const [completedThisSession, setCompletedThisSession] = useState(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingNextSteps, setIsLoadingNextSteps] = useState(true);
   const [aiGapGroups, setAiGapGroups] = useState(null);
@@ -35,8 +36,21 @@ function App() {
     classroomIdRef.current = classroom.id;
     const data = classroomDataMapRef.current[classroom.id] ?? { gapGroups: null, savedNextSteps: [] };
     const savedItems = data.savedNextSteps;
-    const active = savedItems.filter((x) => x.status !== 'completed').map((db) => SavedNextStepParser.dbToLocal(db));
-    const completed = savedItems.filter((x) => x.status === 'completed').map((db) => SavedNextStepParser.dbToLocal(db));
+    const gapGroups = data.gapGroups;
+
+    // Enrich parsed saved items with full ccssStandards from the matching gap group
+    // so the Prepare tab tooltip can display learning components, prerequisites, etc.
+    const enrichCcss = (item) => {
+      if (!gapGroups || !item.gapGroupId) return item;
+      const match = gapGroups.find((g) => g.id === item.gapGroupId);
+      if (match?.ccssStandards) {
+        return { ...item, ccssStandards: match.ccssStandards };
+      }
+      return item;
+    };
+
+    const active = savedItems.filter((x) => x.status !== 'completed').map((db) => enrichCcss(SavedNextStepParser.dbToLocal(db)));
+    const completed = savedItems.filter((x) => x.status === 'completed').map((db) => enrichCcss(SavedNextStepParser.dbToLocal(db)));
     setNextSteps(active);
     setNextStepsHistory(
       completed.map((item) => ({
@@ -238,6 +252,7 @@ function App() {
       ...(prev || [])
     ]);
     setNextSteps((prev) => prev.filter((x) => x.id !== id));
+    setCompletedThisSession((prev) => new Set([...prev, `${existing.gapGroupId}:${existing.moveId}`]));
 
     const cid = classroomIdRef.current;
     if (cid && classroomDataMapRef.current[cid]) {
@@ -368,6 +383,7 @@ function App() {
                 <RecommendedNextSteps
                   onAddNextStep={addNextStep}
                   existingNextSteps={nextSteps}
+                  completedKeys={completedThisSession}
                   gapGroups={aiGapGroups ?? undefined}
                 />
               )}

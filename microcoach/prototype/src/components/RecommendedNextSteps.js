@@ -7,7 +7,7 @@ import './SharedButtons.css';
 import NextStepDetailsModal from './NextStepDetailsModal';
 
 
-const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups: gapGroupsProp }) => {
+const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], completedKeys = new Set(), gapGroups: gapGroupsProp }) => {
   const [gapGroups, setGapGroups] = useState(() => gapGroupsProp ?? []);
   const [toast, setToast] = useState(null);
   const toastTimeoutRef = useRef(null);
@@ -471,7 +471,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], gapGroups
             {(selectedRecommendationGroup.moveOptions || []).slice(0, 3).map((opt) => {
               const selectedMove = getSelectedMoveForGroup(selectedRecommendationGroup);
               const isSelected = selectedMove?.id === opt.id;
-              const alreadyAdded = existingIndex.has(`${selectedRecommendationGroup.id}:${opt.id}`);
+              const alreadyAdded = existingIndex.has(`${selectedRecommendationGroup.id}:${opt.id}`) || completedKeys.has(`${selectedRecommendationGroup.id}:${opt.id}`);
 
               return (
                 <div
