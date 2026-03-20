@@ -66,3 +66,23 @@
   outline: none;
   border-color: white;
 }
+
+.header-upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  color: #1B376F;
+  font-size: 12px;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.header-upload-btn:hover {
+  background-color: #F3F4F6;
+}

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { APIClient, GapGroupParser, SavedNextStepParser } from '@righton/microcoach-api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Header from './components/Header';
@@ -9,6 +10,7 @@ import './App.css';
 
 
 function App() {
+  const navigate = useNavigate();
   const [activeOverviewSection, setActiveOverviewSection] = useState('Recommended Next Steps');
 
   const [classrooms, setClassrooms] = useState([]);
@@ -336,6 +338,7 @@ function App() {
           setSelectedClassroomId(id);
           selectClassroom(classrooms.find((c) => c.id === id));
         }}
+        onUpload={() => navigate('/upload')}
       />
 
       <main className="main-content">
