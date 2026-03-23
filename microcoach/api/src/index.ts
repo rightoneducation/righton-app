@@ -15,6 +15,7 @@ import {
   getLearningScience,
   getAnalysis,
   generateNextStep,
+  createClassroom,
   updateClassroom,
   createMisconception,
   updateMisconception,
@@ -23,6 +24,7 @@ import {
   createSavedNextStep,
   updateSavedNextStep,
   deleteSavedNextStep,
+  teacherUpload,
 } from "./graphql/mutations";
 import awsconfig from "./aws-exports";
 
@@ -199,6 +201,22 @@ async updateClassroom(classroomData: any, analytics: string) {
   async deleteSavedNextStep(id: string) {
     await this.callGraphQL<any>(deleteSavedNextStep, { input: { id } });
   }
+
+  // ── Classroom (create) ───────────────────────────────────────────────────
+
+  async createClassroom(input: Record<string, unknown>) {
+    const result = await this.callGraphQL<any>(createClassroom, { input });
+    return result.data?.createClassroom;
+  }
+
+  // ── Teacher Upload ───────────────────────────────────────────────────────
+
+  async teacherUpload(input: { classroomId: string; activityFileBase64: string; studentDataFileBase64: string }) {
+    const result = await this.callGraphQL<any>(teacherUpload, { input });
+    return result.data?.teacherUpload;
+  }
+
+  // ── SavedNextStep (list) ────────────────────────────────────────────────
 
   async listSavedNextSteps(classroomId: string) {
     const result = await this.callGraphQL<any>(savedNextStepsByClassroomId, { classroomId });

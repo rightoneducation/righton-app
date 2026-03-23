@@ -130,6 +130,87 @@
   background-color: #F3F4F6;
 }
 
+.upload-classroom-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-classroom-row .upload-select {
+  flex: 1;
+}
+
+.upload-add-btn {
+  padding: 8px 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  color: #1B376F;
+  font-size: 12px;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.upload-add-btn:hover {
+  background-color: #F3F4F6;
+}
+
+.upload-new-classroom {
+  margin-top: 8px;
+  padding: 14px 16px;
+  background-color: #F9FAFB;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.upload-new-classroom-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.upload-input {
+  padding: 7px 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  color: #1B376F;
+  font-size: 13px;
+  font-family: 'Rubik', sans-serif;
+  min-width: 120px;
+}
+
+.upload-input:focus {
+  outline: none;
+  border-color: #1B376F;
+}
+
+.upload-input-sm {
+  min-width: 70px;
+  max-width: 110px;
+}
+
+.upload-create-btn {
+  align-self: flex-start;
+  font-size: 12px;
+  padding: 7px 16px;
+}
+
+.upload-status {
+  font-size: 14px;
+  color: #374151;
+  padding: 12px 16px;
+  background-color: #F0F9FF;
+  border-radius: 6px;
+  border: 1px solid #BAE6FD;
+}
+
 .upload-actions {
   display: flex;
   align-items: center;

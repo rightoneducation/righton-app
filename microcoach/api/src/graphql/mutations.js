@@ -26,6 +26,11 @@ export const ingestPPQ = /* GraphQL */ `
     ingestPPQ(input: $input)
   }
 `;
+export const teacherUpload = /* GraphQL */ `
+  mutation TeacherUpload($input: TeacherUploadInput!) {
+    teacherUpload(input: $input)
+  }
+`;
 export const createClassroom = /* GraphQL */ `
   mutation CreateClassroom(
     $input: CreateClassroomInput!

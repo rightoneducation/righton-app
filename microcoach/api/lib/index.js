@@ -158,6 +158,19 @@ class APIClient {
     async deleteSavedNextStep(id) {
         await this.callGraphQL(mutations_1.deleteSavedNextStep, { input: { id } });
     }
+    // ── Classroom (create) ───────────────────────────────────────────────────
+    async createClassroom(input) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.createClassroom, { input });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.createClassroom;
+    }
+    // ── Teacher Upload ───────────────────────────────────────────────────────
+    async teacherUpload(input) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.teacherUpload, { input });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.teacherUpload;
+    }
+    // ── SavedNextStep (list) ────────────────────────────────────────────────
     async listSavedNextSteps(classroomId) {
         var _a, _b, _c;
         const result = await this.callGraphQL(queries_1.savedNextStepsByClassroomId, { classroomId });
