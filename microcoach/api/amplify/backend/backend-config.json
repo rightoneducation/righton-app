@@ -49,6 +49,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "microcoachTeacherUploadGen": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -129,6 +134,22 @@
         {
           "category": "function",
           "resourceName": "microcoachNextStepOption"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachTeacherUploadGen_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachTeacherUploadGen"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachTeacherUploadGen_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachTeacherUploadGen"
         }
       ]
     },
