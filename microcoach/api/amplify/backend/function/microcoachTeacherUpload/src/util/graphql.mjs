@@ -187,6 +187,12 @@ export const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
   }
 `;
 
+export const CREATE_CONTEXT_DATA = /* GraphQL */ `
+  mutation CreateContextData($input: CreateContextDataInput!) {
+    createContextData(input: $input) { id type title gradeLevel ccssStandards isReference }
+  }
+`;
+
 export const INGEST_PPQ = /* GraphQL */ `
   mutation IngestPPQ($input: IngestPPQInput!) {
     ingestPPQ(input: $input)

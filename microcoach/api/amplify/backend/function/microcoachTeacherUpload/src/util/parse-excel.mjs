@@ -18,7 +18,7 @@ function parseConfidenceLetter(raw) {
   return undefined;
 }
 
-function deriveTopic(ccss) {
+export function deriveTopic(ccss) {
   if (ccss.includes('6.NS')) return 'Dividing Fractions';
   if (ccss.includes('8.EE')) return 'Linear Equations and Systems';
   if (ccss.includes('8.F')) return 'Functions and Rate of Change';

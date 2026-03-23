@@ -4,21 +4,24 @@
  * Consolidates the ingest → upload → generate pipeline into a single Lambda.
  * Uses self-invoke async pattern to work around AppSync's 30s resolver timeout.
  *
- * Flow:
- *   1. AppSync calls handler → validates input → self-invokes async → returns immediately
- *   2. Async invocation runs full pipeline:
- *      a. Parse xlsx (student data)
- *      b. Upload students, session, assessment, responses
- *      c. Ingest docx (extract misconceptions via IngestPPQ Lambda)
- *      d. Upload misconceptions + stub activities
- *      e. Run generate pipeline (learning science → analysis → next steps)
- *      f. Send completion email
+ * Flow mirrors the CLI scripts exactly:
+ *   1. Ingest (yarn ingest): docx → LLM → misconceptions
+ *   2. Upload (yarn upload): xlsx + misconceptions → DB
+ *      a. Parse xlsx
+ *      b. Upload students
+ *      c. Create session
+ *      d. Create PPQ assessment + student responses
+ *      e. Link assessment to session
+ *      f. Upload misconceptions + stub activities
+ *      g. Create ContextData
+ *   3. Generate (yarn generate): DB → pregeneratedNextSteps (short-circuited for now)
+ *   4. Send completion email
  */
 
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import mammoth from 'mammoth';
 import { createGqlClient } from './util/appsync-client.mjs';
-import { parseExcelBuffer } from './util/parse-excel.mjs';
+import { parseExcelBuffer, deriveTopic } from './util/parse-excel.mjs';
 import { sendEmail } from './util/send-email.mjs';
 import {
   GET_CLASSROOM,
@@ -29,6 +32,7 @@ import {
   CREATE_STUDENT_RESPONSE,
   CREATE_MISCONCEPTION,
   CREATE_ACTIVITY,
+  CREATE_CONTEXT_DATA,
   SESSIONS_BY_CLASSROOM,
   GET_SESSION,
   LIST_CONTEXT_DATA,
@@ -40,7 +44,7 @@ import {
 const AMPLIFY_ENV = process.env.ENV || 'dev';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// ── Lambda invocation helper ──────────────────────────────────────────────────
+// ── Lambda invocation helper (from generate-next-steps.ts:20-33) ────────────
 
 async function invokeLambda(functionName, payload) {
   const client = new LambdaClient({ region: process.env.REGION || 'us-east-1' });
@@ -57,7 +61,7 @@ async function invokeLambda(functionName, payload) {
   return JSON.parse(Buffer.from(resp.Payload).toString('utf8'));
 }
 
-// ── Upload helpers (ported from upload.ts) ────────────────────────────────────
+// ── Upload helpers (from upload.ts — identical logic) ───────────────────────
 
 async function uploadStudents(gql, classroomId, students) {
   const created = [];
@@ -65,6 +69,7 @@ async function uploadStudents(gql, classroomId, students) {
     const s = students[i];
     const studentName = s.name || `Student ${i + 1}`;
     const externalId = s.externalId || `S${String(i + 1).padStart(3, '0')}`;
+    console.log(`    Creating students [${i + 1}/${students.length}]  ${studentName}`);
     const confValues = s.questionResponses
       .map((qr) => qr.confidence)
       .filter((c) => c != null && c >= 1 && c <= 5);
@@ -90,16 +95,17 @@ async function uploadStudents(gql, classroomId, students) {
   return created;
 }
 
-async function uploadSession(gql, classroomId, parsed) {
+async function uploadSession(gql, classroomId, sessionLabel, weekNumber, topic, ccssStandards) {
+  console.log(`    Creating session: ${sessionLabel}...`);
   const data = await gql(CREATE_SESSION, {
     input: {
       classroomId,
       classroomSessionsId: classroomId,
-      sessionLabel: `W${parsed.weekNumber}`,
-      weekNumber: parsed.weekNumber,
-      topic: parsed.topic,
-      ccssStandards: parsed.ccssStandards,
-      status: 'data_ingested',
+      sessionLabel,
+      weekNumber,
+      topic,
+      ccssStandards,
+      status: 'completed',
     },
   });
   const session = data.createSession;
@@ -108,6 +114,7 @@ async function uploadSession(gql, classroomId, parsed) {
 }
 
 async function uploadAssessment(gql, classroomId, sessionId, parsed, type, sourceAssessmentId) {
+  console.log(`    Creating ${type} assessment (${parsed.questionMeta.length} questions)...`);
   const input = {
     classroomId,
     sessionId,
@@ -135,11 +142,20 @@ async function uploadAssessment(gql, classroomId, sessionId, parsed, type, sourc
   return assessment;
 }
 
-async function uploadStudentResponses(gql, assessmentId, students, studentMap) {
+async function uploadStudentResponses(gql, label, assessmentId, students, studentMap) {
   let count = 0;
-  for (const s of students) {
+  let skipped = 0;
+
+  for (let i = 0; i < students.length; i++) {
+    const s = students[i];
+    console.log(`    Uploading ${label} responses [${i + 1}/${students.length}]`);
+
     const studentId = studentMap.get(s.externalId);
-    if (!studentId) continue;
+    if (!studentId) {
+      skipped++;
+      await sleep(10);
+      continue;
+    }
 
     await gql(CREATE_STUDENT_RESPONSE, {
       input: {
@@ -159,19 +175,24 @@ async function uploadStudentResponses(gql, assessmentId, students, studentMap) {
     count++;
     await sleep(50);
   }
-  console.log(`  ✓ ${count} student responses uploaded`);
+
+  const skipNote = skipped > 0 ? `  (${skipped} skipped — not in PPQ roster)` : '';
+  console.log(`  ✓ ${count} ${label} responses uploaded${skipNote}`);
   return count;
 }
 
 async function uploadMisconceptions(gql, classroomId, sessionId, misconceptions) {
   const created = [];
-  for (const m of misconceptions) {
+
+  for (let i = 0; i < misconceptions.length; i++) {
+    const m = misconceptions[i];
+    console.log(`    Creating misconception [${i + 1}/${misconceptions.length}]  ${m.title}`);
+
     const data = await gql(CREATE_MISCONCEPTION, {
       input: {
         classroomId,
         sessionId,
         sessionMisconceptionsId: sessionId,
-        classroomMisconceptionsId: classroomId,
         ccssStandard: m.ccssStandard,
         title: m.title,
         description: m.description,
@@ -179,18 +200,12 @@ async function uploadMisconceptions(gql, classroomId, sessionId, misconceptions)
         priority: m.priority,
         occurrence: m.occurrence,
         successIndicators: m.successIndicators,
-        evidence: m.evidence,
-        studentCount: m.studentCount,
-        studentPercent: m.studentPercent,
-        aiReasoning: m.aiReasoning,
-        prerequisiteGapCodes: m.prerequisiteGapCodes,
-        impactedObjectiveCodes: m.impactedObjectiveCodes,
       },
     });
     const misconception = data.createMisconception;
     created.push({ id: misconception.id, sessionId, classroomId });
 
-    // Stub Activity
+    // Stub Activity for each Misconception
     await gql(CREATE_ACTIVITY, {
       input: {
         misconceptionId: misconception.id,
@@ -207,11 +222,36 @@ async function uploadMisconceptions(gql, classroomId, sessionId, misconceptions)
     });
     await sleep(100);
   }
-  console.log(`  ✓ ${created.length} misconceptions + activities created`);
+
+  console.log(`  ✓ ${created.length} misconceptions + ${created.length} activities created`);
   return created;
 }
 
-// ── Generate pipeline helpers (ported from generate-next-steps.ts) ───────────
+async function uploadContextData(gql, title, gradeLevel, ccssStandards, weekNumber, isReference, assessmentCode) {
+  const tag = isReference ? '[REF]' : '[CLS]';
+  console.log(`    Creating ContextData ${tag} "${title}"...`);
+
+  await gql(CREATE_CONTEXT_DATA, {
+    input: {
+      type: 'NEXT_STEP_LESSON',
+      title,
+      gradeLevel,
+      weekNumber,
+      ccssStandards,
+      assessmentCode,
+      isReference,
+      nextStepLesson: {
+        targetAssessmentCode: assessmentCode ?? 'REFERENCE',
+        topic: deriveTopic(ccssStandards[0] ?? ''),
+        targetProblem: 'See source document',
+      },
+    },
+  });
+  console.log(`  ✓ ContextData created`);
+  await sleep(100);
+}
+
+// ── Generate pipeline helpers (from generate-next-steps.ts — identical logic) ─
 
 function computeConfidenceStats(studentResponses, questions) {
   const qStats = {};
@@ -306,7 +346,12 @@ function getStudentGroups(studentResponses, questionNumbers, studentNameMap, thr
       buildingUnderstanding.push(name);
     }
   }
-  const sortByName = (a, b) => a.localeCompare(b);
+  const sortByName = (a, b) => {
+    const [aFirst = '', ...aRest] = a.split(' ');
+    const [bFirst = '', ...bRest] = b.split(' ');
+    const firstCmp = aFirst.localeCompare(bFirst);
+    return firstCmp !== 0 ? firstCmp : aRest.join(' ').localeCompare(bRest.join(' '));
+  };
   return {
     buildingUnderstanding: buildingUnderstanding.sort(sortByName),
     understoodConcept: understoodConcept.sort(sortByName),
@@ -424,24 +469,32 @@ function parseJson(raw) {
   return typeof raw === 'string' ? JSON.parse(raw) : raw;
 }
 
-// ── Generate pipeline (ported from generate-next-steps.ts processClassroom) ──
+// ── Generate pipeline (from generate-next-steps.ts processClassroom) ────────
 
 async function runGeneratePipeline(gql, classroom, sessionId) {
   console.log('=== Starting generate pipeline ===');
 
-  // Fetch session details
-  const sessionData = await gql(GET_SESSION, { id: sessionId });
-  const currentSession = sessionData.getSession;
-
-  // Fetch history sessions
+  // List sessions
+  console.log('  Sessions...');
   const sessionsData = await gql(SESSIONS_BY_CLASSROOM, { classroomId: classroom.id });
-  const allSessions = sessionsData.sessionsByClassroomId?.items ?? [];
-  const sorted = [...allSessions].sort((a, b) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
-  const historyStubs = sorted.filter((s) => s.id !== sessionId);
+  const sessionStubs = sessionsData.sessionsByClassroomId?.items ?? [];
+  if (!sessionStubs.length) {
+    console.log(' — no sessions, skipping');
+    return;
+  }
+  const sorted = [...sessionStubs].sort((a, b) => (a.weekNumber ?? 0) - (b.weekNumber ?? 0));
+  const currentStub = sorted[sorted.length - 1];
+  const historyStubs = sorted.slice(0, sorted.length - 1);
+  console.log(`  ✓ current: ${currentStub.sessionLabel}${historyStubs.length ? `, ${historyStubs.length} historical` : ''}`);
 
-  const historySessions = await Promise.all(
-    historyStubs.map((s) => gql(GET_SESSION, { id: s.id }).then((d) => d.getSession))
+  // Fetch full session details
+  console.log('  Session details...');
+  const [currentSession, ...historySessions] = await Promise.all(
+    [currentStub, ...historyStubs].map((s) =>
+      gql(GET_SESSION, { id: s.id }).then((d) => d.getSession)
+    )
   );
+  console.log('  ✓');
 
   const ppq = currentSession?.assessments?.items?.find((a) => a.type === 'PPQ');
   const allCcss = [
@@ -452,7 +505,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   ].filter(Boolean);
 
   if (!allCcss.length) {
-    console.log('No CCSS standards found — skipping generation');
+    console.log('  ✗ No CCSS standards found — skipping');
     return;
   }
 
@@ -469,12 +522,18 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
     standards: lsResults.flatMap((r) => r?.standards ?? []),
   };
   console.log(`  ✓ ${learningScienceData.standards.length} standards`);
+  console.log(`  [LS] standards returned: ${learningScienceData.standards.length}`);
+  for (const s of learningScienceData.standards) {
+    console.log(`  [LS]   ${s.code}: ${s.prerequisiteStandards?.length ?? 0} prereqs, ${s.futureDependentStandards?.length ?? 0} future`);
+    if (s.prerequisiteStandards?.length) console.log(`  [LS]     prereqs:`, s.prerequisiteStandards.map((r) => r.code));
+    if (s.futureDependentStandards?.length) console.log(`  [LS]     future:`, s.futureDependentStandards.map((r) => r.code));
+  }
 
-  // Student responses — confidence stats
+  // Student responses — confidence stats + PPQ enrichment
   let augmentedPpq = ppq;
   let studentResponses = [];
   if (ppq?.id) {
-    console.log('  Fetching student responses...');
+    console.log('  Student responses...');
     try {
       const srData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: ppq.id });
       studentResponses = srData?.studentResponsesByAssessmentId?.items ?? [];
@@ -483,10 +542,12 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
       if (hasConfidence) {
         const confidenceStats = computeConfidenceStats(studentResponses, ppq.questions ?? []);
         augmentedPpq = { ...ppq, confidenceStats };
+        console.log(`  ✓ ${studentResponses.length}, with confidence`);
+      } else {
+        console.log(`  ✓ ${studentResponses.length}, no confidence`);
       }
-      console.log(`  ✓ ${studentResponses.length} responses`);
     } catch (err) {
-      console.log(`  ✗ Student responses error: ${err}`);
+      console.log(`  ✗ ${err} — continuing`);
     }
   }
 
@@ -497,7 +558,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
 
   // Misconception analysis
-  console.log('  Running misconception analysis...');
+  console.log('  Misconception analysis...');
   const analysisResult = await invokeLambda(`microcoachLLMAnalysis-${AMPLIFY_ENV}`, {
     input: {
       classroomData: JSON.stringify({
@@ -511,8 +572,8 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
     },
   });
   const analysis = parseJson(analysisResult);
-  const misconceptions = analysis?.misconceptions ?? [];
-  console.log(`  ✓ ${misconceptions.length} misconceptions`);
+  const genMisconceptions = analysis?.misconceptions ?? [];
+  console.log(`  ✓ ${genMisconceptions.length} misconceptions`);
 
   // Per-misconception extras
   const ppqQs = (ppq?.questions ?? []).map((q) => ({
@@ -520,7 +581,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
     correctAnswer: q.correctAnswer ?? null,
     classPercentCorrect: q.classPercentCorrect ?? null,
   }));
-  const misconceptionExtras = misconceptions.map((m) => {
+  const misconceptionExtras = genMisconceptions.map((m) => {
     const qNums = parseQuestionNumbers(m.evidence?.source ?? '');
     return {
       ppqQuestions: ppqQs,
@@ -537,6 +598,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
     limit: 20,
   });
   const nextStepExamples = nextStepData.listContextData?.items ?? [];
+  console.log(`  ✓ ${nextStepExamples.length} next step examples`);
 
   // Generate next step activities
   const classroomContext = { grade: classroom.grade, subject: classroom.subject, cohortSize: classroom.cohortSize };
@@ -544,21 +606,21 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
 
   // Planning call
   let structurePlan = [];
-  console.log(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
+  console.log(`  Planning activity structures for ${genMisconceptions.length} misconceptions...`);
   try {
     const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, {
       input: {
         planStructures: true,
-        misconceptions: JSON.stringify(misconceptions.map((m) => ({
+        misconceptions: JSON.stringify(genMisconceptions.map((m) => ({
           title: m.title, description: m.description, ccssStandard: m.ccssStandard,
         }))),
         classroomContext: JSON.stringify(classroomContext),
       },
     });
     structurePlan = parseJson(raw) ?? [];
-    console.log(`  ✓ ${structurePlan.length} structure assignments`);
+    console.log(`  ✓ ${structurePlan.length} assignments`);
   } catch (err) {
-    console.warn(`  ⚠ Structure planning failed: ${err}`);
+    console.warn(`  ⚠ Structure planning failed, generating without suggestions: ${err}`);
   }
 
   const getSuggestedStructure = (title, fmt) => {
@@ -566,10 +628,10 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
     return plan ? plan[fmt] ?? null : null;
   };
 
-  // Generate activities
+  // Generate activities — misconceptions in parallel, formats sequential within each
   const activitiesPerGroup = await Promise.all(
-    misconceptions.map(async (m, i) => {
-      console.log(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}`);
+    genMisconceptions.map(async (m, i) => {
+      console.log(`  Next steps [${i + 1}/${genMisconceptions.length}]: ${m.title}...`);
       const relevant = nextStepExamples.filter(
         (ex) =>
           !ex.ccssStandards?.length ||
@@ -586,6 +648,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
       const sd = misconceptionExtras[i]?.studentData ?? [];
       const resultList = [];
 
+      // Sequential within misconception so each format sees what was already generated
       for (const fmt of NEXT_STEP_FORMATS) {
         const existingActivities = resultList.map(a => ({
           title: a.title, format: a.format, activityStructure: a.activityStructure,
@@ -609,93 +672,67 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
         }
       }
 
-      console.log(`  ✓ ${resultList.length} activities for misconception ${i + 1}`);
+      console.log(`  ✓ ${resultList.length} activities`);
       return resultList;
     })
   );
 
   // Build + save
-  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras);
-  console.log(`  Saving ${nextSteps.length} next steps to session ${sessionId}...`);
+  const nextSteps = buildNextSteps(genMisconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras);
+  console.log(`  Saving ${nextSteps.length} next steps to session ${currentStub.id}...`);
   await gql(UPDATE_SESSION, {
     input: {
-      id: sessionId,
+      id: currentStub.id,
       pregeneratedNextSteps: JSON.stringify(nextSteps),
       status: 'generated',
     },
   });
   console.log('  ✓ Session updated');
 
-  await gql(UPDATE_CLASSROOM_WEEK, {
-    input: { id: classroom.id, currentWeek: currentSession.weekNumber },
-  });
-  console.log(`  ✓ Classroom currentWeek set to ${currentSession.weekNumber}`);
+  console.log(`  Setting currentWeek to ${currentStub.weekNumber}...`);
+  await gql(UPDATE_CLASSROOM_WEEK, { input: { id: classroom.id, currentWeek: currentStub.weekNumber } });
+  console.log('  ✓');
 
-  return { misconceptionCount: misconceptions.length, nextStepCount: nextSteps.length };
+  return { misconceptionCount: genMisconceptions.length, nextStepCount: nextSteps.length };
 }
 
-// ── Main async pipeline ──────────────────────────────────────────────────────
+// ── Main async pipeline ─────────────────────────────────────────────────────
+// Mirrors CLI order: yarn ingest → yarn upload → yarn generate
 
 async function runPipeline(input) {
   const { classroomId, activityFileBase64, studentDataFileBase64 } = input;
 
   const gql = await createGqlClient();
 
-  // 1. Look up classroom
+  // ── Step 1: Fetch classroom ─────────────────────────────────────────────────
   console.log('Step 1: Fetching classroom...');
   const classroomData = await gql(GET_CLASSROOM, { id: classroomId });
   const classroom = classroomData.getClassroom;
   if (!classroom) throw new Error(`Classroom ${classroomId} not found`);
-  console.log(`  ✓ ${classroom.classroomName} (grade ${classroom.grade})`);
+  console.log(`  ✓ ${classroom.classroomName} (grade ${classroom.grade}, ${classroom.state})`);
 
-  // 2. Parse xlsx
-  console.log('Step 2: Parsing student data xlsx...');
-  const xlsxBuffer = Buffer.from(studentDataFileBase64, 'base64');
-  const parsed = parseExcelBuffer(xlsxBuffer);
-  console.log(`  ✓ ${parsed.students.length} students, ${parsed.questionMeta.length} questions, week ${parsed.weekNumber}`);
-
-  // 3. Upload students
-  console.log('Step 3: Uploading students...');
-  const createdStudents = await uploadStudents(gql, classroomId, parsed.students);
-  const studentMap = new Map();
-  for (const s of createdStudents) {
-    studentMap.set(s.externalId, s.id);
-  }
-
-  // 4. Create session
-  console.log('Step 4: Creating session...');
-  const session = await uploadSession(gql, classroomId, parsed);
-  const sessionId = session.id;
-
-  // 5. Create PPQ assessment
-  console.log('Step 5: Creating PPQ assessment...');
-  const ppqAssessment = await uploadAssessment(gql, classroomId, sessionId, parsed, 'PPQ');
-
-  // 6. Upload student responses
-  console.log('Step 6: Uploading student responses...');
-  await uploadStudentResponses(gql, ppqAssessment.id, parsed.students, studentMap);
-
-  // 7. Link assessment to session
-  console.log('Step 7: Linking assessment to session...');
-  await gql(UPDATE_SESSION, {
-    input: {
-      id: sessionId,
-      ppqAssessmentId: ppqAssessment.id,
-    },
-  });
-
-  // 8. Ingest docx — extract misconceptions
-  console.log('Step 8: Ingesting activity docx...');
+  // ── Step 2: Ingest docx — extract misconceptions (yarn ingest) ──────────────
+  console.log('Step 2: Ingesting activity docx...');
   const docxBuffer = Buffer.from(activityFileBase64, 'base64');
   const docxResult = await mammoth.extractRawText({ buffer: docxBuffer });
   const ppqText = docxResult.value.trim();
+  if (!ppqText) {
+    throw new Error('Empty text extracted from docx — cannot ingest');
+  }
   console.log(`  ✓ Extracted ${ppqText.length} chars from docx`);
 
   // Determine occurrence (first if no prior sessions, recurring otherwise)
   const existingSessions = await gql(SESSIONS_BY_CLASSROOM, { classroomId });
   const sessionCount = (existingSessions.sessionsByClassroomId?.items ?? []).length;
-  const occurrence = sessionCount <= 1 ? 'first' : 'recurring';
+  const occurrence = sessionCount === 0 ? 'first' : 'recurring';
 
+  // Parse xlsx early to get weekNumber for ingest call
+  console.log('  Parsing student data xlsx...');
+  const xlsxBuffer = Buffer.from(studentDataFileBase64, 'base64');
+  const parsed = parseExcelBuffer(xlsxBuffer);
+  console.log(`  ✓ ${parsed.students.length} students, ${parsed.questionMeta.length} questions, week ${parsed.weekNumber}`);
+
+  console.log(`  Calling ingestPPQ (occurrence: ${occurrence})...`);
   const ingestResult = await gql(INGEST_PPQ, {
     input: {
       ppqText,
@@ -704,7 +741,7 @@ async function runPipeline(input) {
       subject: classroom.subject,
       state: classroom.state,
       schoolYear: classroom.schoolYear,
-      cohortSize: classroom.cohortSize,
+      cohortSize: classroom.cohortSize ?? parsed.students.length,
       sessionLabel: `W${parsed.weekNumber}`,
       weekNumber: parsed.weekNumber,
       occurrence,
@@ -714,22 +751,75 @@ async function runPipeline(input) {
   const misconceptions = ingestData.misconceptions ?? [];
   console.log(`  ✓ ${misconceptions.length} misconceptions extracted`);
 
-  // 9. Upload misconceptions + stub activities
-  console.log('Step 9: Uploading misconceptions...');
+  // ── Step 3: Upload (yarn upload) ────────────────────────────────────────────
+  // Derive CCSS: use xlsx if available, fall back to misconception ccssStandards
+  // (mirrors CLI using sessionConfig.ccssStandards as fallback)
+  const ccssFromMisconceptions = [...new Set(misconceptions.map((m) => m.ccssStandard).filter(Boolean))];
+  const ccssStandards =
+    parsed.ccssStandards.filter((s) => /\d/.test(s)).length > 0
+      ? parsed.ccssStandards
+      : ccssFromMisconceptions;
+
+  // Merge CCSS into parsed data for assessment creation (mirrors upload.ts:642-650)
+  const ppqData = {
+    ...parsed,
+    ccssStandards,
+    topic: parsed.topic || deriveTopic(ccssStandards[0] ?? ''),
+  };
+
+  // 3a. Upload students
+  console.log('Step 3a: Uploading students...');
+  const createdStudents = await uploadStudents(gql, classroomId, ppqData.students);
+  const studentMap = new Map();
+  for (const s of createdStudents) {
+    studentMap.set(s.externalId, s.id);
+  }
+
+  // 3b. Create session
+  console.log('Step 3b: Creating session...');
+  const sessionLabel = `W${ppqData.weekNumber}`;
+  const session = await uploadSession(gql, classroomId, sessionLabel, ppqData.weekNumber, ppqData.topic, ccssStandards);
+  const sessionId = session.id;
+
+  // 3c. Create PPQ assessment
+  console.log('Step 3c: Creating PPQ assessment...');
+  const ppqAssessment = await uploadAssessment(gql, classroomId, sessionId, ppqData, 'PPQ');
+
+  // 3d. Upload PPQ student responses
+  console.log('Step 3d: Uploading PPQ student responses...');
+  await uploadStudentResponses(gql, 'PPQ', ppqAssessment.id, ppqData.students, studentMap);
+
+  // 3e. Link assessment to session (mirrors upload.ts:690-698)
+  console.log('Step 3e: Linking assessment to session...');
+  await gql(UPDATE_SESSION, {
+    input: {
+      id: sessionId,
+      ppqAssessmentId: ppqAssessment.id,
+    },
+  });
+  console.log('  ✓');
+
+  // 3f. Upload misconceptions + stub activities (mirrors upload.ts:701-718)
+  console.log('Step 3f: Uploading misconceptions...');
   await uploadMisconceptions(gql, classroomId, sessionId, misconceptions);
 
-  // 10. Run generate pipeline
-  console.log('Step 10: Running generate pipeline...');
-  // Refetch classroom to include the newly created students
-  const freshClassroomData = await gql(GET_CLASSROOM, { id: classroomId });
-  const freshClassroom = freshClassroomData.getClassroom;
-  const generateResult = await runGeneratePipeline(gql, freshClassroom, sessionId);
+  // 3g. Create ContextData (mirrors upload.ts:721-729)
+  console.log('Step 3g: Creating ContextData...');
+  const nextStepTitle = `${classroom.classroomName} ${sessionLabel} Next Step - ${ppqData.topic}`;
+  await uploadContextData(gql, nextStepTitle, classroom.grade, ccssStandards, ppqData.weekNumber, false, ppqData.assessmentCode);
+
+  // ── Step 4: Generate pipeline (yarn generate) — short-circuited for now ─────
+  console.log('Step 4: Generate pipeline — skipped (short-circuited)');
+  // TODO: re-enable when ready
+  // const freshClassroomData = await gql(GET_CLASSROOM, { id: classroomId });
+  // const freshClassroom = freshClassroomData.getClassroom;
+  // const generateResult = await runGeneratePipeline(gql, freshClassroom, sessionId);
 
   return {
     classroomName: classroom.classroomName,
-    studentCount: parsed.students.length,
+    studentCount: ppqData.students.length,
     misconceptionCount: misconceptions.length,
-    nextStepCount: generateResult?.nextStepCount ?? 0,
+    nextStepCount: 0,
   };
 }
 
@@ -749,30 +839,108 @@ export const handler = async (event) => {
       const result = await runPipeline(input);
       console.log('Pipeline complete:', JSON.stringify(result));
 
-      await sendEmail(
-        `✓ Microcoach Upload Complete — ${result.classroomName}`,
-        [
-          `Upload and analysis complete for ${result.classroomName}.`,
-          '',
-          `Students: ${result.studentCount}`,
-          `Misconceptions identified: ${result.misconceptionCount}`,
-          `Next steps generated: ${result.nextStepCount}`,
-          '',
-          'The dashboard is ready for review.',
-        ].join('\n')
-      );
+      const subject = `RightOn Education: MicroCoach Upload Complete - ${result.classroomName}`;
+      const bodyHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1B376F; margin: 0; padding: 0; background-color: #FFFBF6; }
+    .container { max-width: 600px; margin: 24px auto; background: #FFFFFF; border-radius: 8px; overflow: hidden; border: 1px solid #e5e5e5; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+    .header { background-color: #1B376F; padding: 24px 32px; }
+    .header h1 { font-family: 'Poppins', sans-serif; color: #FFFBF6; margin: 0; font-size: 20px; font-weight: 700; }
+    .body { padding: 32px; }
+    .intro { font-size: 14px; line-height: 1.6; margin-bottom: 24px; color: #374151; }
+    .summary-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .summary-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #e5e5e5; }
+    .summary-table td:first-child { font-family: 'Poppins', sans-serif; font-weight: 600; color: #1B376F; width: 200px; font-size: 13px; letter-spacing: 0.3px; }
+    .summary-table td:last-child { color: #374151; }
+    .status { background-color: rgba(5, 150, 105, 0.08); padding: 12px 16px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; color: #059669; text-align: center; }
+    .footer { padding: 16px 32px; background-color: #FFFBF6; border-top: 1px solid #e5e5e5; font-size: 12px; color: #6B7280; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>MicroCoach Upload Complete</h1>
+    </div>
+    <div class="body">
+      <p class="intro">A user has uploaded data to MicroCoach and it has been parsed and analyzed. Here is a summary:</p>
+      <table class="summary-table">
+        <tr><td>Classroom</td><td>${result.classroomName}</td></tr>
+        <tr><td>Students</td><td>${result.studentCount}</td></tr>
+        <tr><td>Misconceptions Identified</td><td>${result.misconceptionCount}</td></tr>
+        <tr><td>Next Steps Generated</td><td>${result.nextStepCount}</td></tr>
+      </table>
+      <div class="status">Ready for Review</div>
+    </div>
+    <div class="footer">RightOn Education &mdash; MicroCoach</div>
+  </div>
+</body>
+</html>`.trim();
+      const bodyText = [
+        `RightOn Education: MicroCoach Upload Complete - ${result.classroomName}`,
+        '',
+        'A user has uploaded data to MicroCoach and it has been parsed and analyzed. Here is a summary:',
+        '',
+        `Classroom: ${result.classroomName}`,
+        `Students: ${result.studentCount}`,
+        `Misconceptions Identified: ${result.misconceptionCount}`,
+        `Next Steps Generated: ${result.nextStepCount}`,
+        '',
+        'Ready for Review.',
+      ].join('\n');
+      await sendEmail(subject, bodyHtml, bodyText);
     } catch (err) {
       console.error('Pipeline failed:', err);
 
+      const failHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1B376F; margin: 0; padding: 0; background-color: #FFFBF6; }
+    .container { max-width: 600px; margin: 24px auto; background: #FFFFFF; border-radius: 8px; overflow: hidden; border: 1px solid #e5e5e5; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+    .header { background-color: #CC5500; padding: 24px 32px; }
+    .header h1 { font-family: 'Poppins', sans-serif; color: #FFFBF6; margin: 0; font-size: 20px; font-weight: 700; }
+    .body { padding: 32px; }
+    .intro { font-size: 14px; line-height: 1.6; margin-bottom: 24px; color: #374151; }
+    .error-box { background-color: rgba(204, 85, 0, 0.06); border-left: 4px solid #CC5500; padding: 12px 16px; border-radius: 8px; font-size: 13px; color: #CC5500; font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace; word-break: break-all; }
+    .note { margin-top: 16px; font-size: 13px; color: #6B7280; }
+    .footer { padding: 16px 32px; background-color: #FFFBF6; border-top: 1px solid #e5e5e5; font-size: 12px; color: #6B7280; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>MicroCoach Upload Failed</h1>
+    </div>
+    <div class="body">
+      <p class="intro">The upload pipeline encountered an error and could not complete.</p>
+      <div class="error-box">${err.message}</div>
+      <p class="note">Check CloudWatch logs for full details.</p>
+    </div>
+    <div class="footer">RightOn Education &mdash; MicroCoach</div>
+  </div>
+</body>
+</html>`.trim();
+      const failText = [
+        'RightOn Education: MicroCoach Upload Failed',
+        '',
+        'The upload pipeline encountered an error and could not complete.',
+        '',
+        `Error: ${err.message}`,
+        '',
+        'Check CloudWatch logs for full details.',
+      ].join('\n');
       await sendEmail(
-        `✗ Microcoach Upload Failed`,
-        [
-          `Upload pipeline failed.`,
-          '',
-          `Error: ${err.message}`,
-          '',
-          `Check CloudWatch logs for details.`,
-        ].join('\n')
+        'RightOn Education: MicroCoach Upload Failed',
+        failHtml,
+        failText
       ).catch((emailErr) => console.error('Failed to send error email:', emailErr));
 
       throw err;

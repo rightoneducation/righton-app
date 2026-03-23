@@ -72,8 +72,8 @@
             },
             "APPSYNC_SECRET_NAME": "microcoach",
             "API_SECRET_NAME": "microcoach",
-            "NOTIFY_FROM_EMAIL": "drew@rightoneducation.com",
-            "NOTIFY_TO_EMAILS": "drew@rightoneducation.com,gregori@rightoneducation.com"
+            "NOTIFY_FROM_EMAIL": "noreply@rightoneducation.com",
+            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com"
           }
         },
         "Role": {
