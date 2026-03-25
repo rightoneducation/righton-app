@@ -41,6 +41,7 @@ exports.getClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -243,6 +244,7 @@ exports.listClassrooms = `
             topic
             ccssStandards
             status
+            publishStatus
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -352,6 +354,7 @@ exports.getSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -482,6 +485,7 @@ exports.listSessions = `
         topic
         ccssStandards
         status
+        publishStatus
         ppqAssessmentId
         postPpqAssessmentId
         assessments {
@@ -1363,6 +1367,7 @@ exports.classroomsByClassroomName = `
             topic
             ccssStandards
             status
+            publishStatus
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -1485,6 +1490,7 @@ exports.sessionsByClassroomId = `
         topic
         ccssStandards
         status
+        publishStatus
         ppqAssessmentId
         postPpqAssessmentId
         assessments {

@@ -87,7 +87,7 @@ function App() {
       const map = {};
       for (const classroom of sorted) {
         const activeSession = (classroom.sessions?.items ?? [])
-          .find((s) => s.weekNumber === classroom.currentWeek);
+          .find((s) => s.weekNumber === classroom.currentWeek && (s.publishStatus ?? 'PUBLISHED') === 'PUBLISHED');
         let gapGroups = null;
         if (activeSession?.pregeneratedNextSteps) {
           gapGroups = GapGroupParser.fromPregeneratedJson(activeSession.pregeneratedNextSteps);

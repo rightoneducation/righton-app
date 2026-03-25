@@ -48,6 +48,13 @@ class APIClient {
         const result = await this.callGraphQL(queries_1.getSession, { id: sessionId });
         return (_b = (_a = result.data) === null || _a === void 0 ? void 0 : _a.getSession) !== null && _b !== void 0 ? _b : null;
     }
+    async updateSession(sessionId, updates) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.updateSession, {
+            input: { id: sessionId, ...updates },
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.updateSession;
+    }
     // ── Misconception ──────────────────────────────────────────────────────────
     async createMisconception(sessionId, item) {
         var _a;

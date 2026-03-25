@@ -10,6 +10,7 @@ export declare class APIClient {
     getClassroom(classId: string): Promise<any>;
     listSessions(classroomId: string): Promise<any>;
     getSession(sessionId: string): Promise<any>;
+    updateSession(sessionId: string, updates: Record<string, unknown>): Promise<any>;
     createMisconception(sessionId: string, item: Record<string, unknown>): Promise<any>;
     updateMisconception(id: string, updates: Record<string, unknown>): Promise<any>;
     listActivities(misconceptionId: string): Promise<any>;

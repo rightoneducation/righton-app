@@ -39,6 +39,7 @@ export const getClassroom = /* GraphQL */ `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -241,6 +242,7 @@ export const listClassrooms = /* GraphQL */ `
             topic
             ccssStandards
             status
+            publishStatus
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -350,6 +352,7 @@ export const getSession = /* GraphQL */ `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -480,6 +483,7 @@ export const listSessions = /* GraphQL */ `
         topic
         ccssStandards
         status
+        publishStatus
         ppqAssessmentId
         postPpqAssessmentId
         assessments {
@@ -1361,6 +1365,7 @@ export const classroomsByClassroomName = /* GraphQL */ `
             topic
             ccssStandards
             status
+            publishStatus
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -1483,6 +1488,7 @@ export const sessionsByClassroomId = /* GraphQL */ `
         topic
         ccssStandards
         status
+        publishStatus
         ppqAssessmentId
         postPpqAssessmentId
         assessments {

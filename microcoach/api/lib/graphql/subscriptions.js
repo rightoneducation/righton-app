@@ -43,6 +43,7 @@ exports.onCreateClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -242,6 +243,7 @@ exports.onUpdateClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -441,6 +443,7 @@ exports.onDeleteClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -610,6 +613,7 @@ exports.onCreateSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -735,6 +739,7 @@ exports.onUpdateSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -860,6 +865,7 @@ exports.onDeleteSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {

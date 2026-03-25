@@ -499,6 +499,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
       id: currentStub.id,
       pregeneratedNextSteps: JSON.stringify(nextSteps),
       status: 'generated',
+      publishStatus: 'DRAFT',
     },
   });
   console.log('  ✓ Session updated');
@@ -534,6 +535,8 @@ export const handler = async (event) => {
     console.log('Generate pipeline complete:', JSON.stringify(result));
 
     const displayName = classroomName || classroom.classroomName;
+    const frontendUrl = process.env.FRONTEND_URL || 'https://microcoach.rightoneducation.com';
+    const reviewUrl = `${frontendUrl}/review/${classroomId}`;
     const subject = `RightOn Education: MicroCoach Upload Complete - ${displayName}`;
     const bodyHtml = `
 <!DOCTYPE html>
@@ -569,7 +572,7 @@ export const handler = async (event) => {
         <tr><td>Misconceptions Identified</td><td>${misconceptionCount ?? result.misconceptionCount}</td></tr>
         <tr><td>Next Steps Generated</td><td>${result.nextStepCount}</td></tr>
       </table>
-      <div class="status">Ready for Review</div>
+      <a href="${reviewUrl}" class="status" style="display:block;text-decoration:none;color:#059669;">Ready for Review &rarr;</a>
     </div>
     <div class="footer">RightOn Education &mdash; MicroCoach</div>
   </div>
@@ -585,7 +588,7 @@ export const handler = async (event) => {
       `Misconceptions Identified: ${misconceptionCount ?? result.misconceptionCount}`,
       `Next Steps Generated: ${result.nextStepCount}`,
       '',
-      'Ready for Review.',
+      `Ready for Review: ${reviewUrl}`,
     ].join('\n');
     await sendEmail(subject, bodyHtml, bodyText);
 

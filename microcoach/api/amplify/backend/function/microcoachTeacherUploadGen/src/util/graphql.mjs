@@ -138,6 +138,7 @@ export const UPDATE_SESSION = /* GraphQL */ `
     updateSession(input: $input) {
       id
       status
+      publishStatus
       pregeneratedNextSteps
     }
   }

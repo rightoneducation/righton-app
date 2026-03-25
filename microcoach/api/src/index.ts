@@ -25,6 +25,7 @@ import {
   updateSavedNextStep,
   deleteSavedNextStep,
   teacherUpload,
+  updateSession,
 } from "./graphql/mutations";
 import awsconfig from "./aws-exports";
 
@@ -86,6 +87,13 @@ export class APIClient {
   async getSession(sessionId: string) {
     const result = await this.callGraphQL<any>(getSession, { id: sessionId });
     return result.data?.getSession ?? null;
+  }
+
+  async updateSession(sessionId: string, updates: Record<string, unknown>) {
+    const result = await this.callGraphQL<any>(updateSession, {
+      input: { id: sessionId, ...updates },
+    });
+    return result.data?.updateSession;
   }
 
   // ── Misconception ──────────────────────────────────────────────────────────

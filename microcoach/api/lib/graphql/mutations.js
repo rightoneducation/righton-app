@@ -74,6 +74,7 @@ exports.createClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -274,6 +275,7 @@ exports.updateClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -474,6 +476,7 @@ exports.deleteClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -646,6 +649,7 @@ exports.createSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -774,6 +778,7 @@ exports.updateSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -902,6 +907,7 @@ exports.deleteSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {

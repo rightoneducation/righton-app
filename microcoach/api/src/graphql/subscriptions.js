@@ -41,6 +41,7 @@ export const onCreateClassroom = /* GraphQL */ `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -240,6 +241,7 @@ export const onUpdateClassroom = /* GraphQL */ `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -439,6 +441,7 @@ export const onDeleteClassroom = /* GraphQL */ `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -608,6 +611,7 @@ export const onCreateSession = /* GraphQL */ `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -733,6 +737,7 @@ export const onUpdateSession = /* GraphQL */ `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -858,6 +863,7 @@ export const onDeleteSession = /* GraphQL */ `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
