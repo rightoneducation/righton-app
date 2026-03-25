@@ -44,6 +44,7 @@ type Session @model {
   # Precomputed frontend view — set by the generate-next-steps script.
   # Cached here so the app fetches it in a single listClassrooms call with no extra LLM cost.
   pregeneratedNextSteps: AWSJSON
+  evaluationResults: AWSJSON      # Grade level evaluation from Learning Commons evaluators
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }

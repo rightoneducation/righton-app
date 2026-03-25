@@ -95,6 +95,7 @@ exports.getClassroom = `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -256,6 +257,7 @@ exports.listClassrooms = `
               __typename
             }
             pregeneratedNextSteps
+            evaluationResults
             createdAt
             updatedAt
             classroomSessionsId
@@ -463,6 +465,7 @@ exports.getSession = `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -563,6 +566,7 @@ exports.listSessions = `
           __typename
         }
         pregeneratedNextSteps
+        evaluationResults
         createdAt
         updatedAt
         classroomSessionsId
@@ -1379,6 +1383,7 @@ exports.classroomsByClassroomName = `
               __typename
             }
             pregeneratedNextSteps
+            evaluationResults
             createdAt
             updatedAt
             classroomSessionsId
@@ -1568,6 +1573,7 @@ exports.sessionsByClassroomId = `
           __typename
         }
         pregeneratedNextSteps
+        evaluationResults
         createdAt
         updatedAt
         classroomSessionsId

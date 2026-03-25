@@ -126,6 +126,7 @@ export const createClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -327,6 +328,7 @@ export const updateClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -528,6 +530,7 @@ export const deleteClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -756,6 +759,7 @@ export const createSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -885,6 +889,7 @@ export const updateSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -1014,6 +1019,7 @@ export const deleteSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId

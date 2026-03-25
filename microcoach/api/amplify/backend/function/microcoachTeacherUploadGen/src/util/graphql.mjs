@@ -140,6 +140,7 @@ export const UPDATE_SESSION = /* GraphQL */ `
       status
       publishStatus
       pregeneratedNextSteps
+      evaluationResults
     }
   }
 `;

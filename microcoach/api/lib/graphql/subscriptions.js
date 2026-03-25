@@ -97,6 +97,7 @@ exports.onCreateClassroom = `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -297,6 +298,7 @@ exports.onUpdateClassroom = `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -497,6 +499,7 @@ exports.onDeleteClassroom = `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -722,6 +725,7 @@ exports.onCreateSession = `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -848,6 +852,7 @@ exports.onUpdateSession = `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -974,6 +979,7 @@ exports.onDeleteSession = `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId

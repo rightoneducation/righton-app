@@ -508,7 +508,51 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   await gql(UPDATE_CLASSROOM_WEEK, { input: { id: classroom.id, currentWeek: currentStub.weekNumber } });
   console.log('  ✓');
 
-  return { misconceptionCount: misconceptions.length, nextStepCount: nextSteps.length };
+  // ── Evaluate generated content for grade level appropriateness ──────────────
+  let evalResults = null;
+  // Concatenate all generated content into a single text block for one evaluation call
+  const allParts = [];
+  for (const ns of nextSteps) {
+    for (const move of ns.moveOptions ?? []) {
+      const steps = move.tabs?.activitySteps;
+      if (steps?.incorrectWorkedExamples) {
+        for (const ex of steps.incorrectWorkedExamples) {
+          allParts.push(typeof ex === 'string' ? ex : `Problem: ${ex.problem}\nIncorrect Work: ${ex.incorrectWork}`);
+        }
+      }
+      if (steps?.discussionQuestions) {
+        for (const q of steps.discussionQuestions) {
+          allParts.push(q);
+        }
+      }
+    }
+  }
+  const evalTexts = allParts.length > 0
+    ? [{ id: 'all', label: 'All Generated Content', type: 'combined', text: allParts.join('\n\n---\n\n') }]
+    : [];
+
+  if (evalTexts.length > 0) {
+    console.log(`  Evaluating ${evalTexts.length} texts for grade level appropriateness...`);
+    try {
+      evalResults = await invokeLambda(`microcoachInitialEvaluator-${AMPLIFY_ENV}`, {
+        grade: classroom.grade,
+        texts: evalTexts,
+      });
+      console.log(`  ✓ Evaluation: ${JSON.stringify(evalResults.summary)}`);
+      // Save evaluation results to session
+      await gql(UPDATE_SESSION, {
+        input: {
+          id: currentStub.id,
+          evaluationResults: JSON.stringify(evalResults),
+        },
+      });
+      console.log('  ✓ Evaluation results saved to session');
+    } catch (err) {
+      console.error('  ✗ Evaluator failed (non-fatal):', err.message);
+    }
+  }
+
+  return { misconceptionCount: misconceptions.length, nextStepCount: nextSteps.length, evalResults };
 }
 
 // ── Handler ──────────────────────────────────────────────────────────────────
@@ -572,12 +616,31 @@ export const handler = async (event) => {
         <tr><td>Misconceptions Identified</td><td>${misconceptionCount ?? result.misconceptionCount}</td></tr>
         <tr><td>Next Steps Generated</td><td>${result.nextStepCount}</td></tr>
       </table>
+      ${result.evalResults?.evaluations?.[0] ? (() => {
+        const e = result.evalResults.evaluations[0];
+        const s = result.evalResults.summary;
+        const isAtGrade = e.classification === 'atGrade';
+        const statusColor = isAtGrade ? '#059669' : '#CC5500';
+        const statusText = isAtGrade ? '✓ At Grade Level' : e.classification === 'aboveGrade' ? '⚠ Above Grade Level' : e.classification === 'belowGrade' ? '⚠ Below Grade Level' : '— Unknown';
+        return `
+      <table class="summary-table">
+        <tr><td>Grade Level Check</td><td style="color:${statusColor};font-weight:600;">${statusText}</td></tr>
+        <tr><td>Expected</td><td>${s.expectedBand}</td></tr>
+        <tr><td>Scored</td><td>${e.score}</td></tr>
+      </table>`;
+      })() : ''}
       <a href="${reviewUrl}" class="status" style="display:block;text-decoration:none;color:#059669;">Ready for Review &rarr;</a>
     </div>
     <div class="footer">RightOn Education &mdash; MicroCoach</div>
   </div>
 </body>
 </html>`.trim();
+    const evalTextLines = result.evalResults?.evaluations?.[0] ? (() => {
+      const e = result.evalResults.evaluations[0];
+      const s = result.evalResults.summary;
+      const status = e.classification === 'atGrade' ? 'At Grade Level' : e.classification === 'aboveGrade' ? 'Above Grade Level' : e.classification === 'belowGrade' ? 'Below Grade Level' : 'Unknown';
+      return ['', `Grade Level Check: ${status} (expected ${s.expectedBand}, scored ${e.score})`];
+    })() : [];
     const bodyText = [
       `RightOn Education: MicroCoach Upload Complete - ${displayName}`,
       '',
@@ -587,6 +650,7 @@ export const handler = async (event) => {
       `Students: ${studentCount ?? '—'}`,
       `Misconceptions Identified: ${misconceptionCount ?? result.misconceptionCount}`,
       `Next Steps Generated: ${result.nextStepCount}`,
+      ...evalTextLines,
       '',
       `Ready for Review: ${reviewUrl}`,
     ].join('\n');

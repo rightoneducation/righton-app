@@ -21,6 +21,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "microcoachInitialEvaluator": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "microcoachLLMAnalysis": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -36,6 +43,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Region": "string"
     },
     "microcoachNextStepOption": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachRegenEvaluator": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
