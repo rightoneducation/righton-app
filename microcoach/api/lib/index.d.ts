@@ -11,6 +11,7 @@ export declare class APIClient {
     listSessions(classroomId: string): Promise<any>;
     getSession(sessionId: string): Promise<any>;
     updateSession(sessionId: string, updates: Record<string, unknown>): Promise<any>;
+    regenerateContent(sessionId: string, grade: number): Promise<any>;
     createMisconception(sessionId: string, item: Record<string, unknown>): Promise<any>;
     updateMisconception(id: string, updates: Record<string, unknown>): Promise<any>;
     listActivities(misconceptionId: string): Promise<any>;

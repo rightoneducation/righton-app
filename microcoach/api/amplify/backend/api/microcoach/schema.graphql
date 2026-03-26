@@ -322,12 +322,19 @@ type Mutation {
     @function(name: "microcoachIngestPPQ-${env}")
   teacherUpload(input: TeacherUploadInput!): String
     @function(name: "microcoachTeacherUpload-${env}")
+  regenerateContent(input: RegenerateContentInput!): AWSJSON
+    @function(name: "microcoachRegenEvaluator-${env}")
 }
 
 input TeacherUploadInput {
   classroomId: ID!
   activityFileBase64: String!
   studentDataFileBase64: String!
+}
+
+input RegenerateContentInput {
+  sessionId: ID!
+  grade: Int!
 }
 
 # ── ContextData ────────────────────────────────────────────────────────

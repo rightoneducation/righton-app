@@ -69,7 +69,9 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            }
+            },
+            "API_SECRET_NAME": "openai-api",
+            "APPSYNC_SECRET_NAME": "microcoach"
           }
         },
         "Role": {
@@ -78,9 +80,10 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs20.x",
         "Layers": [],
-        "Timeout": 25
+        "Timeout": 300,
+        "MemorySize": 256
       }
     },
     "LambdaExecutionRole": {
@@ -164,6 +167,41 @@
           ]
         }
       }
+    },
+    "CustomLambdaExecutionPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "custom-lambda-execution-policy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "secretsmanager:GetSecretValue"
+              ],
+              "Resource": [
+                "*"
+              ],
+              "Effect": "Allow"
+            },
+            {
+              "Action": [
+                "lambda:InvokeFunction"
+              ],
+              "Resource": [
+                "arn:aws:lambda:*:*:function:microcoach*"
+              ],
+              "Effect": "Allow"
+            }
+          ]
+        },
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ]
+      },
+      "DependsOn": "LambdaExecutionRole"
     }
   },
   "Outputs": {

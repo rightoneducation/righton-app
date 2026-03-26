@@ -22,6 +22,9 @@ function ReviewPage() {
   const [completedThisSession, setCompletedThisSession] = useState(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
+  const [regenComplete, setRegenComplete] = useState(false);
+  const [evaluationResults, setEvaluationResults] = useState(null);
   const [aiGapGroups, setAiGapGroups] = useState(null);
 
   const apiClientRef = useRef(null);
@@ -32,6 +35,10 @@ function ReviewPage() {
       gapGroups = GapGroupParser.fromPregeneratedJson(session.pregeneratedNextSteps);
     }
     setAiGapGroups(gapGroups);
+
+    try {
+      setEvaluationResults(session?.evaluationResults ? JSON.parse(session.evaluationResults) : null);
+    } catch { setEvaluationResults(null); }
 
     const enrichCcss = (item) => {
       if (!gapGroups || !item.gapGroupId) return item;
@@ -86,6 +93,7 @@ function ReviewPage() {
 
   const handleSessionChange = (sessionId) => {
     setSelectedSessionId(sessionId);
+    setRegenComplete(false);
     const session = draftSessions.find((s) => s.id === sessionId);
     if (session) selectSession(session);
   };
@@ -110,6 +118,43 @@ function ReviewPage() {
       console.error('Publish failed:', err);
     } finally {
       setIsPublishing(false);
+    }
+  };
+
+  const handleRegenerate = async () => {
+    if (isRegenerating || !classroom?.grade) return;
+    setIsRegenerating(true);
+    try {
+      const client = apiClientRef.current;
+      // Fire-and-forget: Lambda self-invokes async and returns immediately
+      await client.regenerateContent(selectedSessionId, classroom.grade);
+
+      // Poll session until evaluationResults changes (regen complete)
+      const origEval = evaluationResults;
+      const origScore = origEval?.evaluations?.[0]?.score;
+      const maxAttempts = 30; // 30 × 5s = 150s max wait
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        await new Promise((r) => setTimeout(r, 5000));
+        const updated = await client.getSession(selectedSessionId);
+        if (!updated?.evaluationResults) continue;
+        const newEval = JSON.parse(updated.evaluationResults);
+        const newScore = newEval?.evaluations?.[0]?.score;
+        // Check if evaluation changed (different score or different reasoning)
+        if (newScore !== origScore || newEval?.evaluations?.[0]?.reasoning !== origEval?.evaluations?.[0]?.reasoning) {
+          const session = draftSessions.find((s) => s.id === selectedSessionId);
+          if (session) {
+            const updatedSession = { ...session, pregeneratedNextSteps: updated.pregeneratedNextSteps, evaluationResults: updated.evaluationResults };
+            setDraftSessions((prev) => prev.map((s) => s.id === selectedSessionId ? updatedSession : s));
+            selectSession(updatedSession);
+          }
+          setRegenComplete(true);
+          break;
+        }
+      }
+    } catch (err) {
+      console.error('Regeneration failed:', err);
+    } finally {
+      setIsRegenerating(false);
     }
   };
 
@@ -276,6 +321,10 @@ function ReviewPage() {
         onSessionChange={handleSessionChange}
         onPublish={handlePublish}
         isPublishing={isPublishing}
+        evaluationResults={evaluationResults}
+        onRegenerate={handleRegenerate}
+        isRegenerating={isRegenerating}
+        regenComplete={regenComplete}
       />
 
       <main className="main-content">

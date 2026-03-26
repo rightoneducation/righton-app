@@ -55,6 +55,13 @@ class APIClient {
         });
         return (_a = result.data) === null || _a === void 0 ? void 0 : _a.updateSession;
     }
+    async regenerateContent(sessionId, grade) {
+        var _a;
+        const result = await this.callGraphQL(mutations_1.regenerateContent, {
+            input: { sessionId, grade },
+        });
+        return (_a = result.data) === null || _a === void 0 ? void 0 : _a.regenerateContent;
+    }
     // ── Misconception ──────────────────────────────────────────────────────────
     async createMisconception(sessionId, item) {
         var _a;

@@ -31,6 +31,11 @@ export const teacherUpload = /* GraphQL */ `
     teacherUpload(input: $input)
   }
 `;
+export const regenerateContent = /* GraphQL */ `
+  mutation RegenerateContent($input: RegenerateContentInput!) {
+    regenerateContent(input: $input)
+  }
+`;
 export const createClassroom = /* GraphQL */ `
   mutation CreateClassroom(
     $input: CreateClassroomInput!

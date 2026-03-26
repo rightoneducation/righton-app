@@ -136,7 +136,7 @@
         },
         "microcoachRegenEvaluator": {
           "deploymentBucketName": "amplify-microcoach-test-131102-deployment",
-          "s3Key": "amplify-builds/microcoachRegenEvaluator-6e4d426b434959594c43-build.zip"
+          "s3Key": "amplify-builds/microcoachRegenEvaluator-732f7678744157735166-build.zip"
         }
       },
       "api": {

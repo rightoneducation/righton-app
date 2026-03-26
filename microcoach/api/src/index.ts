@@ -26,6 +26,7 @@ import {
   deleteSavedNextStep,
   teacherUpload,
   updateSession,
+  regenerateContent,
 } from "./graphql/mutations";
 import awsconfig from "./aws-exports";
 
@@ -94,6 +95,13 @@ export class APIClient {
       input: { id: sessionId, ...updates },
     });
     return result.data?.updateSession;
+  }
+
+  async regenerateContent(sessionId: string, grade: number) {
+    const result = await this.callGraphQL<any>(regenerateContent, {
+      input: { sessionId, grade },
+    });
+    return result.data?.regenerateContent;
   }
 
   // ── Misconception ──────────────────────────────────────────────────────────
