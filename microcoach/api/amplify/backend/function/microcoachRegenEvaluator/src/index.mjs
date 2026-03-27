@@ -9,12 +9,47 @@ import { GET_SESSION, UPDATE_SESSION } from './util/graphql.mjs';
 const AMPLIFY_ENV = process.env.ENV || 'dev';
 const MODEL = 'gpt-4o';
 
-// ── Structured output schema matching existing data structures ──
+// ── Exact rubric used by GradeLevelAppropriatenessEvaluator (extracted from @learning-commons/evaluators) ──
+const EVALUATOR_RUBRIC = `
+The evaluator scores text using these four steps:
+
+1. Quantitative: word count and Flesch-Kincaid Grade Level
+   Word count bands: 2-3: 200-800w, 4-5: 200-800w, 6-8: 400-1000w, 9-10: 500-1500w, 11-12: 1501+w
+   FK formula: 0.39*(words/sentences) + 11.8*(syllables/words) - 15.59
+
+2. Qualitative complexity rubric:
+
+TEXT STRUCTURE
+Exceedingly Complex: Deep, intricate, ambiguous connections; discipline-specific organization; graphics essential
+Very Complex: Expanded ideas with implicit/subtle connections; multiple organizational pathways; graphics integral
+Moderately Complex: Some implicit/subtle connections; evident sequential organization; graphics supplementary
+Slightly Complex: Explicit clear connections; chronological/sequential/predictable; simple graphics
+
+LANGUAGE FEATURES
+Exceedingly Complex: Dense, abstract, ironic/figurative language; complex/unfamiliar/archaic/subject-specific vocabulary; mainly complex sentences with multiple subordinate clauses
+Very Complex: Fairly complex; some abstract/ironic/figurative; some unfamiliar/archaic/academic vocabulary; many complex sentences with subordinate phrases/clauses
+Moderately Complex: Mostly explicit language; mostly familiar/conversational vocabulary; primarily simple and compound sentences with some complex ones
+Slightly Complex: Explicit, literal, straightforward; contemporary/familiar/conversational vocabulary; mainly simple sentences
+
+PURPOSE
+Exceedingly Complex: Subtle, intricate, difficult to determine; many theoretical/abstract elements
+Very Complex: Implicit or subtle, fairly easy to infer; more theoretical than concrete
+Moderately Complex: Implied but easy to identify from context
+Slightly Complex: Explicitly stated, clear, concrete, narrowly focused
+
+KNOWLEDGE DEMANDS
+Exceedingly Complex: Extensive discipline-specific or theoretical knowledge; many references/allusions
+Very Complex: Moderate discipline-specific knowledge; some references/allusions
+Moderately Complex: Common knowledge + some discipline-specific; few references/allusions
+Slightly Complex: Everyday, practical knowledge; no references/allusions
+
+3. Background knowledge: at which grade level would students have enough background knowledge to understand the text?
+
+4. Synthesis: quantitative signal → qualitative refinement → background knowledge → final grade band
+`;
+
+// ── Structured output schema — discussion questions only ──
 const RewriteResultSchema = z.object({
-  incorrectWorkedExamples: z.array(z.object({
-    problem: z.string().describe('The math problem statement'),
-    incorrectWork: z.string().describe('The step-by-step incorrect student work showing the misconception'),
-  })).describe('Rewritten incorrect worked examples'),
   discussionQuestions: z.array(z.string())
     .describe('Rewritten discussion questions'),
 });
@@ -87,7 +122,7 @@ async function runRegenPipeline({ sessionId, grade }) {
   const prevReasoning = prevEval?.evaluations?.[0]?.reasoning ?? '';
 
   console.log(`Previous evaluation score: ${prevScore}, expected: ${targetBand}`);
-  console.log(`Evaluator feedback:\n${prevReasoning}`);
+  console.log(`=== EVALUATOR FEEDBACK ===\n${prevReasoning}\n=========================`);
 
   // 2. Collect move options to rewrite (one OpenAI call per move option)
   const moveJobs = [];
@@ -98,7 +133,7 @@ async function runRegenPipeline({ sessionId, grade }) {
       const steps = move.tabs?.activitySteps;
       if (!steps) continue;
 
-      const hasContent = (steps.incorrectWorkedExamples?.length > 0) || (steps.discussionQuestions?.length > 0);
+      const hasContent = steps.discussionQuestions?.length > 0;
       if (hasContent) {
         moveJobs.push({ nsIdx, moveIdx, misconception: ns.title, format: move.format, steps });
       }
@@ -106,43 +141,30 @@ async function runRegenPipeline({ sessionId, grade }) {
   }
 
   if (moveJobs.length === 0) {
-    console.log('No content to rewrite');
+    console.log('No discussion questions found to rewrite');
     return;
   }
 
-  console.log(`Rewriting content across ${moveJobs.length} move options from ${prevScore} to ${targetBand}`);
+  console.log(`Rewriting discussion questions across ${moveJobs.length} move options from ${prevScore} to ${targetBand}`);
 
   // 3. Rewrite each move option in parallel, guided by evaluator feedback
   const openai = await loadOpenAIClient();
 
   const rewritePromises = moveJobs.map(async (job) => {
-    const { nsIdx, moveIdx, misconception, format, steps } = job;
-
-    const existingExamples = (steps.incorrectWorkedExamples ?? []).map((ex, i) =>
-      `[${i}] ${typeof ex === 'string' ? ex : `Problem: ${ex.problem}\nIncorrect Work: ${ex.incorrectWork}`}`
-    ).join('\n\n');
+    const { misconception, format, steps } = job;
 
     const existingQuestions = (steps.discussionQuestions ?? []).map((q, i) =>
       `[${i}] ${q}`
     ).join('\n\n');
 
-    const numExamples = (steps.incorrectWorkedExamples ?? []).length;
-    const numQuestions = (steps.discussionQuestions ?? []).length;
+    const numQuestions = steps.discussionQuestions.length;
 
-    const completion = await openai.chat.completions.create({
-      model: MODEL,
-      temperature: 0.7,
-      response_format: zodResponseFormat(RewriteResultSchema, 'rewriteResult'),
-      messages: [
-        {
-          role: 'system',
-          content: `You are an expert K-12 math education content writer.`
-        },
-        {
-          role: 'user',
-          content: `An external evaluator has analyzed the grade-level appropriateness of the following math education content and determined that it does NOT match the target grade level.
+    console.log(`\n--- [${misconception} — ${format}] SENDING ${numQuestions} questions to OpenAI ---`);
+    console.log(existingQuestions);
 
-Your task is to rewrite the content so that it matches the target grade band. Use the evaluator's analysis below as your primary guide — it tells you exactly what is wrong and what needs to change.
+    const userMessage = `An external evaluator scored math education discussion questions above the target grade level.
+
+Your task is to rewrite the discussion questions so they score at the target grade band. The worked examples for this misconception are intentionally kept as-is — only rewrite the discussion questions.
 
 [BEGIN EVALUATOR ANALYSIS]
 Content was scored at grade band: ${prevScore}
@@ -152,47 +174,43 @@ Evaluator reasoning and feedback:
 ${prevReasoning}
 [END EVALUATOR ANALYSIS]
 
+[BEGIN EVALUATOR RUBRIC — this is the exact rubric the evaluator uses to score your output]
+${EVALUATOR_RUBRIC}
+[END EVALUATOR RUBRIC]
+
 Misconception being addressed: "${misconception}"
 Activity format: ${format}
 
-Instructions:
-- Maintain the original meaning and the specific misconception error pattern
-- Target the evaluator's feedback as a means to ensure the rewritten text is at the target grade band "${targetBand}" (grade ${grade})
-- Address every issue the evaluator identified — vocabulary complexity, sentence structure, knowledge demands, and any other factors mentioned
-- Preserve the intentional misconception error while adjusting the language and mathematical complexity to grade ${grade}
-- A primary goal is to achieve the target grade band in a single pass
-
-Rules for incorrect worked examples (return as objects with "problem" and "incorrectWork" fields):
-- Show a complete problem and the full incorrect student work step-by-step
-- Reflect the specific misconception error pattern (not a random mistake)
-- Be self-contained — immediately usable on a board or slide with no additional prep
-
-Rules for discussion questions (return as plain strings):
-- Surface and resolve the specific error pattern
+Rules for discussion questions:
+- Surface and resolve the specific misconception error pattern
+- Use vocabulary and sentence structure appropriate for grade ${grade} — prefer everyday language over academic/subject-specific terms where possible
 - Be open-ended enough to generate classroom discussion
+- A student at grade ${grade} should be able to understand and engage with the question without scaffolding
+- You MUST return exactly ${numQuestions} discussion questions
 
-You MUST return exactly ${numExamples} incorrectWorkedExamples and exactly ${numQuestions} discussionQuestions.
+--- DISCUSSION QUESTIONS TO REWRITE (${numQuestions}) ---
+${existingQuestions}`;
 
---- INCORRECT WORKED EXAMPLES (${numExamples}) ---
-${existingExamples || '(none)'}
-
---- DISCUSSION QUESTIONS (${numQuestions}) ---
-${existingQuestions || '(none)'}`
-        }
+    const completion = await openai.chat.completions.create({
+      model: MODEL,
+      temperature: 0.7,
+      response_format: zodResponseFormat(RewriteResultSchema, 'rewriteResult'),
+      messages: [
+        { role: 'system', content: `You are an expert K-12 math education content writer.` },
+        { role: 'user', content: userMessage },
       ],
     });
 
     const parsed = JSON.parse(completion.choices[0].message.content);
 
-    // Swap in rewritten content directly
-    if (parsed.incorrectWorkedExamples?.length > 0) {
-      steps.incorrectWorkedExamples = parsed.incorrectWorkedExamples;
-    }
+    console.log(`\n--- [${misconception} — ${format}] RECEIVED from OpenAI ---`);
+    console.log(JSON.stringify(parsed.discussionQuestions, null, 2));
+
     if (parsed.discussionQuestions?.length > 0) {
       steps.discussionQuestions = parsed.discussionQuestions;
     }
 
-    console.log(`  ✓ ${misconception} — ${format}: ${numExamples} examples + ${numQuestions} questions rewritten`);
+    console.log(`  ✓ ${misconception} — ${format}: ${numQuestions} questions rewritten`);
   });
 
   await Promise.all(rewritePromises);

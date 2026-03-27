@@ -227,7 +227,7 @@ async updateClassroom(classroomData: any, analytics: string) {
 
   // ── Teacher Upload ───────────────────────────────────────────────────────
 
-  async teacherUpload(input: { classroomId: string; activityFileBase64: string; studentDataFileBase64: string }) {
+  async teacherUpload(input: { classroomId: string; activityFileBase64: string; studentDataFileBase64: string; organization?: string }) {
     const result = await this.callGraphQL<any>(teacherUpload, { input });
     return result.data?.teacherUpload;
   }

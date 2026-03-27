@@ -30,6 +30,7 @@ export declare class APIClient {
         classroomId: string;
         activityFileBase64: string;
         studentDataFileBase64: string;
+        organization?: string;
     }): Promise<any>;
     listSavedNextSteps(classroomId: string): Promise<any>;
 }

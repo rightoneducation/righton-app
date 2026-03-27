@@ -99,6 +99,7 @@ const UploadPage = () => {
         classroomId: classroom,
         activityFileBase64,
         studentDataFileBase64,
+        organization,
       });
 
       const message = typeof result === 'string' ? JSON.parse(result) : result;
@@ -196,32 +197,6 @@ const UploadPage = () => {
                             <option key={g} value={g}>{g}</option>
                           ))}
                         </select>
-                        <select
-                          className="upload-input upload-input-sm"
-                          value={newSubject}
-                          onChange={(e) => setNewSubject(e.target.value)}
-                        >
-                          <option value="Math">Math</option>
-                          <option value="ELA">ELA</option>
-                          <option value="Science">Science</option>
-                        </select>
-                        <select
-                          className="upload-input upload-input-sm"
-                          value={newState}
-                          onChange={(e) => setNewState(e.target.value)}
-                        >
-                          <option value="NJ">NJ</option>
-                          <option value="NY">NY</option>
-                          <option value="MA">MA</option>
-                          <option value="CT">CT</option>
-                        </select>
-                        <input
-                          className="upload-input upload-input-sm"
-                          type="text"
-                          placeholder="School year"
-                          value={newSchoolYear}
-                          onChange={(e) => setNewSchoolYear(e.target.value)}
-                        />
                       </div>
                       <button
                         type="button"

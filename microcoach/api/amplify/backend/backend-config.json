@@ -19,6 +19,32 @@
       "service": "AppSync"
     }
   },
+  "auth": {
+    "microcoach4ff9e90a": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
   "function": {
     "microcoachGetLearningScience": {
       "build": true,
@@ -210,6 +236,13 @@
           "resourceName": "microcoachTeacherUpload"
         }
       ]
+    }
+  },
+  "storage": {
+    "microcoachdocs": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

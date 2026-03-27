@@ -560,7 +560,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
 export const handler = async (event) => {
   console.log('Event received:', JSON.stringify(event));
 
-  const { classroomId, sessionId, classroomName, studentCount, misconceptionCount } = event;
+  const { classroomId, sessionId, classroomName, studentCount, misconceptionCount, docxKey, xlsxKey } = event;
   if (!classroomId) {
     throw new Error('Missing required field: classroomId');
   }
@@ -615,6 +615,7 @@ export const handler = async (event) => {
         <tr><td>Students</td><td>${studentCount ?? '—'}</td></tr>
         <tr><td>Misconceptions Identified</td><td>${misconceptionCount ?? result.misconceptionCount}</td></tr>
         <tr><td>Next Steps Generated</td><td>${result.nextStepCount}</td></tr>
+        ${docxKey && xlsxKey ? `<tr><td>Files Stored</td><td style="font-size:12px;word-break:break-all;">${docxKey.split('/').pop()}<br>${xlsxKey.split('/').pop()}</td></tr>` : ''}
       </table>
       ${result.evalResults?.evaluations?.[0] ? (() => {
         const e = result.evalResults.evaluations[0];
@@ -624,9 +625,10 @@ export const handler = async (event) => {
         const statusText = isAtGrade ? '✓ At Grade Level' : e.classification === 'aboveGrade' ? '⚠ Above Grade Level' : e.classification === 'belowGrade' ? '⚠ Below Grade Level' : '— Unknown';
         return `
       <table class="summary-table">
-        <tr><td>Grade Level Check</td><td style="color:${statusColor};font-weight:600;">${statusText}</td></tr>
+        <tr><td>Student-Facing Text Grade Level</td><td style="color:${statusColor};font-weight:600;">${statusText}</td></tr>
         <tr><td>Expected</td><td>${s.expectedBand}</td></tr>
-        <tr><td>Scored</td><td>${e.score}</td></tr>
+        <tr><td>Scored (avg)</td><td>${e.score}</td></tr>
+        ${!isAtGrade ? `<tr><td colspan="2" style="font-size:12px;color:#6B7280;">Note: this is an average — some content may already be at grade level.</td></tr>` : ''}
       </table>`;
       })() : ''}
       <a href="${reviewUrl}" class="status" style="display:block;text-decoration:none;color:#059669;">Ready for Review &rarr;</a>
@@ -639,7 +641,7 @@ export const handler = async (event) => {
       const e = result.evalResults.evaluations[0];
       const s = result.evalResults.summary;
       const status = e.classification === 'atGrade' ? 'At Grade Level' : e.classification === 'aboveGrade' ? 'Above Grade Level' : e.classification === 'belowGrade' ? 'Below Grade Level' : 'Unknown';
-      return ['', `Grade Level Check: ${status} (expected ${s.expectedBand}, scored ${e.score})`];
+      return ['', `Student-Facing Text Grade Level: ${status} (expected ${s.expectedBand}, scored avg ${e.score})${status !== 'At Grade Level' ? ' — note: this is an average, some content may already be at grade level.' : ''}`];
     })() : [];
     const bodyText = [
       `RightOn Education: MicroCoach Upload Complete - ${displayName}`,
@@ -650,6 +652,7 @@ export const handler = async (event) => {
       `Students: ${studentCount ?? '—'}`,
       `Misconceptions Identified: ${misconceptionCount ?? result.misconceptionCount}`,
       `Next Steps Generated: ${result.nextStepCount}`,
+      ...(docxKey && xlsxKey ? [`Files Stored: ${docxKey.split('/').pop()}, ${xlsxKey.split('/').pop()}`] : []),
       ...evalTextLines,
       '',
       `Ready for Review: ${reviewUrl}`,

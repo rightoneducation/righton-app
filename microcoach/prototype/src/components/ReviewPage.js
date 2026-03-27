@@ -147,7 +147,8 @@ function ReviewPage() {
             setDraftSessions((prev) => prev.map((s) => s.id === selectedSessionId ? updatedSession : s));
             selectSession(updatedSession);
           }
-          setRegenComplete(true);
+          const isAtGrade = newEval?.evaluations?.[0]?.classification === 'atGrade';
+          if (isAtGrade) setRegenComplete(true);
           break;
         }
       }

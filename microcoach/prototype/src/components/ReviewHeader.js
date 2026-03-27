@@ -84,14 +84,11 @@ const ReviewHeader = ({
       return (
         <div className="review-bell-dropdown">
           <div className="review-bell-status review-bell-status--alert">
-            {evalItem.classification === 'aboveGrade' ? '⚠ Above' : '⚠ Below'} Grade Level
+            ⚠ Some student-facing text is above grade level
           </div>
           <p className="review-bell-detail">
             Content scored at <strong>{evalItem.score}</strong>, expected <strong>{summary.expectedBand}</strong>
           </p>
-          {evalItem.reasoning && (
-            <p className="review-bell-reasoning">{evalItem.reasoning}</p>
-          )}
           <button
             className="review-bell-regen-btn"
             onClick={() => { onRegenerate?.(); setBellOpen(false); }}

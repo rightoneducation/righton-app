@@ -19,6 +19,7 @@
  */
 
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import mammoth from 'mammoth';
 import { createGqlClient } from './util/appsync-client.mjs';
 import { parseExcelBuffer, deriveTopic } from './util/parse-excel.mjs';
@@ -55,6 +56,27 @@ async function invokeLambda(functionName, payload) {
     throw new Error(`Lambda ${functionName} error: ${errBody}`);
   }
   return JSON.parse(Buffer.from(resp.Payload).toString('utf8'));
+}
+
+// ── S3 file storage ──────────────────────────────────────────────────────────
+
+async function uploadFilesToS3(docxBuffer, xlsxBuffer, organization, classroomName) {
+  const bucket = process.env.STORAGE_MICROCOACHDOCS_BUCKETNAME;
+  if (!bucket) throw new Error('STORAGE_MICROCOACHDOCS_BUCKETNAME env var not set');
+
+  const sanitize = (s) => (s ?? '').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+  const now = new Date();
+  const datetime = now.toISOString().replace('T', '_').replace(/:/g, '-').slice(0, 19); // YYYY-MM-DD_HH-MM-SS
+  const baseName = `${sanitize(organization)}_${sanitize(classroomName)}_${datetime}`;
+  const docxKey = `public/${baseName}.docx`;
+  const xlsxKey = `public/${baseName}.xlsx`;
+
+  const s3 = new S3Client({ region: process.env.REGION || 'us-east-1' });
+  await Promise.all([
+    s3.send(new PutObjectCommand({ Bucket: bucket, Key: docxKey, Body: docxBuffer, ContentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })),
+    s3.send(new PutObjectCommand({ Bucket: bucket, Key: xlsxKey, Body: xlsxBuffer, ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })),
+  ]);
+  return { docxKey, xlsxKey };
 }
 
 // ── Upload helpers (from upload.ts — identical logic) ───────────────────────
@@ -251,7 +273,7 @@ async function uploadContextData(gql, title, gradeLevel, ccssStandards, weekNumb
 // Mirrors CLI order: yarn ingest → yarn upload (generation runs in separate Lambda)
 
 async function runPipeline(input) {
-  const { classroomId, activityFileBase64, studentDataFileBase64 } = input;
+  const { classroomId, activityFileBase64, studentDataFileBase64, organization } = input;
 
   const gql = await createGqlClient();
 
@@ -262,9 +284,15 @@ async function runPipeline(input) {
   if (!classroom) throw new Error(`Classroom ${classroomId} not found`);
   console.log(`  ✓ ${classroom.classroomName} (grade ${classroom.grade}, ${classroom.state})`);
 
+  // ── Step 1b: Upload files to S3 (priority — store originals before any processing) ──
+  console.log('Step 1b: Uploading files to S3...');
+  const docxBuffer = Buffer.from(activityFileBase64, 'base64');
+  const xlsxBuffer = Buffer.from(studentDataFileBase64, 'base64');
+  const { docxKey, xlsxKey } = await uploadFilesToS3(docxBuffer, xlsxBuffer, organization, classroom.classroomName);
+  console.log(`  ✓ Stored: ${docxKey}, ${xlsxKey}`);
+
   // ── Step 2: Ingest docx — extract misconceptions (yarn ingest) ──────────────
   console.log('Step 2: Ingesting activity docx...');
-  const docxBuffer = Buffer.from(activityFileBase64, 'base64');
   const docxResult = await mammoth.extractRawText({ buffer: docxBuffer });
   const ppqText = docxResult.value.trim();
   if (!ppqText) {
@@ -279,7 +307,6 @@ async function runPipeline(input) {
 
   // Parse xlsx early to get weekNumber for ingest call
   console.log('  Parsing student data xlsx...');
-  const xlsxBuffer = Buffer.from(studentDataFileBase64, 'base64');
   const parsed = parseExcelBuffer(xlsxBuffer);
   console.log(`  ✓ ${parsed.students.length} students, ${parsed.questionMeta.length} questions, week ${parsed.weekNumber}`);
 
@@ -371,6 +398,8 @@ async function runPipeline(input) {
     classroomName: classroom.classroomName,
     studentCount: ppqData.students.length,
     misconceptionCount: misconceptions.length,
+    docxKey,
+    xlsxKey,
   };
   const lambdaClient = new LambdaClient({ region: process.env.REGION || 'us-east-1' });
   await lambdaClient.send(new InvokeCommand({
@@ -480,5 +509,5 @@ export const handler = async (event) => {
   }));
 
   console.log('Async invocation triggered');
-  return JSON.stringify('Upload processing started. You will receive an email when analysis is complete.');
+  return JSON.stringify('Upload processing started. We will reach out when our analysis is complete!');
 };

@@ -330,6 +330,7 @@ input TeacherUploadInput {
   classroomId: ID!
   activityFileBase64: String!
   studentDataFileBase64: String!
+  organization: String
 }
 
 input RegenerateContentInput {
