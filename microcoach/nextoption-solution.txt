@@ -1,0 +1,133 @@
+LATEX SUPPORT SOLUTION — microcoachNextStepOption
+==================================================
+
+FILE: api/amplify/backend/function/microcoachNextStepOption/src/index.mjs
+
+──────────────────────────────────────────────
+OVERVIEW
+──────────────────────────────────────────────
+The function currently instructs the LLM to output all math in plain Unicode
+(e.g. x², √x, ÷, ×). We need to flip this to LaTeX so the frontend can render
+properly typeset math expressions.
+
+──────────────────────────────────────────────
+CHANGE 1 — Main prompt: Math Formatting Requirements (line ~379)
+──────────────────────────────────────────────
+CURRENT:
+  ## Math Formatting Requirements
+  Always use Unicode. Never use LaTeX or caret/underscore ASCII notation. Specific rules:
+  - Exponents: x² x³ 10⁴ (never x^2 or x^3)
+  - Subscripts: x₁ x₂ xₙ (never x_1 or x_n)
+  - Fractions: use / inline (e.g. 1/2, 3/4) or a÷b form — never \frac
+  - Multiplication: × (never \times or *)
+  - Division: ÷ (never \div)
+  - Square root: √x (never \sqrt or sqrt())
+  - Inequalities: ≤ ≥ ≠ (never <=, >=, !=)
+  - Approximately equal: ≈ (never ~= or approx)
+  - Negative numbers: use Unicode minus − (U+2212), not a hyphen-minus -
+  - Pi: π (never "pi")
+  - Angle/theta: ∠ABC, θ (never "angle ABC" or "theta")
+  - Absolute value: |x| (pipe characters, never abs(x))
+
+REPLACE WITH:
+  ## Math Formatting Requirements
+  Always use LaTeX for mathematical expressions. Never use Unicode math symbols
+  or caret/underscore ASCII notation. Wrap ALL math in LaTeX delimiters:
+  - Inline math: $...$ (e.g. $\frac{2}{3} \div \frac{3}{4}$, $-6x + 12$, $x^2$)
+  - Display/block math (standalone equations): $$...$$ on its own line
+  Specific rules:
+  - Exponents: $x^2$, $x^3$, $10^4$ (never x², x³, x^2 outside delimiters)
+  - Subscripts: $x_1$, $x_2$, $x_n$ (never x₁, x₁ outside delimiters)
+  - Fractions: $\frac{a}{b}$ (never a/b or a÷b for fractions)
+  - Multiplication: $a \times b$ (never × outside delimiters or *)
+  - Division: $a \div b$ (never ÷ outside delimiters)
+  - Square root: $\sqrt{x}$ (never √x outside delimiters)
+  - Inequalities: $\leq$, $\geq$, $\neq$ (never ≤ ≥ ≠ outside delimiters)
+  - Approximately equal: $\approx$ (never ≈ outside delimiters)
+  - Negative numbers: $-6$ (standard LaTeX minus inside delimiters)
+  - Pi: $\pi$ (never π outside delimiters)
+  - Angle/theta: $\angle ABC$, $\theta$ (never ∠ABC, θ outside delimiters)
+  - Absolute value: $|x|$ (inside delimiters)
+  Plain prose text should remain as normal English — only wrap actual math
+  expressions. Example of mixed text: "Students who multiply $\frac{2}{3}$ by
+  the reciprocal will get $\frac{8}{9}$, but a common error is to get $\frac{4}{9}$."
+
+──────────────────────────────────────────────
+CHANGE 2 — validateWorkedExamples sub-prompt (line ~465)
+──────────────────────────────────────────────
+This validator reviews incorrect worked examples for unintentional arithmetic
+errors. It currently has no math formatting instruction, so the LLM may revert
+to Unicode when making corrections.
+
+ADD this line to the prompt (after "Rules:" section):
+  - Use LaTeX for all mathematical expressions ($...$ for inline, $$...$$ for display). Never use Unicode math symbols or plain ASCII math notation.
+
+──────────────────────────────────────────────
+CHANGE 3 — validateActivityProblem sub-prompt (line ~504)
+──────────────────────────────────────────────
+Same issue — no math formatting instruction. The validator may correct a problem
+statement and return it in Unicode.
+
+ADD to the prompt content string:
+  "Use LaTeX for all math ($...$ inline, $$...$$ display). Never use Unicode math symbols."
+
+──────────────────────────────────────────────
+FIELDS THAT WILL CONTAIN LATEX AFTER THESE CHANGES
+──────────────────────────────────────────────
+These are the output fields from NextStepActivity that the frontend must render
+with a LaTeX library:
+
+High probability of LaTeX (math-heavy):
+  - tabs.activitySteps.problem
+  - tabs.activitySteps.incorrectWorkedExample1.problem
+  - tabs.activitySteps.incorrectWorkedExample1.incorrectWork
+  - tabs.activitySteps.incorrectWorkedExample2.problem
+  - tabs.activitySteps.incorrectWorkedExample2.incorrectWork
+  - tabs.activitySteps.incorrectWorkedExample3.problem
+  - tabs.activitySteps.incorrectWorkedExample3.incorrectWork
+  - tabs.activitySteps.coreActivity (array of strings)
+  - tabs.activitySteps.discussionQuestions (array of strings)
+
+Medium probability of LaTeX (prose that may reference expressions):
+  - summary
+  - targets
+  - instructionalMove
+  - tabs.overview.whatStudentsDo[].detail
+  - tabs.overview.whatYouDo[].detail
+  - tabs.overview.importance
+
+Low probability (structural/metadata, unlikely to have math):
+  - title
+  - activityStructure
+  - strategyTag
+  - aiReasoning
+  - tabs.activitySteps.setup (array of strings)
+  - tabs.materials.required / optional
+  - tabs.studentGroupings.groups[].name / description
+  - tabs.studentGroupings.aiRecommendation
+
+──────────────────────────────────────────────
+FRONTEND RENDERING NOTES
+──────────────────────────────────────────────
+Recommended library: KaTeX (via react-katex or katex directly)
+  - Much faster than MathJax
+  - Small bundle
+  - Renders $...$ inline and $$...$$ block math
+
+Recommended approach: a shared <MathText text={value} /> component that:
+  1. Splits the string on $...$ / $$...$$ delimiters
+  2. Renders math segments through KaTeX
+  3. Renders plain text segments as normal text
+
+This way every field can be passed through MathText safely — if there's no
+LaTeX delimiter in the string, it renders as plain text with no overhead.
+
+All the "high probability" fields above should use MathText. For "medium
+probability" fields, using MathText is safe and recommended since it is a
+no-op for strings with no $ delimiters.
+
+──────────────────────────────────────────────
+PLANNER PROMPT — NO CHANGE NEEDED
+──────────────────────────────────────────────
+The planStructures branch (line ~159) assigns activity structures across
+misconceptions. It does not generate math content — no LaTeX changes needed there.
