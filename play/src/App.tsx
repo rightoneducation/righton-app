@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -25,11 +25,11 @@ function RedirectToPlayIfMissing() {
 
 function App() {
   const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.PLAY);
-  
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <>
-      {apiClients &&
+
+  const router = useMemo(() => {
+    if (!apiClients) return null;
+    return createBrowserRouter(
+      createRoutesFromElements(
         <>
           <Route
             path="/"
@@ -41,19 +41,16 @@ function App() {
             element={<GameInProgressContainer apiClients={apiClients} />}
             loader={LocalModelLoader}
           />
+          <Route element={<RedirectToPlayIfMissing />} />
         </>
-        }
-        <Route element={<RedirectToPlayIfMissing />} />
-      </>
-    )
-  );
+      )
+    );
+  }, [apiClients]);
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>
         <AppErrorBoundary>
-          {apiClients &&
-            <RouterProvider router={router} />
-          }
+          {router && <RouterProvider router={router} />}
         </AppErrorBoundary>
       </ThemeProvider>
     </StyledEngineProvider>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -27,6 +27,7 @@ interface PregameFinished {
 export function PregameContainer({ apiClients }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [, startTransition] = useTransition();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const isMedDevice = useMediaQuery(theme.breakpoints.down('md'));
   const [isShowCodeError, setIsShowCodeError] = useState<boolean>(false);
@@ -65,7 +66,9 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       teamId: rejoinGameObject!.teamId, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     });
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-    navigate(`/game`);
+    startTransition(() => {
+      navigate(`/game`);
+    });
   };
 
   // if player doesn't want to rejoin, remove the localStorage and set rejoinGameObject to null
