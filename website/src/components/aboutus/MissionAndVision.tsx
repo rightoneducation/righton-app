@@ -153,7 +153,7 @@ export default function MissionAndVision({ screenSize }: IMissionAndVision) {
             letterSpacing={screenSize === ScreenSize.SMALL ? 0 : 0.22}
             sx={{ color: '#fff' }}
           >
-            Unlocking STEM potential in all youth.
+            Unlocking STEM potential in all youth
           </Typography>
         </StyledFlexBox>
         <StyledFlexBox align="center">
