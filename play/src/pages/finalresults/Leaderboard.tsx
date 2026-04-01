@@ -19,7 +19,6 @@ import FooterStackContainerStyled from '../../lib/styledcomponents/layout/Footer
 import 'swiper/css';
 import 'swiper/css/pagination';
 import LeaderboardSelector from '../../components/LeaderboardSelector';
-import { StorageKey } from '../../lib/PlayModels';
 
 interface LeaderboardProps {
   teams?: ITeam[];
@@ -39,12 +38,7 @@ export default function Leaderboard({
     !isNullOrUndefined(teams) ? ModelHelper.teamSorter(teams, 5).filter((team) => team.score > 0) : []
   ).current;
 
-  // remove locally stored game info when reaching leaderboard
-  useEffect(() => {
-    if (currentState !== GameSessionState.TEAMS_JOINING) {
-      window.localStorage.removeItem(StorageKey);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
   // ref req'd for height of container
   const containerRef = useRef<HTMLDivElement>(null);

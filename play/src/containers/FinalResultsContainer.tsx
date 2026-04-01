@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   ITeam,
   GameSessionState,
@@ -6,7 +6,7 @@ import {
 } from '@righton/networking';
 import Leaderboard from '../pages/finalresults/Leaderboard';
 import Congrats from '../pages/finalresults/Congrats';
-import { FinalResultsState } from '../lib/PlayModels';
+import { FinalResultsState, StorageKey } from '../lib/PlayModels';
 
 interface FinalResultsContainerProps {
   teams?: ITeam[];
@@ -38,6 +38,10 @@ export default function FinalResultsContainer({
     return false;
   };
   const leader = useRef<boolean>(isLeader(teams, teamId));
+
+  useEffect(() => {
+    window.localStorage.removeItem(StorageKey);
+  }, []);
 
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
