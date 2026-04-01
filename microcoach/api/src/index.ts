@@ -15,6 +15,7 @@ import {
   getLearningScience,
   getAnalysis,
   generateNextStep,
+  createClassroom,
   updateClassroom,
   createMisconception,
   updateMisconception,
@@ -23,6 +24,9 @@ import {
   createSavedNextStep,
   updateSavedNextStep,
   deleteSavedNextStep,
+  teacherUpload,
+  updateSession,
+  regenerateContent,
 } from "./graphql/mutations";
 import awsconfig from "./aws-exports";
 
@@ -84,6 +88,20 @@ export class APIClient {
   async getSession(sessionId: string) {
     const result = await this.callGraphQL<any>(getSession, { id: sessionId });
     return result.data?.getSession ?? null;
+  }
+
+  async updateSession(sessionId: string, updates: Record<string, unknown>) {
+    const result = await this.callGraphQL<any>(updateSession, {
+      input: { id: sessionId, ...updates },
+    });
+    return result.data?.updateSession;
+  }
+
+  async regenerateContent(sessionId: string, grade: number) {
+    const result = await this.callGraphQL<any>(regenerateContent, {
+      input: { sessionId, grade },
+    });
+    return result.data?.regenerateContent;
   }
 
   // ── Misconception ──────────────────────────────────────────────────────────
@@ -199,6 +217,22 @@ async updateClassroom(classroomData: any, analytics: string) {
   async deleteSavedNextStep(id: string) {
     await this.callGraphQL<any>(deleteSavedNextStep, { input: { id } });
   }
+
+  // ── Classroom (create) ───────────────────────────────────────────────────
+
+  async createClassroom(input: Record<string, unknown>) {
+    const result = await this.callGraphQL<any>(createClassroom, { input });
+    return result.data?.createClassroom;
+  }
+
+  // ── Teacher Upload ───────────────────────────────────────────────────────
+
+  async teacherUpload(input: { classroomId: string; activityFileBase64: string; studentDataFileBase64: string; organization?: string }) {
+    const result = await this.callGraphQL<any>(teacherUpload, { input });
+    return result.data?.teacherUpload;
+  }
+
+  // ── SavedNextStep (list) ────────────────────────────────────────────────
 
   async listSavedNextSteps(classroomId: string) {
     const result = await this.callGraphQL<any>(savedNextStepsByClassroomId, { classroomId });

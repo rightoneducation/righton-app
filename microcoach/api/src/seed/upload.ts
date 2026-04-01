@@ -266,12 +266,16 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
       }
 
       if (isAssessmentMatrix) {
-        if (rawResponse === '') return null;  // no response — exclude from storage
+        // Blank in an answer column = correct (district shades correct cells green; export leaves them blank)
+        if (rawResponse === '') {
+          return { questionNumber: qNum, response: '', isCorrect: true, pointsEarned: 1, confidence };
+        }
         const isCorrect = correctAnswer !== '' && rawResponse === correctAnswer;
         return { questionNumber: qNum, response: rawResponse, isCorrect, pointsEarned: isCorrect ? 1 : 0, confidence };
       }
 
-      const isCorrect = rawResponse !== '' && rawResponse === correctAnswer;
+      // Blank in an answer column = correct (same green-cell convention)
+      const isCorrect = rawResponse === '' || rawResponse === correctAnswer;
       return { questionNumber: qNum, response: rawResponse, isCorrect, pointsEarned: isCorrect ? 1 : 0, confidence };
     }).filter((r): r is ParsedQuestionResponse => r !== null);
 

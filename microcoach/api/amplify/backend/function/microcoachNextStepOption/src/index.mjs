@@ -42,35 +42,6 @@ const SPLIT_CLASS_DESC             = FORMAT_CONSTRAINTS.splitClass?.description 
 const SPLIT_CLASS_STRUCTURES       = FORMAT_CONSTRAINTS.splitClass?.structures ?? [];
 const SPLIT_CLASS_AVOID            = FORMAT_CONSTRAINTS.splitClass?.avoid ?? [];
 
-// ── Post-generation sanitization ──────────────────────────────────────────────
-// Safety net: replace any camelCase field names the LLM may echo into prose text.
-const SANITIZE_PATTERNS = [
-  [/incorrectWorkedExamples/g, 'Incorrect Worked Examples'],
-  [/incorrectWorkedExample(\d+)/g, (_, n) => `Incorrect Worked Example ${n}`],
-  [/coreActivity/g, 'Core Activity'],
-  [/discussionQuestions/g, 'Discussion Questions'],
-  [/studentGroupings/g, 'Student Groupings'],
-  [/whatStudentsDo/g, 'What Students Do'],
-  [/whatYouDo/g, "What You'll Do"],
-  [/aiRecommendation/g, 'AI Recommendation'],
-  [/highFlyers/g, 'High Flyers'],
-];
-
-function sanitizeFieldNames(obj) {
-  if (typeof obj === 'string') {
-    return SANITIZE_PATTERNS.reduce((s, [re, rep]) => s.replace(re, rep), obj);
-  }
-  if (Array.isArray(obj)) return obj.map(sanitizeFieldNames);
-  if (obj && typeof obj === 'object') {
-    const out = {};
-    for (const [k, v] of Object.entries(obj)) {
-      out[k] = sanitizeFieldNames(v);
-    }
-    return out;
-  }
-  return obj;
-}
-
 // ── Schema ────────────────────────────────────────────────────────────────────
 // Generates ONE next step activity option for a single misconception + format.
 // Called once per format per misconception in parallel by the seed script.
@@ -460,11 +431,11 @@ Requirements for each field:
 - **strategyTag**: Must be exactly one of: ${STRATEGY_TAGS.map(t => `"${t.name}"`).join(', ')}${lvnFactors.length ? '. Use the LVN factors above to select the best fit.' : ''}
 - **durationMinutes**: Choose a value within one of these buckets: ${ALLOWED_DURATION_BUCKETS.map(b => b.label).join(', ')}
 - **aiReasoning**: Explain specifically WHY this activity structure and format targets this cognitive error
-- **What students do** (overview): ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Think", "Discuss", "Compare") + 1-2 sentences. ${ws.overviewBullets ?? ''}
-- **What you'll do** (overview): ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Present", "Facilitate", "Highlight") + 1-2 sentences. ${ws.overviewBullets ?? ''}
-- **Importance** (overview): Why this specific activity addresses this specific misconception
-- **Activity steps**: setup (${SETUP_STEPS_MIN}-${SETUP_STEPS_MAX} steps), concrete math problem, ${ACTIVITY_STEPS_MIN}-${ACTIVITY_STEPS_MAX} core activity steps, ${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX} discussion questions that surface and resolve the error
-- **Incorrect worked examples** (3 required, one per field): Every field must be populated. Each must:
+- **tabs.overview.whatStudentsDo**: ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Think", "Discuss", "Compare") + 1-2 sentences. ${ws.overviewBullets ?? ''}
+- **tabs.overview.whatYouDo**: ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Present", "Facilitate", "Highlight") + 1-2 sentences. ${ws.overviewBullets ?? ''}
+- **tabs.overview.importance**: Why this specific activity addresses this specific misconception
+- **tabs.activitySteps**: setup (${SETUP_STEPS_MIN}-${SETUP_STEPS_MAX} steps), concrete math problem, ${ACTIVITY_STEPS_MIN}-${ACTIVITY_STEPS_MAX} core activity steps, ${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX} discussion questions that surface and resolve the error
+- **tabs.activitySteps.incorrectWorkedExample1**, **incorrectWorkedExample2**, **incorrectWorkedExample3**: Three separate required fields, one incorrect worked example each. Every field must be populated. Each must:
   - Show a complete problem and the full incorrect student work step-by-step (not just the wrong answer)
   - Reflect the specific misconception error pattern (not a random mistake)
   - Use grade-appropriate language for middle school
@@ -483,8 +454,8 @@ Misconception: ${ex.misconception}
   Problem: ${ex.bad.problem}
   Incorrect work: ${ex.bad.incorrectWork}
 `).join('\n')}` : ''}
-- **Materials**: what must be prepared or printed
-- **Student groupings**: ${GROUPS_MIN}-${GROUPS_MAX} groups differentiated by misconception severity + grouping strategy guidance
+- **tabs.materials**: what must be prepared or printed
+- **tabs.studentGroupings**: ${GROUPS_MIN}-${GROUPS_MAX} groups differentiated by misconception severity + grouping strategy guidance
 
 Return JSON matching the schema.
 `.trim();
@@ -586,8 +557,7 @@ ${JSON.stringify(examples, null, 2)}`;
       misconception.ccssStandard
     );
 
-    const sanitized = sanitizeFieldNames(structured);
-    return JSON.stringify(sanitized);
+    return JSON.stringify(structured);
   } catch (error) {
     console.error('[microcoachNextStepOption] Error', {
       timestamp: new Date().toISOString(),

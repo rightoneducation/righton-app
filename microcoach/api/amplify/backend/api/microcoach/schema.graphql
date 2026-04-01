@@ -36,6 +36,7 @@ type Session @model {
   topic: String                     # "Dividing Fractions"
   ccssStandards: [String]           # ["6.NS.A.1"]
   status: String                    # "data_ingested" | "generated" | "completed"
+  publishStatus: String             # "DRAFT" | "PUBLISHED" — controls visibility on main vs review pages
   ppqAssessmentId: ID               # FK to PPQ Assessment record
   postPpqAssessmentId: ID           # FK to PostPPQ Assessment record
   assessments: [Assessment] @hasMany
@@ -43,6 +44,7 @@ type Session @model {
   # Precomputed frontend view — set by the generate-next-steps script.
   # Cached here so the app fetches it in a single listClassrooms call with no extra LLM cost.
   pregeneratedNextSteps: AWSJSON
+  evaluationResults: AWSJSON      # Grade level evaluation from Learning Commons evaluators
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -318,6 +320,22 @@ type Mutation {
     @function(name: "microcoachNextStepOption-${env}")
   ingestPPQ(input: IngestPPQInput!): String
     @function(name: "microcoachIngestPPQ-${env}")
+  teacherUpload(input: TeacherUploadInput!): String
+    @function(name: "microcoachTeacherUpload-${env}")
+  regenerateContent(input: RegenerateContentInput!): AWSJSON
+    @function(name: "microcoachRegenEvaluator-${env}")
+}
+
+input TeacherUploadInput {
+  classroomId: ID!
+  activityFileBase64: String!
+  studentDataFileBase64: String!
+  organization: String
+}
+
+input RegenerateContentInput {
+  sessionId: ID!
+  grade: Int!
 }
 
 # ── ContextData ────────────────────────────────────────────────────────

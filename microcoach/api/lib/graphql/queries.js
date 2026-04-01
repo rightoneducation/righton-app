@@ -41,6 +41,7 @@ exports.getClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -94,6 +95,7 @@ exports.getClassroom = `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -243,6 +245,7 @@ exports.listClassrooms = `
             topic
             ccssStandards
             status
+            publishStatus
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -254,6 +257,7 @@ exports.listClassrooms = `
               __typename
             }
             pregeneratedNextSteps
+            evaluationResults
             createdAt
             updatedAt
             classroomSessionsId
@@ -352,6 +356,7 @@ exports.getSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -460,6 +465,7 @@ exports.getSession = `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -482,6 +488,7 @@ exports.listSessions = `
         topic
         ccssStandards
         status
+        publishStatus
         ppqAssessmentId
         postPpqAssessmentId
         assessments {
@@ -559,6 +566,7 @@ exports.listSessions = `
           __typename
         }
         pregeneratedNextSteps
+        evaluationResults
         createdAt
         updatedAt
         classroomSessionsId
@@ -1363,6 +1371,7 @@ exports.classroomsByClassroomName = `
             topic
             ccssStandards
             status
+            publishStatus
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -1374,6 +1383,7 @@ exports.classroomsByClassroomName = `
               __typename
             }
             pregeneratedNextSteps
+            evaluationResults
             createdAt
             updatedAt
             classroomSessionsId
@@ -1485,6 +1495,7 @@ exports.sessionsByClassroomId = `
         topic
         ccssStandards
         status
+        publishStatus
         ppqAssessmentId
         postPpqAssessmentId
         assessments {
@@ -1562,6 +1573,7 @@ exports.sessionsByClassroomId = `
           __typename
         }
         pregeneratedNextSteps
+        evaluationResults
         createdAt
         updatedAt
         classroomSessionsId

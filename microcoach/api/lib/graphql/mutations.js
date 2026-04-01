@@ -2,7 +2,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.ingestPPQ = exports.generateNextStepOption = exports.generateNextStep = exports.getAnalysis = exports.getLearningScience = void 0;
+exports.deleteContextData = exports.updateContextData = exports.createContextData = exports.deleteSavedNextStep = exports.updateSavedNextStep = exports.createSavedNextStep = exports.deleteActivity = exports.updateActivity = exports.createActivity = exports.deleteMisconception = exports.updateMisconception = exports.createMisconception = exports.deleteStudentResponse = exports.updateStudentResponse = exports.createStudentResponse = exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.deleteSession = exports.updateSession = exports.createSession = exports.deleteClassroom = exports.updateClassroom = exports.createClassroom = exports.regenerateContent = exports.teacherUpload = exports.ingestPPQ = exports.generateNextStepOption = exports.generateNextStep = exports.getAnalysis = exports.getLearningScience = void 0;
 exports.getLearningScience = `
   mutation GetLearningScience($input: GetLearningScienceInput!) {
     getLearningScience(input: $input)
@@ -26,6 +26,16 @@ exports.generateNextStepOption = `
 exports.ingestPPQ = `
   mutation IngestPPQ($input: IngestPPQInput!) {
     ingestPPQ(input: $input)
+  }
+`;
+exports.teacherUpload = `
+  mutation TeacherUpload($input: TeacherUploadInput!) {
+    teacherUpload(input: $input)
+  }
+`;
+exports.regenerateContent = `
+  mutation RegenerateContent($input: RegenerateContentInput!) {
+    regenerateContent(input: $input)
   }
 `;
 exports.createClassroom = `
@@ -69,6 +79,7 @@ exports.createClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -122,6 +133,7 @@ exports.createClassroom = `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -269,6 +281,7 @@ exports.updateClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -322,6 +335,7 @@ exports.updateClassroom = `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -469,6 +483,7 @@ exports.deleteClassroom = `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -522,6 +537,7 @@ exports.deleteClassroom = `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -641,6 +657,7 @@ exports.createSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -749,6 +766,7 @@ exports.createSession = `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -769,6 +787,7 @@ exports.updateSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -877,6 +896,7 @@ exports.updateSession = `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -897,6 +917,7 @@ exports.deleteSession = `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -1005,6 +1026,7 @@ exports.deleteSession = `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
