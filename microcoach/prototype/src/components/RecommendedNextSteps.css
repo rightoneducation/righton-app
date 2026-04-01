@@ -4012,3 +4012,109 @@
   color: #4B5563;
   margin-top: -4px;
 }
+
+/* ── CCSS standard pill hover card (shared with Prepare/Reflect tabs) ───── */
+
+.yns-standard-pill-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.yns-standard-pill {
+  cursor: default;
+  padding: 6px 10px;
+  border-radius: 999px;
+  line-height: 1.2;
+}
+
+.yns-standard-hover-card {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  width: 320px;
+  background-color: #FFFFFF;
+  border: 1px solid #dbe3f2;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(16, 42, 90, 0.18);
+  padding: 16px;
+  z-index: 40;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+
+.yns-standard-pill-wrap:hover .yns-standard-hover-card,
+.yns-standard-pill-wrap:focus-within .yns-standard-hover-card {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+.yns-standard-hover-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1B376F;
+}
+
+.yns-standard-hover-subtitle {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #50658f;
+}
+
+.yns-kg-diagram {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.yns-kg-right {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.yns-kg-row {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  align-items: center;
+  gap: 6px;
+}
+
+.yns-kg-component-node {
+  border: 1px solid #d5dfef;
+  background: #f7faff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: #1B376F;
+  line-height: 1.25;
+}
+
+.yns-kg-link {
+  position: relative;
+  height: 1px;
+  background-color: #98abd0;
+}
+
+.yns-kg-link::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 5px solid #98abd0;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+}
+
+.yns-kg-standard-node {
+  align-self: center;
+}
