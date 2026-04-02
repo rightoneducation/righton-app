@@ -313,7 +313,7 @@ export const buildEditedGameTemplate = (
         '.',
       )[3] ?? '',
     imageUrl: gameImgUrl,
-    timesPlayed: 0,
+    timesPlayed: draftGame.gameTemplate.timesPlayed,
   };
 };
 
@@ -389,6 +389,7 @@ export const assembleQuestionTemplate = (
 
   return {
     publicPrivateType: isDraft ? template.finalPublicPrivateType : template.publicPrivateType,
+    timesPlayed: template.timesPlayed,
     questionCard: {
       title: template.title,
       ccss: template.ccss,
