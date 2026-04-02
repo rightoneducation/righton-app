@@ -15,12 +15,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { CloudFrontDistributionUrl } from '@righton/networking';
 import rightonlogo from '../images/rightOnLogoHeader.svg';
 import dice from '../images/dice.svg';
-import dicePink from '../images/dicePink.svg';
 import qmark from '../images/qmark.svg';
-import qmarkPink from '../images/qmarkPink.svg';
 import books from '../images/books.svg';
 import lib from '../images/lib.svg';
-import libPink from '../images/libPink.svg';
 import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
@@ -110,6 +107,7 @@ const TransparentButton = styled(Button, {
   background: 'transparent',
   borderStyle: 'none',
   borderColor: `${theme.palette.primary.buttonNavBorder}`,
+  color: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
   '&:hover': {
     background: 'none',
     borderRadius: `${theme.sizing.xSmPadding}px`,
@@ -140,11 +138,6 @@ const CreateDropDown = styled(Paper)(({ theme }) => ({
   borderBottomRightRadius: '8px',
 }));
 
-const PinkIcon = styled('img')(({ theme }) => ({
-  filter:
-    'brightness(0) saturate(100%) invert(19%) sepia(100%) saturate(2857%) hue-rotate(317deg) brightness(91%) contrast(103%)',
-}));
-
 interface ButtonTextProps {
   isActive: boolean;
 }
@@ -158,7 +151,7 @@ const ButtonText = styled(Typography, {
   lineHeight: '30px',
   textAlign: 'center',
   textTransform: 'none',
-  color: isActive ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
+  color: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
 }));
 
 interface ImageContainerProps {
@@ -396,11 +389,11 @@ export default function Header({
               isActive={currentScreen === ScreenType.GAMES}
               menuOpen={menuOpen}
             >
-              {currentScreen === ScreenType.GAMES ? (
-                <img src={dicePink} alt="Games Icon" />
-              ) : (
-                <img src={dice} alt="Games Icon" />
-              )}
+              <img
+                src={dice}
+                alt="Games Icon"
+                style={{ opacity: currentScreen === ScreenType.GAMES ? 1 : 0.5 }}
+              />
               Games
             </TransparentButton>
             <TransparentButton
@@ -408,11 +401,11 @@ export default function Header({
               isActive={currentScreen === ScreenType.QUESTIONS}
               menuOpen={menuOpen}
             >
-              {currentScreen === ScreenType.QUESTIONS ? (
-                <img src={qmarkPink} alt="Questions Icon" />
-              ) : (
-                <img src={qmark} alt="Questions Icon" />
-              )}
+              <img
+                src={qmark}
+                alt="Questions Icon"
+                style={{ opacity: currentScreen === ScreenType.QUESTIONS ? 1 : 0.5 }}
+              />
               Questions
             </TransparentButton>
             {userStatus === UserStatusType.LOGGEDIN && (
@@ -421,11 +414,11 @@ export default function Header({
                 isActive={currentScreen === ScreenType.LIBRARY}
                 menuOpen={menuOpen}
               >
-                {currentScreen === ScreenType.LIBRARY ? (
-                  <img src={libPink} alt="Library Icon" />
-                ) : (
-                  <img src={lib} alt="Library Icon" />
-                )}
+                <img
+                  src={lib}
+                  alt="Library Icon"
+                  style={{ opacity: currentScreen === ScreenType.LIBRARY ? 1 : 0.5 }}
+                />
                 My Library
               </TransparentButton>
             )}
@@ -460,11 +453,11 @@ export default function Header({
                   onClick={() => handleButtonClick(ScreenType.GAMES)}
                   isActive={currentScreen === ScreenType.GAMES}
                 >
-                  {currentScreen === ScreenType.GAMES ? (
-                    <PinkIcon src={dice} alt="Games Icon" />
-                  ) : (
-                    <img src={dice} alt="Games Icon" />
-                  )}
+                  <img
+                    src={dice}
+                    alt="Games Icon"
+                    style={{ opacity: currentScreen === ScreenType.GAMES ? 1 : 0.5 }}
+                  />
                   <ButtonText isActive={currentScreen === ScreenType.GAMES}>
                     Games
                   </ButtonText>
@@ -474,11 +467,11 @@ export default function Header({
                   onClick={() => handleButtonClick(ScreenType.QUESTIONS)}
                   isActive={currentScreen === ScreenType.QUESTIONS}
                 >
-                  {currentScreen === ScreenType.QUESTIONS ? (
-                    <PinkIcon src={qmark} alt="Questions Icon" />
-                  ) : (
-                    <img src={qmark} alt="Questions Icon" />
-                  )}
+                  <img
+                    src={qmark}
+                    alt="Questions Icon"
+                    style={{ opacity: currentScreen === ScreenType.QUESTIONS ? 1 : 0.5 }}
+                  />
                   <ButtonText isActive={currentScreen === ScreenType.QUESTIONS}>
                     Questions
                   </ButtonText>
@@ -491,11 +484,11 @@ export default function Header({
                     onClick={() => handleButtonClick(ScreenType.LIBRARY)}
                     isActive={currentScreen === ScreenType.LIBRARY}
                   >
-                    {currentScreen === ScreenType.LIBRARY ? (
-                      <PinkIcon src={books} alt="Library Icon" />
-                    ) : (
-                      <img src={books} alt="Library Icon" />
-                    )}
+                    <img
+                      src={books}
+                      alt="Library Icon"
+                      style={{ opacity: currentScreen === ScreenType.LIBRARY ? 1 : 0.5 }}
+                    />
                     <ButtonText isActive={currentScreen === ScreenType.LIBRARY}>
                       My Library
                     </ButtonText>
