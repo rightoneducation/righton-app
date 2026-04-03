@@ -36,6 +36,23 @@ export default function useFetchAndSubscribeGameSession(
   const [newPoints, setNewPoints] = useState<number>(0);
   const previousStateRef = useRef<GameSessionState | null>(null);
 
+  const addBonusPoints = async (inputTeamId: string, prevScore: number, bonusPoints: number) => {
+    try {
+      await apiClients.team.updateTeam({ id: inputTeamId, score: prevScore + bonusPoints });
+      setGameSession((prevGame) => {
+        if (!prevGame) return prevGame;
+        return {
+          ...prevGame,
+          teams: prevGame.teams?.map((team) =>
+            team.id === inputTeamId ? { ...team, score: prevScore + bonusPoints } : team
+          ),
+        };
+      });
+    } catch (e) {
+      setIsError({ error: true, withheldPoints: bonusPoints });
+    }
+  };
+
   const handleVisibilityChange = () => {
     if (!document.hidden) {
       setCurrentTime(calculateCurrentTime(gameSession ?? null));
@@ -72,13 +89,9 @@ export default function useFetchAndSubscribeGameSession(
     // added so we can update the score for the discuss page. (previously implemented in results pages we got rid of)
     const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
       try {
-        console.log('sup');
-        const response = await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
-        console.log('updateTeamscore');
-        console.log(response);
+        await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
         setNewPoints(newScore);
       } catch (e) {
-        console.log(e);
         setIsError({ error: true, withheldPoints: newScore });
       }
     };
@@ -106,7 +119,6 @@ export default function useFetchAndSubscribeGameSession(
         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
-            console.log(response);
             if (!response) {
               setError(`${t('error.connect.subscriptionerror')}`);
               trackEvent(PlayEvent.SUBSCRIPTION_ERROR, {
@@ -145,7 +157,6 @@ export default function useFetchAndSubscribeGameSession(
               const currentQuestion = response.questions[currentQuestionIndex];
               
               const currentTeam = response.teams?.find((team) => team.id === teamId);
-              const currName = currentTeam?.name;
               if (!currentTeam) {
                 console.error('Team not found');
                 return;
@@ -161,11 +172,8 @@ export default function useFetchAndSubscribeGameSession(
                     currentTeam,
                     isShortAnswerEnabled
                   );
-                  console.log(calcNewScore);
               }
               const prevScore = currentTeam?.score ?? 0;
-              console.log('inside useEffect');
-              console.log(calcNewScore);
               updateTeamScore(teamId, prevScore, calcNewScore); 
             }
           }
@@ -218,7 +226,5 @@ export default function useFetchAndSubscribeGameSession(
       }
     };
   }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
-  console.log("outside of useEffect");
-  console.log(newPoints);
-  return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime };
+  return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime, addBonusPoints };
 }

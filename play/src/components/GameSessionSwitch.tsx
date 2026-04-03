@@ -24,6 +24,7 @@ interface GameSessionSwitchProps {
   isAddTime: boolean;
   localModel: LocalModel;
   newPoints: number;
+  addBonusPoints: (teamId: string, prevScore: number, bonusPoints: number) => Promise<void>;
 }
 
 export default function GameSessionSwitch({
@@ -34,6 +35,7 @@ export default function GameSessionSwitch({
   isAddTime,
   localModel,
   newPoints,
+  addBonusPoints,
 }: GameSessionSwitchProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(
     !hasRejoined
@@ -127,6 +129,8 @@ export default function GameSessionSwitch({
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}
+          newPoints={newPoints}
+          addBonusPoints={addBonusPoints}
         />
       );
     case GameSessionState.PHASE_1_DISCUSS:

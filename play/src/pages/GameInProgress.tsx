@@ -61,6 +61,7 @@ interface GameInProgressProps {
   gameSession: IGameSession;
   newPoints?: number;
   isAddTime: boolean;
+  addBonusPoints?: (teamId: string, prevScore: number, bonusPoints: number) => Promise<void>;
 }
 
 export default function GameInProgress({
@@ -84,6 +85,7 @@ export default function GameInProgress({
   isShortAnswerEnabled,
   gameSession,
   newPoints,
+  addBonusPoints,
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
@@ -210,6 +212,9 @@ export default function GameInProgress({
       await apiClients.teamAnswer.updateTeamAnswerHint(teamAnswerId, normalizedHint);
       window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
       setAnswerHint(normalizedHint);
+      if (addBonusPoints) {
+        await addBonusPoints(teamId, currentTeam?.score ?? score, 1);
+      }
     } catch (e) {
       setIsAnswerError(true);
     }

@@ -51,8 +51,6 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.hasRejoined,
     localModel?.teamId,
   );
-  console.log(subscription.newPoints);
-
   useEffect(() => {
     if (subscription.error) {
       if (!errorTrackingRef.current) {
@@ -130,6 +128,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
       localModel={localModel}
       gameSession={subscription.gameSession}
       newPoints={subscription.newPoints}
+      addBonusPoints={subscription.addBonusPoints}
       {...props}
     />
   );
