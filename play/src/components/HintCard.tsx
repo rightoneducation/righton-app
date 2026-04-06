@@ -65,12 +65,47 @@ export default function HintCard({
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled >
-        <Typography
-          variant="subtitle1"
-          sx={{ width: '100%', textAlign: 'left' }}
-        >
-          {t('gameinprogress.chooseanswer.hintcardtitle')}
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <Typography
+            variant="subtitle1"
+            sx={{ textAlign: 'left' }}
+          >
+            {t('gameinprogress.chooseanswer.hintcardtitle')}
+          </Typography>
+          <Box
+            sx={{
+              width: '58px',
+              height: '22px',
+              borderRadius: '23px',
+              background: isHintSubmitted
+                ? 'linear-gradient(180deg, #7BDD61 0%, #22B851 100%)'
+                : '#CCCCCC',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingTop: '3px',
+              paddingBottom: '3px',
+              animation: isHintSubmitted ? 'pillPop 600ms ease-in-out' : 'none',
+              '@keyframes pillPop': {
+                '0%': { transform: 'scale(1)', opacity: 0.7 },
+                '50%': { transform: 'scale(1.2)', opacity: 1 },
+                '100%': { transform: 'scale(1)', opacity: 1 },
+              },
+            }}
+          >
+            <Typography
+              sx={{
+                fontFamily: 'Poppins',
+                fontWeight: 700,
+                fontSize: '20px',
+                color: 'white',
+                textShadow: '0px 1px 1px rgba(0,0,0,0.15)',
+              }}
+            >
+              +1
+            </Typography>
+          </Box>
+        </Box>
         <Box
           style={{
             display: 'flex',

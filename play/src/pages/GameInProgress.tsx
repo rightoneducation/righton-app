@@ -88,6 +88,7 @@ export default function GameInProgress({
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
+  const [hintBonusPoints, setHintBonusPoints] = useState(0);
   const [answerHint, setAnswerHint] = useState<IAnswerHint>(() => {
     const rejoinSubmittedHint = checkForSubmittedHintOnRejoin(
       localModel,
@@ -205,14 +206,16 @@ export default function GameInProgress({
     }
   };
 
-  const handleSubmitHint = async (normalizedHint: IAnswerHint) => {
-    try{
-      await apiClients.teamAnswer.updateTeamAnswerHint(teamAnswerId, normalizedHint);
-      window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
-      setAnswerHint(normalizedHint);
-    } catch (e) {
-      setIsAnswerError(true);
-    }
+  const handleSubmitHint = (normalizedHint: IAnswerHint) => {
+    // frontend first
+    setHintBonusPoints(1);
+    window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
+    setAnswerHint(normalizedHint);
+    // backend after — fire and forget
+    apiClients.teamAnswer.updateTeamAnswerHint(teamAnswerId, normalizedHint)
+      .catch(() => setIsAnswerError(true));
+    apiClients.team.updateTeam({ id: teamId, score: (currentTeam?.score ?? score) + 1 })
+      .catch(() => setIsAnswerError(true));
   };
 
   const handleRetry = () => {
@@ -358,7 +361,8 @@ export default function GameInProgress({
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           score={score}
-          newPoints={newPoints}
+          newPoints={hintBonusPoints > 0 ? hintBonusPoints : newPoints}
+          animationDelay={hintBonusPoints > 0 ? 0 : undefined}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>
