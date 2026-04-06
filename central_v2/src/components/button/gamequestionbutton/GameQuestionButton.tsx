@@ -21,7 +21,7 @@ const GameQuestionContainer = styled(Button, {
   },
   padding: 0,
   position: 'relative',
-  cursor: isDisabled ? 'default' : 'pointer',
+  cursor: 'default',
 }));
 
 const GameQuestionSelectionPill = styled(Box, {
@@ -68,6 +68,8 @@ const SubContainer = styled(Box, {
     width: screenSize === ScreenSize.SMALL ? '150px' : '200px',
     opacity: isSelected ? 1 : 0.5,
     transition: 'opacity 0.3 ease-in-out',
+    cursor: isSelected ? 'default' : 'pointer',
+    zIndex: 4,
   }),
 );
 
@@ -117,16 +119,23 @@ export default function GameQuestionButton({
     <GameQuestionContainer
       screenSize={screenSize}
       isDisabled={isDisabled}
-      onClick={!isDisabled ? handleGameQuestionSwitch : undefined}
     >
       <GameQuestionSelectionPill screenSize={screenSize} isPublic={isPublic} />
       <LabelContainer>
-        <SubContainer screenSize={screenSize} isSelected={isPublic}>
+        <SubContainer
+          screenSize={screenSize}
+          isSelected={isPublic}
+          onClick={!isDisabled && !isPublic ? handleGameQuestionSwitch : undefined}
+        >
           <GameQuestionText isSelected={isPublic}>
             {t(`gameQuestionButton.games`)}
           </GameQuestionText>
         </SubContainer>
-        <SubContainer screenSize={screenSize} isSelected={!isPublic}>
+        <SubContainer
+          screenSize={screenSize}
+          isSelected={!isPublic}
+          onClick={!isDisabled && isPublic ? handleGameQuestionSwitch : undefined}
+        >
           <GameQuestionText isSelected={!isPublic}>
             {t(`gameQuestionButton.questions`)}
           </GameQuestionText>
