@@ -16,16 +16,15 @@ const ScorePill = styled('div')(({ theme }) => ({
 
 interface ScoreAnimationProps {
   startAnimation: boolean;
+  animationDelay: number;
 }
 const ScoreAnimation = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'startAnimation',
-})<ScoreAnimationProps>(({ startAnimation }) => ({
+  shouldForwardProp: (prop) => prop !== 'startAnimation' && prop !== 'animationDelay',
+})<ScoreAnimationProps>(({ startAnimation, animationDelay }) => ({
   opacity: 1,
   zIndex: 2,
   animation: startAnimation
-    ? `
-   scoreGrow 1000ms ease-in-out 1650ms
-  `
+    ? `scoreGrow 1000ms ease-in-out ${animationDelay}ms`
     : ``,
   '@keyframes scoreGrow': {
     '0%, 100%': {
@@ -42,11 +41,13 @@ const ScoreAnimation = styled('div', {
 interface ScoreIndicatorProps {
   newPoints?: number;
   score: number;
+  animationDelay?: number;
 }
 
 export default function ScoreIndicator({
   newPoints,
   score,
+  animationDelay = 1650,
 }: ScoreIndicatorProps) {
   const [newScore, setNewScore] = useState(score);
   const [startScoreAnimation, setStartScoreAnimation] = useState(false);
@@ -60,7 +61,7 @@ export default function ScoreIndicator({
 
   return (
     <Box>
-      <ScoreAnimation startAnimation={startScoreAnimation}>
+      <ScoreAnimation startAnimation={startScoreAnimation} animationDelay={animationDelay}>
         <ScorePill>
           <Typography data-testid="scoreindicator-newpoints" variant="overline">
             {isNullOrUndefined(newScore) ? 0 : newScore}

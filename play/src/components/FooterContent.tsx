@@ -34,6 +34,7 @@ interface FooterContentProps {
   teamName: string;
   newPoints?: number;
   score: number;
+  animationDelay?: number;
 }
 
 export default function FooterContent({
@@ -41,6 +42,7 @@ export default function FooterContent({
   teamName,
   newPoints,
   score,
+  animationDelay,
 }: FooterContentProps) {
   const theme = useTheme();
 
@@ -55,7 +57,7 @@ export default function FooterContent({
           {teamName}
         </Typography>
       </FooterLeftContainer>
-      <ScoreIndicator newPoints={newPoints} score={score} />
+      <ScoreIndicator newPoints={newPoints} score={score} animationDelay={animationDelay} />
     </FooterContainer>
   );
 }
