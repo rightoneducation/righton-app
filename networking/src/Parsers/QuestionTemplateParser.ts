@@ -50,7 +50,7 @@ export class QuestionTemplateParser {
             gradeFilter: grade,
             standard,
             imageUrl,
-            timesPlayed: 0,
+            timesPlayed: createQuestionTemplateInput.timesPlayed ?? 0,
             gameTemplatesCount: 0,
         }
         return questionTemplate

@@ -76,4 +76,5 @@ export type CentralQuestionTemplateInput = {
   questionCard: QuestionCard;
   correctCard: CorrectCard;
   incorrectCards: IncorrectCard[];
+  timesPlayed?: number | null;
 }
