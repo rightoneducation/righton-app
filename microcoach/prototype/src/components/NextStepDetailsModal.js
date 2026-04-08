@@ -62,7 +62,6 @@ function formatText(text) {
 function WorkedExampleText({ text, teacherView }) {
   if (!text) return null;
   const lines = text.split('\n');
-  console.log("Printing Lines: ", lines);
   // Find the last non-empty line index — that's the final answer, hidden in student view
   let lastNonEmptyIdx = -1;
   for (let i = lines.length - 1; i >= 0; i--) {
