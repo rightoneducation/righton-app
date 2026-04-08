@@ -88,7 +88,10 @@ function App() {
           .find((s) => s.weekNumber === classroom.currentWeek);
         let gapGroups = null;
         if (activeSession?.pregeneratedNextSteps) {
+          console.log('[RAW pregeneratedNextSteps]', activeSession.pregeneratedNextSteps);
           gapGroups = GapGroupParser.fromPregeneratedJson(activeSession.pregeneratedNextSteps);
+          console.log('[After pregeneratedNextSteps]', gapGroups);
+
         }
         const entry = savedByClassroom.find((x) => x.id === classroom.id);
         const rawItems = entry?.items ?? [];

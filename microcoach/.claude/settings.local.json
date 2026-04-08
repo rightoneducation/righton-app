@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/tmp/search_fields.txt:*)",
+      "Read(//tmp/**)"
+    ]
+  }
+}
