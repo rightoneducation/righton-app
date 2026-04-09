@@ -6,6 +6,9 @@ import {
   styled,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import {
+  useCentralDataDispatch,
+} from '../../hooks/context/useCentralDataContext';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 
@@ -26,12 +29,21 @@ const SubText = styled(Typography)(({ theme }) => ({
 }));
 
 export default function LoginModal() {
+  const centralDataDispatch = useCentralDataDispatch();
   const navigate = useNavigate();
   const handleLogin = () => {
+     centralDataDispatch({
+      type: 'SET_IS_TABS_OPEN',
+      payload: false,
+    });
     navigate('/login');
   };
 
   const handleSignUp = () => {
+     centralDataDispatch({
+      type: 'SET_IS_TABS_OPEN',
+      payload: false,
+    });
     navigate('/signup')
   };
 
@@ -46,6 +58,7 @@ export default function LoginModal() {
           flexDirection: 'column',
           gap: '24px',
           padding: '48px',
+          borderRadius: '8px'
         }}
       >
         <DragText>

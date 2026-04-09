@@ -365,13 +365,13 @@ export default function Header({
           >
             <TransparentButton
               onClick={() => handleButtonClick(ScreenType.GAMES)}
-              isActive={currentScreen === ScreenType.GAMES}
+              isActive={currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME}
               menuOpen={menuOpen}
             >
               <img
                 src={dice}
                 alt="Games Icon"
-                style={{ opacity: currentScreen === ScreenType.GAMES ? 1 : 0.5 }}
+                style={{ opacity: currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME ? 1 : 0.5 }}
               />
               Games
             </TransparentButton>
@@ -438,14 +438,14 @@ export default function Header({
                 <TransparentButton
                   disableRipple
                   onClick={() => handleButtonClick(ScreenType.GAMES)}
-                  isActive={currentScreen === ScreenType.GAMES}
+                  isActive={currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME}
                 >
                   <img
                     src={dice}
                     alt="Games Icon"
-                    style={{ opacity: currentScreen === ScreenType.GAMES ? 1 : 0.5 }}
+                    style={{ opacity: currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME ? 1 : 0.5 }}
                   />
-                  <ButtonText isActive={currentScreen === ScreenType.GAMES}>
+                  <ButtonText isActive={currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME}>
                     Games
                   </ButtonText>
                 </TransparentButton>
