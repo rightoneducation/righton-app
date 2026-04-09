@@ -37,7 +37,8 @@ const getHoverColor = (
         buttonType === ButtonType.LOGOUT ||
         buttonType === ButtonType.EDITPROFILEPICTURE ||
         buttonType === ButtonType.CHANGEIMAGE ||
-        buttonType === ButtonType.SAVEDRAFT
+        buttonType === ButtonType.SAVEDRAFT ||
+        buttonType === ButtonType.SIGNUPNULL
       ) {
         return `rgba(0,0,0, 0.1)`;
       }
@@ -90,6 +91,7 @@ export const ButtonStyled = styled(Button, {
       buttonColor === ButtonColor.NULL // eslint-disable-line no-nested-ternary
         ? buttonType === ButtonType.CHANGEIMAGE ||
           buttonType === ButtonType.SAVEDRAFT ||
+          buttonType === ButtonType.SIGNUPNULL ||
           (buttonType === ButtonType.SIGNUP && isReset) ||
           (buttonType === ButtonType.BACK && isReset)
           ? `${theme.palette.primary.buttonPrimaryDefault}`
@@ -138,6 +140,7 @@ export const ButtonTypography = styled(Typography, {
     buttonType === ButtonType.CHANGEIMAGE ||
     buttonType === ButtonType.LOGINHEADER ||
     buttonType === ButtonType.SAVEDRAFT ||
+    buttonType === ButtonType.SIGNUPNULL ||
     (buttonType === ButtonType.SIGNUP && isReset) ||
     (buttonType === ButtonType.BACK && isReset)
       ? `${theme.palette.primary.buttonPrimaryDefault}`

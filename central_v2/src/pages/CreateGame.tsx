@@ -27,6 +27,7 @@ import {
   StorageKey,
   TemplateType,
   GameQuestionType,
+  UserStatusType
 } from '../lib/CentralModels';
 import { timeLookup } from '../components/cards/creategamecard/time';
 import {
@@ -1423,6 +1424,7 @@ export default function CreateGame({
                 >
                   {draftQuestionItem.isLibraryViewOnly ? (
                     <ViewQuestionCards
+                      userStatus={UserStatusType.LOGGEDIN}
                       screenSize={screenSize}
                       question={draftQuestionItem.questionTemplate}
                       isViewGame

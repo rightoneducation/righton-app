@@ -415,6 +415,7 @@ export default function ViewGame({
                 (question, index) =>
                   index === selectedQuestionIndex && (
                     <ViewQuestionCards
+                      userStatus={centralData.userStatus}
                       isViewGame
                       screenSize={screenSize}
                       question={question.questionTemplate}
