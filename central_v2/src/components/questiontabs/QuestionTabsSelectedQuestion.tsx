@@ -31,6 +31,7 @@ import {
   useCentralDataState,
   useCentralDataDispatch,
 } from '../../hooks/context/useCentralDataContext';
+import LoginModal from '../modal/LoginModal';
 
 interface TabContainerProps {
   screenSize: ScreenSize;
@@ -200,31 +201,44 @@ export default function QuestionTabsSelectedQuestion({
                       screenSize={screenSize}
                       question={question}
                     />
-                    <Grid container spacing={`${theme.sizing.smPadding}px`}>
-                      <SubCardGridItem item sm={12} md={6}>
-                        <DetailedQuestionSubCard
-                          cardType={CardType.CORRECT}
-                          answer={
-                            question?.choices?.find((answer) => answer.isAnswer)
-                              ?.text ?? ''
-                          }
-                          instructions={question?.instructions ?? []}
-                        />
-                      </SubCardGridItem>
-                      <SubCardGridItem item sm={12} md={6}>
-                        {question &&
-                          question.choices
-                            ?.filter((choice) => !choice.isAnswer)
-                            .map((choice, index) => (
-                              <DetailedQuestionSubCard
-                                key={uuidv4()}
-                                cardType={CardType.INCORRECT}
-                                answer={choice.text}
-                                answerReason={choice.reason}
-                              />
-                            ))}
-                      </SubCardGridItem>
-                    </Grid>
+                     <Box style={{position: 'relative'}}>
+                      {centralData.userStatus !== UserStatusType.LOGGEDIN &&
+                        <Box style={{width: '100%', display: 'flex', justifyContent: 'center', position: 'absolute', top: '48px', zIndex: 5}}>
+                          <LoginModal />
+                        </Box>
+                      }
+                      <Grid 
+                        container
+                        spacing={`${theme.sizing.smPadding}px`}
+                        style={{
+                          ...(centralData.userStatus !== UserStatusType.LOGGEDIN && {filter: 'blur(8px)'})
+                        }}
+                      >
+                        <SubCardGridItem item sm={12} md={6}>
+                          <DetailedQuestionSubCard
+                            cardType={CardType.CORRECT}
+                            answer={
+                              question?.choices?.find((answer) => answer.isAnswer)
+                                ?.text ?? ''
+                            }
+                            instructions={question?.instructions ?? []}
+                          />
+                        </SubCardGridItem>
+                        <SubCardGridItem item sm={12} md={6}>
+                          {question &&
+                            question.choices
+                              ?.filter((choice) => !choice.isAnswer)
+                              .map((choice, index) => (
+                                <DetailedQuestionSubCard
+                                  key={uuidv4()}
+                                  cardType={CardType.INCORRECT}
+                                  answer={choice.text}
+                                  answerReason={choice.reason}
+                                />
+                              ))}
+                        </SubCardGridItem>
+                      </Grid>
+                    </Box>
                   </>
                 )}
               </GridItem>

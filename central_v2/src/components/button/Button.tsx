@@ -78,11 +78,12 @@ export default function CentralButton({
       style={{ width: buttonWidthOverride ?? buttonWidth }}
     >
       <ButtonContent>
-        {buttonObj.icon && (
+        {buttonObj.icon && !hideIcon && (
           <ButtonIconContainer>
             {(buttonColor === ButtonColor.NULL &&
               (buttonType === ButtonType.CHANGEIMAGE ||
-                buttonType === ButtonType.SAVEDRAFT)) ||
+                buttonType === ButtonType.SAVEDRAFT ||
+                buttonType === ButtonType.SIGNUPNULL)) ||
             (buttonType === ButtonType.SIGNUP && isReset) ? (
               <ButtonIconBlue src={buttonObj.icon} />
             ) : (

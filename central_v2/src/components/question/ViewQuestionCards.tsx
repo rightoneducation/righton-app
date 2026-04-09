@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Box, useTheme } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { IQuestionTemplate } from '@righton/networking';
-import { ScreenSize, CardType } from '../../lib/CentralModels';
+import { ScreenSize, CardType, UserStatusType } from '../../lib/CentralModels';
 import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestionCardBase';
 import DetailedQuestionSubCard from '../cards/detailedquestion/DetailedQuestionSubCard';
 import OwnerTag from '../profile/OwnerTag';
@@ -11,11 +11,13 @@ import {
   CardContainer,
   SubCardGridItem,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
+import LoginModal from '../modal/LoginModal';
 
 interface ViewQuestionsProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
   isViewGame: boolean;
+  userStatus: UserStatusType;
   isCreateGame?: boolean;
 }
 
@@ -23,6 +25,7 @@ export default function ViewQuestionCards({
   screenSize,
   question,
   isViewGame,
+  userStatus,
   isCreateGame,
 }: ViewQuestionsProps) {
   const theme = useTheme();
@@ -69,31 +72,44 @@ export default function ViewQuestionCards({
             screenSize={screenSize}
             question={question}
           />
-          <Grid container spacing={`${theme.sizing.smPadding}px`}>
-            <SubCardGridItem item sm={12} md={6}>
-              <DetailedQuestionSubCard
-                cardType={CardType.CORRECT}
-                answer={
-                  question?.choices?.find((answer) => answer.isAnswer)?.text ??
-                  ''
-                }
-                instructions={question?.instructions ?? []}
-              />
-            </SubCardGridItem>
-            <SubCardGridItem item sm={12} md={6}>
-              {question &&
-                question.choices
-                  ?.filter((choice) => !choice.isAnswer)
-                  .map((choice, index) => (
-                    <DetailedQuestionSubCard
-                      key={uuidv4()}
-                      cardType={CardType.INCORRECT}
-                      answer={choice.text}
-                      answerReason={choice.reason}
-                    />
-                  ))}
-            </SubCardGridItem>
-          </Grid>
+          <Box style={{position: 'relative'}}>
+            {userStatus !== UserStatusType.LOGGEDIN &&
+              <Box style={{width: '100%', display: 'flex', justifyContent: 'center', position: 'absolute', top: '48px', zIndex: 5}}>
+                <LoginModal />
+              </Box>
+            }
+            <Grid 
+              container 
+              spacing={`${theme.sizing.smPadding}px`} 
+              style={{
+                ...(userStatus !== UserStatusType.LOGGEDIN && {filter: 'blur(8px)'})
+              }}
+            >
+                <SubCardGridItem item sm={12} md={6}>
+                  <DetailedQuestionSubCard
+                    cardType={CardType.CORRECT}
+                    answer={
+                      question?.choices?.find((answer) => answer.isAnswer)?.text ??
+                      ''
+                    }
+                    instructions={question?.instructions ?? []}
+                  />
+                </SubCardGridItem>
+                <SubCardGridItem item sm={12} md={6}>
+                  {question &&
+                    question.choices
+                      ?.filter((choice) => !choice.isAnswer)
+                      .map((choice, index) => (
+                        <DetailedQuestionSubCard
+                          key={uuidv4()}
+                          cardType={CardType.INCORRECT}
+                          answer={choice.text}
+                          answerReason={choice.reason}
+                        />
+                      ))}
+                </SubCardGridItem>
+            </Grid>
+          </Box>
         </Grid>
         <Grid sm md item />
       </DetailedQuestionContainer>

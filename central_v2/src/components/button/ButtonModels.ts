@@ -68,6 +68,7 @@ export enum ButtonType {
   EDIT = 'edit',
   DELETE = 'delete',
   OK = 'ok',
+  SIGNUPNULL = 'signupnull',
 }
 
 export enum ButtonColor {
@@ -294,5 +295,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.OK]: {
     textKey: ButtonType.OK,
+  },
+  [ButtonType.SIGNUPNULL]: {
+    icon: signup,
+    textKey: ButtonType.SIGNUP,
+    color: ButtonColor.NULL,
   },
 };
