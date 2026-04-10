@@ -39,6 +39,7 @@ export const getClassroom = /* GraphQL */ `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -92,6 +93,7 @@ export const getClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -241,6 +243,7 @@ export const listClassrooms = /* GraphQL */ `
             topic
             ccssStandards
             status
+            publishStatus
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -252,6 +255,7 @@ export const listClassrooms = /* GraphQL */ `
               __typename
             }
             pregeneratedNextSteps
+            evaluationResults
             createdAt
             updatedAt
             classroomSessionsId
@@ -350,6 +354,7 @@ export const getSession = /* GraphQL */ `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -458,6 +463,7 @@ export const getSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -480,6 +486,7 @@ export const listSessions = /* GraphQL */ `
         topic
         ccssStandards
         status
+        publishStatus
         ppqAssessmentId
         postPpqAssessmentId
         assessments {
@@ -557,6 +564,7 @@ export const listSessions = /* GraphQL */ `
           __typename
         }
         pregeneratedNextSteps
+        evaluationResults
         createdAt
         updatedAt
         classroomSessionsId
@@ -1361,6 +1369,7 @@ export const classroomsByClassroomName = /* GraphQL */ `
             topic
             ccssStandards
             status
+            publishStatus
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -1372,6 +1381,7 @@ export const classroomsByClassroomName = /* GraphQL */ `
               __typename
             }
             pregeneratedNextSteps
+            evaluationResults
             createdAt
             updatedAt
             classroomSessionsId
@@ -1483,6 +1493,7 @@ export const sessionsByClassroomId = /* GraphQL */ `
         topic
         ccssStandards
         status
+        publishStatus
         ppqAssessmentId
         postPpqAssessmentId
         assessments {
@@ -1560,6 +1571,7 @@ export const sessionsByClassroomId = /* GraphQL */ `
           __typename
         }
         pregeneratedNextSteps
+        evaluationResults
         createdAt
         updatedAt
         classroomSessionsId

@@ -19,6 +19,32 @@
       "service": "AppSync"
     }
   },
+  "auth": {
+    "microcoach4ff9e90a": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
   "function": {
     "microcoachGetLearningScience": {
       "build": true,
@@ -26,6 +52,11 @@
       "service": "Lambda"
     },
     "microcoachIngestPPQ": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachInitialEvaluator": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -41,6 +72,11 @@
       "service": "Lambda"
     },
     "microcoachNextStepOption": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachRegenEvaluator": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -86,6 +122,22 @@
         {
           "category": "function",
           "resourceName": "microcoachIngestPPQ"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachInitialEvaluator_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachInitialEvaluator"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachInitialEvaluator_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachInitialEvaluator"
         }
       ]
     },
@@ -137,6 +189,22 @@
         }
       ]
     },
+    "AMPLIFY_function_microcoachRegenEvaluator_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachRegenEvaluator"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachRegenEvaluator_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachRegenEvaluator"
+        }
+      ]
+    },
     "AMPLIFY_function_microcoachTeacherUploadGen_deploymentBucketName": {
       "usedBy": [
         {
@@ -168,6 +236,13 @@
           "resourceName": "microcoachTeacherUpload"
         }
       ]
+    }
+  },
+  "storage": {
+    "microcoachdocs": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

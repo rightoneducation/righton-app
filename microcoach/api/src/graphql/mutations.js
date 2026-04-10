@@ -26,6 +26,16 @@ export const ingestPPQ = /* GraphQL */ `
     ingestPPQ(input: $input)
   }
 `;
+export const teacherUpload = /* GraphQL */ `
+  mutation TeacherUpload($input: TeacherUploadInput!) {
+    teacherUpload(input: $input)
+  }
+`;
+export const regenerateContent = /* GraphQL */ `
+  mutation RegenerateContent($input: RegenerateContentInput!) {
+    regenerateContent(input: $input)
+  }
+`;
 export const createClassroom = /* GraphQL */ `
   mutation CreateClassroom(
     $input: CreateClassroomInput!
@@ -67,6 +77,7 @@ export const createClassroom = /* GraphQL */ `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -120,6 +131,7 @@ export const createClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -267,6 +279,7 @@ export const updateClassroom = /* GraphQL */ `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -320,6 +333,7 @@ export const updateClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -467,6 +481,7 @@ export const deleteClassroom = /* GraphQL */ `
           topic
           ccssStandards
           status
+          publishStatus
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -520,6 +535,7 @@ export const deleteClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          evaluationResults
           createdAt
           updatedAt
           classroomSessionsId
@@ -639,6 +655,7 @@ export const createSession = /* GraphQL */ `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -747,6 +764,7 @@ export const createSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -767,6 +785,7 @@ export const updateSession = /* GraphQL */ `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -875,6 +894,7 @@ export const updateSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId
@@ -895,6 +915,7 @@ export const deleteSession = /* GraphQL */ `
       topic
       ccssStandards
       status
+      publishStatus
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -1003,6 +1024,7 @@ export const deleteSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      evaluationResults
       createdAt
       updatedAt
       classroomSessionsId

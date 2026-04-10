@@ -5,6 +5,7 @@ import './RecommendedNextSteps.css';
 import './SharedButtons.css';
 
 import NextStepDetailsModal from './NextStepDetailsModal';
+import CcssHoverPill from './CcssHoverPill';
 
 
 const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], completedKeys = new Set(), gapGroups: gapGroupsProp }) => {
@@ -246,7 +247,11 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], completed
                         <h5 className="column-header assessed-header">Focus Skill</h5>
                         <div className="standards-list">
                           <div className="standard-card assessed-card">
-                            <span className="standard-code">{reasoningGroup.ccssStandards.targetObjective.standard}</span>
+                            <CcssHoverPill
+                              standard={reasoningGroup.ccssStandards.targetObjective.standard}
+                              description={reasoningGroup.ccssStandards.targetObjective.description}
+                              learningComponents={reasoningGroup.ccssStandards.targetObjective.learningComponents}
+                            />
                             <span className="standard-description">{reasoningGroup.ccssStandards.targetObjective.description}</span>
                           </div>
                         </div>

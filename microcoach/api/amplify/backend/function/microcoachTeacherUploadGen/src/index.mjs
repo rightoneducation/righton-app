@@ -499,6 +499,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
       id: currentStub.id,
       pregeneratedNextSteps: JSON.stringify(nextSteps),
       status: 'generated',
+      publishStatus: 'DRAFT',
     },
   });
   console.log('  ✓ Session updated');
@@ -507,7 +508,51 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   await gql(UPDATE_CLASSROOM_WEEK, { input: { id: classroom.id, currentWeek: currentStub.weekNumber } });
   console.log('  ✓');
 
-  return { misconceptionCount: misconceptions.length, nextStepCount: nextSteps.length };
+  // ── Evaluate generated content for grade level appropriateness ──────────────
+  let evalResults = null;
+  // Concatenate all generated content into a single text block for one evaluation call
+  const allParts = [];
+  for (const ns of nextSteps) {
+    for (const move of ns.moveOptions ?? []) {
+      const steps = move.tabs?.activitySteps;
+      if (steps?.incorrectWorkedExamples) {
+        for (const ex of steps.incorrectWorkedExamples) {
+          allParts.push(typeof ex === 'string' ? ex : `Problem: ${ex.problem}\nIncorrect Work: ${ex.incorrectWork}`);
+        }
+      }
+      if (steps?.discussionQuestions) {
+        for (const q of steps.discussionQuestions) {
+          allParts.push(q);
+        }
+      }
+    }
+  }
+  const evalTexts = allParts.length > 0
+    ? [{ id: 'all', label: 'All Generated Content', type: 'combined', text: allParts.join('\n\n---\n\n') }]
+    : [];
+
+  if (evalTexts.length > 0) {
+    console.log(`  Evaluating ${evalTexts.length} texts for grade level appropriateness...`);
+    try {
+      evalResults = await invokeLambda(`microcoachInitialEvaluator-${AMPLIFY_ENV}`, {
+        grade: classroom.grade,
+        texts: evalTexts,
+      });
+      console.log(`  ✓ Evaluation: ${JSON.stringify(evalResults.summary)}`);
+      // Save evaluation results to session
+      await gql(UPDATE_SESSION, {
+        input: {
+          id: currentStub.id,
+          evaluationResults: JSON.stringify(evalResults),
+        },
+      });
+      console.log('  ✓ Evaluation results saved to session');
+    } catch (err) {
+      console.error('  ✗ Evaluator failed (non-fatal):', err.message);
+    }
+  }
+
+  return { misconceptionCount: misconceptions.length, nextStepCount: nextSteps.length, evalResults };
 }
 
 // ── Handler ──────────────────────────────────────────────────────────────────
@@ -515,7 +560,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
 export const handler = async (event) => {
   console.log('Event received:', JSON.stringify(event));
 
-  const { classroomId, sessionId, classroomName, studentCount, misconceptionCount } = event;
+  const { classroomId, sessionId, classroomName, studentCount, misconceptionCount, docxKey, xlsxKey } = event;
   if (!classroomId) {
     throw new Error('Missing required field: classroomId');
   }
@@ -534,6 +579,8 @@ export const handler = async (event) => {
     console.log('Generate pipeline complete:', JSON.stringify(result));
 
     const displayName = classroomName || classroom.classroomName;
+    const frontendUrl = process.env.FRONTEND_URL || 'https://microcoach.rightoneducation.com';
+    const reviewUrl = `${frontendUrl}/review/${classroomId}`;
     const subject = `RightOn Education: MicroCoach Upload Complete - ${displayName}`;
     const bodyHtml = `
 <!DOCTYPE html>
@@ -568,13 +615,34 @@ export const handler = async (event) => {
         <tr><td>Students</td><td>${studentCount ?? '—'}</td></tr>
         <tr><td>Misconceptions Identified</td><td>${misconceptionCount ?? result.misconceptionCount}</td></tr>
         <tr><td>Next Steps Generated</td><td>${result.nextStepCount}</td></tr>
+        ${docxKey && xlsxKey ? `<tr><td>Files Stored</td><td style="font-size:12px;word-break:break-all;">${docxKey.split('/').pop()}<br>${xlsxKey.split('/').pop()}</td></tr>` : ''}
       </table>
-      <div class="status">Ready for Review</div>
+      ${result.evalResults?.evaluations?.[0] ? (() => {
+        const e = result.evalResults.evaluations[0];
+        const s = result.evalResults.summary;
+        const isAtGrade = e.classification === 'atGrade';
+        const statusColor = isAtGrade ? '#059669' : '#CC5500';
+        const statusText = isAtGrade ? '✓ At Grade Level' : e.classification === 'aboveGrade' ? '⚠ Above Grade Level' : e.classification === 'belowGrade' ? '⚠ Below Grade Level' : '— Unknown';
+        return `
+      <table class="summary-table">
+        <tr><td>Student-Facing Text Grade Level</td><td style="color:${statusColor};font-weight:600;">${statusText}</td></tr>
+        <tr><td>Expected</td><td>${s.expectedBand}</td></tr>
+        <tr><td>Scored (avg)</td><td>${e.score}</td></tr>
+        ${!isAtGrade ? `<tr><td colspan="2" style="font-size:12px;color:#6B7280;">Note: this is an average — some content may already be at grade level.</td></tr>` : ''}
+      </table>`;
+      })() : ''}
+      <a href="${reviewUrl}" class="status" style="display:block;text-decoration:none;color:#059669;">Ready for Review &rarr;</a>
     </div>
     <div class="footer">RightOn Education &mdash; MicroCoach</div>
   </div>
 </body>
 </html>`.trim();
+    const evalTextLines = result.evalResults?.evaluations?.[0] ? (() => {
+      const e = result.evalResults.evaluations[0];
+      const s = result.evalResults.summary;
+      const status = e.classification === 'atGrade' ? 'At Grade Level' : e.classification === 'aboveGrade' ? 'Above Grade Level' : e.classification === 'belowGrade' ? 'Below Grade Level' : 'Unknown';
+      return ['', `Student-Facing Text Grade Level: ${status} (expected ${s.expectedBand}, scored avg ${e.score})${status !== 'At Grade Level' ? ' — note: this is an average, some content may already be at grade level.' : ''}`];
+    })() : [];
     const bodyText = [
       `RightOn Education: MicroCoach Upload Complete - ${displayName}`,
       '',
@@ -584,8 +652,10 @@ export const handler = async (event) => {
       `Students: ${studentCount ?? '—'}`,
       `Misconceptions Identified: ${misconceptionCount ?? result.misconceptionCount}`,
       `Next Steps Generated: ${result.nextStepCount}`,
+      ...(docxKey && xlsxKey ? [`Files Stored: ${docxKey.split('/').pop()}, ${xlsxKey.split('/').pop()}`] : []),
+      ...evalTextLines,
       '',
-      'Ready for Review.',
+      `Ready for Review: ${reviewUrl}`,
     ].join('\n');
     await sendEmail(subject, bodyHtml, bodyText);
 

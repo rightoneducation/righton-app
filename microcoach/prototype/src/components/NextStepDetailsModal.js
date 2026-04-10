@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { sortStudentNames } from '../util/sortStudentNames';
 import MathText from './MathText';
+import CcssHoverPill from './CcssHoverPill';
 
 // Known technical field names → user-friendly labels.
 // Numbered patterns handle any trailing digit (e.g. incorrectWorkedExample1, 2, 3…).
@@ -168,9 +169,11 @@ const NextStepDetailsModal = ({
                         <span className="rns-activity-option-field-label">Targets</span>
                         <div className="nsdm-targets-meta">
                           {ccssStandards?.targetObjective?.standard && (
-                            <span className="ccss-tag target-objective">
-                              {ccssStandards.targetObjective.standard}
-                            </span>
+                            <CcssHoverPill
+                              standard={ccssStandards.targetObjective.standard}
+                              description={ccssStandards.targetObjective.description}
+                              learningComponents={ccssStandards.targetObjective.learningComponents}
+                            />
                           )}
                           {title && (
                             <span className="nsdm-misconception-label">{title}</span>

@@ -72,7 +72,8 @@
             },
             "APPSYNC_SECRET_NAME": "microcoach",
             "NOTIFY_FROM_EMAIL": "noreply@rightoneducation.com",
-            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com"
+            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com",
+            "FRONTEND_URL": "https://microcoach.rightoneducation.com"
           }
         },
         "Role": {

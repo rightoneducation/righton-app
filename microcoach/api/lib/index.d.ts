@@ -10,6 +10,8 @@ export declare class APIClient {
     getClassroom(classId: string): Promise<any>;
     listSessions(classroomId: string): Promise<any>;
     getSession(sessionId: string): Promise<any>;
+    updateSession(sessionId: string, updates: Record<string, unknown>): Promise<any>;
+    regenerateContent(sessionId: string, grade: number): Promise<any>;
     createMisconception(sessionId: string, item: Record<string, unknown>): Promise<any>;
     updateMisconception(id: string, updates: Record<string, unknown>): Promise<any>;
     listActivities(misconceptionId: string): Promise<any>;
@@ -23,5 +25,12 @@ export declare class APIClient {
     createSavedNextStep(classroomId: string, item: Record<string, unknown>): Promise<any>;
     updateSavedNextStep(id: string, updates: Record<string, unknown>): Promise<any>;
     deleteSavedNextStep(id: string): Promise<void>;
+    createClassroom(input: Record<string, unknown>): Promise<any>;
+    teacherUpload(input: {
+        classroomId: string;
+        activityFileBase64: string;
+        studentDataFileBase64: string;
+        organization?: string;
+    }): Promise<any>;
     listSavedNextSteps(classroomId: string): Promise<any>;
 }
