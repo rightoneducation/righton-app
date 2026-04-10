@@ -377,19 +377,23 @@ Also: the title must **not be a rewording** of any title above.
 If you cannot generate a genuinely distinct activity for this misconception and format, say so in the aiReasoning field — but still produce your best attempt.
 ` : ''}
 ## Math Formatting Requirements
-Always use Unicode. Never use LaTeX or caret/underscore ASCII notation. Specific rules:
-- Exponents: x² x³ 10⁴ (never x^2 or x^3)
-- Subscripts: x₁ x₂ xₙ (never x_1 or x_n)
-- Fractions: use / inline (e.g. 1/2, 3/4) or a÷b form — never \\frac
-- Multiplication: × (never \\times or *)
-- Division: ÷ (never \\div)
-- Square root: √x (never \\sqrt or sqrt())
-- Inequalities: ≤ ≥ ≠ (never <=, >=, !=)
-- Approximately equal: ≈ (never ~= or approx)
-- Negative numbers: use Unicode minus − (U+2212), not a hyphen-minus -
-- Pi: π (never "pi")
-- Angle/theta: ∠ABC, θ (never "angle ABC" or "theta")
-- Absolute value: |x| (pipe characters, never abs(x))
+Always use LaTeX for mathematical expressions. Never use Unicode math symbols or caret/underscore ASCII notation outside of LaTeX delimiters. Wrap ALL math in LaTeX delimiters:
+- Inline math: $...$ (e.g. $\\frac{2}{3} \\div \\frac{3}{4}$, $-6x + 12$, $x^2$)
+- Display/block math (standalone equations): $$...$$ on its own line
+Specific rules:
+- Exponents: $x^2$, $x^3$, $10^4$ (never x², x³ outside delimiters)
+- Subscripts: $x_1$, $x_2$, $x_n$ (never x₁, x₂ outside delimiters)
+- Fractions: $\\frac{a}{b}$ (never a/b or a÷b for fractions)
+- Multiplication: $a \\times b$ (never × outside delimiters or *)
+- Division: $a \\div b$ (never ÷ outside delimiters)
+- Square root: $\\sqrt{x}$ (never √x outside delimiters)
+- Inequalities: $\\leq$, $\\geq$, $\\neq$ (never ≤ ≥ ≠ outside delimiters)
+- Approximately equal: $\\approx$ (never ≈ outside delimiters)
+- Negative numbers: $-6$ (standard minus inside delimiters)
+- Pi: $\\pi$ (never π outside delimiters)
+- Angle/theta: $\\angle ABC$, $\\theta$ (never ∠ABC, θ outside delimiters)
+- Absolute value: $|x|$ (inside delimiters)
+Plain prose text should remain as normal English — only wrap actual math expressions in delimiters. Example: "Students who multiply $\\frac{2}{3}$ by the reciprocal will get $\\frac{8}{9}$, but a common error is to get $\\frac{4}{9}$."
 ${examplesSection}
 ${knowledgeGraphSection}
 ${lvnSection ? lvnSection + '\n' : ''}
@@ -471,6 +475,7 @@ Rules:
 - DO fix any arithmetic slippage in other steps (wrong multiplication, wrong simplification, wrong sign, wrong intermediate result)
 - If an example is already correct (one error only, no arithmetic slippage), return it unchanged
 - CRITICAL: For each example, solve the problem correctly to find the true correct answer. Then trace the incorrect path shown in incorrectWork to find the STATED answer (the value the student writes as their solution — not their final conclusion about whether it is right or wrong). If the stated answer matches the correct solution, the example fails — the misconception error is inconsequential. Replace the ENTIRE example (both "problem" and "incorrectWork") with a new problem of the same misconception type where the misconception error causes the student to state a clearly wrong final answer. Note: an error that only appears in a checking/verification step but not in the solve step also fails this test, because the student's stated solution is still correct.
+- Use LaTeX for all mathematical expressions ($...$ for inline, $$...$$ for display). Never use Unicode math symbols or plain ASCII math notation.
 - Return a JSON array with the same length as the input, each item: { "problem": "...", "incorrectWork": "..." }
 
 Examples to review:
@@ -505,7 +510,7 @@ ${JSON.stringify(examples, null, 2)}`;
           { role: 'system', content: VALIDATOR_SYSTEM_PROMPT },
           {
             role: 'user',
-            content: `Review this math problem for a ${ccssStandard} (${misconceptionTitle}) intervention activity.\nProblem: "${problem}"\n${VALIDATOR_PROBLEM_INSTRUCTIONS}`,
+            content: `Review this math problem for a ${ccssStandard} (${misconceptionTitle}) intervention activity.\nProblem: "${problem}"\n${VALIDATOR_PROBLEM_INSTRUCTIONS}\nUse LaTeX for all math ($...$ inline, $$...$$ display). Never use Unicode math symbols.`,
           },
         ],
       });

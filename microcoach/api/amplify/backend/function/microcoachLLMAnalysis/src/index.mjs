@@ -46,7 +46,7 @@ const Misconception = z.object({
   frequency: z.enum(['many', 'some', 'few']).describe(`"many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%`),
   isCore: z.boolean().describe('true for the single highest-priority misconception only; false for all others'),
   occurrence: z.enum(['first', 'recurring']).describe('"recurring" only if this pattern appeared in session history'),
-  example: z.object({ incorrect: z.string(), correct: z.string() }).optional().describe('A representative student error: "incorrect" shows a typical wrong expression/answer, "correct" shows the right form. Use plain Unicode math (e.g. 2/3 ÷ 3/4, -6x + 12) — never LaTeX.'),
+  example: z.object({ incorrect: z.string(), correct: z.string() }).optional().describe('A representative student error: "incorrect" shows a typical wrong expression/answer, "correct" shows the right form. Use LaTeX for all math expressions (e.g. $\\frac{2}{3} \\div \\frac{3}{4}$, $-6x + 12$). Always wrap math in $...$ delimiters.'),
   successIndicators: z.array(z.string()).optional().describe('Observable behaviors showing the student has overcome this misconception'),
   evidence: MisconceptionEvidence.optional(),
   prerequisiteGapCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `prerequisiteStandards` list (earlier-grade topics students must know first). Must be lower grade level than ccssStandard. Only include codes where a gap in that earlier skill would specifically cause this misconception."),
@@ -133,19 +133,23 @@ Apply these rules to every string you generate:
 - **Success indicators**: ${ws.successIndicators ?? 'Start with action verb. Observable behavior only.'}
 
 ## Math Formatting Requirements
-Always use Unicode. Never use LaTeX or caret/underscore ASCII notation. Specific rules:
-- Exponents: x² x³ 10⁴ (never x^2 or x^3)
-- Subscripts: x₁ x₂ xₙ (never x_1 or x_n)
-- Fractions: use / inline (e.g. 1/2, 3/4) or a÷b form — never \frac
-- Multiplication: × (never \times or *)
-- Division: ÷ (never \div)
-- Square root: √x (never \sqrt or sqrt())
-- Inequalities: ≤ ≥ ≠ (never <=, >=, !=)
-- Approximately equal: ≈ (never ~= or approx)
-- Negative numbers: use Unicode minus − (U+2212), not a hyphen-minus -
-- Pi: π (never "pi")
-- Angle/theta: ∠ABC, θ (never "angle ABC" or "theta")
-- Absolute value: |x| (pipe characters, never abs(x))
+Always use LaTeX for mathematical expressions. Never use Unicode math symbols or caret/underscore ASCII notation outside of LaTeX delimiters. Wrap ALL math in LaTeX delimiters:
+- Inline math: $...$ (e.g. $\frac{2}{3} \div \frac{3}{4}$, $-6x + 12$, $x^2$)
+- Display/block math (standalone equations): $$...$$ on its own line
+Specific rules:
+- Exponents: $x^2$, $x^3$, $10^4$ (never x², x³ outside delimiters)
+- Subscripts: $x_1$, $x_2$, $x_n$ (never x₁, x₂ outside delimiters)
+- Fractions: $\frac{a}{b}$ (never a/b or a÷b for fractions)
+- Multiplication: $a \times b$ (never × outside delimiters or *)
+- Division: $a \div b$ (never ÷ outside delimiters)
+- Square root: $\sqrt{x}$ (never √x outside delimiters)
+- Inequalities: $\leq$, $\geq$, $\neq$ (never ≤ ≥ ≠ outside delimiters)
+- Approximately equal: $\approx$ (never ≈ outside delimiters)
+- Negative numbers: $-6$ (standard minus inside delimiters)
+- Pi: $\pi$ (never π outside delimiters)
+- Angle/theta: $\angle ABC$, $\theta$ (never ∠ABC, θ outside delimiters)
+- Absolute value: $|x|$ (inside delimiters)
+Plain prose text should remain as normal English — only wrap actual math expressions in delimiters. Example: "Students who multiply $\frac{2}{3}$ by the reciprocal will get $\frac{8}{9}$, but a common error is to get $\frac{4}{9}$."
 
 ## Learning Science Data
 ${typeof rawLearningScienceData === 'string' ? rawLearningScienceData : JSON.stringify(rawLearningScienceData, null, 2)}
@@ -271,7 +275,7 @@ CCSS Standard: ${misconception.ccssStandard ?? 'unknown'}
 ${correctLines ? `Relevant questions and correct answers:\n${correctLines}` : ''}
 
 ## Task 1 — Correct answer solution
-Write a worked solution showing how to arrive at the correct answer for this type of problem. Use 2–4 concise steps. Each step should be a plain string. Use Unicode math symbols (×, ÷, ², √, etc.). If multiple question numbers are relevant and they share the same solution path, write one unified solution.
+Write a worked solution showing how to arrive at the correct answer for this type of problem. Use 2–4 concise steps. Each step should be a plain string. Use LaTeX for all math expressions ($...$ for inline). If multiple question numbers are relevant and they share the same solution path, write one unified solution.
 
 ## Task 2 — Wrong answer explanations
 ${wrongAnswerBlock}
@@ -327,6 +331,8 @@ Return a JSON object with exactly these keys:
       '',
       ...(fieldsBlock ? ['For each item, review:', fieldsBlock, ''] : []),
       ...(rulesBlock ? ['Rules:', rulesBlock, ''] : []),
+      'Use LaTeX for all mathematical expressions ($...$ for inline, $$...$$ for display). Never use Unicode math symbols or plain ASCII math notation.',
+      '',
       'Input:',
       JSON.stringify(payload, null, 2),
     ].join('\n');

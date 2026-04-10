@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sortStudentNames } from '../util/sortStudentNames';
+import MathText from './MathText';
 import CcssHoverPill from './CcssHoverPill';
 
 // Known technical field names → user-friendly labels.
@@ -62,7 +63,6 @@ function formatText(text) {
 function WorkedExampleText({ text, teacherView }) {
   if (!text) return null;
   const lines = text.split('\n');
-
   // Find the last non-empty line index — that's the final answer, hidden in student view
   let lastNonEmptyIdx = -1;
   for (let i = lines.length - 1; i >= 0; i--) {
@@ -82,26 +82,27 @@ function WorkedExampleText({ text, teacherView }) {
           if (!teacherView) {
             // Strip the annotation — keep only the math portion before the ←
             const mathPart = line.split('←')[0].trimEnd();
-            return <span key={i} style={{ display: 'block' }}>{mathPart}</span>;
+            return <span key={i} style={{ display: 'block' }}><MathText text={mathPart} /></span>;
           }
           // Teacher view: highlight the whole line
           return (
             <span key={i} style={{ display: 'block', backgroundColor: '#FFF3CD', borderLeft: '3px solid #E8A200', paddingLeft: '6px', marginLeft: '-6px', color: '#7A4600', fontWeight: 600 }}>
-              {line}
+              <MathText text={line} />
             </span>
           );
         }
 
         // Teacher view: highlight the answer line so it's easy to spot
         if (teacherView && isAnswer) {
+          console.log("Printing line Part: ", line);
           return (
             <span key={i} style={{ display: 'block', fontWeight: 700, color: '#1B376F' }}>
-              {line}
+              <MathText text={line} />
             </span>
           );
         }
 
-        return <span key={i} style={{ display: 'block' }}>{line}</span>;
+        return <span key={i} style={{ display: 'block' }}><MathText text={line} /></span>;
       })}
     </span>
   );
@@ -178,14 +179,14 @@ const NextStepDetailsModal = ({
                             <span className="nsdm-misconception-label">{title}</span>
                           )}
                         </div>
-                        <span className="rns-activity-option-field-value">{move.targets}</span>
+                        <span className="rns-activity-option-field-value"><MathText text={move.targets} /></span>
                       </div>
                     )}
 
                     {move.instructionalMove && (
                       <div className="rns-activity-option-field">
                         <span className="rns-activity-option-field-label">Instructional Move</span>
-                        <span className="rns-activity-option-field-value">{move.instructionalMove}</span>
+                        <span className="rns-activity-option-field-value"><MathText text={move.instructionalMove} /></span>
                       </div>
                     )}
 
@@ -286,7 +287,7 @@ const NextStepDetailsModal = ({
                     <h4 className="tab-section-title">What will students do</h4>
                     <ul className="tab-section-bullets">
                       {(move?.tabs?.overview?.whatStudentsDo ?? []).map((bullet, i) => (
-                        <li key={i}><strong>{formatText(bullet.label)}:</strong> {formatText(bullet.detail)}</li>
+                        <li key={i}><strong>{formatText(bullet.label)}:</strong> <MathText text={bullet.detail} /></li>
                       ))}
                     </ul>
                   </div>
@@ -295,7 +296,7 @@ const NextStepDetailsModal = ({
                     <h4 className="tab-section-title">What you'll do</h4>
                     <ul className="tab-section-bullets">
                       {(move?.tabs?.overview?.whatYouDo ?? []).map((bullet, i) => (
-                        <li key={i}><strong>{formatText(bullet.label)}:</strong> {formatText(bullet.detail)}</li>
+                        <li key={i}><strong>{formatText(bullet.label)}:</strong> <MathText text={bullet.detail} /></li>
                       ))}
                     </ul>
                   </div>
@@ -326,7 +327,7 @@ const NextStepDetailsModal = ({
 
                   <div className="tab-section">
                     <h4 className="tab-section-title">Problem</h4>
-                    <p className="tab-section-content">{formatText(move?.tabs?.activitySteps?.problem)}</p>
+                    <p className="tab-section-content"><MathText text={move?.tabs?.activitySteps?.problem} /></p>
                   </div>
 
                   {move?.tabs?.activitySteps?.incorrectWorkedExamples?.length > 0 && (
@@ -369,7 +370,7 @@ const NextStepDetailsModal = ({
                           <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                             Incorrect Worked Example {i + 1}
                           </p>
-                          <p className="worked-example-problem">{ex.problem}</p>
+                          <p className="worked-example-problem"><MathText text={ex.problem} /></p>
                           <p className="worked-example-work" style={{ whiteSpace: 'normal' }}>
                             <WorkedExampleText text={ex.incorrectWork} teacherView={teacherView} />
                           </p>
@@ -387,7 +388,7 @@ const NextStepDetailsModal = ({
                     <h4 className="tab-section-title">Core Activity</h4>
                     <ol className="tab-list">
                       {move?.tabs?.activitySteps?.coreActivity?.map((item, idx) => (
-                        <li key={idx}>{formatText(item)}</li>
+                        <li key={idx}><MathText text={item} /></li>
                       ))}
                     </ol>
                   </div>
@@ -397,7 +398,7 @@ const NextStepDetailsModal = ({
                     <ul className="discussion-questions">
                       {move?.tabs?.activitySteps?.discussionQuestions?.map((question, idx) => (
                         <li key={idx}>
-                          <strong>Q{idx + 1}:</strong> {formatText(question)}
+                          <strong>Q{idx + 1}:</strong> <MathText text={question} />
                         </li>
                       ))}
                     </ul>
