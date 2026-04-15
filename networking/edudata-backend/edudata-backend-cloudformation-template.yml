@@ -1,0 +1,372 @@
+---
+Parameters:
+  VpcId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>
+    Default: /edudata/vpc-id
+  SubnetAId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>
+    Default: /edudata/subnet-a
+  SubnetBId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>
+    Default: /edudata/subnet-b
+
+Resources:
+  ALBSecurityGroup:
+    DeletionPolicy: "Delete"
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "ALB for UpGrade backend"
+      GroupName: "edudata-alb-sg"
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        FromPort: 80
+        ToPort: 80
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        FromPort: 443
+        ToPort: 443
+      SecurityGroupEgress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "-1"
+
+  ECSSecurityGroup:
+    DeletionPolicy: "Delete"
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Fargate tasks for UpGrade backend"
+      GroupName: "edudata-ecs-sg"
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: "tcp"
+        FromPort: 3030
+        SourceSecurityGroupId: !Ref ALBSecurityGroup
+        ToPort: 3030
+      SecurityGroupEgress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "-1"
+
+  RDSSecurityGroup:
+    DeletionPolicy: "Delete"
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "RDS PostgreSQL for UpGrade"
+      GroupName: "edudata-rds-sg"
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: "tcp"
+        FromPort: 5432
+        SourceSecurityGroupId: !Ref ECSSecurityGroup
+        ToPort: 5432
+      SecurityGroupEgress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "-1"
+
+  RDSSubnetGroup:
+    DeletionPolicy: "Delete"
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties:
+      DBSubnetGroupDescription: "Subnets for edudata RDS"
+      DBSubnetGroupName: "edudata-db-subnet-group"
+      SubnetIds:
+      - !Ref SubnetAId
+      - !Ref SubnetBId
+
+  RDSInstance:
+    DeletionPolicy: "Delete"
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      DBInstanceIdentifier: "edudata-db"
+      DBInstanceClass: "db.t4g.micro"
+      Engine: "postgres"
+      EngineVersion: "18.3"
+      AllocatedStorage: "5"
+      StorageType: "gp2"
+      MasterUsername: "postgres"
+      MasterUserPassword: !Sub "{{resolve:secretsmanager:edudata-backend-secrets:SecretString:TYPEORM_PASSWORD}}"
+      DBName: "postgres"
+      Port: "5432"
+      DBParameterGroupName: "edudata-no-ssl"
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      VPCSecurityGroups:
+      - !Ref RDSSecurityGroup
+      PubliclyAccessible: false
+      MultiAZ: false
+      AutoMinorVersionUpgrade: true
+      BackupRetentionPeriod: 1
+      DeletionProtection: false
+      StorageEncrypted: false
+
+  ALB:
+    DeletionPolicy: "Delete"
+    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
+    Properties:
+      Name: "edudata-alb"
+      Type: "application"
+      Scheme: "internet-facing"
+      IpAddressType: "ipv4"
+      SecurityGroups:
+      - !Ref ALBSecurityGroup
+      Subnets:
+      - !Ref SubnetAId
+      - !Ref SubnetBId
+
+  TargetGroup:
+    DeletionPolicy: "Delete"
+    Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
+    Properties:
+      Name: "edudata-tg"
+      Protocol: "HTTP"
+      Port: 3030
+      VpcId: !Ref VpcId
+      TargetType: "ip"
+      HealthCheckEnabled: true
+      HealthCheckPath: "/api"
+      HealthCheckProtocol: "HTTP"
+      HealthCheckPort: "traffic-port"
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      Matcher:
+        HttpCode: "200"
+
+  Listener:
+    DeletionPolicy: "Delete"
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Protocol: "HTTP"
+      Port: 80
+      DefaultActions:
+      - Type: "forward"
+        TargetGroupArn: !Ref TargetGroup
+
+  ECRRepository:
+    DeletionPolicy: "Delete"
+    Type: "AWS::ECR::Repository"
+    Properties:
+      RepositoryName: "edudata-backend"
+      ImageTagMutability: "MUTABLE"
+      EncryptionConfiguration:
+        EncryptionType: "AES256"
+
+  ECSTaskExecutionRole:
+    DeletionPolicy: "Delete"
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "ecsTaskExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Principal:
+            Service: "ecs-tasks.amazonaws.com"
+          Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+      Policies:
+      - PolicyName: "SecretsManagerRead"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+            - "secretsmanager:GetSecretValue"
+            Resource: "arn:aws:secretsmanager:us-east-1:484006752749:secret:edudata-backend-secrets-RbmRdk"
+
+  LogGroup:
+    DeletionPolicy: "Delete"
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: "/ecs/edudata-backend"
+      RetentionInDays: 30
+
+  ECSCluster:
+    DeletionPolicy: "Delete"
+    Type: "AWS::ECS::Cluster"
+    Properties:
+      ClusterName: "edudata-cluster"
+      ClusterSettings:
+      - Name: "containerInsights"
+        Value: "disabled"
+
+  TaskDefinition:
+    DeletionPolicy: "Delete"
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      Family: "edudata-backend"
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: "awsvpc"
+      RequiresCompatibilities:
+      - "FARGATE"
+      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+      ContainerDefinitions:
+      - Name: "edudata-backend"
+        Image: "484006752749.dkr.ecr.us-east-1.amazonaws.com/edudata-backend:6.3.0"
+        Essential: true
+        PortMappings:
+        - ContainerPort: 3030
+          Protocol: "tcp"
+        LogConfiguration:
+          LogDriver: "awslogs"
+          Options:
+            awslogs-group: "/ecs/edudata-backend"
+            awslogs-region: "us-east-1"
+            awslogs-stream-prefix: "ecs"
+        Secrets:
+        - Name: "TYPEORM_PASSWORD"
+          ValueFrom: "arn:aws:secretsmanager:us-east-1:484006752749:secret:edudata-backend-secrets-RbmRdk:TYPEORM_PASSWORD::"
+        - Name: "TOKEN_SECRET_KEY"
+          ValueFrom: "arn:aws:secretsmanager:us-east-1:484006752749:secret:edudata-backend-secrets-RbmRdk:TOKEN_SECRET_KEY::"
+        - Name: "CLIENT_API_SECRET"
+          ValueFrom: "arn:aws:secretsmanager:us-east-1:484006752749:secret:edudata-backend-secrets-RbmRdk:CLIENT_API_SECRET::"
+        - Name: "CLIENT_API_KEY"
+          ValueFrom: "arn:aws:secretsmanager:us-east-1:484006752749:secret:edudata-backend-secrets-RbmRdk:CLIENT_API_KEY::"
+        - Name: "ADMIN_USERS"
+          ValueFrom: "arn:aws:secretsmanager:us-east-1:484006752749:secret:edudata-backend-secrets-RbmRdk:ADMIN_USERS::"
+        - Name: "GOOGLE_CLIENT_ID"
+          ValueFrom: "arn:aws:secretsmanager:us-east-1:484006752749:secret:edudata-backend-secrets-RbmRdk:GOOGLE_CLIENT_ID::"
+        Environment:
+        - Name: "APP_NAME"
+          Value: "A/B Testing Backend"
+        - Name: "APP_SCHEMA"
+          Value: "http"
+        - Name: "APP_HOST"
+          Value: "localhost"
+        - Name: "APP_PORT"
+          Value: "3030"
+        - Name: "APP_ROUTE_PREFIX"
+          Value: "/api"
+        - Name: "APP_BANNER"
+          Value: "true"
+        - Name: "APP_DEMO"
+          Value: "false"
+        - Name: "CACHING_ENABLED"
+          Value: "false"
+        - Name: "CACHING_TTL"
+          Value: "10"
+        - Name: "CACHING_MAX_KEYS"
+          Value: "500"
+        - Name: "USE_NEW_RELIC"
+          Value: "false"
+        - Name: "CORS_WHITELIST"
+          Value: "localhost"
+        - Name: "LOG_LEVEL"
+          Value: "debug"
+        - Name: "LOG_OUTPUT"
+          Value: "dev"
+        - Name: "NODE_ENV"
+          Value: "production"
+        - Name: "TYPEORM_CONNECTION"
+          Value: "postgres"
+        - Name: "TYPEORM_HOST"
+          Value: !GetAtt RDSInstance.Endpoint.Address
+        - Name: "TYPEORM_HOSTNAME_REPLICAS"
+          Value: "[]"
+        - Name: "TYPEORM_PORT"
+          Value: "5432"
+        - Name: "TYPEORM_USERNAME"
+          Value: "postgres"
+        - Name: "TYPEORM_DATABASE"
+          Value: "postgres"
+        - Name: "TYPEORM_SYNCHRONIZE"
+          Value: "false"
+        - Name: "TYPEORM_LOGGING"
+          Value: "error"
+        - Name: "TYPEORM_LOGGER"
+          Value: "advanced-console"
+        - Name: "TYPEORM_MAX_QUERY_EXECUTION_TIME"
+          Value: "1000"
+        - Name: "TYPEORM_MIGRATIONS"
+          Value: "src/database/migrations/**/*.ts"
+        - Name: "TYPEORM_MIGRATIONS_DIR"
+          Value: "src/database/migrations"
+        - Name: "TYPEORM_ENTITIES"
+          Value: "src/api/models/**/*.ts"
+        - Name: "TYPEORM_ENTITIES_DIR"
+          Value: "src/api/models"
+        - Name: "TYPEORM_SEED"
+          Value: "src/database/seeds/**/*.seed.ts"
+        - Name: "TYPEORM_FACTORY"
+          Value: "src/database/factories/**/*.factory.ts"
+        - Name: "CONTROLLERS"
+          Value: "src/api/controllers/**/*Controller.ts,src/api/controllers/**/*Controller.v*.ts"
+        - Name: "MIDDLEWARES"
+          Value: "src/api/middlewares/**/*Middleware.ts"
+        - Name: "INTERCEPTORS"
+          Value: "src/api/interceptors/**/*Interceptor.ts"
+        - Name: "SWAGGER_ENABLED"
+          Value: "true"
+        - Name: "SWAGGER_ROUTE"
+          Value: "/swagger"
+        - Name: "SWAGGER_API"
+          Value: "**/controllers/*.ts"
+        - Name: "SWAGGER_JSON"
+          Value: "/swagger.json"
+        - Name: "GOOGLE_AUTH_TOKEN_REQUIRED"
+          Value: "true"
+        - Name: "ALLOW_SERVICE_ACCOUNT_TOKEN_SERVICE"
+          Value: "false"
+        - Name: "GOOGLE_SERVICE_ACCOUNT_ID"
+          Value: ""
+        - Name: "DOMAIN_NAME"
+          Value: ""
+        - Name: "SCHEDULER_STEP_FUNCTION"
+          Value: ""
+        - Name: "AWS_REGION"
+          Value: "us-east-1"
+        - Name: "HOST_URL"
+          Value: !Sub "http://${ALB.DNSName}"
+        - Name: "EMAIL_FROM"
+          Value: ""
+        - Name: "EMAIL_EXPIRE_AFTER_SECONDS"
+          Value: "36000"
+        - Name: "EMAIL_BUCKET"
+          Value: ""
+        - Name: "MOOCLETS_ENABLED"
+          Value: "false"
+        - Name: "MOOCLETS_HOST_URL"
+          Value: ""
+        - Name: "MOOCLETS_API_ROUTE"
+          Value: ""
+        - Name: "MOOCLETS_API_TOKEN"
+          Value: ""
+        - Name: "CONTEXT_METADATA"
+          Value: "{\"righton-play\":{\"CONDITIONS\":[],\"GROUP_TYPES\":[],\"EXP_IDS\":[],\"EXP_POINTS\":[]}}"
+
+  ECSService:
+    DeletionPolicy: "Delete"
+    Type: "AWS::ECS::Service"
+    Properties:
+      ServiceName: "edudata-backend"
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref TaskDefinition
+      DesiredCount: 1
+      LaunchType: "FARGATE"
+      SchedulingStrategy: "REPLICA"
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: "ENABLED"
+          SecurityGroups:
+          - !Ref ECSSecurityGroup
+          Subnets:
+          - !Ref SubnetAId
+          - !Ref SubnetBId
+      LoadBalancers:
+      - TargetGroupArn: !Ref TargetGroup
+        ContainerName: "edudata-backend"
+        ContainerPort: 3030
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+
+Outputs:
+  ALBEndpoint:
+    Description: "UpGrade backend URL"
+    Value: !Sub "http://${ALB.DNSName}/api"
+  RDSEndpoint:
+    Description: "RDS endpoint"
+    Value: !GetAtt RDSInstance.Endpoint.Address
