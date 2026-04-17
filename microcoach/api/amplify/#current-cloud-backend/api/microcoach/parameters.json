@@ -1,6 +1,0 @@
-{
-  "AppSyncApiName": "microcoach",
-  "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2026-03-03T02:40:20.310Z"
-}
