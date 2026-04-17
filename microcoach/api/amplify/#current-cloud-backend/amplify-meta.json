@@ -1,0 +1,202 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-microcoach-dev-93833-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-microcoach-dev-93833-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-microcoach-dev-93833-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+      "UnauthRoleName": "amplify-microcoach-dev-93833-unauthRole",
+      "StackName": "amplify-microcoach-dev-93833",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-microcoach-dev-93833/16226400-16aa-11f1-95ec-0affd4b28b0d",
+      "AmplifyAppId": "d2qcx18zz1o3fm"
+    }
+  },
+  "api": {
+    "microcoach": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2026-08-30T02:40:14.204Z",
+              "apiKeyExpirationDays": 180,
+              "description": ""
+            },
+            "authenticationType": "API_KEY"
+          }
+        },
+        "GraphQLAPIIdOutput": "hg3xa5eckvgyteuqoov2i4izey",
+        "GraphQLAPIEndpointOutput": "https://w63ndi527jdofk4vpezx2rj4du.appsync-api.us-east-1.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-xgp3kc4szbeorbb3ux5pslffvu"
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync",
+      "lastPushTimeStamp": "2026-03-31T02:21:04.738Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoach-dev-93833-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apimicrocoach"
+      }
+    }
+  },
+  "function": {
+    "microcoachGetLearningScience": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::484006752749:role/microcoachLambdaRole050735b6-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:484006752749:function:microcoachGetLearningScience-dev",
+        "Name": "microcoachGetLearningScience-dev",
+        "LambdaExecutionRole": "microcoachLambdaRole050735b6-dev"
+      },
+      "lastPushTimeStamp": "2026-03-31T02:21:04.754Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoach-dev-93833-deployment/amplify-cfn-templates/function/microcoachGetLearningScience-cloudformation-template.json",
+        "logicalId": "functionmicrocoachGetLearningScience"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+        "s3Key": "amplify-builds/microcoachGetLearningScience-4d7a6b3043727a64344f-build.zip"
+      }
+    },
+    "microcoachIngestPPQ": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::484006752749:role/microcoachLambdaRoleIngestPPQ-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:484006752749:function:microcoachIngestPPQ-dev",
+        "Name": "microcoachIngestPPQ-dev",
+        "LambdaExecutionRole": "microcoachLambdaRoleIngestPPQ-dev"
+      },
+      "lastPushTimeStamp": "2026-03-31T02:21:04.784Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoach-dev-93833-deployment/amplify-cfn-templates/function/microcoachIngestPPQ-cloudformation-template.json",
+        "logicalId": "functionmicrocoachIngestPPQ"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+        "s3Key": "amplify-builds/microcoachIngestPPQ-4e343367667433523576-build.zip"
+      }
+    },
+    "microcoachLLMAnalysis": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::484006752749:role/microcoachLambdaRole202625e1-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:484006752749:function:microcoachLLMAnalysis-dev",
+        "Name": "microcoachLLMAnalysis-dev",
+        "LambdaExecutionRole": "microcoachLambdaRole202625e1-dev"
+      },
+      "lastPushTimeStamp": "2026-03-31T02:21:05.253Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoach-dev-93833-deployment/amplify-cfn-templates/function/microcoachLLMAnalysis-cloudformation-template.json",
+        "logicalId": "functionmicrocoachLLMAnalysis"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+        "s3Key": "amplify-builds/microcoachLLMAnalysis-694444656e774e366f6f-build.zip"
+      },
+      "lastBuildTimeStamp": "2026-03-31T02:19:34.297Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2026-03-31T02:19:41.533Z",
+      "distZipFilename": "microcoachLLMAnalysis-694444656e774e366f6f-build.zip",
+      "lastPushDirHash": "FSaikyi1T2V6UXWngR2Z7CoXFrM="
+    },
+    "microcoachLLMVerify": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::484006752749:role/microcoachLambdaRole8831a6d6-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:484006752749:function:microcoachLLMVerify-dev",
+        "Name": "microcoachLLMVerify-dev",
+        "LambdaExecutionRole": "microcoachLambdaRole8831a6d6-dev"
+      },
+      "lastPushTimeStamp": "2026-03-31T02:21:04.843Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoach-dev-93833-deployment/amplify-cfn-templates/function/microcoachLLMVerify-cloudformation-template.json",
+        "logicalId": "functionmicrocoachLLMVerify"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+        "s3Key": "amplify-builds/microcoachLLMVerify-49626846666a7a473653-build.zip"
+      }
+    },
+    "microcoachNextStepOption": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::484006752749:role/microcoachLambdaRoleNextStepOption-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:484006752749:function:microcoachNextStepOption-dev",
+        "Name": "microcoachNextStepOption-dev",
+        "LambdaExecutionRole": "microcoachLambdaRoleNextStepOption-dev"
+      },
+      "lastPushTimeStamp": "2026-03-31T02:21:05.253Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoach-dev-93833-deployment/amplify-cfn-templates/function/microcoachNextStepOption-cloudformation-template.json",
+        "logicalId": "functionmicrocoachNextStepOption"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+        "s3Key": "amplify-builds/microcoachNextStepOption-67666942693862502b76-build.zip"
+      },
+      "lastBuildTimeStamp": "2026-03-31T02:19:50.103Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2026-03-31T02:19:57.606Z",
+      "distZipFilename": "microcoachNextStepOption-67666942693862502b76-build.zip",
+      "lastPushDirHash": "TUhbNumnkHVnMQhVvjDEAY4hd8A="
+    },
+    "microcoachTeacherUpload": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::484006752749:role/microcoachLambdaRole1d54f9d8-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:484006752749:function:microcoachTeacherUpload-dev",
+        "Name": "microcoachTeacherUpload-dev",
+        "LambdaExecutionRole": "microcoachLambdaRole1d54f9d8-dev"
+      },
+      "lastPushTimeStamp": "2026-03-31T02:21:04.901Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoach-dev-93833-deployment/amplify-cfn-templates/function/microcoachTeacherUpload-cloudformation-template.json",
+        "logicalId": "functionmicrocoachTeacherUpload"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+        "s3Key": "amplify-builds/microcoachTeacherUpload-6e5a6d7a414745594a37-build.zip"
+      }
+    },
+    "microcoachTeacherUploadGen": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::484006752749:role/microcoachLambdaRole538841f7-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:484006752749:function:microcoachTeacherUploadGen-dev",
+        "Name": "microcoachTeacherUploadGen-dev",
+        "LambdaExecutionRole": "microcoachLambdaRole538841f7-dev"
+      },
+      "lastPushTimeStamp": "2026-03-31T02:21:04.930Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoach-dev-93833-deployment/amplify-cfn-templates/function/microcoachTeacherUploadGen-cloudformation-template.json",
+        "logicalId": "functionmicrocoachTeacherUploadGen"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-microcoach-dev-93833-deployment",
+        "s3Key": "amplify-builds/microcoachTeacherUploadGen-54434954454574666246-build.zip"
+      }
+    }
+  }
+}

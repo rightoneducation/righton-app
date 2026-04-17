@@ -122,9 +122,7 @@ export default function ConfidenceResponseDropdown({
   return (
     <Container>
       {selectedConfidence.correct.length === 0 && selectedConfidence.incorrect.length === 0 ? (
-        <HeaderText>
-          {t('gamesession.confidenceCard.graph.dropdown.header.noResponses')}
-        </HeaderText>
+        null
       ) : (
         <>
           <HeaderContainer>
