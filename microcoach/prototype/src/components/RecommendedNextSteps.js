@@ -253,7 +253,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], completed
                               description={reasoningGroup.ccssStandards.targetObjective.description}
                               learningComponents={reasoningGroup.ccssStandards.targetObjective.learningComponents}
                             />
-                            <MathText className="standard-description" text={reasoningGroup.ccssStandards.targetObjective.description} />
+                            <MathText inline className="standard-description" text={reasoningGroup.ccssStandards.targetObjective.description} />
                           </div>
                         </div>
                       </div>
@@ -266,7 +266,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], completed
                             {reasoningGroup.ccssStandards.prerequisiteGaps.map((standard, idx) => (
                               <div key={idx} className="standard-card prerequisite-card">
                                 <span className="standard-code">{standard.standard}</span>
-                                <MathText className="standard-description" text={standard.description} />
+                                <MathText inline className="standard-description" text={standard.description} />
                               </div>
                             ))}
                           </div>
@@ -279,7 +279,7 @@ const RecommendedNextSteps = ({ onAddNextStep, existingNextSteps = [], completed
                             {reasoningGroup.ccssStandards.impactedObjectives.map((standard, idx) => (
                               <div key={idx} className="standard-card at-risk-card">
                                 <span className="standard-code">{standard.standard}</span>
-                                <MathText className="standard-description" text={standard.description} />
+                                <MathText inline className="standard-description" text={standard.description} />
                               </div>
                             ))}
                           </div>

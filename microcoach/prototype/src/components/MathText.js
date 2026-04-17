@@ -9,9 +9,16 @@ import 'katex/dist/katex.min.css';
  *   $...$   — inline math
  * Plain text between delimiters is rendered as-is.
  * Falls back to raw text if KaTeX cannot parse an expression.
+ *
+ * When `inline` is true, display math is forced inline (no block breaks)
+ * and the output is wrapped in a single <span className={className}> so it
+ * mirrors sibling spans in surrounding text (e.g. CCSS description pills).
  */
-function MathText({ text }) {
+function MathText({ text, inline = false, className }) {
   if (!text || typeof text !== 'string') return null;
+
+  const wrap = (children) =>
+    inline ? <span className={className}>{children}</span> : <>{children}</>;
 
   // Match $$...$$ before $...$ to avoid the outer $ consuming first
   const regex = /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$)/g;
@@ -34,31 +41,30 @@ function MathText({ text }) {
 
   // No math found — return as plain text
   if (parts.length === 1 && parts[0].type === 'text') {
-    return <>{text}</>;
+    return wrap(text);
   }
 
-  return (
-    <>
-      {parts.map((part, i) => {
-        if (part.type === 'text') return <span key={i}>{part.content}</span>;
-        try {
-          const html = katex.renderToString(part.content, {
-            displayMode: part.display,
-            throwOnError: false,
-            strict: false,
-          });
-          return (
-            <span
-              key={i}
-              style={part.display ? { display: 'block', textAlign: 'center', margin: '8px 0' } : undefined}
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-          );
-        } catch {
-          return <span key={i}>{part.content}</span>;
-        }
-      })}
-    </>
+  return wrap(
+    parts.map((part, i) => {
+      if (part.type === 'text') return <span key={i}>{part.content}</span>;
+      try {
+        const displayMode = part.display && !inline;
+        const html = katex.renderToString(part.content, {
+          displayMode,
+          throwOnError: false,
+          strict: false,
+        });
+        return (
+          <span
+            key={i}
+            style={displayMode ? { display: 'block', textAlign: 'center', margin: '8px 0' } : undefined}
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        );
+      } catch {
+        return <span key={i}>{part.content}</span>;
+      }
+    })
   );
 }
 

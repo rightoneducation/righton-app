@@ -47,7 +47,7 @@ function CcssHoverPill({ standard, description, learningComponents = [] }) {
             zIndex: 9999,
           }}
         >
-          <MathText className="standard-hover-title" text={description || standard} />
+          <MathText inline className="standard-hover-title" text={description || standard} />
           <div className="yns-standard-hover-subtitle">Related Learning Components</div>
           <div className="yns-kg-diagram" aria-label={`Relationship diagram for ${standard}`}>
             <span className="ccss-tag target-objective yns-kg-standard-node">{standard}</span>

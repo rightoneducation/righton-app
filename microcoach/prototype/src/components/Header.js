@@ -40,10 +40,10 @@ const Header = ({ classrooms = [], selectedClassroomId, onClassChange, onUpload 
               ))}
             </select>
           </div>
-          <button className="header-upload-btn" onClick={onUpload}>
+          {/* <button className="header-upload-btn" onClick={onUpload}>
             <UploadIcon />
             Upload
-          </button>
+          </button> */}
         </div>
       </div>
     </header>
