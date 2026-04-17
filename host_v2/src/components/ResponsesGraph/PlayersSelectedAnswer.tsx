@@ -139,7 +139,7 @@ export default function PlayersSelectedAnswer({
         style={{ height: '25px', cursor: 'pointer',alignItems: 'center', borderRadius: '8px', padding: '8px 12px', backgroundColor: '#FFFFFF33' }}
       >
         <Typography sx={{ color: '#FFFFFF', textAlign: 'center', fontSize: '14px', fontWeight: 700, fontFamily: 'Rubik'}}>
-          Selected by
+          {graphClickIndex === noResponseIndex ? 'Not yet answered' : 'Selected by'}
         </Typography>
         <NumberContainer style={{ gap: '4px' }}>
           <CountText style={{ paddingTop: 0 }}>
