@@ -8,6 +8,10 @@ import YourNextSteps from './YourNextSteps';
 import InterventionPatterns from './InterventionPatterns';
 import '../App.css';
 
+// Temporarily disables the grade-level evaluator UI (bell icon, preview, regenerate button).
+// Flip to `true` to re-enable. Keep in sync with the same flag in microcoachTeacherUploadGen.
+const EVALUATORS_ENABLED = false;
+
 function ReviewPage() {
   const { classroomId } = useParams();
   const navigate = useNavigate();
@@ -122,6 +126,7 @@ function ReviewPage() {
   };
 
   const handleRegenerate = async () => {
+    if (!EVALUATORS_ENABLED) return;
     if (isRegenerating || !classroom?.grade) return;
     setIsRegenerating(true);
     try {
@@ -322,6 +327,7 @@ function ReviewPage() {
         onSessionChange={handleSessionChange}
         onPublish={handlePublish}
         isPublishing={isPublishing}
+        evaluatorEnabled={EVALUATORS_ENABLED}
         evaluationResults={evaluationResults}
         onRegenerate={handleRegenerate}
         isRegenerating={isRegenerating}
