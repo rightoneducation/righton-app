@@ -19,7 +19,7 @@
  */
 
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import mammoth from 'mammoth';
 import { createGqlClient } from './util/appsync-client.mjs';
 import { parseExcelBuffer, deriveTopic } from './util/parse-excel.mjs';
@@ -60,23 +60,12 @@ async function invokeLambda(functionName, payload) {
 
 // ── S3 file storage ──────────────────────────────────────────────────────────
 
-async function uploadFilesToS3(docxBuffer, xlsxBuffer, organization, classroomName) {
-  const bucket = process.env.STORAGE_MICROCOACHDOCS_BUCKETNAME;
-  if (!bucket) throw new Error('STORAGE_MICROCOACHDOCS_BUCKETNAME env var not set');
-
-  const sanitize = (s) => (s ?? '').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
-  const now = new Date();
-  const datetime = now.toISOString().replace('T', '_').replace(/:/g, '-').slice(0, 19); // YYYY-MM-DD_HH-MM-SS
-  const baseName = `${sanitize(organization)}_${sanitize(classroomName)}_${datetime}`;
-  const docxKey = `public/${baseName}.docx`;
-  const xlsxKey = `public/${baseName}.xlsx`;
-
+async function fetchFromS3(bucket, key) {
   const s3 = new S3Client({ region: process.env.REGION || 'us-east-1' });
-  await Promise.all([
-    s3.send(new PutObjectCommand({ Bucket: bucket, Key: docxKey, Body: docxBuffer, ContentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })),
-    s3.send(new PutObjectCommand({ Bucket: bucket, Key: xlsxKey, Body: xlsxBuffer, ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })),
-  ]);
-  return { docxKey, xlsxKey };
+  const response = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+  const chunks = [];
+  for await (const chunk of response.Body) chunks.push(chunk);
+  return Buffer.concat(chunks);
 }
 
 // ── Upload helpers (from upload.ts — identical logic) ───────────────────────
@@ -273,7 +262,7 @@ async function uploadContextData(gql, title, gradeLevel, ccssStandards, weekNumb
 // Mirrors CLI order: yarn ingest → yarn upload (generation runs in separate Lambda)
 
 async function runPipeline(input) {
-  const { classroomId, activityFileBase64, studentDataFileBase64, organization } = input;
+  const { classroomId, docxKey, xlsxKey } = input;
 
   const gql = await createGqlClient();
 
@@ -284,12 +273,15 @@ async function runPipeline(input) {
   if (!classroom) throw new Error(`Classroom ${classroomId} not found`);
   console.log(`  ✓ ${classroom.classroomName} (grade ${classroom.grade}, ${classroom.state})`);
 
-  // ── Step 1b: Upload files to S3 (priority — store originals before any processing) ──
-  console.log('Step 1b: Uploading files to S3...');
-  const docxBuffer = Buffer.from(activityFileBase64, 'base64');
-  const xlsxBuffer = Buffer.from(studentDataFileBase64, 'base64');
-  const { docxKey, xlsxKey } = await uploadFilesToS3(docxBuffer, xlsxBuffer, organization, classroom.classroomName);
-  console.log(`  ✓ Stored: ${docxKey}, ${xlsxKey}`);
+  // ── Step 1b: Fetch uploaded files from S3 (uploaded directly by browser) ────
+  const bucket = process.env.STORAGE_MICROCOACHDOCS_BUCKETNAME;
+  if (!bucket) throw new Error('STORAGE_MICROCOACHDOCS_BUCKETNAME env var not set');
+  console.log(`Step 1b: Fetching files from S3 (${docxKey}, ${xlsxKey})...`);
+  const [docxBuffer, xlsxBuffer] = await Promise.all([
+    fetchFromS3(bucket, docxKey),
+    fetchFromS3(bucket, xlsxKey),
+  ]);
+  console.log(`  ✓ Fetched ${docxBuffer.length} + ${xlsxBuffer.length} bytes`);
 
   // ── Step 2: Ingest docx — extract misconceptions (yarn ingest) ──────────────
   console.log('Step 2: Ingesting activity docx...');
@@ -492,9 +484,9 @@ export const handler = async (event) => {
     return JSON.stringify({ error: 'Missing input' });
   }
 
-  const { classroomId, activityFileBase64, studentDataFileBase64 } = input;
-  if (!classroomId || !activityFileBase64 || !studentDataFileBase64) {
-    return JSON.stringify({ error: 'Missing required fields: classroomId, activityFileBase64, studentDataFileBase64' });
+  const { classroomId, docxKey, xlsxKey } = input;
+  if (!classroomId || !docxKey || !xlsxKey) {
+    return JSON.stringify({ error: 'Missing required fields: classroomId, docxKey, xlsxKey' });
   }
 
   // Self-invoke asynchronously

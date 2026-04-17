@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.APIClient = exports.TabsParser = exports.MisconceptionEvidenceParser = exports.SavedNextStepParser = exports.GapGroupParser = void 0;
 const aws_amplify_1 = require("aws-amplify");
 const api_1 = require("@aws-amplify/api");
+const storage_1 = require("aws-amplify/storage");
 const queries_1 = require("./graphql/queries");
 const mutations_1 = require("./graphql/mutations");
 const aws_exports_1 = __importDefault(require("./aws-exports"));
@@ -179,6 +180,20 @@ class APIClient {
         return (_a = result.data) === null || _a === void 0 ? void 0 : _a.createClassroom;
     }
     // ── Teacher Upload ───────────────────────────────────────────────────────
+    async uploadTeacherFiles(params) {
+        const DOCX_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        const XLSX_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        const sanitize = (s) => (s !== null && s !== void 0 ? s : '').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+        const datetime = new Date().toISOString().replace('T', '_').replace(/:/g, '-').slice(0, 19);
+        const baseName = `${sanitize(params.organization)}_${sanitize(params.classroomName)}_${datetime}`;
+        const docxKey = `public/${baseName}.docx`;
+        const xlsxKey = `public/${baseName}.xlsx`;
+        await Promise.all([
+            (0, storage_1.uploadData)({ path: docxKey, data: params.activityFile, options: { contentType: DOCX_CONTENT_TYPE } }).result,
+            (0, storage_1.uploadData)({ path: xlsxKey, data: params.studentDataFile, options: { contentType: XLSX_CONTENT_TYPE } }).result,
+        ]);
+        return { docxKey, xlsxKey };
+    }
     async teacherUpload(input) {
         var _a;
         const result = await this.callGraphQL(mutations_1.teacherUpload, { input });

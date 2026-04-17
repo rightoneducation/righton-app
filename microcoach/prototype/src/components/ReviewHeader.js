@@ -23,6 +23,7 @@ const ReviewHeader = ({
   onSessionChange,
   onPublish,
   isPublishing,
+  evaluatorEnabled = false,
   evaluationResults,
   onRegenerate,
   isRegenerating,
@@ -131,7 +132,7 @@ const ReviewHeader = ({
             </select>
           )}
 
-          {evaluationResults && (
+          {evaluatorEnabled && evaluationResults && (
             <div className="review-bell-wrapper" ref={bellRef}>
               <button
                 className="review-bell-btn"

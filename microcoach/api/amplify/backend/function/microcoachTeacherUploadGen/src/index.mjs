@@ -23,6 +23,10 @@ import {
 
 const AMPLIFY_ENV = process.env.ENV || 'dev';
 
+// Temporarily disables the grade-level evaluator pipeline (invocation + email summary).
+// Flip to `true` to re-enable. Keep in sync with prototype/src/components/ReviewPage.js.
+const EVALUATORS_ENABLED = false;
+
 // ── Lambda invocation helper (from generate-next-steps.ts:20-33) ────────────
 
 async function invokeLambda(functionName, payload) {
@@ -531,7 +535,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
     ? [{ id: 'all', label: 'All Generated Content', type: 'combined', text: allParts.join('\n\n---\n\n') }]
     : [];
 
-  if (evalTexts.length > 0) {
+  if (EVALUATORS_ENABLED && evalTexts.length > 0) {
     console.log(`  Evaluating ${evalTexts.length} texts for grade level appropriateness...`);
     try {
       evalResults = await invokeLambda(`microcoachInitialEvaluator-${AMPLIFY_ENV}`, {
