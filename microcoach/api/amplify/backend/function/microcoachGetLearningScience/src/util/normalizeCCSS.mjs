@@ -17,7 +17,7 @@ export function normalizeCCSSCode(ccss) {
   // Check if it's a high school code (starts with letter like A-REI, F-IF, etc.)
   const hsPattern = /^([A-Z]+)[.\-](.+)$/;
   const hsMatch = code.match(hsPattern);
-  
+
   if (hsMatch) {
     // High school: format is domain-cluster.standard (e.g., A-REI.1)
     // Replace only the FIRST dot with hyphen, keep remaining dots
@@ -25,6 +25,7 @@ export function normalizeCCSSCode(ccss) {
     if (firstDotIndex > 0) {
       const normalized = code.substring(0, firstDotIndex) + '-' + code.substring(firstDotIndex + 1);
       const candidates = [
+        code,
         normalized,
         `CCSS.Math.Content.HS${normalized}`  // Also try full format
       ];

@@ -26,10 +26,19 @@ export declare class APIClient {
     updateSavedNextStep(id: string, updates: Record<string, unknown>): Promise<any>;
     deleteSavedNextStep(id: string): Promise<void>;
     createClassroom(input: Record<string, unknown>): Promise<any>;
+    uploadTeacherFiles(params: {
+        activityFile: File | Blob;
+        studentDataFile: File | Blob;
+        organization: string;
+        classroomName: string;
+    }): Promise<{
+        docxKey: string;
+        xlsxKey: string;
+    }>;
     teacherUpload(input: {
         classroomId: string;
-        activityFileBase64: string;
-        studentDataFileBase64: string;
+        docxKey: string;
+        xlsxKey: string;
         organization?: string;
     }): Promise<any>;
     listSavedNextSteps(classroomId: string): Promise<any>;

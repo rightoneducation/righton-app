@@ -61,23 +61,6 @@ const UploadPage = () => {
     }
   };
 
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const arrayBuffer = reader.result;
-        const bytes = new Uint8Array(arrayBuffer);
-        let binary = '';
-        for (let i = 0; i < bytes.length; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        resolve(btoa(binary));
-      };
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(file);
-    });
-  };
-
   const handleUpload = async (e) => {
     e.preventDefault();
 
@@ -90,15 +73,20 @@ const UploadPage = () => {
     setStatusMessage('Uploading files...');
 
     try {
-      const [activityFileBase64, studentDataFileBase64] = await Promise.all([
-        fileToBase64(activityFile),
-        fileToBase64(studentDataFile),
-      ]);
+      const selectedClassroom = classrooms.find((c) => c.id === classroom);
+      const classroomName = selectedClassroom?.classroomName ?? 'unknown';
+
+      const { docxKey, xlsxKey } = await apiClient.uploadTeacherFiles({
+        activityFile,
+        studentDataFile,
+        organization,
+        classroomName,
+      });
 
       const result = await apiClient.teacherUpload({
         classroomId: classroom,
-        activityFileBase64,
-        studentDataFileBase64,
+        docxKey,
+        xlsxKey,
         organization,
       });
 

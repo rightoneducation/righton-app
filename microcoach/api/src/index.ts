@@ -2,6 +2,7 @@ import { Amplify } from "aws-amplify";
 import { GraphQLResult, generateClient } from "@aws-amplify/api";
 import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
 import { GraphQLResponseV6 } from '@aws-amplify/api-graphql';
+import { uploadData } from 'aws-amplify/storage';
 import {
   getClassroom,
   listClassrooms,
@@ -227,7 +228,30 @@ async updateClassroom(classroomData: any, analytics: string) {
 
   // ── Teacher Upload ───────────────────────────────────────────────────────
 
-  async teacherUpload(input: { classroomId: string; activityFileBase64: string; studentDataFileBase64: string; organization?: string }) {
+  async uploadTeacherFiles(params: {
+    activityFile: File | Blob;
+    studentDataFile: File | Blob;
+    organization: string;
+    classroomName: string;
+  }): Promise<{ docxKey: string; xlsxKey: string }> {
+    const DOCX_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const XLSX_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const sanitize = (s: string) => (s ?? '').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+
+    const datetime = new Date().toISOString().replace('T', '_').replace(/:/g, '-').slice(0, 19);
+    const baseName = `${sanitize(params.organization)}_${sanitize(params.classroomName)}_${datetime}`;
+    const docxKey = `public/${baseName}.docx`;
+    const xlsxKey = `public/${baseName}.xlsx`;
+
+    await Promise.all([
+      uploadData({ path: docxKey, data: params.activityFile, options: { contentType: DOCX_CONTENT_TYPE } }).result,
+      uploadData({ path: xlsxKey, data: params.studentDataFile, options: { contentType: XLSX_CONTENT_TYPE } }).result,
+    ]);
+
+    return { docxKey, xlsxKey };
+  }
+
+  async teacherUpload(input: { classroomId: string; docxKey: string; xlsxKey: string; organization?: string }) {
     const result = await this.callGraphQL<any>(teacherUpload, { input });
     return result.data?.teacherUpload;
   }
