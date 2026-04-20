@@ -3,6 +3,7 @@ import {
   IAPIClients,
   isNullOrUndefined,
   GameSessionState,
+  IEduDataAPIClient,
 } from '@righton/networking';
 import { Navigate, useLoaderData } from 'react-router-dom';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
@@ -22,10 +23,11 @@ import { trackEvent, PlayEvent } from '../lib/analytics';
 
 interface GameInProgressContainerProps {
   apiClients: IAPIClients;
+  eduDataAPIClient: IEduDataAPIClient | null;
 }
 
 export function GameInProgressContainer(props: GameInProgressContainerProps) {
-  const { apiClients } = props;
+  const { apiClients, eduDataAPIClient } = props;
   const [retry, setRetry] = useState<number>(0);
   const errorTrackingRef = useRef(false);
   // retreives game data from react-router loader

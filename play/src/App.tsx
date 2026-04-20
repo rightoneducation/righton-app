@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -6,7 +6,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
-import { useAPIClients, Environment, AppType } from '@righton/networking';
+import { useAPIClients, Environment, AppType, IEduDataAPIClient } from '@righton/networking';
 import {
   PregameContainer,
   PregameLocalModelLoader,
@@ -25,6 +25,9 @@ function RedirectToPlayIfMissing() {
 
 function App() {
   const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.PLAY);
+  // this will get initialized in the pregame flow, as it needs a teamId prior to init
+  const [eduDataAPIClient, setEduDataAPIClient] = useState<IEduDataAPIClient | null>(null);
+  
 
   const router = useMemo(() => {
     if (!apiClients) return null;
@@ -33,12 +36,12 @@ function App() {
         <>
           <Route
             path="/"
-            element={<PregameContainer apiClients={apiClients} />}
+            element={<PregameContainer apiClients={apiClients} setEduDataAPIClient={setEduDataAPIClient} />}
             loader={PregameLocalModelLoader}
           />
           <Route
             path="/game"
-            element={<GameInProgressContainer apiClients={apiClients} />}
+            element={<GameInProgressContainer apiClients={apiClients} eduDataAPIClient={eduDataAPIClient}/>}
             loader={LocalModelLoader}
           />
           <Route element={<RedirectToPlayIfMissing />} />

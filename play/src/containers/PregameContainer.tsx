@@ -9,6 +9,8 @@ import {
   isNullOrUndefined,
   IGameSession,
   GameSessionState,
+  EduDataAPIClient,
+  IEduDataAPIClient
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
 import JoinGame from '../pages/pregame/JoinGame';
@@ -22,9 +24,13 @@ import { identifyStudent, trackEvent, trackError, PlayEvent } from '../lib/analy
 
 interface PregameFinished {
   apiClients: IAPIClients;
+  setEduDataAPIClient: (value: IEduDataAPIClient | null) => void;
 }
 
-export function PregameContainer({ apiClients }: PregameFinished) {
+export function PregameContainer({ 
+  apiClients,
+  setEduDataAPIClient
+ }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
@@ -121,6 +127,14 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     return undefined;
   };
 
+  // EDUDATA
+  // if eduData is active via flag, we will init the session here, as it is the first time we have teamId
+  const eduDataInit = async (teamId: string) => {
+    const eduData = new EduDataAPIClient(teamId);
+    await eduData.init();
+    setEduDataAPIClient(eduData);
+  }
+
   // on click of avatar select button, add team and team member, store local storage data, and navigate to game
   const handleAvatarSelectClick = async (gameSessionResponse: IGameSession) => {
     try {
@@ -130,6 +144,8 @@ export function PregameContainer({ apiClients }: PregameFinished) {
           setIsShowCodeError(true);
           return;
         }
+        eduDataInit(teamInfo.teamId);
+
         identifyStudent(teamInfo.teamId, {
           gameSessionId: gameSessionResponse.id,
           avatarIndex: selectedAvatar,
