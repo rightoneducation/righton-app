@@ -61,7 +61,7 @@ export class APIClients {
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
   cms: ICMSAPIClient;
-  eduData?: EduDataAPIClient;
+  eduData: EduDataAPIClient | null = null;
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
   centralDataManager?: ICentralDataManagerAPIClient;
@@ -96,7 +96,7 @@ export class APIClients {
     return new APIClients(env, authClient, appType); 
   }
     
-  async initEduData(studentId: string): Promise<EduDataAPIClient> {
+  async initEduData(studentId: string): Promise<EduDataAPIClient | null> {
     this.eduData = await EduDataAPIClient.create(studentId);
     return this.eduData;
   }

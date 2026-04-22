@@ -24,8 +24,8 @@ export interface IAPIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
-  initEduData(studentId: string): Promise<EduDataAPIClient>;
-  eduData?: EduDataAPIClient;
+  initEduData(studentId: string): Promise<EduDataAPIClient | null>;
+  eduData: EduDataAPIClient | null;
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
   centralDataManager?: ICentralDataManagerAPIClient;

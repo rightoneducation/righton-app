@@ -311,6 +311,7 @@ export default function GameInProgress({
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
         currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
+            apiClients={apiClients}
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
