@@ -11,8 +11,8 @@ export class EduDataAPIClient
   protected experiments: IExperimentAssignmentv5[];
 
   private constructor(studentId: string) {
-    this.endpoint = `http://edudata-alb-170633511.us-east-1.elb.amazonaws.com/api`;
-    this.client = new UpgradeClient(studentId, this.endpoint, 'play-app');
+    this.endpoint = `http://edudata-alb-170633511.us-east-1.elb.amazonaws.com`;
+    this.client = new UpgradeClient(studentId, this.endpoint, 'righton-play');
     this.userId = studentId;
     this.user = null;
     this.experiments = [];

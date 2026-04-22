@@ -136,7 +136,7 @@ export function PregameContainer({
         }
         // EDUDATA - initialize once we have an identifier for the student/team joining
         try {
-        const eduData = await apiClients.initEduData(teamInfo.teamId);
+          const eduData = await apiClients.initEduData(teamInfo.teamId);
         } catch (e) {
           console.error('UpGrade failed to init, continuing');
           console.error('Error Output:');

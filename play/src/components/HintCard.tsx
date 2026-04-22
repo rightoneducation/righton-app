@@ -46,15 +46,7 @@ export default function HintCard({
     apiClients.eduData?.markExposure('hintcard', 'hintcardtext').catch(() =>    
   {});                                                                          
   }, [apiClients.eduData]);
-
-  let upgradeExperiment = {
-    site: 'hintcard',
-    target: 'hintcardtext',
-    assignedCondition: ['default']
-  }
-  const conditions =  apiClients.eduData?.getConditions(upgradeExperiment.site, upgradeExperiment.target);
-  if (conditions)
-    upgradeExperiment.assignedCondition = conditions;
+  const conditions = apiClients.eduData?.getConditions('hintcard', 'hintcardtext') ?? ['default'];    
   // UPGRADE INTEGRATION END
 
   const [editorContents, setEditorContents] = useState<string>(() => 
@@ -145,7 +137,7 @@ export default function HintCard({
               sx={{ textAlign: 'left' }}
             >
               {/* UPGRADE INTEGRATION START */}
-              { upgradeExperiment.assignedCondition.find(ac => ac === 'default' || ac === 'upgrade1')
+              { conditions.find(ac => ac === 'default' || ac === 'upgrade1')
                 ? t('gameinprogress.chooseanswer.hintcarddescriptiondefault')
                 : t('gameinprogress.chooseanswer.hintcarddescriptionupgrade')
               }
