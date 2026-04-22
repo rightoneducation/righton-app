@@ -1,4 +1,3 @@
-
 export interface IEduDataAPIClient {
-  init(): void;
+  create(studentId: string): Promise<IEduDataAPIClient>;
 }

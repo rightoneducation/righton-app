@@ -101,7 +101,8 @@
       "openanswercardkatexpreview": "Expression preview:",
       "openanswercardnumberwarning": "Only the following inputs are allowed: . - % 0-9",
       "hintcardtitle": "Share a hint",
-      "hintcarddescription": "What hint would you give a friend to avoid this mistake?",
+      "hintcarddescriptiondefault": "What hint would you give a friend to avoid this mistake?",
+      "hintcarddescriptionupgrade": "What hint would you give your past self to avoid this mistake?",
       "hintcardplaceholder": "Type your hint here"
     },
     "discussanswer": {

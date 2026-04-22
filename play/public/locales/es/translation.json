@@ -90,7 +90,8 @@
       "openanswercard": "Introduce tu respuesta",
       "openanswercardplaceholder": "Ingresa tu respuesta aquí...",
       "hintcardtitle": "Dar una pista (opcional)",
-      "hintcarddescription": "¿Podrías darle una pista a alguien que haya cometido este error?",
+      "hintcarddescriptiondefault": "¿Podrías darle una pista a alguien que haya cometido este error?",
+      "hintcarddescriptionupgrade": "¿Qué consejo le darías a tu yo del pasado para evitar este error?",
       "hintcardplaceholder": "Introduce tu explicación..."
     },
     "discussanswer": {

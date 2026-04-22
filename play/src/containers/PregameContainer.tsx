@@ -24,12 +24,10 @@ import { identifyStudent, trackEvent, trackError, PlayEvent } from '../lib/analy
 
 interface PregameFinished {
   apiClients: IAPIClients;
-  setEduDataAPIClient: (value: IEduDataAPIClient | null) => void;
 }
 
 export function PregameContainer({ 
-  apiClients,
-  setEduDataAPIClient
+  apiClients
  }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -127,14 +125,6 @@ export function PregameContainer({
     return undefined;
   };
 
-  // EDUDATA
-  // if eduData is active via flag, we will init the session here, as it is the first time we have teamId
-  const eduDataInit = async (teamId: string) => {
-    const eduData = new EduDataAPIClient(teamId);
-    await eduData.init();
-    setEduDataAPIClient(eduData);
-  }
-
   // on click of avatar select button, add team and team member, store local storage data, and navigate to game
   const handleAvatarSelectClick = async (gameSessionResponse: IGameSession) => {
     try {
@@ -144,8 +134,15 @@ export function PregameContainer({
           setIsShowCodeError(true);
           return;
         }
-        eduDataInit(teamInfo.teamId);
-
+        // EDUDATA - initialize once we have an identifier for the student/team joining
+        try {
+        const eduData = await apiClients.initEduData(teamInfo.teamId);
+        } catch (e) {
+          console.error('UpGrade failed to init, continuing');
+          console.error('Error Output:');
+          console.error(e);
+        }
+        
         identifyStudent(teamInfo.teamId, {
           gameSessionId: gameSessionResponse.id,
           avatarIndex: selectedAvatar,

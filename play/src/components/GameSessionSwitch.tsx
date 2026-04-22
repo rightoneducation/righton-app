@@ -83,7 +83,7 @@ export default function GameSessionSwitch({
             text: choice.text,
             isAnswer: choice.isAnswer,
             reason: choice.reason ?? '',
-          } as IChoice) ?? []
+          } as IChoice)
       )
     );
   switch (currentState) {

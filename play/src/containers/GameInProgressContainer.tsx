@@ -23,11 +23,10 @@ import { trackEvent, PlayEvent } from '../lib/analytics';
 
 interface GameInProgressContainerProps {
   apiClients: IAPIClients;
-  eduDataAPIClient: IEduDataAPIClient | null;
 }
 
 export function GameInProgressContainer(props: GameInProgressContainerProps) {
-  const { apiClients, eduDataAPIClient } = props;
+  const { apiClients } = props;
   const [retry, setRetry] = useState<number>(0);
   const errorTrackingRef = useRef(false);
   // retreives game data from react-router loader

@@ -1,8 +1,6 @@
 import UpgradeClient, { UpGradeClientInterfaces, IExperimentAssignmentv5 } from 'upgrade_client_lib/dist/browser';
-import { IEduDataAPIClient } from "./interfaces/IEduDataAPIClient";
 
 export class EduDataAPIClient
-  implements IEduDataAPIClient
 {
   protected endpoint: string;
   protected client: UpgradeClient;
@@ -10,7 +8,7 @@ export class EduDataAPIClient
   protected user: UpGradeClientInterfaces.IExperimentUser | null;
   protected experiments: IExperimentAssignmentv5[];
 
-  constructor(studentId: string) {
+  private constructor(studentId: string) {
     this.endpoint = `http://edudata-alb-170633511.us-east-1.elb.amazonaws.com/api`;
     this.client = new UpgradeClient(studentId, this.endpoint, 'play-app');
     this.userId = studentId;
@@ -18,8 +16,10 @@ export class EduDataAPIClient
     this.experiments = [];
   }
 
-  public async init (){
-    this.user = await this.client.init();
-    this.experiments = await this.client.getAllExperimentConditions();
+  static async create (studentId: string): Promise<EduDataAPIClient>{
+    const c = new EduDataAPIClient(studentId);
+    c.user = await c.client.init();
+    c.experiments = await c.client.getAllExperimentConditions();
+    return c;
   }
 }

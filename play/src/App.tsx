@@ -25,9 +25,6 @@ function RedirectToPlayIfMissing() {
 
 function App() {
   const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.PLAY);
-  // this will get initialized in the pregame flow, as it needs a teamId prior to init
-  const [eduDataAPIClient, setEduDataAPIClient] = useState<IEduDataAPIClient | null>(null);
-  
 
   const router = useMemo(() => {
     if (!apiClients) return null;
@@ -36,12 +33,12 @@ function App() {
         <>
           <Route
             path="/"
-            element={<PregameContainer apiClients={apiClients} setEduDataAPIClient={setEduDataAPIClient} />}
+            element={<PregameContainer apiClients={apiClients} />}
             loader={PregameLocalModelLoader}
           />
           <Route
             path="/game"
-            element={<GameInProgressContainer apiClients={apiClients} eduDataAPIClient={eduDataAPIClient}/>}
+            element={<GameInProgressContainer apiClients={apiClients} />}
             loader={LocalModelLoader}
           />
           <Route element={<RedirectToPlayIfMissing />} />

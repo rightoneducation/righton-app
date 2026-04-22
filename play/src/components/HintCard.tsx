@@ -122,7 +122,8 @@ export default function HintCard({
               display="inline"
               sx={{ textAlign: 'left' }}
             >
-              {t('gameinprogress.chooseanswer.hintcarddescription')}
+              {t('gameinprogress.chooseanswer.hintcarddescriptiondefault')}
+              {t('gameinprogress.chooseanswer.hintcarddescriptionupgrade')}
             </Typography>
           </Box>
           <ShortAnswerTextFieldStyled
