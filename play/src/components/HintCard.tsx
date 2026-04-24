@@ -40,15 +40,22 @@ export default function HintCard({
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [condition, setCondition] = useState('default');
   
   // UPGRADE INTEGRATION START
   useEffect(() => {                                                             
-    apiClients.eduData?.markExposure('hintcard', 'hintcardtext').catch(() =>    
-  {});                                                                          
+    console.log('herestart')                                                                          
+    apiClients.eduData?.getConditionObj('hintcard', 'hintcardtext').then(response => {
+      if (response){
+        setCondition(response.conditionValue)
+        apiClients.eduData?.markExposure('hintcard', 'hintcardtext', response.conditionCode).catch(() =>    
+          {});
+      }
+    })
+    console.log('hereend')                                                                          
   }, [apiClients.eduData]);
-  const conditions = apiClients.eduData?.getConditions('hintcard', 'hintcardtext') ?? ['default'];    
-  // UPGRADE INTEGRATION END
 
+  // UPGRADE INTEGRATION END
   const [editorContents, setEditorContents] = useState<string>(() => 
     answerHintText ?? ''
   );
@@ -137,7 +144,7 @@ export default function HintCard({
               sx={{ textAlign: 'left' }}
             >
               {/* UPGRADE INTEGRATION START */}
-              { conditions.find(ac => ac === 'default' || ac === 'upgrade1')
+              { (condition === 'default' || condition === 'upgrade1')
                 ? t('gameinprogress.chooseanswer.hintcarddescriptiondefault')
                 : t('gameinprogress.chooseanswer.hintcarddescriptionupgrade')
               }

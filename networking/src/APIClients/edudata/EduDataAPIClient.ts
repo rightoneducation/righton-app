@@ -1,5 +1,5 @@
 import UpgradeClient, { UpGradeClientInterfaces, IExperimentAssignmentv5, MARKED_DECISION_POINT_STATUS } from 'upgrade_client_lib/dist/browser';
-import { IEduDataAPIClient } from './interfaces';
+import { IEduDataAPIClient, IDecisionPoint } from './interfaces';
 
 export class EduDataAPIClient
   implements IEduDataAPIClient
@@ -31,14 +31,23 @@ export class EduDataAPIClient
     }
   }
 
-  public getConditions(site: string, target: string): string[] | undefined {    
-    const experiment = this.experiments.find(e => e.site === site && e.target === target);                                                                  
-    return experiment?.assignedCondition.map(ac => ac.payload.value);
+  public async getConditionObj(site: string, target: string): Promise<IDecisionPoint | null> {
+    try{
+      const decisionPoint = await this.client.getDecisionPointAssignment(site, target);
+      if (!decisionPoint)
+        return null
+      const conditionCode = decisionPoint.getCondition();
+      const conditionValue = decisionPoint.getPayload()?.value ?? '';
+      return { conditionCode, conditionValue };                                                       
+    } catch (e) {
+      console.error('UpGrade getDecisionPoint failed');
+      console.error(e);
+      return null;
+    }
+    
   }                                                                             
                   
-  public async markExposure(site: string, target: string): Promise<void> {
-    const experiment = this.experiments.find(e => e.site === site && e.target === target);                                                                  
-    const conditionCode = experiment?.assignedCondition[0]?.conditionCode ?? null;                                                                         
+  public async markExposure(site: string, target: string, conditionCode: string): Promise<void> {                                                                       
     try {         
       await this.client.markDecisionPoint(                                      
         site,     
