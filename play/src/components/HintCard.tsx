@@ -1,9 +1,10 @@
-import React, {  ChangeEvent, useState } from 'react';
+import React, {  ChangeEvent, useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 import {
   isNullOrUndefined,
+  IAPIClients,
   ITeam,
   IAnswerHint,
   GameSessionState,
@@ -15,6 +16,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 
 interface HintProps {
+  apiClients: IAPIClients;
   answerHintText: string;
   isHintSubmitted: boolean;
   currentState: GameSessionState;
@@ -26,6 +28,7 @@ interface HintProps {
 }
 
 export default function HintCard({
+  apiClients,
   answerHintText,
   isHintSubmitted,
   currentState,
@@ -37,7 +40,22 @@ export default function HintCard({
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
- 
+  const [condition, setCondition] = useState('default');
+  
+  // UPGRADE INTEGRATION START
+  useEffect(() => {                                                             
+    console.log('herestart')                                                                          
+    apiClients.eduData?.getConditionObj('hintcard', 'hintcardtext').then(response => {
+      if (response){
+        setCondition(response.conditionValue)
+        apiClients.eduData?.markExposure('hintcard', 'hintcardtext', response.conditionCode).catch(() =>    
+          {});
+      }
+    })
+    console.log('hereend')                                                                          
+  }, [apiClients.eduData]);
+
+  // UPGRADE INTEGRATION END
   const [editorContents, setEditorContents] = useState<string>(() => 
     answerHintText ?? ''
   );
@@ -59,6 +77,9 @@ export default function HintCard({
       teamName: currentTeam?.name ?? '',
       isHintSubmitted: true
     } as IAnswerHint;
+    // UPGRADE INTEGRATION START
+    apiClients.eduData?.logMetric('hintSubmitted', 1); 
+    // UPGRADE INTEGRATION END
     handleSubmitHint(packagedAnswer);
   };
 
@@ -122,7 +143,12 @@ export default function HintCard({
               display="inline"
               sx={{ textAlign: 'left' }}
             >
-              {t('gameinprogress.chooseanswer.hintcarddescription')}
+              {/* UPGRADE INTEGRATION START */}
+              { (condition === 'default' || condition === 'upgrade1')
+                ? t('gameinprogress.chooseanswer.hintcarddescriptiondefault')
+                : t('gameinprogress.chooseanswer.hintcarddescriptionupgrade')
+              }
+              {/* UPGRADE INTEGRATION END */}
             </Typography>
           </Box>
           <ShortAnswerTextFieldStyled

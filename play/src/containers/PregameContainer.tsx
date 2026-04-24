@@ -9,6 +9,8 @@ import {
   isNullOrUndefined,
   IGameSession,
   GameSessionState,
+  EduDataAPIClient,
+  IEduDataAPIClient
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
 import JoinGame from '../pages/pregame/JoinGame';
@@ -24,7 +26,9 @@ interface PregameFinished {
   apiClients: IAPIClients;
 }
 
-export function PregameContainer({ apiClients }: PregameFinished) {
+export function PregameContainer({ 
+  apiClients
+ }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
@@ -130,6 +134,15 @@ export function PregameContainer({ apiClients }: PregameFinished) {
           setIsShowCodeError(true);
           return;
         }
+        // EDUDATA - initialize once we have an identifier for the student/team joining
+        try {
+          const eduData = await apiClients.initEduData(teamInfo.teamId);
+        } catch (e) {
+          console.error('UpGrade failed to init, continuing');
+          console.error('Error Output:');
+          console.error(e);
+        }
+        
         identifyStudent(teamInfo.teamId, {
           gameSessionId: gameSessionResponse.id,
           avatarIndex: selectedAvatar,

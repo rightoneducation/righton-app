@@ -3,6 +3,7 @@ import {
   IAPIClients,
   isNullOrUndefined,
   GameSessionState,
+  IEduDataAPIClient,
 } from '@righton/networking';
 import { Navigate, useLoaderData } from 'react-router-dom';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';

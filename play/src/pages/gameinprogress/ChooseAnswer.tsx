@@ -9,7 +9,8 @@ import {
   IChoice,
   ITeam,
   IAnswerHint,
-  IAnswerSettings
+  IAnswerSettings,
+  IAPIClients
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
@@ -24,6 +25,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 interface ChooseAnswerProps {
+  apiClients: IAPIClients;
   isSmallDevice: boolean;
   questionText: string;
   questionUrl: string;
@@ -52,6 +54,7 @@ interface ChooseAnswerProps {
 }
 
 export default function ChooseAnswer({
+  apiClients,
   isSmallDevice,
   questionText,
   questionUrl,
@@ -221,6 +224,7 @@ export default function ChooseAnswer({
               <Fade in={isSubmitted} timeout={500}>
                 <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox">
                   <HintCard
+                    apiClients={apiClients}
                     answerHintText={answerHint?.rawHint ?? ''}
                     currentState={currentState}
                     currentQuestionIndex={currentQuestionIndex}
@@ -300,6 +304,7 @@ export default function ChooseAnswer({
                    }
                    {isHintEnabled && currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER  &&
                     <HintCard
+                      apiClients={apiClients}
                       answerHintText={answerHint?.rawHint ?? ''}
                       currentState={currentState}
                       currentQuestionIndex={currentQuestionIndex}
