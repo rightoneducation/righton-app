@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { isNullOrUndefined } from '@righton/networking';
 import { PregameState, LocalModel } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
-import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import { IntroButtonStyled } from '../../lib/styledcomponents/IntroButtonStyled';
 import RejoinModal from '../../components/RejoinModal';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';

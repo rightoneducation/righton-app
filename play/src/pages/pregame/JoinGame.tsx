@@ -5,7 +5,7 @@ import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { useTranslation } from 'react-i18next';
 import { isNameValid } from '../../lib/HelperFunctions';
 import { InputPlaceholder } from '../../lib/PlayModels';
-import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import {JoinButton} from '../../lib/styledcomponents/IntroButtonStyled';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import AvatarSelection from './joingamecontent/AvatarSelection';
@@ -390,11 +390,11 @@ export default function JoinGame({
         </JoinGameBody>
 
       <JoinGameFooter>
-        <IntroButtonStyled disabled={isJoining || isButtonDisabled} onClick={() => validateInput(gameCodeValue)} style={{ opacity: (isJoining || isButtonDisabled) ? 0.5 : 1 }}>
+        <JoinButton disabled={isJoining || isButtonDisabled} onClick={() => validateInput(gameCodeValue)} style={{ opacity: (isJoining || isButtonDisabled) ? 0.5 : 1 }}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {!isJoining ? t('joingame.gamecode.button') : t('joingame.gamecode.buttonJoining')}
           </Typography>
-        </IntroButtonStyled>
+        </JoinButton>
       </JoinGameFooter>
     </BackgroundContainerStyled>
   );

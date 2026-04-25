@@ -2,7 +2,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Typography, Stack } from '@mui/material';
 import { trackError, PlayEvent } from '../lib/analytics';
 import BackgroundContainerStyled from '../lib/styledcomponents/layout/BackgroundContainerStyled';
-import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
+import { IntroButtonStyled } from '../lib/styledcomponents/IntroButtonStyled';
 
 export default class AppErrorBoundary extends Component<
   { children: ReactNode },
