@@ -75,9 +75,9 @@ export default function SelectedHints(props: any) {
           <NameText >
             {team.teamName}
           </NameText>
-          {/* <NameText style={{color: 'rgba(255,255,255,0.6)'}}>
+          <NameText style={{color: 'rgba(255,255,255,0.6)'}}>
             {team.rawHint}
-          </NameText> */}
+          </NameText>
         </StyledRect>
       ))}
     </Box>
