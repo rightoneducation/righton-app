@@ -202,3 +202,9 @@ export const StorageKeyAnswer = 'rightOnAnswer';
  */
 
 export const StorageKeyHint = 'rightOnHint';
+
+/**
+ * string for storage of UpGrade decision-point assignment so the variant
+ * survives rejoin/refresh. 2h TTL, invalidated when question/state changes.
+ */
+export const StorageKeyEduDataAssignment = 'rightOnEduDataAssignment';
