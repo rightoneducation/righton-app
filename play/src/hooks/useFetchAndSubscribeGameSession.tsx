@@ -35,6 +35,8 @@ export default function useFetchAndSubscribeGameSession(
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const [newPoints, setNewPoints] = useState<number>(0);
   const previousStateRef = useRef<GameSessionState | null>(null);
+  const hasRejoinedRef = useRef<boolean>(hasRejoined);
+  const gameSessionRef = useRef<IGameSession | undefined>(gameSession);
 
   const handleVisibilityChange = () => {
     if (!document.hidden) {
@@ -51,7 +53,24 @@ export default function useFetchAndSubscribeGameSession(
       window.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [gameSession]); // eslint-disable-line react-hooks/exhaustive-deps
-  
+
+  useEffect(() => {
+    hasRejoinedRef.current = hasRejoined;
+  }, [hasRejoined]);
+
+  useEffect(() => {
+    gameSessionRef.current = gameSession;
+  }, [gameSession]);
+
+  // Ensure EduData is initialized as soon as we have a teamId (covers F5/rejoin).
+  // Separate from subscription wiring so it can never interrupt subscriptions.
+  useEffect(() => {
+    if (!teamId) return;
+    if (!apiClients.eduData) {
+      apiClients.initEduData(teamId).catch(() => {});
+    }
+  }, [apiClients, teamId]);
+
 
   // useEffect to handle subscriptions
   useEffect(() => {
@@ -131,7 +150,7 @@ export default function useFetchAndSubscribeGameSession(
               previousStateRef.current = response.currentState;
             }
             // checks if host has added time via button
-            const prevTime = gameSession?.startTime ?? 0;
+            const prevTime = gameSessionRef.current?.startTime ?? 0;
             const newTime = response.startTime;
             if (newTime > prevTime) {
               setIsAddTime((prev) => !prev);
@@ -154,7 +173,7 @@ export default function useFetchAndSubscribeGameSession(
               const isShortAnswerEnabled = false; 
 
               let calcNewScore = 0;
-              if (!hasRejoined) {
+              if (!hasRejoinedRef.current) {
                   calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
                     response,
                     currentQuestion,
@@ -217,7 +236,7 @@ export default function useFetchAndSubscribeGameSession(
         teamsSubscription.unsubscribe();
       }
     };
-  }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [gameSessionId, apiClients, t, retry, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
   console.log("outside of useEffect");
   console.log(newPoints);
   return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime };
