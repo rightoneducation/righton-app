@@ -7,7 +7,7 @@ import {
   ModelHelper,
   GameSessionState,
 } from '@righton/networking';
-import { StorageKey, StorageKeyAnswer} from '../lib/PlayModels';
+import { StorageKey, StorageKeyAnswer, StorageKeyEduDataStudentId } from '../lib/PlayModels';
 import { calculateCurrentTime } from '../lib/HelperFunctions';
 import { trackEvent, trackError, flushAndRedirect, PlayEvent } from '../lib/analytics';
 
@@ -64,10 +64,14 @@ export default function useFetchAndSubscribeGameSession(
 
   // Ensure EduData is initialized as soon as we have a teamId (covers F5/rejoin).
   // Separate from subscription wiring so it can never interrupt subscriptions.
+  // Reuse the studentId persisted at pregame init so UpGrade sees one continuous
+  // identity across refresh/rejoin instead of splitting into two assignments.
   useEffect(() => {
     if (!teamId) return;
     if (!apiClients.eduData) {
-      apiClients.initEduData(teamId).catch(() => {});
+      const persistedStudentId = window.localStorage.getItem(StorageKeyEduDataStudentId);
+      const studentId = persistedStudentId ?? teamId;
+      apiClients.initEduData(studentId).catch(() => {});
     }
   }, [apiClients, teamId]);
 
@@ -202,6 +206,7 @@ export default function useFetchAndSubscribeGameSession(
             });
             window.localStorage.removeItem(StorageKey);
             window.localStorage.removeItem(StorageKeyAnswer);
+            window.localStorage.removeItem(StorageKeyEduDataStudentId);
             teamsSubscription.unsubscribe();
             flushAndRedirect('https://play.rightoneducation.com');
           }

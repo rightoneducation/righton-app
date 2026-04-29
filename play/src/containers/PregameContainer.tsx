@@ -18,6 +18,7 @@ import {
   PregameState,
   LocalModel,
   StorageKey,
+  StorageKeyEduDataStudentId,
 } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 import { identifyStudent, trackEvent, trackError, PlayEvent } from '../lib/analytics';
@@ -78,6 +79,7 @@ export function PregameContainer({
   // if player doesn't want to rejoin, remove the localStorage and set rejoinGameObject to null
   const handleDontRejoinSession = () => {
     window.localStorage.removeItem(StorageKey);
+    window.localStorage.removeItem(StorageKeyEduDataStudentId);
     setRejoinGameObject(null);
   };
 
@@ -134,9 +136,12 @@ export function PregameContainer({
           setIsShowCodeError(true);
           return;
         }
-        // EDUDATA - initialize once we have an identifier for the student/team joining
+        // EDUDATA - initialize once we have an identifier for the student/team joining.
+        // Persist the studentId so rejoin/refresh reuses the same UpGrade identity
+        // (avoids splitting a single student across two assignments).
         try {
-          const eduData = await apiClients.initEduData(teamInfo.teamId);
+          await apiClients.initEduData(teamInfo.teamId);
+          window.localStorage.setItem(StorageKeyEduDataStudentId, teamInfo.teamId);
         } catch (e) {
           console.error('UpGrade failed to init, continuing');
           console.error('Error Output:');

@@ -6,7 +6,7 @@ import {
 } from '@righton/networking';
 import Leaderboard from '../pages/finalresults/Leaderboard';
 import Congrats from '../pages/finalresults/Congrats';
-import { FinalResultsState, StorageKey } from '../lib/PlayModels';
+import { FinalResultsState, StorageKey, StorageKeyEduDataStudentId } from '../lib/PlayModels';
 
 interface FinalResultsContainerProps {
   teams?: ITeam[];
@@ -41,6 +41,7 @@ export default function FinalResultsContainer({
 
   useEffect(() => {
     window.localStorage.removeItem(StorageKey);
+    window.localStorage.removeItem(StorageKeyEduDataStudentId);
   }, []);
 
   switch (finalResultsState) {

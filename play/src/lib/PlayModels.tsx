@@ -204,6 +204,7 @@ export const StorageKeyAnswer = 'rightOnAnswer';
 export const StorageKeyHint = 'rightOnHint';
 
 export const StorageKeyEduDataAssignment = 'rightOnEduDataAssignment';
+export const StorageKeyEduDataStudentId = 'rightOnEduDataStudentId';
 export const EDUDATA_ASSIGNMENT_TTL_MS = 2 * 60 * 60 * 1000;
 export const EDUDATA_SITE = 'hintcard';
 export const EDUDATA_TARGET = 'hintcardtext';
