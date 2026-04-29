@@ -31,14 +31,14 @@ export class EduDataAPIClient
 {
   protected endpoint: string;
   protected client: UpgradeClient;
-  protected userId: string;
+  public readonly userId: string;
   protected user: UpGradeClientInterfaces.IExperimentUser | null;
   protected experiments: IExperimentAssignmentv5[];
 
-  private constructor(studentId: string) {
+  private constructor(teamId: string) {
     this.endpoint = `http://edudata-alb-170633511.us-east-1.elb.amazonaws.com`;
-    this.client = new UpgradeClient(studentId, this.endpoint, 'righton-play');
-    this.userId = studentId;
+    this.client = new UpgradeClient(teamId, this.endpoint, 'righton-play');
+    this.userId = teamId;
     this.user = null;
     this.experiments = [];
   }
@@ -57,10 +57,10 @@ export class EduDataAPIClient
     });
   }
   
-  static async create (studentId: string): Promise<EduDataAPIClient | null>{
+  static async create(teamId: string): Promise<EduDataAPIClient | null>{
     try {
-      const c = new EduDataAPIClient(studentId);
-      c.user = await c.withTimeout(c.client.init(), 5000, `init(${studentId})`);
+      const c = new EduDataAPIClient(teamId);
+      c.user = await c.withTimeout(c.client.init(), 5000, `init(${teamId})`);
       c.experiments = (await c.withTimeout(
         c.client.getAllExperimentConditions(),
         5000,

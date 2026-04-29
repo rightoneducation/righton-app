@@ -51,6 +51,7 @@ interface ChooseAnswerProps {
   currentTeam: ITeam | null;
   questionId: string;
   teamMemberAnswersId: string;
+  gameSessionId: string;
 }
 
 export default function ChooseAnswer({
@@ -79,7 +80,8 @@ export default function ChooseAnswer({
   isHintSubmitted,
   currentTeam,
   questionId,
-  teamMemberAnswersId
+  teamMemberAnswersId,
+  gameSessionId,
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -233,6 +235,7 @@ export default function ChooseAnswer({
                     currentTeam={currentTeam ?? null}
                     questionId={questionId}
                     teamMemberAnswersId={teamMemberAnswersId}
+                    gameSessionId={gameSessionId}
                   />
                 </Box>
               </Fade>
@@ -313,6 +316,7 @@ export default function ChooseAnswer({
                       currentTeam={currentTeam ?? null}
                       questionId={questionId}
                       teamMemberAnswersId={teamMemberAnswersId}
+                      gameSessionId={gameSessionId}
                     />
                    }
                   </ScrollBoxStyled>

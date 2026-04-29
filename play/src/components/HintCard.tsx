@@ -8,42 +8,16 @@ import {
   ITeam,
   IAnswerHint,
   GameSessionState,
+  CachedAssignment,
+  readCachedAssignment,
 } from '@righton/networking';
-import { StorageKeyHint, StorageKeyEduDataAssignment } from '../lib/PlayModels';
-
-const EDUDATA_ASSIGNMENT_TTL_MS = 2 * 60 * 60 * 1000;
-const EDUDATA_SITE = 'hintcard';
-const EDUDATA_TARGET = 'hintcardtext';
-
-interface CachedAssignment {
-  questionIndex: number;
-  state: GameSessionState;
-  site: string;
-  target: string;
-  conditionCode: string;
-  conditionValue: string;
-  ts: number;
-}
-
-const readCachedAssignment = (
-  questionIndex: number,
-  state: GameSessionState,
-): CachedAssignment | null => {
-  try {
-    const raw = window.localStorage.getItem(StorageKeyEduDataAssignment);
-    if (!raw) return null;
-    const cached = JSON.parse(raw) as CachedAssignment;
-    const fresh = Date.now() - (cached.ts ?? 0) < EDUDATA_ASSIGNMENT_TTL_MS;
-    const matches =
-      cached.questionIndex === questionIndex &&
-      cached.state === state &&
-      cached.site === EDUDATA_SITE &&
-      cached.target === EDUDATA_TARGET;
-    return fresh && matches ? cached : null;
-  } catch {
-    return null;
-  }
-};
+import {
+  StorageKeyHint,
+  StorageKeyEduDataAssignment,
+  EDUDATA_ASSIGNMENT_TTL_MS,
+  EDUDATA_SITE,
+  EDUDATA_TARGET,
+} from '../lib/PlayModels';
 import ShortAnswerTextFieldStyled from '../lib/styledcomponents/ShortAnswerTextFieldStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
@@ -59,6 +33,7 @@ interface HintProps {
   currentTeam: ITeam | null;
   questionId: string;
   teamMemberAnswersId: string;
+  gameSessionId: string;
 }
 
 export default function HintCard({
@@ -70,32 +45,56 @@ export default function HintCard({
   handleSubmitHint,
   currentTeam,
   questionId,
-  teamMemberAnswersId
+  teamMemberAnswersId,
+  gameSessionId,
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [condition, setCondition] = useState(
-    () => readCachedAssignment(currentQuestionIndex, currentState)?.conditionValue ?? 'default',
-  );
 
   // UPGRADE INTEGRATION START
+  const [condition, setCondition] = useState(
+    () =>
+      readCachedAssignment(
+        apiClients.eduData?.userId,
+        gameSessionId,
+        currentQuestionIndex,
+        currentState,
+        StorageKeyEduDataAssignment,
+        EDUDATA_ASSIGNMENT_TTL_MS,
+        EDUDATA_SITE,
+        EDUDATA_TARGET,
+      )?.conditionValue ?? 'default',
+  );
+
   useEffect(() => {
     console.log('herestart');
+    const userId = apiClients.eduData?.userId;
     // Cache hit on rejoin/refresh: keep the variant consistent and skip both
     // the network call and re-marking exposure (already marked pre-rejoin).
-    const cached = readCachedAssignment(currentQuestionIndex, currentState);
+    const cached = readCachedAssignment(
+      userId,
+      gameSessionId,
+      currentQuestionIndex,
+      currentState,
+      StorageKeyEduDataAssignment,
+      EDUDATA_ASSIGNMENT_TTL_MS,
+      EDUDATA_SITE,
+      EDUDATA_TARGET,
+    );
     if (cached) {
       setCondition(cached.conditionValue);
       console.log('hereend');
       return;
     }
     apiClients.eduData?.getConditionObj(EDUDATA_SITE, EDUDATA_TARGET).then(response => {
-      if (response) {
+      if (response && userId) {
         setCondition(response.conditionValue);
         try {
           window.localStorage.setItem(
             StorageKeyEduDataAssignment,
             JSON.stringify({
+              userId,
+              gameSessionId,
               questionIndex: currentQuestionIndex,
               state: currentState,
               site: EDUDATA_SITE,
@@ -112,9 +111,9 @@ export default function HintCard({
       }
     });
     console.log('hereend');
-  }, [apiClients.eduData, currentQuestionIndex, currentState]);
-
+  }, [apiClients.eduData, gameSessionId, currentQuestionIndex, currentState]);
   // UPGRADE INTEGRATION END
+
   const [editorContents, setEditorContents] = useState<string>(() => 
     answerHintText ?? ''
   );
