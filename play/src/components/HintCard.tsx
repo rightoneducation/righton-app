@@ -8,8 +8,16 @@ import {
   ITeam,
   IAnswerHint,
   GameSessionState,
+  CachedAssignment,
+  readCachedAssignment,
 } from '@righton/networking';
-import { StorageKeyHint } from '../lib/PlayModels';
+import {
+  StorageKeyHint,
+  StorageKeyEduDataAssignment,
+  EDUDATA_ASSIGNMENT_TTL_MS,
+  EDUDATA_SITE,
+  EDUDATA_TARGET,
+} from '../lib/PlayModels';
 import ShortAnswerTextFieldStyled from '../lib/styledcomponents/ShortAnswerTextFieldStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
@@ -25,6 +33,7 @@ interface HintProps {
   currentTeam: ITeam | null;
   questionId: string;
   teamMemberAnswersId: string;
+  gameSessionId: string;
 }
 
 export default function HintCard({
@@ -36,26 +45,75 @@ export default function HintCard({
   handleSubmitHint,
   currentTeam,
   questionId,
-  teamMemberAnswersId
+  teamMemberAnswersId,
+  gameSessionId,
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [condition, setCondition] = useState('default');
-  
-  // UPGRADE INTEGRATION START
-  useEffect(() => {                                                             
-    console.log('herestart')                                                                          
-    apiClients.eduData?.getConditionObj('hintcard', 'hintcardtext').then(response => {
-      if (response){
-        setCondition(response.conditionValue)
-        apiClients.eduData?.markExposure('hintcard', 'hintcardtext', response.conditionCode).catch(() =>    
-          {});
-      }
-    })
-    console.log('hereend')                                                                          
-  }, [apiClients.eduData]);
 
+  // UPGRADE INTEGRATION START
+  const [condition, setCondition] = useState(
+    () =>
+      readCachedAssignment(
+        apiClients.eduData?.userId,
+        gameSessionId,
+        currentQuestionIndex,
+        currentState,
+        StorageKeyEduDataAssignment,
+        EDUDATA_ASSIGNMENT_TTL_MS,
+        EDUDATA_SITE,
+        EDUDATA_TARGET,
+      )?.conditionValue ?? 'default',
+  );
+
+  useEffect(() => {
+    console.log('herestart');
+    const userId = apiClients.eduData?.userId;
+    // Cache hit on rejoin/refresh: keep the variant consistent and skip both
+    // the network call and re-marking exposure (already marked pre-rejoin).
+    const cached = readCachedAssignment(
+      userId,
+      gameSessionId,
+      currentQuestionIndex,
+      currentState,
+      StorageKeyEduDataAssignment,
+      EDUDATA_ASSIGNMENT_TTL_MS,
+      EDUDATA_SITE,
+      EDUDATA_TARGET,
+    );
+    if (cached) {
+      setCondition(cached.conditionValue);
+      console.log('hereend');
+      return;
+    }
+    apiClients.eduData?.getConditionObj(EDUDATA_SITE, EDUDATA_TARGET).then(response => {
+      if (response && userId) {
+        setCondition(response.conditionValue);
+        try {
+          window.localStorage.setItem(
+            StorageKeyEduDataAssignment,
+            JSON.stringify({
+              userId,
+              gameSessionId,
+              questionIndex: currentQuestionIndex,
+              state: currentState,
+              site: EDUDATA_SITE,
+              target: EDUDATA_TARGET,
+              conditionCode: response.conditionCode,
+              conditionValue: response.conditionValue,
+              ts: Date.now(),
+            } as CachedAssignment),
+          );
+        } catch {
+          // localStorage full / disabled — assignment continuity degrades gracefully
+        }
+        apiClients.eduData?.markExposure(EDUDATA_SITE, EDUDATA_TARGET, response.conditionCode).catch(() => {});
+      }
+    });
+    console.log('hereend');
+  }, [apiClients.eduData, gameSessionId, currentQuestionIndex, currentState]);
   // UPGRADE INTEGRATION END
+
   const [editorContents, setEditorContents] = useState<string>(() => 
     answerHintText ?? ''
   );

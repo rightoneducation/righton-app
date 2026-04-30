@@ -337,6 +337,7 @@ export default function GameInProgress({
             currentTeam={currentTeam ?? null}
             questionId={currentQuestion.id ?? ''}
             teamMemberAnswersId={teamMemberAnswersId}
+            gameSessionId={gameSession.id ?? ''}
           />
         ) : (
           <DiscussAnswer

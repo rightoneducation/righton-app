@@ -96,8 +96,8 @@ export class APIClients {
     return new APIClients(env, authClient, appType); 
   }
     
-  async initEduData(studentId: string): Promise<EduDataAPIClient | null> {
-    this.eduData = await EduDataAPIClient.create(studentId);
+  async initEduData(teamId: string): Promise<EduDataAPIClient | null> {
+    this.eduData = await EduDataAPIClient.create(teamId);
     return this.eduData;
   }
 
