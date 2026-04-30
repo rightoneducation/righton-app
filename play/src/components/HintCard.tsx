@@ -93,7 +93,7 @@ export default function HintCard({
           window.localStorage.setItem(
             StorageKeyEduDataAssignment,
             JSON.stringify({
-              userId,
+              teamId: userId,
               gameSessionId,
               questionIndex: currentQuestionIndex,
               state: currentState,
