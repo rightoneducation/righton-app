@@ -7,6 +7,8 @@ const backgroundGradient =
   'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))'; // upper header background
 // const radialGradient =
 // 'radial-gradient(circle farthest-side, #7D63C8, #7D63C8 100%)';
+const splashScreenBackgroundGradient =
+  'linear-gradient(180deg, #2A124F, #6029B5)';
 const radialGradient =
   'radial-gradient(circle 500px at 50% 60%, #7D64C7 13.54%, #514187 51.56%, #3A2D66 77.6%, #352960 88.02%, #312759 100%)';
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
@@ -89,6 +91,7 @@ declare module '@mui/material/styles' {
   interface PaletteColor {
     accent: string;
     backgroundGradient: string;
+    splashScreenBackgroundGradient: string;
     radialGradient: string;
     highlightGradient: string;
     altHighlightGradient: string;
@@ -110,6 +113,7 @@ declare module '@mui/material/styles' {
   interface SimplePaletteColorOptions {
     accent?: string;
     backgroundGradient?: string;
+    splashScreenBackgroundGradient?: string;
     radialGradient?: string;
     highlightGradient?: string;
     altHighlightGradient?: string;
@@ -150,6 +154,7 @@ export default createTheme({
       main: mainColor,
       accent: accentColor,
       backgroundGradient,
+      splashScreenBackgroundGradient,
       radialGradient,
       highlightGradient,
       altHighlightGradient,
