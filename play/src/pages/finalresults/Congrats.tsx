@@ -2,8 +2,8 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { PlayButton, ButtonType } from '@righton/networking';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
-import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
 import { monsterMap, FinalResultsState } from '../../lib/PlayModels';
 import Podium from '../../img/Podium.svg';
 
@@ -126,12 +126,12 @@ export default function Congrats({
           />
         </Stack>
         <BottomBox style={{ zIndex: 1 }}>
-          <GamePlayButtonStyled
+          <PlayButton
+            buttonType={ButtonType.LEADERBOARD}
+            label={t('finalresults.congrats.button')}
+            isEnabled
             onClick={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
-          >
-            {' '}
-            {t('finalresults.congrats.button')}{' '}
-          </GamePlayButtonStyled>
+          />
         </BottomBox>
       </StackContainer>
     </BackgroundContainerStyled>

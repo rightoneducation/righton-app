@@ -2,9 +2,12 @@
   "name": "@righton/networking",
   "version": "0.0.1",
   "devDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^5.16.7",
     "@types/jest": "^29.5.1",
     "@types/node": "^18.16.3",
-    "@types/react": "^18.3.1",
+    "@types/react": "^18.0.0",
     "@types/stopword": "^2.0.3",
     "@types/uuid": "^9.0.8",
     "create-ts-index": "^1.14.0",
@@ -14,15 +17,14 @@
     "typescript": "^5.0.4"
   },
   "peerDependencies": {
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^5.16.7",
     "react": "^18.3.1"
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
     "@aws-sdk/client-s3": "^3.705.0",
-    "@emotion/react": "^11.14.0",
-    "@mui/material": "^5.16.7",
     "@portabletext/react": "^3.2.1",
     "@sanity/client": "^7.6.0",
     "@sanity/image-url": "^1.1.0",

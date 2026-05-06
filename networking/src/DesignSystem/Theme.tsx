@@ -5,6 +5,8 @@ const mainColor = '#FFFFFF'; // main  (ex white)
 const accentColor = '#312759'; // accent (ex purple)
 const backgroundGradient =
   'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))'; // upper header background
+// const radialGradient =
+// 'radial-gradient(circle farthest-side, #7D63C8, #7D63C8 100%)';
 const splashScreenBackgroundGradient =
   'linear-gradient(180deg, #2A124F, #6029B5)';
 const radialGradient =
@@ -219,7 +221,7 @@ const xl = 1536;
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
 const headerHeight = 116;
 const footerHeight = 145;
-const pregameMinColumnWidth = 352; // enter game code screen + splash logo column
+const pregameMinColumnWidth = 352; // used on enter game code screen and righton logo
 const extraSmallPadding = 8; // small icons, text positioning
 const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
 const mediumPadding = 24; // timer margin
@@ -364,89 +366,64 @@ export default createTheme({
     designSystem: designSystemTypography,
     h1: {
       // screen titles
-      fontWeight: '800',
-      fontSize: '26px',
-      lineHeight: '30px',
+      ...designSystemTypography.h1,
       color: primaryTextColor,
     },
     h2: {
       // column titles
-      fontWeight: '800',
-      fontSize: '20px',
-      lineHeight: '30px',
+      ...designSystemTypography.h2,
       color: primaryTextColor,
     },
     h3: {
       // player name
-      fontWeight: '800',
-      fontSize: '20px',
-      lineHeight: '30px',
+      ...designSystemTypography.h3,
       color: playerNameTextColor,
     },
     h4: {
       // answer card title
-      fontWeight: '700',
-      fontSize: '14px',
-      lineHeight: '16px',
+      ...designSystemTypography.boldLabel,
       color: secondaryTextColor,
     },
     h5: {
       // card answer list letters (A, B, C, D, etc)
-      fontFamily: 'Karla',
-      fontSize: '16px',
-      fontWeight: 800,
-      lineHeight: '19px',
+      ...designSystemTypography.answerOption,
       color: secondaryTextColor,
     },
     h6: {
       // screen titles
-      fontWeight: '800',
-      fontSize: '35px',
-      lineHeight: '48px',
+      ...designSystemTypography.title,
       color: primaryTextColor,
     },
     subtitle1: {
       // correct/nice try discuss answer text
-      fontWeight: '800',
-      fontSize: '24px',
-      lineHeight: '38px',
+      ...designSystemTypography.h1,
       color: darkestTextColor,
     },
     body1: {
       // question text
-      fontWeight: '400',
-      fontSize: '16px',
-      lineHeight: '18px',
+      ...designSystemTypography.paragraph,
       color: secondaryTextColor,
     },
     body2: {
       // answer text
-      fontWeight: '400',
-      fontSize: '18px',
-      lineHeight: '22px',
+      ...designSystemTypography.answerOption,
       textAlign: 'left',
       color: secondaryTextColor,
     },
     button: {
       // button text
-      fontWeight: '700',
-      fontSize: '16px',
-      lineHeight: '18px',
+      ...designSystemTypography.h4,
       color: primaryTextColor,
     },
     caption: {
       // timer text
-      fontWeight: '700',
-      fontSize: '12px',
-      lineHeight: '14px',
+      ...designSystemTypography.smallLabel,
       color: primaryTextColor,
       opacity: '0.8',
     },
     overline: {
       // scoreIndicator text
-      fontSize: '18px',
-      fontWeight: 800,
-      lineHeight: '21px',
+      ...designSystemTypography.equation,
       color: primaryTextColor,
       textShadow: '0px 1px 1px rgba(0, 0, 0, 0.15)',
     },

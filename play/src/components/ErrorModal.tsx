@@ -6,7 +6,7 @@ import { Typography, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { v4 as uuidv4 } from 'uuid';
-import { IntroButtonStyled } from '../lib/styledcomponents/IntroButtonStyled';
+import { PlayButton, ButtonType } from '@righton/networking';
 import { StorageKey, StorageKeyEduDataStudentId, ErrorType } from '../lib/PlayModels';
 
 interface ErrorModalProps {
@@ -46,21 +46,11 @@ export default function ErrorModal({
       {errorText}
     </Typography>,
   ];
-  const lowerButton = [
-    <IntroButtonStyled
-      key={uuidv4()}
-      onClick={() => {
-        window.localStorage.removeItem(StorageKey);
-        window.localStorage.removeItem(StorageKeyEduDataStudentId);
-        navigate('/');
-      }}
-      style={{
-        boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-      }}
-    >
-      {t('error.connect.button2')}
-    </IntroButtonStyled>,
-  ];
+
+  const retryCounter =
+    errorType === ErrorType.CONNECT && retry && retry > 0
+      ? ` (${retry})`
+      : '';
 
   return (
     <Modal
@@ -108,22 +98,24 @@ export default function ErrorModal({
         {lowerText}
       </Stack>
       <Stack spacing={2} style={{ alignItems: 'center' }}>
-        <IntroButtonStyled
-          onClick={() => {
-            handleRetry();
-          }}
-          style={{
-            background: `${theme.palette.primary.highlightGradient}`,
-            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-          }}
-        >
-          {errorType === ErrorType.CONNECT
-            ? `${t('error.connect.button1')} ${
-                retry && retry > 0 ? `(${retry})` : ''
-              }`
-            : t('error.connect.button1')}
-        </IntroButtonStyled>
-        {errorType === ErrorType.CONNECT && lowerButton}
+        <PlayButton
+          buttonType={ButtonType.RETRY}
+          label={`${t('error.connect.button1')}${retryCounter}`}
+          isEnabled
+          onClick={handleRetry}
+        />
+        {errorType === ErrorType.CONNECT && (
+          <PlayButton
+            buttonType={ButtonType.QUIT}
+            label={t('error.connect.button2')}
+            isEnabled
+            onClick={() => {
+              window.localStorage.removeItem(StorageKey);
+              window.localStorage.removeItem(StorageKeyEduDataStudentId);
+              navigate('/');
+            }}
+          />
+        )}
       </Stack>
     </Modal>
   );

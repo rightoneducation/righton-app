@@ -1,5 +1,4 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
   BackendAnswer,
@@ -7,12 +6,10 @@ import {
   IChoice,
   ITeam,
   AnswerFactory,
-  AnswerType
+  AnswerType,
+  PlayButton,
+  ButtonType,
 } from '@righton/networking';
-import {
-  GamePlayButtonStyled,
-  GamePlayButtonStyledDisabled,
-} from '../lib/styledcomponents/GamePlayButtonStyled';
 
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
@@ -44,20 +41,26 @@ export default function ButtonSubmitAnswer({
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
-  const buttonText = isSubmitted
+  const isEnabled = isSelected && !isSubmitted;
+  // eslint-disable-next-line no-nested-ternary
+  const buttonType = isSubmitted
+    ? ButtonType.SUBMITTED
+    : isHint
+      ? ButtonType.HINT
+      : ButtonType.SUBMIT;
+  // eslint-disable-next-line no-nested-ternary
+  const label = isSubmitted
     ? t('gameinprogress.button.submitted')
-    : t('gameinprogress.button.submit');
-  const hintButtonText = isSubmitted
-    ? t('gameinprogress.button.submitted')
-    : t('gameinprogress.button.hint');
-  const buttonContents = (
-    <Typography sx={{ textTransform: 'none' }} variant="button">
-      {isHint ? hintButtonText : buttonText}
-    </Typography>
-  );
-  return isSelected && !isSubmitted ? (
-    <GamePlayButtonStyled
-      data-testid="answer-button-enabled"
+    : isHint
+      ? t('gameinprogress.button.hint')
+      : t('gameinprogress.button.submit');
+
+  return (
+    <PlayButton
+      buttonType={buttonType}
+      label={label}
+      isEnabled={isEnabled}
+      dataTestId={isEnabled ? 'answer-button-enabled' : 'answer-button-disabled'}
       onClick={() => {
         const submitAnswer = new BackendAnswer(
           AnswerFactory.createAnswer(selectedAnswer ?? '', AnswerType.MULTICHOICE),
@@ -74,15 +77,8 @@ export default function ButtonSubmitAnswer({
           null,
           null
         );
-
         handleSubmitAnswer(submitAnswer);
       }}
-    >
-      {buttonContents}
-    </GamePlayButtonStyled>
-  ) : (
-    <GamePlayButtonStyledDisabled data-testid="answer-button-disabled" disabled>
-      {buttonContents}
-    </GamePlayButtonStyledDisabled>
+    />
   );
 }

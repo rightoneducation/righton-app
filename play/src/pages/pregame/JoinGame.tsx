@@ -3,9 +3,9 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography, Collapse, Fade, Zoom } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { useTranslation } from 'react-i18next';
+import { PlayButton, ButtonType } from '@righton/networking';
 import { isNameValid } from '../../lib/HelperFunctions';
 import { InputPlaceholder } from '../../lib/PlayModels';
-import {JoinButton} from '../../lib/styledcomponents/IntroButtonStyled';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import AvatarSelection from './joingamecontent/AvatarSelection';
@@ -390,11 +390,12 @@ export default function JoinGame({
         </JoinGameBody>
 
       <JoinGameFooter>
-        <JoinButton disabled={isJoining || isButtonDisabled} onClick={() => validateInput(gameCodeValue)} style={{ opacity: (isJoining || isButtonDisabled) ? 0.5 : 1 }}>
-          <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {!isJoining ? t('joingame.gamecode.button') : t('joingame.gamecode.buttonJoining')}
-          </Typography>
-        </JoinButton>
+        <PlayButton
+          buttonType={isJoining ? ButtonType.JOINING : ButtonType.JOIN}
+          label={isJoining ? t('joingame.gamecode.buttonJoining') : t('joingame.gamecode.button')}
+          isEnabled={!isJoining && !isButtonDisabled}
+          onClick={() => validateInput(gameCodeValue)}
+        />
       </JoinGameFooter>
     </BackgroundContainerStyled>
   );

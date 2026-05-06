@@ -7,7 +7,6 @@ export default styled(Stack)(({ theme }) => ({
   height: '100%',
   position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
   width: '100%',
-  // background: `${theme.palette.primary.splashScreenBackgroundGradient} no-repeat`,
   backgroundImage: `
     linear-gradient(180deg, rgba(42, 18, 79, 0.95), rgba(96, 41, 181, 0.95)),
     url(${mathSymbolsBackground})
