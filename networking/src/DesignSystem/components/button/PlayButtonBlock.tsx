@@ -1,11 +1,11 @@
 import { Typography } from '@mui/material';
 import { ButtonType, buttonContentMap } from './PlayButtonModels';
 import {
-  PlayButtonStyled,
+  PlayButtonBlockStyled,
   PlayButtonContent,
 } from './styledcomponents/ButtonStyledComponents';
 
-interface PlayButtonProps {
+interface PlayButtonBlockProps {
   buttonType: ButtonType;
   label: string;
   isEnabled: boolean;
@@ -13,28 +13,27 @@ interface PlayButtonProps {
   dataTestId?: string;
 }
 
-export function PlayButton({
+export function PlayButtonBlock({
   buttonType,
   label,
   isEnabled,
   onClick,
   dataTestId,
-}: PlayButtonProps) {
+}: PlayButtonBlockProps) {
   const buttonObj = buttonContentMap[buttonType];
 
   return (
-    <PlayButtonStyled
+    <PlayButtonBlockStyled
       buttonShape={buttonObj.shape}
       disabled={!isEnabled}
       onClick={onClick}
       data-testid={dataTestId}
-      style={buttonObj.width ? { width: buttonObj.width } : undefined}
     >
       <PlayButtonContent buttonShape={buttonObj.shape}>
         <Typography variant="h2">
           {label}
         </Typography>
       </PlayButtonContent>
-    </PlayButtonStyled>
+    </PlayButtonBlockStyled>
   );
 }

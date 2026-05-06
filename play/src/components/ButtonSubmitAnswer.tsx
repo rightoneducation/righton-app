@@ -7,7 +7,7 @@ import {
   ITeam,
   AnswerFactory,
   AnswerType,
-  PlayButton,
+  PlayButtonBlock,
   ButtonType,
 } from '@righton/networking';
 
@@ -56,7 +56,7 @@ export default function ButtonSubmitAnswer({
       : t('gameinprogress.button.submit');
 
   return (
-    <PlayButton
+    <PlayButtonBlock
       buttonType={buttonType}
       label={label}
       isEnabled={isEnabled}
@@ -80,5 +80,6 @@ export default function ButtonSubmitAnswer({
         handleSubmitAnswer(submitAnswer);
       }}
     />
+
   );
 }

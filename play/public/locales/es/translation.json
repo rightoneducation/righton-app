@@ -110,7 +110,7 @@
     "button": {
       "submit": "Enviar Respuesta",
       "hint": "Enviar Explicación",
-      "submitted": "Enviada"
+      "submitted": "¡Enviada!"
     }
   },
   "finalresults": {

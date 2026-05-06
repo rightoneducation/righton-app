@@ -13,11 +13,6 @@ export enum ButtonType {
   LEADERBOARD = 'leaderboard',
 }
 
-export enum ButtonColor {
-  RED,
-  CYAN,
-}
-
 export enum ButtonShape {
   INTRO,
   GAMEPLAY,
@@ -25,61 +20,22 @@ export enum ButtonShape {
 
 type ButtonContentMapProps = {
   [key in ButtonType]: {
-    color: ButtonColor;
     shape: ButtonShape;
     width?: string;
   };
 };
 
 export const buttonContentMap: ButtonContentMapProps = {
-  [ButtonType.START]: {
-    color: ButtonColor.RED,
-    shape: ButtonShape.INTRO,
-  },
-  [ButtonType.JOIN]: {
-    color: ButtonColor.RED,
-    shape: ButtonShape.INTRO,
-    width: '135px',
-  },
-  [ButtonType.JOINING]: {
-    color: ButtonColor.RED,
-    shape: ButtonShape.INTRO,
-    width: '135px',
-  },
-  [ButtonType.REJOIN]: {
-    color: ButtonColor.CYAN,
-    shape: ButtonShape.INTRO,
-  },
-  [ButtonType.DONTREJOIN]: {
-    color: ButtonColor.RED,
-    shape: ButtonShape.INTRO,
-  },
-  [ButtonType.RETRY]: {
-    color: ButtonColor.CYAN,
-    shape: ButtonShape.INTRO,
-  },
-  [ButtonType.QUIT]: {
-    color: ButtonColor.RED,
-    shape: ButtonShape.INTRO,
-  },
-  [ButtonType.REFRESH]: {
-    color: ButtonColor.RED,
-    shape: ButtonShape.INTRO,
-  },
-  [ButtonType.SUBMIT]: {
-    color: ButtonColor.CYAN,
-    shape: ButtonShape.GAMEPLAY,
-  },
-  [ButtonType.SUBMITTED]: {
-    color: ButtonColor.CYAN,
-    shape: ButtonShape.GAMEPLAY,
-  },
-  [ButtonType.HINT]: {
-    color: ButtonColor.CYAN,
-    shape: ButtonShape.GAMEPLAY,
-  },
-  [ButtonType.LEADERBOARD]: {
-    color: ButtonColor.CYAN,
-    shape: ButtonShape.GAMEPLAY,
-  },
+  [ButtonType.START]: { shape: ButtonShape.INTRO },
+  [ButtonType.JOIN]: { shape: ButtonShape.INTRO, width: '135px' },
+  [ButtonType.JOINING]: { shape: ButtonShape.INTRO, width: '135px' },
+  [ButtonType.REJOIN]: { shape: ButtonShape.INTRO },
+  [ButtonType.DONTREJOIN]: { shape: ButtonShape.INTRO },
+  [ButtonType.RETRY]: { shape: ButtonShape.INTRO },
+  [ButtonType.QUIT]: { shape: ButtonShape.INTRO },
+  [ButtonType.REFRESH]: { shape: ButtonShape.INTRO },
+  [ButtonType.SUBMIT]: { shape: ButtonShape.GAMEPLAY },
+  [ButtonType.SUBMITTED]: { shape: ButtonShape.GAMEPLAY },
+  [ButtonType.HINT]: { shape: ButtonShape.GAMEPLAY },
+  [ButtonType.LEADERBOARD]: { shape: ButtonShape.GAMEPLAY },
 };

@@ -121,7 +121,7 @@
     "button": {
       "submit": "Submit Answer",
       "hint": "Submit Hint",
-      "submitted": "Submitted"
+      "submitted": "Submitted!"
     }
   },
   "finalresults": {

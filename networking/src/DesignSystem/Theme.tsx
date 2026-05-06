@@ -122,84 +122,84 @@ const designSystemTypography = {
     fontWeight: 700,
     fontSize: '40px',
     lineHeight: '130%',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   h1: {
     fontFamily: 'Poppins',
     fontWeight: 700,
     fontSize: '24px',
     lineHeight: '130%',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   }, // main header
   h2: {
     fontFamily: 'Poppins',
     fontWeight: 700,
     fontSize: '20px',
     lineHeight: '24px',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   }, // button labels
   h3: {
     fontFamily: 'Poppins',
     fontWeight: 800,
     fontSize: '20px',
     lineHeight: '23px',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   h4: {
     fontFamily: 'Poppins',
     fontWeight: 600,
     fontSize: '16px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   paragraph: {
     fontFamily: 'Rubik',
     fontWeight: 400,
     fontSize: '16px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   questionLabel: {
     fontFamily: 'Rubik',
     fontWeight: 400,
     fontSize: '14px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   answerOption: {
     fontFamily: 'Rubik',
     fontWeight: 400,
     fontSize: '16px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   boldLabel: {
     fontFamily: 'Rubik',
     fontWeight: 700,
     fontSize: '14px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   responseLabel: {
     fontFamily: 'Rubik',
     fontWeight: 800,
     fontSize: '14px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   smallLabel: {
     fontFamily: 'Rubik',
     fontWeight: 400,
     fontSize: '12px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   xsLabel: {
     fontFamily: 'Rubik',
     fontWeight: 400,
     fontSize: '10px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
   equation: {
     fontFamily: '"Times New Roman", serif',
@@ -207,7 +207,7 @@ const designSystemTypography = {
     fontWeight: 400,
     fontSize: '18px',
     lineHeight: 'normal',
-    letterSpacing: '0%',
+    letterSpacing: 'normal',
   },
 };
 
@@ -321,7 +321,7 @@ declare module '@mui/material/styles' {
   }
 }
 
-export default createTheme({
+const RightOnTheme = createTheme({
   breakpoints: {
     values: { xs, sm, md, lg, xl },
   },
@@ -429,3 +429,6 @@ export default createTheme({
     },
   },
 });
+
+export { RightOnTheme };
+export default RightOnTheme;

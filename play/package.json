@@ -1,5 +1,5 @@
 {
-  "name": "play2",
+  "name": "play",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -191,5 +191,5 @@
     ]
   },
   "readme": "readme.md",
-  "_id": "play2@0.1.0"
+  "_id": "play@0.1.0"
 }
