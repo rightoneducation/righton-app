@@ -63,7 +63,7 @@ export default function ScoreIndicator({
     <Box>
       <ScoreAnimation startAnimation={startScoreAnimation} animationDelay={animationDelay}>
         <ScorePill>
-          <Typography data-testid="scoreindicator-newpoints" variant="overline">
+          <Typography data-testid="scoreindicator-newpoints" variant="h2">
             {isNullOrUndefined(newScore) ? 0 : newScore}
           </Typography>
         </ScorePill>

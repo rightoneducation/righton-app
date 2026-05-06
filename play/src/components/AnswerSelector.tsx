@@ -18,7 +18,7 @@ const AnswerSelectorDefault = styled(Button, {
   boxSizing: 'border-box',
   width: '100%',
   minHeight: '42px',
-  borderRadius: '22px',
+  borderRadius: '8px',
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'center',
@@ -90,9 +90,9 @@ export default function AnswerSelector({
   const buttonContents = (
     <>
       <Typography
-        variant="h5"
+        variant="h3"
         sx={{
-          color: `${theme.palette.primary.darkPurple}`,
+          color: `${theme.palette.designSystem.surface.coolBlue}`,
           paddingLeft:
             !isSubmitted && answerStatus === AnswerState.SELECTED
               ? '1px'
@@ -105,8 +105,9 @@ export default function AnswerSelector({
         {String.fromCharCode(letterCode)}
       </Typography>
       <Typography
-        variant="body2"
+        variant="paragraph"
         sx={{
+          color: `${theme.palette.designSystem.surface.coolBlue}`,
           paddingLeft: `${theme.sizing.extraSmallPadding}px`,
           paddingRight: `${theme.sizing.largePadding}px`,
         }}

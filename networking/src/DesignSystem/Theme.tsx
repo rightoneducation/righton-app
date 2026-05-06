@@ -18,7 +18,6 @@ const altHighlightGradient =
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
-const playerNameTextColor = '#AEAEAE'; // player name
 const darkPurpleColor = '#4700B2'; // phase results, selected answer
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
@@ -118,6 +117,13 @@ const designSystemColors = {
 };
 
 const designSystemTypography = {
+  h0: {
+    fontFamily: 'Poppins',
+    fontWeight: 800,
+    fontSize: '26px',
+    lineHeight: 'normal',
+    letterSpacing: 'normal',
+  },
   title: {
     fontFamily: 'Poppins',
     fontWeight: 700,
@@ -329,6 +335,7 @@ declare module '@mui/material/styles' {
 
   interface TypographyVariants {
     designSystem: typeof designSystemTypography;
+    h0: CSSProperties;
     title: CSSProperties;
     paragraph: CSSProperties;
     semiBoldParagraph: CSSProperties;
@@ -344,6 +351,7 @@ declare module '@mui/material/styles' {
 
   interface TypographyVariantsOptions {
     designSystem?: typeof designSystemTypography;
+    h0?: CSSProperties;
     title?: CSSProperties;
     paragraph?: CSSProperties;
     semiBoldParagraph?: CSSProperties;
@@ -360,6 +368,7 @@ declare module '@mui/material/styles' {
 
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
+    h0: true;
     title: true;
     paragraph: true;
     semiBoldParagraph: true;
@@ -418,6 +427,7 @@ const RightOnTheme = createTheme({
     MuiTypography: {
       defaultProps: {
         variantMapping: {
+          h0: 'h1',
           title: 'h1',
           paragraph: 'p',
           semiBoldParagraph: 'p',
@@ -436,6 +446,7 @@ const RightOnTheme = createTheme({
   typography: {
     fontFamily: 'Karla',
     designSystem: designSystemTypography,
+    h0: { ...designSystemTypography.h0, color: primaryTextColor },
     title: { ...designSystemTypography.title, color: primaryTextColor },
     paragraph: { ...designSystemTypography.paragraph, color: primaryTextColor },
     semiBoldParagraph: { ...designSystemTypography.semiBoldParagraph, color: primaryTextColor },
@@ -460,7 +471,7 @@ const RightOnTheme = createTheme({
     h3: {
       // player name
       ...designSystemTypography.h3,
-      color: playerNameTextColor,
+      color: primaryTextColor,
     },
     h4: {
       // answer card title

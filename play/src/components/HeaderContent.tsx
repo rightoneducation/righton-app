@@ -68,7 +68,7 @@ export default function HeaderContent({
 
   return (
     <HeaderContainer>
-      <Typography variant="h1">
+      <Typography variant="h0">
         {stateCheck(currentState, isCorrect, isIncorrect)}
       </Typography>
       {(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||

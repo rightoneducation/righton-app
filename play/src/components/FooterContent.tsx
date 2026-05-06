@@ -11,7 +11,6 @@ const FooterContainer = styled(Container)(({ theme }) => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  color: theme.palette.primary.main,
   paddingLeft: `${theme.sizing.smallPadding}px`,
   paddingRight: `${theme.sizing.smallPadding}px`,
 }));

@@ -89,16 +89,8 @@ export default function ConfidenceMeterCard({
         marginBottom: `${theme.sizing.smallPadding}px`,
       }}
     >
-      <ConfidenceTitleTypography>
+      <Typography variant="h1" style={{color: theme.palette.designSystem.surface.play}}>
         {t('gameinprogress.chooseanswer.confidenceheader')}
-      </ConfidenceTitleTypography>
-    </Box>
-  );
-
-  const chooseConfidenceText = (
-    <Box display="inline" sx={{ textAlign: 'center' }}>
-      <Typography variant="body1">
-        {t('gameinprogress.chooseanswer.confidencetext')}
       </Typography>
     </Box>
   );
@@ -176,8 +168,9 @@ export default function ConfidenceMeterCard({
         onChange={handleRadioChange}
         sx={{
           textAlign: 'center',
-          justifyContent: 'space-between',
-          marginY: `${theme.sizing.mediumPadding}px`,
+          justifyContent: 'center',
+          gap: '12px',
+          marginBottom: '24px'
         }}
       >
         {confidenceOptionArray.map((option) => responseOption(option))}
@@ -194,7 +187,6 @@ export default function ConfidenceMeterCard({
       }}
     >
       {confidenceHeader}
-      {chooseConfidenceText}
       {responseOptions}
       {statusText}
     </BodyCardStyled>

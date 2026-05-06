@@ -62,7 +62,7 @@ export default function HowToPlay({ mode }: HowToPlayProps) {
     <>
       <Typography
         data-testid="lobby-howtoplay"
-        variant="h1"
+        variant="h0"
         sx={{
           textAlign: 'center',
           paddingTop: `${theme.sizing.mediumPadding}px`,
