@@ -73,15 +73,16 @@ export default function SplashScreen({
               alt="Question"
             />
             <Typography
-              variant="h2"
+              variant="semiBoldParagraph"
               sx={{
-                weight: 700,
                 textAlign: `center`,
                 paddingLeft: `${theme.sizing.mediumPadding}px`,
                 paddingRight: `${theme.sizing.mediumPadding}px`,
               }}
             >
-              {t('joingame.splash.title')}
+              {t('joingame.splash.title1')}
+              <br />
+              {t('joingame.splash.title2')}
             </Typography>
           </Stack>
           <BottomBox>

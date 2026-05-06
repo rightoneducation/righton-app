@@ -8,8 +8,6 @@ export default styled(Stack)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
-  background: theme.palette.primary.backgroundGradient,
   border: 'none',
   width: '100vw',
   height: `${theme.sizing.headerHeight}px`,

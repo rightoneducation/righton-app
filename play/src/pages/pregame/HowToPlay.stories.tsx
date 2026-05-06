@@ -4,7 +4,7 @@ import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import HowToPlay from './HowToPlay';
-import Theme from '../../lib/Theme';
+import { RightOnTheme as Theme } from '@righton/networking';
 import { LobbyMode } from '../../lib/PlayModels';
 import i18n from '../../i18n';
 

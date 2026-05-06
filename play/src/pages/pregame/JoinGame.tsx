@@ -207,7 +207,7 @@ export default function JoinGame({
           <div ref={inputRef}/>
           {/* container here to trim the spacing set by parent stack between text and input, typ */}
           <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '8px'  }}>
-            <Typography variant="h2" sx={{ weight: 700, fontSize: '18px', lineHeight: '20px', textAlign: 'center' }}>
+            <Typography variant="textLabel" sx={{ textAlign: 'center' }}>
               {t('joingame.gamecode.title')}
             </Typography>
             <InputTextFieldStyled
@@ -239,7 +239,7 @@ export default function JoinGame({
           </Box>
           <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <Box sx={{ width: '100%', display: 'flex'}}>
-              <Typography variant="h2" sx={{ width: '100%', weight: 700, fontSize: '18px', lineHeight: '20px', textAlign: 'center', paddingLeft: '37px' }}>
+              <Typography variant="textLabel" sx={{ width: '100%', textAlign: 'center', paddingLeft: '37px' }}>
                 {t('joingame.playername.title')}
               </Typography>
               {isMedDevice
@@ -251,10 +251,10 @@ export default function JoinGame({
               : <StyledTooltip
                   title={
                     <>
-                      <Typography variant="h2" sx={{ weight: 800, fontSize: '18px', lineHeight: '20px', textAlign: 'center', paddingBottom: '8px' }}>
+                      <Typography variant="textLabel" sx={{ textAlign: 'center', paddingBottom: '8px' }}>
                         Type in both your first and last name to enter the game.
                       </Typography>
-                      <Typography variant="body1" sx={{ weight: 200, fontSize: '18px', lineHeight: '20px', textAlign: 'center', color: '#FFF' }}>
+                      <Typography variant="textLabel" sx={{ weight: 400, textAlign: 'center' }}>
                         This will be used to identify you only during the game, and will not be stored.
                       </Typography>
                     </>
@@ -277,10 +277,10 @@ export default function JoinGame({
                   <EnterNameHelpTriangleStyled src={EnterNameHelpTriangle}/>
                 </Box>
                 <SmallDeviceHelpBox>
-                  <Typography variant="h2" sx={{ weight: 800, fontSize: '18px', lineHeight: '20px', textAlign: 'center', paddingBottom: '8px' }}>
+                  <Typography variant="textLabel" sx={{ weight: 800, textAlign: 'center', paddingBottom: '8px' }}>
                     Type in both your first and last name to enter the game.
                   </Typography>
-                  <Typography variant="body1" sx={{ weight: 200, fontSize: '18px', lineHeight: '20px', textAlign: 'center', color: '#FFF' }}>
+                  <Typography variant="textLabel" sx={{ weight: 400, textAlign: 'center' }}>
                     This will be used to identify you only during the game, and will not be stored.
                   </Typography>
                 </SmallDeviceHelpBox>
@@ -338,13 +338,12 @@ export default function JoinGame({
               </Grid>
             </Grid>
           </Box>
-          <Box style={{padding: 0}}>
+          <Box style={{padding: 0, maxWidth: '250px'}}>
             <PaddedContainer>
               <Collapse in={isShowCodeError}>
                 <Typography
-                  variant="h2"
+                  variant="textLabel"
                   sx={{
-                    weight: 700,
                     textAlign: 'center',
                     marginBottom: `${theme.sizing.smallPadding}px`,
                   }}
@@ -352,11 +351,11 @@ export default function JoinGame({
                   {t('joingame.gamecode.error1')}
                 </Typography>
                 {!isShowNameError ? 
-                <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
+                <Typography variant="textLabel" sx={{ textAlign: 'center' }}>
                   {t('joingame.gamecode.error2')}
                 </Typography>
                 :
-                 <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
+                 <Typography variant="textLabel" sx={{ textAlign: 'center' }}>
                   {t('joingame.gamecode.error3')}
                 </Typography>
                 }
@@ -366,9 +365,8 @@ export default function JoinGame({
               <Collapse in={isShowNameInvalidError}>
                 <Typography
                   data-testid="playername-invalidtext"
-                  variant="h2"
+                  variant="textLabel"
                   sx={{     
-                    weight: 700,
                     textAlign: 'center',
                     marginBottom: `${theme.sizing.smallPadding}px`,
                   }}

@@ -1,7 +1,8 @@
 {
   "joingame": {
     "splash": {
-      "title": "Unlocking every student's potential in math!",
+      "title1": "Unlocking every student's",
+      "title2": "potential in math!",
       "button": "Join Game"
     },
     "rejoinmodal": {

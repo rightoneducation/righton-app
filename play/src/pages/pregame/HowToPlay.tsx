@@ -62,7 +62,7 @@ export default function HowToPlay({ mode }: HowToPlayProps) {
     <>
       <Typography
         data-testid="lobby-howtoplay"
-        variant="h2"
+        variant="h1"
         sx={{
           textAlign: 'center',
           paddingTop: `${theme.sizing.mediumPadding}px`,
@@ -101,12 +101,10 @@ export default function HowToPlay({ mode }: HowToPlayProps) {
       </StackContainer>
       <Typography
         data-testid="lobby-howtoplay-statustext"
-        variant="h4"
+        variant="textLabel"
         sx={{
           position: 'absolute',
           bottom: 0,
-          color: `${theme.palette.primary.main}`,
-          fontWeight: 400,
           textAlign: 'center',
           paddingBottom: `${theme.sizing.mediumPadding}px`,
         }}

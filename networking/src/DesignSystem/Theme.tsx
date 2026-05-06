@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import type { CSSProperties } from 'react';
 
 // design tokens - colors: (comments = example usage)
 const mainColor = '#FFFFFF'; // main  (ex white)
@@ -159,6 +160,13 @@ const designSystemTypography = {
     lineHeight: 'normal',
     letterSpacing: 'normal',
   },
+  semiBoldParagraph: {
+    fontFamily: 'Rubik',
+    fontWeight: 600,
+    fontSize: '16px',
+    lineHeight: 'normal',
+    letterSpacing: 'normal',
+  },
   questionLabel: {
     fontFamily: 'Rubik',
     fontWeight: 400,
@@ -205,6 +213,13 @@ const designSystemTypography = {
     fontFamily: '"Times New Roman", serif',
     fontStyle: 'italic',
     fontWeight: 400,
+    fontSize: '18px',
+    lineHeight: 'normal',
+    letterSpacing: 'normal',
+  },
+  textLabel: {
+    fontFamily: 'Karla',
+    fontWeight: 800,
     fontSize: '18px',
     lineHeight: 'normal',
     letterSpacing: 'normal',
@@ -314,10 +329,48 @@ declare module '@mui/material/styles' {
 
   interface TypographyVariants {
     designSystem: typeof designSystemTypography;
+    title: CSSProperties;
+    paragraph: CSSProperties;
+    semiBoldParagraph: CSSProperties;
+    questionLabel: CSSProperties;
+    answerOption: CSSProperties;
+    boldLabel: CSSProperties;
+    responseLabel: CSSProperties;
+    smallLabel: CSSProperties;
+    xsLabel: CSSProperties;
+    equation: CSSProperties;
+    textLabel: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
     designSystem?: typeof designSystemTypography;
+    title?: CSSProperties;
+    paragraph?: CSSProperties;
+    semiBoldParagraph?: CSSProperties;
+    questionLabel?: CSSProperties;
+    answerOption?: CSSProperties;
+    boldLabel?: CSSProperties;
+    responseLabel?: CSSProperties;
+    smallLabel?: CSSProperties;
+    xsLabel?: CSSProperties;
+    equation?: CSSProperties;
+    textLabel?: CSSProperties;
+  }
+}
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    title: true;
+    paragraph: true;
+    semiBoldParagraph: true;
+    questionLabel: true;
+    answerOption: true;
+    boldLabel: true;
+    responseLabel: true;
+    smallLabel: true;
+    xsLabel: true;
+    equation: true;
+    textLabel: true;
   }
 }
 
@@ -361,9 +414,39 @@ const RightOnTheme = createTheme({
     },
     designSystem: designSystemColors,
   },
+  components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          title: 'h1',
+          paragraph: 'p',
+          semiBoldParagraph: 'p',
+          questionLabel: 'p',
+          answerOption: 'p',
+          boldLabel: 'p',
+          responseLabel: 'p',
+          smallLabel: 'p',
+          xsLabel: 'p',
+          equation: 'p',
+          textLabel: 'p',
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: 'Karla',
     designSystem: designSystemTypography,
+    title: { ...designSystemTypography.title, color: primaryTextColor },
+    paragraph: { ...designSystemTypography.paragraph, color: primaryTextColor },
+    semiBoldParagraph: { ...designSystemTypography.semiBoldParagraph, color: primaryTextColor },
+    questionLabel: { ...designSystemTypography.questionLabel, color: primaryTextColor },
+    answerOption: { ...designSystemTypography.answerOption, color: primaryTextColor },
+    boldLabel: { ...designSystemTypography.boldLabel, color: primaryTextColor },
+    responseLabel: { ...designSystemTypography.responseLabel, color: primaryTextColor },
+    smallLabel: { ...designSystemTypography.smallLabel, color: primaryTextColor },
+    xsLabel: { ...designSystemTypography.xsLabel, color: primaryTextColor },
+    equation: { ...designSystemTypography.equation, color: primaryTextColor },
+    textLabel: { ...designSystemTypography.textLabel, color: primaryTextColor },
     h1: {
       // screen titles
       ...designSystemTypography.h1,

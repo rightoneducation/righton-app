@@ -9,7 +9,7 @@ import {
 import { I18nextProvider } from 'react-i18next';
 import MockGameSession from '../../mock/MockGameSession.json';
 import Leaderboard from './Leaderboard';
-import Theme from '../../lib/Theme';
+import { RightOnTheme as Theme } from '@righton/networking';
 import i18n from '../../i18n.mock';
 
 export default {

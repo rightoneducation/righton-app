@@ -103,11 +103,10 @@ export default function ChooseAnswer({
       <QuestionCard questionText={questionText} imageUrl={questionUrl} />
       {isSmallDevice ? (
         <Typography
-          variant="body1"
+          variant="paragraph"
           sx={{
             textAlign: 'center',
             marginTop: `${theme.sizing.largePadding}px`,
-            opacity: 0.5,
           }}
         >
           {t('gameinprogress.general.swipealert')}

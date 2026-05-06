@@ -9,7 +9,6 @@ export default styled(Stack)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: theme.palette.primary.main,
   width: '100vw',
   border: 'none',
   position: 'sticky',

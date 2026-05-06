@@ -306,8 +306,6 @@ export default function GameInProgress({
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
         currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
