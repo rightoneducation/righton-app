@@ -60,13 +60,6 @@ export default function DiscussAnswerCard({
   const correctCard =
     answerStatus === AnswerState.CORRECT ||
     answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
-  const AnswerTitleTypography = styled(Typography)({
-    lineHeight: '28px',
-    fontFamily: 'Karla',
-    fontWeight: '800',
-    fontSize: '24px',
-    color: 'black',
-  });
   let percent = 0;
   if (answerStatus === AnswerState.OTHER)
     percent = otherAnswersCount! / totalAnswers! * 100;
@@ -78,12 +71,12 @@ export default function DiscussAnswerCard({
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
       {correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
+          <Typography variant="textLabel"> Correct Answer </Typography>
         </Box>
       )}
       {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && answerStatus !== AnswerState.OTHER && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <AnswerTitleTypography>Incorrect Answer</AnswerTitleTypography>
+          <Typography variant="textLabel">Incorrect Answer</Typography>
           {answerStatus === AnswerState.SELECTED &&(
             <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>)}
         </Box>
@@ -93,15 +86,12 @@ export default function DiscussAnswerCard({
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
               <Typography
                 variant="subtitle1"
-                sx={{ whiteSpace: 'pre-line', paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
+                sx={{ whiteSpace: 'pre-line'}}
               >
                 {resultText}
               </Typography>
               <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>
             </Box>
-            <Typography variant="body1" sx={{whiteSpace: 'pre-line'}}>
-              {t('gameinprogress.discussanswer.correctanswertext')}
-            </Typography>
           </Box>
         )}
         { answerStatus !== AnswerState.OTHER && (
@@ -153,13 +143,11 @@ export default function DiscussAnswerCard({
               >
                 <Box sx={{ width: '30px' }}>
                   <Typography
-                    variant="h3"
+                    variant="h2"
                     sx={{
                       width: '30px',
-                      fontWeight: 700,
-                      color: theme.palette.primary.darkPurple,
-                      lineHeight: '20px',
                       textAlign: 'right',
+                      color: theme.palette.designSystem.surface.pink
                     }}
                   >
                     {index + 1}

@@ -87,30 +87,27 @@ export default function ResultSelector({
   );
   const resultContents = (
     <>
-      <Box style={{ display: 'flex'}}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         {!(isShortAnswerEnabled && currentState === GameSessionState.PHASE_1_DISCUSS) && !(isShortAnswerEnabled && correctCard) && (
           <Typography
-            variant="h5"
+            variant="h2"
             sx={{
               paddingLeft: '1px',
-              paddingTop: `${theme.sizing.extraSmallPadding}px`,
-              color: correctCard ? '#384466' : `${theme.palette.primary.darkPurple}`,
-              fontWeight: '800',
-              fontSize: '16px',
-              lineHeight: '22px',
+              lineHeight: 1,
+              color: correctCard ? '#384466' : `${theme.palette.designSystem.surface.play}`,
             }}
           >
-            {letterCode}
+            {letterCode.toUpperCase()}
           </Typography>
         )}
         <Typography
-          variant="body2"
+          variant="h2"
           sx={{
-            paddingTop: `${theme.sizing.extraSmallPadding}px`,
-            paddingBottom: `${theme.sizing.extraSmallPadding}px`,
-            paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+            paddingLeft: `${theme.sizing.smallPadding}px`,
             paddingRight: `${theme.sizing.largePadding}px`,
-            whiteSpace: 'pre-line'
+            whiteSpace: 'pre-line',
+            fontWeight: 400,
+            color:  `${theme.palette.designSystem.surface.play}`
           }}
         >
           {answerText}

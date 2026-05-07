@@ -29,15 +29,12 @@ export default function StartPhase2() {
       <StackContainer spacing={5}>
         <Stack sx={{ alignItems: 'center' }} spacing={2}>
           <TypographyStyled
-            variant="h1"
-            sx={{
-              weight: 700,
-            }}
+            variant="h0"
           >
             {t('gameinprogress.startphase2.title')}
           </TypographyStyled>
           <TypographyStyled
-            variant="body2"
+            variant="textLabel"
             sx={{
               color: `${theme.palette.primary.main}`,
             }}
@@ -54,7 +51,7 @@ export default function StartPhase2() {
           src={MagicHat}
           alt="Question"
         />
-        <TypographyStyled variant="h2">
+        <TypographyStyled variant="h3">
           {t('gameinprogress.startphase2.subtitle2')}
         </TypographyStyled>
       </StackContainer>

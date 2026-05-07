@@ -95,7 +95,7 @@ export default function NewPointsIndicator({
       {newPoints && newPoints > 0 ? (
         <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd}>
           <NewPointsPill currentState={currentState}>
-            <Typography variant="overline">{`+${newPoints}`}</Typography>
+            <Typography variant="h2">{`+${newPoints}`}</Typography>
           </NewPointsPill>
         </NewPointsAnimation>
       ) : null}

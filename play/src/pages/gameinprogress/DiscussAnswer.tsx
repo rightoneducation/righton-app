@@ -98,7 +98,7 @@ export default function DiscussAnswer({
       </Stack>
       {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
         <Typography
-          variant="body1"
+          variant="paragraph"
           sx={{
             textAlign: 'center',
             marginTop: `${theme.sizing.largePadding}px`,
@@ -150,7 +150,7 @@ export default function DiscussAnswer({
         </Stack>
         {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
           <Typography
-            variant="body1"
+            variant="paragraph"
             sx={{
               textAlign: 'center',
               marginTop: `${theme.sizing.largePadding}px`,

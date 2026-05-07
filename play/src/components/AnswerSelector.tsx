@@ -107,7 +107,7 @@ export default function AnswerSelector({
       <Typography
         variant="paragraph"
         sx={{
-          color: `${theme.palette.designSystem.surface.coolBlue}`,
+          color: `${theme.palette.designSystem.surface.play}`,
           paddingLeft: `${theme.sizing.extraSmallPadding}px`,
           paddingRight: `${theme.sizing.largePadding}px`,
         }}

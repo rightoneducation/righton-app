@@ -148,29 +148,11 @@ export default function OpenAnswerCard({
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
         <Typography
-          variant="subtitle1"
-          sx={{ width: '100%', textAlign: 'left' }}
+          variant="h1"
+          sx={{ width: '100%', textAlign: 'left', color: theme.palette.designSystem.surface.play }}
         >
           {t('gameinprogress.chooseanswer.openanswercard')}
         </Typography>
-        <Box display="inline" style={{ width: '100%' }}>
-        <Typography
-          variant="body1"
-          display="inline"
-          sx={{ width: '100%', textAlign: 'left' }}
-        >
-          {t('gameinprogress.chooseanswer.openanswercarddescription')}
-         
-        </Typography>
-   
-        <Typography
-            variant="body1"
-            display="inline"
-            sx={{ width: '100%', textAlign: 'left', fontWeight: 700 }}
-          >
-            {answerText}
-          </Typography>
-          </Box>
         <Box
           style={{
             display: 'flex',
@@ -203,7 +185,7 @@ export default function OpenAnswerCard({
           />
           { isBadInput
             ? <Typography
-                variant="body1"
+                variant="paragraph"
                 sx={{ width: '100%', textAlign: 'center' }}
               >
                   {t('gameinprogress.chooseanswer.openanswercardnumberwarning')}
@@ -222,7 +204,7 @@ export default function OpenAnswerCard({
               }}
             >
               <Typography
-              variant="body1"
+              variant="paragraph"
               sx={{ width: '100%', textAlign: 'left' }}
               >
                 {t('gameinprogress.chooseanswer.openanswercardkatexpreview')}
