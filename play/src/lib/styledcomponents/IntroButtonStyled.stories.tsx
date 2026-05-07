@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react';
 import { Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
-import IntroButtonStyled from './IntroButtonStyled';
+import { IntroButtonStyled } from './IntroButtonStyled';
 import Theme from '../Theme';
 import i18n from '../../i18n.mock';
 
@@ -13,7 +13,7 @@ export default {
 } as Meta<typeof IntroButtonStyled>;
 
 const Template: StoryFn<typeof IntroButtonStyled> =
-  function ButtonSubmitAnswerTemplate(args) {
+  function ButtonSubmitAnswerTemplate(args: React.ComponentProps<typeof IntroButtonStyled>) {
     return (
       <ThemeProvider theme={Theme}>
         <I18nextProvider i18n={i18n}>

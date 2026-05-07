@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 import Modal from 'react-modal';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
+import { IntroButtonStyled } from '../lib/styledcomponents/IntroButtonStyled';
 
 interface RejoinModalProps {
   handleRejoinSession: () => void;

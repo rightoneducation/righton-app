@@ -2,6 +2,6 @@
 
 export * from './IGameSessionAPIClient';
 export * from './IQuestionAPIClient';
-export * from './ITeamAPIClient';
 export * from './ITeamAnswerAPIClient';
+export * from './ITeamAPIClient';
 export * from './ITeamMemberAPIClient';
