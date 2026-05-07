@@ -71,12 +71,12 @@ export default function DiscussAnswerCard({
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
       {correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <Typography variant="textLabel"> Correct Answer </Typography>
+          <Typography variant="h1" style={{color: theme.palette.designSystem.surface.play}}> Correct Answer </Typography>
         </Box>
       )}
       {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && answerStatus !== AnswerState.OTHER && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <Typography variant="textLabel">Incorrect Answer</Typography>
+          <Typography variant="h1" style={{color: theme.palette.designSystem.surface.play}}>Incorrect Answer</Typography>
           {answerStatus === AnswerState.SELECTED &&(
             <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>)}
         </Box>
@@ -107,7 +107,7 @@ export default function DiscussAnswerCard({
         )}
          {(currentState === GameSessionState.PHASE_2_DISCUSS) &&
             <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '8px'}}>
-              <Typography sx={{paddingTop: '16px'}}>
+              <Typography variant="body1" sx={{paddingTop: '16px'}}>
                 {answerStatus !== AnswerState.OTHER ? 'Players who answered this way' : 'Players who answered something else'}
               </Typography>
                 <BarContainer>

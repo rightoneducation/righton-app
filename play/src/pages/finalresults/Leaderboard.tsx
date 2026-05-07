@@ -90,8 +90,6 @@ export default function Leaderboard({
         ref={containerRef}
         style={{ height: `${subContainerHeight}px` }}
       >
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
         <BodyContentAreaLeaderboardStyled
           container
           style={{ height: `${subContainerHeight}px` }}

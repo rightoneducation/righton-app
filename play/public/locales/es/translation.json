@@ -57,8 +57,8 @@
       "phase2start": "Respuesta Explicaciones",
       "phase1results": "Resultados de la Fase 1",
       "phase2results": "Resultados de la Fase 2",
-      "leaderboard": "Clasificación Final",
-      "finalresults": "Tabla de Posiciones",
+      "leaderboard": "Los 5 mejores jugadores actuales",
+      "finalresults": "Los 5 mejores jugadores",
       "finished": "Responde la Pregunta",
       "correct": "Correcta!",
       "incorrect": "¡Buen Intento!"
@@ -92,7 +92,9 @@
       "hintcardtitle": "Dar una pista (opcional)",
       "hintcarddescriptiondefault": "¿Podrías darle una pista a alguien que haya cometido este error?",
       "hintcarddescriptionupgrade": "¿Qué consejo le darías a tu yo del pasado para evitar este error?",
-      "hintcardplaceholder": "Introduce tu explicación..."
+      "hintcardplaceholder1": "Recuerda...",
+      "hintcardplaceholder2": "No olvides...",
+      "hintcardplaceholder3": "Comprueba que..."
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
@@ -115,11 +117,12 @@
   },
   "finalresults": {
     "congrats": {
-      "title": "Has ganado un total de",
-      "points": "puntos",
-      "top5": "¡Felicidades! \n ¡Estás entre los 5 primeros!",
-      "greatjob": "¡Gran trabajo!",
-      "button": "Ver tabla de posiciones"
+      "title": "¡Felicidades!",
+      "points1": "Has ganado ",
+      "points2": " puntos",
+      "top5": "¡Estás entre los 5 mejores!",
+      "greatjob": "¡Buen trabajo!",
+      "button": "Ver clasificación"
     }
   },
   "error": {

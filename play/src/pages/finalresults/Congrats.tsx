@@ -68,7 +68,7 @@ export default function Congrats({
       <StackContainer spacing={3}>
         <Box style={{ zIndex: 1 }}>
           <Typography
-            variant="h1"
+            variant="h0"
             sx={{
               textAlign: 'center',
               paddingTop: `${theme.sizing.largePadding}px`,
@@ -77,14 +77,13 @@ export default function Congrats({
             {t('finalresults.congrats.title')}
           </Typography>
           <Typography
-            variant="h1"
+            variant="h2"
             sx={{
-              fontSize: '36px',
               textAlign: 'center',
               paddingTop: `${theme.sizing.smallPadding}px`,
             }}
           >
-            {`${score} ${t('finalresults.congrats.points')}`}
+            {` ${t('finalresults.congrats.points1')} ${score} ${t('finalresults.congrats.points2')}`}
           </Typography>
         </Box>
         <Stack
@@ -99,13 +98,13 @@ export default function Congrats({
           <SignCard>
             {leader ? (
               <Typography
-                variant="h2"
+                variant="h1"
                 sx={{ textAlign: 'center', whiteSpace: 'pre-wrap' }}
               >
                 {t('finalresults.congrats.top5')}
               </Typography>
             ) : (
-              <Typography variant="h6" sx={{ textAlign: 'center' }}>
+              <Typography variant="h1" sx={{ textAlign: 'center' }}>
                 {t('finalresults.congrats.greatjob')}
               </Typography>
             )}

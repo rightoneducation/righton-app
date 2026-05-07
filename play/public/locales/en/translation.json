@@ -60,8 +60,8 @@
       "phase2start": "Answer Explanations",
       "phase1results": "Phase 1 Results",
       "phase2results": "Phase 2 Results",
-      "leaderboard": "Leaderboard",
-      "finalresults": "Final Leaderboard",
+      "leaderboard": "Current Top 5 Players",
+      "finalresults": "Top 5 Players",
       "finished": "Answer the Question",
       "correct": "Correct!",
       "incorrect": "Nice Try!"
@@ -104,7 +104,9 @@
       "hintcardtitle": "Share a hint",
       "hintcarddescriptiondefault": "What hint would you give a friend to avoid this mistake?",
       "hintcarddescriptionupgrade": "What hint would you give your past self to avoid this mistake?",
-      "hintcardplaceholder": "Type your hint here"
+      "hintcardplaceholder1": "Remeber to...",
+      "hintcardplaceholder2": "Don't forget to...",
+      "hintcardplaceholder3": "Check that..."
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answers",
@@ -127,9 +129,10 @@
   },
   "finalresults": {
     "congrats": {
-      "title": "You've earned a total of",
-      "points": "points",
-      "top5": "Congratulations! \n You are in the Top 5!",
+      "title": "Congrats!",
+      "points1": "You earned ",
+      "points2": " points",
+      "top5": "You're in the Top 5!",
       "greatjob": "Great job!",
       "button": "View leaderboard"
     }

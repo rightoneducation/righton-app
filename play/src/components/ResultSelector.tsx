@@ -101,7 +101,7 @@ export default function ResultSelector({
           </Typography>
         )}
         <Typography
-          variant="h2"
+          variant="textLabel"
           sx={{
             paddingLeft: `${theme.sizing.smallPadding}px`,
             paddingRight: `${theme.sizing.largePadding}px`,

@@ -22,13 +22,13 @@ export default function CustomLabel(props: any) {
               y={labelY}
               text={`${datum.letterCode}`}
               style={{
-                fontSize: 24,
+                fontSize: 20,
                 fill: `${datum.fill}`,
                 fontWeight: 700
               }}
             />
           )}    
-          <text x={x} y={y} style={{ fontSize: '16px', fill: 'black', textAnchor: 'middle', dominantBaseline: 'middle' }}>
+          <text x={x} y={y} style={{ fontSize: '12px', fill: 'black', textAnchor: 'middle', dominantBaseline: 'middle' }}>
             {datum.percentage} 
           </text>
           { datum.fill === '#6F9E3C' &&
