@@ -20,8 +20,6 @@ export default styled(TextField)(({ theme }) => ({
     },
     '&.Mui-focused': {
       border: `2px solid ${theme.palette.primary.darkGrey}`,
-      outline: `2px solid ${theme.palette.primary.extraDarkGrey}`,
-      outlineOffset: '1px',
       backgroundColor: 'white',
     },
   },

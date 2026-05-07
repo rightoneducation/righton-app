@@ -170,8 +170,8 @@ export default function OpenAnswerCard({
             variant="filled"
             autoComplete="off"
             multiline
-            minRows={2}
-            maxRows={2}
+            minRows={3}
+            maxRows={3}
             placeholder={t('gameinprogress.chooseanswer.openanswercardplaceholder') ?? ''}
             onChange={handleEditorContentsChange}
             value={editorContents}

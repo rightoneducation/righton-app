@@ -17,7 +17,7 @@ const ScorePill = styled('div', {
   width: '58px',
   height: '22px',
   borderRadius: '23px',
-  background: currentState === GameSessionState.PHASE_1_DISCUSS ? `${theme.palette.primary.altHighlightGradient}` : `${theme.palette.primary.highlightGradient}`,
+  background: currentState === GameSessionState.PHASE_1_DISCUSS ? `${theme.palette.primary.altHighlightGradient}` : `${theme.palette.designSystem.surface.deepPurple}`,
   zIndex: 2,
 }));
 

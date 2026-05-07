@@ -222,7 +222,7 @@ export default function HintCard({
             variant="filled"
             autoComplete="off"
             multiline
-            minRows={3}
+            minRows={8}
             maxRows={8}
             disabled={isHintSubmitted}
             placeholder={hintPlaceholderText}

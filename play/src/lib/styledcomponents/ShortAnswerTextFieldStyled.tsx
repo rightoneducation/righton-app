@@ -3,10 +3,10 @@ import { TextField } from '@mui/material';
 
 export default styled(TextField)(({ theme }) => ({
   '& .MuiFilledInput-root': {
-    borderRadius: 5,
+    borderRadius: 4,
     overflow: 'hidden',
     backgroundColor: 'white',
-    border: `1px solid ${theme.palette.primary.darkGrey}`,
+    border: `2px solid ${theme.palette.primary.darkGrey}`,
     width: 'auto',
     transition: theme.transitions.create([
       'border-color',
@@ -17,7 +17,7 @@ export default styled(TextField)(({ theme }) => ({
       backgroundColor: 'white',
     },
     '&.Mui-focused': {
-      border: `1px solid ${theme.palette.primary.darkGrey}`,
+      border: `2px solid ${theme.palette.primary.darkGrey}`,
       backgroundColor: 'white',
     },
   },

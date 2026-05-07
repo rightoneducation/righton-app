@@ -90,6 +90,7 @@ const designSystemColors = {
     lightPink: '#FF2E96', // use case: header text
     coralPink: '#FF3A6A', // use case: header text
     coolBlue: '#0076AA', // use case: accent list text
+    deepPurple: '#3400A8', // use case: phase 2 new score pill
   },
   status: {
     correct: '#EBFFDA', // use case: correct
@@ -112,6 +113,9 @@ const designSystemColors = {
     website: {
       cottonCandy: 'linear-gradient(180deg, #F87CE0 0%, #7EBBEB 100%)', // use case: website
       darkPurple: 'linear-gradient(180deg, #4700B2 0%, #5A257D 100%)', // use case: website
+    },
+    play: {
+      newScore: 'linear-gradient(170deg, #EB147C 0%, #22B851 100%)', // use case: score indicator new points pill (10deg counter-clockwise from top→bottom)
     },
   },
 };
