@@ -1,10 +1,8 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
-import SelectedAnswer from '../img/SelectedAnswer.svg';
 import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
 import { AnswerState } from '../lib/PlayModels';
 
@@ -24,9 +22,12 @@ const AnswerSelectorDefault = styled(Button, {
   alignItems: 'center',
   textTransform: 'none',
   border: `1px solid ${theme.palette.primary.darkGrey}`,
-  backgroundColor: isSubmitted
-    ? `${theme.palette.primary.lightGrey}`
-    : `${theme.palette.primary.main}`,
+  backgroundColor: `${theme.palette.primary.main}`,
+  '&:hover': {
+    border: !isSubmitted
+      ? `1px solid ${theme.palette.designSystem.surface.coolBlue}`
+      : `1px solid ${theme.palette.primary.darkGrey}`,
+  },
 }));
 
 const AnswerSelectorCorrect = styled(AnswerSelectorDefault)(({ theme }) => ({
@@ -37,12 +38,20 @@ const AnswerSelectorCorrect = styled(AnswerSelectorDefault)(({ theme }) => ({
 const AnswerSelectorSelected = styled(AnswerSelectorDefault, {
   shouldForwardProp: (prop) => prop !== 'isSubmitted',
 })(({ isSubmitted, theme }) => ({
-  border: isSubmitted
-    ? `1px solid ${theme.palette.primary.blue}`
-    : `2px solid ${theme.palette.primary.blue}`,
-  backgroundColor: isSubmitted
-    ? `${theme.palette.primary.lightGrey}`
+  border: !isSubmitted
+    ? `1px solid ${theme.palette.designSystem.surface.coolBlue}`
+    : `1px solid ${theme.palette.primary.darkGrey}`,
+  backgroundColor: !isSubmitted
+    ? alpha(theme.palette.designSystem.surface.coolBlue, 0.1)
     : `${theme.palette.primary.main}`,
+  '&:hover': {
+    border: !isSubmitted
+      ? `1px solid ${theme.palette.designSystem.surface.coolBlue}`
+      : `1px solid ${theme.palette.primary.darkGrey}`,
+    backgroundColor: !isSubmitted
+      ? alpha(theme.palette.designSystem.surface.coolBlue, 0.1)
+      : `${theme.palette.primary.main}`,
+  },
 }));
 
 interface AnswerSelectorComponentProps {
@@ -62,30 +71,6 @@ export default function AnswerSelector({
 }: AnswerSelectorComponentProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
-  const imageMap = {
-    [AnswerState.DEFAULT]: UnselectedAnswerImage,
-    [AnswerState.CORRECT]: CorrectAnswerImage,
-    [AnswerState.SELECTED]: SelectedAnswer,
-    [AnswerState.PREVIOUS]: SelectedAnswer,
-    [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
-    [AnswerState.OTHER]: UnselectedAnswerImage
-  };
-
-  const selectorImage = [
-    <img
-      src={imageMap[answerStatus]}
-      key={uuidv4()}
-      style={{
-        position: 'absolute',
-        right: isSubmitted ? `17px` : `16px`,
-        width: `16px`,
-        height: `16px`,
-        paddingTop: '2px',
-        opacity: isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
-      }}
-      alt="SelectedAnswerImage"
-    />,
-  ];
 
   const buttonContents = (
     <>
@@ -114,9 +99,6 @@ export default function AnswerSelector({
       >
         {answerText}
       </Typography>
-      {!isSubmitted
-        ? selectorImage
-        : answerStatus !== AnswerState.DEFAULT && selectorImage}
     </>
   );
 

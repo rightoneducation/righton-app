@@ -9,13 +9,28 @@ export default styled(Stack)({
   position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
   width: '100%',
   touchAction: 'none',
-  backgroundImage: `
-    linear-gradient(180deg, rgba(42, 18, 79, 0.95), rgba(96, 41, 181, 0.95)),
-    url(${mathSymbolsBackground})
-  `,
+  isolation: 'isolate',
+  backgroundImage: 'linear-gradient(180deg, #2A124F, #6029B5)',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'bottom', // Adjust as needed
-  backgroundSize: `100% 100%, auto 100%`,
+  backgroundSize: `100% 100%`,
   backgroundAttachment: 'fixed',
   zIndex: 0,
+  // '&::before': {
+  //   content: '""',
+  //   position: 'absolute',
+  //   inset: 0,
+  //   zIndex: 0,
+  //   backgroundImage: `url(${mathSymbolsBackground})`,
+  //   backgroundRepeat: 'no-repeat',
+  //   backgroundPosition: 'bottom',
+  //   backgroundSize: 'auto 100%',
+  //   backgroundAttachment: 'fixed',
+  //   opacity: 0.25,
+  //   pointerEvents: 'none',
+  // },
+  // '& > *': {
+  //   position: 'relative',
+  //   zIndex: 1,
+  // },
 });
