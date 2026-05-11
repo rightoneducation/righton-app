@@ -1,11 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   GameSessionState,
   ITeam,
   isNullOrUndefined,
   ModelHelper
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
 import { Box } from '@mui/material';
 import HeaderContent from '../../components/HeaderContent';
 import StackContainerStyled from '../../lib/styledcomponents/layout/StackContainerStyled';
@@ -15,6 +14,9 @@ import { BodyContentAreaLeaderboardStyled } from '../../lib/styledcomponents/lay
 import 'swiper/css';
 import 'swiper/css/pagination';
 import LeaderboardSelector, { LeaderboardOuterContainer } from '../../components/LeaderboardSelector';
+
+const CONTAINER_DURATION_MS = 500;
+const GROUP_STAGGER_MS = 220;
 
 interface LeaderboardProps {
   teams?: ITeam[];
@@ -28,7 +30,6 @@ export default function Leaderboard({
   const sortedTeams: ITeam[] = useRef<ITeam[]>(
     !isNullOrUndefined(teams) ? ModelHelper.teamSorter(teams, 5).filter((team) => team.score > 0) : []
   ).current;
-
 
   const { current: avatarNumbers } = useRef<number[]>(
     sortedTeams
@@ -64,6 +65,28 @@ export default function Leaderboard({
       });
     });
 
+  const [containerVisible, setContainerVisible] = useState(false);
+  const [visibleGroups, setVisibleGroups] = useState<boolean[]>(
+    tieGroups.map((_, i) => i === 0)
+  );
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    timers.push(setTimeout(() => setContainerVisible(true), 50));
+
+    tieGroups.forEach((_, i) => {
+      if (i === 0) return;
+      timers.push(
+        setTimeout(() => {
+          setVisibleGroups((prev) => prev.map((v, idx) => (idx === i ? true : v)));
+        }, CONTAINER_DURATION_MS + (i - 1) * GROUP_STAGGER_MS)
+      );
+    });
+
+    return () => timers.forEach(clearTimeout);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <StackContainerStyled
       direction="column"
@@ -83,11 +106,9 @@ export default function Leaderboard({
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
-        <BodyContentAreaLeaderboardStyled
-          container
-        >
+        <BodyContentAreaLeaderboardStyled container>
           <Box
-            sx={{
+            style={{
               width: '100%',
               maxWidth: '340px',
               flexShrink: 0,
@@ -97,22 +118,38 @@ export default function Leaderboard({
               padding: '16px',
               background: 'rgba(255, 255, 255, 0.3)',
               borderRadius: '8px',
+              clipPath: containerVisible
+                ? 'inset(0% 0 0 0 round 8px)'
+                : 'inset(100% 0 0 0 round 8px)',
+              transition: `clip-path ${CONTAINER_DURATION_MS}ms ease-out`,
             }}
           >
-            {tieGroups.map((group) => (
-              <LeaderboardOuterContainer key={uuidv4()}>
-                {group.map((entry, i) => (
-                  <LeaderboardSelector
-                    key={uuidv4()}
-                    teamName={entry.team.name ?? 'Team One'}
-                    teamAvatar={entry.avatarIndex}
-                    teamScore={entry.team.score}
-                    position={entry.rank}
-                    cardBorderRadius={entry.cardBorderRadius}
-                    showPosition={i === 0}
-                  />
-                ))}
-              </LeaderboardOuterContainer>
+            {tieGroups.map((group, groupIndex) => (
+              <div
+                key={group[0].rank}
+                style={groupIndex === 0 ? {
+                  transform: containerVisible ? 'translateY(0)' : 'translateY(80vh)',
+                  transition: `transform ${CONTAINER_DURATION_MS}ms ease-out`,
+                } : {
+                  opacity: visibleGroups[groupIndex] ? 1 : 0,
+                  transform: visibleGroups[groupIndex] ? 'scale(1)' : 'scale(0.3)',
+                  transition: 'opacity 0.5s ease-out, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                }}
+              >
+                <LeaderboardOuterContainer>
+                  {group.map((entry, i) => (
+                    <LeaderboardSelector
+                      key={`${entry.rank}-${entry.avatarIndex}`}
+                      teamName={entry.team.name ?? 'Team One'}
+                      teamAvatar={entry.avatarIndex}
+                      teamScore={entry.team.score}
+                      position={entry.rank}
+                      cardBorderRadius={entry.cardBorderRadius}
+                      showPosition={i === 0}
+                    />
+                  ))}
+                </LeaderboardOuterContainer>
+              </div>
             ))}
           </Box>
         </BodyContentAreaLeaderboardStyled>
