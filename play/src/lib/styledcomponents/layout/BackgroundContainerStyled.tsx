@@ -15,20 +15,22 @@ export default styled(Stack)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   touchAction: 'none',
-  // '&::before': {
-  //   content: '""',
-  //   position: 'absolute',
-  //   inset: 0,
-  //   zIndex: 0,
-  //   backgroundImage: `url(${mathSymbolsBackground})`,
-  //   backgroundRepeat: 'no-repeat',
-  //   backgroundPosition: 'bottom',
-  //   backgroundSize: 'auto 100%',
-  //   backgroundAttachment: 'fixed',
-  //   pointerEvents: 'none',
-  // },
-  // '& > *': {
-  //   position: 'relative',
-  //   zIndex: 1,
-  // },
+  overscrollBehavior: 'none',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    zIndex: 0,
+    backgroundImage: `url(${mathSymbolsBackground})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'bottom',
+    backgroundSize: 'auto 100%',
+    backgroundAttachment: 'fixed',
+    pointerEvents: 'none',
+    opacity: '10%'
+  },
+  '& > *': {
+    position: 'relative',
+    zIndex: 1,
+  },
 }));

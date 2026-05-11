@@ -8,7 +8,7 @@ export default styled(Container)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   padding: '8px',
-  '--swiper-pagination-color': `${theme.palette.primary.highlightGradient}`,
+  '--swiper-pagination-color': `${theme.palette.designSystem.surface.pink}`,
   '--swiper-pagination-bullet-inactive-color': `${theme.palette.primary.darkGrey}`,
   '--swiper-pagination-bullet-inactive-opacity': '1',
   '--swiper-pagination-bullet-size': '10px',

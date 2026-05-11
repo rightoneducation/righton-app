@@ -21,7 +21,7 @@ const TimerBar = styled(LinearProgress)(({ theme }) => ({
   width: `calc(100% - ${theme.sizing.mediumPadding}px)`,
   backgroundColor: theme.palette.primary.main,
   '& .MuiLinearProgress-bar': {
-    background: `linear-gradient(90deg, #349E15 0%, #7DC642 100%)`,
+    background: theme.palette.primary.timerGradient,
   },
 }));
 

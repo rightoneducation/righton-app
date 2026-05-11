@@ -118,7 +118,7 @@ export default function DiscussAnswerCard({
                       borderRadius: '4px',
                       backgroundColor: theme.palette.primary.progressBarBackgroundColor,
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: answerStatus === AnswerState.SELECTED ? theme.palette.primary.progressBarSelectedColor : theme.palette.primary.darkPurple
+                        backgroundColor: answerStatus === AnswerState.SELECTED ? theme.palette.primary.progressBarSelectedColor : theme.palette.designSystem.surface.deepPurple
                       }
                     }}
                     value={percent}

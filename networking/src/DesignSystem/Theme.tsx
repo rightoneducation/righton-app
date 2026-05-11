@@ -13,6 +13,7 @@ const splashScreenBackgroundGradient =
 const radialGradient =
   'radial-gradient(circle 500px at 50% 60%, #7D64C7 13.54%, #514187 51.56%, #3A2D66 77.6%, #352960 88.02%, #312759 100%)';
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
+const timerGradient = 'linear-gradient(90deg, #90E8FE 0%, #36D7F7 100%)'; // timer bar
 const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
@@ -291,6 +292,7 @@ declare module '@mui/material/styles' {
     radialGradient: string;
     highlightGradient: string;
     altHighlightGradient: string;
+    timerGradient: string;
     red: string;
     green: string;
     darkPurple: string;
@@ -313,6 +315,7 @@ declare module '@mui/material/styles' {
     radialGradient?: string;
     highlightGradient?: string;
     altHighlightGradient?: string;
+    timerGradient?: string;
     red?: string;
     green?: string;
     darkPurple?: string;
@@ -411,6 +414,7 @@ const RightOnTheme = createTheme({
       radialGradient,
       highlightGradient,
       altHighlightGradient,
+      timerGradient,
       red: redColor,
       green: greenColor,
       darkPurple: darkPurpleColor,

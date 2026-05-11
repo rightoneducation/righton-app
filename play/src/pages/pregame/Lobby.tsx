@@ -41,13 +41,11 @@ export default function Lobby({
             }}
           >
             <Typography
-              variant="h1"
+              variant="title"
               sx={{
                 position: 'absolute',
                 alignItems: 'center',
-                fontSize: '54px',
                 textAlign: 'center',
-                lineHeight: `${theme.sizing.extraLargePadding}px`,
               }}
             >
               {t('lobby.title')}
