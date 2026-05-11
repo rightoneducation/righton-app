@@ -8,15 +8,12 @@ export default styled(Stack)({
   height: '100%',
   position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
   width: '100%',
-  touchAction: 'none',
   isolation: 'isolate',
   backgroundImage: 'linear-gradient(180deg, #2A124F, #6029B5)',
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'bottom', // Adjust as needed
+  backgroundPosition: 'bottom',
   backgroundSize: `100% 100%`,
-  backgroundAttachment: 'fixed',
   zIndex: 0,
-  overscrollBehavior: 'none',
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -25,8 +22,7 @@ export default styled(Stack)({
     backgroundImage: `url(${mathSymbolsBackground})`,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'bottom',
-    backgroundSize: 'auto 100%',
-    backgroundAttachment: 'fixed',
+    backgroundSize: 'auto',
     pointerEvents: 'none',
     opacity: '10%',
   },

@@ -29,10 +29,10 @@ export default function AnswerphaseOneResponsesGraph({
   const assignColor = (p1response: IHostTeamAnswersResponse, response: IHostTeamAnswersResponse | null) => {
     if (p1response){
       if (p1response.isCorrect)
-        return '#6F9E3C';
+        return theme.palette.designSystem.foreground.green;
       if(response){
         if (response.teams.find((team) => team === currentTeam.name)){
-          return '#19BCFB';
+          return theme.palette.designSystem.surface.deepPurple;
         }
         if (response.multiChoiceCharacter === '…')
           return '#EAE5F5';
@@ -47,13 +47,16 @@ export default function AnswerphaseOneResponsesGraph({
   }
   const adjustedResponses = isShortAnswerEnabled ? [...phaseOneResponses.filter((response) => response.isSelectedMistake || response.isCorrect), ...otherResponsesTrimmed] : phaseOneResponses;
   
-  const data = adjustedResponses.reduce<{ letterCode: string; count: number; percentage: string; fill: string }[]>((acc, response, index) => {
+  const data = adjustedResponses.reduce<{ letterCode: string; count: number; percentage: string; fill: string; isCorrect: boolean; isSelected: boolean }[]>((acc, response) => {
     if (response.count !== 0) {
+      const p2Response = phaseTwoResponses.find((res) => res.rawAnswer === response.rawAnswer);
       acc.push({
         letterCode: assignLetterCode(response, phaseTwoResponses),
         count: response.count,
         percentage: `${Math.floor((response.count / totalAnswers) * 100)}%`,
-        fill: (!isShortAnswerEnabled || (response.isSelectedMistake || response.isCorrect)) ? assignColor(response, phaseTwoResponses.find((res) => res.rawAnswer === response.rawAnswer) ?? null) : "#B5B5B5"
+        fill: (!isShortAnswerEnabled || (response.isSelectedMistake || response.isCorrect)) ? assignColor(response, p2Response ?? null) : "#B5B5B5",
+        isCorrect: response.isCorrect,
+        isSelected: !!(p2Response?.teams.find((team) => team === currentTeam.name)),
       });
     }
     return acc;
@@ -76,6 +79,9 @@ export default function AnswerphaseOneResponsesGraph({
       style={{
         data: {
           fill: ({ datum }) => datum.fill,
+          stroke: ({ datum }) => datum.isSelected ? theme.palette.designSystem.foreground.lightPurple : 'transparent',
+          strokeWidth: ({ datum }) => datum.isSelected ? 2 : 0,
+          strokeLinejoin: 'round',
         },
         labels: {
           fontSize: 18, fill: "#384466"

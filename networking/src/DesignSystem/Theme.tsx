@@ -78,6 +78,7 @@ const designSystemColors = {
     plum: '#B21F5B', // use case: leaderboard top 6
     mustard: '#F69F40', // use case: leaderboard top 6
     skyBlue: '#1B8DD2', // use case: leaderboard top 6
+    lightPurple: '#B59AEB', // use case: selected answer border - donut chart
   },
   surface: {
     play: '#1B376F', // use case: text on card

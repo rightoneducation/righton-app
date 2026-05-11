@@ -50,8 +50,6 @@ export default function FinalResultsContainer({
         <Leaderboard
           teams={teams}
           currentState={currentState}
-          teamAvatar={selectedAvatar}
-          teamId={teamId}
         />
       );
     case FinalResultsState.CONGRATS:

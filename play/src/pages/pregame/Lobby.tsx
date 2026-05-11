@@ -64,8 +64,6 @@ export default function Lobby({
         <Leaderboard
           teams={teams}
           currentState={currentState!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamAvatar={teamAvatar!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamId={teamId!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
         />
       );
     default:
