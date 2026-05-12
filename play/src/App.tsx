@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -6,7 +6,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
-import { useAPIClients, Environment, AppType, IEduDataAPIClient, RightOnTheme } from '@righton/networking';
+import { useAPIClients, Environment, AppType, RightOnTheme } from '@righton/networking';
 import {
   PregameContainer,
   PregameLocalModelLoader,
@@ -16,17 +16,14 @@ import {
   LocalModelLoader,
 } from './containers/GameInProgressContainer';
 import AppErrorBoundary from './components/AppErrorBoundary';
-import DevTemplate from './pages/DevTemplate';
 
 function RedirectToPlayIfMissing() {
   window.location.href = 'http://play.rightoneducation.com/';
   return null;
 }
 
-const DEV_TEMPLATE = true;
-
 function App() {
-  const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.PLAY);
+  const { apiClients } = useAPIClients(Environment.Developing, AppType.PLAY);
 
   const router = useMemo(() => {
     if (!apiClients) return null;
@@ -48,16 +45,6 @@ function App() {
       )
     );
   }, [apiClients]);
-
-  if (DEV_TEMPLATE) {
-    return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={RightOnTheme}>
-          <DevTemplate />
-        </ThemeProvider>
-      </StyledEngineProvider>
-    );
-  }
 
   return (
     <StyledEngineProvider injectFirst>

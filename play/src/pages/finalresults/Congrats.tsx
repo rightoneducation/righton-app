@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { PlayButtonBlock, ButtonType } from '@righton/networking';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import { monsterMap, FinalResultsState } from '../../lib/PlayModels';
+import WavingMonster from '../../components/WavingMonster';
 import Podium from '../../img/Podium.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -62,10 +63,24 @@ export default function Congrats({
 }: CongratsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [animationDone, setAnimationDone] = useState(false);
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer spacing={3}>
+      <style>{`@keyframes contentFadeIn { from { opacity: 0; } to { opacity: 1; } }`}</style>
+      {!animationDone && (
+        <WavingMonster
+          avatarIndex={selectedAvatar}
+          onComplete={() => setAnimationDone(true)}
+        />
+      )}
+      <StackContainer
+        spacing={3}
+        style={{
+          opacity: animationDone ? 1 : 0,
+          animation: animationDone ? 'contentFadeIn 0.5s ease-out both' : 'none',
+        }}
+      >
         <Box style={{ zIndex: 1 }}>
           <Typography
             variant="h0"
