@@ -16,14 +16,11 @@ import {
   LocalModelLoader,
 } from './containers/GameInProgressContainer';
 import AppErrorBoundary from './components/AppErrorBoundary';
-import DevTemplate from './pages/DevTemplate';
 
 function RedirectToPlayIfMissing() {
   window.location.href = 'http://play.rightoneducation.com/';
   return null;
 }
-
-const DEV_TEMPLATE = true;
 
 function App() {
   const { apiClients } = useAPIClients(Environment.Developing, AppType.PLAY);
@@ -48,16 +45,6 @@ function App() {
       )
     );
   }, [apiClients]);
-
-  if (DEV_TEMPLATE) {
-    return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={RightOnTheme}>
-          <DevTemplate />
-        </ThemeProvider>
-      </StyledEngineProvider>
-    );
-  }
 
   return (
     <StyledEngineProvider injectFirst>

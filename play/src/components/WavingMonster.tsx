@@ -35,7 +35,7 @@ const MONSTERS: MonsterConfig[] = [
   { id: 5, body: monster5Body, arm: monster5Arm, bodyW: 326, bodyH: 376, armLeft: 60,  armTop: 188, transformOrigin: 'center top',   armRestAngle:  48, armWaveAmp: -36 },
 ];
 
-const DURATION = '5s';
+const DURATION = '3s';
 
 const armWaveKeyframes = (m: MonsterConfig) => `
   @keyframes armWave${m.id} {
@@ -50,7 +50,7 @@ const armWaveKeyframes = (m: MonsterConfig) => `
 const styles = `
   @keyframes monsterSequence {
     0%   { opacity: 0; transform: translateX(0);    animation-timing-function: ease-out; }
-    10%  { opacity: 1; transform: translateX(0);    animation-timing-function: linear;   }
+    17%  { opacity: 1; transform: translateX(0);    animation-timing-function: linear;   }
     80%  { opacity: 1; transform: translateX(0);    animation-timing-function: ease-in;  }
     100% { opacity: 1; transform: translateX(120%); }
   }
