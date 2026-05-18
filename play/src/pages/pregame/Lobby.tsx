@@ -69,7 +69,7 @@ export default function Lobby({
     default:
       return (
         <BackgroundContainerStyledTouchActionOverride>
-          <HowToPlay mode={mode} />
+          <HowToPlay />
         </BackgroundContainerStyledTouchActionOverride>
       );
   }

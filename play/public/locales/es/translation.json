@@ -33,12 +33,12 @@
     "title": "Unirse al juego..."
   },
   "howtoplay": {
-    "title": "¡Cómo jugar!",
+    "title": "Cómo jugar",
     "slide0": "Lea la pregunta de opción múltiple",
     "slide1": "Gana puntos eligiendo la respuesta correcta...",
     "slide2": "Leer soluciones paso a paso",
     "slide3": "¡Gana más puntos adivinando la respuesta incorrecta más popular!",
-    "slide4": "¡La mayor cantidad de puntos totales gana!",
+    "slide4": "¡La puntuación total más alta gana!",
     "description": "Esperando a que comience el juego...",
     "loading": "Obteniendo sesión de juego..."
   },

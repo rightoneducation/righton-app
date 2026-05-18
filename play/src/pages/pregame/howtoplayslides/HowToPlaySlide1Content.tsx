@@ -44,7 +44,7 @@ export default function HowToPlaySlide1Content() {
         variant="textLabel"
         sx={{
           textAlign: 'center',
-          paddingTop: `${theme.sizing.mediumPadding}px`,
+          paddingTop: '54px',
           width: '250px',
         }}
       >

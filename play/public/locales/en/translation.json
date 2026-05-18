@@ -36,12 +36,12 @@
     "title": "Joining Game..."
   },
   "howtoplay": {
-    "title": "How to Play!",
+    "title": "How to Play",
     "slide0": "Read the question",
     "slide1": "Earn points by answering correctly",
     "slide2": "Read step-by-step solutions",
     "slide3": "Earn more points by picking the most popular incorrect answer",
-    "slide4": "The most total points wins",
+    "slide4": "Highest total score wins",
     "description": "Waiting for the game to start...",
     "loading": "Getting game session..."
   },
