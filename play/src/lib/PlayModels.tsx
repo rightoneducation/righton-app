@@ -114,6 +114,20 @@ export enum ErrorType {
 }
 
 /**
+ * Enum that holds the various screen sizes for the game
+ * @enum ScreenSize
+ * @param {string} SMALL - small screen size
+ * @param {string} MEDIUM - medium screen size
+ * @param {string} LARGE - large screen size
+ */
+
+export enum ScreenSize {
+  SMALL,
+  MEDIUM,
+  LARGE,
+}
+
+/**
  * Type interface that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {number} currentTime: - current time (used to ignore saved local storage after a certain interval)
  * @param {string} gameSessionId - id of game session
