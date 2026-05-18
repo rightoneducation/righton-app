@@ -12,7 +12,7 @@
       "button2": "No"
     },
     "gamecode": {
-      "title": "Enter Game Code",
+      "title": "Enter game code",
       "button": "Join",
       "buttonJoining": "Joining...",
       "error1": "Unable to join this game.",
@@ -20,15 +20,15 @@
       "error3": "A player with that name has already joined the game."
     },
     "playername": {
-      "title": "Enter Your Name",
-      "firstnamedefault": "First Name",
-      "lastnamedefault": "Last Name",
-      "button": "Enter",
-      "description1": "Type in both your first and last name to enter the game.",
-      "description2": "This will be used to identify you only during the game, and will not be stored."
+      "title": "Enter your name",
+      "firstnamedefault": "First name",
+      "lastnamedefault": "Last name",
+      "button": "Join",
+      "description1": "To enter the game, type in both your first and last name.",
+      "description2": "This will be used to identify you during the game."
     },
     "selectavatar": {
-      "title": "Choose Your Avatar!",
+      "title": "Choose your avatar",
       "button": "Choose"
     }
   },

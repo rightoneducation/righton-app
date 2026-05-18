@@ -27,8 +27,8 @@ type ButtonContentMapProps = {
 
 export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.START]: { shape: ButtonShape.INTRO },
-  [ButtonType.JOIN]: { shape: ButtonShape.INTRO, width: '135px' },
-  [ButtonType.JOINING]: { shape: ButtonShape.INTRO, width: '135px' },
+  [ButtonType.JOIN]: { shape: ButtonShape.INTRO },
+  [ButtonType.JOINING]: { shape: ButtonShape.INTRO },
   [ButtonType.REJOIN]: { shape: ButtonShape.INTRO },
   [ButtonType.DONTREJOIN]: { shape: ButtonShape.INTRO },
   [ButtonType.RETRY]: { shape: ButtonShape.INTRO },

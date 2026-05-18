@@ -11,8 +11,6 @@ export default styled(Stack)(({ theme }) => ({
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'bottom',
   backgroundSize: `100% 100%`,
-  display: 'flex',
-  alignItems: 'center',
   '&::before': {
     content: '""',
     position: 'absolute',

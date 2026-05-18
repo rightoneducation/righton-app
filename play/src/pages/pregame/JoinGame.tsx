@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Grid, Typography, Collapse, Fade, Zoom } from '@mui/material';
+import { Stack, Box, Grid, Typography, Collapse, Fade, Zoom, useMediaQuery  } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { useTranslation } from 'react-i18next';
 import { PlayButton, ButtonType } from '@righton/networking';
 import { isNameValid } from '../../lib/HelperFunctions';
-import { InputPlaceholder } from '../../lib/PlayModels';
+import { InputPlaceholder, ScreenSize } from '../../lib/PlayModels';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import AvatarSelection from './joingamecontent/AvatarSelection';
@@ -45,7 +45,11 @@ const EnterNameHelpTriangleStyled = styled('img')(({ theme }) => ({
 const SmallDeviceHelpBox = styled(Box)(({ theme }) => ({
   width: '100%',
   backgroundColor: `rgba(255,255,255, 0.2)`,
-  padding: `${theme.sizing.extraSmallPadding}px`,
+  // padding: `${theme.sizing.extraSmallPadding}px`,
+  paddingTop: '14px',
+  paddingBottom: '14px',
+  paddingLeft: '16px',
+  paddingRight: '16px',
   borderRadius: `${theme.sizing.extraSmallPadding}px`,
   boxSizing: 'border-box',
 }));
@@ -58,27 +62,41 @@ const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 });
 
-const JoinGameFooter = styled(Box)(({ theme }) => ({
-  position: 'sticky',
-  bottom: 0,
+interface JoinGameFooterProps {
+  screenSize: ScreenSize;
+}
+
+const PADDING_BOTTOM_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '160px',
+  [ScreenSize.MEDIUM]: '0px',
+  [ScreenSize.LARGE]: '52px',
+};
+
+const JoinGameFooter = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<JoinGameFooterProps>(({ theme, screenSize }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  paddingBottom: '48px',
-  paddingTop: '40px'
+  paddingTop: screenSize === ScreenSize.MEDIUM ? '0px' : '40px',
+  paddingBottom: PADDING_BOTTOM_BY_SIZE[screenSize],
 }));
 
 interface JoinGameBodyProps {
   isSmallDevice: boolean;
   isMedDevice: boolean;
+  screenSize: ScreenSize;
 }
 
-const JoinGameBody = styled(Box)<JoinGameBodyProps>(({ theme, isSmallDevice, isMedDevice }) => ({
-  paddingTop: '24px',
-  height: '100%',
+const JoinGameBody = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSmallDevice' && prop !== 'isMedDevice' && prop !== 'screenSize',
+})<JoinGameBodyProps>(({ theme, isSmallDevice, isMedDevice, screenSize }) => ({
+  paddingTop: screenSize === ScreenSize.MEDIUM ? 0 : '24px',
+  minHeight: 0,
+  maxHeight: screenSize === ScreenSize.MEDIUM ? '462px' : undefined,
   display: 'flex',
   flexDirection: 'column',
-  flexGrow: 1,
+  flexGrow: screenSize === ScreenSize.MEDIUM ? 0 : 1,
   overflow: 'auto',
   width: (!isSmallDevice && !isMedDevice) ? '540px' : `${theme.sizing.pregameMinColumnWidth}px`,
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
@@ -90,6 +108,12 @@ const JoinGameBody = styled(Box)<JoinGameBodyProps>(({ theme, isSmallDevice, isM
   '-ms-overflow-style': 'none', // IE and Edge,
   gap: '24px'
 }));
+
+const PADDING_TOP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '80px',
+  [ScreenSize.MEDIUM]: '0px',
+  [ScreenSize.LARGE]: '52px',
+};
 
 interface JoinGameProps {
   isSmallDevice: boolean;
@@ -136,6 +160,12 @@ export default function JoinGame({
 }: JoinGameProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallScreen) screenSize = ScreenSize.SMALL;
+
   const [gameCodeValue, setGameCodeValue] = useState<string>('');
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [showHelp, setShowHelp] = useState<boolean>(false);
@@ -193,33 +223,38 @@ export default function JoinGame({
   };
 
   return (
-    <BackgroundContainerStyled>
-        <img
-          style={{
-            width: `${theme.sizing.pregameMinColumnWidth}px`,
-            height: '118px',
-            paddingTop: `${theme.sizing.extraLargePadding}px`,
-          }}
-          src={Logo}
-          alt="Question"
-        />
-        <JoinGameBody isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} style={{margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+    <BackgroundContainerStyled
+      style={
+        screenSize === ScreenSize.MEDIUM
+          ? { justifyContent: 'center', gap: '44px' }
+          : undefined
+      }
+    >
+      <img
+        style={{
+          width: `${theme.sizing.pregameMinColumnWidth}px`,
+          height: '118px',
+          paddingTop: PADDING_TOP_BY_SIZE[screenSize],
+          alignSelf: 'center',
+        }}
+        src={Logo}
+        alt="Question"
+      />
+      <JoinGameBody isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} screenSize={screenSize} style={{margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', alignSelf: 'center'}}>
           <div ref={inputRef}/>
           {/* container here to trim the spacing set by parent stack between text and input, typ */}
-          <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '8px'  }}>
+          <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px'  }}>
             <Typography variant="textLabel" sx={{ textAlign: 'center' }}>
               {t('joingame.gamecode.title')}
             </Typography>
             <InputTextFieldStyled
               data-testid="gameCode-inputtextfield"
-              fullWidth
               variant="filled"
               autoComplete="off"
               placeholder={InputPlaceholder.GAME_CODE}
               onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false)}}
               onChange={handleGameCodeChange}
               value={gameCodeValue}
-              style={{width: '100%', paddingLeft: '40px', paddingRight: '40px', boxSizing: 'border-box'}}
               InputProps={{
                 disableUnderline: true,
                 inputProps: {
@@ -251,11 +286,11 @@ export default function JoinGame({
               : <StyledTooltip
                   title={
                     <>
-                      <Typography variant="textLabel" sx={{ textAlign: 'center', paddingBottom: '8px' }}>
-                        Type in both your first and last name to enter the game.
+                      <Typography variant="textLabel" sx={{ paddingBottom: '8px' }}>
+                        {t('joingame.playername.description1')}
                       </Typography>
-                      <Typography variant="textLabel" sx={{ weight: 400, textAlign: 'center' }}>
-                        This will be used to identify you only during the game, and will not be stored.
+                      <Typography variant="textLabel" sx={{ fontWeight: 400 }}>
+                        {t('joingame.playername.description2')}
                       </Typography>
                     </>
                   }
@@ -272,16 +307,16 @@ export default function JoinGame({
             </Box>
             {isMedDevice &&
             <Collapse in={showHelp} >
-              <Box style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0'}}>
+              <Box style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0', paddingBottom: '16px'}}>
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', paddingRight: '14px', boxSizing: 'border-box', gap: 0}}>
                   <EnterNameHelpTriangleStyled src={EnterNameHelpTriangle}/>
                 </Box>
                 <SmallDeviceHelpBox>
-                  <Typography variant="textLabel" sx={{ weight: 800, textAlign: 'center', paddingBottom: '8px' }}>
-                    Type in both your first and last name to enter the game.
+                  <Typography variant="textLabel" sx={{ paddingBottom: '8px' }}>
+                    {t('joingame.playername.description1')}
                   </Typography>
-                  <Typography variant="textLabel" sx={{ weight: 400, textAlign: 'center' }}>
-                    This will be used to identify you only during the game, and will not be stored.
+                  <Typography variant="textLabel" sx={{ fontWeight: 400 }}>
+                    {t('joingame.playername.description2')}
                   </Typography>
                 </SmallDeviceHelpBox>
               </Box>
@@ -338,7 +373,7 @@ export default function JoinGame({
               </Grid>
             </Grid>
           </Box>
-          <Box style={{padding: 0, maxWidth: '250px'}}>
+          <Box>
             <PaddedContainer>
               <Collapse in={isShowCodeError}>
                 <Typography
@@ -385,9 +420,8 @@ export default function JoinGame({
               </div>
             </Fade>
           }
-        </JoinGameBody>
-
-      <JoinGameFooter>
+      </JoinGameBody>
+      <JoinGameFooter screenSize={screenSize}>
         <PlayButton
           buttonType={isJoining ? ButtonType.JOINING : ButtonType.JOIN}
           label={isJoining ? t('joingame.gamecode.buttonJoining') : t('joingame.gamecode.button')}

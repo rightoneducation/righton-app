@@ -20,12 +20,12 @@
       "title": "Introduzca su nombre",
       "firstnamedefault": "Nombre de pila",
       "lastnamedefault": "Apellido",
-      "button": "Ingresar",
-      "description1": "Escriba su nombre y apellido para ingresar al juego.",
-      "description2": "Esto se usará para identificarlo solo durante el juego y no se almacenará."
+      "button": "Unirse",
+      "description1": "Para entrar al juego, escribe tu nombre y apellido.",
+      "description2": "Esto se utilizará para identificarte durante el juego."
     },
     "selectavatar": {
-      "title": "¡Elige tu avatar!",
+      "title": "Elige tu avatar",
       "button": "Elegir"
     }
   },
