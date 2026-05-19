@@ -37,7 +37,7 @@ import {
   checkForSubmittedHintOnRejoin
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
+import { ErrorType, LocalModel, ScreenSize, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
 import { trackEvent, trackError, PlayEvent } from '../lib/analytics';
 
 interface GameInProgressProps {
@@ -99,6 +99,10 @@ export default function GameInProgress({
     return rejoinSubmittedHint;
   });
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallDevice) screenSize = ScreenSize.SMALL;
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   const answerSettings: IAnswerSettings | null = currentQuestion.answerSettings ?? null;
@@ -353,7 +357,7 @@ export default function GameInProgress({
           />
         )}
       </BodyStackContainerStyled>
-      <FooterStackContainerStyled>
+      <FooterStackContainerStyled screenSize={screenSize}>
         {isSmallDevice ? (
           <PaginationContainerStyled className="swiper-pagination-container" />
         ) : null}

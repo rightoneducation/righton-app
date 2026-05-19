@@ -1,24 +1,44 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Typography, Container } from '@mui/material';
-import { monsterMap } from '../lib/PlayModels';
+import { Typography, Container, useMediaQuery } from '@mui/material';
+import { monsterMap, ScreenSize } from '../lib/PlayModels';
 import ScoreIndicator from './ScoreIndicator';
 
-const FooterContainer = styled(Container)(({ theme }) => ({
+const PADDING_X_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '32px',
+  [ScreenSize.MEDIUM]: '24px',
+  [ScreenSize.LARGE]: '0px',
+};
+
+const MAX_WIDTH_BY_SIZE: Record<ScreenSize, string | undefined> = {
+  [ScreenSize.SMALL]: undefined,
+  [ScreenSize.MEDIUM]: undefined,
+  [ScreenSize.LARGE]: '636px',
+};
+
+interface FooterContainerProps {
+  screenSize: ScreenSize;
+}
+
+const FooterContainer = styled(Container, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<FooterContainerProps>(({ theme, screenSize }) => ({
   width: '100%',
-  maxWidth: `${theme.breakpoints.values.sm}px`,
+  maxWidth: MAX_WIDTH_BY_SIZE[screenSize],
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  paddingLeft: `${theme.sizing.smallPadding}px`,
-  paddingRight: `${theme.sizing.smallPadding}px`,
+  paddingLeft: PADDING_X_BY_SIZE[screenSize],
+  paddingRight: PADDING_X_BY_SIZE[screenSize],
 }));
 
 const FooterLeftContainer = styled(Container)({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
+  paddingLeft: 0,
+  paddingRight: 0
 });
 
 const Avatar = styled('img')({
@@ -44,9 +64,14 @@ export default function FooterContent({
   animationDelay,
 }: FooterContentProps) {
   const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallScreen) screenSize = ScreenSize.SMALL;
 
   return (
-    <FooterContainer>
+    <FooterContainer screenSize={screenSize}>
       <FooterLeftContainer>
         <Avatar src={monsterMap[avatar].icon} alt="avatar" />
         <Typography
