@@ -34,8 +34,8 @@ export default function StartPhase2({
   const theme = useTheme();
   const { t } = useTranslation();
   return (
-    <BackgroundContainerStyled data-testid="pregame-countdown">
-      <StackContainer spacing={5}>
+    <BackgroundContainerStyled data-testid="pregame-countdown" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <StackContainer spacing={3}>
         <RadialTimer
           mode={TimerMode.COUNTDOWN}
           inputColors={theme.palette.primary.radialTimerArray}
@@ -43,10 +43,10 @@ export default function StartPhase2({
           timerStartInSeconds={3}
           setIsPregameCountdown={setIsPregameCountdown}
         />
-        <TypographyStyled variant="h2">
+        <TypographyStyled variant="textLabel" style={{fontFamily: 'poppins'}}>
           {t('pregamecountdown.subtitle1')}
         </TypographyStyled>
-        <TypographyStyled variant="h2">
+        <TypographyStyled variant="h4" style={{color: '#FFF'}}>
           {t('pregamecountdown.subtitle2')}
         </TypographyStyled>
       </StackContainer>
