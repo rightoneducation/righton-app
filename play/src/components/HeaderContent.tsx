@@ -1,16 +1,34 @@
 import React from 'react';
-import { Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Typography, useMediaQuery } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
+import { ScreenSize } from '../lib/PlayModels';
 import Timer from './Timer';
 
-const HeaderContainer = styled('div')({
+const MAX_WIDTH_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '100%',
+  [ScreenSize.MEDIUM]: '326px',
+  [ScreenSize.LARGE]: '326px',
+};
+
+interface HeaderContainerProps {
+  screenSize: ScreenSize;
+}
+
+const HeaderContainer = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<HeaderContainerProps>(({ theme, screenSize }) => ({
   width: '100%',
+  maxWidth: MAX_WIDTH_BY_SIZE[screenSize],
+  paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.largePadding}px` : 0,
+  paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.largePadding}px` : 0,
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-});
+  gap: '20px',
+}));
 
 interface HeaderContentProps {
   currentState: GameSessionState;
@@ -36,6 +54,13 @@ export default function HeaderContent({
   isIncorrect,
 }: HeaderContentProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallScreen) screenSize = ScreenSize.SMALL;
+
   const stateMap = {
     [GameSessionState.NOT_STARTED]: t('gameinprogress.header.notstarted'),
     [GameSessionState.TEAMS_JOINING]:  t('gameinprogress.header.leaderboard'),
@@ -67,7 +92,7 @@ export default function HeaderContent({
   };
 
   return (
-    <HeaderContainer>
+    <HeaderContainer screenSize={screenSize}>
       <Typography variant="h0">
         {stateCheck(currentState, isCorrect, isIncorrect)}
       </Typography>
@@ -81,6 +106,7 @@ export default function HeaderContent({
           isPaused={isPaused}
           isAddTime={isAddTime}
           handleTimerIsFinished={handleTimerIsFinished}
+          screenSize={screenSize}
         />
       ) }
     </HeaderContainer>
