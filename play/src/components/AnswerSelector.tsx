@@ -27,6 +27,9 @@ const AnswerSelectorDefault = styled(Button, {
     border: !isSubmitted
       ? `1px solid ${theme.palette.designSystem.surface.coolBlue}`
       : `1px solid ${theme.palette.primary.darkGrey}`,
+    backgroundColor: !isSubmitted
+      ? alpha(theme.palette.designSystem.surface.coolBlue, 0.05)
+      : `${theme.palette.primary.main}`,
   },
 }));
 
