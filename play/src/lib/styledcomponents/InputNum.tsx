@@ -9,7 +9,7 @@ export default styled(Typography)<InputNumProps>(({ theme, progressPercent }) =>
   position: 'absolute',
   top: '50%',
   transform: 'translateY(-50%)',
-  left: progressPercent > 0 ? `calc(${progressPercent}% - 30px)` : '5px',
+  left: progressPercent > 0 ? `calc(${progressPercent}% - 34px)` : '5px',
   zIndex: 1,
   fontSize: '12px',
   fontWeight: '400',

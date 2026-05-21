@@ -81,11 +81,11 @@ export default function ConfidenceMeterCard({
 
   const confidenceHeader = (
     <Box
-      display="inline"
       sx={{
+        display: 'block',
+        boxSizing: 'border-box',
         textAlign: 'left',
         width: '100%',
-        paddingLeft: `${theme.sizing.smallPadding}px`,
         marginBottom: `${theme.sizing.smallPadding}px`,
       }}
     >
@@ -97,32 +97,40 @@ export default function ConfidenceMeterCard({
 
   const responseOption = (option: IConfidenceOption) => {
     return (
-      <Box style={{width: '100%', maxWidth: `${theme.sizing.mediumPadding}px`, display: 'flex', justifyContent: 'center', textAlign: 'center', paddingLeft: '8px', paddingRight: '8px'}}>
-        <FormControlLabel
-          key={option.value}
-          value={option.value}
-          control={
-            <Radio
-              size={isSmallDevice ? 'small' : 'medium'}
-              sx={{
-                '&.Mui-checked': {
-                  color: `${theme.palette.primary.blue}`,
-                },
-              }}
-            />
-          }
-          label={<Typography
-            style={{
-              fontSize: isSmallDevice ?
-                `${theme.typography.h4.fontSize}` :
-                `${theme.typography.h5.fontSize}`
-            }}>
-            {option.text}
-          </Typography>}
-          labelPlacement="bottom"
-          style={{width: '100%'}}
-        />
-      </Box>
+      <FormControlLabel
+        key={option.value}
+        value={option.value}
+        sx={{ margin: 0 }}
+        control={
+          <Radio
+            sx={{
+              padding: '12px',
+              '& .MuiSvgIcon-root': {
+                fontSize: '30px',
+              },
+              '&.Mui-checked': {
+                color: isTimeUp
+                  ? `${theme.palette.primary.extraDarkGrey}`
+                  : `${theme.palette.primary.blue}`,
+              },
+              '&.Mui-disabled.Mui-checked': {
+                color: `${theme.palette.primary.extraDarkGrey}`,
+              },
+            }}
+          />
+        }
+        label={<Typography
+          style={{
+            fontSize: isSmallDevice ?
+              `${theme.typography.h4.fontSize}` :
+              `${theme.typography.h5.fontSize}`,
+            maxWidth: '50px',
+            textAlign: 'center',
+          }}>
+          {option.text}
+        </Typography>}
+        labelPlacement="bottom"
+      />
     );
   };
 
@@ -130,10 +138,11 @@ export default function ConfidenceMeterCard({
     if (!isSelected) return null;
     return (
       <Box
-        display="inline"
         sx={{
-          textAlign: 'center',
-          marginBottom: `${theme.sizing.smallPadding}px`,
+          display: 'block',
+          boxSizing: 'border-box',
+          width: '100%',
+          textAlign: 'left',
         }}
       >
         <Typography
@@ -167,10 +176,10 @@ export default function ConfidenceMeterCard({
         value={localSelectedOption}
         onChange={handleRadioChange}
         sx={{
+          flexWrap: 'nowrap',
           textAlign: 'center',
-          justifyContent: 'center',
-          gap: '12px',
-          marginBottom: '24px'
+          justifyContent: 'space-between',
+          marginBottom: `${theme.sizing.smallPadding}px`,
         }}
       >
         {confidenceOptionArray.map((option) => responseOption(option))}
@@ -179,13 +188,7 @@ export default function ConfidenceMeterCard({
   );
 
   return (
-    <BodyCardStyled
-      sx={{
-        paddingTop: `${theme.sizing.mediumPadding}px`,
-        paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-        paddingRight: `${theme.sizing.extraSmallPadding}px`
-      }}
-    >
+    <BodyCardStyled>
       {confidenceHeader}
       {responseOptions}
       {statusText}

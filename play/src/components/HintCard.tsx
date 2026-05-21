@@ -149,7 +149,7 @@ export default function HintCard({
 
   return (
     <BodyCardStyled elevation={10}>
-      <BodyCardContainerStyled >
+      <BodyCardContainerStyled spacing={2}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <Typography
             variant="subtitle1"
@@ -198,7 +198,7 @@ export default function HintCard({
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            gap: '20px',
+            gap: '24px',
           }}
         >
           <Box style={{width: '100%'}}>

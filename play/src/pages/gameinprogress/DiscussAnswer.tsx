@@ -212,21 +212,21 @@ export default function DiscussAnswer({
               modules={[Pagination]}
               spaceBetween={COLUMN_GAP_BY_SIZE[screenSize]}
               centeredSlides
-              slidesPerView={1.2}
+              slidesPerView='auto'
               pagination={{
                 el: '.swiper-pagination-container',
                 bulletClass: 'swiper-pagination-bullet',
                 bulletActiveClass: 'swiper-pagination-bullet-active',
                 clickable: true,
                 renderBullet(index, className) {
-                  return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                  return `<span class="${className}" style="width:30px; height:10px; border-radius:8px"></span>`;
                 },
               }}
               style={{ height: '100%' }}
             >
               <SwiperSlide
                 style={{
-                  width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                  width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
                   height: '100%',
                 }}
               >
@@ -234,7 +234,7 @@ export default function DiscussAnswer({
               </SwiperSlide>
               <SwiperSlide
                 style={{
-                  width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                  width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
                   height: '100%',
                 }}
               >

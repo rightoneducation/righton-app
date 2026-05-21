@@ -52,6 +52,12 @@ const PADDING_BOTTOM_BY_SIZE: Record<ScreenSize, string> = {
   [ScreenSize.LARGE]: '42px',
 };
 
+const HEADER_TO_BODY_GAP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '32px',
+  [ScreenSize.MEDIUM]: '44px',
+  [ScreenSize.LARGE]: '44px',
+};
+
 interface GameInProgressProps {
   apiClients: IAPIClients;
   teams: ITeam[];
@@ -310,7 +316,9 @@ export default function GameInProgress({
       />
     <HeaderStackContainerStyled
         style={{
+          height: 'auto',
           paddingTop: PADDING_TOP_BY_SIZE[screenSize],
+          paddingBottom: HEADER_TO_BODY_GAP_BY_SIZE[screenSize],
           paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
           paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
         }}
@@ -347,7 +355,7 @@ export default function GameInProgress({
             handleSelectConfidence={handleSelectConfidence}
             isConfidenceSelected={selectConfidence.isSelected}
             selectedConfidenceOption={selectConfidence.selectedConfidenceOption}
-            isTimeUp={timerIsPaused}
+            isTimeUp={timerIsPaused || currentTimer <= 0}
             isShortAnswerEnabled={isShortAnswerEnabled}
             backendAnswer={backendAnswer}
             currentQuestionIndex={currentQuestionIndex ?? 0}
@@ -379,6 +387,7 @@ export default function GameInProgress({
       <FooterStackContainerStyled
         screenSize={screenSize}
         style={{
+          paddingTop: '24px',
           paddingBottom: PADDING_BOTTOM_BY_SIZE[screenSize],
           paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
           paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],

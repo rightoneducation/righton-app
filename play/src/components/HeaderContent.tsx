@@ -28,7 +28,7 @@ const HeaderContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '20px',
+  gap: `${theme.sizing.extraSmallPadding}px`,
 }));
 
 interface HeaderContentProps {

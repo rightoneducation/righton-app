@@ -268,21 +268,20 @@ export default function ChooseAnswer({
     isSmallDevice ? (
       <BodyContentAreaDoubleColumnStyled
         container
-        style={{ paddingTop: '16px' }}
       >
         <Grid item xs={12} sm={6} style={{ width: '100%', height: '100%'}}>
           <Swiper
             modules={[Pagination]}
             spaceBetween={COLUMN_GAP_BY_SIZE[screenSize]}
             centeredSlides
-            slidesPerView={1.2}
+            slidesPerView='auto'
             pagination={{
               el: '.swiper-pagination-container',
               bulletClass: 'swiper-pagination-bullet',
               bulletActiveClass: 'swiper-pagination-bullet-active',
               clickable: true,
               renderBullet(index, className) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                return `<span class="${className}" style="width:30px; height:10px; border-radius:8px"></span>`;
               },
             }}
             style={{ height: '100%' }}
@@ -290,7 +289,7 @@ export default function ChooseAnswer({
           >
             <SwiperSlide
               style={{
-                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
                 height: '100%',
               }}
             >
@@ -298,7 +297,7 @@ export default function ChooseAnswer({
             </SwiperSlide>
             <SwiperSlide
               style={{
-                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
                 height: '100%',
               }}
             >
@@ -307,7 +306,7 @@ export default function ChooseAnswer({
             { isSubmitted && isSmallDevice && isConfidenceEnabled &&
                 <SwiperSlide
                   style={{
-                    width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                    width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
                     height: '100%',
                   }}
                 >
@@ -335,6 +334,17 @@ export default function ChooseAnswer({
                       gameSessionId={gameSessionId}
                     />
                    }
+                   {isTimeUp && (
+                     <Typography
+                       variant="paragraph"
+                       sx={{
+                         textAlign: 'center',
+                         marginTop: `${theme.sizing.largePadding}px`,
+                       }}
+                     >
+                       {t('gameinprogress.chooseanswer.answertimeup')}
+                     </Typography>
+                   )}
                   </ScrollBoxStyled>
                 </SwiperSlide>
             }
@@ -346,7 +356,6 @@ export default function ChooseAnswer({
         container
         gap={COLUMN_GAP_BY_SIZE[screenSize]}
         style={{
-          paddingTop: '16px',
           paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
           paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
         }}

@@ -27,4 +27,5 @@ export default styled(Stack, {
   position: 'sticky',
   bottom: 0,
   zIndex: 3,
+  boxSizing: 'border-box',
 }));

@@ -14,6 +14,7 @@ const TimerContainer = styled(Container, {
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
+  gap: `${theme.sizing.smallPadding}px`,
   marginLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mediumPadding}px` : 0,
   marginRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mediumPadding}px` : 0,
   marginTop: `${theme.sizing.extraSmallPadding}px`,
@@ -25,9 +26,8 @@ const TimerContainer = styled(Container, {
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
   borderRadius: '40px',
   display: 'inline-block',
-  marginRight: `${theme.sizing.extraSmallPadding}px`,
   height: `${theme.sizing.extraSmallPadding}px`,
-  width: `calc(100% - ${theme.sizing.mediumPadding}px)`,
+  width: '100%',
   backgroundColor: theme.palette.primary.main,
   '& .MuiLinearProgress-bar': {
     background: theme.palette.primary.timerGradient,
