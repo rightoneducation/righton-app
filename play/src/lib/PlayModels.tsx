@@ -127,6 +127,12 @@ export enum ScreenSize {
   LARGE,
 }
 
+export const PADDING_LEFTRIGHT_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '24px',
+  [ScreenSize.MEDIUM]: '24px',
+  [ScreenSize.LARGE]: '0px',
+};
+
 /**
  * Type interface that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {number} currentTime: - current time (used to ignore saved local storage after a certain interval)

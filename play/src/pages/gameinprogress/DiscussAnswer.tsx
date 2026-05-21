@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Grid, Stack, Box } from '@mui/material';
+import { Typography, Grid, Stack, Box, useMediaQuery } from '@mui/material';
 import {
   GameSessionState,
   ModelHelper,
@@ -13,7 +13,7 @@ import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { AnswerState } from '../../lib/PlayModels';
+import { AnswerState, ScreenSize, PADDING_LEFTRIGHT_BY_SIZE } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
 import AnswerResponsesCard from '../../components/AnswerResponses/AnswerResponsesCard';
@@ -25,6 +25,18 @@ import {
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
+
+const COLUMN_GAP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '16px',
+  [ScreenSize.MEDIUM]: '16px',
+  [ScreenSize.LARGE]: '24px',
+};
+
+const CARD_GAP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '16px',
+  [ScreenSize.MEDIUM]: '24px',
+  [ScreenSize.LARGE]: '24px',
+};
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -55,6 +67,10 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallDevice) screenSize = ScreenSize.SMALL;
   const phaseOneResponses = currentQuestion?.answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== '…' || response.isCorrect).reverse();
   let phaseTwoResponses = null;
   let otherResponses = null;
@@ -81,7 +97,7 @@ export default function DiscussAnswer({
   console.log(newPoints);
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
-      <Stack spacing={2}>
+      <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
         <QuestionCard questionText={questionText} imageUrl={questionUrl} />
         <DiscussAnswerCard
           instructions={instructions}
@@ -112,7 +128,7 @@ export default function DiscussAnswer({
 );
   const questionLeftColumnContents = (
       <ScrollBoxStyled>
-        <Stack spacing={2}>
+        <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
           { phaseTwoResponses?.reverse && phaseTwoResponses.map((response, index) => (
             !response.isCorrect &&
@@ -165,7 +181,7 @@ export default function DiscussAnswer({
 
   const questionRightColumnContents = (
       <ScrollBoxStyled>
-        <Stack spacing={2}>
+        <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
           <AnswerResponsesCard isShortAnswerEnabled={isShortAnswerEnabled} phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses} otherResponses={otherResponses} currentTeam={currentTeam}/>
           <DiscussAnswerCard
             instructions={instructions}
@@ -189,12 +205,12 @@ export default function DiscussAnswer({
     isSmallDevice ? (
       <BodyContentAreaTripleColumnStyled
         container
-        gap='16px'
+        gap={COLUMN_GAP_BY_SIZE[screenSize]}
       >
         <Grid item xs={12} sm style={{ width: `100%`, height: '100%'}}>
             <Swiper
               modules={[Pagination]}
-              spaceBetween='8px'
+              spaceBetween={COLUMN_GAP_BY_SIZE[screenSize]}
               centeredSlides
               slidesPerView={1.2}
               pagination={{
@@ -230,7 +246,11 @@ export default function DiscussAnswer({
       ):(
         <BodyContentAreaTripleColumnStyledNoSwiper
           container
-          gap='16px'
+          gap={COLUMN_GAP_BY_SIZE[screenSize]}
+          style={{
+            paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+            paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          }}
         >
           <Grid item xs={0} sm sx={{ width: '100%', height: '100%' }}>
             {questionLeftColumnContents}
@@ -241,7 +261,12 @@ export default function DiscussAnswer({
         </BodyContentAreaTripleColumnStyledNoSwiper>
       )
     ) : (
-      <BodyContentAreaSingleColumnStyled>
+      <BodyContentAreaSingleColumnStyled
+        style={{
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+        }}
+      >
         <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
           {P1LeftColumnContents}
         </Box>

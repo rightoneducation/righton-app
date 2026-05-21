@@ -37,8 +37,20 @@ import {
   checkForSubmittedHintOnRejoin
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, ScreenSize, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
+import { ErrorType, LocalModel, ScreenSize, StorageKeyAnswer, StorageKeyHint, PADDING_LEFTRIGHT_BY_SIZE } from '../lib/PlayModels';
 import { trackEvent, trackError, PlayEvent } from '../lib/analytics';
+
+const PADDING_TOP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '60px',
+  [ScreenSize.MEDIUM]: '60px',
+  [ScreenSize.LARGE]: '42px',
+};
+
+const PADDING_BOTTOM_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '32px',
+  [ScreenSize.MEDIUM]: '60px',
+  [ScreenSize.LARGE]: '42px',
+};
 
 interface GameInProgressProps {
   apiClients: IAPIClients;
@@ -296,7 +308,13 @@ export default function GameInProgress({
         errorText=""
         handleRetry={handleRetry}
       />
-    <HeaderStackContainerStyled>
+    <HeaderStackContainerStyled
+        style={{
+          paddingTop: PADDING_TOP_BY_SIZE[screenSize],
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+        }}
+      >
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
@@ -307,6 +325,7 @@ export default function GameInProgress({
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
+          disableInnerPadding
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
@@ -357,7 +376,14 @@ export default function GameInProgress({
           />
         )}
       </BodyStackContainerStyled>
-      <FooterStackContainerStyled screenSize={screenSize}>
+      <FooterStackContainerStyled
+        screenSize={screenSize}
+        style={{
+          paddingBottom: PADDING_BOTTOM_BY_SIZE[screenSize],
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+        }}
+      >
         {isSmallDevice ? (
           <PaginationContainerStyled className="swiper-pagination-container" />
         ) : null}
@@ -367,6 +393,7 @@ export default function GameInProgress({
           score={score}
           newPoints={hintBonusPoints > 0 ? hintBonusPoints : newPoints}
           animationDelay={hintBonusPoints > 0 ? 0 : undefined}
+          disableInnerPadding
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

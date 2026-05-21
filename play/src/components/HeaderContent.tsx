@@ -14,15 +14,16 @@ const MAX_WIDTH_BY_SIZE: Record<ScreenSize, string> = {
 
 interface HeaderContainerProps {
   screenSize: ScreenSize;
+  disableInnerPadding?: boolean;
 }
 
 const HeaderContainer = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'screenSize',
-})<HeaderContainerProps>(({ theme, screenSize }) => ({
+  shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'disableInnerPadding',
+})<HeaderContainerProps>(({ theme, screenSize, disableInnerPadding }) => ({
   width: '100%',
   maxWidth: MAX_WIDTH_BY_SIZE[screenSize],
-  paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.largePadding}px` : 0,
-  paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.largePadding}px` : 0,
+  paddingLeft: disableInnerPadding || screenSize !== ScreenSize.SMALL ? 0 : `${theme.sizing.largePadding}px`,
+  paddingRight: disableInnerPadding || screenSize !== ScreenSize.SMALL ? 0 : `${theme.sizing.largePadding}px`,
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
@@ -40,6 +41,7 @@ interface HeaderContentProps {
   handleTimerIsFinished: () => void;
   isCorrect: boolean;
   isIncorrect: boolean;
+  disableInnerPadding?: boolean;
 }
 
 export default function HeaderContent({
@@ -52,6 +54,7 @@ export default function HeaderContent({
   handleTimerIsFinished,
   isCorrect,
   isIncorrect,
+  disableInnerPadding,
 }: HeaderContentProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -92,7 +95,7 @@ export default function HeaderContent({
   };
 
   return (
-    <HeaderContainer screenSize={screenSize}>
+    <HeaderContainer screenSize={screenSize} disableInnerPadding={disableInnerPadding}>
       <Typography variant="h0">
         {stateCheck(currentState, isCorrect, isIncorrect)}
       </Typography>

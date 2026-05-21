@@ -18,19 +18,20 @@ const MAX_WIDTH_BY_SIZE: Record<ScreenSize, string | undefined> = {
 
 interface FooterContainerProps {
   screenSize: ScreenSize;
+  disableInnerPadding?: boolean;
 }
 
 const FooterContainer = styled(Container, {
-  shouldForwardProp: (prop) => prop !== 'screenSize',
-})<FooterContainerProps>(({ theme, screenSize }) => ({
+  shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'disableInnerPadding',
+})<FooterContainerProps>(({ theme, screenSize, disableInnerPadding }) => ({
   width: '100%',
   maxWidth: MAX_WIDTH_BY_SIZE[screenSize],
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  paddingLeft: PADDING_X_BY_SIZE[screenSize],
-  paddingRight: PADDING_X_BY_SIZE[screenSize],
+  paddingLeft: disableInnerPadding ? 0 : PADDING_X_BY_SIZE[screenSize],
+  paddingRight: disableInnerPadding ? 0 : PADDING_X_BY_SIZE[screenSize],
 }));
 
 const FooterLeftContainer = styled(Container)({
@@ -54,6 +55,7 @@ interface FooterContentProps {
   newPoints?: number;
   score: number;
   animationDelay?: number;
+  disableInnerPadding?: boolean;
 }
 
 export default function FooterContent({
@@ -62,6 +64,7 @@ export default function FooterContent({
   newPoints,
   score,
   animationDelay,
+  disableInnerPadding,
 }: FooterContentProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -71,7 +74,7 @@ export default function FooterContent({
   else if (isSmallScreen) screenSize = ScreenSize.SMALL;
 
   return (
-    <FooterContainer screenSize={screenSize}>
+    <FooterContainer screenSize={screenSize} disableInnerPadding={disableInnerPadding}>
       <FooterLeftContainer>
         <Avatar src={monsterMap[avatar].icon} alt="avatar" />
         <Typography

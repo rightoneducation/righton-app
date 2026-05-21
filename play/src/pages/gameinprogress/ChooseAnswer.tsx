@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Grid, Fade, Box } from '@mui/material';
+import { Typography, Grid, Fade, Box, useMediaQuery } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
   ConfidenceLevel,
@@ -21,8 +21,21 @@ import OpenAnswerCard from '../../components/OpenAnswerCard';
 import HintCard from '../../components/HintCard';
 import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
+import { ScreenSize, PADDING_LEFTRIGHT_BY_SIZE } from '../../lib/PlayModels';
 import 'swiper/css';
 import 'swiper/css/pagination';
+
+const COLUMN_GAP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '16px',
+  [ScreenSize.MEDIUM]: '16px',
+  [ScreenSize.LARGE]: '24px',
+};
+
+const CARD_GAP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '16px',
+  [ScreenSize.MEDIUM]: '24px',
+  [ScreenSize.LARGE]: '24px',
+};
 
 interface ChooseAnswerProps {
   apiClients: IAPIClients;
@@ -86,7 +99,11 @@ export default function ChooseAnswer({
   const theme = useTheme();
   const { t } = useTranslation();
   const swiperRef = useRef<SwiperRef>(null);
-  
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallDevice) screenSize = ScreenSize.SMALL;
+
   useEffect(() => {
     if (isSubmitted && isSmallDevice && swiperRef?.current?.swiper.activeIndex !== 0 && 
       ((isConfidenceEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER)
@@ -209,7 +226,7 @@ export default function ChooseAnswer({
           { isConfidenceEnabled && 
             (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) ?
               <Fade in={isSubmitted} timeout={500}>
-                <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="confidencecard-scrollbox">
+                <Box style={{ marginTop: CARD_GAP_BY_SIZE[screenSize] }} id="confidencecard-scrollbox">
                   <ConfidenceMeterCard
                     selectedOption={selectedConfidenceOption}
                     handleSelectOption={handleSelectConfidence}
@@ -223,7 +240,7 @@ export default function ChooseAnswer({
             {isHintEnabled &&
               currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
               <Fade in={isSubmitted} timeout={500}>
-                <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox">
+                <Box style={{ marginTop: CARD_GAP_BY_SIZE[screenSize] }} id="hintcard-scrollbox">
                   <HintCard
                     apiClients={apiClients}
                     answerHintText={answerHint?.rawHint ?? ''}
@@ -256,7 +273,7 @@ export default function ChooseAnswer({
         <Grid item xs={12} sm={6} style={{ width: '100%', height: '100%'}}>
           <Swiper
             modules={[Pagination]}
-            spaceBetween='8px'
+            spaceBetween={COLUMN_GAP_BY_SIZE[screenSize]}
             centeredSlides
             slidesPerView={1.2}
             pagination={{
@@ -327,9 +344,11 @@ export default function ChooseAnswer({
     ) : (
       <BodyContentAreaDoubleColumnStyledNoSwiper
         container
-        gap='16px'
+        gap={COLUMN_GAP_BY_SIZE[screenSize]}
         style={{
           paddingTop: '16px',
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
         }}
       >
         {questionContents}
