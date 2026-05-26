@@ -18,7 +18,7 @@
       "function": {
         "microcoachGetLearningScience": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
-          "s3Key": "amplify-builds/microcoachGetLearningScience-6a446e4279704c513064-build.zip"
+          "s3Key": "amplify-builds/microcoachGetLearningScience-7271385044776d693573-build.zip"
         },
         "microcoachIngestPPQ": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
