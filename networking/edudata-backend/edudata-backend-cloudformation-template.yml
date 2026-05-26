@@ -140,8 +140,35 @@ Resources:
       Protocol: "HTTP"
       Port: 80
       DefaultActions:
+      - Type: "redirect"
+        RedirectConfig:
+          Protocol: "HTTPS"
+          Port: "443"
+          StatusCode: "HTTP_301"
+
+  HTTPSListener:
+    DeletionPolicy: "Delete"
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Protocol: "HTTPS"
+      Port: 443
+      Certificates:
+      - CertificateArn: "arn:aws:acm:us-east-1:484006752749:certificate/1b83393c-cf24-492e-994f-5c3c55c44509"
+      DefaultActions:
       - Type: "forward"
         TargetGroupArn: !Ref TargetGroup
+
+  EDUDataDNSRecord:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      HostedZoneId: "ZBSI0Y1ECI203"
+      Name: "edudata.rightoneducation.com"
+      Type: "A"
+      AliasTarget:
+        DNSName: !GetAtt ALB.DNSName
+        EvaluateTargetHealth: true
+        HostedZoneId: !GetAtt ALB.CanonicalHostedZoneID
 
   ECRRepository:
     DeletionPolicy: "Delete"
@@ -245,15 +272,15 @@ Resources:
         - Name: "APP_DEMO"
           Value: "false"
         - Name: "CACHING_ENABLED"
-          Value: "false"
+          Value: "true"
         - Name: "CACHING_TTL"
-          Value: "10"
+          Value: "60"
         - Name: "CACHING_MAX_KEYS"
           Value: "500"
         - Name: "USE_NEW_RELIC"
           Value: "false"
         - Name: "CORS_WHITELIST"
-          Value: "localhost"
+          Value: "rightoneducation.com,localhost"
         - Name: "LOG_LEVEL"
           Value: "debug"
         - Name: "LOG_OUTPUT"
@@ -319,7 +346,7 @@ Resources:
         - Name: "AWS_REGION"
           Value: "us-east-1"
         - Name: "HOST_URL"
-          Value: !Sub "http://${ALB.DNSName}"
+          Value: "https://edudata.rightoneducation.com"
         - Name: "EMAIL_FROM"
           Value: ""
         - Name: "EMAIL_EXPIRE_AFTER_SECONDS"
@@ -366,7 +393,7 @@ Resources:
 Outputs:
   ALBEndpoint:
     Description: "UpGrade backend URL"
-    Value: !Sub "http://${ALB.DNSName}/api"
+    Value: "https://edudata.rightoneducation.com/api"
   RDSEndpoint:
     Description: "RDS endpoint"
     Value: !GetAtt RDSInstance.Endpoint.Address
