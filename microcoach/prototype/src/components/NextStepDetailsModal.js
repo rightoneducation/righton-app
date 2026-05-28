@@ -60,6 +60,22 @@ function formatText(text) {
  * teacherView=true  → show annotations highlighted in orange
  * teacherView=false → strip the ← annotation and show just the math line
  */
+
+// A teacher error annotation is a math block — \(...\), \[...\] or $...$ —
+// that contains the ← marker (or a bare ←). Student view removes it entirely so
+// the wrapping delimiters (e.g. "\(\text{") never leak as raw text.
+function stripErrorAnnotation(line) {
+  let out = line
+    .replace(/\\\([\s\S]*?←[\s\S]*?\\\)/g, '')
+    .replace(/\\\[[\s\S]*?←[\s\S]*?\\\]/g, '')
+    .replace(/\$\$?[\s\S]*?←[\s\S]*?\$\$?/g, '');
+  if (out.includes('←')) {
+    // Bare ← with no closing delimiter: drop it plus any dangling opener.
+    out = out.slice(0, out.indexOf('←')).replace(/\\\(\s*(?:\\text\s*\{?)?\s*$/, '');
+  }
+  return out.trimEnd();
+}
+
 function WorkedExampleText({ text, teacherView }) {
   if (!text) return null;
   const lines = text.split('\n');
@@ -80,8 +96,10 @@ function WorkedExampleText({ text, teacherView }) {
 
         if (hasAnnotation) {
           if (!teacherView) {
-            // Strip the annotation — keep only the math portion before the ←
-            const mathPart = line.split('←')[0].trimEnd();
+            // Strip the annotation — keep only the math portion, dropping the
+            // whole \(...\) / \[...\] / $...$ wrapper so nothing leaks as raw text.
+            const mathPart = stripErrorAnnotation(line);
+            if (!mathPart) return null;
             return <span key={i} style={{ display: 'block' }}><MathText text={mathPart} /></span>;
           }
           // Teacher view: highlight the whole line
