@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Stack, Box, LinearProgress } from '@mui/material';
-import { GameSessionState, IHostTeamAnswersResponse } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersResponse, BackendAnswer } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { AnswerState } from '../lib/PlayModels';
@@ -33,6 +33,7 @@ interface DiscussAnswerCardProps {
   currentState: GameSessionState;
   isShortAnswerEnabled: boolean;
   newPoints: number | undefined;
+  selectedAnswer: BackendAnswer | null;
   phaseOneResponse?: IHostTeamAnswersResponse;
   phaseTwoResponse?: IHostTeamAnswersResponse;
   otherAnswersCount?: number;
@@ -46,6 +47,7 @@ export default function DiscussAnswerCard({
   currentState,
   isShortAnswerEnabled,
   newPoints,
+  selectedAnswer,
   phaseOneResponse,
   phaseTwoResponse,
   otherAnswersCount,
@@ -54,6 +56,7 @@ export default function DiscussAnswerCard({
   console.log(answerStatus);
   const theme = useTheme();
   const { t } = useTranslation();
+  const hint = selectedAnswer.
   const resultText = (answerStatus === AnswerState.PLAYER_SELECTED_CORRECT)
     ? t('gameinprogress.discussanswer.correcttext')
     : t('gameinprogress.discussanswer.nicetrytext');
@@ -125,6 +128,10 @@ export default function DiscussAnswerCard({
                   />
                   <InputNum progressPercent={percent}>{Math.floor(percent)}%</InputNum>
                 </BarContainer>
+                {selectedAnswer && selectedAnswer.hint}
+                <Box>
+
+                </Box>
             </Box>
             }
         <Stack

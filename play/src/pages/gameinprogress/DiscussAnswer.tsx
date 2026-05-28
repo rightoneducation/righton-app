@@ -94,7 +94,6 @@ export default function DiscussAnswer({
   );
   const totalAnswers = phaseOneResponses.reduce((acc, response) => acc + response.teams.length, 0) ?? 0;
   const isPlayerCorrect = selectedAnswer?.isCorrect ?? false;
-  console.log(newPoints);
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
@@ -147,6 +146,11 @@ export default function DiscussAnswer({
                 isShortAnswerEnabled={isShortAnswerEnabled}
                 newPoints={newPoints}
                 totalAnswers={totalAnswers}
+                selectedAnswer={
+                   response.teams.includes(currentTeam.name) 
+                    ? selectedAnswer
+                    : null
+                }
               />
             )
           )}
@@ -161,6 +165,7 @@ export default function DiscussAnswer({
                 newPoints={newPoints}
                 otherAnswersCount={otherResponses.reduce((acc, response) => acc + response.count, 0) ?? 0}
                 totalAnswers={totalAnswers}
+                selectedAnswer={null}
               />
           )}
         </Stack>
