@@ -7,6 +7,8 @@ import 'katex/dist/katex.min.css';
  * Supports:
  *   $$...$$ — display (block) math
  *   $...$   — inline math
+ *   \[...\] — display (block) math
+ *   \(...\) — inline math
  * Plain text between delimiters is rendered as-is.
  * Falls back to raw text if KaTeX cannot parse an expression.
  *
@@ -20,8 +22,9 @@ function MathText({ text, inline = false, className }) {
   const wrap = (children) =>
     inline ? <span className={className}>{children}</span> : <>{children}</>;
 
-  // Match $$...$$ before $...$ to avoid the outer $ consuming first
-  const regex = /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$)/g;
+  // Match $$...$$ before $...$ to avoid the outer $ consuming first.
+  // Also support LaTeX/MathJax \[...\] (display) and \(...\) (inline) delimiters.
+  const regex = /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g;
   const parts = [];
   let lastIndex = 0;
   let match;
@@ -30,8 +33,11 @@ function MathText({ text, inline = false, className }) {
     if (match.index > lastIndex) {
       parts.push({ type: 'text', content: text.slice(lastIndex, match.index) });
     }
-    const isDisplay = match[0].startsWith('$$');
-    const math = isDisplay ? match[0].slice(2, -2).trim() : match[0].slice(1, -1).trim();
+    const token = match[0];
+    const isDisplay = token.startsWith('$$') || token.startsWith('\\[');
+    // $...$ delimiters are 1 char each; $$ \[ \] \( \) are all 2 chars each.
+    const trim = token.startsWith('$') && !token.startsWith('$$') ? 1 : 2;
+    const math = token.slice(trim, -trim).trim();
     parts.push({ type: 'math', content: math, display: isDisplay });
     lastIndex = regex.lastIndex;
   }
