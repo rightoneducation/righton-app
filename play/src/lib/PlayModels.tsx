@@ -17,6 +17,12 @@ import MonsterHandsUp2 from '../img/MonsterHandsUp2.svg';
 import MonsterHandsUp3 from '../img/MonsterHandsUp3.svg';
 import MonsterHandsUp4 from '../img/MonsterHandsUp4.svg';
 import MonsterHandsUp5 from '../img/MonsterHandsUp5.svg';
+import Monster0AnswerSelect from '../img/Monster0AnswerSelect.svg';
+import Monster1AnswerSelect from '../img/Monster1AnswerSelect.svg';
+import Monster2AnswerSelect from '../img/Monster2AnswerSelect.svg';
+import Monster3AnswerSelect from '../img/Monster3AnswerSelect.svg';
+import Monster4AnswerSelect from '../img/Monster4AnswerSelect.svg';
+import Monster5AnswerSelect from '../img/Monster5AnswerSelect.svg';
 
 /**
  * AnswerState defines each of the cases for an answer that is displayed on an answer select screen
@@ -158,6 +164,7 @@ interface MonsterMap {
     icon: string;
     monster?: string;
     handsup?: string;
+    answerSelect?: string;
     gradient?: string;
   };
 }
@@ -167,36 +174,42 @@ export const monsterMap: MonsterMap = {
     icon: Icon0,
     monster: Monster0,
     handsup: MonsterHandsUp0,
+    answerSelect: Monster0AnswerSelect,
     gradient: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
   },
   1: {
     icon: Icon1,
     monster: Monster1,
     handsup: MonsterHandsUp1,
+    answerSelect: Monster1AnswerSelect,
     gradient: 'linear-gradient(90deg, #FED52B 0%, #C64E0F 100%)',
   },
   2: {
     icon: Icon2,
     monster: Monster2,
     handsup: MonsterHandsUp2,
+    answerSelect: Monster2AnswerSelect,
     gradient: 'linear-gradient(90deg, #0A4178 0%, #0F56A1 100%)',
   },
   3: {
     icon: Icon3,
     monster: Monster3,
     handsup: MonsterHandsUp3,
+    answerSelect: Monster3AnswerSelect,
     gradient: 'linear-gradient(90deg, #7E00C4 0%, #9139F8 100%)',
   },
   4: {
     icon: Icon4,
     monster: Monster4,
     handsup: MonsterHandsUp4,
+    answerSelect: Monster4AnswerSelect,
     gradient: 'linear-gradient(90deg, #69000B 0%, #8B000A 100%)',
   },
   5: {
     icon: Icon5,
     monster: Monster5,
     handsup: MonsterHandsUp5,
+    answerSelect: Monster5AnswerSelect,
     gradient: 'linear-gradient(90deg, #036496 0%, #1F81B3 100%)',
   },
 };

@@ -50,6 +50,7 @@ interface DiscussAnswerProps {
   isShortAnswerEnabled: boolean;
   gameSession: IGameSession;
   newPoints: number | undefined;
+  teamAvatar: number;
 }
 
 export default function DiscussAnswer({
@@ -64,6 +65,7 @@ export default function DiscussAnswer({
   isShortAnswerEnabled,
   gameSession,
   newPoints,
+  teamAvatar
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -109,6 +111,8 @@ export default function DiscussAnswer({
           currentState={currentState}
           isShortAnswerEnabled={isShortAnswerEnabled}
           newPoints={newPoints}
+          selectedAnswer={null}
+          teamAvatar={teamAvatar}
         />
       </Stack>
       {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
@@ -151,6 +155,7 @@ export default function DiscussAnswer({
                     ? selectedAnswer
                     : null
                 }
+                teamAvatar={teamAvatar}
               />
             )
           )}
@@ -166,6 +171,7 @@ export default function DiscussAnswer({
                 otherAnswersCount={otherResponses.reduce((acc, response) => acc + response.count, 0) ?? 0}
                 totalAnswers={totalAnswers}
                 selectedAnswer={null}
+                teamAvatar={teamAvatar}
               />
           )}
         </Stack>
@@ -201,6 +207,8 @@ export default function DiscussAnswer({
             isShortAnswerEnabled={isShortAnswerEnabled}
             newPoints={newPoints}
             totalAnswers={totalAnswers}
+            selectedAnswer={null}
+            teamAvatar={teamAvatar}
           />
         </Stack>
       </ScrollBoxStyled>

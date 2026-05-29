@@ -26,6 +26,16 @@ const StyledAnswerBar = styled(LinearProgress)({
   boxSizing: 'border-box'
 });
 
+const StyledHintBox = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+  borderRadius: '8px',
+  border: '2px #CCC solid',
+  padding: '12px',
+  marginTop: '12px'
+})
+
 interface DiscussAnswerCardProps {
   instructions: string[];
   answerStatus: AnswerState;
@@ -34,6 +44,7 @@ interface DiscussAnswerCardProps {
   isShortAnswerEnabled: boolean;
   newPoints: number | undefined;
   selectedAnswer: BackendAnswer | null;
+  teamAvatar: number;
   phaseOneResponse?: IHostTeamAnswersResponse;
   phaseTwoResponse?: IHostTeamAnswersResponse;
   otherAnswersCount?: number;
@@ -51,12 +62,16 @@ export default function DiscussAnswerCard({
   phaseOneResponse,
   phaseTwoResponse,
   otherAnswersCount,
-  totalAnswers
+  totalAnswers,
+  teamAvatar
 }: DiscussAnswerCardProps) {
   console.log(answerStatus);
   const theme = useTheme();
   const { t } = useTranslation();
-  const hint = selectedAnswer.
+  const hint = selectedAnswer?.hint;
+  let rawHint = null
+  if (hint)
+    rawHint = JSON.parse(hint as unknown as string).rawHint;
   const resultText = (answerStatus === AnswerState.PLAYER_SELECTED_CORRECT)
     ? t('gameinprogress.discussanswer.correcttext')
     : t('gameinprogress.discussanswer.nicetrytext');
@@ -106,6 +121,7 @@ export default function DiscussAnswerCard({
           isShortAnswerEnabled={isShortAnswerEnabled}
           correctCard = {correctCard}
           newPoints={newPoints}
+          teamAvatar={teamAvatar}
         />
         )}
          {(currentState === GameSessionState.PHASE_2_DISCUSS) &&
@@ -128,10 +144,6 @@ export default function DiscussAnswerCard({
                   />
                   <InputNum progressPercent={percent}>{Math.floor(percent)}%</InputNum>
                 </BarContainer>
-                {selectedAnswer && selectedAnswer.hint}
-                <Box>
-
-                </Box>
             </Box>
             }
         <Stack
@@ -172,6 +184,16 @@ export default function DiscussAnswerCard({
             <Typography variant="body1" sx={{whiteSpace: 'pre-line'}}>{answerReason}</Typography>
           )}
         </Stack>
+        { rawHint &&
+          <StyledHintBox>
+            <Typography variant="semiBoldParagraph" style={{color: `${theme.palette.designSystem.surface.tertiary}`}}>
+              {t('gameinprogress.discussanswer.hinttext')}
+            </Typography>
+            <Typography variant="paragraph" style={{color: `${theme.palette.designSystem.surface.tertiary}`}}>
+              {rawHint}
+            </Typography>
+          </StyledHintBox>
+        }
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

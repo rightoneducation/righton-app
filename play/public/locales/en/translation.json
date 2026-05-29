@@ -114,7 +114,8 @@
       "correcttext": "Correct!",
       "nicetrytext": "Nice try",
       "correctanswertext": "The answer is...",
-      "responses": "Answer Responses"
+      "responses": "Answer Responses",
+      "hinttext": "You shared the following hint:"
     },
     "startphase2": {
       "title": "Starting Phase 2...",

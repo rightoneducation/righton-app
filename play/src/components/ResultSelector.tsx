@@ -7,7 +7,7 @@ import CorrectStars_Mirrored from '../img/CorrectStars_Mirrored.svg';
 import SelectedAnswer from '../img/SelectedAnswer.svg';
 import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
-import { AnswerState } from '../lib/PlayModels';
+import { AnswerState, monsterMap } from '../lib/PlayModels';
 
 const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   width: '100%',
@@ -37,6 +37,7 @@ interface ResultSelectorProps {
   answerStatus: AnswerState;
   letterCode: string;
   answerText: string;
+  teamAvatar: number;
   percentageText?: string;
   currentState?: GameSessionState;
   isShortAnswerEnabled?: boolean;
@@ -48,6 +49,7 @@ export default function ResultSelector({
   answerStatus,
   letterCode,
   answerText,
+  teamAvatar,
   percentageText,
   currentState,
   isShortAnswerEnabled,
@@ -60,7 +62,7 @@ export default function ResultSelector({
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
-    [AnswerState.SELECTED]: SelectedAnswer,
+    [AnswerState.SELECTED]: monsterMap[teamAvatar].answerSelect,
     [AnswerState.PREVIOUS]: '',
     [AnswerState.OTHER]: '',
   };
@@ -74,8 +76,8 @@ export default function ResultSelector({
       src={imageMap[answerStatus]}
       style={{
         position: 'relative',
-        width: `${theme.sizing.smallPadding}px`,
-        height: `${theme.sizing.smallPadding}px`,
+        width: `${theme.sizing.mediumPadding}px`,
+        height: `${theme.sizing.mediumPadding}px`,
         paddingTop: '2px',
         // disable touch callout when longclicking on image
         WebkitTouchCallout: 'none',

@@ -102,7 +102,8 @@
       "correcttext": "Correcta!",
       "nicetrytext": "Buen intento",
       "correctanswertext": "La respuesta es...",
-      "responses": "Respuestas de respuesta"
+      "responses": "Respuestas de respuesta",
+      "hinttext": "Compartiste la siguiente pista:"
     },
     "startphase2": {
       "title": "Empezando la Fase 2...",
