@@ -1,12 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { PlayButtonBlock, ButtonType } from '@righton/networking';
+import { PlayButton, ButtonType } from '@righton/networking';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import { FinalResultsState } from '../../lib/PlayModels';
 import WavingMonster from '../../components/WavingMonster';
 
 import stand from '../../img/celebratingmonsters/stand.png';
+import standTablet from '../../img/celebratingmonsters/standTablet.png';
+import standDesktop from '../../img/celebratingmonsters/standDesktop.png';
 import top5StarsLeft from '../../img/celebratingmonsters/top5starsleft.png';
 import top5StarsRight from '../../img/celebratingmonsters/top5starsright.png';
 import spotlight from '../../img/celebratingmonsters/spotlight.png';
@@ -27,7 +30,7 @@ const celebrateMap: Record<number, string> = {
   5: monster5,
 };
 
-const CARD_GAP = 16;
+const CARD_GAP = 8;
 
 const styles = `
   @keyframes slideUp {
@@ -74,6 +77,10 @@ export default function Congrats({
   setFinalResultsState,
 }: CongratsProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
+
   const [animationDone, setAnimationDone] = useState(false);
   const [textDone, setTextDone] = useState(false);
   const [monsterDone, setMonsterDone] = useState(false);
@@ -84,8 +91,21 @@ export default function Congrats({
   const monsterRef = useRef<HTMLImageElement>(null);
   const [monsterHeight, setMonsterHeight] = useState(0);
 
-  const cardBottom = standHeight - 40 + monsterHeight + CARD_GAP;
+  // Mobile uses bottom-based positioning (original formula)
+  const mobileMonsterBottom = standHeight - 40;
+  const mobileCardBottom = mobileMonsterBottom + monsterHeight + CARD_GAP;
+
+  // Tablet/desktop use CSS calc to center the monster vertically without
+  // needing window.innerHeight — the stand hangs from the monster's feet
+  const centeredMonsterTop = `calc(50% - ${monsterHeight / 2}px)`;
+  const centeredStandTop = `calc(50% + ${monsterHeight / 2 - 40}px)`;
+  const centeredCardBottom = `calc(50% + ${(monsterHeight - 4*CARD_GAP) / 2}px)`;
+
   const celebrateSrc = celebrateMap[selectedAvatar] ?? monster0;
+
+  let standSrc = standDesktop;
+  if (isMobile) standSrc = stand;
+  if (isTablet) standSrc = standTablet;
 
   return (
     <BackgroundContainerStyled>
@@ -98,7 +118,7 @@ export default function Congrats({
         />
       )}
 
-      {/* Pre-render stand to measure height */}
+      {/* Pre-render stand to measure height — only used for mobile positioning */}
       <img
         ref={standRef}
         src={stand}
@@ -107,19 +127,19 @@ export default function Congrats({
         onLoad={() => setStandHeight(standRef.current?.offsetHeight ?? 0)}
       />
 
-      {/* Pre-render selected monster to measure height */}
+      {/* Pre-render monster to measure height — used for tablet/desktop CSS calc */}
       <img
         ref={monsterRef}
         src={celebrateSrc}
         alt=""
-        style={{ position: 'absolute', bottom: standHeight - 40, maxWidth: '100%', visibility: 'hidden', pointerEvents: 'none' }}
+        style={{ position: 'absolute', top: 0, visibility: 'hidden', pointerEvents: 'none' }}
         onLoad={() => setMonsterHeight(monsterRef.current?.offsetHeight ?? 0)}
       />
 
       {animationDone && (
         <>
           {/* Header text */}
-          <div style={{ textAlign: 'center', paddingTop: 32, overflow: 'hidden' }}>
+          <div style={{ textAlign: 'center', paddingTop: isMobile ? 32 : 128, overflow: 'hidden' }}>
             <div
               style={{ display: 'flex', flexDirection: 'column', gap: 12, animation: 'slideUp 0.5s ease-out both' }}
               onAnimationEnd={() => setTextDone(true)}
@@ -145,6 +165,8 @@ export default function Congrats({
                     pointerEvents: 'none',
                     animation: 'fadeIn 0.6s ease-out both',
                     zIndex: -1,
+                    maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
                   }}
                 >
                   <img
@@ -159,9 +181,10 @@ export default function Congrats({
               <Box
                 style={{
                   position: 'absolute',
-                  bottom: cardBottom,
-                  left: 24,
-                  right: 24,
+                  bottom: isMobile ? mobileCardBottom : centeredCardBottom,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '280px',
                   animation: 'fadeIn 0.4s ease-out both',
                   zIndex: 3,
                 }}
@@ -193,7 +216,7 @@ export default function Congrats({
                 <Box
                   style={{
                     position: 'relative',
-                    minHeight: 132,
+                    minHeight: 110,
                     backgroundColor: 'white',
                     borderRadius: 16,
                     padding: 24,
@@ -201,6 +224,9 @@ export default function Congrats({
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden',
+                    boxSizing: 'border-box',
+                    maxWidth: '280px',
+                    maxHeight: '130px'
                   }}
                 >
                   <img
@@ -224,28 +250,50 @@ export default function Congrats({
                 </Box>
               </Box>
 
-              {/* Celebrate monster */}
+              {/* Monster + Button: flex column, monster on top, button 68px below */}
               <Box
                 style={{
                   position: 'absolute',
-                  bottom: standHeight - 40,
+                  ...(isMobile
+                    ? { top: `calc(100% - ${mobileMonsterBottom + monsterHeight}px)` }
+                    : { top: centeredMonsterTop }
+                  ),
                   left: 0,
                   right: 0,
                   display: 'flex',
-                  justifyContent: 'center',
-                  animation: 'monsterSlideSpring 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 68,
                   zIndex: 2,
                 }}
-                onAnimationEnd={() => setMonsterDone(true)}
               >
-                <img src={celebrateSrc} alt="" style={{ display: 'block', maxWidth: '100%' }} />
+                <Box
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    animation: 'monsterSlideSpring 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
+                  }}
+                  onAnimationEnd={() => setMonsterDone(true)}
+                >
+                  <img src={celebrateSrc} alt="" style={{ display: 'block', maxWidth: '100%' }} />
+                </Box>
+                <PlayButton
+                  buttonType={ButtonType.LEADERBOARD}
+                  label={t('finalresults.congrats.button')}
+                  isEnabled
+                  onClick={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
+                />
               </Box>
 
               {/* Stand */}
               <Box
                 style={{
                   position: 'absolute',
-                  bottom: 0,
+                  ...(isMobile
+                    ? { bottom: 0 }
+                    : { top: centeredStandTop }
+                  ),
                   left: 0,
                   right: 0,
                   display: 'flex',
@@ -254,32 +302,14 @@ export default function Congrats({
                   zIndex: 0,
                 }}
               >
-                <img src={stand} alt="" style={{ width: '100%', display: 'block' }} />
+                <img
+                  src={standSrc}
+                  alt=""
+                  style={{ display: 'block', width: isTablet ? undefined : '100%', maxWidth: '100%' }}
+                />
               </Box>
             </>
           )}
-
-          {/* Button */}
-          <Box
-            style={{
-              position: 'absolute',
-              bottom: 40,
-              left: 32,
-              right: 32,
-              display: 'flex',
-              justifyContent: 'center',
-              animation: textDone ? 'fadeIn 0.5s ease-out both' : 'none',
-              opacity: textDone ? undefined : 0,
-              zIndex: 4,
-            }}
-          >
-            <PlayButtonBlock
-              buttonType={ButtonType.LEADERBOARD}
-              label={t('finalresults.congrats.button')}
-              isEnabled
-              onClick={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
-            />
-          </Box>
         </>
       )}
     </BackgroundContainerStyled>
