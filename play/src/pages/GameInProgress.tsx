@@ -37,8 +37,26 @@ import {
   checkForSubmittedHintOnRejoin
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
+import { ErrorType, LocalModel, ScreenSize, StorageKeyAnswer, StorageKeyHint, PADDING_LEFTRIGHT_BY_SIZE } from '../lib/PlayModels';
 import { trackEvent, trackError, PlayEvent } from '../lib/analytics';
+
+const PADDING_TOP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '60px',
+  [ScreenSize.MEDIUM]: '60px',
+  [ScreenSize.LARGE]: '42px',
+};
+
+const PADDING_BOTTOM_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '32px',
+  [ScreenSize.MEDIUM]: '60px',
+  [ScreenSize.LARGE]: '42px',
+};
+
+const HEADER_TO_BODY_GAP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '32px',
+  [ScreenSize.MEDIUM]: '44px',
+  [ScreenSize.LARGE]: '44px',
+};
 
 interface GameInProgressProps {
   apiClients: IAPIClients;
@@ -99,6 +117,10 @@ export default function GameInProgress({
     return rejoinSubmittedHint;
   });
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallDevice) screenSize = ScreenSize.SMALL;
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   const answerSettings: IAnswerSettings | null = currentQuestion.answerSettings ?? null;
@@ -292,7 +314,15 @@ export default function GameInProgress({
         errorText=""
         handleRetry={handleRetry}
       />
-    <HeaderStackContainerStyled>
+    <HeaderStackContainerStyled
+        style={{
+          height: 'auto',
+          paddingTop: PADDING_TOP_BY_SIZE[screenSize],
+          paddingBottom: HEADER_TO_BODY_GAP_BY_SIZE[screenSize],
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+        }}
+      >
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
@@ -303,11 +333,10 @@ export default function GameInProgress({
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
+          disableInnerPadding
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
         currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
@@ -326,7 +355,7 @@ export default function GameInProgress({
             handleSelectConfidence={handleSelectConfidence}
             isConfidenceSelected={selectConfidence.isSelected}
             selectedConfidenceOption={selectConfidence.selectedConfidenceOption}
-            isTimeUp={timerIsPaused}
+            isTimeUp={timerIsPaused || currentTimer <= 0}
             isShortAnswerEnabled={isShortAnswerEnabled}
             backendAnswer={backendAnswer}
             currentQuestionIndex={currentQuestionIndex ?? 0}
@@ -352,10 +381,19 @@ export default function GameInProgress({
             isShortAnswerEnabled={isShortAnswerEnabled}
             gameSession={gameSession}
             newPoints={newPoints}
+            teamAvatar={teamAvatar}
           />
         )}
       </BodyStackContainerStyled>
-      <FooterStackContainerStyled>
+      <FooterStackContainerStyled
+        screenSize={screenSize}
+        style={{
+          paddingTop: '24px',
+          paddingBottom: PADDING_BOTTOM_BY_SIZE[screenSize],
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+        }}
+      >
         {isSmallDevice ? (
           <PaginationContainerStyled className="swiper-pagination-container" />
         ) : null}
@@ -364,7 +402,8 @@ export default function GameInProgress({
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           score={score}
           newPoints={hintBonusPoints > 0 ? hintBonusPoints : newPoints}
-          animationDelay={hintBonusPoints > 0 ? 0 : undefined}
+          animationDelay={hintBonusPoints > 0 ? 0 : 1500}
+          disableInnerPadding
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

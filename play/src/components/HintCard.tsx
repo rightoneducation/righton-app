@@ -50,6 +50,12 @@ export default function HintCard({
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const hintPlaceholders = [
+    t('gameinprogress.chooseanswer.hintcardplaceholder1'),
+    t('gameinprogress.chooseanswer.hintcardplaceholder2'),
+    t('gameinprogress.chooseanswer.hintcardplaceholder3'),
+  ];
+  const hintPlaceholderText = hintPlaceholders.join('\n');
 
   // UPGRADE INTEGRATION START
   const [condition, setCondition] = useState(
@@ -143,7 +149,7 @@ export default function HintCard({
 
   return (
     <BodyCardStyled elevation={10}>
-      <BodyCardContainerStyled >
+      <BodyCardContainerStyled spacing={2}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <Typography
             variant="subtitle1"
@@ -192,7 +198,7 @@ export default function HintCard({
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            gap: '20px',
+            gap: '24px',
           }}
         >
           <Box style={{width: '100%'}}>
@@ -216,14 +222,17 @@ export default function HintCard({
             variant="filled"
             autoComplete="off"
             multiline
-            minRows={2}
-            maxRows={2}
+            minRows={8}
+            maxRows={8}
             disabled={isHintSubmitted}
-            placeholder={t('gameinprogress.chooseanswer.hintcardplaceholder') ?? ''}
+            placeholder={hintPlaceholderText}
             onChange={handleEditorContentsChange}
             value={editorContents}
             InputProps={{
               disableUnderline: true,
+              sx: {
+                '& textarea': { textAlign: 'left' },
+              },
               style: {
                 paddingTop: '9px',
               },

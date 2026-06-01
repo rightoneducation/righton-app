@@ -3,8 +3,8 @@ import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 import Modal from 'react-modal';
+import { PlayButton, ButtonType } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
 
 interface RejoinModalProps {
   handleRejoinSession: () => void;
@@ -32,7 +32,7 @@ export default function RejoinModal({
           maxWidth: theme.breakpoints.values.xs,
           inset: 'auto',
           margin: '20px',
-          borderRadius: '24px',
+          borderRadius: '16px',
           backgroundColor: theme.palette.primary.main,
           boxShadow: `0px 20px 20px rgba(0, 0, 0, 0.25)`,
         },
@@ -52,30 +52,30 @@ export default function RejoinModal({
       appElement={document.getElementById('root') || undefined}
     >
       <BodyCardContainerStyled spacing={2}>
-        <Typography variant="h4" sx={{ textAlign: 'center' }}>
+        <Typography variant="semiBoldParagraph" sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}>
           {t('joingame.rejoinmodal.title1')}
         </Typography>
-        <Typography variant="h4">{t('joingame.rejoinmodal.title2')}</Typography>
-        <IntroButtonStyled
+        <Typography variant="paragraph" sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}>
+          {t('joingame.rejoinmodal.title2')}
+        </Typography>
+        <PlayButton
+          buttonType={ButtonType.REJOIN}
+          label={t('joingame.rejoinmodal.button1')}
+          isEnabled
           onClick={() => {
             handleRejoinSession();
             setIsModalVisible(false);
           }}
-          style={{
-            background: `${theme.palette.primary.highlightGradient}`,
-            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-          }}
-        >
-          {t('joingame.rejoinmodal.button1')}
-        </IntroButtonStyled>
-        <IntroButtonStyled
+        />
+        <PlayButton
+          buttonType={ButtonType.DONTREJOIN}
+          label={t('joingame.rejoinmodal.button2')}
+          isEnabled
           onClick={() => {
             handleDontRejoinSession();
             setIsModalVisible(false);
           }}
-        >
-          {t('joingame.rejoinmodal.button2')}
-        </IntroButtonStyled>
+        />
       </BodyCardContainerStyled>
     </Modal>
   );

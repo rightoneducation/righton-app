@@ -27,7 +27,7 @@ export default function LeaderboardHeader() {
           </Grid>
         </Grid>
         <Grid item style={{ paddingTop: `${theme.sizing.xxSmPadding}px` }}>
-          <Typography variant="h1" style={{ fontSize: '24px', lineHeight: '36px', fontFamily: 'Poppins' }}>
+          <Typography variant="h1">
           {localGameSession.currentState === GameSessionState.TEAMS_JOINING ? t('gameinprogress.header.leaderboard') : t('gameinprogress.header.finalresults')}
           </Typography>
         </Grid>

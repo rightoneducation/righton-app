@@ -1,8 +1,8 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Typography, Stack } from '@mui/material';
+import { PlayButton, ButtonType } from '@righton/networking';
 import { trackError, PlayEvent } from '../lib/analytics';
 import BackgroundContainerStyled from '../lib/styledcomponents/layout/BackgroundContainerStyled';
-import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
 
 export default class AppErrorBoundary extends Component<
   { children: ReactNode },
@@ -35,9 +35,12 @@ export default class AppErrorBoundary extends Component<
             <Typography variant="h2">
               Please refresh the page and try again.
             </Typography>
-            <IntroButtonStyled onClick={() => window.location.reload()}>
-              Refresh Page
-            </IntroButtonStyled>
+            <PlayButton
+              buttonType={ButtonType.REFRESH}
+              label="Refresh Page"
+              isEnabled
+              onClick={() => window.location.reload()}
+            />
           </Stack>
         </BackgroundContainerStyled>
       );

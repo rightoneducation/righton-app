@@ -79,10 +79,9 @@ export default function JoinGame({
       <Box style={{display: 'flex', flexDirection: 'column'}}>
         <Stack spacing={2}>
           <Typography
-            variant="h2"
+            variant="textLabel"
             sx={{
               textAlign: 'center',
-              paddingTop: `${theme.sizing.mediumPadding}px`,
             }}
           >
             {t('joingame.selectavatar.title')}

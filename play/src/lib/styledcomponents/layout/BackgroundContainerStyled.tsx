@@ -1,15 +1,30 @@
 import { styled } from '@mui/material/styles';
 import { Stack } from '@mui/material';
+import mathSymbolsBackground from '../../../img/mathSymbolsBackground.svg';
 
 export default styled(Stack)(({ theme }) => ({
   height: '100%',
   position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
   width: '100%',
-  background: `${theme.palette.primary.radialGradient} no-repeat`,
-  backgroundSize: `100%`,
-  backgroundPosition: 'center top',
-  backgroundAttachment: 'fixed',
-  display: 'flex',
-  alignItems: 'center',
-  touchAction: 'none'
+  isolation: 'isolate',
+  backgroundImage: 'linear-gradient(180deg, #2A124F, #6029B5)',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'bottom',
+  backgroundSize: `100% 100%`,
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    zIndex: 0,
+    backgroundImage: `url(${mathSymbolsBackground})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'bottom',
+    backgroundSize: 'auto',
+    pointerEvents: 'none',
+    opacity: '10%'
+  },
+  '& > *': {
+    position: 'relative',
+    zIndex: 1,
+  },
 }));

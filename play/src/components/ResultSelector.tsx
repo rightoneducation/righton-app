@@ -6,8 +6,8 @@ import CorrectStars from '../img/CorrectStars.svg';
 import CorrectStars_Mirrored from '../img/CorrectStars_Mirrored.svg';
 import SelectedAnswer from '../img/SelectedAnswer.svg';
 import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
-import CorrectAnswerImage from '../img/correctAnswerImage.svg';
-import { AnswerState } from '../lib/PlayModels';
+import { AnswerState, monsterMap } from '../lib/PlayModels';
+import NewPointsIndicator from './NewPointsIndicator';
 
 const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   width: '100%',
@@ -37,6 +37,7 @@ interface ResultSelectorProps {
   answerStatus: AnswerState;
   letterCode: string;
   answerText: string;
+  teamAvatar: number;
   percentageText?: string;
   currentState?: GameSessionState;
   isShortAnswerEnabled?: boolean;
@@ -48,6 +49,7 @@ export default function ResultSelector({
   answerStatus,
   letterCode,
   answerText,
+  teamAvatar,
   percentageText,
   currentState,
   isShortAnswerEnabled,
@@ -58,9 +60,9 @@ export default function ResultSelector({
   
   const imageMap = {
     [AnswerState.DEFAULT]: '',
-    [AnswerState.CORRECT]: CorrectAnswerImage,
+    [AnswerState.CORRECT]: '',
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
-    [AnswerState.SELECTED]: SelectedAnswer,
+    [AnswerState.SELECTED]: monsterMap[teamAvatar].answerSelect,
     [AnswerState.PREVIOUS]: '',
     [AnswerState.OTHER]: '',
   };
@@ -69,13 +71,17 @@ export default function ResultSelector({
   const handleContextMenu: MouseEventHandler<HTMLElement> = (event) => {
     event.preventDefault();
   };
+  const correctAnswerIcon = newPoints && newPoints > 0
+    ? <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState ?? GameSessionState.PHASE_1_DISCUSS} />
+    : <img src={PlayerCorrectImage} style={{ position: 'relative', width: `${theme.sizing.mediumPadding}px`, height: `${theme.sizing.mediumPadding}px`, paddingTop: '2px', WebkitTouchCallout: 'none' }} alt="SelectedAnswerImage" onContextMenu={handleContextMenu} />;
+
   const image = (
     <img
       src={imageMap[answerStatus]}
       style={{
         position: 'relative',
-        width: `${theme.sizing.smallPadding}px`,
-        height: `${theme.sizing.smallPadding}px`,
+        width: `${theme.sizing.mediumPadding}px`,
+        height: `${theme.sizing.mediumPadding}px`,
         paddingTop: '2px',
         // disable touch callout when longclicking on image
         WebkitTouchCallout: 'none',
@@ -87,37 +93,34 @@ export default function ResultSelector({
   );
   const resultContents = (
     <>
-      <Box style={{ display: 'flex'}}>
+      <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
         {!(isShortAnswerEnabled && currentState === GameSessionState.PHASE_1_DISCUSS) && !(isShortAnswerEnabled && correctCard) && (
           <Typography
-            variant="h5"
+            variant="h2"
             sx={{
               paddingLeft: '1px',
-              paddingTop: `${theme.sizing.extraSmallPadding}px`,
-              color: correctCard ? '#384466' : `${theme.palette.primary.darkPurple}`,
-              fontWeight: '800',
-              fontSize: '16px',
-              lineHeight: '22px',
+              lineHeight: 1,
+              color: correctCard ? '#384466' : `${theme.palette.designSystem.surface.play}`,
             }}
           >
-            {letterCode}
+            {letterCode.toUpperCase()}
           </Typography>
         )}
         <Typography
-          variant="body2"
+          variant="textLabel"
           sx={{
-            paddingTop: `${theme.sizing.extraSmallPadding}px`,
-            paddingBottom: `${theme.sizing.extraSmallPadding}px`,
-            paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+            paddingLeft: `${theme.sizing.smallPadding}px`,
             paddingRight: `${theme.sizing.largePadding}px`,
-            whiteSpace: 'pre-line'
+            whiteSpace: 'pre-line',
+            fontWeight: 400,
+            color:  `${theme.palette.designSystem.surface.play}`
           }}
         >
           {answerText}
         </Typography>
 
       </Box>
-      <Box style={{ display: 'flex', alignItems: 'center' }}>
+      <Box style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
         {currentState === GameSessionState.PHASE_2_DISCUSS && ( 
           <Typography
             variant="body2"
@@ -133,7 +136,8 @@ export default function ResultSelector({
             {percentageText}
           </Typography>
         )}
-        {answerStatus !== AnswerState.PREVIOUS &&
+        {answerStatus === AnswerState.PLAYER_SELECTED_CORRECT ? correctAnswerIcon : (
+          answerStatus !== AnswerState.PREVIOUS &&
           answerStatus !== AnswerState.DEFAULT &&
           (answerStatus === AnswerState.SELECTED ? (
             <Tooltip
@@ -147,7 +151,8 @@ export default function ResultSelector({
             </Tooltip>
           ) : (
             image
-          ))}
+          ))
+        )}
       </Box>
     </>
   );

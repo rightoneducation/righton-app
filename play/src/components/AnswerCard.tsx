@@ -42,40 +42,22 @@ export default function AnswerCard({
   currentTeam,
   handleSelectAnswer,
 }: AnswerCardProps) {
-  console.log(answers);
   const theme = useTheme();
   const { t } = useTranslation();
   const correctText = (
     <Box display="inline" style={{ width: '100%' }}>
-      <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'left' }}>
+      <Typography variant="h1" sx={{ width: '100%', textAlign: 'left', color: theme.palette.designSystem.surface.play }}>
         {t('gameinprogress.chooseanswer.answercard')}
-      </Typography>
-      <Typography variant="h4" display="inline">
-        {t('gameinprogress.chooseanswer.correcttext1')}
-      </Typography>
-      <Typography
-        variant="h4"
-        display="inline"
-        sx={{ color: `${theme.palette.primary.green}` }}
-      >
-        &nbsp;{t('gameinprogress.chooseanswer.correcttext2')}
       </Typography>
     </Box>
   );
   const trickText = (
-    <Box display="inline" sx={{ textAlign: 'center' }}>
-      <Typography variant="h4" display="inline">
-        {t('gameinprogress.chooseanswer.incorrecttext1')}&nbsp;
+    <Box display="inline" sx={{ textAlign: 'left' }}>
+      <Typography variant="h2" display="inline"  sx={{ fontWeight: 400, color: theme.palette.designSystem.surface.play }}>
+        {t('gameinprogress.chooseanswer.incorrecttext1')}
       </Typography>
-      <Typography
-        display="inline"
-        variant="h4"
-        sx={{ color: `${theme.palette.primary.red}` }}
-      >
-        {t('gameinprogress.chooseanswer.incorrecttext2')}&nbsp;
-      </Typography>
-      <Typography variant="h4" display="inline">
-        {t('gameinprogress.chooseanswer.incorrecttext3')}
+      <Typography variant="h2" display="inline"  sx={{  color: theme.palette.designSystem.surface.play }}>
+        {t('gameinprogress.chooseanswer.incorrecttext2')}
       </Typography>
     </Box>
   );

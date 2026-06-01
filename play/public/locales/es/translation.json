@@ -18,14 +18,16 @@
     },
     "playername": {
       "title": "Introduzca su nombre",
+      "firstnametitle": "Introduzca su nombre",
+      "lastnametitle": "Introduzca su apellido",
       "firstnamedefault": "Nombre de pila",
       "lastnamedefault": "Apellido",
-      "button": "Ingresar",
-      "description1": "Escriba su nombre y apellido para ingresar al juego.",
-      "description2": "Esto se usará para identificarlo solo durante el juego y no se almacenará."
+      "button": "Unirse",
+      "description1": "Para entrar al juego, escribe tu nombre y apellido.",
+      "description2": "Esto se utilizará para identificarte durante el juego."
     },
     "selectavatar": {
-      "title": "¡Elige tu avatar!",
+      "title": "Elige tu avatar",
       "button": "Elegir"
     }
   },
@@ -33,18 +35,18 @@
     "title": "Unirse al juego..."
   },
   "howtoplay": {
-    "title": "¡Cómo jugar!",
+    "title": "Cómo jugar",
     "slide0": "Lea la pregunta de opción múltiple",
     "slide1": "Gana puntos eligiendo la respuesta correcta...",
     "slide2": "Leer soluciones paso a paso",
     "slide3": "¡Gana más puntos adivinando la respuesta incorrecta más popular!",
-    "slide4": "¡La mayor cantidad de puntos totales gana!",
+    "slide4": "¡La puntuación total más alta gana!",
     "description": "Esperando a que comience el juego...",
     "loading": "Obteniendo sesión de juego..."
   },
   "pregamecountdown": {
     "subtitle1": "Su pregunta \n aparecerá pronto.",
-    "subtitle2": "¡Elige la respuesta correcta!"
+    "subtitle2": "Elige la respuesta correcta"
   },
   "gameinprogress": {
     "header": {
@@ -57,8 +59,8 @@
       "phase2start": "Respuesta Explicaciones",
       "phase1results": "Resultados de la Fase 1",
       "phase2results": "Resultados de la Fase 2",
-      "leaderboard": "Clasificación Final",
-      "finalresults": "Tabla de Posiciones",
+      "leaderboard": "Los 5 mejores jugadores actuales",
+      "finalresults": "Los 5 mejores jugadores",
       "finished": "Responde la Pregunta",
       "correct": "Correcta!",
       "incorrect": "¡Buen Intento!"
@@ -74,17 +76,17 @@
       "incorrecttext1": "¿Cuál crees que es la",
       "incorrecttext2": "respuesta incorrecta",
       "incorrecttext3": "más popular entre tu clase?",
-      "confidenceheader": "Califica tu confianza",
+      "confidenceheader": "¿Qué tan segura estabas de tu respuesta?",
       "confidencetext": "¿Qué tan segura estabas de tu respuesta?",
       "confidenceoption1": "De nada",
       "confidenceoption2": "Un poco",
-      "confidenceoption3": "Bastante",
+      "confidenceoption3": "Una especie de",
       "confidenceoption4": "Muy",
       "confidenceoption5": "Totalmente",
       "sendingconfidenceresponse": "Enviando tu respuesta...",
       "submittedconfidenceresponse": "Calificación guardada — puedes cambiarla antes de que se acabe el tiempo.",
-      "timeupconfidenceresponse": "Se acabó el tiempo — tu respuesta está bloqueada.",
-      "answertimeup": "Esperando a que tu profesor avance a la siguiente fase.",
+      "timeupconfidenceresponse": "Se acabó el tiempo: hemos grabado tu respuesta.",
+      "answertimeup": "Esperando a que tu profesor avance a la siguiente fase",
       "questioncard": "Pregunta",
       "answercard": "Elige la respuesta correcta",
       "openanswercard": "Introduce tu respuesta",
@@ -92,7 +94,9 @@
       "hintcardtitle": "Dar una pista (opcional)",
       "hintcarddescriptiondefault": "¿Podrías darle una pista a alguien que haya cometido este error?",
       "hintcarddescriptionupgrade": "¿Qué consejo le darías a tu yo del pasado para evitar este error?",
-      "hintcardplaceholder": "Introduce tu explicación..."
+      "hintcardplaceholder1": "Recuerda...",
+      "hintcardplaceholder2": "No olvides...",
+      "hintcardplaceholder3": "Comprueba que..."
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
@@ -100,7 +104,8 @@
       "correcttext": "Correcta!",
       "nicetrytext": "Buen intento",
       "correctanswertext": "La respuesta es...",
-      "responses": "Respuestas de respuesta"
+      "responses": "Respuestas de respuesta",
+      "hinttext": "Compartiste la siguiente pista:"
     },
     "startphase2": {
       "title": "Empezando la Fase 2...",
@@ -110,16 +115,17 @@
     "button": {
       "submit": "Enviar Respuesta",
       "hint": "Enviar Explicación",
-      "submitted": "Enviada"
+      "submitted": "¡Enviada!"
     }
   },
   "finalresults": {
     "congrats": {
-      "title": "Has ganado un total de",
-      "points": "puntos",
-      "top5": "¡Felicidades! \n ¡Estás entre los 5 primeros!",
-      "greatjob": "¡Gran trabajo!",
-      "button": "Ver tabla de posiciones"
+      "title": "¡Felicidades!",
+      "points1": "Has ganado ",
+      "points2": " puntos",
+      "top5": "¡Estás entre los 5 mejores!",
+      "greatjob": "¡Buen trabajo!",
+      "button": "Ver clasificación"
     }
   },
   "error": {

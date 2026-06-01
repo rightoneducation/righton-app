@@ -1,11 +1,10 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Typography } from '@mui/material';
+import { Stack, Box, Typography, useMediaQuery } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined } from '@righton/networking';
-import { PregameState, LocalModel } from '../../lib/PlayModels';
+import { isNullOrUndefined, PlayButton, ButtonType } from '@righton/networking';
+import { PregameState, LocalModel, ScreenSize } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
-import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import RejoinModal from '../../components/RejoinModal';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
@@ -30,8 +29,46 @@ const StackContainer = styled(Stack)(({ theme }) => ({
   maxWidth: theme.breakpoints.values.xs,
 }));
 
-const BottomBox = styled(Box)(({ theme }) => ({
-  paddingBottom: `${theme.sizing.extraLargePadding}px`,
+interface BottomBoxProps {
+  screenSize: ScreenSize;
+}
+
+const PADDING_BOTTOM_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '160px',
+  [ScreenSize.MEDIUM]: '120px',
+  [ScreenSize.LARGE]: '110px',
+};
+
+const BottomBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<BottomBoxProps>(({ theme, screenSize }) => ({
+  paddingBottom: PADDING_BOTTOM_BY_SIZE[screenSize],
+}));
+
+
+interface StackProps {
+  screenSize: ScreenSize;
+}
+
+const PADDING_TOP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '80px',
+  [ScreenSize.MEDIUM]: '120px',
+  [ScreenSize.LARGE]: '110px',
+};
+
+const PADDING_SIDE_BY_SIZE:  Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '40px',
+  [ScreenSize.MEDIUM]: '80px',
+  [ScreenSize.LARGE]: '0px',
+};
+
+const LogoTextStack = styled(Stack, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<StackProps>(({ theme, screenSize }) => ({
+    paddingTop: PADDING_TOP_BY_SIZE[screenSize],
+    paddingLeft: PADDING_SIDE_BY_SIZE[screenSize],
+    paddingRight: PADDING_SIDE_BY_SIZE[screenSize],
+    alignItems: 'center'
 }));
 
 interface SplashScreenProps {
@@ -49,6 +86,12 @@ export default function SplashScreen({
 }: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.SMALL;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isMediumScreen) screenSize = ScreenSize.MEDIUM;
+
   const [isModalVisible, setIsModalVisible] = React.useState(
     !isNullOrUndefined(rejoinGameObject)
   );
@@ -63,7 +106,7 @@ export default function SplashScreen({
           setIsModalVisible={setIsModalVisible}
         />
         <StackContainer spacing={5}>
-          <Stack sx={{ alignItems: 'center' }} spacing={2}>
+          <LogoTextStack screenSize={screenSize} spacing={2}>
             <img
               style={{
                 width: `${theme.sizing.pregameMinColumnWidth}px`,
@@ -74,29 +117,25 @@ export default function SplashScreen({
               alt="Question"
             />
             <Typography
-              variant="h2"
+              variant="semiBoldParagraph"
               sx={{
-                weight: 700,
                 textAlign: `center`,
                 paddingLeft: `${theme.sizing.mediumPadding}px`,
                 paddingRight: `${theme.sizing.mediumPadding}px`,
               }}
             >
-              {t('joingame.splash.title')}
+              {t('joingame.splash.title1')}
+              <br />
+              {t('joingame.splash.title2')}
             </Typography>
-          </Stack>
-          <BottomBox>
-            <IntroButtonStyled
+          </LogoTextStack>
+          <BottomBox screenSize={screenSize}>
+            <PlayButton
+              buttonType={ButtonType.START}
+              label={t('joingame.splash.button')}
+              isEnabled
               onClick={() => setPregameState(PregameState.ENTER_GAME_CODE)}
-              style={{
-                background: `${theme.palette.primary.highlightGradient}`,
-                boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-              }}
-            >
-              <Typography variant="h2" sx={{ textAlign: 'center' }}>
-                {t('joingame.splash.button')}
-              </Typography>
-            </IntroButtonStyled>
+            />
           </BottomBox>
         </StackContainer>
       </HeroContainer>

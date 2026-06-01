@@ -1,11 +1,12 @@
 {
-  "name": "play2",
+  "name": "play",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@righton/networking": "*",
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.10.6",
-    "@mui/material": "^5.11.15",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^5.16.7",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@mui/styles": "^5.11.13",
     "@testing-library/jest-dom": "^5.14.1",
@@ -109,11 +110,6 @@
     "webpack": "^5.94.0",
     "whatwg-fetch": "^3.6.2"
   },
-  "resolutions": {
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
-    "styled-components": "^5",
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
-  },
   "prettier": {
     "singleQuote": true
   },
@@ -195,5 +191,5 @@
     ]
   },
   "readme": "readme.md",
-  "_id": "play2@0.1.0"
+  "_id": "play@0.1.0"
 }

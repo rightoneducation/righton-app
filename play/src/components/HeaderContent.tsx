@@ -1,16 +1,35 @@
 import React from 'react';
-import { Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Typography, useMediaQuery } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
+import { ScreenSize } from '../lib/PlayModels';
 import Timer from './Timer';
 
-const HeaderContainer = styled('div')({
+const MAX_WIDTH_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '100%',
+  [ScreenSize.MEDIUM]: '326px',
+  [ScreenSize.LARGE]: '326px',
+};
+
+interface HeaderContainerProps {
+  screenSize: ScreenSize;
+  disableInnerPadding?: boolean;
+}
+
+const HeaderContainer = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'disableInnerPadding',
+})<HeaderContainerProps>(({ theme, screenSize, disableInnerPadding }) => ({
   width: '100%',
+  maxWidth: MAX_WIDTH_BY_SIZE[screenSize],
+  paddingLeft: disableInnerPadding || screenSize !== ScreenSize.SMALL ? 0 : `${theme.sizing.largePadding}px`,
+  paddingRight: disableInnerPadding || screenSize !== ScreenSize.SMALL ? 0 : `${theme.sizing.largePadding}px`,
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-});
+  gap: `${theme.sizing.extraSmallPadding}px`,
+}));
 
 interface HeaderContentProps {
   currentState: GameSessionState;
@@ -22,6 +41,7 @@ interface HeaderContentProps {
   handleTimerIsFinished: () => void;
   isCorrect: boolean;
   isIncorrect: boolean;
+  disableInnerPadding?: boolean;
 }
 
 export default function HeaderContent({
@@ -34,8 +54,16 @@ export default function HeaderContent({
   handleTimerIsFinished,
   isCorrect,
   isIncorrect,
+  disableInnerPadding,
 }: HeaderContentProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallScreen) screenSize = ScreenSize.SMALL;
+
   const stateMap = {
     [GameSessionState.NOT_STARTED]: t('gameinprogress.header.notstarted'),
     [GameSessionState.TEAMS_JOINING]:  t('gameinprogress.header.leaderboard'),
@@ -67,8 +95,8 @@ export default function HeaderContent({
   };
 
   return (
-    <HeaderContainer>
-      <Typography variant="h1">
+    <HeaderContainer screenSize={screenSize} disableInnerPadding={disableInnerPadding}>
+      <Typography variant="h0">
         {stateCheck(currentState, isCorrect, isIncorrect)}
       </Typography>
       {(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
@@ -81,6 +109,7 @@ export default function HeaderContent({
           isPaused={isPaused}
           isAddTime={isAddTime}
           handleTimerIsFinished={handleTimerIsFinished}
+          screenSize={screenSize}
         />
       ) }
     </HeaderContainer>

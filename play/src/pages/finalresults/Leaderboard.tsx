@@ -1,120 +1,166 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
-  GameSessionState,
   ITeam,
   isNullOrUndefined,
   ModelHelper
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
-import { Grid } from '@mui/material';
-import HeaderContent from '../../components/HeaderContent';
-import FooterContent from '../../components/FooterContent';
+import { Box, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 import StackContainerStyled from '../../lib/styledcomponents/layout/StackContainerStyled';
-import HeaderStackContainerStyled from '../../lib/styledcomponents/layout/HeaderStackContainerStyled';
-import BodyStackContainerStyled from '../../lib/styledcomponents/layout/BodyStackContainerStyled';
-import BodyBoxUpperStyled from '../../lib/styledcomponents/layout/BodyBoxUpperStyled';
-import BodyBoxLowerStyled from '../../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaLeaderboardStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import FooterStackContainerStyled from '../../lib/styledcomponents/layout/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import LeaderboardSelector from '../../components/LeaderboardSelector';
+import LeaderboardSelector, { LeaderboardOuterContainer } from '../../components/LeaderboardSelector';
+
+const CONTAINER_DURATION_MS = 500;
+const GROUP_STAGGER_MS = 220;
 
 interface LeaderboardProps {
   teams?: ITeam[];
-  currentState: GameSessionState;
-  teamAvatar: number;
-  teamId: string;
 }
 
-export default function Leaderboard({
-  teams,
-  currentState,
-  teamAvatar,
-  teamId,
-}: LeaderboardProps) {
-  const currentTeam = teams?.find((team) => team.id === teamId);
+export default function Leaderboard({ teams }: LeaderboardProps) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
+
+  let paddingTop = '42px';
+  if (isMobile) paddingTop = '60px';
+  if (isTablet) paddingTop = '120px';
+
+  let gap = '60px';
+  if (isMobile) gap = '24px';
+  if (isTablet) gap = '40px';
+
   const sortedTeams: ITeam[] = useRef<ITeam[]>(
     !isNullOrUndefined(teams) ? ModelHelper.teamSorter(teams, 5).filter((team) => team.score > 0) : []
   ).current;
 
-
-  // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
-  // ref req'd for height of container
-  const containerRef = useRef<HTMLDivElement>(null);
-  // ref req'd for height of item
-  const itemRef = useRef<HTMLDivElement>(null);
-  // height of subcontainer
-  const [subContainerHeight, setSubContainerHeight] = useState<number>(0);
-
-  useEffect(() => {
-    // check if the container element has been loaded yet
-    if (containerRef.current && itemRef.current) {
-      // get height of container
-      const containerHeight = containerRef.current.clientHeight;
-      // get height of item
-      const itemHeight = itemRef.current.clientHeight;
-      // adjust height of subcontainer to be a multiple of the item height
-      setSubContainerHeight(containerHeight - (containerHeight % itemHeight));
-    }
-  }, [containerRef.current?.clientHeight, subContainerHeight]); // updates whenever the container is resized
-
   const { current: avatarNumbers } = useRef<number[]>(
     sortedTeams
-      ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-        sortedTeams.map((sortedTeam) => {
-          return sortedTeam.selectedAvatarIndex;
-        })
-      : // if teams is invalid, then return empty array
-        []
+      ? sortedTeams.map((sortedTeam) => sortedTeam.selectedAvatarIndex)
+      : []
   );
+
+  interface TieGroupEntry {
+    team: ITeam;
+    avatarIndex: number;
+    rank: number;
+    cardBorderRadius: string;
+  }
+
+  const tieGroups = sortedTeams
+    .reduce<TieGroupEntry[][]>((groups, team, index) => {
+      const lastGroup = groups[groups.length - 1];
+      if (lastGroup && lastGroup[0].team.score === team.score) {
+        lastGroup.push({ team, avatarIndex: avatarNumbers[index], rank: lastGroup[0].rank, cardBorderRadius: '8px' });
+      } else {
+        const rank = groups.reduce((sum, g) => sum + g.length, 0) + 1;
+        groups.push([{ team, avatarIndex: avatarNumbers[index], rank, cardBorderRadius: '8px' }]);
+      }
+      return groups;
+    }, [])
+    .map((group) => {
+      if (group.length === 1) return group;
+      return group.map((entry, i) => {
+        let cardBorderRadius = '0px';
+        if (i === 0) cardBorderRadius = '8px 8px 0px 0px';
+        else if (i === group.length - 1) cardBorderRadius = '0px 0px 8px 8px';
+        return { ...entry, cardBorderRadius };
+      });
+    });
+
+  const [containerVisible, setContainerVisible] = useState(false);
+  const [visibleGroups, setVisibleGroups] = useState<boolean[]>(
+    tieGroups.map((_, i) => i === 0)
+  );
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    timers.push(setTimeout(() => setContainerVisible(true), 50));
+    tieGroups.forEach((_, i) => {
+      if (i === 0) return;
+      timers.push(
+        setTimeout(() => {
+          setVisibleGroups((prev) => prev.map((v, idx) => (idx === i ? true : v)));
+        }, CONTAINER_DURATION_MS + (i - 1) * GROUP_STAGGER_MS)
+      );
+    });
+    return () => timers.forEach(clearTimeout);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
-    <StackContainerStyled
-      direction="column"
-      alignItems="center"
-      justifyContent="space-between"
-    >
-      <HeaderStackContainerStyled>
-        <HeaderContent
-          currentState={currentState}
-          isCorrect={false}
-          isIncorrect={false}
-          totalTime={15}
-          currentTimer={0}
-          isPaused={false}
-          isFinished={false}
-          handleTimerIsFinished={() => {}}
-        />
-      </HeaderStackContainerStyled>
-      <BodyStackContainerStyled
-        ref={containerRef}
-        style={{ height: `${subContainerHeight}px` }}
+    <StackContainerStyled direction="column" alignItems="center">
+      <Box
+        style={{
+          paddingTop,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap,
+          width: '100%',
+          maxWidth: '500px',
+          height: '100%',
+          overflow: 'scroll',
+          boxSizing: 'border-box',
+          touchAction: 'pan-y',
+        }}
+        sx={{
+          '&::-webkit-scrollbar': { display: 'none' },
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        }}
       >
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
-        <BodyContentAreaLeaderboardStyled
-          container
-          style={{ height: `${subContainerHeight}px` }}
-          spacing={2}
+        <Typography variant="h0">
+          {t('gameinprogress.header.finalresults')}
+        </Typography>
+        <Box
+          style={{
+            width: '100%',
+            maxWidth: '340px',
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            padding: '16px',
+            background: 'rgba(255, 255, 255, 0.3)',
+            borderRadius: '8px',
+            clipPath: containerVisible
+              ? 'inset(0% 0 0 0 round 8px)'
+              : 'inset(100% 0 0 0 round 8px)',
+            transition: `clip-path ${CONTAINER_DURATION_MS}ms ease-out`,
+          }}
         >
-          {sortedTeams.map((team: ITeam, index: number) => (
-            <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
-              <LeaderboardSelector
-                teamName={team.name ? team.name : 'Team One'}
-                teamAvatar={avatarNumbers[index]}
-                teamScore={team.score}
-              />
-            </Grid>
+          {tieGroups.map((group, groupIndex) => (
+            <div
+              key={group[0].rank}
+              style={groupIndex === 0 ? {
+                transform: containerVisible ? 'translateY(0)' : 'translateY(80vh)',
+                transition: `transform ${CONTAINER_DURATION_MS}ms ease-out`,
+              } : {
+                opacity: visibleGroups[groupIndex] ? 1 : 0,
+                transform: visibleGroups[groupIndex] ? 'scale(1)' : 'scale(0.3)',
+                transition: 'opacity 0.5s ease-out, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              }}
+            >
+              <LeaderboardOuterContainer>
+                {group.map((entry, i) => (
+                  <LeaderboardSelector
+                    key={`${entry.rank}-${entry.avatarIndex}`}
+                    teamName={entry.team.name ?? 'Team One'}
+                    teamAvatar={entry.avatarIndex}
+                    teamScore={entry.team.score}
+                    position={entry.rank}
+                    cardBorderRadius={entry.cardBorderRadius}
+                    showPosition={i === 0}
+                  />
+                ))}
+              </LeaderboardOuterContainer>
+            </div>
           ))}
-        </BodyContentAreaLeaderboardStyled>
-      </BodyStackContainerStyled>
-      <FooterStackContainerStyled>
-        <FooterContent
-          avatar={teamAvatar}
-          teamName={currentTeam ? currentTeam.name : 'Team One'}
-          score={currentTeam ? currentTeam.score : 0}
-        />
-      </FooterStackContainerStyled>
+        </Box>
+      </Box>
     </StackContainerStyled>
   );
 }

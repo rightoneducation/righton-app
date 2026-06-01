@@ -25,19 +25,19 @@ export default function StartPhase2() {
   const theme = useTheme();
   const { t } = useTranslation();
   return (
-    <BackgroundContainerStyled>
-      <StackContainer spacing={5}>
+    <BackgroundContainerStyled    
+      direction="column"
+      alignItems="center"
+    >
+      <StackContainer spacing={8}>
         <Stack sx={{ alignItems: 'center' }} spacing={2}>
           <TypographyStyled
-            variant="h1"
-            sx={{
-              weight: 700,
-            }}
+            variant="h0"
           >
             {t('gameinprogress.startphase2.title')}
           </TypographyStyled>
           <TypographyStyled
-            variant="body2"
+            variant="textLabel"
             sx={{
               color: `${theme.palette.primary.main}`,
             }}
@@ -49,12 +49,11 @@ export default function StartPhase2() {
           style={{
             width: '214px',
             height: '118px',
-            paddingTop: `${theme.sizing.extraLargePadding}px`,
           }}
           src={MagicHat}
           alt="Question"
         />
-        <TypographyStyled variant="h2">
+        <TypographyStyled variant="h3">
           {t('gameinprogress.startphase2.subtitle2')}
         </TypographyStyled>
       </StackContainer>
