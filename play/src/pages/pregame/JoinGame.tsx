@@ -243,18 +243,20 @@ export default function JoinGame({
       <JoinGameBody isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} screenSize={screenSize} style={{margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', alignSelf: 'center'}}>
           <div ref={inputRef}/>
           {/* container here to trim the spacing set by parent stack between text and input, typ */}
-          <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px'  }}>
+          <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px'  }}>
             <Typography variant="textLabel" sx={{ textAlign: 'center' }}>
               {t('joingame.gamecode.title')}
             </Typography>
             <InputTextFieldStyled
               data-testid="gameCode-inputtextfield"
+              fullWidth
               variant="filled"
               autoComplete="off"
               placeholder={InputPlaceholder.GAME_CODE}
               onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false)}}
               onChange={handleGameCodeChange}
               value={gameCodeValue}
+              sx={{ '& .MuiFilledInput-root': { width: '100%', maxWidth: '100%' } }}
               InputProps={{
                 disableUnderline: true,
                 inputProps: {
@@ -272,106 +274,164 @@ export default function JoinGame({
               }}
             />
           </Box>
-          <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <Box sx={{ width: '100%', display: 'flex'}}>
-              <Typography variant="textLabel" sx={{ width: '100%', textAlign: 'center', paddingLeft: '37px' }}>
-                {t('joingame.playername.title')}
-              </Typography>
-              {isMedDevice
-              ?  <HelpIcon
-                    onClick={() => setShowHelp((prev)=>!prev)}
-                    src={EnterNameHelp}
-                    alt="NameHelp"
+          <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+            {screenSize === ScreenSize.MEDIUM ? (
+              <>
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Box sx={{ width: '100%', display: 'flex' }}>
+                    <Typography variant="textLabel" sx={{ width: '100%', textAlign: 'center', paddingLeft: '37px' }}>
+                      {t('joingame.playername.firstnametitle')}
+                    </Typography>
+                    <HelpIcon
+                      onClick={() => setShowHelp((prev) => !prev)}
+                      src={EnterNameHelp}
+                      alt="NameHelp"
+                    />
+                  </Box>
+                  <Collapse in={showHelp}>
+                    <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0', paddingBottom: '16px' }}>
+                      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', paddingRight: '14px', boxSizing: 'border-box', gap: 0 }}>
+                        <EnterNameHelpTriangleStyled src={EnterNameHelpTriangle} />
+                      </Box>
+                      <SmallDeviceHelpBox>
+                        <Typography variant="textLabel" sx={{ paddingBottom: '8px' }}>
+                          {t('joingame.playername.description1')}
+                        </Typography>
+                        <Typography variant="textLabel" sx={{ fontWeight: 400 }}>
+                          {t('joingame.playername.description2')}
+                        </Typography>
+                      </SmallDeviceHelpBox>
+                    </Box>
+                  </Collapse>
+                  <InputTextFieldStyled
+                    data-testid="playername-firstinputtextfield"
+                    fullWidth
+                    variant="filled"
+                    autoComplete="off"
+                    placeholder={t('joingame.playername.firstnamedefault') ?? ''}
+                    onChange={(event) => handleFirstNameChange(event.target.value)}
+                    onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); }}
+                    value={firstName}
+                    sx={{ '& .MuiFilledInput-root': { width: '100%', maxWidth: '100%' } }}
+                    InputProps={{
+                      disableUnderline: true,
+                      inputProps: {
+                        style: {
+                          color: theme.palette.primary.darkBlue,
+                          paddingTop: '9px',
+                          textAlign: 'center',
+                          fontSize: `${theme.typography.h2.fontSize}px`,
+                          fontFamily: 'Poppins',
+                        },
+                      },
+                    }}
                   />
-              : <StyledTooltip
-                  title={
-                    <>
-                      <Typography variant="textLabel" sx={{ paddingBottom: '8px' }}>
-                        {t('joingame.playername.description1')}
-                      </Typography>
-                      <Typography variant="textLabel" sx={{ fontWeight: 400 }}>
-                        {t('joingame.playername.description2')}
-                      </Typography>
-                    </>
-                  }
-                  TransitionComponent={Zoom}
-                  placement="right"
-                  arrow
-                >
-                  <HelpIcon
-                    src={EnterNameHelp}
-                    alt="NameHelp"
-                  />
-                </StyledTooltip>
-              }
-            </Box>
-            {isMedDevice &&
-            <Collapse in={showHelp} >
-              <Box style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0', paddingBottom: '16px'}}>
-                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', paddingRight: '14px', boxSizing: 'border-box', gap: 0}}>
-                  <EnterNameHelpTriangleStyled src={EnterNameHelpTriangle}/>
                 </Box>
-                <SmallDeviceHelpBox>
-                  <Typography variant="textLabel" sx={{ paddingBottom: '8px' }}>
-                    {t('joingame.playername.description1')}
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Typography variant="textLabel" sx={{ width: '100%', textAlign: 'center' }}>
+                    {t('joingame.playername.lastnametitle')}
                   </Typography>
-                  <Typography variant="textLabel" sx={{ fontWeight: 400 }}>
-                    {t('joingame.playername.description2')}
+                  <InputTextFieldStyled
+                    data-testid="playername-lastinputtextfield"
+                    fullWidth
+                    variant="filled"
+                    autoComplete="off"
+                    placeholder={t('joingame.playername.lastnamedefault') ?? ''}
+                    onChange={(event) => handleLastNameChange(event.target.value)}
+                    onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); }}
+                    value={lastName}
+                    sx={{ '& .MuiFilledInput-root': { width: '100%', maxWidth: '100%' } }}
+                    InputProps={{
+                      disableUnderline: true,
+                      inputProps: {
+                        style: {
+                          color: theme.palette.primary.darkBlue,
+                          paddingTop: '9px',
+                          textAlign: 'center',
+                          fontSize: `${theme.typography.h2.fontSize}px`,
+                          fontFamily: 'Poppins',
+                        },
+                      },
+                    }}
+                  />
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box sx={{ width: '100%', display: 'flex' }}>
+                  <Typography variant="textLabel" sx={{ width: '100%', textAlign: 'center', paddingLeft: '37px' }}>
+                    {t('joingame.playername.title')}
                   </Typography>
-                </SmallDeviceHelpBox>
-              </Box>
-              </Collapse>
-            }
-            <Grid container spacing={2} wrap="nowrap">
-              <Grid item xs={6}>
-                <InputTextFieldStyled
-                  data-testid="playername-firstinputtextfield"
-                  fullWidth
-                  variant="filled"
-                  autoComplete="off"
-                  placeholder={t('joingame.playername.firstnamedefault') ?? ''}
-                  onChange={(event) => handleFirstNameChange(event.target.value)}
-                  onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false)}}
-                  value={firstName}
-                  InputProps={{
-                    disableUnderline: true,
-                    inputProps: {
-                      style: {
-                        color: theme.palette.primary.darkBlue,
-                        paddingTop: '9px',
-                        textAlign: 'center',
-                        fontSize: `${theme.typography.h2.fontSize}px`,
-                        fontFamily: 'Poppins',
-                      },
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <InputTextFieldStyled
-                  data-testid="playername-lastinputtextfield"
-                  fullWidth
-                  variant="filled"
-                  autoComplete="off"
-                  placeholder={t('joingame.playername.lastnamedefault') ?? ''}
-                  onChange={(event) => handleLastNameChange(event.target.value)}
-                  onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false);  setIsShowNameInvalidError(false)}}
-                  value={lastName}
-                  InputProps={{
-                    disableUnderline: true,
-                    inputProps: {
-                      style: {
-                        color: theme.palette.primary.darkBlue,
-                        paddingTop: '9px',
-                        textAlign: 'center',
-                        fontSize: `${theme.typography.h2.fontSize}px`,
-                        fontFamily: 'Poppins',
-                      },
-                    },
-                  }}
-                />
-              </Grid>
-            </Grid>
+                  <StyledTooltip
+                    title={
+                      <>
+                        <Typography variant="textLabel" sx={{ paddingBottom: '8px' }}>
+                          {t('joingame.playername.description1')}
+                        </Typography>
+                        <Typography variant="textLabel" sx={{ fontWeight: 400 }}>
+                          {t('joingame.playername.description2')}
+                        </Typography>
+                      </>
+                    }
+                    TransitionComponent={Zoom}
+                    placement="right"
+                    arrow
+                  >
+                    <HelpIcon src={EnterNameHelp} alt="NameHelp" />
+                  </StyledTooltip>
+                </Box>
+                <Grid container spacing={2} wrap="nowrap">
+                  <Grid item xs={6}>
+                    <InputTextFieldStyled
+                      data-testid="playername-firstinputtextfield"
+                      fullWidth
+                      variant="filled"
+                      autoComplete="off"
+                      placeholder={t('joingame.playername.firstnamedefault') ?? ''}
+                      onChange={(event) => handleFirstNameChange(event.target.value)}
+                      onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); }}
+                      value={firstName}
+                      InputProps={{
+                        disableUnderline: true,
+                        inputProps: {
+                          style: {
+                            color: theme.palette.primary.darkBlue,
+                            paddingTop: '9px',
+                            textAlign: 'center',
+                            fontSize: `${theme.typography.h2.fontSize}px`,
+                            fontFamily: 'Poppins',
+                          },
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <InputTextFieldStyled
+                      data-testid="playername-lastinputtextfield"
+                      fullWidth
+                      variant="filled"
+                      autoComplete="off"
+                      placeholder={t('joingame.playername.lastnamedefault') ?? ''}
+                      onChange={(event) => handleLastNameChange(event.target.value)}
+                      onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); }}
+                      value={lastName}
+                      InputProps={{
+                        disableUnderline: true,
+                        inputProps: {
+                          style: {
+                            color: theme.palette.primary.darkBlue,
+                            paddingTop: '9px',
+                            textAlign: 'center',
+                            fontSize: `${theme.typography.h2.fontSize}px`,
+                            fontFamily: 'Poppins',
+                          },
+                        },
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            )}
           </Box>
           <Box>
             <PaddedContainer>

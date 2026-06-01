@@ -6,7 +6,7 @@ import { Typography, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { v4 as uuidv4 } from 'uuid';
-import { PlayButtonBlock, ButtonType } from '@righton/networking';
+import { PlayButton, ButtonType } from '@righton/networking';
 import { StorageKey, StorageKeyEduDataStudentId, ErrorType } from '../lib/PlayModels';
 
 interface ErrorModalProps {
@@ -40,8 +40,8 @@ export default function ErrorModal({
   const lowerText = [
     <Typography
       key={uuidv4()}
-      variant="h4"
-      sx={{ textAlign: 'center', fontStyle: 'italic' }}
+      variant="paragraph"
+      sx={{ textAlign: 'center', fontStyle: 'italic', color: theme.palette.designSystem.surface.play }}
     >
       {errorText}
     </Typography>,
@@ -66,7 +66,7 @@ export default function ErrorModal({
           minHeight: '100px',
           inset: 'auto',
           margin: '20px',
-          borderRadius: '24px',
+          borderRadius: '16px',
           backgroundColor: theme.palette.primary.main,
           boxShadow: `0px 20px 20px rgba(0, 0, 0, 0.25)`,
           display: 'flex',
@@ -92,20 +92,20 @@ export default function ErrorModal({
         spacing={2}
         sx={{ paddingBottom: `${theme.sizing.mediumPadding}px` }}
       >
-        <Typography variant="h4" sx={{ textAlign: 'center' }}>
+        <Typography variant="semiBoldParagraph" sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}>
           {upperTextMap[errorType]}
         </Typography>
         {lowerText}
       </Stack>
       <Stack spacing={2} style={{ alignItems: 'center' }}>
-        <PlayButtonBlock
+        <PlayButton
           buttonType={ButtonType.RETRY}
           label={`${t('error.connect.button1')}${retryCounter}`}
           isEnabled
           onClick={handleRetry}
         />
         {errorType === ErrorType.CONNECT && (
-          <PlayButtonBlock
+          <PlayButton
             buttonType={ButtonType.QUIT}
             label={t('error.connect.button2')}
             isEnabled

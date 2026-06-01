@@ -18,6 +18,8 @@
     },
     "playername": {
       "title": "Introduzca su nombre",
+      "firstnametitle": "Introduzca su nombre",
+      "lastnametitle": "Introduzca su apellido",
       "firstnamedefault": "Nombre de pila",
       "lastnamedefault": "Apellido",
       "button": "Unirse",

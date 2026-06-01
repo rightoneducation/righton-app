@@ -40,20 +40,16 @@ const AnswerSelectorCorrect = styled(AnswerSelectorDefault)(({ theme }) => ({
 
 const AnswerSelectorSelected = styled(AnswerSelectorDefault, {
   shouldForwardProp: (prop) => prop !== 'isSubmitted',
-})(({ isSubmitted, theme }) => ({
-  border: !isSubmitted
-    ? `1px solid ${theme.palette.designSystem.surface.coolBlue}`
-    : `1px solid ${theme.palette.primary.darkGrey}`,
-  backgroundColor: !isSubmitted
-    ? alpha(theme.palette.designSystem.surface.coolBlue, 0.1)
-    : `${theme.palette.primary.main}`,
+})(({ theme }) => ({
+  border: `1px solid ${theme.palette.designSystem.surface.coolBlue}`,
+  backgroundColor: alpha(theme.palette.designSystem.surface.coolBlue, 0.1),
   '&:hover': {
-    border: !isSubmitted
-      ? `1px solid ${theme.palette.designSystem.surface.coolBlue}`
-      : `1px solid ${theme.palette.primary.darkGrey}`,
-    backgroundColor: !isSubmitted
-      ? alpha(theme.palette.designSystem.surface.coolBlue, 0.1)
-      : `${theme.palette.primary.main}`,
+    border: `1px solid ${theme.palette.designSystem.surface.coolBlue}`,
+    backgroundColor: alpha(theme.palette.designSystem.surface.coolBlue, 0.1),
+  },
+  '&.Mui-disabled': {
+    border: `1px solid ${theme.palette.designSystem.surface.coolBlue}`,
+    backgroundColor: alpha(theme.palette.designSystem.surface.coolBlue, 0.1),
   },
 }));
 

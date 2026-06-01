@@ -28,10 +28,11 @@ const NewPointsPill = styled(ScorePill)({
 const NewPointsAnimation = styled('div')({
   opacity: 0, 
   animation: `
-   newScoreUpWiggle 2200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms
+   newScoreUpWiggle 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms forwards
   `,
   '@keyframes newScoreUpWiggle': {
     '0%': {
+      opacity: 0,
       transform: 'rotate(0deg) scale(1.0)',
     },
     '5%': {
@@ -58,8 +59,12 @@ const NewPointsAnimation = styled('div')({
       opacity: 1,
       transform: 'rotate(0deg) scale(1.2)',
     },
+    '95%': {
+      opacity: 1,
+      transform: 'rotate(0deg) scale(1.0)',
+    },
     '100%': {
-      opacity: 0,
+      opacity: 1,
       transform: 'rotate(0deg) scale(1.0)',
     },
   },

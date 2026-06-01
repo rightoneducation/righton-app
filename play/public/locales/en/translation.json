@@ -21,6 +21,8 @@
     },
     "playername": {
       "title": "Enter your name",
+      "firstnametitle": "Enter your first name",
+      "lastnametitle": "Enter your last name",
       "firstnamedefault": "First name",
       "lastnamedefault": "Last name",
       "button": "Join",

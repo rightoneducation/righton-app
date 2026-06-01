@@ -99,17 +99,11 @@ export default function DiscussAnswerCard({
             <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>)}
         </Box>
       )}
-        {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
+        {answerStatus === AnswerState.PLAYER_SELECTED_CORRECT && currentState === GameSessionState.PHASE_1_DISCUSS && (
           <Box sx={{ marginBottom: '16px', width: '100%' }}>
-            <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-              <Typography
-                variant="subtitle1"
-                sx={{ whiteSpace: 'pre-line'}}
-              >
-                {resultText}
-              </Typography>
-              <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>
-            </Box>
+            <Typography variant="subtitle1" sx={{ whiteSpace: 'pre-line' }}>
+              {resultText}
+            </Typography>
           </Box>
         )}
         { answerStatus !== AnswerState.OTHER && (

@@ -402,7 +402,7 @@ export default function GameInProgress({
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           score={score}
           newPoints={hintBonusPoints > 0 ? hintBonusPoints : newPoints}
-          animationDelay={hintBonusPoints > 0 ? 0 : undefined}
+          animationDelay={hintBonusPoints > 0 ? 0 : 1500}
           disableInnerPadding
         />
       </FooterStackContainerStyled>

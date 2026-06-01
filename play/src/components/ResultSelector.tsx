@@ -6,8 +6,8 @@ import CorrectStars from '../img/CorrectStars.svg';
 import CorrectStars_Mirrored from '../img/CorrectStars_Mirrored.svg';
 import SelectedAnswer from '../img/SelectedAnswer.svg';
 import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
-import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import { AnswerState, monsterMap } from '../lib/PlayModels';
+import NewPointsIndicator from './NewPointsIndicator';
 
 const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   width: '100%',
@@ -60,7 +60,7 @@ export default function ResultSelector({
   
   const imageMap = {
     [AnswerState.DEFAULT]: '',
-    [AnswerState.CORRECT]: CorrectAnswerImage,
+    [AnswerState.CORRECT]: '',
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
     [AnswerState.SELECTED]: monsterMap[teamAvatar].answerSelect,
     [AnswerState.PREVIOUS]: '',
@@ -71,6 +71,10 @@ export default function ResultSelector({
   const handleContextMenu: MouseEventHandler<HTMLElement> = (event) => {
     event.preventDefault();
   };
+  const correctAnswerIcon = newPoints && newPoints > 0
+    ? <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState ?? GameSessionState.PHASE_1_DISCUSS} />
+    : <img src={PlayerCorrectImage} style={{ position: 'relative', width: `${theme.sizing.mediumPadding}px`, height: `${theme.sizing.mediumPadding}px`, paddingTop: '2px', WebkitTouchCallout: 'none' }} alt="SelectedAnswerImage" onContextMenu={handleContextMenu} />;
+
   const image = (
     <img
       src={imageMap[answerStatus]}
@@ -89,7 +93,7 @@ export default function ResultSelector({
   );
   const resultContents = (
     <>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
         {!(isShortAnswerEnabled && currentState === GameSessionState.PHASE_1_DISCUSS) && !(isShortAnswerEnabled && correctCard) && (
           <Typography
             variant="h2"
@@ -116,7 +120,7 @@ export default function ResultSelector({
         </Typography>
 
       </Box>
-      <Box style={{ display: 'flex', alignItems: 'center' }}>
+      <Box style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
         {currentState === GameSessionState.PHASE_2_DISCUSS && ( 
           <Typography
             variant="body2"
@@ -132,7 +136,8 @@ export default function ResultSelector({
             {percentageText}
           </Typography>
         )}
-        {answerStatus !== AnswerState.PREVIOUS &&
+        {answerStatus === AnswerState.PLAYER_SELECTED_CORRECT ? correctAnswerIcon : (
+          answerStatus !== AnswerState.PREVIOUS &&
           answerStatus !== AnswerState.DEFAULT &&
           (answerStatus === AnswerState.SELECTED ? (
             <Tooltip
@@ -146,7 +151,8 @@ export default function ResultSelector({
             </Tooltip>
           ) : (
             image
-          ))}
+          ))
+        )}
       </Box>
     </>
   );

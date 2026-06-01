@@ -32,13 +32,9 @@ const FloatingPill = styled(PillBase, {
   whiteSpace: 'nowrap',
   pointerEvents: 'none',
   zIndex: 3,
-  animation: `floatingScorePill 1240ms ease-out ${animationDelay}ms forwards`,
+  animation: `floatingScorePill 1240ms ease-out ${animationDelay}ms both`,
   '@keyframes floatingScorePill': {
     '0%': {
-      opacity: 0,
-      transform: 'translateX(-50%) translateY(0)',
-    },
-    '16%': {
       opacity: 1,
       transform: 'translateX(-50%) translateY(0)',
     },
