@@ -49,7 +49,6 @@ export default function FinalResultsContainer({
       return (
         <Leaderboard
           teams={teams}
-          currentState={currentState}
         />
       );
     case FinalResultsState.CONGRATS:

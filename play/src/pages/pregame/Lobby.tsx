@@ -63,7 +63,6 @@ export default function Lobby({
       return (
         <Leaderboard
           teams={teams}
-          currentState={currentState!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
         />
       );
     default:
