@@ -36,7 +36,7 @@ export class EduDataAPIClient
   protected experiments: IExperimentAssignmentv5[];
 
   private constructor(teamId: string) {
-    this.endpoint = `http://edudata-alb-170633511.us-east-1.elb.amazonaws.com`;
+    this.endpoint = `https://edudata.rightoneducation.com`;
     this.client = new UpgradeClient(teamId, this.endpoint, 'righton-play');
     this.userId = teamId;
     this.user = null;
