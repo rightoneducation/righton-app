@@ -1,7 +1,7 @@
 ---
-name: SECD QA - Bug Report
+name: Play 1.2 QA - Bug Report
 about: QA Bug Report
-title: "[SECD QA] - Bug Report - # - Priority - #"
+title: "[Play 1.2 QA] - Bug Report - # - Priority - #"
 labels: bug
 assignees: drewjhart
 
