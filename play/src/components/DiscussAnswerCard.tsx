@@ -65,7 +65,6 @@ export default function DiscussAnswerCard({
   totalAnswers,
   teamAvatar
 }: DiscussAnswerCardProps) {
-  console.log(answerStatus);
   const theme = useTheme();
   const { t } = useTranslation();
   const hint = selectedAnswer?.hint;

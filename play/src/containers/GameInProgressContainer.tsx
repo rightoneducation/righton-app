@@ -52,7 +52,6 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.hasRejoined,
     localModel?.teamId,
   );
-  console.log(subscription.newPoints);
 
   useEffect(() => {
     if (subscription.error) {

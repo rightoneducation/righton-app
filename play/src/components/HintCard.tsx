@@ -73,7 +73,6 @@ export default function HintCard({
   );
 
   useEffect(() => {
-    console.log('herestart');
     const userId = apiClients.eduData?.userId;
     // Cache hit on rejoin/refresh: keep the variant consistent and skip both
     // the network call and re-marking exposure (already marked pre-rejoin).
@@ -89,7 +88,6 @@ export default function HintCard({
     );
     if (cached) {
       setCondition(cached.conditionValue);
-      console.log('hereend');
       return;
     }
     apiClients.eduData?.getConditionObj(EDUDATA_SITE, EDUDATA_TARGET).then(response => {
@@ -116,7 +114,6 @@ export default function HintCard({
         apiClients.eduData?.markExposure(EDUDATA_SITE, EDUDATA_TARGET, response.conditionCode).catch(() => {});
       }
     });
-    console.log('hereend');
   }, [apiClients.eduData, gameSessionId, currentQuestionIndex, currentState]);
   // UPGRADE INTEGRATION END
 
