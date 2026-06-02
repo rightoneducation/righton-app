@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswersPerPhase, IPhase } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersPerPhase, IPhase, HostButton, HostButtonType } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -12,34 +12,6 @@ import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { trackEvent, HostEvent } from '../lib/analytics';
 import { IGraphClickInfo, ScreenSize } from '../lib/HostModels';
 import Timer from './Timer';
-
-const ButtonStyled = styled(Button)({
-  border: '2px solid #159EFA',
-  background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
-  borderRadius: '22px',
-  width: '300px',
-  height: '48px',
-  color: 'white',
-  fontSize: '20px',
-  fontWeight: '700',
-  lineHeight: '30px',
-  textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px #47D9FF 30%',
-  '&:disabled': {
-    background: '#032563',
-    border: '2px solid #159EFA',
-    borderRadius: '22px',
-    width: '300px',
-    height: '48px',
-    color: '#159EFA',
-    fontSize: '20px',
-    fontWeight: '700',
-    lineHeight: '30px',
-    opacity: '100%',
-    cursor: 'not-allowed',
-    boxShadow: '0px 5px 22px 0px #47D9FF 30%',
-  },
-});
 
 const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
@@ -167,6 +139,21 @@ function FooterGameInProgress({
     }
   }
   const buttonText = GetButtonText();
+  const GetButtonType = (): HostButtonType => {
+    switch(currentState) {
+      case GameSessionState.CHOOSE_CORRECT_ANSWER:
+      case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+        return HostButtonType.END_ANSWERING;
+      case GameSessionState.PHASE_2_START:
+        return HostButtonType.CONTINUE_PHASE_TWO;
+      case GameSessionState.PHASE_1_DISCUSS:
+      case GameSessionState.PHASE_2_DISCUSS:
+        return HostButtonType.CONTINUE;
+      default:
+        return HostButtonType.START_GAME;
+    }
+  }
+  const buttonType = GetButtonType();
   let timerMessage = 'Students are reviewing explanations for incorrect answers';
   if (isTimerComplete) timerMessage = 'Continue when students are ready';
   else if (currentState === GameSessionState.PHASE_1_DISCUSS) timerMessage = 'Students are reviewing the correct answer and solution steps';
@@ -203,20 +190,12 @@ function FooterGameInProgress({
             />
           </Box>
         )}
-        <ButtonStyled
-          disabled={teamsLength <= 0 || (buttonText === 'Continue' && !isTimerComplete)}
+        <HostButton
+          buttonType={buttonType}
+          label={buttonText}
+          isEnabled={teamsLength > 0 && !(buttonText === 'Continue' && !isTimerComplete)}
           onClick={handleButtonClick}
-          sx={buttonText === 'Continue' && !isTimerComplete ? {
-            '&:disabled': {
-              background: '#75757538',
-              border: 'none',
-              color: 'white',
-              boxShadow: 'none',
-            }
-          } : undefined}
-        >
-          {buttonText}
-        </ButtonStyled>
+        />
       </InnerFooterContainer>
     </FooterContainer>
   );

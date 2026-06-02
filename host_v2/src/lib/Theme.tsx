@@ -174,29 +174,8 @@ declare module '@mui/material/styles' {
       transparent: string;
       semiTransparent: string;
     };
-    sizing: {
-      fullHeaderHeight: number;
-      headerHeight: number;
-      footerHeight: number;
-      answerBarHeight: number;
-      nextStateButtonWidth: number;
-      pregameMinColumnWidth: number;
-      extraExtraSmallPadding: number;
-      answerOptionBorderRadius: number;
-      xxSmPadding: number;
-      xSmPadding: number;
-      smPadding: number;
-      mdPadding: number;
-      lgPadding: number;
-      xLgPadding: number;
-      xxLgPadding: number;
-      barStrokeWidth: number;
-      confidenceBarThickness: number;
-      defaultVictoryPadding: number;
-      barThicknessResponses: number;
-      barThicknessZeroResponses: number;
-      labelOffsetResponses: number;
-    };
+    // `sizing` augmentation lives in @righton/networking DesignSystem/Theme (shared).
+    // Declaring it here too would create a duplicate MUI Theme augmentation (TS2717).
     victoryResponsesTheme: {
       axis: {
         style: {
@@ -276,28 +255,7 @@ declare module '@mui/material/styles' {
       transparent?: string;
       semiTransparent?: string;
     };
-    sizing?: {
-      fullHeaderHeight?: number;
-      headerHeight?: number;
-      footerHeight?: number;
-      answerBarHeight?: number;
-      nextStateButtonWidth?: number;
-      pregameMinColumnWidth?: number;
-      answerOptionBorderRadius?: number;
-      xxSmPadding: number;
-      xSmPadding: number;
-      smPadding: number;
-      mdPadding: number;
-      lgPadding: number;
-      xLgPadding: number;
-      xxLgPadding: number;
-      barStrokeWidth?: number;
-      confidenceBarThickness?: number;
-      defaultVictoryPadding?: number;
-      barThicknessResponses?: number;
-      barThicknessZeroResponses?: number;
-      labelOffsetResponses?: number;
-    };
+    // `sizing` augmentation lives in @righton/networking DesignSystem/Theme (shared).
     victoryResponsesTheme?: {
       axis?: {
         style?: {

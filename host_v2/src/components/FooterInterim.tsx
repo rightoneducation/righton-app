@@ -1,39 +1,11 @@
 import React, { useContext, useEffect } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
+import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate, HostButton, HostButtonType } from '@righton/networking';
 import { GameSessionContext } from '../lib/context/GameSessionContext';
 import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import { ScreenSize } from '../lib/HostModels';
-
-const ButtonStyled = styled(Button)({
-  border: '2px solid #159EFA',
-  background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
-  borderRadius: '22px',
-  width: '300px',
-  height: '48px',
-  color: 'white',
-  fontSize: '20px',
-  fontWeight: '700',
-  lineHeight: '30px',
-  textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
-  '&:disabled': {
-    background: '#032563',
-    border: '2px solid #159EFA',
-    borderRadius: '22px',
-    width: '300px',
-    height: '48px',
-    color: '#159EFA',
-    fontSize: '20px',
-    fontWeight: '700',
-    lineHeight: '30px',
-    opacity: '100%',
-    cursor: 'not-allowed',
-    boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
-  },
-});
 
 const FooterContainer = styled(Box)(({ theme }) => ({
   position: 'sticky',
@@ -83,23 +55,31 @@ function FooterInterim({
 }: FooterInterimProps) {
  
   let buttonText;
+  let buttonType: HostButtonType;
   const localGameSession = useTSGameSessionContext(GameSessionContext);
 
   switch (localGameSession.currentState) {
     case GameSessionState.TEAMS_JOINING:
-      buttonText = 
-        (localGameSession.currentQuestionIndex === null)
-          ? 'Start Game' 
-          : 'Next Question';
+      if (localGameSession.currentQuestionIndex === null) {
+        buttonText = 'Start Game';
+        buttonType = HostButtonType.START_GAME;
+      } else {
+        buttonText = 'Next Question';
+        buttonType = HostButtonType.NEXT_QUESTION;
+      }
       break;
     case GameSessionState.FINAL_RESULTS:
       buttonText = 'End Game';
+      buttonType = HostButtonType.END_GAME;
       break;
     default:
-      buttonText = 
-        (selectedSuggestedGame === null) 
-          ? 'Exit to RightOn Central' 
-          : 'Play Selected Game';
+      if (selectedSuggestedGame === null) {
+        buttonText = 'Exit to RightOn Central';
+        buttonType = HostButtonType.EXIT_TO_CENTRAL;
+      } else {
+        buttonText = 'Play Selected Game';
+        buttonType = HostButtonType.PLAY_SELECTED_GAME;
+      }
   }
   return (
     <FooterContainer>
@@ -117,9 +97,12 @@ function FooterInterim({
             </>
             }
         </Box>
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
-          { buttonText }
-        </ButtonStyled>
+        <HostButton
+          buttonType={buttonType}
+          label={buttonText}
+          isEnabled={teamsLength > 0}
+          onClick={handleButtonClick}
+        />
       </InnerFooterContainer>
     </FooterContainer>
   );

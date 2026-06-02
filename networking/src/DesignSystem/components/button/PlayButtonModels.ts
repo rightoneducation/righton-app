@@ -13,29 +13,29 @@ export enum ButtonType {
   LEADERBOARD = 'leaderboard',
 }
 
-export enum ButtonShape {
+export enum PlayButtonShape {
   INTRO,
   GAMEPLAY,
 }
 
 type ButtonContentMapProps = {
   [key in ButtonType]: {
-    shape: ButtonShape;
+    shape: PlayButtonShape;
     width?: string;
   };
 };
 
 export const buttonContentMap: ButtonContentMapProps = {
-  [ButtonType.START]: { shape: ButtonShape.INTRO },
-  [ButtonType.JOIN]: { shape: ButtonShape.INTRO },
-  [ButtonType.JOINING]: { shape: ButtonShape.INTRO },
-  [ButtonType.REJOIN]: { shape: ButtonShape.INTRO },
-  [ButtonType.DONTREJOIN]: { shape: ButtonShape.INTRO },
-  [ButtonType.RETRY]: { shape: ButtonShape.INTRO },
-  [ButtonType.QUIT]: { shape: ButtonShape.INTRO },
-  [ButtonType.REFRESH]: { shape: ButtonShape.INTRO },
-  [ButtonType.SUBMIT]: { shape: ButtonShape.GAMEPLAY },
-  [ButtonType.SUBMITTED]: { shape: ButtonShape.GAMEPLAY },
-  [ButtonType.HINT]: { shape: ButtonShape.GAMEPLAY },
-  [ButtonType.LEADERBOARD]: { shape: ButtonShape.GAMEPLAY, width: '200px' },
+  [ButtonType.START]: { shape: PlayButtonShape.INTRO },
+  [ButtonType.JOIN]: { shape: PlayButtonShape.INTRO },
+  [ButtonType.JOINING]: { shape: PlayButtonShape.INTRO },
+  [ButtonType.REJOIN]: { shape: PlayButtonShape.INTRO },
+  [ButtonType.DONTREJOIN]: { shape: PlayButtonShape.INTRO },
+  [ButtonType.RETRY]: { shape: PlayButtonShape.INTRO },
+  [ButtonType.QUIT]: { shape: PlayButtonShape.INTRO },
+  [ButtonType.REFRESH]: { shape: PlayButtonShape.INTRO },
+  [ButtonType.SUBMIT]: { shape: PlayButtonShape.GAMEPLAY },
+  [ButtonType.SUBMITTED]: { shape: PlayButtonShape.GAMEPLAY },
+  [ButtonType.HINT]: { shape: PlayButtonShape.GAMEPLAY },
+  [ButtonType.LEADERBOARD]: { shape: PlayButtonShape.GAMEPLAY, width: '200px' },
 };

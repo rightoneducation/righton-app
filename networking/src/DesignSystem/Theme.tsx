@@ -269,6 +269,24 @@ declare module '@mui/material/styles' {
       largePadding: number;
       extraLargePadding: number;
       extraExtraLargePadding: number;
+      // host_v2 sizing keys (shared so host_v2 can consume DesignSystem components)
+      fullHeaderHeight: number;
+      answerBarHeight: number;
+      nextStateButtonWidth: number;
+      answerOptionBorderRadius: number;
+      xxSmPadding: number;
+      xSmPadding: number;
+      smPadding: number;
+      mdPadding: number;
+      lgPadding: number;
+      xLgPadding: number;
+      xxLgPadding: number;
+      barStrokeWidth: number;
+      confidenceBarThickness: number;
+      defaultVictoryPadding: number;
+      barThicknessResponses: number;
+      barThicknessZeroResponses: number;
+      labelOffsetResponses: number;
     };
   }
 
@@ -283,6 +301,24 @@ declare module '@mui/material/styles' {
       largePadding?: number;
       extraLargePadding?: number;
       extraExtraLargePadding?: number;
+      // host_v2 sizing keys (shared so host_v2 can consume DesignSystem components)
+      fullHeaderHeight?: number;
+      answerBarHeight?: number;
+      nextStateButtonWidth?: number;
+      answerOptionBorderRadius?: number;
+      xxSmPadding?: number;
+      xSmPadding?: number;
+      smPadding?: number;
+      mdPadding?: number;
+      lgPadding?: number;
+      xLgPadding?: number;
+      xxLgPadding?: number;
+      barStrokeWidth?: number;
+      confidenceBarThickness?: number;
+      defaultVictoryPadding?: number;
+      barThicknessResponses?: number;
+      barThicknessZeroResponses?: number;
+      labelOffsetResponses?: number;
     };
   }
 

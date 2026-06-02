@@ -1,52 +1,14 @@
-import React, { useState } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import React from 'react';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
-import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
+import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate, HostButton, HostButtonType } from '@righton/networking';
 import { GameSessionContext } from '../lib/context/GameSessionContext';
 import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import { ScreenSize } from '../lib/HostModels';
 
 
-const ButtonStyled = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'isAnimating',
-})(({ theme, isAnimating }) => ({
-  border: !isAnimating? '2px solid #159EFA' : 'none',
-  borderRadius: '22px',
-  width: '300px',
-  height: '48px',
-  color: 'white',
-  fontSize: '20px',
-  fontWeight: '700',
-  lineHeight: '30px',
-  textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
-  background: !isAnimating? 'linear-gradient(to right, #159EFA 0%,#19BCFB 100%)' : 'linear-gradient(90deg, #0F7DBB 0%, #085CA4 50%, #0F7DBB 100%)',
-  backgroundSize: '200% 100%',
-  transition: '1s ease-in-out', // Smooth gradient transition
-  '&:disabled': {
-    background:'#032563',
-    border: '2px solid #159EFA',
-    borderRadius: '22px',
-    width: '300px',
-    height: '48px',
-    color: '#159EFA',
-    fontSize: '20px',
-    fontWeight: '700',
-    lineHeight: '30px',
-    opacity: '100%',
-    cursor: 'not-allowed',
-    boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
-  },
-  animation: isAnimating ? 'gradientAnimation 2s ease-in-out' : 'none',
-  '@keyframes gradientAnimation': {
-    '0%': { backgroundPosition: '100% 50%' },  // Start with the light part on the right
-    '50%': { backgroundPosition: '0% 50%' },   // Move the light part to the left
-    '100%': { backgroundPosition: '100% 50%' }, // Move it back to the right
-  }
-  
-}));
 const FooterContainer = styled(Box)(({ theme }) => ({
   position: 'sticky',
   bottom: 0,
@@ -91,12 +53,11 @@ export default function FooterStartGame({
   scope4
 }: FootStartGameProps) {
   const localGameSession = useTSGameSessionContext(GameSessionContext);
-  const [isAnimating, setIsAnimating] = useState(false);
   const fetchButtonText = (gameSession: IGameSession, selectedGame: string | null) => {
     switch (gameSession.currentState) {
       case GameSessionState.TEAMS_JOINING:
         return (gameSession.currentQuestionIndex === null) // eslint-disable-line no-nested-ternary
-            ? (isGamePrepared) ? 'Start Game' : 'Prepare Game' 
+            ? (isGamePrepared) ? 'Start Game' : 'Prepare Game'
             : 'Next Question';
       case GameSessionState.FINAL_RESULTS:
         return 'End Game';
@@ -106,22 +67,23 @@ export default function FooterStartGame({
             : 'Play Selected Game';
       }
   }
-  let buttonText = fetchButtonText(localGameSession, selectedSuggestedGame ?? null);
+  const fetchButtonType = (gameSession: IGameSession, selectedGame: string | null): HostButtonType => {
+    switch (gameSession.currentState) {
+      case GameSessionState.TEAMS_JOINING:
+        return (gameSession.currentQuestionIndex === null) // eslint-disable-line no-nested-ternary
+            ? (isGamePrepared) ? HostButtonType.START_GAME : HostButtonType.PREPARE_GAME
+            : HostButtonType.NEXT_QUESTION;
+      case GameSessionState.FINAL_RESULTS:
+        return HostButtonType.END_GAME;
+      default:
+        return (selectedGame === null)
+            ? HostButtonType.EXIT_TO_CENTRAL
+            : HostButtonType.PLAY_SELECTED_GAME;
+      }
+  }
+  const buttonText = fetchButtonText(localGameSession, selectedSuggestedGame ?? null);
+  const buttonType = fetchButtonType(localGameSession, selectedSuggestedGame ?? null);
 
-  
-  const handleButtonAnimationClick = () => {
-    buttonText = 'Starting Game...';
-    setIsAnimating(true);
-  };
-  const handleAnimationEnd = (event: React.AnimationEvent) => {
-    if (
-      event.animationName === 'gradientAnimation'
-    ) {
-      setIsAnimating(false);
-      handleButtonClick();
-    } 
-
-  };
   return (
     <FooterContainer>
       {screenSize === ScreenSize.SMALL &&
@@ -136,30 +98,26 @@ export default function FooterStartGame({
             </PlayerCountTypography>
           </Box>
         }
-        { !isGamePrepared ? 
+        { !isGamePrepared ?
           <motion.div
             ref={scope4}
             exit={{ y: 0, opacity: 0 }}
             style={{ display: 'inline-block' }}
           >
-            <ButtonStyled
-              disabled={teamsLength <= 0}
-              isAnimating={isAnimating}
-              onClick={ handleButtonAnimationClick}
-              onAnimationEnd={handleAnimationEnd}
-              className='animate'
-            >
-              {buttonText}
-            </ButtonStyled>
+            <HostButton
+              buttonType={buttonType}
+              label={buttonText}
+              isEnabled={teamsLength > 0}
+              onClick={handleButtonClick}
+            />
           </motion.div>
-        : 
-          <ButtonStyled
-            disabled={teamsLength <= 0}
-            isAnimating={false}
+        :
+          <HostButton
+            buttonType={buttonType}
+            label={buttonText}
+            isEnabled={teamsLength > 0}
             onClick={handleButtonClick}
-          >
-            {buttonText}
-          </ButtonStyled>
+          />
         }
       </InnerFooterContainer>
     </FooterContainer>
