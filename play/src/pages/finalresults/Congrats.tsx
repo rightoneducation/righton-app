@@ -32,6 +32,10 @@ const celebrateMap: Record<number, string> = {
 
 const CARD_GAP = 8;
 
+// Used to keep the white sign clear of the header text on short mobile screens.
+const CARD_HEIGHT = 130; // white sign maxHeight
+const HEADER_HEIGHT = 130; // approx. header text block height on mobile (paddingTop + title + h2)
+
 const styles = `
   @keyframes slideUp {
     from { transform: translateY(100%); }
@@ -181,9 +185,13 @@ export default function Congrats({
               <Box
                 style={{
                   position: 'absolute',
-                  bottom: isMobile ? mobileCardBottom : centeredCardBottom,
+                  // On short mobile screens, clamp the sign so its top never rises into the
+                  // header text. The wrapper's translateY(24px) below supplies the 24px gap.
+                  bottom: isMobile
+                    ? `min(${mobileCardBottom}px, calc(100% - ${CARD_HEIGHT + HEADER_HEIGHT}px))`
+                    : centeredCardBottom,
                   left: '50%',
-                  transform: 'translateX(-50%)',
+                  transform: 'translate(-50%, 24px)',
                   width: '280px',
                   animation: 'fadeIn 0.4s ease-out both',
                   zIndex: 3,
@@ -263,7 +271,8 @@ export default function Congrats({
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 68,
+                  gap: 44,
+                  transform: 'translateY(24px)',
                   zIndex: 2,
                 }}
               >

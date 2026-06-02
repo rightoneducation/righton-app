@@ -221,7 +221,6 @@ export const fetchLocalData = () => {
   */
 export const calculateCurrentTime = (response: IGameSession | null) => {
   let allottedTime = 0;
-  console.log(response);
   if (response){
     if (response?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       allottedTime = response?.phaseOneTime;
@@ -236,7 +235,6 @@ export const calculateCurrentTime = (response: IGameSession | null) => {
         return 0;
       } 
       const remainingTime = allottedTime - Math.trunc(difference / 1000);
-      console.log(remainingTime)
       return remainingTime;
     }
   }

@@ -138,7 +138,6 @@ export abstract class ModelHelper {
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
         let submittedTrickAnswer = answers.find(answer => (!this.isAnswerFromPhaseOne(answer)) && answer?.questionId === currentQuestion.id)
-        console.log("hellow");
         if (submittedTrickAnswer || gameSession.currentState === GameSessionState.PHASE_2_DISCUSS) {
             const score = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer?.text ?? '', currentQuestion.id);
             console.log(score);

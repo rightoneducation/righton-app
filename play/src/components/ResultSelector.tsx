@@ -6,6 +6,7 @@ import CorrectStars from '../img/CorrectStars.svg';
 import CorrectStars_Mirrored from '../img/CorrectStars_Mirrored.svg';
 import SelectedAnswer from '../img/SelectedAnswer.svg';
 import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
+import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import { AnswerState, monsterMap } from '../lib/PlayModels';
 import NewPointsIndicator from './NewPointsIndicator';
 
@@ -60,7 +61,7 @@ export default function ResultSelector({
   
   const imageMap = {
     [AnswerState.DEFAULT]: '',
-    [AnswerState.CORRECT]: '',
+    [AnswerState.CORRECT]: CorrectAnswerImage,
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
     [AnswerState.SELECTED]: monsterMap[teamAvatar].answerSelect,
     [AnswerState.PREVIOUS]: '',

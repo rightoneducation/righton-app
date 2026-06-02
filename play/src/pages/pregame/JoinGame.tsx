@@ -243,7 +243,7 @@ export default function JoinGame({
       <JoinGameBody isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} screenSize={screenSize} style={{margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', alignSelf: 'center'}}>
           <div ref={inputRef}/>
           {/* container here to trim the spacing set by parent stack between text and input, typ */}
-          <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px'  }}>
+          <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, maxWidth: screenSize === ScreenSize.MEDIUM ? undefined : '210px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px'  }}>
             <Typography variant="textLabel" sx={{ textAlign: 'center' }}>
               {t('joingame.gamecode.title')}
             </Typography>

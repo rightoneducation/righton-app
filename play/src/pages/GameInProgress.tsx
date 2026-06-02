@@ -204,7 +204,6 @@ export default function GameInProgress({
           answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line
         }
       }
-      console.log(correctAnswer);
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
       setTeamAnswerId(response.id ?? '');

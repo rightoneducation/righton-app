@@ -19,7 +19,6 @@ export default function AnswerphaseOneResponsesGraph({
   currentTeam,
   isShortAnswerEnabled
 }: AnswerPhaseOneResponsesGraphProps) {
-  console.log(phaseTwoResponses);
   const theme = useTheme();
   const possibleCharacters = ['A', 'B', 'C', 'D'];
   const currentCharacters = phaseTwoResponses.map((response) => response.multiChoiceCharacter);
@@ -61,7 +60,6 @@ export default function AnswerphaseOneResponsesGraph({
     }
     return acc;
   }, []);
-  console.log(data);
   return (
   
      <VictoryPie

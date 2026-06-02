@@ -19,7 +19,7 @@ const AnswerSelectorDefault = styled(Button, {
   borderRadius: '8px',
   display: 'flex',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   textTransform: 'none',
   border: `1px solid ${theme.palette.primary.darkGrey}`,
   backgroundColor: `${theme.palette.primary.main}`,
@@ -94,6 +94,10 @@ export default function AnswerSelector({
           color: `${theme.palette.designSystem.surface.play}`,
           paddingLeft: `${theme.sizing.extraSmallPadding}px`,
           paddingRight: `${theme.sizing.largePadding}px`,
+          textAlign: 'left',
+          alignSelf: 'stretch',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         {answerText}

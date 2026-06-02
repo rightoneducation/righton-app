@@ -42,10 +42,8 @@ export default function GameSessionSwitch({
   const currentPhase = gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession.currentState === GameSessionState.PHASE_1_DISCUSS || gameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex] as IQuestion;
-  console.log(gameSession);
   const {responses} = currentQuestion.answerData.phase1;
-  console.log(responses);
-  const currentTeam = gameSession.teams.find( 
+  const currentTeam = gameSession.teams.find(
     (team) => team.id === localModel.teamId
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
@@ -59,8 +57,7 @@ export default function GameSessionSwitch({
   (isShortAnswerEnabled
     ? responses.reduce(
         (acc: IChoice[], response: IHostTeamAnswersResponse) => {
-          console.log(response);
-          const shouldAddResponse = 
+          const shouldAddResponse =
             (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
             currentState !== GameSessionState.PHASE_1_DISCUSS) 
               ? (response.isSelectedMistake || response.isCorrect) 

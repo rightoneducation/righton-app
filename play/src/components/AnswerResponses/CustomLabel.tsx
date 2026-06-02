@@ -7,7 +7,6 @@ import check from '../../img/Pickedcheck.svg';
 export default function CustomLabel(props: any) {
   const theme = useTheme();
   const { x, y, width, height, datum, ...rest } = props;
-  console.log('CustomLabel props:', rest);
   const centerX = width / 2;
   const centerY = height / 2;
   const deltaX = x - centerX;
@@ -20,7 +19,6 @@ export default function CustomLabel(props: any) {
   const barCenterFactor = 0.82;
   const barCenterX = centerX + deltaX * barCenterFactor - (deltaX / labelDist) * (iconSize / 4);
   const barCenterY = centerY + deltaY * barCenterFactor - (deltaY / labelDist) * (iconSize / 4);
-  console.log(x, y);
   return (
         <>
           {datum.letterCode !== ' ' && (
