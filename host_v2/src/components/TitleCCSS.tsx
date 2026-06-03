@@ -3,16 +3,6 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles'; 
 
-const TitleCCSSTypography = styled(Typography)({
-  fontFamily: 'Poppins',
-  textAlign: 'left', 
-  fontWeight: 700, 
-  fontSize: '12px',
-  lineHeight: '21px',
-  letterSpacing: '.15em',
-  color: '#9BA9D0', // Match the color from the TitleTypography
-});
-
 interface TitleCCSSProps {
   grade: string;
   domain: string;
@@ -44,5 +34,5 @@ export default function TitleCCSS({ grade, domain, cluster, standard }: TitleCCS
       return null;
   }
 
-  return <TitleCCSSTypography>{titleText}</TitleCCSSTypography>;
+  return <Typography variant="pinkLabel">{titleText}</Typography>;
 }

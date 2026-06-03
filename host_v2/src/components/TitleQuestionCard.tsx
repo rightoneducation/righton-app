@@ -66,7 +66,7 @@ export default function TitleQuestionCard({
     if (questions.length === 0) {
       return (
         <TitleBoxStyled>
-          <TitleTypography>{title}</TitleTypography>
+          <Typography variant="h4" style={{textAlign: 'left'}}>{title}</Typography>
           <TopLineTypography>No questions available</TopLineTypography>
         </TitleBoxStyled>
       );
@@ -77,18 +77,18 @@ export default function TitleQuestionCard({
     return (
       <TitleBoxStyled>
         <TitleBoxTopStyled>
-            <TitleCCSS
+          <TitleCCSS
             key={`${grade}-${domain}-${cluster}-${standard}`}
             grade={grade}
             domain={domain}
             cluster={cluster}
             standard={standard}
-            />
-          <TopLineTypography>
+          />
+          <Typography variant="pinkLabel">
             {questions.length > 1 ? `${questions.length} Questions` : '1 Question'}
-          </TopLineTypography>
+          </Typography>
         </TitleBoxTopStyled>  
-        <TitleTypography>{title}</TitleTypography>      
+        <Typography variant="h4" style={{width: '100%', textAlign: 'left'}}>{title}</Typography>      
       </TitleBoxStyled>
     );
   }

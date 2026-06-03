@@ -689,6 +689,7 @@ declare module '@mui/material/styles' {
     xsLabel: CSSProperties;
     equation: CSSProperties;
     textLabel: CSSProperties;
+    pinkLabel: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
@@ -705,6 +706,7 @@ declare module '@mui/material/styles' {
     xsLabel?: CSSProperties;
     equation?: CSSProperties;
     textLabel?: CSSProperties;
+    pinkLabel?: CSSProperties;
   }
 }
 
@@ -722,6 +724,7 @@ declare module '@mui/material/Typography' {
     xsLabel: true;
     equation: true;
     textLabel: true;
+    pinkLabel: true;
   }
 }
 
@@ -938,6 +941,12 @@ const HostTheme = createTheme({
   typography: {
     fontFamily: 'Poppins',
     designSystem: designSystemTypography,
+    pinkLabel: {
+      fontFamily: 'Poppins',
+      fontWeight: 600,
+      fontSize: '14px',
+      color: designSystemColors.surface.pink,
+    },
     h1: {
       // screen titles
       fontWeight: '800',
@@ -961,9 +970,9 @@ const HostTheme = createTheme({
     },
     h4: {
       // answer card title
-      fontWeight: '700',
-      fontSize: '14px',
-      lineHeight: '16px',
+      fontSize: '16px',
+      lineHeight: '20px',
+      fontWeight: 600,
       color: secondaryTextColor,
     },
     h5: {
