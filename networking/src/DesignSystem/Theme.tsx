@@ -249,12 +249,12 @@ const xl = 1536;
 const headerHeight = 116;
 const footerHeight = 145;
 const pregameMinColumnWidth = 352; // used on enter game code screen and righton logo
-const extraSmallPadding = 8; // small icons, text positioning
-const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
-const mediumPadding = 24; // timer margin
-const largePadding = 32; // text spacing on answer selector, top margin on titles
-const extraLargePadding = 48; // spacing between card and edge of screen
-const extraExtraLargePadding = 64; // spacing between buttons and bottom of screen
+const xSmPadding = 8; // small icons, text positioning
+const smPadding = 16; // upper and lower margins on text, spacing of content in cards
+const mdPadding = 24; // timer margin
+const lgPadding = 32; // text spacing on answer selector, top margin on titles
+const xLgPadding = 48; // spacing between card and edge of screen
+const xxLgPadding = 64; // spacing between buttons and bottom of screen
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
@@ -263,13 +263,6 @@ declare module '@mui/material/styles' {
       headerHeight: number;
       footerHeight: number;
       pregameMinColumnWidth: number;
-      extraSmallPadding: number;
-      smallPadding: number;
-      mediumPadding: number;
-      largePadding: number;
-      extraLargePadding: number;
-      extraExtraLargePadding: number;
-      // host_v2 sizing keys (shared so host_v2 can consume DesignSystem components)
       fullHeaderHeight: number;
       answerBarHeight: number;
       nextStateButtonWidth: number;
@@ -295,13 +288,6 @@ declare module '@mui/material/styles' {
       headerHeight?: number;
       footerHeight?: number;
       pregameMinColumnWidth?: number;
-      extraSmallPadding?: number;
-      smallPadding?: number;
-      mediumPadding?: number;
-      largePadding?: number;
-      extraLargePadding?: number;
-      extraExtraLargePadding?: number;
-      // host_v2 sizing keys (shared so host_v2 can consume DesignSystem components)
       fullHeaderHeight?: number;
       answerBarHeight?: number;
       nextStateButtonWidth?: number;
@@ -435,12 +421,12 @@ const RightOnTheme = createTheme({
     headerHeight,
     footerHeight,
     pregameMinColumnWidth,
-    extraSmallPadding,
-    smallPadding,
-    mediumPadding,
-    largePadding,
-    extraLargePadding,
-    extraExtraLargePadding,
+    xSmPadding,
+    smPadding,
+    mdPadding,
+    lgPadding,
+    xLgPadding,
+    xxLgPadding,
   },
   palette: {
     primary: {

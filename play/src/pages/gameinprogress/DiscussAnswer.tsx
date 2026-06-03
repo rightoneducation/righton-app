@@ -120,7 +120,7 @@ export default function DiscussAnswer({
           variant="paragraph"
           sx={{
             textAlign: 'center',
-            marginTop: `${theme.sizing.largePadding}px`,
+            marginTop: `${theme.sizing.lgPadding}px`,
             opacity: 0.5,
           }}
         >
@@ -180,7 +180,7 @@ export default function DiscussAnswer({
             variant="paragraph"
             sx={{
               textAlign: 'center',
-              marginTop: `${theme.sizing.largePadding}px`,
+              marginTop: `${theme.sizing.lgPadding}px`,
               opacity: 0.5,
             }}
           >
@@ -239,7 +239,7 @@ export default function DiscussAnswer({
             >
               <SwiperSlide
                 style={{
-                  width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
+                  width: `calc(100% - ${theme.sizing.mdPadding * 2}px)`,
                   height: '100%',
                 }}
               >
@@ -247,7 +247,7 @@ export default function DiscussAnswer({
               </SwiperSlide>
               <SwiperSlide
                 style={{
-                  width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
+                  width: `calc(100% - ${theme.sizing.mdPadding * 2}px)`,
                   height: '100%',
                 }}
               >
@@ -280,7 +280,7 @@ export default function DiscussAnswer({
           paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
         }}
       >
-        <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
+        <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mdPadding * 2}px)`, height: '100%' }}>
           {P1LeftColumnContents}
         </Box>
       </BodyContentAreaSingleColumnStyled>

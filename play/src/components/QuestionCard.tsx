@@ -33,7 +33,7 @@ export default function QuestionCard({
           src={`${CloudFrontDistributionUrl}${imageUrl}`}
           alt="Question"
         />
-        <Typography variant="body1" sx={{padding: `${theme.sizing.mediumPadding}px`, whiteSpace: 'pre-line'}}> {questionText} </Typography>
+        <Typography variant="body1" sx={{padding: `${theme.sizing.mdPadding}px`, whiteSpace: 'pre-line'}}> {questionText} </Typography>
       </BodyCardContainerStyled>
     </QuestionCardStyled>
   );

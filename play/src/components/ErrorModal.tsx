@@ -60,8 +60,8 @@ export default function ErrorModal({
         content: {
           position: 'absolute',
           width: isExtraSmallDevice
-            ? `calc(100% - (2 * ${theme.sizing.extraLargePadding}px))`
-            : `calc(${theme.breakpoints.values.xs}px - (2 * ${theme.sizing.extraLargePadding}px))`,
+            ? `calc(100% - (2 * ${theme.sizing.xLgPadding}px))`
+            : `calc(${theme.breakpoints.values.xs}px - (2 * ${theme.sizing.xLgPadding}px))`,
           minWidth: '200px',
           minHeight: '100px',
           inset: 'auto',
@@ -90,7 +90,7 @@ export default function ErrorModal({
       <Stack
         data-testid="errormodal"
         spacing={2}
-        sx={{ paddingBottom: `${theme.sizing.mediumPadding}px` }}
+        sx={{ paddingBottom: `${theme.sizing.mdPadding}px` }}
       >
         <Typography variant="semiBoldParagraph" sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}>
           {upperTextMap[errorType]}

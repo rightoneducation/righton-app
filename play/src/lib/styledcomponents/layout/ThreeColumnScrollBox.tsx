@@ -7,7 +7,7 @@ import { Box } from '@mui/material';
  */
 export default styled(Box)(({ theme }) => ({
   height: `100%`, // footer height & 8px grid spacing
-  paddingBottom: `${theme.sizing.mediumPadding}px`, // added so box shadow shows around edge of card
+  paddingBottom: `${theme.sizing.mdPadding}px`, // added so box shadow shows around edge of card
   paddingLeft: `12px`,
   paddingRight: `12px`,
   overflow: 'auto',

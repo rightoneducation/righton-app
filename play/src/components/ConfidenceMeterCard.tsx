@@ -86,7 +86,7 @@ export default function ConfidenceMeterCard({
         boxSizing: 'border-box',
         textAlign: 'left',
         width: '100%',
-        marginBottom: `${theme.sizing.smallPadding}px`,
+        marginBottom: `${theme.sizing.smPadding}px`,
       }}
     >
       <Typography variant="h1" style={{color: theme.palette.designSystem.surface.play}}>
@@ -179,7 +179,7 @@ export default function ConfidenceMeterCard({
           flexWrap: 'nowrap',
           textAlign: 'center',
           justifyContent: 'space-between',
-          marginBottom: `${theme.sizing.smallPadding}px`,
+          marginBottom: `${theme.sizing.smPadding}px`,
         }}
       >
         {confidenceOptionArray.map((option) => responseOption(option))}

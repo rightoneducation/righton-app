@@ -20,8 +20,8 @@ const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   textTransform: 'none',
   backgroundColor: theme.palette.primary.lightGrey,
   maxWidth: '100%', // overwrite MUI default maxWidth
-  paddingLeft: `${theme.sizing.smallPadding}px`, // overwrite MUI default padding
-  paddingRight: `${theme.sizing.smallPadding}px`,
+  paddingLeft: `${theme.sizing.smPadding}px`, // overwrite MUI default padding
+  paddingRight: `${theme.sizing.smPadding}px`,
 }));
 
 const ResultSelectorCorrect = styled(ResultSelectorDefault)(({ theme }) => ({
@@ -74,15 +74,15 @@ export default function ResultSelector({
   };
   const correctAnswerIcon = newPoints && newPoints > 0
     ? <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState ?? GameSessionState.PHASE_1_DISCUSS} />
-    : <img src={PlayerCorrectImage} style={{ position: 'relative', width: `${theme.sizing.mediumPadding}px`, height: `${theme.sizing.mediumPadding}px`, paddingTop: '2px', WebkitTouchCallout: 'none' }} alt="SelectedAnswerImage" onContextMenu={handleContextMenu} />;
+    : <img src={PlayerCorrectImage} style={{ position: 'relative', width: `${theme.sizing.mdPadding}px`, height: `${theme.sizing.mdPadding}px`, paddingTop: '2px', WebkitTouchCallout: 'none' }} alt="SelectedAnswerImage" onContextMenu={handleContextMenu} />;
 
   const image = (
     <img
       src={imageMap[answerStatus]}
       style={{
         position: 'relative',
-        width: `${theme.sizing.mediumPadding}px`,
-        height: `${theme.sizing.mediumPadding}px`,
+        width: `${theme.sizing.mdPadding}px`,
+        height: `${theme.sizing.mdPadding}px`,
         paddingTop: '2px',
         // disable touch callout when longclicking on image
         WebkitTouchCallout: 'none',
@@ -110,8 +110,8 @@ export default function ResultSelector({
         <Typography
           variant="textLabel"
           sx={{
-            paddingLeft: `${theme.sizing.smallPadding}px`,
-            paddingRight: `${theme.sizing.largePadding}px`,
+            paddingLeft: `${theme.sizing.smPadding}px`,
+            paddingRight: `${theme.sizing.lgPadding}px`,
             whiteSpace: 'pre-line',
             fontWeight: 400,
             color:  `${theme.palette.designSystem.surface.play}`
@@ -130,8 +130,8 @@ export default function ResultSelector({
                 answerStatus === AnswerState.CORRECT ||
                 answerStatus === AnswerState.PREVIOUS ||
                 answerStatus === AnswerState.SELECTED
-                  ? `${theme.sizing.extraSmallPadding}px`
-                  : `${theme.sizing.mediumPadding}px`,
+                  ? `${theme.sizing.xSmPadding}px`
+                  : `${theme.sizing.mdPadding}px`,
             }}
           >
             {percentageText}

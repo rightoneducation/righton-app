@@ -111,7 +111,7 @@ export default function SplashScreen({
               style={{
                 width: `${theme.sizing.pregameMinColumnWidth}px`,
                 height: '118px',
-                paddingTop: `${theme.sizing.extraLargePadding}px`,
+                paddingTop: `${theme.sizing.xLgPadding}px`,
               }}
               src={Logo}
               alt="Question"
@@ -120,8 +120,8 @@ export default function SplashScreen({
               variant="semiBoldParagraph"
               sx={{
                 textAlign: `center`,
-                paddingLeft: `${theme.sizing.mediumPadding}px`,
-                paddingRight: `${theme.sizing.mediumPadding}px`,
+                paddingLeft: `${theme.sizing.mdPadding}px`,
+                paddingRight: `${theme.sizing.mdPadding}px`,
               }}
             >
               {t('joingame.splash.title1')}

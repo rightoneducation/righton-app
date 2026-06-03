@@ -123,7 +123,7 @@ export default function ChooseAnswer({
           variant="paragraph"
           sx={{
             textAlign: 'center',
-            marginTop: `${theme.sizing.largePadding}px`,
+            marginTop: `${theme.sizing.lgPadding}px`,
           }}
         >
           {t('gameinprogress.general.swipealert')}
@@ -138,8 +138,8 @@ export default function ChooseAnswer({
       <Typography
         sx={{
           fontWeight: 700,
-          marginTop: `${theme.sizing.largePadding}px`,
-          marginX: `${theme.sizing.largePadding}px`,
+          marginTop: `${theme.sizing.lgPadding}px`,
+          marginX: `${theme.sizing.lgPadding}px`,
           fontSize: `${theme.typography.h4.fontSize}px`,
           textAlign: 'center',
         }}
@@ -155,8 +155,8 @@ export default function ChooseAnswer({
         <Typography
           sx={{
             fontWeight: 700,
-            marginTop: `${theme.sizing.largePadding}px`,
-            marginX: `${theme.sizing.largePadding}px`,
+            marginTop: `${theme.sizing.lgPadding}px`,
+            marginX: `${theme.sizing.lgPadding}px`,
             fontSize: `${theme.typography.h4.fontSize}px`,
             textAlign: 'center',
           }}
@@ -172,8 +172,8 @@ export default function ChooseAnswer({
           <Typography
             sx={{
               fontWeight: 700,
-              marginTop: `${theme.sizing.largePadding}px`,
-              marginX: `${theme.sizing.largePadding}px`,
+              marginTop: `${theme.sizing.lgPadding}px`,
+              marginX: `${theme.sizing.lgPadding}px`,
               fontSize: `${theme.typography.h4.fontSize}px`,
               textAlign: 'center',
             }}
@@ -289,7 +289,7 @@ export default function ChooseAnswer({
           >
             <SwiperSlide
               style={{
-                width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
+                width: `calc(100% - ${theme.sizing.mdPadding * 2}px)`,
                 height: '100%',
               }}
             >
@@ -297,7 +297,7 @@ export default function ChooseAnswer({
             </SwiperSlide>
             <SwiperSlide
               style={{
-                width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
+                width: `calc(100% - ${theme.sizing.mdPadding * 2}px)`,
                 height: '100%',
               }}
             >
@@ -306,7 +306,7 @@ export default function ChooseAnswer({
             { isSubmitted && isSmallDevice && isConfidenceEnabled &&
                 <SwiperSlide
                   style={{
-                    width: `calc(100% - ${theme.sizing.mediumPadding * 2}px)`,
+                    width: `calc(100% - ${theme.sizing.mdPadding * 2}px)`,
                     height: '100%',
                   }}
                 >
@@ -339,7 +339,7 @@ export default function ChooseAnswer({
                        variant="paragraph"
                        sx={{
                          textAlign: 'center',
-                         marginTop: `${theme.sizing.largePadding}px`,
+                         marginTop: `${theme.sizing.lgPadding}px`,
                        }}
                      >
                        {t('gameinprogress.chooseanswer.answertimeup')}

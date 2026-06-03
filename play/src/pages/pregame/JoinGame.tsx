@@ -21,14 +21,14 @@ const StackContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const PaddedContainer = styled(Box)(({ theme }) => ({
-  paddingLeft: `${theme.sizing.smallPadding}px`,
-  paddingRight: `${theme.sizing.smallPadding}px`,
+  paddingLeft: `${theme.sizing.smPadding}px`,
+  paddingRight: `${theme.sizing.smPadding}px`,
 }));
 
 const HelpIcon = styled('img')(({ theme }) => ({
   width: `21px`,
   height: '21px',
-  paddingRight: `${theme.sizing.smallPadding}px`,
+  paddingRight: `${theme.sizing.smPadding}px`,
   top: 0,
   right: '16px'
 }));
@@ -37,7 +37,7 @@ const EnterNameHelpTriangleStyled = styled('img')(({ theme }) => ({
   width: '25px',
   height: '15px',
   backgroundColor: 'rgba(255,255,255,0.2',
-  paddingRight: `${theme.sizing.smallPadding}px`,
+  paddingRight: `${theme.sizing.smPadding}px`,
   top: 0,
   right: '16px'
 }));
@@ -45,12 +45,12 @@ const EnterNameHelpTriangleStyled = styled('img')(({ theme }) => ({
 const SmallDeviceHelpBox = styled(Box)(({ theme }) => ({
   width: '100%',
   backgroundColor: `rgba(255,255,255, 0.2)`,
-  // padding: `${theme.sizing.extraSmallPadding}px`,
+  // padding: `${theme.sizing.xSmPadding}px`,
   paddingTop: '14px',
   paddingBottom: '14px',
   paddingLeft: '16px',
   paddingRight: '16px',
-  borderRadius: `${theme.sizing.extraSmallPadding}px`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   boxSizing: 'border-box',
 }));
 
@@ -440,7 +440,7 @@ export default function JoinGame({
                   variant="textLabel"
                   sx={{
                     textAlign: 'center',
-                    marginBottom: `${theme.sizing.smallPadding}px`,
+                    marginBottom: `${theme.sizing.smPadding}px`,
                   }}
                 >
                   {t('joingame.gamecode.error1')}
@@ -463,7 +463,7 @@ export default function JoinGame({
                   variant="textLabel"
                   sx={{     
                     textAlign: 'center',
-                    marginBottom: `${theme.sizing.smallPadding}px`,
+                    marginBottom: `${theme.sizing.smPadding}px`,
                   }}
                 >
                   Invalid Name Input.

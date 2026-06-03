@@ -7,7 +7,7 @@ export default styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '8px',
-  padding: `${theme.sizing.mediumPadding}px`,
+  padding: `${theme.sizing.mdPadding}px`,
   backgroundColor: theme.palette.primary.main,
   boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)'
 }));
