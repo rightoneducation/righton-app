@@ -1,7 +1,8 @@
 import { Typography } from '@mui/material';
 import { HostButtonType, hostButtonContentMap } from './HostButtonModels';
 import {
-  HostButtonStyled,
+  HostButtonStartStyled,
+  HostButtonGameStyled,
   HostButtonContent,
 } from './styledcomponents/ButtonStyledComponents';
 
@@ -22,29 +23,55 @@ export function HostButton({
 }: HostButtonProps) {
   const buttonObj = hostButtonContentMap[buttonType];
 
-  return (
-    <HostButtonStyled
-      buttonShape={buttonObj.shape}
-      buttonVariant={buttonObj.variant}
-      disabled={!isEnabled}
-      onClick={onClick}
-      data-testid={dataTestId}
-      style={buttonObj.width ? { width: buttonObj.width } : undefined}
+  const buttonLabel = [
+    <Typography
+      variant="h2"
+      style={{
+        fontSize: '20px',
+        fontWeight: 700,
+        lineHeight: '30px',
+        textTransform: 'none',
+        color: 'inherit',
+      }}
     >
-      <HostButtonContent buttonShape={buttonObj.shape}>
-        <Typography
-          variant="h2"
-          style={{
-            fontSize: '20px',
-            fontWeight: 700,
-            lineHeight: '30px',
-            textTransform: 'none',
-            color: 'inherit',
-          }}
+      {label}
+    </Typography>
+  ]
+  switch(buttonType){
+    case HostButtonType.PREPARE_GAME:
+    case HostButtonType.NEXT_QUESTION:
+    case HostButtonType.END_GAME:
+    case HostButtonType.EXIT_TO_CENTRAL:
+      return (
+        <HostButtonStartStyled
+          disabled={!isEnabled}
+          onClick={onClick}
+          data-testid={dataTestId}
+          style={buttonObj.width ? { width: buttonObj.width } : undefined}
         >
-          {label}
-        </Typography>
-      </HostButtonContent>
-    </HostButtonStyled>
-  );
+          <HostButtonContent>
+            { buttonType === HostButtonType.PREPARE_GAME &&
+              <img src={(isEnabled ? buttonObj.icon : buttonObj.disableIcon) ?? ''} alt='icon'/>
+            }
+            {buttonLabel} 
+          </HostButtonContent>
+        </HostButtonStartStyled>
+      );
+    default:
+      return (
+        <HostButtonGameStyled
+          disabled={!isEnabled}
+          onClick={onClick}
+          data-testid={dataTestId}
+          style={buttonObj.width ? { width: buttonObj.width } : undefined}
+        >
+          <HostButtonContent>
+            { buttonType === HostButtonType.START_GAME &&
+              <img src={(isEnabled ? buttonObj.icon : buttonObj.disableIcon) ?? ''} alt='icon'/>
+            }
+            {buttonLabel} 
+          </HostButtonContent>
+        </HostButtonGameStyled>
+      )
+  }
 }

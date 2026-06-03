@@ -5,7 +5,6 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { PlayButtonShape } from '../PlayButtonModels';
-import { HostButtonShape, HostButtonVariant } from '../HostButtonModels';
 
 type PlayButtonStyledProps = {
   buttonShape: PlayButtonShape;
@@ -57,61 +56,58 @@ export const PlayButtonContent = styled(Box, {
   paddingRight: buttonShape === PlayButtonShape.INTRO ? '12px' : '8px',
 }));
 
-type HostButtonStyledProps = {
-  buttonShape: HostButtonShape;
-  buttonVariant: HostButtonVariant;
-};
-
-type HostShapeProp = { buttonShape: HostButtonShape };
-
-const HOST_BLUE = '#159EFA';
-const HOST_FILLED_GRADIENT = 'linear-gradient(to right, #159EFA 0%, #19BCFB 100%)';
-
-export const HostButtonStyled = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'buttonShape' && prop !== 'buttonVariant',
-})<HostButtonStyledProps>(({ buttonVariant }) => {
-  const isOutline = buttonVariant === HostButtonVariant.OUTLINE;
-  const background = isOutline ? 'transparent' : HOST_FILLED_GRADIENT;
+export const HostButtonStartStyled = styled(Button)(({ theme }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return {
-    width: '300px',
-    height: '48px',
-    borderRadius: '22px',
+    width: isMobile ? '100%' : '343px',
+    height: '32px',
+    borderRadius: '8px',
     textTransform: 'none',
     padding: 0,
-    border: `2px solid ${HOST_BLUE}`,
-    color: isOutline ? HOST_BLUE : '#FFFFFF',
-    background,
-    boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
+    border: `2px solid ${theme.palette.primary.main}`,
+    color: theme.palette.designSystem.background.central.darkNavy,
+    background: theme.palette.primary.main,
     boxSizing: 'border-box',
     '&:hover': {
-      background,
+      background: 'rgba(255,255,255, 0.5)',
     },
     '&.Mui-disabled': {
-      border: `2px solid ${HOST_BLUE}`,
-      color: HOST_BLUE,
-      background: isOutline ? 'transparent' : '#032563',
-      opacity: isOutline ? 0.25 : 1,
+      border: `2px solid ${theme.palette.primary.main}`,
+      background: 'transparent',
+      color: theme.palette.primary.main,
       cursor: 'not-allowed',
-      boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
     },
   };
 });
 
-export const HostButtonBlockStyled = styled(HostButtonStyled)({
+export const HostButtonGameStyled = styled(HostButtonStartStyled)(({ theme }) => {
+  return {
+    color: theme.palette.primary.main,
+    background: theme.palette.designSystem.surface.play,
+    cursor: 'pointer',
+    '&:hover': {
+      background: theme.palette.designSystem.surface.play,
+      opacity: 0.75
+    },
+    '&.Mui-disabled': {
+      background: theme.palette.designSystem.surface.play,
+      opacity: 0.3
+    }
+  }
+})
+
+export const HostButtonBlockStyled = styled(HostButtonStartStyled)({
   '&&': {
     width: '100%',
   },
 });
 
-export const HostButtonContent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'buttonShape',
-})<HostShapeProp>(({ buttonShape }) => ({
+export const HostButtonContent = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   height: '100%',
   width: '100%',
-  paddingLeft: buttonShape === HostButtonShape.INTRO ? '12px' : '8px',
-  paddingRight: buttonShape === HostButtonShape.INTRO ? '12px' : '8px',
+  gap: `${theme.sizing.xSmPadding}px`
 }));

@@ -1,3 +1,6 @@
+import launchWhite from '../../icons/buttonIconLaunchWhite.svg';
+import launchBlue from '../../icons/buttonIconLaunchBlue.svg';
+
 export enum HostButtonType {
   PREPARE_GAME = 'prepareGame',
   START_GAME = 'startGame',
@@ -10,35 +13,22 @@ export enum HostButtonType {
   PLAY_SELECTED_GAME = 'playSelectedGame',
 }
 
-export enum HostButtonShape {
-  INTRO,
-  GAMEPLAY,
-}
-
-export enum HostButtonVariant {
-  FILLED,
-  OUTLINE,
-}
-
 type ButtonContentMapProps = {
   [key in HostButtonType]: {
-    shape: HostButtonShape;
-    variant: HostButtonVariant;
+    icon: string | null;
+    disableIcon?: string;
     width?: string;
   };
 };
 
-// shape: INTRO = lobby/interim footers (FooterStartGame, FooterInterim)
-//        GAMEPLAY = in-progress footer (FooterGameInProgress)
-// variant: OUTLINE only for END_ANSWERING; everything else FILLED
 export const hostButtonContentMap: ButtonContentMapProps = {
-  [HostButtonType.PREPARE_GAME]: { shape: HostButtonShape.INTRO, variant: HostButtonVariant.FILLED },
-  [HostButtonType.START_GAME]: { shape: HostButtonShape.INTRO, variant: HostButtonVariant.FILLED },
-  [HostButtonType.NEXT_QUESTION]: { shape: HostButtonShape.INTRO, variant: HostButtonVariant.FILLED },
-  [HostButtonType.END_GAME]: { shape: HostButtonShape.INTRO, variant: HostButtonVariant.FILLED },
-  [HostButtonType.EXIT_TO_CENTRAL]: { shape: HostButtonShape.INTRO, variant: HostButtonVariant.FILLED },
-  [HostButtonType.PLAY_SELECTED_GAME]: { shape: HostButtonShape.INTRO, variant: HostButtonVariant.FILLED },
-  [HostButtonType.CONTINUE_PHASE_TWO]: { shape: HostButtonShape.GAMEPLAY, variant: HostButtonVariant.FILLED },
-  [HostButtonType.CONTINUE]: { shape: HostButtonShape.GAMEPLAY, variant: HostButtonVariant.FILLED },
-  [HostButtonType.END_ANSWERING]: { shape: HostButtonShape.GAMEPLAY, variant: HostButtonVariant.OUTLINE },
+  [HostButtonType.PREPARE_GAME]: { icon: launchBlue, disableIcon: launchWhite },
+  [HostButtonType.START_GAME]: { icon: launchWhite, disableIcon: launchBlue },
+  [HostButtonType.NEXT_QUESTION]: { icon: null },
+  [HostButtonType.END_GAME]: { icon: null },
+  [HostButtonType.EXIT_TO_CENTRAL]: { icon: null },
+  [HostButtonType.PLAY_SELECTED_GAME]: { icon: null },
+  [HostButtonType.CONTINUE_PHASE_TWO]: { icon: null },
+  [HostButtonType.CONTINUE]: { icon: null },
+  [HostButtonType.END_ANSWERING]: { icon: null }
 };

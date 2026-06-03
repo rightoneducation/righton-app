@@ -256,6 +256,142 @@ const lgPadding = 32; // text spacing on answer selector, top margin on titles
 const xLgPadding = 48; // spacing between card and edge of screen
 const xxLgPadding = 64; // spacing between buttons and bottom of screen
 
+// ============================================================================
+// HOST theme tokens (relocated from host_v2/src/lib/Theme.tsx during the
+// host/play UI refresh). Suffixed `Host` to coexist with play's tokens above.
+// Values copied verbatim; host keeps its own values independently of play.
+// ============================================================================
+
+// host - colors (host-specific only; tokens identical to play reuse play's consts above):
+const darkBlueCardColorHost = '#08458F'; // card color for default host cards with student data
+const backgroundGradientHost =
+  'linear-gradient(196deg, rgb(49,109,176) 0%, rgb(11,33,90) 73%)'; // upper header background
+const timerGradientHost = 'linear-gradient(90deg, #168CDC 0%, #00A7E8 100%)';
+const questionGradientHost =
+  'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator
+const circularProgressHost = '#159EFA';
+const playerNameTextColorHost = '#AEAEAE'; // player name
+const baseQuestionColorHost = 'rgba(255,255,255,0.2)'; //
+const playerFeedbackLabelColorHost = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
+const feedbackCardsInstructionsColorHost = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
+const graphAccentColorHost = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
+const dropdownInfoBackgroundColorHost = '#063772'; // background color of the sub-cards in the player response dropdowns
+const answerBarBackgroundColorHost = 'rgba(8, 69, 143, 0.20)';
+const progressBarColorHost = '#08458F';
+const radialTimerArrayHost = [
+  'rgb(126, 90, 175)',
+  'rgb(148, 98, 179)',
+  'rgb(169, 104, 180)',
+  'rgb(186, 107, 177)',
+  'rgb(202, 109, 172)',
+  'rgb(218, 112, 168)',
+  'rgb(237, 115, 166)',
+  'rgb(255, 120, 165)',
+]; // radial timer color array - appended with '0.x )' opacity when used in countdown
+
+// host - borders:
+const borderWidthHost = 1;
+const solidWhiteHost = `${borderWidthHost}px solid rgba(255, 255, 255, 1)`;
+const transparentHost = `${borderWidthHost}px solid rgba(255, 255, 255, 0)`;
+const semiTransparentHost = `${borderWidthHost}px solid rgba(255, 255, 255, 0.2)`;
+
+// host - breakpoints (host-specific; xl (1536) is identical to play's — reused directly):
+const xsHost = 0;
+const smHost = 400;
+const mdHost = 700;
+const lgHost = 1024;
+
+// host - header, footer, padding sizes:
+const fullHeaderHeightHost = 228;
+const headerHeightHost = 140;
+const footerHeightHost = 144;
+const answerBarHeightHost = 18;
+const nextStateButtonWidthHost = 300;
+const pregameMinColumnWidthHost = 248; // used on enter game code screen and righton logo
+const answerOptionBorderRadiusHost = 22; // border radius of options on answer cards
+const xxSmPaddingHost = 4; // positioning in Victory Graphs (host-only; no play equivalent)
+// xSm/sm/md/lg/xLg/xxLg paddings are identical to play's scale above — reused directly.
+const barStrokeWidthHost = 2; // stroke width of the bar outlines on host graph cards
+const confidenceBarThicknessHost = 55; // thickness of each bar component in confidence bar graph
+
+// host - Victory Graphs Theming
+// victory applies a default of 50px to the VictoryChart component
+const defaultVictoryPaddingHost = 50;
+const barThicknessResponsesHost = 18;
+const barThicknessZeroResponsesHost = 26;
+const labelOffsetResponsesHost = 3;
+
+const customVictoryResponsesThemeHost = {
+  axis: {
+    style: {
+      axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+      grid: { stroke: 'transparent' },
+      tickLabels: {
+        padding: mdPadding,
+      },
+    },
+  },
+  dependentAxis: {
+    style: {
+      axis: { stroke: 'transparent' },
+      grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+      tickLabels: {
+        fill: 'rgba(255, 255, 255, 0.5)',
+        fontFamily: 'Rubik',
+        fontWeight: '400',
+        fontSize: '12px',
+      },
+    },
+  },
+  bar: {
+    style: {
+      data: {
+        stroke: '#FFF',
+        strokeWidth: 1,
+      },
+      labels: {
+        fill: ({ datum, index }: any) =>
+          index === 0 || datum.answerCount === 0
+            ? '#FFF'
+            : '#384466',
+        fontFamily: 'Rubik',
+        fontWeight: '400',
+        textAnchor: 'end',
+        fontSize: '12px',
+      },
+    },
+  },
+};
+
+const customVictoryConfidenceThemeHost = {
+  axis: {
+    style: {
+      axis: {
+        stroke: graphAccentColorHost,
+        strokeWidth: barStrokeWidthHost,
+      },
+      grid: { stroke: 'transparent' },
+      tickLabels: {
+        padding: xSmPadding,
+        fill: playerFeedbackLabelColorHost,
+        fontSize: '18px',
+      },
+    },
+  },
+  stack: {
+    colorScale: [primaryTextColor, 'transparent'],
+    style: {
+      data: {
+        stroke: primaryTextColor,
+        strokeWidth: barStrokeWidthHost,
+      },
+    },
+  },
+  bar: {
+    barWidth: confidenceBarThicknessHost,
+  },
+};
+
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
@@ -281,6 +417,83 @@ declare module '@mui/material/styles' {
       barThicknessZeroResponses: number;
       labelOffsetResponses: number;
     };
+    // host-only augmentations (consumed by HostTheme)
+    borders: {
+      borderWidth: number;
+      solidWhite: string;
+      transparent: string;
+      semiTransparent: string;
+    };
+    victoryResponsesTheme: {
+      axis: {
+        style: {
+          axis: { stroke: string; strokeWidth: number };
+          grid: { stroke: string };
+          tickLabels: {
+            padding: number;
+          };
+        };
+      };
+      dependentAxis: {
+        style: {
+          axis: { stroke: string };
+          grid: { stroke: string; strokeWidth: number };
+          tickLabels: {
+            fill: string;
+            fontFamily: string;
+            fontWeight: string;
+            fontSize: string;
+          };
+        };
+      };
+      bar: {
+        style: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          labels: {
+            fontFamily: string;
+            fontWeight: string;
+            textAnchor: string;
+            fontSize: string;
+          };
+        };
+      };
+    };
+    victoryConfidenceTheme: {
+      axis: {
+        style: {
+          axis: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          grid: { stroke: string };
+          tickLabels: {
+            padding: number;
+            fill: string;
+            fontSize: string;
+          },
+        },
+      },
+      stack: {
+        colorScale: string[];
+        style: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          },
+        },
+      },
+      bar: {
+        style: {
+          data: {
+            fill: string;
+          },
+        },
+        barWidth: number;
+      },
+    }
   }
 
   interface ThemeOptions {
@@ -306,6 +519,83 @@ declare module '@mui/material/styles' {
       barThicknessZeroResponses?: number;
       labelOffsetResponses?: number;
     };
+    // host-only augmentations (consumed by HostTheme)
+    borders?: {
+      borderWidth?: number;
+      solidWhite?: string;
+      transparent?: string;
+      semiTransparent?: string;
+    };
+    victoryResponsesTheme?: {
+      axis?: {
+        style?: {
+          axis?: { stroke: string; strokeWidth: number };
+          grid?: { stroke: string };
+          tickLabels?: {
+            padding: number;
+          };
+        };
+      };
+      dependentAxis?: {
+        style?: {
+          axis?: { stroke: string };
+          grid?: { stroke: string; strokeWidth: number };
+          tickLabels?: {
+            fill: string;
+            fontFamily: string;
+            fontWeight: string;
+            fontSize: string;
+          };
+        };
+      };
+      bar?: {
+        style?: {
+          data?: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          labels?: {
+            fontFamily: string;
+            fontWeight: string;
+            textAnchor: string;
+            fontSize: string;
+          };
+        };
+      };
+    };
+    victoryConfidenceTheme?: {
+      axis?: {
+        style?: {
+          axis?: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          grid?: { stroke: string };
+          tickLabels?: {
+            padding: number;
+            fill: string;
+            fontSize: string;
+          },
+        },
+      },
+      stack?: {
+        colorScale?: string[];
+        style?: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          },
+        },
+      },
+      bar?: {
+        style?: {
+          data?: {
+            fill: string;
+          },
+        },
+        barWidth: number;
+      },
+    }
   }
 
   interface PaletteColor {
@@ -329,6 +619,17 @@ declare module '@mui/material/styles' {
     radialTimerArray: string[];
     progressBarBackgroundColor: string;
     progressBarSelectedColor: string;
+    // host-only palette keys (consumed by HostTheme)
+    darkBlueCardColor: string;
+    questionGradient: string;
+    circularProgress: string;
+    baseQuestionColor: string;
+    playerFeedbackLabelColor: string;
+    feedbackCardsInstructionsColor: string;
+    graphAccentColor: string;
+    dropdownInfoBackgroundColor: string;
+    answerBarBackgroundColor: string;
+    progressBarColor: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -353,6 +654,17 @@ declare module '@mui/material/styles' {
     radialTimerArray?: string[];
     progressBarBackgroundColor?: string;
     progressBarSelectedColor?: string;
+    // host-only palette keys (consumed by HostTheme)
+    darkBlueCardColor?: string;
+    questionGradient?: string;
+    circularProgress?: string;
+    baseQuestionColor?: string;
+    playerFeedbackLabelColor?: string;
+    feedbackCardsInstructionsColor?: string;
+    graphAccentColor?: string;
+    dropdownInfoBackgroundColor?: string;
+    answerBarBackgroundColor?: string;
+    progressBarColor?: string;
   }
 
   interface Palette {
@@ -555,5 +867,175 @@ const RightOnTheme = createTheme({
   },
 });
 
-export { RightOnTheme };
+const HostTheme = createTheme({
+  breakpoints: {
+    values: { xs: xsHost, sm: smHost, md: mdHost, lg: lgHost, xl },
+  },
+  borders: {
+    borderWidth: borderWidthHost,
+    solidWhite: solidWhiteHost,
+    transparent: transparentHost,
+    semiTransparent: semiTransparentHost,
+  },
+  sizing: {
+    fullHeaderHeight: fullHeaderHeightHost,
+    headerHeight: headerHeightHost,
+    footerHeight: footerHeightHost,
+    answerBarHeight: answerBarHeightHost,
+    nextStateButtonWidth: nextStateButtonWidthHost,
+    pregameMinColumnWidth: pregameMinColumnWidthHost,
+    xxSmPadding: xxSmPaddingHost,
+    xSmPadding,
+    smPadding,
+    mdPadding,
+    lgPadding,
+    xLgPadding,
+    xxLgPadding,
+    answerOptionBorderRadius: answerOptionBorderRadiusHost,
+    barStrokeWidth: barStrokeWidthHost,
+    confidenceBarThickness: confidenceBarThicknessHost,
+    defaultVictoryPadding: defaultVictoryPaddingHost,
+    barThicknessResponses: barThicknessResponsesHost,
+    barThicknessZeroResponses: barThicknessZeroResponsesHost,
+    labelOffsetResponses: labelOffsetResponsesHost,
+  },
+  victoryResponsesTheme: customVictoryResponsesThemeHost,
+  victoryConfidenceTheme: customVictoryConfidenceThemeHost,
+  palette: {
+    primary: {
+      main: mainColor,
+      accent: accentColor,
+      darkBlueCardColor: darkBlueCardColorHost,
+      backgroundGradient: backgroundGradientHost,
+      radialGradient,
+      timerGradient: timerGradientHost,
+      highlightGradient,
+      altHighlightGradient,
+      questionGradient: questionGradientHost,
+      circularProgress: circularProgressHost,
+      red: redColor,
+      green: greenColor,
+      darkPurple: darkPurpleColor,
+      blue: blueColor,
+      darkBlue: secondaryTextColor,
+      extraDarkGrey: extraDarkGreyColor,
+      darkGrey: darkGreyColor,
+      lightGrey: lightGreyColor,
+      correctColor: greenCorrectColor,
+      baseQuestionColor: baseQuestionColorHost,
+      playerFeedbackLabelColor: playerFeedbackLabelColorHost,
+      feedbackCardsInstructionsColor: feedbackCardsInstructionsColorHost,
+      graphAccentColor: graphAccentColorHost,
+      dropdownInfoBackgroundColor: dropdownInfoBackgroundColorHost,
+      answerBarBackgroundColor: answerBarBackgroundColorHost,
+      progressBarColor: progressBarColorHost,
+      progressBarBackgroundColor,
+      countdownColor,
+      radialTimerArray: radialTimerArrayHost,
+    },
+    designSystem: designSystemColors,
+  },
+  typography: {
+    fontFamily: 'Poppins',
+    designSystem: designSystemTypography,
+    h1: {
+      // screen titles
+      fontWeight: '800',
+      fontSize: '26px',
+      lineHeight: '30px',
+      color: primaryTextColor,
+    },
+    h2: {
+      // launch game title
+      fontWeight: '800',
+      fontSize: '72px',
+      lineHeight: '30px',
+      color: primaryTextColor,
+    },
+    h3: {
+      // player name
+      fontWeight: '800',
+      fontSize: '20px',
+      lineHeight: '30px',
+      color: playerNameTextColorHost,
+    },
+    h4: {
+      // answer card title
+      fontWeight: '700',
+      fontSize: '14px',
+      lineHeight: '16px',
+      color: secondaryTextColor,
+    },
+    h5: {
+      // card answer list letters (A, B, C, D, etc)
+      fontFamily: 'Poppins',
+      fontSize: '16px',
+      fontWeight: 800,
+      lineHeight: '19px',
+      color: secondaryTextColor,
+    },
+    h6: {
+      // screen titles
+      fontWeight: '800',
+      fontSize: '35px',
+      lineHeight: '48px',
+      color: primaryTextColor,
+    },
+    subtitle1: {
+      // correct/nice try discuss answer text
+      fontWeight: '800',
+      fontSize: '24px',
+      lineHeight: '38px',
+      color: darkestTextColor,
+    },
+    body1: {
+      // question text
+      fontWeight: '400',
+      fontSize: '16px',
+      lineHeight: '18px',
+      color: secondaryTextColor,
+    },
+    body2: {
+      // answer text
+      fontWeight: '400',
+      fontSize: '18px',
+      lineHeight: '22px',
+      textAlign: 'left',
+      color: secondaryTextColor,
+    },
+    button: {
+      // button text
+      fontWeight: '700',
+      fontSize: '16px',
+      lineHeight: '18px',
+      color: primaryTextColor,
+    },
+    caption: {
+      // timer text
+      fontWeight: '700',
+      fontSize: '12px',
+      lineHeight: '14px',
+      color: primaryTextColor,
+      opacity: '0.8',
+    },
+    overline: {
+      // scoreIndicator text
+      fontSize: '18px',
+      fontWeight: 800,
+      lineHeight: '21px',
+      color: primaryTextColor,
+      textShadow: '0px 1px 1px rgba(0, 0, 0, 0.15)',
+    },
+    subtitle2: {
+      //  player icon text
+      fontFamily: 'Poppins',
+      fontSize: '13px',
+      fontWeight: 600,
+      lineHeight: '22px',
+      color: primaryTextColor,
+    },
+  },
+});
+
+export { RightOnTheme, HostTheme };
 export default RightOnTheme;
