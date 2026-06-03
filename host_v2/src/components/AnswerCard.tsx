@@ -4,7 +4,7 @@ import { Typography, Box, LinearProgress } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { GameSessionState, IHostTeamAnswersResponse } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import { BodyCardStyled } from '../lib/styledcomponents/BodyCardStyled';
 import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
 import InputNum from '../lib/styledcomponents/footer/InputNum';
 

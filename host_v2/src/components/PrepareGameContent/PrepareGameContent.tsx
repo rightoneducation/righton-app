@@ -4,18 +4,15 @@ import { useTheme } from '@mui/material/styles';
 import {motion} from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
+import { IGameSession, IQuestion, IPhase } from '@righton/networking';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
+import { ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaSingleColumnStyled,
   BodyContentAreaDoubleColumnStyledNoSwiper,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import EnableShortAnswerCard from './EnableShortAnswerCard';
-import EnableConfidenceCard from './EnableConfidenceCard';
-import EnableHintsCard from './EnableHintsCard';
+import PrepareGameOptionsCard from './PrepareGameOptionsCard';
 import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentLeftColumn';
-import { PrepGameLargeBox } from '../../lib/styledcomponents/animateContainers.tsx/motionDivContainers';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -48,16 +45,12 @@ export default function PrepareGameContent({
   const leftCardsColumn = (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
       <ScrollBoxStyled>
-        <EnableShortAnswerCard
+        <PrepareGameOptionsCard
           isGameSettingMultiChoice={isGameSettingMultiChoice}
           isShortAnswerEnabled={isShortAnswerEnabled}
           setIsShortAnswerEnabled={setIsShortAnswerEnabled}
-        />
-        <EnableConfidenceCard
           isConfidenceEnabled={isConfidenceEnabled}
           setIsConfidenceEnabled={setIsConfidenceEnabled}
-        />
-        <EnableHintsCard
           isHintEnabled={isHintEnabled}
           setIsHintEnabled={setIsHintEnabled}
         />

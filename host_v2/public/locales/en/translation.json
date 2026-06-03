@@ -1,4 +1,15 @@
 {
+  "gameoptions": {
+    "answertypetitle": "Answer Type",
+    "multiplechoice": "Multiple Choice",
+    "shortanswer": "Short Answer",
+    "answertypesubtitlemultiplechoice": "Players choose from a list of answers",
+    "answertypesubtitleshortanswer": "Players will be able to provide a short answer",
+    "confidencetitle": "Confidence Meter",
+    "confidencesubtitle": "Players rate how sure they are of their answer",
+    "studenthintstitle": "Student Hints",
+    "studenthintssubtitle": "Players share hints to help others learn from mistakes"
+  },
   "gamesession": {
     "questionCard": {
       "title": "Question"

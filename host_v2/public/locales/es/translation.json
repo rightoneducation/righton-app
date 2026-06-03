@@ -1,4 +1,15 @@
 {
+  "gameoptions": {
+    "answertypetitle": "Tipo de respuesta",
+    "multiplechoice": "Opción múltiple",
+    "shortanswer": "Respuesta corta",
+    "answertypesubtitlemultiplechoice": "Los jugadores eligen de una lista de respuestas",
+    "answertypesubtitleshortanswer": "Los jugadores podrán proporcionar una respuesta corta",
+    "confidencetitle": "Medidor de confianza",
+    "confidencesubtitle": "Los jugadores califican qué tan seguros están de su respuesta",
+    "studenthintstitle": "Pistas de los estudiantes",
+    "studenthintssubtitle": "Los jugadores comparten pistas para ayudar a otros a aprender de los errores"
+  },
   "gamesession": {
     "questionCard": {
       "title": "Pregunta"

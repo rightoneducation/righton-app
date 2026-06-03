@@ -4,16 +4,7 @@ import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState, CloudFrontDistributionUrl } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
-
-const TitleTypography = styled(Typography)({
-  width: '100%', 
-  textAlign: 'left', 
-  fontFamily: 'Poppins',
-  fontWeight: '700', 
-  fontSize: '24px',
-  lineHeight: '36px',
-})
+import { BodyCardStyled } from '../lib/styledcomponents/BodyCardStyled';
 
 interface QuestionCardProps {
   questionText: string;

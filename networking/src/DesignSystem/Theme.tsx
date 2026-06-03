@@ -263,7 +263,7 @@ const xxLgPadding = 64; // spacing between buttons and bottom of screen
 // ============================================================================
 
 // host - colors (host-specific only; tokens identical to play reuse play's consts above):
-const darkBlueCardColorHost = '#08458F'; // card color for default host cards with student data
+const darkBlueCardColorHost = '#06225A'; // card color for default host cards with student data
 const backgroundGradientHost =
   'linear-gradient(196deg, rgb(49,109,176) 0%, rgb(11,33,90) 73%)'; // upper header background
 const timerGradientHost = 'linear-gradient(90deg, #168CDC 0%, #00A7E8 100%)';
@@ -690,6 +690,8 @@ declare module '@mui/material/styles' {
     equation: CSSProperties;
     textLabel: CSSProperties;
     pinkLabel: CSSProperties;
+    label: CSSProperties;
+    answerTypeLabel: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
@@ -707,6 +709,8 @@ declare module '@mui/material/styles' {
     equation?: CSSProperties;
     textLabel?: CSSProperties;
     pinkLabel?: CSSProperties;
+    label?: CSSProperties;
+    answerTypeLabel?: CSSProperties;
   }
 }
 
@@ -725,6 +729,8 @@ declare module '@mui/material/Typography' {
     equation: true;
     textLabel: true;
     pinkLabel: true;
+    label: true;
+    answerTypeLabel: true;
   }
 }
 
@@ -947,10 +953,22 @@ const HostTheme = createTheme({
       fontSize: '14px',
       color: designSystemColors.surface.pink,
     },
+    label: {
+      fontFamily: 'Rubik',
+      fontWeight: 400,
+      fontSize: '14px',
+      color: primaryTextColor,
+    },
+    answerTypeLabel: {
+      fontFamily: 'Poppins',
+      fontWeight: 400,
+      fontSize: '12px',
+      color: primaryTextColor,
+    },
     h1: {
       // screen titles
-      fontWeight: '800',
-      fontSize: '26px',
+      fontWeight: '700',
+      fontSize: '24px',
       lineHeight: '30px',
       color: primaryTextColor,
     },
