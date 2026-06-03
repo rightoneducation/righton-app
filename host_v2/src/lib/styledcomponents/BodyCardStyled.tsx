@@ -9,8 +9,8 @@ export default styled(Paper)(({ theme }) => ({
   borderRadius: '24px',
   marginLeft: `${theme.sizing.xSmPadding}px`,
   marginRight: `${theme.sizing.xSmPadding}px`,
-  padding: `${theme.sizing.smPadding}px`,
-  gap: '16px',
+  padding: `${theme.sizing.mdPadding}px`,
+  gap: `${theme.sizing.smPadding}px`,
   backgroundColor: theme.palette.primary.main,
   boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
 }));

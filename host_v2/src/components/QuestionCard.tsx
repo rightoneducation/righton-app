@@ -14,13 +14,6 @@ const TitleTypography = styled(Typography)({
   fontSize: '24px',
   lineHeight: '36px',
 })
-const BodyTypography = styled(Typography)({
-  fontFamily: 'Rubik',
-  fontWeight: '400',
-  fontSize: '16px',
-  lineHeight: '19px',
-  color: '#384466',
-})
 
 interface QuestionCardProps {
   questionText: string;
@@ -40,9 +33,9 @@ export default function QuestionCard({
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
-        <TitleTypography>
+        <Typography variant="h1" style={{color: theme.palette.designSystem.surface.host, textAlign: 'left', width: '100%'}}>
         {`${t('gamesession.questionCard.title')} ${currentQuestionIndex + 1}`}       
-        </TitleTypography>
+        </Typography>
         {imageUrl === undefined ? null : (
           <img
             style={{
@@ -54,11 +47,9 @@ export default function QuestionCard({
             alt="Question"
           />
         )}
-        <BodyTypography 
-          sx={{whiteSpace: 'pre-line', textAlign: 'left', width: '100%'}}
-        > 
+        <Typography variant="paragraph"> 
           {questionText} 
-        </BodyTypography>
+        </Typography>
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

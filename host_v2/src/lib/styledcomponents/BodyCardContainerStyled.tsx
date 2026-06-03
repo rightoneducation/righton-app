@@ -2,8 +2,9 @@ import { styled } from '@mui/material/styles';
 import { Stack } from '@mui/material';
 
 // content container inside of card
-export default styled(Stack)({
+ 
+export default styled(Stack)(({ theme }) => ({
   width: '100%',
   alignItems: 'center',
-  gap: '12px',
-});
+  gap: `${theme.sizing.smPadding}px`,
+}));
