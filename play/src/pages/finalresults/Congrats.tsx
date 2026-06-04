@@ -53,21 +53,21 @@ const styles = `
     from { opacity: 0; }
     to   { opacity: 1; }
   }
+  /* Stand is pinned to the bottom edge, so a slide-from-below would travel
+     off-screen. Instead it "grows up" from its bottom (scaleY w/ bottom origin)
+     and fades in — both visible at the bottom of the viewport. */
   @keyframes standSlideSpring {
-    0%   { transform: translateY(100%); }
-    55%  { transform: translateY(-8px); }
-    70%  { transform: translateY(4px); }
-    82%  { transform: translateY(-2px); }
-    91%  { transform: translateY(1px); }
-    100% { transform: translateY(0); }
+    0%   { transform: scaleY(0.85); opacity: 0; }
+    60%  { transform: scaleY(1.04); opacity: 1; }
+    100% { transform: scaleY(1); opacity: 1; }
   }
+  /* Monster rises a short, on-screen distance (not 100% of its height, which
+     would start below the fold) with a fade + spring overshoot. */
   @keyframes monsterSlideSpring {
-    0%   { transform: translateY(100%); }
-    55%  { transform: translateY(-8px); }
-    70%  { transform: translateY(4px); }
-    82%  { transform: translateY(-2px); }
-    91%  { transform: translateY(1px); }
-    100% { transform: translateY(0); }
+    0%   { transform: translateY(50px); opacity: 0; }
+    55%  { transform: translateY(-12px); opacity: 1; }
+    72%  { transform: translateY(6px); }
+    100% { transform: translateY(0); opacity: 1; }
   }
   @keyframes confettiScroll {
     from { transform: translateY(-50%); }
@@ -275,6 +275,7 @@ export default function Congrats({
                   justifyContent: 'center',
                   position: 'relative',
                   zIndex: 1,
+                  transformOrigin: 'bottom center',
                   animation: 'standSlideSpring 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
                 }}
               >
