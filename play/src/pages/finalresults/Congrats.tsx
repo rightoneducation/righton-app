@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Typography, Box, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
@@ -30,11 +30,19 @@ const celebrateMap: Record<number, string> = {
   5: monster5,
 };
 
-const CARD_GAP = 8;
-
-// Used to keep the white sign clear of the header text on short mobile screens.
-const CARD_HEIGHT = 130; // white sign maxHeight
-const HEADER_HEIGHT = 130; // approx. header text block height on mobile (paddingTop + title + h2)
+// Fixed amount the monster's feet overlap the top of the stand. Static now that
+// the layout is flow-based — no height measurement needed.
+const MONSTER_STAND_OVERLAP = 40;
+// Minimum gap kept below the header text before the scene starts, so the white
+// sign can never slide up into the header on short screens.
+const HEADER_GAP = 24;
+// Minimum height for the stand. The stand grows to fill the gap between the
+// monster's feet and the bottom of the screen (bottom stays pinned there) and its
+// image scales into that space; this floor keeps it visible when room is tight.
+const STAND_MIN_HEIGHT = 140;
+// Floor for the monster's height. It stays natural while there's room and shrinks
+// with the screen down to this point; below it the scene scrolls instead.
+const MONSTER_MIN_HEIGHT = 180;
 
 const styles = `
   @keyframes slideUp {
@@ -89,22 +97,6 @@ export default function Congrats({
   const [textDone, setTextDone] = useState(false);
   const [monsterDone, setMonsterDone] = useState(false);
 
-  const standRef = useRef<HTMLImageElement>(null);
-  const [standHeight, setStandHeight] = useState(0);
-
-  const monsterRef = useRef<HTMLImageElement>(null);
-  const [monsterHeight, setMonsterHeight] = useState(0);
-
-  // Mobile uses bottom-based positioning (original formula)
-  const mobileMonsterBottom = standHeight - 40;
-  const mobileCardBottom = mobileMonsterBottom + monsterHeight + CARD_GAP;
-
-  // Tablet/desktop use CSS calc to center the monster vertically without
-  // needing window.innerHeight — the stand hangs from the monster's feet
-  const centeredMonsterTop = `calc(50% - ${monsterHeight / 2}px)`;
-  const centeredStandTop = `calc(50% + ${monsterHeight / 2 - 40}px)`;
-  const centeredCardBottom = `calc(50% + ${(monsterHeight - 4*CARD_GAP) / 2}px)`;
-
   const celebrateSrc = celebrateMap[selectedAvatar] ?? monster0;
 
   let standSrc = standDesktop;
@@ -122,76 +114,70 @@ export default function Congrats({
         />
       )}
 
-      {/* Pre-render stand to measure height — only used for mobile positioning */}
-      <img
-        ref={standRef}
-        src={stand}
-        alt=""
-        style={{ position: 'absolute', bottom: 0, width: '100%', visibility: 'hidden', pointerEvents: 'none' }}
-        onLoad={() => setStandHeight(standRef.current?.offsetHeight ?? 0)}
-      />
-
-      {/* Pre-render monster to measure height — used for tablet/desktop CSS calc */}
-      <img
-        ref={monsterRef}
-        src={celebrateSrc}
-        alt=""
-        style={{ position: 'absolute', top: 0, visibility: 'hidden', pointerEvents: 'none' }}
-        onLoad={() => setMonsterHeight(monsterRef.current?.offsetHeight ?? 0)}
-      />
+      {/* Spotlight — absolute, behind everything */}
+      {monsterDone && (
+        <Box
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '100%',
+            pointerEvents: 'none',
+            animation: 'fadeIn 0.6s ease-out both',
+            zIndex: -1,
+            maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+          }}
+        >
+          <img
+            src={spotlight}
+            alt=""
+            style={{ display: 'block', width: '100%', height: '90vh', objectFit: 'fill', opacity: 0.25 }}
+          />
+        </Box>
+      )}
 
       {animationDone && (
-        <>
-          {/* Header text */}
-          <div style={{ textAlign: 'center', paddingTop: isMobile ? 32 : 128, overflow: 'hidden' }}>
-            <div
-              style={{ display: 'flex', flexDirection: 'column', gap: 12, animation: 'slideUp 0.5s ease-out both' }}
+        // Flex column that fills the fixed-height screen. Document flow keeps the
+        // header above the sign at all times; the spacers center the scene when
+        // there's room and the monster shrinks when there isn't.
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            // When the monster hits its min size and the scene no longer fits,
+            // let it overflow downward and scroll rather than shrink to nothing.
+            overflowY: 'auto',
+          }}
+        >
+          {/* Header text — never shrinks, so it's never covered */}
+          <Box sx={{ flexShrink: 0, textAlign: 'center', paddingTop: isMobile ? '32px' : '128px', overflow: 'hidden' }}>
+            <Box
+              sx={{ display: 'flex', flexDirection: 'column', gap: '12px', animation: 'slideUp 0.5s ease-out both' }}
               onAnimationEnd={() => setTextDone(true)}
             >
               <Typography variant="title">{t('finalresults.congrats.title')}</Typography>
               <Typography variant="h2">
                 {`${t('finalresults.congrats.points1')} ${score} ${t('finalresults.congrats.points2')}`}
               </Typography>
-            </div>
-          </div>
+            </Box>
+          </Box>
 
           {textDone && (
             <>
-              {/* Spotlight — behind everything */}
-              {monsterDone && (
-                <Box
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '100%',
-                    pointerEvents: 'none',
-                    animation: 'fadeIn 0.6s ease-out both',
-                    zIndex: -1,
-                    maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
-                    WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
-                  }}
-                >
-                  <img
-                    src={spotlight}
-                    alt=""
-                    style={{ display: 'block', width: '100%', height: '90vh', objectFit: 'fill', opacity: 0.25 }}
-                  />
-                </Box>
-              )}
+              {/* Top spacer: grows to center the scene; collapses to HEADER_GAP on short screens */}
+              <Box sx={{ flex: '1 1 0', minHeight: `${HEADER_GAP}px` }} />
 
-              {/* White card + stars wrapper */}
+              {/* White sign + stars */}
               <Box
-                style={{
-                  position: 'absolute',
-                  // On short mobile screens, clamp the sign so its top never rises into the
-                  // header text. The wrapper's translateY(24px) below supplies the 24px gap.
-                  bottom: isMobile
-                    ? `min(${mobileCardBottom}px, calc(100% - ${CARD_HEIGHT + HEADER_HEIGHT}px))`
-                    : centeredCardBottom,
-                  left: '50%',
-                  transform: 'translate(-50%, 24px)',
+                sx={{
+                  flexShrink: 0,
+                  position: 'relative',
                   width: '280px',
                   animation: 'fadeIn 0.4s ease-out both',
                   zIndex: 3,
@@ -202,22 +188,12 @@ export default function Congrats({
                     <img
                       src={top5StarsLeft}
                       alt=""
-                      style={{
-                        position: 'absolute',
-                        right: '100%',
-                        bottom: 'calc(100% - 20px)',
-                        pointerEvents: 'none',
-                      }}
+                      style={{ position: 'absolute', right: '100%', bottom: 'calc(100% - 20px)', pointerEvents: 'none' }}
                     />
                     <img
                       src={top5StarsRight}
                       alt=""
-                      style={{
-                        position: 'absolute',
-                        left: '100%',
-                        bottom: 'calc(100% - 20px)',
-                        pointerEvents: 'none',
-                      }}
+                      style={{ position: 'absolute', left: '100%', bottom: 'calc(100% - 20px)', pointerEvents: 'none' }}
                     />
                   </>
                 )}
@@ -234,7 +210,7 @@ export default function Congrats({
                     overflow: 'hidden',
                     boxSizing: 'border-box',
                     maxWidth: '280px',
-                    maxHeight: '130px'
+                    maxHeight: '130px',
                   }}
                 >
                   <img
@@ -258,68 +234,81 @@ export default function Congrats({
                 </Box>
               </Box>
 
-              {/* Monster + Button: flex column, monster on top, button 68px below */}
+              {/* Monster — the <img> is the flex item, so it stays natural while
+                  there's room and scales down with the screen. minHeight floors that
+                  shrink; below it the scene overflows (scrolls) instead. The stand's
+                  height cap keeps it from over-shrinking on wide screens. maxWidth:100%
+                  is a narrow-screen safety cap. position:relative + zIndex so it paints
+                  in front of the stand. */}
               <Box
-                style={{
-                  position: 'absolute',
-                  ...(isMobile
-                    ? { top: `calc(100% - ${mobileMonsterBottom + monsterHeight}px)` }
-                    : { top: centeredMonsterTop }
-                  ),
-                  left: 0,
-                  right: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 44,
-                  transform: 'translateY(24px)',
+                component="img"
+                src={celebrateSrc}
+                alt=""
+                onAnimationEnd={() => setMonsterDone(true)}
+                sx={{
+                  flex: '0 1 auto',
+                  minHeight: `${MONSTER_MIN_HEIGHT}px`,
+                  maxWidth: '100%',
+                  width: 'auto',
+                  height: 'auto',
+                  display: 'block',
+                  marginTop: `${HEADER_GAP}px`,
+                  marginBottom: `-${MONSTER_STAND_OVERLAP}px`,
+                  position: 'relative',
                   zIndex: 2,
+                  animation: 'monsterSlideSpring 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
                 }}
-              >
-                <Box
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    animation: 'monsterSlideSpring 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
-                  }}
-                  onAnimationEnd={() => setMonsterDone(true)}
-                >
-                  <img src={celebrateSrc} alt="" style={{ display: 'block', maxWidth: '100%' }} />
-                </Box>
-                <PlayButton
-                  buttonType={ButtonType.LEADERBOARD}
-                  label={t('finalresults.congrats.button')}
-                  isEnabled
-                  onClick={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
-                />
-              </Box>
+              />
 
-              {/* Stand */}
+              {/* Stand — grows (flex) to fill the space between the monster's feet
+                  and the bottom of the screen; its bottom is pinned to the bottom and
+                  the image scales (objectFit: fill) into whatever height it's given,
+                  so the group floats up toward the middle while the stand reaches the
+                  bottom. The button is anchored on the stand, directly under the monster
+                  (40px overlap + 44px gap), needing no measurement. */}
               <Box
-                style={{
-                  position: 'absolute',
-                  ...(isMobile
-                    ? { bottom: 0 }
-                    : { top: centeredStandTop }
-                  ),
-                  left: 0,
-                  right: 0,
+                sx={{
+                  flex: '1 1 0',
+                  minHeight: `${STAND_MIN_HEIGHT}px`,
+                  width: '100%',
                   display: 'flex',
                   justifyContent: 'center',
+                  position: 'relative',
+                  zIndex: 1,
                   animation: 'standSlideSpring 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
-                  zIndex: 0,
                 }}
               >
                 <img
                   src={standSrc}
                   alt=""
-                  style={{ display: 'block', width: isTablet ? undefined : '100%', maxWidth: '100%' }}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '100%',
+                    maxWidth: '100%',
+                    objectFit: 'fill',
+                  }}
                 />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: `${MONSTER_STAND_OVERLAP + 44}px`,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 2,
+                  }}
+                >
+                  <PlayButton
+                    buttonType={ButtonType.LEADERBOARD}
+                    label={t('finalresults.congrats.button')}
+                    isEnabled
+                    onClick={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
+                  />
+                </Box>
               </Box>
             </>
           )}
-        </>
+        </Box>
       )}
     </BackgroundContainerStyled>
   );
