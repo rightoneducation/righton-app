@@ -20,7 +20,7 @@
     },
     "confidenceCard": {
       "title": "Medidor de confianza",
-      "description": "Se pregunta a los jugadores qué tan seguros están de su respuesta a esta pregunta.",
+      "description": "Se pregunta a los jugadores qué tan seguros están de su respuesta",
       "instructions": "Toca una respuesta para ver más detalles.",
       "graph": {
         "title": "Cantidad de jugadores",

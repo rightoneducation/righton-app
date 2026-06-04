@@ -24,7 +24,7 @@ const SmallTextContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   width: '100%',
   flexDirection: 'column',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   alignSelf: 'stretch',
   marginTop: `${theme.sizing.xSmPadding}px`,
 }));
@@ -38,12 +38,11 @@ const TitleText = styled(Typography)(({ theme }) => ({
   color: `${theme.palette.primary.main}`,
   fontSize: `${theme.typography.subtitle1.fontSize}`,
   fontWeight: `${theme.typography.subtitle1.fontWeight}`,
-  lineHeight: `${theme.typography.subtitle1.lineHeight}`,
   textAlign: 'left',
 }));
 
 const DescriptionText = styled(Typography)(({ theme }) => ({
-  textAlign: 'center',
+  textAlign: 'left',
   color: `${theme.typography.h2.color}`,
   fontWeight: `${theme.typography.body1.fontWeight}`,
 }));

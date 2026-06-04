@@ -4,7 +4,10 @@ import { Paper } from '@mui/material';
 // card for question and answer
 export default styled(Paper)(({ theme }) => ({
   display: 'flex',
-  padding: `${theme.sizing.smPadding}px`,
+  paddingTop: `${theme.sizing.mdPadding}px`,
+  paddingLeft: '20px',
+  paddingRight: '20px',
+  paddingBottom: `${theme.sizing.mdPadding}px`,
   marginLeft: `${theme.sizing.xSmPadding}px`,
   marginRight: `${theme.sizing.xSmPadding}px`,
   flexDirection: 'column',

@@ -21,7 +21,6 @@ const TitleStyled = styled(Typography)({
   fontSize: '24px',
   fontStyle: 'normal',
   fontWeight: '700',
-  lineHeight: 'normal',
   textTransform: 'none',
   textAlign: 'left',
 })
