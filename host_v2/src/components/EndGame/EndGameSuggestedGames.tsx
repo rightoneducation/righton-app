@@ -17,7 +17,7 @@ const PStyled = styled(Typography)({
 const MenuItemStyled = styled(Box)(({isSelected}) => ({
   border: `${isSelected ? '4px solid  #0094FF' : '0px solid transparent'}`,
   padding: `${isSelected ? '0px' : '4px'}`,
-  borderRadius: '14px',
+  borderRadius: '18px',
   width: '100%',
   backgroundColor: 'white',
   cursor: 'default',
