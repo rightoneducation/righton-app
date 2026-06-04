@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { IGameSession, IQuestion, IPhase, IHostTeamAnswersResponse } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
-import QuestionCard from '../../QuestionCard';
+import QuestionCardFullBleed from '../../QuestionCardFullBleed';
 import AnswerCard from '../../AnswerCard';
 
 interface GameInProgressContentLeftColumnProps {
@@ -46,7 +46,7 @@ export default function GameInProgressContentLeftColumn({
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
     <ScrollBoxStyled>
-      <QuestionCard 
+      <QuestionCardFullBleed 
         questionText={currentQuestion.text}
         imageUrl={currentQuestion.imageUrl}
         currentQuestionIndex={localGameSession.currentQuestionIndex}
