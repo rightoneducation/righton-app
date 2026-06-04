@@ -101,8 +101,9 @@
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
       "incorrectanswercolumn": "Respuestas Incorrectas",
-      "correcttext": "Correcta!",
-      "nicetrytext": "Buen intento",
+      "correcttext": "¡Lo entendiste!",
+      "nicetrytext1": "¡Buen intento!",
+      "nicetrytext2": "La respuesta es:",
       "correctanswertext": "La respuesta es...",
       "responses": "Respuestas de respuesta",
       "hinttext": "Compartiste la siguiente pista:"

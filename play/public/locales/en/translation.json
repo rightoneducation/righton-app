@@ -113,8 +113,9 @@
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answers",
       "incorrectanswercolumn": "Incorrect Answers",
-      "correcttext": "Correct!",
-      "nicetrytext": "Nice try",
+      "correcttext": "You got it!",
+      "nicetrytext1": "Nice try!",
+      "nicetrytext2": "The answer is:",
       "correctanswertext": "The answer is...",
       "responses": "Answer Responses",
       "hinttext": "You shared the following hint:"
