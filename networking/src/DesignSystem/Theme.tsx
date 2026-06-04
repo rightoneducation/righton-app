@@ -692,6 +692,8 @@ declare module '@mui/material/styles' {
     pinkLabel: CSSProperties;
     label: CSSProperties;
     answerTypeLabel: CSSProperties;
+    rubikBody: CSSProperties;
+    rubikBodyLarge: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
@@ -711,6 +713,8 @@ declare module '@mui/material/styles' {
     pinkLabel?: CSSProperties;
     label?: CSSProperties;
     answerTypeLabel?: CSSProperties;
+    rubikBody?: CSSProperties;
+    rubikBodyLarge?: CSSProperties;
   }
 }
 
@@ -731,6 +735,8 @@ declare module '@mui/material/Typography' {
     pinkLabel: true;
     label: true;
     answerTypeLabel: true;
+    rubikBody: true;
+    rubikBodyLarge: true;
   }
 }
 
@@ -964,6 +970,17 @@ const HostTheme = createTheme({
       fontWeight: 400,
       fontSize: '12px',
       color: primaryTextColor,
+    },
+    rubikBody: {
+      fontFamily: 'Rubik',
+      fontWeight: 400,
+      fontSize: '18px',
+      color: designSystemColors.surface.play
+    },
+    rubikBodyLarge: {
+      fontFamily: 'Rubik',
+      fontWeight: 400,
+      fontSize: '20px',
     },
     h1: {
       // screen titles

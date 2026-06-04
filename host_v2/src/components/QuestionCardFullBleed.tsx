@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTheme, styled} from '@mui/material/styles';
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState, CloudFrontDistributionUrl } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import QuestionCardStyled from '../lib/styledcomponents/QuestionCardStyled';
+import QuestionCardStyled from '../lib/styledcomponents/QuestionCardGameplayStyled';
 
 interface QuestionCardProps {
   questionText: string;
@@ -22,16 +22,6 @@ const QuestionImage = styled('img')({
   borderTopRightRadius: '8px',
 });
 
-const TextContainer = styled(Typography)(({theme}) => {
-  return {
-    paddingTop: `${theme.sizing.smPadding}px`,
-    paddingLeft: `${theme.sizing.mdPadding}px`,
-    paddingRight: `${theme.sizing.mdPadding}px`,
-    paddingBottom: `${theme.sizing.mdPadding}px`,
-    whiteSpace: 'pre-line'
-  }
-})
-
 export default function QuestionCardFullBleed({
   questionText,
   imageUrl,
@@ -40,6 +30,15 @@ export default function QuestionCardFullBleed({
 }: QuestionCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
+
+  // Split into sentences at terminator-then-whitespace so decimals/currency
+  const sentences = questionText
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length > 0);
+  // The question is any sentence containing '?'; if none has one, bold the last.
+  const hasQuestionMark = sentences.some((sentence) => sentence.includes('?'));
+
   return (
     <QuestionCardStyled elevation={10}>
       <BodyCardContainerStyled>
@@ -49,9 +48,31 @@ export default function QuestionCardFullBleed({
             alt="Question"
           />
         )}
-        <TextContainer variant="paragraph" > 
-          {questionText} 
-        </TextContainer>
+         <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: `${theme.sizing.smPadding}px`,
+            paddingLeft: `${theme.sizing.mdPadding}px`,
+            paddingRight: `${theme.sizing.mdPadding}px`,
+            paddingBottom: `${theme.sizing.mdPadding}px`,
+          }}
+        >
+          {sentences.map((sentence, index) => {
+            const isQuestion =
+              sentence.includes('?') ||
+              (!hasQuestionMark && index === sentences.length - 1);
+            return (
+              <Typography
+                key={sentence}
+                variant="body1"
+                sx={{ whiteSpace: 'pre-line', fontWeight: isQuestion ? 700 : undefined }}
+              >
+                {sentence}
+              </Typography>
+            );
+          })}
+        </Box>
       </BodyCardContainerStyled>
     </QuestionCardStyled>
   );

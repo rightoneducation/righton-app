@@ -4,8 +4,8 @@ import { useTheme } from '@mui/material/styles';
 import { IGameSession, IQuestion, IPhase, IHostTeamAnswersResponse } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
-import QuestionCardFullBleed from '../../QuestionCardFullBleed';
-import AnswerCard from '../../AnswerCard';
+import QuestionCardGameplay from '../../QuestionCardGameplay';
+import IncorrectAnswersCard from '../../IncorrectAnswersCard';
 
 interface GameInProgressContentLeftColumnProps {
   currentQuestion: IQuestion;
@@ -27,7 +27,10 @@ export default function GameInProgressContentLeftColumn({
 ){
   const theme = useTheme();
   // create a deep copy to ensure immutability and sort by multichoice
-  let responsesCopy: IHostTeamAnswersResponse[] = responses ? [...responses].sort((a: any, b: any) => a.multiChoiceCharacter.localeCompare(b.multiChoiceCharacter)): [];
+  let responsesCopy: IHostTeamAnswersResponse[] = responses ? [...responses].filter((response) => !response.isCorrect).sort((a: any, b: any) => a.multiChoiceCharacter.localeCompare(b.multiChoiceCharacter)): [];
+  const correctResponseIndex = (responses && responses.findIndex((response) => response.isCorrect)) ?? 0;
+  const correctResponse = responses && responses[correctResponseIndex]
+
   // phase 1
   if (responses && isShortAnswerEnabled){
     if (currentPhase === IPhase.ONE) {
@@ -46,25 +49,18 @@ export default function GameInProgressContentLeftColumn({
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
     <ScrollBoxStyled>
-      <QuestionCardFullBleed 
+      <QuestionCardGameplay
         questionText={currentQuestion.text}
         imageUrl={currentQuestion.imageUrl}
-        currentQuestionIndex={localGameSession.currentQuestionIndex}
-        currentState={localGameSession.currentState}
+        answerContent={correctResponse?.rawAnswer || ''}
+        instructions={currentQuestion.instructions}
+        isShortAnswerEnabled={isShortAnswerEnabled ?? false}
+        letterCode={correctResponse?.multiChoiceCharacter || ''}
       />
-      { responsesCopy && responsesCopy.map((response, index) => (
-        response.multiChoiceCharacter !== `…` &&
-          <AnswerCard 
-            isCorrectAnswer={response.isCorrect}
-            isShortAnswerEnabled={isShortAnswerEnabled ?? false}
-            answerIndex={index}
-            answerContent={response.rawAnswer}
-            instructions={currentQuestion.instructions}
-            answerReason={response.reason ?? ''}
-            key={uuidv4()}
-            response={response}
-          />
-      )) }
+      <IncorrectAnswersCard 
+        responses={responsesCopy}
+        isShortAnswerEnabled={isShortAnswerEnabled ?? false}
+      />
     </ScrollBoxStyled>
   </Grid>
   );

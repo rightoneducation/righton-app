@@ -94,12 +94,13 @@ export default function  AnswerCard({
   };
 
   return (
-    <BodyCardStyled elevation={10}>
+    <BodyCardStyled elevation={6}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
         <Box style={{ width: '100%', gap: '16px' }}>
         {isCorrectAnswer
-              ? <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
-              : <AnswerTitleTypography> Incorrect Answer </AnswerTitleTypography>}
+          ? <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
+          : <AnswerTitleTypography> Incorrect Answer </AnswerTitleTypography>
+        }
           <AnswerOptionStyled
             sx={{
               backgroundColor: isCorrectAnswer
