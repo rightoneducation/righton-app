@@ -102,7 +102,7 @@ const designSystemColors = {
   gradients: {
     background: {
       play: 'linear-gradient(180deg, #290F51 0%, #5C27AE 100%)', // use case: background
-      host: 'linear-gradient(180deg, #02215F 0%, #0D68B1 100%)', // use case: background
+      host: 'linear-gradient(180deg, #0D68B1 0%, #02215F 100%)', // use case: background
       central: 'linear-gradient(180deg, #02215F 43%, rgba(2, 33, 95, 0) 100%)', // use case: nav heading
     },
     leaderboard: {

@@ -6,7 +6,7 @@ export const BodyCardStyled = styled(Paper)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  borderRadius: '24px',
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   marginLeft: `${theme.sizing.xSmPadding}px`,
   marginRight: `${theme.sizing.xSmPadding}px`,
   padding: `${theme.sizing.mdPadding}px`,

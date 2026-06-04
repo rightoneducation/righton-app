@@ -3,6 +3,7 @@ import { CircularProgress, Box, Paper, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { GameSessionState, isNullOrUndefined, IHostTeamAnswersHint, ModelHelper } from '@righton/networking';
 import { IGraphClickInfo } from '../../lib/HostModels';
+import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardStyled';
 import ButtonStyled from '../../lib/styledcomponents/ButtonStyled';
 import HintsSubmittedBar from './HintsSubmittedBar';
@@ -13,26 +14,6 @@ import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext
 import { GameSessionContext } from '../../lib/context/GameSessionContext';
 import { useTSGameSessionContext } from '../../hooks/context/useGameSessionContext';
 
-
-const BackgroundStyled = styled(Paper)({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  borderRadius: '24px',
-  backgroundColor: 'rgba(0,0,0,0)',
-  paddingTop: '8px',
-  gap: 16
-});
-
-const TitleStyled = styled(Typography)({
-  color: '#FFFFFF',
-  fontFamily: 'Poppins',
-  textAlign: 'left',
-  fontSize: '24px',
-  fontWeight: 700,
-  width: '100%',
-});
-
 const SubtitleStyled = styled(Typography)({
   color: '#FFFFFF',
   fontFamily: 'Rubik',
@@ -41,20 +22,14 @@ const SubtitleStyled = styled(Typography)({
   width: '100%'
 });
 
-const SubtitleStyledLeftAlign = styled(SubtitleStyled)({
-  textAlign: 'left'
-});
-
 interface HintsProps {
   hints: any;
   numPlayers: number;
-  currentState: GameSessionState;
 }
 
 export default function Hints({
   hints,
   numPlayers,
-  currentState,
 }: HintsProps) {
   const [gptHints, setGPTHints] = useState<any>(null);
   const [graphClickIndex, setGraphClickIndex] = useState<number | null>(null);
@@ -93,75 +68,77 @@ export default function Hints({
     }
   }, [localGameSession.currentState]); // eslint-disable-line
   return (
-    <HostDefaultCardStyled elevation={10}>
-      <BackgroundStyled elevation={0}>
-        <TitleStyled>Student Hints</TitleStyled>
-      <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16, width: '100%' }}>
-        { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? ( // eslint-disable-line
-          <>
-            <SubtitleStyled>Number of players who submitted a hint:</SubtitleStyled>
-            <HintsSubmittedBar
-                inputNum={hints ? hints.length : 0}
-                totalNum={numPlayers}
-            />
-             <SubtitleStyled style={{color: 'rgba(255,255,255,0.5)'}}>
-              { hints.length < 3
-                ? `At least 3 submissions are needed to organize hints into themes`
-                : `Hints will be displayed in the next phase`
-              }
-            </SubtitleStyled>
-          </>
-        ) : (
-          !isHintEmpty && !isHintLoading && !isHintError ? (
-              <>
-                <HintsGraph
-                  data={gptHints}
-                  graphClickIndex={graphClickIndex}
-                  handleGraphClick={handleGraphClick}
-                />
-                {graphClickIndex === null ? (
-                  <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                    Tap on a response to see more details.
-                  </Typography>
-                ) :
-                  <SelectedHints hints={hints} gptHints={gptHints} graphClickIndex={graphClickIndex}/>
-                }
-              </>
-          ) : (
+    <HostDefaultCardStyled style={{background: theme.palette.designSystem.gradients.background.host }} elevation={6}>
+      <BodyCardContainerStyled style={{gap: `${theme.sizing.xSmPadding}px`}}>
+        <Typography variant='h3' style={{color: theme.palette.primary.main}}>
+          Student Hints
+        </Typography>
+        <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16, width: '100%' }}>
+          { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? ( // eslint-disable-line
             <>
-              {(isHintEmpty && !isHintLoading && !isHintError) && (
-                <Typography variant='h4' color={`${theme.palette.primary.main}`} style={{ textAlign: 'center'}}>
-                  Not enough players submitted hints.
-                </Typography>
-              )}
-              {(isHintLoading && !isHintError) && (
-                <>
-                  <SubtitleStyled>
-                    Players have submitted hints to help others learn.
-                  </SubtitleStyled>
-                  <CircularProgress style={{color: '#FFF'}}/>
-                  <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                    Organizing student hints into themes...
-                  </Typography>
-                  </>
-              )}
-              {isHintError && (
-                  <>
-                    <ButtonStyled
-                      onClick={() => handleProcessHints(hints)}
-                    >
-                      Retry
-                    </ButtonStyled>
-                    <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                        There was an error processing the hints. Please try again.
-                    </Typography>
-                  </>
-              )}
+              <SubtitleStyled>Number of players who submitted a hint</SubtitleStyled>
+              <HintsSubmittedBar
+                  inputNum={hints ? hints.length : 0}
+                  totalNum={numPlayers}
+              />
+              <SubtitleStyled style={{color: 'rgba(255,255,255,0.5)'}}>
+                { hints.length < 3
+                  ? `At least 3 submissions are needed to organize hints into themes`
+                  : `Hints will be displayed in the next phase`
+                }
+              </SubtitleStyled>
             </>
-          )
-        )}
-      </Box>
-      </BackgroundStyled>
+          ) : (
+            !isHintEmpty && !isHintLoading && !isHintError ? (
+                <>
+                  <HintsGraph
+                    data={gptHints}
+                    graphClickIndex={graphClickIndex}
+                    handleGraphClick={handleGraphClick}
+                  />
+                  {graphClickIndex === null ? (
+                    <Typography variant='h4' color={`${theme.palette.primary.main}`}>
+                      Tap on a response to see more details.
+                    </Typography>
+                  ) :
+                    <SelectedHints hints={hints} gptHints={gptHints} graphClickIndex={graphClickIndex}/>
+                  }
+                </>
+            ) : (
+              <>
+                {(isHintEmpty && !isHintLoading && !isHintError) && (
+                  <Typography variant='h4' color={`${theme.palette.primary.main}`} style={{ textAlign: 'center'}}>
+                    Not enough players submitted hints.
+                  </Typography>
+                )}
+                {(isHintLoading && !isHintError) && (
+                  <>
+                    <SubtitleStyled>
+                      Players have submitted hints to help others learn.
+                    </SubtitleStyled>
+                    <CircularProgress style={{color: '#FFF'}}/>
+                    <Typography variant='h4' color={`${theme.palette.primary.main}`}>
+                      Organizing student hints into themes...
+                    </Typography>
+                    </>
+                )}
+                {isHintError && (
+                    <>
+                      <ButtonStyled
+                        onClick={() => handleProcessHints(hints)}
+                      >
+                        Retry
+                      </ButtonStyled>
+                      <Typography variant='h4' color={`${theme.palette.primary.main}`}>
+                          There was an error processing the hints. Please try again.
+                      </Typography>
+                    </>
+                )}
+              </>
+            )
+          )}
+        </Box>
+      </BodyCardContainerStyled>
     </HostDefaultCardStyled>
   );
 }

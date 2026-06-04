@@ -15,16 +15,6 @@ const ResponseContainer = styled(Box)({
   maxWidth: '500px',
 });
 
-const TitleStyled = styled(Typography)({
-  color: 'white',
-  fontFamily: 'Poppins',
-  fontSize: '24px',
-  fontStyle: 'normal',
-  fontWeight: '700',
-  textTransform: 'none',
-  textAlign: 'left',
-})
-
 interface ResponsesProps {
   currentQuestion: IQuestion;
   responses: IHostTeamAnswersResponse[];
@@ -44,6 +34,7 @@ export default function Responses({
   isPrevPhaseResponses,
   setGraphClickInfo
 }: ResponsesProps) {
+  const theme = useTheme();
   const correctChoiceIndex = currentQuestion.choices.findIndex((choice) => choice.isAnswer);
   const numPlayers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(graphClickInfo.selectedIndex);
@@ -53,11 +44,11 @@ export default function Responses({
     ? [...responses.filter((response) => response.multiChoiceCharacter !== '…' && response.count !== 0),...responses.filter((response) => response.multiChoiceCharacter === '…' && response.count !== 0)]
     : responses;
   return (
-    <HostDefaultCardStyled>
+    <HostDefaultCardStyled style={{background: !isPrevPhaseResponses ? theme.palette.designSystem.gradients.background.host : theme.palette.primary.darkBlueCardColor }} elevation={6}>
       <ResponseContainer>
-        <TitleStyled>
-          { (statePosition < 6 || !isPrevPhaseResponses) ? `Responses` : `Phase 1 Responses` }
-        </TitleStyled>
+        <Typography variant='h3' style={{color: theme.palette.primary.main}}>
+          { (statePosition < 6 || !isPrevPhaseResponses) ? `Popular Incorrect Answer` : `Responses` }
+        </Typography>
         <ResponsesGraph
           data={trimmedResponses}
           statePosition={statePosition}

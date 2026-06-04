@@ -62,7 +62,6 @@ export default function GameInProgressContentMidColumn ({
         <HintsCard 
           hints={currentHints}
           numPlayers={numPlayers}
-          currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
         />
       }
     </ScrollBoxStyled>

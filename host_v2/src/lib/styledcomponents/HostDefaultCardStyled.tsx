@@ -15,6 +15,6 @@ export default styled(Paper)(({ theme }) => ({
   gap: `${theme.sizing.smPadding}px`,
   alignSelf: 'stretch',
   backgroundColor: theme.palette.primary.darkBlueCardColor,
-  borderRadius: `${theme.sizing.mdPadding}px`,
-  boxShadow: '0px 4px 10px 0px rgba(15, 27, 40, 0.45)',
+  borderRadius: `${theme.sizing.xSmPadding}px`,
+  // boxShadow: '0px 4px 10px 0px rgba(15, 27, 40, 0.45)',
 }));

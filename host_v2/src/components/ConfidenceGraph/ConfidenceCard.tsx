@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IHostTeamAnswersConfidence } from '@righton/networking';
@@ -34,34 +34,24 @@ const InstructionsText = styled(Typography)(({ theme }) => ({
   fontSize: `${theme.typography.h4.fontSize}`,
 }));
 
-const TitleText = styled(Typography)(({ theme }) => ({
-  color: `${theme.palette.primary.main}`,
-  fontSize: `${theme.typography.subtitle1.fontSize}`,
-  fontWeight: `${theme.typography.subtitle1.fontWeight}`,
-  textAlign: 'left',
-}));
-
-const DescriptionText = styled(Typography)(({ theme }) => ({
-  textAlign: 'left',
-  color: `${theme.typography.h2.color}`,
-  fontWeight: `${theme.typography.body1.fontWeight}`,
-}));
-
 export default function ConfidenceCard({
   confidences,
   graphClickInfo,
   setGraphClickInfo,
 }: CardProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
   return (
     <HostDefaultCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
         <CardContentContainer>
-          <TitleText>{t('gamesession.confidenceCard.title')}</TitleText>
+          <Typography variant='h3' style={{color: theme.palette.primary.main}}>
+            {t('gamesession.confidenceCard.title')}
+          </Typography>
           <SmallTextContainer>
-            <DescriptionText>
+             <Typography variant='label' style={{color: theme.palette.primary.main}}>
               {t('gamesession.confidenceCard.description')}
-            </DescriptionText>
+            </Typography>
           </SmallTextContainer>
           <ConfidenceResponsesGraph
             confidences={confidences}

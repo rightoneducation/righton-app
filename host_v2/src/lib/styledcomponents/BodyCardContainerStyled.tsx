@@ -5,6 +5,6 @@ import { Stack } from '@mui/material';
  
 export default styled(Stack)(({ theme }) => ({
   width: '100%',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   gap: `${theme.sizing.smPadding}px`,
 }));
