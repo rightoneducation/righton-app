@@ -83,7 +83,7 @@ const ToggleSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-switchBase': {
     padding: 0,
     margin: 3,
-    color: '#C0C0C0',
+    color: theme.palette.designSystem.surface.play,
     '&.Mui-checked': {
       transform: 'translateX(24px)',
       color: '#FFFFFF',
@@ -100,7 +100,7 @@ const ToggleSwitch = styled(Switch)(({ theme }) => ({
   },
   '& .MuiSwitch-track': {
     borderRadius: 13,
-    backgroundColor: '#000000',
+    backgroundColor: '#C0C0C0',
     opacity: 1,
   },
 }));
