@@ -57,7 +57,6 @@ export default function PrepareGameContent({
       </ScrollBoxStyled>
     </Grid>
   );
-
   const rightCardsColumn = (
     <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}

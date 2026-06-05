@@ -23,16 +23,15 @@ export default function QuestionCard({
   const { t } = useTranslation();
   return (
     <BodyCardStyled elevation={10}>
-      <BodyCardContainerStyled>
+      <BodyCardContainerStyled style={{alignItems: 'center'}}>
         <Typography variant="h1" style={{color: theme.palette.designSystem.surface.host, textAlign: 'left', width: '100%'}}>
         {`${t('gamesession.questionCard.title')} ${currentQuestionIndex + 1}`}       
         </Typography>
         {imageUrl === undefined ? null : (
           <img
             style={{
-              width: '75%', // this value was here before, so we're keeping it. (not found on figma)
+              width: '75%',
               height: 'auto',
-
             }}
             src={`${CloudFrontDistributionUrl}${imageUrl}`}
             alt="Question"

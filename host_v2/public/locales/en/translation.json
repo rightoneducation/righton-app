@@ -63,5 +63,17 @@
     "questionCard": {
       "title": "Question"
     }
+  },
+  "hintscard": {
+    "title": "Student Hints",
+    "submittedcount": "Number of players who submitted a hint:",
+    "minsubmissions": "At least 3 submissions are needed to organize hints into themes",
+    "submitted": "Players have submitted hints to help others learn",
+    "instructions": "Tap on a response to see more details.",
+    "notenough": "Not enough players submitted hints.",
+    "loading": "Players have submitted hints to help others learn.",
+    "organizing": "Organizing student hints into themes...",
+    "retry": "Retry",
+    "error": "There was an error processing the hints. Please try again."
   }
 }

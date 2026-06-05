@@ -63,5 +63,17 @@
     "questionCard": {
       "title": "Pregunta"
     }
+  },
+  "hintscard": {
+    "title": "Pistas de los estudiantes",
+    "submittedcount": "Número de jugadores que enviaron una pista:",
+    "minsubmissions": "Se necesitan al menos 3 envíos para organizar las pistas en temas",
+    "submitted": "Los jugadores han enviado pistas para ayudar a otros a aprender",
+    "instructions": "Toca una respuesta para ver más detalles.",
+    "notenough": "No hay suficientes jugadores que enviaron pistas.",
+    "loading": "Los jugadores han enviado pistas para ayudar a otros a aprender.",
+    "organizing": "Organizando las pistas de los estudiantes en temas...",
+    "retry": "Reintentar",
+    "error": "Hubo un error al procesar las pistas. Por favor, inténtalo de nuevo."
   }
 }

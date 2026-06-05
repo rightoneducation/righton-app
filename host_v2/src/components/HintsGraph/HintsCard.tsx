@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { CircularProgress, Box, Paper, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { GameSessionState, isNullOrUndefined, IHostTeamAnswersHint, ModelHelper } from '@righton/networking';
+import { useTranslation } from 'react-i18next';
+import { GameSessionState, isNullOrUndefined, IHostTeamAnswersHint, ModelHelper, HostButton, HostButtonType } from '@righton/networking';
 import { IGraphClickInfo } from '../../lib/HostModels';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardStyled';
-import ButtonStyled from '../../lib/styledcomponents/ButtonStyled';
 import HintsSubmittedBar from './HintsSubmittedBar';
 import HintsGraph from './HintsGraph';
 import SelectedHints from './SelectedHints';
@@ -17,7 +17,7 @@ import { useTSGameSessionContext } from '../../hooks/context/useGameSessionConte
 const SubtitleStyled = styled(Typography)({
   color: '#FFFFFF',
   fontFamily: 'Rubik',
-  fontSize: '14px',
+  fontSize: '12px',
   fontWeight: 400,
   width: '100%'
 });
@@ -37,6 +37,7 @@ export default function Hints({
   const [isHintError, setIsHintError] = useState<boolean>(false);
   const [isHintEmpty, setIsHintEmpty] = useState<boolean>(true);
   const theme = useTheme();
+  const { t } = useTranslation();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
 
@@ -71,34 +72,36 @@ export default function Hints({
     <HostDefaultCardStyled style={{background: theme.palette.designSystem.gradients.background.host }} elevation={6}>
       <BodyCardContainerStyled style={{gap: `${theme.sizing.xSmPadding}px`}}>
         <Typography variant='h3' style={{color: theme.palette.primary.main}}>
-          Student Hints
+          {t('hintscard.title')}
         </Typography>
-        <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16, width: '100%' }}>
+        <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: 16, width: '100%' }}>
           { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? ( // eslint-disable-line
             <>
-              <SubtitleStyled>Number of players who submitted a hint</SubtitleStyled>
+              <Typography variant='label' style={{color: theme.palette.primary.main}}>
+                {t('hintscard.submittedcount')}
+              </Typography>
               <HintsSubmittedBar
                   inputNum={hints ? hints.length : 0}
                   totalNum={numPlayers}
               />
-              <SubtitleStyled style={{color: 'rgba(255,255,255,0.5)'}}>
-                { hints.length < 3
-                  ? `At least 3 submissions are needed to organize hints into themes`
-                  : `Hints will be displayed in the next phase`
-                }
-              </SubtitleStyled>
+              <Typography variant='smallLabel' style={{color: theme.palette.primary.main, opacity: 0.5}}>
+                {t('hintscard.minsubmissions')}
+              </Typography>
             </>
           ) : (
             !isHintEmpty && !isHintLoading && !isHintError ? (
                 <>
+                  <Typography variant='label' style={{color: theme.palette.primary.main}}>
+                    {t('hintscard.submitted')}
+                  </Typography>
                   <HintsGraph
                     data={gptHints}
                     graphClickIndex={graphClickIndex}
                     handleGraphClick={handleGraphClick}
                   />
                   {graphClickIndex === null ? (
-                    <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                      Tap on a response to see more details.
+                    <Typography variant='smallLabel' style={{color: theme.palette.primary.main}}>
+                      {t('hintscard.instructions')}
                     </Typography>
                   ) :
                     <SelectedHints hints={hints} gptHints={gptHints} graphClickIndex={graphClickIndex}/>
@@ -107,30 +110,33 @@ export default function Hints({
             ) : (
               <>
                 {(isHintEmpty && !isHintLoading && !isHintError) && (
-                  <Typography variant='h4' color={`${theme.palette.primary.main}`} style={{ textAlign: 'center'}}>
-                    Not enough players submitted hints.
+                  <Typography variant='label' style={{color: theme.palette.primary.main}}>
+                    {t('hintscard.notenough')}
                   </Typography>
                 )}
                 {(isHintLoading && !isHintError) && (
                   <>
-                    <SubtitleStyled>
-                      Players have submitted hints to help others learn.
-                    </SubtitleStyled>
-                    <CircularProgress style={{color: '#FFF'}}/>
-                    <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                      Organizing student hints into themes...
+                    <Typography variant='label' style={{color: theme.palette.primary.main}}>
+                      {t('hintscard.loading')}
+                    </Typography>
+                    <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                      <CircularProgress style={{color: '#FFF'}}/>
+                    </Box>
+                    <Typography variant='smallLabel' style={{color: theme.palette.primary.main}}>
+                      <b>{t('hintscard.organizing')}</b>
                     </Typography>
                     </>
                 )}
                 {isHintError && (
                     <>
-                      <ButtonStyled
+                      <HostButton
+                        buttonType={HostButtonType.CONTINUE}
+                        label={t('hintscard.retry')}
+                        isEnabled
                         onClick={() => handleProcessHints(hints)}
-                      >
-                        Retry
-                      </ButtonStyled>
+                      />
                       <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                          There was an error processing the hints. Please try again.
+                          {t('hintscard.error')}
                       </Typography>
                     </>
                 )}

@@ -58,6 +58,7 @@ const designSystemColors = {
     warmBase: '#FFFBF6', // use case: light text background
     blue: '#08458F', // use case: card background
     darkBlue: '#063772', // use case: list item
+    selectedListItem: '#415E8A', // use case: selected list item (featured mistakes top 3)
     overlay: '#F4F4F4', // use case: overlay on card
     strokeGray: '#CCCCCC', // use case: stroke - play carousel
     strokeWhite: 'rgba(255, 255, 255, 0.25)', // use case: stroke - host
