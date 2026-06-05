@@ -33,6 +33,7 @@ const StyledButton = styled(Button)({
   backgroundColor: '#4994EC',
   width: '50%',
   maxWidth: '300px',
+  height: '36px',
   "&.MuiButton-contained": {
     backgroundColor: '#4994EC',
     color: 'white',
@@ -72,35 +73,37 @@ const BodyTypography = styled(Typography)({
   fontWeight: '400'
 });
 
-const HintsSwitch = styled(Switch)({
+// 50x26 track with the thumb inset 3px from the track's outer edge (thumb 20px,
+// checked transform = 50 - 3 - 20 - 3 = 24px). Track is black when off and
+// surface.play when on; thumb keeps the existing grey/white styling.
+const ToggleSwitch = styled(Switch)(({ theme }) => ({
+  width: 50,
+  height: 26,
+  padding: 0,
   '& .MuiSwitch-switchBase': {
-    color: "#C0C0C0"
+    padding: 0,
+    margin: 3,
+    color: '#C0C0C0',
+    '&.Mui-checked': {
+      transform: 'translateX(24px)',
+      color: '#FFFFFF',
+      '& + .MuiSwitch-track': {
+        backgroundColor: theme.palette.designSystem.surface.play,
+        opacity: 1,
+      },
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    boxSizing: 'border-box',
+    width: 20,
+    height: 20,
   },
   '& .MuiSwitch-track': {
-    backgroundColor: "#EAEAEA",
+    borderRadius: 13,
+    backgroundColor: '#000000',
+    opacity: 1,
   },
-  '& .MuiSwitch-switchBase.Mui-checked': {
-    color: '#FFFFFF',
-  },
-  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#111111',
-  },
-});
-
-const ConfidenceSwitch = styled(Switch)({
-  '& .MuiSwitch-switchBase': {
-    color: "#C0C0C0"
-  },
-  '& .MuiSwitch-track': {
-    backgroundColor: "#EAEAEA",
-  },
-  '& .MuiSwitch-switchBase.Mui-checked': {
-    color: '#FFFFFF',
-  },
-  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#111111',
-  },
-});
+}));
 
 interface PrepareGameOptionsCardProps {
   isGameSettingMultiChoice: boolean;
@@ -182,7 +185,7 @@ export default function PrepareGameOptionsCard({
         <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
           <TitleContainer>
             <TitleTypography>{t('gameoptions.confidencetitle')}</TitleTypography>
-            <ConfidenceSwitch
+            <ToggleSwitch
               checked={isConfidenceEnabled}
               onChange={() => setIsConfidenceEnabled(!isConfidenceEnabled)}
             />
@@ -196,7 +199,7 @@ export default function PrepareGameOptionsCard({
         <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
           <TitleContainer>
             <TitleTypography>{t('gameoptions.studenthintstitle')}</TitleTypography>
-            <HintsSwitch
+            <ToggleSwitch
               checked={isHintEnabled}
               onChange={() => setIsHintEnabled(!isHintEnabled)}
             />
