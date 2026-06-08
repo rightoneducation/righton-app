@@ -58,7 +58,9 @@
       "finalresults": "Tabla de Posiciones",
       "finished": "Responder la Pregunta",
       "correct": "¡Correcto!",
-      "incorrect": "¡Buen Intento!"
+      "incorrect": "¡Buen Intento!",
+      "phase1pill": "Fase 1",
+      "phase2pill": "Fase 2"
     },
     "questionCard": {
       "title": "Pregunta"

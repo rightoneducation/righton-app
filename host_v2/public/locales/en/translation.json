@@ -58,7 +58,9 @@
       "finalresults": "Final Leaderboard",
       "finished": "Answer the Question",
       "correct": "Correct!",
-      "incorrect": "Nice Try!"
+      "incorrect": "Nice Try!",
+      "phase1pill": "Phase 1",
+      "phase2pill": "Phase 2"
     },
     "questionCard": {
       "title": "Question"

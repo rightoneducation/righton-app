@@ -30,7 +30,6 @@ export default function HeaderContent({
   const { t } = useTranslation();
   const localGameSession = useTSGameSessionContext(GameSessionContext);
 
-  const statePosition = Object.keys(GameSessionState).indexOf(localGameSession.currentState);
   const stateMap = {
     [GameSessionState.NOT_STARTED]: t('gameinprogress.header.notstarted'),
     [GameSessionState.TEAMS_JOINING]: t('gameinprogress.header.teamsjoining'),
@@ -67,13 +66,11 @@ export default function HeaderContent({
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <QuestionIndicator
-              totalQuestions={localGameSession.questions.length}
-              currentQuestionIndex={localGameSession.currentQuestionIndex}
-              statePosition={statePosition}
+              currentState={localGameSession.currentState}
             />
           </Grid>
         </Grid>
-        <Grid item style={{ paddingTop: `${theme.sizing.xxSmPadding}px` }}>
+        <Grid item style={{ paddingTop: '24px' }}>
           <Typography variant="h1" style={{ fontSize: '24px', lineHeight: '36px', fontFamily: 'Poppins' }}>
             {stateCheck(localGameSession.currentState, isCorrect, isIncorrect)}
           </Typography>
