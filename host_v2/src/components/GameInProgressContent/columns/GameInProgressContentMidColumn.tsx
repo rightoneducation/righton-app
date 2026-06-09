@@ -6,10 +6,12 @@ import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyle
 import HintsCard from '../../HintsGraph/HintsCard';
 import Responses from '../../ResponsesGraph/ResponsesCard';
 import ConfidenceCard from '../../ConfidenceGraph/ConfidenceCard';
+import FeaturedMistakes from '../../FeaturedMistakes';
 
 
 interface GameInProgressContentMidColumnProps {
   currentQuestion: IQuestion;
+  currentState: GameSessionState;
   responses: IHostTeamAnswersResponse[];
   featuredMistakesSelectionValue: string;
   isShortAnswerEnabled: boolean;
@@ -20,12 +22,15 @@ interface GameInProgressContentMidColumnProps {
   currentPhase: IPhase;
   graphClickInfo: IGraphClickInfo;
   confidences: IHostTeamAnswersConfidence[];
+  isPopularMode: boolean;
+  setIsPopularMode: (isPopularMode: boolean) => void;
   setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 
-export default function GameInProgressContentMidColumn ({ 
+export default function GameInProgressContentMidColumn ({
     currentQuestion,
+    currentState,
     responses,
     featuredMistakesSelectionValue,
     isShortAnswerEnabled,
@@ -36,13 +41,15 @@ export default function GameInProgressContentMidColumn ({
     graphClickInfo,
     currentPhase,
     confidences,
+    isPopularMode,
+    setIsPopularMode,
     setGraphClickInfo
   }: GameInProgressContentMidColumnProps
 ){
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
     <ScrollBoxStyled>
-      <Responses 
+      <Responses
         currentQuestion={currentQuestion}
         responses={responses}
         statePosition={currentPhase === IPhase.ONE ? 0 : 8}
@@ -51,15 +58,24 @@ export default function GameInProgressContentMidColumn ({
         isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
         setGraphClickInfo={setGraphClickInfo}
       />
-      {isConfidenceEnabled && currentPhase === IPhase.ONE && 
-        <ConfidenceCard 
+      {isConfidenceEnabled && currentPhase === IPhase.ONE &&
+        <ConfidenceCard
           confidences={confidences}
           graphClickInfo={graphClickInfo}
           setGraphClickInfo={setGraphClickInfo}
         />
       }
+      {isShortAnswerEnabled && currentPhase === IPhase.ONE &&
+        <FeaturedMistakes
+          currentQuestion={currentQuestion}
+          currentState={currentState}
+          featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+          isPopularMode={isPopularMode}
+          setIsPopularMode={setIsPopularMode}
+        />
+      }
       {isHintEnabled && currentPhase === IPhase.TWO &&
-        <HintsCard 
+        <HintsCard
           hints={currentHints}
           numPlayers={numPlayers}
         />

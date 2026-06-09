@@ -1,15 +1,14 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import {styled, useTheme} from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import { IHostTeamAnswersResponse } from '@righton/networking';
 import { IGraphClickInfo } from '../../lib/HostModels';
-import check from '../../img/Pickedcheck.svg';
+import check from '../../img/Pickedcheck_white.svg';
 import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
 interface SelectedAnswerProps {
   data: IHostTeamAnswersResponse[];
-  correctChoiceIndex: number;
   numPlayers: number;
   statePosition: number;
   graphClickInfo: IGraphClickInfo;
@@ -82,17 +81,16 @@ const Icon = styled(Box)({
 })
 
 export default function SelectedAnswer(props: SelectedAnswerProps) {
+  const theme = useTheme();
   const {
     data,
-    correctChoiceIndex,
     numPlayers,
     statePosition,
     graphClickInfo,
     isShortAnswerEnabled,
     isPrevPhaseResponses
   } = props;
-  const showCustomTick =
-    graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
+  const showCustomTick = Boolean(data[graphClickInfo.selectedIndex]?.isCorrect);
 
   const noResponseIndex = data.findIndex((response) => response.multiChoiceCharacter === '…');
   return (
@@ -106,7 +104,7 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
           Tap on a response to see more details.
         </Text>
       ) : (
-        <Box style={{ width: '100%'}}>
+        <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
           { graphClickInfo.selectedIndex !== noResponseIndex && (
             <RectStyle>
               { !isShortAnswerEnabled &&

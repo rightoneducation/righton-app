@@ -92,6 +92,7 @@ export default function GameInProgressContent({
   const midCardsColumn = (
     <GameInProgressContentMidColumn
       currentQuestion={currentQuestion}
+      currentState={localGameSession.currentState}
       responses={currentResponses}
       featuredMistakesSelectionValue={featuredMistakesSelectionValue}
       isShortAnswerEnabled={isShortAnswerEnabled}
@@ -101,13 +102,15 @@ export default function GameInProgressContent({
       confidences={currentConfidences}
       numPlayers={localGameSession.teams.length}
       graphClickInfo={graphClickInfo}
+      isPopularMode={isPopularMode}
+      setIsPopularMode={setIsPopularMode}
       setGraphClickInfo={setGraphClickInfo}
       currentPhase={currentPhase}
     />
   );
-  
+
   const rightCardsColumn = (
-    <GameInProgressContentRightColumn 
+    <GameInProgressContentRightColumn
       currentQuestion={currentQuestion}
       currentPhase={currentPhase}
       currentState={localGameSession.currentState}
@@ -117,12 +120,11 @@ export default function GameInProgressContent({
       isConfidenceEnabled={isConfidenceEnabled}
       isShortAnswerEnabled={isShortAnswerEnabled}
       screenSize={screenSize}
-      featuredMistakesSelectionValue={featuredMistakesSelectionValue}
       setGraphClickInfo={setGraphClickInfo}
-      isPopularMode={isPopularMode}
-      setIsPopularMode={setIsPopularMode}
     />
   );
+  // phase 2 uses three columns; phase 1 uses two
+  const isPhaseTwo = currentPhase === IPhase.TWO;
   const needAnimate = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && localGameSession.currentQuestionIndex !== 0;
   switch(screenSize) {
     case (ScreenSize.SMALL):
@@ -151,20 +153,23 @@ export default function GameInProgressContent({
             style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
           >
             <SwiperSlide>
-              {leftCardsColumn}
+              {midCardsColumn}
             </SwiperSlide>
             {!isAnimating && (
-              <>
+              isPhaseTwo ? (
+                <>
+                  <SwiperSlide>
+                    {rightCardsColumn}
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    {leftCardsColumn}
+                  </SwiperSlide>
+                </>
+              ) : (
                 <SwiperSlide>
-                  {midCardsColumn}
+                  {leftCardsColumn}
                 </SwiperSlide>
-                {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
-                   localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && (
-                    <SwiperSlide>
-                      {rightCardsColumn}
-                    </SwiperSlide>
-                )}
-              </>
+              )
             )}
           </Swiper>
           </motion.div>
@@ -179,7 +184,7 @@ export default function GameInProgressContent({
           transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
           style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
         >
-          {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) ? (
+          {isPhaseTwo ? (
             <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
               <Swiper
                 modules={[Pagination]}
@@ -192,33 +197,25 @@ export default function GameInProgressContent({
                     return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
                   },
                 }}
-                slidesPerView={
-                  (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) ?
-                    2.1
-                    : 
-                    2.0
-                }
+                slidesPerView={2.1}
                 spaceBetween={`${theme.sizing.mdPadding}px`}
                 style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
               >
                 <SwiperSlide>
-                  {leftCardsColumn}
-                </SwiperSlide>
-                <SwiperSlide>
                   {midCardsColumn}
                 </SwiperSlide>
-                {(!isAnimating && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
-                   localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && 
-                  <SwiperSlide>
-                    {rightCardsColumn}
-                  </SwiperSlide>)
-                }
+                <SwiperSlide>
+                  {rightCardsColumn}
+                </SwiperSlide>
+                <SwiperSlide>
+                  {leftCardsColumn}
+                </SwiperSlide>
               </Swiper>
             </BodyContentAreaDoubleColumnStyled>
           ) : (
             <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
-              {leftCardsColumn}
               {midCardsColumn}
+              {leftCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>
           )}
         </motion.div>
@@ -234,13 +231,18 @@ export default function GameInProgressContent({
           exit={{ x: 0, y: 0,  }}
           style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
         >
-          <BodyContentAreaTripleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
-            {leftCardsColumn}
-            {midCardsColumn}
-            {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
-              rightCardsColumn
-            }
-          </BodyContentAreaTripleColumnStyled>
+          {isPhaseTwo ? (
+            <BodyContentAreaTripleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+              {midCardsColumn}
+              {rightCardsColumn}
+              {leftCardsColumn}
+            </BodyContentAreaTripleColumnStyled>
+          ) : (
+            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
+              {midCardsColumn}
+              {leftCardsColumn}
+            </BodyContentAreaDoubleColumnStyledNoSwiper>
+          )}
         </motion.div>
       );
   }

@@ -13,6 +13,7 @@ const ResponseContainer = styled(Box)({
   justifyContent: 'center',
   width: '100%',
   maxWidth: '500px',
+  gap: '24px'
 });
 
 interface ResponsesProps {
@@ -35,7 +36,6 @@ export default function Responses({
   setGraphClickInfo
 }: ResponsesProps) {
   const theme = useTheme();
-  const correctChoiceIndex = currentQuestion.choices.findIndex((choice) => choice.isAnswer);
   const numPlayers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(graphClickInfo.selectedIndex);
   // if game is short answer, we don't want to see all answers as they include m/c answers
@@ -44,10 +44,10 @@ export default function Responses({
     ? [...responses.filter((response) => response.multiChoiceCharacter !== '…' && response.count !== 0),...responses.filter((response) => response.multiChoiceCharacter === '…' && response.count !== 0)]
     : responses;
   return (
-    <HostDefaultCardStyled style={{background: !isPrevPhaseResponses ? theme.palette.designSystem.gradients.background.host : theme.palette.primary.darkBlueCardColor }} elevation={6}>
+    <HostDefaultCardStyled style={{background: (statePosition >= 6 && !isPrevPhaseResponses) ? theme.palette.designSystem.gradients.background.host : theme.palette.primary.darkBlueCardColor }} elevation={6}>
       <ResponseContainer>
         <Typography variant='h3' style={{color: theme.palette.primary.main}}>
-          { (statePosition < 6 || !isPrevPhaseResponses) ? `Popular Incorrect Answer` : `Responses` }
+          { (statePosition >= 6 && !isPrevPhaseResponses) ? `Popular Incorrect Answer` : `Responses` }
         </Typography>
         <ResponsesGraph
           data={trimmedResponses}
@@ -65,7 +65,6 @@ export default function Responses({
           statePosition={statePosition}
           graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
-          correctChoiceIndex={correctChoiceIndex}
         />
       </ResponseContainer>
     </HostDefaultCardStyled>
