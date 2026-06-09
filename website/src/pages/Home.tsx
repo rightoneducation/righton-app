@@ -23,6 +23,8 @@ import waegen from '../images/waegen.svg';
 import gates from '../images/gates.svg';
 import inwardCurveImg from '../images/inwardCurve.svg';
 import bottomWaveLg from '../images/bottomWaveLg.svg';
+import learningCommonsImg from '../images/learning-commons.png';
+import digitalPromiseImg from '../images/digital-promise.png';
 import FeaturedVideo from '../components/homepage/FeaturedVideo';
 import rightMainMobile from '../images/RightOn-MobileGraphic.png';
 import { ScreenSize } from '../lib/WebsiteModels';
@@ -37,6 +39,8 @@ const imageArr = [
   { image: schmidtImg, alt: 'sponsors-schmidt-futures' },
   { image: velaImg, alt: 'sponsors-vela' },
   { image: waltonFamilyImg, alt: 'sponsors-walton-family' },
+  { image: learningCommonsImg, alt: 'sponsors-learning-commons' },
+  { image: digitalPromiseImg, alt: 'sponsors-digital-promise' }
 ];
 
 const StyledSponsorDivider = styled(StyledFlexBox)(({ theme }) => ({
