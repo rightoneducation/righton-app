@@ -58,7 +58,7 @@ export default function FooterStartGame({
       case GameSessionState.TEAMS_JOINING:
         return (gameSession.currentQuestionIndex === null) // eslint-disable-line no-nested-ternary
             ? (isGamePrepared) ? 'Start Game' : 'Prepare Game'
-            : 'Next Question';
+            : 'Start Next Question';
       case GameSessionState.FINAL_RESULTS:
         return 'End Game';
       default:
