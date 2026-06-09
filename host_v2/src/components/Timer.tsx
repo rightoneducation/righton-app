@@ -151,7 +151,7 @@ export default function Timer({
   }, [localGameSession.currentState, localGameSession.startTime]); // eslint-disable-line
   return (
     <TimerContainer sx={width ? { width } : undefined}>
-      <Box style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%',  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px)`, opacity: isTimerActiveRef.current ? 1 : 0.4,  }}>
+      <Box style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%',  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px)`  }}>
         <TimerBar
           value={fillLeftToRight ? 100 - progress : progress}
           initial={0}
@@ -159,6 +159,7 @@ export default function Timer({
           sx={{
             ...(barBackground && { backgroundColor: barBackground }),
             ...(barGradient && { '& .MuiLinearProgress-bar': { background: barGradient } }),
+            opacity: isTimerActiveRef.current ? 1 : 0.5,
           }}
         />
         {!hideTimerText && (
@@ -166,7 +167,7 @@ export default function Timer({
             <Typography
               alignSelf="center"
               variant="h6"
-              style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik', lineHeight: '14px' }}
+              style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik', lineHeight: '14px', color: localGameSession.currentState !== GameSessionState.TEAMS_JOINING ? theme.palette.primary.main : theme.palette.designSystem.surface.pink }}
             >
               {timerString}
             </Typography>
