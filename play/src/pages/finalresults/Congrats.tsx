@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography, Box, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { PlayButton, ButtonType } from '@righton/networking';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import { FinalResultsState } from '../../lib/PlayModels';
 import WavingMonster from '../../components/WavingMonster';
+import preloadImages from '../../lib/preloadImages';
 
 import stand from '../../img/celebratingmonsters/stand.png';
 import standTablet from '../../img/celebratingmonsters/standTablet.png';
@@ -29,6 +30,22 @@ const celebrateMap: Record<number, string> = {
   4: monster4,
   5: monster5,
 };
+
+// URLs for everything this screen renders for a given avatar, so earlier
+// screens can preload them. All three stand variants are included since the
+// breakpoint isn't known ahead of time; they're small relative to the monsters.
+export function getCongratsAssets(avatarIndex: number): string[] {
+  return [
+    celebrateMap[avatarIndex] ?? monster0,
+    stand,
+    standTablet,
+    standDesktop,
+    spotlight,
+    confetti,
+    top5StarsLeft,
+    top5StarsRight,
+  ];
+}
 
 // Fixed amount the monster's feet overlap the top of the stand. Static now that
 // the layout is flow-based — no height measurement needed.
@@ -96,6 +113,15 @@ export default function Congrats({
   const [animationDone, setAnimationDone] = useState(false);
   const [textDone, setTextDone] = useState(false);
   const [monsterDone, setMonsterDone] = useState(false);
+
+  // Players who land here without passing through a discuss phase (e.g.
+  // rejoining a finished game) missed DiscussAnswer's preload, so the
+  // celebrate-scene images would be cold. The 3s wave animation is a natural
+  // download window; for everyone else this is a free cache hit.
+  useEffect(() => {
+    preloadImages(getCongratsAssets(selectedAvatar));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const celebrateSrc = celebrateMap[selectedAvatar] ?? monster0;
 

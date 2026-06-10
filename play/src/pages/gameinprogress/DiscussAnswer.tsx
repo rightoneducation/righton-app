@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Grid, Stack, Box, useMediaQuery } from '@mui/material';
 import {
@@ -15,6 +15,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { AnswerState, ScreenSize, PADDING_LEFTRIGHT_BY_SIZE } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
+import preloadImages from '../../lib/preloadImages';
+import { getWavingMonsterAssets } from '../../components/WavingMonster';
+import { getCongratsAssets } from '../finalresults/Congrats';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
 import AnswerResponsesCard from '../../components/AnswerResponses/AnswerResponsesCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
@@ -69,6 +72,17 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+
+  // Warm the browser cache for the final-results screens while the player is
+  // on this (static) discuss screen, so the waving monster and celebrate scene
+  // don't render against a blank background on a cold cache.
+  useEffect(() => {
+    preloadImages([
+      ...getWavingMonsterAssets(teamAvatar),
+      ...getCongratsAssets(teamAvatar),
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   let screenSize = ScreenSize.MEDIUM;
   if (isLargeScreen) screenSize = ScreenSize.LARGE;
