@@ -13,8 +13,8 @@
     "gamecode": {
       "title": "Ingrese el código del juego",
       "button": "Unirse",
-      "error1": "No se puede unir a este juego.",
-      "error2": "Comprueba el código del juego e inténtalo de nuevo."
+      "error1": "No se puede unir\na este juego.",
+      "error2": "Comprueba el código del juego\ne inténtalo de nuevo."
     },
     "playername": {
       "title": "Introduzca su nombre",
@@ -27,7 +27,7 @@
       "description2": "Esto se utilizará para identificarte durante el juego."
     },
     "selectavatar": {
-      "title": "Elige tu avatar",
+      "title": "¡Elige tu avatar!",
       "button": "Elegir"
     }
   },

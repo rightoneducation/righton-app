@@ -98,7 +98,7 @@ const JoinGameBody = styled(Box, {
   flexDirection: 'column',
   flexGrow: screenSize === ScreenSize.MEDIUM ? 0 : 1,
   overflow: 'auto',
-  width: (!isSmallDevice && !isMedDevice) ? '540px' : `${theme.sizing.pregameMinColumnWidth}px`,
+  width: (!isSmallDevice && !isMedDevice) ? 'fit-content' : `${theme.sizing.pregameMinColumnWidth}px`,
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -170,6 +170,11 @@ export default function JoinGame({
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const inputRef = React.useRef<HTMLDivElement>(null);
+  const isDesktop = !isSmallDevice && !isMedDevice;
+  // live version of the shouldShowAvatarSelect gate (which is one-way and never
+  // resets) so the avatar column re-disables if a field is cleared
+  const areFieldsComplete =
+    gameCodeValue.length > 0 && firstName.length > 0 && lastName.length > 0;
 
   // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
   const handleGameCodeChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -242,6 +247,19 @@ export default function JoinGame({
       />
       <JoinGameBody isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} screenSize={screenSize} style={{margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', alignSelf: 'center'}}>
           <div ref={inputRef}/>
+          {/* on desktop the fields sit in a left column with avatar select to the right;
+              on smaller sizes everything stays in the original single column */}
+          <Box sx={{
+            display: 'flex',
+            flexDirection: isDesktop ? 'row' : 'column',
+            alignItems: 'center',
+            gap: isDesktop ? '48px' : '24px',
+            // auto margins center the columns in the leftover body height but,
+            // unlike justifyContent center, still scroll correctly on short windows
+            marginTop: isDesktop ? 'auto' : undefined,
+            marginBottom: isDesktop ? 'auto' : undefined,
+          }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
           {/* container here to trim the spacing set by parent stack between text and input, typ */}
           <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, maxWidth: screenSize === ScreenSize.MEDIUM ? undefined : '210px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '8px'  }}>
             <Typography variant="textLabel" sx={{ textAlign: 'center' }}>
@@ -441,12 +459,15 @@ export default function JoinGame({
                   sx={{
                     textAlign: 'center',
                     marginBottom: `${theme.sizing.smallPadding}px`,
+                    // the \n in the string only renders as a break on desktop;
+                    // elsewhere it collapses to a space
+                    whiteSpace: isDesktop ? 'pre-line' : 'normal',
                   }}
                 >
                   {t('joingame.gamecode.error1')}
                 </Typography>
-                {!isShowNameError ? 
-                <Typography variant="textLabel" sx={{ textAlign: 'center' }}>
+                {!isShowNameError ?
+                <Typography variant="textLabel" sx={{ textAlign: 'center', whiteSpace: isDesktop ? 'pre-line' : 'normal' }}>
                   {t('joingame.gamecode.error2')}
                 </Typography>
                 :
@@ -471,7 +492,20 @@ export default function JoinGame({
               </Collapse>
             </PaddedContainer>
           </Box>
-          {shouldShowAvatarSelect &&
+          </Box>
+          {isDesktop ? (
+            <Box
+              aria-disabled={!areFieldsComplete}
+              sx={{
+                opacity: areFieldsComplete ? 1 : 0.3,
+                pointerEvents: areFieldsComplete ? 'auto' : 'none',
+                transition: 'opacity 500ms',
+              }}
+            >
+              <AvatarSelection isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
+            </Box>
+          ) : (
+            shouldShowAvatarSelect &&
             <Fade in style={{ transformOrigin: '50% 0 0' }}
               timeout={{appear: 4000, enter: 4000}}
             >
@@ -479,7 +513,8 @@ export default function JoinGame({
                 <AvatarSelection isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
               </div>
             </Fade>
-          }
+          )}
+          </Box>
       </JoinGameBody>
       <JoinGameFooter screenSize={screenSize}>
         <PlayButton
