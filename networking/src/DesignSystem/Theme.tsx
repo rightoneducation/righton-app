@@ -179,6 +179,13 @@ const designSystemTypography = {
     lineHeight: 'normal',
     letterSpacing: 'normal',
   },
+  largeParagraph: {
+    fontFamily: 'Rubik',
+    fontWeight: 400,
+    fontSize: '18px',
+    lineHeight: 'normal',
+    letterSpacing: 'normal',
+  },
   questionLabel: {
     fontFamily: 'Rubik',
     fontWeight: 400,
@@ -347,6 +354,7 @@ declare module '@mui/material/styles' {
     title: CSSProperties;
     paragraph: CSSProperties;
     semiBoldParagraph: CSSProperties;
+    largeParagraph: CSSProperties;
     questionLabel: CSSProperties;
     answerOption: CSSProperties;
     boldLabel: CSSProperties;
@@ -363,6 +371,7 @@ declare module '@mui/material/styles' {
     title?: CSSProperties;
     paragraph?: CSSProperties;
     semiBoldParagraph?: CSSProperties;
+    largeParagraph?: CSSProperties;
     questionLabel?: CSSProperties;
     answerOption?: CSSProperties;
     boldLabel?: CSSProperties;
@@ -380,6 +389,7 @@ declare module '@mui/material/Typography' {
     title: true;
     paragraph: true;
     semiBoldParagraph: true;
+    largeParagraph: true;
     questionLabel: true;
     answerOption: true;
     boldLabel: true;
@@ -440,6 +450,7 @@ const RightOnTheme = createTheme({
           title: 'h1',
           paragraph: 'p',
           semiBoldParagraph: 'p',
+          largeParagraph: 'p',
           questionLabel: 'p',
           answerOption: 'p',
           boldLabel: 'p',
@@ -459,6 +470,7 @@ const RightOnTheme = createTheme({
     title: { ...designSystemTypography.title, color: primaryTextColor },
     paragraph: { ...designSystemTypography.paragraph, color: primaryTextColor },
     semiBoldParagraph: { ...designSystemTypography.semiBoldParagraph, color: primaryTextColor },
+    largeParagraph: { ...designSystemTypography.largeParagraph, color: primaryTextColor },
     questionLabel: { ...designSystemTypography.questionLabel, color: primaryTextColor },
     answerOption: { ...designSystemTypography.answerOption, color: primaryTextColor },
     boldLabel: { ...designSystemTypography.boldLabel, color: primaryTextColor },

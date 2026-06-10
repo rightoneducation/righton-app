@@ -45,7 +45,7 @@ export default function HowToPlaySlide3Content() {
         sx={{
           textAlign: 'center',
           paddingTop: '54px',
-          width: '350px',
+          width: '325px',
         }}
       >
         {t('howtoplay.slide3')}

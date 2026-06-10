@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Grid, Stack, Box, useMediaQuery } from '@mui/material';
 import {
@@ -15,10 +15,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { AnswerState, ScreenSize, PADDING_LEFTRIGHT_BY_SIZE } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
+import preloadImages from '../../lib/preloadImages';
+import { getWavingMonsterAssets } from '../../components/WavingMonster';
+import { getCongratsAssets } from '../finalresults/Congrats';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
 import AnswerResponsesCard from '../../components/AnswerResponses/AnswerResponsesCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import {
+  BodyContentAreaDoubleColumnStyledNoSwiper,
   BodyContentAreaTripleColumnStyled,
   BodyContentAreaTripleColumnStyledNoSwiper,
   BodyContentAreaSingleColumnStyled,
@@ -69,6 +73,17 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+
+  // Warm the browser cache for the final-results screens while the player is
+  // on this (static) discuss screen, so the waving monster and celebrate scene
+  // don't render against a blank background on a cold cache.
+  useEffect(() => {
+    preloadImages([
+      ...getWavingMonsterAssets(teamAvatar),
+      ...getCongratsAssets(teamAvatar),
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   let screenSize = ScreenSize.MEDIUM;
   if (isLargeScreen) screenSize = ScreenSize.LARGE;
@@ -96,39 +111,35 @@ export default function DiscussAnswer({
   );
   const totalAnswers = phaseOneResponses.reduce((acc, response) => acc + response.teams.length, 0) ?? 0;
   const isPlayerCorrect = selectedAnswer?.isCorrect ?? false;
-  const P1LeftColumnContents = (
+  // Phase 1's two cards, defined once so the single-column (small/medium) and
+  // two-column (desktop) arrangements below compose the same elements.
+  const p1QuestionCard = (
+    <QuestionCard questionText={questionText} imageUrl={questionUrl} />
+  );
+  const p1CorrectAnswerCard = (
+    <DiscussAnswerCard
+      instructions={instructions}
+      answerStatus={
+        isPlayerCorrect
+          ? AnswerState.PLAYER_SELECTED_CORRECT
+          : AnswerState.CORRECT
+      }
+      phaseOneResponse={correctResponse}
+      currentState={currentState}
+      isShortAnswerEnabled={isShortAnswerEnabled}
+      newPoints={newPoints}
+      selectedAnswer={null}
+      teamAvatar={teamAvatar}
+    />
+  );
+  const P1SingleColumnContents = (
     <ScrollBoxStyled>
       <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
-        <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-        <DiscussAnswerCard
-          instructions={instructions}
-          answerStatus={
-            isPlayerCorrect
-              ? AnswerState.PLAYER_SELECTED_CORRECT
-              : AnswerState.CORRECT
-          }
-          phaseOneResponse={correctResponse}
-          currentState={currentState}
-          isShortAnswerEnabled={isShortAnswerEnabled}
-          newPoints={newPoints}
-          selectedAnswer={null}
-          teamAvatar={teamAvatar}
-        />
+        {p1QuestionCard}
+        {p1CorrectAnswerCard}
       </Stack>
-      {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
-        <Typography
-          variant="paragraph"
-          sx={{
-            textAlign: 'center',
-            marginTop: `${theme.sizing.largePadding}px`,
-            opacity: 0.5,
-          }}
-        >
-            Swipe left to see the correct answer
-        </Typography>
-      )}
     </ScrollBoxStyled>
-);
+  );
   const questionLeftColumnContents = (
       <ScrollBoxStyled>
         <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
@@ -273,7 +284,31 @@ export default function DiscussAnswer({
           </Grid>
         </BodyContentAreaTripleColumnStyledNoSwiper>
       )
-    ) : (
+    ) : screenSize === ScreenSize.LARGE ? ( // eslint-disable-line no-nested-ternary
+      <BodyContentAreaDoubleColumnStyledNoSwiper
+        container
+        gap={COLUMN_GAP_BY_SIZE[screenSize]}
+        style={{
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+        }}
+      >
+        <Grid item xs={0} sm sx={{ width: '100%', height: '100%' }}>
+          <ScrollBoxStyled>
+            <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
+              {p1QuestionCard}
+            </Stack>
+          </ScrollBoxStyled>
+        </Grid>
+        <Grid item xs={0} sm sx={{ width: '100%', height: '100%' }}>
+          <ScrollBoxStyled>
+            <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
+              {p1CorrectAnswerCard}
+            </Stack>
+          </ScrollBoxStyled>
+        </Grid>
+      </BodyContentAreaDoubleColumnStyledNoSwiper>
+  ) : (
       <BodyContentAreaSingleColumnStyled
         style={{
           paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
@@ -281,7 +316,7 @@ export default function DiscussAnswer({
         }}
       >
         <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
-          {P1LeftColumnContents}
+          {P1SingleColumnContents}
         </Box>
       </BodyContentAreaSingleColumnStyled>
   );

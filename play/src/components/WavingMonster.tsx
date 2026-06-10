@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import monster0Body from '../img/wavingmonsters/monster-0-body.png';
 import monster0Arm  from '../img/wavingmonsters/monster-0-arm.png';
@@ -35,6 +35,12 @@ const MONSTERS: MonsterConfig[] = [
   { id: 5, body: monster5Body, arm: monster5Arm, bodyW: 326, bodyH: 376, armLeft: 60,  armTop: 188, transformOrigin: 'center top',   armRestAngle:  48, armWaveAmp: -36 },
 ];
 
+// URLs for a given avatar's images, so earlier screens can preload them.
+export function getWavingMonsterAssets(avatarIndex: number): string[] {
+  const m = MONSTERS[avatarIndex] ?? MONSTERS[0];
+  return [m.body, m.arm];
+}
+
 const DURATION = '3s';
 
 const armWaveKeyframes = (m: MonsterConfig) => `
@@ -65,6 +71,26 @@ interface WavingMonsterProps {
 export default function WavingMonster({ avatarIndex, onComplete }: WavingMonsterProps) {
   const monster = MONSTERS[avatarIndex] ?? MONSTERS[0];
 
+  // Hold the animations until both images are decoded; CSS animations run on
+  // the wall clock whether or not the <img>s have pixels, so on a cold cache
+  // the sequence would otherwise play (or finish entirely) against a blank
+  // screen. allSettled, not all: a failed image shouldn't block forever.
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    const load = (url: string) => {
+      const img = new Image();
+      img.src = url;
+      return img.decode();
+    };
+    Promise.allSettled([load(monster.body), load(monster.arm)]).then(() => {
+      if (!cancelled) setReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [monster]);
+
   return (
     <>
       <style>{styles}</style>
@@ -73,7 +99,11 @@ export default function WavingMonster({ avatarIndex, onComplete }: WavingMonster
           position: 'absolute',
           right: -(monster.bodyW / 2),
           bottom: `calc(30vh - ${monster.bodyH / 2}px)`,
-          animation: `monsterSequence ${DURATION} linear both`,
+          // opacity 0 while waiting — without it the <img>s (which load on
+          // their own schedule) would flash fully visible before the fade-in
+          // starts, or show a lone arm while the body is still downloading.
+          opacity: ready ? undefined : 0,
+          animation: ready ? `monsterSequence ${DURATION} linear both` : 'none',
         }}
         onAnimationEnd={(e) => {
           if (e.animationName === 'monsterSequence') onComplete();
@@ -87,7 +117,7 @@ export default function WavingMonster({ avatarIndex, onComplete }: WavingMonster
             top: monster.armTop,
             left: monster.armLeft,
             transformOrigin: monster.transformOrigin,
-            animation: `armWave${monster.id} ${DURATION} ease-in-out both`,
+            animation: ready ? `armWave${monster.id} ${DURATION} ease-in-out both` : 'none',
             zIndex: 0,
           }}
         />
