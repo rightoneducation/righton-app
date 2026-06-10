@@ -165,24 +165,6 @@ export default function ChooseAnswer({
         </Typography>
       );
     }
-    if (!isConfidenceEnabled) {
-      return (
-        <>
-          {displaySubmitted ? onSubmitDisplay : null}
-          <Typography
-            sx={{
-              fontWeight: 700,
-              marginTop: `${theme.sizing.largePadding}px`,
-              marginX: `${theme.sizing.largePadding}px`,
-              fontSize: `${theme.typography.h4.fontSize}px`,
-              textAlign: 'center',
-            }}
-          >
-            {t('gameinprogress.chooseanswer.answerthankyou2')}
-          </Typography>
-        </>
-      );
-    }
     return null;
   })();
 
