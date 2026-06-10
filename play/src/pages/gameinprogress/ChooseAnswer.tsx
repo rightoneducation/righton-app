@@ -133,22 +133,6 @@ export default function ChooseAnswer({
     </Grid>
   );
 
-  const onSubmitDisplay = (
-    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && (
-      <Typography
-        sx={{
-          fontWeight: 700,
-          marginTop: `${theme.sizing.largePadding}px`,
-          marginX: `${theme.sizing.largePadding}px`,
-          fontSize: `${theme.typography.h4.fontSize}px`,
-          textAlign: 'center',
-        }}
-      >
-        {t('gameinprogress.chooseanswer.answerthankyou1')}
-      </Typography>
-    )
-  );
-
   const belowCardMessage = (() => {
     if (isTimeUp) {
       return (
