@@ -24,7 +24,8 @@ import gates from '../images/gates.svg';
 import inwardCurveImg from '../images/inwardCurve.svg';
 import bottomWaveLg from '../images/bottomWaveLg.svg';
 import learningCommonsImg from '../images/learning-commons.png';
-import digitalPromiseImg from '../images/digital-promise.png';
+import digitalPromiseImg from '../images/digital-promise.svg';
+import carnegieImg from '../images/carnegie.png';
 import FeaturedVideo from '../components/homepage/FeaturedVideo';
 import rightMainMobile from '../images/RightOn-MobileGraphic.png';
 import { ScreenSize } from '../lib/WebsiteModels';
@@ -33,14 +34,15 @@ import PlayGames from '../components/homepage/Play';
 
 const imageArr = [
   { image: fourtyImg, alt: 'sponsors-forty' },
+  { image: carnegieImg, alt: 'sponsors-carnegie'},
+  { image: digitalPromiseImg, alt: 'sponsors-digital-promise' },
   { image: gates, alt: 'sponsors-gates' },
+  { image: learningCommonsImg, alt: 'sponsors-learning-commons' },
   { image: toolsCompetitionImg, alt: 'sponsors-learning-engineering' },
   { image: nsfImg, alt: 'sponsors-nsf' },
   { image: schmidtImg, alt: 'sponsors-schmidt-futures' },
   { image: velaImg, alt: 'sponsors-vela' },
   { image: waltonFamilyImg, alt: 'sponsors-walton-family' },
-  { image: learningCommonsImg, alt: 'sponsors-learning-commons' },
-  { image: digitalPromiseImg, alt: 'sponsors-digital-promise' }
 ];
 
 const StyledSponsorDivider = styled(StyledFlexBox)(({ theme }) => ({
@@ -131,7 +133,7 @@ export function Home({ screenSize }: HomePageProps) { // eslint-disable-line
                   key={`set-${setIndex}-${alt}`}
                   src={image} 
                   alt={alt} 
-                  style={{ width: 'auto', height: '103px',  objectFit: 'contain', zIndex: 5, marginRight: '120px' }}
+                  style={{ width: 'auto', maxHeight: '103px',  objectFit: 'contain', zIndex: 5, marginRight: '120px' }}
                 />
               ))}
               </div>
