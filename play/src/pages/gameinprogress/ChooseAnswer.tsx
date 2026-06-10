@@ -99,6 +99,7 @@ export default function ChooseAnswer({
   const theme = useTheme();
   const { t } = useTranslation();
   const swiperRef = useRef<SwiperRef>(null);
+  const submittedCardRef = useRef<HTMLDivElement>(null);
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   let screenSize = ScreenSize.MEDIUM;
   if (isLargeScreen) screenSize = ScreenSize.LARGE;
@@ -111,6 +112,16 @@ export default function ChooseAnswer({
       swiperRef?.current?.swiper.slideTo(swiperRef?.current?.swiper?.slides.length);
     }
   }, [isSubmitted, isConfidenceEnabled, isHintEnabled, isSmallDevice, currentState, swiperRef]);
+
+  // desktop counterpart of the swiper autoscroll above: the confidence/hint
+  // card mounts below the fold, so scroll it into view on submit
+  useEffect(() => {
+    if (isSubmitted && !isSmallDevice &&
+      ((isConfidenceEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER)
+       || (isHintEnabled && currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER))) {
+      submittedCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [isSubmitted, isConfidenceEnabled, isHintEnabled, isSmallDevice, currentState]);
   const questionContents = (
     <Grid item xs={12} sm style={{ 
       width: '100%',
@@ -192,7 +203,7 @@ export default function ChooseAnswer({
           { isConfidenceEnabled && 
             (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) ?
               <Fade in={isSubmitted} timeout={500}>
-                <Box style={{ marginTop: CARD_GAP_BY_SIZE[screenSize] }} id="confidencecard-scrollbox">
+                <Box ref={submittedCardRef} style={{ marginTop: CARD_GAP_BY_SIZE[screenSize] }} id="confidencecard-scrollbox">
                   <ConfidenceMeterCard
                     selectedOption={selectedConfidenceOption}
                     handleSelectOption={handleSelectConfidence}
@@ -206,7 +217,7 @@ export default function ChooseAnswer({
             {isHintEnabled &&
               currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
               <Fade in={isSubmitted} timeout={500}>
-                <Box style={{ marginTop: CARD_GAP_BY_SIZE[screenSize] }} id="hintcard-scrollbox">
+                <Box ref={submittedCardRef} style={{ marginTop: CARD_GAP_BY_SIZE[screenSize] }} id="hintcard-scrollbox">
                   <HintCard
                     apiClients={apiClients}
                     answerHintText={answerHint?.rawHint ?? ''}
