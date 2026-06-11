@@ -266,7 +266,7 @@ const xxLgPadding = 64; // spacing between buttons and bottom of screen
 // host - colors (host-specific only; tokens identical to play reuse play's consts above):
 const darkBlueCardColorHost = '#06225A'; // card color for default host cards with student data
 const backgroundGradientHost =
-  'linear-gradient(196deg, rgb(49,109,176) 0%, rgb(11,33,90) 73%)'; // upper header background
+  'linear-gradient(0deg, rgba(2, 33, 95, 1) 0%, rgba(13, 104, 177, 1) 100%)'; // upper header background
 const timerGradientHost = 'linear-gradient(90deg, #168CDC 0%, #00A7E8 100%)';
 const questionGradientHost =
   'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator

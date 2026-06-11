@@ -37,7 +37,7 @@ export default function QuestionCard({
             alt="Question"
           />
         )}
-        <Typography variant="paragraph"> 
+        <Typography variant="paragraph" style={{color: theme.palette.designSystem.surface.play }}> 
           {questionText} 
         </Typography>
       </BodyCardContainerStyled>
