@@ -74,9 +74,9 @@ export default function Hints({
         <Typography variant='h3' style={{color: theme.palette.primary.main}}>
           {t('hintscard.title')}
         </Typography>
-        <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: 16, width: '100%' }}>
+        <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', width: '100%' }}>
           { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? ( // eslint-disable-line
-            <>
+            <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
               <Typography variant='label' style={{color: theme.palette.primary.main}}>
                 {t('hintscard.submittedcount')}
               </Typography>
@@ -84,13 +84,13 @@ export default function Hints({
                   inputNum={hints ? hints.length : 0}
                   totalNum={numPlayers}
               />
-              <Typography variant='smallLabel' style={{color: theme.palette.primary.main, opacity: 0.5}}>
+              <Typography variant='smallLabel' style={{color: theme.palette.primary.main, opacity: 0.5, whiteSpace: 'pre-line'}}>
                 {t('hintscard.minsubmissions')}
               </Typography>
-            </>
+            </Box>
           ) : (
             !isHintEmpty && !isHintLoading && !isHintError ? (
-                <>
+                <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
                   <Typography variant='label' style={{color: theme.palette.primary.main}}>
                     {t('hintscard.submitted')}
                   </Typography>
@@ -106,7 +106,7 @@ export default function Hints({
                   ) :
                     <SelectedHints hints={hints} gptHints={gptHints} graphClickIndex={graphClickIndex}/>
                   }
-                </>
+                </Box>
             ) : (
               <>
                 {(isHintEmpty && !isHintLoading && !isHintError) && (
@@ -115,20 +115,20 @@ export default function Hints({
                   </Typography>
                 )}
                 {(isHintLoading && !isHintError) && (
-                  <>
+                  <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
                     <Typography variant='label' style={{color: theme.palette.primary.main}}>
                       {t('hintscard.loading')}
                     </Typography>
                     <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
                       <CircularProgress style={{color: '#FFF'}}/>
                     </Box>
-                    <Typography variant='smallLabel' style={{color: theme.palette.primary.main}}>
+                    <Typography variant='answerOption' style={{color: theme.palette.primary.main, fontWeight: 700}}>
                       <b>{t('hintscard.organizing')}</b>
                     </Typography>
-                    </>
+                  </Box>
                 )}
                 {isHintError && (
-                    <>
+                    <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
                       <HostButton
                         buttonType={HostButtonType.CONTINUE}
                         label={t('hintscard.retry')}
@@ -138,7 +138,7 @@ export default function Hints({
                       <Typography variant='h4' color={`${theme.palette.primary.main}`}>
                           {t('hintscard.error')}
                       </Typography>
-                    </>
+                    </Box>
                 )}
               </>
             )

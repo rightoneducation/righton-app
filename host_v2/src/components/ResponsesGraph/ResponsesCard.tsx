@@ -7,13 +7,15 @@ import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardSty
 import ResponsesGraph from './ResponsesGraph';
 import SelectedAnswer from './SelectedAnswer';
 
-const ResponseContainer = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  width: '100%',
-  maxWidth: '500px',
-  gap: '24px'
+const ResponseContainer = styled(Box)(({theme}) => {
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '100%',
+    maxWidth: '500px',
+    gap: `${theme.sizing.smPadding}px`
+  }
 });
 
 interface ResponsesProps {

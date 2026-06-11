@@ -18,15 +18,10 @@ const ResponseGraphContainer = styled(Box)({
   maxWidth: '500px',
 });
 
-const TitleText = styled(Typography)({
-  color: 'rgba(255, 255, 255, 0.5)',
-  fontFamily: 'Rubik',
-  fontSize: '17px',
-  paddingBottom: '16px',
-});
-
-const TitleContainer = styled(Box)({
-  marginTop: '3%',
+const TitleContainer = styled(Box)(({theme}) => {
+  return {
+    paddingBottom: `${theme.sizing.smPadding}px`
+  }
 });
 
 interface HintsGraphProps {
@@ -85,7 +80,7 @@ export default function HintsGraph({
   return (
      <ResponseGraphContainer>
       <TitleContainer>
-        <TitleText>Student hints organized by common themes</TitleText>
+        <Typography variant='smallLabel' style={{color: theme.palette.primary.main}}>Student hints organized by common themes</Typography>
       </TitleContainer>
       <Box ref={graphRef}>
         {data.length >= 1 && (

@@ -69,7 +69,7 @@
   "hintscard": {
     "title": "Pistas de los estudiantes",
     "submittedcount": "Número de jugadores que enviaron una pista:",
-    "minsubmissions": "Se necesitan al menos 3 envíos para organizar las pistas en temas",
+    "minsubmissions": "Se necesitan al menos 3 envíos \npara organizar las pistas en temas",
     "submitted": "Los jugadores han enviado pistas para ayudar a otros a aprender",
     "instructions": "Toca una respuesta para ver más detalles.",
     "notenough": "No hay suficientes jugadores que enviaron pistas.",

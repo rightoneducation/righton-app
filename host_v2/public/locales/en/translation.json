@@ -69,7 +69,7 @@
   "hintscard": {
     "title": "Student Hints",
     "submittedcount": "Number of players who submitted a hint:",
-    "minsubmissions": "At least 3 submissions are needed to organize hints into themes",
+    "minsubmissions": "At least 3 submissions are needed \nto organize hints into themes",
     "submitted": "Players have submitted hints to help others learn",
     "instructions": "Tap on a response to see more details.",
     "notenough": "Not enough players submitted hints.",

@@ -954,6 +954,9 @@ const HostTheme = createTheme({
   typography: {
     fontFamily: 'Poppins',
     designSystem: designSystemTypography,
+    paragraph: { ...designSystemTypography.paragraph, color: primaryTextColor },
+    answerOption: { ...designSystemTypography.answerOption, color: primaryTextColor },
+    smallLabel: { ...designSystemTypography.smallLabel, color: primaryTextColor },
     pinkLabel: {
       fontFamily: 'Poppins',
       fontWeight: 600,
