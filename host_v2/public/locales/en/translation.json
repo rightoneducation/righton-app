@@ -20,7 +20,7 @@
     },
     "confidenceCard": {
       "title": "Confidence Meter",
-      "description": "Players are asked how sure they are of their answer",
+      "description": "Players rated how sure they were of their answer",
       "instructions": "Tap on a response to see more details.",
       "graph": {
         "title": "Number of Players",

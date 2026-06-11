@@ -2,8 +2,8 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { IHostTeamAnswersConfidence } from '@righton/networking';
-import { IGraphClickInfo } from '../../lib/HostModels';
+import { ConfidenceLevel, IHostTeamAnswersConfidence } from '@righton/networking';
+import { IGraphClickInfo, IGraphClickIndices } from '../../lib/HostModels';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardStyled';
 import ConfidenceResponsesGraph from './ConfidenceResponseGraph';
@@ -11,13 +11,17 @@ import ConfidenceResponseDropdown from './ConfidenceResponseDropdown';
 
 interface CardProps {
   confidences: IHostTeamAnswersConfidence[];
-  graphClickInfo: { graph: string | null; selectedIndex: number | null};
+  numPlayers: number;
+  graphClickInfo: IGraphClickIndices;
   setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
-const CardContentContainer = styled(Box)({
-  width: '100%',
-  display: 'inline',
+const CardContentContainer = styled(Box)(({theme}) => {
+  return {
+    width: '100%',
+    display: 'inline',
+    gap: `${theme.sizing.smPadding}px`
+  }
 });
 
 const SmallTextContainer = styled(Box)(({ theme }) => ({
@@ -29,18 +33,18 @@ const SmallTextContainer = styled(Box)(({ theme }) => ({
   marginTop: `${theme.sizing.xSmPadding}px`,
 }));
 
-const InstructionsText = styled(Typography)(({ theme }) => ({
-  color: `${theme.palette.primary.feedbackCardsInstructionsColor}`,
-  fontSize: `${theme.typography.h4.fontSize}`,
-}));
-
 export default function ConfidenceCard({
   confidences,
+  numPlayers,
   graphClickInfo,
   setGraphClickInfo,
 }: CardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const ratedConfidences = confidences.filter(
+    confidence => confidence.level !== ConfidenceLevel.NOT_RATED
+  );
+  const selectedIndex = graphClickInfo.confidence ?? null;
   return (
     <HostDefaultCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
@@ -54,20 +58,20 @@ export default function ConfidenceCard({
             </Typography>
           </SmallTextContainer>
           <ConfidenceResponsesGraph
-            confidences={confidences}
-            graphClickIndex={graphClickInfo.graph === 'confidence' ? graphClickInfo.selectedIndex : null}
+            confidences={ratedConfidences}
+            graphClickIndex={selectedIndex}
             setGraphClickInfo={setGraphClickInfo}
           />
-          {graphClickInfo.selectedIndex !== null ? (
+          {selectedIndex !== null ? (
             <ConfidenceResponseDropdown
-              graphClickIndex={graphClickInfo.selectedIndex}
-              selectedConfidence={confidences[graphClickInfo.selectedIndex]}
+              selectedConfidence={ratedConfidences[selectedIndex]}
+              numPlayers={numPlayers}
             />
           ) : (
             <SmallTextContainer>
-              <InstructionsText>
+              <Typography variant='label' style={{opacity: 0.4}}>
                 {t('gamesession.confidenceCard.instructions')}
-              </InstructionsText>
+              </Typography>
             </SmallTextContainer>
           )}
         </CardContentContainer>

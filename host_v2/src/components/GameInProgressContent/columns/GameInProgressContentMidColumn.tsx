@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import { GameSessionState, IHostTeamAnswersHint, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IQuestion, IPhase } from '@righton/networking';
-import { Mistake, IGraphClickInfo } from "../../../lib/HostModels";
+import { Mistake, IGraphClickInfo, IGraphClickIndices } from "../../../lib/HostModels";
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
 import HintsCard from '../../HintsGraph/HintsCard';
 import Responses from '../../ResponsesGraph/ResponsesCard';
@@ -20,7 +20,7 @@ interface GameInProgressContentMidColumnProps {
   currentHints: IHostTeamAnswersHint[];
   numPlayers: number;
   currentPhase: IPhase;
-  graphClickInfo: IGraphClickInfo;
+  graphClickInfo: IGraphClickIndices;
   confidences: IHostTeamAnswersConfidence[];
   isPopularMode: boolean;
   setIsPopularMode: (isPopularMode: boolean) => void;
@@ -61,6 +61,7 @@ export default function GameInProgressContentMidColumn ({
       {isConfidenceEnabled && currentPhase === IPhase.ONE &&
         <ConfidenceCard
           confidences={confidences}
+          numPlayers={numPlayers}
           graphClickInfo={graphClickInfo}
           setGraphClickInfo={setGraphClickInfo}
         />

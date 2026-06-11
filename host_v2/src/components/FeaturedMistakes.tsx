@@ -8,6 +8,7 @@ import {
   Radio,
   Box
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { IHostTeamAnswersResponse, IQuestion, GameSessionState } from "@righton/networking";
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -80,11 +81,12 @@ export default function FeaturedMistakes({
   setIsPopularMode
 }: FeaturedMistakesProps) {
   const theme = useTheme();
+  const {t} = useTranslation();
   const title = (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)
     ? 'Common Mistakes Preview' 
     : 'Common Mistakes Preview';
   const subtitle = (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)
-    ? 'Players are asked how sure they are of their answer'
+    ? t('gamesession.confidenceCard.description')
     : 'On the next screen, you will select from these incorrect answers to be options in Phase 2';
   const radioButtonText1 = 'Use the top 3 answers by popularity';
   const radioButtonText2 = 'Manually pick the options';

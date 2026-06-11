@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { useAnimate, motion } from 'framer-motion';
 import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
-import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
+import { IGraphClickInfo, IGraphClickIndices, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaDoubleColumnStyledNoSwiper,
@@ -27,7 +27,7 @@ interface GameInProgressContentProps {
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
   scope?: React.RefObject<HTMLDivElement>;
   isAnimating: boolean;
-  graphClickInfo: IGraphClickInfo;
+  graphClickInfo: IGraphClickIndices;
   setGraphClickInfo: (graphClickInfo: IGraphClickInfo) => void;
 }
 
@@ -116,6 +116,7 @@ export default function GameInProgressContent({
       currentState={localGameSession.currentState}
       responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
       confidences={currentPhase === IPhase.ONE ? currentConfidences : prevPhaseConfidences}
+      numPlayers={localGameSession.teams.length}
       graphClickInfo={graphClickInfo}
       isConfidenceEnabled={isConfidenceEnabled}
       isShortAnswerEnabled={isShortAnswerEnabled}

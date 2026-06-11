@@ -2,7 +2,7 @@ import React from 'react';
 import { LinearProgress, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { IQuestion, IHostTeamAnswers, IHostTeamAnswersResponse, IGameSession, GameSessionState } from '@righton/networking';
-import { IGraphClickInfo } from '../../lib/HostModels';
+import { IGraphClickInfo, IGraphClickIndices } from '../../lib/HostModels';
 import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardStyled';
 import ResponsesGraph from './ResponsesGraph';
 import SelectedAnswer from './SelectedAnswer';
@@ -20,7 +20,7 @@ interface ResponsesProps {
   currentQuestion: IQuestion;
   responses: IHostTeamAnswersResponse[];
   statePosition: number;
-  graphClickInfo: IGraphClickInfo;
+  graphClickInfo: IGraphClickIndices;
   isShortAnswerEnabled: boolean;
   isPrevPhaseResponses: boolean;
   setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
@@ -37,7 +37,8 @@ export default function Responses({
 }: ResponsesProps) {
   const theme = useTheme();
   const numPlayers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
-  const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(graphClickInfo.selectedIndex);
+  const responsesGraphName = statePosition < 6 || (statePosition > 6 && isPrevPhaseResponses) ? 'realtimephase1' : 'realtimephase2';
+  const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(graphClickInfo[responsesGraphName] ?? null);
   // if game is short answer, we don't want to see all answers as they include m/c answers
   const trimmedResponses =
    (isShortAnswerEnabled || (statePosition > 6 && isPrevPhaseResponses)) 

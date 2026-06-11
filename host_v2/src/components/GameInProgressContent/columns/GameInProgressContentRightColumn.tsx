@@ -3,7 +3,7 @@ import React from 'react';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IQuestion, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IPhase, GameSessionState } from '@righton/networking';
-import { ScreenSize, IGraphClickInfo } from '../../../lib/HostModels';
+import { ScreenSize, IGraphClickInfo, IGraphClickIndices } from '../../../lib/HostModels';
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
 import Responses from '../../ResponsesGraph/ResponsesCard';
 import ConfidenceCard from '../../ConfidenceGraph/ConfidenceCard';
@@ -15,10 +15,11 @@ interface GameInProgressContentRightColumnProps {
   currentQuestion: IQuestion;
   responses: IHostTeamAnswersResponse[];
   confidences: IHostTeamAnswersConfidence[];
+  numPlayers: number;
   isConfidenceEnabled: boolean;
   isShortAnswerEnabled: boolean;
   screenSize: ScreenSize;
-  graphClickInfo: IGraphClickInfo;
+  graphClickInfo: IGraphClickIndices;
   setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
@@ -29,6 +30,7 @@ export default function GameInProgressContentRightColumn ({
     currentQuestion,
     responses,
     confidences,
+    numPlayers,
     isConfidenceEnabled,
     isShortAnswerEnabled,
     screenSize,
@@ -52,6 +54,7 @@ export default function GameInProgressContentRightColumn ({
         {isConfidenceEnabled && currentPhase === IPhase.TWO &&
           <ConfidenceCard
             confidences={confidences}
+            numPlayers={numPlayers}
             graphClickInfo={graphClickInfo}
             setGraphClickInfo={setGraphClickInfo}
           />

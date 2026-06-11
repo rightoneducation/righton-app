@@ -273,7 +273,7 @@ const questionGradientHost =
 const circularProgressHost = '#159EFA';
 const playerNameTextColorHost = '#AEAEAE'; // player name
 const baseQuestionColorHost = 'rgba(255,255,255,0.2)'; //
-const playerFeedbackLabelColorHost = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
+const playerFeedbackLabelColorHost = 'rgba(255, 255, 255)'; // color of text on confidence card, responses card, player thinking, etc.
 const feedbackCardsInstructionsColorHost = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
 const graphAccentColorHost = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
 const dropdownInfoBackgroundColorHost = '#063772'; // background color of the sub-cards in the player response dropdowns
@@ -337,7 +337,7 @@ const customVictoryResponsesThemeHost = {
       axis: { stroke: 'transparent' },
       grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
       tickLabels: {
-        fill: 'rgba(255, 255, 255, 0.5)',
+        fill: 'rgba(255, 255, 255)',
         fontFamily: 'Rubik',
         fontWeight: '400',
         fontSize: '12px',

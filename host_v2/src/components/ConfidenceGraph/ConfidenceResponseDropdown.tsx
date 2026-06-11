@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
-import { IHostTeamAnswersConfidence, IHostTeamAnswersConfidenceResponse } from '@righton/networking';
+import { ConfidenceLevel, IHostTeamAnswersConfidence, IHostTeamAnswersConfidenceResponse } from '@righton/networking';
 import ArrowIcon from '../../images/Arrow.svg';
 
 
 interface DropdownProps {
-  graphClickIndex: number | null;
   selectedConfidence: IHostTeamAnswersConfidence;
+  numPlayers: number;
 }
 
 const Container = styled(Box)(({ theme }) => ({
@@ -63,32 +63,58 @@ const ConfidenceLevelText = styled(Typography)(({ theme }) => ({
 }));
 
 
-const NameText = styled(Typography)(({ theme }) => ({
+const NameText = styled(Typography)({
   overflow: 'hidden',
-  color: `${theme.palette.primary.main}`,
   textOverflow: 'ellipsis',
-  fontFamily: 'Poppins',
-  fontSize: `${theme.typography.h5.fontSize}`,
-  fontWeight: `${theme.typography.body1.fontWeight}`,
+  textAlign: 'left',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: '400',
+  color: 'white',
   minWidth: '32px'
-}));
+});
+
+const CountText = styled(Typography)({
+  color: '#FFF',
+  textAlign: 'right',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: '700',
+});
+
+const PercentageText = styled(Typography)({
+  color: '#FFF',
+  textAlign: 'left',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: '400',
+  paddingLeft: '4px',
+});
+
+const NumberContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+});
 
 
 export default function ConfidenceResponseDropdown({
-  graphClickIndex,
   selectedConfidence,
+  numPlayers,
 }: DropdownProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
-  const ConfidenceLevelDictionary: { [key: number]: string } = {
-    0: 'Not Rated',
-    1: 'Not At All Confident',
-    2: 'Kinda Confident',
-    3: 'Quite Confident',
-    4: 'Very Confident',
-    5: 'Totally Confident',
+  const ConfidenceLevelDictionary: { [key in ConfidenceLevel]: string } = {
+    [ConfidenceLevel.NOT_RATED]: 'Not Rated',
+    [ConfidenceLevel.NOT_AT_ALL]: 'Not At All Confident',
+    [ConfidenceLevel.KINDA]: 'Kinda Confident',
+    [ConfidenceLevel.QUITE]: 'Quite Confident',
+    [ConfidenceLevel.VERY]: 'Very Confident',
+    [ConfidenceLevel.TOTALLY]: 'Totally Confident',
   };
+  const count = selectedConfidence.correct.length + selectedConfidence.incorrect.length;
+  const percentage = numPlayers > 0 ? (count / numPlayers) * 100 : 0;
   const playerResponse = (team: string): React.ReactNode => {
     return (
       <PlayerCard>
@@ -126,20 +152,22 @@ export default function ConfidenceResponseDropdown({
       ) : (
         <>
           <HeaderContainer>
-            <HeaderText>
-              {t(
-                'gamesession.confidenceCard.graph.dropdown.header.containsResponses',
-              )}
-            </HeaderText>
             <Box
               onClick={() => setIsExpanded(!isExpanded)}
               style={{  display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', borderRadius: '8px', padding: '8px 12px', backgroundColor: '#FFFFFF33' }}
             >
-              <ConfidenceLevelText>
-                {graphClickIndex !== null &&
-                  ConfidenceLevelDictionary[graphClickIndex]}
-              </ConfidenceLevelText>
-              <img src={ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+              <Typography sx={{ color: '#FFFFFF', textAlign: 'center', fontSize: '14px', fontWeight: 700, fontFamily: 'Rubik'}}>
+                {ConfidenceLevelDictionary[selectedConfidence.level]}
+              </Typography>
+              <NumberContainer>
+                <CountText>
+                  {count}
+                </CountText>
+                <PercentageText>
+                  ({Math.round(percentage)}%)
+                </PercentageText>
+                <img src={ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+              </NumberContainer>
             </Box>
           </HeaderContainer>
           {isExpanded && (
