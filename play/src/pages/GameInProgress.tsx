@@ -161,11 +161,8 @@ export default function GameInProgress({
   );
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
     currentAnswer?.id ?? ''
-  ); // This will be moved later (work in progress - Drew)
-  const handleTimerIsFinished = () => {
-    setBackendAnswer((prev) => ({ ...prev, isSubmitted: true }));
-    setTimerIsPaused(true);
-  };
+  ); 
+ 
 
   // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
   const [selectConfidence, setSelectConfidence] = useState<{
@@ -225,6 +222,23 @@ export default function GameInProgress({
         questionIndex: currentQuestionIndex,
       });
     }
+  };
+
+  // auto-submits a selected/typed answer if the timer expires before the
+  // player presses submit; skips players with no answer in progress
+  const handleTimerIsFinished = () => {
+    setTimerIsPaused(true);
+    if (
+      backendAnswer.isSubmitted ||
+      backendAnswer.teamMemberAnswersId === '' ||
+      (backendAnswer.text ?? '') === ''
+    )
+      return;
+    if (isShortAnswerEnabled)
+      backendAnswer.answer.normalizeAnswer(backendAnswer.answer.rawAnswer);
+    const submittedAnswer = { ...backendAnswer, isSubmitted: true };
+    setBackendAnswer(submittedAnswer);
+    handleSubmitAnswer(submittedAnswer);
   };
 
   const handleSubmitHint = (normalizedHint: IAnswerHint) => {
@@ -366,6 +380,7 @@ export default function GameInProgress({
             questionId={currentQuestion.id ?? ''}
             teamMemberAnswersId={teamMemberAnswersId}
             gameSessionId={gameSession.id ?? ''}
+            setBackendAnswer={setBackendAnswer}
           />
         ) : (
           <DiscussAnswer

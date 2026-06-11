@@ -33,6 +33,7 @@ interface OpenAnswerCardProps {
   teamMemberAnswersId: string;
   currentTeam: ITeam  | null;
   handleSubmitAnswer: (result: BackendAnswer) => void;
+  setBackendAnswer: (answer: BackendAnswer) => void;
 }
 
 export default function OpenAnswerCard({
@@ -46,6 +47,7 @@ export default function OpenAnswerCard({
   teamMemberAnswersId,
   currentTeam,
   handleSubmitAnswer,
+  setBackendAnswer
 }: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -109,6 +111,7 @@ export default function OpenAnswerCard({
       StorageKeyAnswer,
       JSON.stringify(extractedAnswer)
     );
+    setBackendAnswer(extractedAnswer);
     setEditorContents(currentAnswer);
   };
   

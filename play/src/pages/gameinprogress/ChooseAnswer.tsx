@@ -65,6 +65,7 @@ interface ChooseAnswerProps {
   questionId: string;
   teamMemberAnswersId: string;
   gameSessionId: string;
+  setBackendAnswer: (answer: BackendAnswer) => void;
 }
 
 export default function ChooseAnswer({
@@ -95,6 +96,7 @@ export default function ChooseAnswer({
   questionId,
   teamMemberAnswersId,
   gameSessionId,
+  setBackendAnswer
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -182,6 +184,7 @@ export default function ChooseAnswer({
             questionId={questionId}
             teamMemberAnswersId={teamMemberAnswersId}
             currentTeam={currentTeam}
+            setBackendAnswer={setBackendAnswer}
           />
         ) : (
           <AnswerCard
