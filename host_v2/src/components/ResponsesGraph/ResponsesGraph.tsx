@@ -196,6 +196,7 @@ export default function ResponsesGraph({
             labelComponent={
               <CustomLabel
                 noResponseLabel={noResponseLabel}
+                isPrevPhaseResponses={isPrevPhaseResponses}
                 isShortAnswerEnabled={isShortAnswerEnabled}
                 customBarSelectedWidth={customBarSelectedWidth}
                 statePosition={statePosition}
