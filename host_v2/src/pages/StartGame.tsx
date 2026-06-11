@@ -41,22 +41,22 @@ const BackgroundStyled = styled(Paper)(({ theme }) => ({
   background: theme.palette.primary.backgroundGradient,
   zIndex: -1, // Ensure it stays behind the content
   overflow: 'hidden',
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      inset: 0,
-      zIndex: 0,
-      backgroundImage: `url(${mathSymbolsBackground})`,
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'bottom',
-      backgroundSize: 'auto',
-      pointerEvents: 'none',
-      opacity: '5%'
-    },
-    '& > *': {
-      position: 'relative',
-      zIndex: 1,
-    },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    zIndex: 0,
+    backgroundImage: `url(${mathSymbolsBackground})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'bottom',
+    backgroundSize: 'auto',
+    pointerEvents: 'none',
+    opacity: '5%'
+  },
+  '& > *': {
+    position: 'relative',
+    zIndex: 1,
+  },
 }));
 const Shadow = styled(Box)(({theme}) => ({
   position: 'absolute', // Position it absolutely within StartGameContainer
