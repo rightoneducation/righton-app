@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import ArrowIcon from '../../images/Arrow.svg';
+import ArrowIcon from '../../images/ArrowDark.svg';
 
 const SelectedHintsContainer = styled(Box)({
   textAlign: 'center',
@@ -11,7 +11,7 @@ const SelectedHintsContainer = styled(Box)({
 });
 
 const TitleText = styled(Typography)({
-  color: '#FFF',
+  color: '#063772',
   textAlign: 'left',
   fontFamily: 'Rubik',
   fontSize: '14px',
@@ -62,7 +62,7 @@ export default function SelectedHints(props: any) {
       <SelectedHintsContainer>
         <Box
           onClick={() => setIsExpanded(!isExpanded)}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', borderRadius: '8px', padding: '8px 12px', backgroundColor: '#FFFFFF33' }}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', borderRadius: '8px', padding: '8px 12px', backgroundColor: '#FFFFFF80' }}
         >
           <TitleText style={{ paddingTop: 0 }}>
             {gptHints[graphClickIndex].themeText}
