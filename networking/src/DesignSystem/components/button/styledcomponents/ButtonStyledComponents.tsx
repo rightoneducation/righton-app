@@ -21,7 +21,7 @@ export const PlayButtonStyled = styled(Button, {
   if (buttonType === ButtonType.DONTREJOIN || buttonType === ButtonType.QUIT) {
     const outlineColor = theme.palette.designSystem.surface.play;
     return {
-      width: isDesktop ? '135px' : '280px',
+      width: isDesktop ? '355px' : '280px',
       height: '32px',
       borderRadius: '8px',
       textTransform: 'none',
@@ -46,7 +46,7 @@ export const PlayButtonStyled = styled(Button, {
     };
   }
   return {
-    width: isDesktop ? '135px' : '280px',
+    width: isDesktop ? '355px' : '280px',
     height: '32px',
     borderRadius: '8px',
     textTransform: 'none',

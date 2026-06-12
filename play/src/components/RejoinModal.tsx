@@ -3,7 +3,7 @@ import { Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { PlayButton, ButtonType } from '@righton/networking';
+import { PlayButtonBlock, ButtonType } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface RejoinModalProps {
@@ -64,9 +64,10 @@ export default function RejoinModal({
         <Box style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '8px'
+          gap: '8px',
+          width: '100%'
         }}>
-          <PlayButton
+          <PlayButtonBlock
             buttonType={ButtonType.REJOIN}
             label={t('joingame.rejoinmodal.button1')}
             isEnabled
@@ -75,7 +76,7 @@ export default function RejoinModal({
               setIsModalVisible(false);
             }}
           />
-          <PlayButton
+          <PlayButtonBlock
             buttonType={ButtonType.DONTREJOIN}
             label={t('joingame.rejoinmodal.button2')}
             isEnabled

@@ -5,7 +5,7 @@ import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { v4 as uuidv4 } from 'uuid';
-import { PlayButton, ButtonType } from '@righton/networking';
+import { PlayButtonBlock, ButtonType } from '@righton/networking';
 import { StorageKey, StorageKeyEduDataStudentId, ErrorType } from '../lib/PlayModels';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
@@ -90,16 +90,17 @@ export default function ErrorModal({
         <Box style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '8px'
+          gap: '8px',
+          width: '100%'
         }}>
-          <PlayButton
+          <PlayButtonBlock
             buttonType={ButtonType.RETRY}
             label={`${t('error.connect.button1')}${retryCounter}`}
             isEnabled
             onClick={handleRetry}
           />
           {errorType === ErrorType.CONNECT && (
-            <PlayButton
+            <PlayButtonBlock
               buttonType={ButtonType.QUIT}
               label={t('error.connect.button2')}
               isEnabled
