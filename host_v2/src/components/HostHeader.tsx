@@ -17,12 +17,11 @@ const UpperStyled = styled(Box)(({theme}) => ({
   display: 'flex',
   position: 'sticky',
   flexDirection: 'column',
-  justifyContent: 'space-between', 
+  justifyContent: 'center', 
   gap: '16px', 
-  height: '170px', 
   width: '100%',
   maxWidth: `${theme.breakpoints.values.lg}px`,
-  padding: '0px 16px 0px 16px', 
+  padding: '34px 24px 0px', 
   boxSizing: 'border-box', /* got rid of width, added the display, flexdir, justify content */
   zIndex: 3,
 }));
@@ -38,7 +37,6 @@ const TopLineStyled = styled(Box)({
 
 const GameLobbyTypographyStyled = styled(Typography)({
   width: '255px', // this is for the phase description
-  height: '36px',
   fontSize: '24px',
   fontWeight: '700',
   color: 'rgba(255, 255, 255, 1)',
@@ -72,7 +70,7 @@ function HostHeader({ gameCode, screenSize }: HostHeaderProps) {
     window.location.href = 'http://central.rightoneducation.com/';
   };
   return (
-    <>
+    <Box style={{width: '100%'}}>
       <Box style={{
         position: 'absolute',
         top: screenSize !== ScreenSize.LARGE ? '56px' : '0px',
@@ -116,7 +114,7 @@ function HostHeader({ gameCode, screenSize }: HostHeaderProps) {
         </TopLineStyled>
         <GameCode gameCode={gameCode} />
       </UpperStyled>
-    </>
+    </Box>
   );
 }
 

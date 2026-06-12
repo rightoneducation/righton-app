@@ -11,7 +11,7 @@ const GameCodeCard = styled(Grid)({
   padding: '16px',
   border: '1px solid rgba(255, 255, 255, 0.25)',
   borderRadius: '16px',
-  width: '230px',
+  width: '100%',
   height: '118px',
   gap: '12px', 
   margin: 'auto', /* added this */
@@ -20,11 +20,10 @@ const GameCodeCard = styled(Grid)({
 
 const GameCodeText = styled(Typography)({
   fontSize: '72px', /* for 2409 > title */
+  lineHeight: '72px',
   fontWeight: '700',
   color: 'rgba(255, 255, 255, 1)',
-  marginTop: '32px',
   width: '181px',
-  height: '57',
 });
 
 const GameCodeParagraph = styled(Typography)({

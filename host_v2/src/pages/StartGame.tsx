@@ -29,6 +29,7 @@ const SafeAreaStyled = styled(Box)({
 
 
 const HeaderAreaStyled = styled(Box)(({ screenSize }: { screenSize: ScreenSize }) => ({
+  width: '100%',
   marginTop: screenSize !== ScreenSize.LARGE ? '47px' : '0px',
 }));
 
@@ -121,8 +122,8 @@ function StartGame({teams,
           <motion.div ref={shadowScope} style={{ width: '100%' }}>
             <Shadow />
           </motion.div>
-          <HeaderAreaStyled screenSize={screenSize}>
-          <motion.div ref={scope2} exit={{opacity: 0}} >
+          <HeaderAreaStyled screenSize={screenSize} >
+          <motion.div ref={scope2} exit={{opacity: 0, width: '100%'}} >
             <HostHeader gameCode = {gameCode} screenSize={screenSize}/>
           </motion.div>
           </HeaderAreaStyled>
