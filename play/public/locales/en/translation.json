@@ -6,8 +6,8 @@
       "button": "Join Game"
     },
     "rejoinmodal": {
-      "title1": "We have detected that you were disconnected from an ongoing game.",
-      "title2": "Would you like to rejoin?",
+      "title1": "Rejoin your game?",
+      "title2": "Your game is still running.",
       "button1": "Yes",
       "button2": "No"
     },
@@ -15,8 +15,8 @@
       "title": "Enter game code",
       "button": "Join",
       "buttonJoining": "Joining...",
-      "error1": "Unable to join this game.",
-      "error2": "Check the Game Code and try again.",
+      "error1": "Unable to\njoin this game.",
+      "error2": "Check the Game Code\nand try again.",
       "error3": "A player with that name has already joined the game."
     },
     "playername": {
@@ -30,7 +30,7 @@
       "description2": "This will be used to identify you during the game."
     },
     "selectavatar": {
-      "title": "Choose your avatar",
+      "title": "Choose your avatar!",
       "button": "Choose"
     }
   },
@@ -143,7 +143,7 @@
   },
   "error": {
     "connect": {
-      "title1": "An error has occurred with the following error message:",
+      "title1": "An error has occurred:",
       "gamesessionerror": "Game session not found",
       "subscriptionerror": "Subscription could not be established",
       "button1": "Try Again",

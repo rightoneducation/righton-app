@@ -87,8 +87,8 @@ export default function NewPointsIndicator({
   const handlePointsAnimationEnd = (event: React.AnimationEvent) => {
     if (
       event.animationName === 'newScoreUpWiggle' &&
-      newPoints &&
-      newPoints > 0
+      newPoints !== undefined &&
+      newPoints >= 0
     ) {
       setNewScore(score + newPoints);
       setStartScoreAnimation(true);
@@ -97,7 +97,7 @@ export default function NewPointsIndicator({
 
   return (
     <Box sx={{ display: 'flex'}}>
-      {newPoints && newPoints > 0 ? (
+      { newPoints !== undefined && newPoints >= 0 ? (
         <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd}>
           <NewPointsPill currentState={currentState}>
             <Typography variant="h2">{`+${newPoints}`}</Typography>

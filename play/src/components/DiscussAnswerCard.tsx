@@ -27,6 +27,7 @@ const StyledAnswerBar = styled(LinearProgress)({
 });
 
 const StyledHintBox = styled(Box)({
+  width: '100%',
   display: 'flex',
   flexDirection: 'column',
   gap: '8px',
@@ -83,6 +84,7 @@ export default function DiscussAnswerCard({
   if (phaseOneResponse && totalAnswers) {
     percent = phaseOneResponse.count / totalAnswers * 100;
   }
+  console.log(newPoints);
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
