@@ -1,7 +1,7 @@
 import React from 'react';
+import { Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { Typography } from '@mui/material';
 import Modal from 'react-modal';
 import { PlayButton, ButtonType } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
@@ -28,13 +28,16 @@ export default function RejoinModal({
       contentLabel="Rejoin Modal"
       style={{
         content: {
+          width: 'calc(100% - 48px)',
           position: 'absolute',
-          maxWidth: theme.breakpoints.values.xs,
+          maxWidth: '430px',
           inset: 'auto',
-          margin: '20px',
-          borderRadius: '16px',
+          margin: '24px',
+          borderRadius: '8px',
           backgroundColor: theme.palette.primary.main,
           boxShadow: `0px 20px 20px rgba(0, 0, 0, 0.25)`,
+          boxSizing: 'border-box',
+          padding: '48px'
         },
         overlay: {
           height: '100%',
@@ -52,30 +55,36 @@ export default function RejoinModal({
       appElement={document.getElementById('root') || undefined}
     >
       <BodyCardContainerStyled spacing={2}>
-        <Typography variant="semiBoldParagraph" sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}>
+        <Typography variant="h1" sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}>
           {t('joingame.rejoinmodal.title1')}
         </Typography>
         <Typography variant="paragraph" sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}>
           {t('joingame.rejoinmodal.title2')}
         </Typography>
-        <PlayButton
-          buttonType={ButtonType.REJOIN}
-          label={t('joingame.rejoinmodal.button1')}
-          isEnabled
-          onClick={() => {
-            handleRejoinSession();
-            setIsModalVisible(false);
-          }}
-        />
-        <PlayButton
-          buttonType={ButtonType.DONTREJOIN}
-          label={t('joingame.rejoinmodal.button2')}
-          isEnabled
-          onClick={() => {
-            handleDontRejoinSession();
-            setIsModalVisible(false);
-          }}
-        />
+        <Box style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <PlayButton
+            buttonType={ButtonType.REJOIN}
+            label={t('joingame.rejoinmodal.button1')}
+            isEnabled
+            onClick={() => {
+              handleRejoinSession();
+              setIsModalVisible(false);
+            }}
+          />
+          <PlayButton
+            buttonType={ButtonType.DONTREJOIN}
+            label={t('joingame.rejoinmodal.button2')}
+            isEnabled
+            onClick={() => {
+              handleDontRejoinSession();
+              setIsModalVisible(false);
+            }}
+          />
+        </Box>
       </BodyCardContainerStyled>
     </Modal>
   );

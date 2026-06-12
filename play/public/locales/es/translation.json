@@ -5,8 +5,8 @@
       "button": "Unete al juego"
     },
     "rejoinmodal": {
-      "title1": "Hemos detectado que te desconectaron de un juego en curso.",
-      "title2": "¿Te gustaría volver a unirte?",
+      "title1": "¿Volver a unirte a tu juego?",
+      "title2": "Tu juego sigue en curso.",
       "button1": "Sí",
       "button2": "No"
     },
@@ -131,7 +131,7 @@
   },
   "error": {
     "connect": {
-      "title1": "Se ha producido un error con el siguiente mensaje de error:",
+      "title1": "Se ha producido un error:",
       "gamesessionerror": "Sesión de juego no encontrada",
       "subscriptionerror": "Subscription could not be established",
       "button1": "No se pudo establecer la suscripción",
