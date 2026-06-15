@@ -7,7 +7,7 @@ export default styled(LinearProgress)(({ theme }) => ({
   left: '0',
   height: `${theme.sizing.answerBarHeight}px`,
   width: '100%',
-  borderRadius: `${theme.sizing.xSmPadding}px`,
+  borderRadius: `${theme.sizing.xxSmPadding}px`,
   backgroundColor: theme.palette.primary.baseQuestionColor,
   '& .MuiLinearProgress-bar': {
     backgroundColor: theme.palette.primary.main,

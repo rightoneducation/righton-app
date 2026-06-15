@@ -21,7 +21,8 @@ const UpperStyled = styled(Box)(({theme}) => ({
   gap: '16px', 
   width: '100%',
   maxWidth: `${theme.breakpoints.values.lg}px`,
-  padding: '34px 24px 0px', 
+  margin: '0 auto',
+  padding: '34px 24px 0px',
   boxSizing: 'border-box', /* got rid of width, added the display, flexdir, justify content */
   zIndex: 3,
 }));

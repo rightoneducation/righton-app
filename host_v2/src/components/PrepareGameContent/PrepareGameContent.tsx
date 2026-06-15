@@ -70,8 +70,8 @@ export default function PrepareGameContent({
       return (
         <BodyContentAreaSingleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
           <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
           style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center'  }}
         >
@@ -105,8 +105,8 @@ export default function PrepareGameContent({
     default:
       return (
           <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
           style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
           >

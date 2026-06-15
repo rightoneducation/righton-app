@@ -93,8 +93,8 @@ export default function PrepareGame( {
           <HeaderBackgroundStyled />  
         </motion.div>
         <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
         >
           <HeaderContent
@@ -120,12 +120,12 @@ export default function PrepareGame( {
           />
         </BodyStackContainerStyled>  
         <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1, ease: 'easeIn' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, ease: 'easeIn' }}
           style={{
             zIndex: 1,
-            pointerEvents: 'auto',  
+            pointerEvents: 'auto',
           }}
         >
           <FooterBackgroundStyled>
