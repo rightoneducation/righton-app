@@ -136,7 +136,7 @@
       "title": "Congrats!",
       "points1": "You earned ",
       "points2": " points",
-      "top5": "You're in the Top 5!",
+      "top5": "You're in the\nTop 5!",
       "greatjob": "Great job!",
       "button": "View leaderboard"
     }
