@@ -77,5 +77,8 @@
     "organizing": "Organizando las pistas de los estudiantes en temas...",
     "retry": "Reintentar",
     "error": "Hubo un error al procesar las pistas. Por favor, inténtalo de nuevo."
+  },
+  "loadingpage": {
+    "launching": "Lanzando tu juego..."
   }
 }

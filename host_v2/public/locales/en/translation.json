@@ -77,5 +77,8 @@
     "organizing": "Organizing student hints into themes...",
     "retry": "Retry",
     "error": "There was an error processing the hints. Please try again."
+  },
+  "loadingpage": {
+    "launching": "Launching your game..."
   }
 }
