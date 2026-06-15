@@ -33,6 +33,7 @@ const StyledHintBox = styled(Box)({
   gap: '8px',
   borderRadius: '8px',
   border: '2px #CCC solid',
+  boxSizing: 'border-box',
   padding: '12px',
   marginTop: '12px'
 })
