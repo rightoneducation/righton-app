@@ -1,15 +1,20 @@
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
+import { ScreenSize } from '../../HostModels';
 
 /* lower-level container for content that floats in Start Game page when swiper is not enabled */
-export const StartGameContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
+export const StartGameContentAreaDoubleColumnStyled = styled(Grid, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: `${theme.breakpoints.values.md}px`,
+  maxWidth: `${theme.breakpoints.values.lg}px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',
   zIndex: 2,
   paddingTop: `${theme.sizing.mdPadding}px`,
+  paddingLeft: screenSize === ScreenSize.LARGE ? '174px' : '32px',
+  paddingRight: screenSize === ScreenSize.LARGE ? '174px' : '32px',
 }));

@@ -102,6 +102,27 @@ export const HostButtonBlockStyled = styled(HostButtonStartStyled)({
   },
 });
 
+export const HostButtonSortStyled = styled(Button)(({ theme }) => {
+  const color = theme.palette.designSystem.surface.pink;
+  return {
+    width: '32px', // 48px face less the 16px of horizontal content padding that already exists
+    height: '36px',
+    minWidth: 0, // override MUI Button's default 64px min-width
+    borderRadius: '8px',
+    padding: 0,
+    background: color,
+    boxShadow: '0px 5px 22px 0px rgba(244, 190, 216, 0.15)', // F4BED8 @ 15%
+    boxSizing: 'border-box',
+    '&:hover': {
+      background: color,
+    },
+    '&.Mui-disabled': {
+      background: color,
+      opacity: 0.3,
+    },
+  };
+});
+
 export const HostButtonContent = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',

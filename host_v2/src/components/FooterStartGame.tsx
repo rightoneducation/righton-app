@@ -9,7 +9,9 @@ import PaginationContainerStyled from '../lib/styledcomponents/PaginationContain
 import { ScreenSize } from '../lib/HostModels';
 
 
-const FooterContainer = styled(Box)(({ theme }) => ({
+const FooterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   position: 'sticky',
   bottom: 0,
   display: 'flex',
@@ -18,8 +20,13 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   width: '100%',
   gap: '16px',
-  height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
+  paddingTop: '44px',
+  paddingBottom: screenSize === ScreenSize.SMALL ? '64px' : '44px'
 }));
+const SwipeHintText = styled(Typography)({
+  color: '#FFFFFF',
+  textAlign: 'center',
+});
 const InnerFooterContainer = styled(Box)({
   position: 'sticky',
   display: 'flex',
@@ -28,14 +35,9 @@ const InnerFooterContainer = styled(Box)({
   alignItems: 'center',
   width: '100%',
   gap: '16px',
-  height: '100%'
+  height: '100%',
 });
-const PlayerCountTypography = styled(Typography)({
-  fontFamily: 'Rubik',
-  color: "#FFF",
-  fontSize: '24px',
-  fontWeight: 700,
-});
+
 interface FootStartGameProps {
   teamsLength: number;
   screenSize: ScreenSize;
@@ -43,6 +45,7 @@ interface FootStartGameProps {
   handleButtonClick: () => void;
   isGamePrepared: boolean;
   scope4?: React.RefObject<HTMLDivElement>;
+  activeSlide: number;
 }
 export default function FooterStartGame({
   teamsLength,
@@ -50,7 +53,8 @@ export default function FooterStartGame({
   selectedSuggestedGame,
   isGamePrepared,
   handleButtonClick,
-  scope4
+  scope4,
+  activeSlide
 }: FootStartGameProps) {
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const fetchButtonText = (gameSession: IGameSession, selectedGame: string | null) => {
@@ -85,19 +89,19 @@ export default function FooterStartGame({
   const buttonType = fetchButtonType(localGameSession, selectedSuggestedGame ?? null);
 
   return (
-    <FooterContainer>
+    <FooterContainer screenSize={screenSize}>
+      {screenSize === ScreenSize.SMALL &&
+        <SwipeHintText variant="labels">
+          {activeSlide === 0
+            ? 'Swipe left to view game questions'
+            : 'Swipe right to view current players'}
+        </SwipeHintText>
+      }
       {screenSize === ScreenSize.SMALL &&
         <PaginationContainerStyled className="swiper-pagination-container" />
       }
       <InnerFooterContainer>
-        {localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
-          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400 }}>
-            <PlayerCountTypography> {teamsLength} </PlayerCountTypography>
-            <PlayerCountTypography style={{ fontSize: '18px', fontWeight: '400' }}>
-              {teamsLength === 1 ? "player has joined" : "players have joined"}
-            </PlayerCountTypography>
-          </Box>
-        }
+       
         { !isGamePrepared ?
           <motion.div
             ref={scope4}

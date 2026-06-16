@@ -27,7 +27,7 @@ export const StartEndGameScrollBoxStyled = styled(Box)(({ theme, currentQuestion
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px )`,
+  gap: `${theme.sizing.xSmPadding}px`,
   overflow: 'auto',
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
   '&::-webkit-scrollbar': {

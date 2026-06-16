@@ -11,6 +11,7 @@ export enum HostButtonType {
   END_GAME = 'endGame',
   EXIT_TO_CENTRAL = 'exitToCentral',
   PLAY_SELECTED_GAME = 'playSelectedGame',
+  SORT = 'sort',
 }
 
 type ButtonContentMapProps = {
@@ -30,5 +31,6 @@ export const hostButtonContentMap: ButtonContentMapProps = {
   [HostButtonType.PLAY_SELECTED_GAME]: { icon: null },
   [HostButtonType.CONTINUE_PHASE_TWO]: { icon: null },
   [HostButtonType.CONTINUE]: { icon: null },
-  [HostButtonType.END_ANSWERING]: { icon: null }
+  [HostButtonType.END_ANSWERING]: { icon: null },
+  [HostButtonType.SORT]: { icon: null },
 };

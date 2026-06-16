@@ -22,7 +22,13 @@ export default function QuestionCard({
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   return (
-    <BodyCardStyled elevation={10}>
+    <BodyCardStyled 
+      elevation={10} 
+      style={{  
+        marginLeft:`${theme.sizing.xxSmPadding}px`,
+        marginRight: `${theme.sizing.xxSmPadding}px`
+      }}
+    >
       <BodyCardContainerStyled style={{alignItems: 'center'}}>
         <Typography variant="h1" style={{color: theme.palette.designSystem.surface.host, textAlign: 'left', width: '100%'}}>
         {`${t('gamesession.questionCard.title')} ${currentQuestionIndex + 1}`}       

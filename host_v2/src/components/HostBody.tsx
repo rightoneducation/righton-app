@@ -36,19 +36,21 @@ const BodyContentAreaSingleColumnStyled = styled(
 }));
 
 interface HostBodyProps {
-  teams: ITeam[], 
-  questions: IQuestion[], 
-  title: string, 
-  currentQuestionIndex: number, 
-  screenSize: ScreenSize
+  teams: ITeam[],
+  questions: IQuestion[],
+  title: string,
+  currentQuestionIndex: number,
+  screenSize: ScreenSize,
+  onSlideChange?: (index: number) => void,
 }
 
-export default function HostBody({ 
-  teams, 
-  questions, 
-  title, 
-  currentQuestionIndex, 
+export default function HostBody({
+  teams,
+  questions,
+  title,
+  currentQuestionIndex,
   screenSize,
+  onSlideChange,
 }: HostBodyProps) {
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
@@ -65,12 +67,13 @@ export default function HostBody({
                   bulletActiveClass: 'swiper-pagination-bullet-active',
                   clickable: true,
                   renderBullet(index: number, className: string,) {
-                    return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
+                    return `<span class="${className}" style="width:30px; height:10px; border-radius:8px" ></span>`;
                   },
                 }}
                 ref={swiperRef}
-                spaceBetween={`${theme.sizing.mdPadding}px`}
-                style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+                onSlideChange={(swiper) => onSlideChange?.(swiper.activeIndex)}
+                spaceBetween={`${theme.sizing.xSmPadding}px`}
+                style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
               > 
             <SwiperSlide style={{width: '100%', height: '100%'}}>
               {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex}/>}
@@ -84,7 +87,7 @@ export default function HostBody({
     case ScreenSize.LARGE:
       default:
         return (
-          <StartGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+          <StartGameContentAreaDoubleColumnStyled container screenSize={screenSize} style={{gap: '12px'}}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
                 {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>

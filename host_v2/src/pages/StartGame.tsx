@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Box, Paper } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
@@ -15,7 +15,6 @@ import HostBody from '../components/HostBody';
 import { HEADER_SYMBOL_SCALE } from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 
 const SafeAreaStyled = styled(Box)({
-  paddingBottom: '34px',
   position: 'relative',
   width: '100%',
   height: '100dvh',
@@ -24,14 +23,12 @@ const SafeAreaStyled = styled(Box)({
   alignItems: 'center',
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
-  gap: '16px',
   overflow: 'hidden'
 });
 
 
 const HeaderAreaStyled = styled(Box)(({ screenSize }: { screenSize: ScreenSize }) => ({
   width: '100%',
-  marginTop: screenSize !== ScreenSize.LARGE ? '47px' : '0px',
 }));
 
 const BackgroundStyled = styled(Paper)(({ theme }) => ({
@@ -93,8 +90,14 @@ function StartGame({teams,
   setIsGamePrepared
   }: StartGameProps) {
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
+    const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+    const screenSize = isLargeScreen  // eslint-disable-line
+        ? ScreenSize.LARGE
+        : isMediumScreen
+          ? ScreenSize.MEDIUM
+          : ScreenSize.SMALL;
+    const [activeSlide, setActiveSlide] = useState(0);
     // framer-motion transition animation
     // first half is on startGame (exit out components)
     // second half is on prepareGame (enter in components)
@@ -133,7 +136,12 @@ function StartGame({teams,
           </motion.div>
           <HeaderAreaStyled screenSize={screenSize} >
           <motion.div ref={scope2} exit={{opacity: 0, width: '100%'}} >
-            <HostHeader gameCode = {gameCode} screenSize={screenSize}/>
+            <HostHeader 
+              gameCode={gameCode} 
+              screenSize={screenSize}
+              teamsLength={teams ? teams.length : 0}
+              isGamePrepared={false}
+            />
           </motion.div>
           </HeaderAreaStyled>
       <motion.div ref={scope5} style={{ display: 'flex', width: '100%',  overflow: 'hidden', justifyContent: 'center',
@@ -145,6 +153,7 @@ function StartGame({teams,
           title={title}
           currentQuestionIndex={currentQuestionIndex}
           screenSize={screenSize}
+          onSlideChange={setActiveSlide}
         />
       </motion.div>
           <motion.div ref={scope3} style={{width: '100%'}}>           
@@ -154,6 +163,7 @@ function StartGame({teams,
               handleButtonClick={handleButtonClick}
               isGamePrepared={false}
               scope4={scope4}
+              activeSlide={activeSlide}
             />
           </motion.div>
         </SafeAreaStyled>

@@ -1,8 +1,10 @@
+import { ReactNode, CSSProperties } from 'react';
 import { Typography } from '@mui/material';
 import { HostButtonType, hostButtonContentMap } from './HostButtonModels';
 import {
   HostButtonStartStyled,
   HostButtonGameStyled,
+  HostButtonSortStyled,
   HostButtonContent,
 } from './styledcomponents/ButtonStyledComponents';
 
@@ -12,6 +14,8 @@ interface HostButtonProps {
   isEnabled: boolean;
   onClick?: () => void;
   dataTestId?: string;
+  icon?: ReactNode;
+  style?: CSSProperties;
 }
 
 export function HostButton({
@@ -20,6 +24,8 @@ export function HostButton({
   isEnabled,
   onClick,
   dataTestId,
+  icon,
+  style,
 }: HostButtonProps) {
   const buttonObj = hostButtonContentMap[buttonType];
 
@@ -38,6 +44,19 @@ export function HostButton({
     </Typography>
   ]
   switch(buttonType){
+    case HostButtonType.SORT:
+      return (
+        <HostButtonSortStyled
+          disabled={!isEnabled}
+          onClick={onClick}
+          data-testid={dataTestId}
+          style={style}
+        >
+          <HostButtonContent>
+            {icon}
+          </HostButtonContent>
+        </HostButtonSortStyled>
+      );
     case HostButtonType.PREPARE_GAME:
     case HostButtonType.NEXT_QUESTION:
     case HostButtonType.END_GAME:
