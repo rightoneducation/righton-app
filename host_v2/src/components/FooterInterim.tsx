@@ -7,16 +7,19 @@ import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext'
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import { ScreenSize } from '../lib/HostModels';
 
-const FooterContainer = styled(Box)(({ theme }) => ({
+const FooterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
   position: 'sticky',
+  bottom: 0,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
   gap: '16px',
-  height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
-  paddingTop: '16px',
+  paddingTop: '44px',
+  paddingBottom: screenSize === ScreenSize.SMALL ? '64px' : '44px',
 }));
 
 const InnerFooterContainer = styled(Box)({
@@ -82,21 +85,19 @@ function FooterInterim({
       }
   }
   return (
-    <FooterContainer>
+    <FooterContainer screenSize={screenSize}>
       {screenSize === ScreenSize.SMALL &&
         <PaginationContainerStyled className="swiper-pagination-container" />
       }
       <InnerFooterContainer>
-        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
-          { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
-            <>
-              <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
-              <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
-                {teamsLength === 1 ? "player has joined" : "players have joined"}
-              </PlayerCountTypography>
-            </>
-            }
-        </Box>
+        { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
+          <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
+            <PlayerCountTypography> {teamsLength} </PlayerCountTypography>
+            <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
+              {teamsLength === 1 ? "player has joined" : "players have joined"}
+            </PlayerCountTypography>
+          </Box>
+        }
         <HostButton
           buttonType={buttonType}
           label={buttonText}

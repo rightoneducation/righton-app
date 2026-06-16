@@ -12,7 +12,7 @@ import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
 import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
-import { HEADER_SYMBOL_SCALE } from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
+import { HEADER_SYMBOL_SCALE, HEADER_BACKGROUND_COLOR } from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 
 const SafeAreaStyled = styled(Box)({
   position: 'relative',
@@ -57,22 +57,24 @@ const MathSymbolsStyled = styled(Box)({
   bottom: 0,
   height: '1084px', // natural height of the math symbols art (2610x1084)
   backgroundImage: `url(${mathSymbolsBackground})`,
-  backgroundRepeat: 'no-repeat',
+  backgroundRepeat: 'repeat-x', // tile horizontally so coverage stays full-width as the symbols shrink below viewport width (matches the static header's repeat-x handoff)
   backgroundPosition: 'bottom center',
   backgroundSize: 'auto', // natural size on the splash; uniformly scaled during the curtain
   transformOrigin: 'bottom center',
   pointerEvents: 'none',
   opacity: '5%',
 });
-const Shadow = styled(Box)(({theme}) => ({
-  position: 'absolute', // Position it absolutely within StartGameContainer
-  top: 0,
-  left: 0,
-  width: '100vw', // Stretch across the entire container
-  height: '100vh', // Cover the full height of the container
-  boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
-  zIndex: -1,
-}));
+// Flat fill that crossfades in over the splash gradient during the curtain so the
+// box lands on exactly the static header's solid color (no gradient-to-gradient
+// matching). Sits above the gradient but below MathSymbolsStyled (DOM order), so
+// the 5% symbols still read on top — matching the static header's stack.
+const FlatHeaderOverlayStyled = styled(Box)({
+  position: 'absolute',
+  inset: 0,
+  background: HEADER_BACKGROUND_COLOR,
+  opacity: 0, // ramps to 1 during the curtain
+  pointerEvents: 'none',
+});
 
 interface StartGameProps {
   teams: ITeam[];
@@ -106,16 +108,16 @@ function StartGame({teams,
     const [scope3, animate3] = useAnimate();
     const [scope4, animate4] = useAnimate();
     const [scope5, animate5] = useAnimate();
-    const [shadowScope, animateShadow] = useAnimate();
     const [mathScope, animateMath] = useAnimate();
+    const [flatScope, animateFlat] = useAnimate();
 
     const handleButtonClick = () => {
       const exitAnimation = () => {
         // Start all animations concurrently and return a promise that resolves when all animations are complete
         return Promise.all([
-          animate(scope.current, { opacity: .85, height: 200 + theme.sizing.mdPadding }, { duration: 1 }), // shrink gradient to the header's rendered bottom edge: HeaderBackgroundStyled is content-box (no CssBaseline) → 200px height + 24px (mdPadding) top padding = 224px
+          animate(scope.current, { opacity: 1, height: 200 + theme.sizing.mdPadding }, { duration: 1 }), // shrink gradient box to the header's rendered bottom edge: HeaderBackgroundStyled is content-box (no CssBaseline) → 200px height + 24px (mdPadding) top padding = 224px
+          animateFlat(flatScope.current, { opacity: 1 }, { duration: 1 }), // crossfade the flat header color over the gradient so the box lands on the static header's solid fill
           animateMath(mathScope.current, { scale: HEADER_SYMBOL_SCALE }, { duration: 1 }), // uniformly shrink symbols to the header's scaled-down size (bottom-pinned, no squish)
-          animateShadow(shadowScope.current, { y: 'calc(-100vh + 210px)' }, { duration: 1 }),
           animate2(scope2.current, {opacity: 0, position: 'relative'}, { duration: 1 }),
           animate3(scope3.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
           animate5(scope5.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
@@ -129,11 +131,9 @@ function StartGame({teams,
     return (
         <SafeAreaStyled>
           <BackgroundStyled ref={scope}>
+            <FlatHeaderOverlayStyled ref={flatScope} />
             <MathSymbolsStyled ref={mathScope} />
           </BackgroundStyled>
-          <motion.div ref={shadowScope} style={{ width: '100%' }}>
-            <Shadow />
-          </motion.div>
           <HeaderAreaStyled screenSize={screenSize} >
           <motion.div ref={scope2} exit={{opacity: 0, width: '100%'}} >
             <HostHeader 

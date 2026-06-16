@@ -23,7 +23,7 @@ const TimerBar = styled(LinearProgress)(({ theme }) => ({
   display: 'inline-block',
   height: `${theme.sizing.xSmPadding}px`,
   width: '100%',
-  backgroundColor: theme.palette.primary.baseQuestionColor,
+  backgroundColor: 'rgba(255,255,255,0.5)',
   '& .MuiLinearProgress-bar': {
     background: theme.palette.primary.main,
   },
