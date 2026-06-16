@@ -200,7 +200,6 @@ export default function useFetchAndSubscribeGameSession(
             window.localStorage.removeItem(StorageKey);
             window.localStorage.removeItem(StorageKeyAnswer);
             window.localStorage.removeItem(StorageKeyEduDataStudentId);
-            teamsSubscription.unsubscribe();
             flushAndRedirect('https://play.rightoneducation.com');
           }
       });

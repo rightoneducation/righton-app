@@ -164,17 +164,24 @@ function CurrentStudents({ teams, currentQuestionIndex }: CurrentStudentProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
-  const sortedTeams = currentQuestionIndex === null 
-    ? [...teams].sort((a, b) => a.name.localeCompare(b.name))
+  const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState<'name' | 'firstJoined'>('name');
+
+  // lobby sort is client-side only; in-game keeps the score-based teamSorter
+  const sortedTeams = currentQuestionIndex === null
+    ? [...teams].sort((a, b) =>
+        sortBy === 'name'
+          ? a.name.localeCompare(b.name)
+          : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      )
     : ModelHelper.teamSorter(teams, teams.length);
 
-  const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const handleSortClick = () => {
     setIsSortOpen((prev) => !prev);
   };
-  const handleSelectSort = () => {
+  const handleSelectSort = (option: 'name' | 'firstJoined') => {
+    setSortBy(option);
     setIsSortOpen(false);
-    // TODO: wire up sorting of the student list
   };
 
   const handleDeleteTeam = (teamId: string) => {
@@ -210,10 +217,10 @@ function CurrentStudents({ teams, currentQuestionIndex }: CurrentStudentProps) {
               }
             />
             <SortMenu isSortOpen={isSortOpen}>
-              <SortMenuItem variant="h2" onClick={handleSelectSort}>
+              <SortMenuItem variant="h2" onClick={() => handleSelectSort('name')}>
                 Name (A-Z)
               </SortMenuItem>
-              <SortMenuItem variant="h2" onClick={handleSelectSort}>
+              <SortMenuItem variant="h2" onClick={() => handleSelectSort('firstJoined')}>
                 First Joined
               </SortMenuItem>
             </SortMenu>

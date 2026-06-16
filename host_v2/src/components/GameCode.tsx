@@ -22,7 +22,8 @@ const GameCodeCard = styled(Grid, {
   border: '1px solid rgba(255, 255, 255, 0.25)',
   borderRadius: '16px',
   gap: '12px',
-  justifyContent: 'center', /* added this */
+  justifyContent: 'center',
+  alignItems: 'center', // center children on the cross axis so the fixed-width code sits centered in the box
 }));
 
 const GameCodeText = styled(Typography)({
