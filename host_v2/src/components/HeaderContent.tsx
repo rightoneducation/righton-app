@@ -62,7 +62,7 @@ export default function HeaderContent({
   
   return (
     <HeaderStackContainerStyled>
-      <Container style={{maxWidth: 1024, paddingLeft: `${theme.sizing.xLgPadding + theme.sizing.xSmPadding}px`, paddingRight: `${theme.sizing.xLgPadding + theme.sizing.xSmPadding}px`}}>
+      <Container style={{maxWidth: 1024, paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <QuestionIndicator

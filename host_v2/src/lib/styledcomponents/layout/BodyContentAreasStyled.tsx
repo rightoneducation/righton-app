@@ -1,9 +1,12 @@
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
+import { ScreenSize } from '../../HostModels';
 
 /* lower-level container for background content in body. floats above body boxes
 (body stack container -> body box upper, body box lower, body content area) */
-export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
+export const BodyContentAreaDoubleColumnStyled = styled(Grid, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize?: ScreenSize }>(({ theme, screenSize }) => ({
   position: 'absolute',
   top: '0',
   display: 'flex',
@@ -14,7 +17,7 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   height: '100%',
   overflow: 'hidden',
   zIndex: 2,
-  paddingTop: `${theme.sizing.mdPadding}px`,
+  paddingTop: screenSize === ScreenSize.SMALL ? '32px' : '44px',
 }));
 
 

@@ -9,7 +9,7 @@ export default styled(Box)(({ theme }) => ({
   height: `calc(100% - ${theme.sizing.smPadding}px)`,
   display: 'flex',
   flexDirection: 'column',
-  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px )`,
+  gap: `16px`,
   paddingBottom: `${theme.sizing.mdPadding}px`, // added so box shadow shows around edge of card
   overflow: 'auto',
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe

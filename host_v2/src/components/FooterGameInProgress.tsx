@@ -13,16 +13,22 @@ import { trackEvent, HostEvent } from '../lib/analytics';
 import { IGraphClickInfo, ScreenSize } from '../lib/HostModels';
 import Timer from './Timer';
 
-const FooterContainer = styled(Box)(({theme}) => ({
+const FooterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
   position: 'sticky',
   bottom: '0',
   margin: 'auto',
   width: '100%',
-  maxWidth: '700px',
+  maxWidth: '700px', // desktop width tracks to the max width
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-end',
-  padding: '16px 16px 24px',
+  paddingTop: '16px',
+  // left/right: 24px on mobile, 48px (32+16) on tablet, 16px on desktop
+  paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : screenSize === ScreenSize.MEDIUM ? '48px' : '16px',
+  paddingRight: screenSize === ScreenSize.SMALL ? '24px' : screenSize === ScreenSize.MEDIUM ? '48px' : '16px',
+  paddingBottom: screenSize === ScreenSize.SMALL ? '64px' : '44px',
   boxSizing: 'border-box',
 }));
 
@@ -158,7 +164,7 @@ function FooterGameInProgress({
   if (isTimerComplete) timerMessage = 'Continue when students are ready';
   else if (currentState === GameSessionState.PHASE_1_DISCUSS) timerMessage = 'Students are reviewing the correct answer and solution steps';
   return (
-    <FooterContainer>
+    <FooterContainer screenSize={screenSize}>
       <InnerFooterContainer>
         { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS))) && (
           <PaginationContainerStyled

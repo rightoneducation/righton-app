@@ -130,7 +130,7 @@ export default function GameInProgressContent({
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
-        <BodyContentAreaSingleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+        <BodyContentAreaSingleColumnStyled container style={{gap: `12px`}}>
           <motion.div
           ref={scope}
           initial={{ x: needAnimate ? '100vw' : '0%',}}
@@ -146,12 +146,12 @@ export default function GameInProgressContent({
               bulletActiveClass: 'swiper-pagination-bullet-active',
               clickable: true,
               renderBullet(index: number, className: string) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0;"></span>`;
+                return `<span class="${className}" style="width:30px; height:10px; border-radius:8px;"></span>`;
               },
             }}
             slidesPerView='auto'
-            spaceBetween={`${theme.sizing.mdPadding}px`}
-            style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+            spaceBetween={`8px`}
+            style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
           >
             <SwiperSlide>
               {midCardsColumn}
@@ -186,7 +186,7 @@ export default function GameInProgressContent({
           style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
         >
           {isPhaseTwo ? (
-            <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+            <BodyContentAreaDoubleColumnStyled container style={{gap: `8px`}} screenSize={screenSize}>
               <Swiper
                 modules={[Pagination]}
                 pagination={{
@@ -199,7 +199,7 @@ export default function GameInProgressContent({
                   },
                 }}
                 slidesPerView={2.1}
-                spaceBetween={`${theme.sizing.mdPadding}px`}
+                spaceBetween={`12px`}
                 style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
               >
                 <SwiperSlide>
@@ -214,7 +214,7 @@ export default function GameInProgressContent({
               </Swiper>
             </BodyContentAreaDoubleColumnStyled>
           ) : (
-            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
+            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `8px`}}>
               {midCardsColumn}
               {leftCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>
@@ -233,13 +233,13 @@ export default function GameInProgressContent({
           style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
         >
           {isPhaseTwo ? (
-            <BodyContentAreaTripleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+            <BodyContentAreaTripleColumnStyled container style={{gap: `8px`}}>
               {midCardsColumn}
               {rightCardsColumn}
               {leftCardsColumn}
             </BodyContentAreaTripleColumnStyled>
           ) : (
-            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
+            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `8px`}}>
               {midCardsColumn}
               {leftCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>
