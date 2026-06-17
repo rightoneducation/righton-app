@@ -3,6 +3,7 @@ import { GameSessionState, IGameSession } from '@righton/networking';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { ScreenSize } from '../lib/HostModels';
 import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
 import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
@@ -18,6 +19,7 @@ interface HeaderContentProps {
   isIncorrect: boolean;
   totalTime: number;
   isAddTime?: boolean;
+  screenSize?: ScreenSize;
 } // eslint-disable-line
 
 export default function HeaderContent({
@@ -25,6 +27,7 @@ export default function HeaderContent({
   isIncorrect,
   totalTime,
   isAddTime,
+  screenSize,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
@@ -62,7 +65,7 @@ export default function HeaderContent({
   
   return (
     <HeaderStackContainerStyled>
-      <Container style={{maxWidth: 1024, paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}>
+      <Container style={{maxWidth: screenSize === ScreenSize.MEDIUM ? 'none' : 720, paddingLeft: screenSize === ScreenSize.LARGE ? 0 : screenSize === ScreenSize.MEDIUM ? `${theme.sizing.lgPadding}px` : `${theme.sizing.mdPadding}px`, paddingRight: screenSize === ScreenSize.LARGE ? 0 : screenSize === ScreenSize.MEDIUM ? `${theme.sizing.lgPadding}px` : `${theme.sizing.mdPadding}px`}}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <QuestionIndicator

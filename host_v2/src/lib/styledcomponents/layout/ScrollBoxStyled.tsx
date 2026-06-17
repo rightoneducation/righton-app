@@ -10,7 +10,15 @@ export default styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: `16px`,
-  paddingBottom: `${theme.sizing.mdPadding}px`, // added so box shadow shows around edge of card
+  // "bleed" the scroll container outward: horizontal padding gives the card's box
+  // shadow room inside this overflow clip, while the matching negative margin cancels
+  // that padding for layout so the cards keep their full width (shadow lives in the
+  // gap/outer space instead of narrowing content). bottom padding does the same vertically.
+  paddingLeft: `${theme.sizing.xSmPadding}px`,
+  paddingRight: `${theme.sizing.xSmPadding}px`,
+  paddingBottom: `${theme.sizing.mdPadding}px`,
+  marginLeft: `-${theme.sizing.xSmPadding}px`,
+  marginRight: `-${theme.sizing.xSmPadding}px`,
   overflow: 'auto',
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
   '&::-webkit-scrollbar': {

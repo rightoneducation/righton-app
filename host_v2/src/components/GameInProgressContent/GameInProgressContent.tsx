@@ -186,7 +186,7 @@ export default function GameInProgressContent({
           style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
         >
           {isPhaseTwo ? (
-            <BodyContentAreaDoubleColumnStyled container style={{gap: `8px`}} screenSize={screenSize}>
+            <BodyContentAreaDoubleColumnStyled container style={{gap: `8px`, maxWidth: '100%'}} screenSize={screenSize}>
               <Swiper
                 modules={[Pagination]}
                 pagination={{
@@ -198,23 +198,26 @@ export default function GameInProgressContent({
                     return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
                   },
                 }}
-                slidesPerView={2.1}
-                spaceBetween={`12px`}
-                style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+                slidesPerView='auto'
+                spaceBetween={12}
+                slidesOffsetBefore={theme.sizing.lgPadding}
+                slidesOffsetAfter={theme.sizing.lgPadding}
+                style={{height: '100%', width: '100%'}}
               >
-                <SwiperSlide>
+                {/* width shows 2 full columns + a ~40px peek of the next; 96 = 32 offset + 2x12 gap + 40 peek */}
+                <SwiperSlide style={{ width: 'calc((100% - 96px) / 2)' }}>
                   {midCardsColumn}
                 </SwiperSlide>
-                <SwiperSlide>
+                <SwiperSlide style={{ width: 'calc((100% - 96px) / 2)' }}>
                   {rightCardsColumn}
                 </SwiperSlide>
-                <SwiperSlide>
+                <SwiperSlide style={{ width: 'calc((100% - 96px) / 2)' }}>
                   {leftCardsColumn}
                 </SwiperSlide>
               </Swiper>
             </BodyContentAreaDoubleColumnStyled>
           ) : (
-            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `8px`}}>
+            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `16px`}}>
               {midCardsColumn}
               {leftCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>
@@ -233,13 +236,13 @@ export default function GameInProgressContent({
           style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
         >
           {isPhaseTwo ? (
-            <BodyContentAreaTripleColumnStyled container style={{gap: `8px`}}>
+            <BodyContentAreaTripleColumnStyled container style={{gap: `16px`}}>
               {midCardsColumn}
               {rightCardsColumn}
               {leftCardsColumn}
             </BodyContentAreaTripleColumnStyled>
           ) : (
-            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `8px`}}>
+            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `16px`}}>
               {midCardsColumn}
               {leftCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>

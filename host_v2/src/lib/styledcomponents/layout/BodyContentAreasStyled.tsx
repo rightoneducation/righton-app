@@ -6,13 +6,13 @@ import { ScreenSize } from '../../HostModels';
 (body stack container -> body box upper, body box lower, body content area) */
 export const BodyContentAreaDoubleColumnStyled = styled(Grid, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize?: ScreenSize }>(({ theme, screenSize }) => ({
+})<{ screenSize?: ScreenSize }>(({ screenSize }) => ({
   position: 'absolute',
   top: '0',
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: `${theme.breakpoints.values.lg}px`,
+  maxWidth: '720px',
   width: '100%',
   height: '100%',
   overflow: 'hidden',
@@ -22,17 +22,22 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid, {
 
 
 // content area of body that floats above background layers above - Double Column Page
-// padding applied in container when not used with Swiper
+// 8px horizontal padding (+16 on maxWidth) reserves outer shadow room so the cards'
+// content still spans 720 (aligned to the header) but the outermost shadows aren't clipped
 export const BodyContentAreaDoubleColumnStyledNoSwiper = styled(BodyContentAreaDoubleColumnStyled)(({ theme }) => ({
-  paddingLeft: `${theme.sizing.xLgPadding}px`, 
-  paddingRight: `${theme.sizing.xLgPadding}px`
+  maxWidth: '736px',
+  paddingLeft: `${theme.sizing.xSmPadding}px`,
+  paddingRight: `${theme.sizing.xSmPadding}px`,
 }));
 
 // content area of body that floats above background layers above - Triple Column Page
+// same 8px outer shadow room; content still spans 1046
 export const BodyContentAreaTripleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled,
 )(({ theme, isShortAnswerEnabled, isHintEnabled }) => ({
-  maxWidth: isShortAnswerEnabled || isHintEnabled ? '1236px' : `${theme.breakpoints.values.lg}px`,
+  maxWidth: '1062px',
+  paddingLeft: `${theme.sizing.xSmPadding}px`,
+  paddingRight: `${theme.sizing.xSmPadding}px`,
   justifyContent: 'center',
 }));
 

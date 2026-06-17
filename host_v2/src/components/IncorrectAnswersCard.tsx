@@ -7,6 +7,15 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 import { BodyCardStyled } from '../lib/styledcomponents/BodyCardStyled';
 import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
 
+// shares the BodyCardStyled look but drops the 8px side margins: in the gameplay
+// columns the ScrollBox already reserves the shadow gutter, so this card should
+// span its column edge-to-edge like the question card above it. A derived styled
+// component (not sx) is used so it reliably wins the specificity tie with the base.
+const IncorrectAnswersCardStyled = styled(BodyCardStyled)({
+  marginLeft: 0,
+  marginRight: 0,
+});
+
 interface IncorrectAnswersCardProps {
   responses: IHostTeamAnswersResponse[] | null;
   isShortAnswerEnabled: boolean;
@@ -19,14 +28,14 @@ export default function IncorrectAnswersCard({
   const theme = useTheme(); // eslint-disable-line
 
   return (
-    <BodyCardStyled elevation={6}>
+    <IncorrectAnswersCardStyled elevation={6}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
-        <Box style={{ width: '100%', gap: '16px' }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
           <Typography variant='rubikBody'> Incorrect Answer </Typography>
 
-          {responses && responses.map((response, index) => (
+          {responses && responses.map((response) => (
             response.multiChoiceCharacter !== `…` && (
-            <>
+            <Box key={uuidv4()} sx={{ display: 'flex', flexDirection: 'column' }}>
               <AnswerOptionStyled
                 sx={{
                   backgroundColor: theme.palette.primary.lightGrey,
@@ -75,10 +84,10 @@ export default function IncorrectAnswersCard({
                       </Typography>
                     </Box>
               </BodyCardContainerStyled>
-            </>
+            </Box>
           )))}
         </Box>
       </BodyCardContainerStyled>
-    </BodyCardStyled>
+    </IncorrectAnswersCardStyled>
   );
 }

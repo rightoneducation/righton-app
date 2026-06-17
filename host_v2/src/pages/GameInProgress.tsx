@@ -90,6 +90,7 @@ export default function GameInProgress({
         isIncorrect={isIncorrect}
         totalTime={totalTime}
         isAddTime={isAddTime}
+        screenSize={screenSize}
       />
       </motion.div>
       <BodyStackContainerStyled>

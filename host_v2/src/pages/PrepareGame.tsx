@@ -101,6 +101,7 @@ export default function PrepareGame( {
             isCorrect={false}
             isIncorrect={false}
             totalTime={0}
+            screenSize={screenSize}
           />
         </motion.div>
         <BodyStackContainerStyled>

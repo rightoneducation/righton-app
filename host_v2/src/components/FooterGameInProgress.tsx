@@ -20,25 +20,27 @@ const FooterContainer = styled(Box, {
   bottom: '0',
   margin: 'auto',
   width: '100%',
-  maxWidth: '700px', // desktop width tracks to the max width
+  maxWidth: '720px', // matches the header/content max width (with 16px side padding inset)
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-end',
-  paddingTop: '16px',
+  paddingTop: screenSize === ScreenSize.SMALL ? '12px' : '32px',
   // left/right: 24px on mobile, 48px (32+16) on tablet, 16px on desktop
   paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : screenSize === ScreenSize.MEDIUM ? '48px' : '16px',
   paddingRight: screenSize === ScreenSize.SMALL ? '24px' : screenSize === ScreenSize.MEDIUM ? '48px' : '16px',
-  paddingBottom: screenSize === ScreenSize.SMALL ? '64px' : '44px',
+  paddingBottom: screenSize === ScreenSize.SMALL ? '48px' : '44px',
   boxSizing: 'border-box',
 }));
 
-const InnerFooterContainer = styled(Box)({
+const InnerFooterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   width: '100%',
-  gap: 16
-});
+  gap: screenSize === ScreenSize.SMALL ? '12px' : '16px',
+}));
 
 interface FootGameInProgressProps {
   currentState: GameSessionState;
@@ -165,7 +167,7 @@ function FooterGameInProgress({
   else if (currentState === GameSessionState.PHASE_1_DISCUSS) timerMessage = 'Students are reviewing the correct answer and solution steps';
   return (
     <FooterContainer screenSize={screenSize}>
-      <InnerFooterContainer>
+      <InnerFooterContainer screenSize={screenSize}>
         { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS))) && (
           <PaginationContainerStyled
             className="swiper-pagination-container"
