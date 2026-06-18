@@ -84,15 +84,17 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
-  const listGameSessions = /* GraphQL */ `query ListGameSessions(
-    $filter: ModelGameSessionFilterInput
+  // Indexed lookup against the byCode GSI. Unlike listGameSessions + filter
+  // (which is a scan that only inspects the first page), this returns every
+  // session with the given gameCode regardless of table size.
+  const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
+    $gameCode: Int!
     $limit: Int
     $nextToken: String
   ) {
-    listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    gameSessionByCode(gameCode: $gameCode, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        gameCode
       }
       nextToken
       __typename
@@ -270,6 +272,7 @@ mutation CreateGameSession(
   createGameSession(input: $input, condition: $condition) {
     id
     gameId
+    sessionData
     startTime
     phaseOneTime
     phaseTwoTime
@@ -384,40 +387,95 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
   let statusCode = 200;
   let responseBody ={};
 
+  const MAX_GAME_CODE_ATTEMPTS = 20;
   const generateUniqueGameCode = async () => {
-    let gameCodeIsUnique = false;
-    let gameCode = 0;
-    while (!gameCodeIsUnique){
-      gameCode = Math.floor(Math.random() * 9000) + 1000;
-      const matchingGameSessionsRequest = await createAndSignRequest(listGameSessions, { filter: { gameCode: { eq: gameCode } } });
-      const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
-      const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
-      const numOfMatches = matchingGameSessionsResponseParsed.data.listGameSessions.items.length;
-      if (numOfMatches === 0)
-        gameCodeIsUnique = true;
+    console.log('=== Starting game code generation ===');
+    // Creating the game session is the primary operation — it must always
+    // complete. So this never throws: a lookup error/blip just triggers a retry
+    // with a fresh code, and if we somehow can't confirm uniqueness within the
+    // attempt budget we fall back to a best-effort code rather than block the user.
+    let lastGameCode = Math.floor(Math.random() * 9000) + 1000;
+    for (let attempts = 1; attempts <= MAX_GAME_CODE_ATTEMPTS; attempts++) {
+      const gameCode = Math.floor(Math.random() * 9000) + 1000;
+      lastGameCode = gameCode;
+      console.log(`Attempt ${attempts}: Generated game code: ${gameCode}`);
+
+      try {
+        const matchingGameSessionsRequest = await createAndSignRequest(gameSessionByCode, { gameCode });
+        const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
+        const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
+
+        // A query error must NOT be read as "no matches" (that could hand out a
+        // code already in use). Don't trust it and don't fail — just try again.
+        if (matchingGameSessionsResponseParsed.errors || !matchingGameSessionsResponseParsed.data?.gameSessionByCode) {
+          console.warn(`Attempt ${attempts}: gameSessionByCode lookup error, retrying:`, JSON.stringify(matchingGameSessionsResponseParsed.errors ?? matchingGameSessionsResponseParsed));
+          continue;
+        }
+
+        const numOfMatches = matchingGameSessionsResponseParsed.data.gameSessionByCode.items.length;
+        console.log(`Found ${numOfMatches} matching game sessions`);
+
+        if (numOfMatches === 0) {
+          console.log(`=== Game code generation complete: ${gameCode} (${attempts} attempt(s)) ===`);
+          return gameCode;
+        }
+        console.log(`Game code ${gameCode} is not unique, trying again...`);
+      } catch (lookupError) {
+        // Network/exception on a single lookup — retry rather than fail creation.
+        console.warn(`Attempt ${attempts}: gameSessionByCode threw, retrying:`, lookupError?.message);
+      }
     }
-    return gameCode;
+
+    // Never block game creation. Return a best-effort code and log loudly so this
+    // can be alarmed on — with expiry working and a 9000-code pool, reaching here
+    // means the pool is near-full or the lookup is persistently failing.
+    console.error(`!!! Could not confirm a unique game code after ${MAX_GAME_CODE_ATTEMPTS} attempts; falling back to ${lastGameCode}. Proceeding with game creation.`);
+    return lastGameCode;
   };
 
 
   try {
+    console.log('=== Handler started ===');
+    console.log('Event arguments:', JSON.stringify(event.arguments, null, 2));
+    
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
     const publicPrivate = event.arguments.input.publicPrivate;
+    console.log(`Getting ${publicPrivate} game template with ID: ${gameTemplateId}`);
+    
     const gameTemplateRequest = await createAndSignRequest( publicPrivate === 'Public' ? getPublicGameTemplate : getPrivateGameTemplate, { id: gameTemplateId });
     const gameTemplateResponse = await fetch(gameTemplateRequest);
-    const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json(), publicPrivate);
+    const gameTemplateJson = await gameTemplateResponse.json();
+    console.log('Game template response:', JSON.stringify(gameTemplateJson, null, 2));
+    
+    const gameTemplateParsed = gameTemplateFromAWSGameTemplate(gameTemplateJson, publicPrivate);
+    console.log('Parsed game template:', JSON.stringify(gameTemplateParsed, null, 2));
     const { questionTemplates, questionTemplatesOrder, userId, owner, timesPlayed, ...game } = gameTemplateParsed;
+    console.log(`Found ${questionTemplates?.length || 0} question templates`);
+    
     const uniqueGameCode = await generateUniqueGameCode();
+    console.log(`Using unique game code: ${uniqueGameCode}`);
 
     const questionTemplatesOrderParsed = questionTemplatesOrder ? JSON.parse(questionTemplatesOrder) : null;
     const sortedQuestionTemplates = sortQuestionTemplatesByOrder(questionTemplates, questionTemplatesOrderParsed);
+    console.log(`Sorted ${sortedQuestionTemplates.length} question templates`);
 
     // createGameSession
-    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game, gameCode: uniqueGameCode }});
+    const gameSessionId = uuidv4();
+    console.log(`Creating game session with ID: ${gameSessionId}`);
+
+    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: gameSessionId, ...game, gameCode: uniqueGameCode }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
-    const gameSessionParsed = gameSessionJson.data.createGameSession; 
+    console.log('Game session creation response:', JSON.stringify(gameSessionJson, null, 2));
+    
+    const gameSessionParsed = gameSessionJson.data.createGameSession;
+    
+    // Check if game session creation failed
+    if (!gameSessionParsed) {
+      const errorMessage = gameSessionJson.errors ? gameSessionJson.errors[0]?.message : 'Game session creation failed';
+      throw new Error(`Failed to create game session: ${errorMessage}`);
+    } 
 
     // update gameTemplate timesPlayed
     const newTimesPlayed = timesPlayed + 1;
@@ -425,7 +483,9 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
     const timesPlayedGameResponse = await fetch(timesPlayedGameRequest);
     
     // createQuestions
+    console.log('=== Creating questions ===');
     const promises = sortedQuestionTemplates.map(async (question, index) => {
+      console.log(`Processing question ${index + 1}/${sortedQuestionTemplates.length}: ${question.title || question.id}`);
       const {choices, owner, userId, version, createdAt, title, updatedAt, gameId, timesPlayed, __typename, ...trimmedQuestion} = question;
       const shuffledChoices = JSON.parse(choices).sort(() => Math.random() - 0.5);
       
@@ -455,19 +515,28 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
       return questionParsed;
     });
     const questionsParsed = await Promise.all(promises);
+    console.log(`=== Created ${questionsParsed.length} questions successfully ===`);
 
     // update Owner to increment gamesUsed
     const gameTemplateUserId = gameTemplateParsed.userId;
+    console.log(`Updating user gamesUsed count for user: ${gameTemplateUserId}`);
+    
     const userRequest = await createAndSignRequest(getUser, { id: gameTemplateUserId });
     const userResponse = await fetch(userRequest);
     const userJson = await userResponse.json();
     const userParsed = userJson.data.getUser;
     const gamesUsed = userParsed.gamesUsed + 1;
+    
+    console.log(`User had ${userParsed.gamesUsed} games used, updating to ${gamesUsed}`);
+    
     const userUpdateRequest = await createAndSignRequest(updateUser, { input: { id: gameTemplateUserId, gamesUsed } });
     const userUpdateResponse = await fetch(userUpdateRequest);
     const userUpdateJson = await userUpdateResponse.json();
     const userUpdateParsed = userUpdateJson.data.updateUser;
+    
     responseBody = gameSessionParsed.id;
+    console.log('=== Handler completed successfully ===');
+    console.log(`Returning game session ID: ${responseBody}`);
   } catch (error) {
     console.error("Error occurred:", error);
     // Log detailed error information
