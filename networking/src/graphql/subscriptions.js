@@ -117,15 +117,6 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -165,15 +156,6 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -213,15 +195,6 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -261,15 +234,6 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -309,15 +273,6 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -357,15 +312,6 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -405,15 +351,6 @@ export const onCreateDraftGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          draftQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -453,15 +390,6 @@ export const onUpdateDraftGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          draftQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -501,15 +429,6 @@ export const onDeleteDraftGameTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       questionTemplates {
-        items {
-          id
-          draftGameTemplateID
-          draftQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -548,15 +467,6 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -594,15 +504,6 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -640,15 +541,6 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -686,15 +578,6 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -732,15 +615,6 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -778,15 +652,6 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -824,15 +689,6 @@ export const onCreateDraftQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          draftGameTemplateID
-          draftQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -870,15 +726,6 @@ export const onUpdateDraftQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          draftGameTemplateID
-          draftQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -916,15 +763,6 @@ export const onDeleteDraftQuestionTemplate = /* GraphQL */ `
       imageUrl
       timesPlayed
       gameTemplates {
-        items {
-          id
-          draftGameTemplateID
-          draftQuestionTemplateID
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -948,19 +786,6 @@ export const onCreateGameSession = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       teams {
-        items {
-          id
-          name
-          score
-          selectedAvatarIndex
-          createdAt
-          updatedAt
-          gameSessionTeamsId
-          teamQuestionId
-          teamQuestionOrder
-          teamQuestionGameSessionId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -974,26 +799,6 @@ export const onCreateGameSession = /* GraphQL */ `
       currentTimer
       sessionData
       questions {
-        items {
-          id
-          text
-          choices
-          answerSettings
-          answerData
-          hints
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          isConfidenceEnabled
-          isShortAnswerEnabled
-          isHintEnabled
-          gameSessionId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1014,19 +819,6 @@ export const onUpdateGameSession = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       teams {
-        items {
-          id
-          name
-          score
-          selectedAvatarIndex
-          createdAt
-          updatedAt
-          gameSessionTeamsId
-          teamQuestionId
-          teamQuestionOrder
-          teamQuestionGameSessionId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1040,26 +832,6 @@ export const onUpdateGameSession = /* GraphQL */ `
       currentTimer
       sessionData
       questions {
-        items {
-          id
-          text
-          choices
-          answerSettings
-          answerData
-          hints
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          isConfidenceEnabled
-          isShortAnswerEnabled
-          isHintEnabled
-          gameSessionId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1080,19 +852,6 @@ export const onDeleteGameSession = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       teams {
-        items {
-          id
-          name
-          score
-          selectedAvatarIndex
-          createdAt
-          updatedAt
-          gameSessionTeamsId
-          teamQuestionId
-          teamQuestionOrder
-          teamQuestionGameSessionId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1106,26 +865,6 @@ export const onDeleteGameSession = /* GraphQL */ `
       currentTimer
       sessionData
       questions {
-        items {
-          id
-          text
-          choices
-          answerSettings
-          answerData
-          hints
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          isConfidenceEnabled
-          isShortAnswerEnabled
-          isHintEnabled
-          gameSessionId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1161,15 +900,6 @@ export const onCreateTeam = /* GraphQL */ `
         __typename
       }
       teamMembers {
-        items {
-          id
-          isFacilitator
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1211,15 +941,6 @@ export const onUpdateTeam = /* GraphQL */ `
         __typename
       }
       teamMembers {
-        items {
-          id
-          isFacilitator
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1261,15 +982,6 @@ export const onDeleteTeam = /* GraphQL */ `
         __typename
       }
       teamMembers {
-        items {
-          id
-          isFacilitator
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1293,25 +1005,6 @@ export const onCreateTeamMember = /* GraphQL */ `
       id
       isFacilitator
       answers {
-        items {
-          id
-          isCorrect
-          isSubmitted
-          isShortAnswerEnabled
-          currentState
-          currentQuestionIndex
-          questionId
-          teamMemberAnswersId
-          teamAnswersId
-          teamName
-          text
-          answer
-          confidenceLevel
-          hint
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1331,25 +1024,6 @@ export const onUpdateTeamMember = /* GraphQL */ `
       id
       isFacilitator
       answers {
-        items {
-          id
-          isCorrect
-          isSubmitted
-          isShortAnswerEnabled
-          currentState
-          currentQuestionIndex
-          questionId
-          teamMemberAnswersId
-          teamAnswersId
-          teamName
-          text
-          answer
-          confidenceLevel
-          hint
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1369,25 +1043,6 @@ export const onDeleteTeamMember = /* GraphQL */ `
       id
       isFacilitator
       answers {
-        items {
-          id
-          isCorrect
-          isSubmitted
-          isShortAnswerEnabled
-          currentState
-          currentQuestionIndex
-          questionId
-          teamMemberAnswersId
-          teamAnswersId
-          teamName
-          text
-          answer
-          confidenceLevel
-          hint
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -1503,10 +1158,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -1534,10 +1185,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1581,10 +1228,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -1612,10 +1255,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1659,10 +1298,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -1690,10 +1325,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1737,10 +1368,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -1768,10 +1395,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1815,10 +1438,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -1846,10 +1465,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1893,10 +1508,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -1924,10 +1535,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -1971,10 +1578,6 @@ export const onCreateDraftGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -2002,10 +1605,6 @@ export const onCreateDraftGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -2049,10 +1648,6 @@ export const onUpdateDraftGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -2080,10 +1675,6 @@ export const onUpdateDraftGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -2127,10 +1718,6 @@ export const onDeleteDraftGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         timesPlayed
-        questionTemplates {
-          nextToken
-          __typename
-        }
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -2158,10 +1745,6 @@ export const onDeleteDraftGameQuestions = /* GraphQL */ `
         standard
         imageUrl
         timesPlayed
-        gameTemplates {
-          nextToken
-          __typename
-        }
         gameTemplatesCount
         createdAt
         updatedAt
@@ -2185,19 +1768,6 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       teams {
-        items {
-          id
-          name
-          score
-          selectedAvatarIndex
-          createdAt
-          updatedAt
-          gameSessionTeamsId
-          teamQuestionId
-          teamQuestionOrder
-          teamQuestionGameSessionId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -2211,26 +1781,6 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
       currentTimer
       sessionData
       questions {
-        items {
-          id
-          text
-          choices
-          answerSettings
-          answerData
-          hints
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          isConfidenceEnabled
-          isShortAnswerEnabled
-          isHintEnabled
-          gameSessionId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -2246,25 +1796,6 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
       id
       isFacilitator
       answers {
-        items {
-          id
-          isCorrect
-          isSubmitted
-          isShortAnswerEnabled
-          currentState
-          currentQuestionIndex
-          questionId
-          teamMemberAnswersId
-          teamAnswersId
-          teamName
-          text
-          answer
-          confidenceLevel
-          hint
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -2302,15 +1833,6 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `
         __typename
       }
       teamMembers {
-        items {
-          id
-          isFacilitator
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -2352,15 +1874,6 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `
         __typename
       }
       teamMembers {
-        items {
-          id
-          isFacilitator
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-          __typename
-        }
         nextToken
         __typename
       }
@@ -2402,15 +1915,6 @@ export const onTeamUpdateByGameSessionId = /* GraphQL */ `
         __typename
       }
       teamMembers {
-        items {
-          id
-          isFacilitator
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-          __typename
-        }
         nextToken
         __typename
       }
