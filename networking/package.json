@@ -54,5 +54,13 @@
   ],
   "main": "./lib/src/index.js",
   "module": "./lib/src/index.js",
-  "types": "./lib/src/index.d.ts"
+  "types": "./lib/src/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
