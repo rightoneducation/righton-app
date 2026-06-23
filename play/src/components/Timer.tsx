@@ -66,6 +66,13 @@ export default function Timer({
   const prevTimeRef = useRef<number | null>(null);
   const originalTimeRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(isPaused);
+  // the rAF loop below only restarts when its effect deps change, so the
+  // updateTimer closure (and the handleTimerIsFinished it captured) goes stale;
+  // route the call through a ref so expiry always invokes the latest callback
+  const handleTimerIsFinishedRef = useRef(handleTimerIsFinished);
+  useEffect(() => {
+    handleTimerIsFinishedRef.current = handleTimerIsFinished;
+  });
 
   const getTimerString = (currentTimeInput: number) => {
     const currentTime = Math.trunc(currentTimeInput / 1000);
@@ -92,8 +99,8 @@ export default function Timer({
         originalTimeRef.current = timestamp;
       }
       if (currentTimeMilli.current <= 0) {
-        handleTimerIsFinished();
-      } 
+        handleTimerIsFinishedRef.current();
+      }
       else {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);

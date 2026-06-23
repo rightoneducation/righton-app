@@ -4,21 +4,49 @@ import {
   styled,
   useMediaQuery,
 } from '@mui/material';
-import { PlayButtonShape } from '../PlayButtonModels';
+import { ButtonType, PlayButtonShape } from '../PlayButtonModels';
 
 type PlayButtonStyledProps = {
   buttonShape: PlayButtonShape;
+  buttonType?: ButtonType;
 };
 
 type PlayShapeProp = { buttonShape: PlayButtonShape };
 
 export const PlayButtonStyled = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'buttonShape',
-})<PlayButtonStyledProps>(({ theme }) => {
+  shouldForwardProp: (prop) => prop !== 'buttonShape' && prop !== 'buttonType',
+})<PlayButtonStyledProps>(({ theme, buttonType }) => {
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const color = theme.palette.designSystem.surface.pink;
+  if (buttonType === ButtonType.DONTREJOIN || buttonType === ButtonType.QUIT) {
+    const outlineColor = theme.palette.designSystem.surface.play;
+    return {
+      width: isDesktop ? '355px' : '280px',
+      height: '32px',
+      borderRadius: '8px',
+      textTransform: 'none',
+      padding: 0,
+      background: 'transparent',
+      border: `2px solid ${outlineColor}`,
+      color: outlineColor,
+      boxSizing: 'border-box',
+      '& .MuiTypography-root': {
+        color: outlineColor,
+      },
+      '&:hover': {
+        background: 'transparent',
+      },
+      '&.Mui-disabled': {
+        opacity: 0.3,
+        background: 'transparent',
+        border: `2px solid ${outlineColor}`,
+        color: outlineColor,
+        boxShadow: 'none',
+      }
+    };
+  }
   return {
-    width: isDesktop ? '135px' : '280px',
+    width: isDesktop ? '355px' : '280px',
     height: '32px',
     borderRadius: '8px',
     textTransform: 'none',

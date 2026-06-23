@@ -212,6 +212,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -265,6 +266,169 @@ export const listPublicGameTemplates = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicGameTemplatesByUserDate = /* GraphQL */ `
+  query PublicGameTemplatesByUserDate(
+    $userId: String!
+    $updatedAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicGameTemplatesByUserDate(
+      userId: $userId
+      updatedAt: $updatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicGameTemplatesByUserPublicQuestionTemplatesCount = /* GraphQL */ `
+  query PublicGameTemplatesByUserPublicQuestionTemplatesCount(
+    $userId: String!
+    $questionTemplatesCount: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicGameTemplatesByUserPublicQuestionTemplatesCount(
+      userId: $userId
+      questionTemplatesCount: $questionTemplatesCount
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        timesPlayed
+        questionTemplates {
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicGameTemplatesByUserGrade = /* GraphQL */ `
+  query PublicGameTemplatesByUserGrade(
+    $userId: String!
+    $grade: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicGameTemplatesByUserGrade(
+      userId: $userId
+      grade: $grade
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -318,6 +482,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -371,6 +536,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -424,6 +590,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -462,6 +629,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -515,6 +683,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -568,6 +737,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -621,6 +791,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -674,6 +845,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -712,6 +884,7 @@ export const getDraftGameTemplate = /* GraphQL */ `
       description
       lowerCaseDescription
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -765,6 +938,7 @@ export const listDraftGameTemplates = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -818,6 +992,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -871,6 +1046,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -924,6 +1100,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -963,6 +1140,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -1014,6 +1192,163 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicQuestionTemplatesByUserDate = /* GraphQL */ `
+  query PublicQuestionTemplatesByUserDate(
+    $userId: String!
+    $updatedAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicQuestionTemplatesByUserDate(
+      userId: $userId
+      updatedAt: $updatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicQuestionTemplatesByUserPublicGameTemplatesCount = /* GraphQL */ `
+  query PublicQuestionTemplatesByUserPublicGameTemplatesCount(
+    $userId: String!
+    $gameTemplatesCount: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicQuestionTemplatesByUserPublicGameTemplatesCount(
+      userId: $userId
+      gameTemplatesCount: $gameTemplatesCount
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        timesPlayed
+        gameTemplates {
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicQuestionTemplatesByUserGrade = /* GraphQL */ `
+  query PublicQuestionTemplatesByUserGrade(
+    $userId: String!
+    $grade: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicQuestionTemplatesByUserGrade(
+      userId: $userId
+      grade: $grade
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        publicPrivateType
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1065,6 +1400,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1116,6 +1452,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1167,6 +1504,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1203,6 +1541,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -1254,6 +1593,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1305,6 +1645,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1356,6 +1697,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1407,6 +1749,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1443,6 +1786,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `
       instructions
       answerSettings
       ccss
+      ccssDescription
       domain
       cluster
       grade
@@ -1494,6 +1838,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1545,6 +1890,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1596,6 +1942,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -1647,6 +1994,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2163,6 +2511,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2195,6 +2544,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2245,6 +2595,7 @@ export const listPublicGameQuestions = /* GraphQL */ `
           description
           lowerCaseDescription
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -2273,6 +2624,7 @@ export const listPublicGameQuestions = /* GraphQL */ `
           instructions
           answerSettings
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -2313,6 +2665,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2345,6 +2698,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2395,6 +2749,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `
           description
           lowerCaseDescription
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -2423,6 +2778,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `
           instructions
           answerSettings
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -2463,6 +2819,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
         description
         lowerCaseDescription
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2495,6 +2852,7 @@ export const getDraftGameQuestions = /* GraphQL */ `
         instructions
         answerSettings
         ccss
+        ccssDescription
         domain
         cluster
         grade
@@ -2545,6 +2903,7 @@ export const listDraftGameQuestions = /* GraphQL */ `
           description
           lowerCaseDescription
           ccss
+          ccssDescription
           domain
           cluster
           grade
@@ -2573,6 +2932,7 @@ export const listDraftGameQuestions = /* GraphQL */ `
           instructions
           answerSettings
           ccss
+          ccssDescription
           domain
           cluster
           grade

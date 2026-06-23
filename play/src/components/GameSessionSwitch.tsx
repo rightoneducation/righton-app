@@ -131,8 +131,11 @@ export default function GameSessionSwitch({
       return (
         <GameInProgress
           {...gameSession}
-          // adding a key here to trigger a rerender of the component, resetting backendAnswer after answering phases
-          key={uuidv4()}
+          // Remount (resetting backendAnswer) when entering a discuss phase for a
+          // question. A stable key keyed on state+question does this on the actual
+          // transition only — uuidv4() here remounted on every render, replaying
+          // entrance animations and resetting state whenever newPoints/timer updated.
+          key={`${currentState}-${gameSession.currentQuestionIndex}`}
           apiClients={apiClients}
           teamName={localModel.teamName}
           teamMemberAnswersId={localModel.teamMemberAnswersId}

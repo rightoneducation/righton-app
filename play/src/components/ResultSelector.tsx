@@ -142,7 +142,7 @@ export default function ResultSelector({
           answerStatus !== AnswerState.DEFAULT &&
           (answerStatus === AnswerState.SELECTED ? (
             <Tooltip
-              title="Your Answer"
+              title="Your Phase 2 Answer"
               placement="top"
               arrow
               enterTouchDelay={0}

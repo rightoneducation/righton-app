@@ -25,6 +25,7 @@ export function PlayButtonBlock({
   return (
     <PlayButtonBlockStyled
       buttonShape={buttonObj.shape}
+      buttonType={buttonType}
       disabled={!isEnabled}
       onClick={onClick}
       data-testid={dataTestId}

@@ -5,16 +5,16 @@
       "button": "Unete al juego"
     },
     "rejoinmodal": {
-      "title1": "Hemos detectado que te desconectaron de un juego en curso.",
-      "title2": "¿Te gustaría volver a unirte?",
+      "title1": "¿Volver a unirte a tu juego?",
+      "title2": "Tu juego sigue en curso.",
       "button1": "Sí",
       "button2": "No"
     },
     "gamecode": {
       "title": "Ingrese el código del juego",
       "button": "Unirse",
-      "error1": "No se puede unir a este juego.",
-      "error2": "Comprueba el código del juego e inténtalo de nuevo."
+      "error1": "No se puede unir\na este juego.",
+      "error2": "Comprueba el código del juego\ne inténtalo de nuevo."
     },
     "playername": {
       "title": "Introduzca su nombre",
@@ -27,7 +27,7 @@
       "description2": "Esto se utilizará para identificarte durante el juego."
     },
     "selectavatar": {
-      "title": "Elige tu avatar",
+      "title": "¡Elige tu avatar!",
       "button": "Elegir"
     }
   },
@@ -101,8 +101,9 @@
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
       "incorrectanswercolumn": "Respuestas Incorrectas",
-      "correcttext": "Correcta!",
-      "nicetrytext": "Buen intento",
+      "correcttext": "¡Lo entendiste!",
+      "nicetrytext1": "¡Buen intento!",
+      "nicetrytext2": "La respuesta es:",
       "correctanswertext": "La respuesta es...",
       "responses": "Respuestas de respuesta",
       "hinttext": "Compartiste la siguiente pista:"
@@ -123,14 +124,14 @@
       "title": "¡Felicidades!",
       "points1": "Has ganado ",
       "points2": " puntos",
-      "top5": "¡Estás entre los 5 mejores!",
+      "top5": "¡Estás entre los\n5 mejores!",
       "greatjob": "¡Buen trabajo!",
       "button": "Ver clasificación"
     }
   },
   "error": {
     "connect": {
-      "title1": "Se ha producido un error con el siguiente mensaje de error:",
+      "title1": "Se ha producido un error:",
       "gamesessionerror": "Sesión de juego no encontrada",
       "subscriptionerror": "Subscription could not be established",
       "button1": "No se pudo establecer la suscripción",

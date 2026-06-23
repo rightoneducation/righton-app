@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, styled } from '@mui/material';
+import { Typography, Box, styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { CloudFrontDistributionUrl } from '@righton/networking';
@@ -26,6 +26,16 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+
+  // Split into sentences at terminator-then-whitespace so decimals/currency
+  // (e.g. "3.5") aren't broken up. Trim and drop any empties.
+  const sentences = questionText
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length > 0);
+  // The question is any sentence containing '?'; if none has one, bold the last.
+  const hasQuestionMark = sentences.some((sentence) => sentence.includes('?'));
+
   return (
     <QuestionCardStyled elevation={10}>
       <BodyCardContainerStyled>
@@ -33,7 +43,30 @@ export default function QuestionCard({
           src={`${CloudFrontDistributionUrl}${imageUrl}`}
           alt="Question"
         />
-        <Typography variant="body1" sx={{padding: `${theme.sizing.mdPadding}px`, whiteSpace: 'pre-line'}}> {questionText} </Typography>
+        {/* One Typography per sentence so the question sentence can be bolded on its own line */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: `${theme.sizing.extraSmallPadding}px`,
+            padding: `${theme.sizing.mediumPadding}px`,
+          }}
+        >
+          {sentences.map((sentence, index) => {
+            const isQuestion =
+              sentence.includes('?') ||
+              (!hasQuestionMark && index === sentences.length - 1);
+            return (
+              <Typography
+                key={sentence}
+                variant="body1"
+                sx={{ whiteSpace: 'pre-line', fontWeight: isQuestion ? 700 : undefined }}
+              >
+                {sentence}
+              </Typography>
+            );
+          })}
+        </Box>
       </BodyCardContainerStyled>
     </QuestionCardStyled>
   );

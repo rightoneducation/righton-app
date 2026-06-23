@@ -37,5 +37,5 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.SUBMIT]: { shape: PlayButtonShape.GAMEPLAY },
   [ButtonType.SUBMITTED]: { shape: PlayButtonShape.GAMEPLAY },
   [ButtonType.HINT]: { shape: PlayButtonShape.GAMEPLAY },
-  [ButtonType.LEADERBOARD]: { shape: PlayButtonShape.GAMEPLAY, width: '200px' },
+  [ButtonType.LEADERBOARD]: { shape: PlayButtonShape.GAMEPLAY },
 };

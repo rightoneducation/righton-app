@@ -27,11 +27,13 @@ const StyledAnswerBar = styled(LinearProgress)({
 });
 
 const StyledHintBox = styled(Box)({
+  width: '100%',
   display: 'flex',
   flexDirection: 'column',
   gap: '8px',
   borderRadius: '8px',
   border: '2px #CCC solid',
+  boxSizing: 'border-box',
   padding: '12px',
   marginTop: '12px'
 })
@@ -83,6 +85,7 @@ export default function DiscussAnswerCard({
   if (phaseOneResponse && totalAnswers) {
     percent = phaseOneResponse.count / totalAnswers * 100;
   }
+  console.log(newPoints);
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
@@ -98,10 +101,27 @@ export default function DiscussAnswerCard({
             <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>)}
         </Box>
       )}
-        {answerStatus === AnswerState.PLAYER_SELECTED_CORRECT && currentState === GameSessionState.PHASE_1_DISCUSS && (
+        {currentState === GameSessionState.PHASE_1_DISCUSS && (
           <Box sx={{ marginBottom: '16px', width: '100%' }}>
-            <Typography variant="subtitle1" sx={{ whiteSpace: 'pre-line' }}>
-              {resultText}
+            <Typography
+              variant="largeParagraph"
+              sx={{
+                whiteSpace: 'pre-line',
+                color: theme.palette.designSystem.surface.tertiary,
+                display: 'inline-block',
+                transformOrigin: 'left center',
+                '@keyframes discussTextPopIn': {
+                  '0%': { transform: 'scale(0.7)', opacity: 0 },
+                  '60%': { transform: 'scale(1.08)', opacity: 1 },
+                  '100%': { transform: 'scale(1)', opacity: 1 },
+                },
+                animation: 'discussTextPopIn 0.75s ease-out both',
+              }}
+            >
+              { answerStatus === AnswerState.PLAYER_SELECTED_CORRECT 
+               ? <b>{t('gameinprogress.discussanswer.correcttext')}</b>
+               : <><b> {t('gameinprogress.discussanswer.nicetrytext1')} </b> {t('gameinprogress.discussanswer.nicetrytext2')}</>
+              }
             </Typography>
           </Box>
         )}
