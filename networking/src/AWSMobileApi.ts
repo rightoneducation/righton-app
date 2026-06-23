@@ -42,9 +42,6 @@ export type ModelUserConditionInput = {
   and?: Array< ModelUserConditionInput | null > | null,
   or?: Array< ModelUserConditionInput | null > | null,
   not?: ModelUserConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelStringInput = {
@@ -201,7 +198,6 @@ export type ModelPublicGameTemplateConditionInput = {
   and?: Array< ModelPublicGameTemplateConditionInput | null > | null,
   or?: Array< ModelPublicGameTemplateConditionInput | null > | null,
   not?: ModelPublicGameTemplateConditionInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type PublicGameTemplate = {
@@ -365,7 +361,6 @@ export type ModelPrivateGameTemplateConditionInput = {
   and?: Array< ModelPrivateGameTemplateConditionInput | null > | null,
   or?: Array< ModelPrivateGameTemplateConditionInput | null > | null,
   not?: ModelPrivateGameTemplateConditionInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type PrivateGameTemplate = {
@@ -529,7 +524,6 @@ export type ModelDraftGameTemplateConditionInput = {
   and?: Array< ModelDraftGameTemplateConditionInput | null > | null,
   or?: Array< ModelDraftGameTemplateConditionInput | null > | null,
   not?: ModelDraftGameTemplateConditionInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type DraftGameTemplate = {
@@ -689,7 +683,6 @@ export type ModelPublicQuestionTemplateConditionInput = {
   and?: Array< ModelPublicQuestionTemplateConditionInput | null > | null,
   or?: Array< ModelPublicQuestionTemplateConditionInput | null > | null,
   not?: ModelPublicQuestionTemplateConditionInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type UpdatePublicQuestionTemplateInput = {
@@ -771,7 +764,6 @@ export type ModelPrivateQuestionTemplateConditionInput = {
   and?: Array< ModelPrivateQuestionTemplateConditionInput | null > | null,
   or?: Array< ModelPrivateQuestionTemplateConditionInput | null > | null,
   not?: ModelPrivateQuestionTemplateConditionInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type UpdatePrivateQuestionTemplateInput = {
@@ -853,7 +845,6 @@ export type ModelDraftQuestionTemplateConditionInput = {
   and?: Array< ModelDraftQuestionTemplateConditionInput | null > | null,
   or?: Array< ModelDraftQuestionTemplateConditionInput | null > | null,
   not?: ModelDraftQuestionTemplateConditionInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type UpdateDraftQuestionTemplateInput = {
@@ -932,8 +923,6 @@ export type ModelGameSessionConditionInput = {
   and?: Array< ModelGameSessionConditionInput | null > | null,
   or?: Array< ModelGameSessionConditionInput | null > | null,
   not?: ModelGameSessionConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
 };
 
 export type ModelIDInput = {
@@ -1193,8 +1182,6 @@ export type ModelTeamConditionInput = {
   and?: Array< ModelTeamConditionInput | null > | null,
   or?: Array< ModelTeamConditionInput | null > | null,
   not?: ModelTeamConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   gameSessionTeamsId?: ModelIDInput | null,
   teamQuestionId?: ModelIDInput | null,
   teamQuestionOrder?: ModelIntInput | null,
@@ -1229,8 +1216,6 @@ export type ModelTeamMemberConditionInput = {
   and?: Array< ModelTeamMemberConditionInput | null > | null,
   or?: Array< ModelTeamMemberConditionInput | null > | null,
   not?: ModelTeamMemberConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   teamTeamMembersId?: ModelIDInput | null,
 };
 
@@ -1279,8 +1264,6 @@ export type ModelTeamAnswerConditionInput = {
   and?: Array< ModelTeamAnswerConditionInput | null > | null,
   or?: Array< ModelTeamAnswerConditionInput | null > | null,
   not?: ModelTeamAnswerConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
 };
 
 export type ModelConfidenceLevelInput = {
@@ -1321,9 +1304,6 @@ export type ModelPublicGameQuestionsConditionInput = {
   and?: Array< ModelPublicGameQuestionsConditionInput | null > | null,
   or?: Array< ModelPublicGameQuestionsConditionInput | null > | null,
   not?: ModelPublicGameQuestionsConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type UpdatePublicGameQuestionsInput = {
@@ -1348,9 +1328,6 @@ export type ModelPrivateGameQuestionsConditionInput = {
   and?: Array< ModelPrivateGameQuestionsConditionInput | null > | null,
   or?: Array< ModelPrivateGameQuestionsConditionInput | null > | null,
   not?: ModelPrivateGameQuestionsConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type UpdatePrivateGameQuestionsInput = {
@@ -1375,9 +1352,6 @@ export type ModelDraftGameQuestionsConditionInput = {
   and?: Array< ModelDraftGameQuestionsConditionInput | null > | null,
   or?: Array< ModelDraftGameQuestionsConditionInput | null > | null,
   not?: ModelDraftGameQuestionsConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type UpdateDraftGameQuestionsInput = {
@@ -1451,12 +1425,9 @@ export type ModelUserFilterInput = {
   profilePicPath?: ModelStringInput | null,
   favoriteGameTemplateIds?: ModelStringInput | null,
   favoriteQuestionTemplateIds?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
   or?: Array< ModelUserFilterInput | null > | null,
   not?: ModelUserFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export enum ModelSortDirection {
@@ -1499,7 +1470,6 @@ export type ModelPublicGameTemplateFilterInput = {
   and?: Array< ModelPublicGameTemplateFilterInput | null > | null,
   or?: Array< ModelPublicGameTemplateFilterInput | null > | null,
   not?: ModelPublicGameTemplateFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelPublicGameTemplateConnection = {
@@ -1555,7 +1525,6 @@ export type ModelPrivateGameTemplateFilterInput = {
   and?: Array< ModelPrivateGameTemplateFilterInput | null > | null,
   or?: Array< ModelPrivateGameTemplateFilterInput | null > | null,
   not?: ModelPrivateGameTemplateFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelPrivateGameTemplateConnection = {
@@ -1592,7 +1561,6 @@ export type ModelDraftGameTemplateFilterInput = {
   and?: Array< ModelDraftGameTemplateFilterInput | null > | null,
   or?: Array< ModelDraftGameTemplateFilterInput | null > | null,
   not?: ModelDraftGameTemplateFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelDraftGameTemplateConnection = {
@@ -1627,7 +1595,6 @@ export type ModelPublicQuestionTemplateFilterInput = {
   and?: Array< ModelPublicQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelPublicQuestionTemplateFilterInput | null > | null,
   not?: ModelPublicQuestionTemplateFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelPublicQuestionTemplateConnection = {
@@ -1662,7 +1629,6 @@ export type ModelPrivateQuestionTemplateFilterInput = {
   and?: Array< ModelPrivateQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelPrivateQuestionTemplateFilterInput | null > | null,
   not?: ModelPrivateQuestionTemplateFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelPrivateQuestionTemplateConnection = {
@@ -1697,7 +1663,6 @@ export type ModelDraftQuestionTemplateFilterInput = {
   and?: Array< ModelDraftQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelDraftQuestionTemplateFilterInput | null > | null,
   not?: ModelDraftQuestionTemplateFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelDraftQuestionTemplateConnection = {
@@ -1721,8 +1686,6 @@ export type ModelGameSessionFilterInput = {
   title?: ModelStringInput | null,
   currentTimer?: ModelIntInput | null,
   sessionData?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelGameSessionFilterInput | null > | null,
   or?: Array< ModelGameSessionFilterInput | null > | null,
   not?: ModelGameSessionFilterInput | null,
@@ -1777,8 +1740,6 @@ export type ModelTeamFilterInput = {
   name?: ModelStringInput | null,
   score?: ModelIntInput | null,
   selectedAvatarIndex?: ModelIntInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelTeamFilterInput | null > | null,
   or?: Array< ModelTeamFilterInput | null > | null,
   not?: ModelTeamFilterInput | null,
@@ -1792,8 +1753,6 @@ export type ModelTeamMemberFilterInput = {
   id?: ModelIDInput | null,
   isFacilitator?: ModelBooleanInput | null,
   deviceId?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelTeamMemberFilterInput | null > | null,
   or?: Array< ModelTeamMemberFilterInput | null > | null,
   not?: ModelTeamMemberFilterInput | null,
@@ -1815,8 +1774,6 @@ export type ModelTeamAnswerFilterInput = {
   answer?: ModelStringInput | null,
   confidenceLevel?: ModelConfidenceLevelInput | null,
   hint?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelTeamAnswerFilterInput | null > | null,
   or?: Array< ModelTeamAnswerFilterInput | null > | null,
   not?: ModelTeamAnswerFilterInput | null,
@@ -1826,36 +1783,27 @@ export type ModelPublicGameQuestionsFilterInput = {
   id?: ModelIDInput | null,
   publicGameTemplateID?: ModelIDInput | null,
   publicQuestionTemplateID?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelPublicGameQuestionsFilterInput | null > | null,
   or?: Array< ModelPublicGameQuestionsFilterInput | null > | null,
   not?: ModelPublicGameQuestionsFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelPrivateGameQuestionsFilterInput = {
   id?: ModelIDInput | null,
   privateGameTemplateID?: ModelIDInput | null,
   privateQuestionTemplateID?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelPrivateGameQuestionsFilterInput | null > | null,
   or?: Array< ModelPrivateGameQuestionsFilterInput | null > | null,
   not?: ModelPrivateGameQuestionsFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelDraftGameQuestionsFilterInput = {
   id?: ModelIDInput | null,
   draftGameTemplateID?: ModelIDInput | null,
   draftQuestionTemplateID?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelDraftGameQuestionsFilterInput | null > | null,
   or?: Array< ModelDraftGameQuestionsFilterInput | null > | null,
   not?: ModelDraftGameQuestionsFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionUserFilterInput = {
@@ -1876,11 +1824,8 @@ export type ModelSubscriptionUserFilterInput = {
   profilePicPath?: ModelSubscriptionStringInput | null,
   favoriteGameTemplateIds?: ModelSubscriptionStringInput | null,
   favoriteQuestionTemplateIds?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserFilterInput | null > | null,
   or?: Array< ModelSubscriptionUserFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -1952,7 +1897,6 @@ export type ModelSubscriptionPublicGameTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPublicGameTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionPublicGameTemplateFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPrivateGameTemplateFilterInput = {
@@ -1982,7 +1926,6 @@ export type ModelSubscriptionPrivateGameTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPrivateGameTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionPrivateGameTemplateFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionDraftGameTemplateFilterInput = {
@@ -2012,7 +1955,6 @@ export type ModelSubscriptionDraftGameTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionDraftGameTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionDraftGameTemplateFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPublicQuestionTemplateFilterInput = {
@@ -2040,7 +1982,6 @@ export type ModelSubscriptionPublicQuestionTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPublicQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionPublicQuestionTemplateFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPrivateQuestionTemplateFilterInput = {
@@ -2068,7 +2009,6 @@ export type ModelSubscriptionPrivateQuestionTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPrivateQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionPrivateQuestionTemplateFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionDraftQuestionTemplateFilterInput = {
@@ -2096,7 +2036,6 @@ export type ModelSubscriptionDraftQuestionTemplateFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionDraftQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelSubscriptionDraftQuestionTemplateFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionGameSessionFilterInput = {
@@ -2114,11 +2053,8 @@ export type ModelSubscriptionGameSessionFilterInput = {
   title?: ModelSubscriptionStringInput | null,
   currentTimer?: ModelSubscriptionIntInput | null,
   sessionData?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionGameSessionFilterInput | null > | null,
   or?: Array< ModelSubscriptionGameSessionFilterInput | null > | null,
-  gameSessionTeamsId?: ModelSubscriptionIDInput | null,
 };
 
 export type ModelSubscriptionBooleanInput = {
@@ -2131,25 +2067,16 @@ export type ModelSubscriptionTeamFilterInput = {
   name?: ModelSubscriptionStringInput | null,
   score?: ModelSubscriptionIntInput | null,
   selectedAvatarIndex?: ModelSubscriptionIntInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionTeamFilterInput | null > | null,
   or?: Array< ModelSubscriptionTeamFilterInput | null > | null,
-  teamTeamMembersId?: ModelSubscriptionIDInput | null,
-  teamQuestionId?: ModelSubscriptionIDInput | null,
-  teamQuestionOrder?: ModelSubscriptionIntInput | null,
-  teamQuestionGameSessionId?: ModelSubscriptionIDInput | null,
 };
 
 export type ModelSubscriptionTeamMemberFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   isFacilitator?: ModelSubscriptionBooleanInput | null,
   deviceId?: ModelSubscriptionIDInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionTeamMemberFilterInput | null > | null,
   or?: Array< ModelSubscriptionTeamMemberFilterInput | null > | null,
-  teamMemberAnswersId?: ModelSubscriptionIDInput | null,
 };
 
 export type ModelSubscriptionTeamAnswerFilterInput = {
@@ -2167,8 +2094,6 @@ export type ModelSubscriptionTeamAnswerFilterInput = {
   answer?: ModelSubscriptionStringInput | null,
   confidenceLevel?: ModelSubscriptionStringInput | null,
   hint?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionTeamAnswerFilterInput | null > | null,
   or?: Array< ModelSubscriptionTeamAnswerFilterInput | null > | null,
 };
@@ -2177,33 +2102,24 @@ export type ModelSubscriptionPublicGameQuestionsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   publicGameTemplateID?: ModelSubscriptionIDInput | null,
   publicQuestionTemplateID?: ModelSubscriptionIDInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPublicGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionPublicGameQuestionsFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPrivateGameQuestionsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   privateGameTemplateID?: ModelSubscriptionIDInput | null,
   privateQuestionTemplateID?: ModelSubscriptionIDInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionPrivateGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionPrivateGameQuestionsFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionDraftGameQuestionsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   draftGameTemplateID?: ModelSubscriptionIDInput | null,
   draftQuestionTemplateID?: ModelSubscriptionIDInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionDraftGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionDraftGameQuestionsFilterInput | null > | null,
-  owner?: ModelStringInput | null,
 };
 
 export type CreateUserMutationVariables = {
