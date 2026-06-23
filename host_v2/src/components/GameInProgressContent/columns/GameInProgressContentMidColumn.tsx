@@ -48,7 +48,7 @@ export default function GameInProgressContentMidColumn ({
 ){
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-    <ScrollBoxStyled>
+    <ScrollBoxStyled sx={{ gap: '12px' }}>
       <Responses
         currentQuestion={currentQuestion}
         responses={responses}

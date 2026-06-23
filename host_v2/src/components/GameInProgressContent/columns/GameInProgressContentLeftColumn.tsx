@@ -63,7 +63,7 @@ export default function GameInProgressContentLeftColumn({
   }
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
-    <ScrollBoxStyled>
+    <ScrollBoxStyled sx={{ gap: '12px' }}>
       <QuestionCardGameplay
         questionText={currentQuestion.text}
         imageUrl={currentQuestion.imageUrl}

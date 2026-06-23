@@ -41,7 +41,7 @@ export default function GameInProgressContentRightColumn ({
   const theme = useTheme();
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-      <ScrollBoxStyled>
+      <ScrollBoxStyled sx={{ gap: '12px' }}>
         <Responses
           currentQuestion={currentQuestion}
           responses={responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter))}

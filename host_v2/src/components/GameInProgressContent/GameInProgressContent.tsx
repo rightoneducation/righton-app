@@ -150,7 +150,7 @@ export default function GameInProgressContent({
               },
             }}
             slidesPerView='auto'
-            spaceBetween={`8px`}
+            spaceBetween={`12px`}
             style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
           >
             <SwiperSlide>
@@ -199,19 +199,19 @@ export default function GameInProgressContent({
                   },
                 }}
                 slidesPerView='auto'
-                spaceBetween={12}
+                spaceBetween={`16px`}
                 slidesOffsetBefore={theme.sizing.lgPadding}
                 slidesOffsetAfter={theme.sizing.lgPadding}
                 style={{height: '100%', width: '100%'}}
               >
-                {/* width shows 2 full columns + a ~40px peek of the next; 96 = 32 offset + 2x12 gap + 40 peek */}
-                <SwiperSlide style={{ width: 'calc((100% - 96px) / 2)' }}>
+                {/* width shows 2 full columns + a ~40px peek of the next; 104 = 32 offset + 2x16 gap + 40 peek */}
+                <SwiperSlide style={{ width: 'calc((100% - 104px) / 2)' }}>
                   {midCardsColumn}
                 </SwiperSlide>
-                <SwiperSlide style={{ width: 'calc((100% - 96px) / 2)' }}>
+                <SwiperSlide style={{ width: 'calc((100% - 104px) / 2)' }}>
                   {rightCardsColumn}
                 </SwiperSlide>
-                <SwiperSlide style={{ width: 'calc((100% - 96px) / 2)' }}>
+                <SwiperSlide style={{ width: 'calc((100% - 104px) / 2)' }}>
                   {leftCardsColumn}
                 </SwiperSlide>
               </Swiper>
