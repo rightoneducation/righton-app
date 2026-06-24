@@ -217,7 +217,7 @@ export default function GameInProgressContent({
               </Swiper>
             </BodyContentAreaDoubleColumnStyled>
           ) : (
-            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `16px`}}>
+            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `16px`}} screenSize={screenSize}>
               {midCardsColumn}
               {leftCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>
@@ -242,7 +242,7 @@ export default function GameInProgressContent({
               {leftCardsColumn}
             </BodyContentAreaTripleColumnStyled>
           ) : (
-            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `16px`}}>
+            <BodyContentAreaDoubleColumnStyledNoSwiper container style={{gap: `16px`}} screenSize={screenSize}>
               {midCardsColumn}
               {leftCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>

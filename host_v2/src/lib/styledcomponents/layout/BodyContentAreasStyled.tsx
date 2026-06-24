@@ -22,13 +22,30 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid, {
 
 
 // content area of body that floats above background layers above - Double Column Page
-// 8px horizontal padding (+16 on maxWidth) reserves outer shadow room so the cards'
-// content still spans 720 (aligned to the header) but the outermost shadows aren't clipped
-export const BodyContentAreaDoubleColumnStyledNoSwiper = styled(BodyContentAreaDoubleColumnStyled)(({ theme }) => ({
-  maxWidth: '736px',
-  paddingLeft: `${theme.sizing.xSmPadding}px`,
-  paddingRight: `${theme.sizing.xSmPadding}px`,
-}));
+// Large: 8px horizontal padding (+16 on maxWidth) reserves outer shadow room so the cards'
+// content still spans 720 (aligned to the 720-centered large header) but the outermost
+// shadows aren't clipped.
+// Medium: the header is full-width with 32px (lgPadding) side padding
+// (HeaderContent: Container maxWidth 'none' + lgPadding on medium), and phase 2's swiper is
+// full-width with a 32px slidesOffsetBefore/After, so both put their content 32px from the
+// viewport edge. Phase 1 matches by going full-width (maxWidth 100% -> no 720 cap, so no
+// centering margin gets added outside the 32px) with 32px side padding.
+// box-sizing is border-box on both sizes: the base component has height:100% + 44px
+// paddingTop, so under the default content-box the box would be ~44px taller than the body
+// region and poke down into the sticky footer band (the cards' scroll container would bottom
+// out over the footer instead of within the body). border-box folds that padding inside the
+// 100% height so the content stays within the body region and scrolls; it also keeps the
+// medium 32px side padding inside the 100vw width (content-box would overflow by 64px) and
+// makes the large card content span 720 (aligned to the 720-centered large header).
+export const BodyContentAreaDoubleColumnStyledNoSwiper = styled(BodyContentAreaDoubleColumnStyled)(({ theme, screenSize }) => {
+  const isMedium = screenSize === ScreenSize.MEDIUM;
+  return {
+    maxWidth: isMedium ? '100%' : '736px',
+    paddingLeft: isMedium ? `${theme.sizing.lgPadding}px` : `${theme.sizing.xSmPadding}px`,
+    paddingRight: isMedium ? `${theme.sizing.lgPadding}px` : `${theme.sizing.xSmPadding}px`,
+    boxSizing: 'border-box',
+  };
+});
 
 // content area of body that floats above background layers above - Triple Column Page
 // same 8px outer shadow room; content still spans 1046

@@ -85,7 +85,9 @@ export const PlayButtonContent = styled(Box, {
 }));
 
 export const HostButtonStartStyled = styled(Button)(({ theme }) => {
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  // full-width below md (700px) to match the host's mobile breakpoint (ScreenSize.SMALL),
+  // so the button lines up with the full-width content (e.g. footer progress bar) above it
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return {
     width: isMobile ? '100%' : '343px',
     height: '32px',

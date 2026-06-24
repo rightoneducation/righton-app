@@ -109,7 +109,7 @@ export default function GameInProgress({
           setGraphClickInfo={setGraphClickInfo}
         />
       </BodyStackContainerStyled>
-      <FooterBackgroundStyled >
+      <FooterBackgroundStyled screenSize={screenSize}>
       <motion.div ref={scope3} >
         <FooterGameInProgress
           submittedAnswers={submittedAnswers}

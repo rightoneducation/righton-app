@@ -88,7 +88,7 @@ export default function PrepareGameContent({
             }}
             slidesPerView='auto'
             spaceBetween={`${theme.sizing.mdPadding}px`}
-            style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+            style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
           >
             <SwiperSlide>
               {leftCardsColumn}
@@ -110,7 +110,7 @@ export default function PrepareGameContent({
           transition={{ duration: 1, ease: 'easeIn' }}
           style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
           >
-            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
+            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`} screenSize={screenSize}>
               {leftCardsColumn}
               {rightCardsColumn}
               </BodyContentAreaDoubleColumnStyledNoSwiper>

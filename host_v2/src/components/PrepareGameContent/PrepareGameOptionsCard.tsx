@@ -126,8 +126,11 @@ export default function PrepareGameOptionsCard({
 }: PrepareGameOptionsCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
+  // zero BodyCardStyled's 8px side margin so the card aligns to the column's padding
+  // outline (24/32px); the ScrollBox already bleeds 8px for shadow room, matching the
+  // marginless QuestionCardGameplayStyled used by the question card
   return (
-    <BodyCardStyledBlue elevation={10}>
+    <BodyCardStyledBlue elevation={10} sx={{ marginLeft: 0, marginRight: 0 }}>
       <BodyCardContainerStyled style={{gap: `${theme.sizing.mdPadding}px`}}>
         <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
           <TitleContainer>

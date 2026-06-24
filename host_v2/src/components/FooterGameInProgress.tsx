@@ -15,22 +15,31 @@ import Timer from './Timer';
 
 const FooterContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
-  position: 'sticky',
-  bottom: '0',
-  margin: 'auto',
-  width: '100%',
-  maxWidth: '720px', // matches the header/content max width (with 16px side padding inset)
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-end',
-  paddingTop: screenSize === ScreenSize.SMALL ? '12px' : '32px',
-  // left/right: 24px on mobile, 48px (32+16) on tablet, 16px on desktop
-  paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : screenSize === ScreenSize.MEDIUM ? '48px' : '16px',
-  paddingRight: screenSize === ScreenSize.SMALL ? '24px' : screenSize === ScreenSize.MEDIUM ? '48px' : '16px',
-  paddingBottom: screenSize === ScreenSize.SMALL ? '48px' : '44px',
-  boxSizing: 'border-box',
-}));
+})<{ screenSize: ScreenSize }>(({ screenSize }) => {
+  const bottomPaddingBySize: Record<ScreenSize, string> = {
+    [ScreenSize.SMALL]: '48px',
+    [ScreenSize.MEDIUM]: '56px',
+    [ScreenSize.LARGE]: '24px',
+  };
+  return {
+    position: 'sticky',
+    bottom: '0',
+    margin: 'auto',
+    width: '100%',
+    maxWidth: '720px', // matches the header/content max width (with 16px side padding inset)
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    paddingTop: screenSize === ScreenSize.SMALL ? '20px' : '32px',
+    // inner left/right: 24px on mobile, 16px on tablet/desktop. Mobile's inset lives here
+    // (not on the FooterBackgroundStyled wrapper) so it renders reliably. The 32px tablet
+    // wrapper inset lives on FooterBackgroundStyled; desktop has no wrapper.
+    paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '16px',
+    paddingRight: screenSize === ScreenSize.SMALL ? '24px' : '16px',
+    paddingBottom: bottomPaddingBySize[screenSize],
+    boxSizing: 'border-box',
+  };
+});
 
 const InnerFooterContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',

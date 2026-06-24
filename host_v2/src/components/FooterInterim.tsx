@@ -9,18 +9,33 @@ import { ScreenSize } from '../lib/HostModels';
 
 const FooterContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
-  position: 'sticky',
-  bottom: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  gap: '16px',
-  paddingTop: '44px',
-  paddingBottom: screenSize === ScreenSize.SMALL ? '64px' : '44px',
-}));
+})<{ screenSize: ScreenSize }>(({ screenSize }) => {
+  const bottomPaddingBySize: Record<ScreenSize, string> = {
+    [ScreenSize.SMALL]: '48px',
+    [ScreenSize.MEDIUM]: '56px',
+    [ScreenSize.LARGE]: '24px',
+  };
+  return {
+    position: 'sticky',
+    bottom: '0',
+    margin: 'auto',
+    width: '100%',
+    maxWidth: '720px', // matches the header/content max width (with 16px side padding inset)
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '16px',
+    // inner left/right: 24px on mobile, 16px on tablet/desktop. Mobile's inset lives here
+    // (not on the FooterBackgroundStyled wrapper) so it renders reliably. The 32px tablet
+    // wrapper inset lives on FooterBackgroundStyled; desktop has no wrapper.
+    paddingTop: screenSize === ScreenSize.SMALL ? '20px' : '32px',
+    paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '16px',
+    paddingRight: screenSize === ScreenSize.SMALL ? '24px' : '16px',
+    paddingBottom: bottomPaddingBySize[screenSize],
+    boxSizing: 'border-box',
+  };
+});
 
 const InnerFooterContainer = styled(Box)({
   display: 'flex',
