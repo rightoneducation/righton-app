@@ -14,14 +14,21 @@ const FooterContainer = styled(Box, {
 })<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   position: 'sticky',
   bottom: 0,
+  margin: 'auto',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
+  maxWidth: '720px', // matches the header/content max width (with the side padding inset)
   gap: '16px',
   paddingTop: '44px',
-  paddingBottom: screenSize === ScreenSize.SMALL ? '64px' : '44px'
+  // left/right inset so the full-width (below md) button doesn't run edge-to-edge,
+  // matching the PrepareGame footer (FooterInterim): 24px on mobile, 16px on tablet/desktop
+  paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '16px',
+  paddingRight: screenSize === ScreenSize.SMALL ? '24px' : '16px',
+  paddingBottom: screenSize === ScreenSize.SMALL ? '64px' : '44px',
+  boxSizing: 'border-box',
 }));
 const SwipeHintText = styled(Typography)({
   color: '#FFFFFF',
@@ -45,7 +52,10 @@ interface FootStartGameProps {
   handleButtonClick: () => void;
   isGamePrepared: boolean;
   scope4?: React.RefObject<HTMLDivElement>;
-  activeSlide: number;
+  activeSlide?: number;
+  // StartGame's swiper toggles between players/questions so the hint is meaningful;
+  // EndGame's swiper is players/suggested-games, so it opts out (showSwipeHint={false}).
+  showSwipeHint?: boolean;
 }
 export default function FooterStartGame({
   teamsLength,
@@ -54,7 +64,8 @@ export default function FooterStartGame({
   isGamePrepared,
   handleButtonClick,
   scope4,
-  activeSlide
+  activeSlide,
+  showSwipeHint = true
 }: FootStartGameProps) {
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const fetchButtonText = (gameSession: IGameSession, selectedGame: string | null) => {
@@ -90,7 +101,7 @@ export default function FooterStartGame({
 
   return (
     <FooterContainer screenSize={screenSize}>
-      {screenSize === ScreenSize.SMALL &&
+      {screenSize === ScreenSize.SMALL && showSwipeHint &&
         <SwipeHintText variant="labels">
           {activeSlide === 0
             ? 'Swipe left to view game questions'
@@ -106,7 +117,9 @@ export default function FooterStartGame({
           <motion.div
             ref={scope4}
             exit={{ y: 0, opacity: 0 }}
-            style={{ display: 'inline-block' }}
+            // full width so the button (width:100% below md) can stretch to the footer's
+            // content box; on md+ the button is a fixed 343px and justifyContent centers it
+            style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
           >
             <HostButton
               buttonType={buttonType}

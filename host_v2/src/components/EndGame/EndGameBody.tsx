@@ -31,7 +31,8 @@ const BodyContentAreaSingleColumnStyled = styled(
   justifyContent: 'center',
   maxWidth: `${theme.breakpoints.values.md}px`,
   flexGrow: 1,
-  overflow: 'auto',
+  // inherit overflow:hidden from the base (matches StartGame's HostBody) so the cards are
+  // cropped at the body's bottom edge instead of bleeding over the footer's swiper pagination
 }));
 
 interface GameEndedHostBodyProps{

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Grid} from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -54,7 +55,18 @@ export default function HostBody({
 }: HostBodyProps) {
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
-  switch(screenSize){
+  // derive a 3-way layout size so mid screens (md–lg) get a real two-column layout with the
+  // 32px medium padding (matching GameInProgress/PrepareGame) instead of the cramped large
+  // padding. children keep the page-provided screenSize so their internal rendering is
+  // unchanged.
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const layoutSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE
+    : isMediumScreen
+      ? ScreenSize.MEDIUM
+      : ScreenSize.SMALL;
+  switch(layoutSize){
     case ScreenSize.SMALL:
       return (
         <BodyContentAreaSingleColumnStyled>
@@ -87,7 +99,7 @@ export default function HostBody({
     case ScreenSize.LARGE:
       default:
         return (
-          <StartGameContentAreaDoubleColumnStyled container screenSize={screenSize} style={{gap: '12px'}}>
+          <StartGameContentAreaDoubleColumnStyled container screenSize={layoutSize} style={{gap: '12px'}}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
                 {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
