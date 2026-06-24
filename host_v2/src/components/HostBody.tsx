@@ -7,6 +7,7 @@ import { Pagination } from 'swiper/modules';
 import { ITeam, IQuestion } from '@righton/networking';
 import { ScreenSize } from '../lib/HostModels';
 import CurrentStudents from './CurrentStudents';
+import ResultsStudents from './ResultsStudents';
 import NoPlayersLobby from './NoPlayersLobby';
 import QuestionList from './LobbyQuestionSwipe';
 import {
@@ -43,6 +44,9 @@ interface HostBodyProps {
   currentQuestionIndex: number,
   screenSize: ScreenSize,
   onSlideChange?: (index: number) => void,
+  // StartGame (lobby) renders CurrentStudents; the results screens (Leaderboard,
+  // InterimLeaderboard) opt into the forked ResultsStudents via isResults.
+  isResults?: boolean,
 }
 
 export default function HostBody({
@@ -52,9 +56,11 @@ export default function HostBody({
   currentQuestionIndex,
   screenSize,
   onSlideChange,
+  isResults = false,
 }: HostBodyProps) {
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
+  const StudentsComponent = isResults ? ResultsStudents : CurrentStudents;
   // derive a 3-way layout size so mid screens (md–lg) get a real two-column layout with the
   // 32px medium padding (matching GameInProgress/PrepareGame) instead of the cramped large
   // padding. children keep the page-provided screenSize so their internal rendering is
@@ -88,7 +94,7 @@ export default function HostBody({
                 style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
               > 
             <SwiperSlide style={{width: '100%', height: '100%'}}>
-              {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex}/>}
+              {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex}/>}
             </SwiperSlide>
             <SwiperSlide style={{width: '100%', height: '100%'  }}>
               <QuestionList questions={questions} title ={title}/> 
@@ -101,7 +107,7 @@ export default function HostBody({
         return (
           <StartGameContentAreaDoubleColumnStyled container screenSize={layoutSize} style={{gap: '12px'}}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
               <QuestionList questions={questions} title ={title}/> 

@@ -79,12 +79,13 @@ export default function InterimLeaderboard({
           transition={{ duration: 1, ease: 'easeIn' }}
           style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', flexGrow: 1 }}
       >
-        <HostBody 
-          teams={localGameSession.teams} 
-          questions={questions} 
-          title={title} 
+        <HostBody
+          teams={localGameSession.teams}
+          questions={questions}
+          title={title}
           currentQuestionIndex={currentQuestionIndex}
           screenSize={screenSize}
+          isResults
         />
       </motion.div>
       <FooterInterim

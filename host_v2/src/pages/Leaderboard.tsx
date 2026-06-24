@@ -156,6 +156,7 @@ export default function Leaderboard({
           title={title}
           currentQuestionIndex={currentQuestionIndex}
           screenSize={screenSize}
+          isResults
         />
       </motion.div>
 

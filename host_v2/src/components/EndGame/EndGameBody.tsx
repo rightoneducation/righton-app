@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { IGameTemplate, ITeam } from '@righton/networking';
 import { ScreenSize } from '../../lib/HostModels';
-import CurrentStudents from '../CurrentStudents';
+import ResultsStudents from '../ResultsStudents';
 import SuggestedGames from './EndGameSuggestedGames';
 import NoPlayersLobby from '../NoPlayersLobby';
 import { EndGameContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/EndGameContentAreasStyled';
@@ -79,7 +79,7 @@ export default function GameEndedHostBody({
               style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
             > 
               <SwiperSlide style={{width: '100%', height: '100%'}}>
-                {teams.length === 0 ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {teams.length === 0 ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <ResultsStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
               </SwiperSlide>
               <SwiperSlide style={{width: '100%', height: '100%'}}>
                 <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
@@ -92,7 +92,7 @@ export default function GameEndedHostBody({
         return (
           <EndGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <ResultsStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
                <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
