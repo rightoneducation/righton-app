@@ -15,7 +15,9 @@ const PStyled = styled(Typography)({
   textAlign: 'center'
 })
 
-const MenuItemStyled = styled(Box)(({isSelected}) => ({
+const MenuItemStyled = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected: boolean }>(({isSelected}) => ({
   border: `${isSelected ? '4px solid  #0094FF' : '0px solid transparent'}`,
   padding: `${isSelected ? '0px' : '4px'}`,
   borderRadius: '18px',
@@ -32,7 +34,9 @@ const MenuItemStyled = styled(Box)(({isSelected}) => ({
   minHeight: '110px',
 }))
 
-const LeftBox = styled(Box)(({isSelected}) => ({
+const LeftBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected: boolean }>(({isSelected}) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',

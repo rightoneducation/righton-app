@@ -3,6 +3,7 @@ import { Box, Grid} from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
+import type { Swiper as SwiperClass } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { ITeam, IQuestion } from '@righton/networking';
 import { ScreenSize } from '../lib/HostModels';
@@ -93,7 +94,7 @@ export default function HostBody({
                   },
                 }}
                 ref={swiperRef}
-                onSlideChange={(swiper) => onSlideChange?.(swiper.activeIndex)}
+                onSlideChange={(swiper: SwiperClass) => onSlideChange?.(swiper.activeIndex)}
                 spaceBetween={`${theme.sizing.xSmPadding}px`}
                 style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
               > 

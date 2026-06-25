@@ -163,7 +163,11 @@ const PlayerCountTypography = styled(Typography)({
   fontWeight: 700,
 });
 
-function CurrentStudents({ teams, currentQuestionIndex }: CurrentStudentProps) {
+function CurrentStudents({
+  teams,
+  currentQuestionIndex,
+  entranceDelay, // eslint-disable-line @typescript-eslint/no-unused-vars
+}: CurrentStudentProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);

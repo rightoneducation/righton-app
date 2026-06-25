@@ -92,7 +92,7 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
   } = props;
   const graphName = statePosition < 6 || isPrevPhaseResponses ? 'realtimephase1' : 'realtimephase2';
   const selectedIndex = graphClickInfo[graphName] ?? null;
-  const showCustomTick = Boolean(data[selectedIndex]?.isCorrect);
+  const showCustomTick = selectedIndex !== null && Boolean(data[selectedIndex]?.isCorrect);
 
   const noResponseIndex = data.findIndex((response) => response.multiChoiceCharacter === '…');
   return (

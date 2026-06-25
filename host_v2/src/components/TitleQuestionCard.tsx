@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { IQuestion } from '@righton/networking';
 import TitleCCSS from './TitleCCSS';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface TitleQuestionCardProps {
   title: string;

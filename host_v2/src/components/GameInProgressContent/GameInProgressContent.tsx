@@ -150,7 +150,7 @@ export default function GameInProgressContent({
               },
             }}
             slidesPerView='auto'
-            spaceBetween={`12px`}
+            spaceBetween="12px"
             style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
           >
             <SwiperSlide>
@@ -199,7 +199,7 @@ export default function GameInProgressContent({
                   },
                 }}
                 slidesPerView='auto'
-                spaceBetween={`16px`}
+                spaceBetween="16px"
                 slidesOffsetBefore={theme.sizing.lgPadding}
                 slidesOffsetAfter={theme.sizing.lgPadding}
                 style={{height: '100%', width: '100%'}}

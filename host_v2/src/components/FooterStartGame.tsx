@@ -102,7 +102,7 @@ export default function FooterStartGame({
   return (
     <FooterContainer screenSize={screenSize}>
       {screenSize === ScreenSize.SMALL && showSwipeHint &&
-        <SwipeHintText variant="labels">
+        <SwipeHintText variant="label">
           {activeSlide === 0
             ? 'Swipe left to view game questions'
             : 'Swipe right to view current players'}
