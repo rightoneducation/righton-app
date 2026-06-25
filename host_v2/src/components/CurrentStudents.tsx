@@ -18,7 +18,7 @@ interface CurrentStudentProps {
   currentQuestionIndex: number;
   // accepted but unused: shares a prop shape with ResultsStudents so HostBody's StudentsComponent
   // switch can pass entranceDelay to either fork. The lobby has no delayed entrance animation.
-  entranceDelay?: number;
+  entranceDelay?: number; // eslint-disable-line react/no-unused-prop-types -- accepted for prop-shape parity with ResultsStudents; unused in the lobby
 }
 
 const GridStyled = styled(Grid)({
@@ -163,11 +163,7 @@ const PlayerCountTypography = styled(Typography)({
   fontWeight: 700,
 });
 
-function CurrentStudents({
-  teams,
-  currentQuestionIndex,
-  entranceDelay, // eslint-disable-line @typescript-eslint/no-unused-vars
-}: CurrentStudentProps) {
+function CurrentStudents({ teams, currentQuestionIndex }: CurrentStudentProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);

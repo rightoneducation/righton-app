@@ -63,9 +63,19 @@ export default function HeaderContent({
     return stateMap[currentStateForCheck];
   };
   
+  // left/right padding by screen size (LARGE flush to 0; MEDIUM 32px; SMALL/unset 24px), pulled
+  // out of the JSX to avoid nested ternaries — matches the lookup-map pattern used in the footers.
+  // screenSize is optional, so unset falls back to SMALL (24px), matching the prior ternary default.
+  const horizontalPaddingBySize: Record<ScreenSize, number | string> = {
+    [ScreenSize.SMALL]: `${theme.sizing.mdPadding}px`,
+    [ScreenSize.MEDIUM]: `${theme.sizing.lgPadding}px`,
+    [ScreenSize.LARGE]: 0,
+  };
+  const horizontalPadding = horizontalPaddingBySize[screenSize ?? ScreenSize.SMALL];
+
   return (
     <HeaderStackContainerStyled>
-      <Container style={{maxWidth: screenSize === ScreenSize.MEDIUM ? 'none' : 720, paddingLeft: screenSize === ScreenSize.LARGE ? 0 : screenSize === ScreenSize.MEDIUM ? `${theme.sizing.lgPadding}px` : `${theme.sizing.mdPadding}px`, paddingRight: screenSize === ScreenSize.LARGE ? 0 : screenSize === ScreenSize.MEDIUM ? `${theme.sizing.lgPadding}px` : `${theme.sizing.mdPadding}px`}}>
+      <Container style={{maxWidth: screenSize === ScreenSize.MEDIUM ? 'none' : 720, paddingLeft: horizontalPadding, paddingRight: horizontalPadding}}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <QuestionIndicator

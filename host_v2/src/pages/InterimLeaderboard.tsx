@@ -23,8 +23,8 @@ interface InterimLeaderboardProps {
   title: string;
   // shared animation refs from GameSessionContainer (used by GameInProgress's slide-out); this
   // screen drives its own entrance, so they're accepted but not consumed here.
-  scope: any;
-  animate: any;
+  scope: any; // eslint-disable-line react/no-unused-prop-types -- shared ref from the parent; not consumed here
+  animate: any; // eslint-disable-line react/no-unused-prop-types -- shared ref from the parent; not consumed here
 }
 
 const SafeAreaStyled = styled(Box)(({ theme }) => ({
@@ -91,8 +91,6 @@ export default function InterimLeaderboard({
  questions,
  currentQuestionIndex,
  title,
- scope, // eslint-disable-line @typescript-eslint/no-unused-vars
- animate, // eslint-disable-line @typescript-eslint/no-unused-vars
 }: InterimLeaderboardProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));

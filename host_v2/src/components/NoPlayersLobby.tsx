@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { styled, useTheme } from '@mui/material';
+import { Box, Typography, styled, useTheme } from '@mui/material';
 import { ScreenSize } from '../lib/HostModels';
 import monsterWait0 from '../img/MonsterWait0.png';
 import monsterWait1 from '../img/MonsterWait1.png';

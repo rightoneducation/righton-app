@@ -122,7 +122,7 @@ export default function HintsGraph({
               standalone={false}
               orientation="top"
               tickValues={calculateRoundedTicks()}
-              tickFormat={(tick) => Math.round(tick)}
+              tickFormat={(tick: number) => Math.round(tick)}
             />
           )}
           <VictoryBar
