@@ -16,6 +16,9 @@ import MonsterIcon from './MonsterIcon';
 interface CurrentStudentProps {
   teams: ITeam[];
   currentQuestionIndex: number;
+  // accepted but unused: shares a prop shape with ResultsStudents so HostBody's StudentsComponent
+  // switch can pass entranceDelay to either fork. The lobby has no delayed entrance animation.
+  entranceDelay?: number;
 }
 
 const GridStyled = styled(Grid)({

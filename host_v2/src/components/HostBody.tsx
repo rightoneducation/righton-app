@@ -47,6 +47,9 @@ interface HostBodyProps {
   // StartGame (lobby) renders CurrentStudents; the results screens (Leaderboard,
   // InterimLeaderboard) opt into the forked ResultsStudents via isResults.
   isResults?: boolean,
+  // seconds to hold ResultsStudents' card grow animation until the page's entrance animations
+  // finish; forwarded to the students component. Only meaningful with isResults.
+  entranceDelay?: number,
 }
 
 export default function HostBody({
@@ -57,6 +60,7 @@ export default function HostBody({
   screenSize,
   onSlideChange,
   isResults = false,
+  entranceDelay = 0,
 }: HostBodyProps) {
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
@@ -94,7 +98,7 @@ export default function HostBody({
                 style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
               > 
             <SwiperSlide style={{width: '100%', height: '100%'}}>
-              {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex}/>}
+              {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex} entranceDelay={entranceDelay}/>}
             </SwiperSlide>
             <SwiperSlide style={{width: '100%', height: '100%'  }}>
               <QuestionList questions={questions} title ={title}/> 
@@ -107,7 +111,7 @@ export default function HostBody({
         return (
           <StartGameContentAreaDoubleColumnStyled container screenSize={layoutSize} style={{gap: '12px'}}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex} entranceDelay={entranceDelay} />}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
               <QuestionList questions={questions} title ={title}/> 

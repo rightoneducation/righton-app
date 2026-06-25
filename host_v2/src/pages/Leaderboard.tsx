@@ -157,32 +157,27 @@ export default function Leaderboard({
           currentQuestionIndex={currentQuestionIndex}
           screenSize={screenSize}
           isResults
+          // hold the card grow until the curtain (2s) and the slide-ins (0.5s delay + 1.5s) finish
+          entranceDelay={2}
         />
       </motion.div>
 
+      {/* mount the footer the way StartGame/InterimLeaderboard do: let it size to its content
+          (FooterInterim's own FooterContainer is sticky bottom-0 and handles pinning) so the
+          page gradient sits behind the whole footer. The old fixed 90px height clipped the
+          footer and pushed the pagination bullets above the gradient-backed area. */}
       <motion.div
         initial={{ y: '-100vh', opacity: 0 }}
         animate={{ y: '0', opacity: 1 }}
         transition={{ duration: 1.5, delay: .5 }}
-        style={{   
-          position: 'sticky',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          bottom: '0',
-          width: '100%',
-          height: '90px'
-        }}
+        style={{ width: '100%' }}
       >
-        <Box style={{bottom: '0', marginTop: 'auto', width: '100%' }}>
         <FooterInterim
           teamsLength={teams ? teams.length : 0}
           screenSize={screenSize}
           handleButtonClick={handleButtonClick}
           isGamePrepared={false}
         />
-        </Box>
       </motion.div>
     </SafeAreaStyled>
   );

@@ -71,7 +71,7 @@ export default function GameEndedHostBody({
                 bulletActiveClass: 'swiper-pagination-bullet-active',
                 clickable: true,
                 renderBullet(index: number, className: string,) {
-                  return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
+                  return `<span class="${className}" style="width:30px; height:10px; border-radius:8px" ></span>`;
                 },
               }}
               ref={swiperRef}
