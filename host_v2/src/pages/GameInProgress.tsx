@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { IHostTeamAnswers, GameSessionState, IPhase } from '@righton/networking';
 import { GameSessionContext } from '../lib/context/GameSessionContext';
@@ -16,6 +17,18 @@ import GameInProgressContent from '../components/GameInProgressContent/GameInPro
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
 import FooterGameInProgress from '../components/FooterGameInProgress';
+
+// Cream backstop behind the page (zIndex -2, below the z-index:-1 fixed header). The blue html
+// canvas tints the iOS bars; this paints cream over it so the gap between the header and the
+// cream body shows cream, not the blue canvas (the previous "blue band"). position:absolute (not
+// fixed), so iOS doesn't sample it for the bar tint — the bars keep reading the blue html canvas.
+const CreamBackstopStyled = styled(Box)({
+  position: 'absolute',
+  inset: 0,
+  background: '#FFFBF6', // designSystem.foreground.warmBase
+  zIndex: -2,
+  pointerEvents: 'none',
+});
 
 interface GameInProgressProps {
   isTimerVisible: boolean,
@@ -80,6 +93,7 @@ export default function GameInProgress({
     const totalTime = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? localGameSession.phaseOneTime : localGameSession.phaseTwoTime;
     return(
       <StackContainerStyled>
+      <CreamBackstopStyled />
       {isTimerVisible &&
         <GameStartingModal isTimerVisible={isTimerVisible} setIsTimerVisible={setIsTimerVisible}/>
       }

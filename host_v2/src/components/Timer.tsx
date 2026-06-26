@@ -40,6 +40,10 @@ interface TimerProps {
   onTimerComplete?: () => void;
   width?: string;
   hideTimerText?: boolean;
+  // remove MUI's built-in transform transition on the bar. the bar value is already driven
+  // every frame by requestAnimationFrame, so the .4s transition is redundant — and on iOS it
+  // fights the per-frame fill updates, causing the bar to crawl (~10%) then jump on complete.
+  disableBarTransition?: boolean;
 }
 
 export default function Timer({
@@ -53,6 +57,7 @@ export default function Timer({
   onTimerComplete,
   width,
   hideTimerText,
+  disableBarTransition,
 }: TimerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -157,8 +162,11 @@ export default function Timer({
           variant="determinate"
           sx={{
             ...(barBackground && { backgroundColor: barBackground }),
-            ...(barGradient && { '& .MuiLinearProgress-bar': { background: barGradient } }),
             opacity: isTimerActiveRef.current ? 1 : 0.5,
+            '& .MuiLinearProgress-bar': {
+              ...(barGradient && { background: barGradient }),
+              ...(disableBarTransition && { transition: 'none' }),
+            },
           }}
         />
         {!hideTimerText && (

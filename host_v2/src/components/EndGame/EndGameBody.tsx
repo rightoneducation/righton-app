@@ -76,7 +76,7 @@ export default function GameEndedHostBody({
               }}
               ref={swiperRef}
               spaceBetween={`${theme.sizing.mdPadding}px`}
-              style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+              style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
             > 
               <SwiperSlide style={{width: '100%', height: '100%'}}>
                 {teams.length === 0 ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <ResultsStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}

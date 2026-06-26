@@ -104,7 +104,12 @@ export default function Leaderboard({
       : ScreenSize.SMALL;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
-  const dispatch = useTSDispatchContext(GameSessionDispatchContext);  
+  const dispatch = useTSDispatchContext(GameSessionDispatchContext);
+  // the curtain expands the gradient to window.innerHeight (a fixed px captured at mount);
+  // on iOS that's the toolbar-shrunk value, so once the toolbar collapses the gradient no
+  // longer reaches the bottom and the cream canvas shows through. once the expand finishes we
+  // switch the height to 100dvh, which tracks the dynamic viewport and always covers.
+  const [bgSettled, setBgSettled] = useState(false);
   const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     trackEvent(HostEvent.GAME_PHASE_ADVANCED, {
@@ -121,8 +126,9 @@ export default function Leaderboard({
     <SafeAreaStyled>
       <MotionBackgroundStyled
         initial={{ height: 200 + theme.sizing.mdPadding }}
-        animate={{ height: window.innerHeight }}
-        transition={{ duration: 2, ease: 'easeInOut' }}
+        animate={{ height: bgSettled ? '100dvh' : window.innerHeight }}
+        transition={{ duration: bgSettled ? 0 : 2, ease: 'easeInOut' }}
+        onAnimationComplete={() => setBgSettled(true)}
       >
         <MotionFlatHeaderOverlayStyled
           initial={{ opacity: 1 }}

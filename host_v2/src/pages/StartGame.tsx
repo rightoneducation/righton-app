@@ -42,6 +42,22 @@ const BackgroundStyled = styled(Paper)(({ theme }) => ({
   overflow: 'hidden',
 }));
 
+// Cream backstop one layer behind the splash gradient (zIndex -2, below BackgroundStyled's -1).
+// The blue html canvas tints the iOS bars; this paints cream OVER that canvas so that when the
+// curtain pulls the gradient up, the revealed area is cream (the PrepareGame body color), not the
+// blue canvas. It is position:absolute (NOT fixed), so iOS Safari does not sample it for the bar
+// tint — the bars keep reading the blue html canvas.
+const CreamBackstopStyled = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100dvh',
+  background: '#FFFBF6', // designSystem.foreground.warmBase
+  zIndex: -2,
+  pointerEvents: 'none',
+});
+
 // Math symbols live in their own layer (not a ::before) so the curtain can uniformly
 // scale them down. transformOrigin bottom-center keeps them pinned to the header's
 // bottom edge while shrinking; bottom:0 means they ride the gradient box's rising
@@ -130,6 +146,7 @@ function StartGame({teams,
     }
     return (
         <SafeAreaStyled>
+          <CreamBackstopStyled />
           <BackgroundStyled ref={scope}>
             <FlatHeaderOverlayStyled ref={flatScope} />
             <MathSymbolsStyled ref={mathScope} />

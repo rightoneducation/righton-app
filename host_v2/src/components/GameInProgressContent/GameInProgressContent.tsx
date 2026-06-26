@@ -139,6 +139,11 @@ export default function GameInProgressContent({
           style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center'  }}
           >
           <Swiper
+            // phase 1 and phase 2 share this one Swiper instance (only the slides differ),
+            // so without a per-phase key it keeps its previous activeIndex when moving to
+            // phase 2 and opens on the wrong column. keying by phase remounts it fresh at
+            // slide 0 on the phase change; phase 1 is unaffected (it already starts at 0).
+            key={currentPhase}
             modules={[Pagination]}
             pagination={{
               el: '.swiper-pagination-container',

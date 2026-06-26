@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Paper } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme, styled } from '@mui/material/styles';
@@ -108,6 +108,9 @@ export default function InterimLeaderboard({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
+  // see Leaderboard: switch the expanded gradient from a fixed window.innerHeight px to 100dvh
+  // once the curtain finishes, so it always covers the dynamic viewport on iOS (no cream gap).
+  const [bgSettled, setBgSettled] = useState(false);
   const handleButtonClick = async () => {
     const startTime = Date.now();
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
@@ -119,8 +122,9 @@ export default function InterimLeaderboard({
     <SafeAreaStyled>
       <MotionBackgroundStyled
         initial={{ height: 200 + theme.sizing.mdPadding }}
-        animate={{ height: window.innerHeight }}
-        transition={{ duration: 2, ease: 'easeInOut' }}
+        animate={{ height: bgSettled ? '100dvh' : window.innerHeight }}
+        transition={{ duration: bgSettled ? 0 : 2, ease: 'easeInOut' }}
+        onAnimationComplete={() => setBgSettled(true)}
       >
         <MotionFlatHeaderOverlayStyled
           initial={{ opacity: 1 }}

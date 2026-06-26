@@ -84,7 +84,7 @@ function HostHeader({ gameCode, screenSize }: HostHeaderProps) {
             <GameLobbyTypographyStyled
               style={{fontSize: screenSize !== ScreenSize.LARGE ? '24px' : '32px'}}
             >
-              Game Lobby 
+              Game Lobby
             </GameLobbyTypographyStyled> 
             <Box>
               <Tooltip
