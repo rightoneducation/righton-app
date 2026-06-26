@@ -2,7 +2,6 @@ import React from 'react';
 import { Grid, Typography, Box, useMediaQuery } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';
-import { v4 as uuidv4 } from 'uuid';
 import { ITeam, ModelHelper, IGameSession } from '@righton/networking';
 import { StartEndGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -241,7 +240,7 @@ function ResultsStudents({ teams, currentQuestionIndex, entranceDelay = 0 }: Res
           if (isTopFive) {
             return (
               <MotionTopFiveRow
-                key={uuidv4()}
+                key={team.id}
                 initial={{ opacity: 0, scale: 0.3 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={growTransition}
@@ -261,7 +260,7 @@ function ResultsStudents({ teams, currentQuestionIndex, entranceDelay = 0 }: Res
           }
           return (
             <MotionMenuItemStyled
-              key={uuidv4()}
+              key={team.id}
               style={isFirstOutsideTopFive ? { marginTop: '8px' } : undefined}
               initial={{ opacity: 0, scale: 0.3 }}
               animate={{ opacity: 1, scale: 1 }}

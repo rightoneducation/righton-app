@@ -10,8 +10,6 @@ import { ReactComponent as CloseIcon } from '../images/Close.svg';
 interface HostHeaderProps {
   gameCode: number;
   screenSize: ScreenSize;
-  isGamePrepared: boolean;
-  teamsLength: number;
 }
 
 
@@ -65,14 +63,7 @@ const CloseSvg = styled(CloseIcon)({
   cursor: 'pointer', 
 });
 
-const PlayerCountTypography = styled(Typography)({
-  fontFamily: 'Rubik',
-  color: "#FFF",
-  fontSize: '24px',
-  fontWeight: 700,
-});
-
-function HostHeader({ gameCode, screenSize, isGamePrepared, teamsLength }: HostHeaderProps) {
+function HostHeader({ gameCode, screenSize }: HostHeaderProps) {
   const theme = useTheme();
   
   const [isHelpDisplayed, setIsHelpDisplayed] = useState<boolean>(false);
@@ -120,15 +111,6 @@ function HostHeader({ gameCode, screenSize, isGamePrepared, teamsLength }: HostH
             </Box>
         </TopLineStyled>
         <GameCode gameCode={gameCode} screenSize={screenSize} />
-
-         {!isGamePrepared && teamsLength === 0 &&
-          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400, paddingTop: '8px', paddingBottom: '8px' }}>
-            <PlayerCountTypography> {teamsLength} </PlayerCountTypography>
-            <PlayerCountTypography style={{ fontSize: '16px', fontWeight: '400' }}>
-              players have joined
-            </PlayerCountTypography>
-          </Box>
-        }
       </UpperStyled>
     </Box>
   );

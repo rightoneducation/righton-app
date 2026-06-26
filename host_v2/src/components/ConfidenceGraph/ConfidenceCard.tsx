@@ -2,7 +2,7 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ConfidenceLevel, IHostTeamAnswersConfidence } from '@righton/networking';
+import { ConfidenceLevel, IHostTeamAnswersConfidence, IHostTeamAnswersResponse } from '@righton/networking';
 import { IGraphClickInfo, IGraphClickIndices } from '../../lib/HostModels';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardStyled';
@@ -12,6 +12,8 @@ import ConfidenceResponseDropdown from './ConfidenceResponseDropdown';
 interface CardProps {
   confidences: IHostTeamAnswersConfidence[];
   numPlayers: number;
+  responses: IHostTeamAnswersResponse[];
+  isShortAnswerEnabled: boolean;
   graphClickInfo: IGraphClickIndices;
   setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
@@ -36,6 +38,8 @@ const SmallTextContainer = styled(Box)(({ theme }) => ({
 export default function ConfidenceCard({
   confidences,
   numPlayers,
+  responses,
+  isShortAnswerEnabled,
   graphClickInfo,
   setGraphClickInfo,
 }: CardProps) {
@@ -66,6 +70,8 @@ export default function ConfidenceCard({
             <ConfidenceResponseDropdown
               selectedConfidence={ratedConfidences[selectedIndex]}
               numPlayers={numPlayers}
+              responses={responses}
+              isShortAnswerEnabled={isShortAnswerEnabled}
             />
           ) : (
             <SmallTextContainer>

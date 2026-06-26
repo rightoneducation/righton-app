@@ -55,6 +55,8 @@ export default function GameInProgressContentRightColumn ({
           <ConfidenceCard
             confidences={confidences}
             numPlayers={numPlayers}
+            responses={responses}
+            isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
             graphClickInfo={graphClickInfo}
             setGraphClickInfo={setGraphClickInfo}
           />

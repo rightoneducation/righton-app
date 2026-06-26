@@ -12,6 +12,8 @@ import { useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import CloseIcon from '../images/Close.svg';
 import SortArrows from '../images/buttonIconSortArrows.svg';
 import MonsterIcon from './MonsterIcon';
+import NoPlayersLobby from './NoPlayersLobby';
+import { ScreenSize } from '../lib/HostModels';
 
 interface CurrentStudentProps {
   teams: ITeam[];
@@ -19,6 +21,10 @@ interface CurrentStudentProps {
   // accepted but unused: shares a prop shape with ResultsStudents so HostBody's StudentsComponent
   // switch can pass entranceDelay to either fork. The lobby has no delayed entrance animation.
   entranceDelay?: number; // eslint-disable-line react/no-unused-prop-types -- accepted for prop-shape parity with ResultsStudents; unused in the lobby
+  // empty-lobby fallback: with no players yet, the count + sort row still renders, and the
+  // waiting-monsters NoPlayersLobby fills the list area below it. these feed that fallback.
+  questionsCount?: number;
+  screenSize?: ScreenSize;
 }
 
 const GridStyled = styled(Grid)({
@@ -163,7 +169,7 @@ const PlayerCountTypography = styled(Typography)({
   fontWeight: 700,
 });
 
-function CurrentStudents({ teams, currentQuestionIndex }: CurrentStudentProps) {
+function CurrentStudents({ teams, currentQuestionIndex, questionsCount, screenSize }: CurrentStudentProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
@@ -230,22 +236,26 @@ function CurrentStudents({ teams, currentQuestionIndex }: CurrentStudentProps) {
           </SortButtonContainer>
         </ClickAwayListener>
       </PlayerCountContainer>
-      <StartEndGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{flex: 1, minHeight: 0, width: '100%'}}>
-        {sortedTeams && sortedTeams.map((team) => (
-          <MenuItemStyled key={uuidv4()}>
-            <MonsterIcon index={team.selectedAvatarIndex} />
-            <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
-              <PlayerNameTypography variant="answerOption">{formatName(team.name)}</PlayerNameTypography>
-              { currentQuestionIndex !== null && 
-                <GridScoreStyled>{team.score}</GridScoreStyled>
-              }
-              { currentQuestionIndex === null &&
-                <CloseSvg src={CloseIcon} alt="Close" onClick={() => handleDeleteTeam(team.id)} />
-              }
-            </Box>
-          </MenuItemStyled>
-        ))}
-      </StartEndGameScrollBoxStyled>
+      {teams.length === 0 ? (
+        <NoPlayersLobby questionsCount={questionsCount} screenSize={screenSize} />
+      ) : (
+        <StartEndGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{flex: 1, minHeight: 0, width: '100%'}}>
+          {sortedTeams && sortedTeams.map((team) => (
+            <MenuItemStyled key={uuidv4()}>
+              <MonsterIcon index={team.selectedAvatarIndex} />
+              <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+                <PlayerNameTypography variant="answerOption">{formatName(team.name)}</PlayerNameTypography>
+                { currentQuestionIndex !== null &&
+                  <GridScoreStyled>{team.score}</GridScoreStyled>
+                }
+                { currentQuestionIndex === null &&
+                  <CloseSvg src={CloseIcon} alt="Close" onClick={() => handleDeleteTeam(team.id)} />
+                }
+              </Box>
+            </MenuItemStyled>
+          ))}
+        </StartEndGameScrollBoxStyled>
+      )}
     </Box>
   );
 }

@@ -87,7 +87,7 @@ export default function PrepareGameContent({
               },
             }}
             slidesPerView='auto'
-            spaceBetween={`${theme.sizing.mdPadding}px`}
+            spaceBetween="12px"
             style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
           >
             <SwiperSlide>

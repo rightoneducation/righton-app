@@ -76,7 +76,7 @@ export default function Hints({
         </Typography>
         <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', width: '100%' }}>
           { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? ( // eslint-disable-line
-            <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+            <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
               <Typography variant='label' style={{color: theme.palette.primary.main}}>
                 {t('hintscard.submittedcount')}
               </Typography>

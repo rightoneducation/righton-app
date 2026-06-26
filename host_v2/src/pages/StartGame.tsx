@@ -136,11 +136,9 @@ function StartGame({teams,
           </BackgroundStyled>
           <HeaderAreaStyled screenSize={screenSize} >
           <motion.div ref={scope2} exit={{opacity: 0, width: '100%'}} >
-            <HostHeader 
-              gameCode={gameCode} 
+            <HostHeader
+              gameCode={gameCode}
               screenSize={screenSize}
-              teamsLength={teams ? teams.length : 0}
-              isGamePrepared={false}
             />
           </motion.div>
           </HeaderAreaStyled>

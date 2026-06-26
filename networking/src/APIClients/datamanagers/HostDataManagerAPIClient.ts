@@ -312,9 +312,9 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
   private ConfidenceLevelDictionary: { [key in ConfidenceLevel]: string } = {
     [ConfidenceLevel.NOT_RATED]: 'Not\nRated',
-    [ConfidenceLevel.NOT_AT_ALL]: 'Not\nAt All',
-    [ConfidenceLevel.KINDA]: 'Kinda',
-    [ConfidenceLevel.QUITE]: 'Quite',
+    [ConfidenceLevel.NOT_AT_ALL]: 'Not\nat all',
+    [ConfidenceLevel.KINDA]: 'A\nlittle',
+    [ConfidenceLevel.QUITE]: 'Sort\nof',
     [ConfidenceLevel.VERY]: 'Very',
     [ConfidenceLevel.TOTALLY]: 'Totally',
   };

@@ -77,6 +77,18 @@ export default function HostBody({
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
+  // lobby (CurrentStudents) always renders its own count + sort row, and falls back to the
+  // waiting-monsters NoPlayersLobby internally when empty — so the row/sort show at 0 players too.
+  // the results screens keep the old swap: ResultsStudents when populated, NoPlayersLobby when empty.
+  const isEmpty = teams.length === 0 || !teams;
+  let studentsContent;
+  if (!isResults) {
+    studentsContent = <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} questionsCount={questions.length} screenSize={screenSize} />;
+  } else if (isEmpty) {
+    studentsContent = <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} />;
+  } else {
+    studentsContent = <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex} entranceDelay={entranceDelay} />;
+  }
   switch(layoutSize){
     case ScreenSize.SMALL:
       return (
@@ -99,7 +111,7 @@ export default function HostBody({
                 style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
               > 
             <SwiperSlide style={{width: '100%', height: '100%'}}>
-              {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex} entranceDelay={entranceDelay}/>}
+              {studentsContent}
             </SwiperSlide>
             <SwiperSlide style={{width: '100%', height: '100%'  }}>
               <QuestionList questions={questions} title ={title}/> 
@@ -112,7 +124,7 @@ export default function HostBody({
         return (
           <StartGameContentAreaDoubleColumnStyled container screenSize={layoutSize} style={{gap: '12px'}}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} /> : <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex} entranceDelay={entranceDelay} />}
+                {studentsContent}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
               <QuestionList questions={questions} title ={title}/> 

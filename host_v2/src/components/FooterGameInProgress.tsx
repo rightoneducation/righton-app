@@ -187,7 +187,7 @@ function FooterGameInProgress({
           <ProgressBarGroup submittedAnswers={submittedAnswers} teamsLength={teamsLength} />
         }
         {buttonText === 'Continue' && (
-          <Typography sx={{fontFamily: 'Rubik', fontWeight: '600', fontSize: '16px', color: '#384466'}}>
+          <Typography sx={{fontFamily: 'Rubik', fontWeight: '600', fontSize: '16px', color: '#384466', textAlign: 'center'}}>
             {timerMessage}
           </Typography>
         )}
