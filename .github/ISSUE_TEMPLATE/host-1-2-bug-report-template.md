@@ -1,10 +1,11 @@
 ---
-name: "[Host 1.2 QA] - Bug Report - [Add Descriptive Title] - Bug Number: [Replace
+name: Host 1.2 Bug Report Template
+about: Bug Report Template
+title: "[Host 1.2 QA] - Bug Report - [Add Descriptive Title] - Bug Number: [Replace
   with number] - Priority - [Replace with P0-P4]"
-about: Host 1.2 QA Bug Report Template
-title: "[Play 1.2 QA] - Bug Report - # - Priority - #"
 labels: bug
 assignees: drewjhart
+type: Bug
 
 ---
 

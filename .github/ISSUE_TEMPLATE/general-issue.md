@@ -1,7 +1,8 @@
 ---
-name: General Issue Template
+name: General Issue
 about: A template for general issues.
-title: "[Replace with App] - [Replace with Issue Title] "
+title: "[Host 1.2 QA] - Bug Report - [Add Descriptive Title] - Bug Number: [Replace
+  with number] - Priority - [Replace with P0-P4]"
 labels: ''
 assignees: ''
 
