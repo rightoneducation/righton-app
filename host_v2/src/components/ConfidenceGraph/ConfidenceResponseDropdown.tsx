@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
-import { IHostTeamAnswersConfidence, IHostTeamAnswersConfidenceResponse } from '@righton/networking';
+import { ConfidenceLevel, IHostTeamAnswersConfidence, IHostTeamAnswersConfidenceResponse, IHostTeamAnswersResponse } from '@righton/networking';
 import ArrowIcon from '../../images/Arrow.svg';
+import check from '../../img/Pickedcheck_white.svg';
 
 
 interface DropdownProps {
-  graphClickIndex: number | null;
   selectedConfidence: IHostTeamAnswersConfidence;
+  numPlayers: number;
+  // responses for the question, used to map a player's rawAnswer to its multiple-choice letter
+  responses: IHostTeamAnswersResponse[];
+  isShortAnswerEnabled: boolean;
 }
 
 const Container = styled(Box)(({ theme }) => ({
@@ -63,36 +67,97 @@ const ConfidenceLevelText = styled(Typography)(({ theme }) => ({
 }));
 
 
-const NameText = styled(Typography)(({ theme }) => ({
+const NameText = styled(Typography)({
   overflow: 'hidden',
-  color: `${theme.palette.primary.main}`,
   textOverflow: 'ellipsis',
-  fontFamily: 'Poppins',
-  fontSize: `${theme.typography.h5.fontSize}`,
-  fontWeight: `${theme.typography.body1.fontWeight}`,
+  whiteSpace: 'nowrap',
+  textAlign: 'left',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: '400',
+  color: 'white',
+  // take the row's free space and allow shrinking so a long name ellipsizes
+  // rather than pushing the answer off the right edge
+  flex: 1,
   minWidth: '32px'
+});
+
+// right side of the player row: the (optional) correct-answer check followed by the
+// player's answer — its multiple-choice letter, or the raw answer in short-answer mode.
+const AnswerContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: `${theme.sizing.xSmPadding}px`,
+  flexShrink: 0,
 }));
+
+const AnswerText = styled(Typography)({
+  color: 'white',
+  textAlign: 'right',
+});
+
+const CountText = styled(Typography)({
+  color: '#FFF',
+  textAlign: 'right',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: '700',
+});
+
+const PercentageText = styled(Typography)({
+  color: '#FFF',
+  textAlign: 'left',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: '400',
+  paddingLeft: '4px',
+});
+
+const NumberContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+});
 
 
 export default function ConfidenceResponseDropdown({
-  graphClickIndex,
   selectedConfidence,
+  numPlayers,
+  responses,
+  isShortAnswerEnabled,
 }: DropdownProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
-  const ConfidenceLevelDictionary: { [key: number]: string } = {
-    0: 'Not Rated',
-    1: 'Not At All Confident',
-    2: 'Kinda Confident',
-    3: 'Quite Confident',
-    4: 'Very Confident',
-    5: 'Totally Confident',
+  const ConfidenceLevelDictionary: { [key in ConfidenceLevel]: string } = {
+    [ConfidenceLevel.NOT_RATED]: 'Not Rated',
+    [ConfidenceLevel.NOT_AT_ALL]: 'Not At All Confident',
+    [ConfidenceLevel.KINDA]: 'A Little Confident',
+    [ConfidenceLevel.QUITE]: 'Sort Of Confident',
+    [ConfidenceLevel.VERY]: 'Very Confident',
+    [ConfidenceLevel.TOTALLY]: 'Totally Confident',
   };
-  const playerResponse = (team: string): React.ReactNode => {
+  const count = selectedConfidence.correct.length + selectedConfidence.incorrect.length;
+  const percentage = numPlayers > 0 ? (count / numPlayers) * 100 : 0;
+  // map a player's rawAnswer to its multiple-choice letter (e.g. 'A'); unused in short-answer mode
+  const letterByRawAnswer = responses.reduce<Record<string, string>>((acc, response) => {
+    acc[response.rawAnswer] = response.multiChoiceCharacter;
+    return acc;
+  }, {});
+  const playerResponse = (
+    playerData: IHostTeamAnswersConfidenceResponse,
+    isCorrect: boolean,
+  ): React.ReactNode => {
+    const answerDisplay = isShortAnswerEnabled
+      ? playerData.rawAnswer
+      : (letterByRawAnswer[playerData.rawAnswer] ?? '-');
     return (
-      <PlayerCard>
-        <NameText>{team}</NameText>
+      <PlayerCard key={`${playerData.team}-${playerData.rawAnswer}`}>
+        <NameText>{playerData.team}</NameText>
+        <AnswerContainer>
+          {isCorrect && <img src={check} alt="correct answer" />}
+          <AnswerText variant="h4">{answerDisplay}</AnswerText>
+        </AnswerContainer>
       </PlayerCard>
     );
   };
@@ -126,29 +191,31 @@ export default function ConfidenceResponseDropdown({
       ) : (
         <>
           <HeaderContainer>
-            <HeaderText>
-              {t(
-                'gamesession.confidenceCard.graph.dropdown.header.containsResponses',
-              )}
-            </HeaderText>
             <Box
               onClick={() => setIsExpanded(!isExpanded)}
               style={{  display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', borderRadius: '8px', padding: '8px 12px', backgroundColor: '#FFFFFF33' }}
             >
-              <ConfidenceLevelText>
-                {graphClickIndex !== null &&
-                  ConfidenceLevelDictionary[graphClickIndex]}
-              </ConfidenceLevelText>
-              <img src={ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+              <Typography sx={{ color: '#FFFFFF', textAlign: 'center', fontSize: '14px', fontWeight: 700, fontFamily: 'Rubik'}}>
+                {ConfidenceLevelDictionary[selectedConfidence.level]}
+              </Typography>
+              <NumberContainer>
+                <CountText>
+                  {count}
+                </CountText>
+                <PercentageText>
+                  ({Math.round(percentage)}%)
+                </PercentageText>
+                <img src={ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+              </NumberContainer>
             </Box>
           </HeaderContainer>
           {isExpanded && (
             <DropDownContainer>
               {sortedPlayers.correct.map((playerData) =>
-                playerResponse(playerData.team),
+                playerResponse(playerData, true),
               )}
               {sortedPlayers.incorrect.map((playerData) =>
-                playerResponse(playerData.team),
+                playerResponse(playerData, false),
               )}
             </DropDownContainer>
           )}

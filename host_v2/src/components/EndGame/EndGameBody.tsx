@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { IGameTemplate, ITeam } from '@righton/networking';
 import { ScreenSize } from '../../lib/HostModels';
-import CurrentStudents from '../CurrentStudents';
+import ResultsStudents from '../ResultsStudents';
 import SuggestedGames from './EndGameSuggestedGames';
 import NoPlayersLobby from '../NoPlayersLobby';
 import { EndGameContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/EndGameContentAreasStyled';
@@ -31,7 +31,8 @@ const BodyContentAreaSingleColumnStyled = styled(
   justifyContent: 'center',
   maxWidth: `${theme.breakpoints.values.md}px`,
   flexGrow: 1,
-  overflow: 'auto',
+  // inherit overflow:hidden from the base (matches StartGame's HostBody) so the cards are
+  // cropped at the body's bottom edge instead of bleeding over the footer's swiper pagination
 }));
 
 interface GameEndedHostBodyProps{
@@ -70,15 +71,15 @@ export default function GameEndedHostBody({
                 bulletActiveClass: 'swiper-pagination-bullet-active',
                 clickable: true,
                 renderBullet(index: number, className: string,) {
-                  return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
+                  return `<span class="${className}" style="width:30px; height:10px; border-radius:8px" ></span>`;
                 },
               }}
               ref={swiperRef}
               spaceBetween={`${theme.sizing.mdPadding}px`}
-              style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+              style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
             > 
               <SwiperSlide style={{width: '100%', height: '100%'}}>
-                {teams.length === 0 ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {teams.length === 0 ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <ResultsStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
               </SwiperSlide>
               <SwiperSlide style={{width: '100%', height: '100%'}}>
                 <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
@@ -91,7 +92,7 @@ export default function GameEndedHostBody({
         return (
           <EndGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {teams.length === 0 || !teams ? <NoPlayersLobby questionsCount={0} screenSize={screenSize} /> : <ResultsStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
                <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>

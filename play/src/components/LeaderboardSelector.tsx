@@ -38,7 +38,7 @@ const ScoreBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   background: 'rgba(0, 0, 0, 0.302)',
   borderRadius: '17px',
-  marginRight: `${theme.sizing.extraSmallPadding}px`,
+  marginRight: `${theme.sizing.xSmPadding}px`,
 }));
 
 interface LeaderboardSelectorProps {
@@ -94,7 +94,7 @@ export default function LeaderboardSelector({
           sx={{
             textShadow: '0px 2px 8px rgba(0, 0, 0, 0.7)',
             zIndex: 1,
-            paddingLeft: `${theme.sizing.extraLargePadding}px`,
+            paddingLeft: `${theme.sizing.xLgPadding}px`,
           }}
         >
           {teamNameFormatted}
@@ -103,8 +103,8 @@ export default function LeaderboardSelector({
           <Typography
             variant="h1"
             sx={{
-              paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-              paddingRight: `${theme.sizing.extraSmallPadding}px`,
+              paddingLeft: `${theme.sizing.xSmPadding}px`,
+              paddingRight: `${theme.sizing.xSmPadding}px`,
             }}
           >
             {teamScore}

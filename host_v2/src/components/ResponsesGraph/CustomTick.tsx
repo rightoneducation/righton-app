@@ -2,7 +2,7 @@ import React from 'react';
 import { VictoryLabel } from 'victory';
 import { Tooltip, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import check from '../../img/Pickedcheck.svg';
+import check from '../../img/Pickedcheck_white.svg';
 import noResponse from '../../img/noResponse.svg';
 
 const TooltipBox = styled(Box)({
@@ -47,7 +47,7 @@ export default function CustomTick(props: any) {
         y={y} 
         text={data[index].multiChoiceCharacter} 
         style={{
-          fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
+          fill: '#FFF',
           fontFamily: 'Poppins',
           fontWeight: '800',
           fontSize: '16px',

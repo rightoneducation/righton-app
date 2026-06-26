@@ -79,7 +79,7 @@ export default function FooterContent({
         <Avatar src={monsterMap[avatar].icon} alt="avatar" />
         <Typography
           variant="h3"
-          sx={{ marginLeft: `${theme.sizing.smallPadding}px` }}
+          sx={{ marginLeft: `${theme.sizing.smPadding}px` }}
         >
           {teamName}
         </Typography>

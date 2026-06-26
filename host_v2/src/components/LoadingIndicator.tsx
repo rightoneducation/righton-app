@@ -127,7 +127,7 @@ export default function LoadingIndicator({
       >
         {Segments(21, 21, 15.91549430918954, colors)}
       </svg>
-      <Typography variant="h2" sx={{fontSize: '108px', textAlign: 'center', position: 'absolute'}}>
+      <Typography variant="h2" sx={{fontFamily: 'Rubik', fontWeight: 700, fontSize: '68px', textAlign: 'center', position: 'absolute'}}>
         {!gameCreate ? remainingTimeInSecond : null}
       </Typography>
     </Box>

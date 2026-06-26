@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswersPerPhase, IPhase } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersPerPhase, IPhase, HostButton, HostButtonType } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -13,54 +13,43 @@ import { trackEvent, HostEvent } from '../lib/analytics';
 import { IGraphClickInfo, ScreenSize } from '../lib/HostModels';
 import Timer from './Timer';
 
-const ButtonStyled = styled(Button)({
-  border: '2px solid #159EFA',
-  background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
-  borderRadius: '22px',
-  width: '300px',
-  height: '48px',
-  color: 'white',
-  fontSize: '20px',
-  fontWeight: '700',
-  lineHeight: '30px',
-  textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px #47D9FF 30%',
-  '&:disabled': {
-    background: '#032563',
-    border: '2px solid #159EFA',
-    borderRadius: '22px',
-    width: '300px',
-    height: '48px',
-    color: '#159EFA',
-    fontSize: '20px',
-    fontWeight: '700',
-    lineHeight: '30px',
-    opacity: '100%',
-    cursor: 'not-allowed',
-    boxShadow: '0px 5px 22px 0px #47D9FF 30%',
-  },
+const FooterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ screenSize }) => {
+  const bottomPaddingBySize: Record<ScreenSize, string> = {
+    [ScreenSize.SMALL]: '48px',
+    [ScreenSize.MEDIUM]: '56px',
+    [ScreenSize.LARGE]: '24px',
+  };
+  return {
+    position: 'sticky',
+    bottom: '0',
+    margin: 'auto',
+    width: '100%',
+    maxWidth: '720px', // matches the header/content max width (with 16px side padding inset)
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    paddingTop: screenSize === ScreenSize.SMALL ? '20px' : '32px',
+    // inner left/right: 24px on mobile, 16px on tablet/desktop. Mobile's inset lives here
+    // (not on the FooterBackgroundStyled wrapper) so it renders reliably. The 32px tablet
+    // wrapper inset lives on FooterBackgroundStyled; desktop has no wrapper.
+    paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '16px',
+    paddingRight: screenSize === ScreenSize.SMALL ? '24px' : '16px',
+    paddingBottom: bottomPaddingBySize[screenSize],
+    boxSizing: 'border-box',
+  };
 });
 
-const FooterContainer = styled(Box)(({theme}) => ({
-  position: 'sticky',
-  bottom: '0',
-  margin: 'auto',
-  width: '100%',
-  maxWidth: '700px',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-end',
-  padding: '16px 16px 24px',
-  boxSizing: 'border-box',
-}));
-
-const InnerFooterContainer = styled(Box)({
+const InnerFooterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   width: '100%',
-  gap: 16
-});
+  gap: screenSize === ScreenSize.SMALL ? '12px' : '16px',
+}));
 
 interface FootGameInProgressProps {
   currentState: GameSessionState;
@@ -158,7 +147,7 @@ function FooterGameInProgress({
       case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
         return 'End Answering';
       case GameSessionState.PHASE_2_START:
-        return 'Continue to Phase Two';
+        return 'Start Phase 2';
       case GameSessionState.PHASE_1_DISCUSS:
       case GameSessionState.PHASE_2_DISCUSS:
         return 'Continue';
@@ -167,12 +156,27 @@ function FooterGameInProgress({
     }
   }
   const buttonText = GetButtonText();
+  const GetButtonType = (): HostButtonType => {
+    switch(currentState) {
+      case GameSessionState.CHOOSE_CORRECT_ANSWER:
+      case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+        return HostButtonType.END_ANSWERING;
+      case GameSessionState.PHASE_2_START:
+        return HostButtonType.CONTINUE_PHASE_TWO;
+      case GameSessionState.PHASE_1_DISCUSS:
+      case GameSessionState.PHASE_2_DISCUSS:
+        return HostButtonType.CONTINUE;
+      default:
+        return HostButtonType.START_GAME;
+    }
+  }
+  const buttonType = GetButtonType();
   let timerMessage = 'Students are reviewing explanations for incorrect answers';
   if (isTimerComplete) timerMessage = 'Continue when students are ready';
   else if (currentState === GameSessionState.PHASE_1_DISCUSS) timerMessage = 'Students are reviewing the correct answer and solution steps';
   return (
-    <FooterContainer>
-      <InnerFooterContainer>
+    <FooterContainer screenSize={screenSize}>
+      <InnerFooterContainer screenSize={screenSize}>
         { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS))) && (
           <PaginationContainerStyled
             className="swiper-pagination-container"
@@ -183,7 +187,7 @@ function FooterGameInProgress({
           <ProgressBarGroup submittedAnswers={submittedAnswers} teamsLength={teamsLength} />
         }
         {buttonText === 'Continue' && (
-          <Typography sx={{fontFamily: 'Rubik', fontWeight: '600', fontSize: '16px', color: '#384466'}}>
+          <Typography sx={{fontFamily: 'Rubik', fontWeight: '600', fontSize: '16px', color: '#384466', textAlign: 'center'}}>
             {timerMessage}
           </Typography>
         )}
@@ -200,23 +204,16 @@ function FooterGameInProgress({
               onTimerComplete={() => setIsTimerComplete(true)}
               width="300px"
               hideTimerText
+              disableBarTransition
             />
           </Box>
         )}
-        <ButtonStyled
-          disabled={teamsLength <= 0 || (buttonText === 'Continue' && !isTimerComplete)}
+        <HostButton
+          buttonType={buttonType}
+          label={buttonText}
+          isEnabled={teamsLength > 0 && !(buttonText === 'Continue' && !isTimerComplete)}
           onClick={handleButtonClick}
-          sx={buttonText === 'Continue' && !isTimerComplete ? {
-            '&:disabled': {
-              background: '#75757538',
-              border: 'none',
-              color: 'white',
-              boxShadow: 'none',
-            }
-          } : undefined}
-        >
-          {buttonText}
-        </ButtonStyled>
+        />
       </InnerFooterContainer>
     </FooterContainer>
   );

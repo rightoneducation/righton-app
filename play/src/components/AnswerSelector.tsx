@@ -92,8 +92,8 @@ export default function AnswerSelector({
         variant="paragraph"
         sx={{
           color: `${theme.palette.designSystem.surface.play}`,
-          paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-          paddingRight: `${theme.sizing.largePadding}px`,
+          paddingLeft: `${theme.sizing.xSmPadding}px`,
+          paddingRight: `${theme.sizing.lgPadding}px`,
           textAlign: 'left',
           alignSelf: 'stretch',
           display: 'flex',

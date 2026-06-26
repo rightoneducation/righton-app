@@ -1,4 +1,15 @@
 {
+  "gameoptions": {
+    "answertypetitle": "Answer Type",
+    "multiplechoice": "Multiple Choice",
+    "shortanswer": "Short Answer",
+    "answertypesubtitlemultiplechoice": "Players choose from a list of answers",
+    "answertypesubtitleshortanswer": "Players will be able to provide a short answer",
+    "confidencetitle": "Confidence Meter",
+    "confidencesubtitle": "Players rate how sure they are of their answer",
+    "studenthintstitle": "Student Hints",
+    "studenthintssubtitle": "Players share hints to help others learn from mistakes"
+  },
   "gamesession": {
     "questionCard": {
       "title": "Question"
@@ -8,8 +19,8 @@
       "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     },
     "confidenceCard": {
-      "title": "Confidence",
-      "description": "Players were asked how sure they are of their answer.",
+      "title": "Confidence Meter",
+      "description": "Players rated how sure they were of their answer",
       "instructions": "Tap on a response to see more details.",
       "graph": {
         "title": "Number of Players",
@@ -37,20 +48,37 @@
       "notstarted": "Answer the Question",
       "teamsjoining": "Prepare Game",
       "choosecorrectanswer": "Answer the Question",
-      "choosetrickiestanswer": "Pick the Trickiest!",
-      "phase1discuss": "Answer Explanations",
-      "phase2discuss": "Answer Explanations",
-      "phase2start": "Answer Explanations",
+      "choosetrickiestanswer": "Pick the Trickiest",
+      "phase1discuss": "Review the Answer",
+      "phase2discuss": "Review the Answer",
+      "phase2start": "Review the Answer",
       "phase1results": "Phase 1 Results",
       "phase2results": "Phase 2 Results",
       "leaderboard": "Leaderboard",
       "finalresults": "Final Leaderboard",
       "finished": "Answer the Question",
       "correct": "Correct!",
-      "incorrect": "Nice Try!"
+      "incorrect": "Nice Try!",
+      "phase1pill": "Phase 1",
+      "phase2pill": "Phase 2"
     },
     "questionCard": {
       "title": "Question"
     }
+  },
+  "hintscard": {
+    "title": "Student Hints",
+    "submittedcount": "Number of players who submitted a hint:",
+    "minsubmissions": "At least 3 submissions are needed \nto organize hints into themes",
+    "submitted": "Players have submitted hints to help others learn",
+    "instructions": "Tap on a response to see more details.",
+    "notenough": "Not enough players submitted hints.",
+    "loading": "Players have submitted hints to help others learn.",
+    "organizing": "Organizing student hints into themes...",
+    "retry": "Retry",
+    "error": "There was an error processing the hints. Please try again."
+  },
+  "loadingpage": {
+    "launching": "Launching your game..."
   }
 }

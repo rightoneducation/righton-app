@@ -9,15 +9,18 @@ import RightOnPlaceHolder from '../../images/RightOnLogo.png';
 
 const PStyled = styled(Typography)({
   color: 'rgba(255, 255, 255, 1)',
-  fontSize: '16px',
+  fontSize: '14px',
   width: '100%',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  textAlign: 'center'
 })
 
-const MenuItemStyled = styled(Box)(({isSelected}) => ({
+const MenuItemStyled = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected: boolean }>(({isSelected}) => ({
   border: `${isSelected ? '4px solid  #0094FF' : '0px solid transparent'}`,
   padding: `${isSelected ? '0px' : '4px'}`,
-  borderRadius: '14px',
+  borderRadius: '18px',
   width: '100%',
   backgroundColor: 'white',
   cursor: 'default',
@@ -31,7 +34,9 @@ const MenuItemStyled = styled(Box)(({isSelected}) => ({
   minHeight: '110px',
 }))
 
-const LeftBox = styled(Box)(({isSelected}) => ({
+const LeftBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected: boolean }>(({isSelected}) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -93,6 +98,7 @@ const TitleStyled = styled(Typography)({
 
 const BoxStyled = styled(Box)({
   margin: 'auto',
+  paddingTop: '24px'
 })
 
 const SearchStyled = styled(Box)({

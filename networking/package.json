@@ -46,7 +46,7 @@
     "zod": "^3.24.1"
   },
   "scripts": {
-    "build": "cti s -p ./tsconfig.build.json ./src -s true -b -f index.ts && tsc --build tsconfig.json",
+    "build": "cti s -p ./tsconfig.build.json ./src -s true -b -f index.ts && tsc --build tsconfig.json && rsync -a --include='*/' --include='*.svg' --exclude='*' src/ lib/src/",
     "test": "jest"
   },
   "files": [

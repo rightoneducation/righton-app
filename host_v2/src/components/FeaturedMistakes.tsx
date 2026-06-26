@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import {
   Paper,
   Typography,
@@ -8,7 +8,9 @@ import {
   Radio,
   Box
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { IHostTeamAnswersResponse, IQuestion, GameSessionState } from "@righton/networking";
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useHostTeamAnswersContext';
@@ -17,39 +19,51 @@ import { Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 
-const BackgroundStyled = styled(Paper)({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  borderRadius: '24px',
-  backgroundColor: 'rgba(0,0,0,0)',
-  gap: 16,
-});
-
-const TitleStyled = styled(Typography)({
-  color: '#FFFFFF',
-  fontFamily: 'Poppins',
-  textAlign: 'left',
-  fontSize: '24px',
-  fontWeight: 700,
-  width: '100%',
-  lineHeight: '36px',
-});
-
-const SubtitleStyled = styled(Typography)({
-  color: '#FFFFFF',
-  fontFamily: 'Rubik',
-  textAlign: 'center',
-  fontSize: '14px',
-  fontWeight: 400,
-});
-
 const RadioLabelStyled = styled(FormControlLabel)({
   color: '#FFFFFF',
   '& .MuiTypography-root': {
     color: '#FFFFFF',
+    fontSize: '14px'
   },
 });
+
+// Unselected: an empty white-outlined circle.
+const RadioIconStyled = styled(Box)({
+  width: 18,
+  height: 18,
+  borderRadius: '50%',
+  boxSizing: 'border-box',
+  border: '2px solid #FFFFFF',
+  backgroundColor: 'transparent',
+});
+
+// Selected: outline in surface.host (#384466) wrapping a bright-blue gradient dot.
+const RadioCheckedIconStyled = styled(Box)(({ theme }) => ({
+  width: 18,
+  height: 18,
+  borderRadius: '50%',
+  boxSizing: 'border-box',
+  border: `2px solid ${theme.palette.designSystem.surface.host}`,
+  backgroundColor: 'transparent',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const RadioCheckedDotStyled = styled(Box)(({ theme }) => ({
+  width: 10,
+  height: 10,
+  borderRadius: '50%',
+  background: theme.palette.primary.highlightGradient,
+}));
+
+const SmallTextContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  alignSelf: 'stretch',
+}));
 
 interface FeaturedMistakesProps {
   currentQuestion: IQuestion,
@@ -66,15 +80,17 @@ export default function FeaturedMistakes({
   isPopularMode,
   setIsPopularMode
 }: FeaturedMistakesProps) {
-
+  const theme = useTheme();
+  const {t} = useTranslation();
   const title = (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)
-    ? 'Common Mistakes' 
+    ? 'Common Mistakes Preview' 
     : 'Common Mistakes Preview';
   const subtitle = (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)
-    ? 'Selected responses will be presented to players as options for popular incorrect answers.'
-    : 'On the next screen, you will select from these incorrect answers to be options in Phase 2.';
+    ? t('gamesession.confidenceCard.description')
+    : 'On the next screen, you will select from these incorrect answers to be options in Phase 2';
   const radioButtonText1 = 'Use the top 3 answers by popularity';
   const radioButtonText2 = 'Manually pick the options';
+  const manualSubtitle = 'Select 3 options for the Phase 2 multiple-choice question';
   const numOfPopularMistakes = 3;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localHostTeamAnswers = useTSHostTeamAnswersContext(HostTeamAnswersContext);
@@ -160,25 +176,51 @@ export default function FeaturedMistakes({
 
   return (
     <HostDefaultCardStyled elevation={10}>
-      <BackgroundStyled elevation={0}>
-        <TitleStyled>{title}</TitleStyled>
-        <SubtitleStyled>{subtitle}</SubtitleStyled>
+      <BodyCardContainerStyled>
+        <Typography variant='h3' style={{color: theme.palette.primary.main}}>
+          {title}
+        </Typography>
+        <SmallTextContainer>
+          <Typography variant='label' style={{color: theme.palette.primary.main}}>
+            {subtitle}
+          </Typography>
+        </SmallTextContainer>
         {(currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START) &&
+        <>
           <RadioGroup
             value={isPopularMode ? "A" : "B"} // Controlled component
             onChange={handleModeChange}
+            sx={{ gap: `${theme.sizing.smPadding}px` }}
           >
             <RadioLabelStyled
               value="A"
-              control={<Radio sx={{ color: '#FFFFFF' }} />}
+              control={
+                <Radio
+                  sx={{ py: 0 }}
+                  icon={<RadioIconStyled />}
+                  checkedIcon={<RadioCheckedIconStyled><RadioCheckedDotStyled /></RadioCheckedIconStyled>}
+                />
+              }
               label={radioButtonText1}
             />
             <RadioLabelStyled
               value="B"
-              control={<Radio sx={{ color: '#FFFFFF' }} />}
+              control={
+                <Radio
+                  sx={{ py: 0 }}
+                  icon={<RadioIconStyled />}
+                  checkedIcon={<RadioCheckedIconStyled><RadioCheckedDotStyled /></RadioCheckedIconStyled>}
+                />
+              }
               label={radioButtonText2}
             />
           </RadioGroup>
+          {!isPopularMode &&
+            <Typography variant='smallLabel' style={{color: theme.palette.primary.main, opacity: 0.4}}>
+                {manualSubtitle}
+            </Typography>
+          }
+          </>
         }
         {sortedMistakes.length > 0 ? (
           <Box
@@ -206,14 +248,12 @@ export default function FeaturedMistakes({
           </Box>
         ) : (
           <Box sx={{ width: '100%' }}>
-            <SubtitleStyled
-              style={{ fontStyle: 'italic', textAlign: 'center' }}
-            >
+            <Typography variant='label' style={{color: theme.palette.primary.main, fontStyle: 'italic', textAlign: 'center'}}>
               Student responses will appear here
-            </SubtitleStyled>
+            </Typography>
           </Box>
         )}
-      </BackgroundStyled>
+      </BodyCardContainerStyled>
     </HostDefaultCardStyled>
   );
 }

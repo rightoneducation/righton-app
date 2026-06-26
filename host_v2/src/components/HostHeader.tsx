@@ -13,37 +13,40 @@ interface HostHeaderProps {
 }
 
 
-const UpperStyled = styled(Box)(({theme}) => ({
+const UpperStyled = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({theme, screenSize}) => ({
   display: 'flex',
   position: 'sticky',
   flexDirection: 'column',
-  justifyContent: 'space-between', 
-  gap: '16px', 
-  height: '170px', 
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: screenSize === ScreenSize.LARGE ? '8px' : '24px',
   width: '100%',
   maxWidth: `${theme.breakpoints.values.lg}px`,
-  padding: '0px 16px 0px 16px', 
-  boxSizing: 'border-box', /* got rid of width, added the display, flexdir, justify content */
+  margin: '0 auto',
+  paddingTop: '48px',
+  paddingLeft: screenSize === ScreenSize.MEDIUM ? '32px' : '24px',
+  paddingRight: screenSize === ScreenSize.MEDIUM ? '32px' : '24px',
+  boxSizing: 'border-box',
   zIndex: 3,
 }));
 
 const TopLineStyled = styled(Box)({
   display: 'flex',
-  justifyContent: 'center', // send the "game lobby" and the icons to opp sides
+  justifyContent: 'space-between', // send the "game lobby" and the icons to opp sides
   alignItems: 'center', // align items vertically in the center
-  width: '100%', // fixed on the figma, but that would look goofy on bigger screens
+  width: '100%', 
   gap: '8px', 
   height: '36px',
 });
 
 const GameLobbyTypographyStyled = styled(Typography)({
-  width: '255px', // this is for the phase description
-  height: '36px',
+  width: '255px', 
   fontSize: '24px',
   fontWeight: '700',
   color: 'rgba(255, 255, 255, 1)',
   lineHeight: '36px', 
-  textAlign: 'center',
 });
 
 const IconsContainer = styled(Box)({
@@ -69,54 +72,47 @@ function HostHeader({ gameCode, screenSize }: HostHeaderProps) {
   };
   
   const handleCloseClick = () => {
-    window.location.href = 'http://central.rightoneducation.com/';
+    window.location.href = 'http://dev-central.rightoneducation.com/';
   };
   return (
-    <>
-      <Box style={{
-        position: 'absolute',
-        top: screenSize !== ScreenSize.LARGE ? '56px' : '0px',
-        right: 0,
-        paddingTop: '24px',
-        paddingRight: '24px'
-      }}>
-        <Tooltip
-              title="Help"
-              placement="top"
-              arrow
-              enterTouchDelay={0}
-              leaveTouchDelay={300}
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: 'offset',
-                      options: {
-                        offset: [0, -12],
-                      },
-                    },
-                  ],
-                },
-              }}
-            >
-          <HelpSvg onClick={handleHelpClick}/>
-        </Tooltip>
-      </Box>
-      <UpperStyled>
+    <Box style={{width: '100%'}}>
+      <UpperStyled screenSize={screenSize}>
         {isHelpDisplayed && 
           <HelpModal isHelpDisplayed={isHelpDisplayed} setIsHelpDisplayed={setIsHelpDisplayed}/>
         }
         <TopLineStyled>
-          <Box>
             <GameLobbyTypographyStyled
               style={{fontSize: screenSize !== ScreenSize.LARGE ? '24px' : '32px'}}
             >
-              Game Lobby </GameLobbyTypographyStyled> 
-          </Box>
+              Game Lobby
+            </GameLobbyTypographyStyled> 
+            <Box>
+              <Tooltip
+                    title="Help"
+                    placement="top"
+                    arrow
+                    enterTouchDelay={0}
+                    leaveTouchDelay={300}
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: 'offset',
+                            options: {
+                              offset: [0, -12],
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  >
+                <HelpSvg onClick={handleHelpClick}/>
+              </Tooltip>
+            </Box>
         </TopLineStyled>
-        <GameCode gameCode={gameCode} />
+        <GameCode gameCode={gameCode} screenSize={screenSize} />
       </UpperStyled>
-    </>
+    </Box>
   );
 }
 

@@ -9,7 +9,7 @@ import {
   Bar
 } from 'victory';
 import { ITeam, IHostTeamAnswersResponse } from '@righton/networking';
-import { IGraphClickInfo } from '../../lib/HostModels';
+import { IGraphClickInfo, IGraphClickIndices } from '../../lib/HostModels';
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import { CustomBar } from './CustomBar';
@@ -35,7 +35,7 @@ interface ResponseGraphProps {
   data: IHostTeamAnswersResponse[];
   statePosition: number,
   isShortAnswerEnabled: boolean,
-  graphClickInfo: IGraphClickInfo, // eslint-disable-line
+  graphClickInfo: IGraphClickIndices, // eslint-disable-line
   isPrevPhaseResponses: boolean,
   setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
   setGraphClickIndex: (index: number | null) => void;
@@ -158,7 +158,7 @@ export default function ResponsesGraph({
               standalone={false}
               orientation="top"
               tickValues={calculateRoundedTicks()}
-              tickFormat={(tick) => Math.round(tick)}
+              tickFormat={(tick: number) => Math.round(tick)}
             />
           )}
           <VictoryBar
@@ -196,6 +196,7 @@ export default function ResponsesGraph({
             labelComponent={
               <CustomLabel
                 noResponseLabel={noResponseLabel}
+                isPrevPhaseResponses={isPrevPhaseResponses}
                 isShortAnswerEnabled={isShortAnswerEnabled}
                 customBarSelectedWidth={customBarSelectedWidth}
                 statePosition={statePosition}

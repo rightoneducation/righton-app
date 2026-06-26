@@ -17,8 +17,8 @@ const StackContainer = styled(Stack)(({ theme }) => ({
 
 const TypographyStyled = styled(Typography)(({ theme }) => ({
   textAlign: `center`,
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
   whiteSpace: 'pre-wrap',
 }));
 

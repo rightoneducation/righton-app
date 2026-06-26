@@ -4,23 +4,7 @@ import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState, CloudFrontDistributionUrl } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
-
-const TitleTypography = styled(Typography)({
-  width: '100%', 
-  textAlign: 'left', 
-  fontFamily: 'Poppins',
-  fontWeight: '700', 
-  fontSize: '24px',
-  lineHeight: '36px',
-})
-const BodyTypography = styled(Typography)({
-  fontFamily: 'Rubik',
-  fontWeight: '400',
-  fontSize: '16px',
-  lineHeight: '19px',
-  color: '#384466',
-})
+import { BodyCardStyled } from '../lib/styledcomponents/BodyCardStyled';
 
 interface QuestionCardProps {
   questionText: string;
@@ -38,27 +22,30 @@ export default function QuestionCard({
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   return (
-    <BodyCardStyled elevation={10}>
-      <BodyCardContainerStyled>
-        <TitleTypography>
+    <BodyCardStyled 
+      elevation={10} 
+      style={{  
+        marginLeft:`${theme.sizing.xxSmPadding}px`,
+        marginRight: `${theme.sizing.xxSmPadding}px`
+      }}
+    >
+      <BodyCardContainerStyled style={{alignItems: 'center'}}>
+        <Typography variant="h1" style={{color: theme.palette.designSystem.surface.host, textAlign: 'left', width: '100%'}}>
         {`${t('gamesession.questionCard.title')} ${currentQuestionIndex + 1}`}       
-        </TitleTypography>
+        </Typography>
         {imageUrl === undefined ? null : (
           <img
             style={{
-              width: '75%', // this value was here before, so we're keeping it. (not found on figma)
+              width: '75%',
               height: 'auto',
-
             }}
             src={`${CloudFrontDistributionUrl}${imageUrl}`}
             alt="Question"
           />
         )}
-        <BodyTypography 
-          sx={{whiteSpace: 'pre-line', textAlign: 'left', width: '100%'}}
-        > 
+        <Typography variant="paragraph" style={{color: theme.palette.designSystem.surface.play }}> 
           {questionText} 
-        </BodyTypography>
+        </Typography>
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

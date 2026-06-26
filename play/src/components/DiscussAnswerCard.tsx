@@ -161,7 +161,7 @@ export default function DiscussAnswerCard({
             }
         <Stack
           spacing={1}
-          sx={{ paddingTop: `${theme.sizing.extraSmallPadding}px` }}
+          sx={{ paddingTop: `${theme.sizing.xSmPadding}px` }}
         >
           {correctCard ? (
             instructions.map((instruction, index) => (
@@ -187,7 +187,7 @@ export default function DiscussAnswerCard({
                 </Box>
                 <Typography
                   variant="body1"
-                  sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px`,whiteSpace: 'pre-line' }}
+                  sx={{ paddingLeft: `${theme.sizing.xSmPadding}px`,whiteSpace: 'pre-line' }}
                 >
                   {instruction}
                 </Typography>

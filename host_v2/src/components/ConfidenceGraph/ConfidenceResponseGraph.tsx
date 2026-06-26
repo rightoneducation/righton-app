@@ -11,7 +11,7 @@ import {
   VictoryAxis,
 } from 'victory';
 import { debounce } from 'lodash';
-import { ConfidenceLevel, IHostTeamAnswersConfidence } from '@righton/networking';
+import { IHostTeamAnswersConfidence } from '@righton/networking';
 import { IGraphClickInfo } from '../../lib/HostModels';
 import Legend from './ConfidenceResponseLegend';
 import CustomBar from './CustomBar';
@@ -35,17 +35,22 @@ const LabelStyled = styled(Typography)(({ theme }) => ({
   alignSelf: 'stretch',
 }));
 
-const ContainerStyled = styled(Box)({
-  display: 'flex',
-  padding: `4px`,
-  flexDirection: 'column',
-  alignItems: 'center',
-  alignSelf: 'stretch',
+const ContainerStyled = styled(Box)(({theme}) => {
+  return {
+    display: 'flex',
+    padding: `4px`,
+    flexDirection: 'column',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  }
 });
 
-const CenteredContainer = styled(Box)({
-  display: 'flex',
-  justifyContent: 'center',
+const CenteredContainer = styled(Box)(({theme}) => {
+  return {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: `${theme.sizing.smPadding}px`
+  }
 });
 
 export default function ConfidenceResponsesGraph({
@@ -98,9 +103,7 @@ export default function ConfidenceResponsesGraph({
   }, []);
   return (
     <ContainerStyled>
-      <CenteredContainer>
-        <LabelStyled>{t('gamesession.confidenceCard.graph.title')}</LabelStyled>
-      </CenteredContainer>
+      <Legend />
       <div ref={graphRef}>
         <VictoryChart
           theme={theme.victoryConfidenceTheme}
@@ -123,7 +126,7 @@ export default function ConfidenceResponsesGraph({
             {currentIncorrectConfidences.length > 0 &&
               <VictoryBar
                 name='incorrect'
-                style={{data: {fill: 'transparent'}}}
+                style={{data: {fill: 'rgba(255,255,255, 0.4', stroke: 'rgba(255, 255, 255, 0.6)', strokeWidth: '2px'}}}
                 data={currentIncorrectConfidences}
                 cornerRadius={({ index }) =>
                   (index !== undefined && currentCorrectConfidences[Number(index)].y === 0)
@@ -171,14 +174,15 @@ export default function ConfidenceResponsesGraph({
             }
             <VictoryAxis
               tickValues={currentCorrectConfidences.map((datum: Response) => datum.x)}
+              style={{ tickLabels: { fillOpacity: 1 } }}
             />
           </VictoryStack>
         </VictoryChart>
       </div>
       <CenteredContainer>
-        <LabelStyled>{t('gamesession.confidenceCard.title')}</LabelStyled>
+        <Typography variant='label'>{t('gamesession.confidenceCard.title')}</Typography>
       </CenteredContainer>
-      <Legend />
+
     </ContainerStyled>
   );
 }

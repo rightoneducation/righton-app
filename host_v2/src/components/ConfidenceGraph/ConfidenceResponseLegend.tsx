@@ -34,16 +34,18 @@ export default function Legend() {
    */
   function legendKey(name: string): React.ReactNode {
     return (
-      <svg width={40} height={15}>
+      <svg width={30} height={10}>
         <rect
-          width={40}
-          height={15}
+          width={30}
+          height={10}
           style={{
             fill:
               name === 'correct'
                 ? `${theme.palette.primary.main}`
-                : 'transparent',
-            stroke: `${theme.palette.primary.main}`,
+                : 'rgba(255,255,255,0.4)',
+            stroke: name === 'correct' 
+                ? `${theme.palette.primary.main}`
+                : 'rgba(255,255,255,0.6)',
             strokeWidth: `${theme.sizing.barStrokeWidth}`,
           }}
         />

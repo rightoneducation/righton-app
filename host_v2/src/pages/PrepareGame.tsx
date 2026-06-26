@@ -93,14 +93,15 @@ export default function PrepareGame( {
           <HeaderBackgroundStyled />  
         </motion.div>
         <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
         >
           <HeaderContent
             isCorrect={false}
             isIncorrect={false}
             totalTime={0}
+            screenSize={screenSize}
           />
         </motion.div>
         <BodyStackContainerStyled>
@@ -119,24 +120,21 @@ export default function PrepareGame( {
             setIsHintEnabled={setIsHintEnabled}
           />
         </BodyStackContainerStyled>  
-        <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1, ease: 'easeIn' }}
-          style={{
-            zIndex: 1,
-            pointerEvents: 'auto',  
-          }}
-        >
-          <FooterBackgroundStyled>
+        <FooterBackgroundStyled screenSize={screenSize}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: 'easeIn' }}
+            style={{ pointerEvents: 'auto' }}
+          >
             <FooterInterim
               teamsLength={localGameSession.teams.length}
               screenSize={screenSize}
               handleButtonClick={handleButtonClick}
               isGamePrepared={isGamePrepared}
             />
-          </FooterBackgroundStyled>
-        </motion.div>
+          </motion.div>
+        </FooterBackgroundStyled>
       </StackContainerStyled>
     );
   }

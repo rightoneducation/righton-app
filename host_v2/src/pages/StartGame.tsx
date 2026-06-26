@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Box, Paper } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
@@ -7,13 +7,14 @@ import {
   ITeam,
   IQuestion,
 } from '@righton/networking';
+import mathSymbolsBackground from '../img/mathSymbolsBackground.svg';
 import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
 import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
+import { HEADER_SYMBOL_SCALE, HEADER_BACKGROUND_COLOR } from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 
 const SafeAreaStyled = styled(Box)({
-  paddingBottom: '34px',
   position: 'relative',
   width: '100%',
   height: '100dvh',
@@ -22,13 +23,12 @@ const SafeAreaStyled = styled(Box)({
   alignItems: 'center',
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
-  gap: '16px',
   overflow: 'hidden'
 });
 
 
 const HeaderAreaStyled = styled(Box)(({ screenSize }: { screenSize: ScreenSize }) => ({
-  marginTop: screenSize !== ScreenSize.LARGE ? '47px' : '0px',
+  width: '100%',
 }));
 
 const BackgroundStyled = styled(Paper)(({ theme }) => ({
@@ -36,20 +36,61 @@ const BackgroundStyled = styled(Paper)(({ theme }) => ({
   top: 0,
   left: 0,
   width: '100vw', // Stretch across the entire container
-  height: '100vh', // Cover the full height of the container
+  height: '100dvh', // Cover the full height of the container; gradient fills the box top→bottom
   background: theme.palette.primary.backgroundGradient,
   zIndex: -1, // Ensure it stays behind the content
   overflow: 'hidden',
 }));
-const Shadow = styled(Box)(({theme}) => ({
-  position: 'absolute', // Position it absolutely within StartGameContainer
+
+// Cream backstop one layer behind the splash gradient (zIndex -2, below BackgroundStyled's -1).
+// The blue html canvas tints the iOS bars; this paints cream OVER that canvas so that when the
+// curtain pulls the gradient up, the revealed area is cream (the PrepareGame body color), not the
+// blue canvas. It is position:absolute (NOT fixed), so iOS Safari does not sample it for the bar
+// tint — the bars keep reading the blue html canvas.
+const CreamBackstopStyled = styled(Box)({
+  position: 'absolute',
   top: 0,
   left: 0,
-  width: '100vw', // Stretch across the entire container
-  height: '100vh', // Cover the full height of the container
-  boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
-  zIndex: -1,
-}));
+  width: '100vw',
+  height: '100dvh',
+  background: '#FFFBF6', // designSystem.foreground.warmBase
+  zIndex: -2,
+  pointerEvents: 'none',
+});
+
+// Math symbols live in their own layer (not a ::before) so the curtain can uniformly
+// scale them down. transformOrigin bottom-center keeps them pinned to the header's
+// bottom edge while shrinking; bottom:0 means they ride the gradient box's rising
+// bottom edge as its height animates, so no separate translate is needed.
+const MathSymbolsStyled = styled(Box)({
+  position: 'absolute',
+  // 300vw wide and centered so the element's box never clips the art inside the
+  // viewport while it scales down (a background image is clipped to its own box).
+  // At scale 0.5 the box is still 150vw, so only the parent's overflow:hidden (the
+  // real viewport) clips it — exactly like the static HeaderBackgroundStyled.
+  left: '-100vw',
+  right: '-100vw',
+  bottom: 0,
+  height: '1084px', // natural height of the math symbols art (2610x1084)
+  backgroundImage: `url(${mathSymbolsBackground})`,
+  backgroundRepeat: 'repeat-x', // tile horizontally so coverage stays full-width as the symbols shrink below viewport width (matches the static header's repeat-x handoff)
+  backgroundPosition: 'bottom center',
+  backgroundSize: 'auto', // natural size on the splash; uniformly scaled during the curtain
+  transformOrigin: 'bottom center',
+  pointerEvents: 'none',
+  opacity: '5%',
+});
+// Flat fill that crossfades in over the splash gradient during the curtain so the
+// box lands on exactly the static header's solid color (no gradient-to-gradient
+// matching). Sits above the gradient but below MathSymbolsStyled (DOM order), so
+// the 5% symbols still read on top — matching the static header's stack.
+const FlatHeaderOverlayStyled = styled(Box)({
+  position: 'absolute',
+  inset: 0,
+  background: HEADER_BACKGROUND_COLOR,
+  opacity: 0, // ramps to 1 during the curtain
+  pointerEvents: 'none',
+});
 
 interface StartGameProps {
   teams: ITeam[];
@@ -67,8 +108,14 @@ function StartGame({teams,
   setIsGamePrepared
   }: StartGameProps) {
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
+    const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+    const screenSize = isLargeScreen  // eslint-disable-line
+        ? ScreenSize.LARGE
+        : isMediumScreen
+          ? ScreenSize.MEDIUM
+          : ScreenSize.SMALL;
+    const [activeSlide, setActiveSlide] = useState(0);
     // framer-motion transition animation
     // first half is on startGame (exit out components)
     // second half is on prepareGame (enter in components)
@@ -77,15 +124,16 @@ function StartGame({teams,
     const [scope3, animate3] = useAnimate();
     const [scope4, animate4] = useAnimate();
     const [scope5, animate5] = useAnimate();
-    const [shadowScope, animateShadow] = useAnimate();
+    const [mathScope, animateMath] = useAnimate();
+    const [flatScope, animateFlat] = useAnimate();
 
     const handleButtonClick = () => {
       const exitAnimation = () => {
-        const scaleFactor = 225 / window.innerHeight;
         // Start all animations concurrently and return a promise that resolves when all animations are complete
         return Promise.all([
-          animate(scope.current, { opacity: .85, scaleY: scaleFactor, x: 0, zIndex: -1 }, { duration: 1 }), // Animate to final value over 1 second
-          animateShadow(shadowScope.current, { y: 'calc(-100vh + 210px)' }, { duration: 1 }),
+          animate(scope.current, { opacity: 1, height: 200 + theme.sizing.mdPadding }, { duration: 1 }), // shrink gradient box to the header's rendered bottom edge: HeaderBackgroundStyled is content-box (no CssBaseline) → 200px height + 24px (mdPadding) top padding = 224px
+          animateFlat(flatScope.current, { opacity: 1 }, { duration: 1 }), // crossfade the flat header color over the gradient so the box lands on the static header's solid fill
+          animateMath(mathScope.current, { scale: HEADER_SYMBOL_SCALE }, { duration: 1 }), // uniformly shrink symbols to the header's scaled-down size (bottom-pinned, no squish)
           animate2(scope2.current, {opacity: 0, position: 'relative'}, { duration: 1 }),
           animate3(scope3.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
           animate5(scope5.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
@@ -98,15 +146,17 @@ function StartGame({teams,
     }
     return (
         <SafeAreaStyled>
-          <motion.div ref={scope} initial={{ opacity: 1 }} style={{width: '100%'}}>
-            <BackgroundStyled/>
-          </motion.div>
-          <motion.div ref={shadowScope} style={{ width: '100%' }}>
-            <Shadow />
-          </motion.div>
-          <HeaderAreaStyled screenSize={screenSize}>
-          <motion.div ref={scope2} exit={{opacity: 0}} >
-            <HostHeader gameCode = {gameCode} screenSize={screenSize}/>
+          <CreamBackstopStyled />
+          <BackgroundStyled ref={scope}>
+            <FlatHeaderOverlayStyled ref={flatScope} />
+            <MathSymbolsStyled ref={mathScope} />
+          </BackgroundStyled>
+          <HeaderAreaStyled screenSize={screenSize} >
+          <motion.div ref={scope2} exit={{opacity: 0, width: '100%'}} >
+            <HostHeader
+              gameCode={gameCode}
+              screenSize={screenSize}
+            />
           </motion.div>
           </HeaderAreaStyled>
       <motion.div ref={scope5} style={{ display: 'flex', width: '100%',  overflow: 'hidden', justifyContent: 'center',
@@ -118,6 +168,7 @@ function StartGame({teams,
           title={title}
           currentQuestionIndex={currentQuestionIndex}
           screenSize={screenSize}
+          onSlideChange={setActiveSlide}
         />
       </motion.div>
           <motion.div ref={scope3} style={{width: '100%'}}>           
@@ -127,6 +178,7 @@ function StartGame({teams,
               handleButtonClick={handleButtonClick}
               isGamePrepared={false}
               scope4={scope4}
+              activeSlide={activeSlide}
             />
           </motion.div>
         </SafeAreaStyled>

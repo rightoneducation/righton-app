@@ -22,13 +22,13 @@ const HeaderContainer = styled('div', {
 })<HeaderContainerProps>(({ theme, screenSize, disableInnerPadding }) => ({
   width: '100%',
   maxWidth: MAX_WIDTH_BY_SIZE[screenSize],
-  paddingLeft: disableInnerPadding || screenSize !== ScreenSize.SMALL ? 0 : `${theme.sizing.largePadding}px`,
-  paddingRight: disableInnerPadding || screenSize !== ScreenSize.SMALL ? 0 : `${theme.sizing.largePadding}px`,
+  paddingLeft: disableInnerPadding || screenSize !== ScreenSize.SMALL ? 0 : `${theme.sizing.lgPadding}px`,
+  paddingRight: disableInnerPadding || screenSize !== ScreenSize.SMALL ? 0 : `${theme.sizing.lgPadding}px`,
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: `${theme.sizing.extraSmallPadding}px`,
+  gap: `${theme.sizing.xSmPadding}px`,
 }));
 
 interface HeaderContentProps {
