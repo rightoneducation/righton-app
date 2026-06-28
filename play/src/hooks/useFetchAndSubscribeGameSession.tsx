@@ -35,7 +35,6 @@ export default function useFetchAndSubscribeGameSession(
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const [newPoints, setNewPoints] = useState<number>(0);
   const previousStateRef = useRef<GameSessionState | null>(null);
-  const hasRejoinedRef = useRef<boolean>(hasRejoined);
   const gameSessionRef = useRef<IGameSession | undefined>(gameSession);
 
   const handleVisibilityChange = () => {
@@ -53,10 +52,6 @@ export default function useFetchAndSubscribeGameSession(
       window.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [gameSession]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    hasRejoinedRef.current = hasRejoined;
-  }, [hasRejoined]);
 
   useEffect(() => {
     gameSessionRef.current = gameSession;
@@ -106,6 +101,57 @@ export default function useFetchAndSubscribeGameSession(
       }
     };
 
+    // Scoring is deferred to the discuss phases (never the answer phases) so points
+    // don't reveal correctness early. Idempotent per (question, discuss-phase), and
+    // persisted so a refresh/rejoin neither double-adds (the write is additive) nor
+    // drops not-yet-scored points.
+    // Known limitation: localStorage loss (mobile Safari eviction) or a device switch
+    // resets these keys, so a rejoin could double-count.
+    const SCORED_STORAGE_KEY = `scoredKeys:${gameSessionId}:${teamId}`;
+    const loadScored = (): Set<string> => {
+      try {
+        const raw = window.localStorage.getItem(SCORED_STORAGE_KEY);
+        return new Set<string>(raw ? JSON.parse(raw) : []);
+      } catch {
+        return new Set<string>();
+      }
+    };
+    const saveScored = (set: Set<string>) => {
+      try {
+        window.localStorage.setItem(SCORED_STORAGE_KEY, JSON.stringify(Array.from(set)));
+      } catch {
+        /* ignore persistence failures */
+      }
+    };
+    const maybeScore = (g: IGameSession) => {
+      if (
+        g.currentState !== GameSessionState.PHASE_1_DISCUSS &&
+        g.currentState !== GameSessionState.PHASE_2_DISCUSS
+      ) {
+        return;
+      }
+      const key = `${g.currentQuestionIndex ?? 0}:${g.currentState}`;
+      const scored = loadScored();
+      if (scored.has(key)) return; // already scored this (question, discuss-phase)
+      const currentTeam = g.teams?.find((team) => team.id === teamId);
+      if (!currentTeam) {
+        console.error('Team not found');
+        return;
+      }
+      const currentQuestion = g.questions[g.currentQuestionIndex ?? 0];
+      const isShortAnswerEnabled = false;
+      const calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
+        g,
+        currentQuestion,
+        currentTeam,
+        isShortAnswerEnabled
+      );
+      scored.add(key); // mark before the async write so a rapid duplicate can't double-fire
+      saveScored(scored);
+      setNewPoints(0);
+      updateTeamScore(teamId, currentTeam.score ?? 0, calcNewScore);
+    };
+
     // Extracted so Step 2 (DeltaSync resync) can re-establish on reconnect/foreground.
     const establishSubscriptions = async () => {
       const fetchedGame = await apiClients.gameSession.getGameSession(gameSessionId);
@@ -127,6 +173,9 @@ export default function useFetchAndSubscribeGameSession(
         trigger: 'initial_fetch',
       });
       previousStateRef.current = fetchedGame.currentState;
+      // Score on the base query too, so a rejoin straight into a discuss phase
+      // (with no further subscription update) still applies points (idempotent).
+      maybeScore(fetchedGame);
 
       // await to get the REAL Subscription handle (subscribeGraphQL is async)
       const gameSub = await apiClients.gameSession.subscribeUpdateGameSession(
@@ -164,36 +213,8 @@ export default function useFetchAndSubscribeGameSession(
             }
             setGameSession((prevGame) => ({ ...prevGame, ...response }));
             setCurrentTime(calculateCurrentTime(response));
-            // updates team score in the phase 1 and 2 discuss states
-            if (response.currentState === GameSessionState.PHASE_1_DISCUSS || response.currentState === GameSessionState.PHASE_2_DISCUSS) {
-              setNewPoints(0);
-              const currentQuestionIndex = response.currentQuestionIndex ?? 0;
-              const currentQuestion = response.questions[currentQuestionIndex];
-              
-              const currentTeam = response.teams?.find((team) => team.id === teamId);
-              const currName = currentTeam?.name;
-              if (!currentTeam) {
-                console.error('Team not found');
-                return;
-              }
-              
-              const isShortAnswerEnabled = false; 
-
-              let calcNewScore = 0;
-              if (!hasRejoinedRef.current) {
-                  calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
-                    response,
-                    currentQuestion,
-                    currentTeam,
-                    isShortAnswerEnabled
-                  );
-                  console.log(calcNewScore);
-              }
-              const prevScore = currentTeam?.score ?? 0;
-              console.log('inside useEffect');
-              console.log(calcNewScore);
-              updateTeamScore(teamId, prevScore, calcNewScore); 
-            }
+            // scoring is deferred to the discuss phases; idempotent per (question, phase)
+            maybeScore(response);
           }
         );
         if (ignore) { gameSub.unsubscribe(); return; } // cleanup already ran -> don't leak
