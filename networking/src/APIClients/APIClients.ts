@@ -31,6 +31,12 @@ import { TeamMemberAPIClient } from './gamesession/TeamMemberAPIClient';
 import { TeamAnswerAPIClient } from './gamesession/TeamAnswerAPIClient';
 import { CMSAPIClient } from './cms/CMSAPIClient';
 import { Environment } from './BaseAPIClient';
+import {
+  IObservabilityAPIClient
+} from './observability/IObservabilityAPIClient';
+import {
+  ObservabilityAPIClient
+} from './observability/ObservabilityAPIClient';
 import { PlayDataManagerAPIClient } from './datamanagers/PlayDataManagerAPIClient';
 import { IPlayDataManagerAPIClient } from './datamanagers/interfaces/IPlayDataManagerAPIClient';
 import { HostDataManagerAPIClient } from './datamanagers/HostDataManagerAPIClient';
@@ -62,6 +68,7 @@ export class APIClients {
   teamAnswer: ITeamAnswerAPIClient;
   cms: ICMSAPIClient;
   eduData: EduDataAPIClient | null = null;
+  observability: IObservabilityAPIClient;
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
   centralDataManager?: ICentralDataManagerAPIClient;
@@ -82,6 +89,7 @@ export class APIClients {
     this.teamAnswer = new TeamAnswerAPIClient(env, this.auth);
     this.user = new UserAPIClient(env, this.auth);
     this.cms = new CMSAPIClient();
+    this.observability = new ObservabilityAPIClient();
 
     if (appType === AppType.PLAY) {
       this.playDataManager = new PlayDataManagerAPIClient(env, this.gameSession);

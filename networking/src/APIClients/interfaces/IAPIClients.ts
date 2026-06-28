@@ -11,6 +11,7 @@ import { ITeamAnswerAPIClient } from '../gamesession/interfaces/ITeamAnswerAPICl
 import { ICentralDataManagerAPIClient, IHostDataManagerAPIClient, IPlayDataManagerAPIClient } from '../datamanagers';
 import { EduDataAPIClient } from '../edudata';
 import IAIAPIClient from '../AI/interfaces/IAIAPIClient';
+import { IObservabilityAPIClient } from '../observability/IObservabilityAPIClient';
 
 export interface IAPIClients {
   auth: IAuthAPIClient;
@@ -26,6 +27,7 @@ export interface IAPIClients {
   teamAnswer: ITeamAnswerAPIClient;
   initEduData(teamId: string): Promise<EduDataAPIClient | null>;
   eduData: EduDataAPIClient | null;
+  observability: IObservabilityAPIClient;
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
   centralDataManager?: ICentralDataManagerAPIClient;

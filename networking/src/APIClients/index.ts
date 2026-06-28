@@ -9,5 +9,6 @@ export * from './datamanagers';
 export * from './edudata';
 export * from './gamesession';
 export * from './interfaces';
+export * from './observability';
 export * from './templates';
 export * from './user';

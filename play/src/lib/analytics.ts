@@ -1,3 +1,4 @@
+import { IAPIClients } from '@righton/networking';
 import posthog from 'posthog-js';
 
 // ── Event catalogue ──────────────────────────────────────────────────────────
@@ -12,9 +13,13 @@ export enum PlayEvent {
   // Connection
   SUBSCRIPTION_ESTABLISHED = 'play_subscription_established',
   SUBSCRIPTION_ERROR       = 'play_subscription_error',
+  TAB_VISIBILITY_CHANGE    = 'play_tab_visibility_change',
 
   // Game lifecycle
   GAME_STATE_CHANGED       = 'play_game_state_changed',
+  CONNECTION_STATE_CHANGE = 'play_connection_state_change',
+  SUBSCRIPTION_FIRST_DATA = 'play_subscription_first_data',
+  SUBSCRIPTION_RESYNC     = 'play_subscription_resync',    // defined now;
   STUDENT_DROPPED          = 'play_student_dropped',
 
   // Gameplay
@@ -98,6 +103,56 @@ export function trackEvent(
   properties?: Record<string, unknown>
 ): void {
   posthog.capture(event, properties);
+}
+
+// Derives the cause of a connection transition from Amplify's ConnectionState.
+// The enum already encodes the cause, so we don't need separate event names.
+function causeFromState(state: string): string {
+  switch (state) {
+    case 'ConnectedPendingNetwork':
+    case 'ConnectionDisruptedPendingNetwork':
+      return 'network';
+    case 'ConnectedPendingKeepAlive':
+      return 'keepalive';
+    case 'ConnectionDisrupted':
+      return 'socket'; // the silent-death class
+    case 'Connecting':
+    case 'Connected':
+      return 'connect';
+    case 'Disconnected':
+    case 'ConnectedPendingDisconnect':
+      return 'disconnect';
+    default:
+      return 'unknown';
+  }
+}
+
+// Wires Amplify's AppSync connection-state changes into PostHog so socket
+// drops/recoveries are visible instead of silent. Returns an unsubscribe fn.
+export function initConnectionStateTracking(apiClients: IAPIClients): () => void {
+  return apiClients.observability.onConnectionStateChange((state, previous) => {
+    trackEvent(PlayEvent.CONNECTION_STATE_CHANGE, {
+      connectionState: state,
+      previousConnectionState: previous,
+      cause: causeFromState(String(state)),
+      isOnline: navigator.onLine,           // false  => network condition
+      visibility: document.visibilityState, // 'hidden' => backgrounded
+    });
+  });
+}
+
+// Backgrounding never surfaces as an Amplify connection-state change (its
+// detector freezes while hidden), so we track tab visibility separately.
+// This is the only way to make the silent-background case observable.
+export function initVisibilityTracking(): () => void {
+  const handler = () => {
+    trackEvent(PlayEvent.TAB_VISIBILITY_CHANGE, {
+      visibility: document.visibilityState, // 'hidden' | 'visible'
+      isOnline: navigator.onLine,
+    });
+  };
+  document.addEventListener('visibilitychange', handler);
+  return () => document.removeEventListener('visibilitychange', handler);
 }
 
 export function trackError(

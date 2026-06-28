@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -17,6 +17,7 @@ import {
 } from './containers/GameInProgressContainer';
 import Theme from './lib/Theme';
 import AppErrorBoundary from './components/AppErrorBoundary';
+import { initConnectionStateTracking, initVisibilityTracking } from './lib/analytics';
 
 function RedirectToPlayIfMissing() {
   window.location.href = 'http://play.rightoneducation.com/';
@@ -25,6 +26,16 @@ function RedirectToPlayIfMissing() {
 
 function App() {
   const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.PLAY);
+
+  useEffect(() => {
+    if (!apiClients) return undefined;
+    const unsubscribeConnection = initConnectionStateTracking(apiClients);
+    const unsubscribeVisibility = initVisibilityTracking();
+    return () => {
+      unsubscribeConnection();
+      unsubscribeVisibility();
+    };
+  }, [apiClients]);
 
   const router = useMemo(() => {
     if (!apiClients) return null;

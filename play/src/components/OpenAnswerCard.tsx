@@ -20,7 +20,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import ShortAnswerTextFieldStyled from '../lib/styledcomponents/ShortAnswerTextFieldStyled';
 
-window.katex = katex;
+(window as any).katex = katex; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 interface OpenAnswerCardProps {
   backendAnswer: BackendAnswer;

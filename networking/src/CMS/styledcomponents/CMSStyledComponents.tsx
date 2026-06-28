@@ -2,58 +2,58 @@ import { Typography, styled } from '@mui/material';
 
 // Styled components for a Article Header
 
-export const CMSMonsterAvatar = styled('img')(() => ({
+export const CMSMonsterAvatar = styled('img')({
   height: '50px',
   width: '50px',
-}));
+});
 
 // Styled components for a Article 
 
-export const CMSHeroImage = styled('img')(() => ({
+export const CMSHeroImage = styled('img')({
   width: '100%',
   maxWidth: '648px',
   height: 'auto',
   objectFit: 'cover',
   borderRadius: '8px',
-}));
+});
 
-export const CMSTitleText = styled(Typography)(() => ({
+export const CMSTitleText = styled(Typography)({
   fontFamily: 'Poppins',
   fontWeight: '700',
   fontSize: '40px',
   lineHeight: '48px',
   color: '#FFFFFF',
-}));
+});
 
-export const CMSHeaderText = styled(CMSTitleText)(() => ({
+export const CMSHeaderText = styled(CMSTitleText)({
   fontSize: '24px',
   lineHeight: '30px',
-}));
+});
 
-export const CMSBodyText = styled(Typography)(() => ({
+export const CMSBodyText = styled(Typography)({
   fontFamily: 'Rubik',
   fontWeight: '400',
   fontSize: '16px',
   lineHeight: '19px',
   color: '#FFFFFF',
-}));
+});
 
-export const CMSLinkText = styled(CMSBodyText)(() => ({
+export const CMSLinkText = styled(CMSBodyText)({
   color: '#FF3A6A',
   textDecoration: 'underline',
-}));
+});
 
 // Styled components for a Content Card 
 
-export const CMSCardThumbnailImage = styled('img')(() => ({
+export const CMSCardThumbnailImage = styled('img')({
   width: '100%',
   maxWidth: '98px',
   height: 'auto',
   objectFit: 'cover',
   borderRadius: '8px',
-}));
+});
 
-export const CMSCardTitle = styled(Typography)(() => ({
+export const CMSCardTitle = styled(Typography)({
   fontFamily: 'Poppins',
   fontWeight: '700',
   fontSize: '16px',
@@ -64,9 +64,9 @@ export const CMSCardTitle = styled(Typography)(() => ({
   textOverflow: 'ellipsis',
   WebkitBoxOrient: 'vertical',
   WebkitLineClamp: 1,
-}));
+});
 
-export const CMSCardCaption = styled(Typography)(() => ({
+export const CMSCardCaption = styled(Typography)({
   fontFamily: 'Rubik',
   fontWeight: '400',
   fontSize: '16px',
@@ -77,9 +77,9 @@ export const CMSCardCaption = styled(Typography)(() => ({
   textOverflow: 'ellipsis',
   WebkitBoxOrient: 'vertical',
   WebkitLineClamp: 1,
-}));
+});
 
-export const CMSCardTag = styled(CMSCardTitle)(() => ({
+export const CMSCardTag = styled(CMSCardTitle)({
   fontSize: '8px',
   lineHeight: '8px',
   fontFamily: 'Inter, sans-serif',
@@ -89,24 +89,24 @@ export const CMSCardTag = styled(CMSCardTitle)(() => ({
   padding: '4px',
   borderRadius: '9px',
   boxSizing: 'border-box',
-}));
+});
 
-export const CMSCardDateText = styled(CMSCardTitle)(() => ({
+export const CMSCardDateText = styled(CMSCardTitle)({
   fontSize: '12px',
   lineHeight: '12px',
   fontFamily: 'Rubik',
   fontWeight: 400,
   color: '#FFFFFF',
-}));
+});
 
 // Cornerstone card styled components
 
-export const CMSCornerstoneTitle = styled(CMSCardTitle)(() => ({
+export const CMSCornerstoneTitle = styled(CMSCardTitle)({
   color: '#FFF',
   WebkitLineClamp: 2,
-}))
+})
 
-export const CMSCornerstoneCaption = styled(CMSCardCaption)(() => ({
+export const CMSCornerstoneCaption = styled(CMSCardCaption)({
   color: '#FFF',
   WebkitLineClamp: 3,
-}))
+})
