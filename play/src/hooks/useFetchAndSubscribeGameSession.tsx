@@ -106,27 +106,30 @@ export default function useFetchAndSubscribeGameSession(
       }
     };
 
-    apiClients.gameSession
-      .getGameSession(gameSessionId)
-      .then((fetchedGame) => {
-        if (!fetchedGame || !fetchedGame.id) {
-          setError(`${t('error.connect.gamesessionerror')}`);
-          setIsLoading(false);
-          return;
-        }
-        if (!ignore) setGameSession(fetchedGame);
+    // Extracted so Step 2 (DeltaSync resync) can re-establish on reconnect/foreground.
+    const establishSubscriptions = async () => {
+      const fetchedGame = await apiClients.gameSession.getGameSession(gameSessionId);
+      if (!fetchedGame || !fetchedGame.id) {
+        setError(`${t('error.connect.gamesessionerror')}`);
         setIsLoading(false);
-        setCurrentTime(calculateCurrentTime(fetchedGame));
-        trackEvent(PlayEvent.GAME_STATE_CHANGED, {
-          previousState: previousStateRef.current,
-          newState: fetchedGame.currentState,
-          gameSessionId,
-          teamId,
-          questionIndex: fetchedGame.currentQuestionIndex,
-          trigger: 'initial_fetch',
-        });
-        previousStateRef.current = fetchedGame.currentState;
-        gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
+        return;
+      }
+      if (ignore) return; // torn down during the fetch
+      setGameSession(fetchedGame);
+      setIsLoading(false);
+      setCurrentTime(calculateCurrentTime(fetchedGame));
+      trackEvent(PlayEvent.GAME_STATE_CHANGED, {
+        previousState: previousStateRef.current,
+        newState: fetchedGame.currentState,
+        gameSessionId,
+        teamId,
+        questionIndex: fetchedGame.currentQuestionIndex,
+        trigger: 'initial_fetch',
+      });
+      previousStateRef.current = fetchedGame.currentState;
+
+      // await to get the REAL Subscription handle (subscribeGraphQL is async)
+      const gameSub = await apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
             console.log(response);
@@ -193,8 +196,10 @@ export default function useFetchAndSubscribeGameSession(
             }
           }
         );
+        if (ignore) { gameSub.unsubscribe(); return; } // cleanup already ran -> don't leak
+        gameSessionSubscription = gameSub;
 
-        teamsSubscription = apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => {
+        const teamSub = await apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => {
           if (deletedTeam.id === teamId) {
             setHasRejoined(false);
             trackEvent(PlayEvent.STUDENT_DROPPED, {
@@ -211,6 +216,9 @@ export default function useFetchAndSubscribeGameSession(
             flushAndRedirect('https://play.rightoneducation.com');
           }
       });
+        if (ignore) { teamSub.unsubscribe(); return; } // cleanup already ran -> don't leak
+        teamsSubscription = teamSub;
+
         trackEvent(PlayEvent.SUBSCRIPTION_ESTABLISHED, {
           gameSessionId,
           teamId,
@@ -218,18 +226,19 @@ export default function useFetchAndSubscribeGameSession(
           currentState: fetchedGame.currentState,
           questionIndex: fetchedGame.currentQuestionIndex,
         });
-      })
-      .catch((e) => {
-        setIsLoading(false);
-        if (e instanceof Error) setError(e.message);
-        else setError(`${t('error.connect.gamesessionerror')}`);
-        trackError(PlayEvent.SUBSCRIPTION_ERROR, e, {
-          gameSessionId,
-          teamId,
-          retryCount: retry,
-          trigger: 'fetch_failed',
-        });
+    };
+
+    establishSubscriptions().catch((e) => {
+      setIsLoading(false);
+      if (e instanceof Error) setError(e.message);
+      else setError(`${t('error.connect.gamesessionerror')}`);
+      trackError(PlayEvent.SUBSCRIPTION_ERROR, e, {
+        gameSessionId,
+        teamId,
+        retryCount: retry,
+        trigger: 'fetch_failed',
       });
+    });
 
     // eslint-disable-next-line consistent-return
     return () => {
