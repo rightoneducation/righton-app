@@ -30,6 +30,7 @@ export enum PlayEvent {
   ERROR_MODAL_SHOWN        = 'play_error_modal_shown',
   RETRY_ATTEMPTED          = 'play_retry_attempted',
   UNHANDLED_JS_ERROR       = 'play_unhandled_js_error',
+  STALE_SKIP               = 'play_stale_skip'
 }
 
 // ── Init ─────────────────────────────────────────────────────────────────────

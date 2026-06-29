@@ -15,8 +15,10 @@ import {
   UpdateGameSessionMutation,
   UpdateGameSessionMutationVariables,
 } from "../../AWSMobileApi";
+import { getGameSessionVersion as getGameSessionVersionQuery } from "../../graphql-custom/customQueries";
 import { isNullOrUndefined } from "../../global";
 import { IGameSessionAPIClient } from "./interfaces/IGameSessionAPIClient";
+import { IGameSessionVersion } from "./interfaces/IGameSessionVersion";
 
 export class GameSessionAPIClient
   extends BaseAPIClient
@@ -69,6 +71,19 @@ export class GameSessionAPIClient
     return GameSessionParser.gameSessionFromAWSGameSession(
       result.data.getGameSession
     );
+  }
+
+  async getGameSessionVersion(id: string): Promise<IGameSessionVersion | null> {
+    const result = await this.callGraphQL(getGameSessionVersionQuery, { id } as unknown as GraphQLOptions) as {data: any};
+    const gs = result?.data?.getGameSession;
+    if (isNullOrUndefined(gs)) return null;
+    return {
+      id: gs.id, 
+      updatedAt: gs.updatedAt, 
+      currentState: gs.currentState, 
+      currentQuestionIndex: gs.currentQuestionIndex ?? null, 
+      startTime: gs.startTime ?? null
+    };
   }
 
   async updateGameSession(

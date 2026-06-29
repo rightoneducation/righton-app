@@ -7,9 +7,18 @@ import {
   ModelHelper,
   GameSessionState,
 } from '@righton/networking';
-import { StorageKey, StorageKeyAnswer, StorageKeyEduDataStudentId } from '../lib/PlayModels';
+import {
+  StorageKey,
+  StorageKeyAnswer,
+  StorageKeyEduDataStudentId,
+} from '../lib/PlayModels';
 import { calculateCurrentTime } from '../lib/HelperFunctions';
-import { trackEvent, trackError, flushAndRedirect, PlayEvent } from '../lib/analytics';
+import {
+  trackEvent,
+  trackError,
+  flushAndRedirect,
+  PlayEvent,
+} from '../lib/analytics';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -30,7 +39,6 @@ export default function useFetchAndSubscribeGameSession(
   const { t } = useTranslation();
   const [error, setError] = useState<string>('');
   const [hasRejoined, setHasRejoined] = useState<boolean>(isInitialRejoin);
-  const [isError, setIsError] = useState<{ error: boolean; withheldPoints: number }>({ error: false, withheldPoints: 0 });
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const [newPoints, setNewPoints] = useState<number>(0);
@@ -64,16 +72,18 @@ export default function useFetchAndSubscribeGameSession(
   useEffect(() => {
     if (!teamId) return;
     if (!apiClients.eduData) {
-      const persistedStudentId = window.localStorage.getItem(StorageKeyEduDataStudentId);
+      const persistedStudentId = window.localStorage.getItem(
+        StorageKeyEduDataStudentId
+      );
       const studentId = persistedStudentId ?? teamId;
       apiClients.initEduData(studentId).catch(() => {});
     }
   }, [apiClients, teamId]);
 
-
   // useEffect to handle subscriptions
   useEffect(() => {
     let ignore = false;
+    let lastAppliedUpdatedAt = 0;
     let gameSessionSubscription: any;
     let teamsSubscription: any;
 
@@ -81,33 +91,79 @@ export default function useFetchAndSubscribeGameSession(
       setIsLoading(true);
       setError('');
     }
-
     if (!gameSessionId) {
       setError(`${t('error.connect.gamesessionerror')}`);
       setIsLoading(false);
       return;
     }
-    // added so we can update the score for the discuss page. (previously implemented in results pages we got rid of)
-    const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
+    // Scoring is deferred to the discuss phases (never the answer phases) so points
+    // don't reveal correctness early. accrueIfNew computes the per-(question,phase)
+    // delta once (for the +X UI) and accumulates a persisted absolute total;
+    // reconcileScore writes that total max-guarded (monotonic), so it's idempotent and
+    // self-healing across resync / rejoin / failed writes.
+    // Known limitation: localStorage loss (Safari eviction / device switch) can reset
+    // the running total; reconcile's max(local, backend) stops it clobbering the backend
+    // down, but a delta earned during the eviction window may be missed.
+    const SCORED_STORAGE_KEY = `scoredKeys:${gameSessionId}:${teamId}`;
+    const TOTAL_STORAGE_KEY = `scoreTotal:${gameSessionId}:${teamId}`;
+    const loadTotal = (): number => {
+      const raw = window.localStorage.getItem(TOTAL_STORAGE_KEY);
+      const n = raw ? Number(raw) : 0;
+      return Number.isFinite(n) ? n : 0;
+    };
+    const saveTotal = (n: number) => {
       try {
-        console.log('sup');
-        const response = await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
-        console.log('updateTeamscore');
-        console.log(response);
-        setNewPoints(newScore);
+        window.localStorage.setItem(TOTAL_STORAGE_KEY, String(n));
       } catch (e) {
-        console.log(e);
-        setIsError({ error: true, withheldPoints: newScore });
+        console.error(e);
       }
     };
 
-    // Scoring is deferred to the discuss phases (never the answer phases) so points
-    // don't reveal correctness early. Idempotent per (question, discuss-phase), and
-    // persisted so a refresh/rejoin neither double-adds (the write is additive) nor
-    // drops not-yet-scored points.
-    // Known limitation: localStorage loss (mobile Safari eviction) or a device switch
-    // resets these keys, so a rejoin could double-count.
-    const SCORED_STORAGE_KEY = `scoredKeys:${gameSessionId}:${teamId}`;
+    // determines delta scores to pass to UI (ex. +10)
+    const accrueIfNew = (g: IGameSession) => {
+      if (
+        g.currentState !== GameSessionState.PHASE_1_DISCUSS &&
+        g.currentState !== GameSessionState.PHASE_2_DISCUSS
+      )
+        return;
+      const key = `${g.currentQuestionIndex ?? 0}:${g.currentState}`;
+      const scored = loadScored();
+      if (scored.has(key)) return; // already counted (question/phase)
+      const team = g.teams?.find((t: ITeam) => t.id === teamId);
+      if (!team) {
+        console.error('Team not found');
+        return;
+      }
+      const delta = ModelHelper.calculateBasicModeScoreForQuestion(
+        g,
+        g.questions[g.currentQuestionIndex ?? 0],
+        team,
+        false
+      );
+      scored.add(key);
+      saveScored(scored);
+      saveTotal(loadTotal() + delta);
+      setNewPoints(delta);
+    };
+
+    const reconcileScore = async (g: IGameSession) => {
+      const team = g.teams?.find((t: ITeam) => t.id === teamId);
+      if (!team) return;
+      const backend = team.score ?? 0;
+      const target = Math.max(loadTotal(), backend); // monotonic
+      saveTotal(target);
+      if (target > backend) {
+        try {
+          await apiClients.team.updateTeam({
+            id: teamId,
+            score: target,
+          });
+        } catch (e) {
+          /* next reconcile retries */
+        }
+      }
+    };
+
     const loadScored = (): Set<string> => {
       try {
         const raw = window.localStorage.getItem(SCORED_STORAGE_KEY);
@@ -118,70 +174,148 @@ export default function useFetchAndSubscribeGameSession(
     };
     const saveScored = (set: Set<string>) => {
       try {
-        window.localStorage.setItem(SCORED_STORAGE_KEY, JSON.stringify(Array.from(set)));
+        window.localStorage.setItem(
+          SCORED_STORAGE_KEY,
+          JSON.stringify(Array.from(set))
+        );
       } catch {
         /* ignore persistence failures */
       }
     };
-    const maybeScore = (g: IGameSession) => {
-      if (
-        g.currentState !== GameSessionState.PHASE_1_DISCUSS &&
-        g.currentState !== GameSessionState.PHASE_2_DISCUSS
-      ) {
+
+    const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    let resyncing = false;
+    let establishing = false;
+
+    const resync = async (reason: string) => {
+      if (resyncing || establishing || ignore) return;
+      resyncing = true;
+      try {
+        await sleep(Math.random() * 2000); // jitter so all classmates don't poll at the same second
+        if (ignore) return;
+        const v = await apiClients.gameSession.getGameSessionVersion(
+          gameSessionId
+        ); // poll for current gs version via updatedAt
+        if (!v || ignore) return;
+        const incoming = new Date(v.updatedAt).getTime();
+        if (incoming > lastAppliedUpdatedAt) {
+          // socket has missed an update as backend is later than local
+          trackEvent(PlayEvent.SUBSCRIPTION_RESYNC, {
+            reason,
+            action: 'reestablish',
+            gameSessionId,
+            teamId,
+          });
+          teardown();
+          await establishSubscriptions('resync_reestablish'); // re-fetch + apply (cursor) + resubscribe
+        } else {
+          trackEvent(PlayEvent.SUBSCRIPTION_RESYNC, {
+            reason,
+            action: 'noop',
+            gameSessionId,
+            teamId,
+          });
+        }
+      } catch (e) {
+        // next trigger retries; surface it for observability
+        trackError(PlayEvent.SUBSCRIPTION_RESYNC, e, {
+          reason,
+          action: 'error',
+          gameSessionId,
+          teamId,
+        });
+      } finally {
+        resyncing = false;
+      }
+    };
+
+    const applyGameSession = (g: IGameSession, trigger: string) => {
+      const incoming = new Date(g.updatedAt).getTime();
+      if (incoming <= lastAppliedUpdatedAt) {
+        trackEvent(PlayEvent.STALE_SKIP, {
+          previousState: previousStateRef.current,
+          newState: g.currentState,
+          gameSessionId,
+          teamId,
+          questionIndex: g.currentQuestionIndex,
+          trigger,
+        });
+        accrueIfNew(g);
+        reconcileScore(g);
         return;
       }
-      const key = `${g.currentQuestionIndex ?? 0}:${g.currentState}`;
-      const scored = loadScored();
-      if (scored.has(key)) return; // already scored this (question, discuss-phase)
-      const currentTeam = g.teams?.find((team) => team.id === teamId);
-      if (!currentTeam) {
-        console.error('Team not found');
-        return;
+      lastAppliedUpdatedAt = incoming;
+
+      // state-change telemetry
+      if (g.currentState !== previousStateRef.current) {
+        trackEvent(PlayEvent.GAME_STATE_CHANGED, {
+          previousState: previousStateRef.current,
+          newState: g.currentState,
+          gameSessionId,
+          teamId,
+          questionIndex: g.currentQuestionIndex,
+          trigger,
+        });
+        previousStateRef.current = g.currentState;
       }
-      const currentQuestion = g.questions[g.currentQuestionIndex ?? 0];
-      const isShortAnswerEnabled = false;
-      const calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
-        g,
-        currentQuestion,
-        currentTeam,
-        isShortAnswerEnabled
-      );
-      scored.add(key); // mark before the async write so a rapid duplicate can't double-fire
-      saveScored(scored);
-      setNewPoints(0);
-      updateTeamScore(teamId, currentTeam.score ?? 0, calcNewScore);
+      // time-detection
+      const prevTime = gameSessionRef.current?.startTime ?? 0;
+      if (g.startTime > prevTime) setIsAddTime((prev) => !prev);
+
+      setGameSession((prev) => ({ ...prev, ...g }));
+      setCurrentTime(calculateCurrentTime(g));
+      accrueIfNew(g);
+      reconcileScore(g);
+    };
+
+    const redirectAsDropped = (g: IGameSession, trigger: string) => {
+      trackEvent(PlayEvent.STUDENT_DROPPED, {
+        gameSessionId,
+        teamId,
+        trigger,
+        currentState: g.currentState,
+        questionIndex: g.currentQuestionIndex,
+      });
+      window.localStorage.removeItem(StorageKey);
+      window.localStorage.removeItem(StorageKeyAnswer);
+      window.localStorage.removeItem(StorageKeyEduDataStudentId);
+      gameSessionSubscription?.unsubscribe?.();
+      teamsSubscription?.unsubscribe?.();
+      flushAndRedirect('https://play.rightoneducation.com');
     };
 
     // Extracted so Step 2 (DeltaSync resync) can re-establish on reconnect/foreground.
-    const establishSubscriptions = async () => {
-      const fetchedGame = await apiClients.gameSession.getGameSession(gameSessionId);
-      if (!fetchedGame || !fetchedGame.id) {
-        setError(`${t('error.connect.gamesessionerror')}`);
+    const establishSubscriptions = async (
+      trigger: string = 'initial_fetch'
+    ) => {
+      if (establishing) return;
+      establishing = true;
+      try {
+        const fetchedGame = await apiClients.gameSession.getGameSession(
+          gameSessionId
+        );
+        if (!fetchedGame || !fetchedGame.id) {
+          setError(`${t('error.connect.gamesessionerror')}`);
+          setIsLoading(false);
+          return;
+        }
+        if (ignore) return; // torn down during the fetch
+        if (
+          fetchedGame.currentQuestionIndex != null &&
+          !fetchedGame.teams?.some((tm: ITeam) => tm.id === teamId)
+        ) {
+          redirectAsDropped(fetchedGame, 'team_missing_on_fetch');
+          return;
+        }
         setIsLoading(false);
-        return;
-      }
-      if (ignore) return; // torn down during the fetch
-      setGameSession(fetchedGame);
-      setIsLoading(false);
-      setCurrentTime(calculateCurrentTime(fetchedGame));
-      trackEvent(PlayEvent.GAME_STATE_CHANGED, {
-        previousState: previousStateRef.current,
-        newState: fetchedGame.currentState,
-        gameSessionId,
-        teamId,
-        questionIndex: fetchedGame.currentQuestionIndex,
-        trigger: 'initial_fetch',
-      });
-      previousStateRef.current = fetchedGame.currentState;
-      // Score on the base query too, so a rejoin straight into a discuss phase
-      // (with no further subscription update) still applies points (idempotent).
-      maybeScore(fetchedGame);
+        applyGameSession(fetchedGame, trigger);
 
-      // await to get the REAL Subscription handle (subscribeGraphQL is async)
-      const gameSub = await apiClients.gameSession.subscribeUpdateGameSession(
+        const subscribedAt = Date.now();
+        let firstDataReceived = false;
+        // await to get the REAL Subscription handle (subscribeGraphQL is async)
+        const gameSub = await apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
-            console.log(response);
             if (!response) {
               setError(`${t('error.connect.subscriptionerror')}`);
               trackEvent(PlayEvent.SUBSCRIPTION_ERROR, {
@@ -193,51 +327,40 @@ export default function useFetchAndSubscribeGameSession(
               });
               return;
             }
-            if (!ignore) setHasRejoined(false);
-            if (response.currentState !== previousStateRef.current) {
-              trackEvent(PlayEvent.GAME_STATE_CHANGED, {
-                previousState: previousStateRef.current,
-                newState: response.currentState,
+            if (!firstDataReceived) {
+              firstDataReceived = true;
+              trackEvent(PlayEvent.SUBSCRIPTION_FIRST_DATA, {
                 gameSessionId,
                 teamId,
+                retryCount: retry,
+                currentState: response.currentState,
                 questionIndex: response.currentQuestionIndex,
-                trigger: 'subscription_update',
+                msToFirstData: Date.now() - subscribedAt,
               });
-              previousStateRef.current = response.currentState;
             }
-            // checks if host has added time via button
-            const prevTime = gameSessionRef.current?.startTime ?? 0;
-            const newTime = response.startTime;
-            if (newTime > prevTime) {
-              setIsAddTime((prev) => !prev);
-            }
-            setGameSession((prevGame) => ({ ...prevGame, ...response }));
-            setCurrentTime(calculateCurrentTime(response));
-            // scoring is deferred to the discuss phases; idempotent per (question, phase)
-            maybeScore(response);
+            if (!ignore) setHasRejoined(false);
+            applyGameSession(response, 'subscription_update');
           }
         );
-        if (ignore) { gameSub.unsubscribe(); return; } // cleanup already ran -> don't leak
+        if (ignore) {
+          gameSub.unsubscribe();
+          return;
+        } // cleanup already ran -> don't leak
         gameSessionSubscription = gameSub;
 
-        const teamSub = await apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => {
-          if (deletedTeam.id === teamId) {
-            setHasRejoined(false);
-            trackEvent(PlayEvent.STUDENT_DROPPED, {
-              gameSessionId,
-              teamId,
-              trigger: 'team_deleted_by_teacher',
-              currentState: fetchedGame.currentState,
-              questionIndex: fetchedGame.currentQuestionIndex,
-            });
-            window.localStorage.removeItem(StorageKey);
-            window.localStorage.removeItem(StorageKeyAnswer);
-            window.localStorage.removeItem(StorageKeyEduDataStudentId);
-            teamsSubscription.unsubscribe();
-            flushAndRedirect('https://play.rightoneducation.com');
+        const teamSub = await apiClients.team.subscribeDeleteTeam(
+          gameSessionId,
+          (deletedTeam: ITeam) => {
+            if (deletedTeam.id === teamId) {
+              setHasRejoined(false);
+              redirectAsDropped(fetchedGame, 'team_deleted_by_teacher');
+            }
           }
-      });
-        if (ignore) { teamSub.unsubscribe(); return; } // cleanup already ran -> don't leak
+        );
+        if (ignore) {
+          teamSub.unsubscribe();
+          return;
+        } // cleanup already ran -> don't leak
         teamsSubscription = teamSub;
 
         trackEvent(PlayEvent.SUBSCRIPTION_ESTABLISHED, {
@@ -247,6 +370,9 @@ export default function useFetchAndSubscribeGameSession(
           currentState: fetchedGame.currentState,
           questionIndex: fetchedGame.currentQuestionIndex,
         });
+      } finally {
+        establishing = false;
+      }
     };
 
     establishSubscriptions().catch((e) => {
@@ -261,18 +387,42 @@ export default function useFetchAndSubscribeGameSession(
       });
     });
 
+    const onVisible = () => {
+      if (!document.hidden) resync('foreground');
+    };
+    const onOnline = () => resync('online');
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('online', onOnline);
+
+    // jittered 30s poll
+    let pollId: any;
+    const pollStart = setTimeout(() => {
+      pollId = setInterval(() => resync('poll'), 30000);
+    }, Math.random() * 30000);
+
+    const teardown = () => {
+      gameSessionSubscription?.unsubscribe?.();
+      teamsSubscription?.unsubscribe?.();
+      gameSessionSubscription = undefined;
+      teamsSubscription = undefined;
+    };
     // eslint-disable-next-line consistent-return
     return () => {
       ignore = true;
-      if (gameSessionSubscription && gameSessionSubscription.unsubscribe) {
-        gameSessionSubscription.unsubscribe();
-      }
-      if (teamsSubscription && teamsSubscription.unsubscribe) {
-        teamsSubscription.unsubscribe();
-      }
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('online', onOnline);
+      clearTimeout(pollStart);
+      clearInterval(pollId);
+      teardown();
     };
   }, [gameSessionId, apiClients, t, retry, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
-  console.log("outside of useEffect");
-  console.log(newPoints);
-  return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime };
+  return {
+    isLoading,
+    error,
+    gameSession,
+    hasRejoined,
+    newPoints,
+    currentTime,
+    isAddTime,
+  };
 }
