@@ -9,6 +9,7 @@ export enum PlayEvent {
   GAME_JOIN_SUCCESS        = 'play_game_join_success',
   GAME_JOIN_FAILURE        = 'play_game_join_failure',
   GAME_REJOIN_STARTED      = 'play_game_rejoin_started',
+  GAME_REJOIN_RECOVERED    = 'play_game_rejoin_recovered',
 
   // Connection
   SUBSCRIPTION_ESTABLISHED = 'play_subscription_established',

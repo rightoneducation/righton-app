@@ -47,7 +47,12 @@ export default function RejoinModal({
           alignItems: 'center',
         },
       }}
-      onRequestClose={() => setIsModalVisible(false)}
+      onRequestClose={() => {
+        // Clicking outside is identical to clicking "No": run the decline handler
+        // then dismiss, so both paths behave the same.
+        handleDontRejoinSession();
+        setIsModalVisible(false);
+      }}
       shouldCloseOnOverlayClick
       appElement={document.getElementById('root') || undefined}
     >
