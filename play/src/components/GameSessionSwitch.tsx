@@ -24,6 +24,7 @@ interface GameSessionSwitchProps {
   isAddTime: boolean;
   localModel: LocalModel;
   newPoints: number;
+  accrueHintBonus: () => void;
 }
 
 export default function GameSessionSwitch({
@@ -34,6 +35,7 @@ export default function GameSessionSwitch({
   isAddTime,
   localModel,
   newPoints,
+  accrueHintBonus,
 }: GameSessionSwitchProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(
     !hasRejoined
@@ -124,6 +126,7 @@ export default function GameSessionSwitch({
           currentTimer={currentTimer}
           localModel={localModel}
           isAddTime={isAddTime}
+          accrueHintBonus={accrueHintBonus}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}

@@ -131,6 +131,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
       localModel={localModel}
       gameSession={subscription.gameSession}
       newPoints={subscription.newPoints}
+      accrueHintBonus={subscription.accrueHintBonus}
       {...props}
     />
   );

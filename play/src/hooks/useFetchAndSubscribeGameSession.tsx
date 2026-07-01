@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   IAPIClients,
@@ -44,6 +44,17 @@ export default function useFetchAndSubscribeGameSession(
   const [newPoints, setNewPoints] = useState<number>(0);
   const previousStateRef = useRef<GameSessionState | null>(null);
   const gameSessionRef = useRef<IGameSession | undefined>(gameSession);
+  // In-memory primary for the running score; localStorage is only a best-effort
+  // backup (see loadTotal/saveTotal). Survives effect re-runs (resync re-establish);
+  // reset only when the game/team changes (scoreKeyRef).
+  const scoreTotalRef = useRef<number | null>(null);
+  const scoredKeysRef = useRef<Set<string> | null>(null);
+  const scoreKeyRef = useRef<string>('');
+  // Bridges the effect-scoped hint accrual out to consumers (handleSubmitHint).
+  const accrueHintBonusRef = useRef<() => void>(() => {});
+  const accrueHintBonus = useCallback(() => {
+    accrueHintBonusRef.current();
+  }, []);
 
   const handleVisibilityChange = () => {
     if (!document.hidden) {
@@ -106,16 +117,65 @@ export default function useFetchAndSubscribeGameSession(
     // down, but a delta earned during the eviction window may be missed.
     const SCORED_STORAGE_KEY = `scoredKeys:${gameSessionId}:${teamId}`;
     const TOTAL_STORAGE_KEY = `scoreTotal:${gameSessionId}:${teamId}`;
+
+    // The in-memory refs are the source of truth for the running score. localStorage
+    // is a backup only: writes are best-effort and reads are used solely to hydrate the
+    // refs once. This keeps scoring working when localStorage is unavailable/blocked
+    // (MDM-restricted iPads, "Block All Cookies", quota, private mode) — where the refs
+    // still accumulate in memory and reconcileScore re-seeds them from the backend score.
+    // Reset the refs only when the game/team changes (not across a same-key retry/resync).
+    const scoreKey = `${gameSessionId}:${teamId}`;
+    if (scoreKeyRef.current !== scoreKey) {
+      scoreKeyRef.current = scoreKey;
+      scoreTotalRef.current = null;
+      scoredKeysRef.current = null;
+    }
+
     const loadTotal = (): number => {
-      const raw = window.localStorage.getItem(TOTAL_STORAGE_KEY);
-      const n = raw ? Number(raw) : 0;
-      return Number.isFinite(n) ? n : 0;
+      if (scoreTotalRef.current == null) {
+        let backup = 0;
+        try {
+          const raw = window.localStorage.getItem(TOTAL_STORAGE_KEY);
+          const n = raw ? Number(raw) : 0;
+          backup = Number.isFinite(n) ? n : 0;
+        } catch {
+          backup = 0;
+        }
+        scoreTotalRef.current = backup;
+      }
+      return scoreTotalRef.current;
     };
     const saveTotal = (n: number) => {
+      scoreTotalRef.current = n; // primary — cannot fail
       try {
-        window.localStorage.setItem(TOTAL_STORAGE_KEY, String(n));
+        window.localStorage.setItem(TOTAL_STORAGE_KEY, String(n)); // backup
       } catch (e) {
         console.error(e);
+      }
+    };
+
+    const loadScored = (): Set<string> => {
+      if (scoredKeysRef.current == null) {
+        let backup: Set<string>;
+        try {
+          const raw = window.localStorage.getItem(SCORED_STORAGE_KEY);
+          backup = new Set<string>(raw ? JSON.parse(raw) : []);
+        } catch {
+          backup = new Set<string>();
+        }
+        scoredKeysRef.current = backup;
+      }
+      return scoredKeysRef.current;
+    };
+    const saveScored = (set: Set<string>) => {
+      scoredKeysRef.current = set; // primary
+      try {
+        window.localStorage.setItem(
+          SCORED_STORAGE_KEY,
+          JSON.stringify(Array.from(set))
+        );
+      } catch {
+        /* ignore persistence failures */
       }
     };
 
@@ -129,7 +189,7 @@ export default function useFetchAndSubscribeGameSession(
       const key = `${g.currentQuestionIndex ?? 0}:${g.currentState}`;
       const scored = loadScored();
       if (scored.has(key)) return; // already counted (question/phase)
-      const team = g.teams?.find((t: ITeam) => t.id === teamId);
+      const team = g.teams?.find((tm: ITeam) => tm.id === teamId);
       if (!team) {
         console.error('Team not found');
         return;
@@ -147,7 +207,7 @@ export default function useFetchAndSubscribeGameSession(
     };
 
     const reconcileScore = async (g: IGameSession) => {
-      const team = g.teams?.find((t: ITeam) => t.id === teamId);
+      const team = g.teams?.find((tm: ITeam) => tm.id === teamId);
       if (!team) return;
       const backend = team.score ?? 0;
       const target = Math.max(loadTotal(), backend); // monotonic
@@ -164,70 +224,28 @@ export default function useFetchAndSubscribeGameSession(
       }
     };
 
-    const loadScored = (): Set<string> => {
-      try {
-        const raw = window.localStorage.getItem(SCORED_STORAGE_KEY);
-        return new Set<string>(raw ? JSON.parse(raw) : []);
-      } catch {
-        return new Set<string>();
-      }
-    };
-    const saveScored = (set: Set<string>) => {
-      try {
-        window.localStorage.setItem(
-          SCORED_STORAGE_KEY,
-          JSON.stringify(Array.from(set))
-        );
-      } catch {
-        /* ignore persistence failures */
-      }
+    // Hint bonus = +1 once per question, folded into the same absolute total so the
+    // max-guarded reconcileScore preserves it (a direct additive write would be clobbered
+    // by the next question's reconcile). Idempotent via a `hint:<q>` key in the scored-set,
+    // so resync/resubmit can't double-add. Exposed to handleSubmitHint via the ref bridge.
+    accrueHintBonusRef.current = () => {
+      const g = gameSessionRef.current;
+      if (!g) return;
+      const key = `hint:${g.currentQuestionIndex ?? 0}`;
+      const scored = loadScored();
+      if (scored.has(key)) return; // already granted this question
+      scored.add(key);
+      saveScored(scored);
+      saveTotal(loadTotal() + 1);
+      reconcileScore(g); // push promptly, max-guarded; self-heals on next apply if it fails
     };
 
-    const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    const sleep = (ms: number) =>
+      new Promise((res) => {
+        setTimeout(res, ms);
+      });
     let resyncing = false;
     let establishing = false;
-
-    const resync = async (reason: string) => {
-      if (resyncing || establishing || ignore) return;
-      resyncing = true;
-      try {
-        await sleep(Math.random() * 2000); // jitter so all classmates don't poll at the same second
-        if (ignore) return;
-        const v = await apiClients.gameSession.getGameSessionVersion(
-          gameSessionId
-        ); // poll for current gs version via updatedAt
-        if (!v || ignore) return;
-        const incoming = new Date(v.updatedAt).getTime();
-        if (incoming > lastAppliedUpdatedAt) {
-          // socket has missed an update as backend is later than local
-          trackEvent(PlayEvent.SUBSCRIPTION_RESYNC, {
-            reason,
-            action: 'reestablish',
-            gameSessionId,
-            teamId,
-          });
-          teardown();
-          await establishSubscriptions('resync_reestablish'); // re-fetch + apply (cursor) + resubscribe
-        } else {
-          trackEvent(PlayEvent.SUBSCRIPTION_RESYNC, {
-            reason,
-            action: 'noop',
-            gameSessionId,
-            teamId,
-          });
-        }
-      } catch (e) {
-        // next trigger retries; surface it for observability
-        trackError(PlayEvent.SUBSCRIPTION_RESYNC, e, {
-          reason,
-          action: 'error',
-          gameSessionId,
-          teamId,
-        });
-      } finally {
-        resyncing = false;
-      }
-    };
 
     const applyGameSession = (g: IGameSession, trigger: string) => {
       const incoming = new Date(g.updatedAt).getTime();
@@ -285,9 +303,7 @@ export default function useFetchAndSubscribeGameSession(
     };
 
     // Extracted so Step 2 (DeltaSync resync) can re-establish on reconnect/foreground.
-    const establishSubscriptions = async (
-      trigger: string = 'initial_fetch'
-    ) => {
+    const establishSubscriptions = async (trigger = 'initial_fetch') => {
       if (establishing) return;
       establishing = true;
       try {
@@ -375,6 +391,55 @@ export default function useFetchAndSubscribeGameSession(
       }
     };
 
+    const teardown = () => {
+      gameSessionSubscription?.unsubscribe?.();
+      teamsSubscription?.unsubscribe?.();
+      gameSessionSubscription = undefined;
+      teamsSubscription = undefined;
+    };
+
+    const resync = async (reason: string) => {
+      if (resyncing || establishing || ignore) return;
+      resyncing = true;
+      try {
+        await sleep(Math.random() * 2000); // jitter so all classmates don't poll at the same second
+        if (ignore) return;
+        const v = await apiClients.gameSession.getGameSessionVersion(
+          gameSessionId
+        ); // poll for current gs version via updatedAt
+        if (!v || ignore) return;
+        const incoming = new Date(v.updatedAt).getTime();
+        if (incoming > lastAppliedUpdatedAt) {
+          // socket has missed an update as backend is later than local
+          trackEvent(PlayEvent.SUBSCRIPTION_RESYNC, {
+            reason,
+            action: 'reestablish',
+            gameSessionId,
+            teamId,
+          });
+          teardown();
+          await establishSubscriptions('resync_reestablish'); // re-fetch + apply (cursor) + resubscribe
+        } else {
+          trackEvent(PlayEvent.SUBSCRIPTION_RESYNC, {
+            reason,
+            action: 'noop',
+            gameSessionId,
+            teamId,
+          });
+        }
+      } catch (e) {
+        // next trigger retries; surface it for observability
+        trackError(PlayEvent.SUBSCRIPTION_RESYNC, e, {
+          reason,
+          action: 'error',
+          gameSessionId,
+          teamId,
+        });
+      } finally {
+        resyncing = false;
+      }
+    };
+
     establishSubscriptions().catch((e) => {
       setIsLoading(false);
       if (e instanceof Error) setError(e.message);
@@ -400,12 +465,6 @@ export default function useFetchAndSubscribeGameSession(
       pollId = setInterval(() => resync('poll'), 30000);
     }, Math.random() * 30000);
 
-    const teardown = () => {
-      gameSessionSubscription?.unsubscribe?.();
-      teamsSubscription?.unsubscribe?.();
-      gameSessionSubscription = undefined;
-      teamsSubscription = undefined;
-    };
     // eslint-disable-next-line consistent-return
     return () => {
       ignore = true;
@@ -424,5 +483,6 @@ export default function useFetchAndSubscribeGameSession(
     newPoints,
     currentTime,
     isAddTime,
+    accrueHintBonus,
   };
 }

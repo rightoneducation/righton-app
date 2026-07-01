@@ -81,7 +81,11 @@ export const checkForSubmittedAnswerOnRejoin = (
     if (
       localModel.answer !== null &&
       localModel.answer.currentState === currentState &&
-      localModel.answer.currentQuestionIndex === currentQuestionIndex
+      localModel.answer.currentQuestionIndex === currentQuestionIndex &&
+      // Identity guard: only restore an answer that belongs to THIS game/team.
+      // StorageKeyAnswer leaks across games, so a prior game's Q1 answer (same phase
+      // + index) would otherwise be reattached as "submitted" and lock the answer UI.
+      localModel.answer.teamMemberAnswersId === localModel.teamMemberAnswersId
     ) {
       // set answer to localAnswer
       returnedAnswer = localModel.answer;
@@ -117,7 +121,10 @@ export const checkForSubmittedHintOnRejoin = (
       localModel.answer !== null &&
       !isNullOrUndefined(localModel.answer.hint) &&
       localModel.answer.currentState === currentState &&
-      localModel.answer.currentQuestionIndex === currentQuestionIndex
+      localModel.answer.currentQuestionIndex === currentQuestionIndex &&
+      // Identity guard: only restore a hint that belongs to THIS game/team (see
+      // checkForSubmittedAnswerOnRejoin — StorageKeyAnswer leaks across games).
+      localModel.answer.teamMemberAnswersId === localModel.teamMemberAnswersId
     ) {
       // set hint to localModel.hint
       returnedHint = localModel.answer.hint;
