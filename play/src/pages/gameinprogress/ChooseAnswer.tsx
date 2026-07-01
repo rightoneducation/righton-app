@@ -146,25 +146,6 @@ export default function ChooseAnswer({
     </Grid>
   );
 
-  const belowCardMessage = (() => {
-    if (isTimeUp) {
-      return (
-        <Typography
-          sx={{
-            fontWeight: 700,
-            marginTop: `${theme.sizing.lgPadding}px`,
-            marginX: `${theme.sizing.lgPadding}px`,
-            fontSize: `${theme.typography.h4.fontSize}px`,
-            textAlign: 'center',
-          }}
-        >
-          {t('gameinprogress.chooseanswer.answertimeup')}
-        </Typography>
-      );
-    }
-    return null;
-  })();
-
   const answerContents = (
     <Grid item xs={12} sm style={{ 
       width: '100%',
@@ -236,8 +217,6 @@ export default function ChooseAnswer({
                 </Box>
               </Fade>
             )}
-
-            {belowCardMessage}
           </>
         ) : null}
       </ScrollBoxStyled>
@@ -314,17 +293,6 @@ export default function ChooseAnswer({
                       gameSessionId={gameSessionId}
                     />
                    }
-                   {isTimeUp && (
-                     <Typography
-                       variant="paragraph"
-                       sx={{
-                         textAlign: 'center',
-                         marginTop: `${theme.sizing.lgPadding}px`,
-                       }}
-                     >
-                       {t('gameinprogress.chooseanswer.answertimeup')}
-                     </Typography>
-                   )}
                   </ScrollBoxStyled>
                 </SwiperSlide>
             }
