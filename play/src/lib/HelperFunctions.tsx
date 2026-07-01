@@ -18,6 +18,7 @@ import {
   LocalModel,
   StorageKeyAnswer,
 } from './PlayModels';
+import { safeStorage } from './safeStorage';
 
 /**
  * check if name entered isn't empty or the default value
@@ -91,7 +92,7 @@ export const checkForSubmittedAnswerOnRejoin = (
       returnedAnswer = localModel.answer;
       // remove localAnswer from local storage
       localModel.answer = null; // eslint-disable-line no-param-reassign
-      window.localStorage.setItem(StorageKey, JSON.stringify(localModel));
+      safeStorage.setItem(StorageKey, JSON.stringify(localModel));
     }
   }
   return returnedAnswer as BackendAnswer;
@@ -211,12 +212,12 @@ export const validateLocalModel = (
  */
 export const fetchLocalData = () => {
   const localModel = validateLocalModel(
-    window.localStorage.getItem(StorageKey),
-    window.localStorage.getItem(StorageKeyAnswer)
+    safeStorage.getItem(StorageKey),
+    safeStorage.getItem(StorageKeyAnswer)
   );
   if (!localModel) {
-    window.localStorage.removeItem(StorageKey);
-    window.localStorage.removeItem(StorageKeyAnswer);
+    safeStorage.removeItem(StorageKey);
+    safeStorage.removeItem(StorageKeyAnswer);
   }
   return localModel;
 };

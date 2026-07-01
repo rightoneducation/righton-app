@@ -38,6 +38,7 @@ import {
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
+import { safeStorage } from '../lib/safeStorage';
 import { trackEvent, trackError, PlayEvent } from '../lib/analytics';
 
 interface GameInProgressProps {
@@ -186,7 +187,7 @@ export default function GameInProgress({
       }
       console.log(correctAnswer);
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
+      safeStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
       setTeamAnswerId(response.id ?? '');
       setBackendAnswer(answer);
       setDisplaySubmitted(true);
@@ -211,17 +212,17 @@ export default function GameInProgress({
   const handleSubmitHint = (normalizedHint: IAnswerHint) => {
     // frontend first
     setHintBonusPoints(1);
-    window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
+    safeStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
     // Persist the hint onto the stored answer too, so a refresh restores the
     // submitted-hint state. checkForSubmittedHintOnRejoin reads localModel.answer.hint,
     // gated by the answer's currentState/currentQuestionIndex (which the standalone
     // StorageKeyHint value lacks), so without this the hint pill resets on reload.
     try {
-      const storedAnswerRaw = window.localStorage.getItem(StorageKeyAnswer);
+      const storedAnswerRaw = safeStorage.getItem(StorageKeyAnswer);
       if (storedAnswerRaw) {
         const storedAnswer = JSON.parse(storedAnswerRaw);
         storedAnswer.hint = normalizedHint;
-        window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(storedAnswer));
+        safeStorage.setItem(StorageKeyAnswer, JSON.stringify(storedAnswer));
       }
     } catch {
       /* ignore persistence failures */
@@ -265,7 +266,7 @@ export default function GameInProgress({
       answerText,
       false
     )
-    window.localStorage.setItem(
+    safeStorage.setItem(
       StorageKeyAnswer,
       JSON.stringify(answer)
     );

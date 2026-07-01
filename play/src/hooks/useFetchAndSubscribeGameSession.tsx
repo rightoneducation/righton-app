@@ -13,6 +13,7 @@ import {
   StorageKeyEduDataStudentId,
 } from '../lib/PlayModels';
 import { calculateCurrentTime } from '../lib/HelperFunctions';
+import { safeStorage } from '../lib/safeStorage';
 import {
   trackEvent,
   trackError,
@@ -294,9 +295,12 @@ export default function useFetchAndSubscribeGameSession(
         currentState: g.currentState,
         questionIndex: g.currentQuestionIndex,
       });
-      window.localStorage.removeItem(StorageKey);
-      window.localStorage.removeItem(StorageKeyAnswer);
-      window.localStorage.removeItem(StorageKeyEduDataStudentId);
+      // Route through safeStorage so a blocked-storage removeItem can't throw and
+      // abort the unsubscribe + redirect below (the EduData key removal is incidental
+      // cleanup here, not part of the UpGrade integration).
+      safeStorage.removeItem(StorageKey);
+      safeStorage.removeItem(StorageKeyAnswer);
+      safeStorage.removeItem(StorageKeyEduDataStudentId);
       gameSessionSubscription?.unsubscribe?.();
       teamsSubscription?.unsubscribe?.();
       flushAndRedirect('https://play.rightoneducation.com');

@@ -22,6 +22,7 @@ import ShortAnswerTextFieldStyled from '../lib/styledcomponents/ShortAnswerTextF
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
+import { safeStorage } from '../lib/safeStorage';
 
 interface HintProps {
   apiClients: IAPIClients;
@@ -122,7 +123,7 @@ export default function HintCard({
     event: ChangeEvent<HTMLInputElement>
   ) => {    
     const currentHint = event.target.value;
-    window.localStorage.setItem(
+    safeStorage.setItem(
       StorageKeyHint,
       JSON.stringify(currentHint)
     );

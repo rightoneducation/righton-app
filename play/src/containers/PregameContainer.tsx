@@ -23,6 +23,7 @@ import {
   StorageKeyEduDataStudentId,
 } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
+import { safeStorage } from '../lib/safeStorage';
 import { identifyStudent, trackEvent, trackError, PlayEvent } from '../lib/analytics';
 
 interface PregameFinished {
@@ -107,7 +108,7 @@ export function PregameContainer({
       gameSessionId: model.gameSessionId,
       teamId: model.teamId,
     });
-    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+    safeStorage.setItem(StorageKey, JSON.stringify(storageObject));
     startTransition(() => {
       navigate(`/game`);
     });
@@ -227,12 +228,12 @@ export function PregameContainer({
       currentTimer: gameSessionResponse.phaseOneTime,
       answer: null,
     };
-    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+    safeStorage.setItem(StorageKey, JSON.stringify(storageObject));
     // Fresh join = new team/game: clear any answer/hint left over from a prior game so
     // a stale "submitted" answer can't be reattached on the first question. (Rejoin via
     // rejoinWithModel intentionally keeps these to restore in-progress work.)
-    window.localStorage.removeItem(StorageKeyAnswer);
-    window.localStorage.removeItem(StorageKeyHint);
+    safeStorage.removeItem(StorageKeyAnswer);
+    safeStorage.removeItem(StorageKeyHint);
     navigate(`/game`);
   };
 

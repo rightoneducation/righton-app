@@ -7,6 +7,7 @@ import {
 import Leaderboard from '../pages/finalresults/Leaderboard';
 import Congrats from '../pages/finalresults/Congrats';
 import { FinalResultsState, StorageKey, StorageKeyEduDataStudentId } from '../lib/PlayModels';
+import { safeStorage } from '../lib/safeStorage';
 
 interface FinalResultsContainerProps {
   teams?: ITeam[];
@@ -45,8 +46,8 @@ export default function FinalResultsContainer({
   // "Game session not found" error on the next refresh.
   useEffect(() => {
     if (currentState === GameSessionState.FINAL_RESULTS) {
-      window.localStorage.removeItem(StorageKey);
-      window.localStorage.removeItem(StorageKeyEduDataStudentId);
+      safeStorage.removeItem(StorageKey);
+      safeStorage.removeItem(StorageKeyEduDataStudentId);
     }
   }, [currentState]);
 

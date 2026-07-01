@@ -8,6 +8,7 @@ import Modal from 'react-modal';
 import { v4 as uuidv4 } from 'uuid';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
 import { StorageKey, StorageKeyEduDataStudentId, ErrorType } from '../lib/PlayModels';
+import { safeStorage } from '../lib/safeStorage';
 
 interface ErrorModalProps {
   isModalOpen: boolean;
@@ -50,8 +51,8 @@ export default function ErrorModal({
     <IntroButtonStyled
       key={uuidv4()}
       onClick={() => {
-        window.localStorage.removeItem(StorageKey);
-        window.localStorage.removeItem(StorageKeyEduDataStudentId);
+        safeStorage.removeItem(StorageKey);
+        safeStorage.removeItem(StorageKeyEduDataStudentId);
         navigate('/');
       }}
       style={{
