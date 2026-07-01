@@ -58,7 +58,7 @@ const RectStyle = styled(Box)({
 })
 
 const ChoiceContainer = styled(Box)({
-  color: 'rgba(255, 255, 255, 0.5)',
+  color: 'rgba(255, 255, 255)',
   fontFamily: 'Poppins',
   fontSize: '16px',
   fontWeight: '800',
