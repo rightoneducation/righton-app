@@ -37,7 +37,7 @@ const BodyContentAreaSingleColumnStyled = styled(
 
 interface GameEndedHostBodyProps{
   selectedSuggestedGame: string | null;
-  setSelectedSuggestedGame: (value: string) => void;
+  setSelectedSuggestedGame: (value: string | null) => void;
   teams: ITeam[];
   gameTemplates: IGameTemplate[];
   currentQuestionIndex: number;

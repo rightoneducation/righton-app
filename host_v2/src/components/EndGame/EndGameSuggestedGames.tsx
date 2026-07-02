@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { CircularProgress, Grid, MenuItem, Divider, Typography, Box, TextField  } from '@mui/material';
+import { CircularProgress, Grid, MenuItem, Divider, Typography, Box, TextField, ClickAwayListener  } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { IGameTemplate, ITeam, CloudFrontDistributionUrl } from '@righton/networking';
@@ -147,7 +147,7 @@ interface SuggestedGamesProps {
   gameTemplates: IGameTemplate[];
   teams: ITeam[] | null;
   selectedSuggestedGame: string | null;
-  setSelectedSuggestedGame: (value: string) => void;
+  setSelectedSuggestedGame: (value: string | null) => void;
   searchText: string;
   handleUpdateSearchText: (value: string) => void;
 }
@@ -208,6 +208,9 @@ function SuggestedGames ({
                 </Typography>
               </>
             }
+            {/* click-away on the card list: tapping anywhere outside a game card unselects the
+                game and resets the footer button back to "exit to central". */}
+            <ClickAwayListener onClickAway={() => { if (selectedSuggestedGame) setSelectedSuggestedGame(null); }}>
             <StyledGameContainer>
             {gameTemplates.length > 0 && gameTemplates.map((gameTemplate) => (
                 <MenuItemStyled isSelected={gameTemplate.id === selectedSuggestedGame} key={uuidv4()} onClick={() => setSelectedSuggestedGame(gameTemplate.id)}>
@@ -235,6 +238,7 @@ function SuggestedGames ({
                 </MenuItemStyled>
             ))}
             </StyledGameContainer>
+            </ClickAwayListener>
         </StartEndGameScrollBoxStyled>
     )
 }
