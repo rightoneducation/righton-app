@@ -2,7 +2,7 @@
 name: Play 1.2 Bug Report Template
 about: Bug Report Template
 title: ''
-labels: play-app
+labels: play_v2
 assignees: drewjhart
 type: Bug
 
