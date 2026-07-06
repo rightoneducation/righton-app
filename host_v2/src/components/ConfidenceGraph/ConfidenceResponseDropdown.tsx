@@ -131,11 +131,11 @@ export default function ConfidenceResponseDropdown({
   const [isExpanded, setIsExpanded] = useState(true);
   const ConfidenceLevelDictionary: { [key in ConfidenceLevel]: string } = {
     [ConfidenceLevel.NOT_RATED]: 'Not Rated',
-    [ConfidenceLevel.NOT_AT_ALL]: 'Not At All Confident',
-    [ConfidenceLevel.KINDA]: 'A Little Confident',
-    [ConfidenceLevel.QUITE]: 'Sort Of Confident',
-    [ConfidenceLevel.VERY]: 'Very Confident',
-    [ConfidenceLevel.TOTALLY]: 'Totally Confident',
+    [ConfidenceLevel.NOT_AT_ALL]: 'Not At All',
+    [ConfidenceLevel.KINDA]: 'A Little',
+    [ConfidenceLevel.QUITE]: 'Sort Of',
+    [ConfidenceLevel.VERY]: 'Very',
+    [ConfidenceLevel.TOTALLY]: 'Totally',
   };
   const count = selectedConfidence.correct.length + selectedConfidence.incorrect.length;
   const percentage = numPlayers > 0 ? (count / numPlayers) * 100 : 0;
