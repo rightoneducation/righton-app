@@ -179,7 +179,25 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
   };
 
+  // A team has "answered" this phase once it appears in any real (non "no-response") response
+  // bucket. Centralized so the duplicate-answer guard lives in ONE place — shared by
+  // processAnswer and decrementNoResponseCount. Answers and hints are final once submitted;
+  // only confidence may change after submission (handled in processConfidenceLevel).
+  private hasTeamAnswered(teamAnswersQuestion: any, phase: IPhase, teamName: string): boolean {
+    return teamAnswersQuestion[phase].responses.some(
+      (response: any) =>
+        response.multiChoiceCharacter !== this.noResponseCharacter &&
+        response.teams.includes(teamName)
+    );
+  }
+
   private processAnswer(ans: any, teamAnswersQuestion: any, phase: IPhase, teamName: string) {
+    // First answer wins: if this team already answered this phase (e.g. the same identity
+    // submitting from a second tab, or a duplicate subscription delivery), ignore the duplicate
+    // so it can't inflate the response counts / graph / "players answered" footer.
+    if (this.hasTeamAnswered(teamAnswersQuestion, phase, teamName)) {
+      return teamAnswersQuestion[phase].responses;
+    }
     const answerObj = this.createAnswerFromBackendData(ans.answer);
     let newResponses = [...teamAnswersQuestion[phase].responses];
     if (answerObj) {
@@ -230,11 +248,16 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     let newConfidences: IHostTeamAnswersConfidence[] = []
     if (teamAnswersQuestion[IPhase.ONE].confidences)
       newConfidences = [...teamAnswersQuestion[IPhase.ONE].confidences];
-    // step one: remove the old confidence value
-    if (ans.isCorrect)
-      newConfidences = newConfidences.map((confidence) => { return {...confidence, correct: confidence.correct.filter((entry) => entry.team !== teamName)}});
-    else
-      newConfidences = newConfidences.map((confidence) => { return {...confidence, incorrect: confidence.incorrect.filter((entry) => entry.team !== teamName)}});
+    // step one: remove this team's prior confidence entry from BOTH correctness buckets.
+    // Confidence is the one response type that can change after submission, so we always clear the
+    // team's previous entry before re-adding. Filtering both sides (not just the current
+    // isCorrect side) prevents a correctness flip — or a duplicate submission from a second tab —
+    // from leaving the team double-listed across the correct and incorrect buckets.
+    newConfidences = newConfidences.map((confidence) => ({
+      ...confidence,
+      correct: confidence.correct.filter((entry) => entry.team !== teamName),
+      incorrect: confidence.incorrect.filter((entry) => entry.team !== teamName),
+    }));
     // step two: push the new confidence value into the correct object
     const confidenceLevel = newConfidences.find((confidence: any) => confidence.level === ans.confidenceLevel);
     if (confidenceLevel) {
@@ -261,10 +284,16 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     const hints = [...teamAnswersQuestion[IPhase.TWO].hints];
     const hint = JSON.parse(ans.hint);
     if (hint){
-      hints.push({
-        rawHint: hint.rawHint,
-        teamName: hint.teamName  
-      })
+      // First hint wins: a hint is final once submitted (like an answer, unlike confidence).
+      // Ignore a duplicate hint from a team that already has one (e.g. a second tab sharing the
+      // identity) so it can't double-list on the hints graph or in the GPT-hint summary.
+      const alreadyHinted = hints.some((existing: any) => existing.teamName === hint.teamName);
+      if (!alreadyHinted) {
+        hints.push({
+          rawHint: hint.rawHint,
+          teamName: hint.teamName
+        })
+      }
     }
     return hints;
   }
@@ -303,6 +332,13 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   private decrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
+    // Only a team's FIRST answer should decrement the outstanding "no response" count. This runs
+    // AFTER processAnswer, but processAnswer returns a new array without mutating this question,
+    // so on the first answer the team is not yet present here (guard passes → decrement); on a
+    // duplicate delivery the team is already present (guard blocks → no double-decrement).
+    if (this.hasTeamAnswered(teamAnswersQuestion, phase, teamName)) {
+      return;
+    }
     const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
     if (noResponse) {
       noResponse.count = Math.max(noResponse.count - 1,0);

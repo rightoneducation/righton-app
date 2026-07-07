@@ -173,8 +173,8 @@ export default function SplashScreen({
             variant="semiBoldParagraph"
             sx={{
               textAlign: 'center',
-              paddingLeft: `${theme.sizing.mediumPadding}px`,
-              paddingRight: `${theme.sizing.mediumPadding}px`,
+              paddingLeft: `${theme.sizing.mdPadding}px`,
+              paddingRight: `${theme.sizing.mdPadding}px`,
             }}
           >
             {t('joingame.splash.title1')}

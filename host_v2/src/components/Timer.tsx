@@ -174,7 +174,7 @@ export default function Timer({
             <Typography
               alignSelf="center"
               variant="h6"
-              style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik', lineHeight: '14px', color: localGameSession.currentState !== GameSessionState.TEAMS_JOINING ? theme.palette.primary.main : theme.palette.designSystem.surface.pink }}
+              style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik', lineHeight: '14px', color: theme.palette.primary.main }}
             >
               {timerString}
             </Typography>

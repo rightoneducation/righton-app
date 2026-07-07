@@ -158,6 +158,7 @@ export default function PrepareGameOptionsCard({
                   disableRipple
                   disabled={isGameSettingMultiChoice}
                   variant={isShortAnswerEnabled ? 'outlined' : 'contained'} 
+                  style={{borderRight: '0px'}}
                   onClick={() => setIsShortAnswerEnabled(false)}
                 >
                   <Typography variant="answerTypeLabel">

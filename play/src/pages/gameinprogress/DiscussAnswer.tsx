@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Grid, Stack, Box, useMediaQuery } from '@mui/material';
 import {
@@ -73,6 +73,7 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const resultCardRef = useRef<HTMLDivElement>(null);
 
   // Warm the browser cache for the final-results screens while the player is
   // on this (static) discuss screen, so the waving monster and celebrate scene
@@ -84,6 +85,28 @@ export default function DiscussAnswer({
     ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // small-device counterpart of ChooseAnswer's submitted-card autoscroll: the
+  // player's result card (phase 1: correct/nice-try, phase 2: their own
+  // selection with the points pill; absent when they answered correctly)
+  // mounts below the fold, so bring it into view when a discuss phase starts.
+  // scrollIntoView would also drag the phase 2 swiper's overflow: hidden
+  // container horizontally, so scroll only the nearest vertical scroll
+  // ancestor (ScrollBoxStyled)
+  useEffect(() => {
+    const card = resultCardRef.current;
+    if (!isSmallDevice || card == null ||
+      (currentState !== GameSessionState.PHASE_1_DISCUSS &&
+        currentState !== GameSessionState.PHASE_2_DISCUSS))
+      return;
+    let scrollBox = card.parentElement;
+    while (scrollBox != null && !/auto|scroll/.test(window.getComputedStyle(scrollBox).overflowY))
+      scrollBox = scrollBox.parentElement;
+    scrollBox?.scrollTo({
+      top: card.getBoundingClientRect().top - scrollBox.getBoundingClientRect().top + scrollBox.scrollTop,
+      behavior: 'smooth',
+    });
+  }, [isSmallDevice, currentState]);
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   let screenSize = ScreenSize.MEDIUM;
   if (isLargeScreen) screenSize = ScreenSize.LARGE;
@@ -117,20 +140,22 @@ export default function DiscussAnswer({
     <QuestionCard questionText={questionText} imageUrl={questionUrl} />
   );
   const p1CorrectAnswerCard = (
-    <DiscussAnswerCard
-      instructions={instructions}
-      answerStatus={
-        isPlayerCorrect
-          ? AnswerState.PLAYER_SELECTED_CORRECT
-          : AnswerState.CORRECT
-      }
-      phaseOneResponse={correctResponse}
-      currentState={currentState}
-      isShortAnswerEnabled={isShortAnswerEnabled}
-      newPoints={newPoints}
-      selectedAnswer={null}
-      teamAvatar={teamAvatar}
-    />
+    <Box ref={resultCardRef} id="discussanswercard-scrollbox">
+      <DiscussAnswerCard
+        instructions={instructions}
+        answerStatus={
+          isPlayerCorrect
+            ? AnswerState.PLAYER_SELECTED_CORRECT
+            : AnswerState.CORRECT
+        }
+        phaseOneResponse={correctResponse}
+        currentState={currentState}
+        isShortAnswerEnabled={isShortAnswerEnabled}
+        newPoints={newPoints}
+        selectedAnswer={null}
+        teamAvatar={teamAvatar}
+      />
+    </Box>
   );
   const P1SingleColumnContents = (
     <ScrollBoxStyled>
@@ -144,32 +169,39 @@ export default function DiscussAnswer({
       <ScrollBoxStyled>
         <Stack sx={{ gap: CARD_GAP_BY_SIZE[screenSize] }}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-          { phaseTwoResponses?.reverse && phaseTwoResponses.map((response, index) => (
-            !response.isCorrect &&
-              <DiscussAnswerCard
-                instructions={instructions ?? ''}
-                answerStatus={
-                  response.teams.includes(currentTeam.name) 
-                    ? AnswerState.SELECTED
-                    : AnswerState.DEFAULT
-                }
-                phaseTwoResponse={response}
-                phaseOneResponse={phaseOneResponses.find((p1Response) => p1Response.rawAnswer === response.rawAnswer)}
-                answerReason={response.reason ?? ''}
-                currentState={currentState}
-                key={uuidv4()}
-                isShortAnswerEnabled={isShortAnswerEnabled}
-                newPoints={newPoints}
-                totalAnswers={totalAnswers}
-                selectedAnswer={
-                   response.teams.includes(currentTeam.name) 
-                    ? selectedAnswer
-                    : null
-                }
-                teamAvatar={teamAvatar}
-              />
-            )
-          )}
+          { phaseTwoResponses?.reverse && phaseTwoResponses.map((response, index) => {
+            const isPlayerSelection = response.teams.includes(currentTeam.name);
+            return (
+              !response.isCorrect &&
+                <Box
+                  key={uuidv4()}
+                  ref={isPlayerSelection ? resultCardRef : null}
+                  id={isPlayerSelection ? 'selectedanswercard-scrollbox' : undefined}
+                >
+                  <DiscussAnswerCard
+                    instructions={instructions ?? ''}
+                    answerStatus={
+                      isPlayerSelection
+                        ? AnswerState.SELECTED
+                        : AnswerState.DEFAULT
+                    }
+                    phaseTwoResponse={response}
+                    phaseOneResponse={phaseOneResponses.find((p1Response) => p1Response.rawAnswer === response.rawAnswer)}
+                    answerReason={response.reason ?? ''}
+                    currentState={currentState}
+                    isShortAnswerEnabled={isShortAnswerEnabled}
+                    newPoints={newPoints}
+                    totalAnswers={totalAnswers}
+                    selectedAnswer={
+                      isPlayerSelection
+                        ? selectedAnswer
+                        : null
+                    }
+                    teamAvatar={teamAvatar}
+                  />
+                </Box>
+            );
+          })}
           { otherResponses && otherResponses.length > 0 && (
               <DiscussAnswerCard
                 instructions={instructions ?? ''}
@@ -315,7 +347,7 @@ export default function DiscussAnswer({
           paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
         }}
       >
-        <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
+        <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mdPadding * 2}px)`, height: '100%' }}>
           {P1SingleColumnContents}
         </Box>
       </BodyContentAreaSingleColumnStyled>

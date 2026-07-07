@@ -458,7 +458,7 @@ export default function JoinGame({
                   variant="textLabel"
                   sx={{
                     textAlign: 'center',
-                    marginBottom: `${theme.sizing.smallPadding}px`,
+                    marginBottom: `${theme.sizing.smPadding}px`,
                     // the \n in the string only renders as a break on desktop;
                     // elsewhere it collapses to a space
                     whiteSpace: isDesktop ? 'pre-line' : 'normal',

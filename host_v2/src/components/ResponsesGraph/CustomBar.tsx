@@ -39,7 +39,7 @@ export function CustomBar(props: any) {
         <HighlightRectangle
           x =  {isShortAnswerEnabled ? 0 : theme.sizing.defaultVictoryPadding - theme.sizing.xSmPadding - theme.sizing.mdPadding}
           y =  {isShortAnswerEnabled ? y - theme.sizing.xLgPadding + theme.sizing.xSmPadding : y - theme.sizing.smPadding}
-          width = {customBarSelectedWidth + theme.sizing.defaultVictoryPadding + (isShortAnswerEnabled ? 0 : theme.sizing.mdPadding) + theme.sizing.xSmPadding }
+          width = {customBarSelectedWidth + theme.sizing.defaultVictoryPadding + (isShortAnswerEnabled ? 0 : theme.sizing.mdPadding) + theme.sizing.xxSmPadding }
           height = {height}
           fill={
             isSelected

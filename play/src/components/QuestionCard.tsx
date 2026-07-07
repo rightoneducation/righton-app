@@ -48,8 +48,8 @@ export default function QuestionCard({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: `${theme.sizing.extraSmallPadding}px`,
-            padding: `${theme.sizing.mediumPadding}px`,
+            gap: `${theme.sizing.xSmPadding}px`,
+            padding: `${theme.sizing.mdPadding}px`,
           }}
         >
           {sentences.map((sentence, index) => {
