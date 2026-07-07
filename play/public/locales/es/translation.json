@@ -1,7 +1,8 @@
 {
   "joingame": {
     "splash": {
-      "title": "¡Liberando el potencial de cada estudiante en matemáticas!",
+      "title1": "¡Liberando el potencial de cada",
+      "title2": "estudiante en matemáticas!",
       "button": "Unete al juego"
     },
     "rejoinmodal": {
@@ -13,8 +14,12 @@
     "gamecode": {
       "title": "Ingrese el código del juego",
       "button": "Unirse",
+      "buttonJoining": "Uniéndose...",
       "error1": "No se puede unir\na este juego.",
-      "error2": "Comprueba el código del juego\ne inténtalo de nuevo."
+      "error2": "Comprueba el código del juego\ne inténtalo de nuevo.",
+      "error3": "Un jugador con ese nombre ya se ha unido al juego.",
+      "error4a": "El juego ya ha comenzado.",
+      "error4b": "Busca a un compañero que ya esté dentro y\nsigan juntos el juego en su pantalla."
     },
     "playername": {
       "title": "Introduzca su nombre",
@@ -91,6 +96,15 @@
       "answercard": "Elige la respuesta correcta",
       "openanswercard": "Introduce tu respuesta",
       "openanswercardplaceholder": "Ingresa tu respuesta aquí...",
+      "openanswercarddescription": "Tu profesor espera una ",
+      "openanswercardnumberanswer1": "respuesta numérica en número entero.",
+      "openanswercardnumberanswer2": "respuesta numérica con un decimal.",
+      "openanswercardnumberanswer3": "respuesta numérica con dos decimales.",
+      "openanswercardnumberanswer4": "respuesta numérica con tres decimales.",
+      "openanswercardwordanswer": "respuesta breve de una palabra.",
+      "openanswercardexpressionanswer": "expresión matemática.",
+      "openanswercardkatexpreview": "Vista previa de la expresión:",
+      "openanswercardnumberwarning": "Solo se permiten los siguientes caracteres: . - % 0-9",
       "hintcardtitle": "Dar una pista (opcional)",
       "hintcarddescriptiondefault": "¿Podrías darle una pista a alguien que haya cometido este error?",
       "hintcarddescriptionupgrade": "¿Qué consejo le darías a tu yo del pasado para evitar este error?",

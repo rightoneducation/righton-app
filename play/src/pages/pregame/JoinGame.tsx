@@ -124,6 +124,8 @@ interface JoinGameProps {
   setIsShowNameError: (value: boolean) => void;
   isShowNameInvalidError: boolean;
   setIsShowNameInvalidError: (value: boolean) => void;
+  isShowGameInProgressError: boolean;
+  setIsShowGameInProgressError: (value: boolean) => void;
   shouldShowAvatarSelect: boolean;
   setShouldShowAvatarSelect: (value: boolean) => void;
   firstName: string;
@@ -146,6 +148,8 @@ export default function JoinGame({
   setIsShowNameError,
   isShowNameInvalidError,
   setIsShowNameInvalidError,
+  isShowGameInProgressError,
+  setIsShowGameInProgressError,
   shouldShowAvatarSelect,
   setShouldShowAvatarSelect,
   firstName,
@@ -271,7 +275,7 @@ export default function JoinGame({
               variant="filled"
               autoComplete="off"
               placeholder={InputPlaceholder.GAME_CODE}
-              onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false)}}
+              onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); setIsShowGameInProgressError(false)}}
               onChange={handleGameCodeChange}
               value={gameCodeValue}
               sx={{ '& .MuiFilledInput-root': { width: '100%', maxWidth: '100%' } }}
@@ -328,7 +332,7 @@ export default function JoinGame({
                     autoComplete="off"
                     placeholder={t('joingame.playername.firstnamedefault') ?? ''}
                     onChange={(event) => handleFirstNameChange(event.target.value)}
-                    onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); }}
+                    onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); setIsShowGameInProgressError(false); }}
                     value={firstName}
                     sx={{ '& .MuiFilledInput-root': { width: '100%', maxWidth: '100%' } }}
                     InputProps={{
@@ -356,7 +360,7 @@ export default function JoinGame({
                     autoComplete="off"
                     placeholder={t('joingame.playername.lastnamedefault') ?? ''}
                     onChange={(event) => handleLastNameChange(event.target.value)}
-                    onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); }}
+                    onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); setIsShowGameInProgressError(false); }}
                     value={lastName}
                     sx={{ '& .MuiFilledInput-root': { width: '100%', maxWidth: '100%' } }}
                     InputProps={{
@@ -407,7 +411,7 @@ export default function JoinGame({
                       autoComplete="off"
                       placeholder={t('joingame.playername.firstnamedefault') ?? ''}
                       onChange={(event) => handleFirstNameChange(event.target.value)}
-                      onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); }}
+                      onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); setIsShowGameInProgressError(false); }}
                       value={firstName}
                       InputProps={{
                         disableUnderline: true,
@@ -431,7 +435,7 @@ export default function JoinGame({
                       autoComplete="off"
                       placeholder={t('joingame.playername.lastnamedefault') ?? ''}
                       onChange={(event) => handleLastNameChange(event.target.value)}
-                      onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); }}
+                      onFocus={() => { setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); setIsShowGameInProgressError(false); }}
                       value={lastName}
                       InputProps={{
                         disableUnderline: true,
@@ -475,6 +479,23 @@ export default function JoinGame({
                   {t('joingame.gamecode.error3')}
                 </Typography>
                 }
+              </Collapse>
+            </PaddedContainer>
+            <PaddedContainer>
+              <Collapse in={isShowGameInProgressError}>
+                <Typography
+                  variant="textLabel"
+                  sx={{
+                    textAlign: 'center',
+                    marginBottom: `${theme.sizing.smPadding}px`,
+                    whiteSpace: isDesktop ? 'pre-line' : 'normal',
+                  }}
+                >
+                  {t('joingame.gamecode.error4a')}
+                </Typography>
+                <Typography variant="textLabel" sx={{ textAlign: 'center', whiteSpace: isDesktop ? 'pre-line' : 'normal' }}>
+                  {t('joingame.gamecode.error4b')}
+                </Typography>
               </Collapse>
             </PaddedContainer>
             <PaddedContainer>
