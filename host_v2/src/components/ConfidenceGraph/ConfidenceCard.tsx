@@ -75,7 +75,7 @@ export default function ConfidenceCard({
             />
           ) : (
             <SmallTextContainer>
-              <Typography variant='label' style={{opacity: 0.4}}>
+              <Typography variant='label' style={{opacity: 0.5}}>
                 {t('gamesession.confidenceCard.instructions')}
               </Typography>
             </SmallTextContainer>
