@@ -28,6 +28,7 @@ interface InterimLeaderboardProps {
 }
 
 const SafeAreaStyled = styled(Box)(({ theme }) => ({
+  position: 'relative', // anchor the absolute background/backstop layers to this page, not the viewport by accident
   width: '100%',
   height: '100dvh',
   display: 'flex',
@@ -38,6 +39,21 @@ const SafeAreaStyled = styled(Box)(({ theme }) => ({
   gap: '16px',
   overflow: 'hidden',
 }));
+
+// Cream backstop one layer behind the curtain gradient (zIndex -2, below BackgroundStyled's -1).
+// GameInProgress leaves a cream body behind when its contents slide out, and the html canvas
+// under this page is the same blue gradient as the curtain — without this layer the curtain
+// descends over an identical copy of itself and reads as already open. Cream here mirrors the
+// StartGame opening in reverse: the not-yet-covered area stays cream until the curtain reaches
+// it. position:absolute (NOT fixed), so iOS Safari does not sample it for the bar tint — the
+// bars keep reading the blue html canvas.
+const CreamBackstopStyled = styled(Box)({
+  position: 'absolute',
+  inset: 0,
+  background: '#FFFBF6', // designSystem.foreground.warmBase
+  zIndex: -2,
+  pointerEvents: 'none',
+});
 const BackgroundStyled = styled(Paper)(({ theme }) => ({
   position: 'absolute', // Position it absolutely within StartGameContainer
   top: 0,
@@ -120,6 +136,7 @@ export default function InterimLeaderboard({
 
   return(
     <SafeAreaStyled>
+      <CreamBackstopStyled />
       <MotionBackgroundStyled
         initial={{ height: 200 + theme.sizing.mdPadding }}
         animate={{ height: bgSettled ? '100dvh' : window.innerHeight }}

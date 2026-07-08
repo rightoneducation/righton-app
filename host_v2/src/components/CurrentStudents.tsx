@@ -118,7 +118,7 @@ const SortMenu = styled(Box, {
   backgroundColor: '#FFFBF6',
   borderRadius: '8px',
   borderTopRightRadius: '0px', // square corner tucks under the button's bottom-right
-  padding: '12px',
+  overflow: 'hidden', // items carry the padding and fill edge-to-edge; this clips their fills to the rounded corners
   position: 'absolute',
   top: '36px', // height of the sort button
   right: 0,
@@ -134,31 +134,21 @@ const SortMenu = styled(Box, {
   pointerEvents: isSortOpen ? 'auto' : 'none',
 }));
 
-const SortMenuItem = styled(Typography)(({ theme }) => ({
-  color: theme.palette.designSystem.surface.play,
+const SortMenuItem = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected: boolean }>(({ theme, isSelected }) => ({
+  width: '100%',
+  boxSizing: 'border-box',
+  padding: '8px 12px',
+  color: isSelected ? '#FFF' : theme.palette.designSystem.surface.play,
+  backgroundColor: isSelected ? theme.palette.designSystem.surface.play : 'transparent',
   fontSize: '20px',
   textAlign: 'right',
   cursor: 'pointer',
-}));
-
-// rotate + scale animation on the sort arrows, mirroring central_v2's SortArrowContainer
-const SortArrowsContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSortOpen',
-})<{ isSortOpen: boolean }>(({ isSortOpen }) => ({
-  display: 'flex',
-  transform: isSortOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-  animation: isSortOpen
-    ? 'rotateScaleOpen 300ms ease-in-out'
-    : 'rotateScaleClose 300ms ease-in-out',
-  '@keyframes rotateScaleOpen': {
-    '0%': { transform: 'rotate(0deg) scale(1)' },
-    '50%': { transform: 'rotate(180deg) scale(1.1)' },
-    '100%': { transform: 'rotate(180deg) scale(1)' },
-  },
-  '@keyframes rotateScaleClose': {
-    '0%': { transform: 'rotate(180deg) scale(1)' },
-    '50%': { transform: 'rotate(0deg) scale(1.1)' },
-    '100%': { transform: 'rotate(0deg) scale(1)' },
+  // hover wins over selected: text returns to the default color on the light fill
+  '&:hover': {
+    color: theme.palette.designSystem.surface.play,
+    backgroundColor: '#CCD3DF', // not in the design system yet; sort-menu hover fill only
   },
 }));
 
@@ -174,7 +164,7 @@ function CurrentStudents({ teams, currentQuestionIndex, questionsCount, screenSi
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<'name' | 'firstJoined'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'firstJoined'>('firstJoined');
 
   // lobby sort is client-side only; in-game keeps the score-based teamSorter
   const sortedTeams = currentQuestionIndex === null
@@ -219,17 +209,13 @@ function CurrentStudents({ teams, currentQuestionIndex, questionsCount, screenSi
               isEnabled
               onClick={handleSortClick}
               style={{ borderBottomRightRadius: isSortOpen ? '0px' : '8px' }}
-              icon={
-                <SortArrowsContainer isSortOpen={isSortOpen}>
-                  <img src={SortArrows} alt="Sort" />
-                </SortArrowsContainer>
-              }
+              icon={<img src={SortArrows} alt="Sort" />}
             />
             <SortMenu isSortOpen={isSortOpen}>
-              <SortMenuItem variant="h2" onClick={() => handleSelectSort('name')}>
+              <SortMenuItem variant="h2" isSelected={sortBy === 'name'} onClick={() => handleSelectSort('name')}>
                 Name (A-Z)
               </SortMenuItem>
-              <SortMenuItem variant="h2" onClick={() => handleSelectSort('firstJoined')}>
+              <SortMenuItem variant="h2" isSelected={sortBy === 'firstJoined'} onClick={() => handleSelectSort('firstJoined')}>
                 First Joined
               </SortMenuItem>
             </SortMenu>
