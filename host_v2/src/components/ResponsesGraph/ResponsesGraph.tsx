@@ -139,7 +139,7 @@ export default function ResponsesGraph({
           }
           theme={theme.victoryResponsesTheme}
           width={boundingRect.width}
-          height={(isShortAnswerEnabled ? data.length * 68 : data.length * 40) + prevPhaseTopRoom} // height is a calc of the width of the bars + the space between them + the offset (+ extra top room on the phase-1 graph)
+          height={(isShortAnswerEnabled ? data.length * 68 : data.length * 36 + 20) + prevPhaseTopRoom} // multi-choice: constant 36px row pitch (36n + padding/domainPadding overhead of 20) to match the 36px highlight rect in CustomBar, so hover/selected boxes never overlap even when zero-count rows are trimmed (+ extra top room on the phase-1 graph)
         >
           <VictoryAxis
             standalone={false}
