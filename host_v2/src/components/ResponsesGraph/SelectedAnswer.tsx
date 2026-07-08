@@ -98,9 +98,9 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
   return (
     <Box>
       {selectedIndex === null ? (
-        <Text>
-          Tap on a response to see more details.
-        </Text>
+        <Typography variant='label' style={{opacity: 0.5}}>
+          Tap an answer to see who chose it
+        </Typography>
       ) : (
         <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
           { selectedIndex !== noResponseIndex && (

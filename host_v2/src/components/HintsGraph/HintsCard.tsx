@@ -100,7 +100,7 @@ export default function Hints({
                     handleGraphClick={handleGraphClick}
                   />
                   {graphClickIndex === null ? (
-                    <Typography variant='smallLabel' style={{color: theme.palette.primary.main}}>
+                    <Typography variant='label' style={{opacity: 0.5}}>
                       {t('hintscard.instructions')}
                     </Typography>
                   ) :
