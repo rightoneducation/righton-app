@@ -21,7 +21,7 @@
     "confidenceCard": {
       "title": "Confidence Meter",
       "description": "Players rated how sure they were of their answer",
-      "instructions": "Tap on a response to see more details.",
+      "instructions": "Tap a confidence level to see who chose it",
       "graph": {
         "title": "Number of Players",
         "legend": {
@@ -71,7 +71,7 @@
     "submittedcount": "Number of players who submitted a hint:",
     "minsubmissions": "At least 3 submissions are needed \nto organize hints into themes",
     "submitted": "Players have submitted hints to help others learn",
-    "instructions": "Tap on a response to see more details.",
+    "instructions": "Tap an answer to see who chose it",
     "notenough": "Not enough players submitted hints.",
     "loading": "Players have submitted hints to help others learn.",
     "organizing": "Organizing student hints into themes...",
