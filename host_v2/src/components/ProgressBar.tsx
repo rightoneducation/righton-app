@@ -39,7 +39,8 @@ const CurrentNumberTypography = styled(Typography)({
   fontWeight: 'bold',
   zIndex: '1',
   lineHeight: '18px',
-  color: 'white'
+  color: 'white',
+  paddingLeft: '8px'
 }); 
 
 const TotalNumberTypography = styled(Typography)({

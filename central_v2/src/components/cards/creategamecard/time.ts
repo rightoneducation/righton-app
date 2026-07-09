@@ -1,5 +1,9 @@
 const times = [
   {
+    value: 30,
+    label: '0:30',
+  },
+  {
     value: 60,
     label: '1:00',
   },
@@ -12,29 +16,17 @@ const times = [
     label: '2:00',
   },
   {
-    value: 150,
-    label: '2:30',
-  },
-  {
     value: 180,
     label: '3:00',
   },
   {
-    value: 210,
-    label: '3:30',
-  },
-  {
-    value: 240,
-    label: '4:00',
-  },
-  {
-    value: 270,
-    label: '4:30',
-  },
-  {
     value: 300,
     label: '5:00',
-  }
+  },
+  {
+    value: 600,
+    label: '10:00',
+  },
 ];
 
 export const reverseTimesMap = times.reduce(

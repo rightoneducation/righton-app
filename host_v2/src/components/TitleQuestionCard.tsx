@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { IQuestion } from '@righton/networking';
 import TitleCCSS from './TitleCCSS';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface TitleQuestionCardProps {
   title: string;
@@ -24,9 +23,9 @@ const TitleBoxStyled = styled(Paper)(({theme}) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  borderRadius: '18px',
-  marginLeft: `${theme.sizing.xSmPadding}px`,
-  marginRight: `${theme.sizing.xSmPadding}px`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
+  marginLeft: `${theme.sizing.xxSmPadding}px`,
+  marginRight: `${theme.sizing.xxSmPadding}px`,
   padding: '16px 18px 20px 18px',
   gap: '2px',
   boxShadow: '0px 4px 10px 0px rgba(15, 27, 40, 0.3)',
@@ -66,7 +65,7 @@ export default function TitleQuestionCard({
     if (questions.length === 0) {
       return (
         <TitleBoxStyled>
-          <TitleTypography>{title}</TitleTypography>
+          <Typography variant="h4" style={{textAlign: 'left'}}>{title}</Typography>
           <TopLineTypography>No questions available</TopLineTypography>
         </TitleBoxStyled>
       );
@@ -77,18 +76,18 @@ export default function TitleQuestionCard({
     return (
       <TitleBoxStyled>
         <TitleBoxTopStyled>
-            <TitleCCSS
+          <TitleCCSS
             key={`${grade}-${domain}-${cluster}-${standard}`}
             grade={grade}
             domain={domain}
             cluster={cluster}
             standard={standard}
-            />
-          <TopLineTypography>
-            {questions.length} Questions
-          </TopLineTypography>
+          />
+          <Typography variant="pinkLabel">
+            {questions.length > 1 ? `${questions.length} Questions` : '1 Question'}
+          </Typography>
         </TitleBoxTopStyled>  
-        <TitleTypography>{title}</TitleTypography>      
+        <Typography variant="h4" style={{width: '100%', textAlign: 'left'}}>{title}</Typography>      
       </TitleBoxStyled>
     );
   }

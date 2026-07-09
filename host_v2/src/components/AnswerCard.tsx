@@ -4,7 +4,7 @@ import { Typography, Box, LinearProgress } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { GameSessionState, IHostTeamAnswersResponse } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import { BodyCardStyled } from '../lib/styledcomponents/BodyCardStyled';
 import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
 import InputNum from '../lib/styledcomponents/footer/InputNum';
 
@@ -94,12 +94,13 @@ export default function  AnswerCard({
   };
 
   return (
-    <BodyCardStyled elevation={10}>
+    <BodyCardStyled elevation={6}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
         <Box style={{ width: '100%', gap: '16px' }}>
         {isCorrectAnswer
-              ? <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
-              : <AnswerTitleTypography> Incorrect Answer </AnswerTitleTypography>}
+          ? <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
+          : <AnswerTitleTypography> Incorrect Answer </AnswerTitleTypography>
+        }
           <AnswerOptionStyled
             sx={{
               backgroundColor: isCorrectAnswer

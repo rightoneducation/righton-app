@@ -6,6 +6,6 @@ import { Box } from '@mui/material';
 export default styled(Box)(({ theme }) => ({
   flex: 1,
   width: '100vw',
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: theme.palette.designSystem.foreground.warmBase,
   zIndex: 0,
 }));

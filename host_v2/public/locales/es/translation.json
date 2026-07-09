@@ -1,4 +1,15 @@
 {
+  "gameoptions": {
+    "answertypetitle": "Tipo de respuesta",
+    "multiplechoice": "Opción múltiple",
+    "shortanswer": "Respuesta corta",
+    "answertypesubtitlemultiplechoice": "Los jugadores eligen de una lista de respuestas",
+    "answertypesubtitleshortanswer": "Los jugadores podrán proporcionar una respuesta corta",
+    "confidencetitle": "Medidor de confianza",
+    "confidencesubtitle": "Los jugadores califican qué tan seguros están de su respuesta",
+    "studenthintstitle": "Pistas de los estudiantes",
+    "studenthintssubtitle": "Los jugadores comparten pistas para ayudar a otros a aprender de los errores"
+  },
   "gamesession": {
     "questionCard": {
       "title": "Pregunta"
@@ -9,7 +20,7 @@
     },
     "confidenceCard": {
       "title": "Medidor de confianza",
-      "description": "Se pregunta a los jugadores qué tan seguros están de su respuesta a esta pregunta.",
+      "description": "Se pregunta a los jugadores qué tan seguros están de su respuesta",
       "instructions": "Toca una respuesta para ver más detalles.",
       "graph": {
         "title": "Cantidad de jugadores",
@@ -47,10 +58,27 @@
       "finalresults": "Tabla de Posiciones",
       "finished": "Responder la Pregunta",
       "correct": "¡Correcto!",
-      "incorrect": "¡Buen Intento!"
+      "incorrect": "¡Buen Intento!",
+      "phase1pill": "Fase 1",
+      "phase2pill": "Fase 2"
     },
     "questionCard": {
       "title": "Pregunta"
     }
+  },
+  "hintscard": {
+    "title": "Pistas de los estudiantes",
+    "submittedcount": "Número de jugadores que enviaron una pista:",
+    "minsubmissions": "Se necesitan al menos 3 envíos \npara organizar las pistas en temas",
+    "submitted": "Los jugadores han enviado pistas para ayudar a otros a aprender",
+    "instructions": "Toca una respuesta para ver más detalles.",
+    "notenough": "No hay suficientes jugadores que enviaron pistas.",
+    "loading": "Los jugadores han enviado pistas para ayudar a otros a aprender.",
+    "organizing": "Organizando las pistas de los estudiantes en temas...",
+    "retry": "Reintentar",
+    "error": "Hubo un error al procesar las pistas. Por favor, inténtalo de nuevo."
+  },
+  "loadingpage": {
+    "launching": "Lanzando tu juego..."
   }
 }

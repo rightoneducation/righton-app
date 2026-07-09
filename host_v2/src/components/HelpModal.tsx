@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 import Modal from 'react-modal';
+import { HostButton, HostButtonType } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonStyled from '../lib/styledcomponents/ButtonStyled';
 import Logo from '../img/rightOnLogo.svg';
@@ -53,7 +54,7 @@ export default function RejoinModal({
       shouldCloseOnOverlayClick
       appElement={document.getElementById('root') || undefined}
     >
-      <BodyCardContainerStyled>
+      <BodyCardContainerStyled style={{alignItems: 'center', justifyContent: 'center'}}>
         <img
           style={{
             width: `100%`,
@@ -79,21 +80,15 @@ export default function RejoinModal({
             </Typography>
           {' '} to begin! 
         </Typography>
-        <ButtonStyled
+        <HostButton
+          buttonType={HostButtonType.END_GAME}
+          label='OK'
+          isEnabled
+          icon={null}
           onClick={() => {
             setIsHelpDisplayed(false);
           }}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            background: `${theme.palette.primary.highlightGradient}`,
-            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-            cursor: 'pointer',
-          }}
-        >
-          OK
-        </ButtonStyled>
+        />
       </BodyCardContainerStyled>
     </Modal>
   );

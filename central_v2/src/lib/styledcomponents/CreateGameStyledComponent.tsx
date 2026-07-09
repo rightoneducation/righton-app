@@ -18,15 +18,10 @@ import { ScreenSize } from '../CentralModels';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 // Create Game Page Components
-export const CreateGameMainContainer = styled(Box, {
-  shouldForwardProp: (prop: string) =>
-    prop !== 'screenSize',
-})<CreateGameBoxContainerProps>(({ screenSize, theme }) => ({
+export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
   height: '100%',
-  flexGrow: 1,
-  minHeight: 0,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -36,30 +31,6 @@ export const CreateGameMainContainer = styled(Box, {
   msOverflowStyle: 'none',
   boxSizing: 'border-box',
   display: 'flex',
-  flexDirection: 'column',
-  paddingLeft: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
-  paddingRight: screenSize !== ScreenSize.LARGE ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
-  paddingTop: screenSize !== ScreenSize.LARGE ? `0px` : `${theme.sizing.mdPadding}px`,
-  gap: `${theme.sizing.mdPadding}px`,
-}));
-
-export const CreateGameContentContainer = styled(Box)(({ theme }) => ({
-  width: '100%',
-  flexGrow: 1,
-  minHeight: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  justifyContent: 'flex-start',
-  gap: `${theme.sizing.mdPadding}px`,
-  height: '100%',
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  msOverflowStyle: 'none', // IE and Edge
 }));
 
 export const CreateGameBackground = styled(Box)(({ theme }) => ({
@@ -73,32 +44,33 @@ export const CreateGameBackground = styled(Box)(({ theme }) => ({
   zIndex: 0,
   backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
   backgroundImage: `
-    linear-gradient(180deg, rgb(255, 251, 246) 0%, rgba(254, 251, 247, 0) 100%),
+    linear-gradient(180deg, rgb(254, 251, 247) 0%, rgba(254, 251, 247, 0) 100%),
     url(${mathSymbolsBackground})
   `,
   backgroundSize: 'cover, contain',
   overflow: 'hidden',
 }));
 
-type CreateGameBoxContainerProps = {
-  screenSize: ScreenSize;
-};
-
-export const CreateGameBoxContainer = styled(Box, {
-  shouldForwardProp: (prop: string) =>
-    prop !== 'screenSize',
-})<CreateGameBoxContainerProps>(({ screenSize, theme }) => ({
+export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: 'fit-content',
   display: 'flex',
-  flexDirection: screenSize !== ScreenSize.LARGE ? 'column' : 'row',
-  alignItems: 'flex-start',
+  flexDirection: 'column',
+  alignItems: 'center',
   justifyContent: 'flex-start',
-  gap: `60px`,
+  gap: `${theme.sizing.mdPadding}px`,
   zIndex: 1,
   position: 'relative',
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
-  paddingBottom: `${theme.sizing.xLgPadding}px`,
+  flexGrow: 1,
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE and Edge
 }));
 
 type TitleTextProps = {
@@ -113,41 +85,9 @@ export const TitleText = styled(Typography)<TitleTextProps>(
     fontSize:
       screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
     color: `${theme.palette.primary.extraDarkBlue}`,
+    paddingTop: `${theme.sizing.lgPadding}px`,
   }),
 );
-
-export const HeaderText = styled(Typography)(({ theme }) => ({
-  fontSize: '14px',
-  fontWeight: '400',
-  lineHeight: '20px',
-  fontFamily: 'Rubik',
-  color: '#384466',
-}));
-
-export const QuestionHeaderText = styled(Typography)(({ theme }) => ({
-  fontSize: '24px',
-  fontWeight: 'bold',
-  lineHeight: '32px',
-  fontFamily: 'Poppins',
-  color: '#384466',
-}));
-
-export const QuestionBodyText = styled(Typography)(({ theme }) => ({
-  fontSize: '16px',
-  fontWeight: '600',
-  fontFamily: 'Poppins',
-  textAlign: 'center',
-  color: '#384466',
-}));
-
-export const GameCardBaseItem = styled(Box)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  justifyContent: 'flex-start',
-  gap: `${theme.sizing.smPadding}px`,
-}));
 
 type SaveDiscardContainerProps = {
   screenSize: ScreenSize;
@@ -175,11 +115,10 @@ export const CreateGameSaveDiscardBoxContainer = styled(Box, {
   }),
 }));
 
-export const CreateGameGridContainer = styled(Box)(({ theme }) => ({
+export const CreateGameGridContainer = styled(Grid)(({ theme }) => ({
   width: '100%',
   display: 'flex',
-  alignItems: 'flex-start',
-  gap: `60px`,
+  justifyContent: 'center',
 }));
 
 type QuestionCountButtonProps = {
@@ -209,7 +148,7 @@ export const QuestionCountButton = styled(Button, {
   gap: '10px',
 }));
 
-export const CreateGameSaveDiscardGridItem = styled(Box)(({ theme }) => ({
+export const CreateGameSaveDiscardGridItem = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'flex-start',
@@ -327,10 +266,11 @@ export const CreateGameTextFieldContainer = styled(TextField, {
   '& .MuiInputBase-input': {
     ...(isTitle && {
       padding: '12px 10px',
-      fontSize: '16px',
+      fontSize: '20px',
+      fontWeight: 'bold',
     }),
     color: '#384466',
-    opacity: 1,
+    opacity: isCardError ? 1 : 0.5,
     '&::placeholder': {
       color: isCardError ? '#D0254D' : '#384466',
       opacity: isCardError ? 1 : 0.5,
@@ -361,13 +301,13 @@ interface ContentContainerProps {
 export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(
   ({ theme, screenSize }) => ({
     width: '100%',
-    height: '100%',
+    height: screenSize === ScreenSize.SMALL ? '100%' : '100%',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
-    justifyContent: 'flex-start',
     gap:
-      `${theme.sizing.mdPadding}px`,
+      screenSize === ScreenSize.SMALL ? '12px' : `${theme.sizing.smPadding}px`,
   }),
 );
 
@@ -382,7 +322,7 @@ export const SelectPhaseLabel = styled(Typography, {
   color: error ? '#D0254D' : theme.palette.primary.sliderBlue,
   fontFamily: 'Rubik',
   fontSize: 14,
-  fontWeight: 'bold',
+  fontWeight: isSelected ? 'normal' : 'bold',
   margin: 0,
 }));
 

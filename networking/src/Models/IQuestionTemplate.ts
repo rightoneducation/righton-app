@@ -12,7 +12,6 @@ export interface IQuestionTemplate {
   id: string,
   userId: string,
   publicPrivateType: PublicPrivateType,
-  finalPublicPrivateType: PublicPrivateType,
   title: string,
   lowerCaseTitle: string,
   owner?: string,
@@ -54,11 +53,10 @@ export type AnswerSettingsType = {
 export type CorrectCard = {
   answer: string;
   answerSteps: string[];
-  isMultipleChoice: boolean;
   answerSettings: {
     answerType: AnswerType;
     answerPrecision?: AnswerPrecision;
-  };
+  }
   isFirstEdit: boolean;
   isCardComplete: boolean;
 }
@@ -75,8 +73,8 @@ export type IncorrectCard = {
 // object that handles all input variables in the create question flow for the client side exclusively
 // these then get based into the more structured IQuestion/AWSQuestion objects when the API request is made
 export type CentralQuestionTemplateInput = {
-  publicPrivateType: PublicPrivateType;
   questionCard: QuestionCard;
   correctCard: CorrectCard;
   incorrectCards: IncorrectCard[];
+  timesPlayed?: number | null;
 }

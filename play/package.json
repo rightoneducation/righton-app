@@ -1,10 +1,12 @@
 {
-  "name": "play2",
+  "name": "play",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/styled": "^11.10.6",
-    "@mui/material": "^5.11.15",
+    "@righton/networking": "*",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^5.16.7",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@mui/styles": "^5.11.13",
     "@testing-library/jest-dom": "^5.14.1",
@@ -17,13 +19,15 @@
     "@types/react-modal": "^3.16.0",
     "@types/uuid": "^9.0.1",
     "compromise": "^14.10.0",
-    "dompurify": "^3.4.0",
+    "dompurify": "^3.2.4",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^7.0.1",
-    "i18next-http-backend": "^3.0.5",
+    "i18next-http-backend": "^2.2.1",
     "katex": "^0.16.21",
+    "lodash": "^4.17.23",
     "luxon": "^3.4.4",
     "mathjs": "^11.11.1",
+    "posthog-js": "^1.351.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^12.3.0",
@@ -31,7 +35,7 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
-    "storybook": "^7.6.21",
+    "storybook": "^7.0.27",
     "styled-components": "^5.3.9",
     "swiper": "^9.2.0",
     "typescript": "^5.1.3",
@@ -76,7 +80,7 @@
     "@storybook/react": "^7.0.27",
     "@storybook/react-webpack5": "^7.0.27",
     "@storybook/testing-library": "^0.2.0",
-    "@types/dompurify": "^3.2.0",
+    "@types/dompurify": "^3.0.2",
     "@types/katex": "^0.16.3",
     "@types/luxon": "^3.4.2",
     "@types/styled-components": "^5.1.26",
@@ -85,7 +89,7 @@
     "babel-jest": "^29.5.0",
     "babel-plugin-named-exports-order": "^0.0.2",
     "chromatic": "^6.17.3",
-    "eslint": "^9.26.0",
+    "eslint": "^8.2.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.8.0",
@@ -105,11 +109,6 @@
     "ts-node": "^10.9.1",
     "webpack": "^5.94.0",
     "whatwg-fetch": "^3.6.2"
-  },
-  "resolutions": {
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
-    "styled-components": "^5",
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   },
   "prettier": {
     "singleQuote": true
@@ -192,5 +191,5 @@
     ]
   },
   "readme": "readme.md",
-  "_id": "play2@0.1.0"
+  "_id": "play@0.1.0"
 }

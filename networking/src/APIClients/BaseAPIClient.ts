@@ -59,16 +59,8 @@ export enum SortDirection {
 export enum PublicPrivateType {
   PUBLIC = "Public",
   PRIVATE = "Private",
-  DRAFT = "Draft",
-  DRAFT_PUBLIC = "DraftPublic",
-  DRAFT_PRIVATE = "DraftPrivate"
+  DRAFT = "Draft"
 }
-
-// Type for actual question/game templates (excludes join table types)
-export type TemplateType = PublicPrivateType.PUBLIC | PublicPrivateType.PRIVATE | PublicPrivateType.DRAFT;
-
-// Type for join tables only
-export type JoinTableType = PublicPrivateType.DRAFT_PUBLIC | PublicPrivateType.DRAFT_PRIVATE;
 export interface GraphQLOptions {
   input?: object;
   variables?: object;

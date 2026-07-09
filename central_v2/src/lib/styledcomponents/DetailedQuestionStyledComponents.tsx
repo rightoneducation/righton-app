@@ -42,8 +42,8 @@ export const RadioContainerStyled = styled(Box)(({ theme }) => ({
   width: 'fit-content',
   height: '100%',
   display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
 }));
 
 type RadioLabelProps = {
@@ -55,9 +55,9 @@ export const RadioLabelStyled = styled(FormControlLabel, {
 })<RadioLabelProps>(({ theme, isSelected }) => ({
   cursor: 'default',
   margin: 0,
-  color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.5)',
+  color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
   '& .MuiTypography-root': {
-    color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.5)',
+    color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
     fontSize: '14px',
   },
 }));
@@ -65,9 +65,6 @@ export const RadioLabelStyled = styled(FormControlLabel, {
 export const RadioStyled = styled(Radio)(({ theme }) => ({
   cursor: 'default',
   color: 'rgba(0, 0, 0, 0.2)',
-  paddingTop: 0,
-  paddingBottom: 0,
-  paddingLeft: 0,
   '&.Mui-checked': {
     color: `${theme.palette.primary.mediumBlue}`,
   },

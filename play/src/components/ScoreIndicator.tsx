@@ -1,40 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { isNullOrUndefined } from '@righton/networking';
 
-const ScorePill = styled('div')(({ theme }) => ({
+const PillBase = styled('div')({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: `58px`,
+  minWidth: '60px',
   height: '22px',
   borderRadius: '23px',
-  background: `${theme.palette.primary.highlightGradient}`,
+});
+
+const ScorePill = styled(PillBase)(({ theme }) => ({
+  background: `${theme.palette.designSystem.surface.pink}`,
   zIndex: 2,
 }));
 
-interface ScoreAnimationProps {
-  startAnimation: boolean;
+interface FloatingPillProps {
+  animationDelay: number;
 }
-const ScoreAnimation = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'startAnimation',
-})<ScoreAnimationProps>(({ startAnimation }) => ({
-  opacity: 1,
-  zIndex: 2,
-  animation: startAnimation
-    ? `
-   scoreGrow 1000ms ease-in-out 1650ms
-  `
-    : ``,
-  '@keyframes scoreGrow': {
-    '0%, 100%': {
+const FloatingPill = styled(PillBase, {
+  shouldForwardProp: (prop) => prop !== 'animationDelay',
+})<FloatingPillProps>(({ theme, animationDelay }) => ({
+  position: 'absolute',
+  top: '-44px',
+  left: '50%',
+  background: theme.palette.designSystem.gradients.play.newScore,
+  opacity: 0,
+  transform: 'translateX(-50%) translateY(0)',
+  whiteSpace: 'nowrap',
+  pointerEvents: 'none',
+  zIndex: 3,
+  animation: `floatingScorePill 1240ms ease-out ${animationDelay}ms both`,
+  '@keyframes floatingScorePill': {
+    '0%': {
       opacity: 1,
-      transform: ' scale(1.0)',
+      transform: 'translateX(-50%) translateY(0)',
     },
-    '50%': {
-      opacity: 1,
-      transform: ' scale(1.2)',
+    '100%': {
+      opacity: 0,
+      transform: 'translateX(-50%) translateY(44px)',
     },
   },
 }));
@@ -42,31 +48,37 @@ const ScoreAnimation = styled('div', {
 interface ScoreIndicatorProps {
   newPoints?: number;
   score: number;
+  animationDelay?: number;
 }
 
 export default function ScoreIndicator({
   newPoints,
   score,
+  animationDelay = 0,
 }: ScoreIndicatorProps) {
-  const [newScore, setNewScore] = useState(score);
-  const [startScoreAnimation, setStartScoreAnimation] = useState(false);
+  const [displayedScore, setDisplayedScore] = useState(score);
 
-  useEffect(() => {
+  const handleAnimationEnd = () => {
     if (newPoints && newPoints > 0) {
-      setNewScore(score + newPoints);
-      setStartScoreAnimation(true);
+      setDisplayedScore(score + newPoints);
     }
-  }, [newPoints, score]);
+  };
 
   return (
-    <Box>
-      <ScoreAnimation startAnimation={startScoreAnimation}>
-        <ScorePill>
-          <Typography data-testid="scoreindicator-newpoints" variant="overline">
-            {isNullOrUndefined(newScore) ? 0 : newScore}
-          </Typography>
-        </ScorePill>
-      </ScoreAnimation>
+    <Box sx={{ position: 'relative', display: 'inline-block' }}>
+      {newPoints && newPoints > 0 ? (
+        <FloatingPill
+          animationDelay={animationDelay}
+          onAnimationEnd={handleAnimationEnd}
+        >
+          <Typography variant="h2">+{newPoints}</Typography>
+        </FloatingPill>
+      ) : null}
+      <ScorePill>
+        <Typography data-testid="scoreindicator-newpoints" variant="h2">
+          {isNullOrUndefined(displayedScore) ? 0 : displayedScore}
+        </Typography>
+      </ScorePill>
     </Box>
   );
 }

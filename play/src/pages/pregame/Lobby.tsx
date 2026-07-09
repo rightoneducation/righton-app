@@ -41,13 +41,11 @@ export default function Lobby({
             }}
           >
             <Typography
-              variant="h1"
+              variant="title"
               sx={{
                 position: 'absolute',
                 alignItems: 'center',
-                fontSize: '54px',
                 textAlign: 'center',
-                lineHeight: `${theme.sizing.extraLargePadding}px`,
               }}
             >
               {t('lobby.title')}
@@ -65,15 +63,12 @@ export default function Lobby({
       return (
         <Leaderboard
           teams={teams}
-          currentState={currentState!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamAvatar={teamAvatar!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamId={teamId!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
         />
       );
     default:
       return (
         <BackgroundContainerStyledTouchActionOverride>
-          <HowToPlay mode={mode} />
+          <HowToPlay />
         </BackgroundContainerStyledTouchActionOverride>
       );
   }

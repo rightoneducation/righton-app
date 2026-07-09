@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
 import { VictoryLabel } from 'victory';
 import { Box, Typography } from '@mui/material';
 import check from '../../img/Pickedcheck.svg';
 
 export default function CustomLabel(props: any) {
-  const {x, y, width, height, datum} = props;
+  const theme = useTheme();
+  const { x, y, width, height, datum, ...rest } = props;
   const centerX = width / 2;
   const centerY = height / 2;
   const deltaX = x - centerX;
@@ -12,7 +14,11 @@ export default function CustomLabel(props: any) {
   const labelFactor = 0.5;
   const labelX = centerX + deltaX * labelFactor;
   const labelY = centerY + deltaY * labelFactor;
-  console.log(x, y);
+  const iconSize = 16;
+  const labelDist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  const barCenterFactor = 0.82;
+  const barCenterX = centerX + deltaX * barCenterFactor - (deltaX / labelDist) * (iconSize / 4);
+  const barCenterY = centerY + deltaY * barCenterFactor - (deltaY / labelDist) * (iconSize / 4);
   return (
         <>
           {datum.letterCode !== ' ' && (
@@ -22,19 +28,19 @@ export default function CustomLabel(props: any) {
               y={labelY}
               text={`${datum.letterCode}`}
               style={{
-                fontSize: 24,
-                fill: `${datum.fill}`,
+                fontSize: 20,
+                fill: `rgba(56, 68, 102, 0.5)`,
                 fontWeight: 700
               }}
             />
           )}    
-          <text x={x} y={y} style={{ fontSize: '16px', fill: 'black', textAnchor: 'middle', dominantBaseline: 'middle' }}>
-            {datum.count} 
+          <text x={x} y={y} style={{ fontFamily: theme.typography.smallLabel.fontFamily, fontWeight: theme.typography.smallLabel.fontWeight, fontSize: theme.typography.smallLabel.fontSize, fill: theme.palette.primary.darkBlue, textAnchor: 'middle', dominantBaseline: 'middle' }}>
+            {datum.percentage} 
           </text>
-          { datum.fill === '#6F9E3C' &&
-            <svg x={x-6} y={y+5} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="8" cy="8" r="7.5" stroke="rgba(111, 158, 60, 1)"/>
-              <path d="M3.78125 9.04018L6.49268 11.7516L12.6632 5.58105" stroke="rgba(111, 158, 60, 1)" strokeLinecap="round"/>
+          { datum.isCorrect &&
+            <svg x={barCenterX-8} y={barCenterY-8} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7.5" stroke="white" strokeWidth={1}/>
+              <path d="M3.78125 9.04018L6.49268 11.7516L12.6632 5.58105" stroke="white" strokeWidth={1} strokeLinecap="round"/>
             </svg>
           }
       </>

@@ -2,7 +2,7 @@ import React from 'react';
 import { VictoryLabel } from 'victory';
 import { Tooltip, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import check from '../../img/Pickedcheck.svg';
+import check from '../../img/Pickedcheck_white.svg';
 import noResponse from '../../img/noResponse.svg';
 
 const TooltipBox = styled(Box)({
@@ -15,39 +15,37 @@ export default function CustomTick(props: any) {
   const theme = useTheme();
   const showCustomTick = index ===  correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
-  const isNoResponse = index === 0; 
-  console.log(data);
+  const isNoResponse = index === 0;
+  const checkSize = 16;
   return (
     <g>
 
       {showCustomTick && (
-        <foreignObject
-          x={x - theme.sizing.mdPadding}
-          y={y - theme.sizing.mdPadding / 2.5}
-          width={16}
-          height={18}
+        <Tooltip
+          title={
+            <TooltipBox>
+              This is the {'\n'} correct answer
+            </TooltipBox>
+          }
+          placement="bottom"
+          arrow
         >
-          <Tooltip
-            title={
-              <TooltipBox>
-                This is the {'\n'} correct answer
-              </TooltipBox>
-            }
-            placement="bottom"
-            arrow
-          >
-            <span>
-              <img src={check} alt="correct answer" />
-            </span>
-          </Tooltip>
-        </foreignObject>
+          <image
+            href={check}
+            x={x - theme.sizing.mdPadding}
+            // center the checkmark on the letter's vertical middle (its VictoryLabel y)
+            y={y - checkSize / 2}
+            width={checkSize}
+            height={checkSize}
+          />
+        </Tooltip>
       )}
       <VictoryLabel 
         x={x} 
         y={y} 
         text={data[index].multiChoiceCharacter} 
         style={{
-          fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
+          fill: '#FFF',
           fontFamily: 'Poppins',
           fontWeight: '800',
           fontSize: '16px',

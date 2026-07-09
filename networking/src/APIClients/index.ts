@@ -6,6 +6,7 @@ export * from './AI';
 export * from './auth';
 export * from './cms';
 export * from './datamanagers';
+export * from './edudata';
 export * from './gamesession';
 export * from './interfaces';
 export * from './templates';

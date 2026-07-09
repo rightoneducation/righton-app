@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   IAPIClients,
@@ -7,8 +7,9 @@ import {
   ModelHelper,
   GameSessionState,
 } from '@righton/networking';
-import { StorageKey, StorageKeyAnswer} from '../lib/PlayModels';
+import { StorageKey, StorageKeyAnswer, StorageKeyEduDataStudentId } from '../lib/PlayModels';
 import { calculateCurrentTime } from '../lib/HelperFunctions';
+import { trackEvent, trackError, flushAndRedirect, PlayEvent } from '../lib/analytics';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -33,6 +34,9 @@ export default function useFetchAndSubscribeGameSession(
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const [newPoints, setNewPoints] = useState<number>(0);
+  const previousStateRef = useRef<GameSessionState | null>(null);
+  const hasRejoinedRef = useRef<boolean>(hasRejoined);
+  const gameSessionRef = useRef<IGameSession | undefined>(gameSession);
 
   const handleVisibilityChange = () => {
     if (!document.hidden) {
@@ -49,7 +53,28 @@ export default function useFetchAndSubscribeGameSession(
       window.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [gameSession]); // eslint-disable-line react-hooks/exhaustive-deps
-  
+
+  useEffect(() => {
+    hasRejoinedRef.current = hasRejoined;
+  }, [hasRejoined]);
+
+  useEffect(() => {
+    gameSessionRef.current = gameSession;
+  }, [gameSession]);
+
+  // Ensure EduData is initialized as soon as we have a teamId (covers F5/rejoin).
+  // Separate from subscription wiring so it can never interrupt subscriptions.
+  // Reuse the studentId persisted at pregame init so UpGrade sees one continuous
+  // identity across refresh/rejoin instead of splitting into two assignments.
+  useEffect(() => {
+    if (!teamId) return;
+    if (!apiClients.eduData) {
+      const persistedStudentId = window.localStorage.getItem(StorageKeyEduDataStudentId);
+      const studentId = persistedStudentId ?? teamId;
+      apiClients.initEduData(studentId).catch(() => {});
+    }
+  }, [apiClients, teamId]);
+
 
   // useEffect to handle subscriptions
   useEffect(() => {
@@ -70,10 +95,7 @@ export default function useFetchAndSubscribeGameSession(
     // added so we can update the score for the discuss page. (previously implemented in results pages we got rid of)
     const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
       try {
-        console.log('sup');
-        const response = await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
-        console.log('updateTeamscore');
-        console.log(response);
+        await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
         setNewPoints(newScore);
       } catch (e) {
         console.log(e);
@@ -92,17 +114,43 @@ export default function useFetchAndSubscribeGameSession(
         if (!ignore) setGameSession(fetchedGame);
         setIsLoading(false);
         setCurrentTime(calculateCurrentTime(fetchedGame));
+        trackEvent(PlayEvent.GAME_STATE_CHANGED, {
+          previousState: previousStateRef.current,
+          newState: fetchedGame.currentState,
+          gameSessionId,
+          teamId,
+          questionIndex: fetchedGame.currentQuestionIndex,
+          trigger: 'initial_fetch',
+        });
+        previousStateRef.current = fetchedGame.currentState;
         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
-            console.log(response);
             if (!response) {
               setError(`${t('error.connect.subscriptionerror')}`);
+              trackEvent(PlayEvent.SUBSCRIPTION_ERROR, {
+                gameSessionId,
+                teamId,
+                retryCount: retry,
+                errorMessage: 'Subscription callback received null response',
+                trigger: 'null_response',
+              });
               return;
             }
             if (!ignore) setHasRejoined(false);
+            if (response.currentState !== previousStateRef.current) {
+              trackEvent(PlayEvent.GAME_STATE_CHANGED, {
+                previousState: previousStateRef.current,
+                newState: response.currentState,
+                gameSessionId,
+                teamId,
+                questionIndex: response.currentQuestionIndex,
+                trigger: 'subscription_update',
+              });
+              previousStateRef.current = response.currentState;
+            }
             // checks if host has added time via button
-            const prevTime = gameSession?.startTime ?? 0;
+            const prevTime = gameSessionRef.current?.startTime ?? 0;
             const newTime = response.startTime;
             if (newTime > prevTime) {
               setIsAddTime((prev) => !prev);
@@ -125,37 +173,54 @@ export default function useFetchAndSubscribeGameSession(
               const isShortAnswerEnabled = false; 
 
               let calcNewScore = 0;
-              if (!hasRejoined) {
+              if (!hasRejoinedRef.current) {
                   calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
                     response,
                     currentQuestion,
                     currentTeam,
                     isShortAnswerEnabled
                   );
-                  console.log(calcNewScore);
               }
               const prevScore = currentTeam?.score ?? 0;
-              console.log('inside useEffect');
-              console.log(calcNewScore);
-              updateTeamScore(teamId, prevScore, calcNewScore); 
+              updateTeamScore(teamId, prevScore, calcNewScore);
             }
           }
         );
 
-        teamsSubscription = apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => { 
+        teamsSubscription = apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => {
           if (deletedTeam.id === teamId) {
             setHasRejoined(false);
+            trackEvent(PlayEvent.STUDENT_DROPPED, {
+              gameSessionId,
+              teamId,
+              trigger: 'team_deleted_by_teacher',
+              currentState: fetchedGame.currentState,
+              questionIndex: fetchedGame.currentQuestionIndex,
+            });
             window.localStorage.removeItem(StorageKey);
             window.localStorage.removeItem(StorageKeyAnswer);
-            teamsSubscription.unsubscribe();
-            window.location.replace((`https://play.rightoneducation.com`));
+            window.localStorage.removeItem(StorageKeyEduDataStudentId);
+            flushAndRedirect('https://play.rightoneducation.com');
           }
-      })
+      });
+        trackEvent(PlayEvent.SUBSCRIPTION_ESTABLISHED, {
+          gameSessionId,
+          teamId,
+          retryCount: retry,
+          currentState: fetchedGame.currentState,
+          questionIndex: fetchedGame.currentQuestionIndex,
+        });
       })
       .catch((e) => {
         setIsLoading(false);
         if (e instanceof Error) setError(e.message);
         else setError(`${t('error.connect.gamesessionerror')}`);
+        trackError(PlayEvent.SUBSCRIPTION_ERROR, e, {
+          gameSessionId,
+          teamId,
+          retryCount: retry,
+          trigger: 'fetch_failed',
+        });
       });
 
     // eslint-disable-next-line consistent-return
@@ -168,8 +233,6 @@ export default function useFetchAndSubscribeGameSession(
         teamsSubscription.unsubscribe();
       }
     };
-  }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
-  console.log("outside of useEffect");
-  console.log(newPoints);
+  }, [gameSessionId, apiClients, t, retry, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
   return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime };
 }

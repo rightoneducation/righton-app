@@ -42,10 +42,8 @@ export default function GameSessionSwitch({
   const currentPhase = gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession.currentState === GameSessionState.PHASE_1_DISCUSS || gameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex] as IQuestion;
-  console.log(gameSession);
   const {responses} = currentQuestion.answerData.phase1;
-  console.log(responses);
-  const currentTeam = gameSession.teams.find( 
+  const currentTeam = gameSession.teams.find(
     (team) => team.id === localModel.teamId
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
@@ -59,8 +57,7 @@ export default function GameSessionSwitch({
   (isShortAnswerEnabled
     ? responses.reduce(
         (acc: IChoice[], response: IHostTeamAnswersResponse) => {
-          console.log(response);
-          const shouldAddResponse = 
+          const shouldAddResponse =
             (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
             currentState !== GameSessionState.PHASE_1_DISCUSS) 
               ? (response.isSelectedMistake || response.isCorrect) 
@@ -83,7 +80,7 @@ export default function GameSessionSwitch({
             text: choice.text,
             isAnswer: choice.isAnswer,
             reason: choice.reason ?? '',
-          } as IChoice) ?? []
+          } as IChoice)
       )
     );
   switch (currentState) {
@@ -134,8 +131,11 @@ export default function GameSessionSwitch({
       return (
         <GameInProgress
           {...gameSession}
-          // adding a key here to trigger a rerender of the component, resetting backendAnswer after answering phases
-          key={uuidv4()}
+          // Remount (resetting backendAnswer) when entering a discuss phase for a
+          // question. A stable key keyed on state+question does this on the actual
+          // transition only — uuidv4() here remounted on every render, replaying
+          // entrance animations and resetting state whenever newPoints/timer updated.
+          key={`${currentState}-${gameSession.currentQuestionIndex}`}
           apiClients={apiClients}
           teamName={localModel.teamName}
           teamMemberAnswersId={localModel.teamMemberAnswersId}

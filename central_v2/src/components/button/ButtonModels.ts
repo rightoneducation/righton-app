@@ -39,7 +39,6 @@ export enum ButtonType {
   SAVE = 'save',
   SAVEPASSWORD = 'savepassword',
   SAVEDRAFT = 'savedraft',
-  SAVEDRAFTBLUE = 'savedraftblue',
   DISCARD = 'discard',
   DISCARDBLUE = 'discardblue',
   ADDSTEP = 'addstep',
@@ -47,12 +46,10 @@ export enum ButtonType {
   CHANGEIMAGE = 'changeimage',
   NEXTCARD = 'nextcard',
   LAUNCHGAME = 'launchgame',
-  LAUNCHPINK = 'launchpink',
   LOGOUT = 'logout',
   CREATEQUESTION = 'createquestion',
   QUESTIONBANK = 'questionbank',
   BACK = 'back',
-  BACKTOEDIT = 'backtoedit',
   EDITPICTURE = 'editpicture',
   EDITPROFILEPICTURE = 'editprofilepicture',
   EDITINFORMATION = 'editinformation',
@@ -66,24 +63,12 @@ export enum ButtonType {
   RETRY = 'retry',
   CANCEL = 'cancel',
   ADDTOGAME = 'addtogame',
-  ADDTOGAMEPINK = 'addtogamepink',
   YES = 'yes',
   NO = 'no',
   EDIT = 'edit',
-  EDITQUESTION = 'editquestion',
   DELETE = 'delete',
   OK = 'ok',
-  PUBLISH = 'publish',
-  UPDATE = 'update',
-  CONTINUE = 'continue',
-  CANCELQUESTION = 'cancelquestion',
-  SAVEADD = 'saveadd',
-  DUPLICATE = 'duplicate',
-  CONFIRM = 'confirm',
-  STARTCREATING = 'startcreating',
-  BACKNOARROW = 'backnoarrow',
-  CONFIRMNOICON = 'confirmnoicon',
-  PINKDELETE='pinkdelete'
+  SIGNUPNULL = 'signupnull',
 }
 
 export enum ButtonColor {
@@ -128,11 +113,6 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: launch,
     textKey: ButtonType.LAUNCH,
   },
-  [ButtonType.LAUNCHPINK]: {
-    icon: launch,
-    textKey: ButtonType.LAUNCHPINK,
-    color: ButtonColor.RED,
-  },
   [ButtonType.UPLOAD]: {
     icon: upload,
     textKey: ButtonType.UPLOAD,
@@ -140,7 +120,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.UPLOADIMAGE]: {
     icon: upload,
     textKey: ButtonType.UPLOADIMAGE,
-    width: '224px',
+    width: '200px',
   },
   [ButtonType.NEXTSTEP]: {
     textKey: ButtonType.NEXTSTEP,
@@ -198,10 +178,6 @@ export const buttonContentMap: ButtonContentMapProps = {
     width: '200px',
     color: ButtonColor.NULL,
   },
-  [ButtonType.SAVEDRAFTBLUE]: {
-    icon: save,
-    textKey: ButtonType.SAVEDRAFT,
-  },
   [ButtonType.DISCARD]: {
     icon: discard,
     textKey: ButtonType.DISCARD,
@@ -219,11 +195,6 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.ADDTOGAME]: {
     icon: add,
     textKey: ButtonType.ADDTOGAME,
-  },
-  [ButtonType.ADDTOGAMEPINK]: {
-    icon: add,
-    textKey: ButtonType.ADDTOGAMEPINK,
-    color: ButtonColor.RED,
   },
   [ButtonType.BROWSEFILES]: {
     icon: upload,
@@ -251,9 +222,8 @@ export const buttonContentMap: ButtonContentMapProps = {
     color: ButtonColor.NULL,
   },
   [ButtonType.CREATEQUESTION]: {
-    icon: add,
+    icon: create,
     textKey: ButtonType.CREATEQUESTION,
-    color: ButtonColor.NULL,
   },
   [ButtonType.QUESTIONBANK]: {
     icon: bank,
@@ -262,7 +232,6 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.BACK]: {
     icon: previous,
     textKey: ButtonType.BACK,
-    color: ButtonColor.NULL,
   },
   [ButtonType.EDITPICTURE]: {
     textKey: ButtonType.EDITPICTURE,
@@ -320,64 +289,16 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: edit,
     textKey: ButtonType.EDIT,
   },
-  [ButtonType.EDITQUESTION]: {
-    icon: edit,
-    textKey: ButtonType.EDITQUESTION,
-    color: ButtonColor.NULL,
-  },
-  [ButtonType.BACKTOEDIT]: {
-    icon: previous,
-    textKey: ButtonType.BACKTOEDIT,
-    color: ButtonColor.NULL,
-  },
   [ButtonType.DELETE]: {
     icon: deleteIcon,
     textKey: ButtonType.DELETE,
-    color: ButtonColor.NULL,
   },
   [ButtonType.OK]: {
     textKey: ButtonType.OK,
   },
-  [ButtonType.PUBLISH]: {
-    icon: upload,
-    textKey: ButtonType.PUBLISH,
-    color: ButtonColor.RED,
-  },
-  [ButtonType.UPDATE]: {
-    icon: save,
-    textKey: ButtonType.UPDATE,
-  },
-  [ButtonType.CONTINUE]: {
-    textKey: ButtonType.CONTINUE,
-  },
-  [ButtonType.SAVEADD]: {
-    textKey: ButtonType.SAVEADD,
-  },
-  [ButtonType.CANCELQUESTION]: {
-    textKey: ButtonType.CANCELQUESTION,
+  [ButtonType.SIGNUPNULL]: {
+    icon: signup,
+    textKey: ButtonType.SIGNUP,
     color: ButtonColor.NULL,
-  },
-  [ButtonType.DUPLICATE]: {
-    icon: clone,
-    textKey: ButtonType.DUPLICATE,
-  },
-  [ButtonType.CONFIRM]: {
-    icon: clone,
-    textKey: ButtonType.CONFIRM,
-  },
-  [ButtonType.STARTCREATING]: {
-    textKey: ButtonType.STARTCREATING,
-  },
-  [ButtonType.BACKNOARROW]: {
-    textKey: ButtonType.BACK,
-    color: ButtonColor.NULL,
-  },
-  [ButtonType.CONFIRMNOICON]: {
-    textKey: ButtonType.CONFIRM,
-  },
-  [ButtonType.PINKDELETE]: {
-    icon: deleteIcon,
-    textKey: ButtonType.PINKDELETE,
-    color: ButtonColor.RED,
   },
 };

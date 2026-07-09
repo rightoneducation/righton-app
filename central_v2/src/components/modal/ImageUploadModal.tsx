@@ -31,7 +31,7 @@ const IntegratedContainer = styled(Paper, {
   left: '50%',
   transform: 'translateY(-50%) translateX(-50%)',
   background: '#FFF',
-  zIndex: 1312,
+  zIndex: 1310,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'column',
@@ -79,7 +79,6 @@ interface ImageUploadModalProps {
   screenSize: ScreenSize;
   isClone: boolean;
   isCloneImageChanged: boolean;
-  isEdit: boolean;
   isModalOpen: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   handleImageChange: (inputImage?: File, inputUrl?: string) => void;
@@ -91,7 +90,6 @@ export default function ImageUploadModal({
   screenSize,
   isClone,
   isCloneImageChanged,
-  isEdit,
   isModalOpen,
   draftQuestion,
   handleImageChange,
@@ -105,11 +103,10 @@ export default function ImageUploadModal({
   const [isChangeImage, setIsChangeImage] = React.useState<boolean>(false);
 
   let imageLink: string | null = null;
-  if (imageUrl) {
-    imageLink = imageUrl;
-    if ((isClone || isEdit) && !isCloneImageChanged)
-      imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
-  } else if (image && image instanceof File)
+  if (imageUrl) imageLink = imageUrl;
+  if (isClone && !isCloneImageChanged)
+    imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
+  else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
 
   const handleChangeClick = (newImage: File) => {

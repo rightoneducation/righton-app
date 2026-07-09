@@ -3,6 +3,11 @@ import { VictoryLabel } from 'victory';
 import { useTheme } from '@mui/material/styles';
 import check from '../../img/Pickedcheck_white.svg';
 
+const maxLabelChars = 38;
+
+const truncateLabel = (text: string) =>
+  text.length > maxLabelChars ? `${text.slice(0, maxLabelChars).trimEnd()}...` : text;
+
 export default function CustomLabel(props: any) {
   const {x, y, datum, noResponseLabel} = props;
   const theme = useTheme();
@@ -20,7 +25,7 @@ export default function CustomLabel(props: any) {
           dy={-theme.sizing.barThicknessResponses / 2 - theme.sizing.xxSmPadding}
           textAnchor="start"
           verticalAnchor="end"
-          text={datum.themeText}
+          text={truncateLabel(datum.themeText)}
           style={{
             fontSize: 15,
             fill: 'white',

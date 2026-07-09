@@ -4,7 +4,6 @@ export type AWSQuestionTemplate = {
     id: string,
     userId: string,
     publicPrivateType?: string | null,
-    finalPublicPrivateType?: string | null,
     title?: string | null,
     lowerCaseTitle?: string | null,
     owner?: string | null,
@@ -23,7 +22,6 @@ export type AWSQuestionTemplate = {
     imageUrl?: string | null | undefined,
     timesPlayed?: number | null,
     gameTemplates?:  AWSModelGameQuestionConnection | null,
-    draftGames?:  AWSModelGameQuestionConnection | null,
     gameTemplatesCount: number,
     createdAt?: string | null | undefined,
     updatedAt?: string | null

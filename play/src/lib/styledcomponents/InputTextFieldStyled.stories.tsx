@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import InputTextFieldStyled from './InputTextFieldStyled';
-import Theme from '../Theme';
+import { RightOnTheme as Theme } from '@righton/networking';
 import i18n from '../../i18n.mock';
 
 export default {

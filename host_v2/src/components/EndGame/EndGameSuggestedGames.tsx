@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { CircularProgress, Grid, MenuItem, Divider, Typography, Box, TextField  } from '@mui/material';
+import { CircularProgress, Grid, MenuItem, Divider, Typography, Box, TextField, ClickAwayListener  } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { IGameTemplate, ITeam, CloudFrontDistributionUrl } from '@righton/networking';
@@ -9,16 +9,18 @@ import RightOnPlaceHolder from '../../images/RightOnLogo.png';
 
 const PStyled = styled(Typography)({
   color: 'rgba(255, 255, 255, 1)',
-  textAlign: 'center',
-  fontSize: '16px',
+  fontSize: '14px',
   width: '100%',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  textAlign: 'center'
 })
 
-const MenuItemStyled = styled(Box)(({isSelected}) => ({
+const MenuItemStyled = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected: boolean }>(({isSelected}) => ({
   border: `${isSelected ? '4px solid  #0094FF' : '0px solid transparent'}`,
   padding: `${isSelected ? '0px' : '4px'}`,
-  borderRadius: '14px',
+  borderRadius: '18px',
   width: '100%',
   backgroundColor: 'white',
   cursor: 'default',
@@ -32,7 +34,9 @@ const MenuItemStyled = styled(Box)(({isSelected}) => ({
   minHeight: '110px',
 }))
 
-const LeftBox = styled(Box)(({isSelected}) => ({
+const LeftBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected: boolean }>(({isSelected}) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -94,6 +98,7 @@ const TitleStyled = styled(Typography)({
 
 const BoxStyled = styled(Box)({
   margin: 'auto',
+  paddingTop: '24px'
 })
 
 const SearchStyled = styled(Box)({
@@ -142,7 +147,7 @@ interface SuggestedGamesProps {
   gameTemplates: IGameTemplate[];
   teams: ITeam[] | null;
   selectedSuggestedGame: string | null;
-  setSelectedSuggestedGame: (value: string) => void;
+  setSelectedSuggestedGame: (value: string | null) => void;
   searchText: string;
   handleUpdateSearchText: (value: string) => void;
 }
@@ -180,7 +185,6 @@ function SuggestedGames ({
       }
       return null;
     };
-    console.log(gameTemplates);
     return (
         <StartEndGameScrollBoxStyled>
             <SearchStyled>
@@ -188,13 +192,13 @@ function SuggestedGames ({
                 <img src={SearchIcon} alt="Search Icon" />
               </SearchIconStyled>
               <InputInputStyled 
-                placeholder = "Search outside suggestions"
+                placeholder = "Search other games"
                 value={searchText}
                 onChange={(e: any) => handleUpdateSearchText(e.target.value)}
               />
             </SearchStyled>
             <BoxStyled>
-                <PStyled>Continue your current session with our suggested games:</PStyled>
+                <PStyled>Start a new game with one of these suggested options:</PStyled>
             </BoxStyled>
             {gameTemplates.length === 0 && 
               <>
@@ -204,6 +208,9 @@ function SuggestedGames ({
                 </Typography>
               </>
             }
+            {/* click-away on the card list: tapping anywhere outside a game card unselects the
+                game and resets the footer button back to "exit to central". */}
+            <ClickAwayListener onClickAway={() => { if (selectedSuggestedGame) setSelectedSuggestedGame(null); }}>
             <StyledGameContainer>
             {gameTemplates.length > 0 && gameTemplates.map((gameTemplate) => (
                 <MenuItemStyled isSelected={gameTemplate.id === selectedSuggestedGame} key={uuidv4()} onClick={() => setSelectedSuggestedGame(gameTemplate.id)}>
@@ -231,6 +238,7 @@ function SuggestedGames ({
                 </MenuItemStyled>
             ))}
             </StyledGameContainer>
+            </ClickAwayListener>
         </StartEndGameScrollBoxStyled>
     )
 }

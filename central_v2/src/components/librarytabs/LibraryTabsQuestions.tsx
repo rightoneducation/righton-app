@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Tabs, Typography, CircularProgress } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Tabs } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ElementType,
   GalleryType,
@@ -26,7 +27,6 @@ import { LibraryTab } from '../../lib/styledcomponents/MyLibraryStyledComponent'
 import tabPublicIcon from '../../images/tabPublic.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import tabPrivateIcon from '../../images/tabPrivate.svg';
-import libraryTabsCloseIcon from '../../images/libraryTabsClose.svg';
 
 interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   screenSize: ScreenSize;
@@ -40,7 +40,6 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   handleSearchChange: (searchString: string) => void;
   fetchElements: (libraryTab: LibraryTabEnum) => void;
   handleView: (element: T, elements: T[]) => void;
-  handleCloseQuestionTabs: () => void;
 }
 
 export default function LibraryTabsQuestions({
@@ -52,13 +51,10 @@ export default function LibraryTabsQuestions({
   fetchElements,
   handleView,
   isPublic,
-  handleCloseQuestionTabs,
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
   const centralData = useCentralDataState();
 
-  const isSearchResults =
-    (centralData?.searchTerms?.length ?? 0) > 0 ||
-    (centralData?.selectedGrades?.length ?? 0) > 0;
+  const isSearchResults = centralData?.searchTerms?.length > 0;
 
   const tabMap: { [key: number]: string } = {
     [LibraryTabEnum.PUBLIC]: 'Public',
@@ -87,22 +83,21 @@ export default function LibraryTabsQuestions({
   const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
     isPublic ? LibraryTabEnum.PUBLIC : LibraryTabEnum.PRIVATE,
   );
-
-  useEffect(() => {
+  const [hasInitialized, setHasInitialized] = useState(false);
+  if (!hasInitialized) {
     fetchElements(openTab);
-  }, [openTab]); // eslint-disable-line react-hooks/exhaustive-deps
-
+    setHasInitialized(true);
+  }
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     const newTabEnum = tabIndexToEnum[newValue as number];
     setOpenTab(newTabEnum);
-    // Fetch runs in useEffect when openTab changes.
+    fetchElements(newTabEnum);
   };
 
   const elements = getQuestionElements(openTab, isSearchResults, centralData);
 
   return (
     <TabContent>
-      <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Tabs
         value={enumToTabIndex[openTab]}
         onChange={handleChange}
@@ -118,7 +113,7 @@ export default function LibraryTabsQuestions({
           const label = getTabLabel(screenSize, isSelected, value);
           return (
             <LibraryTab
-              key={key}
+              key={uuidv4()}
               icon={
                 <img
                   src={tabIconMap[key]}
@@ -152,27 +147,7 @@ export default function LibraryTabsQuestions({
             />
           );
         })}
-    
       </Tabs>
-        <Box
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-            onClick={handleCloseQuestionTabs}
-          >
-            <img
-              src={libraryTabsCloseIcon}
-              alt="Close"
-              style={{
-                width: '30px',
-                height: '30px',
-                cursor: 'pointer',
-              }}
-            />
-        </Box>
-      </Box>
       <ContentContainer>
         <SearchBar
           screenSize={screenSize}
@@ -181,11 +156,6 @@ export default function LibraryTabsQuestions({
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
         />
-        { centralData.isLoading ? (
-          <Box sx={{display: 'flex', flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}>
-            <CircularProgress style={{ color: '#FFF' }} />
-          </Box>
-        ) : (
         <CardGallery<IQuestionTemplate>
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
@@ -203,7 +173,6 @@ export default function LibraryTabsQuestions({
           isMyLibrary
           isCreateGame
         />
-      )}
       </ContentContainer>
     </TabContent>
   );

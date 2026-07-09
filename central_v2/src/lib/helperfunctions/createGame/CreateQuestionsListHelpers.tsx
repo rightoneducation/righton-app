@@ -3,7 +3,6 @@ import {
   IncorrectCard,
   IQuestionTemplate,
   PublicPrivateType,
-  TemplateType,
   AnswerType,
   IGameTemplate,
   CentralQuestionTemplateInput,
@@ -34,39 +33,6 @@ import {
   updateDQwithIncorrectAnswers,
 } from '../createquestion/IncorrectAnswerCardHelperFunctions';
 
-export const handleCheckQuestionBaseComplete = (draftQuestion: CentralQuestionTemplateInput) => {
-  if (
-    draftQuestion.questionCard.ccss.length > 0 &&
-    draftQuestion.questionCard.ccss !== 'CCSS' &&
-    draftQuestion.questionCard.title.length > 0
-    )
-    return true;
-  return false;
-};
-
-export const handleCheckQuestionCorrectCardComplete = (draftQuestion: CentralQuestionTemplateInput) => {
-  if (
-    draftQuestion.correctCard.answer.length > 0 &&
-    draftQuestion.correctCard.answerSteps.length > 0 &&
-    draftQuestion.correctCard.answerSteps.every((step) => step.length > 0)
-  )
-    return true;
-  return false;
-};
-
-export const handleCheckQuestionIncorrectCardsComplete = (draftQuestion: CentralQuestionTemplateInput) => {
-  if (
-    draftQuestion.incorrectCards.length > 0 &&
-    draftQuestion.incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)
-  )
-    return true;
-  return false;
-};
-
-export const handleCheckQuestionComplete = (draftQuestion: CentralQuestionTemplateInput) => {
-  return handleCheckQuestionBaseComplete(draftQuestion) && handleCheckQuestionCorrectCardComplete(draftQuestion) && handleCheckQuestionIncorrectCardsComplete(draftQuestion);
-};
-
 export const checkDQsAreValid = (
   draftQuestionsList: TDraftQuestionsList[],
 ): boolean => {
@@ -78,6 +44,9 @@ export const checkDQsAreValid = (
       dq.question.questionCard.ccss.length > 0 &&
       dq.question.questionCard.ccss !== 'CCSS' &&
       dq.question.questionCard.title.trim().length > 0 &&
+      ((dq.question.questionCard.imageUrl &&
+        dq.question.questionCard.imageUrl?.length > 0) ||
+        dq.question.questionCard.image) &&
       dq.question.correctCard.answer.trim().length > 0 &&
       dq.question.correctCard.answerSteps.length > 0 &&
       dq.question.correctCard.answerSteps.every(
@@ -136,8 +105,8 @@ export const buildQuestionTemplatePromises = (
     dqCopy.questionTemplate.userId = userId;
     dqCopy.questionTemplate.timesPlayed = 0;
 
-    // if existing question without need for type change (draft to public/private) return its ID for Game Creation
-    if (dqCopy.questionTemplate.id && dqCopy.questionTemplate.publicPrivateType === type) {
+    // if existing question return its ID for Game Creation
+    if (dqCopy.questionTemplate.id) {
       return { id: dqCopy.questionTemplate.id } as IQuestionTemplate;
     }
 
@@ -157,37 +126,39 @@ export const buildQuestionTemplatePromises = (
       }
     }
 
-    // image url case: only fetch+upload external URLs; existing S3 keys (e.g. from draft) use as-is
+    // image url case
     else if (dqCopy.question.questionCard.imageUrl) {
-      const {imageUrl} = dqCopy.question.questionCard;
-      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-        try {
-          url = await apiClients.questionTemplate.storeImageUrlInS3(imageUrl);
-        } catch (err) {
-          console.error('Error storing image URL:', err);
-          throw new Error('Failed to store image URL.');
-        }
-      } else {
-        url = imageUrl;
+      try {
+        url = await apiClients.questionTemplate.storeImageUrlInS3(
+          dqCopy.question.questionCard.imageUrl,
+        );
+      } catch (err) {
+        console.error('Error storing image URL:', err);
+        throw new Error('Failed to store image URL.');
       }
     }
-    // create question template (images are optional)
-    try {
-      const newQuestionResponse =
-        await apiClients.questionTemplate.createQuestionTemplate(
-          (type === PublicPrivateType.DRAFT
-            ? PublicPrivateType.DRAFT
-            : dqCopy.publicPrivate) as TemplateType,
-          url ?? '',
-          userId,
-          dqCopy.question,
-        );
-      // return updated question with POST response
-      return newQuestionResponse;
-    } catch (err) {
-      console.error('Error creating question template:', err);
-      throw new Error('Failed to create question template.');
+
+    let newQuestionResponse: IQuestionTemplate | undefined;
+    // if an image url is available, we can create a question template
+    if (url || type === PublicPrivateType.DRAFT) {
+      try {
+        newQuestionResponse =
+          await apiClients.questionTemplate.createQuestionTemplate(
+            type === PublicPrivateType.DRAFT
+              ? PublicPrivateType.DRAFT
+              : dqCopy.publicPrivate,
+            url ?? '',
+            userId,
+            dqCopy.question,
+          );
+      } catch (err) {
+        console.error('Error creating question template:', err);
+        throw new Error('Failed to create question template.');
+      }
     }
+
+    // return updated question with POST response
+    return newQuestionResponse;
   });
 };
 
@@ -702,7 +673,6 @@ export const buildLibraryQuestionAtIndex = (
     publicPrivate,
     questionTemplate: { ...question },
     question: {
-      publicPrivateType: publicPrivate,
       questionCard: {
         imageUrl: question?.imageUrl ? question.imageUrl : '',
         title: question?.title,
@@ -715,7 +685,6 @@ export const buildLibraryQuestionAtIndex = (
         answerSteps: question?.instructions
           ? question?.instructions
           : ['', '', ''],
-        isMultipleChoice: true,
         answerSettings: {
           answerType:
             question?.answerSettings?.answerType ?? AnswerType.MULTICHOICE,
@@ -738,7 +707,38 @@ export const updateDraftListWithLibraryQuestion = (
   selectedIndex: number,
   libraryQuestion: TDraftQuestionsList,
 ): UpdateDraftListResult => {
-  return { updatedList: [libraryQuestion, ...draftQuestionsList], addNew: false };
+  const isFirstEmpty =
+    draftQuestionsList.length === 1 &&
+    !draftQuestionsList[0].question.questionCard.isCardComplete;
+
+  if (isFirstEmpty) {
+    return { updatedList: [libraryQuestion], addNew: false };
+  }
+
+  if (
+    typeof selectedIndex === 'number' &&
+    draftQuestionsList[selectedIndex] &&
+    !draftQuestionsList[selectedIndex].question.questionCard.isCardComplete
+  ) {
+    const updated = [...draftQuestionsList];
+    updated[selectedIndex] = libraryQuestion;
+    return { updatedList: updated, addNew: false };
+  }
+
+  const currentIndex = draftQuestionsList.findIndex(
+    (q) => !q.question.questionCard.isCardComplete,
+  );
+
+  if (currentIndex !== -1) {
+    const updated = [...draftQuestionsList];
+    updated[currentIndex] = libraryQuestion;
+    return { updatedList: updated, addNew: false };
+  }
+
+  const updatedQuestions = [...draftQuestionsList, draftTemplate];
+  updatedQuestions[updatedQuestions.length - 1] = libraryQuestion;
+
+  return { updatedList: updatedQuestions, addNew: true };
 };
 
 export const handleQuestionListErrors = (

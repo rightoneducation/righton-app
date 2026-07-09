@@ -1,18 +1,17 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import {styled, useTheme} from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import { IHostTeamAnswersResponse } from '@righton/networking';
-import { IGraphClickInfo } from '../../lib/HostModels';
-import check from '../../img/Pickedcheck.svg';
+import { IGraphClickIndices } from '../../lib/HostModels';
+import check from '../../img/Pickedcheck_white.svg';
 import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
 interface SelectedAnswerProps {
   data: IHostTeamAnswersResponse[];
-  correctChoiceIndex: number;
   numPlayers: number;
   statePosition: number;
-  graphClickInfo: IGraphClickInfo;
+  graphClickInfo: IGraphClickIndices;
   isShortAnswerEnabled: boolean;
   isPrevPhaseResponses: boolean;
 }
@@ -59,7 +58,7 @@ const RectStyle = styled(Box)({
 })
 
 const ChoiceContainer = styled(Box)({
-  color: 'rgba(255, 255, 255, 0.5)',
+  color: 'rgba(255, 255, 255)',
   fontFamily: 'Poppins',
   fontSize: '16px',
   fontWeight: '800',
@@ -82,61 +81,61 @@ const Icon = styled(Box)({
 })
 
 export default function SelectedAnswer(props: SelectedAnswerProps) {
+  const theme = useTheme();
   const {
     data,
-    correctChoiceIndex,
     numPlayers,
     statePosition,
     graphClickInfo,
     isShortAnswerEnabled,
     isPrevPhaseResponses
   } = props;
-  const showCustomTick =
-    graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
+  const graphName = statePosition < 6 || isPrevPhaseResponses ? 'realtimephase1' : 'realtimephase2';
+  const selectedIndex = graphClickInfo[graphName] ?? null;
+  const showCustomTick = selectedIndex !== null && Boolean(data[selectedIndex]?.isCorrect);
+
+  const noResponseIndex = data.findIndex((response) => response.multiChoiceCharacter === '…');
   return (
     <Box>
-      {graphClickInfo.selectedIndex === null 
-        || (statePosition < 6 && graphClickInfo.graph !== 'realtimephase1')
-        || (statePosition >= 6 && isPrevPhaseResponses && graphClickInfo.graph !== 'realtimephase1')
-        || (statePosition >= 6 && !isPrevPhaseResponses && graphClickInfo.graph !== 'realtimephase2') 
-      ? (
-        <Text>
-          Tap on a response to see more details.
-        </Text>
+      {selectedIndex === null ? (
+        <Typography variant='label' style={{opacity: 0.5}}>
+          Tap an answer to see who chose it
+        </Typography>
       ) : (
-        <Box style={{ width: '100%'}}>
-          <TitleText>
-            Showing players who answered:
-          </TitleText>
-          <RectStyle>
-            { !isShortAnswerEnabled &&
-            <ChoiceContainer>
-              { (data[graphClickInfo.selectedIndex] && data[graphClickInfo.selectedIndex].multiChoiceCharacter)?
-              data[graphClickInfo.selectedIndex].multiChoiceCharacter : '-'}
-            </ChoiceContainer>
-            }
-            <TextContainer>
-              {data[graphClickInfo.selectedIndex]?.rawAnswer ? data[graphClickInfo.selectedIndex].rawAnswer : null}
-            </TextContainer>
-            {showCustomTick && (
-              <Tooltip
-                title={
-                  <ToolTip>
-                    This is the {'\n'} correct answer
-                  </ToolTip>
-                }
-                placement="bottom"
-                arrow
-              >
-                <Icon>
-                  <img src={check} alt="correct answer" />
-                </Icon>
-              </Tooltip>
-            )}
-          </RectStyle>
+        <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+          { selectedIndex !== noResponseIndex && (
+            <RectStyle>
+              { !isShortAnswerEnabled &&
+              <ChoiceContainer>
+                { (data[selectedIndex] && data[selectedIndex].multiChoiceCharacter)?
+                data[selectedIndex].multiChoiceCharacter : '-'}
+              </ChoiceContainer>
+              }
+              <TextContainer>
+                {data[selectedIndex]?.rawAnswer ? data[selectedIndex].rawAnswer : null}
+              </TextContainer>
+              {showCustomTick && (
+                <Tooltip
+                  title={
+                    <ToolTip>
+                      This is the {'\n'} correct answer
+                    </ToolTip>
+                  }
+                  placement="bottom"
+                  arrow
+                >
+                  <Icon>
+                    <img src={check} alt="correct answer" />
+                  </Icon>
+                </Tooltip>
+              )}
+            </RectStyle>
+          )}
           <PlayersSelectedAnswer
+            key={selectedIndex}
             data={data}
-            graphClickIndex={graphClickInfo.selectedIndex}
+            graphClickIndex={selectedIndex}
+            noResponseIndex={noResponseIndex}
             numPlayers={numPlayers}
             statePosition={statePosition}
             isShortAnswerEnabled={isShortAnswerEnabled}

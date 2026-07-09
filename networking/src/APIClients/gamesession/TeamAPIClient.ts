@@ -63,7 +63,6 @@ export class TeamAPIClient
     const input: CreateTeamInput = {
         name,
         score: 0,
-        globalStudentId: '0',
         selectedAvatarIndex: selectedAvatarIndex,
         teamQuestionId: questionId,
         gameSessionTeamsId: gameSessionId,

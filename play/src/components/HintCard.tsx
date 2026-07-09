@@ -1,20 +1,30 @@
-import React, {  ChangeEvent, useState } from 'react';
+import React, {  ChangeEvent, useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 import {
   isNullOrUndefined,
+  IAPIClients,
   ITeam,
   IAnswerHint,
   GameSessionState,
+  CachedAssignment,
+  readCachedAssignment,
 } from '@righton/networking';
-import { StorageKeyHint } from '../lib/PlayModels';
+import {
+  StorageKeyHint,
+  StorageKeyEduDataAssignment,
+  EDUDATA_ASSIGNMENT_TTL_MS,
+  EDUDATA_SITE,
+  EDUDATA_TARGET,
+} from '../lib/PlayModels';
 import ShortAnswerTextFieldStyled from '../lib/styledcomponents/ShortAnswerTextFieldStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 
 interface HintProps {
+  apiClients: IAPIClients;
   answerHintText: string;
   isHintSubmitted: boolean;
   currentState: GameSessionState;
@@ -23,9 +33,11 @@ interface HintProps {
   currentTeam: ITeam | null;
   questionId: string;
   teamMemberAnswersId: string;
+  gameSessionId: string;
 }
 
 export default function HintCard({
+  apiClients,
   answerHintText,
   isHintSubmitted,
   currentState,
@@ -33,11 +45,78 @@ export default function HintCard({
   handleSubmitHint,
   currentTeam,
   questionId,
-  teamMemberAnswersId
+  teamMemberAnswersId,
+  gameSessionId,
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
- 
+  const hintPlaceholders = [
+    t('gameinprogress.chooseanswer.hintcardplaceholder1'),
+    t('gameinprogress.chooseanswer.hintcardplaceholder2'),
+    t('gameinprogress.chooseanswer.hintcardplaceholder3'),
+  ];
+  const hintPlaceholderText = hintPlaceholders.join('\n');
+
+  // UPGRADE INTEGRATION START
+  const [condition, setCondition] = useState(
+    () =>
+      readCachedAssignment(
+        apiClients.eduData?.userId,
+        gameSessionId,
+        currentQuestionIndex,
+        currentState,
+        StorageKeyEduDataAssignment,
+        EDUDATA_ASSIGNMENT_TTL_MS,
+        EDUDATA_SITE,
+        EDUDATA_TARGET,
+      )?.conditionValue ?? 'default',
+  );
+
+  useEffect(() => {
+    const userId = apiClients.eduData?.userId;
+    // Cache hit on rejoin/refresh: keep the variant consistent and skip both
+    // the network call and re-marking exposure (already marked pre-rejoin).
+    const cached = readCachedAssignment(
+      userId,
+      gameSessionId,
+      currentQuestionIndex,
+      currentState,
+      StorageKeyEduDataAssignment,
+      EDUDATA_ASSIGNMENT_TTL_MS,
+      EDUDATA_SITE,
+      EDUDATA_TARGET,
+    );
+    if (cached) {
+      setCondition(cached.conditionValue);
+      return;
+    }
+    apiClients.eduData?.getConditionObj(EDUDATA_SITE, EDUDATA_TARGET).then(response => {
+      if (response && userId) {
+        setCondition(response.conditionValue);
+        try {
+          window.localStorage.setItem(
+            StorageKeyEduDataAssignment,
+            JSON.stringify({
+              teamId: userId,
+              gameSessionId,
+              questionIndex: currentQuestionIndex,
+              state: currentState,
+              site: EDUDATA_SITE,
+              target: EDUDATA_TARGET,
+              conditionCode: response.conditionCode,
+              conditionValue: response.conditionValue,
+              ts: Date.now(),
+            } as CachedAssignment),
+          );
+        } catch {
+          // localStorage full / disabled — assignment continuity degrades gracefully
+        }
+        apiClients.eduData?.markExposure(EDUDATA_SITE, EDUDATA_TARGET, response.conditionCode).catch(() => {});
+      }
+    });
+  }, [apiClients.eduData, gameSessionId, currentQuestionIndex, currentState]);
+  // UPGRADE INTEGRATION END
+
   const [editorContents, setEditorContents] = useState<string>(() => 
     answerHintText ?? ''
   );
@@ -59,18 +138,56 @@ export default function HintCard({
       teamName: currentTeam?.name ?? '',
       isHintSubmitted: true
     } as IAnswerHint;
+    // UPGRADE INTEGRATION START
+    apiClients.eduData?.logMetric('hintSubmitted', 1); 
+    // UPGRADE INTEGRATION END
     handleSubmitHint(packagedAnswer);
   };
 
   return (
     <BodyCardStyled elevation={10}>
-      <BodyCardContainerStyled >
-        <Typography
-          variant="subtitle1"
-          sx={{ width: '100%', textAlign: 'left' }}
-        >
-          {t('gameinprogress.chooseanswer.hintcardtitle')}
-        </Typography>
+      <BodyCardContainerStyled spacing={2}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <Typography
+            variant="subtitle1"
+            sx={{ textAlign: 'left' }}
+          >
+            {t('gameinprogress.chooseanswer.hintcardtitle')}
+          </Typography>
+          <Box
+            sx={{
+              width: '58px',
+              height: '22px',
+              borderRadius: '23px',
+              background: isHintSubmitted
+                ? 'linear-gradient(180deg, #7BDD61 0%, #22B851 100%)'
+                : '#CCCCCC',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingTop: '3px',
+              paddingBottom: '3px',
+              animation: isHintSubmitted ? 'pillPop 600ms ease-in-out' : 'none',
+              '@keyframes pillPop': {
+                '0%': { transform: 'scale(1)', opacity: 0.7 },
+                '50%': { transform: 'scale(1.2)', opacity: 1 },
+                '100%': { transform: 'scale(1)', opacity: 1 },
+              },
+            }}
+          >
+            <Typography
+              sx={{
+                fontFamily: 'Poppins',
+                fontWeight: 700,
+                fontSize: '20px',
+                color: 'white',
+                textShadow: '0px 1px 1px rgba(0,0,0,0.15)',
+              }}
+            >
+              +1
+            </Typography>
+          </Box>
+        </Box>
         <Box
           style={{
             display: 'flex',
@@ -78,7 +195,7 @@ export default function HintCard({
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            gap: '20px',
+            gap: '24px',
           }}
         >
           <Box style={{width: '100%'}}>
@@ -87,7 +204,12 @@ export default function HintCard({
               display="inline"
               sx={{ textAlign: 'left' }}
             >
-              {t('gameinprogress.chooseanswer.hintcarddescription')}
+              {/* UPGRADE INTEGRATION START */}
+              { (condition === 'default' || condition === 'upgrade1')
+                ? t('gameinprogress.chooseanswer.hintcarddescriptiondefault')
+                : t('gameinprogress.chooseanswer.hintcarddescriptionupgrade')
+              }
+              {/* UPGRADE INTEGRATION END */}
             </Typography>
           </Box>
           <ShortAnswerTextFieldStyled
@@ -97,14 +219,17 @@ export default function HintCard({
             variant="filled"
             autoComplete="off"
             multiline
-            minRows={2}
-            maxRows={2}
+            minRows={8}
+            maxRows={8}
             disabled={isHintSubmitted}
-            placeholder={t('gameinprogress.chooseanswer.hintcardplaceholder') ?? ''}
+            placeholder={hintPlaceholderText}
             onChange={handleEditorContentsChange}
             value={editorContents}
             InputProps={{
               disableUnderline: true,
+              sx: {
+                '& textarea': { textAlign: 'left' },
+              },
               style: {
                 paddingTop: '9px',
               },

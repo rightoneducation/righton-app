@@ -215,7 +215,7 @@ export function Footer({ screenSize }: FooterProps) { // eslint-disable-line
             fontFamily: 'Rubik',
           }}
         >
-          Copyright © 2025 RightOn. All rights reserved.
+          {`Copyright © ${new Date().getFullYear()} RightOn Education. All rights reserved.`}
         </StyledText>
         {screenSize === ScreenSize.LARGE && (
           <StyledText

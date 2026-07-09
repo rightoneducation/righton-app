@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import {
   Typography,
@@ -9,7 +9,8 @@ import {
   FormControl,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ConfidenceLevel, isNullOrUndefined } from '@righton/networking';
+import { debounce } from 'lodash';
+import { ConfidenceLevel } from '@righton/networking';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface ConfidenceMeterCardProps {
@@ -17,8 +18,7 @@ interface ConfidenceMeterCardProps {
   handleSelectOption: (confidence: ConfidenceLevel) => void;
   isSelected: boolean;
   isSmallDevice: boolean;
-  timeOfLastSelect: number;
-  setTimeOfLastSelect: (time: number) => void;
+  isTimeUp: boolean;
 }
 
 export default function ConfidenceMeterCard({
@@ -26,11 +26,23 @@ export default function ConfidenceMeterCard({
   handleSelectOption,
   isSelected,
   isSmallDevice,
-  timeOfLastSelect,
-  setTimeOfLastSelect,
+  isTimeUp,
 }: ConfidenceMeterCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [localSelectedOption, setLocalSelectedOption] = useState(selectedOption);
+
+  // Keep a ref to the latest handleSelectOption so the debounced function
+  // never holds a stale closure, without recreating the debounce each render.
+  const handleSelectOptionRef = useRef(handleSelectOption);
+  handleSelectOptionRef.current = handleSelectOption;
+
+  const debouncedSelectRef = useRef(
+    debounce((confidence: ConfidenceLevel) => {
+      handleSelectOptionRef.current(confidence);
+    }, 800)
+  );
+
   interface IConfidenceOption {
     text: string;
     value: ConfidenceLevel;
@@ -69,106 +81,105 @@ export default function ConfidenceMeterCard({
 
   const confidenceHeader = (
     <Box
-      display="inline"
       sx={{
+        display: 'block',
+        boxSizing: 'border-box',
         textAlign: 'left',
-        marginX: `${theme.sizing.extraSmallPadding}px`,
         width: '100%',
-        marginBottom: `${theme.sizing.smallPadding}px`,
+        marginBottom: `${theme.sizing.smPadding}px`,
       }}
     >
-      <ConfidenceTitleTypography>
+      <Typography variant="h1" style={{color: theme.palette.designSystem.surface.play}}>
         {t('gameinprogress.chooseanswer.confidenceheader')}
-      </ConfidenceTitleTypography>
-    </Box>
-  );
-  const chooseConfidenceText = (
-    <Box display="inline" sx={{ textAlign: 'center' }}>
-      <Typography variant="body1">
-        {t('gameinprogress.chooseanswer.answerthankyou1')}
-      </Typography>
-      <Typography variant="body1">
-        {t('gameinprogress.chooseanswer.confidencetext')}
       </Typography>
     </Box>
   );
 
   const responseOption = (option: IConfidenceOption) => {
     return (
-      <Box style={{width: '100%', maxWidth: `${theme.sizing.mediumPadding}px`, display: 'flex', justifyContent: 'center', textAlign: 'center', paddingLeft: '8px', paddingRight: '8px'}}>
-        <FormControlLabel
-          key={option.value}
-          value={option.value}
-          control={
-            <Radio
-              size={isSmallDevice ? 'small' : 'medium'}
-              sx={{
-                '&.Mui-checked': {
-                  color: `${theme.palette.primary.blue}`,
-                },
-              }}
-            />
-          }
-          label={<Typography
-            style={{
-              fontSize: isSmallDevice ?
-                `${theme.typography.h4.fontSize}` :
-                `${theme.typography.h5.fontSize}`
-            }}>
-            {option.text}
-          </Typography>}
-          labelPlacement="bottom"
-          style={{width: '100%'}}
-        />
-      </Box>
+      <FormControlLabel
+        key={option.value}
+        value={option.value}
+        sx={{ margin: 0 }}
+        control={
+          <Radio
+            sx={{
+              padding: '12px',
+              '& .MuiSvgIcon-root': {
+                fontSize: '30px',
+              },
+              '&.Mui-checked': {
+                color: isTimeUp
+                  ? `${theme.palette.primary.extraDarkGrey}`
+                  : `${theme.palette.primary.blue}`,
+              },
+              '&.Mui-disabled.Mui-checked': {
+                color: `${theme.palette.primary.extraDarkGrey}`,
+              },
+            }}
+          />
+        }
+        label={<Typography
+          style={{
+            fontSize: isSmallDevice ?
+              `${theme.typography.h4.fontSize}` :
+              `${theme.typography.h5.fontSize}`,
+            maxWidth: '50px',
+            textAlign: 'center',
+          }}>
+          {option.text}
+        </Typography>}
+        labelPlacement="bottom"
+      />
     );
   };
-  const sendingResponseText = (
-    <Box
-      display="inline"
-      sx={{
-        textAlign: 'center',
-        marginBottom: `${theme.sizing.smallPadding}px`,
-      }}
-    >
-      <Typography
-        variant="body1"
-        sx={{ color: `${theme.palette.primary.darkBlue}`, opacity: '0.5' }}
+
+  const statusText = (() => {
+    if (!isSelected) return null;
+    return (
+      <Box
+        sx={{
+          display: 'block',
+          boxSizing: 'border-box',
+          width: '100%',
+          textAlign: 'left',
+        }}
       >
-        {isSelected
-          ? t('gameinprogress.chooseanswer.submittedconfidenceresponse')
-          : t('gameinprogress.chooseanswer.sendingconfidenceresponse')}
-      </Typography>
-    </Box>
-  );
+        <Typography
+          variant="body1"
+          sx={{ color: `${theme.palette.primary.darkBlue}`, opacity: '0.5' }}
+        >
+          {isTimeUp
+            ? t('gameinprogress.chooseanswer.timeupconfidenceresponse')
+            : t('gameinprogress.chooseanswer.submittedconfidenceresponse')}
+        </Typography>
+      </Box>
+    );
+  })();
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const currentEpochTimeInSeconds = new Date().getTime() / 1000;
-    if (
-      isNullOrUndefined(timeOfLastSelect) ||
-      currentEpochTimeInSeconds - timeOfLastSelect > 5
-    ) {
-      const confidence =
-        confidenceOptionArray.find(
-          (option) => option.value === event.target.value
-        )?.value ?? ConfidenceLevel.NOT_RATED;
-      setTimeOfLastSelect(currentEpochTimeInSeconds);
-      handleSelectOption(confidence);
-    }
+    if (isTimeUp) return;
+    const newValue =
+      confidenceOptionArray.find(
+        (option) => option.value === event.target.value
+      )?.value ?? ConfidenceLevel.NOT_RATED;
+    setLocalSelectedOption(newValue);
+    debouncedSelectRef.current(newValue);
   };
 
   const responseOptions = (
-    <FormControl fullWidth>
+    <FormControl fullWidth disabled={isTimeUp}>
       <RadioGroup
         row
         aria-labelledby="demo-controlled-radio-buttons-group"
         name="controlled-radio-buttons-group"
-        value={selectedOption}
+        value={localSelectedOption}
         onChange={handleRadioChange}
         sx={{
+          flexWrap: 'nowrap',
           textAlign: 'center',
           justifyContent: 'space-between',
-          marginY: `${theme.sizing.mediumPadding}px`,
+          marginBottom: `${theme.sizing.smPadding}px`,
         }}
       >
         {confidenceOptionArray.map((option) => responseOption(option))}
@@ -177,18 +188,10 @@ export default function ConfidenceMeterCard({
   );
 
   return (
-    <BodyCardStyled
-      sx={{
-        paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-        paddingRight: `${theme.sizing.extraSmallPadding}px`
-      }}
-    >
+    <BodyCardStyled>
       {confidenceHeader}
-      {chooseConfidenceText}
       {responseOptions}
-      {!isNullOrUndefined(timeOfLastSelect) || isSelected
-        ? sendingResponseText
-        : null}
+      {statusText}
     </BodyCardStyled>
   );
 }
