@@ -90,7 +90,7 @@ export default function Hints({
             </Box>
           ) : (
             !isHintEmpty && !isHintLoading && !isHintError ? (
-                <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+                <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`, width: '100%', maxWidth: '500px'}}>
                   <Typography variant='label' style={{color: theme.palette.primary.main}}>
                     {t('hintscard.submitted')}
                   </Typography>
@@ -104,7 +104,7 @@ export default function Hints({
                       {t('hintscard.instructions')}
                     </Typography>
                   ) :
-                    <SelectedHints hints={hints} gptHints={gptHints} graphClickIndex={graphClickIndex}/>
+                    <SelectedHints key={graphClickIndex} hints={hints} gptHints={gptHints} graphClickIndex={graphClickIndex}/>
                   }
                 </Box>
             ) : (
@@ -115,7 +115,7 @@ export default function Hints({
                   </Typography>
                 )}
                 {(isHintLoading && !isHintError) && (
-                  <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+                  <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`, width: '100%', maxWidth: '500px'}}>
                     <Typography variant='label' style={{color: theme.palette.primary.main}}>
                       {t('hintscard.loading')}
                     </Typography>
@@ -128,7 +128,7 @@ export default function Hints({
                   </Box>
                 )}
                 {isHintError && (
-                    <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+                    <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`, width: '100%', maxWidth: '500px'}}>
                       <HostButton
                         buttonType={HostButtonType.CONTINUE}
                         label={t('hintscard.retry')}

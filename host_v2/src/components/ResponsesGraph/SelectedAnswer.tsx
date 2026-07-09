@@ -132,6 +132,7 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
             </RectStyle>
           )}
           <PlayersSelectedAnswer
+            key={selectedIndex}
             data={data}
             graphClickIndex={selectedIndex}
             noResponseIndex={noResponseIndex}
