@@ -68,6 +68,7 @@ export default function ConfidenceCard({
           />
           {selectedIndex !== null ? (
             <ConfidenceResponseDropdown
+              key={selectedIndex}
               selectedConfidence={ratedConfidences[selectedIndex]}
               numPlayers={numPlayers}
               responses={responses}
