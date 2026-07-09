@@ -102,10 +102,11 @@ export default function CCSSTabs({
       }
       case CCSSType.GRADE:
       default: {
-        const gradeObj = ccssDictionary.find(
+        const testObj = ccssDictionary.find(
           (ccssGrade) => ccssGrade.key === value,
         );
-        return gradeObj !== undefined;
+        console.log(testObj);
+        return !(!testObj || testObj === undefined);
       }
     }
   };

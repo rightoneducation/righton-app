@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { IHostTeamAnswersResponse } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
+import ArrowIcon from '../../images/Arrow.svg';
+import ArrowIconDark from '../../images/ArrowDark.svg';
 
 const TitleText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'statePosition',
-})(({statePosition}) => ({
+})<{ statePosition?: number }>(({statePosition}) => ({
   color: '#FFF',
   textAlign: 'left',
   fontFamily: 'Rubik',
@@ -18,7 +20,7 @@ const TitleText = styled(Typography, {
 
 const PercentageText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'statePosition',
-})(({statePosition}) => ({
+})<{ statePosition?: number }>(({statePosition}) => ({
   color: '#FFF',
   textAlign: 'left',
   fontFamily: 'Rubik',
@@ -31,7 +33,7 @@ const PercentageText = styled(Typography, {
 
 const CountText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'statePosition',
-})(({statePosition}) => ({
+})<{ statePosition?: number }>(({statePosition}) => ({
   color: '#FFF',
   textAlign: 'right',
   fontFamily: 'Rubik',
@@ -109,6 +111,7 @@ const StyledRect = styled(Box)({
 interface PlayersSelectedAnswerProps {
     data: IHostTeamAnswersResponse[];
     graphClickIndex: number;
+    noResponseIndex: number;
     numPlayers: number;
     statePosition: number;
     isShortAnswerEnabled: boolean;
@@ -118,6 +121,7 @@ interface PlayersSelectedAnswerProps {
 export default function PlayersSelectedAnswer({
   data, 
   graphClickIndex, 
+  noResponseIndex,
   numPlayers, 
   statePosition, 
   isShortAnswerEnabled,
@@ -128,22 +132,29 @@ export default function PlayersSelectedAnswer({
   const percentage = (count / numPlayers) * 100;
   console.log(data);
   const teamsWithSelectedAnswer = data[graphClickIndex].teams.map((team: string) => team);
+  const [isExpanded, setIsExpanded] = useState(true);
+  // matches the gradient background condition on the phase 2 card in ResponsesCard
+  const headerTextColor = statePosition >= 6 && !isPrevPhaseResponses ? '#063772' : '#FFFFFF';
   return (
-    <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding}}>
-      <TextContainer>
-        <TitleText>
-        { (statePosition < 6 || isPrevPhaseResponses) ? `Players who picked this answer` : `Players who think this is the trickiest answer`}
-        </TitleText>
-        <NumberContainer>
-          <CountText>
+    <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding, paddingTop: '8px'}}>
+      <TextContainer
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{ height: '25px', cursor: 'pointer',alignItems: 'center', borderRadius: '8px', padding: '8px 12px', backgroundColor: statePosition >= 6 && !isPrevPhaseResponses ? '#FFFFFF80' : '#FFFFFF33' }}
+      >
+        <Typography sx={{ color: headerTextColor, textAlign: 'center', fontSize: '14px', fontWeight: 700, fontFamily: 'Rubik'}}>
+          {graphClickIndex === noResponseIndex ? 'Not yet answered' : 'Selected by'}
+        </Typography>
+        <NumberContainer style={{ gap: '4px' }}>
+          <CountText style={{ paddingTop: 0, color: headerTextColor }}>
             {count}
           </CountText>
-          <PercentageText>
+          <PercentageText style={{ paddingTop: 0, color: headerTextColor }}>
             ({Math.round(percentage)}%)
           </PercentageText>
+          <img src={statePosition >= 6 && !isPrevPhaseResponses ? ArrowIconDark : ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </NumberContainer>
       </TextContainer>
-      {teamsWithSelectedAnswer.map((team: string) => (
+      {isExpanded && teamsWithSelectedAnswer.map((team: string) => (
         <StyledRect key={uuidv4()} >
           <NameText>
             {team}

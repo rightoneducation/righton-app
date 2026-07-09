@@ -1,5 +1,5 @@
 import { UploadDataWithPathOutput } from 'aws-amplify/storage';
-import { PublicPrivateType, TemplateType, GradeTarget } from "../../BaseAPIClient";
+import { PublicPrivateType, GradeTarget } from "../../BaseAPIClient";
 import { CentralQuestionTemplateInput, IQuestionTemplate } from "../../../Models";
 import {
   createPublicQuestionTemplate,
@@ -219,17 +219,17 @@ export const questionTemplateRuntimeMap = {
         byGameTemplatesCount: draftQuestionTemplatesByDraftGameTemplatesCount
       }
    }
-  },
+  }
 }
 
-export type QuestionTemplateType<T extends TemplateType> =
-  T extends PublicPrivateType.PUBLIC ? IPublicQuestionTemplate :
-  T extends PublicPrivateType.PRIVATE ? IPrivateQuestionTemplate :
+export type QuestionTemplateType<T extends PublicPrivateType> =
+  T extends "Public" ? IPublicQuestionTemplate :
+  T extends "Private" ? IPrivateQuestionTemplate :
   IDraftQuestionTemplate;
 
 
 export interface IQuestionTemplateAPIClient {
-  createQuestionTemplate<T extends TemplateType>(
+  createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     imageUrl: string,
     userId: string,
@@ -244,17 +244,17 @@ export interface IQuestionTemplateAPIClient {
     imageUrl: string,
   ): Promise<string>;
 
-  getQuestionTemplate<T extends TemplateType>(
+  getQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<IQuestionTemplate>;
 
-  getQuestionTemplateJoinTableIds<T extends TemplateType>(
+  getQuestionTemplateJoinTableIds<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<string[]>;
 
-  updateQuestionTemplate<T extends TemplateType>(
+  updateQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     imageUrl: string,
     userId: string,
@@ -262,12 +262,12 @@ export interface IQuestionTemplateAPIClient {
     questionId: string
   ): Promise<IQuestionTemplate>;
 
-  deleteQuestionTemplate<T extends TemplateType>(
+  deleteQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<boolean>;
 
-  listQuestionTemplates<T extends TemplateType>(
+  listQuestionTemplates<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -277,7 +277,7 @@ export interface IQuestionTemplateAPIClient {
     favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
-  listQuestionTemplatesByDate<T extends TemplateType>(
+  listQuestionTemplatesByDate<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -287,7 +287,7 @@ export interface IQuestionTemplateAPIClient {
     favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
-  listQuestionTemplatesByGrade<T extends TemplateType>(
+  listQuestionTemplatesByGrade<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -297,7 +297,7 @@ export interface IQuestionTemplateAPIClient {
     favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
-  listQuestionTemplatesByGameTemplatesCount<T extends TemplateType>(
+  listQuestionTemplatesByGameTemplatesCount<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -308,7 +308,7 @@ export interface IQuestionTemplateAPIClient {
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
   listQuestionTemplatesByUserDate(
-    type: typeof PublicPrivateType.PUBLIC,
+    type: PublicPrivateType,
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
@@ -319,7 +319,7 @@ export interface IQuestionTemplateAPIClient {
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
   listQuestionTemplatesByUserGrade(
-    type: typeof PublicPrivateType.PUBLIC,
+    type: PublicPrivateType,
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
@@ -330,7 +330,7 @@ export interface IQuestionTemplateAPIClient {
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
   listQuestionTemplatesByUserPublicGameTemplatesCount(
-    type: typeof PublicPrivateType.PUBLIC,
+    type: PublicPrivateType,
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,

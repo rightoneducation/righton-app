@@ -17,7 +17,7 @@ const ScorePill = styled('div', {
   width: '58px',
   height: '22px',
   borderRadius: '23px',
-  background: currentState === GameSessionState.PHASE_1_DISCUSS ? `${theme.palette.primary.altHighlightGradient}` : `${theme.palette.primary.highlightGradient}`,
+  background: currentState === GameSessionState.PHASE_1_DISCUSS ? `${theme.palette.primary.altHighlightGradient}` : `${theme.palette.designSystem.surface.deepPurple}`,
   zIndex: 2,
 }));
 
@@ -28,10 +28,11 @@ const NewPointsPill = styled(ScorePill)({
 const NewPointsAnimation = styled('div')({
   opacity: 0, 
   animation: `
-   newScoreUpWiggle 2200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms
+   newScoreUpWiggle 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms forwards
   `,
   '@keyframes newScoreUpWiggle': {
     '0%': {
+      opacity: 0,
       transform: 'rotate(0deg) scale(1.0)',
     },
     '5%': {
@@ -58,8 +59,12 @@ const NewPointsAnimation = styled('div')({
       opacity: 1,
       transform: 'rotate(0deg) scale(1.2)',
     },
+    '95%': {
+      opacity: 1,
+      transform: 'rotate(0deg) scale(1.0)',
+    },
     '100%': {
-      opacity: 0,
+      opacity: 1,
       transform: 'rotate(0deg) scale(1.0)',
     },
   },
@@ -82,8 +87,8 @@ export default function NewPointsIndicator({
   const handlePointsAnimationEnd = (event: React.AnimationEvent) => {
     if (
       event.animationName === 'newScoreUpWiggle' &&
-      newPoints &&
-      newPoints > 0
+      newPoints !== undefined &&
+      newPoints >= 0
     ) {
       setNewScore(score + newPoints);
       setStartScoreAnimation(true);
@@ -92,10 +97,10 @@ export default function NewPointsIndicator({
 
   return (
     <Box sx={{ display: 'flex'}}>
-      {newPoints && newPoints > 0 ? (
+      { newPoints !== undefined && newPoints >= 0 ? (
         <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd}>
           <NewPointsPill currentState={currentState}>
-            <Typography variant="overline">{`+${newPoints}`}</Typography>
+            <Typography variant="h2">{`+${newPoints}`}</Typography>
           </NewPointsPill>
         </NewPointsAnimation>
       ) : null}

@@ -111,7 +111,7 @@ export abstract class ModelHelper {
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0);
         console.log(totalNoChosenAnswer);
-        const totalNumberOfResponses = gameSession.questions[gameSession.currentQuestionIndex].answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== `–`).reduce((previousVal: number, response: IHostTeamAnswersResponse) => {
+        const totalNumberOfResponses = gameSession.questions[gameSession.currentQuestionIndex].answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== `…`).reduce((previousVal: number, response: IHostTeamAnswersResponse) => {
             return previousVal + response.teams.length
         }, 0);
         console.log(totalNumberOfResponses);
@@ -138,7 +138,6 @@ export abstract class ModelHelper {
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
         let submittedTrickAnswer = answers.find(answer => (!this.isAnswerFromPhaseOne(answer)) && answer?.questionId === currentQuestion.id)
-        console.log("hellow");
         if (submittedTrickAnswer || gameSession.currentState === GameSessionState.PHASE_2_DISCUSS) {
             const score = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer?.text ?? '', currentQuestion.id);
             console.log(score);

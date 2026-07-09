@@ -52,34 +52,28 @@ export const updateGameTitle = (
   draftGame: TGameTemplateProps,
   title: string,
 ): TGameTemplateProps => {
-  const newDraftGame = {
+  return {
     ...draftGame,
     gameTemplate: {
       ...draftGame.gameTemplate,
       title,
       lowerCaseTitle: title.toLowerCase(),
     },
-  }
-  return {
-    ...newDraftGame
-  }
+  };
 };
 
 export const updateGameDescription = (
   draftGame: TGameTemplateProps,
   description: string,
 ): TGameTemplateProps => {
-  const newDraftGame = {
+  return {
     ...draftGame,
     gameTemplate: {
       ...draftGame.gameTemplate,
       description,
       lowerCaseDescription: description.toLowerCase(),
     },
-  }
-  return {
-    ...newDraftGame
-  }
+  };
 };
 
 export const updateGameTemplatePhaseTime = (
@@ -135,6 +129,9 @@ export const toggleQuestionBank = (
     ...(draftGame.openCreateQuestion &&
       gameFormIsValid && { openCreateQuestion: false }),
     ...(gameFormIsValid && { openQuestionBank: !draftGame.openQuestionBank }),
+    ...(gameFormIsValid &&
+      draftGame.isGameCardErrored && { isGameCardErrored: false }),
+    ...(!gameFormIsValid && { isGameCardErrored: true }),
   };
 };
 
@@ -212,7 +209,6 @@ export const buildGameTemplate = (
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
   questionTemplateCCSS?: string[],
-  isDraft?: boolean
 ): GameTemplate => {
   let questionTemplatesOrder: any[] = [];
   if (draftQuestionsList.length > 0) {
@@ -256,15 +252,7 @@ export const buildGameTemplate = (
       )[3] ?? '',
     imageUrl: gameImgUrl,
     timesPlayed: 0,
-    finalPublicPrivateType: draftGame.gameTemplate.finalPublicPrivateType,
   };
-  if (isDraft) {
-    const draftGameTemplate = gameTemplate as CreateDraftGameTemplateInput;
-    draftGameTemplate.publicQuestionIds = JSON.stringify(draftGame.gameTemplate.publicQuestionIds ?? []);
-    draftGameTemplate.privateQuestionIds = JSON.stringify(draftGame.gameTemplate.privateQuestionIds ?? []);
-    draftGameTemplate.finalPublicPrivateType = draftGame.gameTemplate.finalPublicPrivateType;
-    return draftGameTemplate;
-  }
   return gameTemplate;
 };
 
@@ -313,34 +301,33 @@ export const buildEditedGameTemplate = (
         '.',
       )[3] ?? '',
     imageUrl: gameImgUrl,
-    timesPlayed: 0,
+    timesPlayed: draftGame.gameTemplate.timesPlayed,
   };
 };
 
 export const buildGameQuestion = (
+  draftGame: TGameTemplateProps,
   gameTemplateId: string,
   questionTemplateId: string,
   type?: PublicPrivateType,
 ): GameQuestionTemplate => {
-  // update to switch on type
-  switch (type) {
-    case PublicPrivateType.PUBLIC:
-      return {
-        publicGameTemplateID: String(gameTemplateId),
-        publicQuestionTemplateID: String(questionTemplateId),
-      };
-    case PublicPrivateType.DRAFT:
-      return {
-        draftGameTemplateID: String(gameTemplateId),
-        draftQuestionTemplateID: String(questionTemplateId),
-      };
-    case PublicPrivateType.PRIVATE:
-      default:
-      return {
-        privateGameTemplateID: String(gameTemplateId),
-        privateQuestionTemplateID: String(questionTemplateId),
-      };
+  if (type === PublicPrivateType.DRAFT) {
+    return {
+      draftGameTemplateID: String(gameTemplateId),
+      draftQuestionTemplateID: String(questionTemplateId),
+    };
   }
+  return {
+    ...(draftGame.gameTemplate.publicPrivateType === PublicPrivateType.PUBLIC
+      ? {
+          publicGameTemplateID: String(gameTemplateId),
+          publicQuestionTemplateID: String(questionTemplateId),
+        }
+      : {
+          privateGameTemplateID: String(gameTemplateId),
+          privateQuestionTemplateID: String(questionTemplateId),
+        }),
+  };
 };
 
 export const buildGameQuestionPromises = (
@@ -352,6 +339,7 @@ export const buildGameQuestionPromises = (
 ) => {
   return questionTemplateIds.map(async (questionId, i) => {
     const gameQuestion = buildGameQuestion(
+      draftGame,
       String(gameTemplateId),
       String(questionId),
       type,
@@ -365,7 +353,6 @@ export const buildGameQuestionPromises = (
 
 export const assembleQuestionTemplate = (
   template: IQuestionTemplate,
-  isDraft?: boolean,
 ): CentralQuestionTemplateInput => {
   const correctAnswer = template.choices?.find((choice) => choice.isAnswer);
   const incorrectAnswers = template.choices?.filter(
@@ -388,7 +375,7 @@ export const assembleQuestionTemplate = (
     })) ?? blankIncorrectAnswers;
 
   return {
-    publicPrivateType: isDraft ? template.finalPublicPrivateType : template.publicPrivateType,
+    timesPlayed: template.timesPlayed,
     questionCard: {
       title: template.title,
       ccss: template.ccss,
@@ -399,7 +386,6 @@ export const assembleQuestionTemplate = (
     correctCard: {
       answer: correctAnswer?.text ?? '',
       answerSteps: template.instructions ?? [],
-      isMultipleChoice: template.answerSettings?.answerType === AnswerType.MULTICHOICE,
       answerSettings: {
         answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
         answerPrecision: template.answerSettings?.answerPrecision,

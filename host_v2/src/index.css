@@ -9,6 +9,17 @@
 
 html {
   overscroll-behavior: none;
+  /* blue host gradient on the ROOT element so it becomes the canvas background. iOS Safari
+     samples the document background to tint its status bar / toolbar, so this is what makes the
+     bars blue (the <meta theme-color> and absolutely-positioned per-page gradients are NOT enough
+     on their own). Keep it on <html>, not <body> — an opaque <body> background paints over the
+     app's z-index:-1 math-symbol layers and hides them.
+     The two game screens that need cream where this blue would otherwise show through — the
+     StartGame curtain reveal and the GameInProgress header gap — paint their own absolute,
+     z-index:-2 cream "backstop" over this canvas. That backstop is absolutely positioned (not
+     fixed/sticky), so iOS does not sample it and the bars stay blue. */
+  background: linear-gradient(0deg, rgba(2, 33, 95, 1) 0%, rgba(13, 104, 177, 1) 100%);
+  background-attachment: fixed;
 }
 
 body {

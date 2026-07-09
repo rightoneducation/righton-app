@@ -21,7 +21,9 @@ const TypographyTotalNum = styled(Typography)({
   margin: 'auto',
 })
 
-const InputNum = styled(Typography)(({ theme, progressPercent }) => ({
+const InputNum = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'progressPercent',
+})<{ progressPercent: number }>(({ theme, progressPercent }) => ({
   position: 'absolute',
   top: '0',
   left: `${progressPercent - 3}%`,

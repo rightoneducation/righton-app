@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -9,6 +9,8 @@ import {
   isNullOrUndefined,
   IGameSession,
   GameSessionState,
+  EduDataAPIClient,
+  IEduDataAPIClient
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
 import JoinGame from '../pages/pregame/JoinGame';
@@ -16,16 +18,21 @@ import {
   PregameState,
   LocalModel,
   StorageKey,
+  StorageKeyEduDataStudentId,
 } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
+import { identifyStudent, trackEvent, trackError, PlayEvent } from '../lib/analytics';
 
 interface PregameFinished {
   apiClients: IAPIClients;
 }
 
-export function PregameContainer({ apiClients }: PregameFinished) {
+export function PregameContainer({ 
+  apiClients
+ }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [, startTransition] = useTransition();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const isMedDevice = useMediaQuery(theme.breakpoints.down('md'));
   const [isShowCodeError, setIsShowCodeError] = useState<boolean>(false);
@@ -55,13 +62,24 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       ...rejoinGameObject!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
       hasRejoined: true,
     };
+    identifyStudent(rejoinGameObject!.teamId, { // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      gameSessionId: rejoinGameObject!.gameSessionId, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      avatarIndex: rejoinGameObject!.selectedAvatar, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    });
+    trackEvent(PlayEvent.GAME_REJOIN_STARTED, {
+      gameSessionId: rejoinGameObject!.gameSessionId, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      teamId: rejoinGameObject!.teamId, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    });
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-    navigate(`/game`);
+    startTransition(() => {
+      navigate(`/game`);
+    });
   };
 
   // if player doesn't want to rejoin, remove the localStorage and set rejoinGameObject to null
   const handleDontRejoinSession = () => {
     window.localStorage.removeItem(StorageKey);
+    window.localStorage.removeItem(StorageKeyEduDataStudentId);
     setRejoinGameObject(null);
   };
 
@@ -71,6 +89,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     try {
       if (inputGameSession.teams.some(team => team.name === teamName)){
         setIsShowNameError(true);
+        trackEvent(PlayEvent.GAME_JOIN_FAILURE, { reason: 'duplicate_name', gameSessionId: inputGameSession.id });
         throw new Error('User already joined with this name');
       }
       const team = await apiClients.team.addTeamToGameSessionId(
@@ -81,6 +100,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       );
       if (!team) {
         setIsShowCodeError(true);
+        trackEvent(PlayEvent.GAME_JOIN_FAILURE, { reason: 'api_error', gameSessionId: inputGameSession.id });
       } else {
         try {
           const teamMember = await apiClients.teamMember.addTeamMemberToTeam(
@@ -90,15 +110,18 @@ export function PregameContainer({ apiClients }: PregameFinished) {
           );
           if (!teamMember) {
             setIsShowCodeError(true);
+            trackEvent(PlayEvent.GAME_JOIN_FAILURE, { reason: 'api_error', gameSessionId: inputGameSession.id });
           }
           return { teamId: team.id, teamMemberAnswersId: teamMember.id };
         } catch (error) {
           setIsShowCodeError(true);
+          trackError(PlayEvent.GAME_JOIN_FAILURE, error, { reason: 'api_error', gameSessionId: inputGameSession.id });
           throw new Error ('error');
         }
       }
     } catch (error) {
       setIsShowCodeError(true);
+      trackError(PlayEvent.GAME_JOIN_FAILURE, error, { reason: 'api_error', gameSessionId: inputGameSession.id });
       throw new Error ('error');
     }
     return undefined;
@@ -113,6 +136,27 @@ export function PregameContainer({ apiClients }: PregameFinished) {
           setIsShowCodeError(true);
           return;
         }
+        // EDUDATA - initialize once we have an identifier for the student/team joining.
+        // Persist the studentId so rejoin/refresh reuses the same UpGrade identity
+        // (avoids splitting a single student across two assignments).
+        try {
+          await apiClients.initEduData(teamInfo.teamId);
+          window.localStorage.setItem(StorageKeyEduDataStudentId, teamInfo.teamId);
+        } catch (e) {
+          console.error('UpGrade failed to init, continuing');
+          console.error('Error Output:');
+          console.error(e);
+        }
+        
+        identifyStudent(teamInfo.teamId, {
+          gameSessionId: gameSessionResponse.id,
+          avatarIndex: selectedAvatar,
+        });
+        trackEvent(PlayEvent.GAME_JOIN_SUCCESS, {
+          gameSessionId: gameSessionResponse.id,
+          teamId: teamInfo.teamId,
+          avatarIndex: selectedAvatar,
+        });
         const storageObject: LocalModel = {
           currentTime: new Date().getTime() / 60000,
           gameSessionId: gameSessionResponse.id,

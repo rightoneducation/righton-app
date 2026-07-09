@@ -1,82 +1,54 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
-import { Box, Typography, Container } from '@mui/material';
-import GameEndedGameCode from './EndGameGameCode';
-import { ReactComponent as HelpIcon } from '../../images/Help.svg';
-import { ReactComponent as CloseIcon } from '../../images/Close.svg';
+import { useTheme } from '@mui/material/styles';
+import { Typography, Grid, Container } from '@mui/material';
+import HeaderStackContainerStyled from '../../lib/styledcomponents/layout/HeaderStackContainerStyled';
+import { ScreenSize } from '../../lib/HostModels';
+import Timer from '../Timer';
+import { useTSGameSessionContext } from '../../hooks/context/useGameSessionContext';
+import { GameSessionContext } from '../../lib/context/GameSessionContext';
 
-interface GameEndedHostHeaderProps {
-  gameCode: number;
+interface EndGameHeaderProps {
+  screenSize: ScreenSize;
 }
 
-const UpperStyled = styled(Box)(({theme}) => ({
-  display: 'flex',
-  position: 'sticky',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center', 
-  gap: '16px', /* this is for Header / Lobby */
-  height: '86px', 
-  width: '100%',
-  padding: '0px 16px 0px 16px', 
-  boxSizing: 'border-box', /* got rid of width, added the display, flexdir, justify content */
-  zIndex: 2,
-  maxWidth: `${theme.breakpoints.values.lg}px`,
-  marginBottom: '16px',
-}));
+export default function EndGameHeader({ screenSize }: EndGameHeaderProps) {
+  const theme = useTheme();
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
 
-const TopLineStyled = styled(Box)({
-  display: 'flex',
-  justifyContent: 'space-between', // send the "game lobby" and the icons to opp sides
-  alignItems: 'center', // align items vertically in the center
-  width: '100%', // fixed on the figma, but that would look goofy on bigger screens
-  padding: '0px 0px 0px 8px', // Adjust padding as needed
-  gap: '8px', /* changed the width to 100%, added the display, justify, and align */
-  height: '36px',
-});
+  // same horizontal padding as the Leaderboard/GameInProgress headers:
+  // 24px (mdPadding) on mobile, 32px (lgPadding) on tablet, 0 on desktop (720 centered)
+  const horizontalPaddingBySize: Record<ScreenSize, number> = {
+    [ScreenSize.SMALL]: theme.sizing.mdPadding,
+    [ScreenSize.MEDIUM]: theme.sizing.lgPadding,
+    [ScreenSize.LARGE]: 0,
+  };
 
-const GameLobbyTypographyStyled = styled(Typography)({
-  width: '255px', /* this si for the phase description */
-  height: '36px',
-  fontSize: '24px',
-  fontWeight: '700',
-  color: 'rgba(255, 255, 255, 1)',
-  lineHeight: '36px', /* same everything */
-});
-
-const IconsContainer = styled(Box)({
-  display: 'flex',
-  gap: '8px', // Adjust the gap between icons if needed
-});
-
-const HelpSvg = styled(HelpIcon)({
-  cursor: 'pointer', // Set cursor to pointer
-});
-
-const CloseSvg = styled(CloseIcon)({
-  marginRight: '8px',
-  cursor: 'pointer', // Set cursor to pointer
-});
-
-const handleHelpClick = () => {
-  console.log("Help Icon clicked");
-};
-
-const handleCloseClick = () => {
-  console.log("Close Icon clicked");
-};
-
-
-function GameEndedHostHeader({ gameCode }: GameEndedHostHeaderProps) {
   return (
-    <UpperStyled>
-      <TopLineStyled>
-        <GameLobbyTypographyStyled>Game End Lobby </GameLobbyTypographyStyled>
-      </TopLineStyled>
-      <GameEndedGameCode gameCode={gameCode} />
-    </UpperStyled>
+    <HeaderStackContainerStyled>
+      <Container
+        style={{
+          maxWidth: screenSize === ScreenSize.MEDIUM ? 'none' : 720,
+          paddingLeft: `${horizontalPaddingBySize[screenSize]}px`,
+          paddingRight: `${horizontalPaddingBySize[screenSize]}px`,
+        }}
+      >
+        {/* 44px total above the title (32px from HeaderStackContainerStyled + 12px here);
+            the end-game lobby has no phase-pills row, matching the Leaderboard header */}
+        <Grid item style={{ paddingTop: '12px' }}>
+          <Typography variant="h1" style={{ fontSize: '24px', lineHeight: '36px', fontFamily: 'Poppins' }}>
+            Game End Lobby
+          </Typography>
+        </Grid>
+        {/* same timer bar as the Leaderboard header; the end-game state is never a timed
+            state, so it renders disabled at 0:00. isAddTime=false hides the add-time button. */}
+        <Grid item style={{ paddingTop: `${theme.sizing.xSmPadding}px` }}>
+          <Timer
+            totalTime={0}
+            isAddTime={false}
+            localGameSession={localGameSession}
+          />
+        </Grid>
+      </Container>
+    </HeaderStackContainerStyled>
   );
 }
-
-export default GameEndedHostHeader;
-

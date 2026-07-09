@@ -9,6 +9,7 @@ import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/G
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import { HostTeamAnswersDispatchContext } from '../lib/context/HostTeamAnswersContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { trackEvent, HostEvent } from '../lib/analytics';
 import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
@@ -31,7 +32,7 @@ export default function PrepareGame( {
 }: PrepareGameProps) {
     const theme = useTheme();
     const [isConfidenceEnabled, setIsConfidenceEnabled] = React.useState<boolean>(true);
-    const [isHintEnabled, setIsHintEnabled] = React.useState<boolean>(false);
+    const [isHintEnabled, setIsHintEnabled] = React.useState<boolean>(true);
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
     const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
@@ -68,6 +69,14 @@ export default function PrepareGame( {
       .then((questions) => {
         console.log('now here');
         const updatedGameSession = {...localGameSession, questions};
+        trackEvent(HostEvent.GAME_STARTED, {
+          gameSessionId: localGameSession.id,
+          questionCount: localGameSession.questions.length,
+          teamCount: localGameSession.teams.length,
+          isConfidenceEnabled,
+          isHintEnabled,
+          isShortAnswerEnabled,
+        });
         dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis}});
         apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis});
         setIsTimerVisible(true);
@@ -84,14 +93,15 @@ export default function PrepareGame( {
           <HeaderBackgroundStyled />  
         </motion.div>
         <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
         >
           <HeaderContent
             isCorrect={false}
             isIncorrect={false}
             totalTime={0}
+            screenSize={screenSize}
           />
         </motion.div>
         <BodyStackContainerStyled>
@@ -110,24 +120,21 @@ export default function PrepareGame( {
             setIsHintEnabled={setIsHintEnabled}
           />
         </BodyStackContainerStyled>  
-        <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1, ease: 'easeIn' }}
-          style={{
-            zIndex: 1,
-            pointerEvents: 'auto',  
-          }}
-        >
-          <FooterBackgroundStyled>
+        <FooterBackgroundStyled screenSize={screenSize}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: 'easeIn' }}
+            style={{ pointerEvents: 'auto' }}
+          >
             <FooterInterim
               teamsLength={localGameSession.teams.length}
               screenSize={screenSize}
               handleButtonClick={handleButtonClick}
               isGamePrepared={isGamePrepared}
             />
-          </FooterBackgroundStyled>
-        </motion.div>
+          </motion.div>
+        </FooterBackgroundStyled>
       </StackContainerStyled>
     );
   }

@@ -153,7 +153,6 @@ type PublicGameTemplate @model
                  @index(name: "publicGameTemplatesByUserPublicQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"], queryField: "publicGameTemplatesByUserPublicQuestionTemplatesCount")
                  @index(name: "publicGameTemplatesByUserGrade", sortKeyFields: ["grade"], queryField: "publicGameTemplatesByUserGrade")
   publicPrivateType: String
-  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -197,7 +196,6 @@ type PrivateGameTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
-  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -240,7 +238,6 @@ type DraftGameTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
-  finalPublicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -258,8 +255,6 @@ type DraftGameTemplate @model
   imageUrl: String
   timesPlayed: Int
   questionTemplates: [DraftQuestionTemplate] @manyToMany(relationName: "DraftGameQuestions")
-  publicQuestionIds: AWSJSON
-  privateQuestionIds: AWSJSON
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
@@ -289,7 +284,6 @@ type PublicQuestionTemplate @model
                  @index(name: "publicQuestionTemplatesByUserPublicGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"], queryField: "publicQuestionTemplatesByUserPublicGameTemplatesCount")
                  @index(name: "publicQuestionTemplatesByUserGrade", sortKeyFields: ["grade"], queryField: "publicQuestionTemplatesByUserGrade")
   publicPrivateType: String
-  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -330,7 +324,6 @@ type PrivateQuestionTemplate @model
   id: ID!
   userId: String
   publicPrivateType: String
-  finalPublicPrivateType: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -371,7 +364,6 @@ type DraftQuestionTemplate @model
   id: ID
   userId: String
   publicPrivateType: String
-  finalPublicPrivateType: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -405,7 +397,7 @@ input CreateGameSessionFromTemplateInput {
   publicPrivate: String!
 }
 
-type GameSession @model 
+type GameSession @model
 @auth(
   rules: [
     { allow: public, provider: apiKey  },
@@ -475,7 +467,7 @@ type Question @model(subscriptions: null, timestamps: null)
   gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["order"])
 }
 
-type Team @model 
+type Team @model
 @auth(
   rules: [
     { allow: public, provider: apiKey  },
@@ -493,7 +485,7 @@ type Team @model
   selectedAvatarIndex: Int! @default(value: "0")
 }
 
-type TeamMember @model 
+type TeamMember @model
 @auth(
   rules: [
     { allow: public, provider: apiKey  },
@@ -517,7 +509,7 @@ enum ConfidenceLevel {
   TOTALLY
 }
 
-type TeamAnswer @model 
+type TeamAnswer @model
 @auth(
   rules: [
     { allow: public, provider: apiKey  },

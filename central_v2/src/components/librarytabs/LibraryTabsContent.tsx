@@ -65,23 +65,16 @@ export default function LibraryTabsContent({
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
   const centralData = useCentralDataState();
   const theme = useTheme();
-  const isDefaultSort = gameQuestion === GameQuestionType.GAME
-    ? (centralData.sort.field === SortType.listGameTemplates && 
-       centralData.sort.direction === SortDirection.DESC) ||
-      (centralData.sort.field === SortType.listGameTemplatesByDate && 
-       centralData.sort.direction === SortDirection.DESC)
-    : (centralData.sort.field === SortType.listQuestionTemplates && 
-       centralData.sort.direction === SortDirection.DESC) ||
-      (centralData.sort.field === SortType.listQuestionTemplatesByDate && 
-       centralData.sort.direction === SortDirection.DESC);
   const isSearchResults =
     centralData.searchTerms.length > 0 ||
     centralData.selectedGrades.length > 0 ||
-    !isDefaultSort;
+    (centralData.sort.field !== SortType.listGameTemplates &&
+      centralData.sort.direction !== SortDirection.ASC);
   const elements =
     gameQuestion === GameQuestionType.GAME
       ? getGameElements(openTab, isSearchResults, centralData)
       : getQuestionElements(openTab, isSearchResults, centralData);
+
   const hasMore = openTab !== LibraryTabEnum.FAVORITES ? 
     centralData.nextToken !== null :
     false;
@@ -130,10 +123,10 @@ export default function LibraryTabsContent({
   const handleLoadMore = async () => {
     loadMoreLibrary(openTab, centralData.searchTerms, centralData.nextToken);
   };
+
   const cardGallery = [
      gameQuestion === GameQuestionType.GAME ? (
         <CardGallery<IGameTemplate>
-          key="game-gallery"
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
           grades={isSearchResults ? centralData.selectedGrades : undefined}
@@ -151,7 +144,6 @@ export default function LibraryTabsContent({
         />
       ) : (
         <CardGallery<IQuestionTemplate>
-          key="question-gallery"
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
           grades={isSearchResults ? centralData.selectedGrades : undefined}

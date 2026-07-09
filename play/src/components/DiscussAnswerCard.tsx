@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Stack, Box, LinearProgress } from '@mui/material';
-import { GameSessionState, IHostTeamAnswersResponse } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersResponse, BackendAnswer } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { AnswerState } from '../lib/PlayModels';
@@ -26,6 +26,18 @@ const StyledAnswerBar = styled(LinearProgress)({
   boxSizing: 'border-box'
 });
 
+const StyledHintBox = styled(Box)({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+  borderRadius: '8px',
+  border: '2px #CCC solid',
+  boxSizing: 'border-box',
+  padding: '12px',
+  marginTop: '12px'
+})
+
 interface DiscussAnswerCardProps {
   instructions: string[];
   answerStatus: AnswerState;
@@ -33,6 +45,8 @@ interface DiscussAnswerCardProps {
   currentState: GameSessionState;
   isShortAnswerEnabled: boolean;
   newPoints: number | undefined;
+  selectedAnswer: BackendAnswer | null;
+  teamAvatar: number;
   phaseOneResponse?: IHostTeamAnswersResponse;
   phaseTwoResponse?: IHostTeamAnswersResponse;
   otherAnswersCount?: number;
@@ -46,61 +60,68 @@ export default function DiscussAnswerCard({
   currentState,
   isShortAnswerEnabled,
   newPoints,
+  selectedAnswer,
   phaseOneResponse,
   phaseTwoResponse,
   otherAnswersCount,
-  totalAnswers
+  totalAnswers,
+  teamAvatar
 }: DiscussAnswerCardProps) {
-  console.log(answerStatus);
   const theme = useTheme();
   const { t } = useTranslation();
+  const hint = selectedAnswer?.hint;
+  let rawHint = null
+  if (hint)
+    rawHint = JSON.parse(hint as unknown as string).rawHint;
   const resultText = (answerStatus === AnswerState.PLAYER_SELECTED_CORRECT)
     ? t('gameinprogress.discussanswer.correcttext')
     : t('gameinprogress.discussanswer.nicetrytext');
   const correctCard =
     answerStatus === AnswerState.CORRECT ||
     answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
-  const AnswerTitleTypography = styled(Typography)({
-    lineHeight: '28px',
-    fontFamily: 'Karla',
-    fontWeight: '800',
-    fontSize: '24px',
-    color: 'black',
-  });
   let percent = 0;
   if (answerStatus === AnswerState.OTHER)
     percent = otherAnswersCount! / totalAnswers! * 100;
   if (phaseOneResponse && totalAnswers) {
     percent = phaseOneResponse.count / totalAnswers * 100;
   }
+  console.log(newPoints);
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
       {correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
+          <Typography variant="h1" style={{color: theme.palette.designSystem.surface.play}}> Correct Answer </Typography>
         </Box>
       )}
       {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && answerStatus !== AnswerState.OTHER && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <AnswerTitleTypography>Incorrect Answer</AnswerTitleTypography>
+          <Typography variant="h1" style={{color: theme.palette.designSystem.surface.play}}>Incorrect Answer</Typography>
           {answerStatus === AnswerState.SELECTED &&(
             <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>)}
         </Box>
       )}
-        {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
+        {currentState === GameSessionState.PHASE_1_DISCUSS && (
           <Box sx={{ marginBottom: '16px', width: '100%' }}>
-            <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-              <Typography
-                variant="subtitle1"
-                sx={{ whiteSpace: 'pre-line', paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
-              >
-                {resultText}
-              </Typography>
-              <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>
-            </Box>
-            <Typography variant="body1" sx={{whiteSpace: 'pre-line'}}>
-              {t('gameinprogress.discussanswer.correctanswertext')}
+            <Typography
+              variant="largeParagraph"
+              sx={{
+                whiteSpace: 'pre-line',
+                color: theme.palette.designSystem.surface.tertiary,
+                display: 'inline-block',
+                transformOrigin: 'left center',
+                '@keyframes discussTextPopIn': {
+                  '0%': { transform: 'scale(0.7)', opacity: 0 },
+                  '60%': { transform: 'scale(1.08)', opacity: 1 },
+                  '100%': { transform: 'scale(1)', opacity: 1 },
+                },
+                animation: 'discussTextPopIn 0.75s ease-out both',
+              }}
+            >
+              { answerStatus === AnswerState.PLAYER_SELECTED_CORRECT 
+               ? <b>{t('gameinprogress.discussanswer.correcttext')}</b>
+               : <><b> {t('gameinprogress.discussanswer.nicetrytext1')} </b> {t('gameinprogress.discussanswer.nicetrytext2')}</>
+              }
             </Typography>
           </Box>
         )}
@@ -113,11 +134,12 @@ export default function DiscussAnswerCard({
           isShortAnswerEnabled={isShortAnswerEnabled}
           correctCard = {correctCard}
           newPoints={newPoints}
+          teamAvatar={teamAvatar}
         />
         )}
          {(currentState === GameSessionState.PHASE_2_DISCUSS) &&
             <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '8px'}}>
-              <Typography sx={{paddingTop: '16px'}}>
+              <Typography variant="body1" sx={{paddingTop: '16px'}}>
                 {answerStatus !== AnswerState.OTHER ? 'Players who answered this way' : 'Players who answered something else'}
               </Typography>
                 <BarContainer>
@@ -128,7 +150,7 @@ export default function DiscussAnswerCard({
                       borderRadius: '4px',
                       backgroundColor: theme.palette.primary.progressBarBackgroundColor,
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: answerStatus === AnswerState.SELECTED ? theme.palette.primary.progressBarSelectedColor : theme.palette.primary.darkPurple
+                        backgroundColor: answerStatus === AnswerState.SELECTED ? theme.palette.primary.progressBarSelectedColor : theme.palette.designSystem.surface.deepPurple
                       }
                     }}
                     value={percent}
@@ -139,7 +161,7 @@ export default function DiscussAnswerCard({
             }
         <Stack
           spacing={1}
-          sx={{ paddingTop: `${theme.sizing.extraSmallPadding}px` }}
+          sx={{ paddingTop: `${theme.sizing.xSmPadding}px` }}
         >
           {correctCard ? (
             instructions.map((instruction, index) => (
@@ -153,13 +175,11 @@ export default function DiscussAnswerCard({
               >
                 <Box sx={{ width: '30px' }}>
                   <Typography
-                    variant="h3"
+                    variant="h2"
                     sx={{
                       width: '30px',
-                      fontWeight: 700,
-                      color: theme.palette.primary.darkPurple,
-                      lineHeight: '20px',
                       textAlign: 'right',
+                      color: theme.palette.designSystem.surface.pink
                     }}
                   >
                     {index + 1}
@@ -167,7 +187,7 @@ export default function DiscussAnswerCard({
                 </Box>
                 <Typography
                   variant="body1"
-                  sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px`,whiteSpace: 'pre-line' }}
+                  sx={{ paddingLeft: `${theme.sizing.xSmPadding}px`,whiteSpace: 'pre-line' }}
                 >
                   {instruction}
                 </Typography>
@@ -177,6 +197,16 @@ export default function DiscussAnswerCard({
             <Typography variant="body1" sx={{whiteSpace: 'pre-line'}}>{answerReason}</Typography>
           )}
         </Stack>
+        { rawHint &&
+          <StyledHintBox>
+            <Typography variant="semiBoldParagraph" style={{color: `${theme.palette.designSystem.surface.tertiary}`}}>
+              {t('gameinprogress.discussanswer.hinttext')}
+            </Typography>
+            <Typography variant="paragraph" style={{color: `${theme.palette.designSystem.surface.tertiary}`}}>
+              {rawHint}
+            </Typography>
+          </StyledHintBox>
+        }
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

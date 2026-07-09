@@ -9,7 +9,7 @@ import {
   Bar
 } from 'victory';
 import { ITeam, IHostTeamAnswersResponse } from '@righton/networking';
-import { IGraphClickInfo } from '../../lib/HostModels';
+import { IGraphClickInfo, IGraphClickIndices } from '../../lib/HostModels';
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import { CustomBar } from './CustomBar';
@@ -35,7 +35,7 @@ interface ResponseGraphProps {
   data: IHostTeamAnswersResponse[];
   statePosition: number,
   isShortAnswerEnabled: boolean,
-  graphClickInfo: IGraphClickInfo, // eslint-disable-line
+  graphClickInfo: IGraphClickIndices, // eslint-disable-line
   isPrevPhaseResponses: boolean,
   setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
   setGraphClickIndex: (index: number | null) => void;
@@ -53,7 +53,7 @@ export default function ResponsesGraph({
   const theme = useTheme();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef<HTMLElement | null>(null);
-  const noResponseLabel = '–';
+  const noResponseLabel = '…';
   const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - theme.sizing.defaultVictoryPadding : boundingRect.width - (theme.sizing.defaultVictoryPadding + theme.sizing.mdPadding * 2);
   const correctChoiceIndex =
     data.findIndex((element: any) => element.isCorrect);
@@ -61,6 +61,11 @@ export default function ResponsesGraph({
     ...data.map((response: any) => response.count),
   );
   const numAnswers = data.length;
+  const zeroTickGap = theme.sizing.xSmPadding;
+  const prevPhaseTopRoom = isPrevPhaseResponses ? theme.sizing.xSmPadding : 0;
+  const dependentAxisStyle = isPrevPhaseResponses
+    ? { tickLabels: { padding: zeroTickGap } }
+    : undefined;
   const calculateRoundedTicks = () => {
     const maxAnswerCount = Math.max(
       ...data.map(({ count }) => count),
@@ -120,7 +125,7 @@ export default function ResponsesGraph({
         <VictoryChart
           domainPadding={{ x: isShortAnswerEnabled ? 32: 16, y: 0 }} // domainPadding is offsetting all data away from the origin. used in conjunction with height
           padding={{
-            top: theme.sizing.smPadding,
+            top: theme.sizing.smPadding + prevPhaseTopRoom,
             bottom: theme.sizing.xSmPadding,
             left: (isShortAnswerEnabled) ? theme.sizing.xSmPadding : theme.sizing.defaultVictoryPadding,
             right: theme.sizing.xSmPadding,
@@ -134,7 +139,7 @@ export default function ResponsesGraph({
           }
           theme={theme.victoryResponsesTheme}
           width={boundingRect.width}
-          height={isShortAnswerEnabled ? data.length * 68 : data.length * 40} // height is a calc of the width of the bars + the space between them + the offset
+          height={(isShortAnswerEnabled ? data.length * 68 : data.length * 36 + 20) + prevPhaseTopRoom} // multi-choice: constant 36px row pitch (36n + padding/domainPadding overhead of 20) to match the 36px highlight rect in CustomBar, so hover/selected boxes never overlap even when zero-count rows are trimmed (+ extra top room on the phase-1 graph)
         >
           <VictoryAxis
             standalone={false}
@@ -149,6 +154,7 @@ export default function ResponsesGraph({
               standalone={false}
               orientation="top"
               tickValues={[0]}
+              style={dependentAxisStyle}
             />
           )}
           {largestAnswerCount >= 5 && (
@@ -158,7 +164,8 @@ export default function ResponsesGraph({
               standalone={false}
               orientation="top"
               tickValues={calculateRoundedTicks()}
-              tickFormat={(tick) => Math.round(tick)}
+              tickFormat={(tick: number) => Math.round(tick)}
+              style={dependentAxisStyle}
             />
           )}
           <VictoryBar
@@ -175,7 +182,7 @@ export default function ResponsesGraph({
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             style={{ 
               data: { 
-                fill: ({ index, datum }: any) => ((index === numAnswers-1 || statePosition > 6) && datum.multiChoiceCharacter ==='–') || isPrevPhaseResponses ? 'transparent' : '#FFF'
+                fill: ({ index, datum }: any) => ((index === numAnswers-1 || statePosition > 6) && datum.multiChoiceCharacter ==='…') || isPrevPhaseResponses ? 'transparent' : '#FFF'
               } 
             }}
             barWidth={({ datum }) =>
@@ -196,6 +203,7 @@ export default function ResponsesGraph({
             labelComponent={
               <CustomLabel
                 noResponseLabel={noResponseLabel}
+                isPrevPhaseResponses={isPrevPhaseResponses}
                 isShortAnswerEnabled={isShortAnswerEnabled}
                 customBarSelectedWidth={customBarSelectedWidth}
                 statePosition={statePosition}

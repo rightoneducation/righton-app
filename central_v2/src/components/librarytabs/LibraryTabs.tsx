@@ -35,7 +35,7 @@ import {
 import tabPublicIcon from '../../images/tabPublic.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import tabPrivateIcon from '../../images/books.svg';
+import tabPrivateIcon from '../../images/tabPrivate.svg';
 import LibraryTabsContent from './LibraryTabsContent';
 
 interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
@@ -86,12 +86,11 @@ export default function LibraryTabs({
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const isDefaultSort = centralData.sort.field === SortType.listGameTemplates && 
-                        centralData.sort.direction === SortDirection.DESC;
   const isSearchResults =
     centralData.searchTerms.length > 0 ||
     centralData.selectedGrades.length > 0 ||
-    !isDefaultSort;
+    (centralData.sort.field !== SortType.listGameTemplates &&
+      centralData.sort.direction !== SortDirection.ASC);
 
   const tabs: LibraryTabEnum[] = [
     LibraryTabEnum.PUBLIC,
@@ -100,11 +99,9 @@ export default function LibraryTabs({
     LibraryTabEnum.FAVORITES,
   ];
 
-  const gameQuestionText = gameQuestion === GameQuestionType.GAME ? 'Games' : 'Questions';
-
   const tabMap: { [key in LibraryTabEnum]: string } = {
-    [LibraryTabEnum.PUBLIC]: `Public ${gameQuestionText}`,
-    [LibraryTabEnum.PRIVATE]: `Private ${gameQuestionText}`,
+    [LibraryTabEnum.PUBLIC]: 'Public',
+    [LibraryTabEnum.PRIVATE]: 'Private',
     [LibraryTabEnum.DRAFTS]: 'Drafts',
     [LibraryTabEnum.FAVORITES]: 'Favorites',
   };
@@ -116,16 +113,6 @@ export default function LibraryTabs({
   };
 
   if (centralData.isLibraryInit) {
-    const librarySort = {
-      field: gameQuestion === GameQuestionType.GAME 
-        ? SortType.listGameTemplatesByDate 
-        : SortType.listQuestionTemplatesByDate,
-      direction: SortDirection.DESC,
-    };
-    centralDataDispatch({
-      type: 'SET_SORT',
-      payload: librarySort,
-    });
     centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
@@ -187,12 +174,11 @@ export default function LibraryTabs({
                 alignItems: 'center',
                 marginRight: '12px',
                 textTransform: 'none',
-                fontFamily: 'Poppins',
+                fontFamily: 'Karla',
                 fontSize: 20,
-                fontWeight: 800,
+                fontWeight: 600,
                 padding: '16px',
                 boxSizing: 'border-box',
-                color: isSelected ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)',
               }}
             />
           );

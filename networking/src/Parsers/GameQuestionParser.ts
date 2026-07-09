@@ -16,96 +16,90 @@ export class GameQuestionParser {
             )
         }
         let gameQuestion: IGameQuestion;
-        switch (publicPrivate) {
-            case PublicPrivateType.PRIVATE: {
-                if (isNullOrUndefined(awsGameQuestion.privateGameTemplate))
-                    throw new Error(
-                        "GameQuestion has null field for the attributes that are not nullable"
-                    )
-                if (isNullOrUndefined(awsGameQuestion.privateQuestionTemplate))
-                    throw new Error(
-                        "GameQuestion has null field for the attributes that are not nullable"
-                    )
-    
-                const gameTemplate = GameTemplateParser.gameTemplateFromAWSGameTemplate(awsGameQuestion.privateGameTemplate, publicPrivate);
-                const questionTemplate = QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(awsGameQuestion.privateQuestionTemplate, publicPrivate);
-    
-                const {
-                    id,
-                    privateQuestionTemplateID,
-                    privateGameTemplateID,
-                } = awsGameQuestion || {}
-    
-                gameQuestion = {
-                    id,
-                    questionTemplateID: privateQuestionTemplateID,
-                    gameTemplateID: privateGameTemplateID,
-                    gameTemplate,
-                    questionTemplate,
-                    createdAt: new Date(awsGameQuestion.createdAt ?? 0),
-                    updatedAt: new Date(awsGameQuestion.updatedAt ?? 0)
-                } as IGameQuestion
-                break;
-            }
-            case PublicPrivateType.DRAFT: {
-                if (isNullOrUndefined(awsGameQuestion.draftGameTemplate))
-                    throw new Error(
-                        "GameQuestion has null field for the attributes that are not nullable"
-                    )
-                if (isNullOrUndefined(awsGameQuestion.draftQuestionTemplate))
-                    throw new Error(
-                        "GameQuestion has null field for the attributes that are not nullable"
-                    )
-                const gameTemplate = GameTemplateParser.gameTemplateFromAWSGameTemplate(awsGameQuestion.draftGameTemplate, publicPrivate);
-                const questionTemplate = QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(awsGameQuestion.draftQuestionTemplate, publicPrivate);
+        if (publicPrivate === PublicPrivateType.PUBLIC){
+            if (isNullOrUndefined(awsGameQuestion.publicGameTemplate))
+                throw new Error(
+                    "GameQuestion has null field for the attributes that are not nullable"
+                )
+            if (isNullOrUndefined(awsGameQuestion.publicQuestionTemplate))
+                throw new Error(
+                    "GameQuestion has null field for the attributes that are not nullable"
+                )
 
-                const {
-                    id,
-                    draftQuestionTemplateID,
-                    draftGameTemplateID,
-                } = awsGameQuestion || {}
+            const gameTemplate = GameTemplateParser.gameTemplateFromAWSGameTemplate(awsGameQuestion.publicGameTemplate, publicPrivate);
+            const questionTemplate = QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(awsGameQuestion.publicQuestionTemplate, publicPrivate);
 
-                gameQuestion = {
-                    id,
-                    questionTemplateID: draftQuestionTemplateID,
-                    gameTemplateID: draftGameTemplateID,
-                    gameTemplate,
-                    questionTemplate,
-                    createdAt: new Date(awsGameQuestion.createdAt ?? 0),
-                    updatedAt: new Date(awsGameQuestion.updatedAt ?? 0)
-                } as IGameQuestion
-                break;
-            }
-            case PublicPrivateType.PUBLIC:
-            default:
-                if (isNullOrUndefined(awsGameQuestion.publicGameTemplate))
-                    throw new Error(
-                        "GameQuestion has null field for the attributes that are not nullable"
-                    )
-                if (isNullOrUndefined(awsGameQuestion.publicQuestionTemplate))
-                    throw new Error(
-                        "GameQuestion has null field for the attributes that are not nullable"
-                    )
-    
-                const gameTemplate = GameTemplateParser.gameTemplateFromAWSGameTemplate(awsGameQuestion.publicGameTemplate, publicPrivate);
-                const questionTemplate = QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(awsGameQuestion.publicQuestionTemplate, publicPrivate);
-    
-                const {
-                    id,
-                    publicQuestionTemplateID,
-                    publicGameTemplateID,
-                } = awsGameQuestion || {}
-    
-                gameQuestion = {
-                    id,
-                    questionTemplateID: publicQuestionTemplateID,
-                    gameTemplateID: publicGameTemplateID,
-                    gameTemplate,
-                    questionTemplate,
-                    createdAt: new Date(awsGameQuestion.createdAt ?? 0),
-                    updatedAt: new Date(awsGameQuestion.updatedAt ?? 0)
-                } as IGameQuestion
-                break;
+            const {
+                id,
+                publicQuestionTemplateID,
+                publicGameTemplateID,
+            } = awsGameQuestion || {}
+
+            gameQuestion = {
+                id,
+                questionTemplateID: publicQuestionTemplateID,
+                gameTemplateID: publicGameTemplateID,
+                gameTemplate,
+                questionTemplate,
+                createdAt: new Date(awsGameQuestion.createdAt ?? 0),
+                updatedAt: new Date(awsGameQuestion.updatedAt ?? 0)
+            } as IGameQuestion
+        } else if (publicPrivate === PublicPrivateType.PRIVATE) {
+            if (isNullOrUndefined(awsGameQuestion.privateGameTemplate))
+                throw new Error(
+                    "GameQuestion has null field for the attributes that are not nullable"
+                )
+            if (isNullOrUndefined(awsGameQuestion.privateQuestionTemplate))
+                throw new Error(
+                    "GameQuestion has null field for the attributes that are not nullable"
+                )
+
+            const gameTemplate = GameTemplateParser.gameTemplateFromAWSGameTemplate(awsGameQuestion.privateGameTemplate, publicPrivate);
+            const questionTemplate = QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(awsGameQuestion.privateQuestionTemplate, publicPrivate);
+
+            const {
+                id,
+                privateQuestionTemplateID,
+                privateGameTemplateID,
+            } = awsGameQuestion || {}
+
+            gameQuestion = {
+                id,
+                questionTemplateID: privateQuestionTemplateID,
+                gameTemplateID: privateGameTemplateID,
+                gameTemplate,
+                questionTemplate,
+                createdAt: new Date(awsGameQuestion.createdAt ?? 0),
+                updatedAt: new Date(awsGameQuestion.updatedAt ?? 0)
+            } as IGameQuestion
+        } else {
+            if (isNullOrUndefined(awsGameQuestion.draftGameTemplate))
+                throw new Error(
+                    "Draft GameQuestion has null field for the attributes that are not nullable"
+                )
+            if (isNullOrUndefined(awsGameQuestion.draftQuestionTemplate))
+                throw new Error(
+                    "Draft GameQuestion has null field for the attributes that are not nullable"
+                )
+
+            const gameTemplate = GameTemplateParser.gameTemplateFromAWSGameTemplate(awsGameQuestion.draftGameTemplate, publicPrivate);
+            const questionTemplate = QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(awsGameQuestion.draftQuestionTemplate, publicPrivate);
+
+            const {
+                id,
+                privateQuestionTemplateID,
+                privateGameTemplateID,
+            } = awsGameQuestion || {}
+
+            gameQuestion = {
+                id,
+                questionTemplateID: privateQuestionTemplateID,
+                gameTemplateID: privateGameTemplateID,
+                gameTemplate,
+                questionTemplate,
+                createdAt: new Date(awsGameQuestion.createdAt ?? 0),
+                updatedAt: new Date(awsGameQuestion.updatedAt ?? 0)
+            } as IGameQuestion
         }
         return gameQuestion
     }

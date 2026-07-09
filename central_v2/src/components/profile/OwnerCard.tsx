@@ -32,7 +32,6 @@ interface OwnerCardProps {
   draftUserProfile: IUserProfile;
   newProfilePic: File | null;
   handleEditPicture: () => void;
-  handleLogOut: () => void;
 }
 
 export default function OwnerCard({
@@ -40,7 +39,6 @@ export default function OwnerCard({
   draftUserProfile,
   newProfilePic,
   handleEditPicture,
-  handleLogOut,
 }: OwnerCardProps) {
   let imageLink = '';
   if (newProfilePic) {
@@ -120,11 +118,6 @@ export default function OwnerCard({
           <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
         </LeftBottomGamesContainer>
       </Box>
-      <CentralButton
-        buttonType={ButtonType.LOGOUT}
-        isEnabled
-        onClick={handleLogOut}
-      />
     </LeftProfileContainer>
   ) : (
     <TopProfileContainer>
@@ -188,11 +181,6 @@ export default function OwnerCard({
           <LeftAccountCreatedInfo>Account Created</LeftAccountCreatedInfo>
           <LeftDateText>{formatted}</LeftDateText>
         </LeftAccountCreatedContainer>
-        <CentralButton
-          buttonType={ButtonType.LOGOUT}
-          isEnabled
-          onClick={handleLogOut}
-        />
       </TopSubContainer>
     </TopProfileContainer>
   );

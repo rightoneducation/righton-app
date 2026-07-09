@@ -37,7 +37,26 @@ import {
   checkForSubmittedHintOnRejoin
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
+import { ErrorType, LocalModel, ScreenSize, StorageKeyAnswer, StorageKeyHint, PADDING_LEFTRIGHT_BY_SIZE } from '../lib/PlayModels';
+import { trackEvent, trackError, PlayEvent } from '../lib/analytics';
+
+const PADDING_TOP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '60px',
+  [ScreenSize.MEDIUM]: '60px',
+  [ScreenSize.LARGE]: '42px',
+};
+
+const PADDING_BOTTOM_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '32px',
+  [ScreenSize.MEDIUM]: '60px',
+  [ScreenSize.LARGE]: '42px',
+};
+
+const HEADER_TO_BODY_GAP_BY_SIZE: Record<ScreenSize, string> = {
+  [ScreenSize.SMALL]: '32px',
+  [ScreenSize.MEDIUM]: '44px',
+  [ScreenSize.LARGE]: '44px',
+};
 
 interface GameInProgressProps {
   apiClients: IAPIClients;
@@ -87,6 +106,7 @@ export default function GameInProgress({
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
+  const [hintBonusPoints, setHintBonusPoints] = useState(0);
   const [answerHint, setAnswerHint] = useState<IAnswerHint>(() => {
     const rejoinSubmittedHint = checkForSubmittedHintOnRejoin(
       localModel,
@@ -97,6 +117,10 @@ export default function GameInProgress({
     return rejoinSubmittedHint;
   });
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  let screenSize = ScreenSize.MEDIUM;
+  if (isLargeScreen) screenSize = ScreenSize.LARGE;
+  else if (isSmallDevice) screenSize = ScreenSize.SMALL;
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   const answerSettings: IAnswerSettings | null = currentQuestion.answerSettings ?? null;
@@ -137,17 +161,13 @@ export default function GameInProgress({
   );
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
     currentAnswer?.id ?? ''
-  ); // This will be moved later (work in progress - Drew)
-  const handleTimerIsFinished = () => {
-    setBackendAnswer((prev) => ({ ...prev, isSubmitted: true }));
-    setTimerIsPaused(true);
-  };
+  ); 
+ 
 
   // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
   const [selectConfidence, setSelectConfidence] = useState<{
     selectedConfidenceOption: string;
     isSelected: boolean;
-    timeOfLastSelect: number;
   }>(() => {
     let rejoinSelectedConfidence = null;
     rejoinSelectedConfidence = checkForSelectedConfidenceOnRejoin(
@@ -181,25 +201,56 @@ export default function GameInProgress({
           answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line
         }
       }
-      console.log(correctAnswer);
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
       setTeamAnswerId(response.id ?? '');
       setBackendAnswer(answer);
       setDisplaySubmitted(true);
+      trackEvent(PlayEvent.ANSWER_SUBMITTED, {
+        gameSessionId: localModel.gameSessionId,
+        teamId,
+        questionIndex: currentQuestionIndex,
+        phase: currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2',
+        isCorrect: answer.isCorrect,
+      });
     } catch (e) {
       setIsAnswerError(true);
+      trackError(PlayEvent.ERROR_MODAL_SHOWN, e, {
+        errorType: 'ANSWER',
+        gameSessionId: localModel.gameSessionId,
+        teamId,
+        questionIndex: currentQuestionIndex,
+      });
     }
   };
 
-  const handleSubmitHint = async (normalizedHint: IAnswerHint) => {
-    try{
-      await apiClients.teamAnswer.updateTeamAnswerHint(teamAnswerId, normalizedHint);
-      window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
-      setAnswerHint(normalizedHint);
-    } catch (e) {
-      setIsAnswerError(true);
-    }
+  // auto-submits a selected/typed answer if the timer expires before the
+  // player presses submit; skips players with no answer in progress
+  const handleTimerIsFinished = () => {
+    setTimerIsPaused(true);
+    if (
+      backendAnswer.isSubmitted ||
+      backendAnswer.teamMemberAnswersId === '' ||
+      (backendAnswer.text ?? '') === ''
+    )
+      return;
+    if (isShortAnswerEnabled)
+      backendAnswer.answer.normalizeAnswer(backendAnswer.answer.rawAnswer);
+    const submittedAnswer = { ...backendAnswer, isSubmitted: true };
+    setBackendAnswer(submittedAnswer);
+    handleSubmitAnswer(submittedAnswer);
+  };
+
+  const handleSubmitHint = (normalizedHint: IAnswerHint) => {
+    // frontend first
+    setHintBonusPoints(1);
+    window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
+    setAnswerHint(normalizedHint);
+    // backend after — fire and forget
+    apiClients.teamAnswer.updateTeamAnswerHint(teamAnswerId, normalizedHint)
+      .catch(() => setIsAnswerError(true));
+    apiClients.team.updateTeam({ id: teamId, score: (currentTeam?.score ?? score) + 1 })
+      .catch(() => setIsAnswerError(true));
   };
 
   const handleRetry = () => {
@@ -210,7 +261,6 @@ export default function GameInProgress({
     if (isConfidenceError) {
       setIsConfidenceError(false);
       setSelectConfidence({
-        timeOfLastSelect: 0,
         selectedConfidenceOption: ConfidenceLevel.NOT_RATED,
         isSelected: false,
       });
@@ -239,17 +289,15 @@ export default function GameInProgress({
     setBackendAnswer((prev) => ({ ...prev, ...answer }));
   };
 
-  const setTimeOfLastConfidenceSelect = (time: number) => {
-    setSelectConfidence((prev) => ({ ...prev, timeOfLastSelect: time }));
-  };
-
   const handleSelectConfidence = async (confidence: ConfidenceLevel) => {
     try {
-      // since subscription.isLoading does not update when user selects answer,
-      // set isSelected to false when user selects or reselects confidence so
-      // that the loading message can display while we wait for apiClient. Then
-      // after await, set isSelected to true again
-      setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
+      // Only show the "Sending..." loading state on the very first submission.
+      // Subsequent re-selections keep isSelected: true so the status message
+      // never flickers back to "Sending..." while the API call is in flight.
+      const wasAlreadySelected = selectConfidence.isSelected;
+      if (!wasAlreadySelected) {
+        setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
+      }
       await apiClients.teamAnswer.updateTeamAnswerConfidence(teamAnswerId, confidence);
       setSelectConfidence((prev) => ({
         ...prev,
@@ -279,7 +327,15 @@ export default function GameInProgress({
         errorText=""
         handleRetry={handleRetry}
       />
-    <HeaderStackContainerStyled>
+    <HeaderStackContainerStyled
+        style={{
+          height: 'auto',
+          paddingTop: PADDING_TOP_BY_SIZE[screenSize],
+          paddingBottom: HEADER_TO_BODY_GAP_BY_SIZE[screenSize],
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+        }}
+      >
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
@@ -290,14 +346,14 @@ export default function GameInProgress({
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
+          disableInnerPadding
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
         currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
+            apiClients={apiClients}
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
@@ -312,8 +368,7 @@ export default function GameInProgress({
             handleSelectConfidence={handleSelectConfidence}
             isConfidenceSelected={selectConfidence.isSelected}
             selectedConfidenceOption={selectConfidence.selectedConfidenceOption}
-            timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
-            setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
+            isTimeUp={timerIsPaused || currentTimer <= 0}
             isShortAnswerEnabled={isShortAnswerEnabled}
             backendAnswer={backendAnswer}
             currentQuestionIndex={currentQuestionIndex ?? 0}
@@ -324,6 +379,8 @@ export default function GameInProgress({
             currentTeam={currentTeam ?? null}
             questionId={currentQuestion.id ?? ''}
             teamMemberAnswersId={teamMemberAnswersId}
+            gameSessionId={gameSession.id ?? ''}
+            setBackendAnswer={setBackendAnswer}
           />
         ) : (
           <DiscussAnswer
@@ -338,10 +395,19 @@ export default function GameInProgress({
             isShortAnswerEnabled={isShortAnswerEnabled}
             gameSession={gameSession}
             newPoints={newPoints}
+            teamAvatar={teamAvatar}
           />
         )}
       </BodyStackContainerStyled>
-      <FooterStackContainerStyled>
+      <FooterStackContainerStyled
+        screenSize={screenSize}
+        style={{
+          paddingTop: '24px',
+          paddingBottom: PADDING_BOTTOM_BY_SIZE[screenSize],
+          paddingLeft: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+          paddingRight: PADDING_LEFTRIGHT_BY_SIZE[screenSize],
+        }}
+      >
         {isSmallDevice ? (
           <PaginationContainerStyled className="swiper-pagination-container" />
         ) : null}
@@ -349,7 +415,9 @@ export default function GameInProgress({
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           score={score}
-          newPoints={newPoints}
+          newPoints={hintBonusPoints > 0 ? hintBonusPoints : newPoints}
+          animationDelay={hintBonusPoints > 0 ? 0 : 1500}
+          disableInnerPadding
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

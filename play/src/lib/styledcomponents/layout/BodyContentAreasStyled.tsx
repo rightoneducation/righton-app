@@ -43,8 +43,8 @@ export const BodyContentAreaSingleColumnStyled = styled(
 )(({ theme }) => ({
   justifyContent: 'center',
   
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
 }));
 
 // content area of body that floats above background layers above - Phase Results Page
@@ -65,8 +65,8 @@ export const BodyContentAreaLeaderboardStyled = styled(
   alignItems: 'center',
   justifyContent: 'flex-start',
   maxWidth: '500px',
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
   height: '100%',
   overflow: 'scroll',
   flexWrap: 'nowrap',

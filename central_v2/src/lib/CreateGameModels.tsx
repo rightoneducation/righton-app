@@ -43,13 +43,10 @@ export type TDraftQuestionsList = {
   isMultipleChoice: boolean;
   questionTemplate: IQuestionTemplate;
   isLibraryViewOnly: boolean;
-  localId?: string; // Unique identifier for React keys
-  isEdited?: boolean; // Track if question has been edited
 };
 
 // empty centralQuestionTemplate for creating question templates
 export const newEmptyTemplate: CentralQuestionTemplateInput = {
-  publicPrivateType: PublicPrivateType.PUBLIC,
   questionCard: {
     title: '',
     ccss: 'CCSS',
@@ -59,7 +56,6 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
   correctCard: {
     answer: '',
     answerSteps: ['', '', ''],
-    isMultipleChoice: true,
     answerSettings: {
       answerType: AnswerType.MULTICHOICE,
     },
@@ -96,7 +92,6 @@ export const emptyQuestionTemplate: IQuestionTemplate = {
   id: '',
   userId: '',
   publicPrivateType: PublicPrivateType.PUBLIC,
-  finalPublicPrivateType: PublicPrivateType.PUBLIC,
   title: '',
   lowerCaseTitle: '',
   version: 0,
@@ -139,15 +134,14 @@ export const newGameTemplate: IGameTemplate = {
   id: '',
   userId: '',
   publicPrivateType: PublicPrivateType.PUBLIC,
-  finalPublicPrivateType: PublicPrivateType.PUBLIC,
   title: '',
   lowerCaseTitle: '',
   owner: '',
   version: 0,
   description: '',
   lowerCaseDescription: '',
-  phaseOneTime: 120,
-  phaseTwoTime: 120,
+  phaseOneTime: 0,
+  phaseTwoTime: 0,
   questionTemplatesCount: 0,
   questionTemplatesOrder: [],
   imageUrl: null,

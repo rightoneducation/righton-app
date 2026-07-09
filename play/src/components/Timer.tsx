@@ -2,33 +2,42 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
+import { ScreenSize } from '../lib/PlayModels';
 
-const TimerContainer = styled(Container)(({ theme }) => ({
+interface TimerContainerProps {
+  screenSize: ScreenSize;
+}
+
+const TimerContainer = styled(Container, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<TimerContainerProps>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  marginLeft: `${theme.sizing.mediumPadding}px`,
-  marginRight: `${theme.sizing.mediumPadding}px`,
-  marginTop: `${theme.sizing.extraSmallPadding}px`,
-  marginBottom: `${theme.sizing.extraSmallPadding}px`,
+  gap: `${theme.sizing.smPadding}px`,
+  marginLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : 0,
+  marginRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : 0,
+  marginTop: `${theme.sizing.xSmPadding}px`,
+  marginBottom: `${theme.sizing.xSmPadding}px`,
+  paddingLeft: screenSize === ScreenSize.SMALL ? undefined : 0,
+  paddingRight: screenSize === ScreenSize.SMALL ? undefined : 0,
 }));
 
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
   borderRadius: '40px',
   display: 'inline-block',
-  marginRight: `${theme.sizing.extraSmallPadding}px`,
-  height: `${theme.sizing.extraSmallPadding}px`,
-  width: `calc(100% - ${theme.sizing.mediumPadding}px)`,
+  height: `${theme.sizing.xSmPadding}px`,
+  width: '100%',
   backgroundColor: theme.palette.primary.main,
   '& .MuiLinearProgress-bar': {
-    background: `linear-gradient(90deg, #349E15 0%, #7DC642 100%)`,
+    background: theme.palette.primary.timerGradient,
   },
 }));
 
 const TimerText = styled(Container)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
-  width: `${theme.sizing.extraSmallPadding}px`,
+  width: `${theme.sizing.xSmPadding}px`,
 }));
 
 interface TimerProps {
@@ -38,6 +47,7 @@ interface TimerProps {
   isFinished: boolean;
   isAddTime?: boolean;
   handleTimerIsFinished: () => void;
+  screenSize: ScreenSize;
 }
 
 export default function Timer({
@@ -47,6 +57,7 @@ export default function Timer({
   isFinished,
   isAddTime,
   handleTimerIsFinished,
+  screenSize,
 }: TimerProps) {
   const [timerString, setTimerString] = useState<string>('00:00');
   const [progress, setProgress] = useState<number>(0);
@@ -55,6 +66,13 @@ export default function Timer({
   const prevTimeRef = useRef<number | null>(null);
   const originalTimeRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(isPaused);
+  // the rAF loop below only restarts when its effect deps change, so the
+  // updateTimer closure (and the handleTimerIsFinished it captured) goes stale;
+  // route the call through a ref so expiry always invokes the latest callback
+  const handleTimerIsFinishedRef = useRef(handleTimerIsFinished);
+  useEffect(() => {
+    handleTimerIsFinishedRef.current = handleTimerIsFinished;
+  });
 
   const getTimerString = (currentTimeInput: number) => {
     const currentTime = Math.trunc(currentTimeInput / 1000);
@@ -81,8 +99,8 @@ export default function Timer({
         originalTimeRef.current = timestamp;
       }
       if (currentTimeMilli.current <= 0) {
-        handleTimerIsFinished();
-      } 
+        handleTimerIsFinishedRef.current();
+      }
       else {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
@@ -102,7 +120,7 @@ export default function Timer({
   }, [isPaused, isFinished, currentTimer, isAddTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <TimerContainer maxWidth="sm">
+    <TimerContainer maxWidth="sm" screenSize={screenSize}>
       <TimerBar 
         sx={{
           "& .MuiLinearProgress-bar": {

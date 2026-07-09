@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { IHostTeamAnswers, GameSessionState, IPhase } from '@righton/networking';
 import { GameSessionContext } from '../lib/context/GameSessionContext';
 import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
 import GameStartingModal from '../components/GameStartingModal';
-import { LocalModel, ScreenSize, IGraphClickInfo } from '../lib/HostModels';
+import { LocalModel, ScreenSize, IGraphClickInfo, IGraphClickIndices } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -16,6 +17,18 @@ import GameInProgressContent from '../components/GameInProgressContent/GameInPro
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
 import FooterGameInProgress from '../components/FooterGameInProgress';
+
+// Cream backstop behind the page (zIndex -2, below the z-index:-1 fixed header). The blue html
+// canvas tints the iOS bars; this paints cream over it so the gap between the header and the
+// cream body shows cream, not the blue canvas (the previous "blue band"). position:absolute (not
+// fixed), so iOS doesn't sample it for the bar tint — the bars keep reading the blue html canvas.
+const CreamBackstopStyled = styled(Box)({
+  position: 'absolute',
+  inset: 0,
+  background: '#FFFBF6', // designSystem.foreground.warmBase
+  zIndex: -2,
+  pointerEvents: 'none',
+});
 
 interface GameInProgressProps {
   isTimerVisible: boolean,
@@ -49,9 +62,18 @@ export default function GameInProgress({
   animate3
 }: GameInProgressProps) {
     const theme = useTheme();
-    const [isAddTime, setIsAddTime] = useState<boolean>(false);
+    const [isAddTime, setIsAddTime] = useState<boolean>(true);
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
-    const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
+    const [graphClickInfo, setGraphClickIndices] = React.useState<IGraphClickIndices>({});
+    // keeps the existing {graph, selectedIndex} setter signature, but only updates
+    // that graph's entry so selections in other graphs are preserved
+    const setGraphClickInfo = ({ graph, selectedIndex }: IGraphClickInfo) => {
+      if (graph === null) {
+        setGraphClickIndices({});
+        return;
+      }
+      setGraphClickIndices(prev => ({ ...prev, [graph]: selectedIndex }));
+    };
     const localGameSession = useTSGameSessionContext(GameSessionContext); 
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
     const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
@@ -60,7 +82,7 @@ export default function GameInProgress({
     console.log(currentQuestion);
     console.log(currentPhase);
     console.log(currentPhaseTeamAnswers);
-    const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
+    const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '…' ? acc + response.count : acc, 0) ?? 0;
     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const screenSize = isLargeScreen  // eslint-disable-line
@@ -71,6 +93,7 @@ export default function GameInProgress({
     const totalTime = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? localGameSession.phaseOneTime : localGameSession.phaseTwoTime;
     return(
       <StackContainerStyled>
+      <CreamBackstopStyled />
       {isTimerVisible &&
         <GameStartingModal isTimerVisible={isTimerVisible} setIsTimerVisible={setIsTimerVisible}/>
       }
@@ -81,6 +104,7 @@ export default function GameInProgress({
         isIncorrect={isIncorrect}
         totalTime={totalTime}
         isAddTime={isAddTime}
+        screenSize={screenSize}
       />
       </motion.div>
       <BodyStackContainerStyled>
@@ -99,7 +123,7 @@ export default function GameInProgress({
           setGraphClickInfo={setGraphClickInfo}
         />
       </BodyStackContainerStyled>
-      <FooterBackgroundStyled >
+      <FooterBackgroundStyled screenSize={screenSize}>
       <motion.div ref={scope3} >
         <FooterGameInProgress
           submittedAnswers={submittedAnswers}

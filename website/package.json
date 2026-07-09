@@ -24,7 +24,7 @@
     "framer-motion": "^12.23.6",
     "i18next": "^25.1.2",
     "i18next-browser-languagedetector": "^8.1.0",
-    "i18next-http-backend": "^3.0.5",
+    "i18next-http-backend": "^3.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-fast-marquee": "^1.6.5",
@@ -39,8 +39,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write ."
@@ -132,9 +132,9 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^9.26.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "react-app-rewired": "^2.2.1"
   }
 }
