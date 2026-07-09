@@ -13,8 +13,12 @@
     "gamecode": {
       "title": "Ingrese el código del juego",
       "button": "Unirse",
-      "error1": "No se puede unir a este juego.",
-      "error2": "Comprueba el código del juego e inténtalo de nuevo."
+      "buttonJoining": "Uniéndose...",
+      "error1": "No se puede unir\na este juego.",
+      "error2": "Comprueba el código del juego\ne inténtalo de nuevo.",
+      "error3": "Un jugador con ese nombre ya se ha unido al juego.",
+      "error4a": "El juego ya ha comenzado.",
+      "error4b": "Busca a un compañero que ya esté dentro y\nsigan juntos el juego en su pantalla."
     },
     "playername": {
       "title": "Introduzca su nombre",

@@ -72,6 +72,7 @@ export function PregameContainer({
   const [isShowCodeError, setIsShowCodeError] = useState<boolean>(false);
   const [isShowNameError, setIsShowNameError] = useState<boolean>(false);
   const [isShowNameInvalidError, setIsShowNameInvalidError] = useState<boolean>(false);
+  const [isShowGameInProgressError, setIsShowGameInProgressError] = useState<boolean>(false);
   const [shouldShowAvatarSelect, setShouldShowAvatarSelect] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [pregameState, setPregameState] = useState<PregameState>(
@@ -273,6 +274,8 @@ export function PregameContainer({
           return true;
         case 'reject_state':
           // Game already in progress and this student has no team here.
+          setIsShowGameInProgressError(true);
+          trackEvent(PlayEvent.GAME_JOIN_FAILURE, { reason: 'game_already_started', gameSessionId: gameSessionResponse.id });
           return false;
         case 'join':
         default:
@@ -300,6 +303,8 @@ export function PregameContainer({
           setIsShowNameError={setIsShowNameError}
           isShowNameInvalidError={isShowNameInvalidError}
           setIsShowNameInvalidError={setIsShowNameInvalidError}
+          isShowGameInProgressError={isShowGameInProgressError}
+          setIsShowGameInProgressError={setIsShowGameInProgressError}
           shouldShowAvatarSelect={shouldShowAvatarSelect}
           setShouldShowAvatarSelect={setShouldShowAvatarSelect}
           firstName={firstName}

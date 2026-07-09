@@ -103,7 +103,7 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
         || (statePosition >= 6 && !isPrevPhaseResponses && graphClickInfo.graph !== 'realtimephase2') 
       ? (
         <Text>
-          Tap on a response to see more details.
+          Tap an answer to see who chose it
         </Text>
       ) : (
         <Box style={{ width: '100%'}}>
