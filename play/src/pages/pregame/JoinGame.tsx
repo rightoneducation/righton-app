@@ -100,6 +100,8 @@ interface JoinGameProps {
   setIsShowNameError: (value: boolean) => void;
   isShowNameInvalidError: boolean;
   setIsShowNameInvalidError: (value: boolean) => void;
+  isShowGameInProgressError: boolean;
+  setIsShowGameInProgressError: (value: boolean) => void;
   shouldShowAvatarSelect: boolean;
   setShouldShowAvatarSelect: (value: boolean) => void;
   firstName: string;
@@ -122,6 +124,8 @@ export default function JoinGame({
   setIsShowNameError,
   isShowNameInvalidError,
   setIsShowNameInvalidError,
+  isShowGameInProgressError,
+  setIsShowGameInProgressError,
   shouldShowAvatarSelect,
   setShouldShowAvatarSelect,
   firstName,
@@ -216,7 +220,7 @@ export default function JoinGame({
               variant="filled"
               autoComplete="off"
               placeholder={InputPlaceholder.GAME_CODE}
-              onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false)}}
+              onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); setIsShowGameInProgressError(false)}}
               onChange={handleGameCodeChange}
               value={gameCodeValue}
               style={{width: '100%', paddingLeft: '40px', paddingRight: '40px', boxSizing: 'border-box'}}
@@ -296,7 +300,7 @@ export default function JoinGame({
                   autoComplete="off"
                   placeholder={t('joingame.playername.firstnamedefault') ?? ''}
                   onChange={(event) => handleFirstNameChange(event.target.value)}
-                  onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false)}}
+                  onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false); setIsShowNameInvalidError(false); setIsShowGameInProgressError(false)}}
                   value={firstName}
                   InputProps={{
                     disableUnderline: true,
@@ -320,7 +324,7 @@ export default function JoinGame({
                   autoComplete="off"
                   placeholder={t('joingame.playername.lastnamedefault') ?? ''}
                   onChange={(event) => handleLastNameChange(event.target.value)}
-                  onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false);  setIsShowNameInvalidError(false)}}
+                  onFocus={() => {setIsShowCodeError(false); setIsShowNameError(false);  setIsShowNameInvalidError(false); setIsShowGameInProgressError(false)}}
                   value={lastName}
                   InputProps={{
                     disableUnderline: true,
@@ -347,12 +351,13 @@ export default function JoinGame({
                     weight: 700,
                     textAlign: 'center',
                     marginBottom: `${theme.sizing.smallPadding}px`,
+                    whiteSpace: isMedDevice ? 'normal' : 'pre-line',
                   }}
                 >
                   {t('joingame.gamecode.error1')}
                 </Typography>
-                {!isShowNameError ? 
-                <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
+                {!isShowNameError ?
+                <Typography variant="h2" sx={{ weight: 700, textAlign: 'center', whiteSpace: isMedDevice ? 'normal' : 'pre-line' }}>
                   {t('joingame.gamecode.error2')}
                 </Typography>
                 :
@@ -360,6 +365,24 @@ export default function JoinGame({
                   {t('joingame.gamecode.error3')}
                 </Typography>
                 }
+              </Collapse>
+            </PaddedContainer>
+            <PaddedContainer>
+              <Collapse in={isShowGameInProgressError}>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    weight: 700,
+                    textAlign: 'center',
+                    marginBottom: `${theme.sizing.smallPadding}px`,
+                    whiteSpace: isMedDevice ? 'normal' : 'pre-line',
+                  }}
+                >
+                  {t('joingame.gamecode.error4a')}
+                </Typography>
+                <Typography variant="h2" sx={{ weight: 700, textAlign: 'center', whiteSpace: isMedDevice ? 'normal' : 'pre-line' }}>
+                  {t('joingame.gamecode.error4b')}
+                </Typography>
               </Collapse>
             </PaddedContainer>
             <PaddedContainer>

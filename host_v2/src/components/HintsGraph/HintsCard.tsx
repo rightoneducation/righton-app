@@ -121,7 +121,7 @@ export default function Hints({
                 />
                 {graphClickIndex === null ? (
                   <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                    Tap on a response to see more details.
+                    Tap an answer to see who chose it
                   </Typography>
                 ) :
                   <SelectedHints hints={hints} gptHints={gptHints} graphClickIndex={graphClickIndex}/>

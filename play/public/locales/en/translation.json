@@ -14,9 +14,11 @@
       "title": "Enter Game Code",
       "button": "Join",
       "buttonJoining": "Joining...",
-      "error1": "Unable to join this game.",
-      "error2": "Check the Game Code and try again.",
-      "error3": "A player with that name has already joined the game."
+      "error1": "Unable to\njoin this game.",
+      "error2": "Check the Game Code\nand try again.",
+      "error3": "A player with that name has already joined the game.",
+      "error4a": "The game has already started.",
+      "error4b": "Find a classmate who's already in and\nfollow along on their screen together."
     },
     "playername": {
       "title": "Enter Your Name",
