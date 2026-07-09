@@ -131,9 +131,9 @@ export default function ConfidenceResponseDropdown({
   const [isExpanded, setIsExpanded] = useState(true);
   const ConfidenceLevelDictionary: { [key in ConfidenceLevel]: string } = {
     [ConfidenceLevel.NOT_RATED]: 'Not Rated',
-    [ConfidenceLevel.NOT_AT_ALL]: 'Not At All',
+    [ConfidenceLevel.NOT_AT_ALL]: 'Not at All',
     [ConfidenceLevel.KINDA]: 'A Little',
-    [ConfidenceLevel.QUITE]: 'Sort Of',
+    [ConfidenceLevel.QUITE]: 'Sort of',
     [ConfidenceLevel.VERY]: 'Very',
     [ConfidenceLevel.TOTALLY]: 'Totally',
   };
