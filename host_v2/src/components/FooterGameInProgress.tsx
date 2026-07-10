@@ -209,6 +209,7 @@ function FooterGameInProgress({
           </Box>
         )}
         <HostButton
+          key={String(isTimerComplete)}
           buttonType={buttonType}
           label={buttonText}
           isEnabled={teamsLength > 0 && !(buttonText === 'Continue' && !isTimerComplete)}
