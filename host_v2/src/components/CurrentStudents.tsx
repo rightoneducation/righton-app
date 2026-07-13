@@ -198,7 +198,7 @@ function CurrentStudents({ teams, currentQuestionIndex, questionsCount, screenSi
         <PlayerCountLabel>
           <PlayerCountTypography>{teams.length} </PlayerCountTypography>
           <PlayerCountTypography style={{ fontSize: '16px', fontWeight: 400 }}>
-            players have joined
+            {teams.length === 1 ? `player has joined` : `players have joined`}
           </PlayerCountTypography>
         </PlayerCountLabel>
         <ClickAwayListener onClickAway={() => isSortOpen && setIsSortOpen(false)}>

@@ -121,7 +121,7 @@ function CurrentStudentsCard({ teams, currentQuestionIndex, questionsCount, scre
       <Box style={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%', gap: '8px'}}>
         <PlayerCountContainer onClick={() => setIsExpanded(!isExpanded)} style={{cursor: 'pointer'}}>
           <PlayerCountLabel>
-            <Typography variant='h3' style={{color: '#FFF'}}> {teams.length} players have joined</Typography>
+            <Typography variant='h3' style={{color: '#FFF'}}> {teams.length} {teams.length === 1 ? `player has joined` : `players have joined`}</Typography>
           </PlayerCountLabel>
          <img src={ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </PlayerCountContainer>
