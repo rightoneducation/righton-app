@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion'; 
-import { AnswerType } from '@righton/networking';
+import { AnswerType, ITeam, IQuestion } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
@@ -23,11 +23,17 @@ import FooterInterim from '../components/FooterInterim';
 
 interface PrepareGameProps {
   isGamePrepared: boolean;
+  teams: ITeam[];
+  questions:IQuestion[];
+  currentQuestionIndex: number;
   setIsTimerVisible: (isTimerVisible: boolean) => void;
 }
 
 export default function PrepareGame( {
   isGamePrepared,
+  teams,
+  questions,
+  currentQuestionIndex,
   setIsTimerVisible
 }: PrepareGameProps) {
     const theme = useTheme();
@@ -53,7 +59,6 @@ export default function PrepareGame( {
       const hostTeamAnswers = apiClients.hostDataManager?.initHostTeamAnswers(localGameSession);
       if (hostTeamAnswers)
         dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {...hostTeamAnswers}});
-      console.log('nextState', nextState);
       const questionUpdates = localGameSession.questions.map(async (question) => 
         apiClients.question.updateQuestion({
           id: question.id, 
@@ -66,9 +71,8 @@ export default function PrepareGame( {
         }) // eslint-disable-line
       );
       Promise.all(questionUpdates)
-      .then((questions) => {
-        console.log('now here');
-        const updatedGameSession = {...localGameSession, questions};
+      .then((newQuestions) => {
+        const updatedGameSession = {...localGameSession, newQuestions};
         trackEvent(HostEvent.GAME_STARTED, {
           gameSessionId: localGameSession.id,
           questionCount: localGameSession.questions.length,
@@ -112,6 +116,9 @@ export default function PrepareGame( {
             localGameSession={localGameSession}
             screenSize={screenSize}
             isGameSettingMultiChoice={isGameSettingMultiChoice}
+            teams={teams}
+            questions={questions}
+            currentQuestionIndex={currentQuestionIndex}
             isShortAnswerEnabled={isShortAnswerEnabled}
             setIsShortAnswerEnabled={setIsShortAnswerEnabled}
             isConfidenceEnabled={isConfidenceEnabled}

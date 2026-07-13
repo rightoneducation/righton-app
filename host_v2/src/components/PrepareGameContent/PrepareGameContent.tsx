@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import {motion} from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession, IQuestion, IPhase } from '@righton/networking';
+import { IGameSession, IQuestion, IPhase, ITeam } from '@righton/networking';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import { ScreenSize } from '../../lib/HostModels';
 import {
@@ -12,6 +12,7 @@ import {
   BodyContentAreaDoubleColumnStyledNoSwiper,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import PrepareGameOptionsCard from './PrepareGameOptionsCard';
+import CurrentStudentsCard from '../CurrentStudentsCard';
 import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentLeftColumn';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -21,6 +22,9 @@ interface PrepareGameContentProps {
   screenSize: ScreenSize;
   currentQuestion: IQuestion;
   isGameSettingMultiChoice: boolean;
+  teams: ITeam[];
+  questions:IQuestion[];
+  currentQuestionIndex: number;
   isShortAnswerEnabled: boolean;
   setIsShortAnswerEnabled: (value: boolean) => void;
   isConfidenceEnabled: boolean;
@@ -34,6 +38,9 @@ export default function PrepareGameContent({
   screenSize,
   currentQuestion,
   isGameSettingMultiChoice,
+  teams,
+  questions,
+  currentQuestionIndex,
   isShortAnswerEnabled,
   setIsShortAnswerEnabled,
   isConfidenceEnabled,
@@ -44,7 +51,7 @@ export default function PrepareGameContent({
   const theme = useTheme();
   const leftCardsColumn = (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-      <ScrollBoxStyled>
+      <ScrollBoxStyled style={{gap: `${theme.sizing.mdPadding}px`}}>
         <PrepareGameOptionsCard
           isGameSettingMultiChoice={isGameSettingMultiChoice}
           isShortAnswerEnabled={isShortAnswerEnabled}
@@ -54,6 +61,7 @@ export default function PrepareGameContent({
           isHintEnabled={isHintEnabled}
           setIsHintEnabled={setIsHintEnabled}
         />
+        <CurrentStudentsCard teams={teams} currentQuestionIndex={currentQuestionIndex} questionsCount={questions.length} screenSize={screenSize} />;
       </ScrollBoxStyled>
     </Grid>
   );

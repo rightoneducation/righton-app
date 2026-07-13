@@ -76,13 +76,15 @@ export default function HeaderContent({
   return (
     <HeaderStackContainerStyled>
       <Container style={{maxWidth: screenSize === ScreenSize.MEDIUM ? 'none' : 720, paddingLeft: horizontalPadding, paddingRight: horizontalPadding}}>
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item>
-            <QuestionIndicator
-              currentState={localGameSession.currentState}
-            />
+        { localGameSession.currentState !== GameSessionState.TEAMS_JOINING &&
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Grid item>
+              <QuestionIndicator
+                currentState={localGameSession.currentState}
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        }
         <Grid item style={{ paddingTop: '24px' }}>
           <Typography variant="h1" style={{ fontSize: '24px', lineHeight: '36px', fontFamily: 'Poppins' }}>
             {stateCheck(localGameSession.currentState, isCorrect, isIncorrect)}
