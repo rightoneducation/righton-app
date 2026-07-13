@@ -24,19 +24,17 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-const BodyContainer = styled(Box)(() => {
-  return {
-    width: '100%',
-    display: 'flex',
-    flexGrow: 1,
-    overflowY: 'auto',
-    '&::-webkit-scrollbar': {
-      // Chrome and Safari
-      display: 'none',
-    },
-    scrollbarWidth: 'none', // Firefox
-    msOverflowStyle: 'none',
-  };
+const BodyContainer = styled(Box)({
+  width: '100%',
+  display: 'flex',
+  flexGrow: 1,
+  overflowY: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none',
 });
 
 interface AppContainerProps {

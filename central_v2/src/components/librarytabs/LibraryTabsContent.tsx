@@ -166,6 +166,7 @@ export default function LibraryTabsContent({
   return (
     <ContentContainer>
       <SearchBar
+        isSearchResults={isSearchResults}
         screenSize={screenSize}
         searchTerms={centralData.searchTerms}
         handleSearchChange={handleSearchChange}

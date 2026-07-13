@@ -230,7 +230,6 @@ declare module '@mui/material/styles' {
       answerBarHeight: number;
       nextStateButtonWidth: number;
       pregameMinColumnWidth: number;
-      extraExtraSmallPadding: number;
       answerOptionBorderRadius: number;
       xxSmPadding: number;
       xSmPadding: number;
@@ -333,13 +332,13 @@ declare module '@mui/material/styles' {
       nextStateButtonWidth?: number;
       pregameMinColumnWidth?: number;
       answerOptionBorderRadius?: number;
-      xxSmPadding: number;
-      xSmPadding: number;
-      smPadding: number;
-      mdPadding: number;
-      lgPadding: number;
-      xLgPadding: number;
-      xxLgPadding: number;
+      xxSmPadding?: number;
+      xSmPadding?: number;
+      smPadding?: number;
+      mdPadding?: number;
+      lgPadding?: number;
+      xLgPadding?: number;
+      xxLgPadding?: number;
       barStrokeWidth?: number;
       confidenceBarThickness?: number;
       defaultVictoryPadding?: number;
