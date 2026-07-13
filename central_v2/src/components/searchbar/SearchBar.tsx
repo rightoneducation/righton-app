@@ -8,6 +8,7 @@ import SelectGradesMenu from './SelectGradesMenu';
 import SortSearchMenu from './SortSearchMenu';
 
 interface SearchBarProps {
+  isSearchResults: boolean;
   screenSize?: ScreenSize;
   searchTerms: string;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -75,6 +76,7 @@ const SearchAndFilterContainer = styled(Box, {
 }));
 
 function SearchBar({
+  isSearchResults,
   screenSize,
   searchTerms,
   handleSearchChange,
@@ -121,10 +123,12 @@ function SearchBar({
           }}
         />
       </Box>
-      <SortSearchMenu
-        screenSize={screenSize ?? ScreenSize.SMALL}
-        handleSortChange={handleSortChange}
-      />
+      {isSearchResults && 
+        <SortSearchMenu
+          screenSize={screenSize ?? ScreenSize.SMALL}
+          handleSortChange={handleSortChange}
+        />
+      }
     </SearchAndFilterContainer>
   );
 }

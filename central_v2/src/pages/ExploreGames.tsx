@@ -98,6 +98,7 @@ export default function ExploreGames({
           />
         )}
         <SearchBar
+          isSearchResults={isSearchResults}
           screenSize={screenSize}
           searchTerms={centralData.searchTerms}
           handleSearchChange={handleSearchChange}
