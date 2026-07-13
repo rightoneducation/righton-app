@@ -221,8 +221,8 @@ function ResultsStudents({ teams, currentQuestionIndex, entranceDelay = 0 }: Res
           }
         >
           {isMobile
-            ? 'Students see only the Top 5; ties are listed alphabetically.'
-            : 'Students see only the Top 5;\nties are listed alphabetically.'}
+            ? `Students' screens show the Top 5 players with more \n than 0 points. Ties listed alphabetically`
+            : `Students' screens show the Top 5 players with \n more than 0 points. Ties listed alphabetically`}
         </RankingNoteTypography>
       </RankingNoteContainer>
       <StartEndGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{flex: 1, minHeight: 0, width: '100%'}}>
