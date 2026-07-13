@@ -53,7 +53,7 @@ export default function Lobby({
             <RadialTimer
               mode={TimerMode.JOIN}
               inputColors={theme.palette.primary.radialTimerArray}
-              radius={110}
+              radius={90}
               timerStartInSeconds={1}
             />
           </Box>

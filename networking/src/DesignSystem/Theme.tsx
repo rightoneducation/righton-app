@@ -31,15 +31,17 @@ const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended 
 const progressBarBackgroundColor = '#D0DAE7'; // progress bar background color
 const progressBarSelectedColor = '#499BF3'; // progress bar when player has selected the answer
 const radialTimerArray = [
-  `${countdownColor}, 0.3)`,
-  `${countdownColor}, 0.4)`,
-  `${countdownColor}, 0.5)`,
-  `${countdownColor}, 0.6)`,
-  `${countdownColor}, 0.7)`,
-  `${countdownColor}, 0.8)`,
-  `${countdownColor}, 0.9)`,
-  `${countdownColor}, 1)`,
-]; // radial timer color array - appended with '0.x )' opacity when used in countdown
+  // one continuous purple→red ramp so brightness rises once around the ring:
+  // slow drift through the purples, steeper climb through the reds
+  'rgb(97, 67, 129)',
+  'rgb(110, 67, 127)',
+  'rgb(123, 66, 125)',
+  'rgb(135, 66, 122)',
+  'rgb(161, 65, 118)',
+  'rgb(180, 64, 115)',
+  'rgb(199, 63, 111)',
+  'rgb(225, 62, 107)',
+]; // radial timer color array - revolving purple→red gradient
 
 const designSystemColors = {
   background: {
