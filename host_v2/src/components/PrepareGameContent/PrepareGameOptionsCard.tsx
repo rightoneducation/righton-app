@@ -188,7 +188,7 @@ export default function PrepareGameOptionsCard({
         </Box>
         <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
           <TitleContainer>
-            <TitleTypography>{t('gameoptions.confidencetitle')}</TitleTypography>
+            <Typography variant="h3" style={{color: theme.palette.primary.main}}>{t('gameoptions.confidencetitle')}</Typography>
             <ToggleSwitch
               checked={isConfidenceEnabled}
               onChange={() => setIsConfidenceEnabled(!isConfidenceEnabled)}
@@ -202,7 +202,7 @@ export default function PrepareGameOptionsCard({
         </Box>
         <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
           <TitleContainer>
-            <TitleTypography>{t('gameoptions.studenthintstitle')}</TitleTypography>
+            <Typography variant="h3" style={{color: theme.palette.primary.main}}>{t('gameoptions.studenthintstitle')}</Typography>
             <ToggleSwitch
               checked={isHintEnabled}
               onChange={() => setIsHintEnabled(!isHintEnabled)}
