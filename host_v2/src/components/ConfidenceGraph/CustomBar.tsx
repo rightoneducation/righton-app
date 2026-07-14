@@ -14,6 +14,7 @@ interface BarProps {
 
 export default function CustomBar(props: any) {
   const {
+    datum,
     x,
     selectedWidth,
     selectedHeight,
@@ -29,7 +30,9 @@ export default function CustomBar(props: any) {
 
   return (
     <g style={{ pointerEvents: 'visible' }}>
-      <Bar {...props} />
+      { datum.y > 0 &&
+        <Bar {...props} />
+      }
       <rect
         x={x !== undefined ? x - offset : -offset}
         y={graphTitleOffset}
@@ -37,7 +40,7 @@ export default function CustomBar(props: any) {
         height={selectedHeight - graphTitleOffset}
         fill={
           graphClickIndex != null && graphClickIndex === index
-            ? `${theme.palette.primary.graphAccentColor}`
+            ? 'rgba(235, 255, 218, 0.4)'
             : 'transparent'
         }
         stroke="transparent"

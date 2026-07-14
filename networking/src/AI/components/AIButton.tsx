@@ -19,7 +19,7 @@ export function AIButton({
   handleClickOutput,
   handleAIEnabled
 }: AIButtonProps) {
-  // const IconComponent = aiButtonContentMap[type].icon;
+  const IconComponent = aiButtonContentMap[type].icon;
   const handleButtonClick = async () => {
     switch(type){
       case AIButtonType.WAE_REGEN: {
@@ -64,17 +64,9 @@ export function AIButton({
           disabled={false}
           onClick={handleButtonClick}
         >
-          <div
-            style={{
-              fontFamily: 'Poppins',
-              fontSize: '20px',
-              fontWeight: '700',
-              textTransform: 'none',
-              color: '#FFFFFF',
-            }}
-          >
-          {aiButtonContentMap[type].textKey}
-          </div>
+          {IconComponent && 
+            <IconComponent />
+          }
         </ButtonStyled> 
     }
    </>

@@ -25,23 +25,13 @@
     "changeimage": "Cambiar Imagen",
     "nextcard": "Siguiente Tarjeta",
     "launchgame": "Lanzar Juego",
-    "createquestion": "Agregar Pregunta",
+    "createquestion": "Crear Pregunta",
     "questionbank": "Banco de Preguntas",
     "back": "Atrás",
     "editpicture": "Editar Imagen",
     "editinformation": "Editar Información",
     "changepassword": "Cambiar Contraseña",
     "choose": "Elegir",
-    "clone": "Duplicar",
-    "publish": "Publicar",
-    "backtoedit": "Volver a Editar",
-    "update": "Actualizar",
-    "continue": "Continuar",
-    "cancelquestion": "Cancelar",
-    "saveadd": "Agregar Pregunta",
-    "duplicate": "Duplicar",
-    "launchpink": "Lanzar",
-    "startcreating": "Empezar a Crear",
-    "confirm": "Confirmar"
+    "clone": "Clonar"
   }
 }

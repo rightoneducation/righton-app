@@ -20,7 +20,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import ShortAnswerTextFieldStyled from '../lib/styledcomponents/ShortAnswerTextFieldStyled';
 
-window.katex = katex;
+(window as any).katex = katex; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 interface OpenAnswerCardProps {
   backendAnswer: BackendAnswer;
@@ -33,6 +33,7 @@ interface OpenAnswerCardProps {
   teamMemberAnswersId: string;
   currentTeam: ITeam  | null;
   handleSubmitAnswer: (result: BackendAnswer) => void;
+  setBackendAnswer: (answer: BackendAnswer) => void;
 }
 
 export default function OpenAnswerCard({
@@ -46,6 +47,7 @@ export default function OpenAnswerCard({
   teamMemberAnswersId,
   currentTeam,
   handleSubmitAnswer,
+  setBackendAnswer
 }: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -109,6 +111,7 @@ export default function OpenAnswerCard({
       StorageKeyAnswer,
       JSON.stringify(extractedAnswer)
     );
+    setBackendAnswer(extractedAnswer);
     setEditorContents(currentAnswer);
   };
   
@@ -147,29 +150,11 @@ export default function OpenAnswerCard({
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
         <Typography
-          variant="subtitle1"
-          sx={{ width: '100%', textAlign: 'left' }}
+          variant="h1"
+          sx={{ width: '100%', textAlign: 'left', color: theme.palette.designSystem.surface.play }}
         >
           {t('gameinprogress.chooseanswer.openanswercard')}
         </Typography>
-        <Box display="inline" style={{ width: '100%' }}>
-        <Typography
-          variant="body1"
-          display="inline"
-          sx={{ width: '100%', textAlign: 'left' }}
-        >
-          {t('gameinprogress.chooseanswer.openanswercarddescription')}
-         
-        </Typography>
-   
-        <Typography
-            variant="body1"
-            display="inline"
-            sx={{ width: '100%', textAlign: 'left', fontWeight: 700 }}
-          >
-            {answerText}
-          </Typography>
-          </Box>
         <Box
           style={{
             display: 'flex',
@@ -187,8 +172,8 @@ export default function OpenAnswerCard({
             variant="filled"
             autoComplete="off"
             multiline
-            minRows={2}
-            maxRows={2}
+            minRows={3}
+            maxRows={3}
             placeholder={t('gameinprogress.chooseanswer.openanswercardplaceholder') ?? ''}
             onChange={handleEditorContentsChange}
             value={editorContents}
@@ -202,7 +187,7 @@ export default function OpenAnswerCard({
           />
           { isBadInput
             ? <Typography
-                variant="body1"
+                variant="paragraph"
                 sx={{ width: '100%', textAlign: 'center' }}
               >
                   {t('gameinprogress.chooseanswer.openanswercardnumberwarning')}
@@ -221,7 +206,7 @@ export default function OpenAnswerCard({
               }}
             >
               <Typography
-              variant="body1"
+              variant="paragraph"
               sx={{ width: '100%', textAlign: 'left' }}
               >
                 {t('gameinprogress.chooseanswer.openanswercardkatexpreview')}

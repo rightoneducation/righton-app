@@ -28,7 +28,6 @@ export class AIAPIClient
       )
       return response.data?.waegen || '';
     } catch (error) {
-      console.error(error);
       throw new Error(`Failed to generate question`)
     }
   }

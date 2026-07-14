@@ -40,6 +40,7 @@ import { ICentralDataManagerAPIClient } from './datamanagers/interfaces/ICentral
 
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
+import { EduDataAPIClient, EDUDATA_ENABLED } from './edudata';
 
 export enum AppType {
   HOST,
@@ -60,6 +61,7 @@ export class APIClients {
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
   cms: ICMSAPIClient;
+  eduData: EduDataAPIClient | null = null;
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
   centralDataManager?: ICentralDataManagerAPIClient;
@@ -94,6 +96,15 @@ export class APIClients {
     return new APIClients(env, authClient, appType); 
   }
     
+  async initEduData(teamId: string): Promise<EduDataAPIClient | null> {
+    if (!EDUDATA_ENABLED) {
+      this.eduData = null;
+      return null;
+    }
+    this.eduData = await EduDataAPIClient.create(teamId);
+    return this.eduData;
+  }
+
   configAmplify(awsconfig: any) {
     Amplify.configure(awsconfig);
   }

@@ -9,7 +9,11 @@ export default styled(TextField)(({ theme }) => ({
     backgroundColor: 'white',
     border: `2px solid ${theme.palette.primary.darkGrey}`,
     width: 'auto',
+    maxWidth: '210px',
     height: '36px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     transition: theme.transitions.create([
       'border-color',
       'background-color',
@@ -20,8 +24,6 @@ export default styled(TextField)(({ theme }) => ({
     },
     '&.Mui-focused': {
       border: `2px solid ${theme.palette.primary.darkGrey}`,
-      outline: `2px solid ${theme.palette.primary.extraDarkGrey}`,
-      outlineOffset: '1px',
       backgroundColor: 'white',
     },
   },

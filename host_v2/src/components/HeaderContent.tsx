@@ -3,6 +3,7 @@ import { GameSessionState, IGameSession } from '@righton/networking';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { ScreenSize } from '../lib/HostModels';
 import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
 import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
@@ -18,6 +19,7 @@ interface HeaderContentProps {
   isIncorrect: boolean;
   totalTime: number;
   isAddTime?: boolean;
+  screenSize?: ScreenSize;
 } // eslint-disable-line
 
 export default function HeaderContent({
@@ -25,12 +27,12 @@ export default function HeaderContent({
   isIncorrect,
   totalTime,
   isAddTime,
+  screenSize,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   const localGameSession = useTSGameSessionContext(GameSessionContext);
 
-  const statePosition = Object.keys(GameSessionState).indexOf(localGameSession.currentState);
   const stateMap = {
     [GameSessionState.NOT_STARTED]: t('gameinprogress.header.notstarted'),
     [GameSessionState.TEAMS_JOINING]: t('gameinprogress.header.teamsjoining'),
@@ -61,19 +63,27 @@ export default function HeaderContent({
     return stateMap[currentStateForCheck];
   };
   
+  // left/right padding by screen size (LARGE flush to 0; MEDIUM 32px; SMALL/unset 24px), pulled
+  // out of the JSX to avoid nested ternaries — matches the lookup-map pattern used in the footers.
+  // screenSize is optional, so unset falls back to SMALL (24px), matching the prior ternary default.
+  const horizontalPaddingBySize: Record<ScreenSize, number | string> = {
+    [ScreenSize.SMALL]: `${theme.sizing.mdPadding}px`,
+    [ScreenSize.MEDIUM]: `${theme.sizing.lgPadding}px`,
+    [ScreenSize.LARGE]: 0,
+  };
+  const horizontalPadding = horizontalPaddingBySize[screenSize ?? ScreenSize.SMALL];
+
   return (
     <HeaderStackContainerStyled>
-      <Container maxWidth="md">
+      <Container style={{maxWidth: screenSize === ScreenSize.MEDIUM ? 'none' : 720, paddingLeft: horizontalPadding, paddingRight: horizontalPadding}}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <QuestionIndicator
-              totalQuestions={localGameSession.questions.length}
-              currentQuestionIndex={localGameSession.currentQuestionIndex}
-              statePosition={statePosition}
+              currentState={localGameSession.currentState}
             />
           </Grid>
         </Grid>
-        <Grid item style={{ paddingTop: `${theme.sizing.xxSmPadding}px` }}>
+        <Grid item style={{ paddingTop: '24px' }}>
           <Typography variant="h1" style={{ fontSize: '24px', lineHeight: '36px', fontFamily: 'Poppins' }}>
             {stateCheck(localGameSession.currentState, isCorrect, isIncorrect)}
           </Typography>

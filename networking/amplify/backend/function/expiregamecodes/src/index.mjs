@@ -9,7 +9,6 @@ const AWS_REGION = process.env.REGION || 'us-east-1';
 
 async function createAndSignRequest(query, variables) {
   const credentials = await defaultProvider()();
-  console.log(credentials);
   const endpoint = new URL(GRAPHQL_ENDPOINT ?? '');
   const signer = new SignatureV4({
     credentials: defaultProvider(),
@@ -73,50 +72,55 @@ async function createAndSignRequest(query, variables) {
     console.log('=== STARTING GAME CODE EXPIRY PROCESS ===');
     const todaysDate = new Date();
     const expiryDays = 90;
-    
-    // Calculate the date 90 days ago
-    const expiryDate = new Date(todaysDate);
-    expiryDate.setDate(todaysDate.getDate() - expiryDays);
-    const expiryDateString = expiryDate.toISOString().split('T')[0];
-    
-    console.log('Today\'s date:', todaysDate.toISOString());
-    console.log('Expiry date (90 days ago):', expiryDateString);
 
-    const gameSessionsRequest = await createAndSignRequest(listGameSessions, { 
-      filter: { 
-        startTime: { lt: expiryDateString },
-        gameCode: { 
-          between: [1000, 9999] 
-        }
-      } 
-    });
-    console.log('=== MAKING GRAPHQL REQUEST ===');
-    console.log('Request URL:', gameSessionsRequest.url);
-    console.log('Request headers:', gameSessionsRequest.headers);
-    console.log('Request body:', gameSessionsRequest.body);
-    
-    const gameSessionsResponse = await fetch(gameSessionsRequest);
-    console.log('Response status:', gameSessionsResponse.status);
-    console.log('Response headers:', Object.fromEntries(gameSessionsResponse.headers.entries()));
-    
-    const gameSessionsResponseParsed = await gameSessionsResponse.json();
-    console.log('=== GRAPHQL RESPONSE ===');
-    console.log('Full response:', JSON.stringify(gameSessionsResponseParsed, null, 2));
-    
-    if (!gameSessionsResponseParsed.data) {
-      throw new Error(`GraphQL response missing data field. Response: ${JSON.stringify(gameSessionsResponseParsed)}`);
-    }
-    
-    if (!gameSessionsResponseParsed.data.listGameSessions) {
-      throw new Error(`GraphQL response missing listGameSessions field. Response: ${JSON.stringify(gameSessionsResponseParsed)}`);
-    }
-    
-    const numOfMatches = gameSessionsResponseParsed.data.listGameSessions.items.length;
-    console.log(`=== PROCESSING RESULTS ===`);
-    console.log(`Found ${numOfMatches} game sessions to expire`);
-    
-    if (numOfMatches > 0) {
-      for (const gameSession of gameSessionsResponseParsed.data.listGameSessions.items) {
+    // startTime is the only time field exposed on ModelGameSessionFilterInput
+    // (the deployed schema does not expose createdAt). It is stored as an
+    // epoch-millis string (Date.now().toString()), so the cutoff must also be a
+    // millis string: all values are 13 digits, so a lexicographic `lt` compare
+    // matches a numeric one. Sessions with a null startTime (created but never
+    // started) are excluded by DynamoDB's filter and will not be expired.
+    const expiryThreshold = (Date.now() - expiryDays * 24 * 60 * 60 * 1000).toString();
+
+    console.log('Today\'s date:', todaysDate.toISOString());
+    console.log('Expiry threshold (startTime <, epoch ms):', expiryThreshold);
+
+    // Page through every matching session. DynamoDB applies the filter after
+    // scanning each page, so it returns a nextToken even when a page yields few
+    // or zero matches. Loop until nextToken is null so the whole table is covered
+    // rather than just the first page.
+    let nextToken = null;
+    let totalExpired = 0;
+    let pageCount = 0;
+
+    do {
+      const gameSessionsRequest = await createAndSignRequest(listGameSessions, {
+        filter: {
+          startTime: { lt: expiryThreshold },
+          gameCode: {
+            between: [1000, 9999]
+          }
+        },
+        limit: 100,
+        nextToken
+      });
+
+      const gameSessionsResponse = await fetch(gameSessionsRequest);
+      const gameSessionsResponseParsed = await gameSessionsResponse.json();
+
+      if (!gameSessionsResponseParsed.data) {
+        throw new Error(`GraphQL response missing data field. Response: ${JSON.stringify(gameSessionsResponseParsed)}`);
+      }
+
+      if (!gameSessionsResponseParsed.data.listGameSessions) {
+        throw new Error(`GraphQL response missing listGameSessions field. Response: ${JSON.stringify(gameSessionsResponseParsed)}`);
+      }
+
+      const page = gameSessionsResponseParsed.data.listGameSessions;
+      pageCount += 1;
+      console.log(`=== PROCESSING PAGE ${pageCount} ===`);
+      console.log(`Found ${page.items.length} game sessions to expire on this page`);
+
+      for (const gameSession of page.items) {
         console.log(`Processing game session: ${gameSession.id} with gameCode: ${gameSession.gameCode}`);
         const existingGameCode = gameSession.gameCode;
         if (existingGameCode && typeof existingGameCode === 'number') {
@@ -125,11 +129,16 @@ async function createAndSignRequest(query, variables) {
           const expireGameSessionRequest = await createAndSignRequest(updateGameSession, { input: { id: gameSession.id, gameCode: newGameCode } });
           const expireGameSessionResponse = await fetch(expireGameSessionRequest);
           console.log(`Update response status: ${expireGameSessionResponse.status}`);
+          totalExpired += 1;
         } else {
           console.warn(`Skipping game session ${gameSession.id} - invalid gameCode: ${existingGameCode}`);
         }
       }
-    }
+
+      nextToken = page.nextToken;
+    } while (nextToken);
+
+    console.log(`=== Expired ${totalExpired} game codes across ${pageCount} page(s) ===`);
 
   } catch (error) {
     console.error("=== ERROR OCCURRED ===");

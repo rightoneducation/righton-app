@@ -1,5 +1,5 @@
 import { uploadData, UploadDataWithPathOutput } from 'aws-amplify/storage';
-import { BaseAPIClient, PublicPrivateType, TemplateType, GradeTarget } from "../BaseAPIClient";
+import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
 import { QuestionTemplateType, questionTemplateRuntimeMap, IQuestionTemplateAPIClient } from "./interfaces/IQuestionTemplateAPIClient";
 import { CentralQuestionTemplateInput, IQuestionTemplate } from "../../Models";
 import { QuestionTemplateParser } from "../../Parsers/QuestionTemplateParser";
@@ -18,17 +18,14 @@ export class QuestionTemplateAPIClient
   extends BaseAPIClient
   implements IQuestionTemplateAPIClient
 {
-  async createQuestionTemplate<T extends TemplateType>(
+  async createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     imageUrl: string,
     userId: string,
     createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate> {
     const parsedInput = QuestionTemplateParser.centralQuestionTemplateInputToIQuestionTemplate<T>(imageUrl, userId, createQuestionTemplateInput);
-    // For draft questions, set finalPublicPrivateType from the input's publicPrivateType
-    const questionTemplateInput = type === PublicPrivateType.DRAFT
-      ? {...parsedInput, publicPrivateType: type, finalPublicPrivateType: createQuestionTemplateInput.publicPrivateType} as QuestionTemplateType<T>['create']['input']
-      : {...parsedInput, publicPrivateType: type} as QuestionTemplateType<T>['create']['input'];
+    const questionTemplateInput = {...parsedInput, publicPrivateType: type} as QuestionTemplateType<T>['create']['input'];
     const variables: GraphQLOptions = { input: questionTemplateInput };
     const queryFunction = questionTemplateRuntimeMap[type].create.queryFunction;
     const createType = `create${type}QuestionTemplate`;
@@ -78,7 +75,7 @@ export class QuestionTemplateAPIClient
     return response.data.uploadExternalImageToS3;
   }
 
-  async getQuestionTemplate<T extends TemplateType>(
+  async getQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<IQuestionTemplate> {
@@ -101,7 +98,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate({} as AWSQuestionTemplate, type);
   }
 
-  async getQuestionTemplateJoinTableIds<T extends TemplateType>(
+  async getQuestionTemplateJoinTableIds<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<string[]> {
@@ -128,7 +125,7 @@ export class QuestionTemplateAPIClient
     return [];
   }
 
-  async updateQuestionTemplate<T extends TemplateType>(
+  async updateQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     imageUrl: string,
     userId: string,
@@ -136,11 +133,7 @@ export class QuestionTemplateAPIClient
     questionId: string
   ): Promise<IQuestionTemplate> {
     const parsedInput = QuestionTemplateParser.centralQuestionTemplateInputToIQuestionTemplate<T>(imageUrl, userId, updateQuestionTemplateInput, questionId);
-    // For draft questions, set finalPublicPrivateType from the input's publicPrivateType
-    const questionTemplateInput = type === PublicPrivateType.DRAFT
-      ? {...parsedInput, finalPublicPrivateType: updateQuestionTemplateInput.publicPrivateType} as QuestionTemplateType<T>['update']['input']
-      : parsedInput as QuestionTemplateType<T>['update']['input'];
-    const variables: GraphQLOptions = { input: questionTemplateInput };
+    const variables: GraphQLOptions = { input: parsedInput as QuestionTemplateType<T>['update']['input'] };
     const queryFunction = questionTemplateRuntimeMap[type].update.queryFunction;
     const updateType = `update${type}QuestionTemplate`;
     const questionTemplate = await this.callGraphQL<QuestionTemplateType<T>['update']['query']>(
@@ -155,7 +148,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data[updateType] as AWSQuestionTemplate, type);
   }
 
-  async deleteQuestionTemplate<T extends TemplateType>(
+  async deleteQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<boolean> {
@@ -170,7 +163,7 @@ export class QuestionTemplateAPIClient
     return (!isNullOrUndefined(result));
   }
 
-  async listQuestionTemplates<T extends TemplateType>(
+  async listQuestionTemplates<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -185,7 +178,7 @@ export class QuestionTemplateAPIClient
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
-  async listQuestionTemplatesByDate<T extends TemplateType>(
+  async listQuestionTemplatesByDate<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -201,7 +194,7 @@ export class QuestionTemplateAPIClient
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
-  async listQuestionTemplatesByGrade<T extends TemplateType>(
+  async listQuestionTemplatesByGrade<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -216,7 +209,7 @@ export class QuestionTemplateAPIClient
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
-  async listQuestionTemplatesByGameTemplatesCount<T extends TemplateType>(
+  async listQuestionTemplatesByGameTemplatesCount<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -232,7 +225,7 @@ export class QuestionTemplateAPIClient
   }
 
   async listQuestionTemplatesByUserDate(
-    type: typeof PublicPrivateType.PUBLIC,
+    type: PublicPrivateType.PUBLIC,
     limit: number,
     nextToken: string | null,
     sortDirection: string | null,
@@ -249,7 +242,7 @@ export class QuestionTemplateAPIClient
   }
 
   async listQuestionTemplatesByUserGrade(
-    type: typeof PublicPrivateType.PUBLIC,
+    type: PublicPrivateType.PUBLIC,
     limit: number,
     nextToken: string | null,
     sortDirection: string | null,
@@ -265,7 +258,7 @@ export class QuestionTemplateAPIClient
   }
 
   async listQuestionTemplatesByUserPublicGameTemplatesCount(
-    type: typeof PublicPrivateType.PUBLIC,
+    type: PublicPrivateType.PUBLIC,
     limit: number,
     nextToken: string | null,
     sortDirection: string | null,

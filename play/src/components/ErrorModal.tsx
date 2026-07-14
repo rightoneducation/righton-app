@@ -1,13 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { Typography, Stack } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { v4 as uuidv4 } from 'uuid';
-import { IntroButtonStyled } from '../lib/styledcomponents/IntroButtonStyled';
-import { StorageKey, ErrorType } from '../lib/PlayModels';
+import { PlayButtonBlock, ButtonType } from '@righton/networking';
+import { StorageKey, StorageKeyEduDataStudentId, ErrorType } from '../lib/PlayModels';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface ErrorModalProps {
   isModalOpen: boolean;
@@ -25,7 +25,6 @@ export default function ErrorModal({
   handleRetry,
 }: ErrorModalProps) {
   const theme = useTheme();
-  const isExtraSmallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -40,26 +39,17 @@ export default function ErrorModal({
   const lowerText = [
     <Typography
       key={uuidv4()}
-      variant="h4"
-      sx={{ textAlign: 'center', fontStyle: 'italic' }}
+      variant="paragraph"
+      sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}
     >
       {errorText}
     </Typography>,
   ];
-  const lowerButton = [
-    <IntroButtonStyled
-      key={uuidv4()}
-      onClick={() => {
-        window.localStorage.removeItem(StorageKey);
-        navigate('/');
-      }}
-      style={{
-        boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-      }}
-    >
-      {t('error.connect.button2')}
-    </IntroButtonStyled>,
-  ];
+
+  const retryCounter =
+    errorType === ErrorType.CONNECT && retry && retry > 0
+      ? ` (${retry})`
+      : '';
 
   return (
     <Modal
@@ -67,20 +57,16 @@ export default function ErrorModal({
       contentLabel="Rejoin Modal"
       style={{
         content: {
+          width: 'calc(100% - 48px)',
           position: 'absolute',
-          width: isExtraSmallDevice
-            ? `calc(100% - (2 * ${theme.sizing.extraLargePadding}px))`
-            : `calc(${theme.breakpoints.values.xs}px - (2 * ${theme.sizing.extraLargePadding}px))`,
-          minWidth: '200px',
-          minHeight: '100px',
+          maxWidth: '430px',
           inset: 'auto',
-          margin: '20px',
-          borderRadius: '24px',
+          margin: '24px',
+          borderRadius: '8px',
           backgroundColor: theme.palette.primary.main,
           boxShadow: `0px 20px 20px rgba(0, 0, 0, 0.25)`,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
+          boxSizing: 'border-box',
+          padding: '48px'
         },
         overlay: {
           height: '100%',
@@ -96,34 +82,37 @@ export default function ErrorModal({
       shouldCloseOnOverlayClick={false}
       appElement={document.getElementById('root') || undefined}
     >
-      <Stack
-        data-testid="errormodal"
-        spacing={2}
-        sx={{ paddingBottom: `${theme.sizing.mediumPadding}px` }}
-      >
-        <Typography variant="h4" sx={{ textAlign: 'center' }}>
+      <BodyCardContainerStyled data-testid="errormodal" spacing={2}>
+        <Typography variant="h1" sx={{ textAlign: 'center', color: theme.palette.designSystem.surface.play }}>
           {upperTextMap[errorType]}
         </Typography>
         {lowerText}
-      </Stack>
-      <Stack spacing={2} style={{ alignItems: 'center' }}>
-        <IntroButtonStyled
-          onClick={() => {
-            handleRetry();
-          }}
-          style={{
-            background: `${theme.palette.primary.highlightGradient}`,
-            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-          }}
-        >
-          {errorType === ErrorType.CONNECT
-            ? `${t('error.connect.button1')} ${
-                retry && retry > 0 ? `(${retry})` : ''
-              }`
-            : t('error.connect.button1')}
-        </IntroButtonStyled>
-        {errorType === ErrorType.CONNECT && lowerButton}
-      </Stack>
+        <Box style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          width: '100%'
+        }}>
+          <PlayButtonBlock
+            buttonType={ButtonType.RETRY}
+            label={`${t('error.connect.button1')}${retryCounter}`}
+            isEnabled
+            onClick={handleRetry}
+          />
+          {errorType === ErrorType.CONNECT && (
+            <PlayButtonBlock
+              buttonType={ButtonType.QUIT}
+              label={t('error.connect.button2')}
+              isEnabled
+              onClick={() => {
+                window.localStorage.removeItem(StorageKey);
+                window.localStorage.removeItem(StorageKeyEduDataStudentId);
+                navigate('/');
+              }}
+            />
+          )}
+        </Box>
+      </BodyCardContainerStyled>
     </Modal>
   );
 }

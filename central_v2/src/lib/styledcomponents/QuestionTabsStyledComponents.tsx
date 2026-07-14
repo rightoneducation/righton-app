@@ -91,8 +91,9 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
 
 export const QTContentContainer = styled(ContentContainer)(({ theme }) => ({
   backgroundImage: `
-    url(${mathSymbolsBackground}),
-    linear-gradient(180deg, #092361 0%, #19356D 100%)
+  url(${mathSymbolsBackground}),
+  linear-gradient(180deg, #092361 0%, #19356D 100%)
+    
   `,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'bottom', 

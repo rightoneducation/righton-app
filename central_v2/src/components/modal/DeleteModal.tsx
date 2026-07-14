@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { IUserProfile } from '@righton/networking';
-import { GameQuestionType, TemplateType } from '../../lib/CentralModels';
+import { GameQuestionType } from '../../lib/CentralModels';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
@@ -26,9 +26,12 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   maxHeight: '100%',
-  maxWidth: '430px',
+  maxWidth: '400px',
   background: '#FFF',
-  padding: '45px',
+  paddingTop: '16px',
+  paddingBottom: '16px',
+  paddingLeft: '24px',
+  paddingRight: '24px',
   zIndex: 1310,
   display: 'flex',
   flexDirection: 'column',
@@ -39,7 +42,6 @@ const IntegratedContainer = styled(Paper)(({ theme }) => ({
 }));
 
 const DragText = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Poppins',
   width: '100%',
   fontSize: '24px',
   lineHeight: '32px',
@@ -47,11 +49,10 @@ const DragText = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
 }));
 
-const BodyText = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Rubik',  
+const SubText = styled(Typography)(({ theme }) => ({
   width: '100%',
-  fontSize: '16px',
-  lineHeight: '18px',
+  fontSize: '24px',
+  lineHeight: '32px',
   fontWeight: 400,
   textAlign: 'center',
 }));
@@ -64,17 +65,25 @@ const CloseButton = styled('img')(({ theme }) => ({
 
 interface DeleteModalProps {
   isModalOpen: boolean;
-  templateType: TemplateType;
+  gameQuestion: GameQuestionType;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleProceedToDelete: () => void;
-  handleCloseDeleteModal: () => void;
 }
 
 export default function DeleteModal({
   isModalOpen,
-  templateType,
+  gameQuestion,
+  setIsModalOpen,
   handleProceedToDelete,
-  handleCloseDeleteModal,
 }: DeleteModalProps) {
+  const handleDelete = () => {
+    setIsModalOpen(false);
+    handleProceedToDelete();
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
@@ -86,32 +95,29 @@ export default function DeleteModal({
             justifyContent: 'space-between',
             alignItems: 'center',
             flexDirection: 'column',
-            gap: '24px',
+            gap: '16px',
+            padding: '24px',
           }}
         >
           <DragText>
-            Confirm Deletion
+            {`Warning: You are about to delete a public ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'}.`}
           </DragText>
-          <Box style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-            <BodyText>
-              Deleted content will be permanently gone.
-            </BodyText>
-            <BodyText>  
-              This action will not be reversible.
-            </BodyText>
-          </Box>
-          <Box style={{ width: '100%', display: 'flex', gap: '9px', flexDirection: 'column' }}>
+          <SubText>
+            {`This will remove the ${gameQuestion === GameQuestionType.GAME ? 'game' : 'question'} for anyone that is using it!`}
+          </SubText>
+          <SubText> Do you want to continue? </SubText>
+          <Box style={{ display: 'flex', gap: '16px' }}>
             <CentralButton
-              buttonType={ButtonType.PINKDELETE}
+              buttonType={ButtonType.YES}
               isEnabled
               smallScreenOverride
-              onClick={handleProceedToDelete}
+              onClick={handleDelete}
             />
             <CentralButton
-              buttonType={ButtonType.BACK}
+              buttonType={ButtonType.NO}
               isEnabled
               smallScreenOverride
-              onClick={handleCloseDeleteModal}
+              onClick={handleCancel}
             />
           </Box>
         </Box>

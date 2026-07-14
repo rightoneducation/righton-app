@@ -12,7 +12,6 @@ import { APIClientsContext } from './lib/context/APIClientsContext';
 import Theme from './lib/Theme';
 import AppSwitch from './switches/AppSwitch';
 import CreateQuestionLoader from './loaders/CreateQuestionLoader';
-import CreateGameLoader from './loaders/CreateGameLoader';
 import { CentralDataProvider } from './lib/context/CentralDataContext';
 import { ScreenType } from './lib/CentralModels';
 
@@ -51,7 +50,6 @@ function App() {
             <Route
               path="/create/game"
               element={<AppSwitch currentScreen={ScreenType.CREATEGAME} />}
-              loader={CreateGameLoader}
             />
             <Route
               path="/clone/game/:type/:gameId"
@@ -59,10 +57,6 @@ function App() {
             />
             <Route
               path="/edit/game/:type/:gameId"
-              element={<AppSwitch currentScreen={ScreenType.EDITGAME} />}
-            />
-            <Route
-              path="/edit/game/:type/:gameId/add/:questionId"
               element={<AppSwitch currentScreen={ScreenType.EDITGAME} />}
             />
             <Route
@@ -87,14 +81,6 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.EDITQUESTION} />}
             />
             <Route
-              path="/questions/:type/:questionId"
-              element={<AppSwitch currentScreen={ScreenType.VIEWQUESTION} />}
-            />
-            <Route
-              path="/library/questions/:type/:questionId"
-              element={<AppSwitch currentScreen={ScreenType.VIEWQUESTION} />}
-            />
-            <Route
               path="/confirmation"
               element={<AppSwitch currentScreen={ScreenType.CONFIRMATION} />}
             />
@@ -104,14 +90,6 @@ function App() {
             />
             <Route
               path="/library"
-              element={<AppSwitch currentScreen={ScreenType.LIBRARY} />}
-            />
-            <Route
-              path="/library/games/:type"
-              element={<AppSwitch currentScreen={ScreenType.LIBRARY} />}
-            />
-            <Route
-              path="/library/questions/:type"
               element={<AppSwitch currentScreen={ScreenType.LIBRARY} />}
             />
             <Route

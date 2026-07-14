@@ -50,3 +50,7 @@ export interface IGraphClickInfo {
   graph: string | null;
   selectedIndex: number | null;
 }
+
+// per-graph selection state so each graph's selected bar is independent;
+// keyed by graph name ('realtimephase1', 'realtimephase2', 'confidence')
+export type IGraphClickIndices = Record<string, number | null>;

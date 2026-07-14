@@ -3,12 +3,12 @@ import { IQuestionTemplate, IGameTemplate, CentralQuestionTemplateInput } from "
 import { QuestionTemplateType } from "../APIClients/templates/interfaces/IQuestionTemplateAPIClient";
 import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
-import { PublicPrivateType, TemplateType } from "../APIClients";
+import { PublicPrivateType } from "../APIClients";
 import { IChoice } from "../Models/IQuestion";
 import { ModelHelper } from "../ModelHelper";
 
 export class QuestionTemplateParser {
-    static centralQuestionTemplateInputToIQuestionTemplate<T extends TemplateType>(
+    static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
         imageUrl: string,
         userId: string,
         createQuestionTemplateInput: CentralQuestionTemplateInput,
@@ -50,7 +50,7 @@ export class QuestionTemplateParser {
             gradeFilter: grade,
             standard,
             imageUrl,
-            timesPlayed: 0,
+            timesPlayed: createQuestionTemplateInput.timesPlayed ?? 0,
             gameTemplatesCount: 0,
         }
         return questionTemplate
@@ -108,7 +108,6 @@ export class QuestionTemplateParser {
           id,
           userId,
           publicPrivateType,
-          finalPublicPrivateType,
           title,
           lowerCaseTitle,
           owner,
@@ -126,9 +125,9 @@ export class QuestionTemplateParser {
           gameTemplatesCount
       } = awsQuestionTemplate || {}
       const awsAnswerSettings = !isNullOrUndefined(answerSettings) ? JSON.parse(answerSettings) : null;
-      if ((isNullOrUndefined(id) ||
+      if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
-          isNullOrUndefined(version)) && publicPrivate !== PublicPrivateType.PUBLIC) {
+          isNullOrUndefined(version)) {
           throw new Error(
               "Question Template has null field for the attributes that are not nullable"
           )
@@ -139,18 +138,17 @@ export class QuestionTemplateParser {
       }
 
       const parsedPublicPrivate = isPublicPrivateValid(publicPrivateType) ? publicPrivateType : PublicPrivateType.PUBLIC;
-      const parsedFinalPublicPrivate = isPublicPrivateValid(finalPublicPrivateType) ? finalPublicPrivateType : PublicPrivateType.PUBLIC;
+
       const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
       const questionTemplate: IQuestionTemplate = {
           id,
           userId,
           publicPrivateType: parsedPublicPrivate,
-          finalPublicPrivateType: parsedFinalPublicPrivate,
-          title: title ?? '',
+          title,
           lowerCaseTitle: lowerCaseTitle ?? '',
           owner: owner ?? '',
-          version: version ?? 0,
+          version,
           choices,
           instructions,
           answerSettings: awsAnswerSettings,

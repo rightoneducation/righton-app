@@ -84,15 +84,17 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
-  const listGameSessions = /* GraphQL */ `query ListGameSessions(
-    $filter: ModelGameSessionFilterInput
+  // Indexed lookup against the byCode GSI. Unlike listGameSessions + filter
+  // (which is a scan that only inspects the first page), this returns every
+  // session with the given gameCode regardless of table size.
+  const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
+    $gameCode: Int!
     $limit: Int
     $nextToken: String
   ) {
-    listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    gameSessionByCode(gameCode: $gameCode, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        gameCode
       }
       nextToken
       __typename
@@ -386,34 +388,50 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
   let statusCode = 200;
   let responseBody ={};
 
+  const MAX_GAME_CODE_ATTEMPTS = 20;
   const generateUniqueGameCode = async () => {
     console.log('=== Starting game code generation ===');
-    let gameCodeIsUnique = false;
-    let gameCode = 0;
-    let attempts = 0;
-    while (!gameCodeIsUnique){
-      attempts++;
-      gameCode = Math.floor(Math.random() * 9000) + 1000;
+    // Creating the game session is the primary operation — it must always
+    // complete. So this never throws: a lookup error/blip just triggers a retry
+    // with a fresh code, and if we somehow can't confirm uniqueness within the
+    // attempt budget we fall back to a best-effort code rather than block the user.
+    let lastGameCode = Math.floor(Math.random() * 9000) + 1000;
+    for (let attempts = 1; attempts <= MAX_GAME_CODE_ATTEMPTS; attempts++) {
+      const gameCode = Math.floor(Math.random() * 9000) + 1000;
+      lastGameCode = gameCode;
       console.log(`Attempt ${attempts}: Generated game code: ${gameCode}`);
-      
-      const matchingGameSessionsRequest = await createAndSignRequest(listGameSessions, { filter: { gameCode: { eq: gameCode } } });
-      const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
-      const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
-      
-      console.log('Game sessions response:', JSON.stringify(matchingGameSessionsResponseParsed, null, 2));
-      
-      const numOfMatches = matchingGameSessionsResponseParsed?.data?.listGameSessions?.items?.length || 0;
-      console.log(`Found ${numOfMatches} matching game sessions`);
-      
-      if (numOfMatches === 0) {
-        gameCodeIsUnique = true;
-        console.log(`Game code ${gameCode} is unique!`);
-      } else {
+
+      try {
+        const matchingGameSessionsRequest = await createAndSignRequest(gameSessionByCode, { gameCode });
+        const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
+        const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
+
+        // A query error must NOT be read as "no matches" (that could hand out a
+        // code already in use). Don't trust it and don't fail — just try again.
+        if (matchingGameSessionsResponseParsed.errors || !matchingGameSessionsResponseParsed.data?.gameSessionByCode) {
+          console.warn(`Attempt ${attempts}: gameSessionByCode lookup error, retrying:`, JSON.stringify(matchingGameSessionsResponseParsed.errors ?? matchingGameSessionsResponseParsed));
+          continue;
+        }
+
+        const numOfMatches = matchingGameSessionsResponseParsed.data.gameSessionByCode.items.length;
+        console.log(`Found ${numOfMatches} matching game sessions`);
+
+        if (numOfMatches === 0) {
+          console.log(`=== Game code generation complete: ${gameCode} (${attempts} attempt(s)) ===`);
+          return gameCode;
+        }
         console.log(`Game code ${gameCode} is not unique, trying again...`);
+      } catch (lookupError) {
+        // Network/exception on a single lookup — retry rather than fail creation.
+        console.warn(`Attempt ${attempts}: gameSessionByCode threw, retrying:`, lookupError?.message);
       }
     }
-    console.log(`=== Game code generation complete: ${gameCode} (${attempts} attempts) ===`);
-    return gameCode;
+
+    // Never block game creation. Return a best-effort code and log loudly so this
+    // can be alarmed on — with expiry working and a 9000-code pool, reaching here
+    // means the pool is near-full or the lookup is persistently failing.
+    console.error(`!!! Could not confirm a unique game code after ${MAX_GAME_CODE_ATTEMPTS} attempts; falling back to ${lastGameCode}. Proceeding with game creation.`);
+    return lastGameCode;
   };
 
 
@@ -447,7 +465,7 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
     const gameSessionId = uuidv4();
     const classroomId = uuidv4();
     console.log(`Creating game session with ID: ${gameSessionId}, classroom ID: ${classroomId}`);
-    
+
     const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: gameSessionId, ...game, gameCode: uniqueGameCode, classroomId }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 

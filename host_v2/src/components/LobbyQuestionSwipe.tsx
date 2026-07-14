@@ -48,7 +48,7 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
               questionText={question.text}
               imageUrl={question.imageUrl}
               currentQuestionIndex = {index}
-                          />
+            />
           </Box>
         </BoxStyled>
       ))}

@@ -6,6 +6,5 @@ import { Box } from '@mui/material';
 export default styled(Box)(() => ({
   height: '70px',
   width: '100vw',
-  boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
   zIndex: 1,
 }));

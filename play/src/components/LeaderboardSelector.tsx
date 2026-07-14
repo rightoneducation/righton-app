@@ -3,15 +3,23 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { monsterMap } from '../lib/PlayModels';
 
-const LeaderboardSelectorContainer = styled(Box)({
+export const LeaderboardOuterContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  maxWidth: '340px',
+  borderRadius: '8px',
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  background: theme.palette.primary.darkPurple,
+}));
+
+const LeaderboardSelectorContainer = styled(Box)({
+  flex: 1,
   minHeight: '75px',
-  borderRadius: '24px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   textTransform: 'none',
-  maxWidth: '100%', // overwrite MUI default maxWidth
   overflow: 'hidden',
   position: 'relative',
 });
@@ -30,27 +38,31 @@ const ScoreBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   background: 'rgba(0, 0, 0, 0.302)',
   borderRadius: '17px',
-  marginRight: `${theme.sizing.extraSmallPadding}px`,
+  marginRight: `${theme.sizing.xSmPadding}px`,
 }));
 
 interface LeaderboardSelectorProps {
   teamName: string;
   teamAvatar: number;
   teamScore: number;
+  position: number;
+  cardBorderRadius?: string;
+  showPosition?: boolean;
 }
 
 export default function LeaderboardSelector({
   teamName,
   teamAvatar,
   teamScore,
+  position,
+  cardBorderRadius = '8px',
+  showPosition = true,
 }: LeaderboardSelectorProps) {
   const theme = useTheme();
 
-  // this reformats the team name to first name and first initial of last name
   const reformatTeamName = (inputText: string) => {
     const spaceLocation = inputText.lastIndexOf(' ');
     let reformattedTeamName = inputText;
-
     if (spaceLocation !== -1) {
       reformattedTeamName = `${inputText.substring(0, spaceLocation + 2)}.`;
     }
@@ -60,31 +72,45 @@ export default function LeaderboardSelector({
   const teamNameFormatted = reformatTeamName(teamName);
 
   return (
-    <LeaderboardSelectorContainer
-      sx={{ background: monsterMap[teamAvatar].gradient }}
-    >
-      <MonsterAvatar src={monsterMap[teamAvatar].monster} alt="avatar" />
+    <Box sx={{ width: '100%', minHeight: '75px', display: 'flex', alignItems: 'center' }}>
       <Typography
-        variant="h1"
+        variant="title"
         sx={{
-          textShadow: '0px 2px 8px rgba(0, 0, 0, 0.7)',
-          zIndex: 1,
-          paddingLeft: `${theme.sizing.extraLargePadding}px`,
+          minWidth: '30px',
+          paddingLeft: '8px',
+          paddingRight: '8px',
+          textAlign: 'center',
+          visibility: showPosition ? 'visible' : 'hidden',
         }}
       >
-        {teamNameFormatted}
+        {position}
       </Typography>
-      <ScoreBox>
+      <LeaderboardSelectorContainer
+        sx={{ background: monsterMap[teamAvatar].gradient, borderRadius: cardBorderRadius }}
+      >
+        <MonsterAvatar src={monsterMap[teamAvatar].monster} alt="avatar" />
         <Typography
           variant="h1"
           sx={{
-            paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-            paddingRight: `${theme.sizing.extraSmallPadding}px`,
+            textShadow: '0px 2px 8px rgba(0, 0, 0, 0.7)',
+            zIndex: 1,
+            paddingLeft: `${theme.sizing.xLgPadding}px`,
           }}
         >
-          {teamScore}
+          {teamNameFormatted}
         </Typography>
-      </ScoreBox>
-    </LeaderboardSelectorContainer>
+        <ScoreBox>
+          <Typography
+            variant="h1"
+            sx={{
+              paddingLeft: `${theme.sizing.xSmPadding}px`,
+              paddingRight: `${theme.sizing.xSmPadding}px`,
+            }}
+          >
+            {teamScore}
+          </Typography>
+        </ScoreBox>
+      </LeaderboardSelectorContainer>
+    </Box>
   );
 }

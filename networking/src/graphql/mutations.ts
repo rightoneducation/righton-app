@@ -101,7 +101,6 @@ export const createPublicGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -127,7 +126,6 @@ export const createPublicGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -153,7 +151,6 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -186,7 +183,6 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -233,7 +229,6 @@ export const createPublicGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -258,7 +253,6 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -291,7 +285,6 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -360,7 +353,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -386,7 +378,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -412,7 +403,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -445,7 +435,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -492,7 +481,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -517,7 +505,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -550,7 +537,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -619,7 +605,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -645,7 +630,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -671,7 +655,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -704,7 +687,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -751,7 +733,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -776,7 +757,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -809,7 +789,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -878,7 +857,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -904,7 +882,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -930,7 +907,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -963,7 +939,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1010,7 +985,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -1035,7 +1009,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1068,7 +1041,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1137,7 +1109,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -1163,7 +1134,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -1189,7 +1159,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1222,7 +1191,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1269,7 +1237,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -1294,7 +1261,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1327,7 +1293,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1396,7 +1361,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -1422,7 +1386,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -1448,7 +1411,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1481,7 +1443,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1528,7 +1489,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -1553,7 +1513,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1586,7 +1545,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1655,7 +1613,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -1681,7 +1638,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -1707,7 +1663,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1728,8 +1683,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1742,7 +1695,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1777,8 +1729,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
-            publicQuestionIds
-            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -1791,7 +1741,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -1816,7 +1765,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1837,8 +1785,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1851,7 +1797,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1901,8 +1846,6 @@ export const createDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      publicQuestionIds
-      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -1922,7 +1865,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -1948,7 +1890,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -1974,7 +1915,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -1995,8 +1935,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2009,7 +1947,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2044,8 +1981,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
-            publicQuestionIds
-            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -2058,7 +1993,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -2083,7 +2017,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2104,8 +2037,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2118,7 +2049,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2168,8 +2098,6 @@ export const updateDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      publicQuestionIds
-      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -2189,7 +2117,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -2215,7 +2142,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -2241,7 +2167,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2262,8 +2187,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2276,7 +2199,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2311,8 +2233,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
-            publicQuestionIds
-            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -2325,7 +2245,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -2350,7 +2269,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2371,8 +2289,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2385,7 +2301,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2435,8 +2350,6 @@ export const deleteDraftGameTemplate = /* GraphQL */ `
         nextToken
         __typename
       }
-      publicQuestionIds
-      privateQuestionIds
       questionTemplatesCount
       questionTemplatesOrder
       createdAt
@@ -2456,7 +2369,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -2481,7 +2393,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -2507,7 +2418,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2540,7 +2450,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2587,7 +2496,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -2612,7 +2520,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2645,7 +2552,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2713,7 +2619,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -2738,7 +2643,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -2764,7 +2668,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2797,7 +2700,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2844,7 +2746,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -2869,7 +2770,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2902,7 +2802,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -2970,7 +2869,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -2995,7 +2893,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -3021,7 +2918,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3054,7 +2950,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3101,7 +2996,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -3126,7 +3020,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3159,7 +3052,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3227,7 +3119,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -3252,7 +3143,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -3278,7 +3168,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3311,7 +3200,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3358,7 +3246,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -3383,7 +3270,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3416,7 +3302,6 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3484,7 +3369,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -3509,7 +3393,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -3535,7 +3418,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3568,7 +3450,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3615,7 +3496,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -3640,7 +3520,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3673,7 +3552,6 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3741,7 +3619,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -3766,7 +3643,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -3792,7 +3668,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3825,7 +3700,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3872,7 +3746,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -3897,7 +3770,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3930,7 +3802,6 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -3998,7 +3869,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -4023,7 +3893,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -4049,7 +3918,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4070,8 +3938,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4084,7 +3950,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4119,8 +3984,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
-            publicQuestionIds
-            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -4133,7 +3996,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -4158,7 +4020,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4179,8 +4040,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4193,7 +4052,6 @@ export const createDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4261,7 +4119,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -4286,7 +4143,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -4312,7 +4168,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4333,8 +4188,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4347,7 +4200,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4382,8 +4234,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
-            publicQuestionIds
-            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -4396,7 +4246,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -4421,7 +4270,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4442,8 +4290,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4456,7 +4302,6 @@ export const updateDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4524,7 +4369,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
       id
       userId
       publicPrivateType
-      finalPublicPrivateType
       title
       lowerCaseTitle
       version
@@ -4549,7 +4393,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -4575,7 +4418,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4596,8 +4438,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4610,7 +4450,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4645,8 +4484,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
               nextToken
               __typename
             }
-            publicQuestionIds
-            privateQuestionIds
             questionTemplatesCount
             questionTemplatesOrder
             createdAt
@@ -4659,7 +4496,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
             id
             userId
             publicPrivateType
-            finalPublicPrivateType
             title
             lowerCaseTitle
             version
@@ -4684,7 +4520,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4705,8 +4540,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                     nextToken
                     __typename
                   }
-                  publicQuestionIds
-                  privateQuestionIds
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4719,7 +4552,6 @@ export const deleteDraftQuestionTemplate = /* GraphQL */ `
                   id
                   userId
                   publicPrivateType
-                  finalPublicPrivateType
                   title
                   lowerCaseTitle
                   version
@@ -4785,7 +4617,6 @@ export const createGameSession = /* GraphQL */ `
   ) {
     createGameSession(input: $input, condition: $condition) {
       id
-      classroomId
       gameId
       startTime
       phaseOneTime
@@ -4793,7 +4624,6 @@ export const createGameSession = /* GraphQL */ `
       teams {
         items {
           id
-          globalStudentId
           name
           question {
             id
@@ -4872,7 +4702,6 @@ export const createGameSession = /* GraphQL */ `
       description
       title
       currentTimer
-      studentID
       sessionData
       questions {
         items {
@@ -4911,7 +4740,6 @@ export const updateGameSession = /* GraphQL */ `
   ) {
     updateGameSession(input: $input, condition: $condition) {
       id
-      classroomId
       gameId
       startTime
       phaseOneTime
@@ -4919,7 +4747,6 @@ export const updateGameSession = /* GraphQL */ `
       teams {
         items {
           id
-          globalStudentId
           name
           question {
             id
@@ -4998,7 +4825,6 @@ export const updateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
-      studentID
       sessionData
       questions {
         items {
@@ -5037,7 +4863,6 @@ export const deleteGameSession = /* GraphQL */ `
   ) {
     deleteGameSession(input: $input, condition: $condition) {
       id
-      classroomId
       gameId
       startTime
       phaseOneTime
@@ -5045,7 +4870,6 @@ export const deleteGameSession = /* GraphQL */ `
       teams {
         items {
           id
-          globalStudentId
           name
           question {
             id
@@ -5124,7 +4948,6 @@ export const deleteGameSession = /* GraphQL */ `
       description
       title
       currentTimer
-      studentID
       sessionData
       questions {
         items {
@@ -5244,7 +5067,6 @@ export const createTeam = /* GraphQL */ `
   ) {
     createTeam(input: $input, condition: $condition) {
       id
-      globalStudentId
       name
       question {
         id
@@ -5321,7 +5143,6 @@ export const updateTeam = /* GraphQL */ `
   ) {
     updateTeam(input: $input, condition: $condition) {
       id
-      globalStudentId
       name
       question {
         id
@@ -5398,7 +5219,6 @@ export const deleteTeam = /* GraphQL */ `
   ) {
     deleteTeam(input: $input, condition: $condition) {
       id
-      globalStudentId
       name
       question {
         id
@@ -5676,7 +5496,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -5702,7 +5521,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -5728,7 +5546,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -5757,7 +5574,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -5800,7 +5616,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -5825,7 +5640,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -5854,7 +5668,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -5912,7 +5725,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -5937,7 +5749,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -5963,7 +5774,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -5992,7 +5802,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6035,7 +5844,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -6060,7 +5868,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6089,7 +5896,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6162,7 +5968,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -6188,7 +5993,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -6214,7 +6018,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6243,7 +6046,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6286,7 +6088,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -6311,7 +6112,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6340,7 +6140,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6398,7 +6197,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -6423,7 +6221,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -6449,7 +6246,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6478,7 +6274,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6521,7 +6316,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -6546,7 +6340,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6575,7 +6368,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6648,7 +6440,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -6674,7 +6465,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -6700,7 +6490,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6729,7 +6518,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6772,7 +6560,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -6797,7 +6584,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6826,7 +6612,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6884,7 +6669,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -6909,7 +6693,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -6935,7 +6718,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -6964,7 +6746,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7007,7 +6788,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -7032,7 +6812,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7061,7 +6840,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7134,7 +6912,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -7160,7 +6937,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -7186,7 +6962,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7215,7 +6990,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7258,7 +7032,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -7283,7 +7056,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7312,7 +7084,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7370,7 +7141,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -7395,7 +7165,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -7421,7 +7190,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7450,7 +7218,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7493,7 +7260,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -7518,7 +7284,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7547,7 +7312,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7620,7 +7384,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -7646,7 +7409,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -7672,7 +7434,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7701,7 +7462,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7744,7 +7504,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -7769,7 +7528,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7798,7 +7556,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7856,7 +7613,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -7881,7 +7637,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -7907,7 +7662,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7936,7 +7690,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -7979,7 +7732,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8004,7 +7756,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8033,7 +7784,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8106,7 +7856,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -8132,7 +7881,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8158,7 +7906,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8187,7 +7934,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8230,7 +7976,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8255,7 +8000,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8284,7 +8028,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8342,7 +8085,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -8367,7 +8109,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8393,7 +8134,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8422,7 +8162,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8465,7 +8204,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8490,7 +8228,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8519,7 +8256,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8592,7 +8328,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -8618,7 +8353,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8644,7 +8378,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8661,8 +8394,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -8675,7 +8406,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8706,8 +8436,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
-              publicQuestionIds
-              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -8720,7 +8448,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8745,7 +8472,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8762,8 +8488,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -8776,7 +8500,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8822,8 +8545,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        publicQuestionIds
-        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -8836,7 +8557,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -8861,7 +8581,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8887,7 +8606,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8904,8 +8622,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -8918,7 +8634,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -8949,8 +8664,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
-              publicQuestionIds
-              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -8963,7 +8676,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -8988,7 +8700,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9005,8 +8716,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9019,7 +8728,6 @@ export const createDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9092,7 +8800,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -9118,7 +8825,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -9144,7 +8850,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9161,8 +8866,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9175,7 +8878,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9206,8 +8908,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
-              publicQuestionIds
-              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -9220,7 +8920,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -9245,7 +8944,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9262,8 +8960,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9276,7 +8972,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9322,8 +9017,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        publicQuestionIds
-        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -9336,7 +9029,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -9361,7 +9053,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -9387,7 +9078,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9404,8 +9094,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9418,7 +9106,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9449,8 +9136,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
-              publicQuestionIds
-              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -9463,7 +9148,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -9488,7 +9172,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9505,8 +9188,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9519,7 +9200,6 @@ export const updateDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9592,7 +9272,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -9618,7 +9297,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -9644,7 +9322,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9661,8 +9338,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9675,7 +9350,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9706,8 +9380,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
-              publicQuestionIds
-              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -9720,7 +9392,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -9745,7 +9416,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9762,8 +9432,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9776,7 +9444,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9822,8 +9489,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
           nextToken
           __typename
         }
-        publicQuestionIds
-        privateQuestionIds
         questionTemplatesCount
         questionTemplatesOrder
         createdAt
@@ -9836,7 +9501,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
         id
         userId
         publicPrivateType
-        finalPublicPrivateType
         title
         lowerCaseTitle
         version
@@ -9861,7 +9525,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -9887,7 +9550,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9904,8 +9566,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -9918,7 +9578,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -9949,8 +9608,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                 nextToken
                 __typename
               }
-              publicQuestionIds
-              privateQuestionIds
               questionTemplatesCount
               questionTemplatesOrder
               createdAt
@@ -9963,7 +9620,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
               id
               userId
               publicPrivateType
-              finalPublicPrivateType
               title
               lowerCaseTitle
               version
@@ -9988,7 +9644,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version
@@ -10005,8 +9660,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     phaseTwoTime
                     imageUrl
                     timesPlayed
-                    publicQuestionIds
-                    privateQuestionIds
                     questionTemplatesCount
                     questionTemplatesOrder
                     createdAt
@@ -10019,7 +9672,6 @@ export const deleteDraftGameQuestions = /* GraphQL */ `
                     id
                     userId
                     publicPrivateType
-                    finalPublicPrivateType
                     title
                     lowerCaseTitle
                     version

@@ -39,7 +39,7 @@ const GameCodeParagraph = styled(Typography)({
 
 function GameEndedGameCode({ gameCode }: GameEndedGameCodeProps) {
   return (
-    <GameCodeCard container>
+    <GameCodeCard>
         <GameCodeParagraph>Game Code</GameCodeParagraph>
         <GameCodeText>{gameCode}</GameCodeText>
     </GameCodeCard>

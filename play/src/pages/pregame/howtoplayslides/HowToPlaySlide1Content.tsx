@@ -41,10 +41,10 @@ export default function HowToPlaySlide1Content() {
       </OverlayContainerStyled>
       <ScreenshotImageStyled src={HowToPlay_Screenshot1} alt="monster" />
       <Typography
-        variant="h2"
+        variant="textLabel"
         sx={{
           textAlign: 'center',
-          paddingTop: `${theme.sizing.mediumPadding}px`,
+          paddingTop: '54px',
           width: '250px',
         }}
       >

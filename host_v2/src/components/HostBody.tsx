@@ -1,11 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Grid} from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
+import type { Swiper as SwiperClass } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { ITeam, IQuestion } from '@righton/networking';
 import { ScreenSize } from '../lib/HostModels';
 import CurrentStudents from './CurrentStudents';
+import ResultsStudents from './ResultsStudents';
 import NoPlayersLobby from './NoPlayersLobby';
 import QuestionList from './LobbyQuestionSwipe';
 import {
@@ -36,23 +39,57 @@ const BodyContentAreaSingleColumnStyled = styled(
 }));
 
 interface HostBodyProps {
-  teams: ITeam[], 
-  questions: IQuestion[], 
-  title: string, 
-  currentQuestionIndex: number, 
-  screenSize: ScreenSize
+  teams: ITeam[],
+  questions: IQuestion[],
+  title: string,
+  currentQuestionIndex: number,
+  screenSize: ScreenSize,
+  onSlideChange?: (index: number) => void,
+  // StartGame (lobby) renders CurrentStudents; the results screens (Leaderboard,
+  // InterimLeaderboard) opt into the forked ResultsStudents via isResults.
+  isResults?: boolean,
+  // seconds to hold ResultsStudents' card grow animation until the page's entrance animations
+  // finish; forwarded to the students component. Only meaningful with isResults.
+  entranceDelay?: number,
 }
 
-export default function HostBody({ 
-  teams, 
-  questions, 
-  title, 
-  currentQuestionIndex, 
+export default function HostBody({
+  teams,
+  questions,
+  title,
+  currentQuestionIndex,
   screenSize,
+  onSlideChange,
+  isResults = false,
+  entranceDelay = 0,
 }: HostBodyProps) {
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
-  switch(screenSize){
+  const StudentsComponent = isResults ? ResultsStudents : CurrentStudents;
+  // derive a 3-way layout size so mid screens (md–lg) get a real two-column layout with the
+  // 32px medium padding (matching GameInProgress/PrepareGame) instead of the cramped large
+  // padding. children keep the page-provided screenSize so their internal rendering is
+  // unchanged.
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const layoutSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE
+    : isMediumScreen
+      ? ScreenSize.MEDIUM
+      : ScreenSize.SMALL;
+  // lobby (CurrentStudents) always renders its own count + sort row, and falls back to the
+  // waiting-monsters NoPlayersLobby internally when empty — so the row/sort show at 0 players too.
+  // the results screens keep the old swap: ResultsStudents when populated, NoPlayersLobby when empty.
+  const isEmpty = teams.length === 0 || !teams;
+  let studentsContent;
+  if (!isResults) {
+    studentsContent = <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} questionsCount={questions.length} screenSize={screenSize} />;
+  } else if (isEmpty) {
+    studentsContent = <NoPlayersLobby questionsCount={questions.length} screenSize={screenSize} />;
+  } else {
+    studentsContent = <StudentsComponent teams={teams} currentQuestionIndex={currentQuestionIndex} entranceDelay={entranceDelay} />;
+  }
+  switch(layoutSize){
     case ScreenSize.SMALL:
       return (
         <BodyContentAreaSingleColumnStyled>
@@ -65,15 +102,16 @@ export default function HostBody({
                   bulletActiveClass: 'swiper-pagination-bullet-active',
                   clickable: true,
                   renderBullet(index: number, className: string,) {
-                    return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
+                    return `<span class="${className}" style="width:30px; height:10px; border-radius:8px" ></span>`;
                   },
                 }}
                 ref={swiperRef}
-                spaceBetween={`${theme.sizing.mdPadding}px`}
-                style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+                onSlideChange={(swiper: SwiperClass) => onSlideChange?.(swiper.activeIndex)}
+                spaceBetween={`${theme.sizing.xSmPadding}px`}
+                style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.mdPadding}px`, paddingRight: `${theme.sizing.mdPadding}px`}}
               > 
             <SwiperSlide style={{width: '100%', height: '100%'}}>
-              {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex}/>}
+              {studentsContent}
             </SwiperSlide>
             <SwiperSlide style={{width: '100%', height: '100%'  }}>
               <QuestionList questions={questions} title ={title}/> 
@@ -84,9 +122,9 @@ export default function HostBody({
     case ScreenSize.LARGE:
       default:
         return (
-          <StartGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+          <StartGameContentAreaDoubleColumnStyled container screenSize={layoutSize} style={{gap: '12px'}}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
+                {studentsContent}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
               <QuestionList questions={questions} title ={title}/> 

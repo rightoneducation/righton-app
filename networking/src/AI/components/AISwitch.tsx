@@ -16,7 +16,7 @@ export default function AISwitch({
 }: AISwitchProps) {
   return (
     <StyledAISwitch 
-      defaultChecked={false}
+      defaultChecked
       value={switchValue}
       onChange={(e: any) => handleSwitchChange(e.target.checked)}
     />

@@ -9,7 +9,6 @@ import {
   styled,
 } from '@mui/material';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
-import { ScreenSize } from '../CentralModels';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -44,14 +43,7 @@ export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-type CreateQuestionBoxContainerProps = {
-  screenSize: ScreenSize;
-};
-
-export const CreateQuestionBoxContainer = styled(Box, {
-  shouldForwardProp: (prop: string) =>
-    prop !== 'screenSize',
-})<CreateQuestionBoxContainerProps>(({ screenSize, theme }) => ({
+export const CreateQuestionBoxContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -61,9 +53,8 @@ export const CreateQuestionBoxContainer = styled(Box, {
   gap: `${theme.sizing.lgPadding}px`,
   zIndex: 1,
   position: 'relative',
-  paddingLeft: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`, 
-  paddingRight: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : `${theme.sizing.xLgPadding}px`,
-  paddingBottom: `${theme.sizing.xLgPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
   flexGrow: 1,
   overflow: 'auto',
@@ -76,6 +67,7 @@ export const CreateQuestionBoxContainer = styled(Box, {
 }));
 
 interface BaseCardStyledProps {
+  isHighlight: boolean;
   isCardComplete: boolean;
   isClone?: boolean;
   dropShadow?: boolean;
@@ -83,42 +75,25 @@ interface BaseCardStyledProps {
 
 export const BaseCardStyled = styled(Paper, {
   shouldForwardProp: (prop) =>
+    prop !== 'isHighlight' &&
     prop !== 'isCardComplete' &&
     prop !== 'dropShadow' &&
     prop !== 'isClone',
-})<BaseCardStyledProps>(({ theme, isCardComplete, isClone }) => ({
+})<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete, isClone }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
   flexDirection: 'column',
-  gap: '16px',
+  gap: `${theme.sizing.xSmPadding}px`,
   background: '#FFFFFF',
   borderRadius: `8px`,
   boxSizing: 'border-box',
   height: 'fit-content',
-}));
-
-export const ViewQuestionBaseCardStyled = styled(Paper)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  alignItems: 'flex-start',
-  background: '#FFFFFF',
-  borderRadius: `8px`,
-  boxSizing: 'border-box',
-  height: 'fit-content',
-}));
-
-export const ViewQuestionContentContainerStyled = styled(Box)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: `${theme.sizing.smPadding}px`,
-}));
-
-export const QuestionTextStyled = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Poppins',
-  fontSize: '20px',
-  fontWeight: 'bold',
+  boxShadow: isHighlight
+    ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}`
+    : '',
+  opacity: isCardComplete && !isClone ? 0.6 : 1,
+  transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
 
 export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({

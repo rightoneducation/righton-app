@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import { I18nextProvider } from 'react-i18next';
 import HeaderContent from './HeaderContent';
-import Theme from '../lib/Theme';
+import { RightOnTheme as Theme } from '@righton/networking';
 import i18n from '../i18n.mock';
 
 export default {

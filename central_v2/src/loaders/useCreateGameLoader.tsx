@@ -1,12 +1,8 @@
 import React from 'react';
 import { useLoaderData } from 'react-router-dom';
-import type { CreateGameDraftLocalData } from './CreateGameLoader';
+import { CreateGameLocalData } from '../lib/CentralModels';
 
-export default function useCreateGameLoader(): CreateGameDraftLocalData {
-  const retrievedData = useLoaderData() as CreateGameDraftLocalData | undefined;
-  return {
-    draftGame: retrievedData?.draftGame ?? null,
-    draftQuestionsList: retrievedData?.draftQuestionsList ?? null,
-    phaseTime: retrievedData?.phaseTime ?? null,
-  };
+export default function useCreateGameLoader(): CreateGameLocalData {
+  const retreivedData = useLoaderData() as CreateGameLocalData;
+  return { gameTemplate: retreivedData.gameTemplate };
 }

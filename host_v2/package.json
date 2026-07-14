@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+    "@righton/networking": "*",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/material": "^5.15.0",
-    "@mui/styled-engine-sc": "^6.0.0-alpha.8",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -19,8 +20,9 @@
     "framer-motion": "^11.3.21",
     "i18next": "^23.7.11",
     "i18next-browser-languagedetector": "^7.2.0",
-    "i18next-http-backend": "^3.0.5",
-    "lodash": "^4.17.23",
+    "i18next-http-backend": "^2.4.2",
+    "lodash": "^4.17.21",
+    "posthog-js": "^1.351.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
@@ -28,17 +30,17 @@
     "react-router-dom": "^6.21.0",
     "react-scripts": "5.0.1",
     "react-spring": "^9.7.3",
-    "storybook": "^10.2.1",
-    "styled-components": "^6.1.1",
+    "storybook": "^7.6.5",
+    "styled-components": "^5.3.9",
     "swiper": "^11.1.1",
     "typescript": "^4.9.5",
-    "uuid": "^14.0.0",
+    "uuid": "^9.0.1",
     "victory": "^36.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "yarn --cwd ../networking build && react-scripts start",
+    "build": "yarn --cwd ../networking build && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
@@ -70,7 +72,7 @@
     "@storybook/react-webpack5": "^7.6.5",
     "@storybook/test": "^7.6.5",
     "chromatic": "^10.1.0",
-    "eslint": "^9.26.0",
+    "eslint": "^8.56.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.8.0",
@@ -84,12 +86,7 @@
     "eslint-plugin-storybook": "^0.6.15",
     "prettier": "^3.1.1",
     "prop-types": "^15.8.1",
-    "webpack": "^5.105.2"
-  },
-  "resolutions": {
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
-    "styled-components": "^5",
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+    "webpack": "^5.94.0"
   },
   "prettier": {
     "singleQuote": true

@@ -1,9 +1,8 @@
 ---
 name: Host 1.2 Bug Report Template
 about: Bug Report Template
-title: "[Host 1.2 QA] - Bug Report #[Add number]- [Add Descriptive Title] - Priority
-  - [Replace with P0-P4]"
-labels: bug
+title: 'Bug Report #[Add number] - [Add Descriptive Title] - [Assign Priority of P0-P4]'
+labels: host_v2, play_v2
 assignees: drewjhart
 type: Bug
 

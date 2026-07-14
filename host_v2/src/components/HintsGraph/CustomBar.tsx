@@ -5,7 +5,7 @@ import { styled, useTheme } from '@mui/material/styles';
 const HighlightRectangle = styled('rect')({
   cursor: 'pointer', 
   '&:hover': {
-    fill: 'rgba(255, 255, 255, 0.2)',
+    fill:'rgba(235, 255, 218, 0.4)'
   },
 });
 
@@ -38,7 +38,7 @@ export default function CustomBar( props: any ) {
           height={height}
           fill={
             isSelected
-            ? 'rgba(255, 255, 255, 0.2)'
+            ? 'rgba(235, 255, 218, 0.4)'
             : 'transparent'
           }
           stroke="transparent"
@@ -47,12 +47,6 @@ export default function CustomBar( props: any ) {
           onClick={() =>
             handleGraphClick(index)
           }
-          style={{ 
-            cursor: 'pointer',
-            '&:hover': {
-              fill: 'rgba(255, 255, 255, 0.2)',
-            }, 
-          }}
         />
       )}
     </g>

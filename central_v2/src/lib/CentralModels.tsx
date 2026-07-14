@@ -34,7 +34,6 @@ export enum ScreenType {
   CREATEQUESTION,
   CLONEQUESTION,
   EDITQUESTION,
-  VIEWQUESTION,
   CONFIRMATION,
   NEXTSTEP,
   USERPROFILE,
@@ -70,36 +69,6 @@ export enum GameQuestionType {
   QUESTION,
 }
 
-export enum ModalStateType {
-  NULL,
-  DELETE,
-  DELETING,
-  DISCARD,
-  PUBLISH,
-  LOADING,
-  SAVING,
-  PUBLISHING,
-  CONFIRM,
-  CREATEQUESTION,
-  DUPLICATE,
-  UPDATE, 
-  GAMEEDITQUESTION,
-  ADDTOGAME
-}
-
-export enum ConfirmStateType {
-  NULL,
-  DRAFT,
-  PUBLISHED,
-  UPDATED,
-  FAVORITED
-}
-
-export type ModalObject = {
-  modalState: ModalStateType;
-  confirmState: ConfirmStateType;
-}
-
 export type CallType = {
   gameQuestionType: GameQuestionType;
   publicPrivateType: PublicPrivateType;
@@ -122,8 +91,6 @@ export enum TemplateType {
 
 // key for storage to localStorage
 export const StorageKey = 'rightOnCentral';
-export const StorageKeyIsFirstCreate = 'isFirstCreate';
-export const StorageKeyCreateGame = 'rightOnCentralCreateGame';
 
 // type that shapes retreived storage for createQuestion
 export type CreateQuestionLocalData = {
@@ -228,7 +195,7 @@ export const initCentralDataState: ICentralDataState = {
   publicPrivate: PublicPrivateType.PUBLIC,
   sort: {
     field: SortType.listGameTemplates,
-    direction: SortDirection.DESC,
+    direction: SortDirection.ASC,
   },
 };
 
