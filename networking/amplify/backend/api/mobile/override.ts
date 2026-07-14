@@ -49,7 +49,7 @@ export function override(resources: AmplifyApiGraphQlResourceStackTemplate, ampl
   console.log(`OVERRIDE: using GameSession own auth fn "${getGameSessionAuthKey}" as replacement slot-0`);
 
   // 2) Repoint slot 0 of the two index-query resolvers to that same-stack auth fn.
-  const targetFields = new Set(['gameSessionByCode', 'gameSessionByState']);
+  const targetFields = new Set(['gameSessionByCode', 'gameSessionByState', 'gameSessionByClassroomId']);
   for (const [key, resolver] of Object.entries(resolvers)) {
     const fieldName: string = resolver?.fieldName;
     const typeName: string = resolver?.typeName;
