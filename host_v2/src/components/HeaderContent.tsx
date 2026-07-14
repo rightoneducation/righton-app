@@ -95,6 +95,7 @@ export default function HeaderContent({
                 totalTime={totalTime}
                 isAddTime={isAddTime}
                 localGameSession={localGameSession}
+                disableBarTransition
               />
         
         </Grid>
