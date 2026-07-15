@@ -48,6 +48,10 @@ interface UseCentralDataManagerReturnProps {
     nextToken?: string | null,
     isFromLibrary?: boolean,
     isLoadMoreLibrary?: boolean,
+    sortOverride?: {
+      field: SortType;
+      direction: SortDirection | null;
+    } | null,
     gameQuestionOverride?: GameQuestionType,
   ) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
@@ -335,6 +339,10 @@ export default function useCentralDataManager({
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
+    sortOverride?: {
+      field: SortType;
+      direction: SortDirection | null;
+    } | null,
     gameQuestionOverride?: GameQuestionType,
   ) => {
     if (!isFromLibrary)
@@ -343,17 +351,25 @@ export default function useCentralDataManager({
       type: 'SET_PUBLIC_PRIVATE',
       payload: newPublicPrivate,
     });
+    const inputSortField = sortOverride?.field ?? centralData.sort.field;
+    const inputSortDirection = sortOverride?.direction ?? centralData.sort.direction;
     const effectiveGq = gameQuestionOverride ?? gameQuestion;
     switch (effectiveGq) {
-      case GameQuestionType.QUESTION:
+      case GameQuestionType.QUESTION: {
+        const sortField = (isFromLibrary && inputSortField === SortType.listQuestionTemplates)
+          ? SortType.listQuestionTemplatesByDate
+          : inputSortField;
+        const sortDirection = (isFromLibrary && inputSortField === SortType.listQuestionTemplates)
+          ? SortDirection.DESC
+          : (inputSortDirection ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
             newPublicPrivate,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             centralData.selectedGrades ?? [],
             null,
             (isFromLibrary && newPublicPrivate === PublicPrivateType.PUBLIC) ?? false,
@@ -396,16 +412,23 @@ export default function useCentralDataManager({
             }
           });
         break;
+      }
       case GameQuestionType.GAME:
-      default:
+      default: {
+        const sortField = (isFromLibrary && inputSortField === SortType.listGameTemplates)
+          ? SortType.listGameTemplatesByDate
+          : inputSortField;
+        const sortDirection = (isFromLibrary && inputSortField === SortType.listGameTemplates)
+          ? SortDirection.DESC
+          : (inputSortDirection ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             newPublicPrivate,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             centralData.selectedGrades ?? [],
             null,
             (isFromLibrary && newPublicPrivate === PublicPrivateType.PUBLIC) ?? false,
@@ -447,6 +470,7 @@ export default function useCentralDataManager({
               }
           });
         break;
+      }
     }
   };
 
@@ -552,15 +576,21 @@ export default function useCentralDataManager({
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     const effectiveGq = gameQuestionOverride ?? gameQuestion;
     switch (effectiveGq) {
-      case GameQuestionType.QUESTION:
+      case GameQuestionType.QUESTION: {
+        const sortField = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+          ? SortType.listQuestionTemplatesByDate
+          : centralData.sort.field;
+        const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+          ? SortDirection.DESC
+          : (centralData.sort.direction ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
             PublicPrivateType.DRAFT,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             [...centralData.selectedGrades],
             null,
           )
@@ -580,16 +610,23 @@ export default function useCentralDataManager({
             });
           });
         break;
+      }
       case GameQuestionType.GAME:
-      default:
+      default: {
+        const sortField = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+          ? SortType.listGameTemplatesByDate
+          : centralData.sort.field;
+        const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+          ? SortDirection.DESC
+          : (centralData.sort.direction ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             PublicPrivateType.DRAFT,
             12,
             nextToken ?? null,
             libraryTab ? '' : centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             [...centralData.selectedGrades],
             null,
           )
@@ -609,6 +646,7 @@ export default function useCentralDataManager({
             });
           });
         break;
+      }
     }
   };
 
@@ -629,14 +667,20 @@ export default function useCentralDataManager({
           user.favoriteQuestionTemplateIds &&
           user.favoriteQuestionTemplateIds.length > 0
         ) {
+          const sortField = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+            ? SortType.listQuestionTemplatesByDate
+            : centralData.sort.field;
+          const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+            ? SortDirection.DESC
+            : (centralData.sort.direction ?? SortDirection.ASC);
           apiClients?.centralDataManager
             ?.searchForQuestionTemplates(
               PublicPrivateType.PUBLIC,
               null,
               nextToken ?? null,
               searchTerms ?? centralData.searchTerms,
-              centralData.sort.direction ?? SortDirection.ASC,
-              centralData.sort.field,
+              sortDirection,
+              sortField,
               [...centralData.selectedGrades],
               user.favoriteQuestionTemplateIds,
             )
@@ -670,14 +714,20 @@ export default function useCentralDataManager({
           user.favoriteGameTemplateIds &&
           user.favoriteGameTemplateIds.length > 0
         ) {
+          const sortField = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+            ? SortType.listGameTemplatesByDate
+            : centralData.sort.field;
+          const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+            ? SortDirection.DESC
+            : (centralData.sort.direction ?? SortDirection.ASC);
           apiClients?.centralDataManager
             ?.searchForGameTemplates(
               PublicPrivateType.PUBLIC,
               null,
               nextToken ?? null,
               searchTerms ?? centralData.searchTerms,
-              centralData.sort.direction ?? SortDirection.ASC,
-              centralData.sort.field,
+              sortDirection,
+              sortField,
               [...centralData.selectedGrades],
               user.favoriteGameTemplateIds,
             )
@@ -855,6 +905,10 @@ export default function useCentralDataManager({
     nextToken?: string | null,
     isFromLibray?: boolean,
     isLoadMoreLibrary?: boolean,
+    sortOverride?: {
+      field: SortType;
+      direction: SortDirection | null;
+    } | null,
     gameQuestionOverride?: GameQuestionType,
   ) => {
     const effectiveGameQuestion = gameQuestionOverride ?? gameQuestion;
@@ -909,6 +963,7 @@ export default function useCentralDataManager({
           searchTerms,
           nextToken,
           isFromLibray ?? false,
+          sortOverride,
           effectiveGameQuestion,
         );
         break;
@@ -920,6 +975,7 @@ export default function useCentralDataManager({
           searchTerms,
           nextToken,
           isFromLibray ?? false,
+          sortOverride,
           effectiveGameQuestion,
         );
         break;
