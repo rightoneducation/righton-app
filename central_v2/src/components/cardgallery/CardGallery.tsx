@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Box } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import {
   IGameTemplate,
   IQuestionTemplate,
@@ -102,7 +101,7 @@ function MostPopularGamesComponent({
             const isFavorite =
               favoriteGameTemplateIds?.includes(game.id) || false;
             return (
-              <Grid item key={`${uuidv4()}${game.id}`}>
+              <Grid item key={game.id}>
                 <StyledGameCard
                   screenSize={screenSize}
                   game={game}
@@ -134,7 +133,6 @@ function MostPopularQuestionsComponent({
   handleViewButtonClick,
   isCreateGame,
 }: MostPopularComponentProps<IQuestionTemplate>) {
-  const array = Array.from({ length: numColumns });
   const navigate = useNavigate();
   const elementsLength = Object.values(mostPopularElements).reduce(
     (acc, column) => acc + column.length,
@@ -168,9 +166,13 @@ function MostPopularQuestionsComponent({
               </Grid>
             );
           })
-        : Array.from({ length: numColumns }).map((_, index) => {
+        : Object.keys(mostPopularElements)
+            .map(Number)
+            .sort((a, b) => a - b)
+            .map((columnIndex) => {
+            const columnQuestions = mostPopularElements[columnIndex] || [];
             return (
-              <Grid item xs={12} md={4} lg key={uuidv4()}>
+              <Grid item xs={12} md={4} lg key={`question-column-${columnIndex}`}>
                 <Box
                   style={{
                     display: 'flex',
@@ -178,14 +180,14 @@ function MostPopularQuestionsComponent({
                     gap: '16px',
                   }}
                 >
-                  {mostPopularElements[index] &&
-                    mostPopularElements[index].length > 0 &&
-                    mostPopularElements[index].map((question) => {
+                  {columnQuestions.length > 0 &&
+                    columnQuestions.map((question) => {
                       const isFavorite =
                         favoriteQuestionTemplateIds?.includes(question.id) ||
                         false;
                       return (
                         <StyledQuestionCard
+                          key={question.id}
                           question={question}
                           id={question.id}
                           title={question.title}
@@ -279,7 +281,7 @@ export default function CardGallery<
           galleryType={galleryType}
         />
       )}
-      {elementType === ElementType.GAME ? (
+      {elementType === ElementType.GAME && (
         <MostPopularGamesComponent
           screenSize={screenSize}
           isLoading={isLoading ?? false}
@@ -294,7 +296,8 @@ export default function CardGallery<
             handleViewButtonClick as (element: IGameTemplate) => void
           }
         />
-      ) : (
+      )}
+      {elementType !== ElementType.GAME && (
         <MostPopularQuestionsComponent
           isLoading={isLoading ?? false}
           isCreateGame={isCreateGame}

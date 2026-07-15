@@ -18,10 +18,10 @@ export interface ICentralDataManagerAPIClient {
     userId?: string
   ) => Promise<{ nextToken: string | null, games: IGameTemplate[] }>;
   searchForQuestionTemplates: (
-    type: PublicPrivateType, 
-    limit: number | null, 
-    nextToken: string | null, 
-    search: string, 
+    type: PublicPrivateType,
+    limit: number | null,
+    nextToken: string | null,
+    search: string | null,
     sortDirection: SortDirection, 
     sortType: SortType, 
     gradeTargets: GradeTarget[],
