@@ -4616,6 +4616,7 @@ export const onCreateGameSession = /* GraphQL */ `
   ) {
     onCreateGameSession(filter: $filter) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -4623,6 +4624,7 @@ export const onCreateGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           question {
             id
@@ -4701,6 +4703,7 @@ export const onCreateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -4738,6 +4741,7 @@ export const onUpdateGameSession = /* GraphQL */ `
   ) {
     onUpdateGameSession(filter: $filter) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -4745,6 +4749,7 @@ export const onUpdateGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           question {
             id
@@ -4823,6 +4828,7 @@ export const onUpdateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -4860,6 +4866,7 @@ export const onDeleteGameSession = /* GraphQL */ `
   ) {
     onDeleteGameSession(filter: $filter) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -4867,6 +4874,7 @@ export const onDeleteGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           question {
             id
@@ -4945,6 +4953,7 @@ export const onDeleteGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -4980,6 +4989,7 @@ export const onCreateTeam = /* GraphQL */ `
   subscription OnCreateTeam($filter: ModelSubscriptionTeamFilterInput) {
     onCreateTeam(filter: $filter) {
       id
+      globalStudentId
       name
       question {
         id
@@ -5053,6 +5063,7 @@ export const onUpdateTeam = /* GraphQL */ `
   subscription OnUpdateTeam($filter: ModelSubscriptionTeamFilterInput) {
     onUpdateTeam(filter: $filter) {
       id
+      globalStudentId
       name
       question {
         id
@@ -5126,6 +5137,7 @@ export const onDeleteTeam = /* GraphQL */ `
   subscription OnDeleteTeam($filter: ModelSubscriptionTeamFilterInput) {
     onDeleteTeam(filter: $filter) {
       id
+      globalStudentId
       name
       question {
         id
@@ -9636,6 +9648,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
   subscription OnGameSessionUpdatedById($id: ID!) {
     onGameSessionUpdatedById(id: $id) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -9643,6 +9656,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           question {
             id
@@ -9721,6 +9735,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -9792,6 +9807,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `
   subscription OnTeamCreateByGameSessionId($gameSessionTeamsId: ID!) {
     onTeamCreateByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
       id
+      globalStudentId
       name
       question {
         id
@@ -9865,6 +9881,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `
   subscription OnTeamDeleteByGameSessionId($gameSessionTeamsId: ID!) {
     onTeamDeleteByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
       id
+      globalStudentId
       name
       question {
         id
@@ -9938,6 +9955,7 @@ export const onTeamUpdateByGameSessionId = /* GraphQL */ `
   subscription OnTeamUpdateByGameSessionId($gameSessionTeamsId: ID!) {
     onTeamUpdateByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
       id
+      globalStudentId
       name
       question {
         id
