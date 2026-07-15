@@ -9157,6 +9157,7 @@ export const getGameSession = /* GraphQL */ `
   query GetGameSession($id: ID!) {
     getGameSession(id: $id) {
       id
+      classroomId
       gameId
       startTime
       phaseOneTime
@@ -9164,6 +9165,7 @@ export const getGameSession = /* GraphQL */ `
       teams {
         items {
           id
+          globalStudentId
           name
           question {
             id
@@ -9242,6 +9244,7 @@ export const getGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      studentID
       sessionData
       questions {
         items {
@@ -9282,6 +9285,7 @@ export const listGameSessions = /* GraphQL */ `
     listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        classroomId
         gameId
         startTime
         phaseOneTime
@@ -9289,6 +9293,7 @@ export const listGameSessions = /* GraphQL */ `
         teams {
           items {
             id
+            globalStudentId
             name
             question {
               id
@@ -9367,6 +9372,146 @@ export const listGameSessions = /* GraphQL */ `
         description
         title
         currentTimer
+        studentID
+        sessionData
+        questions {
+          items {
+            id
+            text
+            choices
+            answerSettings
+            answerData
+            hints
+            imageUrl
+            instructions
+            standard
+            cluster
+            domain
+            grade
+            order
+            isConfidenceEnabled
+            isShortAnswerEnabled
+            isHintEnabled
+            gameSessionId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const gameSessionByClassroomId = /* GraphQL */ `
+  query GameSessionByClassroomId(
+    $classroomId: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGameSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    gameSessionByClassroomId(
+      classroomId: $classroomId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classroomId
+        gameId
+        startTime
+        phaseOneTime
+        phaseTwoTime
+        teams {
+          items {
+            id
+            globalStudentId
+            name
+            question {
+              id
+              text
+              choices
+              answerSettings
+              answerData
+              hints
+              imageUrl
+              instructions
+              standard
+              cluster
+              domain
+              grade
+              order
+              isConfidenceEnabled
+              isShortAnswerEnabled
+              isHintEnabled
+              gameSessionId
+              __typename
+            }
+            teamMembers {
+              items {
+                id
+                isFacilitator
+                answers {
+                  items {
+                    id
+                    isCorrect
+                    isSubmitted
+                    isShortAnswerEnabled
+                    currentState
+                    currentQuestionIndex
+                    questionId
+                    teamMemberAnswersId
+                    teamAnswersId
+                    teamName
+                    text
+                    answer
+                    confidenceLevel
+                    hint
+                    createdAt
+                    updatedAt
+                    __typename
+                  }
+                  nextToken
+                  __typename
+                }
+                deviceId
+                createdAt
+                updatedAt
+                teamTeamMembersId
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            score
+            selectedAvatarIndex
+            createdAt
+            updatedAt
+            gameSessionTeamsId
+            teamQuestionId
+            teamQuestionOrder
+            teamQuestionGameSessionId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        currentQuestionIndex
+        currentState
+        gameCode
+        isAdvancedMode
+        imageUrl
+        description
+        title
+        currentTimer
+        studentID
         sessionData
         questions {
           items {
@@ -9418,6 +9563,7 @@ export const gameSessionByState = /* GraphQL */ `
     ) {
       items {
         id
+        classroomId
         gameId
         startTime
         phaseOneTime
@@ -9425,6 +9571,7 @@ export const gameSessionByState = /* GraphQL */ `
         teams {
           items {
             id
+            globalStudentId
             name
             question {
               id
@@ -9503,6 +9650,7 @@ export const gameSessionByState = /* GraphQL */ `
         description
         title
         currentTimer
+        studentID
         sessionData
         questions {
           items {
@@ -9554,6 +9702,7 @@ export const gameSessionByCode = /* GraphQL */ `
     ) {
       items {
         id
+        classroomId
         gameId
         startTime
         phaseOneTime
@@ -9561,6 +9710,7 @@ export const gameSessionByCode = /* GraphQL */ `
         teams {
           items {
             id
+            globalStudentId
             name
             question {
               id
@@ -9639,6 +9789,7 @@ export const gameSessionByCode = /* GraphQL */ `
         description
         title
         currentTimer
+        studentID
         sessionData
         questions {
           items {
@@ -9743,6 +9894,7 @@ export const getTeam = /* GraphQL */ `
   query GetTeam($id: ID!) {
     getTeam(id: $id) {
       id
+      globalStudentId
       name
       question {
         id
@@ -9821,6 +9973,97 @@ export const listTeams = /* GraphQL */ `
     listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        globalStudentId
+        name
+        question {
+          id
+          text
+          choices
+          answerSettings
+          answerData
+          hints
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          order
+          isConfidenceEnabled
+          isShortAnswerEnabled
+          isHintEnabled
+          gameSessionId
+          __typename
+        }
+        teamMembers {
+          items {
+            id
+            isFacilitator
+            answers {
+              items {
+                id
+                isCorrect
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
+                questionId
+                teamMemberAnswersId
+                teamAnswersId
+                teamName
+                text
+                answer
+                confidenceLevel
+                hint
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            deviceId
+            createdAt
+            updatedAt
+            teamTeamMembersId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        score
+        selectedAvatarIndex
+        createdAt
+        updatedAt
+        gameSessionTeamsId
+        teamQuestionId
+        teamQuestionOrder
+        teamQuestionGameSessionId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const teamByGlobalStudentId = /* GraphQL */ `
+  query TeamByGlobalStudentId(
+    $globalStudentId: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTeamFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    teamByGlobalStudentId(
+      globalStudentId: $globalStudentId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        globalStudentId
         name
         question {
           id

@@ -106,7 +106,7 @@
         },
         "createGameTest": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
-          "s3Key": "amplify-builds/createGameTest-30466b58704849334374-build.zip"
+          "s3Key": "amplify-builds/createGameTest-595763633243736d754f-build.zip"
         },
         "mobile6060603cPreSignup": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
