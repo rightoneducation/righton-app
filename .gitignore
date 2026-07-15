@@ -90,3 +90,12 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+# MCP Runtime artifacts
+**/logs/
+**/*.log
+**/.env
+**/.env.*
+**/*.tar
+*.pem
+*.key

@@ -163,3 +163,75 @@ export const deleteQuestions = /* GraphQL */ `
     }
   }
 `;
+export const createRefinedData = /* GraphQL */ `
+  mutation CreateRefinedData(
+    $input: CreateRefinedDataInput!
+    $condition: ModelRefinedDataConditionInput
+  ) {
+    createRefinedData(input: $input, condition: $condition) {
+      id
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateRefinedData = /* GraphQL */ `
+  mutation UpdateRefinedData(
+    $input: UpdateRefinedDataInput!
+    $condition: ModelRefinedDataConditionInput
+  ) {
+    updateRefinedData(input: $input, condition: $condition) {
+      id
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteRefinedData = /* GraphQL */ `
+  mutation DeleteRefinedData(
+    $input: DeleteRefinedDataInput!
+    $condition: ModelRefinedDataConditionInput
+  ) {
+    deleteRefinedData(input: $input, condition: $condition) {
+      id
+      originalText
+      targetComplexity
+      pastAnalysis
+      refinedText
+      analysisData
+      assignedComplexity
+      finalReasoning
+      analysisDataExplanation
+      complexityMatchesTarget
+      complexityMatchExplanation
+      promptContent
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

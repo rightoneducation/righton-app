@@ -1,0 +1,14 @@
+{
+  "name": "microcoachinitialevaluator",
+  "version": "2.0.0",
+  "description": "Grade level appropriateness evaluator using Learning Commons SDK",
+  "main": "index.mjs",
+  "type": "module",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@learning-commons/evaluators": "^0.4.0",
+    "ai": "^6.0.0",
+    "@ai-sdk/google": "^3.0.0",
+    "@aws-sdk/client-secrets-manager": "^3.600.0"
+  }
+}

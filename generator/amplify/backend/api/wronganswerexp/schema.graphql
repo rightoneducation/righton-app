@@ -43,3 +43,26 @@ type Questions @model
   wrongAnswers: AWSJSON!
   version: String!
 }
+
+type RefinedData @model 
+@auth(
+ rules: [
+   { allow: public, provider: iam  },
+ ]
+)
+{
+  id: ID!
+  originalText: String!
+  targetComplexity: String!
+  pastAnalysis: String!
+  refinedText: String!
+  analysisData: String!
+  assignedComplexity: String!
+  finalReasoning: String!
+  analysisDataExplanation: String!
+  complexityMatchesTarget: Boolean!
+  complexityMatchExplanation: String!
+  promptContent: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}

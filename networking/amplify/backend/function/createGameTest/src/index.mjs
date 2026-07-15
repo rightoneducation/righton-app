@@ -272,6 +272,7 @@ mutation CreateGameSession(
   createGameSession(input: $input, condition: $condition) {
     id
     gameId
+    classroomId
     sessionData
     startTime
     phaseOneTime
@@ -462,9 +463,10 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
 
     // createGameSession
     const gameSessionId = uuidv4();
-    console.log(`Creating game session with ID: ${gameSessionId}`);
+    const classroomId = uuidv4();
+    console.log(`Creating game session with ID: ${gameSessionId}, classroom ID: ${classroomId}`);
 
-    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: gameSessionId, ...game, gameCode: uniqueGameCode }});
+    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: gameSessionId, ...game, gameCode: uniqueGameCode, classroomId }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
     console.log('Game session creation response:', JSON.stringify(gameSessionJson, null, 2));

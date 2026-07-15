@@ -397,15 +397,17 @@ input CreateGameSessionFromTemplateInput {
   publicPrivate: String!
 }
 
-type GameSession @model 
+type GameSession @model
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
 {
   id: ID!
+  classroomId: String @index(name: "byClassroomId", queryField: "gameSessionByClassroomId")
   gameId: ID!
   startTime: String
   phaseOneTime: Int!
@@ -420,6 +422,7 @@ type GameSession @model
   description: String
   title: String
   currentTimer: Int
+  studentID: Int
   sessionData: AWSJSON
   questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
 }
@@ -439,6 +442,7 @@ enum GameSessionState {
 type Question @model(subscriptions: null, timestamps: null)
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -463,15 +467,17 @@ type Question @model(subscriptions: null, timestamps: null)
   gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["order"])
 }
 
-type Team @model 
+type Team @model
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
 {
   id: ID!
+  globalStudentId: String @index(name: "byGlobalStudentId", queryField: "teamByGlobalStudentId")
   name: String!
   question: Question @hasOne
   teamMembers: [TeamMember] @hasMany
@@ -479,9 +485,10 @@ type Team @model
   selectedAvatarIndex: Int! @default(value: "0")
 }
 
-type TeamMember @model 
+type TeamMember @model
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -502,9 +509,10 @@ enum ConfidenceLevel {
   TOTALLY
 }
 
-type TeamAnswer @model 
+type TeamAnswer @model
 @auth(
   rules: [
+    { allow: public, provider: apiKey  },
     { allow: public, provider: iam },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
@@ -518,7 +526,7 @@ type TeamAnswer @model
   currentQuestionIndex: Int!
   questionId: ID!
   teamMemberAnswersId: ID!
-  teamAnswersId: ID
+  teamAnswersId: ID!
   teamName: String
   text: String!
   answer: AWSJSON!

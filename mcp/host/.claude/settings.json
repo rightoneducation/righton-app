@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__custom__getGameSessionsByClassroomId",
+      "mcp__custom__getStudentHistory",
+      "mcp__ext__getLearningScienceDatabyCCSS"
+    ]
+  }
+}

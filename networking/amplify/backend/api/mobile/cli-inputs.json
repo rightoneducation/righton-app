@@ -9,6 +9,12 @@
     "conflictResolution": {},
     "additionalAuthTypes": [
       {
+        "mode": "API_KEY",
+        "expirationTime": 364,
+        "apiKeyExpirationDate": "2026-10-14T20:55:45.842Z",
+        "keyDescription": "mcp"
+      },
+      {
         "mode": "AMAZON_COGNITO_USER_POOLS",
         "cognitoUserPoolId": "authmobile6060603c"
       }
