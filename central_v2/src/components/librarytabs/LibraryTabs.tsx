@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Tabs } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import {
   ElementType,
   GalleryType,
@@ -149,7 +148,7 @@ export default function LibraryTabs({
           const label = getTabLabel(screenSize, isSelected, value);
           return (
             <LibraryTab
-              key={uuidv4()}
+              key={key}
               icon={
                 <img
                   src={tabIconMap[key]}
