@@ -258,6 +258,7 @@ export default function useCentralDataManager({
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
         const callType = getCallType({
           ...callTypeMatchesDebounced,
+          matchLibraryTab: libraryTab,
           libraryTab,
           gameQuestion: searchGameQuestion,
         });
