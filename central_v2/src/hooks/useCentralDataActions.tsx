@@ -60,6 +60,10 @@ interface UseCentralDataManagerReturnProps {
     field: SortType;
     direction: SortDirection | null;
   }) => void;
+  setLibrarySort: (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => void;
   handleSearchChange: (searchString: string) => void;
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
@@ -192,6 +196,19 @@ export default function useCentralDataManager({
           });
         break;
     }
+  };
+
+  // Resets the library sort (field + direction) WITHOUT firing a query. Used on
+  // the Games<->Questions switch, where the fetch is triggered separately via
+  // handleLibraryInit. handleSortChange (below) fires a search query, which on
+  // the switch was both redundant and — because it hardcoded ASC — flipped
+  // isDefaultSort false, breaking bucket selection.
+  const setLibrarySort = (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => {
+    centralDataDispatch({ type: 'SET_SORT', payload: newSort });
+    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
   };
 
   const handleSortChange = (newSort: {
@@ -1236,6 +1253,7 @@ export default function useCentralDataManager({
     isUserProfileComplete,
     handleChooseGrades,
     handleSortChange,
+    setLibrarySort,
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
