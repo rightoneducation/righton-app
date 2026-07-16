@@ -122,6 +122,15 @@ export default function useCentralDataManager({
   };
 
   const handleChooseGrades = (grades: GradeTarget[]) => {
+    // On the library Favorites tab the visible set is the by-id favorites,
+    // which are not grade-filtered (game/question grade fields are
+    // inconsistent and unsafe to match client-side). Just record the selection
+    // rather than firing a list-scan query whose result never reaches the
+    // favorites display.
+    if (isLibrary && centralData.openTab === LibraryTabEnum.FAVORITES) {
+      centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: grades });
+      return;
+    }
     centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: grades });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
