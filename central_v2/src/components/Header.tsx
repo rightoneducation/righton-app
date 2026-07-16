@@ -209,7 +209,15 @@ export default function Header({
   };
 
   const createMenu = [
-    <CreateButtonContainer key="createMenu">
+    <ClickAwayListener
+      key="createMenu"
+      onClickAway={() => {
+        if (isCreateMenuOpen) {
+          setIsCreateMenuOpen(false);
+        }
+      }}
+    >
+    <CreateButtonContainer>
       <Box style={{ zIndex: 9 }}>
         <CentralButton
           buttonType={ButtonType.CREATE}
@@ -273,7 +281,8 @@ export default function Header({
           </Box>
         </CreateDropDown>
       </Collapse>
-    </CreateButtonContainer>,
+    </CreateButtonContainer>
+    </ClickAwayListener>,
   ];
 
   const loggedInUserComponents = [
@@ -332,6 +341,16 @@ export default function Header({
   ];
 
   return (
+    <ClickAwayListener
+      onClickAway={() => {
+        if (menuOpen) {
+          setMenuOpen(false);
+        }
+        if (isCreateMenuOpen) {
+          setIsCreateMenuOpen(false);
+        }
+      }}
+    >
     <HeaderContainer
       screenSize={screenSize}
       menuOpen={menuOpen}
@@ -543,5 +562,6 @@ export default function Header({
         </Collapse>
       )}
     </HeaderContainer>
+    </ClickAwayListener>
   );
 }

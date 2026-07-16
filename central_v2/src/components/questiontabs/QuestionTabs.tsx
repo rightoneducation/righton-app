@@ -8,7 +8,6 @@ import {
   Box,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { v4 as uuidv4 } from 'uuid';
 import {
   IQuestionTemplate,
   PublicPrivateType,
@@ -219,7 +218,7 @@ export default function QuestionTabs({
                       const isSelected = openTab === numericKey;
                       return (
                         <StyledTab
-                          key={uuidv4()}
+                          key={numericKey}
                           icon={
                             <img
                               src={tabIconMap[numericKey]}
@@ -242,7 +241,6 @@ export default function QuestionTabs({
                     })
                   ) : (
                     <StyledTab
-                      key={uuidv4()}
                       icon={
                         <img
                           src={tabIconMap[0]}

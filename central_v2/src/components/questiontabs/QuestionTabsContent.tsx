@@ -95,6 +95,7 @@ export default function QuestionTabsContent({
   return (
     <QTInnerContentContainer>
       <SearchBar
+        isSearchResults
         screenSize={screenSize}
         searchTerms={centralData.searchTerms}
         handleSearchChange={handleSearchChange}

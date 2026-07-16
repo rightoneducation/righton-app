@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import {
   ElementType,
   GalleryType,
@@ -112,13 +111,15 @@ export default function LibraryTabs({
     [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
   };
 
-  if (centralData.isLibraryInit) {
-    centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
-    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    centralDataDispatch({ type: 'SET_OPEN_TAB', payload: openTab });
-    fetchElements(openTab, '', null, true);
-  }
+  useEffect(() => {
+    if (centralData.isLibraryInit) {
+      centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
+      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+      centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+      centralDataDispatch({ type: 'SET_OPEN_TAB', payload: openTab });
+      fetchElements(openTab, '', null, true);
+    }
+  }, [centralData.isLibraryInit]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (
     event: React.SyntheticEvent,
@@ -149,7 +150,7 @@ export default function LibraryTabs({
           const label = getTabLabel(screenSize, isSelected, value);
           return (
             <LibraryTab
-              key={uuidv4()}
+              key={key}
               icon={
                 <img
                   src={tabIconMap[key]}
