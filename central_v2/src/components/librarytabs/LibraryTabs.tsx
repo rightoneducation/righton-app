@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs } from '@mui/material';
 import {
   ElementType,
@@ -111,13 +111,15 @@ export default function LibraryTabs({
     [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
   };
 
-  if (centralData.isLibraryInit) {
-    centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
-    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    centralDataDispatch({ type: 'SET_OPEN_TAB', payload: openTab });
-    fetchElements(openTab, '', null, true);
-  }
+  useEffect(() => {
+    if (centralData.isLibraryInit) {
+      centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
+      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+      centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+      centralDataDispatch({ type: 'SET_OPEN_TAB', payload: openTab });
+      fetchElements(openTab, '', null, true);
+    }
+  }, [centralData.isLibraryInit]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (
     event: React.SyntheticEvent,
