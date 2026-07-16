@@ -224,6 +224,15 @@ export default function useCentralDataManager({
     field: SortType;
     direction: SortDirection | null;
   }) => {
+    // On the library Favorites tab the visible set is the by-id favorites,
+    // re-sorted client-side in the bucket helper. Record the new sort but do
+    // NOT fire a list-scan query (getCallType maps Favorites to PUBLIC, so the
+    // query returns public results into searchedX and, for the byDate/byGrade
+    // GSIs, could leave isLoading stuck - blanking the favorites display).
+    if (isLibrary && centralData.openTab === LibraryTabEnum.FAVORITES) {
+      centralDataDispatch({ type: 'SET_SORT', payload: newSort });
+      return;
+    }
     centralDataDispatch({ type: 'SET_SORT', payload: newSort });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
