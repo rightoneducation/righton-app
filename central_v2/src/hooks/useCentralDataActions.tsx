@@ -47,10 +47,20 @@ interface UseCentralDataManagerReturnProps {
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
+    isLoadMoreLibrary?: boolean,
+    sortOverride?: {
+      field: SortType;
+      direction: SortDirection | null;
+    } | null,
+    gameQuestionOverride?: GameQuestionType,
   ) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => void;
+  setLibrarySort: (newSort: {
     field: SortType;
     direction: SortDirection | null;
   }) => void;
@@ -112,29 +122,56 @@ export default function useCentralDataManager({
   };
 
   const handleChooseGrades = (grades: GradeTarget[]) => {
+    // On the library Favorites tab the visible set is the by-id favorites,
+    // which are not grade-filtered (game/question grade fields are
+    // inconsistent and unsafe to match client-side). Just record the selection
+    // rather than firing a list-scan query whose result never reaches the
+    // favorites display.
+    if (isLibrary && centralData.openTab === LibraryTabEnum.FAVORITES) {
+      centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: grades });
+      return;
+    }
     centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: grades });
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     const libraryTab = centralData.openTab;
+    const trimmedSearch = (centralData.searchTerms ?? '').trim();
+    const shouldNullifySearch =
+      gameQuestion === GameQuestionType.QUESTION &&
+      trimmedSearch.length === 0;
+    const questionSearchTerm = shouldNullifySearch ? null : trimmedSearch;
     const callType = getCallType({
       ...callTypeMatches,
       libraryTab,
       gameQuestion,
     });
+    const isQuestionBankPublicLibrary =
+      gameQuestion === GameQuestionType.QUESTION &&
+      isLibrary &&
+      callType.publicPrivateType === PublicPrivateType.PUBLIC &&
+      centralData.openTab === LibraryTabEnum.PUBLIC;
+    const shouldLimitToUser =
+      isLibrary &&
+      callType.publicPrivateType === PublicPrivateType.PUBLIC &&
+      !isQuestionBankPublicLibrary &&
+      questionSearchTerm !== null;
+    const searchLimit =
+      gameQuestion === GameQuestionType.QUESTION && grades.length > 0 ? 300 : null;
+
     switch (gameQuestion) {
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
             callType.publicPrivateType,
+            searchLimit,
             null,
-            null,
-            centralData.searchTerms,
+            questionSearchTerm,
             centralData.sort.direction ?? SortDirection.ASC,
             centralData.sort.field,
             [...grades],
             null,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ?? false,
-            (isLibrary && callType.publicPrivateType === PublicPrivateType.PUBLIC)  ? centralData.userProfile.dynamoId : undefined,
+            shouldLimitToUser,
+            shouldLimitToUser ? centralData.userProfile.dynamoId : undefined,
           )
           .then((response) => {
             centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -168,6 +205,19 @@ export default function useCentralDataManager({
           });
         break;
     }
+  };
+
+  // Resets the library sort (field + direction) WITHOUT firing a query. Used on
+  // the Games<->Questions switch, where the fetch is triggered separately via
+  // handleLibraryInit. handleSortChange (below) fires a search query, which on
+  // the switch was both redundant and — because it hardcoded ASC — flipped
+  // isDefaultSort false, breaking bucket selection.
+  const setLibrarySort = (newSort: {
+    field: SortType;
+    direction: SortDirection | null;
+  }) => {
+    centralDataDispatch({ type: 'SET_SORT', payload: newSort });
+    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
   };
 
   const handleSortChange = (newSort: {
@@ -252,6 +302,7 @@ export default function useCentralDataManager({
         centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
         const callType = getCallType({
           ...callTypeMatchesDebounced,
+          matchLibraryTab: libraryTab,
           libraryTab,
           gameQuestion: searchGameQuestion,
         });
@@ -314,6 +365,17 @@ export default function useCentralDataManager({
   );
 
   const handleSearchChange = (searchString: string) => {
+    // On the library Favorites tab the visible set is the by-id favorites
+    // (getFav), filtered client-side in the bucket helper. Just update the term
+    // rather than firing a list-scan search that would populate searchedX and
+    // never reach the favorites display.
+    if (isLibrary && centralData.openTab === LibraryTabEnum.FAVORITES) {
+      centralDataDispatch({
+        type: 'SET_SEARCH_TERMS',
+        payload: searchString.trim(),
+      });
+      return;
+    }
     debouncedSearch(
       searchString.trim(),
       centralData.sort.direction ?? SortDirection.ASC,
@@ -333,6 +395,11 @@ export default function useCentralDataManager({
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
+    sortOverride?: {
+      field: SortType;
+      direction: SortDirection | null;
+    } | null,
+    gameQuestionOverride?: GameQuestionType,
   ) => {
     if (!isFromLibrary)
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
@@ -340,16 +407,25 @@ export default function useCentralDataManager({
       type: 'SET_PUBLIC_PRIVATE',
       payload: newPublicPrivate,
     });
-    switch (gameQuestion) {
-      case GameQuestionType.QUESTION:
+    const inputSortField = sortOverride?.field ?? centralData.sort.field;
+    const inputSortDirection = sortOverride?.direction ?? centralData.sort.direction;
+    const effectiveGq = gameQuestionOverride ?? gameQuestion;
+    switch (effectiveGq) {
+      case GameQuestionType.QUESTION: {
+        const sortField = (isFromLibrary && inputSortField === SortType.listQuestionTemplates)
+          ? SortType.listQuestionTemplatesByDate
+          : inputSortField;
+        const sortDirection = (isFromLibrary && inputSortField === SortType.listQuestionTemplates)
+          ? SortDirection.DESC
+          : (inputSortDirection ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
             newPublicPrivate,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             centralData.selectedGrades ?? [],
             null,
             (isFromLibrary && newPublicPrivate === PublicPrivateType.PUBLIC) ?? false,
@@ -392,16 +468,23 @@ export default function useCentralDataManager({
             }
           });
         break;
+      }
       case GameQuestionType.GAME:
-      default:
+      default: {
+        const sortField = (isFromLibrary && inputSortField === SortType.listGameTemplates)
+          ? SortType.listGameTemplatesByDate
+          : inputSortField;
+        const sortDirection = (isFromLibrary && inputSortField === SortType.listGameTemplates)
+          ? SortDirection.DESC
+          : (inputSortDirection ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             newPublicPrivate,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             centralData.selectedGrades ?? [],
             null,
             (isFromLibrary && newPublicPrivate === PublicPrivateType.PUBLIC) ?? false,
@@ -443,6 +526,7 @@ export default function useCentralDataManager({
               }
           });
         break;
+      }
     }
   };
 
@@ -542,19 +626,27 @@ export default function useCentralDataManager({
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
+    gameQuestionOverride?: GameQuestionType,
   ) => {
     if (!isFromLibrary)
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    switch (gameQuestion) {
-      case GameQuestionType.QUESTION:
+    const effectiveGq = gameQuestionOverride ?? gameQuestion;
+    switch (effectiveGq) {
+      case GameQuestionType.QUESTION: {
+        const sortField = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+          ? SortType.listQuestionTemplatesByDate
+          : centralData.sort.field;
+        const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listQuestionTemplates)
+          ? SortDirection.DESC
+          : (centralData.sort.direction ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
             PublicPrivateType.DRAFT,
             12,
             nextToken ?? null,
             searchTerms ?? centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             [...centralData.selectedGrades],
             null,
           )
@@ -574,16 +666,23 @@ export default function useCentralDataManager({
             });
           });
         break;
+      }
       case GameQuestionType.GAME:
-      default:
+      default: {
+        const sortField = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+          ? SortType.listGameTemplatesByDate
+          : centralData.sort.field;
+        const sortDirection = (isFromLibrary && centralData.sort.field === SortType.listGameTemplates)
+          ? SortDirection.DESC
+          : (centralData.sort.direction ?? SortDirection.ASC);
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             PublicPrivateType.DRAFT,
             12,
             nextToken ?? null,
             libraryTab ? '' : centralData.searchTerms,
-            centralData.sort.direction ?? SortDirection.ASC,
-            centralData.sort.field,
+            sortDirection,
+            sortField,
             [...centralData.selectedGrades],
             null,
           )
@@ -603,6 +702,7 @@ export default function useCentralDataManager({
             });
           });
         break;
+      }
     }
   };
 
@@ -612,41 +712,44 @@ export default function useCentralDataManager({
     searchTerms?: string,
     nextToken?: string | null,
     isFromLibrary?: boolean,
+    gameQuestionOverride?: GameQuestionType,
   ) => {
     if (!isFromLibrary)
       centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    switch (gameQuestion) {
+    const effectiveGq = gameQuestionOverride ?? gameQuestion;
+    switch (effectiveGq) {
       case GameQuestionType.QUESTION:
         if (
           user.favoriteQuestionTemplateIds &&
           user.favoriteQuestionTemplateIds.length > 0
         ) {
-          apiClients?.centralDataManager
-            ?.searchForQuestionTemplates(
-              PublicPrivateType.PUBLIC,
-              null,
-              nextToken ?? null,
-              searchTerms ?? centralData.searchTerms,
-              centralData.sort.direction ?? SortDirection.ASC,
-              centralData.sort.field,
-              [...centralData.selectedGrades],
-              user.favoriteQuestionTemplateIds,
-            )
-            .then((response) => {
-              centralDataDispatch({
-                type: 'SET_FAV_QUESTIONS',
-                payload: isLoadMoreLibrary ? [...centralData.favQuestions, ...response.questions] : [...response.questions],
-              });
-              centralDataDispatch({
-                type: 'SET_NEXT_TOKEN',
-                payload: response.nextToken,
-              });
-              centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-              centralDataDispatch({
-                type: 'SET_IS_LOADING_INFINITE_SCROLL',
-                payload: false,
-              });
+          // Favorites are an explicit id list: fetch by id instead of scanning
+          // list indexes (a filtered scan starves once the table outgrows the
+          // scan window and the favorites fall outside it).
+          Promise.all(
+            user.favoriteQuestionTemplateIds.map((favId) =>
+              apiClients.questionTemplate
+                .getQuestionTemplate(PublicPrivateType.PUBLIC, favId)
+                .catch(() => null),
+            ),
+          ).then((questions) => {
+            const term = (searchTerms ?? centralData.searchTerms ?? '').trim().toLowerCase();
+            const favQuestions = questions
+              .filter((q): q is IQuestionTemplate => q !== null && q !== undefined)
+              .filter((q) => !term || (q.title ?? '').toLowerCase().includes(term))
+              .sort(
+                (a, b) =>
+                  new Date(b.updatedAt ?? 0).getTime() -
+                  new Date(a.updatedAt ?? 0).getTime(),
+              );
+            centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: favQuestions });
+            centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({
+              type: 'SET_IS_LOADING_INFINITE_SCROLL',
+              payload: false,
             });
+          });
         } else {
           centralDataDispatch({ type: 'SET_FAV_QUESTIONS', payload: [] });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -662,32 +765,31 @@ export default function useCentralDataManager({
           user.favoriteGameTemplateIds &&
           user.favoriteGameTemplateIds.length > 0
         ) {
-          apiClients?.centralDataManager
-            ?.searchForGameTemplates(
-              PublicPrivateType.PUBLIC,
-              null,
-              nextToken ?? null,
-              searchTerms ?? centralData.searchTerms,
-              centralData.sort.direction ?? SortDirection.ASC,
-              centralData.sort.field,
-              [...centralData.selectedGrades],
-              user.favoriteGameTemplateIds,
-            )
-            .then((response) => {
-              centralDataDispatch({
-                type: 'SET_FAV_GAMES',
-                payload: isLoadMoreLibrary ? [...centralData.favGames, ...response.games] : [...response.games],
-              });
-              centralDataDispatch({
-                type: 'SET_NEXT_TOKEN',
-                payload: response.nextToken,
-              });
-              centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-              centralDataDispatch({
-                type: 'SET_IS_LOADING_INFINITE_SCROLL',
-                payload: false,
-              });
+          // Favorites are an explicit id list: fetch by id (see question branch).
+          Promise.all(
+            user.favoriteGameTemplateIds.map((favId) =>
+              apiClients.gameTemplate
+                .getGameTemplate(PublicPrivateType.PUBLIC, favId)
+                .catch(() => null),
+            ),
+          ).then((games) => {
+            const term = (searchTerms ?? centralData.searchTerms ?? '').trim().toLowerCase();
+            const favGames = games
+              .filter((g): g is IGameTemplate => g !== null && g !== undefined)
+              .filter((g) => !term || (g.title ?? '').toLowerCase().includes(term))
+              .sort(
+                (a, b) =>
+                  new Date(b.updatedAt ?? 0).getTime() -
+                  new Date(a.updatedAt ?? 0).getTime(),
+              );
+            centralDataDispatch({ type: 'SET_FAV_GAMES', payload: favGames });
+            centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({
+              type: 'SET_IS_LOADING_INFINITE_SCROLL',
+              payload: false,
             });
+          });
         } else {
           centralDataDispatch({ type: 'SET_FAV_GAMES', payload: [] });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -847,7 +949,13 @@ export default function useCentralDataManager({
     nextToken?: string | null,
     isFromLibray?: boolean,
     isLoadMoreLibrary?: boolean,
+    sortOverride?: {
+      field: SortType;
+      direction: SortDirection | null;
+    } | null,
+    gameQuestionOverride?: GameQuestionType,
   ) => {
+    const effectiveGameQuestion = gameQuestionOverride ?? gameQuestion;
     const getFetchType = (tab: LibraryTabEnum | null) => {
       if (isEditGame) {
         switch (tab) {
@@ -868,20 +976,20 @@ export default function useCentralDataManager({
       ) {
         switch (tab) {
           case LibraryTabEnum.FAVORITES:
-            return gameQuestion === GameQuestionType.GAME
+            return effectiveGameQuestion === GameQuestionType.GAME
               ? FetchType.FAVORITE_GAMES
               : FetchType.FAVORITE_QUESTIONS;
           case LibraryTabEnum.DRAFTS:
-            return gameQuestion === GameQuestionType.GAME
+            return effectiveGameQuestion === GameQuestionType.GAME
               ? FetchType.DRAFT_GAMES
               : FetchType.DRAFT_QUESTIONS;
           case LibraryTabEnum.PRIVATE:
-            return gameQuestion === GameQuestionType.GAME
+            return effectiveGameQuestion === GameQuestionType.GAME
               ? FetchType.PRIVATE_GAMES
               : FetchType.PRIVATE_QUESTIONS;
           case LibraryTabEnum.PUBLIC:
           default:
-            return gameQuestion === GameQuestionType.GAME
+            return effectiveGameQuestion === GameQuestionType.GAME
               ? FetchType.PUBLIC_GAMES
               : FetchType.PUBLIC_QUESTIONS;
         }
@@ -899,6 +1007,8 @@ export default function useCentralDataManager({
           searchTerms,
           nextToken,
           isFromLibray ?? false,
+          sortOverride,
+          effectiveGameQuestion,
         );
         break;
       case FetchType.PRIVATE_QUESTIONS:
@@ -909,11 +1019,13 @@ export default function useCentralDataManager({
           searchTerms,
           nextToken,
           isFromLibray ?? false,
+          sortOverride,
+          effectiveGameQuestion,
         );
         break;
       case FetchType.DRAFT_QUESTIONS:
       case FetchType.DRAFT_GAMES:
-        getDrafts(isLoadMoreLibrary ?? false, libraryTab, searchTerms, nextToken, isFromLibray ?? false);
+        getDrafts(isLoadMoreLibrary ?? false, libraryTab, searchTerms, nextToken, isFromLibray ?? false, effectiveGameQuestion);
         break;
       case FetchType.FAVORITE_QUESTIONS:
       case FetchType.FAVORITE_GAMES:
@@ -923,6 +1035,7 @@ export default function useCentralDataManager({
           searchTerms,
           nextToken,
           isFromLibray ?? false,
+          effectiveGameQuestion,
         );
         break;
       case FetchType.EXPLORE_QUESTIONS:
@@ -1149,6 +1262,7 @@ export default function useCentralDataManager({
     isUserProfileComplete,
     handleChooseGrades,
     handleSortChange,
+    setLibrarySort,
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,

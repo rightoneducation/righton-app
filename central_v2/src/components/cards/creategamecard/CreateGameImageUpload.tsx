@@ -220,7 +220,9 @@ export default function GameImageUploadModal({
               variant="outlined"
               rows="1"
               placeholder="Add Image URL"
-              onChange={(e) => setLocalURL(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setLocalURL(e.target.value)
+              }
             />
             <ImageURLUploadButton
               onClick={() => handleUrlChange(localURL ?? '')}

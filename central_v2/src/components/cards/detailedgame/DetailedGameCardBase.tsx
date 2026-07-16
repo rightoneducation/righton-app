@@ -1,6 +1,5 @@
 import React from 'react';
 import { Typography, RadioGroup, Box, styled } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
   IGameTemplate,
@@ -140,7 +139,7 @@ export default function DetailedGameCardBase({
             >
               {ccssChips.length > 0 &&
                 ccssChips.map((chip) => {
-                  return <ButtonCCSS key={uuidv4()}>{chip}</ButtonCCSS>;
+                  return <ButtonCCSS key={chip}>{chip}</ButtonCCSS>;
                 })}
             </Box>
           </Box>

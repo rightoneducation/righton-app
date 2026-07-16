@@ -52,6 +52,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     handleLibraryInit,
     handleChooseGrades,
     handleSortChange,
+    setLibrarySort,
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
@@ -68,12 +69,15 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     gameQuestionValue: GameQuestionType,
   ) => {
     setLibraryGameQuestionSwitch(gameQuestionValue);
-    handleSortChange({
+    // Reset the sort to the default for the new type WITHOUT firing a query
+    // (handleLibraryInit triggers the fetch). DESC keeps isDefaultSort true so
+    // tabs render their own bucket rather than search results.
+    setLibrarySort({
       field:
         gameQuestionValue === GameQuestionType.GAME
           ? SortType.listGameTemplates
           : SortType.listQuestionTemplates,
-      direction: SortDirection.ASC,
+      direction: SortDirection.DESC,
     });
     handleLibraryInit(true);
   };

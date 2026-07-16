@@ -3,13 +3,11 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import { SortType, SortDirection } from '@righton/networking';
 import { ScreenSize } from '../CentralModels';
 
-export const SortContainer = styled(Box)(() => {
-  return {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    position: 'relative',
-  };
+export const SortContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  position: 'relative',
 });
 
 export const SortButton = styled(Box, {

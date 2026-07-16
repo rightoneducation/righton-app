@@ -291,6 +291,7 @@ export default function ExploreQuestions({
           />
         )}
         <SearchBar
+          isSearchResults={isSearchResults}
           screenSize={screenSize}
           searchTerms={centralData.searchTerms}
           handleSearchChange={handleSearchChange}

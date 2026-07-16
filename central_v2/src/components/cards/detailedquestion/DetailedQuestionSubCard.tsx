@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { v4 as uuidv4 } from 'uuid';
 import {
   BaseCardStyled,
   QuestionTitleStyled,
@@ -34,7 +33,6 @@ export default function DetailedQuestionSubCard({
           alignItems: 'flex-start',
           marginTop: `${theme.sizing.xSmPadding}px`,
         }}
-        key={uuidv4()}
       >
         <Typography
           sx={{

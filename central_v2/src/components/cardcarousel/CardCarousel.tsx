@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { v4 as uuidv4 } from 'uuid';
 import {
   IGameTemplate,
   IQuestionTemplate,
@@ -93,7 +92,7 @@ export default function CardCarousel<
           const gameElement = element as IGameTemplate;
           return (
             <SwiperSlide
-              key={uuidv4()}
+              key={gameElement?.id ?? `slide-${index}`}
               style={{
                 width: screenSize !== ScreenSize.LARGE ? '290px' : '385px',
               }}
@@ -126,7 +125,7 @@ export default function CardCarousel<
         }
         const questionElement = element as IQuestionTemplate;
         return (
-          <SwiperSlide key={uuidv4()} className="fixed-swiper-slide-question">
+          <SwiperSlide key={questionElement?.id ?? `slide-${index}`} className="fixed-swiper-slide-question">
             {questionElement ? (
               <StyledQuestionCard
                 question={questionElement}

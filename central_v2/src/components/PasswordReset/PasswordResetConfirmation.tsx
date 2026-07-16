@@ -164,10 +164,16 @@ function PasswordResetConfirmation({
               error={isCodeError}
               variant="outlined"
               key={`code-${uniqueKeys[index]}`}
-              inputRef={(el) => setInputRef(index, el)}
+              inputRef={(el: HTMLInputElement | null) =>
+                setInputRef(index, el)
+              }
               value={value}
-              onChange={(e) => handleCodeInputChange(e.target.value, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleCodeInputChange(e.target.value, index)
+              }
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                handleKeyDown(e, index)
+              }
               inputProps={{ maxLength: 1 }}
             />
           ))}

@@ -2,13 +2,11 @@ import React, { useState, ChangeEvent } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 
-export const SelectContainer = styled(Box)(() => {
-  return {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    position: 'relative',
-  };
+export const SelectContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  position: 'relative',
 });
 
 export const SelectGrade = styled(Box, {

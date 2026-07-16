@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Box, Tabs } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import {
   ElementType,
   GalleryType,
@@ -54,7 +53,9 @@ export default function LibraryTabsQuestions({
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
   const centralData = useCentralDataState();
 
-  const isSearchResults = centralData?.searchTerms?.length > 0;
+  const isSearchResults =
+    (centralData?.searchTerms?.length ?? 0) > 0 ||
+    (centralData?.selectedGrades?.length ?? 0) > 0;
 
   const tabMap: { [key: number]: string } = {
     [LibraryTabEnum.PUBLIC]: 'Public',
@@ -83,15 +84,14 @@ export default function LibraryTabsQuestions({
   const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
     isPublic ? LibraryTabEnum.PUBLIC : LibraryTabEnum.PRIVATE,
   );
-  const [hasInitialized, setHasInitialized] = useState(false);
-  if (!hasInitialized) {
+  useEffect(() => {
     fetchElements(openTab);
-    setHasInitialized(true);
-  }
+  }, [openTab]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     const newTabEnum = tabIndexToEnum[newValue as number];
     setOpenTab(newTabEnum);
-    fetchElements(newTabEnum);
+    // Fetch runs in useEffect when openTab changes.
   };
 
   const elements = getQuestionElements(openTab, isSearchResults, centralData);
@@ -113,7 +113,7 @@ export default function LibraryTabsQuestions({
           const label = getTabLabel(screenSize, isSelected, value);
           return (
             <LibraryTab
-              key={uuidv4()}
+              key={key}
               icon={
                 <img
                   src={tabIconMap[key]}
@@ -150,6 +150,7 @@ export default function LibraryTabsQuestions({
       </Tabs>
       <ContentContainer>
         <SearchBar
+          isSearchResults={isSearchResults}
           screenSize={screenSize}
           searchTerms={centralData.searchTerms}
           handleSearchChange={handleSearchChange}

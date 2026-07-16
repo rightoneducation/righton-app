@@ -1,7 +1,7 @@
 {
   "name": "righton-monorepo-root",
   "private": true,
-  "workspaces": ["play", "host_v2", "networking"],
+  "workspaces": ["play", "host_v2", "networking", "central_v2"],
   "resolutions": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
     "styled-components": "^5",

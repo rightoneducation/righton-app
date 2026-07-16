@@ -65,11 +65,19 @@ export default function LibraryTabsContent({
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
   const centralData = useCentralDataState();
   const theme = useTheme();
+  const isDefaultSort = gameQuestion === GameQuestionType.GAME
+    ? (centralData.sort.field === SortType.listGameTemplates &&
+       centralData.sort.direction === SortDirection.DESC) ||
+      (centralData.sort.field === SortType.listGameTemplatesByDate &&
+       centralData.sort.direction === SortDirection.DESC)
+    : (centralData.sort.field === SortType.listQuestionTemplates &&
+       centralData.sort.direction === SortDirection.DESC) ||
+      (centralData.sort.field === SortType.listQuestionTemplatesByDate &&
+       centralData.sort.direction === SortDirection.DESC);
   const isSearchResults =
     centralData.searchTerms.length > 0 ||
     centralData.selectedGrades.length > 0 ||
-    (centralData.sort.field !== SortType.listGameTemplates &&
-      centralData.sort.direction !== SortDirection.ASC);
+    !isDefaultSort;
   const elements =
     gameQuestion === GameQuestionType.GAME
       ? getGameElements(openTab, isSearchResults, centralData)
@@ -127,6 +135,7 @@ export default function LibraryTabsContent({
   const cardGallery = [
      gameQuestion === GameQuestionType.GAME ? (
         <CardGallery<IGameTemplate>
+          key="game-gallery"
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
           grades={isSearchResults ? centralData.selectedGrades : undefined}
@@ -144,6 +153,7 @@ export default function LibraryTabsContent({
         />
       ) : (
         <CardGallery<IQuestionTemplate>
+          key="question-gallery"
           screenSize={screenSize}
           searchTerm={isSearchResults ? centralData.searchTerms : undefined}
           grades={isSearchResults ? centralData.selectedGrades : undefined}
@@ -166,6 +176,7 @@ export default function LibraryTabsContent({
   return (
     <ContentContainer>
       <SearchBar
+        isSearchResults={isSearchResults}
         screenSize={screenSize}
         searchTerms={centralData.searchTerms}
         handleSearchChange={handleSearchChange}

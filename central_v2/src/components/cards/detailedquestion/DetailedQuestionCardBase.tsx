@@ -6,7 +6,6 @@ import {
   styled,
   FormControl,
 } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
   IQuestionTemplate,
@@ -119,7 +118,7 @@ export default function DetailedQuestionCardBase({
           }}
         >
           <QuestionTitleStyled>Question</QuestionTitleStyled>
-          <ButtonCCSS key={uuidv4()}>{question.ccss}</ButtonCCSS>
+          <ButtonCCSS>{question.ccss}</ButtonCCSS>
         </Box>
         {screenSize !== ScreenSize.SMALL && !isCreateGame && (
           <Box
