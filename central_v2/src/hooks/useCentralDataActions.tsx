@@ -339,6 +339,17 @@ export default function useCentralDataManager({
   );
 
   const handleSearchChange = (searchString: string) => {
+    // On the library Favorites tab the visible set is the by-id favorites
+    // (getFav), filtered client-side in the bucket helper. Just update the term
+    // rather than firing a list-scan search that would populate searchedX and
+    // never reach the favorites display.
+    if (isLibrary && centralData.openTab === LibraryTabEnum.FAVORITES) {
+      centralDataDispatch({
+        type: 'SET_SEARCH_TERMS',
+        payload: searchString.trim(),
+      });
+      return;
+    }
     debouncedSearch(
       searchString.trim(),
       centralData.sort.direction ?? SortDirection.ASC,
