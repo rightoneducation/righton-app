@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -12,6 +12,7 @@ import LaunchWrapper from './containers/Launcher/LaunchWrapper';
 import GameSessionWrapper from './containers/GameSession/GameSessionWrapper';
 import Theme from './lib/Theme';
 import AppErrorBoundary from './components/AppErrorBoundary';
+import { initConnectionStateTracking } from './lib/analytics';
 
 function RedirectToCentralIfMissing() {
   window.location.href = 'http://central.rightoneducation.com/';
@@ -20,6 +21,11 @@ function RedirectToCentralIfMissing() {
 
 function App() {
   const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.HOST);
+
+  useEffect(() => {
+    if (!apiClients) return undefined;
+    return initConnectionStateTracking(apiClients);
+  }, [apiClients]);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
