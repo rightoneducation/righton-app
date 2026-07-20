@@ -21,7 +21,9 @@ export default styled(Box)(({ theme }) => ({
   '-ms-overflow-style': 'none', // IE and Edge
 }));
 
-export const StartEndGameScrollBoxStyled = styled(Box)(({ theme, currentQuestionIndex }) => ({
+export const StartEndGameScrollBoxStyled = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'currentQuestionIndex',
+})<{ currentQuestionIndex?: number | null }>(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',

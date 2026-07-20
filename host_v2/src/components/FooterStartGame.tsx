@@ -11,7 +11,7 @@ import { ScreenSize } from '../lib/HostModels';
 
 const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'isAnimating',
-})(({ theme, isAnimating }) => ({
+})<{ isAnimating: boolean }>(({ theme, isAnimating }) => ({
   border: !isAnimating? '2px solid #159EFA' : 'none',
   borderRadius: '22px',
   width: '300px',

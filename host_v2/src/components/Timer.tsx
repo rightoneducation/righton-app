@@ -154,7 +154,6 @@ export default function Timer({
       <Box style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%',  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px)`, opacity: isTimerActiveRef.current ? 1 : 0.4,  }}>
         <TimerBar
           value={fillLeftToRight ? 100 - progress : progress}
-          initial={0}
           variant="determinate"
           sx={{
             ...(barBackground && { backgroundColor: barBackground }),
