@@ -200,6 +200,7 @@ function FooterGameInProgress({
               onTimerComplete={() => setIsTimerComplete(true)}
               width="300px"
               hideTimerText
+              disableBarTransition
             />
           </Box>
         )}
