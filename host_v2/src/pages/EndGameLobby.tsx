@@ -100,10 +100,10 @@ function EndGameLobby({currentID, teams,
 
     const handleButtonClick = () => {
       if (selectedSuggestedGame === null){
-        window.location.href = 'http://dev-central.rightoneducation.com/';
+        window.location.href = 'http://central.rightoneducation.com/';
       }
       else {
-        window.location.href = `http://dev-host.rightoneducation.com/new/Public/${selectedSuggestedGame}`;
+        window.location.href = `http://host.rightoneducation.com/new/Public/${selectedSuggestedGame}`;
       }
     };
 
