@@ -22,12 +22,12 @@ const FooterContainer = styled(Box, {
   width: '100%',
   maxWidth: '720px', // matches the header/content max width (with the side padding inset)
   gap: '16px',
-  paddingTop: '44px',
+  paddingTop: screenSize === ScreenSize.SMALL ? '16px' : '44px',
   // left/right inset so the full-width (below md) button doesn't run edge-to-edge,
   // matching the PrepareGame footer (FooterInterim): 24px on mobile, 16px on tablet/desktop
   paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '16px',
   paddingRight: screenSize === ScreenSize.SMALL ? '24px' : '16px',
-  paddingBottom: screenSize === ScreenSize.SMALL ? '64px' : '44px',
+  paddingBottom: screenSize === ScreenSize.SMALL ? '60px' : '44px',
   boxSizing: 'border-box',
 }));
 const SwipeHintText = styled(Typography)({

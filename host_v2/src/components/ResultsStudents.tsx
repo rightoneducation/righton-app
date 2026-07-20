@@ -214,11 +214,7 @@ function ResultsStudents({ teams, currentQuestionIndex, entranceDelay = 0 }: Res
       <RankingNoteContainer>
         <RankingNoteTypography
           variant={isMobile ? 'smallLabel' : 'label'}
-          style={
-            isMobile
-              ? { whiteSpace: 'nowrap' }
-              : { whiteSpace: 'pre-line', textAlign: 'left' }
-          }
+          style={{ whiteSpace: 'pre-line', textAlign: 'left' }}
         >
           {isMobile
             ? `Students' screens show the Top 5 players with more \n than 0 points. Ties listed alphabetically`

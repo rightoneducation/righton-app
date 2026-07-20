@@ -25,7 +25,7 @@ const UpperStyled = styled(Box, {
   width: '100%',
   maxWidth: `${theme.breakpoints.values.lg}px`,
   margin: '0 auto',
-  paddingTop: '48px',
+  paddingTop: '40px',
   paddingLeft: screenSize === ScreenSize.MEDIUM ? '32px' : '24px',
   paddingRight: screenSize === ScreenSize.MEDIUM ? '32px' : '24px',
   boxSizing: 'border-box',

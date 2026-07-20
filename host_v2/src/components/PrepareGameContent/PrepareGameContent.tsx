@@ -76,7 +76,7 @@ export default function PrepareGameContent({
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
-        <BodyContentAreaSingleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+        <BodyContentAreaSingleColumnStyled container screenSize={screenSize} gap={`${theme.sizing.mdPadding}px`}>
           <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
