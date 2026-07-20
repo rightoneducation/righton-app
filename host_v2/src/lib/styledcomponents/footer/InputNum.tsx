@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
 import { Typography } from '@mui/material';
 
-export default styled(Typography)(({ theme, progressPercent }) => ({
+export default styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'progressPercent',
+})<{ progressPercent: number }>(({ theme, progressPercent }) => ({
   position: 'absolute',
   top: '0',
   left: progressPercent > 0 ? `calc(${progressPercent}% - 30px)` : '5px',

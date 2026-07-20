@@ -7,7 +7,7 @@ export default styled(Stack)(({ theme }) => ({
   position: 'sticky',
   bottom: 0,
   left: 0,
-  background: theme.palette.primary.mainColor,
+  background: theme.palette.primary.main,
   border: 'none',
   width: '100vw',
   zIndex: -1,

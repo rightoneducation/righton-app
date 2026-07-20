@@ -47,12 +47,7 @@ export default function CustomBar( props: any ) {
           onClick={() =>
             handleGraphClick(index)
           }
-          style={{ 
-            cursor: 'pointer',
-            '&:hover': {
-              fill: 'rgba(255, 255, 255, 0.2)',
-            }, 
-          }}
+          style={{ cursor: 'pointer' }}
         />
       )}
     </g>

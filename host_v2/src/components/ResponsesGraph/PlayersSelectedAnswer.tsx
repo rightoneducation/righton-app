@@ -7,7 +7,7 @@ import ArrowIcon from '../../images/Arrow.svg';
 
 const TitleText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'statePosition',
-})(({statePosition}) => ({
+})<{ statePosition?: number }>(({statePosition}) => ({
   color: '#FFF',
   textAlign: 'left',
   fontFamily: 'Rubik',
@@ -19,7 +19,7 @@ const TitleText = styled(Typography, {
 
 const PercentageText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'statePosition',
-})(({statePosition}) => ({
+})<{ statePosition?: number }>(({statePosition}) => ({
   color: '#FFF',
   textAlign: 'left',
   fontFamily: 'Rubik',
@@ -32,7 +32,7 @@ const PercentageText = styled(Typography, {
 
 const CountText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'statePosition',
-})(({statePosition}) => ({
+})<{ statePosition?: number }>(({statePosition}) => ({
   color: '#FFF',
   textAlign: 'right',
   fontFamily: 'Rubik',
