@@ -71,8 +71,17 @@ export default function PrepareGame( {
         }) // eslint-disable-line
       );
       Promise.all(questionUpdates)
-      .then((newQuestions) => {
-        const updatedGameSession = {...localGameSession, newQuestions};
+      .then(() => {
+        // Apply the teacher's toggles onto the local questions so the reducer copy matches what we
+        // just persisted. Building from localGameSession.questions (not the updateQuestion echoes)
+        // keeps the full question shape (choices, answerSettings, parsed answerData) intact.
+        const updatedQuestions = localGameSession.questions.map((question) => ({
+          ...question,
+          isConfidenceEnabled,
+          isHintEnabled,
+          isShortAnswerEnabled,
+        }));
+        const updatedGameSession = {...localGameSession, questions: updatedQuestions};
         trackEvent(HostEvent.GAME_STARTED, {
           gameSessionId: localGameSession.id,
           questionCount: localGameSession.questions.length,
