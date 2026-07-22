@@ -134,24 +134,44 @@ const RankTypography = styled(Typography)({
   color: 'rgba(255, 255, 255, 1)',
 });
 
-// the player card for a top-five row: full remaining width, rounded on all 8px corners,
-// pulled 8px left over the rank tab (and raised above it) so the gradient shows in its
-// left corner notches.
-const TopFivePlayerCard = styled(Box)({
+// the stack of player cards for a top-five row. holds one card for a solo rank and N cards
+// for a tie group; the overlap over the rank tab (and the raise above it) lives here rather
+// than on the individual cards so a tie group overlaps the gradient once, as a single block.
+// no gap between members: that's what merges a tie group into one continuous card.
+const TopFiveCardStack = styled(Box)({
   flex: 1,
   minWidth: 0,
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-start',
-  gap: '8px',
-  background: '#375A8D',
-  borderRadius: '8px',
-  padding: '12px 10px',
+  flexDirection: 'column',
   marginLeft: '-8px',
   position: 'relative',
   zIndex: 1,
   boxSizing: 'border-box',
 });
+
+// the player card for a top-five row: full width of the stack. its border radius is set per
+// position so that a tie group's cards read as one card — rounded only on the outer corners
+// of the group (see cardRadiusFor).
+const TopFivePlayerCard = styled(Box)({
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  gap: '8px',
+  background: '#375A8D',
+  padding: '12px 10px',
+  boxSizing: 'border-box',
+});
+
+// corner rounding for a card at position `index` in a group of `length`. a solo card keeps
+// all four corners; a tie group rounds only the top of its first card and the bottom of its
+// last, so the interior boundaries go flat and the group merges into one background card.
+const cardRadiusFor = (index: number, length: number) => {
+  if (length === 1) return '8px';
+  if (index === 0) return '8px 8px 0px 0px';
+  if (index === length - 1) return '0px 0px 8px 8px';
+  return '0px';
+};
 
 const TopFiveNameTypography = styled(Typography)(({ theme }) => ({
   color: theme.palette.designSystem.foreground.warmBase,
@@ -209,6 +229,23 @@ function ResultsStudents({ teams, currentQuestionIndex, entranceDelay = 0 }: Res
     return acc;
   }, []);
 
+  // collapse consecutive equal tiers into groups so a tie renders as one row: one rank tab
+  // shared by the group and one merged player card. `startIndex` is the group's position in
+  // the flat list, reused for the entrance-animation delay so the cascade timing is unchanged
+  // for games with no ties.
+  const tierGroups = rankedTeams.reduce<{ tier: number; teams: ITeam[]; startIndex: number }[]>(
+    (groups, { team, tier }, index) => {
+      const last = groups[groups.length - 1];
+      if (last && last.tier === tier) {
+        last.teams.push(team);
+      } else {
+        groups.push({ tier, teams: [team], startIndex: index });
+      }
+      return groups;
+    },
+    [],
+  );
+
   return (
     <Box style={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%', gap: '8px'}}>
       <RankingNoteContainer>
@@ -222,57 +259,75 @@ function ResultsStudents({ teams, currentQuestionIndex, entranceDelay = 0 }: Res
         </RankingNoteTypography>
       </RankingNoteContainer>
       <StartEndGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{flex: 1, minHeight: 0, width: '100%'}}>
-        {rankedTeams.map(({ team, tier }, index) => {
+        {tierGroups.map(({ tier, teams: groupTeams, startIndex }, groupIndex) => {
           const isTopFive = isResultsMode && tier <= 5;
-          const prevTier = index > 0 ? rankedTeams[index - 1].tier : 0;
+          const prevTier = groupIndex > 0 ? tierGroups[groupIndex - 1].tier : 0;
           // an extra 8px above the first non-top-five card (on top of the scroll box's 8px gap)
           // sets the top-five block apart from the rest of the players.
           const isFirstOutsideTopFive = isResultsMode && tier > 5 && prevTier <= 5;
-          const growTransition = {
-            duration: isTopFive ? TOP_FIVE_GROW_S : REST_GROW_S,
-            ease: GROW_EASE,
-            delay: entranceDelay + index * GROW_STAGGER_S,
-          };
           if (isTopFive) {
+            // the whole group grows in as one unit, so a tie doesn't visibly stretch its own
+            // shared card as members arrive.
             return (
               <MotionTopFiveRow
-                key={team.id}
+                key={groupTeams[0].id}
                 initial={{ opacity: 0, scale: 0.3 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={growTransition}
+                transition={{
+                  duration: TOP_FIVE_GROW_S,
+                  ease: GROW_EASE,
+                  delay: entranceDelay + startIndex * GROW_STAGGER_S,
+                }}
               >
                 <RankCard>
                   <RankTypography variant="h3">{tier}</RankTypography>
                 </RankCard>
-                <TopFivePlayerCard>
-                  <MonsterIcon index={team.selectedAvatarIndex} />
-                  <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <TopFiveNameTypography variant="answerOption">{formatName(team.name)}</TopFiveNameTypography>
-                    <TopFiveScoreTypography variant="h4">{team.score}</TopFiveScoreTypography>
-                  </Box>
-                </TopFivePlayerCard>
+                <TopFiveCardStack>
+                  {groupTeams.map((team, i) => (
+                    <TopFivePlayerCard
+                      key={team.id}
+                      style={{ borderRadius: cardRadiusFor(i, groupTeams.length) }}
+                    >
+                      <MonsterIcon index={team.selectedAvatarIndex} />
+                      <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <TopFiveNameTypography variant="answerOption">{formatName(team.name)}</TopFiveNameTypography>
+                        <TopFiveScoreTypography variant="h4">{team.score}</TopFiveScoreTypography>
+                      </Box>
+                    </TopFivePlayerCard>
+                  ))}
+                </TopFiveCardStack>
               </MotionTopFiveRow>
             );
           }
+          // outside the top five there's no rank tab, so ties stay as separate cards (and at
+          // end of game a large block of players can share 0 points).
           return (
-            <MotionMenuItemStyled
-              key={team.id}
-              style={isFirstOutsideTopFive ? { marginTop: '8px' } : undefined}
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={growTransition}
-            >
-              <MonsterIcon index={team.selectedAvatarIndex} />
-              <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
-                <PlayerNameTypography variant="answerOption">{formatName(team.name)}</PlayerNameTypography>
-                { currentQuestionIndex !== null &&
-                  <GridScoreStyled>{team.score}</GridScoreStyled>
-                }
-                { currentQuestionIndex === null &&
-                  <CloseSvg src={CloseIcon} alt="Close" onClick={() => handleDeleteTeam(team.id)} />
-                }
-              </Box>
-            </MotionMenuItemStyled>
+            <React.Fragment key={groupTeams[0].id}>
+              {groupTeams.map((team, i) => (
+                <MotionMenuItemStyled
+                  key={team.id}
+                  style={isFirstOutsideTopFive && i === 0 ? { marginTop: '8px' } : undefined}
+                  initial={{ opacity: 0, scale: 0.3 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: REST_GROW_S,
+                    ease: GROW_EASE,
+                    delay: entranceDelay + (startIndex + i) * GROW_STAGGER_S,
+                  }}
+                >
+                  <MonsterIcon index={team.selectedAvatarIndex} />
+                  <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <PlayerNameTypography variant="answerOption">{formatName(team.name)}</PlayerNameTypography>
+                    { currentQuestionIndex !== null &&
+                      <GridScoreStyled>{team.score}</GridScoreStyled>
+                    }
+                    { currentQuestionIndex === null &&
+                      <CloseSvg src={CloseIcon} alt="Close" onClick={() => handleDeleteTeam(team.id)} />
+                    }
+                  </Box>
+                </MotionMenuItemStyled>
+              ))}
+            </React.Fragment>
           );
         })}
       </StartEndGameScrollBoxStyled>
