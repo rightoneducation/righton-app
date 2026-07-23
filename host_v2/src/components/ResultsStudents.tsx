@@ -11,6 +11,7 @@ import { useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 
 import CloseIcon from '../images/Close.svg';
 import MonsterIcon from './MonsterIcon';
+import PlayerName from './PlayerName';
 
 // Results-screen variant of CurrentStudents, used on the Leaderboard, InterimLeaderboard and
 // EndGame screens. Forked from the StartGame lobby version so its visual styling can diverge
@@ -70,19 +71,10 @@ const PlayerNameTypography = styled(Typography)(({ theme }) => ({
   fontSize: '14px',
 }));
 
-// "Angela Fox" -> "Angela F."; abbreviates the surname when it's longer than one character
-const formatName = (name: string) => {
-  const parts = name.trim().split(' ');
-  if (parts.length < 2) return name;
-  const surname = parts[parts.length - 1];
-  if (surname.length > 1) {
-    parts[parts.length - 1] = `${surname.charAt(0)}.`;
-  }
-  return parts.join(' ');
-};
-
 const GridScoreStyled = styled(GridNameStyled)({
-  paddingRight: '8px'
+  paddingRight: '8px',
+  flexShrink: 0, // holds its position when a long name truncates beside it
+  cursor: 'default', // not interactive; avoids the I-beam a text node would get
 });
 
 const BoxStyled = styled(Box)({
@@ -180,6 +172,8 @@ const TopFiveNameTypography = styled(Typography)(({ theme }) => ({
 
 const TopFiveScoreTypography = styled(Typography)({
   color: 'rgba(255, 255, 255, 1)',
+  flexShrink: 0, // holds its position when a long name truncates beside it
+  cursor: 'default', // not interactive; avoids the I-beam a text node would get
 });
 
 // cards animate in with play's final-results "grow": scale up from 0.3 with an overshoot ease
@@ -289,8 +283,8 @@ function ResultsStudents({ teams, currentQuestionIndex, entranceDelay = 0 }: Res
                       style={{ borderRadius: cardRadiusFor(i, groupTeams.length) }}
                     >
                       <MonsterIcon index={team.selectedAvatarIndex} />
-                      <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <TopFiveNameTypography variant="answerOption">{formatName(team.name)}</TopFiveNameTypography>
+                      <Box style={{display: 'flex', width: '100%', minWidth: 0, justifyContent: 'space-between', alignItems: 'center'}}>
+                        <PlayerName name={team.name} TypographyComponent={TopFiveNameTypography} />
                         <TopFiveScoreTypography variant="h4">{team.score}</TopFiveScoreTypography>
                       </Box>
                     </TopFivePlayerCard>
@@ -316,8 +310,8 @@ function ResultsStudents({ teams, currentQuestionIndex, entranceDelay = 0 }: Res
                   }}
                 >
                   <MonsterIcon index={team.selectedAvatarIndex} />
-                  <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <PlayerNameTypography variant="answerOption">{formatName(team.name)}</PlayerNameTypography>
+                  <Box style={{display: 'flex', width: '100%', minWidth: 0, justifyContent: 'space-between', alignItems: 'center'}}>
+                    <PlayerName name={team.name} TypographyComponent={PlayerNameTypography} />
                     { currentQuestionIndex !== null &&
                       <GridScoreStyled>{team.score}</GridScoreStyled>
                     }

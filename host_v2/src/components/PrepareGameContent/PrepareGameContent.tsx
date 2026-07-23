@@ -61,7 +61,7 @@ export default function PrepareGameContent({
           isHintEnabled={isHintEnabled}
           setIsHintEnabled={setIsHintEnabled}
         />
-        <CurrentStudentsCard teams={teams} currentQuestionIndex={currentQuestionIndex} questionsCount={questions.length} screenSize={screenSize} />
+        <CurrentStudentsCard teams={teams} currentQuestionIndex={currentQuestionIndex} gameCode={localGameSession.gameCode} questionsCount={questions.length} screenSize={screenSize} />
       </ScrollBoxStyled>
     </Grid>
   );

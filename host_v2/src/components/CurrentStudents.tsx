@@ -12,6 +12,7 @@ import { useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import CloseIcon from '../images/Close.svg';
 import SortArrows from '../images/buttonIconSortArrows.svg';
 import MonsterIcon from './MonsterIcon';
+import PlayerName from './PlayerName';
 import NoPlayersLobby from './NoPlayersLobby';
 import { ScreenSize } from '../lib/HostModels';
 
@@ -45,6 +46,7 @@ const PStyled = styled(Typography)({
 const CloseSvg = styled('img')({
   cursor: 'pointer',
   marginLeft: 'auto',
+  flexShrink: 0, // holds its position when a long name truncates beside it
 });
 
 const MenuItemStyled = styled(Box)({
@@ -71,19 +73,10 @@ const PlayerNameTypography = styled(Typography)(({ theme }) => ({
   color: theme.palette.designSystem.foreground.warmBase,
 }));
 
-// "Angela Fox" -> "Angela F."; abbreviates the surname when it's longer than one character
-const formatName = (name: string) => {
-  const parts = name.trim().split(' ');
-  if (parts.length < 2) return name;
-  const surname = parts[parts.length - 1];
-  if (surname.length > 1) {
-    parts[parts.length - 1] = `${surname.charAt(0)}.`;
-  }
-  return parts.join(' ');
-};
-
 const GridScoreStyled = styled(GridNameStyled)({
-  paddingRight: '8px'
+  paddingRight: '8px',
+  flexShrink: 0, // holds its position when a long name truncates beside it
+  cursor: 'default', // not interactive; avoids the I-beam a text node would get
 });
 
 const BoxStyled = styled(Box)({
@@ -229,8 +222,8 @@ function CurrentStudents({ teams, currentQuestionIndex, questionsCount, screenSi
           {sortedTeams && sortedTeams.map((team) => (
             <MenuItemStyled key={uuidv4()}>
               <MonsterIcon index={team.selectedAvatarIndex} />
-              <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
-                <PlayerNameTypography variant="answerOption">{formatName(team.name)}</PlayerNameTypography>
+              <Box style={{display: 'flex', width: '100%', minWidth: 0, justifyContent: 'space-between', alignItems: 'center'}}>
+                <PlayerName name={team.name} TypographyComponent={PlayerNameTypography} />
                 { currentQuestionIndex !== null &&
                   <GridScoreStyled>{team.score}</GridScoreStyled>
                 }
