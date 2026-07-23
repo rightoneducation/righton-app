@@ -117,9 +117,6 @@ export default function ResponsesGraph({
   }
   return (
     <ResponseGraphContainer>
-      <TitleContainer>
-        <TitleText>Number of players</TitleText>
-      </TitleContainer>
       <Box ref={graphRef}>
         {(isShortAnswerEnabled ? data.length >= 1 : data.length >= 1) && (
         <VictoryChart

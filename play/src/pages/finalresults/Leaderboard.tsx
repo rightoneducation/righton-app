@@ -56,7 +56,10 @@ export default function Leaderboard({ teams }: LeaderboardProps) {
       if (lastGroup && lastGroup[0].team.score === team.score) {
         lastGroup.push({ team, avatarIndex: avatarNumbers[index], rank: lastGroup[0].rank, cardBorderRadius: '8px' });
       } else {
-        const rank = groups.reduce((sum, g) => sum + g.length, 0) + 1;
+        // dense ranking (1, 2, 2, 3) to match host_v2 ResultsStudents: each distinct score bumps
+        // the rank by one, so ties never skip a number. groups.length = number of distinct scores
+        // already placed, so the next group's rank is groups.length + 1.
+        const rank = groups.length + 1;
         groups.push([{ team, avatarIndex: avatarNumbers[index], rank, cardBorderRadius: '8px' }]);
       }
       return groups;

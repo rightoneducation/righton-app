@@ -146,7 +146,6 @@ export default function Timer({
         onTimerComplete?.();
       }
     }
-    console.log('triggered');
     if (currentTimeMilli.current > 0) {
       isTimerActiveRef.current = true;
       prevTimeRef.current = null;

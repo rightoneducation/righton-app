@@ -17,7 +17,7 @@ const FooterContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
 })<{ screenSize: ScreenSize }>(({ screenSize }) => {
   const bottomPaddingBySize: Record<ScreenSize, string> = {
-    [ScreenSize.SMALL]: '48px',
+    [ScreenSize.SMALL]: '16px',
     [ScreenSize.MEDIUM]: '56px',
     [ScreenSize.LARGE]: '24px',
   };
@@ -30,7 +30,7 @@ const FooterContainer = styled(Box, {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-end',
-    paddingTop: screenSize === ScreenSize.SMALL ? '20px' : '32px',
+    paddingTop: screenSize === ScreenSize.SMALL ? '8px' : '32px',
     // inner left/right: 24px on mobile, 16px on tablet/desktop. Mobile's inset lives here
     // (not on the FooterBackgroundStyled wrapper) so it renders reliably. The 32px tablet
     // wrapper inset lives on FooterBackgroundStyled; desktop has no wrapper.
@@ -91,7 +91,7 @@ function FooterGameInProgress({
   const [isTimerComplete, setIsTimerComplete] = useState(
     isTimerPhase && (Date.now() - Number(localGameSession.startTime)) >= timerTotalTime * 1000
   );
-  console.log(isTimerComplete);
+  
   const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     const startTime = Date.now(); 
@@ -180,7 +180,7 @@ function FooterGameInProgress({
         { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS))) && (
           <PaginationContainerStyled
             className="swiper-pagination-container"
-            style={{ paddingTop: `${theme.sizing.xxSmPadding}px`, zIndex: 2 }}
+            style={{ paddingTop: `${theme.sizing.xxSmPadding}px`, paddingBottom: 0, zIndex: 2 }}
           />
         )}
         { (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
@@ -209,6 +209,7 @@ function FooterGameInProgress({
           </Box>
         )}
         <HostButton
+          key={String(isTimerComplete)}
           buttonType={buttonType}
           label={buttonText}
           isEnabled={teamsLength > 0 && !(buttonText === 'Continue' && !isTimerComplete)}

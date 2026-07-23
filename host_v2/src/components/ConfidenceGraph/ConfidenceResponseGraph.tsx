@@ -179,10 +179,6 @@ export default function ConfidenceResponsesGraph({
           </VictoryStack>
         </VictoryChart>
       </div>
-      <CenteredContainer>
-        <Typography variant='label'>{t('gamesession.confidenceCard.title')}</Typography>
-      </CenteredContainer>
-
     </ContainerStyled>
   );
 }

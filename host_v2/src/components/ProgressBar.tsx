@@ -40,7 +40,10 @@ const CurrentNumberTypography = styled(Typography)({
   zIndex: '1',
   lineHeight: '18px',
   color: 'white',
-  paddingLeft: '8px'
+  boxSizing: 'border-box',
+  paddingLeft: '8px',
+  paddingRight: '8px',
+  minWidth: 'fit-content',
 }); 
 
 const TotalNumberTypography = styled(Typography)({
@@ -73,7 +76,7 @@ export default function ProgressBar({ inputNum, totalNum }: LinearProgressBarPro
           }}
           value={progressPercent}
         />
-        <CurrentNumberTypography style={{width: `${progressPercent - 2}%`}}>
+        <CurrentNumberTypography style={{width: `${progressPercent}%`}}>
           {inputNum}
         </CurrentNumberTypography>
       </ProgressBarContainer>

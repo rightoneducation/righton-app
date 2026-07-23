@@ -8,17 +8,19 @@ import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { GameSessionDispatchContext } from '../lib/context/GameSessionContext';
 import { useTSDispatchContext } from '../hooks/context/useGameSessionContext';
-
+import { BodyCardStyledBlue } from '../lib/styledcomponents/BodyCardStyled';
 import CloseIcon from '../images/Close.svg';
 import SortArrows from '../images/buttonIconSortArrows.svg';
 import MonsterIcon from './MonsterIcon';
 import PlayerName from './PlayerName';
-import NoPlayersLobby from './NoPlayersLobby';
 import { ScreenSize } from '../lib/HostModels';
+import ArrowIcon from '../images/Arrow.svg';
 
-interface CurrentStudentProps {
+interface CurrentStudentsCardProps {
   teams: ITeam[];
   currentQuestionIndex: number;
+  // shown in the row above the player list while the card is expanded
+  gameCode: number;
   // accepted but unused: shares a prop shape with ResultsStudents so HostBody's StudentsComponent
   // switch can pass entranceDelay to either fork. The lobby has no delayed entrance animation.
   entranceDelay?: number; // eslint-disable-line react/no-unused-prop-types -- accepted for prop-shape parity with ResultsStudents; unused in the lobby
@@ -27,21 +29,6 @@ interface CurrentStudentProps {
   questionsCount?: number;
   screenSize?: ScreenSize;
 }
-
-const GridStyled = styled(Grid)({
-  color: 'rgba(255, 255, 255, 1)',
-  fontWeight: 'bold',
-  fontSize: '72px',
-  textAlign: 'center',
-  marginTop: '4%',
-});
-
-const PStyled = styled(Typography)({
-  color: 'rgba(255, 255, 255, 1)',
-  textAlign: 'center',
-  margin: 'auto',
-  fontSize: '16px',
-});
 
 const CloseSvg = styled('img')({
   cursor: 'pointer',
@@ -79,10 +66,6 @@ const GridScoreStyled = styled(GridNameStyled)({
   cursor: 'default', // not interactive; avoids the I-beam a text node would get
 });
 
-const BoxStyled = styled(Box)({
-  padding: '16px 12px 16px 12px',
-});
-
 const PlayerCountContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
@@ -96,12 +79,20 @@ const PlayerCountLabel = styled(Box)({
   whiteSpace: 'pre-wrap',
 });
 
+const PlayerCountTypography = styled(Typography)({
+  fontFamily: 'Rubik',
+  color: '#FFF',
+  fontSize: '24px',
+  fontWeight: 700,
+});
+
 // anchors the absolutely-positioned sort menu to the sort button
 const SortButtonContainer = styled(Box)({
   position: 'relative',
 });
 
-// dropdown that fades/slides in below the sort button, mirroring central_v2's SortMenu
+// dropdown that fades/slides in below the sort button. mirrors the lobby's sort menu in
+// CurrentStudents.tsx — kept as a local copy so the lobby's version can't be disturbed.
 const SortMenu = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSortOpen',
 })<{ isSortOpen: boolean }>(({ isSortOpen }) => ({
@@ -145,19 +136,19 @@ const SortMenuItem = styled(Typography, {
   },
 }));
 
-const PlayerCountTypography = styled(Typography)({
-  fontFamily: 'Rubik',
+// "Game Code: 1234" — Poppins/800/20px comes from the host h3 variant; the variant's own
+// color is the grey player-name token, so it's overridden to white on the blue card.
+const GameCodeTypography = styled(Typography)({
   color: '#FFF',
-  fontSize: '24px',
-  fontWeight: 700,
 });
 
-function CurrentStudents({ teams, currentQuestionIndex, questionsCount, screenSize }: CurrentStudentProps) {
+function CurrentStudentsCard({ teams, currentQuestionIndex, gameCode, questionsCount, screenSize }: CurrentStudentsCardProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<'name' | 'firstJoined'>('firstJoined');
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
   // lobby sort is client-side only; in-game keeps the score-based teamSorter
   const sortedTeams = currentQuestionIndex === null
@@ -186,38 +177,39 @@ function CurrentStudents({ teams, currentQuestionIndex, questionsCount, screenSi
   };
     
   return (
-    <Box style={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%', gap: '8px'}}>
-      <PlayerCountContainer>
-        <PlayerCountLabel>
-          <PlayerCountTypography>{teams.length} </PlayerCountTypography>
-          <PlayerCountTypography style={{ fontSize: '16px', fontWeight: 400 }}>
-            {teams.length === 1 ? `player has joined` : `players have joined`}
-          </PlayerCountTypography>
-        </PlayerCountLabel>
-        <ClickAwayListener onClickAway={() => isSortOpen && setIsSortOpen(false)}>
-          <SortButtonContainer>
-            <HostButton
-              buttonType={HostButtonType.SORT}
-              label=""
-              isEnabled
-              onClick={handleSortClick}
-              style={{ borderBottomRightRadius: isSortOpen ? '0px' : '8px' }}
-              icon={<img src={SortArrows} alt="Sort" />}
-            />
-            <SortMenu isSortOpen={isSortOpen}>
-              <SortMenuItem variant="h2" isSelected={sortBy === 'name'} onClick={() => handleSelectSort('name')}>
-                Name (A-Z)
-              </SortMenuItem>
-              <SortMenuItem variant="h2" isSelected={sortBy === 'firstJoined'} onClick={() => handleSelectSort('firstJoined')}>
-                First Joined
-              </SortMenuItem>
-            </SortMenu>
-          </SortButtonContainer>
-        </ClickAwayListener>
-      </PlayerCountContainer>
-      {teams.length === 0 ? (
-        <NoPlayersLobby questionsCount={questionsCount} screenSize={screenSize} />
-      ) : (
+    <BodyCardStyledBlue elevation={10} sx={{ marginLeft: 0, marginRight: 0 }}>
+      <Box style={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%', gap: '8px'}}>
+        <PlayerCountContainer onClick={() => setIsExpanded(!isExpanded)} style={{cursor: 'pointer'}}>
+          <PlayerCountLabel>
+            <Typography variant='h3' style={{color: '#FFF'}}>{teams.length} {teams.length === 1 ? `player has joined` : `players have joined`}</Typography>
+          </PlayerCountLabel>
+         <img src={ArrowIcon} alt="arrow" style={{ transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+        </PlayerCountContainer>
+        { isExpanded &&
+        <>
+        <PlayerCountContainer>
+          <GameCodeTypography variant="h3">Game Code: {gameCode}</GameCodeTypography>
+          <ClickAwayListener onClickAway={() => isSortOpen && setIsSortOpen(false)}>
+            <SortButtonContainer>
+              <HostButton
+                buttonType={HostButtonType.SORT}
+                label=""
+                isEnabled
+                onClick={handleSortClick}
+                style={{ borderBottomRightRadius: isSortOpen ? '0px' : '8px' }}
+                icon={<img src={SortArrows} alt="Sort" />}
+              />
+              <SortMenu isSortOpen={isSortOpen}>
+                <SortMenuItem variant="h2" isSelected={sortBy === 'name'} onClick={() => handleSelectSort('name')}>
+                  Name (A-Z)
+                </SortMenuItem>
+                <SortMenuItem variant="h2" isSelected={sortBy === 'firstJoined'} onClick={() => handleSelectSort('firstJoined')}>
+                  First Joined
+                </SortMenuItem>
+              </SortMenu>
+            </SortButtonContainer>
+          </ClickAwayListener>
+        </PlayerCountContainer>
         <StartEndGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{flex: 1, minHeight: 0, width: '100%'}}>
           {sortedTeams && sortedTeams.map((team) => (
             <MenuItemStyled key={uuidv4()}>
@@ -234,9 +226,11 @@ function CurrentStudents({ teams, currentQuestionIndex, questionsCount, screenSi
             </MenuItemStyled>
           ))}
         </StartEndGameScrollBoxStyled>
-      )}
-    </Box>
+        </>
+        }
+      </Box>
+    </BodyCardStyledBlue>
   );
 }
 
-export default CurrentStudents;
+export default CurrentStudentsCard;

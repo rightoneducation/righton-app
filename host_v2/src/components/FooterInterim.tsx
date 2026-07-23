@@ -11,7 +11,7 @@ const FooterContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
 })<{ screenSize: ScreenSize }>(({ screenSize }) => {
   const bottomPaddingBySize: Record<ScreenSize, string> = {
-    [ScreenSize.SMALL]: '48px',
+    [ScreenSize.SMALL]: '16px',
     [ScreenSize.MEDIUM]: '56px',
     [ScreenSize.LARGE]: '24px',
   };
@@ -29,7 +29,7 @@ const FooterContainer = styled(Box, {
     // inner left/right: 24px on mobile, 16px on tablet/desktop. Mobile's inset lives here
     // (not on the FooterBackgroundStyled wrapper) so it renders reliably. The 32px tablet
     // wrapper inset lives on FooterBackgroundStyled; desktop has no wrapper.
-    paddingTop: screenSize === ScreenSize.SMALL ? '20px' : '32px',
+    paddingTop: screenSize === ScreenSize.SMALL ? '8px' : '32px',
     paddingLeft: screenSize === ScreenSize.SMALL ? '24px' : '16px',
     paddingRight: screenSize === ScreenSize.SMALL ? '24px' : '16px',
     paddingBottom: bottomPaddingBySize[screenSize],
@@ -102,7 +102,7 @@ function FooterInterim({
   return (
     <FooterContainer screenSize={screenSize}>
       {screenSize === ScreenSize.SMALL &&
-        <PaginationContainerStyled className="swiper-pagination-container" />
+        <PaginationContainerStyled className="swiper-pagination-container" style={{paddingBottom: 0}} />
       }
       <InnerFooterContainer>
         { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
