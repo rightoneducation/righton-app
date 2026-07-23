@@ -1,0 +1,64 @@
+{
+  "writingStyle": {
+    "description": "Language quality guidance injected into all LLM prompts",
+    "titles": "3-6 words. Plain noun phrase that names the specific error. No parentheticals or clarifications inside parentheses. Write the error directly: 'Did Not Flip the Second Fraction' — never 'Did Not Flip the Second Fraction (no reciprocal)'.",
+    "descriptions": "2-3 sentences maximum. Keep it concrete and specific. Do NOT start every sentence with 'Students' — vary the subject. Good openers: the error itself ('Slope and intercept get swapped...'), a conditional ('When reading y = mx + b, the two numbers...'), or the consequence ('The result is...'). One idea per sentence. No hedging words (often, typically, usually, tend to). Do not restate the same idea in different words. Write for a classroom teacher, not a researcher.",
+    "instructionalMoves": "Write in short, scannable chunks. Use plain conversational language — imagine a teacher reading this quickly between classes. Break steps into separate sentences. Avoid dense paragraphs. No academic or clinical language. Active voice. Each instruction should be one action: 'Show students two worked examples side by side.' not 'Teachers should consider presenting students with two worked examples simultaneously for comparison purposes.'",
+    "successIndicators": "Start each with an action verb. Describe observable student behavior only. 10 words max per indicator."
+  },
+  "analysis": {
+    "description": "microcoachLLMAnalysis — identifies misconceptions from PPQ assessment data",
+    "model": "gpt-5-mini",
+    "keyFindingsCount": {
+      "min": 3,
+      "max": 5
+    },
+    "successIndicatorsPerMisconception": {
+      "min": 2,
+      "max": 4
+    },
+    "frequencyThresholds": {
+      "description": "Percent of class affected to classify a misconception's frequency label (3 tiers: many/some/few)",
+      "manyPercent": 50,
+      "somePercent": 30
+    },
+    "misconceptionScoring": {
+      "description": "Weights for the composite score that determines which misconception is isCore. Weights should sum to 1.0.",
+      "prevalenceWeight": 0.4,
+      "conceptualSeverityWeight": 0.3,
+      "prerequisiteLeverageWeight": 0.15,
+      "forwardImpactWeight": 0.15,
+      "conceptualSeverityScale": {
+        "description": "Guide for the LLM when estimating conceptual severity: 1.0 = structural conceptual misunderstanding of the math concept; 0.6 = mixed conceptual and procedural; 0.3 = procedural/execution error only"
+      }
+    },
+    "coreSelection": {
+      "description": "Rules for designating the isCore misconception and filtering secondary misconceptions",
+      "minimumPrevalencePercent": 20,
+      "alternativeQualifier": {
+        "description": "A misconception below minimum prevalence can still be priority 1 if BOTH conditions are met",
+        "minConceptualSeverity": 0.8,
+        "minForwardImpact": 0.7
+      },
+      "maxMisconceptions": 4,
+      "secondaryMustBeMeaningfullyDistinct": true,
+      "tiebreakers": [
+        "prefer_conceptual_over_procedural",
+        "prefer_broader_downstream_impact"
+      ]
+    },
+    "futureScoringSignals": {
+      "ppqConfidenceRatings": true,
+      "studentReflectionResponses": false,
+      "confidenceScoring": {
+        "description": "Confidence modifies existing scoring dimensions rather than adding a new one.",
+        "highConfWrongThreshold": 0.25,
+        "highConfidenceMinRating": 4,
+        "lowConfidenceMaxRating": 2,
+        "lowAvgConfidenceCorrectThreshold": 2.5,
+        "conceptualSeverityBoost": "raise toward 1.0 when highConfWrongPct >= highConfWrongThreshold",
+        "prevalenceAdjustment": "discount correct rate when avgConfidenceCorrect < lowAvgConfidenceCorrectThreshold"
+      }
+    }
+  }
+}
