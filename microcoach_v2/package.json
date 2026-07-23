@@ -1,0 +1,11 @@
+{
+  "name": "microcoach_v2",
+  "private": true,
+  "workspaces": ["app", "api"],
+  "resolutions": {
+    "styled-components": "^5",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@9.0.0",
+    "@types/react": "~18.2.0",
+    "@types/react-dom": "~18.2.0"
+  }
+}
