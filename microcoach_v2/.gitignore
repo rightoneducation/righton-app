@@ -2,7 +2,7 @@
 node_modules/
 
 # build output
-app/build/
+build/
 api/lib/
 *.tsbuildinfo
 
