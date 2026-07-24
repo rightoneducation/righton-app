@@ -1,0 +1,248 @@
+{
+  "api": {
+    "microcoach": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2026-10-14T11:23:58.856Z",
+              "apiKeyExpirationDays": 180,
+              "description": "new"
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "auth": {
+    "microcoach4ff9e90a": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "microcoachGetLearningScience": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachIngestPPQ": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachInitialEvaluator": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachLLMAnalysis": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachLLMVerify": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachNextStepOption": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachRegenEvaluator": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachTeacherUpload": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachTeacherUploadGen": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_microcoachGetLearningScience_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachGetLearningScience"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachGetLearningScience_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachGetLearningScience"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachIngestPPQ_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachIngestPPQ"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachIngestPPQ_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachIngestPPQ"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachInitialEvaluator_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachInitialEvaluator"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachInitialEvaluator_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachInitialEvaluator"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLMAnalysis_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLMAnalysis"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLMAnalysis_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLMAnalysis"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLMVerify_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLMVerify"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachLLMVerify_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachLLMVerify"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachNextStepOption_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachNextStepOption"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachNextStepOption_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachNextStepOption"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachRegenEvaluator_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachRegenEvaluator"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachRegenEvaluator_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachRegenEvaluator"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachTeacherUploadGen_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachTeacherUploadGen"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachTeacherUploadGen_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachTeacherUploadGen"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachTeacherUpload_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachTeacherUpload"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachTeacherUpload_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachTeacherUpload"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "microcoachdocs": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
+}

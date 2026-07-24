@@ -1,0 +1,14 @@
+{
+  "name": "microcoachregenevaluator",
+  "version": "2.0.0",
+  "description": "Regenerates grade-level-inappropriate content and re-evaluates",
+  "main": "index.mjs",
+  "type": "module",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "openai": "^4.0.0",
+    "zod": "^3.23.0",
+    "@aws-sdk/client-secrets-manager": "^3.600.0",
+    "@aws-sdk/client-lambda": "^3.600.0"
+  }
+}
