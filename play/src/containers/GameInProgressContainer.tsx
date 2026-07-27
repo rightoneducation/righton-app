@@ -19,6 +19,7 @@ import {
   ErrorType,
 } from '../lib/PlayModels';
 import { calculateCurrentTime } from '../lib/HelperFunctions';
+import { safeStorage } from '../lib/safeStorage';
 import { trackEvent, PlayEvent } from '../lib/analytics';
 
 interface GameInProgressContainerProps {
@@ -130,6 +131,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
       localModel={localModel}
       gameSession={subscription.gameSession}
       newPoints={subscription.newPoints}
+      accrueHintBonus={subscription.accrueHintBonus}
       {...props}
     />
   );
@@ -139,18 +141,18 @@ export function LocalModelLoader(): LocalModel {
   // localModelBase and localModelAnswer are stored separately so that
   // changes to the timer and changes to the short answer response pad don't conflict
   const localModelBase = JSON.parse(
-    window.localStorage.getItem(StorageKey) ?? '{}'
+    safeStorage.getItem(StorageKey) ?? '{}'
   );
   const localModelAnswer = JSON.parse(
-    window.localStorage.getItem(StorageKeyAnswer) ?? '{}'
+    safeStorage.getItem(StorageKeyAnswer) ?? '{}'
   );
   const localModelHint = JSON.parse(
-    window.localStorage.getItem(StorageKeyHint) ?? '{}'
+    safeStorage.getItem(StorageKeyHint) ?? '{}'
   );
   const localModel = { ...localModelBase, answer: localModelAnswer, hint: localModelHint };
   if (localModel && !localModel.hasRejoined) {
     const updatedModelForNextReload = { ...localModel, hasRejoined: true };
-    window.localStorage.setItem(
+    safeStorage.setItem(
       StorageKey,
       JSON.stringify(updatedModelForNextReload)
     );

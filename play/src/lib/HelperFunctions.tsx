@@ -18,6 +18,7 @@ import {
   LocalModel,
   StorageKeyAnswer,
 } from './PlayModels';
+import { safeStorage } from './safeStorage';
 
 /**
  * check if name entered isn't empty or the default value
@@ -81,13 +82,17 @@ export const checkForSubmittedAnswerOnRejoin = (
     if (
       localModel.answer !== null &&
       localModel.answer.currentState === currentState &&
-      localModel.answer.currentQuestionIndex === currentQuestionIndex
+      localModel.answer.currentQuestionIndex === currentQuestionIndex &&
+      // Identity guard: only restore an answer that belongs to THIS game/team.
+      // StorageKeyAnswer leaks across games, so a prior game's Q1 answer (same phase
+      // + index) would otherwise be reattached as "submitted" and lock the answer UI.
+      localModel.answer.teamMemberAnswersId === localModel.teamMemberAnswersId
     ) {
       // set answer to localAnswer
       returnedAnswer = localModel.answer;
       // remove localAnswer from local storage
       localModel.answer = null; // eslint-disable-line no-param-reassign
-      window.localStorage.setItem(StorageKey, JSON.stringify(localModel));
+      safeStorage.setItem(StorageKey, JSON.stringify(localModel));
     }
   }
   return returnedAnswer as BackendAnswer;
@@ -117,7 +122,10 @@ export const checkForSubmittedHintOnRejoin = (
       localModel.answer !== null &&
       !isNullOrUndefined(localModel.answer.hint) &&
       localModel.answer.currentState === currentState &&
-      localModel.answer.currentQuestionIndex === currentQuestionIndex
+      localModel.answer.currentQuestionIndex === currentQuestionIndex &&
+      // Identity guard: only restore a hint that belongs to THIS game/team (see
+      // checkForSubmittedAnswerOnRejoin — StorageKeyAnswer leaks across games).
+      localModel.answer.teamMemberAnswersId === localModel.teamMemberAnswersId
     ) {
       // set hint to localModel.hint
       returnedHint = localModel.answer.hint;
@@ -204,12 +212,12 @@ export const validateLocalModel = (
  */
 export const fetchLocalData = () => {
   const localModel = validateLocalModel(
-    window.localStorage.getItem(StorageKey),
-    window.localStorage.getItem(StorageKeyAnswer)
+    safeStorage.getItem(StorageKey),
+    safeStorage.getItem(StorageKeyAnswer)
   );
   if (!localModel) {
-    window.localStorage.removeItem(StorageKey);
-    window.localStorage.removeItem(StorageKeyAnswer);
+    safeStorage.removeItem(StorageKey);
+    safeStorage.removeItem(StorageKeyAnswer);
   }
   return localModel;
 };
