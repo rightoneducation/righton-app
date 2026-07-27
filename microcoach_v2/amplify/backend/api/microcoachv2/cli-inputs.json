@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "microcoachv2",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authmicrocoachv2bb9ce5a2"
+    },
+    "conflictResolution": {},
+    "additionalAuthTypes": []
+  }
+}
