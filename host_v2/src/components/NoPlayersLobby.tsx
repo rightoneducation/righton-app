@@ -118,13 +118,6 @@ export default function NoPlayersLobby({ questionsCount, screenSize }: NoPlayers
           Waiting for players to join...
         </Typography>
       </Box>
-        {(questionsCount ?? 0) > 1 && screenSize !== ScreenSize.LARGE && (
-          <InternalEmptyLobbyBodyStyled>
-              <SwipeTypographyStyled>
-                Swipe left to view game questions.
-              </SwipeTypographyStyled>
-          </InternalEmptyLobbyBodyStyled>
-        )}
     </EmptyLobbyBodyStyled>
   );
 }

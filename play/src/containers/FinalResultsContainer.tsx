@@ -7,6 +7,7 @@ import {
 import Leaderboard from '../pages/finalresults/Leaderboard';
 import Congrats from '../pages/finalresults/Congrats';
 import { FinalResultsState, StorageKey, StorageKeyEduDataStudentId } from '../lib/PlayModels';
+import { safeStorage } from '../lib/safeStorage';
 
 interface FinalResultsContainerProps {
   teams?: ITeam[];
@@ -39,10 +40,16 @@ export default function FinalResultsContainer({
   };
   const leader = useRef<boolean>(isLeader(teams, teamId));
 
+  // Only clear local identity at genuine game end (FINAL_RESULTS). This component is
+  // also mounted for mid-game TEAMS_JOINING transients (via GameSessionSwitch), and
+  // wiping StorageKey there gutted the student's gameSessionId — causing a spurious
+  // "Game session not found" error on the next refresh.
   useEffect(() => {
-    window.localStorage.removeItem(StorageKey);
-    window.localStorage.removeItem(StorageKeyEduDataStudentId);
-  }, []);
+    if (currentState === GameSessionState.FINAL_RESULTS) {
+      safeStorage.removeItem(StorageKey);
+      safeStorage.removeItem(StorageKeyEduDataStudentId);
+    }
+  }, [currentState]);
 
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:

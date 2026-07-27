@@ -1,3 +1,4 @@
+import { IAPIClients } from '@righton/networking';
 import posthog from 'posthog-js';
 
 // ── Event catalogue ──────────────────────────────────────────────────────────
@@ -10,6 +11,11 @@ export enum HostEvent {
 
   // Lobby
   TEAM_JOINED                  = 'host_team_joined',
+  TEAMS_RESYNCED               = 'host_teams_resynced',
+
+  // Connection
+  CONNECTION_STATE_CHANGE      = 'host_connection_state_change',
+  TAB_VISIBILITY_CHANGE        = 'host_tab_visibility_change',
 
   // Teacher actions
   GAME_STARTED                 = 'host_game_started',
@@ -106,5 +112,45 @@ export function trackError(
     errorMessage: error instanceof Error ? error.message : String(error),
     stack: error instanceof Error ? (error.stack ?? '') : '',
     ...additionalProperties,
+  });
+}
+
+// ── Connection observability ─────────────────────────────────────────────────
+// Mirrors play's wiring: socket death on the host is this app's #2577 root cause
+// and was invisible because the host emitted no connection telemetry at all.
+
+// Derives the cause of a connection transition from Amplify's ConnectionState.
+// The enum already encodes the cause, so we don't need separate event names.
+function causeFromState(state: string): string {
+  switch (state) {
+    case 'ConnectedPendingNetwork':
+    case 'ConnectionDisruptedPendingNetwork':
+      return 'network';
+    case 'ConnectedPendingKeepAlive':
+      return 'keepalive';
+    case 'ConnectionDisrupted':
+      return 'socket'; // the silent-death class
+    case 'Connecting':
+    case 'Connected':
+      return 'connect';
+    case 'Disconnected':
+    case 'ConnectedPendingDisconnect':
+      return 'disconnect';
+    default:
+      return 'unknown';
+  }
+}
+
+// Wires Amplify's AppSync connection-state changes into PostHog so socket
+// drops/recoveries are visible instead of silent. Returns an unsubscribe fn.
+export function initConnectionStateTracking(apiClients: IAPIClients): () => void {
+  return apiClients.observability.onConnectionStateChange((state, previous) => {
+    trackEvent(HostEvent.CONNECTION_STATE_CHANGE, {
+      connectionState: state,
+      previousConnectionState: previous,
+      cause: causeFromState(String(state)),
+      isOnline: navigator.onLine,           // false  => network condition
+      visibility: document.visibilityState, // 'hidden' => backgrounded
+    });
   });
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
@@ -129,6 +129,10 @@ export default function ConfidenceResponseDropdown({
   const { t } = useTranslation();
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
+  // top of the student-list section; this dropdown remounts on every distinct bar tap
+  // (ConfidenceCard renders it with key={selectedIndex}), so the mount effect below fires
+  // once per bar tap and auto-scrolls the list into view when it loads below the fold.
+  const listRef = useRef<HTMLDivElement>(null);
   const ConfidenceLevelDictionary: { [key in ConfidenceLevel]: string } = {
     [ConfidenceLevel.NOT_RATED]: 'Not Rated',
     [ConfidenceLevel.NOT_AT_ALL]: 'Not at All',
@@ -139,6 +143,30 @@ export default function ConfidenceResponseDropdown({
   };
   const count = selectedConfidence.correct.length + selectedConfidence.incorrect.length;
   const percentage = numPlayers > 0 ? (count / numPlayers) * 100 : 0;
+  // On bar tap, auto-scroll so the top of the student list lands in view (host otherwise
+  // has to manually scroll to discover it below the fold). We scroll the nearest vertical
+  // scroll ancestor (ScrollBoxStyled) directly rather than using scrollIntoView, which would
+  // also shift the horizontal Swiper wrapping the columns on mobile/tablet.
+  useEffect(() => {
+    if (count === 0) return undefined; // empty bucket renders null, nothing to scroll to
+    const raf = requestAnimationFrame(() => {
+      const el = listRef.current;
+      if (!el) return;
+      let scrollBox = el.parentElement;
+      while (scrollBox && !/(auto|scroll)/.test(getComputedStyle(scrollBox).overflowY)) {
+        scrollBox = scrollBox.parentElement;
+      }
+      if (!scrollBox) return;
+      const peek = 48; // keep a sliver of the graph / highlighted bar visible for context
+      const top =
+        el.getBoundingClientRect().top -
+        scrollBox.getBoundingClientRect().top +
+        scrollBox.scrollTop -
+        peek;
+      scrollBox.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   // map a player's rawAnswer to its multiple-choice letter (e.g. 'A'); unused in short-answer mode
   const letterByRawAnswer = responses.reduce<Record<string, string>>((acc, response) => {
     acc[response.rawAnswer] = response.multiChoiceCharacter;
@@ -185,7 +213,7 @@ export default function ConfidenceResponseDropdown({
   // return both and then render them in the correct order
   const sortedPlayers = sortPlayers(selectedConfidence);
   return (
-    <Container>
+    <Container ref={listRef}>
       {selectedConfidence.correct.length === 0 && selectedConfidence.incorrect.length === 0 ? (
         null
       ) : (

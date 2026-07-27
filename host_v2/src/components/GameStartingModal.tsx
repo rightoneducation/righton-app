@@ -6,8 +6,8 @@ import LaunchContainerStyled from '../lib/styledcomponents/launchcontainer/Launc
 import LoadingIndicator from './LoadingIndicator';
 
 const TimerContainer = styled(Box)({
-  width: '140px',
-  height: '140px',
+  width: '180px',
+  height: '180px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -58,16 +58,18 @@ export default function GameStartingModal({
           <TimerContainer>
             <LoadingIndicator
               theme={[
-                'rgb(126, 90, 175)',
-                'rgb(148, 98, 179)',
-                'rgb(169, 104, 180)',
-                'rgb(186, 107, 177)',
-                'rgb(202, 109, 172)',
-                'rgb(218, 112, 168)',
-                'rgb(237, 115, 166)',
-                'rgb(255, 120, 165)',
+                // one continuous purple→red ramp so brightness rises once around the ring:
+                // slow drift through the purples, steeper climb through the reds
+                'rgb(97, 67, 129)',
+                'rgb(110, 67, 127)',
+                'rgb(123, 66, 125)',
+                'rgb(135, 66, 122)',
+                'rgb(161, 65, 118)',
+                'rgb(180, 64, 115)',
+                'rgb(199, 63, 111)',
+                'rgb(225, 62, 107)',
               ]}
-              radius={70}
+              radius={90}
               timerStartInSecond={3}
               setIsTimerVisible={setIsTimerVisible}
               gameCreate={false}

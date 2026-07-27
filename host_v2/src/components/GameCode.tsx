@@ -16,8 +16,8 @@ const GameCodeCard = styled(Grid, {
   display: 'flex',
   flexDirection: 'column',
   paddingTop: '16px',
-  paddingLeft:  screenSize === ScreenSize.LARGE ? '24px' : '88px',
-  paddingRight: screenSize === ScreenSize.LARGE ? '24px' : '88px',
+  paddingLeft:  screenSize === ScreenSize.MEDIUM ? '88px' : '24px',
+  paddingRight: screenSize === ScreenSize.MEDIUM ? '88px' : '24px',
   paddingBottom: '16px',
   border: '1px solid rgba(255, 255, 255, 0.25)',
   borderRadius: '16px',
@@ -31,7 +31,8 @@ const GameCodeText = styled(Typography)({
   lineHeight: '72px',
   fontWeight: '700',
   color: 'rgba(255, 255, 255, 1)',
-  width: '181px',
+  width: 'fit-content',
+  maxWidth: '100%',
   textAlign: 'center'
 });
 

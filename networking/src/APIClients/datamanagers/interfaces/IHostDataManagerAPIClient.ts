@@ -15,6 +15,7 @@ export interface IHostDataManagerAPIClient extends IPlayDataManagerAPIClient {
   getResponsesForQuestion(questionId: string, phase: IPhase): IHostTeamAnswersResponse[];
   subscribeToCreateTeam(callback: (updatedGameSession: IGameSession | null) => void): void
   subscribeToUpdateTeam(callback: (updatedGameSession: IGameSession | null) => void): void;
+  resyncTeams(): Promise<{ gameSession: IGameSession; changed: boolean } | null>;
   deleteTeam(teamId: string, callback:(updatedGameSession: IGameSession) => void): Promise<void>;
   subscribeToCreateTeamAnswer(callback: (createdHostTeamAnswers: IHostTeamAnswers | null) => void): void;
   subscribeToUpdateTeamAnswer(callback: (updatedHostTeamAnswers: IHostTeamAnswers) => void): void;

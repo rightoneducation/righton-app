@@ -49,7 +49,13 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
         setIsGamePrepared={setIsGamePrepared}
       />
     ) : (
-      <PrepareGame isGamePrepared={isGamePrepared} setIsTimerVisible={setIsTimerVisible} />
+      <PrepareGame     
+        teams={gameSession.teams}
+        questions={gameSession.questions}
+        currentQuestionIndex={gameSession.currentQuestionIndex}
+        isGamePrepared={isGamePrepared} 
+        setIsTimerVisible={setIsTimerVisible} 
+      />
     );
   } else {
     teamsJoiningContent = (

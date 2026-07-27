@@ -10,6 +10,7 @@ import MonsterIndex5 from '../images/MonsterIndex5.svg';
 const MonsterContainer = styled('div')({
   display: 'flex',
   borderRadius: '4px',
+  flexShrink: 0, // never squeeze the avatar when a long player name competes for the row
 });
 
 const MonsterImage = styled('img')({
