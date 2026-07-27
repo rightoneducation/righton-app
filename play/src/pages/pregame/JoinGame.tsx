@@ -484,17 +484,18 @@ export default function JoinGame({
             <PaddedContainer>
               <Collapse in={isShowGameInProgressError}>
                 <Typography
-                  variant="h2"
+                  variant="textLabel"
                   sx={{
-                    weight: 700,
                     textAlign: 'center',
-                    marginBottom: `${theme.sizing.smallPadding}px`,
-                    whiteSpace: isMedDevice ? 'normal' : 'pre-line',
+                    marginBottom: `${theme.sizing.smPadding}px`,
+                    // the \n in the string only renders as a break on desktop;
+                    // elsewhere it collapses to a space
+                    whiteSpace: isDesktop ? 'pre-line' : 'normal',
                   }}
                 >
                   {t('joingame.gamecode.error4a')}
                 </Typography>
-                <Typography variant="h2" sx={{ weight: 700, textAlign: 'center', whiteSpace: isMedDevice ? 'normal' : 'pre-line' }}>
+                <Typography variant="textLabel" sx={{ textAlign: 'center', whiteSpace: isDesktop ? 'pre-line' : 'normal' }}>
                   {t('joingame.gamecode.error4b')}
                 </Typography>
               </Collapse>
