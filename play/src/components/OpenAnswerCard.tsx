@@ -15,6 +15,7 @@ import {
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import { StorageKeyAnswer} from '../lib/PlayModels';
+import { safeStorage } from '../lib/safeStorage';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
@@ -107,7 +108,7 @@ export default function OpenAnswerCard({
       currentAnswer,
       false
     );
-    window.localStorage.setItem(
+    safeStorage.setItem(
       StorageKeyAnswer,
       JSON.stringify(extractedAnswer)
     );

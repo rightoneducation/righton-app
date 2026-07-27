@@ -23,6 +23,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   protected teamAnswerAPIClient: ITeamAnswerAPIClient;
   protected createTeamSubscription: any;
   protected updateTeamSubscription: any;
+  private teamResyncInFlight: boolean;
+  private teamsPushedDuringResync: ITeam[];
   private hostTeamAnswers: IHostTeamAnswers;
   private createTeamAnswerSubscription: any;
   private updateTeamAnswerSubscription: any;
@@ -43,6 +45,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     this.teamMemberAPIClient = teamMemberAPIClient;
     this.teamAnswerAPIClient = teamAnswerAPIClient;
     this.hostTeamAnswers = {questions:[]};
+    this.teamResyncInFlight = false;
+    this.teamsPushedDuringResync = [];
     this.noResponseCharacter = '…';
     this.lambdaHintEndpoint = `https://yh5ionr9rg.execute-api.us-east-1.amazonaws.com/groupHints/groupHints`;
   }
@@ -61,21 +65,20 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   cleanupSubscription() {
-    if (this.gameSessionSubscription && this.gameSessionSubscription.unsubscribe) {
-      this.gameSessionSubscription.unsubscribe();
-    }
-    if (this.createTeamSubscription && this.createTeamSubscription.unsubscribe) {
-      this.createTeamSubscription.unsubscribe();
-    }
-    if (this.updateTeamSubscription && this.updateTeamSubscription.unsubscribe) {
-      this.updateTeamSubscription.unsubscribe();
-    }
-    if (this.createTeamAnswerSubscription && this.createTeamAnswerSubscription.unsubscribe) {
-      this.createTeamAnswerSubscription.unsubscribe();
-    }
-    if (this.updateTeamAnswerSubscription && this.updateTeamAnswerSubscription.unsubscribe) {
-      this.updateTeamAnswerSubscription.unsubscribe();
-    } 
+    // The subscribe* API client methods are async, so these fields hold Promise<Subscription>,
+    // not Subscription — a direct `.unsubscribe` check is always falsy and silently leaks the
+    // socket. Resolve first (also correct when cleanup races a subscribe still connecting).
+    [
+      this.gameSessionSubscription,
+      this.createTeamSubscription,
+      this.updateTeamSubscription,
+      this.createTeamAnswerSubscription,
+      this.updateTeamAnswerSubscription,
+    ].forEach((subscription) => {
+      Promise.resolve(subscription)
+        .then((resolved: any) => resolved?.unsubscribe?.())
+        .catch((error) => console.error('Error: failed to unsubscribe', error));
+    });
   }
 
   //subscribe to created teams, when players are joining in the lobby
@@ -90,11 +93,64 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team');
         return;
       }
-      const newGameSession = { ...this.gameSession as IGameSession };
-      newGameSession.teams.push(team);
+      // Buffer pushes that land mid-resync: resyncTeams' fetch may have been served before this
+      // team existed, so replacing the roster with that response alone would drop it again.
+      if (this.teamResyncInFlight)
+        this.teamsPushedDuringResync.push(team);
+      const currentTeams = (this.gameSession as IGameSession)?.teams ?? [];
+      // Idempotent: resyncTeams can surface a team the socket later delivers (or redelivers).
+      if (currentTeams.some((existing: ITeam) => existing.id === team.id))
+        return;
+      const newGameSession = { ...this.gameSession as IGameSession, teams: [...currentTeams, team] };
       this.gameSession = newGameSession;
       callback(newGameSession);
     });
+  }
+
+  // Reconcile the locally-held roster against the backend. subscribeToCreateTeam only ever appends
+  // what the socket delivers, so any onCreateTeam lost while the socket was down (host device
+  // backgrounded, a network blip — Amplify reconnects but never replays what it missed) leaves that
+  // team invisible for the rest of the session. Refetching is the only way back: a Team is a child
+  // record, so creating one does not move GameSession.updatedAt and it can't be used as a cursor.
+  // The fetched roster REPLACES the local one (server is authoritative for removals — deleteTeam's
+  // own refetch-replace demonstrably recovered a missed team in production on 2026-07-15).
+  async resyncTeams(): Promise<{ gameSession: IGameSession; changed: boolean } | null> {
+    // Bail until init has loaded a session; triggers can fire before then.
+    if (!this.gameSessionId || !this.gameSession)
+      return null;
+    if (this.teamResyncInFlight)
+      return null;
+    this.teamResyncInFlight = true;
+    this.teamsPushedDuringResync = [];
+    try {
+      const fetchedGameSession = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
+      if (!fetchedGameSession)
+        return null;
+      const teamsById = new Map<string, ITeam>();
+      (fetchedGameSession.teams ?? []).forEach((team: ITeam) => {
+        if (team?.id) teamsById.set(team.id, team);
+      });
+      this.teamsPushedDuringResync.forEach((team: ITeam) => {
+        if (team?.id) teamsById.set(team.id, team);
+      });
+      const priorIds = ((this.gameSession as IGameSession).teams ?? []).map((team: ITeam) => team.id).sort();
+      const nextIds = Array.from(teamsById.keys()).sort();
+      const changed = priorIds.length !== nextIds.length || priorIds.some((id, i) => id !== nextIds[i]);
+      // Teams only. The host drives currentState itself (it holds no gameSession subscription), so
+      // merging the fetched copy wholesale could clobber a just-advanced phase with a staler read.
+      const newGameSession = {
+        ...(this.gameSession as IGameSession),
+        teams: Array.from(teamsById.values()),
+      };
+      this.gameSession = newGameSession;
+      return { gameSession: newGameSession, changed };
+    } catch (error) {
+      console.error('Error: failed to resync teams', error);
+      return null;
+    } finally {
+      this.teamResyncInFlight = false;
+      this.teamsPushedDuringResync = [];
+    }
   }
 
 
@@ -110,8 +166,14 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team');
         return;
       }
-      const newGameSession = { ...this.gameSession as IGameSession };
-      newGameSession.teams[newGameSession.teams.findIndex((t) => t.id === team.id)] = team;
+      // Replace by id, or append when the team isn't in the roster — an update can arrive for a
+      // team whose create push was lost, and indexing with findIndex's -1 would write teams[-1]
+      // and silently drop it. New array either way; the old one may be shared with prior state.
+      const currentTeams = (this.gameSession as IGameSession)?.teams ?? [];
+      const newTeams = currentTeams.some((t) => t.id === team.id)
+        ? currentTeams.map((t) => (t.id === team.id ? team : t))
+        : [...currentTeams, team];
+      const newGameSession = { ...this.gameSession as IGameSession, teams: newTeams };
       this.gameSession = newGameSession;
       callback(newGameSession);
     });

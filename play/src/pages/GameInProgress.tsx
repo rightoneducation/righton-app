@@ -38,6 +38,7 @@ import {
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel, ScreenSize, StorageKeyAnswer, StorageKeyHint, PADDING_LEFTRIGHT_BY_SIZE } from '../lib/PlayModels';
+import { safeStorage } from '../lib/safeStorage';
 import { trackEvent, trackError, PlayEvent } from '../lib/analytics';
 
 const PADDING_TOP_BY_SIZE: Record<ScreenSize, string> = {
@@ -79,6 +80,7 @@ interface GameInProgressProps {
   gameSession: IGameSession;
   newPoints?: number;
   isAddTime: boolean;
+  accrueHintBonus?: () => void;
 }
 
 export default function GameInProgress({
@@ -102,6 +104,7 @@ export default function GameInProgress({
   isShortAnswerEnabled,
   gameSession,
   newPoints,
+  accrueHintBonus,
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
@@ -202,7 +205,7 @@ export default function GameInProgress({
         }
       }
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
+      safeStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
       setTeamAnswerId(response.id ?? '');
       setBackendAnswer(answer);
       setDisplaySubmitted(true);
@@ -244,13 +247,29 @@ export default function GameInProgress({
   const handleSubmitHint = (normalizedHint: IAnswerHint) => {
     // frontend first
     setHintBonusPoints(1);
-    window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
+    safeStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
+    // Persist the hint onto the stored answer too, so a refresh restores the
+    // submitted-hint state. checkForSubmittedHintOnRejoin reads localModel.answer.hint,
+    // gated by the answer's currentState/currentQuestionIndex (which the standalone
+    // StorageKeyHint value lacks), so without this the hint pill resets on reload.
+    try {
+      const storedAnswerRaw = safeStorage.getItem(StorageKeyAnswer);
+      if (storedAnswerRaw) {
+        const storedAnswer = JSON.parse(storedAnswerRaw);
+        storedAnswer.hint = normalizedHint;
+        safeStorage.setItem(StorageKeyAnswer, JSON.stringify(storedAnswer));
+      }
+    } catch {
+      /* ignore persistence failures */
+    }
     setAnswerHint(normalizedHint);
     // backend after — fire and forget
     apiClients.teamAnswer.updateTeamAnswerHint(teamAnswerId, normalizedHint)
       .catch(() => setIsAnswerError(true));
-    apiClients.team.updateTeam({ id: teamId, score: (currentTeam?.score ?? score) + 1 })
-      .catch(() => setIsAnswerError(true));
+    // The hint +1 is folded into the hook's absolute, max-guarded score total
+    // (idempotent per question, self-healing) instead of an additive direct write that
+    // the next question's reconcile would clobber.
+    accrueHintBonus?.();
   };
 
   const handleRetry = () => {
@@ -282,7 +301,7 @@ export default function GameInProgress({
       answerText,
       false
     )
-    window.localStorage.setItem(
+    safeStorage.setItem(
       StorageKeyAnswer,
       JSON.stringify(answer)
     );
