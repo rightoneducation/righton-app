@@ -72,7 +72,7 @@ function HostHeader({ gameCode, screenSize }: HostHeaderProps) {
   };
   
   const handleCloseClick = () => {
-    window.location.href = 'http://dev-central.rightoneducation.com/';
+    window.location.href = 'http://central.rightoneducation.com/';
   };
   return (
     <Box style={{width: '100%'}}>
