@@ -71,7 +71,7 @@ export default function GameInProgressContent({
   }
   // these booleans turn on and off the respective feature cards in the render function below
   const {isConfidenceEnabled, isHintEnabled, isShortAnswerEnabled} = currentQuestion;
-
+  
 
   const [isPopularMode, setIsPopularMode] = React.useState<boolean>(true);
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
@@ -130,7 +130,7 @@ export default function GameInProgressContent({
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
-        <BodyContentAreaSingleColumnStyled container style={{gap: `12px`}}>
+        <BodyContentAreaSingleColumnStyled container screenSize={screenSize} style={{gap: `12px`}}>
           <motion.div
           ref={scope}
           initial={{ x: needAnimate ? '100vw' : '0%',}}

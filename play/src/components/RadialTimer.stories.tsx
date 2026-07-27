@@ -23,20 +23,20 @@ const Template: StoryFn<typeof RadialTimer> = function RadialTimerTemplate(
   );
 };
 
-const countdownColor = 'rgba(225, 65, 107';
-
 export const Default = Template.bind({});
 Default.args = {
-  radius: 110,
+  radius: 90,
   timerStartInSeconds: 5,
   inputColors: [
-    `${countdownColor}, 0.3)`,
-    `${countdownColor}, 0.4)`,
-    `${countdownColor}, 0.5)`,
-    `${countdownColor}, 0.6)`,
-    `${countdownColor}, 0.7)`,
-    `${countdownColor}, 0.8)`,
-    `${countdownColor}, 0.9)`,
-    `${countdownColor}, 1)`,
+    // one continuous purple→red ramp so brightness rises once around the ring:
+    // slow drift through the purples, steeper climb through the reds
+    'rgb(97, 67, 129)',
+    'rgb(110, 67, 127)',
+    'rgb(123, 66, 125)',
+    'rgb(135, 66, 122)',
+    'rgb(161, 65, 118)',
+    'rgb(180, 64, 115)',
+    'rgb(199, 63, 111)',
+    'rgb(225, 62, 107)',
   ],
 };

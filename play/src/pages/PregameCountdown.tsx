@@ -39,7 +39,7 @@ export default function StartPhase2({
         <RadialTimer
           mode={TimerMode.COUNTDOWN}
           inputColors={theme.palette.primary.radialTimerArray}
-          radius={110}
+          radius={90}
           timerStartInSeconds={3}
           setIsPregameCountdown={setIsPregameCountdown}
         />

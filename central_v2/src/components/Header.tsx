@@ -506,6 +506,7 @@ export default function Header({
                 <img
                   src={menuOpen ? hamburgerX : hamburger}
                   alt="Hamburger Menu"
+                  style={{paddingLeft: '4px', paddingRight: '4px'}}
                 />
               </IconButton>
             )}
@@ -517,7 +518,7 @@ export default function Header({
             userStatus === UserStatusType.GOOGLE_SIGNIN ? (
               loggedInUserComponents
             ) : (
-              <Box display="flex" style={{ maxWidth: '300px', gap: '24px' }}>
+              <Box display="flex" style={{ maxWidth: '300px', gap: '12px' }}>
                 <CentralButton
                   buttonType={ButtonType.LOGINHEADER}
                   isEnabled

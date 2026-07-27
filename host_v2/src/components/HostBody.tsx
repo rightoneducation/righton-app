@@ -36,6 +36,7 @@ const BodyContentAreaSingleColumnStyled = styled(
   justifyContent: 'center',
   maxWidth: `${theme.breakpoints.values.md}px`,
   flexGrow: 1,
+  paddingTop: `${theme.sizing.smPadding}px`,
 }));
 
 interface HostBodyProps {
