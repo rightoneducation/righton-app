@@ -2,7 +2,6 @@
   "name": "microcoach_v2",
   "version": "0.1.0",
   "private": true,
-  "workspaces": ["api"],
   "resolutions": {
     "styled-components": "^5",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@9.0.0",
@@ -14,7 +13,8 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.7",
     "@mui/material": "^5.16.7",
-    "@righton/microcoach-v2-api": "*",
+    "@react-oauth/google": "^0.12.1",
+    "aws-amplify": "^6.8.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -33,12 +33,20 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "yarn --cwd ./api build && react-scripts start",
-    "build": "yarn --cwd ./api build && react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "seed:cleanup": "ts-node --project seed/tsconfig.json seed/cleanup.ts",
+    "seed:ingest": "ts-node --project seed/tsconfig.json seed/ingest-ppq.ts",
+    "seed:upload": "ts-node --project seed/tsconfig.json seed/upload.ts",
+    "seed:verify": "ts-node --project seed/tsconfig.json seed/verify.ts",
+    "seed:generate": "ts-node --project seed/tsconfig.json seed/generate-next-steps.ts",
+    "seed:validate": "ts-node --project seed/tsconfig.json seed/validate-next-steps.ts",
+    "seed:post-analyze": "APPSYNC_SECRET_NAME=microcoach ts-node --project seed/tsconfig.json seed/post-analyze.ts",
+    "sync-prompt-config": "node scripts/sync-prompt-config.mjs"
   },
   "prettier": {
     "singleQuote": true
@@ -72,20 +80,21 @@
       "build/*",
       "**/coverage/**",
       "node_modules/*",
-      "api/**"
+      "src/api/**",
+      "seed/**",
+      "scripts/**",
+      "amplify/**"
     ],
     "settings": {
       "import/core-modules": [
-        "@righton/microcoach-v2-api"
+        "aws-amplify",
+        "@react-oauth/google"
       ]
     },
     "rules": {
       "import/no-extraneous-dependencies": [
         "error",
         {
-          "devDependencies": [
-            "@righton/microcoach-v2-api/*"
-          ],
           "peerDependencies": true
         }
       ],
@@ -122,6 +131,12 @@
     ]
   },
   "devDependencies": {
+    "@aws-sdk/client-lambda": "^3.1002.0",
+    "@aws-sdk/client-secrets-manager": "^3.1000.0",
+    "mammoth": "^1.11.0",
+    "openai": "^4.0.0",
+    "ts-node": "^10.9.2",
+    "xlsx": "^0.18.5",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "eslint": "^8.56.0",

@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import configureAmplify from './lib/configureAmplify';
+
+// Configure Amplify (Cognito + Google OAuth) once, before anything renders.
+configureAmplify();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,

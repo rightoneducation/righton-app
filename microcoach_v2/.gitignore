@@ -3,8 +3,17 @@ node_modules/
 
 # build output
 build/
-api/lib/
 *.tsbuildinfo
+
+# amplify (generated + secrets) — amplify init adds its own amplify/.gitignore too
+aws-exports.js
+amplifyconfiguration.json
+amplify/\#current-cloud-backend
+amplify/.config/local-*
+amplify/backend/amplify-meta.json
+amplify/backend/awscloudformation/build/
+amplify/backend/**/build/
+amplify/**/.temp/
 
 # misc
 .DS_Store
