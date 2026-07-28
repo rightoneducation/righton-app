@@ -34,7 +34,7 @@ You are a curriculum quality reviewer. Return only valid JSON.
 ## Misconception
 
 Title: [misconception title]
-Description: [misconception description]
+Description: [misconception misconceptionSummary]
 Most common error: [most common error]
 Student thinking pattern: [thinking pattern]
 
@@ -137,3 +137,5 @@ Rules:
   }
 }
 ```
+
+The three design principles checked here are the same three Call 4 generates against.

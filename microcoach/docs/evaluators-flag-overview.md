@@ -2,6 +2,8 @@
 
 The grade-level evaluator pipeline (initial evaluation during upload, admin-email summary, Review-page bell UI, and regenerate flow) is gated behind a pair of `EVALUATORS_ENABLED` constants so it can be turned off temporarily without deleting any code.
 
+**Current state: both flags are `false` — the evaluator pipeline is disabled.**
+
 ## Where the flag lives
 
 Two constants, both `false` when disabled. They must stay in sync.

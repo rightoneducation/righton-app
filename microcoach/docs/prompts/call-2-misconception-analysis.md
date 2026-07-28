@@ -5,8 +5,12 @@
 | | |
 |---|---|
 | **Lambda** | `microcoachLLMAnalysis` |
-| **Model** | `gpt-5-mini` |
+| **Model** | `gpt-5-mini` (main analysis) |
 | **Called** | Once per session |
+
+The Lambda makes three passes: the main analysis call below, then a per-misconception
+**enrichment** pass (`gpt-4o-mini`) and a **math validation** pass (`o3-mini`) documented at the
+bottom of this file.
 
 ## System Prompt
 
@@ -34,19 +38,26 @@ Apply these rules to every string you generate:
   only. 10 words max per indicator.
 
 ## Math Formatting Requirements
-Always use Unicode. Never use LaTeX or caret/underscore ASCII notation. Specific rules:
-- Exponents: x² x³ 10⁴ (never x^2 or x^3)
-- Subscripts: x₁ x₂ xₙ (never x_1 or x_n)
-- Fractions: use / inline (e.g. 1/2, 3/4) or a÷b form — never \frac
-- Multiplication: × (never \times or *)
-- Division: ÷ (never \div)
-- Square root: √x (never \sqrt or sqrt())
-- Inequalities: ≤ ≥ ≠ (never <=, >=, !=)
-- Approximately equal: ≈ (never ~= or approx)
-- Negative numbers: use Unicode minus − (U+2212), not a hyphen-minus -
-- Pi: π (never "pi")
-- Angle/theta: ∠ABC, θ (never "angle ABC" or "theta")
-- Absolute value: |x| (pipe characters, never abs(x))
+Always use LaTeX for mathematical expressions. Never use Unicode math symbols or caret/underscore
+ASCII notation outside of LaTeX delimiters. Wrap ALL math in LaTeX delimiters:
+- Inline math: $...$ (e.g. $\frac{2}{3} \div \frac{3}{4}$, $-6x + 12$, $x^2$)
+- Display/block math (standalone equations): $$...$$ on its own line
+Specific rules:
+- Exponents: $x^2$, $x^3$, $10^4$ (never x², x³ outside delimiters)
+- Subscripts: $x_1$, $x_2$, $x_n$ (never x₁, x₂ outside delimiters)
+- Fractions: $\frac{a}{b}$ (never a/b or a÷b for fractions)
+- Multiplication: $a \times b$ (never × outside delimiters or *)
+- Division: $a \div b$ (never ÷ outside delimiters)
+- Square root: $\sqrt{x}$ (never √x outside delimiters)
+- Inequalities: $\leq$, $\geq$, $\neq$ (never ≤ ≥ ≠ outside delimiters)
+- Approximately equal: $\approx$ (never ≈ outside delimiters)
+- Negative numbers: $-6$ (standard minus inside delimiters)
+- Pi: $\pi$ (never π outside delimiters)
+- Angle/theta: $\angle ABC$, $\theta$ (never ∠ABC, θ outside delimiters)
+- Absolute value: $|x|$ (inside delimiters)
+Plain prose text should remain as normal English — only wrap actual math expressions in delimiters.
+Example: "Students who multiply $\frac{2}{3}$ by the reciprocal will get $\frac{8}{9}$, but a common
+error is to get $\frac{4}{9}$."
 
 ## Learning Science Data
 [injected: prerequisite and downstream standard data from the 3rd party learning science database]
@@ -140,13 +151,86 @@ from the core, and must represent a separate reasoning error. Set `isCore: false
 secondary misconceptions. Cap total at 4 misconceptions.
 
 - frequency: "many" if >50% of class affected, "some" if 30–50%, "few" if <30%
-- example: provide a concrete, representative student error
+- example: provide a concrete, representative student error. "incorrect" is a typical wrong
+  expression or answer students write; "correct" is the right form with minimal annotation.
+  Apply the Math Formatting Requirements above.
 - occurrence: "recurring" ONLY if the same pattern appears in session history; otherwise "first"
 - prerequisiteGapCodes: ONLY codes where a gap in that earlier skill would DIRECTLY cause this
   specific error pattern
 - impactedObjectiveCodes: ONLY codes that this specific misconception would DIRECTLY threaten
 
 Return JSON matching the schema.
+```
+
+## Pass 2 — Misconception Enrichment
+
+| | |
+|---|---|
+| **Model** | `gpt-4o-mini` (`temperature: 0.3`, `max_tokens: 900`, JSON object mode) |
+| **Called** | Once per misconception, in parallel |
+
+Produces the `correctAnswerSolution` and `wrongAnswerExplanations` fields. Question numbers are
+parsed out of `evidence.source` (the `Q(\d+)` pattern) and used to pull the matching correct
+answers and the top 4 wrong answers from the wrong-answer distribution.
+
+```
+You are a math education expert analyzing a student misconception.
+
+Misconception: "[title]"
+Description: [description]
+CCSS Standard: [ccssStandard]
+Relevant questions and correct answers:
+[injected: "Q3: correct answer = ..." per matched question]
+
+## Task 1 — Correct answer solution
+Write a worked solution showing how to arrive at the correct answer for this type of problem. Use
+2–4 concise steps. Each step should be a plain string. Use LaTeX for all math expressions ($...$
+for inline). If multiple question numbers are relevant and they share the same solution path,
+write one unified solution.
+
+## Task 2 — Wrong answer explanations
+[If wrong answer distribution data exists:]
+Students commonly gave these wrong answers: [top 4 wrong answers]
+
+For each wrong answer, provide a brief explanation of the likely thinking pattern or conceptual
+error. The "answer" field must be the actual mathematical value or expression the student wrote
+(e.g. "8/6", "−2", "multiplied instead of divided") — never a letter like "A" or "B". If the raw
+value is a letter, infer the likely mathematical expression from the misconception context and
+correct answer.
+
+[Otherwise:]
+No wrong answer distribution is available. Omit the "wrongAnswerExplanations" array (return []).
+
+Return a JSON object with exactly these keys:
+{
+  "correctAnswerSolution": ["step 1 text", "step 2 text", ...],
+  "wrongAnswerExplanations": [{ "answer": "...", "explanation": "..." }, ...]
+}
+```
+
+## Pass 3 — Math Content Validation
+
+| | |
+|---|---|
+| **Model** | `o3-mini` (from `analysis.validator.model`) |
+| **Called** | Once per session, over all misconceptions at once |
+
+Re-reads the math-critical fields (`description`, `example.incorrect`, `example.correct`,
+`evidence.mostCommonError`, `correctAnswerSolution`, `wrongAnswerExplanations`) and returns
+corrected versions. Corrections are merged field-by-field; if the pass fails, the misconceptions
+are left untouched.
+
+**System prompt:** `You are a math accuracy reviewer. Output only valid JSON array.`
+
+```
+You are a K-12 math accuracy reviewer. You will receive a list of misconception descriptions
+and associated mathematical content. Your job is to identify and correct any mathematical errors.
+
+Use LaTeX for all mathematical expressions ($...$ for inline, $$...$$ for display). Never use
+Unicode math symbols or plain ASCII math notation.
+
+Input:
+[injected: JSON array of the misconceptions' math-critical fields]
 ```
 
 ## Configuration (`microcoachLLMAnalysis/src/util/config.json`)

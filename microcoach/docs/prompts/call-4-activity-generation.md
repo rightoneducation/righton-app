@@ -103,8 +103,9 @@ Your activity MUST differ meaningfully in at least one of these four dimensions:
 4. **Representation or explanation strategy**
 
 ## Math Formatting Requirements
-Always use Unicode. Never use LaTeX or caret/underscore ASCII notation.
-[same rules as Call 2]
+Always use LaTeX for mathematical expressions. Never use Unicode math symbols or caret/underscore
+ASCII notation outside of LaTeX delimiters.
+[same rules as Call 2 — $...$ inline, $$...$$ display, per-symbol rules, prose stays plain English]
 
 [If reference examples exist:]
 ## Reference Activity Examples
@@ -112,8 +113,31 @@ The following are real next step lessons used in similar classrooms. Study their
 and problem design — your output should match this level of quality.
 [injected: formatted examples from database]
 
-[If learning science data available:]
-[injected: prerequisite and downstream standards context]
+## Knowledge Graph: Learning Context
+
+**Standard Being Taught**: [misconception ccssStandard]
+**Standard Description**: [description from the matched standard, or the misconception description]
+
+[If prerequisite standards exist:]
+**Prerequisite Skills** (knowledge students should have but may be missing):
+  - [code]: [description]
+The activity should acknowledge or briefly surface these gaps where relevant.
+
+[If future-dependent standards exist:]
+**At-Risk Standards** (what students will struggle with later if this misconception persists):
+  - [code]: [description]
+Framing the importance of this fix in terms of these downstream skills can motivate students.
+
+[If the matched standard carries lvnFactors:]
+## LVN Learning Science Factors
+
+The following research-backed factors are linked to [ccssStandard]. Use them to guide your
+strategy selection.
+
+- **[factor name]** ([category]): [description]
+
+Strategy selection guidance (choose the strategy tag that best fits the factors above):
+- [whenToUse] → **"[strategy tag name]"**
 
 ## Misconception to Address
 
@@ -135,11 +159,32 @@ Grade: [grade] | Subject: [subject] | Class size: [cohortSize]
 
 Generate ONE classroom-ready next step activity that directly addresses the cognitive error above.
 
-[injected: format-specific requirements — either Whole Class or Split Class]
+[If preferredFormat is whole_class:]
+## Whole Class Format Requirements
+All students engage in the same activity led by the teacher. Common structures: analyzing
+incorrect worked examples, teacher modeling and student critique, whole-class discussion, quick
+formative responses (whiteboards, hand signals, polling). May briefly include turn-and-talk or
+think-pair-share, but the activity must remain primarily teacher-led whole-class instruction.
+
+[If preferredFormat is split_class:]
+## Split Class Format Requirements
+The class is divided into exactly TWO groups based on a response pattern or misconception — e.g.
+students who chose answers A/B vs. C/D, or students who showed misconception X vs. misconception Y.
+
+Allowed structures for this format:
+  1. Teacher Rotation: Teacher alternates between the two groups providing targeted support.
+  2. Parallel Error Analysis: Each group analyzes a different incorrect example, then the class
+     reconvenes to compare reasoning.
+  3. Partner Discussion Within Groups: Students may think-pair-share within their half of the class.
+
+Avoid:
+  - Creating 3 or more groups
+  - Regrouping students again within groups
+  - Ability-based pairings or trios
 
 The activity MUST:
 - Target the **specific** cognitive error pattern identified in the misconception
-- Connect to the prerequisite knowledge gaps and downstream standards from the learning science database
+- Connect to the prerequisite knowledge gaps and downstream standards from the knowledge graph
 - Use format: **"[whole_class or split_class]"** — do not use any other format
 - Be completable in <= 30 minutes (target: 30 minutes)
 
@@ -160,6 +205,7 @@ Requirements for each field:
 - **tabs.overview.whatStudentsDo**: 2–4 bullets. Each bullet: a short bold action label + 1-2
   sentences.
 - **tabs.overview.whatYouDo**: 2–4 bullets. Same format.
+- **tabs.overview.importance**: Why this specific activity addresses this specific misconception
 - **tabs.activitySteps**: setup (2–3 steps), concrete math problem, 4–6 core activity steps,
   2–3 discussion questions that surface and resolve the error
 - **tabs.activitySteps.incorrectWorkedExample1/2/3**: Three separate required fields, one
@@ -200,9 +246,61 @@ Misconception: Student swaps slope and y-intercept when reading y = mx + b
   Incorrect work: Slope = 5, y-intercept = 3  ← swaps m and b
   The line rises 5 for every 2 right  ✗ wrong — slope of 5 means 5 per 1 unit, not per 2
 
-- **tabs.studentGroupings**: 2–3 groups differentiated by misconception severity
+- **tabs.materials**: what must be prepared or printed
+- **tabs.studentGroupings**: 2–3 groups differentiated by misconception severity + grouping
+  strategy guidance
 
 Return JSON matching the schema.
+```
+
+## Post-Generation Validation Passes
+
+Two `o3-mini` cleanup calls run inside the same Lambda after the activity comes back. Both fall
+back to the original text on any error.
+
+**System prompt (both):** `You are a math accuracy reviewer. Output only valid JSON.`
+
+### Central problem review
+
+```
+Review this math problem for a [ccssStandard] ([misconception title]) intervention activity.
+Problem: "[tabs.activitySteps.problem]"
+Is the problem mathematically correct? If it contains errors, return the corrected version. If
+correct, return it unchanged. Return JSON: { "problem": "<corrected or original problem>" }
+Use LaTeX for all math ($...$ inline, $$...$$ display). Never use Unicode math symbols.
+```
+
+### Incorrect worked example review
+
+Runs over all three examples at once. Preserves the intentional misconception error and fixes only
+unintentional arithmetic slippage — and replaces an example outright if the wrong path lands on the
+correct answer anyway.
+
+```
+You are a K-12 math accuracy reviewer checking incorrect worked examples for a [ccssStandard]
+intervention on "[misconception title]".
+
+Each example is INTENTIONALLY wrong at exactly one step — the misconception step. Your job is to
+fix any UNINTENTIONAL arithmetic errors in the surrounding steps while preserving the intentional
+misconception error.
+
+Rules:
+- Do NOT fix or remove the misconception error (the one step that shows the wrong conceptual move)
+- DO fix any arithmetic slippage in other steps (wrong multiplication, wrong simplification, wrong
+  sign, wrong intermediate result)
+- If an example is already correct (one error only, no arithmetic slippage), return it unchanged
+- CRITICAL: For each example, solve the problem correctly to find the true correct answer. Then
+  trace the incorrect path shown in incorrectWork to find the STATED answer. If the stated answer
+  matches the correct solution, the example fails — the misconception error is inconsequential.
+  Replace the ENTIRE example (both "problem" and "incorrectWork") with a new problem of the same
+  misconception type where the misconception error causes a clearly wrong final answer.
+- Use LaTeX for all mathematical expressions ($...$ for inline, $$...$$ for display). Never use
+  Unicode math symbols or plain ASCII math notation.
+- Return a JSON array with the same length as the input, each item:
+  { "problem": "...", "incorrectWork": "..." }
+
+Examples to review:
+[injected: the three generated examples as JSON]
 ```
 
 ## Configuration (`microcoachNextStepOption/src/util/config.json`)
@@ -213,6 +311,9 @@ Return JSON matching the schema.
     "model": "gpt-5-mini",
     "formatsToGenerate": ["whole_class", "split_class"],
     "maxDurationMinutes": 30,
+    "targetDurationMinutes": 30,
+    "disallowedTeachingMethods": [],
+    "overviewBullets": { "min": 2, "max": 4 },
     "activitySteps": { "min": 4, "max": 6 },
     "setupSteps": { "min": 2, "max": 3 },
     "discussionQuestions": { "min": 2, "max": 3 },
@@ -228,15 +329,18 @@ Return JSON matching the schema.
       "Error-first instruction: Students must encounter and analyze incorrect reasoning before seeing the correct method.",
       "Connection to student responses: The activity must reference or build on the specific error patterns observed in the class data."
     ],
-    "activityStructures": [
-      { "name": "Incorrect Worked Example Analysis", "description": "Students examine a complete incorrect solution step-by-step, identify exactly where the reasoning goes wrong, and justify a correction." },
-      { "name": "Compare / Debate / Evaluate Strategies", "description": "Students evaluate two or more solution methods to determine which is correct or more efficient." },
-      { "name": "Favorite No", "description": "Analyze a real or hypothetical student error (anonymous): identify what the student understood, name the misconception, and explain the correct reasoning." },
-      { "name": "Math Hospital / Diagnose & Repair", "description": "Students 'treat' an incorrect solution: identify the error, propose a correction, and explain why it works." },
-      { "name": "Predict Misconceptions / Error Forecasting", "description": "Students anticipate where errors are likely to occur in a problem before solving, then discuss strategies to prevent them." },
-      { "name": "Strategy Construction / Corrective Pathway", "description": "After analyzing errors, students generate a correct solution pathway from scratch, articulating each step." },
-      { "name": "Multiple Entry Points / Representations", "description": "Students engage with the misconception through visual, symbolic, or verbal representations." }
-    ],
+    "activityStructures": {
+      "description": "Each activity must have a clearly named structure...",
+      "structures": [
+        { "name": "Incorrect Worked Example Analysis", "description": "Students examine a complete incorrect solution step-by-step, identify exactly where the reasoning goes wrong, and justify a correction." },
+        { "name": "Compare / Debate / Evaluate Strategies", "description": "Students evaluate two or more solution methods to determine which is correct or more efficient." },
+        { "name": "Favorite No", "description": "Analyze a real or hypothetical student error (anonymous): identify what the student understood, name the misconception, and explain the correct reasoning." },
+        { "name": "Math Hospital / Diagnose & Repair", "description": "Students 'treat' an incorrect solution: identify the error, propose a correction, and explain why it works." },
+        { "name": "Predict Misconceptions / Error Forecasting", "description": "Students anticipate where errors are likely to occur in a problem before solving, then discuss strategies to prevent them." },
+        { "name": "Strategy Construction / Corrective Pathway", "description": "After analyzing errors, students generate a correct solution pathway from scratch, articulating each step." },
+        { "name": "Multiple Entry Points / Representations", "description": "Students engage with the misconception through visual, symbolic, or verbal representations." }
+      ]
+    },
     "distinctnessRules": [
       "Each activity generated for a misconception must use a different activityStructure.",
       "Activities must differ meaningfully in at least one of: instructional approach, activity structure, strategy tag, or representation/explanation strategy.",
@@ -250,8 +354,17 @@ Return JSON matching the schema.
       "Focus on instructional moves rather than logistics."
     ],
     "formatConstraints": {
-      "wholeClass": "All students engage in the same activity led by the teacher. May include turn-and-talk, but must remain primarily teacher-led whole-class instruction.",
-      "splitClass": "The class is divided into exactly TWO groups based on a response pattern or misconception. Avoid creating 3 or more groups, regrouping within groups, or ability-based pairings."
+      "description": "Only two formats are allowed. Do not generate Small Groups.",
+      "wholeClass": {
+        "label": "whole_class",
+        "description": "All students engage in the same activity led by the teacher... May briefly include turn-and-talk or think-pair-share, but the activity must remain primarily teacher-led whole-class instruction."
+      },
+      "splitClass": {
+        "label": "split_class",
+        "description": "The class is divided into exactly TWO groups based on a response pattern or misconception...",
+        "structures": ["Teacher Rotation: ...", "Parallel Error Analysis: ...", "Partner Discussion Within Groups: ..."],
+        "avoid": ["Creating 3 or more groups", "Regrouping students again within groups", "Ability-based pairings or trios"]
+      }
     },
     "udlRequirements": [
       "Visual representations: specify exactly what the teacher should draw or write on the board.",
@@ -266,6 +379,9 @@ Return JSON matching the schema.
       "Never introduce arithmetic slippage in steps that are not the misconception itself.",
       "Self-check: would a student making only this one conceptual error produce exactly this work? If not, fix the surrounding arithmetic.",
       "The error MUST produce a wrong final answer. If not, choose a different problem."
+    ],
+    "incorrectWorkedExampleFewShot": [
+      { "misconception": "...", "good": { "label": "...", "problem": "...", "incorrectWork": "..." }, "bad": { "label": "...", "problem": "...", "incorrectWork": "..." } }
     ],
     "strategyTags": [
       { "name": "Make Structure Visible", "whenToUse": "Structural conceptual misunderstanding — expose the underlying math structure explicitly" },

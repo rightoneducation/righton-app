@@ -11,9 +11,10 @@
   - [Call 2 — Misconception Analysis](#call-2--misconception-analysis)
   - [Call 3 — Activity Planning](#call-3--activity-planning)
   - [Call 4 — Activity Generation](#call-4--activity-generation)
-  - [Call 5 — Design Principle Checks](#call-5--design-principle-checks)
+  - [Call 5 — Activity Verification](#call-5--activity-verification)
   - [Call 6 — Evaluate Outputs via 3rd Party Tool](#call-67---3rd-party-evaluationregeneration)
   - [Call 7 — Regenerate Outputs Based on Evaluation](#call-67---3rd-party-evaluationregeneration)
+  - [Math Formatting](#math-formatting)
   - [Structural Validation](#structural-validation)
 - [The Post-Activity Pipeline](#the-post-activity-pipeline)
 - [Running the Pipeline](#running-the-pipeline)
@@ -117,6 +118,9 @@ The main diagnostic call. Given the full classroom picture, the AI identifies th
 - `wrongAnswerExplanations` — why students chose each wrong answer
 - `correctAnswerSolution` — step-by-step correct approach
 
+The last two come from a second `gpt-4o-mini` enrichment pass run per misconception, and a third
+`o3-mini` pass then re-checks every math-bearing field and rewrites anything that is wrong.
+
 > **Confidence signal:** The most diagnostic input is `highConfWrongPct` — the percentage of high-confidence answers that were wrong. A student who is confidently wrong has a deep misconception, not a careless error.
 
 ### Call 3 — [Activity Planning](./prompts/call-3-activity-planning.md)
@@ -145,11 +149,17 @@ Writes a complete teaching activity for one misconception in one format.
 - `coreActivity[]` — 4–6 instructional steps
 - `studentGroupings.groups[]` — group names and descriptions, with `students: []` intentionally empty (filled in algorithmically after generation, not by the LLM)
 
+Before returning, the Lambda runs two `o3-mini` cleanup passes: one over the central student-facing
+problem, and one over the three incorrect worked examples. The second preserves the intentional
+misconception error and fixes only unintentional arithmetic slippage around it — and replaces an
+example outright if the wrong reasoning path happens to land on the correct answer.
+
 > **Why incorrect examples come first:** Students learn more from analyzing their own error patterns than from being shown the right answer. The validation script enforces that exactly 3 incorrect examples are always present.
 
-### Call 5 — [Design Principle Checks](./prompts/call-5-activity-verification.md)
+### Call 5 — [Activity Verification](./prompts/call-5-activity-verification.md)
 
-A separate `microcoachLLMVerify` Lambda re-reads each activity and checks:
+A separate `microcoachLLMVerify` Lambda re-reads each activity and runs two independent checks in
+parallel — a design check (`gpt-4o-mini`) and a math check (`o3-mini`):
 - Does the activity actually target the stated misconception?
 - Does it lead with error-first instruction?
 - Does it reference actual class data (PPQ results, response patterns)?
@@ -159,6 +169,19 @@ A separate `microcoachLLMVerify` Lambda re-reads each activity and checks:
 ### Call 6/7 - [3rd Party Evaluation](./prompts/call-6-7-evaluation-and-regeneration.md#call-6--evaluate-outputs-via-3rd-party-tool)/[Regeneration](./prompts/call-6-7-evaluation-and-regeneration.md#call-7--regenerate-outputs-based-on-evaluation)
 
 The content that is output from this data pipeline will be used by teachers and shown to students. As such, we want to ensure that the content and complexity of these outputs is aligned to the classroom setting that it will eventually reach. We use a 3rd party tool to run an evaluation of this text, which provides verbose output. If the quality metrics fail, we can use that verbose output as a rubric that we can pass to the LLM, which greatly simplifies the regeneration process. This two step process ensures that the output from this pipeline has been further vetted, and that we can regenerate explicitly against those 3rd party standards as required. 
+
+## Math Formatting
+
+Every generated string that contains math is written as **LaTeX**, not Unicode. Each generating
+prompt (Calls 2 and 4) carries the same "Math Formatting Requirements" block: inline math wrapped
+in `$...$`, display math in `$$...$$`, and per-symbol rules (`$\frac{a}{b}$` rather than `a/b`,
+`$x^2$` rather than `x²`, `$\leq$` rather than `≤`). Prose between the delimiters stays plain
+English. Each `o3-mini` validation pass restates the same rule so corrections come back in LaTeX
+too.
+
+The app renders the math with KaTeX, so teachers see properly typeset fractions, exponents and
+symbols rather than raw notation. An expression KaTeX cannot parse falls back to visible text
+instead of breaking the page.
 
 ## Structural Validation
 
@@ -172,9 +195,9 @@ After generation, a validation script checks every activity for:
 
 After a teacher runs an intervention activity and students take the follow-up quiz, a POST_PPQ Excel file is exported from Uncommon and placed in the session's `post/` folder. Running `yarn post-analyze` then handles everything in two steps.
 
-**Step 1 — Ingest POST_PPQ data.** The script parses the Excel file, creates a POST_PPQ Assessment record, and uploads each student's responses. If a previous upload exists with empty response data (e.g. the file wasn't filled in correctly), it automatically deletes and re-uploads. Only students already in the class roster are matched — students in the follow-up file who are not in the roster are skipped.
+**Step 1 — Ingest POST_PPQ data.** The script parses the Excel file, creates a POST_PPQ Assessment record, and uploads each student's responses. If a previous upload exists with empty response data (e.g. the file wasn't filled in correctly), it automatically deletes and re-uploads. Only students already in the class roster are matched — responses for students in the follow-up file who are not in the roster are not uploaded, though those students still feed the improvement math in Step 2.
 
-**Step 2 — Compute improvement per misconception.** For each misconception, the script uses the activity student groupings from the Prepare tab as the "before" picture — specifically, all students in Groups A and B (everyone except the strongest group). It then checks each of those students' POST_PPQ scores against a 60% mastery threshold and classifies them as improved, still needing support, or newly surfaced. Students who were absent during the original PPQ (and therefore not placed in any group) are also checked: if they took the POST_PPQ and scored below 60%, they are flagged as still needing support. Only students who took both assessments are counted in the mastery percentages. The results — including class mastery before/after and student-level breakdowns — are saved back to the session and appear immediately on the Reflect tab.
+**Step 2 — Compute improvement per misconception.** For each misconception, the script uses the activity student groupings from the Prepare tab as the "before" picture — specifically, all students in Groups A and B (everyone except the strongest group). It then checks each of those students' POST_PPQ scores against a 60% mastery threshold and classifies them as improved, still needing support, or newly surfaced. Students with no "before" picture — absent during the original PPQ, or not on the roster at all — are also checked: if they took the POST_PPQ and scored below 60%, they are flagged as still needing support. The mastery percentages are computed over everyone who took the POST_PPQ, including those students; anyone who took the PPQ but missed the POST_PPQ is excluded. See [post-ppq-improvement-calculation.md](./post-ppq-improvement-calculation.md) for the full accounting. The results — including class mastery before/after and student-level breakdowns — are saved back to the session and appear immediately on the Reflect tab.
 
 ---
 

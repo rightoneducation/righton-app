@@ -1,0 +1,117 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-microcoachv2-dev-144346-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-microcoachv2-dev-144346-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-microcoachv2-dev-144346-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
+      "UnauthRoleName": "amplify-microcoachv2-dev-144346-unauthRole",
+      "StackName": "amplify-microcoachv2-dev-144346",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-microcoachv2-dev-144346/884b1140-8986-11f1-82f8-0e67ef0dc419",
+      "AmplifyAppId": "d23o98fv9pytkq"
+    }
+  },
+  "auth": {
+    "microcoachv2bb9ce5a2": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "lastPushTimeStamp": "2026-07-27T07:29:47.422Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoachv2-dev-144346-deployment/amplify-cfn-templates/auth/microcoachv2bb9ce5a2-cloudformation-template.json",
+        "logicalId": "authmicrocoachv2bb9ce5a2"
+      },
+      "output": {
+        "UserPoolId": "us-east-1_S8zm9HGnX",
+        "AppClientIDWeb": "2mcar4noktdk6n6esqulcj8mdf",
+        "AppClientID": "2vt6krlas0pj3fms4h9f21544q",
+        "IdentityPoolId": "us-east-1:78ca627d-a9e3-4f2c-9aed-44a7aeb612c9",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:484006752749:userpool/us-east-1_S8zm9HGnX",
+        "IdentityPoolName": "microcoachv2bb9ce5a2_identitypool_bb9ce5a2__dev",
+        "UserPoolName": "microcoachv2bb9ce5a2_userpool_bb9ce5a2"
+      },
+      "lastPushDirHash": "JE0lFh5rio9QAFAPVhx9IxH322E="
+    },
+    "userPoolGroups": {
+      "service": "Cognito-UserPool-Groups",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "microcoachv2bb9ce5a2",
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ]
+        }
+      ],
+      "lastPushTimeStamp": "2026-07-27T07:29:47.422Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoachv2-dev-144346-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
+        "logicalId": "authuserPoolGroups"
+      },
+      "output": {
+        "AdminsGroupRole": "arn:aws:iam::484006752749:role/us-east-1_S8zm9HGnX-AdminsGroupRole"
+      },
+      "lastPushDirHash": "8vMrkx1pJVKUQyjXMLQj72qx76Y="
+    }
+  },
+  "api": {
+    "microcoachv2": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "microcoachv2bb9ce5a2",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authmicrocoachv2bb9ce5a2"
+            }
+          }
+        },
+        "GraphQLAPIIdOutput": "virrpxwlvvgprntind5ze4vqxy",
+        "GraphQLAPIEndpointOutput": "https://y26hf2jewbhjdfgltz6oflnjgm.appsync-api.us-east-1.amazonaws.com/graphql"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-microcoachv2-dev-144346-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apimicrocoachv2"
+      },
+      "lastPushTimeStamp": "2026-07-27T07:29:47.422Z",
+      "lastPushDirHash": "oaBR9yW76dbLr4JM0gBItu/WbZo="
+    }
+  }
+}

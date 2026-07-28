@@ -10,9 +10,15 @@ against the evaluator's own rubric when the score misses the target grade band.
 | | |
 |---|---|
 | **Lambda** | `microcoachInitialEvaluator` |
-| **Model** | N/A — queries the 3rd party evaluation tool database via GraphQL, not an LLM |
+| **Model** | N/A — no prompt of ours; calls the `GradeLevelAppropriatenessEvaluator` from the `@learning-commons/evaluators` package (authenticated with a Google API key from the `google-api` secret) |
 
-No prompt. The function passes all classroom-facing outputs to a 3rd party tool to evaluate text complexity and ensure that it is aligned with the appropriate classroom setting. Returns verbose, structured output that is used for regeneration, as needed. 
+No prompt. The function passes all classroom-facing outputs to a 3rd party tool to evaluate text complexity and ensure that it is aligned with the appropriate classroom setting. Returns verbose, structured output that is used for regeneration, as needed.
+
+Texts are evaluated in parallel batches of 6 with `maxRetries: 2`; failures are recorded per text
+rather than failing the batch. Each result's `score` (a grade band from `K-1` through `11-CCR`) is
+classified against the classroom's grade as `atGrade` / `aboveGrade` / `belowGrade`.
+
+> Calls 6 and 7 are currently switched off, so the pipeline does not run them today.
 
 ## Call 7 — Regenerate Outputs Based on Evaluation
 
@@ -31,7 +37,7 @@ You are an expert K-12 math education content writer.
 ### User Prompt
 
 ```
-An external evaluator scored math education discussion questions outside the target grade level.
+An external evaluator scored math education discussion questions above the target grade level.
 
 Your task is to rewrite the discussion questions so they score at the target grade band. The worked examples for this misconception are intentionally kept as-is — only rewrite the discussion questions.
 
