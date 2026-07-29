@@ -1,0 +1,40 @@
+{
+  "header": {
+    "brand": "RightOn MicroCoach",
+    "signup": "Sign Up",
+    "login": "Login"
+  },
+  "hero": {
+    "title": "See how your whole class is thinking.",
+    "body": "MicroCoach identifies misconception patterns across your class and suggests next steps, in minutes.",
+    "getstarted": "Get started"
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "step1": {
+      "label": "Step 1",
+      "title": "Upload your files",
+      "body": "Upload your answer key and student responses from any quiz or assessment"
+    },
+    "step2": {
+      "label": "Step 2",
+      "title": "See what your class misunderstood",
+      "body": "MicroCoach analyzes every response and groups students by what they misunderstood, not just what they got wrong"
+    },
+    "step3": {
+      "label": "Step 3",
+      "title": "Plan your next move",
+      "body": "For each misconception, MicroCoach suggests targeted next steps. Pick what fits your class and get back to teaching"
+    }
+  },
+  "seeItInAction": {
+    "title": "See it in action",
+    "lead": "New to MicroCoach?",
+    "body": "Watch this quick walkthrough to see how to upload your files, surface misconception patterns, and move forward with next steps.",
+    "playlabel": "Play the MicroCoach walkthrough video"
+  },
+  "footer": {
+    "copyright": "Copyright © 2026 RightOn Education. All rights reserved.",
+    "privacypolicy": "Privacy Policy"
+  }
+}

@@ -185,10 +185,13 @@ const designSystemTypography = {
   },
 };
 
-const xs = 400;
-const sm = 700;
-const md = 900;
-const lg = 1200;
+// Breakpoints match central_v2 so ScreenSize bands line up across the apps:
+// SMALL < 700 | MEDIUM 700-1023 | LARGE >= 1024. The landing page's three
+// Figma frames (393 / 744 / 1920) land one per band.
+const xs = 0;
+const sm = 400;
+const md = 700;
+const lg = 1024;
 const xl = 1536;
 
 const sizing = {
@@ -207,9 +210,14 @@ const sizing = {
   space12: 80,
   space13: 100,
   space14: 120,
-  headerHeight: 64,
-  footerHeight: 64,
+  headerHeight: 134,
+  footerHeight: 160,
   authCardMaxWidth: 400,
+  // Landing page shell: Figma frame is 1920 with content inset to x 260..1660.
+  contentMaxWidth: 1400,
+  // Figma corner radii, shared by the step panel, step cards and video card.
+  sectionRadius: 32,
+  heroImageRadius: 37,
 };
 
 const borderWidth = 1;
