@@ -9,14 +9,20 @@ export type AmplifyDependentResourcesAttributes = {
     "microcoachv2bb9ce5a2": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
-      "IdentityPoolId": "string",
-      "IdentityPoolName": "string",
+      "HostedUIDomain": "string",
+      "OAuthMetadata": "string",
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"
-    },
-    "userPoolGroups": {
-      "AdminsGroupRole": "string"
+    }
+  },
+  "function": {
+    "microcoachv2bb9ce5a2PostAuthentication": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
     }
   }
 }
