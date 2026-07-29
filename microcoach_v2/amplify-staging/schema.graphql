@@ -1,0 +1,32 @@
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+# Embedded (non-@model) type — stored as a list on the User item.
+# Promote to a related @model later if classes need their own queries.
+type Class {
+  id: ID!
+  name: String!
+}
+
+type User
+  @model
+  @auth(
+    rules: [
+      # each teacher owns (creates/reads/updates/deletes) their own record,
+      # keyed by their Cognito sub stored in `cognitoId`
+      { allow: owner, ownerField: "cognitoId", operations: [create, read, update, delete] }
+      # members of the Cognito "Admins" group can read/list all users
+      { allow: groups, groups: ["Admins"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  cognitoId: String! @index(name: "byCognitoId", queryField: "usersByCognitoId")
+  email: String! @index(name: "byEmail", queryField: "usersByEmail")
+  teacherName: String
+  classes: [Class]
+  role: UserRole! @index(name: "byRole", queryField: "usersByRole")
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
