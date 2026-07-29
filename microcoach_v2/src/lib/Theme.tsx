@@ -1,142 +1,224 @@
 import type { CSSProperties } from 'react';
 import { createTheme } from '@mui/material/styles';
 
-// ============================================================================
-// MicroCoach v2 design system.
-//
-// Structure mirrors networking/src/DesignSystem/Theme.tsx (token objects ->
-// module augmentation -> createTheme) but carries one theme instead of two and
-// skips the play/host/Victory-chart specifics.
-//
-// Every value below is a PLACEHOLDER. The shape is what matters: when design
-// hands over real tokens they overwrite values in place, and no structural or
-// type work is needed. Placeholders are deliberately loud (magenta accent) so
-// unfinished surfaces are obvious on screen.
-// ============================================================================
+const rubik = "'Rubik', sans-serif";
+const poppins = "'Poppins', sans-serif";
 
-// design tokens - font families:
-const primaryFont = "'Poppins', sans-serif";
-
-// design tokens - colors: (comments = intended usage)
 const designSystemColors = {
   background: {
-    base: '#FFFFFF', // use case: page background
-    subtle: '#F4F4F4', // use case: page background, secondary sections
+    offWhite: '#FFFDFB',
+    cream: '#FFFBF6',
+    navyBlue: '#1B3467',
+    greyOverlay: '#B2B0AC',
   },
   foreground: {
-    base: '#111111', // use case: body text
-    muted: '#666666', // use case: secondary / helper text
-    inverse: '#FFFFFF', // use case: text on accent or dark surfaces
-    stroke: '#CCCCCC', // use case: borders, dividers
+    base: '#FFFFFF',
+    accentBlue: '#4A6FA5',
+    fadedBlue: '#9FAFC7',
+    lightBlue: '#CADDE8',
+    greyAccent: '#E2EAEE',
+    fadedLightBlue: '#E3EEF4',
+    skyBlue: '#EAF7FE',
+    fadedLightNavyBlue: '#DAE4F3',
+    fadedNavyBlue: '#92A8C7',
+    periwinkle: '#C3D5E3',
+    wildSand: '#F4F5F3',
   },
   surface: {
-    card: '#FFFFFF', // use case: card background
-    raised: '#EEEEEE', // use case: hover / pressed card background
-    accent: '#FF00A8', // TODO(design): placeholder brand accent
-    accentAlt: '#7A00FF', // TODO(design): placeholder secondary accent
+    atlanticNavy: '#1B376F',
+    darkBlue: '#02215F',
+    secondary: '#FFFDFB',
+    black: '#000000',
+    white: '#FFFFFF',
+    neutralGray: '#E4E3E2',
+    skyBlue: '#EAF7FE',
+    steelBlue: '#4A6FA5',
+    lightGreen: '#ECFFE3',
+    green: '#3EBF8F',
+    ashyGray: '#635F5F',
+    placeholderGrey: '#294478',
   },
   status: {
-    success: '#2E7D32', // use case: confirmation
-    warning: '#ED6C02', // use case: caution
-    error: '#D0254D', // use case: validation failure
-    info: '#0288D1', // use case: neutral notice
+    base: '#FFFFFF',
+    success: '#3EBF8F',
+    lightGreen: '#ECFFE3',
+    uploading: '#DFEDF3',
+    uploadingIcon: '#375EF9',
+    uploadingStroke: '#4A6FA5',
+    error: '#FFF3F3',
+    errorStroke: '#E42F2F',
   },
-  // angle defaulted to 180deg (top -> bottom); confirm with design.
   gradients: {
-    background: 'linear-gradient(180deg, #FFFFFF 0%, #F4F4F4 100%)', // use case: page background
-    accent: 'linear-gradient(180deg, #FF00A8 0%, #7A00FF 100%)', // use case: accent button, hero
+    uploadIcons:
+      'linear-gradient(180deg, #E0E5E9 0%, #A2CADD 39%, #4A6FA5 100%)',
   },
 };
 
-// design tokens - typography ramp:
-// Weights are limited to those loaded in src/index.css (Poppins 400/500/600/700).
-// Adding a weight here means adding the matching @import there, otherwise the
-// browser fakes it.
 const designSystemTypography = {
   title: {
-    fontFamily: primaryFont,
-    fontWeight: 700,
-    fontSize: '32px',
-    lineHeight: '130%',
-    letterSpacing: 'normal',
-  }, // screen / hero titles
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '64px',
+    lineHeight: 'normal',
+  },
   h1: {
-    fontFamily: primaryFont,
-    fontWeight: 700,
-    fontSize: '24px',
-    lineHeight: '130%',
-    letterSpacing: 'normal',
-  }, // section headers
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '40px',
+    lineHeight: 'normal',
+  },
   h2: {
-    fontFamily: primaryFont,
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '32px',
+    lineHeight: 'normal',
+  },
+  h3: {
+    fontFamily: rubik,
     fontWeight: 600,
+    fontSize: '32px',
+    lineHeight: 'normal',
+  },
+  h4: {
+    fontFamily: rubik,
+    fontWeight: 400,
     fontSize: '20px',
-    lineHeight: '24px',
-    letterSpacing: 'normal',
-  }, // sub-headers, button labels
-  paragraph: {
-    fontFamily: primaryFont,
+    lineHeight: 'normal',
+  },
+  navTitle: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '32px',
+    lineHeight: 'normal',
+  },
+  navTitle2: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '28px',
+    lineHeight: 'normal',
+  },
+  smallTitle: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '24px',
+    lineHeight: 'normal',
+  },
+  paragraph1: {
+    fontFamily: poppins,
+    fontWeight: 400,
+    fontSize: '24px',
+    lineHeight: '32px',
+    letterSpacing: '0.05em',
+  },
+  paragraph2: {
+    fontFamily: poppins,
+    fontWeight: 300,
+    fontSize: '20px',
+    lineHeight: '28px',
+  },
+  footer: {
+    fontFamily: rubik,
+    fontWeight: 700,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  uploadLabel: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  submissionLabel: {
+    fontFamily: poppins,
+    fontWeight: 500,
+    fontSize: '22px',
+    lineHeight: 'normal',
+  },
+  placeholderLabel: {
+    fontFamily: poppins,
+    fontWeight: 500,
+    fontSize: '16px',
+    lineHeight: 'normal',
+  },
+  mediumLabel: {
+    fontFamily: poppins,
+    fontWeight: 500,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  bodyText: {
+    fontFamily: poppins,
     fontWeight: 400,
     fontSize: '16px',
-    lineHeight: '150%',
-    letterSpacing: 'normal',
-  }, // body copy
-  boldLabel: {
-    fontFamily: primaryFont,
-    fontWeight: 600,
+    lineHeight: 'normal',
+  },
+  smallPopupLabel: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '16px',
+    lineHeight: 'normal',
+    letterSpacing: '0.25px',
+  },
+  titleLight: {
+    fontFamily: rubik,
+    fontWeight: 300,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  xsLabel: {
+    fontFamily: poppins,
+    fontWeight: 400,
     fontSize: '14px',
     lineHeight: 'normal',
-    letterSpacing: 'normal',
-  }, // field labels, emphasis
-  smallLabel: {
-    fontFamily: primaryFont,
-    fontWeight: 400,
-    fontSize: '12px',
+  },
+  statusLabel: {
+    fontFamily: poppins,
+    fontWeight: 500,
+    fontSize: '18px',
     lineHeight: 'normal',
-    letterSpacing: 'normal',
-  }, // helper text, captions
+  },
+  smallBodyText: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '14px',
+    lineHeight: 'normal',
+  },
 };
 
-// design tokens - breakpoints:
 const xs = 400;
 const sm = 700;
 const md = 900;
 const lg = 1200;
 const xl = 1536;
 
-// design tokens - sizing. NOTE: unitless numbers, so consumers must write
-// `${theme.sizing.mdPadding}px`. Passing one bare into an sx spacing prop
-// (p, m, gap) multiplies it by the 8px spacing unit.
 const sizing = {
+  space0: 4,
+  space1: 8,
+  space2: 12,
+  space3: 16,
+  space4: 20,
+  space5: 24,
+  space6: 32,
+  space7: 40,
+  space8: 48,
+  space9: 52,
+  space10: 56,
+  space11: 64,
+  space12: 80,
+  space13: 100,
+  space14: 120,
   headerHeight: 64,
   footerHeight: 64,
-  authCardMaxWidth: 400, // widest the centered auth card grows to
-  xSmPadding: 8, // icon gaps, tight text positioning
-  smPadding: 16, // margins around text, spacing inside cards
-  mdPadding: 24, // spacing between grouped elements
-  lgPadding: 32, // card padding
-  xLgPadding: 48, // spacing between card and screen edge
-  xxLgPadding: 64, // spacing between major page sections
+  authCardMaxWidth: 400,
 };
 
-// design tokens - borders:
 const borderWidth = 1;
 const borders = {
   borderWidth,
-  solid: `${borderWidth}px solid ${designSystemColors.foreground.stroke}`,
+  solid: `${borderWidth}px solid ${designSystemColors.foreground.accentBlue}`,
+  subtle: `${borderWidth}px solid ${designSystemColors.foreground.greyAccent}`,
   transparent: `${borderWidth}px solid transparent`,
-  semiTransparent: `${borderWidth}px solid rgba(0, 0, 0, 0.12)`,
 };
-
-// ============================================================================
-// Type augmentation.
-//
-// Custom colors live under `palette.designSystem.*`, NOT bolted onto
-// `palette.primary.*` the way networking and central_v2 do it — that is what
-// forces those files to hand-maintain ~65 parallel interface keys. Typing the
-// custom theme keys as `typeof <token object>` means adding a token needs no
-// interface edit at all.
-// ============================================================================
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -160,27 +242,65 @@ declare module '@mui/material/styles' {
   interface TypographyVariants {
     designSystem: typeof designSystemTypography;
     title: CSSProperties;
-    paragraph: CSSProperties;
-    boldLabel: CSSProperties;
-    smallLabel: CSSProperties;
+    navTitle: CSSProperties;
+    navTitle2: CSSProperties;
+    smallTitle: CSSProperties;
+    paragraph1: CSSProperties;
+    paragraph2: CSSProperties;
+    footer: CSSProperties;
+    uploadLabel: CSSProperties;
+    submissionLabel: CSSProperties;
+    placeholderLabel: CSSProperties;
+    mediumLabel: CSSProperties;
+    bodyText: CSSProperties;
+    smallPopupLabel: CSSProperties;
+    titleLight: CSSProperties;
+    xsLabel: CSSProperties;
+    statusLabel: CSSProperties;
+    smallBodyText: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
     designSystem?: typeof designSystemTypography;
     title?: CSSProperties;
-    paragraph?: CSSProperties;
-    boldLabel?: CSSProperties;
-    smallLabel?: CSSProperties;
+    navTitle?: CSSProperties;
+    navTitle2?: CSSProperties;
+    smallTitle?: CSSProperties;
+    paragraph1?: CSSProperties;
+    paragraph2?: CSSProperties;
+    footer?: CSSProperties;
+    uploadLabel?: CSSProperties;
+    submissionLabel?: CSSProperties;
+    placeholderLabel?: CSSProperties;
+    mediumLabel?: CSSProperties;
+    bodyText?: CSSProperties;
+    smallPopupLabel?: CSSProperties;
+    titleLight?: CSSProperties;
+    xsLabel?: CSSProperties;
+    statusLabel?: CSSProperties;
+    smallBodyText?: CSSProperties;
   }
 }
 
-// Makes `<Typography variant="paragraph">` typecheck.
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     title: true;
-    paragraph: true;
-    boldLabel: true;
-    smallLabel: true;
+    navTitle: true;
+    navTitle2: true;
+    smallTitle: true;
+    paragraph1: true;
+    paragraph2: true;
+    footer: true;
+    uploadLabel: true;
+    submissionLabel: true;
+    placeholderLabel: true;
+    mediumLabel: true;
+    bodyText: true;
+    smallPopupLabel: true;
+    titleLight: true;
+    xsLabel: true;
+    statusLabel: true;
+    smallBodyText: true;
   }
 }
 
@@ -192,92 +312,91 @@ const Theme = createTheme({
   borders,
   palette: {
     primary: {
-      main: designSystemColors.surface.accent,
-      contrastText: designSystemColors.foreground.inverse,
+      main: designSystemColors.surface.atlanticNavy,
+      contrastText: designSystemColors.surface.white,
     },
     secondary: {
-      main: designSystemColors.surface.accentAlt,
-      contrastText: designSystemColors.foreground.inverse,
+      main: designSystemColors.surface.darkBlue,
+      contrastText: designSystemColors.surface.white,
     },
     background: {
-      default: designSystemColors.background.base,
-      paper: designSystemColors.surface.card,
+      default: designSystemColors.background.offWhite,
+      paper: designSystemColors.foreground.base,
     },
     text: {
-      primary: designSystemColors.foreground.base,
-      secondary: designSystemColors.foreground.muted,
+      primary: designSystemColors.surface.atlanticNavy,
+      secondary: designSystemColors.surface.ashyGray,
+      disabled: designSystemColors.surface.placeholderGrey,
+    },
+    divider: designSystemColors.foreground.greyAccent,
+    action: {
+      disabledBackground: designSystemColors.surface.neutralGray,
     },
     success: { main: designSystemColors.status.success },
-    warning: { main: designSystemColors.status.warning },
-    error: { main: designSystemColors.status.error },
-    info: { main: designSystemColors.status.info },
+    error: { main: designSystemColors.status.errorStroke },
+    info: { main: designSystemColors.status.uploadingIcon },
     designSystem: designSystemColors,
   },
   components: {
-    // Without this, MUI renders unknown variants as <span> — a silent
-    // semantics/a11y regression.
     MuiTypography: {
       defaultProps: {
         variantMapping: {
           title: 'h1',
-          paragraph: 'p',
-          boldLabel: 'p',
-          smallLabel: 'p',
+          navTitle: 'h2',
+          navTitle2: 'h2',
+          smallTitle: 'h3',
+          titleLight: 'h3',
+          paragraph1: 'p',
+          paragraph2: 'p',
+          footer: 'p',
+          uploadLabel: 'p',
+          submissionLabel: 'p',
+          placeholderLabel: 'p',
+          mediumLabel: 'p',
+          bodyText: 'p',
+          smallPopupLabel: 'p',
+          xsLabel: 'p',
+          statusLabel: 'p',
+          smallBodyText: 'p',
         },
       },
     },
   },
   typography: {
-    fontFamily: primaryFont,
+    fontFamily: poppins,
     designSystem: designSystemTypography,
-    // custom variants
-    title: {
-      ...designSystemTypography.title,
-      color: designSystemColors.foreground.base,
-    },
-    paragraph: {
-      ...designSystemTypography.paragraph,
-      color: designSystemColors.foreground.base,
-    },
-    boldLabel: {
-      ...designSystemTypography.boldLabel,
-      color: designSystemColors.foreground.base,
-    },
-    smallLabel: {
-      ...designSystemTypography.smallLabel,
-      color: designSystemColors.foreground.muted,
-    },
-    // stock MUI slots, pointed at the same ramp so untouched components
-    // inherit the design system rather than MUI defaults
-    h1: {
-      ...designSystemTypography.title,
-      color: designSystemColors.foreground.base,
-    },
-    h2: {
-      ...designSystemTypography.h1,
-      color: designSystemColors.foreground.base,
-    },
-    h3: {
-      ...designSystemTypography.h2,
-      color: designSystemColors.foreground.base,
-    },
-    body1: {
-      ...designSystemTypography.paragraph,
-      color: designSystemColors.foreground.base,
-    },
-    body2: {
-      ...designSystemTypography.smallLabel,
-      color: designSystemColors.foreground.muted,
-    },
+    title: { ...designSystemTypography.title },
+    navTitle: { ...designSystemTypography.navTitle },
+    navTitle2: { ...designSystemTypography.navTitle2 },
+    smallTitle: { ...designSystemTypography.smallTitle },
+    paragraph1: { ...designSystemTypography.paragraph1 },
+    paragraph2: { ...designSystemTypography.paragraph2 },
+    footer: { ...designSystemTypography.footer },
+    uploadLabel: { ...designSystemTypography.uploadLabel },
+    submissionLabel: { ...designSystemTypography.submissionLabel },
+    placeholderLabel: { ...designSystemTypography.placeholderLabel },
+    mediumLabel: { ...designSystemTypography.mediumLabel },
+    bodyText: { ...designSystemTypography.bodyText },
+    smallPopupLabel: { ...designSystemTypography.smallPopupLabel },
+    titleLight: { ...designSystemTypography.titleLight },
+    xsLabel: { ...designSystemTypography.xsLabel },
+    statusLabel: { ...designSystemTypography.statusLabel },
+    smallBodyText: { ...designSystemTypography.smallBodyText },
+    h1: { ...designSystemTypography.h1 },
+    h2: { ...designSystemTypography.h2 },
+    h3: { ...designSystemTypography.h3 },
+    h4: { ...designSystemTypography.h4 },
+    h5: { ...designSystemTypography.smallPopupLabel },
+    h6: { ...designSystemTypography.smallBodyText },
+    body1: { ...designSystemTypography.bodyText },
+    body2: { ...designSystemTypography.smallBodyText },
+    caption: { ...designSystemTypography.xsLabel },
     button: {
-      ...designSystemTypography.h2,
+      ...designSystemTypography.h4,
       textTransform: 'none',
     },
   },
 });
 
-// Tokens are exported for direct use outside the MUI theme (tests, storybook,
-// non-MUI surfaces). `Theme` itself is default-only: adding a named `Theme`
-// export alongside it trips import/no-named-as-default at the import site.
 export { designSystemColors, designSystemTypography };
 export default Theme;
