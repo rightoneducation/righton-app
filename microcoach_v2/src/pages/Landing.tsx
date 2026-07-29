@@ -10,16 +10,14 @@ export default function Landing() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 1,
-        px: 3,
+        gap: (theme) => `${theme.sizing.xSmPadding}px`,
+        padding: (theme) => `${theme.sizing.mdPadding}px`,
         textAlign: 'center',
-        background: (theme) => theme.palette.background.default,
+        background: (theme) => theme.palette.designSystem.gradients.background,
       }}
     >
-      <Typography variant="h3" color="primary">
-        MicroCoach
-      </Typography>
-      <Typography variant="body1" color="text.secondary">
+      <Typography variant="title">MicroCoach</Typography>
+      <Typography variant="paragraph">
         Project skeleton is up and running.
       </Typography>
     </Box>
