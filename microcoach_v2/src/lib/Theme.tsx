@@ -60,23 +60,28 @@ const designSystemTypography = {
     fontWeight: 500,
     fontSize: '64px',
     lineHeight: 'normal',
+    // The 393 frame sets the hero title at 40px (48px line box); the 744 frame
+    // keeps it at 64px, so this steps down at SMALL only.
+    '@media (max-width:699px)': {
+      fontSize: '40px',
+    },
   },
   h1: {
     fontFamily: rubik,
     fontWeight: 500,
-    fontSize: '40px',
+    fontSize: '52px',
     lineHeight: 'normal',
   },
   h2: {
     fontFamily: rubik,
     fontWeight: 500,
     fontSize: '32px',
-    lineHeight: 'normal',
+    lineHeight: '36px',
   },
   h3: {
     fontFamily: rubik,
     fontWeight: 600,
-    fontSize: '32px',
+    fontSize: '40px',
     lineHeight: 'normal',
   },
   h4: {
@@ -106,8 +111,7 @@ const designSystemTypography = {
   paragraph1: {
     fontFamily: poppins,
     fontWeight: 400,
-    fontSize: '24px',
-    lineHeight: '32px',
+    fontSize: '28px',
     letterSpacing: '0.05em',
   },
   paragraph2: {
@@ -120,7 +124,6 @@ const designSystemTypography = {
     fontFamily: rubik,
     fontWeight: 700,
     fontSize: '20px',
-    lineHeight: 'normal',
   },
   uploadLabel: {
     fontFamily: rubik,
@@ -185,10 +188,13 @@ const designSystemTypography = {
   },
 };
 
-const xs = 400;
-const sm = 700;
-const md = 900;
-const lg = 1200;
+// Breakpoints match central_v2 so ScreenSize bands line up across the apps:
+// SMALL < 700 | MEDIUM 700-1023 | LARGE >= 1024. The landing page's three
+// Figma frames (393 / 744 / 1920) land one per band.
+const xs = 0;
+const sm = 400;
+const md = 700;
+const lg = 1024;
 const xl = 1536;
 
 const sizing = {
@@ -207,9 +213,15 @@ const sizing = {
   space12: 80,
   space13: 100,
   space14: 120,
-  headerHeight: 64,
-  footerHeight: 64,
+  headerHeight: 134,
   authCardMaxWidth: 400,
+  // Landing page shell: Figma frame is 1920 with header/footer content inset to
+  // x 260..1660 (1400) but the body sections inset to x 275..1645 (1370).
+  contentMaxWidth: 1400,
+  sectionMaxWidth: 1370,
+  // Figma corner radii, shared by the step panel, step cards and video card.
+  sectionRadius: 32,
+  heroImageRadius: 37,
 };
 
 const borderWidth = 1;

@@ -1,0 +1,34 @@
+{
+  "header": {
+    "brand": "RightOn MicroCoach",
+    "signup": "Registrarse",
+    "login": "Iniciar sesión"
+  },
+  "hero": {
+    "title": "Vea cómo piensa toda su clase.",
+    "body": "MicroCoach identifica patrones de conceptos erróneos en su clase y sugiere próximos pasos, en minutos.",
+    "getstarted": "Empezar"
+  },
+  "howItWorks": {
+    "title": "Cómo funciona",
+    "step1": {
+      "label": "Paso 1",
+      "title": "Suba sus archivos",
+      "body": "Suba su clave de respuestas y las respuestas de los estudiantes de cualquier prueba o evaluación"
+    },
+    "step2": {
+      "label": "Paso 2",
+      "title": "Vea qué entendió mal su clase",
+      "body": "MicroCoach analiza cada respuesta y agrupa a los estudiantes según lo que entendieron mal, no solo según lo que respondieron incorrectamente"
+    },
+    "step3": {
+      "label": "Paso 3",
+      "title": "Planifique su siguiente paso",
+      "body": "Para cada concepto erróneo, MicroCoach sugiere próximos pasos específicos. Elija lo que mejor se adapte a su clase y vuelva a enseñar"
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © 2026 RightOn Education. Todos los derechos reservados.",
+    "privacypolicy": "Política de Privacidad"
+  }
+}

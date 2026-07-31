@@ -5,6 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import configureAmplify from './lib/configureAmplify';
 
+// import react-i18n to support internationalisation
+import './i18n';
+
 // Configure Amplify (Cognito + Google OAuth) once, before anything renders.
 configureAmplify();
 

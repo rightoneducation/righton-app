@@ -1,23 +1,39 @@
 import React, { ReactElement } from 'react';
 import { Navigate, useMatch, useSearchParams } from 'react-router-dom';
-import { UserStatusType } from '../lib/MicroCoachModels';
+import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import {
   useMicroCoachDataState,
   useMicroCoachDataDispatch,
 } from '../hooks/context/useMicroCoachDataContext';
+import LandingSkeleton from '../components/LandingSkeleton';
 
 interface AuthGuardProps {
   children: ReactElement;
   handleLogOut: () => void;
+  screenSize: ScreenSize;
+  /**
+   * Whether this screen's content actually depends on knowing who the user is.
+   * Public screens render immediately while the check is still in flight —
+   * blocking them would keep their own fetches (copy, imagery) from starting,
+   * which is what turns independent work into a waterfall.
+   */
+  requiresAuth: boolean;
 }
 
 // Route guard mirroring central_v2's AuthGuard: switches on userStatus and
-// handles the Google OAuth error surfaced on the /auth callback.
-export default function AuthGuard({ children, handleLogOut }: AuthGuardProps) {
+// handles the Google OAuth error surfaced on the /auth callback. Rendered
+// inside AppContainer, so anything returned here replaces the body only.
+export default function AuthGuard({
+  children,
+  handleLogOut,
+  screenSize,
+  requiresAuth,
+}: AuthGuardProps) {
   const microCoachData = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();
   const [search] = useSearchParams();
 
+  const isLandingPage = Boolean(useMatch('/'));
   const isAuthPage = Boolean(useMatch('/auth'));
   const isLoginPage = Boolean(useMatch('/login'));
   const isSignupPage = Boolean(useMatch('/signup'));
@@ -47,7 +63,12 @@ export default function AuthGuard({ children, handleLogOut }: AuthGuardProps) {
       handleLogOut();
       return <Navigate to="/" replace />;
     case UserStatusType.LOADING:
-      return <div>Loading…</div>;
+      // Public screens render straight away — nothing on them depends on the
+      // answer, and holding them would stall their own loading too. Only
+      // screens whose content is the auth state wait, and those are small
+      // centred cards where a blank beat beats a wrong-shaped skeleton.
+      if (!requiresAuth) return children;
+      return isLandingPage ? <LandingSkeleton screenSize={screenSize} /> : null;
     case UserStatusType.NONVERIFIED:
       return isSignupPage || isConfirmationPage ? children : <Navigate to="/confirmation" replace />;
     case UserStatusType.LOGGEDOUT:
