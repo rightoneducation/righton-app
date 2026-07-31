@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
 import Skeleton from '@mui/material/Skeleton';
@@ -52,6 +53,7 @@ function TextLines({
 }
 
 export default function LandingSkeleton({ screenSize }: ScreenSizeProps) {
+  const theme = useTheme();
   const isLarge = screenSize === ScreenSize.LARGE;
 
   return (
@@ -62,12 +64,16 @@ export default function LandingSkeleton({ screenSize }: ScreenSizeProps) {
         sx={{
           display: 'flex',
           flexDirection: isLarge ? 'row' : 'column',
-          alignItems: isLarge ? 'center' : 'stretch',
-          gap: isLarge ? '80px' : '40px',
-          pt: isLarge ? '218px' : '48px',
+          alignItems: isLarge ? 'flex-start' : 'stretch',
+          gap: isLarge
+            ? `${theme.sizing.space12}px`
+            : `${theme.sizing.space7}px`,
+          pt: isLarge ? '218px' : `${theme.sizing.space8}px`,
         }}
       >
-        <Stack sx={{ flex: '1 1 0', minWidth: 0, gap: '32px' }}>
+        <Stack
+          sx={{ flex: '1 1 0', minWidth: 0, gap: `${theme.sizing.space6}px` }}
+        >
           <TextLines count={2} height={isLarge ? 76 : 48} />
           <Box sx={{ maxWidth: isLarge ? 485 : '100%' }}>
             <TextLines count={3} height={40} />
@@ -76,8 +82,8 @@ export default function LandingSkeleton({ screenSize }: ScreenSizeProps) {
             animation="wave"
             variant="rounded"
             width={screenSize === ScreenSize.SMALL ? '100%' : 189}
-            height={58}
-            sx={{ borderRadius: '29px' }}
+            height={54}
+            sx={{ borderRadius: '27px' }}
           />
         </Stack>
 
@@ -90,7 +96,7 @@ export default function LandingSkeleton({ screenSize }: ScreenSizeProps) {
               maxWidth: isLarge ? 640 : '100%',
               aspectRatio: heroAspectRatio(screenSize),
               height: 'auto',
-              borderRadius: '37px',
+              borderRadius: `${theme.sizing.heroImageRadius}px`,
             }}
           />
         </Box>
@@ -101,8 +107,10 @@ export default function LandingSkeleton({ screenSize }: ScreenSizeProps) {
         narrow
         screenSize={screenSize}
         sx={{
-          pt: isLarge ? '356px' : '80px',
-          pb: isLarge ? '120px' : '64px',
+          pt: isLarge ? '330px' : `${theme.sizing.space12}px`,
+          pb: isLarge
+            ? `${theme.sizing.space14}px`
+            : `${theme.sizing.space11}px`,
         }}
       >
         <Skeleton
@@ -110,13 +118,15 @@ export default function LandingSkeleton({ screenSize }: ScreenSizeProps) {
           variant="text"
           width={320}
           height={64}
-          sx={{ mb: '24px' }}
+          sx={{ mb: `${theme.sizing.space5}px` }}
         />
 
         <StepPanel screenSize={screenSize}>
           <Stack
             direction={isLarge ? 'row' : 'column'}
-            spacing={isLarge ? '28px' : '20px'}
+            spacing={
+              isLarge ? `${theme.sizing.space5}px` : `${theme.sizing.space4}px`
+            }
             alignItems="stretch"
           >
             {Array.from({ length: 3 }).map((unused, index) => (
@@ -140,10 +150,10 @@ export default function LandingSkeleton({ screenSize }: ScreenSizeProps) {
                     variant="text"
                     width={120}
                     height={48}
-                    sx={{ ...onPanelSx, mb: '36px' }}
+                    sx={{ ...onPanelSx, mb: `${theme.sizing.space7}px` }}
                   />
                   <StepCard screenSize={screenSize}>
-                    <Box sx={{ mb: '20px' }}>
+                    <Box sx={{ mb: `${theme.sizing.space4}px` }}>
                       <TextLines count={2} height={48} />
                     </Box>
                     <TextLines count={3} height={28} />

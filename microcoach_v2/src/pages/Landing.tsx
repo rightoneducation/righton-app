@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -47,11 +47,13 @@ const GetStartedButton = styled(Button, {
   shouldForwardProp: noScreenSize,
 })<RouterButtonProps & ScreenSizeProps>(({ theme, screenSize }) => ({
   alignSelf: screenSize === ScreenSize.SMALL ? 'stretch' : 'flex-start',
+  // Figma width; height falls out of the label's line box plus its padding so
+  // it tracks the type scale rather than being asserted.
   width: screenSize === ScreenSize.SMALL ? '100%' : 189,
   minWidth: 0,
-  height: 58,
-  padding: `0 ${theme.sizing.space4}px`,
-  borderRadius: 29,
+  padding: `${theme.sizing.space2}px ${theme.sizing.space4}px`,
+  // Half the derived height (54), so the ends are true semicircles.
+  borderRadius: 27,
   backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
   color: theme.palette.designSystem.surface.white,
   ...theme.typography.mediumLabel,
@@ -85,6 +87,7 @@ const STEPS = [
 
 export default function Landing({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
   const isLarge = screenSize === ScreenSize.LARGE;
 
   // Page-level readiness covers things the whole layout depends on — currently
@@ -111,12 +114,21 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
           sx={{
             display: 'flex',
             flexDirection: isLarge ? 'row' : 'column',
-            alignItems: isLarge ? 'center' : 'stretch',
-            gap: isLarge ? '80px' : '40px',
-            pt: isLarge ? '218px' : '48px',
+            alignItems: isLarge ? 'flex-start' : 'stretch',
+            gap: isLarge
+              ? `${theme.sizing.space12}px`
+              : `${theme.sizing.space7}px`,
+            // Figma y-offset for the hero; no near token on the scale.
+            pt: isLarge ? '218px' : `${theme.sizing.space8}px`,
           }}
         >
-          <Stack sx={{ flex: '1 1 0', minWidth: 0, gap: '32px' }}>
+          <Stack
+            sx={{
+              flex: '1 1 0',
+              minWidth: 0,
+              gap: `${theme.sizing.space6}px`,
+            }}
+          >
             <Typography
               variant="title"
               sx={{ color: 'designSystem.background.navyBlue' }}
@@ -150,11 +162,11 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
               width: '100%',
             }}
           >
-            {/* Figma: 640x594 at 1920, 648x600.9 at 744, 353x327.3 at 393. */}
+            {/* Figma: 640x594 at 1920, 648x601 at 744, 353x327 at 393. */}
             <ImageWithSkeleton
               src={heroClassroom}
               alt="Two students working through a worksheet at their desk"
-              borderRadius="37px"
+              borderRadius={`${theme.sizing.heroImageRadius}px`}
               sx={{
                 width: '100%',
                 maxWidth: isLarge ? 640 : '100%',
@@ -162,7 +174,7 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
                 objectFit: 'cover',
                 // The Figma pattern transform crops just below the top.
                 objectPosition: 'center 8%',
-                borderRadius: '37px',
+                borderRadius: `${theme.sizing.heroImageRadius}px`,
               }}
             />
             {isLarge && (
@@ -180,15 +192,18 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
           narrow
           screenSize={screenSize}
           sx={{
-            pt: isLarge ? '356px' : '80px',
-            pb: isLarge ? '120px' : '64px',
+            // Figma y-offset for the section; no near token on the scale.
+            pt: isLarge ? '330px' : `${theme.sizing.space12}px`,
+            pb: isLarge
+              ? `${theme.sizing.space14}px`
+              : `${theme.sizing.space11}px`,
           }}
         >
           <Typography
             variant="h1"
             sx={{
               color: 'designSystem.surface.atlanticNavy',
-              mb: '24px',
+              mb: `${theme.sizing.space5}px`,
             }}
           >
             {t('howItWorks.title')}
@@ -207,10 +222,13 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
             )}
             <Stack
               direction={isLarge ? 'row' : 'column'}
-              // Row: 28px gutter between cards. Column: the Figma frames put 88
-              // between one card's bottom and the next card's top, and that span
-              // contains the "Step N" label (32px line + 36 margin) — so 20 here.
-              spacing={isLarge ? '28px' : '20px'}
+              // Row: gutter between the three cards. Column: the gap between one
+              // card's bottom and the next "Step N" label.
+              spacing={
+                isLarge
+                  ? `${theme.sizing.space5}px`
+                  : `${theme.sizing.space4}px`
+              }
               alignItems="stretch"
             >
               {STEPS.map(({ key: stepKey, image }) => (
@@ -227,7 +245,7 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
                     variant="h3"
                     sx={{
                       color: 'designSystem.surface.white',
-                      mb: '36px',
+                      mb: `${theme.sizing.space7}px`,
                     }}
                   >
                     {t(`howItWorks.${stepKey}.label`)}
@@ -238,7 +256,7 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
                       variant="h2"
                       sx={{
                         color: 'designSystem.surface.black',
-                        mb: '20px',
+                        mb: `${theme.sizing.space4}px`,
                       }}
                     >
                       {t(`howItWorks.${stepKey}.title`)}
@@ -255,7 +273,7 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
                       <ImageWithSkeleton
                         src={image}
                         alt=""
-                        borderRadius="8px"
+                        borderRadius={`${theme.sizing.space1}px`}
                         sx={{ maxWidth: '100%', height: 'auto', mx: 'auto' }}
                       />
                     </StepIllustration>

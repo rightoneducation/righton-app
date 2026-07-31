@@ -62,7 +62,7 @@ const designSystemTypography = {
     lineHeight: 'normal',
     // The 393 frame sets the hero title at 40px (48px line box); the 744 frame
     // keeps it at 64px, so this steps down at SMALL only.
-    '@media (max-width:699.95px)': {
+    '@media (max-width:699px)': {
       fontSize: '40px',
     },
   },
@@ -214,7 +214,6 @@ const sizing = {
   space13: 100,
   space14: 120,
   headerHeight: 134,
-  footerHeight: 160,
   authCardMaxWidth: 400,
   // Landing page shell: Figma frame is 1920 with header/footer content inset to
   // x 260..1660 (1400) but the body sections inset to x 275..1645 (1370).

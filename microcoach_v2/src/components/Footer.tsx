@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
@@ -12,32 +12,27 @@ interface FooterProps {
   screenSize: ScreenSize;
 }
 
-// Figma bar heights: 196 at 393 (the two items stack), 147 at 744, 160 at 1920.
-// Sits in normal flow — not sticky.
-const FooterBar = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'screenSize',
-})<FooterProps>(({ theme, screenSize }) => ({
+// Height is derived, not declared: one padding token plus the content's own
+// height. That lands near the Figma bars (152 vs 160 at 1920, 152 vs 147 at
+// 744, 192 vs 196 at 393) and makes mobile taller automatically because the
+// two items stack there. Sits in normal flow — not sticky.
+const FooterBar = styled(Box)(({ theme }) => ({
   width: '100%',
-  minHeight:
-    screenSize === ScreenSize.LARGE // eslint-disable-line
-      ? theme.sizing.footerHeight
-      : screenSize === ScreenSize.MEDIUM
-        ? 147
-        : 196,
   display: 'flex',
   alignItems: 'center',
   backgroundColor: theme.palette.designSystem.background.navyBlue,
-  paddingTop: theme.sizing.space5,
-  paddingBottom: theme.sizing.space5,
+  paddingTop: theme.sizing.space11,
+  paddingBottom: theme.sizing.space11,
   boxSizing: 'border-box',
 }));
 
 export default function Footer({ screenSize }: FooterProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
   const isSmall = screenSize === ScreenSize.SMALL;
 
   return (
-    <FooterBar component="footer" screenSize={screenSize}>
+    <FooterBar component="footer">
       <ContentRow
         screenSize={screenSize}
         sx={{
@@ -45,8 +40,10 @@ export default function Footer({ screenSize }: FooterProps) {
           flexDirection: isSmall ? 'column' : 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          // Figma: copyright ends at x 1058, "Privacy Policy" starts at 1191.
-          columnGap: screenSize === ScreenSize.LARGE ? '133px' : '32px',
+          columnGap:
+            screenSize === ScreenSize.LARGE
+              ? `${theme.sizing.space14}px`
+              : `${theme.sizing.space6}px`,
           rowGap: 2,
           textAlign: 'center',
         }}

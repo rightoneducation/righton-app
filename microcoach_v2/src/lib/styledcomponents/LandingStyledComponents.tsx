@@ -48,15 +48,15 @@ export const StepCard = styled(Box, {
   boxSizing: 'border-box',
 }));
 
-// Figma: the hero photo is 640x594 at 1920, 648x600.9 at 744 and 353x327.3 at
+// Figma: the hero photo is 640x594 at 1920, 648x601 at 744 and 353x327 at
 // 393 — all rx 37. Exported as a plain ratio so the skeleton can reserve the
 // same box without loading the image.
 export const heroAspectRatio = (screenSize: ScreenSize) =>
   screenSize === ScreenSize.LARGE // eslint-disable-line
     ? '640 / 594'
     : screenSize === ScreenSize.MEDIUM
-      ? '648 / 600.873'
-      : '353 / 327.327';
+      ? '648 / 601'
+      : '353 / 327';
 
 // The hero photo itself renders through ImageWithSkeleton, which needs the
 // ratio (to reserve the box) but supplies its own element.

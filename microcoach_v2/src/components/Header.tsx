@@ -34,9 +34,11 @@ const HeaderBar = styled(Box)(({ theme }) => ({
 
 // Figma: 132x54, rx 27 — a pill, so the radius tracks the height.
 const LoginButton = styled(Button)<ButtonProps & RouterExtras>(({ theme }) => ({
+  // Figma width; height falls out of the label's line box plus its padding so
+  // it tracks the type scale rather than being asserted.
   minWidth: 132,
-  height: 54,
-  padding: `0 ${theme.sizing.space5}px`,
+  padding: `${theme.sizing.space2}px ${theme.sizing.space5}px`,
+  // Half the derived height (54), so the ends are true semicircles.
   borderRadius: 27,
   backgroundColor: theme.palette.designSystem.surface.white,
   color: theme.palette.designSystem.background.navyBlue,
@@ -103,7 +105,7 @@ export default function Header({ screenSize }: HeaderProps) {
             direction="row"
             alignItems="center"
             spacing={4}
-            sx={{ minWidth: 237, justifyContent: 'flex-end' }}
+            sx={{ justifyContent: 'flex-end' }}
           >
             {isResolvingAuth ? (
               <>
