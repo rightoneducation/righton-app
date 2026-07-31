@@ -20,6 +20,22 @@ import AuthCallback from '../pages/AuthCallback';
  * URLs, this decides what a screen actually is.
  */
 
+/**
+ * Screens whose content doesn't depend on who the user is. They render while
+ * the auth check is still in flight, so their own copy and imagery start
+ * loading immediately rather than queueing behind it.
+ *
+ * The rest are mid-auth-flow screens — the auth state *is* their content, so
+ * they wait. AuthGuard still redirects on every screen once the status
+ * resolves; this only governs what happens during LOADING.
+ */
+const PUBLIC_SCREENS = new Set<ScreenType>([
+  ScreenType.LANDING,
+  ScreenType.LOGIN,
+  ScreenType.SIGNUP,
+  ScreenType.PASSWORDRESET,
+]);
+
 interface AppSwitchProps {
   currentScreen: ScreenType;
 }
@@ -56,7 +72,11 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
 
   return (
     <AppContainer>
-      <AuthGuard handleLogOut={handleLogOut} screenSize={screenSize}>
+      <AuthGuard
+        handleLogOut={handleLogOut}
+        screenSize={screenSize}
+        requiresAuth={!PUBLIC_SCREENS.has(currentScreen)}
+      >
         {screenComponent}
       </AuthGuard>
     </AppContainer>

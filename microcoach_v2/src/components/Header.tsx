@@ -5,10 +5,12 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Link, { LinkProps } from '@mui/material/Link';
+import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ContentRow from './ContentRow';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 interface HeaderProps {
   screenSize: ScreenSize;
@@ -53,8 +55,14 @@ const NavLink = styled(Link)<LinkProps & RouterExtras>(({ theme }) => ({
   '&:hover': { textDecoration: 'underline' },
 }));
 
+// Skeleton inherits its colour from the surrounding text colour, which is
+// invisible against the navy bar.
+const authSkeletonSx = { bgcolor: 'rgba(255, 255, 255, 0.18)' };
+
 export default function Header({ screenSize }: HeaderProps) {
   const { t } = useTranslation();
+  const { userStatus } = useMicroCoachDataState();
+  const isResolvingAuth = userStatus === UserStatusType.LOADING;
 
   return (
     <HeaderBar component="header">
@@ -86,15 +94,48 @@ export default function Header({ screenSize }: HeaderProps) {
           Figma: nav group is 237 wide with the pill flush to the column edge.
           The mobile and tablet frames carry no pill at all — the header
           collapses to the brand alone below LARGE.
+
+          This is the only part of the page that depends on who the user is, so
+          it carries its own skeleton rather than the page waiting on auth.
         */}
         {screenSize === ScreenSize.LARGE && (
-          <Stack direction="row" alignItems="center" spacing={4}>
-            <NavLink component={RouterLink} to="/signup">
-              {t('header.signup')}
-            </NavLink>
-            <LoginButton component={RouterLink} to="/login" disableElevation>
-              {t('header.login')}
-            </LoginButton>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={4}
+            sx={{ minWidth: 237, justifyContent: 'flex-end' }}
+          >
+            {isResolvingAuth ? (
+              <>
+                <Skeleton
+                  animation="wave"
+                  variant="rounded"
+                  width={132}
+                  height={54}
+                  sx={{ ...authSkeletonSx, borderRadius: '27px' }}
+                />
+                <Skeleton
+                  animation="wave"
+                  variant="rounded"
+                  width={132}
+                  height={54}
+                  sx={{ ...authSkeletonSx, borderRadius: '27px' }}
+                />
+              </>
+            ) : (
+              <>
+                <NavLink component={RouterLink} to="/signup">
+                  {t('header.signup')}
+                </NavLink>
+                <LoginButton
+                  component={RouterLink}
+                  to="/login"
+                  disableElevation
+                >
+                  {t('header.login')}
+                </LoginButton>
+              </>
+            )}
           </Stack>
         )}
       </ContentRow>

@@ -58,15 +58,5 @@ export const heroAspectRatio = (screenSize: ScreenSize) =>
       ? '648 / 600.873'
       : '353 / 327.327';
 
-export const HeroImage = styled('img', {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  width: '100%',
-  maxWidth: screenSize === ScreenSize.LARGE ? 640 : '100%',
-  aspectRatio: heroAspectRatio(screenSize),
-  objectFit: 'cover',
-  // The Figma pattern transform crops just below the top of the source photo.
-  objectPosition: 'center 8%',
-  borderRadius: theme.sizing.heroImageRadius,
-  display: 'block',
-}));
+// The hero photo itself renders through ImageWithSkeleton, which needs the
+// ratio (to reserve the box) but supplies its own element.

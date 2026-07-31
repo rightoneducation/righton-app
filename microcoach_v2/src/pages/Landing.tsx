@@ -9,14 +9,16 @@ import Typography from '@mui/material/Typography';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import ContentRow from '../components/ContentRow';
 import LandingSkeleton from '../components/LandingSkeleton';
+import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   StepPanel,
   StepCard,
-  HeroImage,
+  heroAspectRatio,
   noScreenSize,
   ScreenSizeProps,
 } from '../lib/styledcomponents/LandingStyledComponents';
+import { useAllReady, useI18nReady } from '../hooks/readiness';
 import heroClassroom from '../images/heroClassroom.jpg';
 import landingPagePattern from '../images/landingPagePattern.svg';
 import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
@@ -24,17 +26,6 @@ import stepCard1 from '../images/landingPageStepCard1.png';
 import stepCard2 from '../images/landingPageStepCard2.png';
 import stepCard3 from '../images/landingPageStepCard3.png';
 
-/*
- * Geometry below is read off three Figma exports: LandingPageMobile.svg (393),
- * LandingPageTablet.svg (744) and LandingPage.svg (1920). Values are quoted as
- * the frame coordinates they reproduce. Anything the loading skeleton also
- * needs lives in lib/styledcomponents/LandingStyledComponents.
- */
-
-// Figma: the petal cluster sits flush to the left edge directly under the
-// header, behind the hero copy. The body starts immediately below the header,
-// so top 0 here is the header's bottom edge. It measures 313 wide on the 1920
-// and 744 frames, 282 on the 393 frame.
 const HeaderPattern = styled('img', {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ screenSize }) => ({
@@ -47,20 +38,15 @@ const HeaderPattern = styled('img', {
   userSelect: 'none',
 }));
 
-// styled() erases MUI's polymorphic `component` prop, so re-declare it here to
-// keep rendering these buttons as a router Link.
 type RouterButtonProps = ButtonProps & {
   component?: React.ElementType;
   to?: string;
 };
 
-// Figma: 189x58 rx 29 fill #1B376F, but full-bleed (353 wide) on mobile.
 const GetStartedButton = styled(Button, {
   shouldForwardProp: noScreenSize,
 })<RouterButtonProps & ScreenSizeProps>(({ theme, screenSize }) => ({
   alignSelf: screenSize === ScreenSize.SMALL ? 'stretch' : 'flex-start',
-  // Fixed, not a floor: with `minWidth` the label plus the arrow icon pushed
-  // the button out to 201.
   width: screenSize === ScreenSize.SMALL ? '100%' : 189,
   minWidth: 0,
   height: 58,
@@ -75,22 +61,14 @@ const GetStartedButton = styled(Button, {
   },
 }));
 
-// Figma: the illustration sits centred at the foot of the card. The three
-// exports have different intrinsic heights (304x300 / 259x221 / 282x277), so
-// let them size themselves and push to the bottom rather than share a slot.
-const StepIllustration = styled('img')(({ theme }) => ({
+// Wrapper rather than the <img> itself — ImageWithSkeleton supplies the
+// element, this just positions it at the foot of the card.
+const StepIllustration = styled(Box)(({ theme }) => ({
   marginTop: 'auto',
-  marginLeft: 'auto',
-  marginRight: 'auto',
   paddingTop: theme.sizing.space6,
-  maxWidth: '100%',
-  height: 'auto',
-  display: 'block',
+  width: '100%',
 }));
 
-// Figma: a 124x106 petal fragment tucked into the bottom corner of the hero
-// image and the step panel. Positioned against those elements rather than page
-// coordinates so it survives content and breakpoint changes.
 const PatternDetail = styled('img')({
   position: 'absolute',
   width: 124,
@@ -99,8 +77,6 @@ const PatternDetail = styled('img')({
   userSelect: 'none',
 });
 
-// Key stubs rather than copy: each maps to a howItWorks.<key>.{label,title,body}
-// group in public/locales/{lng}/translation.json.
 const STEPS = [
   { key: 'step1', image: stepCard1 },
   { key: 'step2', image: stepCard2 },
@@ -108,13 +84,15 @@ const STEPS = [
 ] as const;
 
 export default function Landing({ screenSize }: ScreenSizeProps) {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  // The catalogue is fetched over HTTP, so hold the layout with a skeleton
-  // rather than painting raw translation keys. Header and footer are owned by
-  // AppContainer, so only the body needs holding.
-  if (!ready) {
+  // Page-level readiness covers things the whole layout depends on — currently
+  // just the copy. Images are not here: each one owns its loading state via
+  // ImageWithSkeleton. Add a flag when this page grows an API dependency.
+  const isReady = useAllReady(useI18nReady());
+
+  if (!isReady) {
     return <LandingSkeleton screenSize={screenSize} />;
   }
 
@@ -128,7 +106,6 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
       />
 
       <Box sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Hero — Figma y 352..946 (1920) */}
         <ContentRow
           screenSize={screenSize}
           sx={{
@@ -149,7 +126,6 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
             <Typography
               variant="paragraph1"
               sx={{
-                // Figma: copy block is 485 wide.
                 maxWidth: isLarge ? 485 : '100%',
                 color: 'designSystem.surface.black',
               }}
@@ -174,16 +150,21 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
               width: '100%',
             }}
           >
-            <HeroImage
-              screenSize={screenSize}
+            {/* Figma: 640x594 at 1920, 648x600.9 at 744, 353x327.3 at 393. */}
+            <ImageWithSkeleton
               src={heroClassroom}
               alt="Two students working through a worksheet at their desk"
+              borderRadius="37px"
+              sx={{
+                width: '100%',
+                maxWidth: isLarge ? 640 : '100%',
+                aspectRatio: heroAspectRatio(screenSize),
+                objectFit: 'cover',
+                // The Figma pattern transform crops just below the top.
+                objectPosition: 'center 8%',
+                borderRadius: '37px',
+              }}
             />
-            {/*
-              Figma: overlaps the photo's bottom-right corner. LARGE only —
-              below that the photo is full-bleed inside the gutter, so a
-              negative offset would overflow the viewport horizontally.
-            */}
             {isLarge && (
               <PatternDetail
                 src={landingPagePatternDetail}
@@ -195,8 +176,6 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
           </Box>
         </ContentRow>
 
-        {/* How it works — Figma y 1302..2058 (1920) */}
-        {/* Last section on the page, so it carries the run-out to the footer. */}
         <ContentRow
           narrow
           screenSize={screenSize}
@@ -272,7 +251,14 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
                     >
                       {t(`howItWorks.${stepKey}.body`)}
                     </Typography>
-                    <StepIllustration src={image} alt="" aria-hidden />
+                    <StepIllustration>
+                      <ImageWithSkeleton
+                        src={image}
+                        alt=""
+                        borderRadius="8px"
+                        sx={{ maxWidth: '100%', height: 'auto', mx: 'auto' }}
+                      />
+                    </StepIllustration>
                   </StepCard>
                 </Box>
               ))}

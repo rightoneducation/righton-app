@@ -11,6 +11,13 @@ interface AuthGuardProps {
   children: ReactElement;
   handleLogOut: () => void;
   screenSize: ScreenSize;
+  /**
+   * Whether this screen's content actually depends on knowing who the user is.
+   * Public screens render immediately while the check is still in flight —
+   * blocking them would keep their own fetches (copy, imagery) from starting,
+   * which is what turns independent work into a waterfall.
+   */
+  requiresAuth: boolean;
 }
 
 // Route guard mirroring central_v2's AuthGuard: switches on userStatus and
@@ -20,6 +27,7 @@ export default function AuthGuard({
   children,
   handleLogOut,
   screenSize,
+  requiresAuth,
 }: AuthGuardProps) {
   const microCoachData = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();
@@ -55,9 +63,11 @@ export default function AuthGuard({
       handleLogOut();
       return <Navigate to="/" replace />;
     case UserStatusType.LOADING:
-      // Header and footer are already painted by AppContainer, so hold the body
-      // with a skeleton. Only the landing layout is mirrored; the auth pages are
-      // small centred cards where a blank beat reads better than a wrong shape.
+      // Public screens render straight away — nothing on them depends on the
+      // answer, and holding them would stall their own loading too. Only
+      // screens whose content is the auth state wait, and those are small
+      // centred cards where a blank beat beats a wrong-shaped skeleton.
+      if (!requiresAuth) return children;
       return isLandingPage ? <LandingSkeleton screenSize={screenSize} /> : null;
     case UserStatusType.NONVERIFIED:
       return isSignupPage || isConfirmationPage ? children : <Navigate to="/confirmation" replace />;
