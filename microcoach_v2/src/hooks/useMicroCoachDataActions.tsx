@@ -7,8 +7,14 @@ import { useMicroCoachDataDispatch } from './context/useMicroCoachDataContext';
 // On-load auth resolver + logout, adapted from central_v2's useCentralDataActions.
 // Google vs Cognito is distinguished by the idToken `identities` claim; Google
 // signup-vs-signin by whether a backend User row exists for the cognitoId.
-// eslint-disable-next-line import/prefer-default-export
-export function useMicroCoachDataActions(apiClients: APIClients) {
+//
+// Split into two hooks on purpose. The resolver carries a mount effect and must
+// run exactly once, from the router's root layout; `useLogOut` is effect-free so
+// any screen can call it without re-triggering auth resolution. (central_v2
+// keeps both in one hook called from AppSwitch, which re-fires the effect on
+// every route change and re-flashes its loading state.)
+
+export function useLogOut(apiClients: APIClients) {
   const dispatch = useMicroCoachDataDispatch();
   const navigate = useNavigate();
 
@@ -19,6 +25,13 @@ export function useMicroCoachDataActions(apiClients: APIClients) {
     dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
     navigate('/');
   };
+
+  return { handleLogOut };
+}
+
+export function useAuthResolver(apiClients: APIClients) {
+  const dispatch = useMicroCoachDataDispatch();
+  const { handleLogOut } = useLogOut(apiClients);
 
   const validateUser = async () => {
     try {
@@ -67,5 +80,5 @@ export function useMicroCoachDataActions(apiClients: APIClients) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { handleLogOut, validateUser };
+  return { validateUser };
 }

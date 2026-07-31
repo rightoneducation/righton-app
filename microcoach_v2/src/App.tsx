@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -6,66 +6,61 @@ import {
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { APIClients, AppType, Environment } from './api';
 import Theme from './lib/Theme';
-import { GOOGLE_OAUTH_CLIENT_ID } from './lib/MicroCoachModels';
+import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { APIClientsContext } from './lib/context/APIClientsContext';
 import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
 import { useAPIClientsContext } from './hooks/context/useAPIClientsContext';
-import { useMicroCoachDataActions } from './hooks/useMicroCoachDataActions';
-import AuthGuard from './containers/AuthGuard';
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import Confirmation from './pages/Confirmation';
-import GoogleSignup from './pages/GoogleSignup';
-import ResetPassword from './pages/ResetPassword';
-import AuthCallback from './pages/AuthCallback';
+import { useAuthResolver } from './hooks/useMicroCoachDataActions';
+import AppSwitch from './switches/AppSwitch';
 
-// Shared by the pre-auth branch and the i18n Suspense boundary below.
-function LoadingScreen() {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        backgroundColor: 'designSystem.background.cream',
-      }}
-    >
-      <CircularProgress />
-    </Box>
-  );
-}
-
-// Root layout: runs the on-load auth resolver once and guards the routes.
-function AuthLayout() {
+/**
+ * Parent layout route. React Router keeps this element mounted across child
+ * route changes, so the auth resolver's mount effect fires exactly once per
+ * session rather than re-flashing the loading state on every navigation.
+ *
+ * It has to live here rather than in MicroCoachDataProvider: the resolver needs
+ * both the reducer's dispatch (so it must be *under* that provider) and
+ * useNavigate (so it must be *inside* the router).
+ */
+function RootLayout() {
   const apiClients = useAPIClientsContext();
-  const { handleLogOut } = useMicroCoachDataActions(apiClients as APIClients);
-  return (
-    <AuthGuard handleLogOut={handleLogOut}>
-      <Outlet />
-    </AuthGuard>
-  );
+  useAuthResolver(apiClients as APIClients);
+  return <Outlet />;
 }
 
+// The router knows URLs only. AppSwitch turns a ScreenType into a page wrapped
+// in AuthGuard and AppContainer (central_v2's arrangement).
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <AuthLayout />,
+    element: <RootLayout />,
     children: [
-      { index: true, element: <Landing /> },
-      { path: 'login', element: <Login /> },
-      { path: 'signup', element: <SignUp /> },
-      { path: 'confirmation', element: <Confirmation /> },
-      { path: 'googlesignup', element: <GoogleSignup /> },
-      { path: 'auth', element: <AuthCallback /> },
-      { path: 'password/reset', element: <ResetPassword /> },
+      { index: true, element: <AppSwitch currentScreen={ScreenType.LANDING} /> },
+      {
+        path: 'login',
+        element: <AppSwitch currentScreen={ScreenType.LOGIN} />,
+      },
+      {
+        path: 'signup',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP} />,
+      },
+      {
+        path: 'confirmation',
+        element: <AppSwitch currentScreen={ScreenType.CONFIRMATION} />,
+      },
+      {
+        path: 'googlesignup',
+        element: <AppSwitch currentScreen={ScreenType.GOOGLESIGNUP} />,
+      },
+      { path: 'auth', element: <AppSwitch currentScreen={ScreenType.AUTH} /> },
+      {
+        path: 'password/reset',
+        element: <AppSwitch currentScreen={ScreenType.PASSWORDRESET} />,
+      },
     ],
   },
 ]);
@@ -78,24 +73,18 @@ function App() {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={Theme}>
           <CssBaseline />
-          {apiClients ? (
+          {/*
+            i18n no longer suspends (see src/i18n.tsx) — Landing renders its own
+            skeleton off `ready` from useTranslation() instead. APIClients.create
+            does no I/O, so the null branch lasts a single frame; rendering
+            nothing there beats a spinner that flashes for one paint.
+          */}
+          {apiClients && (
             <APIClientsContext.Provider value={apiClients}>
               <MicroCoachDataProvider>
-                {/*
-                  Landing is the index route and calls useTranslation() at the
-                  top of the tree, so react-i18next suspends on a cold load
-                  while /locales/{lng}/translation.json is in flight. React 18
-                  throws without a boundary here.
-                */}
-                <Suspense fallback={<LoadingScreen />}>
-                  <RouterProvider router={router} />
-                </Suspense>
+                <RouterProvider router={router} />
               </MicroCoachDataProvider>
             </APIClientsContext.Provider>
-          ) : (
-            // Anything rendered here is outside the router, so it must not use
-            // router hooks or Links.
-            <LoadingScreen />
           )}
         </ThemeProvider>
       </StyledEngineProvider>

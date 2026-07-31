@@ -60,23 +60,28 @@ const designSystemTypography = {
     fontWeight: 500,
     fontSize: '64px',
     lineHeight: 'normal',
+    // The 393 frame sets the hero title at 40px (48px line box); the 744 frame
+    // keeps it at 64px, so this steps down at SMALL only.
+    '@media (max-width:699.95px)': {
+      fontSize: '40px',
+    },
   },
   h1: {
     fontFamily: rubik,
     fontWeight: 500,
-    fontSize: '40px',
+    fontSize: '52px',
     lineHeight: 'normal',
   },
   h2: {
     fontFamily: rubik,
     fontWeight: 500,
     fontSize: '32px',
-    lineHeight: 'normal',
+    lineHeight: '36px',
   },
   h3: {
     fontFamily: rubik,
     fontWeight: 600,
-    fontSize: '32px',
+    fontSize: '40px',
     lineHeight: 'normal',
   },
   h4: {
@@ -106,8 +111,7 @@ const designSystemTypography = {
   paragraph1: {
     fontFamily: poppins,
     fontWeight: 400,
-    fontSize: '24px',
-    lineHeight: '32px',
+    fontSize: '28px',
     letterSpacing: '0.05em',
   },
   paragraph2: {
@@ -120,7 +124,6 @@ const designSystemTypography = {
     fontFamily: rubik,
     fontWeight: 700,
     fontSize: '20px',
-    lineHeight: 'normal',
   },
   uploadLabel: {
     fontFamily: rubik,
@@ -213,8 +216,10 @@ const sizing = {
   headerHeight: 134,
   footerHeight: 160,
   authCardMaxWidth: 400,
-  // Landing page shell: Figma frame is 1920 with content inset to x 260..1660.
+  // Landing page shell: Figma frame is 1920 with header/footer content inset to
+  // x 260..1660 (1400) but the body sections inset to x 275..1645 (1370).
   contentMaxWidth: 1400,
+  sectionMaxWidth: 1370,
   // Figma corner radii, shared by the step panel, step cards and video card.
   sectionRadius: 32,
   heroImageRadius: 37,

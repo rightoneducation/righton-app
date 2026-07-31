@@ -63,7 +63,9 @@ export default function Header({ screenSize }: HeaderProps) {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          // The 393 frame centres the brand; 744 and 1920 left-align it.
+          justifyContent:
+            screenSize === ScreenSize.SMALL ? 'center' : 'space-between',
           gap: 2,
         }}
       >
@@ -72,7 +74,6 @@ export default function Header({ screenSize }: HeaderProps) {
           component={RouterLink}
           to="/"
           sx={{
-            fontWeight: 700,
             color: 'designSystem.surface.white',
             textDecoration: 'none',
             whiteSpace: 'nowrap',

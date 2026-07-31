@@ -1,23 +1,31 @@
 import React, { ReactElement } from 'react';
 import { Navigate, useMatch, useSearchParams } from 'react-router-dom';
-import { UserStatusType } from '../lib/MicroCoachModels';
+import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import {
   useMicroCoachDataState,
   useMicroCoachDataDispatch,
 } from '../hooks/context/useMicroCoachDataContext';
+import LandingSkeleton from '../components/LandingSkeleton';
 
 interface AuthGuardProps {
   children: ReactElement;
   handleLogOut: () => void;
+  screenSize: ScreenSize;
 }
 
 // Route guard mirroring central_v2's AuthGuard: switches on userStatus and
-// handles the Google OAuth error surfaced on the /auth callback.
-export default function AuthGuard({ children, handleLogOut }: AuthGuardProps) {
+// handles the Google OAuth error surfaced on the /auth callback. Rendered
+// inside AppContainer, so anything returned here replaces the body only.
+export default function AuthGuard({
+  children,
+  handleLogOut,
+  screenSize,
+}: AuthGuardProps) {
   const microCoachData = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();
   const [search] = useSearchParams();
 
+  const isLandingPage = Boolean(useMatch('/'));
   const isAuthPage = Boolean(useMatch('/auth'));
   const isLoginPage = Boolean(useMatch('/login'));
   const isSignupPage = Boolean(useMatch('/signup'));
@@ -47,7 +55,10 @@ export default function AuthGuard({ children, handleLogOut }: AuthGuardProps) {
       handleLogOut();
       return <Navigate to="/" replace />;
     case UserStatusType.LOADING:
-      return <div>Loading…</div>;
+      // Header and footer are already painted by AppContainer, so hold the body
+      // with a skeleton. Only the landing layout is mirrored; the auth pages are
+      // small centred cards where a blank beat reads better than a wrong shape.
+      return isLandingPage ? <LandingSkeleton screenSize={screenSize} /> : null;
     case UserStatusType.NONVERIFIED:
       return isSignupPage || isConfirmationPage ? children : <Navigate to="/confirmation" replace />;
     case UserStatusType.LOGGEDOUT:

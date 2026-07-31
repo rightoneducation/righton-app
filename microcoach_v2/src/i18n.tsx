@@ -31,6 +31,13 @@ i18n
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
+    // Diverges from central_v2, which leaves Suspense on. central_v2 only calls
+    // useTranslation() in leaf components that mount after the catalogue has
+    // landed; here Landing is the index route and calls it on first paint. With
+    // Suspense off, `ready` from useTranslation() drives a skeleton instead.
+    react: {
+      useSuspense: false,
+    },
   });
 
 export default i18n;

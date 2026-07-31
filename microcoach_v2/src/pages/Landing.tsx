@@ -1,36 +1,50 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { styled, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import ContentRow from '../components/ContentRow';
+import LandingSkeleton from '../components/LandingSkeleton';
 import { ScreenSize } from '../lib/MicroCoachModels';
+import {
+  StepPanel,
+  StepCard,
+  HeroImage,
+  noScreenSize,
+  ScreenSizeProps,
+} from '../lib/styledcomponents/LandingStyledComponents';
 import heroClassroom from '../images/heroClassroom.jpg';
-import videoPoster from '../images/videoPoster.png';
+import landingPagePattern from '../images/landingPagePattern.svg';
+import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
+import stepCard1 from '../images/landingPageStepCard1.png';
+import stepCard2 from '../images/landingPageStepCard2.png';
+import stepCard3 from '../images/landingPageStepCard3.png';
 
 /*
  * Geometry below is read off three Figma exports: LandingPageMobile.svg (393),
  * LandingPageTablet.svg (744) and LandingPage.svg (1920). Values are quoted as
- * the frame coordinates they reproduce.
+ * the frame coordinates they reproduce. Anything the loading skeleton also
+ * needs lives in lib/styledcomponents/LandingStyledComponents.
  */
 
-interface ScreenSizeProps {
-  screenSize: ScreenSize;
-}
-
-const noScreenSize = (prop: PropertyKey) => prop !== 'screenSize';
-
-const Page = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.designSystem.background.cream,
-  minHeight: '100vh',
+// Figma: the petal cluster sits flush to the left edge directly under the
+// header, behind the hero copy. The body starts immediately below the header,
+// so top 0 here is the header's bottom edge. It measures 313 wide on the 1920
+// and 744 frames, 282 on the 393 frame.
+const HeaderPattern = styled('img', {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ screenSize }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: screenSize === ScreenSize.SMALL ? 282 : 313,
+  zIndex: 0,
+  pointerEvents: 'none',
+  userSelect: 'none',
 }));
 
 // styled() erases MUI's polymorphic `component` prop, so re-declare it here to
@@ -45,9 +59,12 @@ const GetStartedButton = styled(Button, {
   shouldForwardProp: noScreenSize,
 })<RouterButtonProps & ScreenSizeProps>(({ theme, screenSize }) => ({
   alignSelf: screenSize === ScreenSize.SMALL ? 'stretch' : 'flex-start',
-  minWidth: screenSize === ScreenSize.SMALL ? 0 : 189,
+  // Fixed, not a floor: with `minWidth` the label plus the arrow icon pushed
+  // the button out to 201.
+  width: screenSize === ScreenSize.SMALL ? '100%' : 189,
+  minWidth: 0,
   height: 58,
-  padding: `0 ${theme.sizing.space6}px`,
+  padding: `0 ${theme.sizing.space4}px`,
   borderRadius: 29,
   backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
   color: theme.palette.designSystem.surface.white,
@@ -58,142 +75,59 @@ const GetStartedButton = styled(Button, {
   },
 }));
 
-// Figma: 640x594 at 1920, 648x600.9 at 744, 353x327.3 at 393 — all rx 37.
-const HeroImage = styled('img', {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  width: '100%',
-  maxWidth: screenSize === ScreenSize.LARGE ? 640 : '100%',
-  aspectRatio:
-    screenSize === ScreenSize.LARGE // eslint-disable-line
-      ? '640 / 594'
-      : screenSize === ScreenSize.MEDIUM
-        ? '648 / 600.873'
-        : '353 / 327.327',
-  objectFit: 'cover',
-  // The Figma pattern transform crops just below the top of the source photo.
-  objectPosition: 'center 8%',
-  borderRadius: theme.sizing.heroImageRadius,
+// Figma: the illustration sits centred at the foot of the card. The three
+// exports have different intrinsic heights (304x300 / 259x221 / 282x277), so
+// let them size themselves and push to the bottom rather than share a slot.
+const StepIllustration = styled('img')(({ theme }) => ({
+  marginTop: 'auto',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  paddingTop: theme.sizing.space6,
+  maxWidth: '100%',
+  height: 'auto',
   display: 'block',
 }));
 
-// Figma: rx 32, inset 32 at 1920 and 20 on both smaller frames.
-const StepPanel = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  backgroundColor: theme.palette.designSystem.foreground.accentBlue,
-  borderRadius: theme.sizing.sectionRadius,
-  padding:
-    screenSize === ScreenSize.LARGE
-      ? theme.sizing.space6
-      : theme.sizing.space4,
-  boxSizing: 'border-box',
-}));
-
-// Figma: rx 32, inset 32 at 1920 and 24 on both smaller frames. Only the
-// desktop row needs a height floor to keep the three columns even; the mobile
-// and tablet cards are content-sized (518/557/536 and 518/540/540).
-const StepCard = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  flexGrow: 1,
-  minHeight: screenSize === ScreenSize.LARGE ? 518 : undefined,
-  backgroundColor: theme.palette.designSystem.background.offWhite,
-  borderRadius: theme.sizing.sectionRadius,
-  padding:
-    screenSize === ScreenSize.LARGE
-      ? theme.sizing.space6
-      : theme.sizing.space5,
-  boxSizing: 'border-box',
-}));
-
-// Figma: the poster sits under a 50% #4A6FA5 frosted wash.
-// The tablet frame draws this card at gutter 20 / rx 17.3 — the desktop card
-// scaled by 0.514 and never re-fitted — so it takes the shared gutter and
-// radius here and keeps only the design's aspect ratio.
-const VideoFrame = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  position: 'relative',
-  width: '100%',
-  aspectRatio:
-    screenSize === ScreenSize.LARGE // eslint-disable-line
-      ? '1370 / 700'
-      : screenSize === ScreenSize.MEDIUM
-        ? '704 / 398.554'
-        : '353 / 240',
-  borderRadius: theme.sizing.sectionRadius,
-  overflow: 'hidden',
-  // #468CAC is a one-off hairline in the export, not a design-system token.
-  border: '1px solid #468CAC',
-  backgroundColor: theme.palette.designSystem.foreground.accentBlue,
-  backgroundImage: `url(${videoPoster})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-}));
-
-const VideoWash = styled(Box)({
+// Figma: a 124x106 petal fragment tucked into the bottom corner of the hero
+// image and the step panel. Positioned against those elements rather than page
+// coordinates so it survives content and breakpoint changes.
+const PatternDetail = styled('img')({
   position: 'absolute',
-  inset: 0,
-  backgroundColor: 'rgba(74, 111, 165, 0.5)',
-  backdropFilter: 'blur(10px)',
-  WebkitBackdropFilter: 'blur(10px)',
-});
-
-// Figma: 133px circle centred in the video frame; scaled down on mobile so it
-// doesn't crowd a 240px-tall card.
-const PlayButton = styled(Button, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ screenSize }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: screenSize === ScreenSize.SMALL ? 72 : 133,
-  height: screenSize === ScreenSize.SMALL ? 72 : 133,
-  minWidth: 0,
-  padding: 0,
-  borderRadius: '50%',
-  color: '#FFFFFF',
-  border: '2px solid rgba(255, 255, 255, 0.9)',
-  backgroundColor: 'rgba(255, 255, 255, 0.25)',
-  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.4)' },
-}));
-
-/**
- * Reserves the illustration area at the foot of each step card. Swap for an
- * <img> once the three step illustration SVGs land in src/images.
- */
-const IllustrationSlot = styled(Box)({
-  marginTop: 'auto',
-  width: '100%',
-  height: 231,
+  width: 124,
+  zIndex: 0,
+  pointerEvents: 'none',
+  userSelect: 'none',
 });
 
 // Key stubs rather than copy: each maps to a howItWorks.<key>.{label,title,body}
 // group in public/locales/{lng}/translation.json.
-const STEP_KEYS = ['step1', 'step2', 'step3'] as const;
+const STEPS = [
+  { key: 'step1', image: stepCard1 },
+  { key: 'step2', image: stepCard2 },
+  { key: 'step3', image: stepCard3 },
+] as const;
 
-export default function Landing() {
-  const { t } = useTranslation();
-  const theme = useTheme();
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const screenSize = isLargeScreen // eslint-disable-line
-    ? ScreenSize.LARGE
-    : isMediumScreen
-      ? ScreenSize.MEDIUM
-      : ScreenSize.SMALL;
-
+export default function Landing({ screenSize }: ScreenSizeProps) {
+  const { t, ready } = useTranslation();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  return (
-    <Page>
-      <Header screenSize={screenSize} />
+  // The catalogue is fetched over HTTP, so hold the layout with a skeleton
+  // rather than painting raw translation keys. Header and footer are owned by
+  // AppContainer, so only the body needs holding.
+  if (!ready) {
+    return <LandingSkeleton screenSize={screenSize} />;
+  }
 
-      <Box component="main">
+  return (
+    <Box sx={{ position: 'relative' }}>
+      <HeaderPattern
+        screenSize={screenSize}
+        src={landingPagePattern}
+        alt=""
+        aria-hidden
+      />
+
+      <Box sx={{ position: 'relative', zIndex: 1 }}>
         {/* Hero — Figma y 352..946 (1920) */}
         <ContentRow
           screenSize={screenSize}
@@ -208,16 +142,15 @@ export default function Landing() {
           <Stack sx={{ flex: '1 1 0', minWidth: 0, gap: '32px' }}>
             <Typography
               variant="title"
-              sx={{ fontWeight: 700, color: 'designSystem.background.navyBlue' }}
+              sx={{ color: 'designSystem.background.navyBlue' }}
             >
               {t('hero.title')}
             </Typography>
             <Typography
               variant="paragraph1"
               sx={{
-                // Figma: copy block is 485 wide with a 42px line box.
+                // Figma: copy block is 485 wide.
                 maxWidth: isLarge ? 485 : '100%',
-                lineHeight: '42px',
                 color: 'designSystem.surface.black',
               }}
             >
@@ -234,24 +167,47 @@ export default function Landing() {
             </GetStartedButton>
           </Stack>
 
-          <Box sx={{ flex: isLarge ? '0 0 640px' : '1 1 auto', width: '100%' }}>
+          <Box
+            sx={{
+              position: 'relative',
+              flex: isLarge ? '0 0 640px' : '1 1 auto',
+              width: '100%',
+            }}
+          >
             <HeroImage
               screenSize={screenSize}
               src={heroClassroom}
               alt="Two students working through a worksheet at their desk"
             />
+            {/*
+              Figma: overlaps the photo's bottom-right corner. LARGE only —
+              below that the photo is full-bleed inside the gutter, so a
+              negative offset would overflow the viewport horizontally.
+            */}
+            {isLarge && (
+              <PatternDetail
+                src={landingPagePatternDetail}
+                alt=""
+                aria-hidden
+                sx={{ bottom: -70, right: -60 }}
+              />
+            )}
           </Box>
         </ContentRow>
 
         {/* How it works — Figma y 1302..2058 (1920) */}
+        {/* Last section on the page, so it carries the run-out to the footer. */}
         <ContentRow
+          narrow
           screenSize={screenSize}
-          sx={{ pt: isLarge ? '356px' : '80px' }}
+          sx={{
+            pt: isLarge ? '356px' : '80px',
+            pb: isLarge ? '120px' : '64px',
+          }}
         >
           <Typography
             variant="h1"
             sx={{
-              fontWeight: 700,
               color: 'designSystem.surface.atlanticNavy',
               mb: '24px',
             }}
@@ -259,7 +215,17 @@ export default function Landing() {
             {t('howItWorks.title')}
           </Typography>
 
-          <StepPanel screenSize={screenSize}>
+          <StepPanel screenSize={screenSize} sx={{ position: 'relative' }}>
+            {/* Figma: overlaps the panel's bottom-left corner. LARGE only —
+                the 20px gutter below that leaves no room for the overhang. */}
+            {isLarge && (
+              <PatternDetail
+                src={landingPagePatternDetail}
+                alt=""
+                aria-hidden
+                sx={{ bottom: -80, left: -61, transform: 'scaleX(-1)' }}
+              />
+            )}
             <Stack
               direction={isLarge ? 'row' : 'column'}
               // Row: 28px gutter between cards. Column: the Figma frames put 88
@@ -268,7 +234,7 @@ export default function Landing() {
               spacing={isLarge ? '28px' : '20px'}
               alignItems="stretch"
             >
-              {STEP_KEYS.map((stepKey) => (
+              {STEPS.map(({ key: stepKey, image }) => (
                 <Box
                   key={stepKey}
                   sx={{
@@ -281,7 +247,6 @@ export default function Landing() {
                   <Typography
                     variant="h3"
                     sx={{
-                      fontWeight: 700,
                       color: 'designSystem.surface.white',
                       mb: '36px',
                     }}
@@ -289,11 +254,10 @@ export default function Landing() {
                     {t(`howItWorks.${stepKey}.label`)}
                   </Typography>
                   <StepCard screenSize={screenSize}>
+                    {/* Figma card titles are 32px in a 36px line box (h2). */}
                     <Typography
-                      variant="h3"
+                      variant="h2"
                       sx={{
-                        fontWeight: 700,
-                        lineHeight: isLarge ? '36px' : '32px',
                         color: 'designSystem.surface.black',
                         mb: '20px',
                       }}
@@ -303,75 +267,19 @@ export default function Landing() {
                     <Typography
                       variant="paragraph2"
                       sx={{
-                        fontWeight: 400,
                         color: 'designSystem.surface.black',
                       }}
                     >
                       {t(`howItWorks.${stepKey}.body`)}
                     </Typography>
-                    {/* TODO: step illustration SVG goes here. */}
-                    <IllustrationSlot />
+                    <StepIllustration src={image} alt="" aria-hidden />
                   </StepCard>
                 </Box>
               ))}
             </Stack>
           </StepPanel>
         </ContentRow>
-
-        {/* See it in action — Figma y 2309..3190 (1920) */}
-        <ContentRow
-          screenSize={screenSize}
-          sx={{
-            pt: isLarge ? '251px' : '80px',
-            pb: isLarge ? '120px' : '64px',
-          }}
-        >
-          <Typography
-            variant="h1"
-            sx={{
-              fontWeight: 700,
-              color: 'designSystem.surface.atlanticNavy',
-              mb: '24px',
-            }}
-          >
-            {t('seeItInAction.title')}
-          </Typography>
-          <Typography
-            variant="paragraph1"
-            sx={{
-              lineHeight: '42px',
-              color: 'designSystem.surface.black',
-              mb: '44px',
-            }}
-          >
-            <Box
-              component="span"
-              sx={{
-                fontWeight: 700,
-                color: 'designSystem.foreground.accentBlue',
-              }}
-            >
-              {t('seeItInAction.lead')}
-            </Box>{' '}
-            {t('seeItInAction.body')}
-          </Typography>
-
-          <VideoFrame screenSize={screenSize}>
-            <VideoWash />
-            {/* TODO: wire to the walkthrough video once the source is available. */}
-            <PlayButton
-              screenSize={screenSize}
-              aria-label={t('seeItInAction.playlabel')}
-            >
-              <PlayArrowIcon
-                sx={{ fontSize: screenSize === ScreenSize.SMALL ? 36 : 64 }}
-              />
-            </PlayButton>
-          </VideoFrame>
-        </ContentRow>
       </Box>
-
-      <Footer screenSize={screenSize} />
-    </Page>
+    </Box>
   );
 }
