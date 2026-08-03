@@ -1,0 +1,841 @@
+{
+  "meta": {
+    "source": "Extracted from Figma export in .temp/layouts (Wireframe0–Wireframe11, incl. Wireframe8 Options 1–5)",
+    "generatedFor": "MicroCoach v2 LLM pipeline output shape",
+    "pipelineContract": "3 misconceptions, each with 2 next-step activities",
+    "fidelity": "All strings verbatim from the layouts. Nothing authored. Fields with no source text are null and carry a detailStatus."
+  },
+
+  "session": {
+    "teacher": {
+      "displayName": "James Anderson",
+      "shortName": "James",
+      "email": "james.anderson@camd..."
+    },
+    "selectedClassId": "class-justice",
+    "classes": [
+      { "id": "class-justice", "name": "Justice", "fullName": "Algebra 1 - Period 2", "isSelected": true },
+      { "id": "class-joy", "name": "Joy", "fullName": null, "isSelected": false },
+      { "id": "class-grace", "name": "Grace", "fullName": null, "isSelected": false },
+      { "id": "class-hope", "name": "Hope", "fullName": null, "isSelected": false }
+    ],
+    "hasMoreClasses": true,
+    "selectedWeek": "Week of Jul 7",
+    "studentWorksAnalyzed": 28,
+    "studentsWithStrongUnderstanding": 10,
+
+    "roster": [
+      { "id": "stu-01", "name": "Amiya E. Adams" },
+      { "id": "stu-02", "name": "Bethel M. Tchatchou" },
+      { "id": "stu-03", "name": "Blessing Agulanna" },
+      { "id": "stu-04", "name": "Christopher J. Strickland" },
+      { "id": "stu-05", "name": "Dennis O. Igiebor" },
+      { "id": "stu-06", "name": "Elijah J. Inman" },
+      { "id": "stu-07", "name": "Evamarie Duran" },
+      { "id": "stu-08", "name": "Isabel C. Espinoza Paulino" },
+      { "id": "stu-09", "name": "Javian N. Thomas" },
+      { "id": "stu-10", "name": "Jayla Maxwell" },
+      { "id": "stu-11", "name": "Joy U. Gageche" },
+      { "id": "stu-12", "name": "Kayleen A. Rosario" },
+      { "id": "stu-13", "name": "Kayleigh Morgan" },
+      { "id": "stu-14", "name": "Madison Ransom" },
+      { "id": "stu-15", "name": "Maliek G. Wright" },
+      { "id": "stu-16", "name": "Mason S. Tyndall" },
+      { "id": "stu-17", "name": "Mounirah R. Ouedraogo" },
+      { "id": "stu-18", "name": "Mya-Marie Porter" },
+      { "id": "stu-19", "name": "Nii-Adjei A. Adjetey-Osekreh" },
+      { "id": "stu-20", "name": "Norbert O. Oko" },
+      { "id": "stu-21", "name": "Oluwasemilore E. Morakinyo" },
+      { "id": "stu-22", "name": "Oluwateniola Oluwafisayo" },
+      { "id": "stu-23", "name": "Omotola O. Abe" },
+      { "id": "stu-24", "name": "Salimatou Diallo" },
+      { "id": "stu-25", "name": "Sanaa Walker" },
+      { "id": "stu-26", "name": "Sapphira R. Scott" },
+      { "id": "stu-27", "name": "Soniyah Phillips" },
+      { "id": "stu-28", "name": "Zuriel B. Agard" }
+    ],
+
+    "flowSteps": [
+      { "order": 1, "label": "Assess", "state": "COMPLETE" },
+      { "order": 2, "label": "Understand", "state": "CURRENT" },
+      { "order": 3, "label": "Choose activity", "state": "UPCOMING" },
+      { "order": 4, "label": "Reassess", "state": "UPCOMING" },
+      { "order": 5, "label": "Reflect on impact", "state": "UPCOMING" }
+    ],
+
+    "navTabs": [
+      { "id": "understand-act", "label": "Understand & Act", "isActive": true },
+      { "id": "prepare", "label": "Prepare", "isActive": false },
+      { "id": "reflect", "label": "Reflect", "isActive": false }
+    ],
+
+    "sidebarItems": [
+      { "id": "home", "label": "Home", "isActive": true },
+      { "id": "this-week", "label": "This Week", "isActive": false },
+      { "id": "past-insights", "label": "Past Insights", "isActive": false }
+    ],
+
+    "copy": {
+      "homeHeading": "Welcome back to MicroCoach",
+      "homeBanner": "Your class results are in — review misconception patterns and recommended activities",
+      "homeSubheading": "Review misconception patterns in your students’ thinking to identify opportunities to strengthen understanding.",
+      "classPickerLabel": "Which class are you working with today?",
+      "weekPickerLabel": "Week",
+      "homeCta": "Review misconception patterns",
+      "understandBanner": "Your class results are in — see what your students misunderstood and next steps you can take",
+      "understandHeading": "Understand Your Students' Thinking",
+      "understandSubheading": "Insights and misconception patterns from your classroom data",
+      "worksAnalyzedChip": "28 student works analyzed",
+      "strongUnderstandingBar": "10 Students showed strong understanding",
+      "chooseActivityHeading": "Choose your next instructional move",
+      "chooseActivitySubheading": "Select the activity that best fits your class",
+      "chooseNextStepHeading": "Choose a Next Step",
+      "chooseNextStepSubheading": "Recommended next steps for the core misconception:",
+      "helpBubble": "Need help"
+    }
+  },
+
+  "misconceptions": [
+    {
+      "id": "misconception-slope-misidentification",
+      "rank": 1,
+      "badge": "RECOMMENDED_FOCUS",
+      "badgeVariants": ["RECOMMENDED FOCUS", "CORE"],
+      "isRecommendedFocus": true,
+      "title": "Slope misidentification in inequalities",
+      "titleCased": "Slope Misidentification in Inequalities",
+      "shortLabel": "Slope misidentification",
+      "description": "Students identify or interpret slope sign and direction incorrectly when graphing linear inequalities.",
+      "consequence": "The consequence is shading the wrong half-plane or selecting the wrong boundary orientation, producing an incorrect solution set.",
+      "prevalence": {
+        "level": "SOME",
+        "label": "Some students",
+        "studentsNeedingSupport": 14,
+        "studentsUnderstood": 13,
+        "studentsNoResponse": 1,
+        "totalAnalyzed": 28,
+        "supportSummaryLabel": "14 of 28 students need support",
+        "understoodSummaryLabel": "13 students understood the concept",
+        "shortCountLabel": "14 of 28 students"
+      },
+      "detailStatus": "COMPLETE",
+
+      "studentWork": {
+        "tabLabel": "Student work",
+        "sectionTitle": "Errors in order of frequency",
+        "errorsByFrequency": [
+          {
+            "optionLetter": "B",
+            "optionSummary": "Option shows: solid boundary line, correct shading below",
+            "errorTag": "Solid vs dashed line",
+            "interpretation": "Students who selected this likely believe all inequalities use a solid boundary line, or haven't connected the < symbol specifically to a dashed line. The shading is correct — the error is isolated to the line type rule.",
+            "studentCount": 9,
+            "students": [
+              "Amiya E. Adams",
+              "Joy U. Gageche",
+              "Mason S. Tyndall",
+              "Dennis O. Igiebor",
+              "Kayleen A. Rosario",
+              "Mya-Marie Porter",
+              "Elijah J. Inman",
+              "Kayleigh Morgan",
+              "Madison Ransom"
+            ]
+          },
+          {
+            "optionLetter": "C",
+            "optionSummary": "Option shows: dashed boundary line, shading above",
+            "errorTag": "Wrong half-plane",
+            "interpretation": "Students who selected this likely believe all inequalities use a solid boundary line, or haven't connected the < symbol specifically to a dashed line. The shading is correct — the error is isolated to the line type rule.",
+            "studentCount": 4,
+            "students": [
+              "Jayla Maxwell",
+              "Maliek G. Wright",
+              "Nii-Adjei A. Adjetey-Osekreh",
+              "Oluwateniola Oluwafisayo"
+            ]
+          },
+          {
+            "optionLetter": "D",
+            "optionSummary": "Option shows: dashed boundary line, shading above",
+            "errorTag": "Wrong half-plane",
+            "interpretation": "Students who selected this likely believe all inequalities use a solid boundary line, or haven't connected the < symbol specifically to a dashed line. The shading is correct — the error is isolated to the line type rule.",
+            "studentCount": 1,
+            "students": ["Zuriel B. Agard"]
+          }
+        ],
+        "understoodConcept": {
+          "sectionTitle": "Understood Concept",
+          "subLabel": "Correct answers",
+          "countChip": "13 students",
+          "studentCount": 13,
+          "students": [
+            "Bethel M. Tchatchou",
+            "Blessing Agulanna",
+            "Christopher J. Strickland",
+            "Evamarie Duran",
+            "Javian N. Thomas",
+            "Mounirah R. Ouedraogo",
+            "Norbert O. Oko",
+            "Oluwasemilore E. Morakinyo",
+            "Omotola O. Abe",
+            "Salimatou Diallo",
+            "Sanaa Walker",
+            "Sapphira R. Scott",
+            "Soniyah Phillips"
+          ]
+        },
+        "noResponse": {
+          "studentCount": 1,
+          "students": ["Isabel C. Espinoza Paulino"]
+        }
+      },
+
+      "skillContext": {
+        "tabLabel": "Skill context",
+        "sectionTitle": "Examples of common errors",
+        "focusSkill": {
+          "groupLabel": "Focus Skill",
+          "code": "HSA-REI.D.12",
+          "name": "Graphing linear inequalities",
+          "description": "Graph the solutions to a linear inequality in two variables as a half-plane (excluding the boundary in the case of a strict inequality), and graph the solution set to a system of linear inequalities in two variables as the intersection of the corresponding half-planes."
+        },
+        "prerequisiteGaps": {
+          "groupLabel": "Prerequisite Gaps",
+          "skills": [
+            {
+              "code": "7.EE.B.4",
+              "name": null,
+              "description": "Use variables to represent quantities in a real-world or mathematical problem, and construct simple equations and inequalities to solve problems by reasoning about the quantities."
+            },
+            {
+              "code": "8.EE.C.8",
+              "name": null,
+              "description": "Analyze and solve pairs of simultaneous linear equations."
+            }
+          ]
+        },
+        "upcomingSkills": {
+          "groupLabel": "Upcoming Skills",
+          "skills": [
+            {
+              "code": "HSA-CED.A.3",
+              "name": null,
+              "description": "Represent constraints by equations or inequalities, and by systems of equations and/or inequalities, and interpret solutions as viable or nonviable options in a modeling context. *For example, represent inequalities describing nutritional and cost constraints on combinations of different foods.*"
+            }
+          ]
+        }
+      },
+
+      "nextStepActivities": [
+        {
+          "id": "activity-spot-the-slip",
+          "misconceptionId": "misconception-slope-misidentification",
+          "title": "Analyze wrong shadings from incorrect reasoning",
+          "titleCased": "Analyze Wrong Shadings from Incorrect Reasoning",
+          "isSelected": true,
+          "selectLabel": "Selected activity",
+          "detailStatus": "COMPLETE",
+          "routine": {
+            "id": "routine-spot-the-slip",
+            "name": "Spot the Slip",
+            "subtitle": "Incorrect Worked Example Analysis",
+            "description": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the mistake happened, and work together to correct it"
+          },
+          "durationMinutes": 20,
+          "durationLabel": "20 min",
+          "grouping": { "level": "WHOLE_CLASS", "label": "whole class" },
+          "targets": "Determine slope sign from an equation or two points; use a test point to check an inequality; choose and shade the correct half-plane",
+          "instructionalMove": "Model the \"Incorrect Worked Example Analysis\" routine. Show each incorrect solution on the board. Ask students to find the single step that uses the misconception (slope sign misread or inequality mis-applied). Then guide a short whole-class correction and have students state why the original shading is wrong.",
+          "strategyTag": "Make Structure Visible",
+
+          "phases": [
+            {
+              "id": "before-class",
+              "label": "Before class",
+              "order": 1,
+              "nextLabel": "Next: Activity",
+              "actions": ["Export PDF", "Next: Activity", "Save to Lesson Plan"],
+              "checklist": {
+                "title": "3 things to do before class",
+                "items": [
+                  { "order": 1, "text": "Write three incorrect worked examples on the board with coordinate axes — use the examples in the next phase." },
+                  { "order": 2, "text": "Prepare one coloured marker to highlight the error step, and a second to redraw the correct line and shading." },
+                  { "order": 3, "text": "Plan a quick 2-min formative check at the start: ask students to write the single step they'd use to decide shading. Confirm group placements from the result." }
+                ]
+              },
+              "groupFormation": {
+                "title": "Form groups for the activity",
+                "guidance": "Form groups from quick formative checks: have students write the single step they would use to decide shading. Use those responses to place students into A, B, or C. Rotate examples so each group practices their specific correction.",
+                "groups": [
+                  {
+                    "label": "Group A",
+                    "description": "Students who draw the boundary correctly but occasionally flip the inequality when testing. Focus on practicing the substitution step and verbalizing the inequality direction.",
+                    "students": [
+                      "Amiya E. Adams",
+                      "Dennis O. Igiebor",
+                      "Isabel C. Espinoza Paulino",
+                      "Jayla Maxwell",
+                      "Joy U. Gageche",
+                      "Kayleen A. Rosario",
+                      "Kayleigh Morgan",
+                      "Mya-Marie Porter",
+                      "Oluwateniola Oluwafisayo",
+                      "Omotola O. Abe"
+                    ]
+                  },
+                  {
+                    "label": "Group B",
+                    "description": "Students who misread slope sign from equations or two points. Focus on finding slope from two points and checking sign before drawing.",
+                    "students": [
+                      "Blessing Agulanna",
+                      "Christopher J. Strickland",
+                      "Elijah J. Inman",
+                      "Evamarie Duran",
+                      "Mason S. Tyndall",
+                      "Nii-Adjei A. Adjetey-Osekreh",
+                      "Oluwasemilore E. Morakinyo",
+                      "Salimatou Diallo",
+                      "Zuriel B. Agard"
+                    ]
+                  }
+                ]
+              }
+            },
+
+            {
+              "id": "activity",
+              "label": "Activity",
+              "order": 2,
+              "nextLabel": "Next: Facilitation",
+              "actions": ["Export PDF", "Next: Facilitation", "Save to Lesson Plan"],
+              "blocks": [
+                {
+                  "type": "INCORRECT_WORKED_EXAMPLES",
+                  "sourceWireframe": "Wireframe8_Option1",
+                  "title": "Incorrect Worked examples - Examples to show the class",
+                  "subtitle": "Teacher view shows the error step highlighted. Student view shows the problem clean",
+                  "supportsViewToggle": true,
+                  "viewModes": ["Teacher", "Student"],
+                  "defaultViewMode": "Teacher",
+                  "examples": [
+                    {
+                      "label": "Example 1",
+                      "prompt": "Graph the solution to y < −1/2 x + 3",
+                      "steps": [
+                        { "step": 1, "text": "Identify boundary. y = −1/2 x + 3. (Correct)", "isError": false, "errorNote": null },
+                        { "step": 2, "text": "y-intercept = 3. Slope = −1/2. (Correct)", "isError": false, "errorNote": null },
+                        { "step": 3, "text": "Draw a dashed line through (0, 3) with slope −1/2. (Correct)", "isError": false, "errorNote": null },
+                        { "step": 4, "text": "Test point (0, 0). Substitute: 0 > 3.", "isError": true, "errorNote": "Error: flipped the inequality when testing" },
+                        { "step": 5, "text": "Since 0 > 3 is false, the student concludes (0, 0) is not a solution and shades the half-plane away from (0, 0).", "isError": false, "errorNote": null }
+                      ],
+                      "finalOutcomeLabel": "FINAL:",
+                      "finalOutcome": "LINE PLOTTED CORRECTLY BUT SHADED THE OPPOSITE HALF-PLANE FROM THE TRUE SOLUTION."
+                    },
+                    {
+                      "label": "Example 2",
+                      "prompt": "Graph the solution to 2x + y ≤ 6",
+                      "steps": [
+                        { "step": 1, "text": "Solve for y: y ≤ −2x + 6. (Correct)", "isError": false, "errorNote": null },
+                        { "step": 2, "text": "y-intercept = 6. (Correct)", "isError": false, "errorNote": null },
+                        { "step": 3, "text": "Slope = 2.", "isError": true, "errorNote": "Error: dropped the negative sign; slope should be −2" },
+                        { "step": 4, "text": "Plot (0, 6) and use slope 2 to plot (1, 8). Draw the line and make it solid because ≤", "isError": false, "errorNote": null },
+                        { "step": 5, "text": "Choose a test point relative to their drawn line and shade the side that satisfies y ≤ 2x + 6. The drawn line and shading differ from the correct y ≤ −2x + 6 solution", "isError": false, "errorNote": null }
+                      ],
+                      "finalOutcomeLabel": "FINAL:",
+                      "finalOutcome": "THE SIGN MISTAKE IN SLOPE PRODUCED A DIFFERENT BOUNDARY AND A WRONG SOLUTION SET"
+                    }
+                  ]
+                },
+
+                {
+                  "type": "COMPARE_THE_THINKING",
+                  "sourceWireframe": "Wireframe7 (Student view) + Wireframe8_Option3 (Teacher view)",
+                  "title": "Compare the Thinking",
+                  "subtitle": "This is your board layout. Print it or use it as a reference while drawing.",
+                  "supportsViewToggle": true,
+                  "viewModes": ["Teacher", "Student"],
+                  "defaultViewMode": "Teacher",
+                  "studentViewHides": ["verdict", "isError", "annotation"],
+                  "problemLabel": "Problem",
+                  "problem": "Graph the solution set for y < −½x + 3",
+                  "columns": [
+                    {
+                      "label": "A",
+                      "verdict": "Wrong approach",
+                      "isCorrect": false,
+                      "steps": [
+                        { "step": 1, "text": "Identify boundary: y = −½x + 3", "isError": false },
+                        { "step": 2, "text": "slope = −½, y-int = 3", "isError": false },
+                        { "step": 3, "text": "Draw dashed line through (0,3)", "isError": false },
+                        { "step": 4, "text": "Shade above the line", "isError": true }
+                      ],
+                      "annotation": "Read < as \"below\" visually — never checked with a test point"
+                    },
+                    {
+                      "label": "B",
+                      "verdict": "Correct approach",
+                      "isCorrect": true,
+                      "steps": [
+                        { "step": 1, "text": "Identify boundary: y = −½x + 3", "isError": false },
+                        { "step": 2, "text": "slope = −½, y-int = 3", "isError": false },
+                        { "step": 3, "text": "Draw dashed line through (0,3)", "isError": false },
+                        { "step": 4, "text": "Test (0,0): 0 < 3 → shade below", "isError": false }
+                      ],
+                      "annotation": "Substituted a test point — didn't rely on the symbol direction"
+                    }
+                  ],
+                  "keyTakeaway": {
+                    "label": "Key Takeaway — built with students during class",
+                    "text": "When graphing inequalities, always verify shading by ______________"
+                  }
+                },
+
+                {
+                  "type": "MATH_HOSPITAL",
+                  "sourceWireframe": "Wireframe8_Option5",
+                  "title": "Math Hospital — Diagnose & Repair",
+                  "supportsViewToggle": false,
+                  "problem": "Graph the solution set for y < −½x + 3",
+                  "problemChecklist": "Plot line ✓ Dashed ✓ Slope = −½ ✓ y < → shade above ✗",
+                  "steps": [
+                    {
+                      "step": 1,
+                      "title": "Diagnose — where did the reasoning break?",
+                      "askLabel": "Ask students",
+                      "ask": "Point to the exact step that went wrong. What was the student thinking?",
+                      "responseLabel": "Expected answer",
+                      "response": "Step 4. They used < as a direction rule (\"shade above\") instead of testing a point. Never verified with substitution."
+                    },
+                    {
+                      "step": 2,
+                      "title": "Repair — rewrite the faulty step",
+                      "askLabel": "Ask students",
+                      "ask": "Rewrite Step 4 so it leads to the correct answer. Show the work.",
+                      "responseLabel": "Corrected step",
+                      "response": "Test (0,0): Is 0 < −½(0)+3? → 0 < 3 ✓ → shade the side containing (0,0) → shade below-left."
+                    },
+                    {
+                      "step": 3,
+                      "title": "Generalize — write the rule that prevents this",
+                      "askLabel": "Ask students",
+                      "ask": "Write one rule that prevents this mistake — for any inequality.",
+                      "responseLabel": "Target rule (write on board)",
+                      "response": "Always test a point. Never use the inequality symbol as a shading direction."
+                    }
+                  ],
+                  "footnote": "Don't skip Step 1. Students need to diagnose before the repair feels necessary. Jumping to the rule makes it another thing to memorise."
+                },
+
+                {
+                  "type": "MULTIPLE_REPRESENTATIONS",
+                  "sourceWireframe": "Wireframe8_Option4",
+                  "title": "Make the connections — multiple representations",
+                  "subtitle": "Students identify which representations describe the same relationship, and explain why",
+                  "supportsViewToggle": false,
+                  "studentTaskLabel": "Student task",
+                  "studentTask": "Three of these four representations describe the same mathematical relationship. Which one doesn't fit — and explain how the other three connect.",
+                  "representations": [
+                    {
+                      "kind": "EQUATION",
+                      "label": "Equation",
+                      "matches": true,
+                      "matchLabel": "Matches",
+                      "value": "y = 2x + 1",
+                      "detail": "slope = 2 · y-intercept = 1"
+                    },
+                    {
+                      "kind": "GRAPH",
+                      "label": "Graph",
+                      "matches": true,
+                      "matchLabel": "Matches",
+                      "lineLabel": "y = 2x + 1",
+                      "plottedPoints": ["(0, 1)", "(1, 3)"],
+                      "slopeAnnotation": { "riseLabel": "rise 2", "runLabel": "run 1", "rise": 2, "run": 1 },
+                      "axisRange": { "xMin": -2, "xMax": 3, "yMin": -1, "yMax": 5 }
+                    },
+                    {
+                      "kind": "TABLE",
+                      "label": "Table",
+                      "matches": true,
+                      "matchLabel": "Matches",
+                      "columns": ["x", "y"],
+                      "rows": [
+                        [-1, -1],
+                        [0, 1],
+                        [1, 3],
+                        [2, 5]
+                      ]
+                    },
+                    {
+                      "kind": "VERBAL",
+                      "label": "Verbal",
+                      "matches": false,
+                      "matchLabel": "Doesn't Fit",
+                      "value": "A line that starts below the x-axis and decreases as x increases."
+                    }
+                  ],
+                  "teachingNotesLabel": "Teaching Notes",
+                  "teachingNotes": [
+                    {
+                      "order": 1,
+                      "title": "Equation, graph, table all match",
+                      "body": "The y-intercept is 1 in all three. The constant rate of change (+2 per unit) appears as the coefficient, the slope of the line, and the consistent +2 difference in the y-column."
+                    },
+                    {
+                      "order": 2,
+                      "title": "Verbal is the distractor",
+                      "body": "It says the line decreases and starts below the x-axis — both wrong. Push students past \"it says the wrong thing\" toward: which specific words are incorrect, and what should replace them?"
+                    },
+                    {
+                      "order": 3,
+                      "title": "Key connection to surface",
+                      "body": "Ask students how slope shows up differently in each matching representation. Students often see it as the same number but miss that it's a ratio in the equation, a visual steepness in the graph, and a repeated difference in the table."
+                    }
+                  ]
+                }
+              ]
+            },
+
+            {
+              "id": "facilitation",
+              "label": "Facilitation",
+              "order": 3,
+              "nextLabel": "Next: Discussion",
+              "actions": ["Export PDF", "Next: Discussion", "Save to Lesson Plan"],
+              "title": "How to run it — 5 steps",
+              "steps": [
+                { "order": 1, "title": "Show Example 1 — whole class", "body": "Put the first incorrect example on the board. Ask: \"Point to the single step where this went wrong.\"" },
+                { "order": 2, "title": "Student restates the algebraic test", "body": "One student writes the correct substitution on the board. Class confirms." },
+                { "order": 3, "title": "Correct and redraw", "body": "Rewrite the line, redraw boundary, shade correct half-plane based on the algebraic test — not intuition." },
+                { "order": 4, "title": "Repeat for Examples 2 and 3", "body": "Same routine. Each example targets a different error type — keep each group focused on their own." },
+                { "order": 5, "title": "Build a 3-step checklist together", "body": "Students summarise: (1) get boundary, (2) draw line, (3) test a point and shade where the inequality is true." }
+              ]
+            },
+
+            {
+              "id": "discussion",
+              "label": "Discussion",
+              "order": 4,
+              "nextLabel": null,
+              "actions": ["Export PDF", "Save to Lesson Plan"],
+              "title": "Discussion questions - close of class",
+              "questions": [
+                { "order": 1, "text": "Which single step made the solution wrong? Point to it and explain why it leads to the opposite half-plane." },
+                { "order": 2, "text": "How does the test-point substitution show the correct shading? Show the algebraic step." },
+                { "order": 3, "text": "When might slope sign be helpful — and why can it never replace the test-point check?" }
+              ]
+            }
+          ]
+        },
+
+        {
+          "id": "activity-my-favorite-no",
+          "misconceptionId": "misconception-slope-misidentification",
+          "title": null,
+          "titleCased": null,
+          "isSelected": false,
+          "selectLabel": "Select activity",
+          "detailStatus": "PARTIAL",
+          "routine": {
+            "id": "routine-my-favorite-no",
+            "name": "My Favorite No",
+            "subtitle": "Student Thinking Analysis",
+            "description": "Students analyze a common incorrect answer (or an anonymous student response), discuss why someone might have chosen it, identify what the reasoning gets right, and determine how to improve it"
+          },
+          "durationMinutes": 20,
+          "durationLabel": "20 min",
+          "grouping": { "level": "WHOLE_CLASS", "label": "whole class" },
+          "targets": "Determine slope sign from an equation or two points; use a test point to check an inequality; choose and shade the correct half-plane",
+          "instructionalMove": "Model the \"Incorrect Worked Example Analysis\" routine. Show each incorrect solution on the board. Ask students to find the single step that uses the misconception (slope sign misread or inequality mis-applied). Then guide a short whole-class correction and have students state why the original shading is wrong.",
+          "strategyTag": "Make Structure Visible",
+
+          "phases": [
+            {
+              "id": "before-class",
+              "label": "Before class",
+              "order": 1,
+              "nextLabel": "Next: Activity",
+              "actions": ["Export PDF", "Next: Activity", "Save to Lesson Plan"],
+              "checklist": null,
+              "groupFormation": null,
+              "detailStatus": "NOT_IN_WIREFRAMES"
+            },
+            {
+              "id": "activity",
+              "label": "Activity",
+              "order": 2,
+              "nextLabel": "Next: Facilitation",
+              "actions": ["Export PDF", "Next: Facilitation", "Save to Lesson Plan"],
+              "blocks": [
+                {
+                  "type": "FAVORITE_NO",
+                  "sourceWireframe": "Wireframe8_Option2",
+                  "title": "My Favorite No — write this on the board before class",
+                  "supportsViewToggle": false,
+                  "boardPrompt": {
+                    "problem": "Graph the solution set for 2x + y > 4",
+                    "instruction": "Students solve on index cards — no name, just a seat number"
+                  },
+                  "suggestedExample": {
+                    "title": "Your Favorite No — suggested example",
+                    "sourceLabel": "Anonymous student response",
+                    "studentWorkLabel": "Student's work",
+                    "studentWork": [
+                      { "text": "2x + y > 4", "status": "NEUTRAL" },
+                      { "text": "y > −2x + 4 ✓", "status": "CORRECT" },
+                      { "text": "slope = −2, y-int = 4 ✓", "status": "CORRECT" },
+                      { "text": "dashed line ✓", "status": "CORRECT" },
+                      { "text": "shaded below the line ✗", "status": "INCORRECT" }
+                    ],
+                    "whatToNoticeLabel": "What to notice",
+                    "whatToNotice": [
+                      { "status": "CORRECT", "text": "Correctly rearranged to slope-intercept form" },
+                      { "status": "CORRECT", "text": "Correct slope and y-intercept identified" },
+                      { "status": "CORRECT", "text": "Dashed line for strict inequality — correct" },
+                      { "status": "INCORRECT", "text": "Shaded below — likely read > as pointing downward rather than testing a point" }
+                    ]
+                  },
+                  "footnote": "This example was pre-selected from RightOn's student data for this misconception. During class, replace it with a real student card — or use this if no comparable response comes up."
+                }
+              ]
+            },
+            {
+              "id": "facilitation",
+              "label": "Facilitation",
+              "order": 3,
+              "nextLabel": "Next: Discussion",
+              "actions": ["Export PDF", "Next: Discussion", "Save to Lesson Plan"],
+              "title": null,
+              "steps": null,
+              "detailStatus": "NOT_IN_WIREFRAMES"
+            },
+            {
+              "id": "discussion",
+              "label": "Discussion",
+              "order": 4,
+              "nextLabel": null,
+              "actions": ["Export PDF", "Save to Lesson Plan"],
+              "title": null,
+              "questions": null,
+              "detailStatus": "NOT_IN_WIREFRAMES"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "misconception-improper-fraction-handling",
+      "rank": 2,
+      "badge": null,
+      "badgeVariants": [],
+      "isRecommendedFocus": false,
+      "title": "Improper fraction handling in equations",
+      "titleCased": "Improper Fraction Handling in Equations",
+      "shortLabel": "Improper fraction handling",
+      "description": "When isolating a variable, students apply fraction operations incorrectly (treating division by a fraction as multiplication by the numerator).",
+      "consequence": "The result is systematically wrong variable values on equations involving rational coefficients.",
+      "prevalence": {
+        "level": "SOME",
+        "label": "Some students",
+        "studentsNeedingSupport": null,
+        "studentsUnderstood": null,
+        "studentsNoResponse": null,
+        "totalAnalyzed": 28,
+        "supportSummaryLabel": null,
+        "understoodSummaryLabel": null,
+        "shortCountLabel": null
+      },
+      "detailStatus": "CARD_ONLY",
+      "studentWork": null,
+      "skillContext": null,
+      "nextStepActivities": [
+        {
+          "id": "activity-fraction-1",
+          "misconceptionId": "misconception-improper-fraction-handling",
+          "title": null,
+          "titleCased": null,
+          "isSelected": false,
+          "selectLabel": "Select activity",
+          "detailStatus": "NOT_IN_WIREFRAMES",
+          "routine": {
+            "id": "routine-spot-the-slip",
+            "name": "Spot the Slip",
+            "subtitle": "Incorrect Worked Example Analysis",
+            "description": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the mistake happened, and work together to correct it"
+          },
+          "durationMinutes": null,
+          "durationLabel": null,
+          "grouping": null,
+          "targets": null,
+          "instructionalMove": null,
+          "strategyTag": null,
+          "phases": null
+        },
+        {
+          "id": "activity-fraction-2",
+          "misconceptionId": "misconception-improper-fraction-handling",
+          "title": null,
+          "titleCased": null,
+          "isSelected": false,
+          "selectLabel": "Select activity",
+          "detailStatus": "NOT_IN_WIREFRAMES",
+          "routine": {
+            "id": "routine-my-favorite-no",
+            "name": "My Favorite No",
+            "subtitle": "Student Thinking Analysis",
+            "description": "Students analyze a common incorrect answer (or an anonymous student response), discuss why someone might have chosen it, identify what the reasoning gets right, and determine how to improve it"
+          },
+          "durationMinutes": null,
+          "durationLabel": null,
+          "grouping": null,
+          "targets": null,
+          "instructionalMove": null,
+          "strategyTag": null,
+          "phases": null
+        }
+      ]
+    },
+
+    {
+      "id": "misconception-inequality-type-boundary-line",
+      "rank": 3,
+      "badge": null,
+      "badgeVariants": [],
+      "isRecommendedFocus": false,
+      "title": "Mistaking inequality type from boundary line",
+      "titleCased": "Mistaking Inequality Type from Boundary Line",
+      "shortLabel": "Inequality type from boundary line",
+      "description": "Students confuse when to draw a solid versus dashed boundary line for inclusive versus strict inequalities.",
+      "consequence": "The consequence is incorrect inclusion or exclusion of boundary points in the solution set.",
+      "prevalence": {
+        "level": "SOME",
+        "label": "Some students",
+        "studentsNeedingSupport": null,
+        "studentsUnderstood": null,
+        "studentsNoResponse": null,
+        "totalAnalyzed": 28,
+        "supportSummaryLabel": null,
+        "understoodSummaryLabel": null,
+        "shortCountLabel": null
+      },
+      "detailStatus": "CARD_ONLY",
+      "studentWork": null,
+      "skillContext": null,
+      "nextStepActivities": [
+        {
+          "id": "activity-boundary-1",
+          "misconceptionId": "misconception-inequality-type-boundary-line",
+          "title": null,
+          "titleCased": null,
+          "isSelected": false,
+          "selectLabel": "Select activity",
+          "detailStatus": "NOT_IN_WIREFRAMES",
+          "routine": {
+            "id": "routine-spot-the-slip",
+            "name": "Spot the Slip",
+            "subtitle": "Incorrect Worked Example Analysis",
+            "description": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the mistake happened, and work together to correct it"
+          },
+          "durationMinutes": null,
+          "durationLabel": null,
+          "grouping": null,
+          "targets": null,
+          "instructionalMove": null,
+          "strategyTag": null,
+          "phases": null
+        },
+        {
+          "id": "activity-boundary-2",
+          "misconceptionId": "misconception-inequality-type-boundary-line",
+          "title": null,
+          "titleCased": null,
+          "isSelected": false,
+          "selectLabel": "Select activity",
+          "detailStatus": "NOT_IN_WIREFRAMES",
+          "routine": {
+            "id": "routine-my-favorite-no",
+            "name": "My Favorite No",
+            "subtitle": "Student Thinking Analysis",
+            "description": "Students analyze a common incorrect answer (or an anonymous student response), discuss why someone might have chosen it, identify what the reasoning gets right, and determine how to improve it"
+          },
+          "durationMinutes": null,
+          "durationLabel": null,
+          "grouping": null,
+          "targets": null,
+          "instructionalMove": null,
+          "strategyTag": null,
+          "phases": null
+        }
+      ]
+    }
+  ],
+
+  "savedPlan": {
+    "heading": "Your saved activity",
+    "subheading": "Activities saved for Algebra 1 - Period 2. Open an activity to prepare, then mark it done after class.",
+    "changeActivityLabel": "Change activity",
+    "completedHeading": "Completed",
+    "items": [
+      {
+        "id": "plan-item-1",
+        "status": "SAVED",
+        "activityId": null,
+        "activityTitle": "Slope Forecasting Challenge",
+        "skillCode": "HSA-REI.D.12",
+        "misconceptionId": "misconception-slope-misidentification",
+        "misconceptionTitle": "Slope Misidentification in Inequalities",
+        "prevalence": { "level": "FEW", "label": "Few students" },
+        "grouping": { "level": "SPLIT_CLASS", "label": "Split class" },
+        "actions": ["Open activity details", "Mark as done", "Remove"]
+      },
+      {
+        "id": "plan-item-2",
+        "status": "COMPLETED",
+        "activityId": null,
+        "activityTitle": "Slope Swap Error Analysis",
+        "skillCode": "HSA-REI.D.12",
+        "misconceptionId": null,
+        "misconceptionTitle": "Incorrect Slope Conversion",
+        "prevalence": { "level": "FEW", "label": "Few students" },
+        "grouping": { "level": "SPLIT_CLASS", "label": "Split class" },
+        "actions": ["Open activity details"]
+      }
+    ]
+  },
+
+  "enums": {
+    "badge": ["RECOMMENDED_FOCUS", "CORE"],
+    "prevalenceLevel": ["FEW", "SOME", "MOST"],
+    "groupingLevel": ["WHOLE_CLASS", "SPLIT_CLASS", "SMALL_GROUP"],
+    "detailStatus": ["COMPLETE", "PARTIAL", "CARD_ONLY", "NOT_IN_WIREFRAMES"],
+    "blockType": [
+      "INCORRECT_WORKED_EXAMPLES",
+      "COMPARE_THE_THINKING",
+      "MATH_HOSPITAL",
+      "MULTIPLE_REPRESENTATIONS",
+      "FAVORITE_NO"
+    ],
+    "workStatus": ["CORRECT", "INCORRECT", "NEUTRAL"],
+    "planStatus": ["SAVED", "COMPLETED"],
+    "viewMode": ["Teacher", "Student"]
+  },
+
+  "wireframeNotes": [
+    "Wireframe4 and Wireframe5 are the same activity card drawn twice: W4 titles by routine name and shows a description; W5 titles by generated activity name, demotes the routine to a chip, and adds Targets / Instructional Move / Strategy Tag. The model is the union of both.",
+    "Wireframe7 and Wireframe8_Option3 are one COMPARE_THE_THINKING block in Student vs Teacher view. The student view hides verdict, isError and annotation — see `studentViewHides`. No duplicated data.",
+    "Wireframe8 Options 1–5 all sit under the same activity header, so they are activity-phase block designs, not five activities. Modelled as `phases[].blocks[]` with a `type` discriminator.",
+    "Wireframe5's second card is titled \"Title\" (unfilled) — kept null rather than guessed; the routine chip identifies it as My Favorite No.",
+    "Wireframe2's error chips were deduped against a single 28-student roster: \"Jay U. Gageche\" (option B) and \"Joy U. Gageche\" (option C) are one student, and Zuriel B. Agard was listed under both C and D. Buckets now sum to 9 + 4 + 1 = 14 needing support, + 13 understood, + 1 no response = 28.",
+    "Wireframe2 labels all three buckets \"9 students:\" regardless of chip count — treated as export lorem, not data.",
+    "Name spellings drift between the modal and the Wireframe6 group lists (Dennis D. Iglebor / Dennis O. Igiebor; Nii-Adjei A. Adjatey / Adjetey-Osekreh; Oluwafisoyo / Oluwafisayo). Normalized to the `session.roster` spelling everywhere.",
+    "Wireframe2 repeats one interpretation paragraph across options B, C and D, and one option summary across C and D — kept verbatim, but it is placeholder text in the export.",
+    "Wireframe6's group guidance says \"place students into A, B, or C\" but only Groups A and B are drawn. Group C has no source content.",
+    "Wireframe6's two groups span 19 students including several who answered correctly, so group membership is not a subset of `studentsNeedingSupport`.",
+    "Badge text differs across screens for the same misconception (RECOMMENDED FOCUS on W1/4/5/6/8; CORE on W2/3/8_Option5) — one `badge` field, with both spellings recorded in `badgeVariants`.",
+    "Wireframe11's rows are plan state, not pipeline output, so they live under `savedPlan`. Their activity titles (Slope Forecasting Challenge, Slope Swap Error Analysis) appear nowhere else, and the completed row's misconception (\"Incorrect Slope Conversion\") is not one of this week's three — hence the denormalized snapshot and null activityId.",
+    "The Wireframe2/Wireframe3 background is a later iteration of Wireframe1 showing misconceptions and next steps on one page; its two activity cards carry the same title twice (placeholder). No unique data extracted from it.",
+    "Prevalence and grouping are enums with counts behind them: W1/W4/W5 show \"Some students\" and \"whole class\"; W11 shows \"Few students\" and \"Split class\"."
+  ]
+}
