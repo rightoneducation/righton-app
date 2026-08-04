@@ -17,6 +17,16 @@
     "myActivities": "Mis actividades",
     "myLessonPlan": "Mi plan de clase"
   },
+  "misconceptionModal": {
+    "close": "Cerrar",
+    "studentWork": "Trabajo de los estudiantes",
+    "skillContext": "Contexto de la destreza",
+    "errorsByFrequency": "Errores por orden de frecuencia",
+    "studentCount": "{{count}} estudiantes:",
+    "chooseActivity": "Elegir actividad",
+    "noStudentWork": "El trabajo de los estudiantes para este concepto erróneo aún no está disponible.",
+    "noSkillContext": "El contexto de la destreza para este concepto erróneo aún no está disponible."
+  },
   "understand": {
     "banner": "Los resultados de su clase están listos: vea qué entendieron mal sus estudiantes y los próximos pasos que puede tomar",
     "dismissBanner": "Descartar",

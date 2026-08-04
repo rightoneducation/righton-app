@@ -48,6 +48,11 @@ const designSystemColors = {
     uploadingStroke: '#4A6FA5',
     error: '#FFF3F3',
     errorStroke: '#E42F2F',
+    // Misconception detail: students who need support, students who understood,
+    // and the prerequisite-gap standard codes.
+    needsSupport: '#F49F82',
+    understood: '#BDE9CA',
+    prerequisite: '#CC5500',
   },
   gradients: {
     uploadIcons:

@@ -9,6 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
 import MisconceptionCard from '../components/MisconceptionCard';
+import MisconceptionDetailModal from '../components/MisconceptionDetailModal';
 import UnderstandSkeleton from '../components/UnderstandSkeleton';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
@@ -29,15 +30,23 @@ export default function Understand({ screenSize }: ScreenSizeProps) {
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   const [isBannerOpen, setIsBannerOpen] = React.useState(true);
+  const [selectedId, setSelectedId] = React.useState<string | null>(null);
 
   if (!isReady) {
     return <UnderstandSkeleton screenSize={screenSize} />;
   }
 
   const handleViewDetails = (misconceptionId: string) => {
-    // eslint-disable-next-line no-console
-    console.log('view details', misconceptionId);
+    setSelectedId(misconceptionId);
   };
+
+  const handleChooseActivity = (misconceptionId: string) => {
+    // eslint-disable-next-line no-console
+    console.log('choose activity', misconceptionId);
+  };
+
+  const selectedMisconception =
+    misconceptions.find((item) => item.id === selectedId) ?? null;
 
   const handleTabSelect = (tabId: FlowTabId) => {
     // eslint-disable-next-line no-console
@@ -155,6 +164,13 @@ export default function Understand({ screenSize }: ScreenSizeProps) {
           })}
         </Typography>
       </StrongUnderstandingBar>
+
+      <MisconceptionDetailModal
+        misconception={selectedMisconception}
+        screenSize={screenSize}
+        onClose={() => setSelectedId(null)}
+        onChooseActivity={handleChooseActivity}
+      />
     </AppContentRow>
   );
 }

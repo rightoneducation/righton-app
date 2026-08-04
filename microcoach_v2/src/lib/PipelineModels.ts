@@ -18,6 +18,55 @@ export interface IPrevalence {
   shortCountLabel: string | null;
 }
 
+export interface IErrorBucket {
+  optionLetter: string;
+  optionSummary: string;
+  errorTag: string;
+  interpretation: string;
+  studentCount: number;
+  students: string[];
+}
+
+export interface IUnderstoodConcept {
+  sectionTitle: string;
+  subLabel: string;
+  countChip: string;
+  studentCount: number;
+  students: string[];
+}
+
+export interface INoResponse {
+  studentCount: number;
+  students: string[];
+}
+
+export interface IStudentWork {
+  tabLabel: string;
+  sectionTitle: string;
+  errorsByFrequency: IErrorBucket[];
+  understoodConcept: IUnderstoodConcept;
+  noResponse: INoResponse;
+}
+
+export interface ISkill {
+  code: string;
+  name: string | null;
+  description: string;
+}
+
+export interface ISkillGroup {
+  groupLabel: string;
+  skills: ISkill[];
+}
+
+export interface ISkillContext {
+  tabLabel: string;
+  sectionTitle: string;
+  focusSkill: ISkill & { groupLabel: string };
+  prerequisiteGaps: ISkillGroup;
+  upcomingSkills: ISkillGroup;
+}
+
 export interface IMisconception {
   id: string;
   rank: number;
@@ -31,8 +80,8 @@ export interface IMisconception {
   prevalence: IPrevalence;
   detailStatus: DetailStatus;
   nextStepActivities: unknown[];
-  studentWork: unknown;
-  skillContext: unknown;
+  studentWork: IStudentWork | null;
+  skillContext: ISkillContext | null;
 }
 
 export interface ISessionTeacher {

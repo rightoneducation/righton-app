@@ -7,6 +7,7 @@ import {
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Modal from 'react-modal';
 import { APIClients, AppType, Environment } from './api';
 import Theme from './lib/Theme';
 import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
@@ -26,6 +27,11 @@ import AppSwitch from './switches/AppSwitch';
  * both the reducer's dispatch (so it must be *under* that provider) and
  * useNavigate (so it must be *inside* the router).
  */
+// react-modal needs to know the app root so it can mark it aria-hidden while a
+// modal is open. Without this it warns and leaves the background readable by
+// screen readers — the other apps in the monorepo skip it.
+Modal.setAppElement('#root');
+
 function RootLayout() {
   const apiClients = useAPIClientsContext();
   useAuthResolver(apiClients as APIClients);

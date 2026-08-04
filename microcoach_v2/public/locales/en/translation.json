@@ -17,6 +17,16 @@
     "myActivities": "My Activities",
     "myLessonPlan": "My Lesson Plan"
   },
+  "misconceptionModal": {
+    "close": "Close",
+    "studentWork": "Student work",
+    "skillContext": "Skill context",
+    "errorsByFrequency": "Errors in order of frequency",
+    "studentCount": "{{count}} students:",
+    "chooseActivity": "Choose activity",
+    "noStudentWork": "Student work for this misconception isn't available yet.",
+    "noSkillContext": "Skill context for this misconception isn't available yet."
+  },
   "understand": {
     "banner": "Your class results are in — see what your students misunderstood and next steps you can take",
     "dismissBanner": "Dismiss",
