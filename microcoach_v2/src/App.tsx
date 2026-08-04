@@ -61,6 +61,10 @@ const router = createBrowserRouter([
         path: 'password/reset',
         element: <AppSwitch currentScreen={ScreenType.PASSWORDRESET} />,
       },
+      {
+        path: 'understand',
+        element: <AppSwitch currentScreen={ScreenType.UNDERSTAND} />,
+      },
     ],
   },
 ]);

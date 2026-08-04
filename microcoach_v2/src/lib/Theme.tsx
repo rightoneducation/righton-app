@@ -23,6 +23,7 @@ const designSystemColors = {
     fadedNavyBlue: '#92A8C7',
     periwinkle: '#C3D5E3',
     wildSand: '#F4F5F3',
+    brightBlue: '#375EF9',
   },
   surface: {
     atlanticNavy: '#1B376F',
@@ -219,6 +220,9 @@ const sizing = {
   // x 260..1660 (1400) but the body sections inset to x 275..1645 (1370).
   contentMaxWidth: 1400,
   sectionMaxWidth: 1370,
+  // In-app screens sit in a narrower column than the landing page: the Figma
+  // card row is 344 x 3 with the gap tokenised to space8, so 344*3 + 48*2.
+  appContentMaxWidth: 1128,
   // Figma corner radii, shared by the step panel, step cards and video card.
   sectionRadius: 32,
   heroImageRadius: 37,

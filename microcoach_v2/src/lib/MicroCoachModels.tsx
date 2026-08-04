@@ -21,6 +21,7 @@ export enum ScreenType {
   GOOGLESIGNUP,
   AUTH,
   PASSWORDRESET,
+  UNDERSTAND,
 }
 
 // Resolved once from useMediaQuery at the top of a page and drilled down, so

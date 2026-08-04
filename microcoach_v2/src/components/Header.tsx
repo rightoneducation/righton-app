@@ -5,15 +5,22 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Link, { LinkProps } from '@mui/material/Link';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { useMisconceptions } from '../hooks/useMisconceptions';
+
+export type HeaderVariant = 'public' | 'app';
 
 interface HeaderProps {
   screenSize: ScreenSize;
+  variant?: HeaderVariant;
 }
 
 // styled() erases MUI's polymorphic `component` prop, so re-declare it here to
@@ -57,14 +64,71 @@ const NavLink = styled(Link)<LinkProps & RouterExtras>(({ theme }) => ({
   '&:hover': { textDecoration: 'underline' },
 }));
 
+const appPillFill = 'rgba(255, 251, 246, 0.1)';
+const appPillStroke = 'rgba(255, 251, 246, 0.3)';
+const appPillRadius = 22;
+
+const IdentityPill = styled(Box)(({ theme }) => ({
+  display: 'block',
+  maxWidth: 362,
+  padding: `${theme.sizing.space1}px ${theme.sizing.space4}px`,
+  lineHeight: '28px',
+  borderRadius: appPillRadius,
+  backgroundColor: appPillFill,
+  border: `${theme.borders.borderWidth}px solid ${appPillStroke}`,
+  color: theme.palette.designSystem.surface.white,
+  ...theme.typography.placeholderLabel,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  boxSizing: 'border-box',
+}));
+
+const ClassSelect = styled(Select<string>, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
+  minWidth: screenSize === ScreenSize.SMALL ? 140 : 180,
+  height: 44,
+  borderRadius: appPillRadius,
+  backgroundColor: appPillFill,
+  color: theme.palette.designSystem.surface.white,
+  ...theme.typography.placeholderLabel,
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderColor: appPillStroke,
+  },
+  '&:hover .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.palette.designSystem.surface.white,
+  },
+  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.palette.designSystem.surface.white,
+  },
+  '& .MuiSelect-icon': {
+    color: theme.palette.designSystem.surface.white,
+  },
+}));
+
 // Skeleton inherits its colour from the surrounding text colour, which is
 // invisible against the navy bar.
 const authSkeletonSx = { bgcolor: 'rgba(255, 255, 255, 0.18)' };
 
-export default function Header({ screenSize }: HeaderProps) {
+export default function Header({
+  screenSize,
+  variant = 'public',
+}: HeaderProps) {
   const { t } = useTranslation();
-  const { userStatus } = useMicroCoachDataState();
+  const { userStatus, userProfile } = useMicroCoachDataState();
   const isResolvingAuth = userStatus === UserStatusType.LOADING;
+
+  const { session } = useMisconceptions();
+  const [selectedClassId, setSelectedClassId] = React.useState(
+    session.selectedClassId,
+  );
+
+  const teacherName = userProfile?.teacherName ?? session.teacher.displayName;
+  const teacherEmail = userProfile?.email ?? session.teacher.email;
+
+  const isCompactBrand =
+    variant === 'app' && screenSize === ScreenSize.SMALL;
 
   return (
     <HeaderBar component="header">
@@ -75,12 +139,14 @@ export default function Header({ screenSize }: HeaderProps) {
           alignItems: 'center',
           // The 393 frame centres the brand; 744 and 1920 left-align it.
           justifyContent:
-            screenSize === ScreenSize.SMALL ? 'center' : 'space-between',
+            screenSize === ScreenSize.SMALL && variant === 'public'
+              ? 'center'
+              : 'space-between',
           gap: 2,
         }}
       >
         <Typography
-          variant="navTitle"
+          variant={isCompactBrand ? 'smallTitle' : 'navTitle'}
           component={RouterLink}
           to="/"
           sx={{
@@ -89,8 +155,46 @@ export default function Header({ screenSize }: HeaderProps) {
             whiteSpace: 'nowrap',
           }}
         >
-          {t('header.brand')}
+          {isCompactBrand ? t('header.brandShort') : t('header.brand')}
         </Typography>
+
+        {variant === 'app' && (
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={2}
+            sx={{ justifyContent: 'flex-end', minWidth: 0 }}
+          >
+            {isResolvingAuth ? (
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                width={180}
+                height={44}
+                sx={{ ...authSkeletonSx, borderRadius: `${appPillRadius}px` }}
+              />
+            ) : (
+              <>
+                {screenSize === ScreenSize.LARGE && (
+                  <IdentityPill>{`${teacherName} • ${teacherEmail}`}</IdentityPill>
+                )}
+                <ClassSelect
+                  screenSize={screenSize}
+                  value={selectedClassId}
+                  IconComponent={KeyboardArrowDownIcon}
+                  onChange={(event) => setSelectedClassId(event.target.value)}
+                  inputProps={{ 'aria-label': t('header.classSwitcher') }}
+                >
+                  {session.classes.map((classOption) => (
+                    <MenuItem key={classOption.id} value={classOption.id}>
+                      {classOption.name}
+                    </MenuItem>
+                  ))}
+                </ClassSelect>
+              </>
+            )}
+          </Stack>
+        )}
 
         {/*
           Figma: nav group is 237 wide with the pill flush to the column edge.
@@ -100,7 +204,7 @@ export default function Header({ screenSize }: HeaderProps) {
           This is the only part of the page that depends on who the user is, so
           it carries its own skeleton rather than the page waiting on auth.
         */}
-        {screenSize === ScreenSize.LARGE && (
+        {variant === 'public' && screenSize === ScreenSize.LARGE && (
           <Stack
             direction="row"
             alignItems="center"

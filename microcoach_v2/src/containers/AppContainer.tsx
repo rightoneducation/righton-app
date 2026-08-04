@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Header from '../components/Header';
+import Header, { HeaderVariant } from '../components/Header';
 import Footer from '../components/Footer';
+import NeedHelpButton from '../components/NeedHelpButton';
 import { useScreenSize } from '../hooks/useScreenSize';
 
 /**
@@ -31,16 +32,23 @@ const BodyContainer = styled(Box)({
 
 interface AppContainerProps {
   children: ReactNode;
+  headerVariant?: HeaderVariant;
+  showFooter?: boolean;
 }
 
-export default function AppContainer({ children }: AppContainerProps) {
+export default function AppContainer({
+  children,
+  headerVariant = 'public',
+  showFooter = true,
+}: AppContainerProps) {
   const screenSize = useScreenSize();
 
   return (
     <ScreenContainer>
-      <Header screenSize={screenSize} />
+      <Header screenSize={screenSize} variant={headerVariant} />
       <BodyContainer component="main">{children}</BodyContainer>
-      <Footer screenSize={screenSize} />
+      {headerVariant === 'app' && <NeedHelpButton />}
+      {showFooter && <Footer screenSize={screenSize} />}
     </ScreenContainer>
   );
 }

@@ -1,8 +1,30 @@
 {
   "header": {
     "brand": "RightOn MicroCoach",
+    "brandShort": "MicroCoach",
     "signup": "Registrarse",
-    "login": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "classSwitcher": "Seleccione una clase"
+  },
+  "common": {
+    "needHelp": "¿Necesita ayuda?"
+  },
+  "flowNav": {
+    "understandAct": "Comprender y actuar",
+    "prepare": "Preparar",
+    "reflect": "Reflexionar",
+    "myPlan": "Mi plan",
+    "myActivities": "Mis actividades",
+    "myLessonPlan": "Mi plan de clase"
+  },
+  "understand": {
+    "banner": "Los resultados de su clase están listos: vea qué entendieron mal sus estudiantes y los próximos pasos que puede tomar",
+    "dismissBanner": "Descartar",
+    "title": "Comprenda el pensamiento de sus estudiantes",
+    "subtitle": "Perspectivas y patrones de conceptos erróneos de los datos de su clase",
+    "worksAnalyzed": "{{count}} trabajos de estudiantes analizados",
+    "viewDetails": "Ver detalles",
+    "strongUnderstanding": "{{count}} estudiantes mostraron una comprensión sólida"
   },
   "hero": {
     "title": "Vea cómo piensa toda su clase.",
