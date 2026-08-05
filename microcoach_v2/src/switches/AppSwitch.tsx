@@ -13,7 +13,7 @@ import Confirmation from '../pages/Confirmation';
 import GoogleSignup from '../pages/GoogleSignup';
 import ResetPassword from '../pages/ResetPassword';
 import AuthCallback from '../pages/AuthCallback';
-import Understand from '../pages/Understand';
+import Analysis from '../pages/Analysis';
 import ChooseActivity from '../pages/ChooseActivity';
 import MyPlan from '../pages/MyPlan';
 
@@ -39,13 +39,13 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.PASSWORDRESET,
   // TODO(auth): move UNDERSTAND behind the guard once sign-in is wired; also
   // needs AuthGuard's LOGGEDOUT case to redirect.
-  ScreenType.UNDERSTAND,
+  ScreenType.ANALYSIS,
   ScreenType.CHOOSE_ACTIVITY,
   ScreenType.MY_PLAN,
 ]);
 
 const APP_CHROME_SCREENS = new Set<ScreenType>([
-  ScreenType.UNDERSTAND,
+  ScreenType.ANALYSIS,
   ScreenType.CHOOSE_ACTIVITY,
   ScreenType.MY_PLAN,
 ]);
@@ -79,8 +79,8 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.PASSWORDRESET:
       screenComponent = <ResetPassword />;
       break;
-    case ScreenType.UNDERSTAND:
-      screenComponent = <Understand screenSize={screenSize} />;
+    case ScreenType.ANALYSIS:
+      screenComponent = <Analysis screenSize={screenSize} />;
       break;
     case ScreenType.CHOOSE_ACTIVITY:
       screenComponent = <ChooseActivity screenSize={screenSize} />;

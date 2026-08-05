@@ -73,7 +73,7 @@ function ChooseActivityView({
   };
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'prepare') navigate('/plan');
+    if (tabId === 'prepare') navigate('/myplan');
   };
 
   const handleHowToRun = (activityId: string) => {
@@ -96,13 +96,13 @@ function ChooseActivityView({
         screenSize={screenSize}
         activeTabId="understand-act"
         onTabSelect={handleTabSelect}
-        onAction={() => navigate('/plan')}
+        onAction={() => navigate('/myplan')}
       />
 
       <BackButton
         disableElevation
         startIcon={<ArrowBackIcon />}
-        onClick={() => navigate('/understand')}
+        onClick={() => navigate('/analysis')}
       >
         {t('chooseActivity.back')}
       </BackButton>
@@ -186,7 +186,7 @@ export default function ChooseActivity({ screenSize }: ScreenSizeProps) {
     misconceptions.find((item) => item.id === misconceptionId) ?? null;
 
   if (!misconception) {
-    return <Navigate to="/understand" replace />;
+    return <Navigate to="/analysis" replace />;
   }
 
   return (

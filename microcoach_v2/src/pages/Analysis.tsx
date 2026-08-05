@@ -22,7 +22,7 @@ import {
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 
-export default function Understand({ screenSize }: ScreenSizeProps) {
+export default function Analysis({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -46,18 +46,18 @@ export default function Understand({ screenSize }: ScreenSizeProps) {
     // Close before navigating so react-modal runs its own close path and
     // restores #root's aria-hidden, rather than being torn down mid-flight.
     setSelectedId(null);
-    navigate(`/understand/${misconceptionId}/activities`);
+    navigate(`/analysis/${misconceptionId}/activities`);
   };
 
   const selectedMisconception =
     misconceptions.find((item) => item.id === selectedId) ?? null;
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'prepare') navigate('/plan');
+    if (tabId === 'prepare') navigate('/myplan');
   };
 
   const handleAction = () => {
-    navigate('/plan');
+    navigate('/myplan');
   };
 
   return (

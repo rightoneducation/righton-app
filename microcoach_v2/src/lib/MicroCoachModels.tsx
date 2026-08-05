@@ -22,7 +22,7 @@ export enum ScreenType {
   GOOGLESIGNUP,
   AUTH,
   PASSWORDRESET,
-  UNDERSTAND,
+  ANALYSIS,
   CHOOSE_ACTIVITY,
   MY_PLAN,
 }

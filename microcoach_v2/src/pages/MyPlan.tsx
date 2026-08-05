@@ -35,7 +35,7 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
   const completed = planItems.filter((item) => item.status === 'COMPLETED');
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'understand-act') navigate('/understand');
+    if (tabId === 'understand-act') navigate('/analysis');
   };
 
   const handleOpenDetails = (item: IPlanItem) => {
@@ -45,7 +45,7 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
 
   const handleChangeActivity = (item: IPlanItem) => {
     if (item.misconceptionId) {
-      navigate(`/understand/${item.misconceptionId}/activities`);
+      navigate(`/analysis/${item.misconceptionId}/activities`);
     }
   };
 
@@ -64,7 +64,7 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
         screenSize={screenSize}
         activeTabId="prepare"
         onTabSelect={handleTabSelect}
-        onAction={() => navigate('/plan')}
+        onAction={() => navigate('/myplan')}
       />
 
       <PlanBackButton
