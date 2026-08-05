@@ -54,9 +54,68 @@ function ActivityDetailView({
     if (tabId === 'understand-act') navigate('/analysis');
   };
 
-  const handleExport = () => {
-    // eslint-disable-next-line no-console
-    console.log('export pdf', activity.id, phase);
+  const [isExporting, setIsExporting] = React.useState(false);
+
+  const documentTitle = activity.title ?? activity.routine.name;
+
+  /*
+   * Hands the finished PDF to the browser's own viewer in a new tab, which
+   * already provides preview, print (OS dialog) and save — including Save to
+   * Files on iOS. Nothing here reimplements those.
+   *
+   * The tab is opened synchronously so it survives the pop-up blocker; opening
+   * it after the await would be rejected as a non-gesture pop-up. @react-pdf is
+   * heavy, so it only loads on first export rather than in the main bundle.
+   */
+  const handleExport = async () => {
+    const tab = window.open('', '_blank');
+    setIsExporting(true);
+
+    try {
+      const [{ pdf }, { default: ActivityDocument }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('../lib/pdf/ActivityDocument'),
+      ]);
+
+      const blob = await pdf(
+        <ActivityDocument
+          activity={activity}
+          misconception={misconception}
+          labels={{
+            subtitle: t('activityDetail.printSubtitle', {
+              misconception: misconception.titleCased,
+            }),
+            beforeClass: t('activityDetail.beforeClass'),
+            activity: t('activityDetail.activity'),
+            facilitation: t('activityDetail.facilitation'),
+            discussion: t('activityDetail.discussion'),
+            page: t('activityDetail.page'),
+          }}
+        />,
+      ).toBlob();
+
+      const url = URL.createObjectURL(blob);
+
+      if (tab) {
+        tab.location.href = url;
+      } else {
+        // Pop-up blocked: fall back to a direct download so the export still
+        // produces something rather than failing silently.
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${documentTitle}.pdf`;
+        link.click();
+      }
+
+      // Released once the tab or download has taken it, not synchronously
+      // after — Firefox cancels an in-flight download otherwise.
+      window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (error) {
+      tab?.close();
+      throw error;
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const body = (() => {
@@ -141,9 +200,12 @@ function ActivityDetailView({
           <PhaseFooterAction
             tone="quiet"
             disableElevation
+            disabled={isExporting}
             onClick={handleExport}
           >
-            {t('activityDetail.exportPdf')}
+            {isExporting
+              ? t('activityDetail.exporting')
+              : t('activityDetail.exportPdf')}
           </PhaseFooterAction>
           {nextPhase && (
             <PhaseFooterAction

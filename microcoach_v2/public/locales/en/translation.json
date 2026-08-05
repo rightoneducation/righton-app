@@ -28,7 +28,10 @@
     "exportPdf": "Export PDF",
     "next": "Next: {{phase}}",
     "saveToPlan": "Save to Lesson Plan",
-    "noContent": "This step isn't available for this activity yet."
+    "noContent": "This step isn't available for this activity yet.",
+    "printSubtitle": "Prepared for: {{misconception}}",
+    "exporting": "Preparing PDF…",
+    "page": "Page"
   },
   "chooseActivity": {
     "back": "Back to misconceptions",

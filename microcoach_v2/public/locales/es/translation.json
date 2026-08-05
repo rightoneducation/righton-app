@@ -28,7 +28,10 @@
     "exportPdf": "Exportar PDF",
     "next": "Siguiente: {{phase}}",
     "saveToPlan": "Guardar en el plan de clase",
-    "noContent": "Este paso aún no está disponible para esta actividad."
+    "noContent": "Este paso aún no está disponible para esta actividad.",
+    "printSubtitle": "Preparado para: {{misconception}}",
+    "exporting": "Preparando PDF…",
+    "page": "Página"
   },
   "chooseActivity": {
     "back": "Volver a los conceptos erróneos",
