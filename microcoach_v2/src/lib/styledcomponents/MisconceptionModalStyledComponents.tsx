@@ -29,43 +29,75 @@ export const ModalBody = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space4,
   padding: theme.sizing.space5,
   overflowY: 'auto',
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+  scrollbarWidth: 'none',
+  msOverflowStyle: 'none',
 }));
 
 const statChipBase = (theme: import('@mui/material/styles').Theme) => ({
   alignSelf: 'flex-start',
-  padding: `${theme.sizing.space0}px ${theme.sizing.space4}px`,
+  padding: `${theme.sizing.space0}px ${theme.sizing.space3}px`,
   borderRadius: statChipRadius,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.placeholderLabel,
+  ...theme.typography.rubikBody,
 });
 
 export const SupportStatChip = styled(Box)(({ theme }) => ({
   ...statChipBase(theme),
   backgroundColor: theme.palette.designSystem.status.needsSupport,
+  color: theme.palette.designSystem.background.offWhite,
 }));
 
 export const UnderstoodStatChip = styled(Box)(({ theme }) => ({
   ...statChipBase(theme),
   backgroundColor: theme.palette.designSystem.status.understood,
+  color: theme.palette.designSystem.background.navyBlue,
 }));
 
-export const ModalTabs = styled(Tabs)(({ theme }) => ({
+// Tabs and their panel share one continuous outline, so they live in a single
+// flex column with no gap between them.
+export const TabGroup = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+export const ModalTabs = styled(Tabs)({
+  // The outline carries selection; a sliding indicator would cut across the
+  // seam where the selected tab joins the panel.
   '& .MuiTabs-indicator': {
-    backgroundColor: theme.palette.designSystem.background.navyBlue,
+    display: 'none',
   },
-}));
+});
 
 export const ModalTab = styled(Tab)(({ theme }) => ({
-  border: theme.borders.subtle,
+  border: theme.borders.faintNavy,
   borderRadius: `${theme.sizing.space2}px ${theme.sizing.space2}px 0 0`,
-  ...theme.typography.mediumLabel,
+  alignItems: 'flex-start',
+  textAlign: 'left',
+  ...theme.typography.headingMd,
   textTransform: 'none',
-  color: theme.palette.designSystem.surface.ashyGray,
+  color: theme.palette.designSystem.foreground.fadedAtlanticNavy,
+  backgroundColor: theme.palette.designSystem.background.cream,
   '&.Mui-selected': {
     border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
     color: theme.palette.designSystem.surface.atlanticNavy,
     fontWeight: 700,
+    // Sit on top of the panel's top border and hide the 1px beneath, so the
+    // tab outline reads as continuous with the panel outline.
+    backgroundColor: theme.palette.designSystem.surface.white,
+    borderBottomColor: 'transparent',
+    marginBottom: -theme.borders.borderWidth,
+    position: 'relative',
+    zIndex: 1,
   },
+}));
+
+export const TabPanel = styled(Box)(({ theme }) => ({
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
+  borderRadius: `0 0 ${theme.sizing.space2}px ${theme.sizing.space2}px`,
+  padding: theme.sizing.space3,
+  backgroundColor: theme.palette.designSystem.surface.white,
 }));
 
 // Figma: 720x186 rx16 sky-blue panel, one per answer option.
@@ -73,7 +105,7 @@ export const ErrorBlock = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space2,
-  padding: theme.sizing.space4,
+  padding: theme.sizing.space3,
   borderRadius: blockRadius,
   backgroundColor: theme.palette.designSystem.surface.skyBlue,
 }));
@@ -85,11 +117,11 @@ export const OptionLetterBadge = styled(Box)(({ theme }) => ({
   flexShrink: 0,
   width: theme.sizing.space7,
   height: theme.sizing.space7,
-  borderRadius: '50%',
+  borderRadius: theme.sizing.space2,
   backgroundColor: theme.palette.designSystem.surface.white,
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.mediumLabel,
+  color: theme.palette.designSystem.background.navyBlue,
+  ...theme.typography.headingMd,
 }));
 
 export const ErrorTagChip = styled(Box)(({ theme }) => ({
@@ -99,7 +131,7 @@ export const ErrorTagChip = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.designSystem.surface.white,
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
   color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.xsLabel,
+  ...theme.typography.microLabel,
   whiteSpace: 'nowrap',
 }));
 
@@ -110,14 +142,17 @@ interface NamePillProps {
 export const StudentNamePill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'tone',
 })<NamePillProps>(({ theme, tone }) => ({
-  padding: `${theme.sizing.space0}px ${theme.sizing.space2}px`,
+  padding: `${theme.sizing.space0}px ${theme.sizing.space1}px`,
   borderRadius: namePillRadius,
   backgroundColor:
     tone === 'support'
       ? theme.palette.designSystem.status.needsSupport
       : theme.palette.designSystem.status.understood,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.xsLabel,
+  color:
+    tone === 'support'
+      ? theme.palette.designSystem.surface.white
+      : theme.palette.designSystem.background.navyBlue,
+  ...theme.typography.microLabel,
   whiteSpace: 'nowrap',
 }));
 
@@ -178,8 +213,7 @@ export const SkillCodePill = styled(Box, {
       tone === 'upcoming'
         ? theme.palette.designSystem.surface.atlanticNavy
         : theme.palette.designSystem.surface.white,
-    ...theme.typography.xsLabel,
-    fontWeight: 600,
+    ...theme.typography.microLabel,
     whiteSpace: 'nowrap',
   };
 });

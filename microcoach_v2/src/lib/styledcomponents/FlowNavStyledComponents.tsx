@@ -15,8 +15,7 @@ export const FlowTab = styled(ButtonBase, {
   shouldForwardProp: noIsActive,
 })<ActiveProps>(({ theme, isActive }) => ({
   padding: `0 0 ${theme.sizing.space0}px`,
-  ...theme.typography.smallPopupLabel,
-  fontWeight: isActive ? 700 : 500,
+  ...theme.typography.navTab,
   color: theme.palette.designSystem.surface.atlanticNavy,
   borderBottom: `2px solid ${
     isActive ? theme.palette.designSystem.background.navyBlue : 'transparent'
@@ -29,7 +28,9 @@ export const FlowTab = styled(ButtonBase, {
 }));
 
 export const FlowTabSeparator = styled(Box)(({ theme }) => ({
-  ...theme.typography.smallPopupLabel,
+  ...theme.typography.navTab,
+  fontWeight: 600,
+  letterSpacing: 'normal',
   color: theme.palette.designSystem.surface.atlanticNavy,
   userSelect: 'none',
 }));
@@ -41,7 +42,7 @@ export const FlowNavAction = styled(Button)(({ theme }) => ({
   borderRadius: actionRadius,
   backgroundColor: theme.palette.designSystem.foreground.accentBlue,
   color: theme.palette.designSystem.surface.white,
-  ...theme.typography.placeholderLabel,
+  ...theme.typography.buttonLabel,
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {

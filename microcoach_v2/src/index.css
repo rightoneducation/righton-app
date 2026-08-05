@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Rubik:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@600&family=Poppins:wght@300;400;500;600&family=Rubik:wght@300;400;500;600;700&display=swap');
 
 /* No `font-family` on body here on purpose: with StyledEngineProvider
    injectFirst, MUI's CssBaseline injects before this file, so a rule here would

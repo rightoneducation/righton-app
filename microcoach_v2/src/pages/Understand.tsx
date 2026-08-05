@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -24,6 +25,7 @@ import { useMisconceptions } from '../hooks/useMisconceptions';
 export default function Understand({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
 
   const { session, misconceptions, isReady: dataReady } = useMisconceptions();
@@ -41,21 +43,21 @@ export default function Understand({ screenSize }: ScreenSizeProps) {
   };
 
   const handleChooseActivity = (misconceptionId: string) => {
-    // eslint-disable-next-line no-console
-    console.log('choose activity', misconceptionId);
+    // Close before navigating so react-modal runs its own close path and
+    // restores #root's aria-hidden, rather than being torn down mid-flight.
+    setSelectedId(null);
+    navigate(`/understand/${misconceptionId}/activities`);
   };
 
   const selectedMisconception =
     misconceptions.find((item) => item.id === selectedId) ?? null;
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    // eslint-disable-next-line no-console
-    console.log('flow tab', tabId);
+    if (tabId === 'prepare') navigate('/plan');
   };
 
   const handleAction = () => {
-    // eslint-disable-next-line no-console
-    console.log('open plan');
+    navigate('/plan');
   };
 
   return (
@@ -82,8 +84,8 @@ export default function Understand({ screenSize }: ScreenSizeProps) {
           sx={{ alignSelf: isLarge ? 'center' : 'stretch' }}
         >
           <Typography
-            variant="bodyText"
-            sx={{ fontWeight: 500, color: 'designSystem.surface.atlanticNavy' }}
+            variant="rubikBodyBold"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
           >
             {t('understand.banner')}
           </Typography>
@@ -100,7 +102,7 @@ export default function Understand({ screenSize }: ScreenSizeProps) {
 
       <Box>
         <Typography
-          variant="navTitle"
+          variant="appTitle"
           sx={{
             color: 'designSystem.surface.atlanticNavy',
             mb: `${theme.sizing.space2}px`,
@@ -115,7 +117,7 @@ export default function Understand({ screenSize }: ScreenSizeProps) {
           spacing={`${theme.sizing.space2}px`}
         >
           <Typography
-            variant="paragraph2"
+            variant="uploadLabel"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
           >
             {t('understand.subtitle')}
@@ -156,7 +158,7 @@ export default function Understand({ screenSize }: ScreenSizeProps) {
 
       <StrongUnderstandingBar elevation={4}>
         <Typography
-          variant="mediumLabel"
+          variant="headingMd"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
         >
           {t('understand.strongUnderstanding', {

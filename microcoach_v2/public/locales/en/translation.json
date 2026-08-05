@@ -17,6 +17,28 @@
     "myActivities": "My Activities",
     "myLessonPlan": "My Lesson Plan"
   },
+  "chooseActivity": {
+    "back": "Back to misconceptions",
+    "addressing": "Addressing misconception: {{title}}",
+    "title": "Choose your next instructional move",
+    "subheading": "Select the activity that best fits your class",
+    "subtitleLabel": "Subtitle",
+    "descriptionLabel": "Description",
+    "selectActivity": "Select activity",
+    "selectedActivity": "Selected activity",
+    "howToRun": "How to run it"
+  },
+  "myPlan": {
+    "back": "Back to choosing activity",
+    "title": "Your saved activity",
+    "subheading": "Activities saved for Algebra 1 - Period 2. Open an activity to prepare, then mark it done after class.",
+    "changeActivity": "Change activity",
+    "completed": "Completed",
+    "openDetails": "Open activity details",
+    "markAsDone": "Mark as done",
+    "remove": "Remove",
+    "empty": "No activities saved yet. Choose one from a misconception's next steps."
+  },
   "misconceptionModal": {
     "close": "Close",
     "studentWork": "Student work",

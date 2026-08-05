@@ -14,6 +14,8 @@ import GoogleSignup from '../pages/GoogleSignup';
 import ResetPassword from '../pages/ResetPassword';
 import AuthCallback from '../pages/AuthCallback';
 import Understand from '../pages/Understand';
+import ChooseActivity from '../pages/ChooseActivity';
+import MyPlan from '../pages/MyPlan';
 
 /**
  * Maps a ScreenType to its page, wraps it in AuthGuard, and drops the result
@@ -38,9 +40,15 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   // TODO(auth): move UNDERSTAND behind the guard once sign-in is wired; also
   // needs AuthGuard's LOGGEDOUT case to redirect.
   ScreenType.UNDERSTAND,
+  ScreenType.CHOOSE_ACTIVITY,
+  ScreenType.MY_PLAN,
 ]);
 
-const APP_CHROME_SCREENS = new Set<ScreenType>([ScreenType.UNDERSTAND]);
+const APP_CHROME_SCREENS = new Set<ScreenType>([
+  ScreenType.UNDERSTAND,
+  ScreenType.CHOOSE_ACTIVITY,
+  ScreenType.MY_PLAN,
+]);
 
 interface AppSwitchProps {
   currentScreen: ScreenType;
@@ -73,6 +81,12 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       break;
     case ScreenType.UNDERSTAND:
       screenComponent = <Understand screenSize={screenSize} />;
+      break;
+    case ScreenType.CHOOSE_ACTIVITY:
+      screenComponent = <ChooseActivity screenSize={screenSize} />;
+      break;
+    case ScreenType.MY_PLAN:
+      screenComponent = <MyPlan screenSize={screenSize} />;
       break;
     case ScreenType.LANDING:
     default:

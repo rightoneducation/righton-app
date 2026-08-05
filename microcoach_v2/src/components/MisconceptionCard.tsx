@@ -39,7 +39,7 @@ export default function MisconceptionCard({
       </BadgeSlot>
 
       <Typography
-        variant="smallTitle"
+        variant="headingMd"
         sx={{ color: 'designSystem.surface.atlanticNavy' }}
       >
         {misconception.title}
@@ -48,7 +48,7 @@ export default function MisconceptionCard({
       <PrevalenceChip>{misconception.prevalence.label}</PrevalenceChip>
 
       <Typography
-        variant="bodyText"
+        variant="rubikBody"
         sx={{
           color: 'designSystem.surface.atlanticNavy',
           pb: `${theme.sizing.space3}px`,

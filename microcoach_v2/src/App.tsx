@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -45,7 +41,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: <AppSwitch currentScreen={ScreenType.LANDING} /> },
+      {
+        index: true,
+        element: <AppSwitch currentScreen={ScreenType.LANDING} />,
+      },
       {
         path: 'login',
         element: <AppSwitch currentScreen={ScreenType.LOGIN} />,
@@ -70,6 +69,14 @@ const router = createBrowserRouter([
       {
         path: 'understand',
         element: <AppSwitch currentScreen={ScreenType.UNDERSTAND} />,
+      },
+      {
+        path: 'understand/:misconceptionId/activities',
+        element: <AppSwitch currentScreen={ScreenType.CHOOSE_ACTIVITY} />,
+      },
+      {
+        path: 'plan',
+        element: <AppSwitch currentScreen={ScreenType.MY_PLAN} />,
       },
     ],
   },

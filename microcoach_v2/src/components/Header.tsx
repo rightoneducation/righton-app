@@ -77,7 +77,7 @@ const IdentityPill = styled(Box)(({ theme }) => ({
   backgroundColor: appPillFill,
   border: `${theme.borders.borderWidth}px solid ${appPillStroke}`,
   color: theme.palette.designSystem.surface.white,
-  ...theme.typography.placeholderLabel,
+  ...theme.typography.rubikBody,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -92,7 +92,7 @@ const ClassSelect = styled(Select<string>, {
   borderRadius: appPillRadius,
   backgroundColor: appPillFill,
   color: theme.palette.designSystem.surface.white,
-  ...theme.typography.placeholderLabel,
+  ...theme.typography.rubikBody,
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: appPillStroke,
   },
@@ -127,8 +127,11 @@ export default function Header({
   const teacherName = userProfile?.teacherName ?? session.teacher.displayName;
   const teacherEmail = userProfile?.email ?? session.teacher.email;
 
-  const isCompactBrand =
-    variant === 'app' && screenSize === ScreenSize.SMALL;
+  const isCompactBrand = variant === 'app' && screenSize === ScreenSize.SMALL;
+
+  const brandVariant =
+    // eslint-disable-next-line no-nested-ternary
+    isCompactBrand ? 'smallTitle' : variant === 'app' ? 'appTitle' : 'navTitle';
 
   return (
     <HeaderBar component="header">
@@ -146,7 +149,7 @@ export default function Header({
         }}
       >
         <Typography
-          variant={isCompactBrand ? 'smallTitle' : 'navTitle'}
+          variant={brandVariant}
           component={RouterLink}
           to="/"
           sx={{
@@ -176,7 +179,12 @@ export default function Header({
             ) : (
               <>
                 {screenSize === ScreenSize.LARGE && (
-                  <IdentityPill>{`${teacherName} • ${teacherEmail}`}</IdentityPill>
+                  <IdentityPill>
+                    <Box component="span" sx={{ fontWeight: 500 }}>
+                      {teacherName}
+                    </Box>
+                    {` • ${teacherEmail}`}
+                  </IdentityPill>
                 )}
                 <ClassSelect
                   screenSize={screenSize}

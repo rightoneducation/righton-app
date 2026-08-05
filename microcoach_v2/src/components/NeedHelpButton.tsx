@@ -14,7 +14,7 @@ const HelpFab = styled(Fab)(({ theme }) => ({
   paddingRight: theme.sizing.space4,
   backgroundColor: theme.palette.designSystem.surface.skyBlue,
   color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.placeholderLabel,
+  ...theme.typography.buttonLabel,
   textTransform: 'none',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.foreground.lightBlue,

@@ -33,9 +33,7 @@ export const MisconceptionCard = styled(Paper, {
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
   borderRadius: theme.sizing.sectionRadius,
   padding:
-    screenSize === ScreenSize.LARGE
-      ? theme.sizing.space6
-      : theme.sizing.space5,
+    screenSize === ScreenSize.LARGE ? theme.sizing.space6 : theme.sizing.space5,
   boxSizing: 'border-box',
 }));
 
@@ -45,17 +43,34 @@ export const BadgeSlot = styled(Box)({
   minHeight: BADGE_SLOT_HEIGHT,
 });
 
-export const FocusBadge = styled(Box)(({ theme }) => ({
+interface FocusBadgeProps {
+  outlined?: boolean;
+}
+
+export const FocusBadge = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'outlined',
+})<FocusBadgeProps>(({ theme, outlined }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   alignSelf: 'flex-start',
-  height: BADGE_SLOT_HEIGHT,
-  padding: `0 ${theme.sizing.space3}px`,
-  borderRadius: badgeRadius,
-  backgroundColor: theme.palette.designSystem.foreground.brightBlue,
-  color: theme.palette.designSystem.surface.white,
-  ...theme.typography.xsLabel,
-  fontWeight: 600,
+  // Filled is the Wireframe1 card badge, which fills its reserved 36px slot.
+  // Outlined sits inline beside PrevalenceChip, so it derives its box the same
+  // way that chip does instead of carrying the slot height.
+  height: outlined ? undefined : BADGE_SLOT_HEIGHT,
+  padding: outlined
+    ? `${theme.sizing.space0}px ${theme.sizing.space3}px`
+    : `0 ${theme.sizing.space3}px`,
+  borderRadius: outlined ? chipRadius : badgeRadius,
+  backgroundColor: outlined
+    ? 'transparent'
+    : theme.palette.designSystem.foreground.brightBlue,
+  border: outlined
+    ? `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.surface.atlanticNavy}`
+    : 'none',
+  color: outlined
+    ? theme.palette.designSystem.surface.atlanticNavy
+    : theme.palette.designSystem.surface.white,
+  ...theme.typography.headingSm,
   letterSpacing: '0.05em',
   textTransform: 'uppercase',
   whiteSpace: 'nowrap',
@@ -68,17 +83,23 @@ export const PrevalenceChip = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.designSystem.surface.skyBlue,
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
   color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.xsLabel,
+  ...theme.typography.rubikBody,
   whiteSpace: 'nowrap',
 }));
 
-export const CountChip = styled(Box)(({ theme }) => ({
+interface DenseProps {
+  dense?: boolean;
+}
+
+export const CountChip = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'dense',
+})<DenseProps>(({ theme, dense }) => ({
   alignSelf: 'flex-start',
   padding: `${theme.sizing.space0}px ${theme.sizing.space2}px`,
   borderRadius: chipRadius,
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
   color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.xsLabel,
+  ...(dense ? theme.typography.microLabel : theme.typography.rubikBody),
   whiteSpace: 'nowrap',
 }));
 
@@ -115,7 +136,7 @@ export const CardCta = styled(Button, {
     ? theme.palette.designSystem.surface.atlanticNavy
     : theme.palette.designSystem.foreground.accentBlue,
   color: theme.palette.designSystem.surface.white,
-  ...theme.typography.mediumLabel,
+  ...theme.typography.buttonLabel,
   textTransform: 'none',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.surface.darkBlue,

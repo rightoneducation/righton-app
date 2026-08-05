@@ -30,14 +30,14 @@ function SkillRow({ skill, tone }: SkillRowProps) {
       <Box sx={{ flex: 1, minWidth: 0 }}>
         {skill.name && (
           <Typography
-            variant="bodyText"
-            sx={{ fontWeight: 700, color: 'designSystem.surface.atlanticNavy' }}
+            variant="rubikSubBold"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
           >
             {skill.name}
           </Typography>
         )}
         <Typography
-          variant="bodyText"
+          variant="smallBodyText"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
         >
           {skill.description}
@@ -60,7 +60,7 @@ export default function SkillContextTab({
   if (!skillContext) {
     return (
       <Typography
-        variant="bodyText"
+        variant="smallBodyText"
         sx={{ color: 'designSystem.surface.ashyGray' }}
       >
         {t('misconceptionModal.noSkillContext')}
@@ -91,9 +91,8 @@ export default function SkillContextTab({
       {groups.map((group) => (
         <SkillBlock key={group.tone} tone={group.tone}>
           <Typography
-            variant="mediumLabel"
+            variant="headingSm"
             sx={{
-              fontWeight: 700,
               color:
                 group.tone === 'prerequisite'
                   ? 'designSystem.status.prerequisite'

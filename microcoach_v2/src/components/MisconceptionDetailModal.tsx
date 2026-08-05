@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Modal from 'react-modal';
 import { IMisconception } from '../lib/PipelineModels';
 import { ScreenSize } from '../lib/MicroCoachModels';
-import StudentWorkTab from './StudentWorkTab';
+import StudentWorkTab, { UnderstoodConceptSection } from './StudentWorkTab';
 import SkillContextTab from './SkillContextTab';
 import {
   MODAL_MAX_WIDTH,
@@ -17,6 +17,8 @@ import {
   ModalBody,
   ModalTabs,
   ModalTab,
+  TabGroup,
+  TabPanel,
   ModalFooter,
   SupportStatChip,
   UnderstoodStatChip,
@@ -100,7 +102,7 @@ export default function MisconceptionDetailModal({
 
           <ModalBody>
             <Typography
-              variant="smallTitle"
+              variant="headingLg"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
             >
               {misconception.titleCased}
@@ -111,7 +113,7 @@ export default function MisconceptionDetailModal({
               <Stack
                 direction={isLarge ? 'row' : 'column'}
                 alignItems="flex-start"
-                spacing={`${theme.sizing.space2}px`}
+                spacing={`${theme.sizing.space3}px`}
               >
                 {misconception.prevalence.supportSummaryLabel && (
                   <SupportStatChip>
@@ -126,24 +128,38 @@ export default function MisconceptionDetailModal({
               </Stack>
             )}
 
-            <ModalTabs
-              value={tab}
-              onChange={(unused, next: ModalTabId) => setTab(next)}
-            >
-              <ModalTab
-                value="student-work"
-                label={t('misconceptionModal.studentWork')}
-              />
-              <ModalTab
-                value="skill-context"
-                label={t('misconceptionModal.skillContext')}
-              />
-            </ModalTabs>
+            <TabGroup>
+              <ModalTabs
+                variant="fullWidth"
+                value={tab}
+                onChange={(unused, next: ModalTabId) => setTab(next)}
+              >
+                <ModalTab
+                  value="student-work"
+                  label={t('misconceptionModal.studentWork')}
+                />
+                <ModalTab
+                  value="skill-context"
+                  label={t('misconceptionModal.skillContext')}
+                />
+              </ModalTabs>
 
-            {tab === 'student-work' ? (
-              <StudentWorkTab studentWork={misconception.studentWork} />
-            ) : (
-              <SkillContextTab skillContext={misconception.skillContext} />
+              <TabPanel>
+                {tab === 'student-work' ? (
+                  <StudentWorkTab
+                    studentWork={misconception.studentWork}
+                    screenSize={screenSize}
+                  />
+                ) : (
+                  <SkillContextTab skillContext={misconception.skillContext} />
+                )}
+              </TabPanel>
+            </TabGroup>
+
+            {tab === 'student-work' && (
+              <UnderstoodConceptSection
+                studentWork={misconception.studentWork}
+              />
             )}
 
             <ModalFooter>

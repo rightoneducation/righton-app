@@ -67,6 +67,48 @@ export interface ISkillContext {
   upcomingSkills: ISkillGroup;
 }
 
+export interface IRoutine {
+  id: string;
+  name: string;
+  subtitle: string;
+  description: string;
+}
+
+export interface IGrouping {
+  level: string;
+  label: string;
+}
+
+export interface IActivity {
+  id: string;
+  misconceptionId: string;
+  title: string | null;
+  isSelected: boolean;
+  selectLabel: string;
+  detailStatus: DetailStatus;
+  routine: IRoutine;
+  durationLabel: string | null;
+  grouping: IGrouping | null;
+  targets: string | null;
+  instructionalMove: string | null;
+  strategyTag: string | null;
+  phases: unknown;
+}
+
+export type PlanStatus = 'SAVED' | 'COMPLETED';
+
+export interface IPlanItem {
+  id: string;
+  status: PlanStatus;
+  activityId: string | null;
+  activityTitle: string;
+  skillCode: string;
+  misconceptionId: string | null;
+  misconceptionTitle: string;
+  prevalence: { level: string; label: string };
+  grouping: IGrouping;
+}
+
 export interface IMisconception {
   id: string;
   rank: number;
@@ -79,7 +121,7 @@ export interface IMisconception {
   consequence: string;
   prevalence: IPrevalence;
   detailStatus: DetailStatus;
-  nextStepActivities: unknown[];
+  nextStepActivities: IActivity[];
   studentWork: IStudentWork | null;
   skillContext: ISkillContext | null;
 }

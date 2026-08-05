@@ -17,6 +17,28 @@
     "myActivities": "Mis actividades",
     "myLessonPlan": "Mi plan de clase"
   },
+  "chooseActivity": {
+    "back": "Volver a los conceptos erróneos",
+    "addressing": "Abordando el concepto erróneo: {{title}}",
+    "title": "Elija su próxima acción instructiva",
+    "subheading": "Seleccione la actividad que mejor se adapte a su clase",
+    "subtitleLabel": "Subtítulo",
+    "descriptionLabel": "Descripción",
+    "selectActivity": "Elegir actividad",
+    "selectedActivity": "Actividad elegida",
+    "howToRun": "Cómo realizarla"
+  },
+  "myPlan": {
+    "back": "Volver a elegir actividad",
+    "title": "Su actividad guardada",
+    "subheading": "Actividades guardadas para Álgebra 1 - Período 2. Abra una actividad para prepararla y márquela como hecha después de la clase.",
+    "changeActivity": "Cambiar actividad",
+    "completed": "Completadas",
+    "openDetails": "Abrir detalles de la actividad",
+    "markAsDone": "Marcar como hecha",
+    "remove": "Quitar",
+    "empty": "Aún no hay actividades guardadas. Elija una en los próximos pasos de un concepto erróneo."
+  },
   "misconceptionModal": {
     "close": "Cerrar",
     "studentWork": "Trabajo de los estudiantes",
