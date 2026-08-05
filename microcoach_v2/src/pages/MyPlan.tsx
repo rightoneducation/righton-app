@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
 import PlanItemRow from '../components/PlanItemRow';
@@ -97,6 +98,7 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
       {saved.length > 0 && (
         <ChangeActivityButton
           disableElevation
+          startIcon={<RefreshIcon />}
           onClick={() => handleChangeActivity(saved[0])}
         >
           {t('myPlan.changeActivity')}
@@ -139,7 +141,7 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
           >
             {t('myPlan.completed')}
           </Typography>
-          <CompletedPanel>
+          <CompletedPanel elevation={4}>
             {completed.map((item) => (
               <PlanItemRow
                 key={item.id}

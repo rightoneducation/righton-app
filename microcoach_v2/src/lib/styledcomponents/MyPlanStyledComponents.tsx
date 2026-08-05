@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 
 const rowRadius = 16;
 const chipRadius = 13;
@@ -40,7 +41,7 @@ interface PlanRowProps {
   isCompleted?: boolean;
 }
 
-export const PlanRow = styled(Box, {
+export const PlanRow = styled(Paper, {
   shouldForwardProp: (prop) => prop !== 'isCompleted',
 })<PlanRowProps>(({ theme, isCompleted }) => ({
   display: 'flex',
@@ -57,7 +58,7 @@ export const PlanRow = styled(Box, {
 }));
 
 // Completed rows sit inside a grey backing panel — the "done" treatment.
-export const CompletedPanel = styled(Box)(({ theme }) => ({
+export const CompletedPanel = styled(Paper)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space2,

@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import CheckIcon from '@mui/icons-material/Check';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { IPlanItem } from '../lib/PipelineModels';
 import {
   PlanRow,
@@ -32,7 +31,10 @@ export default function PlanItemRow({
   const { t } = useTranslation();
 
   return (
-    <PlanRow isCompleted={item.status === 'COMPLETED'}>
+    <PlanRow
+      elevation={item.status === 'COMPLETED' ? 0 : 4}
+      isCompleted={item.status === 'COMPLETED'}
+    >
       <Stack
         direction="row"
         alignItems="center"
@@ -84,7 +86,7 @@ export default function PlanItemRow({
           <RowAction
             tone="quiet"
             disableElevation
-            startIcon={<img src={removeIcon} alt='remove' />}
+            startIcon={<img src={removeIcon} alt="remove" />}
             onClick={() => onRemove(item.id)}
             sx={{ ml: 'auto' }}
           >
