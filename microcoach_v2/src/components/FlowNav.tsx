@@ -63,10 +63,11 @@ export default function FlowNav({
           </React.Fragment>
         ))}
       </Stack>
-
-      <FlowNavAction disableElevation onClick={onAction}>
-        {t(actionLabelKey)}
-      </FlowNavAction>
+      {activeTabId !== 'prepare' && 
+        <FlowNavAction disableElevation onClick={onAction}>
+          {t(actionLabelKey)}
+        </FlowNavAction>
+      }
     </Stack>
   );
 }
