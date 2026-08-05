@@ -17,6 +17,19 @@
     "myActivities": "Mis actividades",
     "myLessonPlan": "Mi plan de clase"
   },
+  "activityDetail": {
+    "back": "Volver a las opciones de actividad",
+    "beforeClass": "Antes de clase",
+    "activity": "Actividad",
+    "facilitation": "Facilitación",
+    "discussion": "Discusión",
+    "teacherView": "Docente",
+    "studentView": "Estudiante",
+    "exportPdf": "Exportar PDF",
+    "next": "Siguiente: {{phase}}",
+    "saveToPlan": "Guardar en el plan de clase",
+    "noContent": "Este paso aún no está disponible para esta actividad."
+  },
   "chooseActivity": {
     "back": "Volver a los conceptos erróneos",
     "addressing": "Abordando el concepto erróneo: {{title}}",

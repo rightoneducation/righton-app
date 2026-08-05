@@ -77,8 +77,7 @@ function ChooseActivityView({
   };
 
   const handleHowToRun = (activityId: string) => {
-    // eslint-disable-next-line no-console
-    console.log('how to run it', activityId);
+    navigate(`/activity/${activityId}`);
   };
 
   return (

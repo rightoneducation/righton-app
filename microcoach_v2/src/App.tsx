@@ -75,6 +75,10 @@ const router = createBrowserRouter([
         element: <AppSwitch currentScreen={ScreenType.CHOOSE_ACTIVITY} />,
       },
       {
+        path: 'activity/:activityId',
+        element: <AppSwitch currentScreen={ScreenType.ACTIVITY_DETAIL} />,
+      },
+      {
         path: 'myplan',
         element: <AppSwitch currentScreen={ScreenType.MY_PLAN} />,
       },

@@ -25,6 +25,7 @@ export enum ScreenType {
   ANALYSIS,
   CHOOSE_ACTIVITY,
   MY_PLAN,
+  ACTIVITY_DETAIL,
 }
 
 // Resolved once from useMediaQuery at the top of a page and drilled down, so

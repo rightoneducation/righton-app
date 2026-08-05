@@ -16,6 +16,7 @@ import AuthCallback from '../pages/AuthCallback';
 import Analysis from '../pages/Analysis';
 import ChooseActivity from '../pages/ChooseActivity';
 import MyPlan from '../pages/MyPlan';
+import ActivityDetail from '../pages/ActivityDetail';
 
 /**
  * Maps a ScreenType to its page, wraps it in AuthGuard, and drops the result
@@ -42,12 +43,14 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.ANALYSIS,
   ScreenType.CHOOSE_ACTIVITY,
   ScreenType.MY_PLAN,
+  ScreenType.ACTIVITY_DETAIL,
 ]);
 
 const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.ANALYSIS,
   ScreenType.CHOOSE_ACTIVITY,
   ScreenType.MY_PLAN,
+  ScreenType.ACTIVITY_DETAIL,
 ]);
 
 interface AppSwitchProps {
@@ -84,6 +87,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       break;
     case ScreenType.CHOOSE_ACTIVITY:
       screenComponent = <ChooseActivity screenSize={screenSize} />;
+      break;
+    case ScreenType.ACTIVITY_DETAIL:
+      screenComponent = <ActivityDetail screenSize={screenSize} />;
       break;
     case ScreenType.MY_PLAN:
       screenComponent = <MyPlan screenSize={screenSize} />;

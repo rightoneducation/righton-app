@@ -17,6 +17,19 @@
     "myActivities": "My Activities",
     "myLessonPlan": "My Lesson Plan"
   },
+  "activityDetail": {
+    "back": "Back to activity choices",
+    "beforeClass": "Before class",
+    "activity": "Activity",
+    "facilitation": "Facilitation",
+    "discussion": "Discussion",
+    "teacherView": "Teacher",
+    "studentView": "Student",
+    "exportPdf": "Export PDF",
+    "next": "Next: {{phase}}",
+    "saveToPlan": "Save to Lesson Plan",
+    "noContent": "This step isn't available for this activity yet."
+  },
   "chooseActivity": {
     "back": "Back to misconceptions",
     "addressing": "Addressing misconception: {{title}}",

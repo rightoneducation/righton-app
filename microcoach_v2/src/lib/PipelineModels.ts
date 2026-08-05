@@ -1,10 +1,7 @@
 export type PrevalenceLevel = 'FEW' | 'SOME' | 'MOST';
 
 export type DetailStatus =
-  | 'COMPLETE'
-  | 'PARTIAL'
-  | 'CARD_ONLY'
-  | 'NOT_IN_WIREFRAMES';
+  'COMPLETE' | 'PARTIAL' | 'CARD_ONLY' | 'NOT_IN_WIREFRAMES';
 
 export interface IPrevalence {
   level: PrevalenceLevel;
@@ -79,7 +76,148 @@ export interface IGrouping {
   label: string;
 }
 
+export type ActivityType =
+  | 'INCORRECT_WORKED_EXAMPLES'
+  | 'FAVORITE_NO'
+  | 'COMPARE_THE_THINKING'
+  | 'MULTIPLE_REPRESENTATIONS'
+  | 'MATH_HOSPITAL';
+
+export type WorkStatus = 'CORRECT' | 'INCORRECT' | 'NEUTRAL';
+
+export interface IExampleStep {
+  step: number;
+  text: string;
+  isError: boolean;
+  errorNote?: string | null;
+}
+
+export interface IWorkedExample {
+  label: string;
+  prompt: string;
+  steps: IExampleStep[];
+  finalOutcomeLabel: string;
+  finalOutcome: string;
+}
+
+export interface IWorkedExamplesContent {
+  type: 'INCORRECT_WORKED_EXAMPLES';
+  title: string;
+  subtitle: string;
+  supportsViewToggle: boolean;
+  examples: IWorkedExample[];
+}
+
+export interface IFavoriteNoContent {
+  type: 'FAVORITE_NO';
+  title: string;
+  boardPrompt: { problem: string; instruction: string };
+  suggestedExample: {
+    title: string;
+    sourceLabel: string;
+    studentWorkLabel: string;
+    studentWork: { text: string; status: WorkStatus }[];
+    whatToNoticeLabel: string;
+    whatToNotice: { status: WorkStatus; text: string }[];
+  };
+  footnote: string;
+}
+
+export interface ICompareColumn {
+  label: string;
+  verdict: string;
+  isCorrect: boolean;
+  steps: IExampleStep[];
+  annotation: string;
+}
+
+export interface ICompareContent {
+  type: 'COMPARE_THE_THINKING';
+  title: string;
+  subtitle: string;
+  supportsViewToggle: boolean;
+  problemLabel: string;
+  problem: string;
+  columns: ICompareColumn[];
+  keyTakeaway: { label: string; text: string };
+}
+
+export interface IRepresentation {
+  kind: string;
+  label: string;
+  matches: boolean;
+  matchLabel: string;
+  value?: string;
+  detail?: string;
+  lineLabel?: string;
+  plottedPoints?: string[];
+  columns?: string[];
+  rows?: (string | number)[][];
+}
+
+export interface IRepresentationsContent {
+  type: 'MULTIPLE_REPRESENTATIONS';
+  title: string;
+  subtitle: string;
+  studentTaskLabel: string;
+  studentTask: string;
+  representations: IRepresentation[];
+  teachingNotesLabel: string;
+  teachingNotes: { order: number; title: string; body: string }[];
+}
+
+export interface IMathHospitalContent {
+  type: 'MATH_HOSPITAL';
+  title: string;
+  problem: string;
+  problemChecklist: string;
+  steps: {
+    step: number;
+    title: string;
+    askLabel: string;
+    ask: string;
+    responseLabel: string;
+    response: string;
+  }[];
+  footnote: string;
+}
+
+export type IActivityContent =
+  | IWorkedExamplesContent
+  | IFavoriteNoContent
+  | ICompareContent
+  | IRepresentationsContent
+  | IMathHospitalContent;
+
+export interface IPhaseStep {
+  order: number;
+  title: string;
+  body?: string;
+}
+
+export interface IActivityGroup {
+  label: string;
+  description: string;
+  students: string[];
+}
+
+export interface IActivityPhases {
+  beforeClass: {
+    title: string;
+    checklist: IPhaseStep[];
+    groupFormation: {
+      title: string;
+      guidance: string;
+      groups: IActivityGroup[];
+    } | null;
+  } | null;
+  activity: IActivityContent | null;
+  facilitation: { title: string; steps: IPhaseStep[] } | null;
+  discussion: { title: string; questions: IPhaseStep[] } | null;
+}
+
 export interface IActivity {
+  activityType: ActivityType;
   id: string;
   misconceptionId: string;
   title: string | null;
@@ -92,7 +230,7 @@ export interface IActivity {
   targets: string | null;
   instructionalMove: string | null;
   strategyTag: string | null;
-  phases: unknown;
+  phases: IActivityPhases | null;
 }
 
 export type PlanStatus = 'SAVED' | 'COMPLETED';
