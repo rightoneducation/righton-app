@@ -20,7 +20,7 @@ import {
   FocusBadge,
   PrevalenceChip,
   ScreenSizeProps,
-} from '../lib/styledcomponents/UnderstandStyledComponents';
+} from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 import { IActivity, IMisconception } from '../lib/PipelineModels';
@@ -101,7 +101,7 @@ function ChooseActivityView({
       <BackButton
         disableElevation
         startIcon={<ArrowBackIcon />}
-        onClick={() => navigate('/analysis')}
+        onClick={() => navigate('/review')}
       >
         {t('chooseActivity.back')}
       </BackButton>
@@ -185,7 +185,7 @@ export default function ChooseActivity({ screenSize }: ScreenSizeProps) {
     misconceptions.find((item) => item.id === misconceptionId) ?? null;
 
   if (!misconception) {
-    return <Navigate to="/analysis" replace />;
+    return <Navigate to="/review" replace />;
   }
 
   return (

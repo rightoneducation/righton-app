@@ -67,11 +67,15 @@ const router = createBrowserRouter([
         element: <AppSwitch currentScreen={ScreenType.PASSWORDRESET} />,
       },
       {
-        path: 'analysis',
-        element: <AppSwitch currentScreen={ScreenType.ANALYSIS} />,
+        path: 'dashboard',
+        element: <AppSwitch currentScreen={ScreenType.DASHBOARD} />,
       },
       {
-        path: 'analysis/:misconceptionId/activities',
+        path: 'review',
+        element: <AppSwitch currentScreen={ScreenType.REVIEW} />,
+      },
+      {
+        path: 'review/:misconceptionId/activities',
         element: <AppSwitch currentScreen={ScreenType.CHOOSE_ACTIVITY} />,
       },
       {

@@ -24,7 +24,7 @@ import {
   FocusBadge,
   PrevalenceChip,
   ScreenSizeProps,
-} from '../lib/styledcomponents/UnderstandStyledComponents';
+} from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 
@@ -51,7 +51,7 @@ function ActivityDetailView({
 
   const handleTabSelect = (tabId: FlowTabId) => {
     if (tabId === 'prepare') navigate('/myplan');
-    if (tabId === 'understand-act') navigate('/analysis');
+    if (tabId === 'understand-act') navigate('/review');
   };
 
   const [isExporting, setIsExporting] = React.useState(false);
@@ -165,7 +165,7 @@ function ActivityDetailView({
       <PlanBackButton
         disableElevation
         startIcon={<ArrowBackIcon />}
-        onClick={() => navigate(`/analysis/${misconception.id}/activities`)}
+        onClick={() => navigate(`/review/${misconception.id}/activities`)}
       >
         {t('activityDetail.back')}
       </PlanBackButton>
@@ -246,7 +246,7 @@ export default function ActivityDetail({ screenSize }: ScreenSizeProps) {
     null;
 
   if (!misconception || !activity) {
-    return <Navigate to="/analysis" replace />;
+    return <Navigate to="/review" replace />;
   }
 
   // Keyed so opening a different activity resets the phase to Before class.

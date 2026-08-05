@@ -13,7 +13,7 @@ import {
   StudentNamePill,
   NamePillGroup,
 } from '../lib/styledcomponents/MisconceptionModalStyledComponents';
-import { CountChip } from '../lib/styledcomponents/UnderstandStyledComponents';
+import { CountChip } from '../lib/styledcomponents/ReviewStyledComponents';
 
 interface StudentWorkTabProps {
   studentWork: IStudentWork | null;

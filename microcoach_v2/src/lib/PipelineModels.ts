@@ -277,6 +277,18 @@ export interface ISessionClass {
   isSelected: boolean;
 }
 
+export interface IFlowStep {
+  order: number;
+  label: string;
+  state: 'COMPLETE' | 'CURRENT' | 'UPCOMING';
+}
+
+export interface ISidebarItem {
+  id: string;
+  label: string;
+  isActive: boolean;
+}
+
 export interface ISession {
   teacher: ISessionTeacher;
   selectedClassId: string;
@@ -285,6 +297,8 @@ export interface ISession {
   selectedWeek: string;
   studentWorksAnalyzed: number;
   studentsWithStrongUnderstanding: number;
+  flowSteps: IFlowStep[];
+  sidebarItems: ISidebarItem[];
 }
 
 export interface IPipelineOutput {

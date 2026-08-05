@@ -65,7 +65,7 @@
     "noStudentWork": "El trabajo de los estudiantes para este concepto erróneo aún no está disponible.",
     "noSkillContext": "El contexto de la destreza para este concepto erróneo aún no está disponible."
   },
-  "understand": {
+  "review": {
     "banner": "Los resultados de su clase están listos: vea qué entendieron mal sus estudiantes y los próximos pasos que puede tomar",
     "dismissBanner": "Descartar",
     "title": "Comprenda el pensamiento de sus estudiantes",
@@ -100,5 +100,14 @@
   "footer": {
     "copyright": "Copyright © 2026 RightOn Education. Todos los derechos reservados.",
     "privacypolicy": "Política de Privacidad"
+  },
+  "home": {
+    "banner": "Los resultados de tu clase están listos: revisa los patrones de conceptos erróneos y las actividades recomendadas",
+    "title": "Bienvenido de nuevo a MicroCoach",
+    "subtitle": "Revisa los patrones de conceptos erróneos en el pensamiento de tus estudiantes\npara identificar oportunidades de fortalecer la comprensión.",
+    "classPrompt": "¿Con qué clase trabajas hoy?",
+    "moreClasses": "Más",
+    "weekLabel": "Semana",
+    "cta": "Revisar patrones de conceptos erróneos"
   }
 }

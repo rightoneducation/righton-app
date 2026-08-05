@@ -11,18 +11,18 @@ import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
 import MisconceptionCard from '../components/MisconceptionCard';
 import MisconceptionDetailModal from '../components/MisconceptionDetailModal';
-import UnderstandSkeleton from '../components/UnderstandSkeleton';
+import ReviewSkeleton from '../components/ReviewSkeleton';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   ResultsBanner,
   CountChip,
   StrongUnderstandingBar,
   ScreenSizeProps,
-} from '../lib/styledcomponents/UnderstandStyledComponents';
+} from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 
-export default function Analysis({ screenSize }: ScreenSizeProps) {
+export default function Review({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export default function Analysis({ screenSize }: ScreenSizeProps) {
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
 
   if (!isReady) {
-    return <UnderstandSkeleton screenSize={screenSize} />;
+    return <ReviewSkeleton screenSize={screenSize} />;
   }
 
   const handleViewDetails = (misconceptionId: string) => {
@@ -46,7 +46,7 @@ export default function Analysis({ screenSize }: ScreenSizeProps) {
     // Close before navigating so react-modal runs its own close path and
     // restores #root's aria-hidden, rather than being torn down mid-flight.
     setSelectedId(null);
-    navigate(`/analysis/${misconceptionId}/activities`);
+    navigate(`/review/${misconceptionId}/activities`);
   };
 
   const selectedMisconception =
@@ -87,11 +87,11 @@ export default function Analysis({ screenSize }: ScreenSizeProps) {
             variant="rubikBodyBold"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
           >
-            {t('understand.banner')}
+            {t('review.banner')}
           </Typography>
           <IconButton
             size="small"
-            aria-label={t('understand.dismissBanner')}
+            aria-label={t('review.dismissBanner')}
             onClick={() => setIsBannerOpen(false)}
             sx={{ ml: 'auto', color: 'designSystem.surface.ashyGray' }}
           >
@@ -108,7 +108,7 @@ export default function Analysis({ screenSize }: ScreenSizeProps) {
             mb: `${theme.sizing.space2}px`,
           }}
         >
-          {t('understand.title')}
+          {t('review.title')}
         </Typography>
 
         <Stack
@@ -120,10 +120,10 @@ export default function Analysis({ screenSize }: ScreenSizeProps) {
             variant="uploadLabel"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
           >
-            {t('understand.subtitle')}
+            {t('review.subtitle')}
           </Typography>
           <CountChip>
-            {t('understand.worksAnalyzed', {
+            {t('review.worksAnalyzed', {
               count: session.studentWorksAnalyzed,
             })}
           </CountChip>
@@ -161,7 +161,7 @@ export default function Analysis({ screenSize }: ScreenSizeProps) {
           variant="headingMd"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
         >
-          {t('understand.strongUnderstanding', {
+          {t('review.strongUnderstanding', {
             count: session.studentsWithStrongUnderstanding,
           })}
         </Typography>

@@ -17,7 +17,7 @@ import {
   ChangeActivityButton,
   CompletedPanel,
 } from '../lib/styledcomponents/MyPlanStyledComponents';
-import { ScreenSizeProps } from '../lib/styledcomponents/UnderstandStyledComponents';
+import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 import {
   useMicroCoachDataState,
   useMicroCoachDataDispatch,
@@ -36,7 +36,7 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
   const completed = planItems.filter((item) => item.status === 'COMPLETED');
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'understand-act') navigate('/analysis');
+    if (tabId === 'understand-act') navigate('/review');
   };
 
   const handleOpenDetails = (item: IPlanItem) => {
@@ -46,7 +46,7 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
 
   const handleChangeActivity = (item: IPlanItem) => {
     if (item.misconceptionId) {
-      navigate(`/analysis/${item.misconceptionId}/activities`);
+      navigate(`/review/${item.misconceptionId}/activities`);
     }
   };
 

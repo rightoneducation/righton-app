@@ -29,6 +29,8 @@ const designSystemColors = {
     // selected state is the same navy at full strength.
     fadedAtlanticNavy: '#1B376F33',
     disabledStroke: '#AAAAAA',
+    mutedGrey: '#8F8F8F',
+    selectedNavy: '#1B2A6B',
   },
   surface: {
     atlanticNavy: '#1B376F',
@@ -243,6 +245,31 @@ const designSystemTypography = {
     lineHeight: 'normal',
     letterSpacing: '-0.02em',
   },
+  stepLabel: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  stepNumber: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '26px',
+    lineHeight: 'normal',
+  },
+  formLabel: {
+    fontFamily: rubik,
+    fontWeight: 700,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  ctaLabel: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '20px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
+  },
   navTab: {
     fontFamily: rubik,
     fontWeight: 700,
@@ -374,6 +401,10 @@ declare module '@mui/material/styles' {
     buttonLabel: CSSProperties;
     buttonLabelSm: CSSProperties;
     buttonLabelSmLight: CSSProperties;
+    stepLabel: CSSProperties;
+    stepNumber: CSSProperties;
+    formLabel: CSSProperties;
+    ctaLabel: CSSProperties;
     planSubheading: CSSProperties;
     navTab: CSSProperties;
     headingSm: CSSProperties;
@@ -408,6 +439,10 @@ declare module '@mui/material/styles' {
     buttonLabel?: CSSProperties;
     buttonLabelSm?: CSSProperties;
     buttonLabelSmLight?: CSSProperties;
+    stepLabel?: CSSProperties;
+    stepNumber?: CSSProperties;
+    formLabel?: CSSProperties;
+    ctaLabel?: CSSProperties;
     planSubheading?: CSSProperties;
     navTab?: CSSProperties;
     headingSm?: CSSProperties;
@@ -443,6 +478,10 @@ declare module '@mui/material/Typography' {
     buttonLabel: true;
     buttonLabelSm: true;
     buttonLabelSmLight: true;
+    stepLabel: true;
+    stepNumber: true;
+    formLabel: true;
+    ctaLabel: true;
     planSubheading: true;
     navTab: true;
     headingSm: true;
@@ -513,6 +552,10 @@ const Theme = createTheme({
           buttonLabel: 'p',
           buttonLabelSm: 'p',
           buttonLabelSmLight: 'p',
+          stepLabel: 'p',
+          stepNumber: 'p',
+          formLabel: 'p',
+          ctaLabel: 'p',
           planSubheading: 'p',
           navTab: 'p',
           headingSm: 'p',
@@ -550,6 +593,10 @@ const Theme = createTheme({
     buttonLabel: { ...designSystemTypography.buttonLabel },
     buttonLabelSm: { ...designSystemTypography.buttonLabelSm },
     buttonLabelSmLight: { ...designSystemTypography.buttonLabelSmLight },
+    stepLabel: { ...designSystemTypography.stepLabel },
+    stepNumber: { ...designSystemTypography.stepNumber },
+    formLabel: { ...designSystemTypography.formLabel },
+    ctaLabel: { ...designSystemTypography.ctaLabel },
     planSubheading: { ...designSystemTypography.planSubheading },
     navTab: { ...designSystemTypography.navTab },
     headingSm: { ...designSystemTypography.headingSm },

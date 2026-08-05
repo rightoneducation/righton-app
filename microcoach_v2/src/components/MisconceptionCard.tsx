@@ -10,7 +10,7 @@ import {
   PrevalenceChip,
   CardCta,
   ScreenSizeProps,
-} from '../lib/styledcomponents/UnderstandStyledComponents';
+} from '../lib/styledcomponents/ReviewStyledComponents';
 
 interface MisconceptionCardProps extends ScreenSizeProps {
   misconception: IMisconception;
@@ -62,7 +62,7 @@ export default function MisconceptionCard({
         disableElevation
         onClick={() => onViewDetails(misconception.id)}
       >
-        {t('understand.viewDetails')}
+        {t('review.viewDetails')}
       </CardCta>
     </CardSurface>
   );

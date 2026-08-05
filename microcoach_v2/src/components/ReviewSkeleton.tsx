@@ -11,9 +11,9 @@ import {
   BadgeSlot,
   BADGE_SLOT_HEIGHT,
   ScreenSizeProps,
-} from '../lib/styledcomponents/UnderstandStyledComponents';
+} from '../lib/styledcomponents/ReviewStyledComponents';
 
-export default function UnderstandSkeleton({ screenSize }: ScreenSizeProps) {
+export default function ReviewSkeleton({ screenSize }: ScreenSizeProps) {
   const theme = useTheme();
   const isLarge = screenSize === ScreenSize.LARGE;
 

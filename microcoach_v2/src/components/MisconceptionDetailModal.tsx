@@ -23,7 +23,7 @@ import {
   SupportStatChip,
   UnderstoodStatChip,
 } from '../lib/styledcomponents/MisconceptionModalStyledComponents';
-import { CardCta } from '../lib/styledcomponents/UnderstandStyledComponents';
+import { CardCta } from '../lib/styledcomponents/ReviewStyledComponents';
 
 type ModalTabId = 'student-work' | 'skill-context';
 

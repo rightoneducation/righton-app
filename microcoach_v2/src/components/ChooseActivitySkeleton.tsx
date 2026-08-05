@@ -12,7 +12,7 @@ import {
   CardActionRow,
   ACTIVITY_CARD_GAP,
 } from '../lib/styledcomponents/ChooseActivityStyledComponents';
-import { ScreenSizeProps } from '../lib/styledcomponents/UnderstandStyledComponents';
+import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 
 export default function ChooseActivitySkeleton({
   screenSize,

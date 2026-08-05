@@ -65,7 +65,7 @@
     "noStudentWork": "Student work for this misconception isn't available yet.",
     "noSkillContext": "Skill context for this misconception isn't available yet."
   },
-  "understand": {
+  "review": {
     "banner": "Your class results are in — see what your students misunderstood and next steps you can take",
     "dismissBanner": "Dismiss",
     "title": "Understand Your Students' Thinking",
@@ -100,5 +100,14 @@
   "footer": {
     "copyright": "Copyright © 2026 RightOn Education. All rights reserved.",
     "privacypolicy": "Privacy Policy"
+  },
+  "home": {
+    "banner": "Your class results are in — review misconception patterns and recommended activities",
+    "title": "Welcome back to MicroCoach",
+    "subtitle": "Review misconception patterns in your students’ thinking\nto identify opportunities to strengthen understanding.",
+    "classPrompt": "Which class are you working with today?",
+    "moreClasses": "More",
+    "weekLabel": "Week",
+    "cta": "Review misconception patterns"
   }
 }
