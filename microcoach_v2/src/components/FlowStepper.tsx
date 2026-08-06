@@ -1,35 +1,29 @@
 import React from 'react';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { IFlowStep } from '../lib/PipelineModels';
+import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   StepperRow,
+  StepItem,
   StepCircle,
   StepConnector,
 } from '../lib/styledcomponents/HomeStyledComponents';
 
 interface FlowStepperProps {
   steps: IFlowStep[];
+  screenSize: ScreenSize;
 }
 
-export default function FlowStepper({ steps }: FlowStepperProps) {
+export default function FlowStepper({ steps, screenSize }: FlowStepperProps) {
   return (
-    <StepperRow>
+    <StepperRow screenSize={screenSize}>
       {steps.map((step, index) => {
         const isActive = step.state === 'CURRENT';
 
         return (
           <React.Fragment key={step.order}>
-            {index > 0 && <StepConnector />}
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: (theme) => `${theme.sizing.space1}px`,
-                flexShrink: 0,
-              }}
-            >
+            {index > 0 && <StepConnector screenSize={screenSize} />}
+            <StepItem screenSize={screenSize}>
               <StepCircle isActive={isActive}>
                 <Typography variant="stepNumber" component="span">
                   {step.order}
@@ -42,11 +36,12 @@ export default function FlowStepper({ steps }: FlowStepperProps) {
                     ? 'designSystem.foreground.accentBlue'
                     : 'designSystem.foreground.mutedGrey',
                   textAlign: 'center',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {step.label}
               </Typography>
-            </Box>
+            </StepItem>
           </React.Fragment>
         );
       })}

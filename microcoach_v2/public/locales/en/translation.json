@@ -103,6 +103,7 @@
   },
   "home": {
     "banner": "Your class results are in — review misconception patterns and recommended activities",
+    "dismissBanner": "Dismiss",
     "title": "Welcome back to MicroCoach",
     "subtitle": "Review misconception patterns in your students’ thinking\nto identify opportunities to strengthen understanding.",
     "classPrompt": "Which class are you working with today?",

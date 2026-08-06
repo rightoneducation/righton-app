@@ -1,4 +1,5 @@
 import React from 'react';
+import MenuItem from '@mui/material/MenuItem';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
@@ -7,6 +8,7 @@ import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   Sidebar,
   SidebarItem,
+  SidebarSelect,
 } from '../lib/styledcomponents/HomeStyledComponents';
 
 const icons: Record<string, React.ReactNode> = {
@@ -26,6 +28,25 @@ export default function AppSidebar({
   screenSize,
   onSelect,
 }: AppSidebarProps) {
+  const activeId = items.find((item) => item.isActive)?.id ?? items[0]?.id;
+
+  if (screenSize === ScreenSize.SMALL) {
+    return (
+      <Sidebar screenSize={screenSize} component="nav">
+        <SidebarSelect
+          value={activeId}
+          onChange={(event) => onSelect(event.target.value)}
+        >
+          {items.map((item) => (
+            <MenuItem key={item.id} value={item.id}>
+              {item.label}
+            </MenuItem>
+          ))}
+        </SidebarSelect>
+      </Sidebar>
+    );
+  }
+
   return (
     <Sidebar screenSize={screenSize} component="nav">
       {items.map((item) => (

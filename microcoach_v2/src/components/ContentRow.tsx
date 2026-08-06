@@ -1,6 +1,16 @@
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { ScreenSize } from '../lib/MicroCoachModels';
+
+/**
+ * The page gutter, shared so screens that can't use ContentRow directly still
+ * inset by the same amount. Figma: 20 at 393, 48 at 744, 24 at 1920.
+ */
+export function pageGutter(theme: Theme, screenSize: ScreenSize) {
+  if (screenSize === ScreenSize.LARGE) return theme.sizing.space5;
+  if (screenSize === ScreenSize.MEDIUM) return theme.sizing.space8;
+  return theme.sizing.space4;
+}
 
 interface ContentRowProps {
   screenSize: ScreenSize;
@@ -29,12 +39,7 @@ const ContentRow = styled(Box, {
   shouldForwardProp: (prop) =>
     prop !== 'screenSize' && prop !== 'narrow' && prop !== 'columnWidth',
 })<ContentRowProps>(({ theme, screenSize, narrow, columnWidth }) => {
-  const gutter =
-    screenSize === ScreenSize.LARGE // eslint-disable-line
-      ? theme.sizing.space5
-      : screenSize === ScreenSize.MEDIUM
-        ? theme.sizing.space8
-        : theme.sizing.space4;
+  const gutter = pageGutter(theme, screenSize);
 
   const column =
     columnWidth ??

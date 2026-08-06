@@ -343,6 +343,11 @@ const sizing = {
   // In-app screens sit in a narrower column than the landing page: the Figma
   // card row is 344 x 3 with the gap tokenised to space8, so 344*3 + 48*2.
   appContentMaxWidth: 1128,
+  // Home is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
+  // The stepper and banner deliberately break out of that column.
+  homeContentMaxWidth: 858,
+  stepperMaxWidth: 1050,
+  bannerMaxWidth: 770,
   // Figma corner radii, shared by the step panel, step cards and video card.
   sectionRadius: 32,
   heroImageRadius: 37,

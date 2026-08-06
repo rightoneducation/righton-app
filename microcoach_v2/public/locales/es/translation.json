@@ -103,6 +103,7 @@
   },
   "home": {
     "banner": "Los resultados de tu clase están listos: revisa los patrones de conceptos erróneos y las actividades recomendadas",
+    "dismissBanner": "Descartar",
     "title": "Bienvenido de nuevo a MicroCoach",
     "subtitle": "Revisa los patrones de conceptos erróneos en el pensamiento de tus estudiantes\npara identificar oportunidades de fortalecer la comprensión.",
     "classPrompt": "¿Con qué clase trabajas hoy?",
