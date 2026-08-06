@@ -3,6 +3,7 @@ import { createTheme } from '@mui/material/styles';
 
 const rubik = "'Rubik', sans-serif";
 const poppins = "'Poppins', sans-serif";
+const karla = "'Karla', sans-serif";
 
 const designSystemColors = {
   background: {
@@ -23,6 +24,13 @@ const designSystemColors = {
     fadedNavyBlue: '#92A8C7',
     periwinkle: '#C3D5E3',
     wildSand: '#F4F5F3',
+    brightBlue: '#375EF9',
+    // surface.atlanticNavy at 20% — the resting outline for controls whose
+    // selected state is the same navy at full strength.
+    fadedAtlanticNavy: '#1B376F33',
+    disabledStroke: '#AAAAAA',
+    mutedGrey: '#8F8F8F',
+    selectedNavy: '#1B2A6B',
   },
   surface: {
     atlanticNavy: '#1B376F',
@@ -47,6 +55,11 @@ const designSystemColors = {
     uploadingStroke: '#4A6FA5',
     error: '#FFF3F3',
     errorStroke: '#E42F2F',
+    // Misconception detail: students who need support, students who understood,
+    // and the prerequisite-gap standard codes.
+    needsSupport: '#F49F82',
+    understood: '#BDE9CA',
+    prerequisite: '#CC5500',
   },
   gradients: {
     uploadIcons:
@@ -174,6 +187,114 @@ const designSystemTypography = {
     fontSize: '14px',
     lineHeight: 'normal',
   },
+  microLabel: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '12px',
+    lineHeight: 'normal',
+  },
+  appTitle: {
+    fontFamily: rubik,
+    fontWeight: 600,
+    fontSize: '32px',
+    lineHeight: 'normal',
+  },
+  rubikBody: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '16px',
+    lineHeight: 'normal',
+  },
+  rubikBodyBold: {
+    fontFamily: rubik,
+    fontWeight: 700,
+    fontSize: '16px',
+    lineHeight: 'normal',
+  },
+  rubikSubBold: {
+    fontFamily: rubik,
+    fontWeight: 700,
+    fontSize: '14px',
+    lineHeight: 'normal',
+  },
+  buttonLabel: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '16px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
+  },
+  buttonLabelSm: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '14px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
+  },
+  planSubheading: {
+    fontFamily: karla,
+    fontWeight: 600,
+    fontSize: '16px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.04em',
+  },
+  buttonLabelSmLight: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '14px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
+  },
+  stepLabel: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  stepNumber: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '26px',
+    lineHeight: 'normal',
+  },
+  formLabel: {
+    fontFamily: rubik,
+    fontWeight: 700,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  ctaLabel: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '20px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
+  },
+  navTab: {
+    fontFamily: rubik,
+    fontWeight: 700,
+    fontSize: '14px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
+  },
+  headingSm: {
+    fontFamily: poppins,
+    fontWeight: 600,
+    fontSize: '16px',
+    lineHeight: 'normal',
+  },
+  headingMd: {
+    fontFamily: poppins,
+    fontWeight: 600,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  headingLg: {
+    fontFamily: poppins,
+    fontWeight: 600,
+    fontSize: '24px',
+    lineHeight: 'normal',
+  },
   statusLabel: {
     fontFamily: poppins,
     fontWeight: 500,
@@ -219,6 +340,14 @@ const sizing = {
   // x 260..1660 (1400) but the body sections inset to x 275..1645 (1370).
   contentMaxWidth: 1400,
   sectionMaxWidth: 1370,
+  // In-app screens sit in a narrower column than the landing page: the Figma
+  // card row is 344 x 3 with the gap tokenised to space8, so 344*3 + 48*2.
+  appContentMaxWidth: 1128,
+  // Home is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
+  // The stepper and banner deliberately break out of that column.
+  homeContentMaxWidth: 858,
+  stepperMaxWidth: 1050,
+  bannerMaxWidth: 770,
   // Figma corner radii, shared by the step panel, step cards and video card.
   sectionRadius: 32,
   heroImageRadius: 37,
@@ -229,6 +358,7 @@ const borders = {
   borderWidth,
   solid: `${borderWidth}px solid ${designSystemColors.foreground.accentBlue}`,
   subtle: `${borderWidth}px solid ${designSystemColors.foreground.greyAccent}`,
+  faintNavy: `${borderWidth}px solid ${designSystemColors.foreground.fadedAtlanticNavy}`,
   transparent: `${borderWidth}px solid transparent`,
 };
 
@@ -268,6 +398,23 @@ declare module '@mui/material/styles' {
     smallPopupLabel: CSSProperties;
     titleLight: CSSProperties;
     xsLabel: CSSProperties;
+    microLabel: CSSProperties;
+    appTitle: CSSProperties;
+    rubikBody: CSSProperties;
+    rubikBodyBold: CSSProperties;
+    rubikSubBold: CSSProperties;
+    buttonLabel: CSSProperties;
+    buttonLabelSm: CSSProperties;
+    buttonLabelSmLight: CSSProperties;
+    stepLabel: CSSProperties;
+    stepNumber: CSSProperties;
+    formLabel: CSSProperties;
+    ctaLabel: CSSProperties;
+    planSubheading: CSSProperties;
+    navTab: CSSProperties;
+    headingSm: CSSProperties;
+    headingMd: CSSProperties;
+    headingLg: CSSProperties;
     statusLabel: CSSProperties;
     smallBodyText: CSSProperties;
   }
@@ -289,6 +436,23 @@ declare module '@mui/material/styles' {
     smallPopupLabel?: CSSProperties;
     titleLight?: CSSProperties;
     xsLabel?: CSSProperties;
+    microLabel?: CSSProperties;
+    appTitle?: CSSProperties;
+    rubikBody?: CSSProperties;
+    rubikBodyBold?: CSSProperties;
+    rubikSubBold?: CSSProperties;
+    buttonLabel?: CSSProperties;
+    buttonLabelSm?: CSSProperties;
+    buttonLabelSmLight?: CSSProperties;
+    stepLabel?: CSSProperties;
+    stepNumber?: CSSProperties;
+    formLabel?: CSSProperties;
+    ctaLabel?: CSSProperties;
+    planSubheading?: CSSProperties;
+    navTab?: CSSProperties;
+    headingSm?: CSSProperties;
+    headingMd?: CSSProperties;
+    headingLg?: CSSProperties;
     statusLabel?: CSSProperties;
     smallBodyText?: CSSProperties;
   }
@@ -311,6 +475,23 @@ declare module '@mui/material/Typography' {
     smallPopupLabel: true;
     titleLight: true;
     xsLabel: true;
+    microLabel: true;
+    appTitle: true;
+    rubikBody: true;
+    rubikBodyBold: true;
+    rubikSubBold: true;
+    buttonLabel: true;
+    buttonLabelSm: true;
+    buttonLabelSmLight: true;
+    stepLabel: true;
+    stepNumber: true;
+    formLabel: true;
+    ctaLabel: true;
+    planSubheading: true;
+    navTab: true;
+    headingSm: true;
+    headingMd: true;
+    headingLg: true;
     statusLabel: true;
     smallBodyText: true;
   }
@@ -368,6 +549,23 @@ const Theme = createTheme({
           bodyText: 'p',
           smallPopupLabel: 'p',
           xsLabel: 'p',
+          microLabel: 'p',
+          appTitle: 'p',
+          rubikBody: 'p',
+          rubikBodyBold: 'p',
+          rubikSubBold: 'p',
+          buttonLabel: 'p',
+          buttonLabelSm: 'p',
+          buttonLabelSmLight: 'p',
+          stepLabel: 'p',
+          stepNumber: 'p',
+          formLabel: 'p',
+          ctaLabel: 'p',
+          planSubheading: 'p',
+          navTab: 'p',
+          headingSm: 'p',
+          headingMd: 'p',
+          headingLg: 'p',
           statusLabel: 'p',
           smallBodyText: 'p',
         },
@@ -392,6 +590,23 @@ const Theme = createTheme({
     smallPopupLabel: { ...designSystemTypography.smallPopupLabel },
     titleLight: { ...designSystemTypography.titleLight },
     xsLabel: { ...designSystemTypography.xsLabel },
+    microLabel: { ...designSystemTypography.microLabel },
+    appTitle: { ...designSystemTypography.appTitle },
+    rubikBody: { ...designSystemTypography.rubikBody },
+    rubikBodyBold: { ...designSystemTypography.rubikBodyBold },
+    rubikSubBold: { ...designSystemTypography.rubikSubBold },
+    buttonLabel: { ...designSystemTypography.buttonLabel },
+    buttonLabelSm: { ...designSystemTypography.buttonLabelSm },
+    buttonLabelSmLight: { ...designSystemTypography.buttonLabelSmLight },
+    stepLabel: { ...designSystemTypography.stepLabel },
+    stepNumber: { ...designSystemTypography.stepNumber },
+    formLabel: { ...designSystemTypography.formLabel },
+    ctaLabel: { ...designSystemTypography.ctaLabel },
+    planSubheading: { ...designSystemTypography.planSubheading },
+    navTab: { ...designSystemTypography.navTab },
+    headingSm: { ...designSystemTypography.headingSm },
+    headingMd: { ...designSystemTypography.headingMd },
+    headingLg: { ...designSystemTypography.headingLg },
     statusLabel: { ...designSystemTypography.statusLabel },
     smallBodyText: { ...designSystemTypography.smallBodyText },
     h1: { ...designSystemTypography.h1 },
