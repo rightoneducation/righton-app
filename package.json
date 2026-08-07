@@ -1,7 +1,12 @@
 {
   "name": "righton-monorepo-root",
   "private": true,
-  "workspaces": ["play", "host_v2", "networking", "central_v2"],
+  "workspaces": [
+    "play",
+    "host_v2",
+    "networking",
+    "central_v2"
+  ],
   "packageManager": "yarn@1.22.22",
   "engines": {
     "node": ">=22.14.0 <23",
@@ -13,5 +18,12 @@
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@types/react": "~18.2.0",
     "@types/react-dom": "~18.2.0"
+  },
+  "devDependencies": {
+    "@manypkg/cli": "^0.25.1"
+  },
+  "manypkg": {
+    "defaultBranch": "dev",
+    "ignoredRules": ["EXTERNAL_MISMATCH", "UNSORTED_DEPENDENCIES"]
   }
 }
