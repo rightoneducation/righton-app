@@ -4,6 +4,11 @@ When contributing to this repository, please first discuss the change you wish t
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
 
+### Installing dependencies
+
+**Always run `yarn install` from the repository root — never from inside `play/`, `host_v2/`, `networking/`, or `central_v2/`.**
+
+
 ### Code of Conduct
 
 #### Our Pledge
