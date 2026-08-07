@@ -19,11 +19,21 @@
     "@types/react": "~18.2.0",
     "@types/react-dom": "~18.2.0"
   },
+  "scripts": {
+    "check:install-location": "for w in central_v2 play host_v2 networking; do if [ -d $w/node_modules/react ]; then echo \"ERROR: yarn install was run inside $w, creating a duplicate React copy. Run yarn install from the repo root instead (see CONTRIBUTING.md), then delete $w/node_modules.\"; exit 1; fi; done",
+    "check:deps": "manypkg check && syncpack lint",
+    "verify": "yarn check:install-location && yarn check:deps",
+    "postinstall": "yarn check:install-location"
+  },
   "devDependencies": {
-    "@manypkg/cli": "^0.25.1"
+    "@manypkg/cli": "^0.25.1",
+    "syncpack": "^15.3.2"
   },
   "manypkg": {
     "defaultBranch": "dev",
-    "ignoredRules": ["EXTERNAL_MISMATCH", "UNSORTED_DEPENDENCIES"]
+    "ignoredRules": [
+      "EXTERNAL_MISMATCH",
+      "UNSORTED_DEPENDENCIES"
+    ]
   }
 }

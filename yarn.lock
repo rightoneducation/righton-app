@@ -21128,6 +21128,60 @@ synchronous-promise@^2.0.15:
   resolved "https://registry.yarnpkg.com/synchronous-promise/-/synchronous-promise-2.0.17.tgz#38901319632f946c982152586f2caf8ddc25c032"
   integrity sha512-AsS729u2RHUfEra9xJrE39peJcc2stq2+poBXX8bcM08Y6g9j/i/PUzwNQqkaJde7Ntg1TO7bSREbR5sdosQ+g==
 
+syncpack-darwin-arm64@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack-darwin-arm64/-/syncpack-darwin-arm64-15.3.2.tgz#dffcda5c3b380d41e0fadc1a76784cff8073292d"
+  integrity sha512-rQwZOvWJbvUzhBySbKnvs+F5khmdkH2W/kTZo+zz6UfH651K9z2fiOYlcpDPX0L97m566gRxVmOr930ygB97ZQ==
+
+syncpack-darwin-x64@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack-darwin-x64/-/syncpack-darwin-x64-15.3.2.tgz#77fffd8ec465f21167fe12ae8bb56f3981050700"
+  integrity sha512-91CWe9Pamfmlm2nY8bCL5z8GYOafGJUm/nQqtvaQDZ9SS25c6Gn8LDfRu6JSKV0dcI1zOH3EiRCM0K/kn9Mpiw==
+
+syncpack-linux-arm64-musl@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack-linux-arm64-musl/-/syncpack-linux-arm64-musl-15.3.2.tgz#5e37d77baaab95137924128df6c14c5f57caf8fd"
+  integrity sha512-IzI4Sr1rFDuF7FFbZ+ti+qA2/0Rp/aGNgzoUzNH28wYJkJMv9KBBr3Nygc1jsoO1+XE1JkYsXkJHuSFrwiwtgA==
+
+syncpack-linux-arm64@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack-linux-arm64/-/syncpack-linux-arm64-15.3.2.tgz#5c33be6deb5260e2b0835b4fa77a565f2957badd"
+  integrity sha512-eApeUFLb8yFHAFnCyHicDieTBW0eR3HsaKSWPMmz+VOQOpZYl0cmqbRLtunsYN6OykRi9Sl1faYjKmyETow7Gg==
+
+syncpack-linux-x64-musl@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack-linux-x64-musl/-/syncpack-linux-x64-musl-15.3.2.tgz#10bc42bb130356064954e9b9ebe832023383255e"
+  integrity sha512-dohyuYgUVHdSFz1KYW/XngyYSiSV3tarroYRsloYsT8bcSStkh2vJVBht0eMl1OFTh3Hb6lNEC12Pgtw4gWTcg==
+
+syncpack-linux-x64@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack-linux-x64/-/syncpack-linux-x64-15.3.2.tgz#f4bf713bbf6e270f5149f75976f85c8335edaef0"
+  integrity sha512-xrzBZx3DjKoece2h3Olv/Y/U7b1eNorWTMiF407m0tO5KJp5u926TMeHlldaA5GRCkVJBe5VaI33WYTJF753oQ==
+
+syncpack-windows-arm64@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack-windows-arm64/-/syncpack-windows-arm64-15.3.2.tgz#d8fbf09bdf24b4cb4d159047a9859cb676fd240a"
+  integrity sha512-ZGjVpyS8PW6Y69HyXOb8RYVWRQ+hlRklqdgOp+x+eqrCRidGho8z2nN5tleMGzcaMC7hg+qSPFh5u6Fy/BXr4w==
+
+syncpack-windows-x64@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack-windows-x64/-/syncpack-windows-x64-15.3.2.tgz#4803eba2f0789d583bdc12de4aad965e29a5f19d"
+  integrity sha512-9zKWNXGhd3rryQjcpBjs02pKgvIzuz3PUS+vKL4vWnDu5VoHad4e6TzL4pvn+VfAm4wXzcuS9fZkxLBEMPLerw==
+
+syncpack@^15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/syncpack/-/syncpack-15.3.2.tgz#1f225ce34327484cbcb8d1ffe4541735185caad1"
+  integrity sha512-RKYfXFQlrIWosTheNbyJg3xHNjTDrW2mOvwxAz3XGghrUDN4hDjhKPCTAQrUtGZw9hNeIr37qRO3/+EP927Vtg==
+  optionalDependencies:
+    syncpack-darwin-arm64 "15.3.2"
+    syncpack-darwin-x64 "15.3.2"
+    syncpack-linux-arm64 "15.3.2"
+    syncpack-linux-arm64-musl "15.3.2"
+    syncpack-linux-x64 "15.3.2"
+    syncpack-linux-x64-musl "15.3.2"
+    syncpack-windows-arm64 "15.3.2"
+    syncpack-windows-x64 "15.3.2"
+
 tailwindcss@^3.0.2:
   version "3.4.19"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.4.19.tgz#af2a0a4ae302d52ebe078b6775e799e132500ee2"
