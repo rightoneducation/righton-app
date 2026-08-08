@@ -7,7 +7,12 @@ on:
     branches: [dev]
     paths:
       - 'central_v2/**'
-      - 'networking/**'
+      # Only what the app build actually reads. Deliberately NOT 'networking/**',
+      # which would also match networking/sanity/** (a separate Sanity Studio
+      # project) and networking/amplify/** (backend IaC) — neither affects the bundle.
+      - 'networking/src/**'
+      - 'networking/package.json'
+      - 'networking/tsconfig*.json'
       - 'package.json'
       - 'yarn.lock'
       - '.syncpackrc.json'
@@ -111,6 +116,20 @@ jobs:
       # "no new problems" and ratchets down over time. Never raise it.
       - name: Lint
         run: yarn --cwd central_v2 lint --max-warnings 690
+
+      # central_v2 currently has ZERO tests. The only one was untouched CRA boilerplate
+      # asserting on "learn react" text that doesn't exist in this app, so it was
+      # deleted rather than repaired — a test that looks like coverage and isn't is
+      # worse than an honest zero.
+      #
+      # --passWithNoTests keeps this step green today and makes it start gating the
+      # moment someone writes a real test. Note that writing one which renders <App />
+      # will hit `Cannot find module '@sanity/client/csm'`: react-scripts 5.0.1 pins
+      # jest-resolve 27, and package `exports` map support only landed in jest 28.
+      # The fix is to stop pulling the CMS client through networking's barrel export,
+      # not to add moduleNameMapper patches per subpath.
+      - name: Test
+        run: yarn --cwd central_v2 test --watchAll=false --passWithNoTests
 
       # GitHub Actions sets CI=true, which makes react-scripts promote all 690 lint
       # warnings to build errors. CI=false is a deliberate, temporary escape hatch —
