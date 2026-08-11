@@ -1,4 +1,6 @@
-// Fallback map for abbreviated HS codes → full KG-compatible codes
+// Fallback map for abbreviated HS codes → full KG-compatible codes.
+// The graph stores HS standards with a cluster letter (HSA-REI.B.3) that the
+// abbreviated form (A.REI.3) does not carry, so it cannot be derived — only mapped.
 const HS_CODE_MAP = {
   'A.REI.3':  'HSA-REI.B.3',
   'A.REI.6':  'HSA-REI.C.6',
@@ -9,33 +11,42 @@ const HS_CODE_MAP = {
   'F.IF.7':   'HSF-IF.C.7',
 };
 
-// Normalize CCSS code to match database format
+/**
+ * Normalize a CCSS code into the list of candidate statementCodes to OR together
+ * in the graph query. Returns most-likely-match first.
+ *
+ * Fixed 2026-08: the previous version emitted `CCSS.Math.Content.HS${normalized}`
+ * unconditionally, producing doubled prefixes such as
+ * `CCSS.Math.Content.HSHSA-APR-A.1` for codes that already began with HS.
+ */
 export function normalizeCCSSCode(ccss) {
-  // Remove any "CCSS.Math.Content." prefix if present
-  let code = ccss.replace(/^CCSS\.Math\.Content\./, '');
+  if (!ccss) return [];
 
-  // Check if it's a high school code (starts with letter like A-REI, F-IF, etc.)
-  const hsPattern = /^([A-Z]+)[.\-](.+)$/;
-  const hsMatch = code.match(hsPattern);
+  const code = String(ccss).trim().replace(/^CCSS\.Math\.Content\./, '');
+  if (!code) return [];
 
-  if (hsMatch) {
-    // High school: format is domain-cluster.standard (e.g., A-REI.1)
-    // Replace only the FIRST dot with hyphen, keep remaining dots
-    const firstDotIndex = code.indexOf('.');
-    if (firstDotIndex > 0) {
-      const normalized = code.substring(0, firstDotIndex) + '-' + code.substring(firstDotIndex + 1);
-      const candidates = [
-        code,
-        normalized,
-        `CCSS.Math.Content.HS${normalized}`  // Also try full format
-      ];
-      // If we have a known full KG code for this abbreviated form, prepend it
-      if (HS_CODE_MAP[code]) {
-        return [HS_CODE_MAP[code], ...candidates];
-      }
-      return candidates;
+  const candidates = [];
+
+  // Known abbreviated HS form → exact graph code. Highest confidence, so first.
+  if (HS_CODE_MAP[code]) candidates.push(HS_CODE_MAP[code]);
+
+  candidates.push(code);
+
+  // High school codes look like `A.REI.3` / `A-REI.B.3`: a letter-only domain,
+  // then the rest. The graph hyphenates the domain separator.
+  if (/^[A-Z]+[.-]/.test(code)) {
+    const firstDot = code.indexOf('.');
+    if (firstDot > 0) {
+      const hyphenated = `${code.slice(0, firstDot)}-${code.slice(firstDot + 1)}`;
+      candidates.push(hyphenated);
+
+      // Only prepend HS when it is not already present — this was the doubling bug.
+      const withHs = hyphenated.startsWith('HS') ? hyphenated : `HS${hyphenated}`;
+      candidates.push(withHs);
+      candidates.push(`CCSS.Math.Content.${withHs}`);
     }
   }
-  // Fallback: return the code as-is (e.g. 8.EE.C.7) so the query has at least one option
-  return [code];
+
+  // Deduplicate, preserving order.
+  return [...new Set(candidates.filter(Boolean))];
 }

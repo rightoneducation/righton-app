@@ -1,2 +1,5 @@
 Data/
 CLAUDE.md
+
+# eval run artifacts — raw prompts and model responses, large
+eval/runs/

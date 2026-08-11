@@ -326,18 +326,36 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   }
 
   // Learning science data
+  //
+  // PARITY: mirrors src/seed/generate-next-steps.ts. This previously swallowed
+  // every failure with `.catch(() => ({ standards: [] }))`, which is how a 404,
+  // three unresolved endpoint secrets and two 403s in May 2026 were recorded
+  // downstream as sessions that merely "had no learning science context".
+  // A failed call and an empty result must stay distinguishable.
   console.log(`  Learning science (${allCcss.join(', ')})...`);
   const lsResults = await Promise.all(
-    allCcss.map((ccss) =>
-      invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } })
-        .then((r) => parseJson(r))
-        .catch(() => ({ standards: [] }))
-    )
+    allCcss.map(async (ccss) => {
+      const raw = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, {
+        input: { ccss, sessionId: currentStub.id },
+      });
+      const parsed = parseJson(raw);
+      if (parsed?.ok === false) {
+        throw new Error(
+          `Knowledge graph call failed for ${ccss}: ${parsed?.error?.message ?? 'unknown error'}`
+        );
+      }
+      return { ccss, parsed };
+    })
   );
+
+  const unmatchedCcss = lsResults.filter((r) => !(r.parsed?.standards?.length > 0)).map((r) => r.ccss);
   const learningScienceData = {
-    standards: lsResults.flatMap((r) => r?.standards ?? []),
+    standards: lsResults.flatMap((r) => r.parsed?.standards ?? []),
   };
   console.log(`  ✓ ${learningScienceData.standards.length} standards`);
+  if (unmatchedCcss.length) {
+    console.warn(`  ⚠ [LS] no graph match for: ${unmatchedCcss.join(', ')}`);
+  }
   console.log(`  [LS] standards returned: ${learningScienceData.standards.length}`);
   for (const s of learningScienceData.standards) {
     console.log(`  [LS]   ${s.code}: ${s.prerequisiteStandards?.length ?? 0} prereqs, ${s.futureDependentStandards?.length ?? 0} future`);

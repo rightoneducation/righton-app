@@ -1,4 +1,5 @@
 import { loadSecret } from './util/loadsecrets.mjs';
+import { formatLearningScience } from './util/formatLearningScience.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -69,8 +70,21 @@ export const handler = async (event) => {
   const rawClassroomData      = event?.arguments?.input?.classroomData      ?? event?.input?.classroomData;
   const rawLearningScienceData = event?.arguments?.input?.learningScienceData ?? event?.input?.learningScienceData;
 
+  // Eval instrumentation. Additive and inert unless explicitly requested.
+  const wantTrace     = (event?.arguments?.input?.trace ?? event?.input?.trace) === true;
+  const traceSubCalls = [];
+  const recordSubCall = (label, model, completion, extra = {}) => {
+    if (!wantTrace) return;
+    traceSubCalls.push({ label, model, usage: completion?.usage ?? null, ...extra });
+  };
+
   if (rawClassroomData == null)       throw new Error('classroomData is required');
   if (rawLearningScienceData == null) throw new Error('learningScienceData is required');
+
+  const learningScienceData = typeof rawLearningScienceData === 'string'
+    ? JSON.parse(rawLearningScienceData)
+    : rawLearningScienceData;
+  const learningScienceSection = formatLearningScience(learningScienceData);
 
   const { classroom, currentSession, sessionHistory, ppq, wrongAnswerDist } =
     typeof rawClassroomData === 'string' ? JSON.parse(rawClassroomData) : rawClassroomData;
@@ -152,7 +166,7 @@ Specific rules:
 Plain prose text should remain as normal English — only wrap actual math expressions in delimiters. Example: "Students who multiply $\frac{2}{3}$ by the reciprocal will get $\frac{8}{9}$, but a common error is to get $\frac{4}{9}$."
 
 ## Learning Science Data
-${typeof rawLearningScienceData === 'string' ? rawLearningScienceData : JSON.stringify(rawLearningScienceData, null, 2)}
+${learningScienceSection}
 
 ## Classroom
 ${JSON.stringify(payload.classroom, null, 2)}
@@ -296,12 +310,16 @@ Return a JSON object with exactly these keys:
       });
       const content = result.choices[0]?.message?.content ?? '{}';
       const parsed = JSON.parse(content);
+      recordSubCall('enrich-misconception', 'gpt-4o-mini', result, { fellBack: false });
       return {
         wrongAnswerExplanations: Array.isArray(parsed.wrongAnswerExplanations) ? parsed.wrongAnswerExplanations : [],
         correctAnswerSolution: Array.isArray(parsed.correctAnswerSolution) ? parsed.correctAnswerSolution : [],
       };
     } catch (err) {
       console.warn('[microcoachLLMAnalysis] enrichMisconception failed:', err?.message);
+      recordSubCall('enrich-misconception', 'gpt-4o-mini', null, {
+        fellBack: true, reason: err?.message ?? 'error',
+      });
       return { wrongAnswerExplanations: [], correctAnswerSolution: [] };
     }
   };
@@ -348,9 +366,13 @@ Return a JSON object with exactly these keys:
       const raw = completion.choices[0]?.message?.content ?? '[]';
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed)) throw new Error('Validator returned non-array');
+      recordSubCall('validate-math-content', VALIDATOR_MODEL, completion, { fellBack: false });
       return parsed;
     } catch (err) {
       console.warn('[microcoachLLMAnalysis] validateMathContent failed:', err?.message);
+      recordSubCall('validate-math-content', VALIDATOR_MODEL, null, {
+        fellBack: true, reason: err?.message ?? 'error',
+      });
       return [];
     }
   };
@@ -367,6 +389,8 @@ Return a JSON object with exactly these keys:
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
+
+    recordSubCall('analysis-main', MODEL, completion, { fellBack: false });
 
     const structured = AnalysisResponse.parse(JSON.parse(raw));
 
@@ -413,6 +437,27 @@ Return a JSON object with exactly these keys:
       console.log(`[microcoachLLMAnalysis] validator corrected ${correctionCount} misconception(s)`);
     }
 
+    if (wantTrace) {
+      const stds = learningScienceData?.standards ?? [];
+      return JSON.stringify({
+        ...structured,
+        _trace: {
+          resolvedPrompt: userContent,
+          model: MODEL,
+          graphStandardCodes: stds.map((s) => s.code),
+          graphUnits: {
+            standards: stds.length,
+            learningComponents: stds.reduce((n, s) => n + (s.learningComponents?.length ?? 0), 0),
+            prerequisites: stds.reduce((n, s) => n + (s.prerequisiteStandards?.length ?? 0), 0),
+            downstream: stds.reduce((n, s) => n + (s.futureDependentStandards?.length ?? 0), 0),
+            lvnFactors: stds.reduce((n, s) => n + (s.lvnFactors?.length ?? 0), 0),
+          },
+          learningScienceSectionChars: learningScienceSection.length,
+          emittedStandardCodes: structured.misconceptions?.map((m) => m.ccssStandard) ?? [],
+          subCalls: traceSubCalls,
+        },
+      });
+    }
     return JSON.stringify(structured);
   } catch (error) {
     console.error('[microcoachLLMAnalysis] Error', {

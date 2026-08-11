@@ -504,18 +504,38 @@ async function processClassroom(gql: GqlFn, classroom: any, nextStepExamples: an
   }
 
   // 4. Learning science data
+  //
+  // This previously swallowed every failure with `.catch(() => ({ standards: [] }))`,
+  // which is how a 404, three unresolved endpoint secrets and two 403s in May 2026
+  // were recorded downstream as sessions that merely "had no learning science
+  // context". A failed call and an empty result are different things and must stay
+  // distinguishable.
   process.stdout.write(`  Learning science (${allCcss.join(', ')})...`);
   const lsResults = await Promise.all(
-    allCcss.map((ccss: string) =>
-      invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } })
-        .then((r: any) => parseJson(r))
-        .catch(() => ({ standards: [] }))
-    )
+    allCcss.map(async (ccss: string) => {
+      const raw = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, {
+        input: { ccss, sessionId: currentStub.id },
+      });
+      const parsed = parseJson(raw);
+      if (parsed?.ok === false) {
+        throw new Error(
+          `Knowledge graph call failed for ${ccss}: ${parsed?.error?.message ?? 'unknown error'}`
+        );
+      }
+      return { ccss, parsed };
+    })
   );
+
+  const unmatched = lsResults.filter((r) => !(r.parsed?.standards?.length > 0)).map((r) => r.ccss);
   const learningScienceData = {
-    standards: lsResults.flatMap((r: any) => r?.standards ?? []),
+    standards: lsResults.flatMap((r: any) => r.parsed?.standards ?? []),
   };
   console.log(` ✓  (${learningScienceData.standards.length} standards)`);
+  if (unmatched.length) {
+    // Not fatal — the graph genuinely has no entry for some codes — but it must be
+    // visible, because it silently changes what every downstream prompt receives.
+    console.warn(`  ⚠ [LS] no graph match for: ${unmatched.join(', ')}`);
+  }
   console.log(`  [LS] standards returned: ${learningScienceData.standards.length}`);
   for (const s of learningScienceData.standards) {
     console.log(`  [LS]   ${s.code}: ${s.prerequisiteStandards?.length ?? 0} prereqs, ${s.futureDependentStandards?.length ?? 0} future`);
