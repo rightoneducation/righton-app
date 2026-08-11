@@ -161,10 +161,10 @@ export const handler = async (event) => {
       ? ACTIVITY_STRUCTURES.map(s => `- ${s.name}: ${s.description}`).join('\n')
       : '(none provided — use your own judgment)';
 
-    const planPrompt = `You are an instructional design planner for a middle school math coaching tool.
+    const planPrompt = `You are an instructional design planner for a K-12 math coaching tool.
 
 A teacher will see activities for ${misconceptions.length} misconception(s) in a single session.
-Grade: ${classroomCtx.grade ?? 'unknown'} | Subject: ${classroomCtx.subject ?? 'math'} | Class size: ${classroomCtx.cohortSize ?? 'unknown'}
+Subject: ${classroomCtx.subject ?? 'math'} | Class size: ${classroomCtx.cohortSize ?? 'unknown'}
 
 Your job: assign a diverse set of activity structures across all misconceptions so that no two misconceptions use the same structure, and the overall session feels varied and pedagogically rich.
 
@@ -395,7 +395,7 @@ ${WHOLE_CLASS_DESC}
 `.trim();
 
   const userContent = `
-You are an expert K-12 math instructional coach designing a targeted intervention activity for early-career middle school teachers.
+You are an expert K-12 math instructional coach designing a targeted intervention activity for early-career teachers.
 
 ## Writing Style Requirements
 Apply these rules to every string you generate:
@@ -419,7 +419,7 @@ A planning step reviewed all misconceptions in this session and assigned this st
 ` : ''}
 
 ## Classroom Feasibility
-This activity will be used in a live middle school classroom by an early-career teacher. It must:
+This activity will be used in a live classroom by an early-career teacher. It must:
 ${CLASSROOM_FEASIBILITY.map(r => `- ${r}`).join('\n')}
 
 ## UDL-Informed Instruction
@@ -483,7 +483,7 @@ ${misconception.evidence?.aiThinkingPattern ? `**Student Thinking Pattern**: ${m
 ${misconception.successIndicators?.length ? `**Success Indicators** (what mastery looks like):\n${misconception.successIndicators.map((s) => `  - ${s}`).join('\n')}` : ''}
 
 ## Classroom Context
-Grade: ${classroomContext.grade ?? 'unknown'} | Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.cohortSize ?? 'unknown'}
+Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.cohortSize ?? 'unknown'}
 
 ---
 
@@ -516,7 +516,7 @@ Requirements for each field:
 - **tabs.activitySteps.incorrectWorkedExample1**, **incorrectWorkedExample2**, **incorrectWorkedExample3**: Three separate required fields, one incorrect worked example each. Every field must be populated. Each must:
   - Show a complete problem and the full incorrect student work step-by-step (not just the wrong answer)
   - Reflect the specific misconception error pattern (not a random mistake)
-  - Use grade-appropriate language for middle school
+  - Use language appropriate to the standard being addressed
   - Be self-contained — immediately usable on a board or slide with no additional prep
 
 **Critical rules for incorrect worked examples** (these are the most common failure mode):

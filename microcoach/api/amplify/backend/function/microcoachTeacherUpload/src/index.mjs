@@ -307,7 +307,7 @@ async function runPipeline(input) {
     input: {
       ppqText,
       classroomKey: classroom.classroomName,
-      grade: classroom.grade,
+      // grade deliberately not sent — see microcoachIngestPPQ
       subject: classroom.subject,
       state: classroom.state,
       schoolYear: classroom.schoolYear,

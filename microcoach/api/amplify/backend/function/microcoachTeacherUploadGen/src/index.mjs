@@ -436,7 +436,10 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   console.log(`  ✓ ${nextStepExamples.length} examples`);
 
   // Generate next step activities
-  const classroomContext = { grade: classroom.grade, subject: classroom.subject, cohortSize: classroom.cohortSize };
+  // PARITY with src/seed/generate-next-steps.ts: `grade` is deliberately excluded.
+  // The CCSS codes carry grade already, and the classroom field was unvalidated
+  // free text that produced contradictory prompts.
+  const classroomContext = { subject: classroom.subject, cohortSize: classroom.cohortSize };
   const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
 
   // Planning call — one cheap LLM call assigns diverse structures across all

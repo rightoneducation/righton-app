@@ -119,9 +119,12 @@ export const handler = async (event) => {
   }) : null;
 
   const payload = {
+    // `grade` is deliberately omitted. It came from a free-text UI field with no
+    // validation against the session's standards, and produced contradictory
+    // prompts (a grade-6 tag alongside high-school algebra standards). The CCSS
+    // codes already encode grade, so the model reads it from the standard itself.
     classroom: {
       classroomName: classroom?.classroomName,
-      grade: classroom?.grade,
       subject: classroom?.subject,
       cohortSize: classroom?.cohortSize,
     },

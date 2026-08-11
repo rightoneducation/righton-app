@@ -67,7 +67,7 @@ async function main() {
           input: {
             ppqText,
             classroomKey: classroom.key,
-            grade: classroom.grade,
+            // grade deliberately not sent — see microcoachIngestPPQ
             subject: classroom.subject,
             state: classroom.state,
             schoolYear: classroom.schoolYear,

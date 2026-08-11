@@ -51,7 +51,9 @@ export const handler = async (event) => {
 
   const ppqText      = input?.ppqText;
   const classroomKey = input?.classroomKey;
-  const grade        = input?.grade;
+  // `grade` is intentionally not read. It was an unvalidated free-text UI field
+  // that could contradict the standards in the document; the CCSS codes extracted
+  // from the PPQ itself carry grade already.
   const subject      = input?.subject;
   const state        = input?.state;
   const schoolYear   = input?.schoolYear;
@@ -81,7 +83,6 @@ Apply these rules to every string you generate:
 
 ## Classroom Context
 - Classroom: ${classroomKey}
-- Grade: ${grade}
 - Subject: ${subject}
 - State: ${state}
 - School Year: ${schoolYear}
