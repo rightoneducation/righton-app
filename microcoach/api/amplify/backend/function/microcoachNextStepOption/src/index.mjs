@@ -202,10 +202,31 @@ Return only the JSON array, no explanation.`;
       const parsed = JSON.parse(raw);
       // Handle both { assignments: [...] } and bare array responses
       const assignments = Array.isArray(parsed) ? parsed : (parsed.assignments ?? parsed[Object.keys(parsed)[0]] ?? []);
-      return JSON.stringify(assignments);
+
+      // Returns an envelope rather than a bare array so the call's token usage is
+      // visible. Previously this branch reported nothing, and its gpt-4o-mini spend
+      // was missing from every run manifest. Consumers accept both shapes, so a
+      // deployed Lambda on the old contract still works.
+      return JSON.stringify({
+        ok: true,
+        assignments,
+        ...(wantTrace && {
+          _trace: {
+            model: PLANNER_MODEL,
+            misconceptionCount: misconceptions.length,
+            resolvedPrompt: planPrompt,
+            subCalls: [{ label: 'plan-structures', model: PLANNER_MODEL, usage: completion?.usage ?? null, fellBack: false }],
+          },
+        }),
+      });
     } catch (err) {
+      // An empty array used to be indistinguishable from a failed call. Say which.
       console.error('[microcoachNextStepOption] planStructures failed:', err?.message);
-      return JSON.stringify([]);
+      return JSON.stringify({
+        ok: false,
+        assignments: [],
+        error: err?.message ?? 'planStructures failed',
+      });
     }
   }
 

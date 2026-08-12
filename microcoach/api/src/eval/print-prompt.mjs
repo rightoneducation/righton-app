@@ -14,8 +14,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { normalizeStandard } from '../api/amplify/backend/function/microcoachGetLearningScience/src/util/normalizeStandard.mjs';
-import { formatLearningScience } from '../api/amplify/backend/function/microcoachLLMAnalysis/src/util/formatLearningScience.mjs';
+import { normalizeStandard } from '../../amplify/backend/function/microcoachGetLearningScience/src/util/normalizeStandard.mjs';
+import { formatLearningScience } from '../../amplify/backend/function/microcoachLLMAnalysis/src/util/formatLearningScience.mjs';
 
 const arg = (flag, fallback = null) => {
   const i = process.argv.indexOf(flag);

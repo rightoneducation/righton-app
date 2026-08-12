@@ -25,7 +25,8 @@
     "post-analyze": "APPSYNC_SECRET_NAME=microcoach ts-node src/seed/post-analyze.ts",
     "sync-prompt-config": "node scripts/sync-prompt-config.mjs",
     "test": "jest",
-    "fixtures": "ts-node -e \"import {listFixtures,verifyFixtures} from './src/seed/fixtures';const v=Object.fromEntries(verifyFixtures().map(x=>[x.id,x.ok]));console.log('id        block           gr  resp  gStd  lvn comp  ref  sum  standards');for (const f of listFixtures() as any[]) console.log([f.id.padEnd(10), String(f.block).padEnd(16), String(f.grade).padStart(2), String(f.studentResponses).padStart(6),String(f.graphStandards).padStart(6), String(f.lvnFactors).padStart(5), String(f.learningComponents).padStart(5),(f.hasReferenceOutput?'  yes':'   no'), (v[f.id]?'   OK':' DRIFT'), '  '+(f.ccssStandards||[]).join(',')].join(''));\""
+    "fixtures": "ts-node -e \"import {listFixtures,verifyFixtures} from './src/seed/fixtures';const v=Object.fromEntries(verifyFixtures().map(x=>[x.id,x.ok]));console.log('id        block           gr  resp  gStd  lvn comp  ref  sum  standards');for (const f of listFixtures() as any[]) console.log([f.id.padEnd(10), String(f.block).padEnd(16), String(f.grade).padStart(2), String(f.studentResponses).padStart(6),String(f.graphStandards).padStart(6), String(f.lvnFactors).padStart(5), String(f.learningComponents).padStart(5),(f.hasReferenceOutput?'  yes':'   no'), (v[f.id]?'   OK':' DRIFT'), '  '+(f.ccssStandards||[]).join(',')].join(''));\"",
+    "enrich-fixtures": "ts-node src/seed/enrich-fixtures.ts"
   },
   "files": [
     "lib"

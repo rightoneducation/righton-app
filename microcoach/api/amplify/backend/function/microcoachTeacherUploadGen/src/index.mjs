@@ -111,6 +111,54 @@ function computeWrongAnswerDist(studentResponses) {
   return dist;
 }
 
+/**
+ * PARITY: mirrors computeMisconceptionReach in src/seed/generate-next-steps.ts.
+ *
+ * How many distinct students exhibited a misconception, counted from the response
+ * rows rather than estimated by a model. `wrongAnswers` is the ingest-time
+ * attribution — the specific answer options the source document's answer key ties
+ * to this misconception. Counting distinct students matters because someone wrong
+ * on two linked questions is still one student.
+ *
+ * Returns nulls when there is no attribution to work from, which is different from
+ * a count of zero (attribution existed, nobody chose those options).
+ */
+function computeMisconceptionReach(wrongAnswers, studentResponses) {
+  if (!wrongAnswers?.length) {
+    return { studentCount: null, studentPercent: null, linkStatus: 'unlinked' };
+  }
+
+  const targets = new Set(
+    wrongAnswers.map((w) => `${w.questionNumber}:${String(w.letter).trim().toUpperCase()}`)
+  );
+
+  const affected = new Set();
+  const respondents = new Set();
+
+  for (const sr of studentResponses) {
+    const sid = sr.studentId ?? sr.student;
+    if (sid == null) continue;
+    respondents.add(sid);
+    for (const qr of (sr.questionResponses ?? [])) {
+      if (qr.response == null) continue;
+      // A double-marked response ("BC") counts as having chosen both options.
+      const chosen = String(qr.response).trim().toUpperCase();
+      for (const letter of chosen) {
+        if (targets.has(`${qr.questionNumber}:${letter}`)) { affected.add(sid); break; }
+      }
+    }
+  }
+
+  // Denominator is every student with a response row, matching the convention the
+  // stored `classPercentCorrect` already uses — not per-question respondents.
+  const total = respondents.size;
+  return {
+    studentCount: affected.size,
+    studentPercent: total ? Math.round((affected.size / total) * 1000) / 1000 : null,
+    linkStatus: 'linked',
+  };
+}
+
 function getStudentPerformanceData(studentResponses, questionNumbers, studentNameMap) {
   if (!questionNumbers.length) return [];
   const qSet = new Set(questionNumbers);
@@ -189,7 +237,7 @@ function injectStudentsIntoGroups(activity, studentData) {
   };
 }
 
-function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learningScienceData, misconceptionExtras = []) {
+function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learningScienceData, misconceptionExtras = [], studentResponses = []) {
   const questionErrorRates = (ppqQuestions ?? [])
     .filter((q) => q.questionNumber != null && q.classPercentCorrect != null)
     .sort((a, b) => a.questionNumber - b.questionNumber)
@@ -224,10 +272,25 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
       ? m.impactedObjectiveCodes.map((code) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
       : (frameworkItem?.futureDependentStandards ?? []).map((r) => ({ standard: r.code, description: r.description }));
 
+    const reach = computeMisconceptionReach(m.wrongAnswers, studentResponses);
+
     return {
       id: `nextstep-ai-${i + 1}`,
+      // Positional `id` stays for UI compatibility; `sourceMisconceptionId` is the
+      // stable join key back to the ingested misconception, so output can be paired
+      // across runs whose titles the model reworded.
+      sourceMisconceptionId: m.sourceMisconceptionId ?? null,
       title: m.title,
+      // The model's own estimate. Deliberately kept alongside the computed count
+      // rather than overwritten by it — the gap between the two is a calibration
+      // signal worth scoring.
       frequency: m.frequency,
+      // Counted from the response rows via the ingest-time option attribution.
+      // null (not 0) when there was no attribution to count from.
+      studentCount: reach.studentCount,
+      studentPercent: reach.studentPercent,
+      wrongAnswers: m.wrongAnswers ?? [],
+      linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
       occurrence: m.occurrence,
       example: m.example ?? null,
@@ -456,7 +519,14 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
         classroomContext: JSON.stringify(classroomContext),
       },
     });
-    structurePlan = parseJson(raw) ?? [];
+    // PARITY: the planner now returns an envelope carrying `_trace`. Accept the old
+    // bare-array shape too, since the deployed Lambda may still be on that contract.
+    const parsed = parseJson(raw);
+    const plannerResult = Array.isArray(parsed) ? { ok: true, assignments: parsed } : (parsed ?? { ok: false, assignments: [] });
+    structurePlan = plannerResult.assignments ?? [];
+    if (plannerResult.ok === false) {
+      console.warn(`  ⚠ Structure planning failed (${plannerResult.error ?? 'unknown'}), generating without suggestions`);
+    }
     console.log(`  ✓ ${structurePlan.length} assignments`);
   } catch (err) {
     console.warn(`  ⚠ Structure planning failed, generating without suggestions: ${err}`);
@@ -517,7 +587,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   );
 
   // Build + save
-  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras);
+  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras, studentResponses);
   console.log(`  Saving ${nextSteps.length} next steps to session ${currentStub.id}...`);
   await gql(UPDATE_SESSION, {
     input: {

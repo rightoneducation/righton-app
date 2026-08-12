@@ -16,6 +16,9 @@ import { createGqlClient, GqlFn } from './appsync-config';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { RunCapture, NoopCapture, Capture } from './capture';
 import { loadFixture, listFixtures, verifyFixtures, normalizeRawGraphItems, Fixture } from './fixtures';
+import { maskQuery } from '../eval/maskQuery';
+import { MaskOptionEnum, KgQueryType } from '../eval/types';
+import { computeMisconceptionReach } from '../eval/computeReach';
 
 const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 
@@ -24,9 +27,17 @@ const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 // `--no-capture` skips the disk writes; `--condition <name>` is recorded in the
 // manifest so ablation runs are distinguishable.
 const CAPTURE_ENABLED = !process.argv.includes('--no-capture');
-const CONDITION = (() => {
+const CONDITION: MaskOptionEnum = (() => {
   const i = process.argv.indexOf('--condition');
-  return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : 'full';
+  const raw = i > -1 && process.argv[i + 1] ? process.argv[i + 1] : 'NONE';
+  const key = raw.toUpperCase() as keyof typeof MaskOptionEnum;
+  // An unrecognised name must not fall through to BASELINE — the run would be
+  // recorded in the manifest under a condition it never actually applied.
+  if (!(key in MaskOptionEnum)) {
+    const valid = Object.keys(MaskOptionEnum).filter((k) => isNaN(Number(k)));
+    throw new Error(`Unknown --condition "${raw}". Valid: ${valid.join(', ')}`);
+  }
+  return MaskOptionEnum[key];
 })();
 // Ask the Lambdas to echo `_trace` (resolved prompt, model, token usage, sub-calls).
 // Additive and inert when false, so production callers are unaffected.
@@ -373,6 +384,7 @@ function buildNextSteps(
     wrongAnswerExplanations: Array<{ answer: string; explanation: string }>;
     correctAnswerSolution: string[];
   }> = [],
+  studentResponses: any[] = [],
 ): any[] {
   const questionErrorRates = (ppqQuestions ?? [])
     .filter((q: any) => q.questionNumber != null && q.classPercentCorrect != null)
@@ -408,10 +420,25 @@ function buildNextSteps(
       ? m.impactedObjectiveCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
       : (frameworkItem?.futureDependentStandards ?? []).map((r: any) => ({ standard: r.code, description: r.description }));
 
+    const reach = computeMisconceptionReach(m.wrongAnswers, studentResponses);
+
     return {
       id: `nextstep-ai-${i + 1}`,
+      // Positional `id` stays for UI compatibility; `sourceMisconceptionId` is the
+      // stable join key back to the ingested misconception, so output can be paired
+      // across runs whose titles the model reworded.
+      sourceMisconceptionId: m.sourceMisconceptionId ?? null,
       title: m.title,
+      // The model's own estimate. Deliberately kept alongside the computed count
+      // rather than overwritten by it — the gap between the two is a calibration
+      // signal worth scoring.
       frequency: m.frequency,
+      // Counted from the response rows via the ingest-time option attribution.
+      // null (not 0) when there was no attribution to count from.
+      studentCount: reach.studentCount,
+      studentPercent: reach.studentPercent,
+      wrongAnswers: m.wrongAnswers ?? [],
+      linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
       occurrence: m.occurrence,
       example: m.example ?? null,
@@ -653,8 +680,15 @@ async function processClassroom(
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
 
   // 5. Misconception analysis
+  //
+  // The snapshot is the unmasked payload and stays that way — graph-derived rubric
+  // rows score against it, so masking it here would make a withheld condition score
+  // zero by construction. `injected` is what the prompts actually receive.
   capture.writeSnapshot(learningScienceData);
-  capture.writeInjected(learningScienceData);
+  const injected = {
+    standards: learningScienceData.standards.map((s: KgQueryType) => maskQuery(s, CONDITION)),
+  };
+  capture.writeInjected(injected);
 
   process.stdout.write(`  Misconception analysis...`);
   const analysisInput = {
@@ -665,7 +699,7 @@ async function processClassroom(
       ppq: augmentedPpq,
       wrongAnswerDist,
     }),
-    learningScienceData: JSON.stringify(learningScienceData),
+    learningScienceData: JSON.stringify(injected),
     trace: WANT_TRACE,
   };
   const analysisResult = await invokeLambda(`microcoachLLMAnalysis-${AMPLIFY_ENV}`, {
@@ -712,8 +746,17 @@ async function processClassroom(
       trace: WANT_TRACE,
     };
     const raw = await invokeLambda(`microcoachNextStepOption-${AMPLIFY_ENV}`, { input: plannerInput });
-    structurePlan = parseJson(raw) ?? [];
-    capture.recordCall('planner', plannerInput, structurePlan);
+    // The planner used to return a bare array; it now returns an envelope carrying
+    // `_trace` so its tokens land in the manifest. Accept both, because the deployed
+    // Lambda may still be on the old contract.
+    const parsed = parseJson(raw);
+    const plannerResult = Array.isArray(parsed) ? { ok: true, assignments: parsed } : (parsed ?? { ok: false, assignments: [] });
+    structurePlan = plannerResult.assignments ?? [];
+    // Record the envelope, not the array — capture reads `_trace` off the output.
+    capture.recordCall('planner', plannerInput, plannerResult);
+    if (plannerResult.ok === false) {
+      console.log(` ✗ planner failed (${plannerResult.error ?? 'unknown'}) — activities will generate without suggested structures`);
+    }
     console.log(` ✓  ${structurePlan.length} assignments`);
   } catch (err) {
     console.warn(`\n  ⚠ Structure planning failed, generating without suggestions: ${err}`);
@@ -738,7 +781,7 @@ async function processClassroom(
       );
       const baseInput = {
         misconception: JSON.stringify(m),
-        learningScienceData: JSON.stringify(learningScienceData),
+        learningScienceData: JSON.stringify(injected),
         classroomContext: JSON.stringify(classroomContext),
         ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
       };
@@ -780,7 +823,10 @@ async function processClassroom(
   );
 
   // 7. Build + save
-  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras);
+  // `injected`, not the snapshot: output.json is the artifact under test and must
+  // reflect what the pipeline actually had. Scoring reads ground truth from
+  // kg-snapshot.json separately.
+  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, injected, misconceptionExtras, studentResponses);
   if (fixture) {
     // Fixture runs never write. The pilot sessions are a measurement substrate, and
     // writing generated output back would overwrite the very records the fixture was
@@ -818,12 +864,37 @@ async function processClassroom(
                  === (m.ccssStandard ?? '').replace(/\s/g, '').toLowerCase()
       )
     ).length,
+    // A run where the model failed to link its output back to the ingested
+    // misconceptions is not comparable to one where the link held, so the count
+    // has to be visible in the manifest rather than inferred later from output.json.
+    sourceMisconceptionMatched: (() => {
+      const sourceIds = new Set(
+        (currentSession?.misconceptions?.items ?? []).map((m: any) => m.id)
+      );
+      return misconceptions.filter((m: any) => sourceIds.has(m.sourceMisconceptionId)).length;
+    })(),
+    sourceMisconceptionAvailable: (currentSession?.misconceptions?.items ?? []).length,
+    // A run where the option attribution never arrived is not comparable to one
+    // where it did, so the counting chain's health goes in the manifest rather than
+    // being inferred from output.json later.
+    wrongAnswerLinked: nextSteps.filter((n: any) => n.linkStatus === 'linked').length,
+    wrongAnswerRefs: nextSteps.reduce((n: number, s: any) => n + (s.wrongAnswers?.length ?? 0), 0),
+    studentCountTotals: nextSteps.map((n: any) => ({
+      id: n.id, title: n.title, studentCount: n.studentCount, studentPercent: n.studentPercent,
+      frequency: n.frequency,
+    })),
   });
   if (manifest) {
     const t = manifest.tokens;
     console.log(`  Captured → eval/runs/${manifest.runId}`);
     console.log(`    ${manifest.modelCalls} calls · ${t.total.toLocaleString()} tokens · models: ${manifest.models.join(', ')}`);
     console.log(`    targetStandard matched on ${manifest.targetStandardMatched}/${manifest.misconceptionCount} misconceptions`);
+    console.log(`    sourceMisconceptionId linked on ${manifest.sourceMisconceptionMatched}/${manifest.misconceptionCount} (${manifest.sourceMisconceptionAvailable} ingested)`);
+    console.log(`    wrong-answer attribution on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
+    for (const s of manifest.studentCountTotals) {
+      const n = s.studentCount == null ? 'not linked' : `${s.studentCount} students (${Math.round((s.studentPercent ?? 0) * 100)}%)`;
+      console.log(`      ${s.title}: ${n} · model said "${s.frequency}"`);
+    }
     if (manifest.silentFallbacks.length) {
       console.log(`    ⚠ ${manifest.silentFallbacks.length} silent validator fallback(s) — see manifest.json`);
     }

@@ -2,8 +2,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
+import { MaskOptionEnum } from '../eval/types';
 
-const RUNS_ROOT = path.resolve(__dirname, '../../../eval/runs');
+const RUNS_ROOT = path.resolve(__dirname, '../eval/runs');
 
 export interface RunOptions {
   classroomId: string;
@@ -11,7 +12,7 @@ export interface RunOptions {
   sessionId: string;
   sessionLabel: string;
   amplifyEnv: string;
-  condition?: string;
+  condition?: MaskOptionEnum;
 }
 
 export interface CallTrace {
@@ -55,7 +56,7 @@ export class RunCapture {
   constructor(opts: RunOptions) {
     this.opts = opts;
     const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    const cond = opts.condition ? `-${slug(opts.condition)}` : '';
+    const cond = `-${slug(opts.condition ?? MaskOptionEnum.NONE)}`;
     this.runId = `${slug(opts.classroomName)}-${slug(opts.sessionLabel)}${cond}-${stamp}`;
     this.dir = path.join(RUNS_ROOT, this.runId);
     fs.mkdirSync(path.join(this.dir, 'calls'), { recursive: true });
@@ -86,16 +87,23 @@ export class RunCapture {
     const trace: CallTrace | undefined = output?._trace;
 
     if (trace?.model) this.models.add(trace.model);
-    for (const sc of trace?.subCalls ?? []) {
+
+    const addUsage = (u: CallTrace['usage']) => {
+      if (!u) return;
+      this.tokens.prompt += u.prompt_tokens ?? 0;
+      this.tokens.completion += u.completion_tokens ?? 0;
+      this.tokens.total += u.total_tokens ?? 0;
+    };
+
+    const subCalls = trace?.subCalls ?? [];
+    for (const sc of subCalls) {
       if (sc.model) this.models.add(sc.model);
-      const u = sc.usage;
-      if (u) {
-        this.tokens.prompt += u.prompt_tokens ?? 0;
-        this.tokens.completion += u.completion_tokens ?? 0;
-        this.tokens.total += u.total_tokens ?? 0;
-      }
+      addUsage(sc.usage);
       if (sc.fellBack) this.fallbacks.push({ call: name, label: sc.label, reason: sc.reason });
     }
+    // A Lambda that makes a single model call reports usage at the top level with no
+    // subCalls. Counting only subCalls silently zeroed those out of every manifest.
+    if (subCalls.length === 0) addUsage(trace?.usage);
 
     this.write(`calls/${n}-${name}.json`, { name, at: new Date().toISOString(), input, output });
     if (trace?.resolvedPrompt) {
@@ -120,7 +128,7 @@ export class RunCapture {
       wallClockMs: Date.now() - this.startedAt,
       gitSha: gitSha(),
       amplifyEnv: this.opts.amplifyEnv,
-      condition: this.opts.condition ?? 'full',
+      condition: this.opts.condition ?? MaskOptionEnum.NONE,
       classroomId: this.opts.classroomId,
       classroomName: this.opts.classroomName,
       sessionId: this.opts.sessionId,

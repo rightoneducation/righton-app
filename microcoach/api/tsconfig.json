@@ -10,5 +10,13 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "lib",
+    "node_modules",
+    "src/eval/print-prompt.mjs",
+    "src/eval/runs"
+  ]
 }

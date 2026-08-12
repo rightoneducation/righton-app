@@ -44,6 +44,7 @@ const Misconception = z.object({
   title: z.string().describe('Short name for the misconception'),
   description: z.string().describe('Full explanation of the misconception and why students hold it'),
   aiReasoning: z.string().optional().describe('How the assessment data supports identifying this misconception'),
+  sourceMisconceptionId: z.string().optional().describe('The `id` of the misconception in currentSession.misconceptions that this was derived from. Omit only when this misconception is genuinely new and has no counterpart in that list.'),
   frequency: z.enum(['many', 'some', 'few']).describe(`"many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%`),
   isCore: z.boolean().describe('true for the single highest-priority misconception only; false for all others'),
   occurrence: z.enum(['first', 'recurring']).describe('"recurring" only if this pattern appeared in session history'),
@@ -102,6 +103,68 @@ export const handler = async (event) => {
     ...(a.confidenceStats != null && { confidenceStats: a.confidenceStats }),
   }) : null;
 
+  /**
+   * Renders the answer options with, per option, its text, how many students chose
+   * it, and which ingested misconception it was attributed to at ingest time.
+   *
+   * Option text only exists when a session has been enriched from its source
+   * document. Without it this degrades to bare letters and counts — which is what
+   * every run before this change had, and why the model used to invent values like
+   * "8/6" for what were really option letters.
+   *
+   * `dist` is `{ [questionNumber]: { [answer]: studentCount } }`.
+   */
+  const formatAnswerOptions = (questions, dist, misconceptions) => {
+    if (!Array.isArray(questions) || !questions.length) {
+      return 'No question data available for this assessment.';
+    }
+
+    // (questionNumber, letter) -> misconception title, from the ingest-time linkage
+    const attribution = new Map();
+    for (const m of misconceptions ?? []) {
+      for (const w of m.wrongAnswers ?? []) {
+        attribution.set(`${w.questionNumber}:${String(w.letter).toUpperCase()}`, m.title);
+      }
+    }
+
+    const countFor = (qNum, letter) => {
+      const answers = dist?.[qNum] ?? {};
+      // A double-marked response like "BC" counts toward both letters.
+      return Object.entries(answers)
+        .filter(([ans]) => String(ans).toUpperCase().includes(letter))
+        .reduce((n, [, c]) => n + c, 0);
+    };
+
+    return [...questions]
+      .sort((a, b) => (a.questionNumber ?? 0) - (b.questionNumber ?? 0))
+      .map((q) => {
+        const pct = q.classPercentCorrect != null
+          ? `${Math.round(q.classPercentCorrect * 100)}% correct`
+          : 'percent correct unknown';
+        const header = `Q${q.questionNumber} (correct: ${q.correctAnswer || '?'}, ${pct})`;
+
+        if (!Array.isArray(q.answerChoices) || !q.answerChoices.length) {
+          const answers = dist?.[q.questionNumber] ?? {};
+          const chosen = Object.entries(answers)
+            .sort((a, b) => b[1] - a[1])
+            .map(([ans, n]) => `${ans} — ${n} student${n === 1 ? '' : 's'}`)
+            .join('; ');
+          return `${header}\n  wrong answers chosen: ${chosen || 'none recorded'}`;
+        }
+
+        const rows = q.answerChoices.map((opt) => {
+          const letter = String(opt.letter).toUpperCase();
+          if (opt.isCorrect) return `  ${letter}. ${opt.text}  [correct answer]`;
+          const n = countFor(q.questionNumber, letter);
+          const who = attribution.get(`${q.questionNumber}:${letter}`);
+          return `  ${letter}. ${opt.text}  — ${n} student${n === 1 ? '' : 's'}` +
+                 (who ? `, attributed to "${who}"` : '');
+        });
+        return `${header}\n${rows.join('\n')}`;
+      })
+      .join('\n\n');
+  };
+
   const trimSession = (s) => s ? ({
     sessionLabel: s.sessionLabel,
     weekNumber: s.weekNumber,
@@ -109,12 +172,20 @@ export const handler = async (event) => {
     ccssStandards: s.ccssStandards,
     assessments: s.assessments?.items?.map(trimAssessment),
     misconceptions: s.misconceptions?.items?.map((m) => ({
+      // `id` is the join key between an ingested misconception and the analysis
+      // output derived from it. Without it the only link is the title string,
+      // which the model rewords freely between runs.
+      id: m.id,
       title: m.title,
       ccssStandard: m.ccssStandard,
       severity: m.severity,
       occurrence: m.occurrence,
       studentCount: m.studentCount,
       studentPercent: m.studentPercent,
+      // The ingest-time option attribution. Carried so the prompt can show which
+      // wrong answers belong to which misconception, and so the count computed
+      // downstream is traceable to something the model was actually shown.
+      wrongAnswers: m.wrongAnswers,
     })),
   }) : null;
 
@@ -131,6 +202,7 @@ export const handler = async (event) => {
     currentSession: trimSession(currentSession),
     sessionHistory: Array.isArray(sessionHistory) ? sessionHistory.map(trimSession) : [],
     ppq: trimAssessment(ppq),
+    wrongAnswerDist: wrongAnswerDist ?? {},
   };
 
   const apiSecret = await loadSecret(apiSecretName);
@@ -180,6 +252,14 @@ ${JSON.stringify(payload.currentSession, null, 2)}
 ## Current PPQ Assessment
 ${JSON.stringify(payload.ppq, null, 2)}
 
+## Answer Options and What Students Chose
+Every option on every question, how many students chose it, and — where the source
+document recorded it — which misconception that option was attributed to at ingest.
+Treat these attributions as given: they come from the printed answer key, not from
+inference. Ground your evidence and examples in this table rather than inventing
+plausible-looking values.
+${formatAnswerOptions(payload.ppq?.questions, payload.wrongAnswerDist, payload.currentSession?.misconceptions)}
+
 ## Session History (prior sessions, oldest first)
 ${payload.sessionHistory.length ? JSON.stringify(payload.sessionHistory, null, 2) : 'No prior sessions.'}
 
@@ -199,6 +279,7 @@ which have improved, which are newly emerging.
 **4. Misconceptions** — Identify ALL significant misconceptions evidenced by the assessment data:
 - Ground each misconception in specific question numbers and performance rates
 - evidence.source: cite specific question numbers (e.g. "PPQ Q3, Q5")
+- sourceMisconceptionId: set this to the \`id\` of the entry in \`currentSession.misconceptions\` that this misconception is derived from, even if you have reworded its title or broadened its description. Omit the field ONLY when the misconception has no counterpart in that list. Never invent an id.
 - successIndicators: ${SUCCESS_IND_MIN}-${SUCCESS_IND_MAX} specific, observable student behaviors that demonstrate mastery
 
 **Core Selection** — Set \`isCore: true\` on the single highest-leverage misconception using this weighted model:
@@ -265,24 +346,56 @@ Return JSON matching the schema.
       .map((q) => `Q${q.questionNumber}: correct answer = ${q.correctAnswer}`)
       .join('\n');
 
-    // Collect top wrong answers if distribution data is available
-    let topAnswers = [];
-    if (wrongAnswerDist && qNums.length) {
+    // Prefer the misconception's own ingest-time option attribution over
+    // re-deriving questions from `evidence.source` free text.
+    const linked = (misconception.wrongAnswers ?? []).map(
+      (w) => ({ questionNumber: w.questionNumber, letter: String(w.letter).toUpperCase() })
+    );
+
+    // Collect the wrong answers to explain, with their real option text where the
+    // session has been enriched from its source document.
+    let wrongAnswerLines = [];
+    const optionText = (qNum, letter) => {
+      const q = ppqQuestions.find((x) => x.questionNumber === qNum);
+      return q?.answerChoices?.find((o) => String(o.letter).toUpperCase() === letter)?.text ?? null;
+    };
+    const countFor = (qNum, letter) =>
+      Object.entries(wrongAnswerDist?.[qNum] ?? {})
+        .filter(([ans]) => String(ans).toUpperCase().includes(letter))
+        .reduce((n, [, c]) => n + c, 0);
+
+    if (linked.length) {
+      wrongAnswerLines = linked.map(({ questionNumber, letter }) => {
+        const text = optionText(questionNumber, letter);
+        const n = countFor(questionNumber, letter);
+        return `Q${questionNumber} option ${letter}${text ? `: "${text}"` : ''} — chosen by ${n} student${n === 1 ? '' : 's'}`;
+      });
+    } else if (wrongAnswerDist && qNums.length) {
       const combined = {};
       for (const qn of qNums) {
         for (const [ans, count] of Object.entries(wrongAnswerDist[qn] ?? {})) {
-          combined[ans] = (combined[ans] ?? 0) + count;
+          combined[`${qn}:${ans}`] = count;
         }
       }
-      topAnswers = Object.entries(combined)
+      wrongAnswerLines = Object.entries(combined)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 4)
-        .map(([ans]) => ans);
+        .map(([key, n]) => {
+          const [qn, ans] = key.split(':');
+          const text = optionText(Number(qn), String(ans).toUpperCase());
+          return `Q${qn} option ${ans}${text ? `: "${text}"` : ''} — chosen by ${n} student${n === 1 ? '' : 's'}`;
+        });
     }
 
-    const wrongAnswerBlock = topAnswers.length
-      ? `Students commonly gave these wrong answers: ${topAnswers.join(', ')}\n\nFor each wrong answer, provide a brief explanation of the likely thinking pattern or conceptual error. The "answer" field must be the actual mathematical value or expression the student wrote (e.g. "8/6", "−2", "multiplied instead of divided") — never a letter like "A" or "B". If the raw value is a letter, infer the likely mathematical expression from the misconception context and correct answer.`
-      : `No wrong answer distribution is available. Omit the "wrongAnswerExplanations" array (return []).`;
+    // The old version of this block told the model that if the raw value was a
+    // letter it should "infer the likely mathematical expression" — with no option
+    // text anywhere in the pipeline, that meant inventing one, and real runs
+    // produced four mutually inconsistent answer domains in a single call. When
+    // option text is present, use it verbatim; when it is absent, say so rather
+    // than asking for a guess.
+    const wrongAnswerBlock = wrongAnswerLines.length
+      ? `Students chose these wrong answers:\n${wrongAnswerLines.join('\n')}\n\nFor each one, explain the likely thinking pattern or conceptual error. Set the "answer" field to the option text shown above, quoted as given. Where no option text is shown, use the option letter itself — do not invent a mathematical expression.`
+      : `No wrong answer data is available. Omit the "wrongAnswerExplanations" array (return []).`;
 
     const prompt = `You are a math education expert analyzing a student misconception.
 
@@ -397,6 +510,27 @@ Return a JSON object with exactly these keys:
 
     const structured = AnalysisResponse.parse(JSON.parse(raw));
 
+    // Carry the ingest-time option attribution onto each analysis misconception via
+    // the id it claims to derive from. The analysis model never invents this link —
+    // it only says which ingested misconception it reworded, and the options come
+    // along. A misconception the model marked as genuinely new has no attribution,
+    // and correctly gets an empty list.
+    const ingestLinks = new Map(
+      (payload.currentSession?.misconceptions ?? [])
+        .filter((m) => m.id)
+        .map((m) => [m.id, m.wrongAnswers ?? []])
+    );
+    let linkedCount = 0;
+    structured.misconceptions = structured.misconceptions.map((m) => {
+      const wrongAnswers = ingestLinks.get(m.sourceMisconceptionId) ?? [];
+      if (wrongAnswers.length) linkedCount += 1;
+      return { ...m, wrongAnswers };
+    });
+    console.log(
+      `[microcoachLLMAnalysis] option attribution carried to ${linkedCount}/${structured.misconceptions.length} misconceptions ` +
+      `(${ingestLinks.size} ingested available)`
+    );
+
     // Secondary pass: enrich each misconception with solution steps + distractor expansions
     const ppqQs = payload.ppq?.questions ?? [];
     const enrichments = await Promise.all(
@@ -409,22 +543,46 @@ Return a JSON object with exactly these keys:
     }));
 
     // Third pass: validate and correct math-critical fields
-    const validatedItems = await validateMathContent(structured.misconceptions);
+    const rawValidatedItems = await validateMathContent(structured.misconceptions);
+    // The merge below is positional, so a short or reordered validator response would
+    // graft one misconception's corrected math onto another. Only trust an exact-length
+    // reply; anything else is discarded and the originals stand.
+    const validatedItems =
+      rawValidatedItems.length === structured.misconceptions.length ? rawValidatedItems : [];
+    if (rawValidatedItems.length && !validatedItems.length) {
+      console.warn(
+        `[microcoachLLMAnalysis] validator returned ${rawValidatedItems.length} items for ` +
+        `${structured.misconceptions.length} misconceptions — corrections discarded`
+      );
+    }
     let correctionCount = 0;
     structured.misconceptions = structured.misconceptions.map((m, i) => {
       const v = validatedItems[i];
       if (!v) return m;
+      // Only reconstruct `example` / `evidence` when there is something to put in
+      // them. Building them unconditionally gave misconceptions that legitimately
+      // had neither an `example: {}` / `evidence: {}`, which serialises as an empty
+      // object and reads downstream as "present but blank" rather than "absent".
+      const nextExample =
+        (v.exampleIncorrect ?? m.example?.incorrect) != null ||
+        (v.exampleCorrect ?? m.example?.correct) != null
+          ? {
+              incorrect: v.exampleIncorrect ?? m.example?.incorrect,
+              correct: v.exampleCorrect ?? m.example?.correct,
+            }
+          : m.example;
+
+      const nextMostCommonError = v.mostCommonError ?? m.evidence?.mostCommonError;
+      const nextEvidence =
+        m.evidence != null || nextMostCommonError != null
+          ? { ...m.evidence, mostCommonError: nextMostCommonError }
+          : m.evidence;
+
       const corrected = {
         ...m,
         description: v.description ?? m.description,
-        example: {
-          incorrect: v.exampleIncorrect ?? m.example?.incorrect,
-          correct: v.exampleCorrect ?? m.example?.correct,
-        },
-        evidence: {
-          ...m.evidence,
-          mostCommonError: v.mostCommonError ?? m.evidence?.mostCommonError,
-        },
+        example: nextExample,
+        evidence: nextEvidence,
         correctAnswerSolution: v.correctAnswerSolution ?? m.correctAnswerSolution,
         wrongAnswerExplanations: v.wrongAnswerExplanations ?? m.wrongAnswerExplanations,
       };

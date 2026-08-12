@@ -5,10 +5,6 @@
     "prototype"
   ],
   "scripts": {
-    "eval:prompt": "node eval/print-prompt.mjs",
-    "eval:probe": "ts-node --project eval/tsconfig.json eval/probe.ts",
-    "eval:run": "ts-node --project eval/tsconfig.json eval/run.ts",
-    "eval:score": "ts-node --project eval/tsconfig.json eval/score.ts",
-    "eval:analyze": "ts-node --project eval/tsconfig.json eval/analyze.ts"
+    "eval:prompt": "node api/src/eval/print-prompt.mjs"
   }
 }

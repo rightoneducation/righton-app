@@ -4,10 +4,7 @@ import * as path from 'path';
 import * as crypto from 'crypto';
 import { pathToFileURL } from 'url';
 
-// Data lives under microcoach/eval/fixtures; this loader lives in api/src/seed
-// because api/tsconfig.json pins rootDir to src/. Resolved at runtime, so the
-// fixture files are never pulled into the api build graph.
-const FIXTURE_DIR = path.resolve(__dirname, '../../../eval/fixtures');
+const FIXTURE_DIR = path.resolve(__dirname, '../eval/fixtures');
 const SESSION_DIR = path.join(FIXTURE_DIR, 'sessions');
 
 // The graph normalizer is the Lambda's own module, imported dynamically so it is
@@ -113,6 +110,22 @@ export function loadFixture(idOrPrefix: string): Fixture {
   const ppq = assessments.find((a) => a.type === 'PPQ') ?? null;
   if (!ppq) throw new Error(`Fixture ${id} has no PPQ assessment`);
 
+  // The archive holds every response row for the session, PPQ and POST_PPQ alike.
+  // The live path fetches by `assessmentId: ppq.id`, so replaying the archive
+  // unfiltered fed post-test answers into wrongAnswerDist and the confidence stats
+  // on four of the five fixtures. Scope it, then give each row the `studentId` the
+  // archive renamed to `student` — every consumer reads `sr.studentId`.
+  const ppqResponses: any[] = (d.input?.studentResponses ?? [])
+    .filter((sr: any) => sr.assessmentId === ppq.id)
+    .map((sr: any) => ({ ...sr, studentId: sr.studentId ?? sr.student }));
+
+  // Rebuild the roster from the responses. The archive carries no student records,
+  // and an empty roster silently disables grouping (studentNameMap never resolves).
+  // The pseudonymised id doubles as the display name, which keeps real names out of
+  // the run artifacts written to disk.
+  const students = [...new Set(ppqResponses.map((sr: any) => sr.studentId).filter(Boolean))]
+    .map((sid) => ({ id: sid, name: sid, externalId: sid }));
+
   // The archive keeps the classroom's name under `name`; the DB row uses
   // `classroomName`. Provide both so downstream code reads either.
   const rc = d.recoveredOutput?.recoveredClassroom ?? {};
@@ -125,7 +138,7 @@ export function loadFixture(idOrPrefix: string): Fixture {
     cohortSize: d.classroom?.cohortSize ?? rc.cohortSize,
     state: rc.state,
     schoolYear: rc.schoolYear,
-    students: { items: [] as any[] },
+    students: { items: students },
   };
 
   const currentSession = {
@@ -150,7 +163,7 @@ export function loadFixture(idOrPrefix: string): Fixture {
     classroom,
     currentSession,
     ppq,
-    studentResponses: d.input?.studentResponses ?? [],
+    studentResponses: ppqResponses,
     rawGraphItems,
     referenceOutput: d.recoveredOutput?.misconceptions ?? [],
     historySessions: [],

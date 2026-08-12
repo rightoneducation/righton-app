@@ -299,7 +299,7 @@ input GenerateNextStepOptionInput {
 input IngestPPQInput {
   ppqText: String!                  # Raw text extracted from PPQ.docx via mammoth
   classroomKey: String!             # e.g. "Classroom4"
-  grade: Int!
+  grade: Int                        # nullable: no longer sent — CCSS codes carry grade
   subject: String!
   state: String!
   schoolYear: String!
