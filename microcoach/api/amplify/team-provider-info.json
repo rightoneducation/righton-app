@@ -22,7 +22,7 @@
         },
         "microcoachIngestPPQ": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
-          "s3Key": "amplify-builds/microcoachIngestPPQ-4e343367667433523576-build.zip"
+          "s3Key": "amplify-builds/microcoachIngestPPQ-4a7937576f6f564c5441-build.zip"
         },
         "microcoachInitialEvaluator": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
@@ -30,7 +30,7 @@
         },
         "microcoachLLMAnalysis": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
-          "s3Key": "amplify-builds/microcoachLLMAnalysis-5a4f7632764b48387654-build.zip"
+          "s3Key": "amplify-builds/microcoachLLMAnalysis-336577316543334d4b4e-build.zip"
         },
         "microcoachLLMVerify": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
@@ -38,7 +38,7 @@
         },
         "microcoachNextStepOption": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
-          "s3Key": "amplify-builds/microcoachNextStepOption-6752446c464a4e38334d-build.zip"
+          "s3Key": "amplify-builds/microcoachNextStepOption-76376759753249695865-build.zip"
         },
         "microcoachRegenEvaluator": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
@@ -46,11 +46,11 @@
         },
         "microcoachTeacherUpload": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
-          "s3Key": "amplify-builds/microcoachTeacherUpload-6d545a53584158387a62-build.zip"
+          "s3Key": "amplify-builds/microcoachTeacherUpload-465573455a315152386a-build.zip"
         },
         "microcoachTeacherUploadGen": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
-          "s3Key": "amplify-builds/microcoachTeacherUploadGen-76486b31524d414a496c-build.zip"
+          "s3Key": "amplify-builds/microcoachTeacherUploadGen-6d467a2b776b3274702f-build.zip"
         }
       },
       "api": {

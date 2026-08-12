@@ -70,6 +70,7 @@ async function main() {
   const argv = process.argv.slice(2);
   const only = argv.includes('--fixture') ? argv[argv.indexOf('--fixture') + 1] : null;
   const dryRun = argv.includes('--dry-run');
+  const force = argv.includes('--force');
 
   const mod = await esmImport(pathToFileURL(PARSER_PATH).href);
   const { parsePpqTable, reconcileQuestionNumbers } = mod;
@@ -86,6 +87,17 @@ async function main() {
     const file = path.join(SESSION_DIR, `${summary.id}.json`);
     const d = JSON.parse(fs.readFileSync(file, 'utf8'));
     process.stdout.write(`  ${summary.id}  ${d.classroom?.name} / ${d.session?.sessionLabel}  `);
+
+    // The attribution is data once written, not something to re-derive. Re-running
+    // the model produces a different grouping (measured: one misconception moved
+    // from 4 students to 0 between two samples), so an already-enriched fixture is
+    // left alone. `--force` exists only for a deliberate redo.
+    const alreadyEnriched = (d.output?.misconceptions ?? []).some((m: any) => m.wrongAnswers?.length);
+    if (alreadyEnriched && !force) {
+      const refs = d.output.misconceptions.reduce((n: number, m: any) => n + (m.wrongAnswers?.length ?? 0), 0);
+      console.log(`— already enriched (${refs} option refs), leaving as-is`);
+      continue;
+    }
 
     const docx = docxPathFor(d);
     if (!docx) {

@@ -148,6 +148,10 @@ export const handler = async (event) => {
 
   const openai = new OpenAI({ apiKey });
 
+  // Declared here rather than alongside the activity-generation inputs below,
+  // because the planning branch returns before reaching them and reads this.
+  const wantTrace = (event?.arguments?.input?.trace ?? event?.input?.trace) === true;
+
   // ── Planning mode: assign diverse structures across all misconceptions ────────
   // Triggered by planStructures: true. Runs once per classroom before generation.
   const planStructures = event?.arguments?.input?.planStructures ?? event?.input?.planStructures;
@@ -241,7 +245,6 @@ Return only the JSON array, no explanation.`;
 
   // Eval instrumentation. Additive and inert unless explicitly requested, so
   // production callers see byte-identical responses.
-  const wantTrace     = (event?.arguments?.input?.trace ?? event?.input?.trace) === true;
   const traceSubCalls = [];
   const recordSubCall = (label, model, completion, extra = {}) => {
     if (!wantTrace) return;

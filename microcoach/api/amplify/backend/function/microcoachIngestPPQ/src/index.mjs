@@ -182,8 +182,12 @@ export const handler = async (event) => {
   const weekNumber   = input?.weekNumber;
   const occurrence   = input?.occurrence ?? 'first';
 
-  if (!ppqText)      throw new Error('ppqText is required');
-  if (!classroomKey) throw new Error('classroomKey is required');
+  // Link-only mode attributes options to misconceptions that already exist. It has
+  // no classroom context and needs none — the guard below applies to full ingest only.
+  const isLinkOnly = Array.isArray(input?.existingMisconceptions);
+
+  if (!ppqText) throw new Error('ppqText is required');
+  if (!classroomKey && !isLinkOnly) throw new Error('classroomKey is required');
 
   const apiSecret = await loadSecret(apiSecretName);
   const { openai_api, OPENAI_API_KEY, API } = JSON.parse(apiSecret);
@@ -197,7 +201,7 @@ export const handler = async (event) => {
   // re-extracting them. Used to backfill archived sessions: a full re-ingest would
   // mint new misconceptions with new ids and titles, discarding the very records
   // the archive was captured from.
-  if (Array.isArray(input?.existingMisconceptions)) {
+  if (isLinkOnly) {
     return JSON.stringify(
       await linkExistingMisconceptions(openai, ppqText, input.existingMisconceptions)
     );
