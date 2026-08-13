@@ -19,6 +19,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { pathToFileURL } from 'url';
 import * as XLSX from 'xlsx';
 import {
   ParsedAssessmentData,
@@ -30,9 +31,18 @@ import {
   CreatedAssessment,
   CreatedStudent,
   CreatedMisconception,
-} from './types';
-import { CLASSROOMS, DATA_ROOT, REFERENCE_NEXT_STEPS } from './seedData';
-import { createGqlClient, GqlFn } from './appsync-config';
+} from './util/types';
+import { CLASSROOMS, DATA_ROOT, REFERENCE_NEXT_STEPS } from './util/seedData';
+import { createGqlClient, GqlFn } from './util/appsync-config';
+
+// The docx table parser lives with the ingest Lambda so there is a single
+// implementation. ts-node emits CommonJS and would downlevel a plain `await
+// import()` into `require()`, which cannot load ESM — hence the `new Function`.
+const PARSER_PATH = path.resolve(
+  __dirname,
+  '../../amplify/backend/function/microcoachIngestPPQ/src/util/parsePpqTable.mjs',
+);
+const esmImport = new Function('p', 'return import(p)') as (p: string) => Promise<any>;
 
 let gql: GqlFn;
 
@@ -437,7 +447,10 @@ async function uploadAssessment(
   sessionId: string,
   parsed: ParsedAssessmentData,
   type: 'PPQ' | 'POST_PPQ',
-  sourceAssessmentId?: string
+  sourceAssessmentId?: string,
+  // Parsed answer-option table, keyed by the assessment's question numbering.
+  // Only the PPQ has one — it comes from the source document, not the spreadsheet.
+  optionsByQuestion?: Map<number, { docxQuestion: number; options: any[] }>
 ): Promise<CreatedAssessment> {
   process.stdout.write(`  Creating ${type} assessment (${parsed.questionMeta.length} questions)...`);
   const start = Date.now();
@@ -451,14 +464,18 @@ async function uploadAssessment(
     topic: parsed.topic,
     ccssStandards: parsed.ccssStandards,
     classPercentCorrect: parsed.classPercentCorrect,
-    questions: parsed.questionMeta.map((q) => ({
-      questionNumber: q.questionNumber,
-      questionType: 'MC',
-      correctAnswer: q.correctAnswer,
-      pointValue: 1,
-      ccssStandard: q.ccssStandard,
-      classPercentCorrect: q.classPercentCorrect,
-    })),
+    questions: parsed.questionMeta.map((q) => {
+      const opt = optionsByQuestion?.get(q.questionNumber);
+      return {
+        questionNumber: q.questionNumber,
+        questionType: 'MC',
+        correctAnswer: q.correctAnswer,
+        pointValue: 1,
+        ccssStandard: q.ccssStandard,
+        classPercentCorrect: q.classPercentCorrect,
+        ...(opt && { docxQuestion: opt.docxQuestion, answerChoices: opt.options }),
+      };
+    }),
   };
   if (sourceAssessmentId) input.sourceAssessmentId = sourceAssessmentId;
 
@@ -513,6 +530,67 @@ async function uploadStudentResponses(
   return count;
 }
 
+/**
+ * Key the parsed answer-option table by the assessment's question numbering, so the
+ * options can be written onto the AssessmentQuestion rows. Returns undefined when
+ * the session has no ingest output (nothing to attach).
+ */
+async function buildOptionsByQuestion(
+  optionTable: any[] | undefined,
+  questionMeta: ParsedQuestionMeta[],
+): Promise<Map<number, { docxQuestion: number; options: any[] }> | undefined> {
+  if (!optionTable?.length || !questionMeta.length) return undefined;
+
+  const mod = await esmImport(pathToFileURL(PARSER_PATH).href);
+  const qNumMap: Map<number, number> = mod.reconcileQuestionNumbers(optionTable, questionMeta);
+
+  const out = new Map<number, { docxQuestion: number; options: any[] }>();
+  for (const q of optionTable) {
+    const stored = qNumMap.get(q.docxQuestion);
+    if (stored != null) out.set(stored, { docxQuestion: q.docxQuestion, options: q.options });
+  }
+  return out;
+}
+
+/**
+ * Rewrite each misconception's `wrongAnswers` from document question numbering to
+ * the numbering the assessment actually stores.
+ *
+ * `reconcileQuestionNumbers` is the same function `enrich-fixtures` uses, loaded from
+ * the ingest Lambda so there is one implementation. It asserts the correct-answer
+ * letter sequence matches position-for-position and throws if it does not, rather
+ * than silently mapping references onto the wrong questions.
+ *
+ * A session ingested before the option table existed has no `optionTable`; it passes
+ * through untouched.
+ */
+async function reconcileWrongAnswers(
+  misconceptions: any[],
+  optionTable: any[] | undefined,
+  questionMeta: ParsedQuestionMeta[],
+): Promise<any[]> {
+  const hasRefs = misconceptions.some((m) => m.wrongAnswers?.length);
+  if (!optionTable?.length || !questionMeta.length || !hasRefs) return misconceptions;
+
+  const mod = await esmImport(pathToFileURL(PARSER_PATH).href);
+  const qNumMap: Map<number, number> = mod.reconcileQuestionNumbers(optionTable, questionMeta);
+
+  let mapped = 0;
+  const out = misconceptions.map((m) => ({
+    ...m,
+    wrongAnswers: (m.wrongAnswers ?? [])
+      .map((w: any) => {
+        const questionNumber = qNumMap.get(w.docxQuestion);
+        if (questionNumber == null) return null;
+        mapped += 1;
+        return { questionNumber, letter: w.letter };
+      })
+      .filter(Boolean),
+  }));
+  console.log(`  Reconciled ${mapped} wrong-answer reference(s) to stored question numbers`);
+  return out;
+}
+
 async function uploadMisconceptions(
   classroomId: string,
   sessionId: string,
@@ -537,6 +615,8 @@ async function uploadMisconceptions(
         priority: m.priority,
         occurrence: m.occurrence,
         successIndicators: m.successIndicators,
+        // Reconciled to the assessment's question numbering by reconcileWrongAnswers.
+        ...(m.wrongAnswers?.length && { wrongAnswers: m.wrongAnswers }),
       },
     });
     const misconception = data.createMisconception;
@@ -642,6 +722,18 @@ async function main() {
       const createdSession = await uploadSession(classroomId, sessionConfig);
       const sessionId = createdSession.id;
 
+      // Ingest output carries the parsed answer-option table. Loaded here rather
+      // than at the misconception step below because the assessment write needs it
+      // too, and both must use the same reconciled question numbering.
+      const ingestPath = path.join(DATA_ROOT, classroomConfig.key, sessionConfig.label, 'misconceptions.json');
+      let ingested: any = null;
+      try { ingested = JSON.parse(fs.readFileSync(ingestPath, 'utf8')); } catch { /* no ingest output */ }
+
+      const optionsByQuestion = await buildOptionsByQuestion(
+        ingested?.optionTable,
+        ppqData?.questionMeta ?? [],
+      );
+
       // Create PPQ assessment
       const ppqAssessmentData: ParsedAssessmentData = {
         ...ppqData,
@@ -652,7 +744,7 @@ async function main() {
             ? ppqData.ccssStandards
             : sessionConfig.ccssStandards,
       };
-      const ppqAssessment = await uploadAssessment(classroomId, sessionId, ppqAssessmentData, 'PPQ');
+      const ppqAssessment = await uploadAssessment(classroomId, sessionId, ppqAssessmentData, 'PPQ', undefined, optionsByQuestion);
 
       // Upload PPQ responses
       await uploadStudentResponses('PPQ', ppqAssessment.id, ppqData.students, studentMap);
@@ -706,12 +798,21 @@ async function main() {
       // Primary source: Data/{classroom.key}/{session.label}/misconceptions.json (written by ingest-ppq.js)
       // Fallback: seedData misconceptions array
       console.log('');
-      const jsonPath = path.join(DATA_ROOT, classroomConfig.key, sessionConfig.label, 'misconceptions.json');
       let misconceptions = sessionConfig.misconceptions ?? [];
       try {
-        const raw = fs.readFileSync(jsonPath, 'utf8');
-        misconceptions = JSON.parse(raw).misconceptions;
-        console.log(`  Loading misconceptions from ${path.relative(process.cwd(), jsonPath)}`);
+        if (!ingested) throw new Error('no ingest output');
+        misconceptions = ingested.misconceptions;
+        console.log(`  Loading misconceptions from ${path.relative(process.cwd(), ingestPath)}`);
+
+        // Ingest reports wrong answers against the question numbers printed in the
+        // document (1,3,5,7,9,11 in the pilot files). The assessment stores them
+        // resequenced (1..N). Translate here — the only stage that holds both — or
+        // every reference points at the wrong question.
+        misconceptions = await reconcileWrongAnswers(
+          misconceptions,
+          ingested.optionTable,
+          ppqData?.questionMeta ?? [],
+        );
       } catch {
         if (misconceptions.length > 0) {
           console.log(`  No misconceptions.json found — using seedData fallback`);

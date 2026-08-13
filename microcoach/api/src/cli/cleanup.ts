@@ -16,7 +16,7 @@
  *   9. ContextData
  */
 
-import { createGqlClient, GqlFn } from './appsync-config';
+import { createGqlClient, GqlFn } from './util/appsync-config';
 
 let gql: GqlFn;
 

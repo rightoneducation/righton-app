@@ -10,7 +10,7 @@
  *   3. Design principle compliance (LLM-as-judge via microcoachLLMVerify Lambda)
  */
 
-import { createGqlClient, GqlFn } from './appsync-config';
+import { createGqlClient, GqlFn } from './util/appsync-config';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import * as path from 'path';
 import * as fs from 'fs';

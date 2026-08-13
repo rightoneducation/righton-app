@@ -49,9 +49,6 @@ export interface FixtureSummary {
   postAssessmentCode: string | null;
   studentResponses: number;
   kgQueriesMatched: number;
-  recoveredMisconceptions: number;
-  recoveredActivities: number;
-  recoveredWorkedExamples: number;
 }
 
 export interface Fixture {
@@ -66,8 +63,6 @@ export interface Fixture {
   studentResponses: any[];
   /** Raw graph items, exactly as the Learning Commons API returned them in March. */
   rawGraphItems: any[];
-  /** The March pipeline's own output — a comparator that costs no judge calls. */
-  referenceOutput: any[];
   /** Prior sessions. The pilot has none; kept so the caller's shape is stable. */
   historySessions: any[];
 }
@@ -128,16 +123,13 @@ export function loadFixture(idOrPrefix: string): Fixture {
 
   // The archive keeps the classroom's name under `name`; the DB row uses
   // `classroomName`. Provide both so downstream code reads either.
-  const rc = d.recoveredOutput?.recoveredClassroom ?? {};
   const classroom = {
-    id: d.classroom?.id ?? rc.id,
-    classroomName: d.classroom?.name ?? rc.classroomName,
-    name: d.classroom?.name ?? rc.classroomName,
-    grade: d.classroom?.grade ?? rc.grade,
-    subject: d.classroom?.subject ?? rc.subject ?? 'Math',
-    cohortSize: d.classroom?.cohortSize ?? rc.cohortSize,
-    state: rc.state,
-    schoolYear: rc.schoolYear,
+    id: d.classroom?.id,
+    classroomName: d.classroom?.classroomName,
+    name: d.classroom?.classroomName,
+    grade: d.classroom?.grade,
+    subject: d.classroom?.subject ?? 'Math',
+    cohortSize: d.classroom?.cohortSize,
     students: { items: students },
   };
 
@@ -165,7 +157,6 @@ export function loadFixture(idOrPrefix: string): Fixture {
     ppq,
     studentResponses: ppqResponses,
     rawGraphItems,
-    referenceOutput: d.recoveredOutput?.misconceptions ?? [],
     historySessions: [],
   };
 }

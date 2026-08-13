@@ -7,8 +7,8 @@
  * Expected counts are derived dynamically from the CLASSROOMS config in seedData.ts.
  */
 
-import { createGqlClient, GqlFn } from './appsync-config';
-import { CLASSROOMS, REFERENCE_NEXT_STEPS } from './seedData';
+import { createGqlClient, GqlFn } from './util/appsync-config';
+import { CLASSROOMS, REFERENCE_NEXT_STEPS } from './util/seedData';
 
 let gql: GqlFn;
 

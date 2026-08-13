@@ -15,14 +15,14 @@
 
 import * as path from 'path';
 import * as XLSX from 'xlsx';
-import { createGqlClient, GqlFn } from './appsync-config';
-import { CLASSROOMS, DATA_ROOT } from './seedData';
+import { createGqlClient, GqlFn } from './util/appsync-config';
+import { CLASSROOMS, DATA_ROOT } from './util/seedData';
 import {
   ParsedAssessmentData,
   ParsedQuestionMeta,
   ParsedStudentRow,
   ParsedQuestionResponse,
-} from './types';
+} from './util/types';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 

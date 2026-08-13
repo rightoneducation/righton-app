@@ -12,10 +12,10 @@
  * and renders its pregeneratedNextSteps — no LLM calls at page-load time.
  */
 
-import { createGqlClient, GqlFn } from './appsync-config';
+import { createGqlClient, GqlFn } from './util/appsync-config';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import { RunCapture, NoopCapture, Capture } from './capture';
-import { loadFixture, listFixtures, verifyFixtures, normalizeRawGraphItems, Fixture } from './fixtures';
+import { RunCapture, NoopCapture, Capture } from '../seed/capture';
+import { loadFixture, listFixtures, verifyFixtures, normalizeRawGraphItems, Fixture } from '../seed/fixtures';
 import { maskQuery } from '../eval/maskQuery';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
 import { computeMisconceptionReach } from '../eval/computeReach';

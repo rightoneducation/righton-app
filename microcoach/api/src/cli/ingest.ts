@@ -14,8 +14,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import mammoth from 'mammoth';
-import { createGqlClient } from './appsync-config';
-import { CLASSROOMS, DATA_ROOT } from './seedData';
+import { createGqlClient } from './util/appsync-config';
+import { CLASSROOMS, DATA_ROOT } from './util/seedData';
 
 const INGEST_PPQ = /* GraphQL */ `
   mutation IngestPPQ($input: IngestPPQInput!) {
