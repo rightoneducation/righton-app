@@ -18,17 +18,21 @@ yarn eval
 
 | flag | default | what it does |
 |---|---|---|
-| `--session <id\|all>` | `all` | One session, or `all`. Accepts a prefix, so `--session ef38` works. |
-| `--condition <NAME\|all>` | `NONE` | One condition, or `all` for the full matrix. |
+| `--session <id\|all>` | **required** | One session, or `all`. Accepts a prefix, so `--session ef38` works. |
+| `--condition <NAME\|all>` | `NONE` | One condition, or `all`. |
 | `--live-graph` | off | Re-query Learning Commons instead of replaying the archived response. |
 | `--list` | — | Show available sessions and conditions, then exit. |
 
+`--session` has no default on purpose — fanning out across every session should be
+something you asked for, not something you got by omitting a flag. The full matrix
+needs both dimensions opened explicitly.
+
 ```bash
-yarn eval                                        # every session, condition NONE
-yarn eval --session ef3872a1                     # one session
-yarn eval --condition NO_LVN_FULL                # every session, one condition
-yarn eval --session all --condition all          # the full matrix
 yarn eval --list                                 # what's available
+yarn eval --session ef3872a1                     # one session, condition NONE
+yarn eval --session all                          # every session, condition NONE
+yarn eval --session ef3872a1 --condition all     # one session, every condition
+yarn eval --session all --condition all          # the full matrix — 55 runs
 ```
 
 ### Conditions

@@ -49,8 +49,15 @@ function main(): void {
     throw new Error(`No fixture sessions found in ${SESSIONS_DIR}`);
   }
 
-  // Session selection — `all`, or a prefix so `--session ef38` works.
-  const wantedSession = arg('--session') ?? 'all';
+  // Session selection — `all`, or a prefix so `--session ef38` works. Required
+  // rather than defaulting: fanning out across every session should be something
+  // you asked for, not something you got by omitting a flag.
+  const wantedSession = arg('--session');
+  if (!wantedSession) {
+    throw new Error(
+      `--session is required. Use "all" to run every session, or one of: ${sessions.join(', ')}`,
+    );
+  }
   const targets = wantedSession === 'all'
     ? sessions
     : sessions.filter((s) => s.startsWith(wantedSession));

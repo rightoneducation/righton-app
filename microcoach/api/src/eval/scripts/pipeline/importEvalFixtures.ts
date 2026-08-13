@@ -1,11 +1,24 @@
+/**
+ * importEvalFixtures.ts — load one frozen session from disk.
+ *
+ * A fixture is three files, mirroring where the data comes from in production:
+ *
+ *   sessions/<id>/input.json   the rows `yarn upload` writes to the database
+ *   sessions/<id>/kg.json      what the Learning Commons query returns
+ *   sessions/<id>/meta.json    session id and provenance
+ *
+ * `input.json` matches the production write shape field-for-field, so loading is
+ * mostly a re-nesting job: the pipeline reads `classroom.students.items` and
+ * `session.assessments.items` because that is how AppSync returns them.
+ *
+ * Session selection lives in runEval.ts. This module loads exactly one.
+ */
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as crypto from 'crypto';
 import { pathToFileURL } from 'url';
 
-const FIXTURE_DIR = path.resolve(__dirname, '../../fixtures');
-const SESSION_DIR = path.join(FIXTURE_DIR, 'sessions');
+const SESSION_DIR = path.resolve(__dirname, '../../fixtures/sessions');
 
 // The graph normalizer is the Lambda's own module, imported dynamically so it is
 // not statically resolved (it sits outside rootDir, and it is ESM). Using the real
@@ -34,128 +47,79 @@ export async function normalizeRawGraphItems(items: any[]): Promise<any[]> {
   return items.map(cachedNormalize);
 }
 
-export interface FixtureSummary {
-  id: string;
-  file: string;
-  sha256: string;
-  classroom: string;
-  grade: number;
-  cohortSize: number;
-  sessionLabel: string;
-  weekNumber: number;
-  topic: string;
-  ccssStandards: string[];
-  ppqAssessmentCode: string | null;
-  postAssessmentCode: string | null;
-  studentResponses: number;
-  kgQueriesMatched: number;
-}
-
 export interface Fixture {
   id: string;
-  /** Shaped like a row from LIST_CLASSROOMS. */
+  /** Shaped like a row from LIST_CLASSROOMS — students nested under `.items`. */
   classroom: any;
-  /** Shaped like getSession(...) — assessments and misconceptions nested under `.items`. */
+  /** Shaped like getSession(...) — assessments and misconceptions under `.items`. */
   currentSession: any;
   /** The PPQ assessment (not the POST_PPQ). */
   ppq: any;
-  /** Shaped like studentResponsesByAssessmentId(...).items. */
+  /** Shaped like studentResponsesByAssessmentId(...).items, scoped to the PPQ. */
   studentResponses: any[];
-  /** Raw graph items, exactly as the Learning Commons API returned them in March. */
+  /** Raw graph items, exactly as the Learning Commons API returned them. */
   rawGraphItems: any[];
   /** Prior sessions. The pilot has none; kept so the caller's shape is stable. */
   historySessions: any[];
 }
 
-function readManifest(): { sessions: FixtureSummary[] } {
-  const p = path.join(FIXTURE_DIR, 'index.json');
-  if (!fs.existsSync(p)) throw new Error(`Fixture manifest missing at ${p}`);
-  return JSON.parse(fs.readFileSync(p, 'utf8'));
-}
-
-export function listFixtures(): FixtureSummary[] {
-  return readManifest().sessions;
-}
-
-/**
- * Verify every fixture still matches the checksum recorded when it was captured.
- * Cheap, and it turns "did this file drift?" into a question with an answer.
- */
-export function verifyFixtures(): { id: string; ok: boolean }[] {
-  return listFixtures().map((s) => {
-    const raw = fs.readFileSync(path.join(FIXTURE_DIR, s.file));
-    return { id: s.id, ok: crypto.createHash('sha256').update(raw).digest('hex') === s.sha256 };
-  });
+/** Session ids, discovered from the directory rather than a manifest. */
+export function availableFixtureIds(): string[] {
+  if (!fs.existsSync(SESSION_DIR)) return [];
+  return fs
+    .readdirSync(SESSION_DIR, { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name)
+    .sort();
 }
 
 function resolveId(idOrPrefix: string): string {
-  const ids = listFixtures().map((s) => s.id);
+  const ids = availableFixtureIds();
   const hit = ids.filter((i) => i === idOrPrefix || i.startsWith(idOrPrefix));
   if (hit.length === 1) return hit[0];
   if (hit.length === 0) throw new Error(`No fixture matching "${idOrPrefix}". Available: ${ids.join(', ')}`);
   throw new Error(`"${idOrPrefix}" is ambiguous: ${hit.join(', ')}`);
 }
 
+function readJson(id: string, file: string): any {
+  const p = path.join(SESSION_DIR, id, file);
+  if (!fs.existsSync(p)) throw new Error(`Fixture ${id} is missing ${file}`);
+  return JSON.parse(fs.readFileSync(p, 'utf8'));
+}
+
 export function loadFixture(idOrPrefix: string): Fixture {
   const id = resolveId(idOrPrefix);
-  const raw = fs.readFileSync(path.join(SESSION_DIR, `${id}.json`), 'utf8');
-  const d = JSON.parse(raw);
+  const input = readJson(id, 'input.json');
+  const kg = readJson(id, 'kg.json');
+  const meta = readJson(id, 'meta.json');
 
-  const assessments: any[] = d.input?.assessments ?? [];
+  const assessments: any[] = input.assessments ?? [];
   const ppq = assessments.find((a) => a.type === 'PPQ') ?? null;
   if (!ppq) throw new Error(`Fixture ${id} has no PPQ assessment`);
 
   // The archive holds every response row for the session, PPQ and POST_PPQ alike.
-  // The live path fetches by `assessmentId: ppq.id`, so replaying the archive
-  // unfiltered fed post-test answers into wrongAnswerDist and the confidence stats
-  // on four of the five fixtures. Scope it, then give each row the `studentId` the
-  // archive renamed to `student` — every consumer reads `sr.studentId`.
-  const ppqResponses: any[] = (d.input?.studentResponses ?? [])
-    .filter((sr: any) => sr.assessmentId === ppq.id)
-    .map((sr: any) => ({ ...sr, studentId: sr.studentId ?? sr.student }));
+  // Production fetches by `assessmentId: ppq.id`, so scope it the same way — an
+  // unfiltered replay feeds post-test answers into the wrong-answer distribution.
+  const studentResponses: any[] = (input.studentResponses ?? [])
+    .filter((sr: any) => sr.assessmentId === ppq.id);
 
-  // Rebuild the roster from the responses. The archive carries no student records,
-  // and an empty roster silently disables grouping (studentNameMap never resolves).
-  // The pseudonymised id doubles as the display name, which keeps real names out of
-  // the run artifacts written to disk.
-  const students = [...new Set(ppqResponses.map((sr: any) => sr.studentId).filter(Boolean))]
-    .map((sid) => ({ id: sid, name: sid, externalId: sid }));
-
-  // The archive keeps the classroom's name under `name`; the DB row uses
-  // `classroomName`. Provide both so downstream code reads either.
-  const classroom = {
-    id: d.classroom?.id,
-    classroomName: d.classroom?.classroomName,
-    name: d.classroom?.classroomName,
-    grade: d.classroom?.grade,
-    subject: d.classroom?.subject ?? 'Math',
-    cohortSize: d.classroom?.cohortSize,
-    students: { items: students },
-  };
-
-  const currentSession = {
-    id: d.sessionId,
-    classroomId: classroom.id,
-    sessionLabel: d.session?.sessionLabel,
-    weekNumber: d.session?.weekNumber,
-    topic: d.session?.topic,
-    ccssStandards: d.session?.ccssStandards ?? [],
-    status: d.session?.status,
-    assessments: { items: assessments },
-    misconceptions: { items: d.output?.misconceptions ?? [] },
-  };
-
-  const rawGraphItems: any[] = [];
-  for (const q of d.knowledgeGraphQueries ?? []) {
-    for (const item of q.graphResponse?.data?.standardsFrameworkItems ?? []) rawGraphItems.push(item);
-  }
+  const rawGraphItems: any[] = (kg.knowledgeGraphQueries ?? []).flatMap(
+    (q: any) => q.graphResponse?.data?.standardsFrameworkItems ?? [],
+  );
 
   return {
     id,
-    classroom,
-    currentSession,
+    // `.items` nesting is the only reshaping needed — the fields themselves already
+    // match what upload writes.
+    classroom: { ...input.classroom, students: { items: input.students ?? [] } },
+    currentSession: {
+      ...input.session,
+      id: meta.sessionId,
+      assessments: { items: assessments },
+      misconceptions: { items: input.misconceptions ?? [] },
+    },
     ppq,
-    studentResponses: ppqResponses,
+    studentResponses,
     rawGraphItems,
     historySessions: [],
   };

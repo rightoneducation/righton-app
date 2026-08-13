@@ -15,7 +15,7 @@
 import { createGqlClient, GqlFn } from './util/appsync-config';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { RunCapture, NoopCapture, Capture } from '../eval/scripts/pipeline/exportEvalOutputs';
-import { loadFixture, listFixtures, verifyFixtures, normalizeRawGraphItems, Fixture } from '../eval/scripts/pipeline/importEvalFixtures';
+import { loadFixture, normalizeRawGraphItems, Fixture } from '../eval/scripts/pipeline/importEvalFixtures';
 import { maskQuery } from '../eval/scripts/pipeline/maskQuery';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
 import { computeMisconceptionReach } from '../eval/scripts/pipeline/computeReach';
@@ -922,20 +922,11 @@ async function main() {
   // nothing from and writes nothing to DynamoDB; the only remote calls are to the
   // LLM Lambdas (and the graph Lambda when --graph live is set).
   if (FIXTURE_ARG) {
-    const drift = verifyFixtures().filter((v) => !v.ok);
-    if (drift.length) {
-      throw new Error(`Fixture checksum mismatch: ${drift.map((d) => d.id).join(', ')} — files differ from the phase-1 extraction`);
-    }
-
-    // `test` is a small cross-block smoke set: one grade-8 pilot session and the
-    // grade-6 fractions session. Two different standards families, so it exercises
-    // the graph path across distinct CCSS values without running the whole corpus.
-    const TEST_SET = ['ef3872a1', '8beae1eb'];
-    const ids =
-      FIXTURE_ARG === 'all' ? listFixtures().map((f) => f.id)
-      : FIXTURE_ARG === 'test' ? TEST_SET
-      : [FIXTURE_ARG];
-    console.log(`Fixtures: ${ids.length} session(s), graph=${GRAPH_SOURCE}, condition=${CONDITION}`);
+    // Exactly one session per invocation. `yarn eval` decides which sessions run and
+    // spawns one process each, so session selection lives there rather than in two
+    // places that could disagree.
+    const ids = [FIXTURE_ARG];
+    console.log(`Fixture: ${FIXTURE_ARG}, graph=${GRAPH_SOURCE}, condition=${CONDITION}`);
     console.log('No database reads or writes will occur.\n');
 
     // Reference examples still come from the DB — they are shared library content,
