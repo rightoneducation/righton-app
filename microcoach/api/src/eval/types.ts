@@ -78,3 +78,76 @@ export enum MaskOptionEnum{
   NO_LVN_INTERACTSWITH = 'NO_LVN_INTERACTSWITH',
   FULL = 'FULL'
 }
+
+// Misconception Types
+export interface ImpactedObjectivesType {
+  standard: string,
+  description: string,
+}
+
+export interface PrerequisiteGapType {
+  standard: string,
+  description: string
+}
+
+export interface EvidenceType {
+  source: string,
+  mostCommonError: string,
+  sampleStudentWork: string[],
+  aiThinkingPattern: string
+}
+
+export interface QuestionErrorRateType {
+  lavel: string,
+  errorRate: string
+}
+
+export interface PPQQuestionType {
+  questionNumber: number,
+  correctAnswer: string,
+  classPercentCorrect: number
+}
+
+export interface WrongAnswerType {
+  questionNumber: number,
+  letter: string
+}
+
+export interface MisconceptionOutputType {
+  id: string,
+  title: string,
+  frequency: string,
+  isCore: boolean,
+  occurrence: string,
+  studentCount: number | null,
+  studentPercent: number | null,
+  wrongAnswers: WrongAnswerType[],
+  linkStatus: 'linked' | 'unlinked',
+  example: { 
+    incorrect: string,
+    correct: string
+  },
+  misconceptionSummary: string,
+  aiReasoning: string,
+  successIndicators: string[],
+  ccssStandards: {
+    targetObjective: {
+      standard: string,
+      description: string,
+      learningComponents: string[]
+    },
+    impactedObjectives: ImpactedObjectivesType[],
+    prerequisiteGaps: PrerequisiteGapType[],
+  },
+  evidence: EvidenceType,
+  questionErrorRates: QuestionErrorRateType[],
+  ppqQuestions: PPQQuestionType[] 
+}
+
+export interface MisconceptionScore {
+  frequency: number,
+  learningProgressionInfluence: number,
+  studentConfidence: number,
+  lcMisconceptionEvalScore: number,
+  conceptualDepth: number
+}
