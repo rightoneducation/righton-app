@@ -1,0 +1,2016 @@
+{
+  "classroom": {
+    "id": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+    "classroomName": "Classroom 4",
+    "grade": 8,
+    "subject": "Math",
+    "state": "NJ",
+    "schoolYear": "2025-26",
+    "cohortSize": 22
+  },
+  "session": {
+    "sessionLabel": "Session1",
+    "weekNumber": 27,
+    "topic": "Linear Equations and Systems of Inequalities",
+    "ccssStandards": [
+      "A.REI.3",
+      "A.REI.12",
+      "8.EE.C.8"
+    ],
+    "status": "generated",
+    "createdAt": "2026-03-11T07:21:23.883Z",
+    "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+    "classroomSessionsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305"
+  },
+  "assessments": [
+    {
+      "id": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentCode": "ALG.08.RTD.W28.ClearingTheFraction.COACH",
+      "type": "POST_PPQ",
+      "weekNumber": 28,
+      "topic": "Linear Equations and Systems of Inequalities",
+      "ccssStandards": [
+        "A.REI.3",
+        "A.REI.12",
+        "8.EE.C.8"
+      ],
+      "classPercentCorrect": 1,
+      "questions": [
+        {
+          "ccssStandard": "",
+          "pointValue": 1,
+          "correctAnswer": "A",
+          "classPercentCorrect": 1,
+          "questionType": "MC",
+          "questionNumber": 1
+        }
+      ],
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "sessionId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "sessionAssessmentsId": "65b68962-d218-4a35-84f2-de3789bf6272"
+    },
+    {
+      "id": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentCode": "ALG.08.PPQZ.W27.25-26.COACH",
+      "type": "PPQ",
+      "weekNumber": 27,
+      "topic": "Linear Equations and Systems of Inequalities",
+      "ccssStandards": [
+        "A.REI.3",
+        "A.REI.12",
+        "8.EE.C.8"
+      ],
+      "classPercentCorrect": 0.6969696969696969,
+      "questions": [
+        {
+          "ccssStandard": "",
+          "pointValue": 1,
+          "correctAnswer": "A",
+          "classPercentCorrect": 0.6818181818181818,
+          "questionType": "MC",
+          "questionNumber": 1,
+          "docxQuestion": 1,
+          "answerChoices": [
+            {
+              "letter": "A",
+              "text": "Correct",
+              "isCorrect": true
+            },
+            {
+              "letter": "B",
+              "text": "Chose graph with slope of -6 (did not convert to slope-intercept)",
+              "isCorrect": false
+            },
+            {
+              "letter": "C",
+              "text": "Chose graph with inclusive inequality symbol (>)",
+              "isCorrect": false
+            },
+            {
+              "letter": "D",
+              "text": "Chose graph of y=-6x+3",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "ccssStandard": "",
+          "pointValue": 1,
+          "correctAnswer": "A",
+          "classPercentCorrect": 0.5,
+          "questionType": "MC",
+          "questionNumber": 2,
+          "docxQuestion": 3,
+          "answerChoices": [
+            {
+              "letter": "A",
+              "text": "Correct",
+              "isCorrect": true
+            },
+            {
+              "letter": "B",
+              "text": "Did not clear fraction – error when combining 3/6 and 20/6",
+              "isCorrect": false
+            },
+            {
+              "letter": "C",
+              "text": "Tried to clear fraction but multiplied by 6 all term on LHS creating a new, non-equivalent equation",
+              "isCorrect": false
+            },
+            {
+              "letter": "D",
+              "text": "None of the above.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "ccssStandard": "",
+          "pointValue": 1,
+          "correctAnswer": "D",
+          "classPercentCorrect": 0.8636363636363636,
+          "questionType": "MC",
+          "questionNumber": 3,
+          "docxQuestion": 5,
+          "answerChoices": [
+            {
+              "letter": "A",
+              "text": "X and y switched, wrong sign",
+              "isCorrect": false
+            },
+            {
+              "letter": "B",
+              "text": "Wrong sign",
+              "isCorrect": false
+            },
+            {
+              "letter": "C",
+              "text": "X and y switched",
+              "isCorrect": false
+            },
+            {
+              "letter": "D",
+              "text": "Correct",
+              "isCorrect": true
+            }
+          ]
+        },
+        {
+          "ccssStandard": "",
+          "pointValue": 1,
+          "correctAnswer": "B",
+          "classPercentCorrect": 0.7727272727272727,
+          "questionType": "MC",
+          "questionNumber": 4,
+          "docxQuestion": 7,
+          "answerChoices": [
+            {
+              "letter": "A",
+              "text": "Point is on the line that is exclusive",
+              "isCorrect": false
+            },
+            {
+              "letter": "B",
+              "text": "Correct",
+              "isCorrect": true
+            },
+            {
+              "letter": "C",
+              "text": "Doesn’t fit both",
+              "isCorrect": false
+            },
+            {
+              "letter": "D",
+              "text": "Doesn’t fit both",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "ccssStandard": "",
+          "pointValue": 1,
+          "correctAnswer": "B",
+          "classPercentCorrect": 0.6818181818181818,
+          "questionType": "MC",
+          "questionNumber": 5,
+          "docxQuestion": 9,
+          "answerChoices": [
+            {
+              "letter": "A",
+              "text": "First inequality was graphed as inclusive",
+              "isCorrect": false
+            },
+            {
+              "letter": "B",
+              "text": "Correct",
+              "isCorrect": true
+            },
+            {
+              "letter": "C",
+              "text": "Incorrect shading and inclusive line",
+              "isCorrect": false
+            },
+            {
+              "letter": "D",
+              "text": "Incorrect shading",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "ccssStandard": "",
+          "pointValue": 1,
+          "correctAnswer": "A",
+          "classPercentCorrect": 0.6818181818181818,
+          "questionType": "MC",
+          "questionNumber": 6,
+          "docxQuestion": 11,
+          "answerChoices": [
+            {
+              "letter": "A",
+              "text": "Correct Answer",
+              "isCorrect": true
+            },
+            {
+              "letter": "B",
+              "text": "Uses the wrong inverse operation. Adds 5 on both sides of the equation instead of subtracting.",
+              "isCorrect": false
+            },
+            {
+              "letter": "C",
+              "text": "Finds x, but does not substitute to find y.",
+              "isCorrect": false
+            },
+            {
+              "letter": "D",
+              "text": "Finds the correct x value but substitutes back into the equation for the y value.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ],
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "sessionId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "sessionAssessmentsId": "65b68962-d218-4a35-84f2-de3789bf6272"
+    }
+  ],
+  "studentResponses": [
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 3,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:47.479Z",
+      "totalScore": 0.4167,
+      "createdAt": "2026-03-11T07:21:47.479Z",
+      "id": "5ace53b4-7584-46da-998b-9f1467fba46e",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0513"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:26.738Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:26.738Z",
+      "id": "0b4ec50d-f2a0-4758-a2e7-b7b920b9f644",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0162"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4.5,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 4,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:34.096Z",
+      "totalScore": 0.5,
+      "createdAt": "2026-03-11T07:21:34.096Z",
+      "id": "87382a9e-a478-40ab-8e10-5cd020a082b1",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0943"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:22.196Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:22.196Z",
+      "id": "39d45c11-4465-4a44-a380-578ed76636da",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S1433"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:28.288Z",
+      "totalScore": 0.5,
+      "createdAt": "2026-03-11T07:21:28.288Z",
+      "id": "35173725-ddbb-44ae-a276-fbc7afff12e1",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0816"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 3,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 3,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 3,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 3,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:36.471Z",
+      "totalScore": 0.3333,
+      "createdAt": "2026-03-11T07:21:36.471Z",
+      "id": "9d0858e8-3af0-4b58-9102-c32864080299",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0338"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:27.981Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:27.981Z",
+      "id": "13be3723-25a4-4867-b134-b49fe3bf1ec2",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0887"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:31.381Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:31.381Z",
+      "id": "abe5e4db-cdeb-4dd8-8a15-307d894d0acb",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0385"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:30.448Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:30.448Z",
+      "id": "95a95a52-3f81-4052-a857-851daafc9e54",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0513"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:25.214Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:25.214Z",
+      "id": "53c47d86-84de-4e93-8a7f-f48d7529e47c",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0717"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:41.087Z",
+      "totalScore": 0.5,
+      "createdAt": "2026-03-11T07:21:41.087Z",
+      "id": "df23dc11-b879-4d4e-8c8d-c403b18315d6",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S1113"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:49.514Z",
+      "totalScore": 0.5,
+      "createdAt": "2026-03-11T07:21:49.514Z",
+      "id": "3645b3a7-c55c-4c3a-800a-ba0e7a11a9d1",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0385"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:19.745Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:19.745Z",
+      "id": "8a6ba901-691e-4787-8f7a-8455dc264f66",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0816"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:18.846Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:18.846Z",
+      "id": "94c7b603-ee71-433a-88cf-3cab170a97ca",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0014"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:17.731Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:17.731Z",
+      "id": "0e5e3169-c16f-4382-8d8e-a89aeceba40d",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0949"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 1,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:32.411Z",
+      "totalScore": 0.4167,
+      "createdAt": "2026-03-11T07:21:32.411Z",
+      "id": "9bcde838-9bb8-4c3e-8946-b1bb2c135b54",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0238"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 3,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 4,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 1,
+          "questionNumber": 4,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 5,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 4,
+          "questionNumber": 6,
+          "isCorrect": false
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:44.582Z",
+      "totalScore": 0.16670000000000001,
+      "createdAt": "2026-03-11T07:21:44.582Z",
+      "id": "db784984-73b3-4ff3-8f35-5b6e84460b01",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S1184"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 3,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 5,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:38.870Z",
+      "totalScore": 0.4167,
+      "createdAt": "2026-03-11T07:21:38.870Z",
+      "id": "7b1134a4-22b9-46e6-99e5-826b656aa5fe",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S1258"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 3,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 3,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 3,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:50.523Z",
+      "totalScore": 0.3333,
+      "createdAt": "2026-03-11T07:21:50.523Z",
+      "id": "7c3cfb2a-4003-49fa-8490-e724b47cd74d",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S1203"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 3,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 4,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 3,
+          "questionNumber": 4,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 4,
+          "questionNumber": 6,
+          "isCorrect": false
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:43.224Z",
+      "totalScore": 0.16670000000000001,
+      "createdAt": "2026-03-11T07:21:43.224Z",
+      "id": "d4484745-314f-4f45-a34b-0497602748df",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0887"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:21.245Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:21.245Z",
+      "id": "ea195014-bad4-4410-b98d-284bf608fa5b",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0238"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:25.775Z",
+      "totalScore": 0.5,
+      "createdAt": "2026-03-11T07:21:25.775Z",
+      "id": "899ff110-15ed-4677-8be8-b82cbabdb6e4",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0949"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 3,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 3,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 4,
+          "questionNumber": 4,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "A",
+          "confidence": 1,
+          "questionNumber": 5,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 3,
+          "questionNumber": 6,
+          "isCorrect": false
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:37.981Z",
+      "totalScore": 0.16670000000000001,
+      "createdAt": "2026-03-11T07:21:37.981Z",
+      "id": "f2706006-19b9-4baf-992c-5fe0db49c43a",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0029"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:34.964Z",
+      "totalScore": 0.4167,
+      "createdAt": "2026-03-11T07:21:34.964Z",
+      "id": "17e1984e-7151-426f-97d7-b9e277ff6887",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S1060"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 3,
+          "questionNumber": 1,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 1,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 4,
+          "questionNumber": 3,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 3,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 1,
+          "questionNumber": 6,
+          "isCorrect": false
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:36.877Z",
+      "totalScore": 0.16670000000000001,
+      "createdAt": "2026-03-11T07:21:36.877Z",
+      "id": "70a8108e-0fff-4d22-9583-dae8da21a1bc",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S1435"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 3,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": false
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:29.636Z",
+      "totalScore": 0.25,
+      "createdAt": "2026-03-11T07:21:29.636Z",
+      "id": "3960020d-0967-408f-821e-25b0ca69a574",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0936"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:28.907Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:28.907Z",
+      "id": "da7aafb1-fd7e-4d03-ad82-187594f3afc0",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S1184"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:26.992Z",
+      "totalScore": 0.4167,
+      "createdAt": "2026-03-11T07:21:26.992Z",
+      "id": "896dad9d-a53d-47c2-aa90-f60b28fe49b4",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0014"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 5,
+          "questionNumber": 1,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 4,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "C",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": false
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:40.216Z",
+      "totalScore": 0.25,
+      "createdAt": "2026-03-11T07:21:40.216Z",
+      "id": "3caa2eb8-6372-46e8-8da3-29670bf8fc33",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0717"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:23.110Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:23.110Z",
+      "id": "c744f7bf-0451-43e2-950f-affa077b238b",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0338"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 5,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:42.241Z",
+      "totalScore": 0.4167,
+      "createdAt": "2026-03-11T07:21:42.241Z",
+      "id": "e99cd9c3-44f3-4a13-a29d-be39bdea4a08",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0162"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 3,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 5,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 3,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:32.803Z",
+      "totalScore": 0.4167,
+      "createdAt": "2026-03-11T07:21:32.803Z",
+      "id": "23501b66-48e6-49fb-bcf9-50311f18ce11",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S1433"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:25.780Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:25.780Z",
+      "id": "c790a0da-5243-4ad5-8e11-878131338736",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S1113"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 2,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "D",
+          "confidence": 3,
+          "questionNumber": 3,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "A",
+          "confidence": 1,
+          "questionNumber": 4,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 4,
+          "questionNumber": 5,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "B",
+          "confidence": 1,
+          "questionNumber": 6,
+          "isCorrect": false
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:48.612Z",
+      "totalScore": 0.16670000000000001,
+      "createdAt": "2026-03-11T07:21:48.612Z",
+      "id": "af83fc66-e51a-4392-88ab-567beebd7fba",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0468"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:20.269Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:20.269Z",
+      "id": "f15ba01e-e764-4aad-a8cb-c8dc9d2394cb",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0936"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:24.309Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:24.309Z",
+      "id": "161bac61-9add-47f6-ac8a-f63deae85835",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0029"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": null,
+          "questionNumber": 1,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-17T07:24:29.454Z",
+      "totalScore": 1,
+      "createdAt": "2026-03-17T07:24:29.454Z",
+      "id": "dba95173-6627-43c7-91ba-f3608fd4f1fc",
+      "assessmentId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "assessmentStudentResponsesId": "fcb14ca7-300a-4b03-8441-c359146d1b42",
+      "studentId": "S0082"
+    },
+    {
+      "questionResponses": [
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 4,
+          "questionNumber": 1,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 0,
+          "response": "D",
+          "confidence": 3,
+          "questionNumber": 2,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 0,
+          "response": "A",
+          "confidence": 1,
+          "questionNumber": 3,
+          "isCorrect": false
+        },
+        {
+          "pointsEarned": 1,
+          "response": "B",
+          "confidence": 4,
+          "questionNumber": 4,
+          "isCorrect": true
+        },
+        {
+          "pointsEarned": 1,
+          "response": "A",
+          "confidence": 5,
+          "questionNumber": 6,
+          "isCorrect": true
+        }
+      ],
+      "updatedAt": "2026-03-11T07:21:45.561Z",
+      "totalScore": 0.25,
+      "createdAt": "2026-03-11T07:21:45.561Z",
+      "id": "ef0e5371-d8e8-45f9-b67c-3f6bb984902a",
+      "assessmentId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "assessmentStudentResponsesId": "0a74af09-4374-4667-83d0-f549a41dec4b",
+      "studentId": "S0082"
+    }
+  ],
+  "misconceptions": [
+    {
+      "ccssStandard": "HSA-REI.B.3",
+      "priority": "3",
+      "createdAt": "2026-03-11T07:21:57.434Z",
+      "sessionMisconceptionsId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "occurrence": "first",
+      "sessionId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "updatedAt": "2026-03-19T01:35:22.193Z",
+      "successIndicators": [
+        "Simplify fractions correctly in equations",
+        "Multiply all terms by appropriate common factor",
+        "Check equivalent equations post-adjustment"
+      ],
+      "description": "Attempting to clear fractions by incorrectly multiplying terms is a procedural error that results from misunderstanding fraction operations and equation balance.",
+      "id": "1d6138f0-2645-4de6-9d93-8bd02384ff34",
+      "severity": "medium",
+      "title": "Clearing Fractions Incorrectly",
+      "wrongAnswers": [
+        {
+          "questionNumber": 2,
+          "letter": "C"
+        }
+      ]
+    },
+    {
+      "ccssStandard": "8.EE.C.8",
+      "priority": "2",
+      "createdAt": "2026-03-11T07:21:55.176Z",
+      "sessionMisconceptionsId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "occurrence": "first",
+      "sessionId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "updatedAt": "2026-03-19T01:35:23.035Z",
+      "successIndicators": [
+        "Maintain variable positions consistently",
+        "Identify roles of x and y correctly",
+        "Verify solutions by substitution"
+      ],
+      "description": "Switching x and y indicates confusion about the role of variables in an equation, leading to incorrect solutions. Students might believe repositioning has no significant effect on the solution.",
+      "id": "f0fefe9d-ba87-42e9-be50-be2512c273e2",
+      "severity": "high",
+      "title": "Switching X and Y in Equations",
+      "wrongAnswers": [
+        {
+          "questionNumber": 3,
+          "letter": "A"
+        },
+        {
+          "questionNumber": 3,
+          "letter": "C"
+        }
+      ]
+    },
+    {
+      "ccssStandard": "8.EE.C.8",
+      "priority": "4",
+      "createdAt": "2026-03-11T07:21:59.731Z",
+      "sessionMisconceptionsId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "occurrence": "first",
+      "sessionId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "updatedAt": "2026-03-19T01:35:24.263Z",
+      "successIndicators": [
+        "Select correct inverse operation consistently",
+        "Demonstrate clear steps in manipulation",
+        "Verify equivalent equations post-operation"
+      ],
+      "description": "Using addition instead of subtraction as the inverse operation suggests a procedural confusion about maintaining equation equality, especially when solving for variables.",
+      "id": "d2fc55f9-9113-4b07-9547-ebb95b8faa11",
+      "severity": "medium",
+      "title": "Using Incorrect Inverse Operations",
+      "wrongAnswers": [
+        {
+          "questionNumber": 6,
+          "letter": "B"
+        }
+      ]
+    },
+    {
+      "ccssStandard": "HSA-REI.D.12",
+      "priority": "1",
+      "createdAt": "2026-03-11T07:21:52.596Z",
+      "sessionMisconceptionsId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "occurrence": "first",
+      "sessionId": "65b68962-d218-4a35-84f2-de3789bf6272",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "updatedAt": "2026-03-19T01:35:25.329Z",
+      "successIndicators": [
+        "Shade correct region for inequalities",
+        "Use dashed line for strict inequalities",
+        "Identify correct boundary line equations"
+      ],
+      "description": "Incorrectly using a solid line for strict inequalities shows a mistaken belief that points on the boundary are included in the solution set. This error often stems from not fully understanding the difference between strict and inclusive inequalities.",
+      "id": "e418d820-cd07-427a-abce-6e1b94074da3",
+      "severity": "high",
+      "title": "Graphing Incorrect Boundary Lines",
+      "wrongAnswers": [
+        {
+          "questionNumber": 1,
+          "letter": "C"
+        },
+        {
+          "questionNumber": 5,
+          "letter": "A"
+        }
+      ]
+    }
+  ],
+  "students": [
+    {
+      "id": "S0513",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0513",
+      "externalId": "S0513",
+      "confidenceLevel": 4.2,
+      "status": "active"
+    },
+    {
+      "id": "S0162",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0162",
+      "externalId": "S0162",
+      "confidenceLevel": 4.7,
+      "status": "active"
+    },
+    {
+      "id": "S0943",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0943",
+      "externalId": "S0943",
+      "confidenceLevel": 4.4,
+      "status": "active"
+    },
+    {
+      "id": "S1433",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1433",
+      "externalId": "S1433",
+      "confidenceLevel": 3.8,
+      "status": "active"
+    },
+    {
+      "id": "S0816",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0816",
+      "externalId": "S0816",
+      "confidenceLevel": 4.7,
+      "status": "active"
+    },
+    {
+      "id": "S0338",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0338",
+      "externalId": "S0338",
+      "confidenceLevel": 3.5,
+      "status": "active"
+    },
+    {
+      "id": "S0887",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0887",
+      "externalId": "S0887",
+      "confidenceLevel": 3.8,
+      "status": "active"
+    },
+    {
+      "id": "S0385",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0385",
+      "externalId": "S0385",
+      "confidenceLevel": 5,
+      "status": "active"
+    },
+    {
+      "id": "S0717",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0717",
+      "externalId": "S0717",
+      "confidenceLevel": 4.8,
+      "status": "active"
+    },
+    {
+      "id": "S1113",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1113",
+      "externalId": "S1113",
+      "confidenceLevel": 4.5,
+      "status": "active"
+    },
+    {
+      "id": "S0014",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0014",
+      "externalId": "S0014",
+      "confidenceLevel": 4.7,
+      "status": "active"
+    },
+    {
+      "id": "S0949",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0949",
+      "externalId": "S0949",
+      "confidenceLevel": 4.3,
+      "status": "active"
+    },
+    {
+      "id": "S0238",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0238",
+      "externalId": "S0238",
+      "confidenceLevel": 5,
+      "status": "active"
+    },
+    {
+      "id": "S1184",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1184",
+      "externalId": "S1184",
+      "confidenceLevel": 3.7,
+      "status": "active"
+    },
+    {
+      "id": "S1258",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1258",
+      "externalId": "S1258",
+      "confidenceLevel": 4.3,
+      "status": "active"
+    },
+    {
+      "id": "S1203",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1203",
+      "externalId": "S1203",
+      "confidenceLevel": 3.8,
+      "status": "active"
+    },
+    {
+      "id": "S0029",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0029",
+      "externalId": "S0029",
+      "confidenceLevel": 3.2,
+      "status": "active"
+    },
+    {
+      "id": "S1060",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1060",
+      "externalId": "S1060",
+      "confidenceLevel": 4.7,
+      "status": "active"
+    },
+    {
+      "id": "S1435",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1435",
+      "externalId": "S1435",
+      "confidenceLevel": 2.8,
+      "status": "active"
+    },
+    {
+      "id": "S0936",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0936",
+      "externalId": "S0936",
+      "confidenceLevel": 4.3,
+      "status": "active"
+    },
+    {
+      "id": "S0468",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0468",
+      "externalId": "S0468",
+      "confidenceLevel": 2.8,
+      "status": "active"
+    },
+    {
+      "id": "S0082",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0082",
+      "externalId": "S0082",
+      "confidenceLevel": 3.4,
+      "status": "active"
+    }
+  ]
+}

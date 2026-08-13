@@ -2,9 +2,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
-import { MaskOptionEnum } from '../eval/types';
+import { MaskOptionEnum } from '../../types';
 
-const RUNS_ROOT = path.resolve(__dirname, '../eval/runs');
+const RUNS_ROOT = path.resolve(__dirname, '../../runs');
 
 export interface RunOptions {
   classroomId: string;

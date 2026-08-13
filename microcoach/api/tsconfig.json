@@ -16,7 +16,7 @@
   "exclude": [
     "lib",
     "node_modules",
-    "src/eval/print-prompt.mjs",
+    "src/eval/scripts/pipeline/print-prompt.mjs",
     "src/eval/runs"
   ]
 }

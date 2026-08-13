@@ -2,7 +2,7 @@
  * generate-next-steps.ts — run the LLM pipeline offline and save pregenerated data
  *
  * Run from the api/ directory:
- *   npx ts-node src/seed/generate-next-steps.ts
+ *   npx ts-node src/cli/generate.ts
  *
  * Output: saves pregeneratedNextSteps to the Session record and sets currentWeek on Classroom
  *
@@ -14,19 +14,33 @@
 
 import { createGqlClient, GqlFn } from './util/appsync-config';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import { RunCapture, NoopCapture, Capture } from '../seed/capture';
-import { loadFixture, listFixtures, verifyFixtures, normalizeRawGraphItems, Fixture } from '../seed/fixtures';
-import { maskQuery } from '../eval/maskQuery';
+import { RunCapture, NoopCapture, Capture } from '../eval/scripts/pipeline/exportEvalOutputs';
+import { loadFixture, listFixtures, verifyFixtures, normalizeRawGraphItems, Fixture } from '../eval/scripts/pipeline/importEvalFixtures';
+import { maskQuery } from '../eval/scripts/pipeline/maskQuery';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
-import { computeMisconceptionReach } from '../eval/computeReach';
+import { computeMisconceptionReach } from '../eval/scripts/pipeline/computeReach';
 
 const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 
-// Capture is on by default — this is the offline/dev orchestrator, and a run that
-// keeps no record of its own prompts cannot be compared against another one.
-// `--no-capture` skips the disk writes; `--condition <name>` is recorded in the
-// manifest so ablation runs are distinguishable.
-const CAPTURE_ENABLED = !process.argv.includes('--no-capture');
+// `--fixture <id>` is the single switch between the two modes this script runs in:
+//
+//   EVAL MODE  (--fixture present)  read a frozen session from disk, write the run
+//                                   directory under eval/runs/, never touch the DB
+//   CLI MODE   (no --fixture)       read from DynamoDB, write results back to it,
+//                                   and produce no eval artifacts at all
+//
+// Keeping these on one flag means a CLI run cannot leave run directories behind that
+// look like eval output, and an eval run cannot write to the database.
+const FIXTURE_ARG = (() => {
+  const i = process.argv.indexOf('--fixture');
+  return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : null;
+})();
+const EVAL_MODE = FIXTURE_ARG !== null;
+
+// A run that keeps no record of its own prompts cannot be compared against another
+// one, so capture is not optional in eval mode — and is never on outside it.
+const CAPTURE_ENABLED = EVAL_MODE;
+
 const CONDITION: MaskOptionEnum = (() => {
   const i = process.argv.indexOf('--condition');
   const raw = i > -1 && process.argv[i + 1] ? process.argv[i + 1] : 'NONE';
@@ -40,16 +54,11 @@ const CONDITION: MaskOptionEnum = (() => {
   return MaskOptionEnum[key];
 })();
 // Ask the Lambdas to echo `_trace` (resolved prompt, model, token usage, sub-calls).
-// Additive and inert when false, so production callers are unaffected.
-const WANT_TRACE = CAPTURE_ENABLED;
+// Additive and inert when false, so CLI runs are unaffected.
+const WANT_TRACE = EVAL_MODE;
 
-// `--fixture <id>` runs against a March pilot session from disk instead of DynamoDB,
-// and never writes. `--fixture all` runs all four. `--graph live` re-queries Learning
-// Commons instead of replaying the archived response.
-const FIXTURE_ARG = (() => {
-  const i = process.argv.indexOf('--fixture');
-  return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : null;
-})();
+// `--graph live` re-queries Learning Commons instead of replaying the archived
+// response. Eval mode only; a CLI run always queries live.
 const GRAPH_SOURCE: 'fixture' | 'live' = (() => {
   const i = process.argv.indexOf('--graph');
   const v = i > -1 && process.argv[i + 1] ? process.argv[i + 1] : null;

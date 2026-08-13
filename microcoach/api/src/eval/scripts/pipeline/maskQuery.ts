@@ -1,4 +1,4 @@
-import { KgQueryType, MaskOptionEnum } from "./types"
+import { KgQueryType, MaskOptionEnum } from "../../types"
 
 export const maskQuery = (query: KgQueryType, maskOption: MaskOptionEnum ) => {
   // keep function pure

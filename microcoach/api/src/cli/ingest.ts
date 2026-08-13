@@ -8,7 +8,7 @@
  * upload.ts reads those JSON files automatically — no manual copy-paste needed.
  *
  * Run from the api/ directory:
- *   APPSYNC_SECRET_NAME=microcoach npx ts-node src/seed/ingest-ppq.ts
+ *   APPSYNC_SECRET_NAME=microcoach npx ts-node src/cli/ingest.ts
  */
 
 import * as fs from 'fs';

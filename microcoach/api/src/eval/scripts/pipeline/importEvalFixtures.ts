@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as crypto from 'crypto';
 import { pathToFileURL } from 'url';
 
-const FIXTURE_DIR = path.resolve(__dirname, '../eval/fixtures');
+const FIXTURE_DIR = path.resolve(__dirname, '../../fixtures');
 const SESSION_DIR = path.join(FIXTURE_DIR, 'sessions');
 
 // The graph normalizer is the Lambda's own module, imported dynamically so it is
@@ -12,7 +12,7 @@ const SESSION_DIR = path.join(FIXTURE_DIR, 'sessions');
 // one rather than a copy means fixture replay can never drift from production.
 const NORMALIZER_PATH = path.resolve(
   __dirname,
-  '../../amplify/backend/function/microcoachGetLearningScience/src/util/normalizeStandard.mjs',
+  '../../../../amplify/backend/function/microcoachGetLearningScience/src/util/normalizeStandard.mjs',
 );
 
 let cachedNormalize: ((item: any) => any) | null = null;

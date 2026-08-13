@@ -2,7 +2,7 @@
  * upload.ts — seed the Microcoach database from the Data/ folder
  *
  * Run AFTER `amplify push` has provisioned the new schema tables:
- *   cd api && npx ts-node src/seed/upload.ts
+ *   cd api && npx ts-node src/cli/upload.ts
  *
  * Upload order (respects FK dependencies):
  *   1. Classrooms
@@ -556,7 +556,7 @@ async function buildOptionsByQuestion(
  * Rewrite each misconception's `wrongAnswers` from document question numbering to
  * the numbering the assessment actually stores.
  *
- * `reconcileQuestionNumbers` is the same function `enrich-fixtures` uses, loaded from
+ * `reconcileQuestionNumbers` is loaded from
  * the ingest Lambda so there is one implementation. It asserts the correct-answer
  * letter sequence matches position-for-position and throws if it does not, rather
  * than silently mapping references onto the wrong questions.
@@ -848,7 +848,7 @@ async function main() {
 
   console.log(`\n${'═'.repeat(60)}`);
   console.log(`Upload complete  (${elapsed(totalStart)} total)`);
-  console.log(`Run \`npx ts-node src/seed/verify.ts\` to check record counts.`);
+  console.log(`Run \`npx ts-node src/cli/verify.ts\` to check record counts.`);
   console.log('═'.repeat(60));
 }
 

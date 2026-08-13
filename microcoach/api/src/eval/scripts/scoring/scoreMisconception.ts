@@ -1,4 +1,4 @@
-import { MisconceptionOutputType, MisconceptionScore } from "./types"
+import { MisconceptionOutputType, MisconceptionScore } from "../../types"
 
 export const extractMisconceptionForEval = (output: MisconceptionOutputType) => {
   return{
@@ -9,7 +9,6 @@ export const extractMisconceptionForEval = (output: MisconceptionOutputType) => 
     frequencyPercent: output.studentPercent ?? 0, // for frequency
     learningProgressionCount: output.ccssStandards.prerequisiteGaps.length, // for learning progression count
     distractorMap: output.wrongAnswers // for confidence
-
   }
 }
 

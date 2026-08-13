@@ -1,0 +1,12 @@
+{
+  "sessionId": "65b68962-d218-4a35-84f2-de3789bf6272",
+  "provenance": {
+    "outputsWrittenTo": "main",
+    "kgLogsFoundIn": [
+      "dev"
+    ],
+    "runMode": "CLI (yarn generate, AMPLIFY_ENV defaulted to dev)",
+    "enrichedAt": "2026-08-12T11:39:56.045Z",
+    "enrichedFrom": "Classroom4/Session1/PPQ.docx"
+  }
+}

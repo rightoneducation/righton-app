@@ -2,7 +2,7 @@
  * post-analyze.ts — ingest post-PPQ data and compute improvement metrics
  *
  * Run from the api/ directory:
- *   APPSYNC_SECRET_NAME=microcoach npx ts-node src/seed/post-analyze.ts
+ *   APPSYNC_SECRET_NAME=microcoach npx ts-node src/cli/post-analyze.ts
  *
  * This script:
  *   1. Uploads POST_PPQ Assessment + StudentResponse records (idempotent)
