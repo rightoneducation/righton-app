@@ -21,3 +21,7 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+
+# eval run artifacts — raw prompts and model responses, large
+src/eval/runs/

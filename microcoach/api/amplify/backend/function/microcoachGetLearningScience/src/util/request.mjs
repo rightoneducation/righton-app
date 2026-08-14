@@ -5,9 +5,7 @@ export async function createAndSignRequest(query, variables, apiKey, graphqlEndp
     queryName: query.substring(0, 100).replace(/\s+/g, ' '),
     variables: JSON.stringify(variables),
     hasAPIKey: !!apiKey,
-    apiKeyLength: apiKey?.length || 0,
-    graphQLEndpoint: graphqlEndpoint || 'NOT SET',
-    endpointLength: graphqlEndpoint?.length || 0
+    graphQLEndpoint: graphqlEndpoint || 'NOT SET'
   });
   
   const headers = {
@@ -16,10 +14,10 @@ export async function createAndSignRequest(query, variables, apiKey, graphqlEndp
 
   if (apiKey) {
     headers['x-api-key'] = apiKey;
+    // NOTE: never log any portion of the key. Pipeline log groups have no
+    // retention policy set, so anything written here persists indefinitely.
     console.log('Using API key for authentication', {
-      timestamp: new Date().toISOString(),
-      keyPrefix: apiKey.substring(0, 10) + '...',
-      keyLength: apiKey.length
+      timestamp: new Date().toISOString()
     });
   } else {
     console.error('WARNING: No API key available!', {

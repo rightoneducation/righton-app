@@ -103,6 +103,19 @@ type AssessmentQuestion {
   pointValue: Int!
   ccssStandard: String
   classPercentCorrect: Float
+  # The answer options as printed in the source PPQ document. Parsed at ingest by
+  # util/parsePpqTable.mjs; this is the only place option text exists in the system.
+  answerChoices: [PPQAnswerChoice]
+  # The question number as printed in the document (1,3,5,7,9,11 in the pilot files),
+  # kept so the mapping to the resequenced `questionNumber` stays inspectable.
+  docxQuestion: Int
+}
+
+# Distinct from AnswerChoice, which belongs to the unused ExemplarQuestion type.
+type PPQAnswerChoice {
+  letter: String!
+  text: String!
+  isCorrect: Boolean!
 }
 
 # ── StudentResponse ────────────────────────────────────────────────────
@@ -144,10 +157,18 @@ type Misconception @model {
   # LLM-selected standard codes for the CCSS learning graph (used in next step display)
   prerequisiteGapCodes: [String]
   impactedObjectiveCodes: [String]
+  # The answer options attributed to this misconception at ingest, reconciled to the
+  # assessment's question numbering at upload. Counting affected students reads this.
+  wrongAnswers: [MisconceptionWrongAnswer]
   activities: [Activity] @hasMany
   postPpqImprovement: Float         # percent improvement after PostPPQ
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+}
+
+type MisconceptionWrongAnswer {
+  questionNumber: Int!    # the assessment's numbering, not the document's
+  letter: String!
 }
 
 type MisconceptionEvidence {
@@ -256,7 +277,7 @@ type SavedNextStep @model {
   targetObjectiveStandard: String
   priority: String!
   studentCount: Int
-  studentPercent: Int
+  studentPercent: Float   # Float, matching Misconception.studentPercent — Int truncated 0.46 to 0
   occurrence: String
   misconceptionSummary: String
   successIndicators: [String]
@@ -299,7 +320,7 @@ input GenerateNextStepOptionInput {
 input IngestPPQInput {
   ppqText: String!                  # Raw text extracted from PPQ.docx via mammoth
   classroomKey: String!             # e.g. "Classroom4"
-  grade: Int!
+  grade: Int                        # nullable: no longer sent — CCSS codes carry grade
   subject: String!
   state: String!
   schoolYear: String!

@@ -2,7 +2,7 @@
  * post-analyze.ts — ingest post-PPQ data and compute improvement metrics
  *
  * Run from the api/ directory:
- *   APPSYNC_SECRET_NAME=microcoach npx ts-node src/seed/post-analyze.ts
+ *   APPSYNC_SECRET_NAME=microcoach npx ts-node src/cli/post-analyze.ts
  *
  * This script:
  *   1. Uploads POST_PPQ Assessment + StudentResponse records (idempotent)
@@ -15,14 +15,14 @@
 
 import * as path from 'path';
 import * as XLSX from 'xlsx';
-import { createGqlClient, GqlFn } from './appsync-config';
-import { CLASSROOMS, DATA_ROOT } from './seedData';
+import { createGqlClient, GqlFn } from './util/appsync-config';
+import { CLASSROOMS, DATA_ROOT } from './util/seedData';
 import {
   ParsedAssessmentData,
   ParsedQuestionMeta,
   ParsedStudentRow,
   ParsedQuestionResponse,
-} from './types';
+} from './util/types';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 

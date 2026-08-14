@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { ClassroomConfig, ReferenceConfig } from './types';
 
-// Root of the Data/ folder: api/src/seed/ → api/src/ → api/ → microcoach/ → Data/
+// Root of the Data/ folder: api/src/cli/util/ → api/src/cli/ → api/src/ → api/ → microcoach/ → Data/
 export const DATA_ROOT = path.resolve(__dirname, '../../../Data');
 
 // Shared session config for all 4 pilot classrooms (same W27 Algebra assessment)

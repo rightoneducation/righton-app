@@ -133,6 +133,16 @@ export const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
   }
 `;
 
+export const UPDATE_MISCONCEPTION = /* GraphQL */ `
+  mutation UpdateMisconception($input: UpdateMisconceptionInput!) {
+    updateMisconception(input: $input) {
+      id
+      studentCount
+      studentPercent
+    }
+  }
+`;
+
 export const UPDATE_SESSION = /* GraphQL */ `
   mutation UpdateSession($input: UpdateSessionInput!) {
     updateSession(input: $input) {

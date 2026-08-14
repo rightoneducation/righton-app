@@ -1,4 +1,5 @@
 import { loadSecret } from './util/loadsecrets.mjs';
+import { parsePpqTable, formatOptionTable } from './util/parsePpqTable.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -13,6 +14,14 @@ const SUCCESS_IND_MAX      = ic.successIndicatorsPerMisconception?.max ?? 4;
 const ACCURACY_INSTRUCTIONS = ic.accuracyInstructions ?? [];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
+
+// One wrong answer choice attributed to a misconception. `docxQuestion` is the
+// question number as printed in the document (1,3,5,7,9,11 in the pilot files) —
+// NOT the resequenced number the assessment stores. Upload reconciles the two.
+const WrongAnswerRef = z.object({
+  docxQuestion: z.number().describe('The Q number exactly as printed in the Answer Options table'),
+  letter: z.string().describe('The option letter (A, B, C or D) from that question in the Answer Options table'),
+});
 
 const Misconception = z.object({
   title: z.string().describe('Short name for the misconception (e.g. "Inverting the Wrong Fraction")'),
@@ -30,6 +39,11 @@ const Misconception = z.object({
   successIndicators: z.array(z.string()).describe(
     `${SUCCESS_IND_MIN}-${SUCCESS_IND_MAX} specific, observable student behaviors that demonstrate mastery of this concept`
   ),
+  wrongAnswers: z.array(WrongAnswerRef).describe(
+    'Every wrong answer choice in the Answer Options table that reflects THIS misconception. ' +
+    'These are used to count affected students directly from response data, so pick only options ' +
+    'you are confident about — a wrong attribution produces a wrong student count.'
+  ),
 });
 
 const IngestPPQResponse = z.object({
@@ -41,6 +55,112 @@ const IngestPPQResponse = z.object({
   ),
 });
 
+// ── Link-only helpers ─────────────────────────────────────────────────────────
+
+const MisconceptionLink = z.object({
+  id: z.string().describe('The id of the misconception being linked, copied exactly from the list given'),
+  wrongAnswers: z.array(WrongAnswerRef).describe(
+    'Every wrong answer option in the Answer Options table that a student holding THIS misconception would choose'
+  ),
+});
+
+const LinkResponse = z.object({
+  links: z.array(MisconceptionLink),
+});
+
+/**
+ * Validate model-supplied option references against the parsed table. Shared by both
+ * modes, because a bad reference skews student counts identically either way.
+ */
+function validateRefs(refs, validOptions, label, rejected) {
+  return (refs ?? []).filter((ref) => {
+    const q = validOptions.get(ref.docxQuestion);
+    const letter = String(ref.letter ?? '').trim().toUpperCase();
+    if (!q) {
+      rejected.push({ ...ref, reason: 'unknownQuestion', misconception: label });
+      return false;
+    }
+    const option = q.options.find((o) => o.letter === letter);
+    if (!option) {
+      rejected.push({ ...ref, reason: 'unknownOption', misconception: label });
+      return false;
+    }
+    if (option.isCorrect) {
+      rejected.push({ ...ref, reason: 'markedCorrect', misconception: label });
+      return false;
+    }
+    ref.letter = letter;
+    return true;
+  });
+}
+
+async function linkExistingMisconceptions(openai, ppqText, existing) {
+  const optionTable = parsePpqTable(ppqText);
+  const validOptions = new Map(optionTable.map((q) => [q.docxQuestion, q]));
+
+  const prompt = `You are an expert K-12 math instructional coach.
+
+Below is the answer-option table from a Pre-Post Quiz, and a list of misconceptions that were previously identified from this same quiz.
+
+Your only job is to attribute answer options to misconceptions. Do NOT rewrite, rename, merge or add misconceptions.
+
+## Answer Options
+${formatOptionTable(optionTable)}
+
+## Misconceptions
+${existing.map((m) => `- id: ${m.id}\n  title: ${m.title}\n  description: ${m.description ?? ''}`).join('\n')}
+
+## Rules
+- For each misconception, list every option a student holding it would choose
+- Use the question numbers and option letters exactly as printed in the Answer Options table
+- Never list the correct answer for a question
+- Assign an option to at most one misconception; if two seem to fit, pick the better one
+- Some questions repeat the same distractor text across two letters — list whichever genuinely apply
+- Omit an option you are unsure of rather than guessing
+- Return one entry per misconception, using the id exactly as given. A misconception with no matching option gets an empty list
+
+Return JSON matching the schema.`;
+
+  const completion = await openai.chat.completions.create({
+    model: MODEL,
+    messages: [
+      { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
+      { role: 'user', content: prompt },
+    ],
+    response_format: zodResponseFormat(LinkResponse, 'linkResponse'),
+  });
+
+  const raw = completion.choices[0]?.message?.content;
+  if (!raw) throw new Error('Empty completion content');
+  const parsed = LinkResponse.parse(JSON.parse(raw));
+
+  const knownIds = new Set(existing.map((m) => m.id));
+  const rejected = [];
+  let claimed = 0;
+
+  const links = parsed.links
+    .filter((l) => {
+      if (knownIds.has(l.id)) return true;
+      rejected.push({ id: l.id, reason: 'unknownMisconceptionId' });
+      return false;
+    })
+    .map((l) => {
+      claimed += (l.wrongAnswers ?? []).length;
+      return { id: l.id, wrongAnswers: validateRefs(l.wrongAnswers, validOptions, l.id, rejected) };
+    });
+
+  // Every misconception gets an entry, even an empty one. A misconception no option
+  // maps to is a real result — it just contributes zero students downstream.
+  const byId = new Map(links.map((l) => [l.id, l.wrongAnswers]));
+  const complete = existing.map((m) => ({ id: m.id, wrongAnswers: byId.get(m.id) ?? [] }));
+
+  const kept = complete.reduce((n, l) => n + l.wrongAnswers.length, 0);
+  console.log(`[microcoachIngestPPQ] linkOnly: ${kept}/${claimed} references valid across ${existing.length} misconceptions`);
+  if (rejected.length) console.warn('[microcoachIngestPPQ] rejected:', JSON.stringify(rejected));
+
+  return { links: complete, optionTable, wrongAnswerLinkStats: { claimed, kept, rejected } };
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 
 export const handler = async (event) => {
@@ -51,7 +171,9 @@ export const handler = async (event) => {
 
   const ppqText      = input?.ppqText;
   const classroomKey = input?.classroomKey;
-  const grade        = input?.grade;
+  // `grade` is intentionally not read. It was an unvalidated free-text UI field
+  // that could contradict the standards in the document; the CCSS codes extracted
+  // from the PPQ itself carry grade already.
   const subject      = input?.subject;
   const state        = input?.state;
   const schoolYear   = input?.schoolYear;
@@ -60,8 +182,12 @@ export const handler = async (event) => {
   const weekNumber   = input?.weekNumber;
   const occurrence   = input?.occurrence ?? 'first';
 
-  if (!ppqText)      throw new Error('ppqText is required');
-  if (!classroomKey) throw new Error('classroomKey is required');
+  // Link-only mode attributes options to misconceptions that already exist. It has
+  // no classroom context and needs none — the guard below applies to full ingest only.
+  const isLinkOnly = Array.isArray(input?.existingMisconceptions);
+
+  if (!ppqText) throw new Error('ppqText is required');
+  if (!classroomKey && !isLinkOnly) throw new Error('classroomKey is required');
 
   const apiSecret = await loadSecret(apiSecretName);
   const { openai_api, OPENAI_API_KEY, API } = JSON.parse(apiSecret);
@@ -69,6 +195,30 @@ export const handler = async (event) => {
   if (!apiKey) throw new Error('Secret must contain openai_api, OPENAI_API_KEY, or API');
 
   const openai = new OpenAI({ apiKey });
+
+  // ── Link-only mode ────────────────────────────────────────────────────────
+  // Attributes answer options to misconceptions that ALREADY exist, without
+  // re-extracting them. Used to backfill archived sessions: a full re-ingest would
+  // mint new misconceptions with new ids and titles, discarding the very records
+  // the archive was captured from.
+  if (isLinkOnly) {
+    return JSON.stringify(
+      await linkExistingMisconceptions(openai, ppqText, input.existingMisconceptions)
+    );
+  }
+
+  // Parse the answer-option table deterministically. A malformed table is fatal:
+  // without it the model would be attributing misconceptions to options it cannot
+  // see, which is exactly the guesswork this field exists to remove.
+  const optionTable = parsePpqTable(ppqText);
+  const optionTableBlock = formatOptionTable(optionTable);
+  const validOptions = new Map(
+    optionTable.map((q) => [q.docxQuestion, q])
+  );
+  console.log(
+    `[microcoachIngestPPQ] parsed ${optionTable.length} questions: ` +
+    optionTable.map((q) => `Q${q.docxQuestion}=${q.correctAnswer}`).join(' ')
+  );
 
   const userContent = `
 You are an expert K-12 math instructional coach analyzing a Pre-Post Quiz (PPQ) to identify the misconceptions that students are most likely to hold based on the distractor answer choices.
@@ -81,13 +231,18 @@ Apply these rules to every string you generate:
 
 ## Classroom Context
 - Classroom: ${classroomKey}
-- Grade: ${grade}
 - Subject: ${subject}
 - State: ${state}
 - School Year: ${schoolYear}
 - Cohort Size: ${cohortSize}
 - Session: ${sessionLabel} (Week ${weekNumber})
 - Occurrence context: "${occurrence}" — use this to set the occurrence field on each misconception
+
+## Answer Options
+This is the answer-option table from the document, parsed and labelled. Use these
+exact question numbers and option letters when filling in \`wrongAnswers\`.
+
+${optionTableBlock}
 
 ## PPQ Document
 ${ppqText}
@@ -103,6 +258,14 @@ Analyze the PPQ questions, their answer choices, and the correct answers to iden
 - Map each distractor to the underlying cognitive mistake it represents
 - Group related distractors across questions that share the same root misconception
 - Rank misconceptions by how many questions/distractors share the same error pattern (priority "1" = most prevalent)
+
+**Recording the linkage (\`wrongAnswers\`):**
+- For each misconception, list every option in the Answer Options table that a student holding it would choose
+- Use the question number and option letter exactly as they appear in that table — not the order they appear in the document body
+- Never list the correct answer for a question
+- An option may belong to only one misconception; if two seem to fit, pick the better one
+- Some questions repeat the same distractor text across two letters. List whichever letters genuinely reflect the misconception; listing only one is fine
+- It is better to omit an option you are unsure of than to guess
 
 **For each misconception:**
 - title: A short, descriptive name (e.g. "Inverting the Wrong Fraction", "Sign Errors in Distribution")
@@ -136,6 +299,28 @@ Return JSON matching the schema.
     if (!raw) throw new Error('Empty completion content');
 
     const structured = IngestPPQResponse.parse(JSON.parse(raw));
+
+    // Validate every wrong-answer reference against the parsed table. A reference
+    // the table does not contain, or one naming the correct answer, would silently
+    // skew the student counts computed downstream — so drop it and say so.
+    const rejected = [];
+    let claimed = 0;
+    for (const m of structured.misconceptions) {
+      claimed += (m.wrongAnswers ?? []).length;
+      m.wrongAnswers = validateRefs(m.wrongAnswers, validOptions, m.title, rejected);
+    }
+
+    const kept = structured.misconceptions.reduce((n, m) => n + m.wrongAnswers.length, 0);
+    console.log(`[microcoachIngestPPQ] wrongAnswers: ${kept}/${claimed} references valid`);
+    if (rejected.length) {
+      console.warn('[microcoachIngestPPQ] rejected references:', JSON.stringify(rejected));
+    }
+
+    // The option table travels with the response so upload can attach answer-choice
+    // text to the assessment questions — nothing downstream can recover it otherwise.
+    structured.optionTable = optionTable;
+    structured.wrongAnswerLinkStats = { claimed, kept, rejected };
+
     return JSON.stringify(structured);
   } catch (error) {
     console.error('[microcoachIngestPPQ] Error', {

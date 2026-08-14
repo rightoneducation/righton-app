@@ -25,6 +25,11 @@ const DISCUSSION_Q_MAX        = nso.discussionQuestions?.max ?? 3;
 const GROUPS_MIN              = nso.studentGroups?.min ?? 2;
 const GROUPS_MAX              = nso.studentGroups?.max ?? 3;
 const STRATEGY_TAGS           = nso.strategyTags ?? [];
+// How many LVN strategies per factor get a full description in the prompt.
+// Defaults to all of them: a field that is not in the prompt cannot be ablated,
+// so nothing is filtered before there is evidence to filter on. Set
+// `nextStepOption.maxLvnStrategyDetail` in prompt-config.json to cap it later.
+const MAX_LVN_STRATEGY_DETAIL = nso.maxLvnStrategyDetail ?? Infinity;
 const ALLOWED_DURATION_BUCKETS = nso.allowedDurationBuckets ?? [];
 const OVERVIEW_BULLETS_MIN    = nso.overviewBullets?.min ?? 2;
 const OVERVIEW_BULLETS_MAX    = nso.overviewBullets?.max ?? 4;
@@ -143,6 +148,10 @@ export const handler = async (event) => {
 
   const openai = new OpenAI({ apiKey });
 
+  // Declared here rather than alongside the activity-generation inputs below,
+  // because the planning branch returns before reaching them and reads this.
+  const wantTrace = (event?.arguments?.input?.trace ?? event?.input?.trace) === true;
+
   // ── Planning mode: assign diverse structures across all misconceptions ────────
   // Triggered by planStructures: true. Runs once per classroom before generation.
   const planStructures = event?.arguments?.input?.planStructures ?? event?.input?.planStructures;
@@ -156,10 +165,10 @@ export const handler = async (event) => {
       ? ACTIVITY_STRUCTURES.map(s => `- ${s.name}: ${s.description}`).join('\n')
       : '(none provided — use your own judgment)';
 
-    const planPrompt = `You are an instructional design planner for a middle school math coaching tool.
+    const planPrompt = `You are an instructional design planner for a K-12 math coaching tool.
 
 A teacher will see activities for ${misconceptions.length} misconception(s) in a single session.
-Grade: ${classroomCtx.grade ?? 'unknown'} | Subject: ${classroomCtx.subject ?? 'math'} | Class size: ${classroomCtx.cohortSize ?? 'unknown'}
+Subject: ${classroomCtx.subject ?? 'math'} | Class size: ${classroomCtx.cohortSize ?? 'unknown'}
 
 Your job: assign a diverse set of activity structures across all misconceptions so that no two misconceptions use the same structure, and the overall session feels varied and pedagogically rich.
 
@@ -197,10 +206,31 @@ Return only the JSON array, no explanation.`;
       const parsed = JSON.parse(raw);
       // Handle both { assignments: [...] } and bare array responses
       const assignments = Array.isArray(parsed) ? parsed : (parsed.assignments ?? parsed[Object.keys(parsed)[0]] ?? []);
-      return JSON.stringify(assignments);
+
+      // Returns an envelope rather than a bare array so the call's token usage is
+      // visible. Previously this branch reported nothing, and its gpt-4o-mini spend
+      // was missing from every run manifest. Consumers accept both shapes, so a
+      // deployed Lambda on the old contract still works.
+      return JSON.stringify({
+        ok: true,
+        assignments,
+        ...(wantTrace && {
+          _trace: {
+            model: PLANNER_MODEL,
+            misconceptionCount: misconceptions.length,
+            resolvedPrompt: planPrompt,
+            subCalls: [{ label: 'plan-structures', model: PLANNER_MODEL, usage: completion?.usage ?? null, fellBack: false }],
+          },
+        }),
+      });
     } catch (err) {
+      // An empty array used to be indistinguishable from a failed call. Say which.
       console.error('[microcoachNextStepOption] planStructures failed:', err?.message);
-      return JSON.stringify([]);
+      return JSON.stringify({
+        ok: false,
+        assignments: [],
+        error: err?.message ?? 'planStructures failed',
+      });
     }
   }
 
@@ -212,6 +242,14 @@ Return only the JSON array, no explanation.`;
   const rawExistingActivities   = event?.arguments?.input?.existingActivities   ?? event?.input?.existingActivities;
   const suggestedStructure      = event?.arguments?.input?.suggestedStructure   ?? event?.input?.suggestedStructure ?? null;
   const preferredFormat         = event?.arguments?.input?.preferredFormat      ?? event?.input?.preferredFormat ?? 'whole_class';
+
+  // Eval instrumentation. Additive and inert unless explicitly requested, so
+  // production callers see byte-identical responses.
+  const traceSubCalls = [];
+  const recordSubCall = (label, model, completion, extra = {}) => {
+    if (!wantTrace) return;
+    traceSubCalls.push({ label, model, usage: completion?.usage ?? null, ...extra });
+  };
 
   if (rawMisconception == null)       throw new Error('misconception is required');
   if (rawLearningScienceData == null) throw new Error('learningScienceData is required');
@@ -233,7 +271,20 @@ Return only the JSON array, no explanation.`;
   const prerequisiteStandards = targetStandard?.prerequisiteStandards ?? [];
   const futureStandards       = targetStandard?.futureDependentStandards ?? [];
   const standardDescription   = targetStandard?.description ?? misconception.description ?? '';
+  const learningComponents    = targetStandard?.learningComponents ?? [];
+  const childStandards        = targetStandard?.childStandards ?? [];
+  const relatedStandards      = targetStandard?.relatedStandards ?? [];
   const lvnFactors            = targetStandard?.lvnFactors ?? [];
+
+  // Diagnostic: when the analysis stage emits a code the graph does not carry,
+  // targetStandard is undefined and ALL graph context silently drops out of this
+  // prompt. Surfaced here so it is measurable rather than invisible.
+  if (!targetStandard) {
+    console.warn('[microcoachNextStepOption] no targetStandard match — generating without graph context', {
+      misconceptionStandard: misconception.ccssStandard,
+      availableCodes: standards.map((s) => s.code),
+    });
+  }
 
   // ── Format knowledge graph section ────────────────────────────────────────
   const knowledgeGraphSection = `
@@ -241,6 +292,16 @@ Return only the JSON array, no explanation.`;
 
 **Standard Being Taught**: ${misconception.ccssStandard}
 ${standardDescription ? `**Standard Description**: ${standardDescription}` : ''}
+
+${learningComponents.length > 0 ? `**Learning Components** (the specific sub-skills this standard decomposes into):
+${learningComponents.map((c) => `  - ${c.description}`).join('\n')}
+Aim the activity at whichever of these sub-skills the misconception actually blocks, rather than at the standard as a whole.` : ''}
+
+${childStandards.length > 0 ? `**Child Standards** (finer-grained standards nested under this one):
+${childStandards.map((s) => `  - ${s.code}: ${s.description}`).join('\n')}` : ''}
+
+${relatedStandards.length > 0 ? `**Related Standards**:
+${relatedStandards.map((s) => `  - ${s.code}: ${s.description}`).join('\n')}` : ''}
 
 ${prerequisiteStandards.length > 0 ? `**Prerequisite Skills** (knowledge students should have but may be missing):
 ${prerequisiteStandards.map((s) => `  - ${s.code}: ${s.description}`).join('\n')}
@@ -252,12 +313,49 @@ Framing the importance of this fix in terms of these downstream skills can motiv
 `.trim();
 
   // ── Format LVN learning science section ───────────────────────────────────
+  // The graph attaches research-backed strategies to each factor. Before the
+  // 2026-08 rework these were fetched and then never rendered, so the model was
+  // asked to "use the LVN factors" while seeing only factor names.
+  const formatFactor = (f) => {
+    const strategies = f.strategies ?? [];
+    const detailed   = strategies.slice(0, MAX_LVN_STRATEGY_DETAIL);
+    const remaining  = strategies.slice(MAX_LVN_STRATEGY_DETAIL);
+    const lines = [`- **${f.name}** (${f.category}): ${f.description}`];
+    if (f.gradeLevel?.length) lines.push(`  Grade levels: ${f.gradeLevel.join(', ')}`);
+
+    if (detailed.length > 0) {
+      lines.push('  Research-backed strategies targeting this factor:');
+      lines.push(...detailed.map(
+        (s) => `    - **${s.name}**${s.category ? ` (${s.category})` : ''}: ${s.description}`
+      ));
+    }
+    if (remaining.length > 0) {
+      lines.push(`    - Also linked: ${remaining.map((s) => s.name).join(', ')}`);
+    }
+
+    if (f.learnerModels?.length) {
+      lines.push('  Learner models carrying this factor:');
+      lines.push(...f.learnerModels.map(
+        (m) => `    - **${m.name}**${m.description ? `: ${m.description}` : ''}`
+      ));
+    }
+
+    if (f.interactsWith?.length) {
+      lines.push('  Interacts with these other factors:');
+      lines.push(...f.interactsWith.map(
+        (i) => `    - **${i.name}**${i.description ? `: ${i.description}` : ''}`
+      ));
+    }
+
+    return lines.join('\n');
+  };
+
   const lvnSection = lvnFactors.length > 0 ? `
 ## LVN Learning Science Factors
 
-The following research-backed factors are linked to ${misconception.ccssStandard}. Use them to guide your strategy selection.
+The following research-backed factors are linked to ${misconception.ccssStandard}. Use them to guide your instructional approach and your strategy selection.
 
-${lvnFactors.map(f => `- **${f.name}** (${f.category}): ${f.description}`).join('\n')}
+${lvnFactors.map(formatFactor).join('\n\n')}
 
 Strategy selection guidance (choose the strategy tag that best fits the factors above):
 ${STRATEGY_TAGS.map(t => `- ${t.whenToUse} → **"${t.name}"**`).join('\n')}
@@ -321,7 +419,7 @@ ${WHOLE_CLASS_DESC}
 `.trim();
 
   const userContent = `
-You are an expert K-12 math instructional coach designing a targeted intervention activity for early-career middle school teachers.
+You are an expert K-12 math instructional coach designing a targeted intervention activity for early-career teachers.
 
 ## Writing Style Requirements
 Apply these rules to every string you generate:
@@ -345,7 +443,7 @@ A planning step reviewed all misconceptions in this session and assigned this st
 ` : ''}
 
 ## Classroom Feasibility
-This activity will be used in a live middle school classroom by an early-career teacher. It must:
+This activity will be used in a live classroom by an early-career teacher. It must:
 ${CLASSROOM_FEASIBILITY.map(r => `- ${r}`).join('\n')}
 
 ## UDL-Informed Instruction
@@ -409,7 +507,7 @@ ${misconception.evidence?.aiThinkingPattern ? `**Student Thinking Pattern**: ${m
 ${misconception.successIndicators?.length ? `**Success Indicators** (what mastery looks like):\n${misconception.successIndicators.map((s) => `  - ${s}`).join('\n')}` : ''}
 
 ## Classroom Context
-Grade: ${classroomContext.grade ?? 'unknown'} | Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.cohortSize ?? 'unknown'}
+Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.cohortSize ?? 'unknown'}
 
 ---
 
@@ -442,7 +540,7 @@ Requirements for each field:
 - **tabs.activitySteps.incorrectWorkedExample1**, **incorrectWorkedExample2**, **incorrectWorkedExample3**: Three separate required fields, one incorrect worked example each. Every field must be populated. Each must:
   - Show a complete problem and the full incorrect student work step-by-step (not just the wrong answer)
   - Reflect the specific misconception error pattern (not a random mistake)
-  - Use grade-appropriate language for middle school
+  - Use language appropriate to the standard being addressed
   - Be self-contained — immediately usable on a board or slide with no additional prep
 
 **Critical rules for incorrect worked examples** (these are the most common failure mode):
@@ -491,13 +589,22 @@ ${JSON.stringify(examples, null, 2)}`;
       });
       const raw = completion.choices[0]?.message?.content ?? '[]';
       const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed) || parsed.length !== examples.length) return examples;
+      if (!Array.isArray(parsed) || parsed.length !== examples.length) {
+        recordSubCall('validate-worked-examples', VALIDATOR_MODEL, completion, {
+          fellBack: true, reason: 'shape mismatch',
+        });
+        return examples;
+      }
+      recordSubCall('validate-worked-examples', VALIDATOR_MODEL, completion, { fellBack: false });
       return parsed.map((v, i) => ({
         problem:       (typeof v?.problem      === 'string' && v.problem.trim())      ? v.problem      : examples[i].problem,
         incorrectWork: (typeof v?.incorrectWork === 'string' && v.incorrectWork.trim()) ? v.incorrectWork : examples[i].incorrectWork,
       }));
     } catch (err) {
       console.warn('[microcoachNextStepOption] validateWorkedExamples failed:', err?.message);
+      recordSubCall('validate-worked-examples', VALIDATOR_MODEL, null, {
+        fellBack: true, reason: err?.message ?? 'error',
+      });
       return examples;
     }
   };
@@ -516,10 +623,19 @@ ${JSON.stringify(examples, null, 2)}`;
       });
       const raw = completion.choices[0]?.message?.content ?? '{}';
       const result = JSON.parse(raw).problem;
-      if (typeof result === 'string' && result.trim()) return result;
+      if (typeof result === 'string' && result.trim()) {
+        recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, { fellBack: false });
+        return result;
+      }
+      recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, {
+        fellBack: true, reason: 'empty or non-string problem',
+      });
       return problem;
     } catch (err) {
       console.warn('[microcoachNextStepOption] validateActivityProblem failed:', err?.message);
+      recordSubCall('validate-activity-problem', VALIDATOR_MODEL, null, {
+        fellBack: true, reason: err?.message ?? 'error',
+      });
       return problem;
     }
   };
@@ -536,6 +652,8 @@ ${JSON.stringify(examples, null, 2)}`;
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
+
+    recordSubCall('generate-activity', MODEL, completion, { fellBack: false });
 
     const structured = NextStepActivity.parse(JSON.parse(raw));
 
@@ -562,6 +680,28 @@ ${JSON.stringify(examples, null, 2)}`;
       misconception.ccssStandard
     );
 
+    if (wantTrace) {
+      return JSON.stringify({
+        ...structured,
+        _trace: {
+          resolvedPrompt: userContent,
+          model: MODEL,
+          preferredFormat,
+          targetStandardMatched: Boolean(targetStandard),
+          targetStandardCode: targetStandard?.code ?? null,
+          misconceptionStandard: misconception.ccssStandard ?? null,
+          availableStandardCodes: standards.map((s) => s.code),
+          graphUnits: {
+            learningComponents: learningComponents.length,
+            prerequisites: prerequisiteStandards.length,
+            downstream: futureStandards.length,
+            lvnFactors: lvnFactors.length,
+            lvnStrategies: lvnFactors.reduce((n, f) => n + (f.strategies?.length ?? 0), 0),
+          },
+          subCalls: traceSubCalls,
+        },
+      });
+    }
     return JSON.stringify(structured);
   } catch (error) {
     console.error('[microcoachNextStepOption] Error', {

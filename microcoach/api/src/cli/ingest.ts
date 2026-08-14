@@ -8,14 +8,14 @@
  * upload.ts reads those JSON files automatically — no manual copy-paste needed.
  *
  * Run from the api/ directory:
- *   APPSYNC_SECRET_NAME=microcoach npx ts-node src/seed/ingest-ppq.ts
+ *   APPSYNC_SECRET_NAME=microcoach npx ts-node src/cli/ingest.ts
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import mammoth from 'mammoth';
-import { createGqlClient } from './appsync-config';
-import { CLASSROOMS, DATA_ROOT } from './seedData';
+import { createGqlClient } from './util/appsync-config';
+import { CLASSROOMS, DATA_ROOT } from './util/seedData';
 
 const INGEST_PPQ = /* GraphQL */ `
   mutation IngestPPQ($input: IngestPPQInput!) {
@@ -67,7 +67,7 @@ async function main() {
           input: {
             ppqText,
             classroomKey: classroom.key,
-            grade: classroom.grade,
+            // grade deliberately not sent — see microcoachIngestPPQ
             subject: classroom.subject,
             state: classroom.state,
             schoolYear: classroom.schoolYear,

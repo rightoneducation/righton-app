@@ -30,6 +30,12 @@ export interface MisconceptionPlaceholder {
   priority: '1' | '2' | '3' | '4';
   occurrence: 'first' | 'recurring';
   successIndicators: string[];
+  /**
+   * Answer options attributed to this misconception at ingest. Absent on the
+   * seedData fallback and on sessions ingested before the option table existed.
+   * `questionNumber` is the assessment's numbering, reconciled at upload.
+   */
+  wrongAnswers?: { questionNumber: number; letter: string }[];
 }
 
 export interface ReferenceConfig {
