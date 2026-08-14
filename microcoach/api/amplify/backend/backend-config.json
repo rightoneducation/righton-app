@@ -46,6 +46,11 @@
     }
   },
   "function": {
+    "microcoachEvalScore": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachGetLearningScience": {
       "build": true,
       "providerPlugin": "awscloudformation",
