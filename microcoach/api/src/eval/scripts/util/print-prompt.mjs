@@ -1,21 +1,23 @@
 /**
  * print-prompt.mjs — show the learning-science prompt section the pipeline builds.
  *
- * Offline: no AWS, no LLM, no cost. Reads an archived pilot graph response and runs
+ * Offline: no AWS, no LLM, no cost. Reads a fixture's archived graph response and runs
  * the *real* normalizer and formatter the Lambdas use, so what you see here is what
  * the model would see.
  *
- * Usage (from microcoach/):
- *   node eval/print-prompt.mjs                       # first pilot session
- *   node eval/print-prompt.mjs --session ef3872a1
- *   node eval/print-prompt.mjs --stats               # counts only, skip the prose
- *   node eval/print-prompt.mjs --data <dir>          # override dataset location
+ * Usage (from api/):
+ *   node src/eval/scripts/util/print-prompt.mjs                    # first session
+ *   node src/eval/scripts/util/print-prompt.mjs --session ef3872a1
+ *   node src/eval/scripts/util/print-prompt.mjs --stats            # counts only
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import os from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { normalizeStandard } from '../../../../amplify/backend/function/microcoachGetLearningScience/src/util/normalizeStandard.mjs';
 import { formatLearningScience } from '../../../../amplify/backend/function/microcoachLLMAnalysis/src/util/formatLearningScience.mjs';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SESSION_DIR = path.resolve(__dirname, '../../fixtures');
 
 const arg = (flag, fallback = null) => {
   const i = process.argv.indexOf(flag);
@@ -23,44 +25,29 @@ const arg = (flag, fallback = null) => {
 };
 const has = (flag) => process.argv.includes(flag);
 
-const DEFAULT_DIRS = [
-  path.join(os.homedir(), 'righton-eval/data/dataset/sessions'),
-  path.join(os.homedir(), 'Desktop/Data/dataset/sessions'),
-];
-
-function resolveDataDir() {
-  const override = arg('--data');
-  if (override) return override;
-  const found = DEFAULT_DIRS.find((d) => fs.existsSync(d));
-  if (!found) {
-    console.error('Could not find the pilot dataset. Looked in:');
-    DEFAULT_DIRS.forEach((d) => console.error(`  ${d}`));
-    console.error('Pass --data <dir> to point at it.');
+/** Session ids, discovered from the directory — same rule importEvalFixtures uses. */
+function loadSession(wanted) {
+  const ids = fs.existsSync(SESSION_DIR)
+    ? fs.readdirSync(SESSION_DIR, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name).sort()
+    : [];
+  if (ids.length === 0) {
+    console.error(`No fixture sessions in ${SESSION_DIR}`);
     process.exit(1);
   }
-  return found;
+  const id = wanted ? ids.find((i) => i.startsWith(wanted)) : ids[0];
+  if (!id) {
+    console.error(`No session matching "${wanted}". Available: ${ids.join(', ')}`);
+    process.exit(1);
+  }
+  // The graph response lives in kg.json; input.json holds the database rows.
+  return { id, kg: JSON.parse(fs.readFileSync(path.join(SESSION_DIR, id, 'kg.json'), 'utf8')) };
 }
 
-function loadSession(dir, wanted) {
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json')).sort();
-  if (files.length === 0) {
-    console.error(`No session files in ${dir}`);
-    process.exit(1);
-  }
-  const file = wanted ? files.find((f) => f.startsWith(wanted)) : files[0];
-  if (!file) {
-    console.error(`No session matching "${wanted}". Available: ${files.map((f) => f.replace('.json', '')).join(', ')}`);
-    process.exit(1);
-  }
-  return { file, data: JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')) };
-}
-
-const dir = resolveDataDir();
-const { file, data } = loadSession(dir, arg('--session'));
+const { id: file, kg } = loadSession(arg('--session'));
 
 // Raw graph items exactly as the API returned them during the pilot.
 const rawItems = [];
-for (const q of data.knowledgeGraphQueries ?? []) {
+for (const q of kg.knowledgeGraphQueries ?? []) {
   for (const item of q.graphResponse?.data?.standardsFrameworkItems ?? []) rawItems.push(item);
 }
 
@@ -88,7 +75,7 @@ const stats = {
 };
 
 console.log('='.repeat(72));
-console.log(`session ${file.replace('.json', '')}   standards: ${standards.map((s) => s.code).join(', ')}`);
+console.log(`session ${file}   standards: ${standards.map((s) => s.code).join(', ')}`);
 console.log('='.repeat(72));
 
 console.log('\nWhat the normalizer produced:');

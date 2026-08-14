@@ -46,11 +46,11 @@
         },
         "microcoachTeacherUpload": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
-          "s3Key": "amplify-builds/microcoachTeacherUpload-465573455a315152386a-build.zip"
+          "s3Key": "amplify-builds/microcoachTeacherUpload-6c523367397476626874-build.zip"
         },
         "microcoachTeacherUploadGen": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
-          "s3Key": "amplify-builds/microcoachTeacherUploadGen-6d467a2b776b3274702f-build.zip"
+          "s3Key": "amplify-builds/microcoachTeacherUploadGen-2f3851733751646c7134-build.zip"
         }
       },
       "api": {

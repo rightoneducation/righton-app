@@ -3,9 +3,9 @@
  *
  * A fixture is three files, mirroring where the data comes from in production:
  *
- *   sessions/<id>/input.json   the rows `yarn upload` writes to the database
- *   sessions/<id>/kg.json      what the Learning Commons query returns
- *   sessions/<id>/meta.json    session id and provenance
+ *   fixtures/<id>/input.json   the rows `yarn upload` writes to the database
+ *   fixtures/<id>/kg.json      what the Learning Commons query returns
+ *   fixtures/<id>/meta.json    session id and provenance
  *
  * `input.json` matches the production write shape field-for-field, so loading is
  * mostly a re-nesting job: the pipeline reads `classroom.students.items` and
@@ -18,7 +18,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { pathToFileURL } from 'url';
 
-const SESSION_DIR = path.resolve(__dirname, '../../fixtures/sessions');
+const SESSION_DIR = path.resolve(__dirname, '../../fixtures');
 
 // The graph normalizer is the Lambda's own module, imported dynamically so it is
 // not statically resolved (it sits outside rootDir, and it is ESM). Using the real
@@ -93,14 +93,16 @@ export function loadFixture(idOrPrefix: string): Fixture {
   const kg = readJson(id, 'kg.json');
   const meta = readJson(id, 'meta.json');
 
-  const assessments: any[] = input.assessments ?? [];
+  // `input.json` is keyed by DynamoDB table name, so each read below names the table
+  // the equivalent production query would hit.
+  const assessments: any[] = input.Assessment ?? [];
   const ppq = assessments.find((a) => a.type === 'PPQ') ?? null;
   if (!ppq) throw new Error(`Fixture ${id} has no PPQ assessment`);
 
   // The archive holds every response row for the session, PPQ and POST_PPQ alike.
   // Production fetches by `assessmentId: ppq.id`, so scope it the same way — an
   // unfiltered replay feeds post-test answers into the wrong-answer distribution.
-  const studentResponses: any[] = (input.studentResponses ?? [])
+  const studentResponses: any[] = (input.StudentResponse ?? [])
     .filter((sr: any) => sr.assessmentId === ppq.id);
 
   const rawGraphItems: any[] = (kg.knowledgeGraphQueries ?? []).flatMap(
@@ -111,12 +113,12 @@ export function loadFixture(idOrPrefix: string): Fixture {
     id,
     // `.items` nesting is the only reshaping needed — the fields themselves already
     // match what upload writes.
-    classroom: { ...input.classroom, students: { items: input.students ?? [] } },
+    classroom: { ...input.Classroom, students: { items: input.Student ?? [] } },
     currentSession: {
-      ...input.session,
+      ...input.Session,
       id: meta.sessionId,
       assessments: { items: assessments },
-      misconceptions: { items: input.misconceptions ?? [] },
+      misconceptions: { items: input.Misconception ?? [] },
     },
     ppq,
     studentResponses,

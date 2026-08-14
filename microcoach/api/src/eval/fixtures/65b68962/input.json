@@ -1,5 +1,5 @@
 {
-  "classroom": {
+  "Classroom": {
     "id": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
     "classroomName": "Classroom 4",
     "grade": 8,
@@ -8,7 +8,207 @@
     "schoolYear": "2025-26",
     "cohortSize": 22
   },
-  "session": {
+  "Student": [
+    {
+      "id": "S0513",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0513",
+      "externalId": "S0513",
+      "confidenceLevel": 4.2,
+      "status": "active"
+    },
+    {
+      "id": "S0162",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0162",
+      "externalId": "S0162",
+      "confidenceLevel": 4.7,
+      "status": "active"
+    },
+    {
+      "id": "S0943",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0943",
+      "externalId": "S0943",
+      "confidenceLevel": 4.4,
+      "status": "active"
+    },
+    {
+      "id": "S1433",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1433",
+      "externalId": "S1433",
+      "confidenceLevel": 3.8,
+      "status": "active"
+    },
+    {
+      "id": "S0816",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0816",
+      "externalId": "S0816",
+      "confidenceLevel": 4.7,
+      "status": "active"
+    },
+    {
+      "id": "S0338",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0338",
+      "externalId": "S0338",
+      "confidenceLevel": 3.5,
+      "status": "active"
+    },
+    {
+      "id": "S0887",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0887",
+      "externalId": "S0887",
+      "confidenceLevel": 3.8,
+      "status": "active"
+    },
+    {
+      "id": "S0385",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0385",
+      "externalId": "S0385",
+      "confidenceLevel": 5,
+      "status": "active"
+    },
+    {
+      "id": "S0717",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0717",
+      "externalId": "S0717",
+      "confidenceLevel": 4.8,
+      "status": "active"
+    },
+    {
+      "id": "S1113",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1113",
+      "externalId": "S1113",
+      "confidenceLevel": 4.5,
+      "status": "active"
+    },
+    {
+      "id": "S0014",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0014",
+      "externalId": "S0014",
+      "confidenceLevel": 4.7,
+      "status": "active"
+    },
+    {
+      "id": "S0949",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0949",
+      "externalId": "S0949",
+      "confidenceLevel": 4.3,
+      "status": "active"
+    },
+    {
+      "id": "S0238",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0238",
+      "externalId": "S0238",
+      "confidenceLevel": 5,
+      "status": "active"
+    },
+    {
+      "id": "S1184",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1184",
+      "externalId": "S1184",
+      "confidenceLevel": 3.7,
+      "status": "active"
+    },
+    {
+      "id": "S1258",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1258",
+      "externalId": "S1258",
+      "confidenceLevel": 4.3,
+      "status": "active"
+    },
+    {
+      "id": "S1203",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1203",
+      "externalId": "S1203",
+      "confidenceLevel": 3.8,
+      "status": "active"
+    },
+    {
+      "id": "S0029",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0029",
+      "externalId": "S0029",
+      "confidenceLevel": 3.2,
+      "status": "active"
+    },
+    {
+      "id": "S1060",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1060",
+      "externalId": "S1060",
+      "confidenceLevel": 4.7,
+      "status": "active"
+    },
+    {
+      "id": "S1435",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S1435",
+      "externalId": "S1435",
+      "confidenceLevel": 2.8,
+      "status": "active"
+    },
+    {
+      "id": "S0936",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0936",
+      "externalId": "S0936",
+      "confidenceLevel": 4.3,
+      "status": "active"
+    },
+    {
+      "id": "S0468",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0468",
+      "externalId": "S0468",
+      "confidenceLevel": 2.8,
+      "status": "active"
+    },
+    {
+      "id": "S0082",
+      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
+      "name": "S0082",
+      "externalId": "S0082",
+      "confidenceLevel": 3.4,
+      "status": "active"
+    }
+  ],
+  "Session": {
     "sessionLabel": "Session1",
     "weekNumber": 27,
     "topic": "Linear Equations and Systems of Inequalities",
@@ -22,7 +222,7 @@
     "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
     "classroomSessionsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305"
   },
-  "assessments": [
+  "Assessment": [
     {
       "id": "fcb14ca7-300a-4b03-8441-c359146d1b42",
       "assessmentCode": "ALG.08.RTD.W28.ClearingTheFraction.COACH",
@@ -254,7 +454,7 @@
       "sessionAssessmentsId": "65b68962-d218-4a35-84f2-de3789bf6272"
     }
   ],
-  "studentResponses": [
+  "StudentResponse": [
     {
       "questionResponses": [
         {
@@ -1703,7 +1903,7 @@
       "studentId": "S0082"
     }
   ],
-  "misconceptions": [
+  "Misconception": [
     {
       "ccssStandard": "HSA-REI.B.3",
       "priority": "3",
@@ -1811,206 +2011,6 @@
           "letter": "A"
         }
       ]
-    }
-  ],
-  "students": [
-    {
-      "id": "S0513",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0513",
-      "externalId": "S0513",
-      "confidenceLevel": 4.2,
-      "status": "active"
-    },
-    {
-      "id": "S0162",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0162",
-      "externalId": "S0162",
-      "confidenceLevel": 4.7,
-      "status": "active"
-    },
-    {
-      "id": "S0943",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0943",
-      "externalId": "S0943",
-      "confidenceLevel": 4.4,
-      "status": "active"
-    },
-    {
-      "id": "S1433",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S1433",
-      "externalId": "S1433",
-      "confidenceLevel": 3.8,
-      "status": "active"
-    },
-    {
-      "id": "S0816",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0816",
-      "externalId": "S0816",
-      "confidenceLevel": 4.7,
-      "status": "active"
-    },
-    {
-      "id": "S0338",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0338",
-      "externalId": "S0338",
-      "confidenceLevel": 3.5,
-      "status": "active"
-    },
-    {
-      "id": "S0887",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0887",
-      "externalId": "S0887",
-      "confidenceLevel": 3.8,
-      "status": "active"
-    },
-    {
-      "id": "S0385",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0385",
-      "externalId": "S0385",
-      "confidenceLevel": 5,
-      "status": "active"
-    },
-    {
-      "id": "S0717",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0717",
-      "externalId": "S0717",
-      "confidenceLevel": 4.8,
-      "status": "active"
-    },
-    {
-      "id": "S1113",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S1113",
-      "externalId": "S1113",
-      "confidenceLevel": 4.5,
-      "status": "active"
-    },
-    {
-      "id": "S0014",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0014",
-      "externalId": "S0014",
-      "confidenceLevel": 4.7,
-      "status": "active"
-    },
-    {
-      "id": "S0949",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0949",
-      "externalId": "S0949",
-      "confidenceLevel": 4.3,
-      "status": "active"
-    },
-    {
-      "id": "S0238",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0238",
-      "externalId": "S0238",
-      "confidenceLevel": 5,
-      "status": "active"
-    },
-    {
-      "id": "S1184",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S1184",
-      "externalId": "S1184",
-      "confidenceLevel": 3.7,
-      "status": "active"
-    },
-    {
-      "id": "S1258",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S1258",
-      "externalId": "S1258",
-      "confidenceLevel": 4.3,
-      "status": "active"
-    },
-    {
-      "id": "S1203",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S1203",
-      "externalId": "S1203",
-      "confidenceLevel": 3.8,
-      "status": "active"
-    },
-    {
-      "id": "S0029",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0029",
-      "externalId": "S0029",
-      "confidenceLevel": 3.2,
-      "status": "active"
-    },
-    {
-      "id": "S1060",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S1060",
-      "externalId": "S1060",
-      "confidenceLevel": 4.7,
-      "status": "active"
-    },
-    {
-      "id": "S1435",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S1435",
-      "externalId": "S1435",
-      "confidenceLevel": 2.8,
-      "status": "active"
-    },
-    {
-      "id": "S0936",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0936",
-      "externalId": "S0936",
-      "confidenceLevel": 4.3,
-      "status": "active"
-    },
-    {
-      "id": "S0468",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0468",
-      "externalId": "S0468",
-      "confidenceLevel": 2.8,
-      "status": "active"
-    },
-    {
-      "id": "S0082",
-      "classroomId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "classroomStudentsId": "d40ffcf5-cb53-48af-a1ed-ff5e2255b305",
-      "name": "S0082",
-      "externalId": "S0082",
-      "confidenceLevel": 3.4,
-      "status": "active"
     }
   ]
 }

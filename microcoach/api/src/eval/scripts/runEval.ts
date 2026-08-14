@@ -14,10 +14,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { spawnSync } from 'child_process';
-import { MaskOptionEnum } from '../../types';
+import { MaskOptionEnum } from '../types';
 
-const SESSIONS_DIR = path.resolve(__dirname, '../../fixtures/sessions');
-const GENERATE = path.resolve(__dirname, '../../../cli/generate.ts');
+const SESSIONS_DIR = path.resolve(__dirname, '../fixtures');
+const GENERATE = path.resolve(__dirname, '../../cli/generate.ts');
 
 const CONDITIONS = Object.keys(MaskOptionEnum) as (keyof typeof MaskOptionEnum)[];
 

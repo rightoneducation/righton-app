@@ -25,7 +25,7 @@
     "post-analyze": "APPSYNC_SECRET_NAME=microcoach ts-node src/cli/post-analyze.ts",
     "sync-prompt-config": "node scripts/sync-prompt-config.mjs",
     "test": "jest",
-    "eval": "ts-node src/eval/scripts/pipeline/runEval.ts"
+    "eval": "ts-node src/eval/scripts/runEval.ts"
   },
   "files": [
     "lib"

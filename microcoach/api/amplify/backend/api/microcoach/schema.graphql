@@ -277,7 +277,7 @@ type SavedNextStep @model {
   targetObjectiveStandard: String
   priority: String!
   studentCount: Int
-  studentPercent: Int
+  studentPercent: Float   # Float, matching Misconception.studentPercent — Int truncated 0.46 to 0
   occurrence: String
   misconceptionSummary: String
   successIndicators: [String]

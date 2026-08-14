@@ -18,6 +18,7 @@ import {
   LIST_CONTEXT_DATA,
   STUDENT_RESPONSES_BY_ASSESSMENT,
   UPDATE_SESSION,
+  UPDATE_MISCONCEPTION,
   UPDATE_CLASSROOM_WEEK,
 } from './util/graphql.mjs';
 
@@ -598,6 +599,23 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
     },
   });
   console.log('  ✓ Session updated');
+
+  // PARITY: mirrors the write-back in src/cli/generate.ts.
+  //
+  // These columns have existed since the model was defined and were never populated,
+  // which is why the UI's intervention cards have always read zero.
+  // `sourceMisconceptionId` is the join key; a next step the model reported as
+  // genuinely new has none and is skipped rather than guessed at.
+  const withCounts = nextSteps.filter((n) => n.sourceMisconceptionId && n.studentCount != null);
+  if (withCounts.length) {
+    console.log(`  Updating student counts on ${withCounts.length} misconception(s)...`);
+    for (const n of withCounts) {
+      await gql(UPDATE_MISCONCEPTION, {
+        input: { id: n.sourceMisconceptionId, studentCount: n.studentCount, studentPercent: n.studentPercent },
+      });
+    }
+    console.log('  ✓');
+  }
 
   console.log(`  Setting currentWeek to ${currentStub.weekNumber}...`);
   await gql(UPDATE_CLASSROOM_WEEK, { input: { id: classroom.id, currentWeek: currentStub.weekNumber } });

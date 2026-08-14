@@ -14,11 +14,11 @@
 
 import { createGqlClient, GqlFn } from './util/appsync-config';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import { RunCapture, NoopCapture, Capture } from '../eval/scripts/pipeline/exportEvalOutputs';
-import { loadFixture, normalizeRawGraphItems, Fixture } from '../eval/scripts/pipeline/importEvalFixtures';
-import { maskQuery } from '../eval/scripts/pipeline/maskQuery';
+import { RunCapture, NoopCapture, Capture } from '../eval/scripts/util/exportEvalOutputs';
+import { loadFixture, normalizeRawGraphItems, Fixture } from '../eval/scripts/util/importEvalFixtures';
+import { maskQuery } from '../eval/scripts/util/maskQuery';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
-import { computeMisconceptionReach } from '../eval/scripts/pipeline/computeReach';
+import { computeMisconceptionReach } from '../eval/scripts/util/computeReach';
 
 const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 
@@ -223,6 +223,16 @@ const UPDATE_SESSION = /* GraphQL */ `
       id
       status
       pregeneratedNextSteps
+    }
+  }
+`;
+
+const UPDATE_MISCONCEPTION = /* GraphQL */ `
+  mutation UpdateMisconception($input: UpdateMisconceptionInput!) {
+    updateMisconception(input: $input) {
+      id
+      studentCount
+      studentPercent
     }
   }
 `;
@@ -851,6 +861,28 @@ async function processClassroom(
       },
     });
     console.log(' ✓');
+
+    // Write the computed counts back onto the Misconception rows. These columns have
+    // existed since the model was defined and were never populated, which is why the
+    // UI's intervention cards have always read zero. `sourceMisconceptionId` is the
+    // join key; a next step the model reported as genuinely new has none and is
+    // skipped rather than guessed at.
+    const withCounts = nextSteps.filter(
+      (n: any) => n.sourceMisconceptionId && n.studentCount != null,
+    );
+    if (withCounts.length) {
+      process.stdout.write(`  Updating student counts on ${withCounts.length} misconception(s)...`);
+      for (const n of withCounts) {
+        await gql(UPDATE_MISCONCEPTION, {
+          input: {
+            id: n.sourceMisconceptionId,
+            studentCount: n.studentCount,
+            studentPercent: n.studentPercent,
+          },
+        });
+      }
+      console.log(' ✓');
+    }
 
     process.stdout.write(`  Setting currentWeek to ${currentStub.weekNumber}...`);
     await gql(UPDATE_CLASSROOM_WEEK, { input: { id: classroom.id, currentWeek: currentStub.weekNumber } });

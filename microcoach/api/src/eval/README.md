@@ -6,7 +6,7 @@ withholding one part of it at a time and comparing the results.
 One command, run from `api/`:
 
 ```bash
-yarn eval
+yarn eval --session all
 ```
 
 **No database access.** Every run reads frozen fixtures from disk and writes only to
@@ -92,11 +92,11 @@ aggregating.
 
 ## Fixtures
 
-`src/eval/fixtures/sessions/<id>/` — one folder per session, three files:
+`src/eval/fixtures/<id>/` — one folder per session, three files:
 
 | file | contents | production equivalent |
 |---|---|---|
-| `input.json` | classroom, session, assessments, student responses, misconceptions | the rows `yarn upload` writes to the database |
+| `input.json` | keyed by DynamoDB table: `Classroom`, `Student`, `Session`, `Assessment`, `StudentResponse`, `Misconception` | the rows `yarn upload` writes to the database |
 | `kg.json` | the archived Learning Commons responses | what the graph query returns at generate time |
 | `meta.json` | session id and provenance | none — harness metadata |
 
@@ -115,16 +115,17 @@ unscoreable there.
 ```
 src/eval/
   types.ts                     shared eval types, including the condition enum
-  fixtures/sessions/<id>/      frozen input
+  fixtures/<id>/               frozen input
   runs/<runId>/                run output
-  scripts/pipeline/
+  scripts/
     runEval.ts                 entry point for `yarn eval`
-    importEvalFixtures.ts      loads a fixture from disk
-    exportEvalOutputs.ts       writes the run directory
-    maskQuery.ts               applies a condition to the graph payload
-    computeReach.ts            student counts from response data
-    print-prompt.mjs           offline prompt inspector
-  scripts/scoring/
-    scoreMisconception.ts      misconception rubric
-    scoreNextStep.ts           activity rubric
+    util/
+      importEvalFixtures.ts    loads a fixture from disk
+      exportEvalOutputs.ts     writes the run directory
+      maskQuery.ts             applies a condition to the graph payload
+      computeReach.ts          student counts from response data
+      print-prompt.mjs         offline prompt inspector
+    scoring/
+      scoreMisconception.ts    misconception rubric
+      scoreNextStep.ts         activity rubric
 ```
