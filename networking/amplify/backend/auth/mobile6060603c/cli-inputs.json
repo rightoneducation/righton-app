@@ -15,7 +15,7 @@
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "Your RightOn! verification code",
-    "emailVerificationMessage": "Your verification code is {####}. \n Mistakes are where thinking happens \n Team RightOn",
+    "emailVerificationMessage": "Your verification code is {####}.<br />Mistakes are where thinking happens!<br />Team RightOn",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
