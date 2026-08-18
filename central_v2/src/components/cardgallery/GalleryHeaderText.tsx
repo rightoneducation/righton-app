@@ -23,10 +23,11 @@ interface GalleryHeaderTextProps<T> {
 }
 
 function formatGrades(grades: string[]): string {
-  if (grades.length === 0) return '';
-  if (grades.length === 1) return grades[0];
-  if (grades.length === 2) return `${grades[0]} and ${grades[1]}`;
-  return `${grades.slice(0, -1).join(', ')}, and ${grades[grades.length - 1]}`;
+  const gradesSorted = grades.sort();
+  if (gradesSorted.length === 0) return '';
+  if (gradesSorted.length === 1) return gradesSorted[0];
+  if (gradesSorted.length === 2) return `${gradesSorted[0]} and ${gradesSorted[1]}`;
+  return `${gradesSorted.slice(0, -1).join(', ')}, and ${gradesSorted[gradesSorted.length - 1]}`;
 }
 
 export default function GalleryHeaderText<
@@ -68,7 +69,7 @@ export default function GalleryHeaderText<
           )}
           {grades && grades.length > 0 && (
             <GradesText screenSize={screenSize}>
-              in {formattedGrades}
+              for Grade{grades.length > 1 ? 's' : ''} {formattedGrades}
             </GradesText>
           )}
           {searchedElements && searchedElements.length === 0 && (
