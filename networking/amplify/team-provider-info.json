@@ -17,7 +17,7 @@
         "mobile6060603cPostConfirmation": {
           "GROUP": "authusers",
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-765637304e6857356974-build.zip"
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-5863745464416e6f7a62-build.zip"
         },
         "S3Trigger04eb3a91": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
@@ -33,7 +33,7 @@
         },
         "shareContent": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
-          "s3Key": "amplify-builds/shareContent-66375941454c56624566-build.zip"
+          "s3Key": "amplify-builds/shareContent-7541356a56712b2f742f-build.zip"
         },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
