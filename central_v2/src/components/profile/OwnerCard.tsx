@@ -145,7 +145,13 @@ export default function OwnerCard({
           <img
             src={imageLink}
             alt="Right On Logo"
-            style={{ width: '50px', height: '50px' }}
+            style={{
+              width: '50px',
+              height: '50px',
+              flexShrink: 0,
+              borderRadius: '50%',
+              objectFit: 'cover',
+            }}
           />
           <AtUserNameText>@{draftUserProfile.userName}</AtUserNameText>
         </MobileUserNameContainer>
