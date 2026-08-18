@@ -104,17 +104,17 @@ export default function OwnerCard({
         <LeftBottomContainer>
           <LeftBottomGamesQuestionContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Games Made</LeftBottomGamesText>
+              <LeftBottomGamesText>Games Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{gamesMade}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Question Made</LeftBottomGamesText>
+              <LeftBottomGamesText>Questions Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{questionsMade}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
           </LeftBottomGamesQuestionContainer>
         </LeftBottomContainer>
         <LeftBottomGamesContainer>
-          <LeftBottomGamesText>Games Used</LeftBottomGamesText>
+          <LeftBottomGamesText>Games Played</LeftBottomGamesText>
           <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
         </LeftBottomGamesContainer>
       </Box>
@@ -162,15 +162,15 @@ export default function OwnerCard({
         <TopSubContainer>
           <LeftBottomContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Games Made</LeftBottomGamesText>
+              <LeftBottomGamesText>Games Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{gamesMade}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Questions Made</LeftBottomGamesText>
+              <LeftBottomGamesText>Questions Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{questionsMade}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Games Used</LeftBottomGamesText>
+              <LeftBottomGamesText>Games Played</LeftBottomGamesText>
               <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
           </LeftBottomContainer>
