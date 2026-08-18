@@ -5,22 +5,23 @@ import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
 export const handler = async (event) => {
+  const { MISCONCEPTION, ACTIVITY, LEARNING_COMPONENTS } = event?.arguments?.input?.generatedContent;
+  if (!MISCONCEPTION || !ACTIVITY || !LEARNING_COMPONENTS) throw new Error(`Required input parameter missing. Misconception: ${MISCONCEPTION}. Activity: ${ACTIVITY}. Learning Components: ${LEARNING_COMPONENTS}.`);
+  
   const apiSecretName = process.env.API_SECRET_NAME;
   if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
 
   const apiSecret = await loadSecret(apiSecretName);
   const { openai_api, OPENAI_API_KEY, API } = JSON.parse(apiSecret);
   const apiKey = openai_api ?? OPENAI_API_KEY ?? API;
-  const { MISCONCEPTION, ACTIVITY, LEARNING_COMPONETNS } = event?.arguments?.input?.generatedContent;
+  if (!apiKey) throw new Error('Secret must contain openai_api, OPENAI_API_KEY, or API');
 
+  const openai = new OpenAI({ apiKey });
+  const MODEL = 'gpt-4o-mini',
   const AnalysisResponse = z.object({
     score: z.string().describe('The overall score (between 0 - 3) assigned from the rubric'),
     aiReasoning: z.array(z.string()).describe('A <250 word description of the reasoning used to arrive at the above score, subtantiated with evidence'),
   });
-
-  if (!apiKey) throw new Error('Secret must contain openai_api, OPENAI_API_KEY, or API');
-
-  const openai = new OpenAI({ apiKey });
 
   const misconceptionEvalUserPrompts = [
     {
