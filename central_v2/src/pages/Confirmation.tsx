@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { TextField, Box, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from '../components/button/Button';
-import { TextContainerStyled } from '../lib/styledcomponents/CreateQuestionStyledComponents';
+import VerificationCodeInput from '../components/VerificationCodeInput';
 import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
 import ModalBackground from '../components/modal/ModalBackground';
@@ -71,29 +71,6 @@ const CodeandResendContainer = styled(Box)(({ theme }) => ({
   gap: '8px',
 }));
 
-const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  gap: '8px',
-}));
-
-const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
-  width: '40px',
-  textAlign: 'center',
-  input: {
-    textAlign: 'center',
-  },
-  '& .MuiOutlinedInput-root': {
-    fontWeight: 700,
-    fontFamily: 'Poppins, sans-serif',
-    fontSize: '20px',
-    '&.Mui-error fieldset': {
-      borderWidth: '3px',
-      borderColor: '#F2184B',
-    },
-  },
-}));
-
 const ResendCodeText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Rubik, sans-serif',
   fontWeight: 400,
@@ -133,26 +110,6 @@ function Confirmation({
   const centralDataDispatch = useCentralDataDispatch();
   const navigate = useNavigate(); // Initialize useNavigate
   const [hasError, setHasError] = useState(false);
-
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
-
-  const handleChange = (value: string, index: number) => {
-    if (!/^[0-9]*$/.test(value)) return; // Only allow numeric input
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
-
-    // Automatically move to the next input box if a character is entered
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === 'Backspace' && !code[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
 
   const handleSubmit = async () => {
     console.log('UserStatus in here: ', centralData);
@@ -205,11 +162,6 @@ function Confirmation({
       console.error('Error resending confirmation code:', error);
     }
   };
-  const setInputRef = (index: number, el: HTMLInputElement | null) => {
-    inputRefs.current[index] = el;
-  };
-
-  const uniqueKeys = ['A', 'B', 'C', 'D', 'E', 'F'];
   const buttonTypeVerify = ButtonType.VERIFY;
   const [isVerify, setIsVerify] = useState(true);
 
@@ -238,27 +190,13 @@ function Confirmation({
           Enter the verification code you have received in your email
         </EnterText>
         <CodeandResendContainer>
-          <UserCodeTextBoxesContainer>
-            {code.map((value, index) => (
-              <UserCodeTextBoxes
-                error={hasError}
-                variant="outlined"
-                key={`code-${uniqueKeys[index]}`}
-                inputRef={(el: HTMLInputElement | null) =>
-                  setInputRef(index, el)
-                }
-                value={value}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(e.target.value, index)
-                }
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-                  handleKeyDown(e, index)
-                }
-                inputProps={{ maxLength: 1 }}
-              />
-            ))}
+          <VerificationCodeInput
+            code={code}
+            onCodeChange={setCode}
+            hasError={hasError}
+          >
             {hasError ? <img src={errorIcon} alt="Error Icon" /> : null}
-          </UserCodeTextBoxesContainer>
+          </VerificationCodeInput>
           <ResendCodeText onClick={handleResendCodeClick}>
             Resend Code
           </ResendCodeText>
