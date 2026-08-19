@@ -185,9 +185,9 @@ function Confirmation({
             style={{ width: '280px', height: '280px' }}
           />
         </ImageContainer>
-        <VerifyText>Step 2: Verify Email</VerifyText>
+        <VerifyText>Step 2: Verify Your Email</VerifyText>
         <EnterText>
-          Enter the verification code you have received in your email
+          Enter the verification code we sent you.
         </EnterText>
         <CodeandResendContainer>
           <VerificationCodeInput
