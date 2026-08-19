@@ -151,3 +151,26 @@ export const ImagePlaceHolder = styled('img')(({ theme }) => ({
   border: '2px solid #ccc',
   objectFit: 'cover',
 }));
+
+export const IdImageWrapper = styled(Box)({
+  position: 'relative',
+  width: '80%',
+  lineHeight: 0,
+  '& img': {
+    width: '100%',
+    boxSizing: 'border-box',
+  },
+});
+
+export const IdImageOverlay = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '4px',
+  backgroundColor: 'rgba(2, 33, 95, 0.55)',
+});

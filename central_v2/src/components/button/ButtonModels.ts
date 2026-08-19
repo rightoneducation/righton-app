@@ -62,6 +62,7 @@ export enum ButtonType {
   TEST = 'test',
   RETRY = 'retry',
   CANCEL = 'cancel',
+  CANCELEDIT = 'canceledit',
   ADDTOGAME = 'addtogame',
   YES = 'yes',
   NO = 'no',
@@ -277,6 +278,11 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.CANCEL]: {
     textKey: ButtonType.CANCEL,
     color: ButtonColor.RED,
+  },
+  [ButtonType.CANCELEDIT]: {
+    textKey: ButtonType.CANCEL,
+    width: '160px',
+    color: ButtonColor.NULL,
   },
   [ButtonType.YES]: {
     textKey: ButtonType.YES,

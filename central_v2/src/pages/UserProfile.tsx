@@ -30,6 +30,8 @@ import {
   UserInfoItemContainer,
   ImageContainer,
   ImagePlaceHolder,
+  IdImageWrapper,
+  IdImageOverlay,
   ImageText,
   UploadImagesContainer,
   UsernameInputContainer,
@@ -48,15 +50,17 @@ import ConfirmPasswordUpdateModal from '../components/modal/ConfirmPasswordUpdat
 
 interface UserProfileProps {
   screenSize: ScreenSize;
+  handleLogOut: () => void;
 }
 
-export default function UserProfile({ screenSize }: UserProfileProps) {
+export default function UserProfile({
+  screenSize,
+  handleLogOut,
+}: UserProfileProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const [isEditInformationHighlight, setEditInformationHighlight] =
     useState(true);
-  const [isSaveInformationHighlight, setSaveInformationHighlight] =
-    useState(false);
 
   const [isEditInformation, setIsEditInformation] = useState(false);
 
@@ -99,6 +103,9 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
+  const [hoveredIdSlot, setHoveredIdSlot] = useState<'front' | 'back' | null>(
+    null,
+  );
 
   useEffect(() => {
     if (centralData.userProfile) {
@@ -190,88 +197,110 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
     }
   };
 
+  const openIdUpload = (inputId: string) => {
+    const uploadInput = document.getElementById(
+      inputId,
+    ) as HTMLInputElement | null;
+    uploadInput?.click();
+  };
+
+  const handleCancelEdit = () => {
+    setDraftUserProfile(centralData.userProfile);
+    setFrontImage(null);
+    setBackImage(null);
+    setNewProfilePic(null);
+    setHoveredIdSlot(null);
+    setIsEditInformation(false);
+    setEditInformationHighlight(true);
+  };
+
   const renderFrontImageSection = () => {
+    let imageSrc = '';
     if (frontImage) {
+      imageSrc = URL.createObjectURL(frontImage);
+    } else if (draftUserProfile.frontIdPath) {
+      imageSrc = `${CloudFrontDistributionUrl}${draftUserProfile.frontIdPath}`;
+    }
+
+    if (!imageSrc) {
       return (
-        <ImagePlaceHolder
-          src={URL.createObjectURL(frontImage)}
-          alt="Uploaded Preview"
+        <CentralButton
+          buttonType={buttonTypeUpload}
+          isEnabled={isUploadFrontEnabled}
+          buttonWidthOverride="38px"
+          iconOnlyOverride
+          onClick={() => openIdUpload('front-upload')}
         />
       );
     }
 
-    if (draftUserProfile.frontIdPath) {
-      return (
-        <ImagePlaceHolder
-          src={`${CloudFrontDistributionUrl}${draftUserProfile.frontIdPath}`}
-          alt="Uploaded Preview"
-        />
-      );
-    }
+    const isOverlayVisible =
+      isEditInformation &&
+      (screenSize !== ScreenSize.LARGE || hoveredIdSlot === 'front');
+
     return (
-      <CentralButton
-        buttonType={buttonTypeUpload}
-        isEnabled={isUploadFrontEnabled}
-        buttonWidthOverride="38px"
-        iconOnlyOverride
-        onClick={async () => {
-          const uploadInput = document.getElementById(
-            'front-upload',
-          ) as HTMLInputElement;
-          uploadInput?.click();
-
-          uploadInput.onchange = async (e: Event) => {
-            const target = e.target as HTMLInputElement;
-            if (target.files) {
-              const file = target.files[0];
-              setFrontImage(file);
-            }
-          };
-        }}
-      />
+      <IdImageWrapper
+        onMouseEnter={() => setHoveredIdSlot('front')}
+        onMouseLeave={() => setHoveredIdSlot(null)}
+      >
+        <ImagePlaceHolder src={imageSrc} alt="Front of teacher ID" />
+        {isOverlayVisible && (
+          <IdImageOverlay>
+            <CentralButton
+              buttonType={buttonTypeUpload}
+              isEnabled
+              buttonWidthOverride="38px"
+              iconOnlyOverride
+              onClick={() => openIdUpload('front-upload')}
+            />
+          </IdImageOverlay>
+        )}
+      </IdImageWrapper>
     );
   };
 
   const renderBackImageSection = () => {
+    let imageSrc = '';
     if (backImage) {
+      imageSrc = URL.createObjectURL(backImage);
+    } else if (draftUserProfile.backIdPath) {
+      imageSrc = `${CloudFrontDistributionUrl}${draftUserProfile.backIdPath}`;
+    }
+
+    if (!imageSrc) {
       return (
-        <ImagePlaceHolder
-          src={URL.createObjectURL(backImage)}
-          alt="Uploaded Preview"
+        <CentralButton
+          buttonType={buttonTypeUpload}
+          isEnabled={isUploadBackEnabled}
+          buttonWidthOverride="38px"
+          iconOnlyOverride
+          onClick={() => openIdUpload('back-upload')}
         />
       );
     }
 
-    if (draftUserProfile.backIdPath) {
-      return (
-        <ImagePlaceHolder
-          src={`${CloudFrontDistributionUrl}${draftUserProfile.backIdPath}`}
-          alt="Uploaded Preview"
-        />
-      );
-    }
+    const isOverlayVisible =
+      isEditInformation &&
+      (screenSize !== ScreenSize.LARGE || hoveredIdSlot === 'back');
 
     return (
-      <CentralButton
-        buttonType={buttonTypeUpload}
-        isEnabled={isUploadBackEnabled}
-        buttonWidthOverride="38px"
-        iconOnlyOverride
-        onClick={async () => {
-          const uploadInput = document.getElementById(
-            'back-upload',
-          ) as HTMLInputElement;
-          uploadInput?.click();
-
-          uploadInput.onchange = async (e: Event) => {
-            const target = e.target as HTMLInputElement;
-            if (target.files) {
-              const file = target.files[0];
-              setBackImage(file);
-            }
-          };
-        }}
-      />
+      <IdImageWrapper
+        onMouseEnter={() => setHoveredIdSlot('back')}
+        onMouseLeave={() => setHoveredIdSlot(null)}
+      >
+        <ImagePlaceHolder src={imageSrc} alt="Back of teacher ID" />
+        {isOverlayVisible && (
+          <IdImageOverlay>
+            <CentralButton
+              buttonType={buttonTypeUpload}
+              isEnabled
+              buttonWidthOverride="38px"
+              iconOnlyOverride
+              onClick={() => openIdUpload('back-upload')}
+            />
+          </IdImageOverlay>
+        )}
+      </IdImageWrapper>
     );
   };
 
@@ -308,9 +337,10 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
             <Box style={{ paddingLeft: `${theme.sizing.lgPadding}px` }}>
               <OwnerCard
                 screenSize={screenSize}
-                draftUserProfile={draftUserProfile}
+                draftUserProfile={centralData.userProfile}
                 newProfilePic={newProfilePic}
                 handleEditPicture={handleEditPicture}
+                handleLogOut={handleLogOut}
               />
             </Box>
           )}
@@ -334,9 +364,10 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
           {screenSize !== ScreenSize.LARGE && (
             <OwnerCard
               screenSize={screenSize}
-              draftUserProfile={draftUserProfile}
+              draftUserProfile={centralData.userProfile}
               newProfilePic={newProfilePic}
               handleEditPicture={handleEditPicture}
+              handleLogOut={handleLogOut}
             />
           )}
           <UsernameTextContainer>
@@ -411,22 +442,7 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
             />
             <SubHeadingTextLight>Teacher ID Image</SubHeadingTextLight>
             <UploadImagesContainer>
-              <ImageContainer
-                onClick={() => {
-                  if (frontImage || draftUserProfile.frontIdPath) {
-                    const uploadInput = document.getElementById(
-                      'front-upload',
-                    ) as HTMLInputElement;
-                    uploadInput?.click(); // Trigger file selection
-                  }
-                }}
-                style={{
-                  cursor:
-                    frontImage || draftUserProfile.frontIdPath
-                      ? 'pointer'
-                      : 'default',
-                }}
-              >
+              <ImageContainer>
                 <ImageText>Front</ImageText>
                 <input
                   type="file"
@@ -442,22 +458,7 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
                 />
                 {renderFrontImageSection()}
               </ImageContainer>
-              <ImageContainer
-                onClick={() => {
-                  if (backImage || draftUserProfile.backIdPath) {
-                    const uploadInput = document.getElementById(
-                      'back-upload',
-                    ) as HTMLInputElement;
-                    uploadInput?.click(); // Trigger file selection
-                  }
-                }}
-                style={{
-                  cursor:
-                    backImage || draftUserProfile.backIdPath
-                      ? 'pointer'
-                      : 'default',
-                }}
-              >
+              <ImageContainer>
                 <ImageText>Back</ImageText>
                 <input
                   type="file"
@@ -475,28 +476,36 @@ export default function UserProfile({ screenSize }: UserProfileProps) {
               </ImageContainer>
             </UploadImagesContainer>
           </UserInfoContainer>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: '24px',
-            }}
-          >
+          {isEditInformationHighlight ? (
             <CentralButton
               buttonType={ButtonType.EDITINFORMATION}
-              isEnabled={isEditInformationHighlight}
+              isEnabled
               smallScreenOverride
               onClick={handleEditInformation}
             />
-            <CentralButton
-              buttonWidthOverride="105px"
-              buttonType={ButtonType.SAVE}
-              isEnabled={isSaveInformationHighlight}
-              smallScreenOverride
-              onClick={handleGetStarted}
-            />
-          </Box>
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: '16px',
+              }}
+            >
+              <CentralButton
+                buttonType={ButtonType.SAVE}
+                isEnabled
+                smallScreenOverride
+                onClick={handleGetStarted}
+              />
+              <CentralButton
+                buttonType={ButtonType.CANCELEDIT}
+                isEnabled
+                smallScreenOverride
+                onClick={handleCancelEdit}
+              />
+            </Box>
+          )}
           <SubHeadingText>Password</SubHeadingText>
           <TextContainerStyled
             variant="outlined"

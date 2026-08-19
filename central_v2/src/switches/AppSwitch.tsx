@@ -221,7 +221,9 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
       break;
     }
     case ScreenType.USERPROFILE: {
-      screenComponent = <UserProfile screenSize={screenSize} />;
+      screenComponent = (
+        <UserProfile screenSize={screenSize} handleLogOut={handleLogOut} />
+      );
       break;
     }
     case ScreenType.GAMES:
