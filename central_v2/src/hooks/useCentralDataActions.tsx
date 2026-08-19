@@ -11,6 +11,7 @@ import {
   IQuestionTemplate,
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { featuredGameIds } from '../lib/FeaturedGamesModels';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
 import {
   useCentralDataState,
@@ -952,6 +953,35 @@ export default function useCentralDataManager({
     return selectedQuestion;
   }
 
+  /**
+   * Fetches the curated carousel games by primary key -- one point read per id,
+   * no filter and no pagination, so AppSync's filter-after-limit behaviour cannot
+   * silently drop entries.
+   *
+   * NOTE: gameTemplate.getGameTemplate swallows its errors and resolves with a
+   * hollow IGameTemplate (every field undefined) rather than throwing, so the
+   * settled status alone is not enough -- a missing game must be caught by the
+   * `id` guard or it renders as a blank card.
+   */
+  const fetchFeaturedGames = async (): Promise<IGameTemplate[]> => {
+    const settled = await Promise.allSettled(
+      featuredGameIds.map((id) =>
+        apiClients.gameTemplate.getGameTemplate(PublicPrivateType.PUBLIC, id),
+      ),
+    );
+    const games: IGameTemplate[] = [];
+    settled.forEach((result, index) => {
+      if (result.status === 'fulfilled' && result.value?.id) {
+        games.push(result.value);
+      } else {
+        console.error(
+          `Featured game could not be loaded: ${featuredGameIds[index]}`,
+        );
+      }
+    });
+    return games;
+  };
+
   const fetchElements = async (
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
@@ -1074,15 +1104,17 @@ export default function useCentralDataManager({
         break;
       case FetchType.EXPLORE_GAMES:
       default:
+        fetchFeaturedGames().then((featuredGames) => {
+          centralDataDispatch({
+            type: 'SET_RECOMMENDED_GAMES',
+            payload: featuredGames,
+          });
+        });
         apiClients?.centralDataManager?.initGames().then((response) => {
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
           centralDataDispatch({
             type: 'SET_IS_LOADING_INFINITE_SCROLL',
             payload: false,
-          });
-          centralDataDispatch({
-            type: 'SET_RECOMMENDED_GAMES',
-            payload: response.games,
           });
           centralDataDispatch({
             type: 'SET_MOST_POPULAR_GAMES',

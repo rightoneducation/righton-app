@@ -17,6 +17,7 @@ interface RecommendedProps<T> {
   elementType: ElementType;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
+  slideCount?: number;
 }
 interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
@@ -56,13 +57,16 @@ export default function Recommended<
   elementType,
   setIsTabsOpen,
   handleView,
+  slideCount,
 }: RecommendedProps<T>) {
   const theme = useTheme();
 
   return (
     <RecommendedContainer screenSize={screenSize}>
       <Title screenSize={screenSize}>
-        Recommended {elementType === ElementType.GAME ? 'Games' : 'Questions'}
+        {elementType === ElementType.GAME
+          ? 'Featured Games'
+          : 'Recommended Questions'}
       </Title>
       <CardCarousel
         screenSize={screenSize}
@@ -70,6 +74,7 @@ export default function Recommended<
         elementType={elementType}
         setIsTabsOpen={setIsTabsOpen}
         handleView={handleView}
+        slideCount={slideCount}
       />
       <PaginationContainerStyled className="swiper-pagination-container" />
     </RecommendedContainer>

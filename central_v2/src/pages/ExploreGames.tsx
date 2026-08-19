@@ -24,6 +24,7 @@ import {
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import Recommended from '../components/explore/Recommended';
+import { featuredGameIds } from '../lib/FeaturedGamesModels';
 import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
@@ -112,6 +113,7 @@ export default function ExploreGames({
             elementType={ElementType.GAME}
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
+            slideCount={featuredGameIds.length}
           />
         )}
       </ExploreGamesUpperContainer>

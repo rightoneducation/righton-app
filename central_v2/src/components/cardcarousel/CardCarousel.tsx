@@ -28,6 +28,7 @@ interface CardCarouselProps<T> {
   recommendedElements: T[];
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
+  slideCount?: number;
 }
 
 export default function CardCarousel<
@@ -38,11 +39,14 @@ export default function CardCarousel<
   elementType,
   setIsTabsOpen,
   handleView,
+  slideCount = 12,
 }: CardCarouselProps<T>) {
   const theme = useTheme();
   const navigate = useNavigate();
   const swiperRef = useRef<SwiperRef>(null);
-  const maxSlides = 12;
+  // slots past the supplied elements render skeletons, so this must match the
+  // expected element count or the carousel trails permanent loading cards
+  const maxSlides = slideCount;
   const handleViewButtonClick = (element: T) => {
     handleView(element, recommendedElements as T[]);
   };
@@ -86,8 +90,7 @@ export default function CardCarousel<
     >
       {Array.from({ length: maxSlides }).map((_, index) => {
         const element = recommendedElements[index] as
-          | IGameTemplate
-          | IQuestionTemplate;
+          IGameTemplate | IQuestionTemplate;
         if (elementType === ElementType.GAME) {
           const gameElement = element as IGameTemplate;
           return (
@@ -125,7 +128,10 @@ export default function CardCarousel<
         }
         const questionElement = element as IQuestionTemplate;
         return (
-          <SwiperSlide key={questionElement?.id ?? `slide-${index}`} className="fixed-swiper-slide-question">
+          <SwiperSlide
+            key={questionElement?.id ?? `slide-${index}`}
+            className="fixed-swiper-slide-question"
+          >
             {questionElement ? (
               <StyledQuestionCard
                 question={questionElement}
