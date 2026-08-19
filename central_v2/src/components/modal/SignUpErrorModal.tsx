@@ -16,6 +16,7 @@ import { ButtonType } from '../button/ButtonModels';
 import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
 import { useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
+import closeX from '../../images/closeX.svg';
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
   position: 'absolute',
@@ -60,6 +61,29 @@ const CloseButton = styled('img')(({ theme }) => ({
   cursor: 'pointer',
 }));
 
+const UNUSABLE = ['', 'undefined', 'null'];
+
+// the modal decides what the user reads; an unusable or unrecognised message
+// still yields something actionable rather than leaking internals
+const resolveErrorCopy = (
+  errorMessage?: string,
+): { header: string; body: string } => {
+  const text = (errorMessage ?? '').trim();
+  if (UNUSABLE.includes(text.toLowerCase())) {
+    return {
+      header: 'Error Signing Up',
+      body: 'Something went wrong while creating your account. Please try again.',
+    };
+  }
+  if (/teacher\s*id|upload/i.test(text)) {
+    return {
+      header: 'Upload Required',
+      body: 'Please upload images of the front and back of your Teacher ID to complete your signup.',
+    };
+  }
+  return { header: 'Error Signing Up', body: text };
+};
+
 interface CreatingTemplateModalProps {
   isModalOpen: boolean;
   errorMessage?: string;
@@ -74,6 +98,8 @@ export default function SignUpErrorModal({
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralDataDispatch = useCentralDataDispatch();
+
+  const { header, body } = resolveErrorCopy(errorMessage);
 
   const handleCloseModalClick = () => {
     setIsModalOpen(false);
@@ -105,13 +131,24 @@ export default function SignUpErrorModal({
             padding: '24px',
           }}
         >
-          <DragText> Error Signing Up </DragText>
-          {errorMessage && errorMessage.length > 0 && (
-            <SubText> {errorMessage} </SubText>
-          )}
+          <Box
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <CloseButton
+              src={closeX}
+              alt="Close"
+              onClick={handleCloseModalClick}
+            />
+          </Box>
+          <DragText> {header} </DragText>
+          <SubText> {body} </SubText>
           <Box style={{ display: 'flex', gap: '16px' }}>
             <CentralButton
-              buttonType={ButtonType.RETRY}
+              buttonType={ButtonType.CLOSE}
               isEnabled
               smallScreenOverride
               onClick={handleCloseModalClick}

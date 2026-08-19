@@ -1,5 +1,6 @@
 {
   "button": {
+    "close": "Cerrar",
     "login": "Iniciar sesión",
     "signup": "Registrarse",
     "view": "Ver",

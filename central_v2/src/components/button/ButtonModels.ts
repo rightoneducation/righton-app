@@ -63,6 +63,7 @@ export enum ButtonType {
   RETRY = 'retry',
   CANCEL = 'cancel',
   CANCELEDIT = 'canceledit',
+  CLOSE = 'close',
   ADDTOGAME = 'addtogame',
   YES = 'yes',
   NO = 'no',
@@ -274,6 +275,9 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.RETRY]: {
     textKey: ButtonType.RETRY,
+  },
+  [ButtonType.CLOSE]: {
+    textKey: ButtonType.CLOSE,
   },
   [ButtonType.CANCEL]: {
     textKey: ButtonType.CANCEL,

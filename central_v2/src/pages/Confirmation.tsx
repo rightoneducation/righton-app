@@ -145,10 +145,7 @@ function Confirmation({
 
       console.log(errorInfo); // now includes message, stack, etc.
 
-      if (
-        error.message ===
-        'Error: CodeMismatchException: Invalid verification code provided, please try again.'
-      ) {
+      if (error?.name === 'CodeMismatchException') {
         setHasError(true);
       }
     }
@@ -186,9 +183,7 @@ function Confirmation({
           />
         </ImageContainer>
         <VerifyText>Step 2: Verify Your Email</VerifyText>
-        <EnterText>
-          Enter the verification code we sent you.
-        </EnterText>
+        <EnterText>Enter the verification code we sent you.</EnterText>
         <CodeandResendContainer>
           <VerificationCodeInput
             code={code}
