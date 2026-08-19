@@ -15,6 +15,7 @@ import {
   CircularProgress,
   IconButton,
 } from '@mui/material';
+import type { TextFieldProps } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -37,6 +38,7 @@ import errorIcon from '../images/errorIcon.svg';
 import SignUpErrorModal from '../components/modal/SignUpErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import { centralDataReducer } from '../lib/reducer/CentralDataReducer';
+import ErrorBox from '../components/cards/createquestion/ErrorBox';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -122,8 +124,12 @@ const MiddleTextFirstRow = styled(Box)(({ theme }) => ({
   gap: '12px',
 }));
 
-const TitleField = styled(TextField)(({ theme }) => ({
-  border: '2px solid #CCCCCC',
+const TitleField = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== 'isError',
+})<{ isError?: boolean }>(({ theme, isError }) => ({
+  border: isError
+    ? `2px solid ${theme.palette.primary.errorBorder}`
+    : '2px solid #CCCCCC',
   borderRadius: '8px',
   backgroundColor: '#FFFFFF',
   minWidth: '108px',
@@ -131,7 +137,7 @@ const TitleField = styled(TextField)(({ theme }) => ({
     borderRadius: '8px', // Ensure consistent border radius
   },
   '& .MuiSelect-select': {
-    color: '#384466',
+    color: isError ? `${theme.palette.primary.errorColor}` : '#384466',
   },
   '& .MuiSelect-icon': {
     transition: 'transform 0.2s ease', // Smooth transition for rotation
@@ -228,10 +234,14 @@ const UploadImages = styled(Box)(({ theme }) => ({
   justifyContent: 'flex-start',
 }));
 
-const UploadImageContainer = styled(Box)(({ theme }) => ({
+const UploadImageContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isError',
+})<{ isError?: boolean }>(({ theme, isError }) => ({
   display: 'flex',
   backgroundColor: '#02215F',
-  border: '1px solid #000000',
+  border: isError
+    ? `2px solid ${theme.palette.primary.errorBorder}`
+    : '1px solid #000000',
   borderRadius: '8px',
   flexDirection: 'column',
   alignItems: 'center',
@@ -243,11 +253,14 @@ const UploadImageContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
-const ImageText = styled(Typography)(({ theme }) => ({
+const ImageText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isError',
+})<{ isError?: boolean }>(({ theme, isError }) => ({
   fontFamily: 'Rubik, sans-serif',
   fontWeight: 400,
   fontSize: '16px',
-  color: '#E9F1FF',
+  // errorBorder (pale) rather than errorColor (deep) -- this sits on navy
+  color: isError ? `${theme.palette.primary.errorBorder}` : '#E9F1FF',
 }));
 
 const LowerLogin = styled(Box)(({ theme }) => ({
@@ -281,6 +294,48 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
   border: '2px solid #ccc', // Add border
   objectFit: 'cover',
 }));
+
+// mirrors the create-game/question required-field treatment: red placeholder on error
+const SignUpTextField = styled(TextContainerStyled, {
+  shouldForwardProp: (prop) => prop !== 'isCardError',
+})<TextFieldProps & { isCardError?: boolean }>(({ isCardError }) => ({
+  ...(isCardError && {
+    '& .MuiInputBase-input': {
+      '&::placeholder': {
+        color: '#D0254D',
+        opacity: 1,
+      },
+      '&:focus::placeholder': {
+        color: '#384466',
+        opacity: 1,
+      },
+    },
+  }),
+}));
+
+const checkSignUpFormIsValid = (
+  form: {
+    title: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    userName: string;
+    password: string;
+  },
+  confirmPasswordValue: string,
+  front: File | null,
+  back: File | null,
+): boolean =>
+  form.title.trim().length > 0 &&
+  form.title !== 'Title...' &&
+  form.firstName.trim().length > 0 &&
+  form.lastName.trim().length > 0 &&
+  form.userName.trim().length > 0 &&
+  form.email.trim().length > 0 &&
+  form.password.length > 0 &&
+  confirmPasswordValue.length > 0 &&
+  front !== null &&
+  back !== null;
 
 interface SignUpProps {
   apiClients: IAPIClients;
@@ -349,6 +404,19 @@ export default function SignUp({
   });
 
   const [loading, setLoading] = useState(false);
+  const [isFormErrored, setIsFormErrored] = useState(false);
+
+  const isSignUpFormValid =
+    checkSignUpFormIsValid(
+      localSignUp,
+      confirmPassword,
+      frontImage,
+      backImage,
+    ) &&
+    !passwordError &&
+    !passwordConfirmError;
+  // the latch only shows while something is actually still wrong
+  const showFieldErrors = isFormErrored && !isSignUpFormValid;
 
   const buttonTypeNext = ButtonType.NEXTSTEP;
   const [isNextEnabled, setIsNextEnabled] = useState(true);
@@ -375,6 +443,11 @@ export default function SignUp({
   };
 
   const handleSubmit = async () => {
+    if (!isSignUpFormValid) {
+      setIsFormErrored(true);
+      return;
+    }
+    setIsFormErrored(false);
     setLoading(true);
     setErrorMessage('');
 
@@ -488,6 +561,8 @@ export default function SignUp({
           <MiddleTextFirstRow>
             <TitleField
               select
+              error={showFieldErrors && localSignUp.title === 'Title...'}
+              isError={showFieldErrors && localSignUp.title === 'Title...'}
               value={localSignUp.title}
               onChange={(event) =>
                 setLocalSignUp((prev) => ({
@@ -506,22 +581,30 @@ export default function SignUp({
               <MenuItem value="Ms.">Ms.</MenuItem>
               <MenuItem value="Dr.">Dr.</MenuItem>
             </TitleField>
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="First Name"
+              isCardError={showFieldErrors}
+              error={
+                showFieldErrors && localSignUp.firstName.trim().length === 0
+              }
               value={localSignUp.firstName}
-              onChange={(event) =>
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setLocalSignUp((prev) => ({
                   ...prev,
                   firstName: event.target.value,
                 }))
               }
             />
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="Last Name"
+              isCardError={showFieldErrors}
+              error={
+                showFieldErrors && localSignUp.lastName.trim().length === 0
+              }
               value={localSignUp.lastName}
-              onChange={(event) =>
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setLocalSignUp((prev) => ({
                   ...prev,
                   lastName: event.target.value,
@@ -531,11 +614,15 @@ export default function SignUp({
           </MiddleTextFirstRow>
           <MiddleTextSecondRow>
             <img src={Adpic} alt="Adpic" style={{ width: '26px' }} />
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="Username..."
+              isCardError={showFieldErrors}
+              error={
+                showFieldErrors && localSignUp.userName.trim().length === 0
+              }
               value={localSignUp.userName}
-              onChange={(event) =>
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setLocalSignUp((prev) => ({
                   ...prev,
                   userName: event.target.value,
@@ -546,11 +633,13 @@ export default function SignUp({
               }}
             />
           </MiddleTextSecondRow>
-          <TextContainerStyled
+          <SignUpTextField
             variant="outlined"
             placeholder="School Email..."
+            isCardError={showFieldErrors}
+            error={showFieldErrors && localSignUp.email.trim().length === 0}
             value={localSignUp.email}
-            onChange={(event) =>
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setLocalSignUp((prev) => ({
                 ...prev,
                 email: event.target.value,
@@ -562,8 +651,10 @@ export default function SignUp({
 
         <UploadImagesAndPassword>
           <UploadImages>
-            <UploadImageContainer>
-              <ImageText>Front</ImageText>
+            <UploadImageContainer isError={showFieldErrors && !frontImage}>
+              <ImageText isError={showFieldErrors && !frontImage}>
+                Front
+              </ImageText>
               <input
                 type="file"
                 accept="image/*"
@@ -605,8 +696,10 @@ export default function SignUp({
               )}
             </UploadImageContainer>
 
-            <UploadImageContainer>
-              <ImageText>Back</ImageText>
+            <UploadImageContainer isError={showFieldErrors && !backImage}>
+              <ImageText isError={showFieldErrors && !backImage}>
+                Back
+              </ImageText>
               <input
                 type="file"
                 accept="image/*"
@@ -649,12 +742,14 @@ export default function SignUp({
             </UploadImageContainer>
           </UploadImages>
           <PasswordContainer>
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="Password..."
+              isCardError={showFieldErrors}
+              error={showFieldErrors && localSignUp.password.length === 0}
               value={localSignUp.password}
               type={isShowPassword ? 'text' : 'password'}
-              onChange={(event) => {
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 const newPassword = event.target.value;
                 setLocalSignUp((prev) => ({
                   ...prev,
@@ -757,11 +852,16 @@ export default function SignUp({
                 ),
               }}
             />
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="Confirm Password..."
+              isCardError={showFieldErrors}
+              error={
+                !!passwordError ||
+                (showFieldErrors && confirmPassword.length === 0)
+              }
               value={confirmPassword}
-              onChange={(event) => {
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 const newConfirmPassword = event.target.value;
                 setConfirmPassword(newConfirmPassword);
 
@@ -773,7 +873,6 @@ export default function SignUp({
                 }
               }}
               type={isShowConfirmPassword ? 'text' : 'password'}
-              error={!!passwordError}
               sx={{
                 backgroundColor: 'white',
               }}
@@ -859,6 +958,7 @@ export default function SignUp({
             </Box>
           ) : (
             <>
+              {showFieldErrors && <ErrorBox />}
               <CentralButton
                 buttonType={buttonTypeNext}
                 isEnabled={isNextEnabled}
