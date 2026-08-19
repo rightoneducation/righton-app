@@ -39,6 +39,7 @@ import SignUpErrorModal from '../components/modal/SignUpErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import { centralDataReducer } from '../lib/reducer/CentralDataReducer';
 import ErrorBox from '../components/cards/createquestion/ErrorBox';
+import NoticeModal from '../components/modal/NoticeModal';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -313,29 +314,45 @@ const SignUpTextField = styled(TextContainerStyled, {
   }),
 }));
 
+type SignUpForm = {
+  title: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  password: string;
+};
+
+// single source of truth for what "required" means -- the boolean below derives
+// from it so the rule can never drift between the gate and the message
+const getMissingRequiredFields = (
+  form: SignUpForm,
+  confirmPasswordValue: string,
+  front: File | null,
+  back: File | null,
+): string[] => {
+  const missing: string[] = [];
+  if (form.title.trim().length === 0 || form.title === 'Title...')
+    missing.push('Title');
+  if (form.firstName.trim().length === 0) missing.push('First Name');
+  if (form.lastName.trim().length === 0) missing.push('Last Name');
+  if (form.userName.trim().length === 0) missing.push('Username');
+  if (form.email.trim().length === 0) missing.push('School Email');
+  if (form.password.length === 0) missing.push('Password');
+  if (confirmPasswordValue.length === 0) missing.push('Confirm Password');
+  if (front === null) missing.push('Teacher ID (Front)');
+  if (back === null) missing.push('Teacher ID (Back)');
+  return missing;
+};
+
 const checkSignUpFormIsValid = (
-  form: {
-    title: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    userName: string;
-    password: string;
-  },
+  form: SignUpForm,
   confirmPasswordValue: string,
   front: File | null,
   back: File | null,
 ): boolean =>
-  form.title.trim().length > 0 &&
-  form.title !== 'Title...' &&
-  form.firstName.trim().length > 0 &&
-  form.lastName.trim().length > 0 &&
-  form.userName.trim().length > 0 &&
-  form.email.trim().length > 0 &&
-  form.password.length > 0 &&
-  confirmPasswordValue.length > 0 &&
-  front !== null &&
-  back !== null;
+  getMissingRequiredFields(form, confirmPasswordValue, front, back).length ===
+  0;
 
 interface SignUpProps {
   apiClients: IAPIClients;
@@ -405,6 +422,7 @@ export default function SignUp({
 
   const [loading, setLoading] = useState(false);
   const [isFormErrored, setIsFormErrored] = useState(false);
+  const [isMissingFieldsOpen, setIsMissingFieldsOpen] = useState(false);
 
   const isSignUpFormValid =
     checkSignUpFormIsValid(
@@ -417,6 +435,19 @@ export default function SignUp({
     !passwordConfirmError;
   // the latch only shows while something is actually still wrong
   const showFieldErrors = isFormErrored && !isSignUpFormValid;
+  const missingRequiredFields = [
+    ...getMissingRequiredFields(
+      localSignUp,
+      confirmPassword,
+      frontImage,
+      backImage,
+    ),
+    // present-but-invalid is a different problem from missing
+    ...(passwordError ? [`Password: ${passwordError}`] : []),
+    ...(passwordConfirmError
+      ? [`Confirm Password: ${passwordConfirmError}`]
+      : []),
+  ];
 
   const buttonTypeNext = ButtonType.NEXTSTEP;
   const [isNextEnabled, setIsNextEnabled] = useState(true);
@@ -445,6 +476,7 @@ export default function SignUp({
   const handleSubmit = async () => {
     if (!isSignUpFormValid) {
       setIsFormErrored(true);
+      setIsMissingFieldsOpen(true);
       return;
     }
     setIsFormErrored(false);
@@ -524,13 +556,20 @@ export default function SignUp({
 
   return (
     <SignUpMainContainer>
+      <NoticeModal
+        isModalOpen={isMissingFieldsOpen}
+        header="Complete Required Fields"
+        body="Please finish the following before continuing:"
+        items={missingRequiredFields}
+        onClose={() => setIsMissingFieldsOpen(false)}
+      />
       <SignUpErrorModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         errorMessage={errorMessage}
       />
       <ModalBackground
-        isModalOpen={isModalOpen}
+        isModalOpen={isModalOpen || isMissingFieldsOpen}
         handleCloseModal={handleCloseModal}
       />
       <InnerBodyContainer>

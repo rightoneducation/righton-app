@@ -12,6 +12,8 @@ import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from '../components/button/Button';
 import VerificationCodeInput from '../components/VerificationCodeInput';
 import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
+import SignUpErrorModal from '../components/modal/SignUpErrorModal';
+import NoticeModal from '../components/modal/NoticeModal';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
 import ModalBackground from '../components/modal/ModalBackground';
 import errorIcon from '../images/errorIcon.svg';
@@ -110,9 +112,14 @@ function Confirmation({
   const centralDataDispatch = useCentralDataDispatch();
   const navigate = useNavigate(); // Initialize useNavigate
   const [hasError, setHasError] = useState(false);
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState('');
+  const [isSignUpErrorOpen, setIsSignUpErrorOpen] = useState(false);
+  const [resendNotice, setResendNotice] = useState<{
+    header: string;
+    body: string;
+  } | null>(null);
 
   const handleSubmit = async () => {
-    console.log('UserStatus in here: ', centralData);
     setIsVerifying(true);
     const fullCode = code.join('');
     if (fullCode.length < 6) {
@@ -137,17 +144,13 @@ function Confirmation({
       }
     } catch (error: any) {
       setIsVerifying(false);
-      console.log(error);
-      const errorInfo = Object.getOwnPropertyNames(error).reduce((acc, key) => {
-        acc[key] = error[key];
-        return acc;
-      }, {} as any);
-
-      console.log(errorInfo); // now includes message, stack, etc.
-
       if (error?.name === 'CodeMismatchException') {
         setHasError(true);
+        return;
       }
+      // anything else (ID upload, createUser, network) used to fail silently
+      setSignUpErrorMessage(error?.message ?? '');
+      setIsSignUpErrorOpen(true);
     }
   };
   const handleResendCodeClick = async () => {
@@ -155,8 +158,17 @@ function Confirmation({
       await apiClients.auth.awsResendConfirmationCode(
         centralData.userProfile.email,
       );
-    } catch (error) {
-      console.error('Error resending confirmation code:', error);
+      setResendNotice({
+        header: 'Code Sent',
+        body: `A new verification code is on its way to ${centralData.userProfile.email}.`,
+      });
+    } catch (error: any) {
+      setResendNotice({
+        header: "Couldn't Send Code",
+        body:
+          error?.message ??
+          'We could not send a new code. Please try again in a moment.',
+      });
     }
   };
   const buttonTypeVerify = ButtonType.VERIFY;
@@ -170,9 +182,24 @@ function Confirmation({
         userProfile={centralData.userProfile}
         setIsTabsOpen={setIsTabsOpen}
       />
+      <SignUpErrorModal
+        isModalOpen={isSignUpErrorOpen}
+        setIsModalOpen={setIsSignUpErrorOpen}
+        errorMessage={signUpErrorMessage}
+      />
+      <NoticeModal
+        isModalOpen={resendNotice !== null}
+        header={resendNotice?.header ?? ''}
+        body={resendNotice?.body ?? ''}
+        onClose={() => setResendNotice(null)}
+      />
       <ModalBackground
-        isModalOpen={isModalOpen}
-        handleCloseModal={() => setIsModalOpen(false)}
+        isModalOpen={isModalOpen || isSignUpErrorOpen || resendNotice !== null}
+        handleCloseModal={() => {
+          setIsModalOpen(false);
+          setIsSignUpErrorOpen(false);
+          setResendNotice(null);
+        }}
       />
       <InnerBody>
         <ImageContainer>

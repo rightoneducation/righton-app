@@ -88,7 +88,9 @@ export class AuthAPIClient
     const input = JSON.stringify({user: user, authSession: authSession});
     const variables = { input };
     const client = generateClient({});
-    client.graphql({query: userCleaner, variables, authMode: authMode });
+    // must be awaited: the caller throws immediately after, and a dropped
+    // promise here means the partial account is never cleaned up
+    await client.graphql({query: userCleaner, variables, authMode: authMode });
   }
   
   async updateCognitoUsername(newUsername: string): Promise<void> {

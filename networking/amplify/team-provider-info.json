@@ -53,7 +53,7 @@
         },
         "userCleaner": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",
-          "s3Key": "amplify-builds/userCleaner-4153673861457a2f5945-build.zip"
+          "s3Key": "amplify-builds/userCleaner-34645156594f774b416f-build.zip"
         },
         "waegen": {
           "deploymentBucketName": "amplify-mobile-main-153119-deployment",

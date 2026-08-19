@@ -7,6 +7,7 @@ import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext
 import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
 import VerificationCodeInput from '../VerificationCodeInput';
+import NoticeModal from '../modal/NoticeModal';
 import { ErrorIcon } from '../../lib/styledcomponents/CentralStyledComponents';
 import errorIcon from '../../images/errorIcon.svg';
 
@@ -70,6 +71,10 @@ function PasswordResetConfirmation({
 }: PasswordResetProps) {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isCodeError, setIsCodeError] = useState(false);
+  const [resendNotice, setResendNotice] = useState<{
+    header: string;
+    body: string;
+  } | null>(null);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const handleCodeSubmit = async () => {
@@ -92,8 +97,17 @@ function PasswordResetConfirmation({
       else if (centralData.userProfile.email) {
         await apiClients.auth.awsResetPassword(centralData.userProfile.email);
       }
-    } catch (error) {
-      console.error('Error resending confirmation code:', error);
+      setResendNotice({
+        header: 'Code Sent',
+        body: 'A new verification code is on its way.',
+      });
+    } catch (error: any) {
+      setResendNotice({
+        header: "Couldn't Send Code",
+        body:
+          error?.message ??
+          'We could not send a new code. Please try again in a moment.',
+      });
     }
   };
 
@@ -101,6 +115,12 @@ function PasswordResetConfirmation({
 
   return (
     <>
+      <NoticeModal
+        isModalOpen={resendNotice !== null}
+        header={resendNotice?.header ?? ''}
+        body={resendNotice?.body ?? ''}
+        onClose={() => setResendNotice(null)}
+      />
       <VerifyText>Step 1: Verify Account</VerifyText>
       <EnterText>
         Enter the verification code you have received in your email
