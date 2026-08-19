@@ -14,6 +14,7 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  useMediaQuery,
 } from '@mui/material';
 import type { TextFieldProps } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
@@ -296,6 +297,29 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
   objectFit: 'cover',
 }));
 
+const IdImageWrapper = styled(Box)({
+  position: 'relative',
+  width: '80%',
+  lineHeight: 0,
+  '& img': {
+    width: '100%',
+    boxSizing: 'border-box',
+  },
+});
+
+const IdImageOverlay = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '4px',
+  backgroundColor: 'rgba(2, 33, 95, 0.55)',
+});
+
 // mirrors the create-game/question required-field treatment: red placeholder on error
 const SignUpTextField = styled(TextContainerStyled, {
   shouldForwardProp: (prop) => prop !== 'isCardError',
@@ -423,6 +447,17 @@ export default function SignUp({
   const [loading, setLoading] = useState(false);
   const [isFormErrored, setIsFormErrored] = useState(false);
   const [isMissingFieldsOpen, setIsMissingFieldsOpen] = useState(false);
+  const [hoveredIdSlot, setHoveredIdSlot] = useState<'front' | 'back' | null>(
+    null,
+  );
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
+  const openIdUpload = (inputId: string) => {
+    const uploadInput = document.getElementById(
+      inputId,
+    ) as HTMLInputElement | null;
+    uploadInput?.click();
+  };
 
   const isSignUpFormValid =
     checkSignUpFormIsValid(
@@ -706,31 +741,33 @@ export default function SignUp({
                 }}
               />
               {frontImage ? (
-                <ImagePlaceHolder
-                  src={URL.createObjectURL(frontImage)}
-                  alt="Uploaded Preview"
-                />
+                <IdImageWrapper
+                  onMouseEnter={() => setHoveredIdSlot('front')}
+                  onMouseLeave={() => setHoveredIdSlot(null)}
+                >
+                  <ImagePlaceHolder
+                    src={URL.createObjectURL(frontImage)}
+                    alt="Front of teacher ID"
+                  />
+                  {(!isLargeScreen || hoveredIdSlot === 'front') && (
+                    <IdImageOverlay>
+                      <CentralButton
+                        buttonType={buttonTypeUpload}
+                        isEnabled
+                        buttonWidthOverride="38px"
+                        iconOnlyOverride
+                        onClick={() => openIdUpload('front-upload')}
+                      />
+                    </IdImageOverlay>
+                  )}
+                </IdImageWrapper>
               ) : (
                 <CentralButton
                   buttonType={buttonTypeUpload}
                   isEnabled={isUploadFrontEnabled}
                   buttonWidthOverride="38px"
                   iconOnlyOverride
-                  onClick={async () => {
-                    const uploadInput = document.getElementById(
-                      'front-upload',
-                    ) as HTMLInputElement;
-                    uploadInput?.click(); // Trigger file selection
-
-                    // Wait for the user to select the file
-                    uploadInput.onchange = async (e: Event) => {
-                      const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
-                      if (target.files) {
-                        const file = target.files[0]; // Access the selected file
-                        setFrontImage(file); // Store file locally
-                      }
-                    };
-                  }}
+                  onClick={() => openIdUpload('front-upload')}
                 />
               )}
             </UploadImageContainer>
@@ -751,31 +788,33 @@ export default function SignUp({
                 }}
               />
               {backImage ? (
-                <ImagePlaceHolder
-                  src={URL.createObjectURL(backImage)}
-                  alt="Uploaded Preview"
-                />
+                <IdImageWrapper
+                  onMouseEnter={() => setHoveredIdSlot('back')}
+                  onMouseLeave={() => setHoveredIdSlot(null)}
+                >
+                  <ImagePlaceHolder
+                    src={URL.createObjectURL(backImage)}
+                    alt="Back of teacher ID"
+                  />
+                  {(!isLargeScreen || hoveredIdSlot === 'back') && (
+                    <IdImageOverlay>
+                      <CentralButton
+                        buttonType={buttonTypeUpload}
+                        isEnabled
+                        buttonWidthOverride="38px"
+                        iconOnlyOverride
+                        onClick={() => openIdUpload('back-upload')}
+                      />
+                    </IdImageOverlay>
+                  )}
+                </IdImageWrapper>
               ) : (
                 <CentralButton
                   buttonType={buttonTypeUpload}
                   isEnabled={isUploadBackEnabled}
                   buttonWidthOverride="38px"
                   iconOnlyOverride
-                  onClick={async () => {
-                    const uploadInput = document.getElementById(
-                      'back-upload',
-                    ) as HTMLInputElement;
-                    uploadInput?.click(); // Trigger file selection
-
-                    // Wait for the user to select the file
-                    uploadInput.onchange = async (e: Event) => {
-                      const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
-                      if (target.files) {
-                        const file = target.files[0]; // Access the selected file
-                        setBackImage(file); // Store file locally
-                      }
-                    };
-                  }}
+                  onClick={() => openIdUpload('back-upload')}
                 />
               )}
             </UploadImageContainer>
