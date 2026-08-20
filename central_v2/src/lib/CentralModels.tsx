@@ -39,7 +39,7 @@ export enum ScreenType {
   USERPROFILE,
   AUTH,
   PASSWORDRESET,
-  BROWSEGAMES,
+  BROWSE,
 }
 
 export enum ScreenSize {

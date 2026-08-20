@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme, Box } from '@mui/material';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   ElementType,
   GalleryType,
@@ -27,7 +26,9 @@ import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
-import CardGallery from '../components/cardgallery/CardGallery';
+import QuestionsLibraryGallery from '../components/cardgallery/QuestionsLibraryGallery';
+import CentralButton from '../components/button/Button';
+import { ButtonType } from '../components/button/ButtonModels';
 import Recommended from '../components/explore/Recommended';
 import SearchBar from '../components/searchbar/SearchBar';
 import QuestionTabs from '../components/questiontabs/QuestionTabs';
@@ -107,6 +108,9 @@ export default function ExploreQuestions({
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const isSearchResults = centralData.searchTerms.length > 0;
+  const galleryQuestions = isSearchResults
+    ? centralData.searchedQuestions
+    : centralData.mostPopularQuestions;
   const handleView = async (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
@@ -311,23 +315,7 @@ export default function ExploreQuestions({
           />
         )}
       </ExploreGamesUpperContainer>
-      <InfiniteScroll
-        dataLength={centralData.mostPopularQuestions.length}
-        next={loadMore}
-        hasMore={centralData.nextToken !== null}
-        loader={
-          <Box
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              paddingBottom: '20px',
-            }}
-          >
-            <h4>...</h4>
-          </Box>
-        }
-        scrollableTarget="scrollableDiv"
+      <Box
         style={{
           width: '100vw',
           height: '100%',
@@ -336,26 +324,30 @@ export default function ExploreQuestions({
           alignItems: 'flex-start',
         }}
       >
-        <CardGallery<IQuestionTemplate>
+        <QuestionsLibraryGallery
           screenSize={screenSize}
-          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-          grades={isSearchResults ? centralData.selectedGrades : undefined}
-          galleryElements={
-            isSearchResults
-              ? centralData.searchedQuestions
-              : centralData.mostPopularQuestions
-          }
-          elementType={ElementType.QUESTION}
-          galleryType={
-            isSearchResults
-              ? GalleryType.SEARCH_RESULTS
-              : GalleryType.MOST_POPULAR
-          }
-          setIsTabsOpen={setIsTabsOpen}
+          galleryElements={galleryQuestions}
           handleView={handleView}
-          isLoading={centralData.isLoading}
+          // isLoading is global and viewQuestion flips it around its getUser
+          // lookup, which would swap every card for a skeleton and back on each
+          // View click. Only show skeletons when the grid is genuinely empty --
+          // the same guard BrowseTemplates applies via pages.length === 0.
+          // Searches still get them: debouncedSearch blanks the array first.
+          isLoading={centralData.isLoading && galleryQuestions.length === 0}
+          footer={
+            <CentralButton
+              buttonType={ButtonType.BROWSEALLQUESTIONS}
+              isEnabled
+              smallScreenOverride
+              // matches the question card's button: card width less its 24px sides
+              buttonWidthOverride={
+                screenSize === ScreenSize.LARGE ? '336px' : '279px'
+              }
+              onClick={() => navigate('/browse/question')}
+            />
+          }
         />
-      </InfiniteScroll>
+      </Box>
       <Box
         style={{
           height: '100%',

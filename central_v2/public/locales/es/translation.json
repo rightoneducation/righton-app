@@ -1,5 +1,6 @@
 {
   "button": {
+    "browseallquestions": "Explorar Todas las Preguntas",
     "browseallgames": "Explorar Todos los Juegos",
     "close": "Cerrar",
     "login": "Iniciar sesión",

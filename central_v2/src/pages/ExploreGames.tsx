@@ -146,7 +146,7 @@ export default function ExploreGames({
               buttonWidthOverride={
                 screenSize === ScreenSize.LARGE ? '336px' : '279px'
               }
-              onClick={() => navigate('/browsegames')}
+              onClick={() => navigate('/browse/game')}
             />
           }
         />

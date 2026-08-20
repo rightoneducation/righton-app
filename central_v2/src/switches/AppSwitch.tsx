@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useMatch } from 'react-router-dom';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -10,7 +11,7 @@ import useCentralDataManager from '../hooks/useCentralDataActions';
 import AppContainer from '../containers/AppContainer';
 import AuthGuard from '../containers/AuthGuard';
 import ExploreGames from '../pages/ExploreGames';
-import BrowseGames from '../pages/BrowseGames';
+import BrowseTemplates from '../pages/BrowseTemplates';
 import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login';
@@ -41,9 +42,20 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
       : ScreenSize.SMALL;
   let screenComponent;
 
+  // the only route param in the app that selects game vs question; every other
+  // param read here goes through useMatch too
+  const browseMatch = useMatch('/browse/:gameQuestion');
+  const browseType =
+    browseMatch?.params.gameQuestion === 'question'
+      ? GameQuestionType.QUESTION
+      : GameQuestionType.GAME;
+
+  // NB the else-branch is QUESTION, so BROWSE has to name its GAME case
+  // explicitly or the whole data layer silently flips to questions
   const gameQuestion: GameQuestionType =
     currentScreen === ScreenType.GAMES ||
-    currentScreen === ScreenType.BROWSEGAMES ||
+    (currentScreen === ScreenType.BROWSE &&
+      browseType === GameQuestionType.GAME) ||
     (currentScreen === ScreenType.LIBRARY &&
       libraryGameQuestionSwitch === GameQuestionType.GAME)
       ? GameQuestionType.GAME
@@ -228,10 +240,26 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
       );
       break;
     }
-    case ScreenType.BROWSEGAMES: {
+    case ScreenType.BROWSE: {
       screenComponent = (
         <AuthGuard handleLogOut={handleLogOut}>
-          <BrowseGames screenSize={screenSize} />
+          {/* keyed on the param: a game <-> question switch reconciles the same
+              component, so without this the buffer, cursor and cached pages of
+              the outgoing type would survive into the new one */}
+          <BrowseTemplates
+            key={browseType}
+            gameQuestion={browseType}
+            screenSize={screenSize}
+            setIsTabsOpen={setIsTabsOpen}
+            viewQuestion={viewQuestion}
+            fetchElements={fetchElements}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={getPublicPrivateElements}
+            loadMore={loadMore}
+            deleteQuestionTemplate={deleteQuestionTemplate}
+          />
         </AuthGuard>
       );
       break;

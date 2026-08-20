@@ -33,6 +33,7 @@ export enum ButtonType {
   PREVIOUSQUESTION = 'previousquestion',
   BACKTOEXPLORE = 'backtoexplore',
   BROWSEALLGAMES = 'browseallgames',
+  BROWSEALLQUESTIONS = 'browseallquestions',
   FAVORITE = 'favorite',
   UNFAVORITE = 'unfavorite',
   CLONEANDEDIT = 'cloneandedit',
@@ -163,6 +164,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.BROWSEALLGAMES]: {
     textKey: ButtonType.BROWSEALLGAMES,
+    rightIcon: next,
+  },
+  [ButtonType.BROWSEALLQUESTIONS]: {
+    textKey: ButtonType.BROWSEALLQUESTIONS,
     rightIcon: next,
   },
   [ButtonType.NEXTQUESTION]: {

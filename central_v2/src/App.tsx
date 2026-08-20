@@ -105,8 +105,8 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.PASSWORDRESET} />}
             />
             <Route
-              path="/browsegames"
-              element={<AppSwitch currentScreen={ScreenType.BROWSEGAMES} />}
+              path="/browse/:gameQuestion"
+              element={<AppSwitch currentScreen={ScreenType.BROWSE} />}
             />
           </>
         )}

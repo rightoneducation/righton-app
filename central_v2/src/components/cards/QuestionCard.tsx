@@ -19,6 +19,12 @@ interface StyledQuestionCardProps {
   question: IQuestionTemplate;
   isCarousel: boolean;
   isFavorite: boolean;
+  // per-consumer clamp, same strategy as GameCard's isCarousel ? 5 : 3. Default
+  // keeps the carousel and the masonry CardGallery exactly as they were.
+  descriptionLineClamp?: number;
+  // the card has a definite height, so the text box must size to its clamp
+  // rather than being stretched to fill the leftover space
+  isFixedHeight?: boolean;
   handleViewButtonClick: (element: IQuestionTemplate) => void;
   handleCloneButtonClick: (element: IQuestionTemplate) => void;
 }
@@ -72,27 +78,38 @@ const TitleContainer = styled(Box)(() => ({
   justifyContent: 'space-between',
 }));
 
-const DescriptionText = styled(Typography)(({ theme }) => ({
-  flex: 1,
-  height: 'auto',
-  fontFamily: 'Rubik',
-  fontWeight: '400',
-  fontSize: `${theme.sizing.smPadding}px`,
-  lineHeight: '18.96px',
-  color: '#384466',
-  display: '-webkit-box',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 5,
-}));
+const DescriptionText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'lineClamp' && prop !== 'isFixedHeight',
+})<{ lineClamp: number; isFixedHeight: boolean }>(
+  ({ theme, lineClamp, isFixedHeight }) => ({
+    // flex: 1 stretches this past the clamped text, leaving overflow: hidden
+    // nothing to clip -- lines past the clamp then render below its ellipsis.
+    // Only bites when the card has a definite height.
+    flex: isFixedHeight ? 'none' : 1,
+    height: 'auto',
+    fontFamily: 'Rubik',
+    fontWeight: '400',
+    fontSize: `${theme.sizing.smPadding}px`,
+    lineHeight: '18.96px',
+    color: '#384466',
+    display: '-webkit-box',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: lineClamp,
+  }),
+);
 
-const BottomButtonBox = styled(Box)(({ theme }) => ({
+const BottomButtonBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isFixedHeight',
+})<{ isFixedHeight: boolean }>(({ theme, isFixedHeight }) => ({
   width: '100%',
   gap: `${theme.sizing.xSmPadding}px`,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
+  // takes over the bottom-pinning that flex: 1 on DescriptionText was doing
+  marginTop: isFixedHeight ? 'auto' : undefined,
 }));
 
 export default function StyledQuestionCard({
@@ -102,6 +119,8 @@ export default function StyledQuestionCard({
   question,
   isCarousel,
   isFavorite,
+  descriptionLineClamp = 5,
+  isFixedHeight = false,
   handleViewButtonClick,
   handleCloneButtonClick,
 }: StyledQuestionCardProps) {
@@ -126,8 +145,13 @@ export default function StyledQuestionCard({
             {domainAndGrade}
           </ButtonCCSS>
         </TitleContainer>
-        <DescriptionText>{title}</DescriptionText>
-        <BottomButtonBox>
+        <DescriptionText
+          lineClamp={descriptionLineClamp}
+          isFixedHeight={isFixedHeight}
+        >
+          {title}
+        </DescriptionText>
+        <BottomButtonBox isFixedHeight={isFixedHeight}>
           <CentralButton
             buttonType={ButtonType.VIEW}
             isEnabled
