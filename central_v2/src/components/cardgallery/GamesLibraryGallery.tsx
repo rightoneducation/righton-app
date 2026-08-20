@@ -15,6 +15,8 @@ interface GamesLibraryGalleryProps {
   galleryElements: IGameTemplate[];
   isLoading?: boolean;
   handleView?: (element: IGameTemplate, elements: IGameTemplate[]) => void;
+  /** Replaces the static title -- used for the search-results summary. */
+  header?: React.ReactNode;
   footer?: React.ReactNode;
 }
 
@@ -33,6 +35,7 @@ export default function GamesLibraryGallery({
   galleryElements,
   isLoading = false,
   handleView,
+  header = null,
   footer = null,
 }: GamesLibraryGalleryProps) {
   const theme = useTheme();
@@ -66,7 +69,9 @@ export default function GamesLibraryGallery({
         boxSizing: 'border-box',
       }}
     >
-      <MostPopularText screenSize={screenSize}>Games Library</MostPopularText>
+      {header ?? (
+        <MostPopularText screenSize={screenSize}>Games Library</MostPopularText>
+      )}
       <Grid
         container
         spacing={4}

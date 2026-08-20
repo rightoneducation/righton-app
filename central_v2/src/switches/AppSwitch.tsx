@@ -10,6 +10,7 @@ import useCentralDataManager from '../hooks/useCentralDataActions';
 import AppContainer from '../containers/AppContainer';
 import AuthGuard from '../containers/AuthGuard';
 import ExploreGames from '../pages/ExploreGames';
+import BrowseGames from '../pages/BrowseGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login';
@@ -42,6 +43,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
 
   const gameQuestion: GameQuestionType =
     currentScreen === ScreenType.GAMES ||
+    currentScreen === ScreenType.BROWSEGAMES ||
     (currentScreen === ScreenType.LIBRARY &&
       libraryGameQuestionSwitch === GameQuestionType.GAME)
       ? GameQuestionType.GAME
@@ -223,6 +225,14 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.USERPROFILE: {
       screenComponent = (
         <UserProfile screenSize={screenSize} handleLogOut={handleLogOut} />
+      );
+      break;
+    }
+    case ScreenType.BROWSEGAMES: {
+      screenComponent = (
+        <AuthGuard handleLogOut={handleLogOut}>
+          <BrowseGames screenSize={screenSize} />
+        </AuthGuard>
       );
       break;
     }

@@ -146,9 +146,7 @@ export default function ExploreGames({
               buttonWidthOverride={
                 screenSize === ScreenSize.LARGE ? '336px' : '279px'
               }
-              onClick={() => {
-                // TODO: destination not built yet
-              }}
+              onClick={() => navigate('/browsegames')}
             />
           }
         />
