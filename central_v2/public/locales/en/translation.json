@@ -1,5 +1,6 @@
 {
   "button": {
+    "browseallgames": "Browse All Games",
     "login": "Login",
     "loginheader": "Login",
     "signup": "Sign Up",

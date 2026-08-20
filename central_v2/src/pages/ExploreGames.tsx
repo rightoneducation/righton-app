@@ -11,7 +11,6 @@ import {
   GradeTarget,
 } from '@righton/networking';
 import { Box, CircularProgress, useTheme } from '@mui/material';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import {
@@ -25,7 +24,7 @@ import {
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import Recommended from '../components/explore/Recommended';
 import { FEATURED_GAME_COUNT } from '../lib/FeaturedGamesModels';
-import CardGallery from '../components/cardgallery/CardGallery';
+import GamesLibraryGallery from '../components/cardgallery/GamesLibraryGallery';
 import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 import CentralButton from '../components/button/Button';
@@ -41,7 +40,6 @@ interface ExploreGamesProps {
     direction: SortDirection | null;
   }) => void;
   handleSearchChange: (searchString: string) => void;
-  loadMore: () => void;
 }
 
 export default function ExploreGames({
@@ -51,7 +49,6 @@ export default function ExploreGames({
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  loadMore,
 }: ExploreGamesProps) {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -121,27 +118,7 @@ export default function ExploreGames({
           />
         )}
       </ExploreGamesUpperContainer>
-      <InfiniteScroll
-        dataLength={
-          isSearchResults
-            ? centralData.searchedGames.length
-            : centralData.mostPopularGames.length
-        }
-        next={loadMore}
-        hasMore={centralData.nextToken !== null}
-        loader={
-          <Box
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              paddingBottom: '20px',
-            }}
-          >
-            <h4>...</h4>
-          </Box>
-        }
-        scrollableTarget="scrollableDiv"
+      <Box
         style={{
           width: '100vw',
           height: '100%',
@@ -151,26 +128,31 @@ export default function ExploreGames({
           backgroundColor: theme.palette.primary.creamBackgroundColor,
         }}
       >
-        <CardGallery<IGameTemplate>
+        <GamesLibraryGallery
           screenSize={screenSize}
-          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-          grades={isSearchResults ? centralData.selectedGrades : undefined}
           galleryElements={
             isSearchResults
               ? centralData.searchedGames
               : centralData.mostPopularGames
           }
-          elementType={ElementType.GAME}
-          galleryType={
-            isSearchResults
-              ? GalleryType.SEARCH_RESULTS
-              : GalleryType.MOST_POPULAR
-          }
-          setIsTabsOpen={setIsTabsOpen}
           handleView={handleView}
           isLoading={centralData.isLoading}
+          footer={
+            <CentralButton
+              buttonType={ButtonType.BROWSEALLGAMES}
+              isEnabled
+              smallScreenOverride
+              // matches the game card's button: card width less its 24px side padding
+              buttonWidthOverride={
+                screenSize === ScreenSize.LARGE ? '336px' : '279px'
+              }
+              onClick={() => {
+                // TODO: destination not built yet
+              }}
+            />
+          }
         />
-      </InfiniteScroll>
+      </Box>
       <Box
         style={{
           height: '100%',

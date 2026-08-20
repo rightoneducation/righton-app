@@ -1,5 +1,6 @@
 {
   "button": {
+    "browseallgames": "Explorar Todos los Juegos",
     "close": "Cerrar",
     "login": "Iniciar sesión",
     "signup": "Registrarse",

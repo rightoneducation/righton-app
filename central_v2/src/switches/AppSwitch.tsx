@@ -237,7 +237,6 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
-            loadMore={loadMore}
           />
         </AuthGuard>
       );
