@@ -66,7 +66,7 @@ export default function Recommended<
       <Title screenSize={screenSize}>
         {elementType === ElementType.GAME
           ? 'Featured Games'
-          : 'Recommended Questions'}
+          : 'Explore Questions'}
       </Title>
       <CardCarousel
         screenSize={screenSize}
