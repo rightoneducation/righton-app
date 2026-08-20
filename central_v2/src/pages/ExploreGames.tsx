@@ -24,7 +24,7 @@ import {
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import Recommended from '../components/explore/Recommended';
-import { featuredGameIds } from '../lib/FeaturedGamesModels';
+import { FEATURED_GAME_COUNT } from '../lib/FeaturedGamesModels';
 import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
@@ -62,17 +62,21 @@ export default function ExploreGames({
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = centralData?.searchTerms?.length > 0;
-  const [hasInitialized, setHasInitialized] = useState(false);
-
-  if (!hasInitialized) {
-    const needsFetch =
-      centralData.recommendedGames.length === 0 ||
-      centralData.mostPopularGames.length === 0;
-    if (needsFetch) {
-      fetchElements();
+  // mirrors the isLibraryInit lifecycle in LibraryTabs: the flag defaults true so
+  // this fires on mount, and dispatching isLoading here (rather than mid-render)
+  // means the gallery's skeletons gate on a committed value
+  useEffect(() => {
+    if (centralData.isExploreInit) {
+      centralDataDispatch({ type: 'SET_IS_EXPLORE_INIT', payload: false });
+      const needsFetch =
+        centralData.recommendedGames.length === 0 ||
+        centralData.mostPopularGames.length === 0;
+      if (needsFetch) {
+        centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+        fetchElements();
+      }
     }
-    setHasInitialized(true);
-  }
+  }, [centralData.isExploreInit]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
@@ -113,7 +117,7 @@ export default function ExploreGames({
             elementType={ElementType.GAME}
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
-            slideCount={featuredGameIds.length}
+            slideCount={FEATURED_GAME_COUNT}
           />
         )}
       </ExploreGamesUpperContainer>

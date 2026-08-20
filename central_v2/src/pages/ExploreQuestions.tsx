@@ -80,19 +80,22 @@ export default function ExploreQuestions({
   const navigate = useNavigate();
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const [hasInitialized, setHasInitialized] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  if (!hasInitialized) {
-    const needsFetch =
-      centralData.recommendedQuestions.length === 0 ||
-      centralData.mostPopularQuestions.length === 0;
-    if (needsFetch) {
-      fetchElements();
+  // mirrors the isLibraryInit lifecycle in LibraryTabs -- see ExploreGames
+  useEffect(() => {
+    if (centralData.isExploreInit) {
+      centralDataDispatch({ type: 'SET_IS_EXPLORE_INIT', payload: false });
+      const needsFetch =
+        centralData.recommendedQuestions.length === 0 ||
+        centralData.mostPopularQuestions.length === 0;
+      if (needsFetch) {
+        centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+        fetchElements();
+      }
     }
-    setHasInitialized(true);
-  }
+  }, [centralData.isExploreInit]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [openQuestionTab, setOpenQuestionTab] = React.useState<LibraryTabEnum>(
     LibraryTabEnum.PUBLIC,

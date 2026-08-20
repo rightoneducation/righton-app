@@ -189,6 +189,7 @@ export const initCentralDataState: ICentralDataState = {
   searchTerms: '',
   selectedGrades: [],
   isLibraryInit: true,
+  isExploreInit: true,
   isTabsOpen: false,
   openTab: LibraryTabEnum.PUBLIC,
   isFavTabOpen: false,
@@ -225,6 +226,7 @@ export interface ICentralDataState {
   searchTerms: string;
   selectedGrades: GradeTarget[];
   isLibraryInit: boolean;
+  isExploreInit: boolean;
   isTabsOpen: boolean;
   openTab: LibraryTabEnum;
   isFavTabOpen: boolean;

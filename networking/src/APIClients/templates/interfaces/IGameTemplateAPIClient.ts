@@ -269,6 +269,8 @@ export interface IGameTemplateAPIClient {
     isExploreGames?: boolean
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
+  listFeaturedGameTemplates(): Promise<IGameTemplate[]>;
+
   listGameTemplatesByDate<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
