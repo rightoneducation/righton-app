@@ -392,7 +392,12 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const randomIndex = Math.floor(Math.random() * 5) + 1;
       
       updatedUser = { ...createUserInput, profilePicPath: `defaultProfilePic${randomIndex}.jpg`};
-      await this.userAPIClient.createUser(updatedUser);
+      // createdAt/updatedAt are stamped server-side and are not fields on
+      // CreateUserInput, so they only exist on the mutation response - merge it
+      // back in or the profile in state has no account-created date
+      const createdUser = await this.userAPIClient.createUser(updatedUser);
+      if (createdUser)
+        updatedUser = { ...updatedUser, ...createdUser };
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
 
@@ -433,7 +438,10 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const randomIndex = Math.floor(Math.random() * 5) + 1;
 
       updatedUser = { ...createUserInput, profilePicPath: `defaultProfilePic${randomIndex}.jpg` };
-      await this.userAPIClient.createUser(updatedUser);
+      // see signUpConfirmAndBuildBackendUser: createdAt only comes back on the response
+      const createdUser = await this.userAPIClient.createUser(updatedUser);
+      if (createdUser)
+        updatedUser = { ...updatedUser, ...createdUser };
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
       //TODO: set user status to LOGGED_IN
@@ -481,7 +489,11 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
     }
 
-    await this.userAPIClient.updateUser(updatedUser);
+    // merge the response back in so server-side fields (createdAt/updatedAt) survive
+    // the round trip through parseAWSUserfromAuthUser, which cannot carry them
+    const savedUser = await this.userAPIClient.updateUser(updatedUser);
+    if (savedUser)
+      updatedUser = { ...updatedUser, ...savedUser };
     this.setLocalUserProfile(updatedUser);
     return { updatedUser };
   };
@@ -499,7 +511,10 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         throw withContext('Profile image upload failed', error);
       }
     }
-    await this.userAPIClient.updateUser(updatedUser);
+    // see userProfileInformationUpdate: keeps createdAt/updatedAt on the profile
+    const savedUser = await this.userAPIClient.updateUser(updatedUser);
+    if (savedUser)
+      updatedUser = { ...updatedUser, ...savedUser };
     this.setLocalUserProfile(updatedUser);
     return { updatedUser };
   };

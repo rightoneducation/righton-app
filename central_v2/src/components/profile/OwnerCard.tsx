@@ -56,11 +56,15 @@ export default function OwnerCard({
   const createdAt = draftUserProfile.createdAt || '';
 
   const date = new Date(createdAt);
-  const formatted = date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
+  // profiles predating the createdAt field (and any unparseable value) would
+  // otherwise render the literal string 'Invalid Date'
+  const formatted = Number.isNaN(date.getTime())
+    ? '--'
+    : date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
 
   return screenSize === ScreenSize.LARGE ? (
     <LeftProfileContainer>
