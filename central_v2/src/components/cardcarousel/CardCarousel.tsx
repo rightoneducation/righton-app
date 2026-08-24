@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import type { Swiper as SwiperClass } from 'swiper';
 import {
   IGameTemplate,
   IQuestionTemplate,
@@ -13,13 +13,13 @@ import StyledQuestionCard from '../cards/QuestionCard';
 import placeHolder from '../../images/placeHolder.svg';
 import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
+import CarouselDots from './CarouselDots';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
   useCentralDataDispatch,
   useCentralDataState,
 } from '../../hooks/context/useCentralDataContext';
 import 'swiper/css';
-import 'swiper/css/pagination';
 import './CardCarousel.css';
 
 interface CardCarouselProps<T> {
@@ -39,14 +39,51 @@ export default function CardCarousel<
   elementType,
   setIsTabsOpen,
   handleView,
-  slideCount = 12,
+  slideCount,
 }: CardCarouselProps<T>) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const swiperRef = useRef<SwiperRef>(null);
-  // slots past the supplied elements render skeletons, so this must match the
-  // expected element count or the carousel trails permanent loading cards
-  const maxSlides = slideCount;
+  // skeletons only while the query is in flight; once the games arrive the
+  // carousel renders exactly what came back, so an under- or over-returning
+  // query cannot strand permanent loading cards or silently drop a game
+  const maxSlides =
+    recommendedElements.length > 0 ? recommendedElements.length : slideCount ?? 12;
+  /**
+   * Which card opens dead centre. Derived from slideCount -- a constant known at
+   * mount -- and NOT from maxSlides: Swiper reads initialSlide once during init,
+   * while the element array is still empty, so anything data-derived resolves
+   * against the placeholder and centres the wrong card.
+   *
+   * Callers that don't declare a curated size (the questions carousel) get 0 and
+   * open at the start, as before.
+   */
+  const initialSlide = slideCount ? Math.floor(slideCount / 2) : 0;
+
+  /**
+   * Mirrors the swiper's own snap grid so the dots can be keyed to distinct
+   * scroll positions rather than to slides. Re-read on resize because the grid
+   * is rebuilt whenever the number of visible cards changes.
+   */
+  const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+  const [snapGrid, setSnapGrid] = useState<number[]>([]);
+  const [snapIndex, setSnapIndex] = useState(0);
+
+  const syncSnaps = (instance: SwiperClass) => {
+    setSnapGrid([...instance.snapGrid]);
+    setSnapIndex(instance.snapIndex);
+  };
+
+  // collapse duplicate positions, keeping the first slide that reaches each
+  const firstSlideAtPosition = new Map<number, number>();
+  snapGrid.forEach((position, index) => {
+    if (!firstSlideAtPosition.has(position))
+      firstSlideAtPosition.set(position, index);
+  });
+  const stops = Array.from(firstSlideAtPosition.values());
+  const activeStop = Math.max(
+    Array.from(firstSlideAtPosition.keys()).indexOf(snapGrid[snapIndex]),
+    0,
+  );
   const handleViewButtonClick = (element: T) => {
     handleView(element, recommendedElements as T[]);
   };
@@ -65,28 +102,28 @@ export default function CardCarousel<
     navigate(`/clone/question/${element.publicPrivateType}/${element.id}`);
   };
   return (
+    <>
     <Swiper
       style={{
         width: '100%',
       }}
-      modules={[Pagination]}
-      pagination={{
-        el: '.swiper-pagination-container',
-        bulletClass: 'swiper-pagination-bullet',
-        bulletActiveClass: 'swiper-pagination-bullet-active',
-        clickable: true,
-        renderBullet(index: number, className: string) {
-          return `<span class="${className}" style="width:20px; height:6px; border-radius:2px;"></span>`;
-        },
+      onSwiper={(instance) => {
+        setSwiper(instance);
+        syncSnaps(instance);
       }}
-      ref={swiperRef}
+      onSnapIndexChange={syncSnaps}
+      onResize={syncSnaps}
       spaceBetween={theme.sizing.smPadding}
       slidesPerView="auto"
+      initialSlide={initialSlide}
       updateOnWindowResize
-      navigation
-      loop
       centeredSlides
+      // clamps the scroll at both ends: without it the first and last cards
+      // centre themselves and leave half a viewport of empty space beside them
       centeredSlidesBounds
+      // above ~2791px every card fits and the strip would sit left-aligned;
+      // this centres the group so the leftover margins are even
+      centerInsufficientSlides
     >
       {Array.from({ length: maxSlides }).map((_, index) => {
         const element = recommendedElements[index] as
@@ -157,5 +194,11 @@ export default function CardCarousel<
         );
       })}
     </Swiper>
+    <CarouselDots
+      stops={stops}
+      activeStop={activeStop}
+      onSelect={(slideIndex) => swiper?.slideTo(slideIndex)}
+    />
+    </>
   );
 }

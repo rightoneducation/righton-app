@@ -70,7 +70,7 @@ export default function GamesLibraryGallery({
       }}
     >
       {header ?? (
-        <MostPopularText screenSize={screenSize}>Games Library</MostPopularText>
+        <MostPopularText screenSize={screenSize}>Game Library</MostPopularText>
       )}
       <Grid
         container

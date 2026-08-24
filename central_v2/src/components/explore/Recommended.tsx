@@ -8,7 +8,6 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import CardCarousel from '../cardcarousel/CardCarousel';
 import { ScreenSize } from '../../lib/CentralModels';
-import PaginationContainerStyled from '../../lib/PaginationContainerStyled';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 interface RecommendedProps<T> {
@@ -76,7 +75,6 @@ export default function Recommended<
         handleView={handleView}
         slideCount={slideCount}
       />
-      <PaginationContainerStyled className="swiper-pagination-container" />
     </RecommendedContainer>
   );
 }
