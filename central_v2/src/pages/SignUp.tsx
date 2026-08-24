@@ -338,6 +338,14 @@ const SignUpTextField = styled(TextContainerStyled, {
   }),
 }));
 
+// the dropdown's "no selection" option carries this as its value, so it has to
+// be scrubbed before save -- otherwise an untouched (now optional) Title
+// persists the placeholder string onto the profile as if it were a real choice
+export const TITLE_PLACEHOLDER = 'Title...';
+
+export const normalizeTitle = (title?: string): string =>
+  !title || title === TITLE_PLACEHOLDER ? '' : title;
+
 type SignUpForm = {
   title: string;
   firstName: string;
@@ -356,8 +364,7 @@ const getMissingRequiredFields = (
   back: File | null,
 ): string[] => {
   const missing: string[] = [];
-  if (form.title.trim().length === 0 || form.title === 'Title...')
-    missing.push('Title');
+  // Title is intentionally absent -- it is optional in both signup and edit
   if (form.firstName.trim().length === 0) missing.push('First Name');
   if (form.lastName.trim().length === 0) missing.push('Last Name');
   if (form.userName.trim().length === 0) missing.push('Username');
@@ -436,7 +443,8 @@ export default function SignUp({
   };
 
   const [localSignUp, setLocalSignUp] = useState({
-    title: centralData.userProfile.title ?? 'Title...',
+    // `||` not `??`: a cleared title is saved as '', which matches no MenuItem
+    title: centralData.userProfile.title || TITLE_PLACEHOLDER,
     firstName: centralData.userProfile.firstName ?? '',
     lastName: centralData.userProfile.lastName ?? '',
     email: centralData.userProfile.email ?? '',
@@ -518,8 +526,8 @@ export default function SignUp({
     setLoading(true);
     setErrorMessage('');
 
-    const { title, firstName, lastName, email, userName, password } =
-      localSignUp;
+    const { firstName, lastName, email, userName, password } = localSignUp;
+    const title = normalizeTitle(localSignUp.title);
     const newProfile = {
       ...centralData.userProfile,
       title,
@@ -594,7 +602,7 @@ export default function SignUp({
       <NoticeModal
         isModalOpen={isMissingFieldsOpen}
         header="Complete Required Fields"
-        body="Please finish the following before continuing:"
+        body="Please complete the following before continuing:"
         items={missingRequiredFields}
         onClose={() => setIsMissingFieldsOpen(false)}
       />
@@ -635,8 +643,6 @@ export default function SignUp({
           <MiddleTextFirstRow>
             <TitleField
               select
-              error={showFieldErrors && localSignUp.title === 'Title...'}
-              isError={showFieldErrors && localSignUp.title === 'Title...'}
               value={localSignUp.title}
               onChange={(event) =>
                 setLocalSignUp((prev) => ({

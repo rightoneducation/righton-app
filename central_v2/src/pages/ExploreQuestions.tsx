@@ -30,7 +30,7 @@ import QuestionsLibraryGallery from '../components/cardgallery/QuestionsLibraryG
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
 import Recommended from '../components/explore/Recommended';
-import SearchBar from '../components/searchbar/SearchBar';
+import ExploreLauncherBar from '../components/explorelauncher/ExploreLauncherBar';
 import QuestionTabs from '../components/questiontabs/QuestionTabs';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
@@ -107,7 +107,14 @@ export default function ExploreQuestions({
   const [originalSelectedQuestion, setOriginalSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
-  const isSearchResults = centralData.searchTerms.length > 0;
+  /**
+   * Searching now happens on Browse: ExploreLauncherBar navigates there rather
+   * than filtering in place, so this screen has no search-results state of its
+   * own. Left as a constant because central searchTerms can still be set by
+   * Browse, and browser-Back would otherwise show an empty searched-* gallery
+   * with Recommended hidden.
+   */
+  const isSearchResults = false;
   const galleryQuestions = isSearchResults
     ? centralData.searchedQuestions
     : centralData.mostPopularQuestions;
@@ -297,13 +304,9 @@ export default function ExploreQuestions({
             }}
           />
         )}
-        <SearchBar
-          isSearchResults={isSearchResults}
+        <ExploreLauncherBar
           screenSize={screenSize}
-          searchTerms={centralData.searchTerms}
-          handleSearchChange={handleSearchChange}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
+          browseTarget={GameQuestionType.QUESTION}
         />
         {!isSearchResults && (
           <Recommended<IQuestionTemplate>

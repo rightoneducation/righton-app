@@ -39,6 +39,7 @@ interface VerificationCodeInputProps {
   onCodeChange: (code: string[]) => void;
   hasError?: boolean;
   children?: React.ReactNode;
+  autoFocus?: boolean;
 }
 
 export default function VerificationCodeInput({
@@ -46,6 +47,7 @@ export default function VerificationCodeInput({
   onCodeChange,
   hasError = false,
   children = null,
+  autoFocus = false,
 }: VerificationCodeInputProps) {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const { length } = code;
@@ -128,6 +130,9 @@ export default function VerificationCodeInput({
           inputProps={{
             maxLength: 1,
             inputMode: 'numeric',
+            // React's own autoFocus: fires once on mount, never on re-render,
+            // so typing can't get yanked back to the first box
+            autoFocus: autoFocus && index === 0,
             autoComplete: index === 0 ? 'one-time-code' : 'off',
             'aria-label': `Verification code digit ${index + 1}`,
             onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) =>

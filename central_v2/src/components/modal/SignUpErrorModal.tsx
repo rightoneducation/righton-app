@@ -19,12 +19,16 @@ import { useCentralDataDispatch } from '../../hooks/context/useCentralDataContex
 import closeX from '../../images/closeX.svg';
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
-  position: 'absolute',
+  // NB: Fade below clones this element with an inline `style`, and inline wins
+  // over a styled() class -- so position/top/transform must agree there too or
+  // edits here silently do nothing. Fixed (not absolute) to centre on the
+  // viewport like ModalBackground, rather than on an unpositioned ancestor.
+  position: 'fixed',
   borderRadius: '16px',
   width: 'calc(90%)',
   height: 'auto',
   top: '50%',
-  transform: 'translateY(-50%)',
+  transform: 'translate(-50%, -50%)',
   maxHeight: '100%',
   maxWidth: '400px',
   background: '#FFF',
@@ -75,6 +79,21 @@ const resolveErrorCopy = (
       body: 'Something went wrong while creating your account. Please try again.',
     };
   }
+  // the PreSignup lambda signals collisions as `CODE|message`, which Cognito
+  // wraps in UserLambdaValidationException noise -- match the code, not the
+  // whole string, and replace the copy rather than surfacing the raw throw
+  if (/USERNAME_EXISTS/.test(text)) {
+    return {
+      header: 'Username Unavailable',
+      body: 'That username is already taken. Please choose a different one.',
+    };
+  }
+  if (/EMAIL_EXISTS/.test(text)) {
+    return {
+      header: 'Email Already Registered',
+      body: 'An account already exists with that email. Try logging in instead.',
+    };
+  }
   if (/teacher\s*id|upload/i.test(text)) {
     return {
       header: 'Upload Required',
@@ -113,10 +132,10 @@ export default function SignUpErrorModal({
       unmountOnExit
       timeout={1000}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         top: '50%',
         left: '50%',
-        transform: 'translate(-50%)',
+        transform: 'translate(-50%, -50%)',
       }}
     >
       <IntegratedContainer elevation={12}>

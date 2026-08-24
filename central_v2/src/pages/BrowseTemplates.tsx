@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { debounce } from 'lodash';
 import {
   SortDirection,
@@ -27,6 +27,13 @@ import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
+import {
+  BrowseQuery,
+  decodeBrowseQuery,
+  effectiveBrowseSort,
+  encodeBrowseQuery,
+  gameSideField,
+} from '../lib/browseQueryParams';
 import GamesLibraryGallery from '../components/cardgallery/GamesLibraryGallery';
 import QuestionsLibraryGallery from '../components/cardgallery/QuestionsLibraryGallery';
 import PaginatedNavigation from '../components/pagination/PaginatedNavigation';
@@ -48,14 +55,6 @@ const PAGE_SIZE = 12;
  */
 const SCAN_WINDOW = 60;
 
-const DEFAULT_SORT = (gameQuestion: GameQuestionType) => ({
-  field:
-    gameQuestion === GameQuestionType.QUESTION
-      ? SortType.listQuestionTemplates
-      : SortType.listGameTemplates,
-  direction: SortDirection.DESC as SortDirection | null,
-});
-
 /**
  * SortSearchMenu only ever emits GAME SortType members. Handed straight to
  * searchForQuestionTemplates they match none of its named cases and fall through
@@ -69,11 +68,7 @@ const GAME_TO_QUESTION_SORT: Partial<Record<SortType, SortType>> = {
     SortType.listQuestionTemplatesByGameCount,
 };
 
-type Query = {
-  search: string;
-  grades: GradeTarget[];
-  sort: { field: SortType; direction: SortDirection | null };
-};
+type Query = BrowseQuery;
 
 /**
  * Mirrors LibraryTabsContent's isDefaultSort/isSearchResults pair -- grades and a
@@ -136,13 +131,45 @@ export default function BrowseTemplates({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const isQuestions = gameQuestion === GameQuestionType.QUESTION;
-  const defaultSort = DEFAULT_SORT(gameQuestion);
-  const emptyQuery: Query = { search: '', grades: [], sort: defaultSort };
+  /**
+   * The URL is this page's source of truth: the front-page launcher bar hands
+   * its search/grades over as query params, and every change below writes back.
+   * A bare URL decodes to the empty query, so arriving via the Browse button
+   * keeps the previous reset-everything behaviour.
+   */
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialQuery = useRef<Query>(
+    decodeBrowseQuery(searchParams, gameQuestion),
+  ).current;
+  const seededQuery = useRef<Query>({
+    ...initialQuery,
+    sort: effectiveBrowseSort(
+      initialQuery,
+      gameQuestion,
+      searchParams.get('sort') !== null,
+    ),
+  }).current;
+
+  const syncUrl = (next: Query) => {
+    setSearchParams(encodeBrowseQuery(next, gameQuestion), { replace: true });
+  };
+
+  /**
+   * Picking grades switches the ordering to grade-ascending, but only until the
+   * user states a preference -- otherwise the sort menu would look broken. An
+   * explicit ?sort= in the URL counts as a stated preference.
+   */
+  const hasUserPickedSort = useRef(searchParams.get('sort') !== null);
+
+  const withEffectiveSort = (next: Query): Query => ({
+    ...next,
+    sort: effectiveBrowseSort(next, gameQuestion, hasUserPickedSort.current),
+  });
 
   // the query the grid is currently showing -- NOT raw central state, because
   // SelectGradesMenu dispatches SET_SELECTED_GRADES on every checkbox tick,
   // before Choose is pressed
-  const [query, setQuery] = useState<Query>(emptyQuery);
+  const [query, setQuery] = useState<Query>(seededQuery);
   const [pages, setPages] = useState<ITemplate[][]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [isFetching, setIsFetching] = useState(false);
@@ -254,20 +281,30 @@ export default function BrowseTemplates({
    */
   useEffect(() => {
     centralDataDispatch({ type: 'SET_IS_TABS_OPEN', payload: false });
-    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
+    // seeding central is what makes the UI reflect the URL: SearchBar mirrors
+    // searchTerms into its input, SelectGradesMenu reads selectedGrades
+    centralDataDispatch({
+      type: 'SET_SEARCH_TERMS',
+      payload: initialQuery.search,
+    });
     centralDataDispatch({
       type: isQuestions ? 'SET_SEARCHED_QUESTIONS' : 'SET_SEARCHED_GAMES',
       payload: [],
     });
-    centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: [] });
-    centralDataDispatch({ type: 'SET_SORT', payload: defaultSort });
+    centralDataDispatch({
+      type: 'SET_SELECTED_GRADES',
+      payload: initialQuery.grades,
+    });
+    centralDataDispatch({ type: 'SET_SORT', payload: seededQuery.sort });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
-    runQuery(emptyQuery);
+    runQuery(seededQuery);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const debouncedSearch = useCallback( // eslint-disable-line
-    debounce((search: string, current: Query) => {
-      runQuery({ ...current, search });
+    debounce((search: string, current: Query, sync: (next: Query) => void) => {
+      const next = { ...current, search };
+      sync(next);
+      runQuery(next);
     }, 800),
     [],
   );
@@ -275,12 +312,17 @@ export default function BrowseTemplates({
   const handleSearchChange = (searchString: string) => {
     const trimmed = searchString.trim();
     centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: trimmed });
-    debouncedSearch(trimmed, query);
+    // the URL write rides the same debounce as the query -- writing per
+    // keystroke would stack a history entry for every pause in typing
+    debouncedSearch(trimmed, query, syncUrl);
   };
 
   const handleChooseGrades = (grades: GradeTarget[]) => {
     centralDataDispatch({ type: 'SET_SELECTED_GRADES', payload: grades });
-    runQuery({ ...query, grades });
+    const next = withEffectiveSort({ ...query, grades });
+    centralDataDispatch({ type: 'SET_SORT', payload: next.sort });
+    syncUrl(next);
+    runQuery(next);
   };
 
   const handleSortChange = (newSort: {
@@ -291,8 +333,11 @@ export default function BrowseTemplates({
       ? (GAME_TO_QUESTION_SORT[newSort.field] ?? newSort.field)
       : newSort.field;
     const sort = { ...newSort, field };
+    hasUserPickedSort.current = true;
     centralDataDispatch({ type: 'SET_SORT', payload: sort });
-    runQuery({ ...query, sort });
+    const next = { ...query, sort };
+    syncUrl(next);
+    runQuery(next);
   };
 
   /**
@@ -449,6 +494,7 @@ export default function BrowseTemplates({
       galleryType={GalleryType.SEARCH_RESULTS}
       searchedTerm={query.search}
       grades={query.grades}
+      elementLabel={isQuestions ? 'Questions' : 'Games'}
       isLoading={isFetching}
       // the result count is deliberately withheld: with cursor pagination the
       // total is unknown until the query is exhausted, so it would climb as the
@@ -559,6 +605,11 @@ export default function BrowseTemplates({
           handleSearchChange={handleSearchChange}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
+          initialSort={{
+            // game-side field: SortSearchMenu's map has no question members
+            field: gameSideField(seededQuery.sort.field),
+            direction: seededQuery.sort.direction ?? SortDirection.DESC,
+          }}
         />
       </ExploreGamesUpperContainer>
       <Box

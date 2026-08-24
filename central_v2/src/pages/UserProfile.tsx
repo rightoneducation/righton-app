@@ -47,6 +47,19 @@ import { ScreenSize } from '../lib/CentralModels';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import ConfirmPasswordUpdateModal from '../components/modal/ConfirmPasswordUpdateModal';
+import NoticeModal from '../components/modal/NoticeModal';
+import { TITLE_PLACEHOLDER, normalizeTitle } from './SignUp';
+
+// mirrors getMissingRequiredFields in SignUp.tsx: the edit flow must not let a
+// profile reach a state that signup would have rejected. Title is absent from
+// both by design -- it is optional everywhere.
+const getMissingProfileFields = (profile: IUserProfile): string[] => {
+  const missing: string[] = [];
+  if ((profile.firstName ?? '').trim().length === 0) missing.push('First Name');
+  if ((profile.lastName ?? '').trim().length === 0) missing.push('Last Name');
+  if (profile.userName.trim().length === 0) missing.push('Username');
+  return missing;
+};
 
 interface UserProfileProps {
   screenSize: ScreenSize;
@@ -106,6 +119,16 @@ export default function UserProfile({
   const [hoveredIdSlot, setHoveredIdSlot] = useState<'front' | 'back' | null>(
     null,
   );
+
+  // latches on a failed save attempt so the inline red outlines only appear
+  // once the user has actually tried to submit
+  const [showFieldErrors, setShowFieldErrors] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [noticeModal, setNoticeModal] = useState<{
+    header: string;
+    body: string;
+    items: string[];
+  } | null>(null);
 
   useEffect(() => {
     if (centralData.userProfile) {
@@ -172,13 +195,50 @@ export default function UserProfile({
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setOpenPasswordModal(false);
+    setNoticeModal(null);
   };
 
   const handleGetStarted = async () => {
-    setEditInformationHighlight(true);
-    setIsEditInformation(false);
+    const missing = getMissingProfileFields(draftUserProfile);
+    if (missing.length > 0) {
+      setShowFieldErrors(true);
+      setNoticeModal({
+        header: 'Complete Required Fields',
+        body: 'These cannot be left blank:',
+        items: missing,
+      });
+      return; // stay in edit mode so the draft is still recoverable
+    }
+
+    const trimmedUserName = draftUserProfile.userName.trim();
+    setIsSaving(true);
     try {
-      const updatedUser = { ...draftUserProfile };
+      // only query when it actually changed -- re-saving an unchanged username
+      // would otherwise collide with the user's own record
+      if (trimmedUserName !== centralData.userProfile.userName) {
+        const existing = await apiClients.user.getUserByUserName(
+          trimmedUserName,
+        );
+        // the id guard still matters: a case-only change can return self
+        if (existing && existing.id !== centralData.userProfile.id) {
+          setShowFieldErrors(true);
+          setNoticeModal({
+            header: 'Username Unavailable',
+            body: 'That username is already taken. Please choose a different one.',
+            items: [],
+          });
+          setIsSaving(false);
+          return;
+        }
+      }
+
+      const updatedUser = {
+        ...draftUserProfile,
+        userName: trimmedUserName,
+        firstName: (draftUserProfile.firstName ?? '').trim(),
+        lastName: (draftUserProfile.lastName ?? '').trim(),
+        title: normalizeTitle(draftUserProfile.title),
+      };
       const response =
         await apiClients.centralDataManager?.userProfileInformationUpdate(
           updatedUser,
@@ -192,8 +252,26 @@ export default function UserProfile({
           payload: response.updatedUser,
         });
       }
+      // only leave edit mode once the write has actually landed
+      setFrontImage(null);
+      setBackImage(null);
+      setShowFieldErrors(false);
+      setEditInformationHighlight(true);
+      setIsEditInformation(false);
     } catch (error) {
+      // this used to be a bare console.error, which made a failed save
+      // indistinguishable from a successful one
       console.error(error);
+      setNoticeModal({
+        header: 'Could Not Save Changes',
+        body:
+          error instanceof Error && error.message.length > 0
+            ? error.message
+            : 'Something went wrong while saving your profile. Please try again.',
+        items: [],
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -212,6 +290,7 @@ export default function UserProfile({
     setHoveredIdSlot(null);
     setIsEditInformation(false);
     setEditInformationHighlight(true);
+    setShowFieldErrors(false);
   };
 
   const renderFrontImageSection = () => {
@@ -320,8 +399,15 @@ export default function UserProfile({
         handleImageSave={handleImageSave}
         handleCloseModal={handleCloseModal}
       />
+      <NoticeModal
+        isModalOpen={noticeModal !== null}
+        header={noticeModal?.header ?? ''}
+        body={noticeModal?.body ?? ''}
+        items={noticeModal?.items ?? []}
+        onClose={() => setNoticeModal(null)}
+      />
       <ModalBackground
-        isModalOpen={isModalOpen || openPasswordModal}
+        isModalOpen={isModalOpen || openPasswordModal || noticeModal !== null}
         handleCloseModal={handleCloseModal}
       />
       <TitleText>My Profile</TitleText>
@@ -379,6 +465,9 @@ export default function UserProfile({
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
+              error={
+                showFieldErrors && draftUserProfile.userName.trim().length === 0
+              }
               value={draftUserProfile.userName}
               onChange={(event) =>
                 setDraftUserProfile({
@@ -394,7 +483,9 @@ export default function UserProfile({
             <UserInfoItemContainer>
               <TitleField
                 select
-                value={draftUserProfile.title}
+                // `||` not `??`: an optional/cleared title is stored as '',
+                // which matches no MenuItem and renders the select blank
+                value={draftUserProfile.title || TITLE_PLACEHOLDER}
                 onChange={(event) =>
                   setDraftUserProfile({
                     ...draftUserProfile,
@@ -412,6 +503,10 @@ export default function UserProfile({
               <TextContainerStyled
                 variant="outlined"
                 placeholder="First Name"
+                error={
+                  showFieldErrors &&
+                  (draftUserProfile.firstName ?? '').trim().length === 0
+                }
                 value={draftUserProfile.firstName}
                 onChange={(event) =>
                   setDraftUserProfile({
@@ -424,6 +519,10 @@ export default function UserProfile({
               <TextContainerStyled
                 variant="outlined"
                 placeholder="Last Name"
+                error={
+                  showFieldErrors &&
+                  (draftUserProfile.lastName ?? '').trim().length === 0
+                }
                 value={draftUserProfile.lastName}
                 onChange={(event) =>
                   setDraftUserProfile({
@@ -494,7 +593,7 @@ export default function UserProfile({
             >
               <CentralButton
                 buttonType={ButtonType.SAVE}
-                isEnabled
+                isEnabled={!isSaving}
                 smallScreenOverride
                 onClick={handleGetStarted}
               />

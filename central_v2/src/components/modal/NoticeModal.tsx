@@ -5,12 +5,16 @@ import { ButtonType } from '../button/ButtonModels';
 import closeX from '../../images/closeX.svg';
 
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
-  position: 'absolute',
+  // NB: Fade below clones this element with an inline `style`, and inline wins
+  // over a styled() class -- so position/top/transform must agree there too or
+  // edits here silently do nothing. Fixed (not absolute) to centre on the
+  // viewport like ModalBackground, rather than on an unpositioned ancestor.
+  position: 'fixed',
   borderRadius: '16px',
   width: 'calc(90%)',
   height: 'auto',
   top: '50%',
-  transform: 'translateY(-50%)',
+  transform: 'translate(-50%, -50%)',
   maxHeight: '100%',
   maxWidth: '400px',
   background: '#FFF',
@@ -86,10 +90,10 @@ export default function NoticeModal({
       unmountOnExit
       timeout={1000}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         top: '50%',
         left: '50%',
-        transform: 'translate(-50%)',
+        transform: 'translate(-50%, -50%)',
       }}
     >
       <IntegratedContainer elevation={12}>

@@ -216,6 +216,7 @@ function Confirmation({
             code={code}
             onCodeChange={setCode}
             hasError={hasError}
+            autoFocus
           >
             {hasError ? <img src={errorIcon} alt="Error Icon" /> : null}
           </VerificationCodeInput>

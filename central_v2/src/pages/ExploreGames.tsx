@@ -17,7 +17,7 @@ import {
   useCentralDataState,
   useCentralDataDispatch,
 } from '../hooks/context/useCentralDataContext';
-import { ScreenSize } from '../lib/CentralModels';
+import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
@@ -25,7 +25,7 @@ import {
 import Recommended from '../components/explore/Recommended';
 import { FEATURED_GAME_COUNT } from '../lib/FeaturedGamesModels';
 import GamesLibraryGallery from '../components/cardgallery/GamesLibraryGallery';
-import SearchBar from '../components/searchbar/SearchBar';
+import ExploreLauncherBar from '../components/explorelauncher/ExploreLauncherBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -58,7 +58,14 @@ export default function ExploreGames({
 
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
-  const isSearchResults = centralData?.searchTerms?.length > 0;
+  /**
+   * Searching now happens on Browse: ExploreLauncherBar navigates there rather
+   * than filtering in place, so this screen has no search-results state of its
+   * own. Left as a constant because central searchTerms can still be set by
+   * Browse, and browser-Back would otherwise show an empty searched-* gallery
+   * with Recommended hidden.
+   */
+  const isSearchResults = false;
   // mirrors the isLibraryInit lifecycle in LibraryTabs: the flag defaults true so
   // this fires on mount, and dispatching isLoading here (rather than mid-render)
   // means the gallery's skeletons gate on a committed value
@@ -99,13 +106,9 @@ export default function ExploreGames({
             }}
           />
         )}
-        <SearchBar
-          isSearchResults={isSearchResults}
+        <ExploreLauncherBar
           screenSize={screenSize}
-          searchTerms={centralData.searchTerms}
-          handleSearchChange={handleSearchChange}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
+          browseTarget={GameQuestionType.GAME}
         />
         {!isSearchResults && (
           <Recommended<IGameTemplate>
