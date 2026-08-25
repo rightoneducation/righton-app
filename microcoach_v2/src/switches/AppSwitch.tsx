@@ -5,6 +5,7 @@ import { useAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { useLogOut } from '../hooks/useMicroCoachDataActions';
 import { useScreenSize } from '../hooks/useScreenSize';
 import AppContainer from '../containers/AppContainer';
+import TemplateDebugMenu from '../components/TemplateDebugMenu';
 import AuthGuard from '../containers/AuthGuard';
 import Landing from '../pages/Landing';
 import Login from '../pages/Login';
@@ -119,6 +120,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       >
         {screenComponent}
       </AuthGuard>
+      {/* Review scaffolding — remove with TemplateDebugMenu once the activity
+          screen is backed by real data. */}
+      {currentScreen === ScreenType.ACTIVITY_DETAIL && <TemplateDebugMenu />}
     </AppContainer>
   );
 }

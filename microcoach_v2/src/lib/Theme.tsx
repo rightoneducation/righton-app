@@ -31,6 +31,9 @@ const designSystemColors = {
     disabledStroke: '#AAAAAA',
     mutedGrey: '#8F8F8F',
     selectedNavy: '#1B2A6B',
+    // Muted label grey above a field or panel ("Student task"). Darker and
+    // cooler than mutedGrey, which is too light to sit on a grey fill.
+    slateGrey: '#6B7280',
   },
   surface: {
     atlanticNavy: '#1B376F',
@@ -60,6 +63,27 @@ const designSystemColors = {
     needsSupport: '#F49F82',
     understood: '#BDE9CA',
     prerequisite: '#CC5500',
+    // The error family used across the activity templates. Figma draws the
+    // worked-example row and the compare column as #D0254D at 30% but paints
+    // the verdict chip as the flat #F1BECA — which is that exact composite
+    // over white. One solid token covers all three: every surface it lands on
+    // is white, and a 6-digit value also survives the PDF renderer, whose
+    // colour parser has no alpha. Distinct from status.error, the pale wash
+    // used for form-level errors.
+    errorTint: '#F1BECA',
+    // The ✗ marker beside an incorrect observation.
+    errorIcon: '#E68A9F',
+    // status.lightGreen at 50% over white — the "Matches" representation card.
+    successTint: '#F6FFF1',
+  },
+  // The plotted graph inside a representation card. Charts are their own
+  // surface with their own legibility needs — same reason `gradients` is
+  // namespaced rather than folded into `foreground`.
+  chart: {
+    axis: '#333333',
+    gridLabel: '#BBBBBB',
+    line: '#1A6FB5',
+    annotation: '#E07B00',
   },
   gradients: {
     uploadIcons:
@@ -307,6 +331,46 @@ const designSystemTypography = {
     fontSize: '14px',
     lineHeight: 'normal',
   },
+  // headingMd at 700 — the worked-example panel headings ("Example 1") sit one
+  // weight above the surrounding headingMd section titles.
+  headingMdBold: {
+    fontFamily: poppins,
+    fontWeight: 700,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  // The "Step N" pill. Sits between smallBodyText (14) and microLabel (12);
+  // named here because StepChip previously inlined the family/size/weight,
+  // the one place in the styled layer that bypassed the type scale.
+  stepChipLabel: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '13px',
+    lineHeight: 'normal',
+  },
+  // Rubik 500 without the tracking the buttonLabel pair carries: panel and
+  // card labels ("Equation", "Ask students", a teaching-note heading).
+  rubikLabel: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '16px',
+    lineHeight: 'normal',
+  },
+  rubikLabelSm: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '14px',
+    lineHeight: 'normal',
+  },
+  // The "FINAL:" summary closing each worked example. Rendered uppercase by
+  // the component, so the copy itself stays natural-case.
+  outcomeLabel: {
+    fontFamily: poppins,
+    fontWeight: 700,
+    fontSize: '12px',
+    lineHeight: 'normal',
+    letterSpacing: '0.5px',
+  },
 };
 
 // Breakpoints match central_v2 so ScreenSize bands line up across the apps:
@@ -417,6 +481,11 @@ declare module '@mui/material/styles' {
     headingLg: CSSProperties;
     statusLabel: CSSProperties;
     smallBodyText: CSSProperties;
+    headingMdBold: CSSProperties;
+    rubikLabel: CSSProperties;
+    rubikLabelSm: CSSProperties;
+    stepChipLabel: CSSProperties;
+    outcomeLabel: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
@@ -455,6 +524,11 @@ declare module '@mui/material/styles' {
     headingLg?: CSSProperties;
     statusLabel?: CSSProperties;
     smallBodyText?: CSSProperties;
+    headingMdBold?: CSSProperties;
+    rubikLabel?: CSSProperties;
+    rubikLabelSm?: CSSProperties;
+    stepChipLabel?: CSSProperties;
+    outcomeLabel?: CSSProperties;
   }
 }
 
@@ -494,6 +568,11 @@ declare module '@mui/material/Typography' {
     headingLg: true;
     statusLabel: true;
     smallBodyText: true;
+    headingMdBold: true;
+    rubikLabel: true;
+    rubikLabelSm: true;
+    stepChipLabel: true;
+    outcomeLabel: true;
   }
 }
 
@@ -568,6 +647,11 @@ const Theme = createTheme({
           headingLg: 'p',
           statusLabel: 'p',
           smallBodyText: 'p',
+          headingMdBold: 'p',
+          rubikLabel: 'p',
+          rubikLabelSm: 'p',
+          stepChipLabel: 'p',
+          outcomeLabel: 'p',
         },
       },
     },
@@ -609,6 +693,11 @@ const Theme = createTheme({
     headingLg: { ...designSystemTypography.headingLg },
     statusLabel: { ...designSystemTypography.statusLabel },
     smallBodyText: { ...designSystemTypography.smallBodyText },
+    headingMdBold: { ...designSystemTypography.headingMdBold },
+    rubikLabel: { ...designSystemTypography.rubikLabel },
+    rubikLabelSm: { ...designSystemTypography.rubikLabelSm },
+    stepChipLabel: { ...designSystemTypography.stepChipLabel },
+    outcomeLabel: { ...designSystemTypography.outcomeLabel },
     h1: { ...designSystemTypography.h1 },
     h2: { ...designSystemTypography.h2 },
     h3: { ...designSystemTypography.h3 },

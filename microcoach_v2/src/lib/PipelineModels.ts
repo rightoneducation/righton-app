@@ -85,11 +85,31 @@ export type ActivityType =
 
 export type WorkStatus = 'CORRECT' | 'INCORRECT' | 'NEUTRAL';
 
+export type StepAnnotationKind = 'CORRECT' | 'ERROR';
+
+/**
+ * A teacher-only remark on one step of a worked example.
+ *
+ * Figma renders both kinds inline in the same navy as the step body — the
+ * error row is distinguished by its highlight, not by the note's colour. It is
+ * still a separate field rather than part of `text` because the student view
+ * has to strip it: "Student view shows the problem clean".
+ */
+export interface IStepAnnotation {
+  kind: StepAnnotationKind;
+  /**
+   * The note itself, with no presentation baked in — the component supplies
+   * the "(Correct)" / "← (Error: …)" wrapper from the catalogue so it stays
+   * translatable. `null` for a bare CORRECT marker, which carries no note.
+   */
+  text: string | null;
+}
+
 export interface IExampleStep {
   step: number;
+  /** Student-safe. Carries no correctness marker of its own. */
   text: string;
-  isError: boolean;
-  errorNote?: string | null;
+  annotation: IStepAnnotation | null;
 }
 
 export interface IWorkedExample {
@@ -116,7 +136,15 @@ export interface IFavoriteNoContent {
     title: string;
     sourceLabel: string;
     studentWorkLabel: string;
-    studentWork: { text: string; status: WorkStatus }[];
+    studentWork: {
+      text: string;
+      status: WorkStatus;
+      /**
+       * Figma highlights the restated problem green but gives it no tick —
+       * the fill and the mark are not the same signal. Defaults to marked.
+       */
+      showMark?: boolean;
+    }[];
     whatToNoticeLabel: string;
     whatToNotice: { status: WorkStatus; text: string }[];
   };
@@ -142,6 +170,19 @@ export interface ICompareContent {
   keyTakeaway: { label: string; text: string };
 }
 
+export interface IGraphLine {
+  /** Plotted directly. Kept as numbers so nothing has to parse `lineLabel`. */
+  slope: number;
+  intercept: number;
+}
+
+export interface IAxisRange {
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+}
+
 export interface IRepresentation {
   kind: string;
   label: string;
@@ -150,6 +191,9 @@ export interface IRepresentation {
   value?: string;
   detail?: string;
   lineLabel?: string;
+  line?: IGraphLine;
+  axisRange?: IAxisRange;
+  slopeAnnotation?: { riseLabel: string; runLabel: string };
   plottedPoints?: string[];
   columns?: string[];
   rows?: (string | number)[][];

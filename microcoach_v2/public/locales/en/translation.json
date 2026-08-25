@@ -31,7 +31,11 @@
     "noContent": "This step isn't available for this activity yet.",
     "printSubtitle": "Prepared for: {{misconception}}",
     "exporting": "Preparing PDF…",
-    "page": "Page"
+    "page": "Page",
+    "stepNumber": "Step {{number}}",
+    "stepCorrect": "(Correct)",
+    "stepError": "← (Error: {{note}})",
+    "stepErrorBare": "← (Error)"
   },
   "chooseActivity": {
     "back": "Back to misconceptions",

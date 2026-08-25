@@ -27,6 +27,7 @@ import {
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
+import formatStepAnnotation from '../lib/activityMarks';
 
 interface ActivityDetailViewProps extends ScreenSizeProps {
   activity: IActivity;
@@ -90,6 +91,9 @@ function ActivityDetailView({
             facilitation: t('activityDetail.facilitation'),
             discussion: t('activityDetail.discussion'),
             page: t('activityDetail.page'),
+            stepNumber: (value) =>
+              t('activityDetail.stepNumber', { number: value }),
+            stepAnnotation: (annotation) => formatStepAnnotation(annotation, t),
           }}
         />,
       ).toBlob();

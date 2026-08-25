@@ -31,7 +31,11 @@
     "noContent": "Este paso aún no está disponible para esta actividad.",
     "printSubtitle": "Preparado para: {{misconception}}",
     "exporting": "Preparando PDF…",
-    "page": "Página"
+    "page": "Página",
+    "stepNumber": "Paso {{number}}",
+    "stepCorrect": "(Correcto)",
+    "stepError": "← (Error: {{note}})",
+    "stepErrorBare": "← (Error)"
   },
   "chooseActivity": {
     "back": "Volver a los conceptos erróneos",
