@@ -52,8 +52,8 @@ const isQuestionType = (gameQuestion: GameQuestionType) =>
 
 export const defaultBrowseSort = (gameQuestion: GameQuestionType) => ({
   field: isQuestionType(gameQuestion)
-    ? SortType.listQuestionTemplates
-    : SortType.listGameTemplates,
+    ? SortType.listQuestionTemplatesByDate
+    : SortType.listGameTemplatesByDate,
   direction: SortDirection.DESC as SortDirection | null,
 });
 

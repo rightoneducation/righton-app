@@ -50,12 +50,12 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   
   public initGames = async () => {
     let games = [];
-    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, [], null, true);
+    const response = await this.gameTemplateAPIClient.listGameTemplatesByDate(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, [], null, true);
     if (response){
       games.push(...response.gameTemplates);
       while (games.length < 12) {
         if (!response.nextToken) break;
-        const nextResponse = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, response.nextToken, SortDirection.DESC, null, [], null, true);
+        const nextResponse = await this.gameTemplateAPIClient.listGameTemplatesByDate(PublicPrivateType.PUBLIC, 12, response.nextToken, SortDirection.DESC, null, [], null, true);
         if (nextResponse && nextResponse.gameTemplates) {
           games.push(...nextResponse.gameTemplates);
           response.nextToken = nextResponse.nextToken;
@@ -70,12 +70,12 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
   public initQuestions = async () => {
     let questions = [];
-    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null);
+    const response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null);
     if (response) {
       questions.push(...response.questionTemplates);
       while (questions.length < 24) {
         if (!response.nextToken) break;
-        const nextResponse = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, response.nextToken, SortDirection.DESC, null, [], null);
+        const nextResponse = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(PublicPrivateType.PUBLIC, 24, response.nextToken, SortDirection.DESC, null, [], null);
         if (nextResponse && nextResponse.questionTemplates) {
           questions.push(...nextResponse.questionTemplates);
           response.nextToken = nextResponse.nextToken;

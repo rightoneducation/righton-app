@@ -182,12 +182,13 @@ export class GameTemplateAPIClient
     sortDirection: string | null, 
     filterString: string | null,
     gradeTargets: GradeTarget[],
-    favIds: string[] | null
+    favIds: string[] | null,
+    isExploreGames?: boolean
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}GameTemplate`;
     const queryName = `${type.toLowerCase()}GameTemplatesByDate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets, favIds);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets, favIds, isExploreGames);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
