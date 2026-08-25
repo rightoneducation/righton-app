@@ -9,9 +9,11 @@ import TemplateDebugMenu from '../components/TemplateDebugMenu';
 import AuthGuard from '../containers/AuthGuard';
 import Landing from '../pages/Landing';
 import Login from '../pages/Login';
-import SignUp from '../pages/SignUp';
-import Confirmation from '../pages/Confirmation';
-import GoogleSignup from '../pages/GoogleSignup';
+import SignUpRole from '../pages/SignUpRole';
+import SignUpRegister from '../pages/SignUpRegister';
+import SignUpVerify from '../pages/SignUpVerify';
+import SignUpClasses from '../pages/SignUpClasses';
+import SignUpSelect from '../pages/SignUpSelect';
 import ResetPassword from '../pages/ResetPassword';
 import AuthCallback from '../pages/AuthCallback';
 import Dashboard from '../pages/Dashboard';
@@ -38,7 +40,11 @@ import ActivityDetail from '../pages/ActivityDetail';
 const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.LANDING,
   ScreenType.LOGIN,
-  ScreenType.SIGNUP,
+  ScreenType.SIGNUP_ROLE,
+  ScreenType.SIGNUP_REGISTER,
+  ScreenType.SIGNUP_VERIFY,
+  ScreenType.SIGNUP_CLASSES,
+  ScreenType.SIGNUP_SELECT,
   ScreenType.PASSWORDRESET,
   // TODO(auth): move UNDERSTAND behind the guard once sign-in is wired; also
   // needs AuthGuard's LOGGEDOUT case to redirect.
@@ -71,14 +77,20 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.LOGIN:
       screenComponent = <Login />;
       break;
-    case ScreenType.SIGNUP:
-      screenComponent = <SignUp />;
+    case ScreenType.SIGNUP_ROLE:
+      screenComponent = <SignUpRole screenSize={screenSize} />;
       break;
-    case ScreenType.CONFIRMATION:
-      screenComponent = <Confirmation />;
+    case ScreenType.SIGNUP_REGISTER:
+      screenComponent = <SignUpRegister screenSize={screenSize} />;
       break;
-    case ScreenType.GOOGLESIGNUP:
-      screenComponent = <GoogleSignup />;
+    case ScreenType.SIGNUP_VERIFY:
+      screenComponent = <SignUpVerify screenSize={screenSize} />;
+      break;
+    case ScreenType.SIGNUP_CLASSES:
+      screenComponent = <SignUpClasses screenSize={screenSize} />;
+      break;
+    case ScreenType.SIGNUP_SELECT:
+      screenComponent = <SignUpSelect screenSize={screenSize} />;
       break;
     case ScreenType.AUTH:
       screenComponent = <AuthCallback />;

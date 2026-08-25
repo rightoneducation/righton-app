@@ -64,6 +64,23 @@ const NavLink = styled(Link)<LinkProps & RouterExtras>(({ theme }) => ({
   '&:hover': { textDecoration: 'underline' },
 }));
 
+// Figma (teacher sign-up, Page6): 215x36 rx 8, solid darkBlue on a cream
+// hairline. Squarer than the app header's IdentityPill, which is a 22-radius
+// lozenge — the two headers present identity differently.
+const PublicIdentityPill = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  minHeight: 36,
+  padding: `0 ${theme.sizing.space3}px`,
+  borderRadius: theme.sizing.space1,
+  backgroundColor: theme.palette.designSystem.surface.darkBlue,
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.cream}`,
+  color: theme.palette.designSystem.background.cream,
+  ...theme.typography.headingSm,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+}));
+
 const appPillFill = 'rgba(255, 251, 246, 0.1)';
 const appPillStroke = 'rgba(255, 251, 246, 0.3)';
 const appPillRadius = 22;
@@ -212,46 +229,58 @@ export default function Header({
           This is the only part of the page that depends on who the user is, so
           it carries its own skeleton rather than the page waiting on auth.
         */}
-        {variant === 'public' && screenSize === ScreenSize.LARGE && (
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={4}
-            sx={{ justifyContent: 'flex-end' }}
-          >
-            {isResolvingAuth ? (
-              <>
-                <Skeleton
-                  animation="wave"
-                  variant="rounded"
-                  width={132}
-                  height={54}
-                  sx={{ ...authSkeletonSx, borderRadius: '27px' }}
-                />
-                <Skeleton
-                  animation="wave"
-                  variant="rounded"
-                  width={132}
-                  height={54}
-                  sx={{ ...authSkeletonSx, borderRadius: '27px' }}
-                />
-              </>
-            ) : (
-              <>
-                <NavLink component={RouterLink} to="/signup">
-                  {t('header.signup')}
-                </NavLink>
-                <LoginButton
-                  component={RouterLink}
-                  to="/login"
-                  disableElevation
-                >
-                  {t('header.login')}
-                </LoginButton>
-              </>
-            )}
-          </Stack>
-        )}
+        {variant === 'public' &&
+          screenSize === ScreenSize.LARGE &&
+          userStatus === UserStatusType.LOGGEDIN && (
+            // Figma (sign-up Page6): once the wizard commits a profile the
+            // public header presents identity instead of the auth links.
+            <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+              <PublicIdentityPill>{teacherName}</PublicIdentityPill>
+            </Stack>
+          )}
+
+        {variant === 'public' &&
+          screenSize === ScreenSize.LARGE &&
+          userStatus !== UserStatusType.LOGGEDIN && (
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={4}
+              sx={{ justifyContent: 'flex-end' }}
+            >
+              {isResolvingAuth ? (
+                <>
+                  <Skeleton
+                    animation="wave"
+                    variant="rounded"
+                    width={132}
+                    height={54}
+                    sx={{ ...authSkeletonSx, borderRadius: '27px' }}
+                  />
+                  <Skeleton
+                    animation="wave"
+                    variant="rounded"
+                    width={132}
+                    height={54}
+                    sx={{ ...authSkeletonSx, borderRadius: '27px' }}
+                  />
+                </>
+              ) : (
+                <>
+                  <NavLink component={RouterLink} to="/signup">
+                    {t('header.signup')}
+                  </NavLink>
+                  <LoginButton
+                    component={RouterLink}
+                    to="/login"
+                    disableElevation
+                  >
+                    {t('header.login')}
+                  </LoginButton>
+                </>
+              )}
+            </Stack>
+          )}
       </ContentRow>
     </HeaderBar>
   );

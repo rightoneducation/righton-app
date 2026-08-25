@@ -10,6 +10,7 @@ import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { APIClientsContext } from './lib/context/APIClientsContext';
 import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
+import { SignUpProvider } from './lib/context/SignUpContext';
 import { useAPIClientsContext } from './hooks/context/useAPIClientsContext';
 import { useAuthResolver } from './hooks/useMicroCoachDataActions';
 import AppSwitch from './switches/AppSwitch';
@@ -51,15 +52,23 @@ const router = createBrowserRouter([
       },
       {
         path: 'signup',
-        element: <AppSwitch currentScreen={ScreenType.SIGNUP} />,
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_ROLE} />,
       },
       {
-        path: 'confirmation',
-        element: <AppSwitch currentScreen={ScreenType.CONFIRMATION} />,
+        path: 'signup/register',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_REGISTER} />,
       },
       {
-        path: 'googlesignup',
-        element: <AppSwitch currentScreen={ScreenType.GOOGLESIGNUP} />,
+        path: 'signup/verify',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_VERIFY} />,
+      },
+      {
+        path: 'signup/classes',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_CLASSES} />,
+      },
+      {
+        path: 'signup/select',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_SELECT} />,
       },
       { path: 'auth', element: <AppSwitch currentScreen={ScreenType.AUTH} /> },
       {
@@ -107,7 +116,11 @@ function App() {
           {apiClients && (
             <APIClientsContext.Provider value={apiClients}>
               <MicroCoachDataProvider>
-                <RouterProvider router={router} />
+                {/* Inside the data provider: the wizard's last step commits
+                    its result into that reducer. */}
+                <SignUpProvider>
+                  <RouterProvider router={router} />
+                </SignUpProvider>
               </MicroCoachDataProvider>
             </APIClientsContext.Provider>
           )}

@@ -1,0 +1,119 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import AppContentRow from '../components/AppContentRow';
+import { SignUpRole as Role } from '../lib/context/SignUpContext';
+import {
+  useSignUpDispatch,
+  useSignUpState,
+} from '../hooks/context/useSignUpContext';
+import {
+  RoleCard,
+  RoleIconTile,
+  SignUpColumn,
+  SignUpCta,
+  SignUpHeading,
+  SignUpSubheading,
+  ScreenSizeProps,
+} from '../lib/styledcomponents/SignUpStyledComponents';
+import { useAllReady, useI18nReady } from '../hooks/readiness';
+
+const ROLES: {
+  id: Role;
+  titleKey: string;
+  bodyKey: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    id: 'TEACHER',
+    titleKey: 'signup.roleTeacher',
+    bodyKey: 'signup.roleTeacherBody',
+    icon: <PersonOutlineIcon />,
+  },
+  {
+    id: 'ADMIN',
+    titleKey: 'signup.roleAdmin',
+    bodyKey: 'signup.roleAdminBody',
+    icon: <ApartmentIcon />,
+  },
+];
+
+export default function SignUpRole({ screenSize }: ScreenSizeProps) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const { role } = useSignUpState();
+  const dispatch = useSignUpDispatch();
+  const isReady = useAllReady(useI18nReady());
+
+  if (!isReady) return null;
+
+  return (
+    <AppContentRow
+      screenSize={screenSize}
+      sx={{
+        pt: `${theme.sizing.space12}px`,
+        pb: `${theme.sizing.space12}px`,
+      }}
+    >
+      <SignUpColumn screenSize={screenSize}>
+        <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
+        <SignUpSubheading>{t('signup.rolePrompt')}</SignUpSubheading>
+
+        <Stack
+          spacing={`${theme.sizing.space3}px`}
+          sx={{ width: '100%', alignItems: 'center' }}
+        >
+          {ROLES.map((option) => (
+            <RoleCard
+              key={option.id}
+              isSelected={role === option.id}
+              aria-pressed={role === option.id}
+              onClick={() => dispatch({ type: 'SET_ROLE', payload: option.id })}
+            >
+              <RoleIconTile>{option.icon}</RoleIconTile>
+              <Box sx={{ minWidth: 0 }}>
+                <Typography
+                  variant="headingMd"
+                  sx={{
+                    display: 'block',
+                    color: 'designSystem.surface.atlanticNavy',
+                  }}
+                >
+                  {t(option.titleKey)}
+                </Typography>
+                <Typography
+                  variant="rubikBody"
+                  sx={{
+                    display: 'block',
+                    color: 'designSystem.surface.atlanticNavy',
+                  }}
+                >
+                  {t(option.bodyKey)}
+                </Typography>
+              </Box>
+            </RoleCard>
+          ))}
+        </Stack>
+
+        {/* Admin is selectable so the choice reads as real, but only the
+            teacher path is built — the CTA stays in its disabled treatment,
+            which is exactly what the default frame draws. */}
+        <SignUpCta
+          disableElevation
+          disabled={role !== 'TEACHER'}
+          onClick={() => navigate('/signup/register')}
+          sx={{ mt: `${theme.sizing.space11}px` }}
+        >
+          {t('signup.continue')}
+        </SignUpCta>
+      </SignUpColumn>
+    </AppContentRow>
+  );
+}

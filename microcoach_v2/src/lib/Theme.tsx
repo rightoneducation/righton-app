@@ -34,6 +34,13 @@ const designSystemColors = {
     // Muted label grey above a field or panel ("Student task"). Darker and
     // cooler than mutedGrey, which is too light to sit on a grey fill.
     slateGrey: '#6B7280',
+    // Sign-up flow: the "or" divider between the Google button and the form,
+    // and the digit inside a filled verification box.
+    slateNavy: '#384466',
+    // The verification box outline, before and after a digit is typed — the
+    // filled state deliberately recedes so the digit carries the emphasis.
+    codeStroke: '#4E628C',
+    codeStrokeFilled: '#CCCCCC',
   },
   surface: {
     atlanticNavy: '#1B376F',
