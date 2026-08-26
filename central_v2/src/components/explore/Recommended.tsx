@@ -8,7 +8,6 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import CardCarousel from '../cardcarousel/CardCarousel';
 import { ScreenSize } from '../../lib/CentralModels';
-import PaginationContainerStyled from '../../lib/PaginationContainerStyled';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 interface RecommendedProps<T> {
@@ -17,6 +16,7 @@ interface RecommendedProps<T> {
   elementType: ElementType;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
+  slideCount?: number;
 }
 interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
@@ -56,13 +56,16 @@ export default function Recommended<
   elementType,
   setIsTabsOpen,
   handleView,
+  slideCount,
 }: RecommendedProps<T>) {
   const theme = useTheme();
 
   return (
     <RecommendedContainer screenSize={screenSize}>
       <Title screenSize={screenSize}>
-        Recommended {elementType === ElementType.GAME ? 'Games' : 'Questions'}
+        {elementType === ElementType.GAME
+          ? 'Featured Games'
+          : 'Explore Questions'}
       </Title>
       <CardCarousel
         screenSize={screenSize}
@@ -70,8 +73,8 @@ export default function Recommended<
         elementType={elementType}
         setIsTabsOpen={setIsTabsOpen}
         handleView={handleView}
+        slideCount={slideCount}
       />
-      <PaginationContainerStyled className="swiper-pagination-container" />
     </RecommendedContainer>
   );
 }

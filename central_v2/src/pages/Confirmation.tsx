@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { TextField, Box, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -10,8 +10,10 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from '../components/button/Button';
-import { TextContainerStyled } from '../lib/styledcomponents/CreateQuestionStyledComponents';
+import VerificationCodeInput from '../components/VerificationCodeInput';
 import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
+import SignUpErrorModal from '../components/modal/SignUpErrorModal';
+import NoticeModal from '../components/modal/NoticeModal';
 import RightOnLogo from '../images/RightOnUserLogo.svg';
 import ModalBackground from '../components/modal/ModalBackground';
 import errorIcon from '../images/errorIcon.svg';
@@ -71,29 +73,6 @@ const CodeandResendContainer = styled(Box)(({ theme }) => ({
   gap: '8px',
 }));
 
-const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  gap: '8px',
-}));
-
-const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
-  width: '40px',
-  textAlign: 'center',
-  input: {
-    textAlign: 'center',
-  },
-  '& .MuiOutlinedInput-root': {
-    fontWeight: 700,
-    fontFamily: 'Poppins, sans-serif',
-    fontSize: '20px',
-    '&.Mui-error fieldset': {
-      borderWidth: '3px',
-      borderColor: '#F2184B',
-    },
-  },
-}));
-
 const ResendCodeText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Rubik, sans-serif',
   fontWeight: 400,
@@ -133,29 +112,14 @@ function Confirmation({
   const centralDataDispatch = useCentralDataDispatch();
   const navigate = useNavigate(); // Initialize useNavigate
   const [hasError, setHasError] = useState(false);
-
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
-
-  const handleChange = (value: string, index: number) => {
-    if (!/^[0-9]*$/.test(value)) return; // Only allow numeric input
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
-
-    // Automatically move to the next input box if a character is entered
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === 'Backspace' && !code[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState('');
+  const [isSignUpErrorOpen, setIsSignUpErrorOpen] = useState(false);
+  const [resendNotice, setResendNotice] = useState<{
+    header: string;
+    body: string;
+  } | null>(null);
 
   const handleSubmit = async () => {
-    console.log('UserStatus in here: ', centralData);
     setIsVerifying(true);
     const fullCode = code.join('');
     if (fullCode.length < 6) {
@@ -180,20 +144,13 @@ function Confirmation({
       }
     } catch (error: any) {
       setIsVerifying(false);
-      console.log(error);
-      const errorInfo = Object.getOwnPropertyNames(error).reduce((acc, key) => {
-        acc[key] = error[key];
-        return acc;
-      }, {} as any);
-
-      console.log(errorInfo); // now includes message, stack, etc.
-
-      if (
-        error.message ===
-        'Error: CodeMismatchException: Invalid verification code provided, please try again.'
-      ) {
+      if (error?.name === 'CodeMismatchException') {
         setHasError(true);
+        return;
       }
+      // anything else (ID upload, createUser, network) used to fail silently
+      setSignUpErrorMessage(error?.message ?? '');
+      setIsSignUpErrorOpen(true);
     }
   };
   const handleResendCodeClick = async () => {
@@ -201,15 +158,19 @@ function Confirmation({
       await apiClients.auth.awsResendConfirmationCode(
         centralData.userProfile.email,
       );
-    } catch (error) {
-      console.error('Error resending confirmation code:', error);
+      setResendNotice({
+        header: 'Code Sent',
+        body: `A new verification code is on its way to ${centralData.userProfile.email}.`,
+      });
+    } catch (error: any) {
+      setResendNotice({
+        header: "Couldn't Send Code",
+        body:
+          error?.message ??
+          'We could not send a new code. Please try again in a moment.',
+      });
     }
   };
-  const setInputRef = (index: number, el: HTMLInputElement | null) => {
-    inputRefs.current[index] = el;
-  };
-
-  const uniqueKeys = ['A', 'B', 'C', 'D', 'E', 'F'];
   const buttonTypeVerify = ButtonType.VERIFY;
   const [isVerify, setIsVerify] = useState(true);
 
@@ -221,9 +182,24 @@ function Confirmation({
         userProfile={centralData.userProfile}
         setIsTabsOpen={setIsTabsOpen}
       />
+      <SignUpErrorModal
+        isModalOpen={isSignUpErrorOpen}
+        setIsModalOpen={setIsSignUpErrorOpen}
+        errorMessage={signUpErrorMessage}
+      />
+      <NoticeModal
+        isModalOpen={resendNotice !== null}
+        header={resendNotice?.header ?? ''}
+        body={resendNotice?.body ?? ''}
+        onClose={() => setResendNotice(null)}
+      />
       <ModalBackground
-        isModalOpen={isModalOpen}
-        handleCloseModal={() => setIsModalOpen(false)}
+        isModalOpen={isModalOpen || isSignUpErrorOpen || resendNotice !== null}
+        handleCloseModal={() => {
+          setIsModalOpen(false);
+          setIsSignUpErrorOpen(false);
+          setResendNotice(null);
+        }}
       />
       <InnerBody>
         <ImageContainer>
@@ -233,32 +209,17 @@ function Confirmation({
             style={{ width: '280px', height: '280px' }}
           />
         </ImageContainer>
-        <VerifyText>Step 2: Verify Email</VerifyText>
-        <EnterText>
-          Enter the verification code you have received in your email
-        </EnterText>
+        <VerifyText>Step 2: Verify Your Email</VerifyText>
+        <EnterText>Enter the verification code we sent you.</EnterText>
         <CodeandResendContainer>
-          <UserCodeTextBoxesContainer>
-            {code.map((value, index) => (
-              <UserCodeTextBoxes
-                error={hasError}
-                variant="outlined"
-                key={`code-${uniqueKeys[index]}`}
-                inputRef={(el: HTMLInputElement | null) =>
-                  setInputRef(index, el)
-                }
-                value={value}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(e.target.value, index)
-                }
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-                  handleKeyDown(e, index)
-                }
-                inputProps={{ maxLength: 1 }}
-              />
-            ))}
+          <VerificationCodeInput
+            code={code}
+            onCodeChange={setCode}
+            hasError={hasError}
+            autoFocus
+          >
             {hasError ? <img src={errorIcon} alt="Error Icon" /> : null}
-          </UserCodeTextBoxesContainer>
+          </VerificationCodeInput>
           <ResendCodeText onClick={handleResendCodeClick}>
             Resend Code
           </ResendCodeText>

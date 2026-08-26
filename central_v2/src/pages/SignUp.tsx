@@ -14,7 +14,9 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  useMediaQuery,
 } from '@mui/material';
+import type { TextFieldProps } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -37,6 +39,8 @@ import errorIcon from '../images/errorIcon.svg';
 import SignUpErrorModal from '../components/modal/SignUpErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import { centralDataReducer } from '../lib/reducer/CentralDataReducer';
+import ErrorBox from '../components/cards/createquestion/ErrorBox';
+import NoticeModal from '../components/modal/NoticeModal';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -122,8 +126,12 @@ const MiddleTextFirstRow = styled(Box)(({ theme }) => ({
   gap: '12px',
 }));
 
-const TitleField = styled(TextField)(({ theme }) => ({
-  border: '2px solid #CCCCCC',
+const TitleField = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== 'isError',
+})<{ isError?: boolean }>(({ theme, isError }) => ({
+  border: isError
+    ? `2px solid ${theme.palette.primary.errorBorder}`
+    : '2px solid #CCCCCC',
   borderRadius: '8px',
   backgroundColor: '#FFFFFF',
   minWidth: '108px',
@@ -131,7 +139,7 @@ const TitleField = styled(TextField)(({ theme }) => ({
     borderRadius: '8px', // Ensure consistent border radius
   },
   '& .MuiSelect-select': {
-    color: '#384466',
+    color: isError ? `${theme.palette.primary.errorColor}` : '#384466',
   },
   '& .MuiSelect-icon': {
     transition: 'transform 0.2s ease', // Smooth transition for rotation
@@ -228,10 +236,14 @@ const UploadImages = styled(Box)(({ theme }) => ({
   justifyContent: 'flex-start',
 }));
 
-const UploadImageContainer = styled(Box)(({ theme }) => ({
+const UploadImageContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isError',
+})<{ isError?: boolean }>(({ theme, isError }) => ({
   display: 'flex',
   backgroundColor: '#02215F',
-  border: '1px solid #000000',
+  border: isError
+    ? `2px solid ${theme.palette.primary.errorBorder}`
+    : '1px solid #000000',
   borderRadius: '8px',
   flexDirection: 'column',
   alignItems: 'center',
@@ -243,11 +255,14 @@ const UploadImageContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
-const ImageText = styled(Typography)(({ theme }) => ({
+const ImageText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isError',
+})<{ isError?: boolean }>(({ theme, isError }) => ({
   fontFamily: 'Rubik, sans-serif',
   fontWeight: 400,
   fontSize: '16px',
-  color: '#E9F1FF',
+  // errorBorder (pale) rather than errorColor (deep) -- this sits on navy
+  color: isError ? `${theme.palette.primary.errorBorder}` : '#E9F1FF',
 }));
 
 const LowerLogin = styled(Box)(({ theme }) => ({
@@ -281,6 +296,94 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
   border: '2px solid #ccc', // Add border
   objectFit: 'cover',
 }));
+
+const IdImageWrapper = styled(Box)({
+  position: 'relative',
+  width: '80%',
+  lineHeight: 0,
+  '& img': {
+    width: '100%',
+    boxSizing: 'border-box',
+  },
+});
+
+const IdImageOverlay = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '4px',
+  backgroundColor: 'rgba(2, 33, 95, 0.55)',
+});
+
+// mirrors the create-game/question required-field treatment: red placeholder on error
+const SignUpTextField = styled(TextContainerStyled, {
+  shouldForwardProp: (prop) => prop !== 'isCardError',
+})<TextFieldProps & { isCardError?: boolean }>(({ isCardError }) => ({
+  ...(isCardError && {
+    '& .MuiInputBase-input': {
+      '&::placeholder': {
+        color: '#D0254D',
+        opacity: 1,
+      },
+      '&:focus::placeholder': {
+        color: '#384466',
+        opacity: 1,
+      },
+    },
+  }),
+}));
+
+// the dropdown's "no selection" option carries this as its value, so it has to
+// be scrubbed before save -- otherwise an untouched (now optional) Title
+// persists the placeholder string onto the profile as if it were a real choice
+export const TITLE_PLACEHOLDER = 'Title...';
+
+export const normalizeTitle = (title?: string): string =>
+  !title || title === TITLE_PLACEHOLDER ? '' : title;
+
+type SignUpForm = {
+  title: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  password: string;
+};
+
+// single source of truth for what "required" means -- the boolean below derives
+// from it so the rule can never drift between the gate and the message
+const getMissingRequiredFields = (
+  form: SignUpForm,
+  confirmPasswordValue: string,
+  front: File | null,
+  back: File | null,
+): string[] => {
+  const missing: string[] = [];
+  // Title is intentionally absent -- it is optional in both signup and edit
+  if (form.firstName.trim().length === 0) missing.push('First Name');
+  if (form.lastName.trim().length === 0) missing.push('Last Name');
+  if (form.userName.trim().length === 0) missing.push('Username');
+  if (form.email.trim().length === 0) missing.push('School Email');
+  if (form.password.length === 0) missing.push('Password');
+  if (confirmPasswordValue.length === 0) missing.push('Confirm Password');
+  if (front === null) missing.push('Teacher ID (Front)');
+  if (back === null) missing.push('Teacher ID (Back)');
+  return missing;
+};
+
+const checkSignUpFormIsValid = (
+  form: SignUpForm,
+  confirmPasswordValue: string,
+  front: File | null,
+  back: File | null,
+): boolean =>
+  getMissingRequiredFields(form, confirmPasswordValue, front, back).length ===
+  0;
 
 interface SignUpProps {
   apiClients: IAPIClients;
@@ -340,7 +443,8 @@ export default function SignUp({
   };
 
   const [localSignUp, setLocalSignUp] = useState({
-    title: centralData.userProfile.title ?? 'Title...',
+    // `||` not `??`: a cleared title is saved as '', which matches no MenuItem
+    title: centralData.userProfile.title || TITLE_PLACEHOLDER,
     firstName: centralData.userProfile.firstName ?? '',
     lastName: centralData.userProfile.lastName ?? '',
     email: centralData.userProfile.email ?? '',
@@ -349,6 +453,44 @@ export default function SignUp({
   });
 
   const [loading, setLoading] = useState(false);
+  const [isFormErrored, setIsFormErrored] = useState(false);
+  const [isMissingFieldsOpen, setIsMissingFieldsOpen] = useState(false);
+  const [hoveredIdSlot, setHoveredIdSlot] = useState<'front' | 'back' | null>(
+    null,
+  );
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
+  const openIdUpload = (inputId: string) => {
+    const uploadInput = document.getElementById(
+      inputId,
+    ) as HTMLInputElement | null;
+    uploadInput?.click();
+  };
+
+  const isSignUpFormValid =
+    checkSignUpFormIsValid(
+      localSignUp,
+      confirmPassword,
+      frontImage,
+      backImage,
+    ) &&
+    !passwordError &&
+    !passwordConfirmError;
+  // the latch only shows while something is actually still wrong
+  const showFieldErrors = isFormErrored && !isSignUpFormValid;
+  const missingRequiredFields = [
+    ...getMissingRequiredFields(
+      localSignUp,
+      confirmPassword,
+      frontImage,
+      backImage,
+    ),
+    // present-but-invalid is a different problem from missing
+    ...(passwordError ? [`Password: ${passwordError}`] : []),
+    ...(passwordConfirmError
+      ? [`Confirm Password: ${passwordConfirmError}`]
+      : []),
+  ];
 
   const buttonTypeNext = ButtonType.NEXTSTEP;
   const [isNextEnabled, setIsNextEnabled] = useState(true);
@@ -375,11 +517,17 @@ export default function SignUp({
   };
 
   const handleSubmit = async () => {
+    if (!isSignUpFormValid) {
+      setIsFormErrored(true);
+      setIsMissingFieldsOpen(true);
+      return;
+    }
+    setIsFormErrored(false);
     setLoading(true);
     setErrorMessage('');
 
-    const { title, firstName, lastName, email, userName, password } =
-      localSignUp;
+    const { firstName, lastName, email, userName, password } = localSignUp;
+    const title = normalizeTitle(localSignUp.title);
     const newProfile = {
       ...centralData.userProfile,
       title,
@@ -451,13 +599,20 @@ export default function SignUp({
 
   return (
     <SignUpMainContainer>
+      <NoticeModal
+        isModalOpen={isMissingFieldsOpen}
+        header="Complete Required Fields"
+        body="Please complete the following before continuing:"
+        items={missingRequiredFields}
+        onClose={() => setIsMissingFieldsOpen(false)}
+      />
       <SignUpErrorModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         errorMessage={errorMessage}
       />
       <ModalBackground
-        isModalOpen={isModalOpen}
+        isModalOpen={isModalOpen || isMissingFieldsOpen}
         handleCloseModal={handleCloseModal}
       />
       <InnerBodyContainer>
@@ -506,22 +661,30 @@ export default function SignUp({
               <MenuItem value="Ms.">Ms.</MenuItem>
               <MenuItem value="Dr.">Dr.</MenuItem>
             </TitleField>
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="First Name"
+              isCardError={showFieldErrors}
+              error={
+                showFieldErrors && localSignUp.firstName.trim().length === 0
+              }
               value={localSignUp.firstName}
-              onChange={(event) =>
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setLocalSignUp((prev) => ({
                   ...prev,
                   firstName: event.target.value,
                 }))
               }
             />
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="Last Name"
+              isCardError={showFieldErrors}
+              error={
+                showFieldErrors && localSignUp.lastName.trim().length === 0
+              }
               value={localSignUp.lastName}
-              onChange={(event) =>
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setLocalSignUp((prev) => ({
                   ...prev,
                   lastName: event.target.value,
@@ -531,11 +694,15 @@ export default function SignUp({
           </MiddleTextFirstRow>
           <MiddleTextSecondRow>
             <img src={Adpic} alt="Adpic" style={{ width: '26px' }} />
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="Username..."
+              isCardError={showFieldErrors}
+              error={
+                showFieldErrors && localSignUp.userName.trim().length === 0
+              }
               value={localSignUp.userName}
-              onChange={(event) =>
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setLocalSignUp((prev) => ({
                   ...prev,
                   userName: event.target.value,
@@ -546,11 +713,13 @@ export default function SignUp({
               }}
             />
           </MiddleTextSecondRow>
-          <TextContainerStyled
+          <SignUpTextField
             variant="outlined"
             placeholder="School Email..."
+            isCardError={showFieldErrors}
+            error={showFieldErrors && localSignUp.email.trim().length === 0}
             value={localSignUp.email}
-            onChange={(event) =>
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setLocalSignUp((prev) => ({
                 ...prev,
                 email: event.target.value,
@@ -562,8 +731,10 @@ export default function SignUp({
 
         <UploadImagesAndPassword>
           <UploadImages>
-            <UploadImageContainer>
-              <ImageText>Front</ImageText>
+            <UploadImageContainer isError={showFieldErrors && !frontImage}>
+              <ImageText isError={showFieldErrors && !frontImage}>
+                Front
+              </ImageText>
               <input
                 type="file"
                 accept="image/*"
@@ -576,37 +747,41 @@ export default function SignUp({
                 }}
               />
               {frontImage ? (
-                <ImagePlaceHolder
-                  src={URL.createObjectURL(frontImage)}
-                  alt="Uploaded Preview"
-                />
+                <IdImageWrapper
+                  onMouseEnter={() => setHoveredIdSlot('front')}
+                  onMouseLeave={() => setHoveredIdSlot(null)}
+                >
+                  <ImagePlaceHolder
+                    src={URL.createObjectURL(frontImage)}
+                    alt="Front of teacher ID"
+                  />
+                  {(!isLargeScreen || hoveredIdSlot === 'front') && (
+                    <IdImageOverlay>
+                      <CentralButton
+                        buttonType={buttonTypeUpload}
+                        isEnabled
+                        buttonWidthOverride="38px"
+                        iconOnlyOverride
+                        onClick={() => openIdUpload('front-upload')}
+                      />
+                    </IdImageOverlay>
+                  )}
+                </IdImageWrapper>
               ) : (
                 <CentralButton
                   buttonType={buttonTypeUpload}
                   isEnabled={isUploadFrontEnabled}
                   buttonWidthOverride="38px"
                   iconOnlyOverride
-                  onClick={async () => {
-                    const uploadInput = document.getElementById(
-                      'front-upload',
-                    ) as HTMLInputElement;
-                    uploadInput?.click(); // Trigger file selection
-
-                    // Wait for the user to select the file
-                    uploadInput.onchange = async (e: Event) => {
-                      const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
-                      if (target.files) {
-                        const file = target.files[0]; // Access the selected file
-                        setFrontImage(file); // Store file locally
-                      }
-                    };
-                  }}
+                  onClick={() => openIdUpload('front-upload')}
                 />
               )}
             </UploadImageContainer>
 
-            <UploadImageContainer>
-              <ImageText>Back</ImageText>
+            <UploadImageContainer isError={showFieldErrors && !backImage}>
+              <ImageText isError={showFieldErrors && !backImage}>
+                Back
+              </ImageText>
               <input
                 type="file"
                 accept="image/*"
@@ -619,42 +794,46 @@ export default function SignUp({
                 }}
               />
               {backImage ? (
-                <ImagePlaceHolder
-                  src={URL.createObjectURL(backImage)}
-                  alt="Uploaded Preview"
-                />
+                <IdImageWrapper
+                  onMouseEnter={() => setHoveredIdSlot('back')}
+                  onMouseLeave={() => setHoveredIdSlot(null)}
+                >
+                  <ImagePlaceHolder
+                    src={URL.createObjectURL(backImage)}
+                    alt="Back of teacher ID"
+                  />
+                  {(!isLargeScreen || hoveredIdSlot === 'back') && (
+                    <IdImageOverlay>
+                      <CentralButton
+                        buttonType={buttonTypeUpload}
+                        isEnabled
+                        buttonWidthOverride="38px"
+                        iconOnlyOverride
+                        onClick={() => openIdUpload('back-upload')}
+                      />
+                    </IdImageOverlay>
+                  )}
+                </IdImageWrapper>
               ) : (
                 <CentralButton
                   buttonType={buttonTypeUpload}
                   isEnabled={isUploadBackEnabled}
                   buttonWidthOverride="38px"
                   iconOnlyOverride
-                  onClick={async () => {
-                    const uploadInput = document.getElementById(
-                      'back-upload',
-                    ) as HTMLInputElement;
-                    uploadInput?.click(); // Trigger file selection
-
-                    // Wait for the user to select the file
-                    uploadInput.onchange = async (e: Event) => {
-                      const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
-                      if (target.files) {
-                        const file = target.files[0]; // Access the selected file
-                        setBackImage(file); // Store file locally
-                      }
-                    };
-                  }}
+                  onClick={() => openIdUpload('back-upload')}
                 />
               )}
             </UploadImageContainer>
           </UploadImages>
           <PasswordContainer>
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="Password..."
+              isCardError={showFieldErrors}
+              error={showFieldErrors && localSignUp.password.length === 0}
               value={localSignUp.password}
               type={isShowPassword ? 'text' : 'password'}
-              onChange={(event) => {
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 const newPassword = event.target.value;
                 setLocalSignUp((prev) => ({
                   ...prev,
@@ -757,11 +936,16 @@ export default function SignUp({
                 ),
               }}
             />
-            <TextContainerStyled
+            <SignUpTextField
               variant="outlined"
               placeholder="Confirm Password..."
+              isCardError={showFieldErrors}
+              error={
+                !!passwordError ||
+                (showFieldErrors && confirmPassword.length === 0)
+              }
               value={confirmPassword}
-              onChange={(event) => {
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 const newConfirmPassword = event.target.value;
                 setConfirmPassword(newConfirmPassword);
 
@@ -773,7 +957,6 @@ export default function SignUp({
                 }
               }}
               type={isShowConfirmPassword ? 'text' : 'password'}
-              error={!!passwordError}
               sx={{
                 backgroundColor: 'white',
               }}
@@ -859,6 +1042,7 @@ export default function SignUp({
             </Box>
           ) : (
             <>
+              {showFieldErrors && <ErrorBox />}
               <CentralButton
                 buttonType={buttonTypeNext}
                 isEnabled={isNextEnabled}

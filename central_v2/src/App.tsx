@@ -104,6 +104,10 @@ function App() {
               path="/password/reset"
               element={<AppSwitch currentScreen={ScreenType.PASSWORDRESET} />}
             />
+            <Route
+              path="/browse/:gameQuestion"
+              element={<AppSwitch currentScreen={ScreenType.BROWSE} />}
+            />
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />

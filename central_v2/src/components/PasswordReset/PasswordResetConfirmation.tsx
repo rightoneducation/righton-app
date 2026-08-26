@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
@@ -6,7 +6,8 @@ import { APIClientsContext } from '../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../button/ButtonModels';
 import CentralButton from '../button/Button';
-import { TextContainerStyled } from '../../lib/styledcomponents/CreateQuestionStyledComponents';
+import VerificationCodeInput from '../VerificationCodeInput';
+import NoticeModal from '../modal/NoticeModal';
 import { ErrorIcon } from '../../lib/styledcomponents/CentralStyledComponents';
 import errorIcon from '../../images/errorIcon.svg';
 
@@ -32,33 +33,6 @@ const CodeandResendContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: '8px',
-}));
-
-const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: '8px',
-}));
-
-const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
-  width: '40px',
-  maxHeight: '54px',
-  textAlign: 'center',
-  '& .MuiInputBase-root': {
-    fontFamily: 'Rubik',
-    fontWeight: 700,
-    fontSize: '20px',
-    color: theme.palette.primary.darkBlue,
-  },
-  '& .MuiOutlinedInput-root': {
-    height: '54px',
-    '&.Mui-error fieldset': {
-      borderWidth: '2px',
-      borderColor: '#F60E44',
-    },
-  },
-  '& .MuiTextField-root': {},
 }));
 
 const ResendCodeText = styled(Typography)(({ theme }) => ({
@@ -97,28 +71,12 @@ function PasswordResetConfirmation({
 }: PasswordResetProps) {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isCodeError, setIsCodeError] = useState(false);
+  const [resendNotice, setResendNotice] = useState<{
+    header: string;
+    body: string;
+  } | null>(null);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
-
-  const handleCodeInputChange = (value: string, index: number) => {
-    if (!/^[0-9]*$/.test(value)) return; // Only allow numeric input
-    const newCode = [...code];
-    newCode[index] = value;
-    onCodeChange(newCode);
-
-    // Automatically move to the next input box if a character is entered
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === 'Backspace' && !code[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
   const handleCodeSubmit = async () => {
     const fullCode = code.join('');
     if (fullCode.length < 6) {
@@ -139,46 +97,42 @@ function PasswordResetConfirmation({
       else if (centralData.userProfile.email) {
         await apiClients.auth.awsResetPassword(centralData.userProfile.email);
       }
-    } catch (error) {
-      console.error('Error resending confirmation code:', error);
+      setResendNotice({
+        header: 'Code Sent',
+        body: 'A new verification code is on its way.',
+      });
+    } catch (error: any) {
+      setResendNotice({
+        header: "Couldn't Send Code",
+        body:
+          error?.message ??
+          'We could not send a new code. Please try again in a moment.',
+      });
     }
   };
 
-  const setInputRef = (index: number, el: HTMLInputElement | null) => {
-    inputRefs.current[index] = el;
-  };
-
   const [isVerify, setIsVerify] = useState(true);
-  const uniqueKeys = ['A', 'B', 'C', 'D', 'E', 'F'];
 
   return (
     <>
+      <NoticeModal
+        isModalOpen={resendNotice !== null}
+        header={resendNotice?.header ?? ''}
+        body={resendNotice?.body ?? ''}
+        onClose={() => setResendNotice(null)}
+      />
       <VerifyText>Step 1: Verify Account</VerifyText>
       <EnterText>
         Enter the verification code you have received in your email
       </EnterText>
       <CodeandResendContainer>
-        <UserCodeTextBoxesContainer>
-          {code.map((value, index) => (
-            <UserCodeTextBoxes
-              error={isCodeError}
-              variant="outlined"
-              key={`code-${uniqueKeys[index]}`}
-              inputRef={(el: HTMLInputElement | null) =>
-                setInputRef(index, el)
-              }
-              value={value}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleCodeInputChange(e.target.value, index)
-              }
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-                handleKeyDown(e, index)
-              }
-              inputProps={{ maxLength: 1 }}
-            />
-          ))}
+        <VerificationCodeInput
+          code={code}
+          onCodeChange={onCodeChange}
+          hasError={isCodeError}
+        >
           {isCodeError && <ErrorIcon src={errorIcon} alt="error icon" />}
-        </UserCodeTextBoxesContainer>
+        </VerificationCodeInput>
         <ResendCodeText onClick={handleResendCodeClick}>
           Resend Code
         </ResendCodeText>

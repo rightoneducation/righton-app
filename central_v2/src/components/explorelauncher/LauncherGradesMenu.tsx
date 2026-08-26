@@ -22,42 +22,43 @@ import {
   SelectMenuItem,
   SelectButtonBox,
 } from '../../lib/styledcomponents/SelectGrade';
-import {
-  useCentralDataState,
-  useCentralDataDispatch,
-} from '../../hooks/context/useCentralDataContext';
 import SelectArrow from '../../images/SelectArrow.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 
-interface SelectGradesMenuProps {
+/**
+ * TEMPORARY -- front-page launcher only. See
+ * ~/.claude/plans/alright-next-bit-of-inherited-bachman.md
+ *
+ * A copy of searchbar/SelectGradesMenu that keeps its selection in LOCAL state
+ * instead of dispatching SET_SELECTED_GRADES. The front page hands its grades to
+ * Browse through the URL, and writing to central here would collide with the
+ * seed Browse performs on mount. Delete this folder to remove the feature.
+ */
+
+interface LauncherGradesMenuProps {
   screenSize: ScreenSize;
-  handleChooseGrades: (grades: GradeTarget[]) => void;
+  selectedGrades: GradeTarget[];
+  onGradesChange: (grades: GradeTarget[]) => void;
+  onCommit: (grades: GradeTarget[]) => void;
 }
 
-export default function SelectGradesMenu({
+export default function LauncherGradesMenu({
   screenSize,
-  handleChooseGrades,
-}: SelectGradesMenuProps) {
+  selectedGrades,
+  onGradesChange,
+  onCommit,
+}: LauncherGradesMenuProps) {
   const theme = useTheme();
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
-  const centralData = useCentralDataState();
-  const centralDataDispatch = useCentralDataDispatch();
-  const { selectedGrades } = centralData;
-  // updates copy of array that will be sent to parent component on click of choose button
   const handleGradesChange = (grade: GradeTarget) => {
     if (!selectedGrades.includes(grade)) {
-      centralDataDispatch({
-        type: 'SET_SELECTED_GRADES',
-        payload: [...selectedGrades, grade],
-      });
+      onGradesChange([...selectedGrades, grade]);
     } else {
-      centralDataDispatch({
-        type: 'SET_SELECTED_GRADES',
-        payload: selectedGrades.filter((g) => g !== grade),
-      });
+      onGradesChange(selectedGrades.filter((g) => g !== grade));
     }
   };
+
   const getSelectLabel = () => {
     if (selectedGrades.length === 0) {
       return 'Choose Grade';
@@ -79,19 +80,20 @@ export default function SelectGradesMenu({
     }
     return `${selectedGrades.length} Grades Selected`;
   };
+
   return (
     <ClickAwayListener
       onClickAway={() => {
         if (isSelectOpen) {
           setIsSelectOpen(false);
-          handleChooseGrades(selectedGrades);
+          onCommit(selectedGrades);
         }
       }}
     >
       <SelectContainer>
         <SelectGrade
           screenSize={screenSize ?? ScreenSize.SMALL}
-          onClick={(prev) => setIsSelectOpen(!isSelectOpen)}
+          onClick={() => setIsSelectOpen(!isSelectOpen)}
         >
           {screenSize !== ScreenSize.SMALL && (
             <SelectLabel>{getSelectLabel()}</SelectLabel>
@@ -131,7 +133,7 @@ export default function SelectGradesMenu({
                 isEnabled
                 onClick={() => {
                   setIsSelectOpen(false);
-                  handleChooseGrades(selectedGrades);
+                  onCommit(selectedGrades);
                 }}
               />
             </SelectButtonBox>

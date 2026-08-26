@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme, Box } from '@mui/material';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   ElementType,
   GalleryType,
@@ -27,9 +26,11 @@ import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
-import CardGallery from '../components/cardgallery/CardGallery';
+import QuestionsLibraryGallery from '../components/cardgallery/QuestionsLibraryGallery';
+import CentralButton from '../components/button/Button';
+import { ButtonType } from '../components/button/ButtonModels';
 import Recommended from '../components/explore/Recommended';
-import SearchBar from '../components/searchbar/SearchBar';
+import ExploreLauncherBar from '../components/explorelauncher/ExploreLauncherBar';
 import QuestionTabs from '../components/questiontabs/QuestionTabs';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
@@ -80,19 +81,22 @@ export default function ExploreQuestions({
   const navigate = useNavigate();
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const [hasInitialized, setHasInitialized] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  if (!hasInitialized) {
-    const needsFetch =
-      centralData.recommendedQuestions.length === 0 ||
-      centralData.mostPopularQuestions.length === 0;
-    if (needsFetch) {
-      fetchElements();
+  // mirrors the isLibraryInit lifecycle in LibraryTabs -- see ExploreGames
+  useEffect(() => {
+    if (centralData.isExploreInit) {
+      centralDataDispatch({ type: 'SET_IS_EXPLORE_INIT', payload: false });
+      const needsFetch =
+        centralData.recommendedQuestions.length === 0 ||
+        centralData.mostPopularQuestions.length === 0;
+      if (needsFetch) {
+        centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+        fetchElements();
+      }
     }
-    setHasInitialized(true);
-  }
+  }, [centralData.isExploreInit]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [openQuestionTab, setOpenQuestionTab] = React.useState<LibraryTabEnum>(
     LibraryTabEnum.PUBLIC,
@@ -103,7 +107,17 @@ export default function ExploreQuestions({
   const [originalSelectedQuestion, setOriginalSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
-  const isSearchResults = centralData.searchTerms.length > 0;
+  /**
+   * Searching now happens on Browse: ExploreLauncherBar navigates there rather
+   * than filtering in place, so this screen has no search-results state of its
+   * own. Left as a constant because central searchTerms can still be set by
+   * Browse, and browser-Back would otherwise show an empty searched-* gallery
+   * with Recommended hidden.
+   */
+  const isSearchResults = false;
+  const galleryQuestions = isSearchResults
+    ? centralData.searchedQuestions
+    : centralData.mostPopularQuestions;
   const handleView = async (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
@@ -290,13 +304,9 @@ export default function ExploreQuestions({
             }}
           />
         )}
-        <SearchBar
-          isSearchResults={isSearchResults}
+        <ExploreLauncherBar
           screenSize={screenSize}
-          searchTerms={centralData.searchTerms}
-          handleSearchChange={handleSearchChange}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
+          browseTarget={GameQuestionType.QUESTION}
         />
         {!isSearchResults && (
           <Recommended<IQuestionTemplate>
@@ -308,23 +318,7 @@ export default function ExploreQuestions({
           />
         )}
       </ExploreGamesUpperContainer>
-      <InfiniteScroll
-        dataLength={centralData.mostPopularQuestions.length}
-        next={loadMore}
-        hasMore={centralData.nextToken !== null}
-        loader={
-          <Box
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              paddingBottom: '20px',
-            }}
-          >
-            <h4>...</h4>
-          </Box>
-        }
-        scrollableTarget="scrollableDiv"
+      <Box
         style={{
           width: '100vw',
           height: '100%',
@@ -333,26 +327,30 @@ export default function ExploreQuestions({
           alignItems: 'flex-start',
         }}
       >
-        <CardGallery<IQuestionTemplate>
+        <QuestionsLibraryGallery
           screenSize={screenSize}
-          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-          grades={isSearchResults ? centralData.selectedGrades : undefined}
-          galleryElements={
-            isSearchResults
-              ? centralData.searchedQuestions
-              : centralData.mostPopularQuestions
-          }
-          elementType={ElementType.QUESTION}
-          galleryType={
-            isSearchResults
-              ? GalleryType.SEARCH_RESULTS
-              : GalleryType.MOST_POPULAR
-          }
-          setIsTabsOpen={setIsTabsOpen}
+          galleryElements={galleryQuestions}
           handleView={handleView}
-          isLoading={centralData.isLoading}
+          // isLoading is global and viewQuestion flips it around its getUser
+          // lookup, which would swap every card for a skeleton and back on each
+          // View click. Only show skeletons when the grid is genuinely empty --
+          // the same guard BrowseTemplates applies via pages.length === 0.
+          // Searches still get them: debouncedSearch blanks the array first.
+          isLoading={centralData.isLoading && galleryQuestions.length === 0}
+          footer={
+            <CentralButton
+              buttonType={ButtonType.BROWSEALLQUESTIONS}
+              isEnabled
+              smallScreenOverride
+              // matches the question card's button: card width less its 24px sides
+              buttonWidthOverride={
+                screenSize === ScreenSize.LARGE ? '336px' : '279px'
+              }
+              onClick={() => navigate('/browse/question')}
+            />
+          }
         />
-      </InfiniteScroll>
+      </Box>
       <Box
         style={{
           height: '100%',

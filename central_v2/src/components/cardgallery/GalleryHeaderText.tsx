@@ -6,6 +6,7 @@ import {
   GalleryType,
 } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
+import { GRADE_SORT_ORDER } from '../../lib/gradeOptions';
 import {
   SearchedText,
   GradesText,
@@ -20,13 +21,21 @@ interface GalleryHeaderTextProps<T> {
   isLoading?: boolean;
   screenSize: ScreenSize;
   galleryType: GalleryType;
+  /** noun for the grade-only headline, e.g. 'Games' / 'Questions' */
+  elementLabel?: string;
 }
 
 function formatGrades(grades: string[]): string {
-  if (grades.length === 0) return '';
-  if (grades.length === 1) return grades[0];
-  if (grades.length === 2) return `${grades[0]} and ${grades[1]}`;
-  return `${grades.slice(0, -1).join(', ')}, and ${grades[grades.length - 1]}`;
+  // copy first -- the caller passes React state straight in, and Array.sort
+  // orders in place
+  const order = GRADE_SORT_ORDER as string[];
+  const gradesSorted = [...grades].sort(
+    (a, b) => order.indexOf(a) - order.indexOf(b),
+  );
+  if (gradesSorted.length === 0) return '';
+  if (gradesSorted.length === 1) return gradesSorted[0];
+  if (gradesSorted.length === 2) return `${gradesSorted[0]} and ${gradesSorted[1]}`;
+  return `${gradesSorted.slice(0, -1).join(', ')}, and ${gradesSorted[gradesSorted.length - 1]}`;
 }
 
 export default function GalleryHeaderText<
@@ -38,9 +47,19 @@ export default function GalleryHeaderText<
   isLoading,
   screenSize,
   galleryType,
+  elementLabel = 'Results',
 }: GalleryHeaderTextProps<T>) {
   const theme = useTheme();
   const formattedGrades = formatGrades(grades ?? []);
+  const hasSearch = (searchedTerm ?? '').trim().length > 0;
+  const hasGrades = (grades ?? []).length > 0;
+  // a grade-only filter reads as "Games for Grades 6, 7, and 8" rather than
+  // `Results for ""` above a separate grades line. With a term present the two
+  // stay split, so the grades are never shown twice.
+  const gradeSuffix = `for Grade${(grades ?? []).length > 1 ? 's' : ''} ${formattedGrades}`;
+  let headline = elementLabel;
+  if (hasSearch) headline = `Results for "${searchedTerm}"`;
+  else if (hasGrades) headline = `${elementLabel} ${gradeSuffix}`;
   return galleryType === GalleryType.MOST_POPULAR ? (
     <MostPopularText screenSize={screenSize}>Most Popular</MostPopularText>
   ) : (
@@ -52,9 +71,7 @@ export default function GalleryHeaderText<
         alignItems: 'center',
       }}
     >
-      <SearchedText screenSize={screenSize}>
-        Results for &quot;{searchedTerm}&quot;
-      </SearchedText>
+      <SearchedText screenSize={screenSize}>{headline}</SearchedText>
       {isLoading ? (
         <CircularProgress
           style={{ color: `${theme.palette.primary.circularProgress}` }}
@@ -66,10 +83,8 @@ export default function GalleryHeaderText<
               {searchedElements.length} results
             </ResultsLengthText>
           )}
-          {grades && grades.length > 0 && (
-            <GradesText screenSize={screenSize}>
-              in {formattedGrades}
-            </GradesText>
+          {hasSearch && hasGrades && (
+            <GradesText screenSize={screenSize}>{gradeSuffix}</GradesText>
           )}
           {searchedElements && searchedElements.length === 0 && (
             <>

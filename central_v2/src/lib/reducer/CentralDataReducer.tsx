@@ -44,6 +44,7 @@ export type CentralDataAction =
   | { type: 'SET_SEARCH_TERMS'; payload: string }
   | { type: 'SET_SELECTED_GRADES'; payload: GradeTarget[] }
   | { type: 'SET_IS_LIBRARY_INIT'; payload: boolean }
+  | { type: 'SET_IS_EXPLORE_INIT'; payload: boolean }
   | { type: 'SET_IS_TABS_OPEN'; payload: boolean }
   | { type: 'SET_OPEN_TAB'; payload: LibraryTabEnum }
   | { type: 'SET_IS_FAV_TAB_OPEN'; payload: boolean }
@@ -122,6 +123,8 @@ export const centralDataReducer = (
       return { ...state, selectedGrades: action.payload };
     case 'SET_IS_LIBRARY_INIT':
       return { ...state, isLibraryInit: action.payload };
+    case 'SET_IS_EXPLORE_INIT':
+      return { ...state, isExploreInit: action.payload };
     case 'SET_IS_TABS_OPEN':
       return { ...state, isTabsOpen: action.payload };
     case 'SET_OPEN_TAB':

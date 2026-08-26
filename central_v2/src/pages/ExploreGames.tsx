@@ -11,21 +11,21 @@ import {
   GradeTarget,
 } from '@righton/networking';
 import { Box, CircularProgress, useTheme } from '@mui/material';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import {
   useCentralDataState,
   useCentralDataDispatch,
 } from '../hooks/context/useCentralDataContext';
-import { ScreenSize } from '../lib/CentralModels';
+import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import Recommended from '../components/explore/Recommended';
-import CardGallery from '../components/cardgallery/CardGallery';
-import SearchBar from '../components/searchbar/SearchBar';
+import { FEATURED_GAME_COUNT } from '../lib/FeaturedGamesModels';
+import GamesLibraryGallery from '../components/cardgallery/GamesLibraryGallery';
+import ExploreLauncherBar from '../components/explorelauncher/ExploreLauncherBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -40,7 +40,6 @@ interface ExploreGamesProps {
     direction: SortDirection | null;
   }) => void;
   handleSearchChange: (searchString: string) => void;
-  loadMore: () => void;
 }
 
 export default function ExploreGames({
@@ -50,7 +49,6 @@ export default function ExploreGames({
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  loadMore,
 }: ExploreGamesProps) {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -60,18 +58,29 @@ export default function ExploreGames({
 
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
-  const isSearchResults = centralData?.searchTerms?.length > 0;
-  const [hasInitialized, setHasInitialized] = useState(false);
-
-  if (!hasInitialized) {
-    const needsFetch =
-      centralData.recommendedGames.length === 0 ||
-      centralData.mostPopularGames.length === 0;
-    if (needsFetch) {
-      fetchElements();
+  /**
+   * Searching now happens on Browse: ExploreLauncherBar navigates there rather
+   * than filtering in place, so this screen has no search-results state of its
+   * own. Left as a constant because central searchTerms can still be set by
+   * Browse, and browser-Back would otherwise show an empty searched-* gallery
+   * with Recommended hidden.
+   */
+  const isSearchResults = false;
+  // mirrors the isLibraryInit lifecycle in LibraryTabs: the flag defaults true so
+  // this fires on mount, and dispatching isLoading here (rather than mid-render)
+  // means the gallery's skeletons gate on a committed value
+  useEffect(() => {
+    if (centralData.isExploreInit) {
+      centralDataDispatch({ type: 'SET_IS_EXPLORE_INIT', payload: false });
+      const needsFetch =
+        centralData.recommendedGames.length === 0 ||
+        centralData.mostPopularGames.length === 0;
+      if (needsFetch) {
+        centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+        fetchElements();
+      }
     }
-    setHasInitialized(true);
-  }
+  }, [centralData.isExploreInit]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
@@ -97,13 +106,9 @@ export default function ExploreGames({
             }}
           />
         )}
-        <SearchBar
-          isSearchResults={isSearchResults}
+        <ExploreLauncherBar
           screenSize={screenSize}
-          searchTerms={centralData.searchTerms}
-          handleSearchChange={handleSearchChange}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
+          browseTarget={GameQuestionType.GAME}
         />
         {!isSearchResults && (
           <Recommended<IGameTemplate>
@@ -112,30 +117,11 @@ export default function ExploreGames({
             elementType={ElementType.GAME}
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
+            slideCount={FEATURED_GAME_COUNT}
           />
         )}
       </ExploreGamesUpperContainer>
-      <InfiniteScroll
-        dataLength={
-          isSearchResults
-            ? centralData.searchedGames.length
-            : centralData.mostPopularGames.length
-        }
-        next={loadMore}
-        hasMore={centralData.nextToken !== null}
-        loader={
-          <Box
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              paddingBottom: '20px',
-            }}
-          >
-            <h4>...</h4>
-          </Box>
-        }
-        scrollableTarget="scrollableDiv"
+      <Box
         style={{
           width: '100vw',
           height: '100%',
@@ -145,26 +131,29 @@ export default function ExploreGames({
           backgroundColor: theme.palette.primary.creamBackgroundColor,
         }}
       >
-        <CardGallery<IGameTemplate>
+        <GamesLibraryGallery
           screenSize={screenSize}
-          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
-          grades={isSearchResults ? centralData.selectedGrades : undefined}
           galleryElements={
             isSearchResults
               ? centralData.searchedGames
               : centralData.mostPopularGames
           }
-          elementType={ElementType.GAME}
-          galleryType={
-            isSearchResults
-              ? GalleryType.SEARCH_RESULTS
-              : GalleryType.MOST_POPULAR
-          }
-          setIsTabsOpen={setIsTabsOpen}
           handleView={handleView}
           isLoading={centralData.isLoading}
+          footer={
+            <CentralButton
+              buttonType={ButtonType.BROWSEALLGAMES}
+              isEnabled
+              smallScreenOverride
+              // matches the game card's button: card width less its 24px side padding
+              buttonWidthOverride={
+                screenSize === ScreenSize.LARGE ? '336px' : '279px'
+              }
+              onClick={() => navigate('/browse/game')}
+            />
+          }
         />
-      </InfiniteScroll>
+      </Box>
       <Box
         style={{
           height: '100%',

@@ -32,6 +32,7 @@ interface OwnerCardProps {
   draftUserProfile: IUserProfile;
   newProfilePic: File | null;
   handleEditPicture: () => void;
+  handleLogOut: () => void;
 }
 
 export default function OwnerCard({
@@ -39,6 +40,7 @@ export default function OwnerCard({
   draftUserProfile,
   newProfilePic,
   handleEditPicture,
+  handleLogOut,
 }: OwnerCardProps) {
   let imageLink = '';
   if (newProfilePic) {
@@ -54,11 +56,15 @@ export default function OwnerCard({
   const createdAt = draftUserProfile.createdAt || '';
 
   const date = new Date(createdAt);
-  const formatted = date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
+  // profiles predating the createdAt field (and any unparseable value) would
+  // otherwise render the literal string 'Invalid Date'
+  const formatted = Number.isNaN(date.getTime())
+    ? '--'
+    : date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
 
   return screenSize === ScreenSize.LARGE ? (
     <LeftProfileContainer>
@@ -104,20 +110,25 @@ export default function OwnerCard({
         <LeftBottomContainer>
           <LeftBottomGamesQuestionContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Games Made</LeftBottomGamesText>
+              <LeftBottomGamesText>Games Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{gamesMade}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Question Made</LeftBottomGamesText>
+              <LeftBottomGamesText>Questions Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{questionsMade}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
           </LeftBottomGamesQuestionContainer>
         </LeftBottomContainer>
         <LeftBottomGamesContainer>
-          <LeftBottomGamesText>Games Used</LeftBottomGamesText>
+          <LeftBottomGamesText>Games Played</LeftBottomGamesText>
           <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
         </LeftBottomGamesContainer>
       </Box>
+      <CentralButton
+        buttonType={ButtonType.LOGOUT}
+        isEnabled
+        onClick={handleLogOut}
+      />
     </LeftProfileContainer>
   ) : (
     <TopProfileContainer>
@@ -145,7 +156,13 @@ export default function OwnerCard({
           <img
             src={imageLink}
             alt="Right On Logo"
-            style={{ width: '50px', height: '50px' }}
+            style={{
+              width: '50px',
+              height: '50px',
+              flexShrink: 0,
+              borderRadius: '50%',
+              objectFit: 'cover',
+            }}
           />
           <AtUserNameText>@{draftUserProfile.userName}</AtUserNameText>
         </MobileUserNameContainer>
@@ -162,15 +179,15 @@ export default function OwnerCard({
         <TopSubContainer>
           <LeftBottomContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Games Made</LeftBottomGamesText>
+              <LeftBottomGamesText>Games Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{gamesMade}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Questions Made</LeftBottomGamesText>
+              <LeftBottomGamesText>Questions Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{questionsMade}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
             <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Games Used</LeftBottomGamesText>
+              <LeftBottomGamesText>Games Played</LeftBottomGamesText>
               <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
           </LeftBottomContainer>
@@ -181,6 +198,11 @@ export default function OwnerCard({
           <LeftAccountCreatedInfo>Account Created</LeftAccountCreatedInfo>
           <LeftDateText>{formatted}</LeftDateText>
         </LeftAccountCreatedContainer>
+        <CentralButton
+          buttonType={ButtonType.LOGOUT}
+          isEnabled
+          onClick={handleLogOut}
+        />
       </TopSubContainer>
     </TopProfileContainer>
   );

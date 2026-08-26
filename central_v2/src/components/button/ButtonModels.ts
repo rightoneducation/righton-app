@@ -32,6 +32,8 @@ export enum ButtonType {
   RESET = 'reset',
   PREVIOUSQUESTION = 'previousquestion',
   BACKTOEXPLORE = 'backtoexplore',
+  BROWSEALLGAMES = 'browseallgames',
+  BROWSEALLQUESTIONS = 'browseallquestions',
   FAVORITE = 'favorite',
   UNFAVORITE = 'unfavorite',
   CLONEANDEDIT = 'cloneandedit',
@@ -62,6 +64,8 @@ export enum ButtonType {
   TEST = 'test',
   RETRY = 'retry',
   CANCEL = 'cancel',
+  CANCELEDIT = 'canceledit',
+  CLOSE = 'close',
   ADDTOGAME = 'addtogame',
   YES = 'yes',
   NO = 'no',
@@ -157,6 +161,14 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.CLONEANDEDIT]: {
     icon: clone,
     textKey: ButtonType.CLONEANDEDIT,
+  },
+  [ButtonType.BROWSEALLGAMES]: {
+    textKey: ButtonType.BROWSEALLGAMES,
+    rightIcon: next,
+  },
+  [ButtonType.BROWSEALLQUESTIONS]: {
+    textKey: ButtonType.BROWSEALLQUESTIONS,
+    rightIcon: next,
   },
   [ButtonType.NEXTQUESTION]: {
     textKey: ButtonType.NEXTQUESTION,
@@ -274,9 +286,17 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.RETRY]: {
     textKey: ButtonType.RETRY,
   },
+  [ButtonType.CLOSE]: {
+    textKey: ButtonType.CLOSE,
+  },
   [ButtonType.CANCEL]: {
     textKey: ButtonType.CANCEL,
     color: ButtonColor.RED,
+  },
+  [ButtonType.CANCELEDIT]: {
+    textKey: ButtonType.CANCEL,
+    width: '160px',
+    color: ButtonColor.NULL,
   },
   [ButtonType.YES]: {
     textKey: ButtonType.YES,

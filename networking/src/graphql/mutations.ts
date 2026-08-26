@@ -175,6 +175,8 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -221,6 +223,8 @@ export const createPublicGameTemplate = /* GraphQL */ `
             questionTemplatesOrder
             createdAt
             updatedAt
+            featuredGroup
+            featuredOrder
             type
             owner
             __typename
@@ -277,6 +281,8 @@ export const createPublicGameTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -338,6 +344,8 @@ export const createPublicGameTemplate = /* GraphQL */ `
       questionTemplatesOrder
       createdAt
       updatedAt
+      featuredGroup
+      featuredOrder
       type
       owner
       __typename
@@ -427,6 +435,8 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -473,6 +483,8 @@ export const updatePublicGameTemplate = /* GraphQL */ `
             questionTemplatesOrder
             createdAt
             updatedAt
+            featuredGroup
+            featuredOrder
             type
             owner
             __typename
@@ -529,6 +541,8 @@ export const updatePublicGameTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -590,6 +604,8 @@ export const updatePublicGameTemplate = /* GraphQL */ `
       questionTemplatesOrder
       createdAt
       updatedAt
+      featuredGroup
+      featuredOrder
       type
       owner
       __typename
@@ -679,6 +695,8 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -725,6 +743,8 @@ export const deletePublicGameTemplate = /* GraphQL */ `
             questionTemplatesOrder
             createdAt
             updatedAt
+            featuredGroup
+            featuredOrder
             type
             owner
             __typename
@@ -781,6 +801,8 @@ export const deletePublicGameTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -842,6 +864,8 @@ export const deletePublicGameTemplate = /* GraphQL */ `
       questionTemplatesOrder
       createdAt
       updatedAt
+      featuredGroup
+      featuredOrder
       type
       owner
       __typename
@@ -2442,6 +2466,8 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -2488,6 +2514,8 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
             questionTemplatesOrder
             createdAt
             updatedAt
+            featuredGroup
+            featuredOrder
             type
             owner
             __typename
@@ -2544,6 +2572,8 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -2692,6 +2722,8 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -2738,6 +2770,8 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
             questionTemplatesOrder
             createdAt
             updatedAt
+            featuredGroup
+            featuredOrder
             type
             owner
             __typename
@@ -2794,6 +2828,8 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -2942,6 +2978,8 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -2988,6 +3026,8 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
             questionTemplatesOrder
             createdAt
             updatedAt
+            featuredGroup
+            featuredOrder
             type
             owner
             __typename
@@ -3044,6 +3084,8 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
                   questionTemplatesOrder
                   createdAt
                   updatedAt
+                  featuredGroup
+                  featuredOrder
                   type
                   owner
                   __typename
@@ -5578,6 +5620,8 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -5620,6 +5664,8 @@ export const createPublicGameQuestions = /* GraphQL */ `
               questionTemplatesOrder
               createdAt
               updatedAt
+              featuredGroup
+              featuredOrder
               type
               owner
               __typename
@@ -5672,6 +5718,8 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -5729,6 +5777,8 @@ export const createPublicGameQuestions = /* GraphQL */ `
         questionTemplatesOrder
         createdAt
         updatedAt
+        featuredGroup
+        featuredOrder
         type
         owner
         __typename
@@ -5806,6 +5856,8 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -5848,6 +5900,8 @@ export const createPublicGameQuestions = /* GraphQL */ `
               questionTemplatesOrder
               createdAt
               updatedAt
+              featuredGroup
+              featuredOrder
               type
               owner
               __typename
@@ -5900,6 +5954,8 @@ export const createPublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -6050,6 +6106,8 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -6092,6 +6150,8 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               questionTemplatesOrder
               createdAt
               updatedAt
+              featuredGroup
+              featuredOrder
               type
               owner
               __typename
@@ -6144,6 +6204,8 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -6201,6 +6263,8 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         questionTemplatesOrder
         createdAt
         updatedAt
+        featuredGroup
+        featuredOrder
         type
         owner
         __typename
@@ -6278,6 +6342,8 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -6320,6 +6386,8 @@ export const updatePublicGameQuestions = /* GraphQL */ `
               questionTemplatesOrder
               createdAt
               updatedAt
+              featuredGroup
+              featuredOrder
               type
               owner
               __typename
@@ -6372,6 +6440,8 @@ export const updatePublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -6522,6 +6592,8 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -6564,6 +6636,8 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               questionTemplatesOrder
               createdAt
               updatedAt
+              featuredGroup
+              featuredOrder
               type
               owner
               __typename
@@ -6616,6 +6690,8 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -6673,6 +6749,8 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         questionTemplatesOrder
         createdAt
         updatedAt
+        featuredGroup
+        featuredOrder
         type
         owner
         __typename
@@ -6750,6 +6828,8 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename
@@ -6792,6 +6872,8 @@ export const deletePublicGameQuestions = /* GraphQL */ `
               questionTemplatesOrder
               createdAt
               updatedAt
+              featuredGroup
+              featuredOrder
               type
               owner
               __typename
@@ -6844,6 +6926,8 @@ export const deletePublicGameQuestions = /* GraphQL */ `
                     questionTemplatesOrder
                     createdAt
                     updatedAt
+                    featuredGroup
+                    featuredOrder
                     type
                     owner
                     __typename

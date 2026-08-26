@@ -56,6 +56,13 @@ export enum SortDirection {
   DESC = "DESC",
 }
 
+/**
+ * Partition-key value for the publicGameTemplatesByFeatured GSI. Must match
+ * exactly what is written to featuredGroup in the data -- it is a key comparison,
+ * so a casing mismatch returns zero rows rather than an error.
+ */
+export const FEATURED_GROUP = "FEATURED";
+
 export enum PublicPrivateType {
   PUBLIC = "Public",
   PRIVATE = "Private",

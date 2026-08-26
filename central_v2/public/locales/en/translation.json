@@ -1,5 +1,7 @@
 {
   "button": {
+    "browseallquestions": "Browse All Questions",
+    "browseallgames": "Browse All Games",
     "login": "Login",
     "loginheader": "Login",
     "signup": "Sign Up",
@@ -34,7 +36,7 @@
     "questionbank": "Question Bank",
     "back": "Back",
     "editpicture": "Edit Picture",
-    "editinformation": "Edit Information",
+    "editinformation": "Edit",
     "changepassword": "Change Password",
     "confirmsendcode": "Confirm & Send Code",
     "choose": "Choose",
@@ -42,6 +44,7 @@
     "signout": "Debug Sign Out",
     "test": "Test",
     "cancel": "Cancel",
+    "close": "Close",
     "retry": "Retry",
     "addtogame": "Add to Game",
     "yes": "Yes",

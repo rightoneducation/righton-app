@@ -32,18 +32,26 @@ interface SortSearchMenuProps {
     field: SortType;
     direction: SortDirection;
   }) => void;
+  /**
+   * Optional starting selection, for callers that restore a sort from outside
+   * (Browse seeds this from its URL). Must be a GAME SortType -- sortTypeMap
+   * below holds no question members, so a question-side field matches no item.
+   * Omitted by every other caller, which keeps the previous unselected default.
+   */
+  initialSort?: { field: SortType; direction: SortDirection };
 }
 
 export default function SortSearchMenu({
   screenSize,
   handleSortChange,
+  initialSort,
 }: SortSearchMenuProps) {
   const theme = useTheme();
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [selectedSort, setSelectedSort] = useState<{
     field: SortType | null;
     direction: SortDirection;
-  }>({ field: null, direction: SortDirection.ASC });
+  }>(initialSort ?? { field: null, direction: SortDirection.ASC });
   const sortTypeMap = {
     'Date Updated': SortType.listGameTemplatesByDate,
     'Most Popular': SortType.listGameTemplates,
