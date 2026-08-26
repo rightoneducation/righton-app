@@ -147,6 +147,9 @@
     "more": "Más",
     "upload": "Suba archivos PPQ para analizar",
     "showPassword": "Mostrar contraseña",
-    "hidePassword": "Ocultar contraseña"
+    "hidePassword": "Ocultar contraseña",
+    "codeError": "Ese código no es correcto. Revise su correo e inténtelo de nuevo.",
+    "checkingEmail": "Verificando el correo con la lista de administradores de su distrito…",
+    "emailNotApproved": "Este correo no está en nuestra lista de correos de administrador aprobados para su distrito. Comuníquese con su escuela para agregarlo, o regístrese como Docente."
   }
 }

@@ -147,6 +147,9 @@
     "more": "More",
     "upload": "Upload PPQ files for analysis",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "codeError": "That code isn't right. Check your email and try again.",
+    "checkingEmail": "Checking email against your district's admin list…",
+    "emailNotApproved": "This email isn't on our list of approved admin emails for your district. Contact your school to get added, or sign up as a Teacher instead."
   }
 }

@@ -20,7 +20,8 @@ export interface ISignUpState {
   lastName: string;
   email: string;
   password: string;
-  code: string;
+  /** One entry per box, '' when empty — the shape VerificationCodeInput takes. */
+  code: string[];
   /** Starts with one empty row — the frame shows a single field by default. */
   classes: string[];
   isVerified: boolean;
@@ -32,17 +33,19 @@ export const initialSignUpState: ISignUpState = {
   lastName: '',
   email: '',
   password: '',
-  code: '',
+  code: Array(CODE_LENGTH).fill(''),
   classes: [''],
   isVerified: false,
 };
 
-export type SignUpField =
-  'firstName' | 'lastName' | 'email' | 'password' | 'code';
+// `code` is not here: it is an array, so it gets its own action rather than
+// being squeezed through the string-valued field setter.
+export type SignUpField = 'firstName' | 'lastName' | 'email' | 'password';
 
 export type SignUpAction =
   | { type: 'SET_ROLE'; payload: SignUpRole }
   | { type: 'SET_FIELD'; payload: { field: SignUpField; value: string } }
+  | { type: 'SET_CODE'; payload: string[] }
   | { type: 'SET_VERIFIED' }
   | { type: 'ADD_CLASS' }
   | { type: 'SET_CLASS'; payload: { index: number; value: string } }
@@ -58,6 +61,8 @@ export function signUpReducer(
       return { ...state, role: action.payload };
     case 'SET_FIELD':
       return { ...state, [action.payload.field]: action.payload.value };
+    case 'SET_CODE':
+      return { ...state, code: action.payload };
     case 'SET_VERIFIED':
       return { ...state, isVerified: true };
     case 'ADD_CLASS':

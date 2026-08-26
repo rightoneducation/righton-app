@@ -33,6 +33,9 @@ const pillHeight = 36;
 const pillRadius = 18;
 const addClassHeight = 31;
 const classChipHeight = 50;
+// Every outline in this flow is drawn at 2px — the fields, the code boxes and
+// the Google button alike — rather than the 1px hairline used elsewhere.
+const FIELD_BORDER_WIDTH = 2;
 
 /** The centred column every step sits in. */
 export const SignUpColumn = styled(Box, {
@@ -112,13 +115,23 @@ export const RoleIconTile = styled(Box)(({ theme }) => ({
  * floating label or helper row, and TextField's chrome would have to be
  * unstyled back out again.
  */
-export const SignUpField = styled(InputBase)(({ theme }) => ({
+export const SignUpField = styled(InputBase, {
+  shouldForwardProp: (prop) => prop !== 'isActive',
+})<{ isActive?: boolean }>(({ theme, isActive }) => ({
   width: '100%',
   height: fieldHeight,
   padding: `0 ${theme.sizing.space2}px`,
   borderRadius: fieldRadius,
-  backgroundColor: theme.palette.designSystem.surface.white,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.surface.darkBlue}`,
+  // Figma (SignUpError1): the field being checked fills sky blue behind a
+  // selectedNavy outline, so the row reads as busy rather than merely typed in.
+  backgroundColor: isActive
+    ? theme.palette.designSystem.surface.skyBlue
+    : theme.palette.designSystem.surface.white,
+  border: `${FIELD_BORDER_WIDTH}px solid ${
+    isActive
+      ? theme.palette.designSystem.foreground.selectedNavy
+      : theme.palette.designSystem.surface.darkBlue
+  }`,
   boxSizing: 'border-box',
   '& input': {
     padding: 0,
@@ -144,7 +157,6 @@ export const FieldRow = styled(Box, {
 // Google's own blue, kept as a literal: it is their brand asset rather than a
 // value from our palette, so it must not drift with the design system.
 const GOOGLE_BLUE = '#0966E0';
-const GOOGLE_BORDER_WIDTH = 2;
 
 /**
  * Ported from central_v2's `GoogleSignUpButton` (central_v2/src/pages/SignUp.tsx)
@@ -163,14 +175,14 @@ export const GoogleButton = styled(Button)(({ theme }) => ({
   padding: `${theme.sizing.space1 + 2}px ${theme.sizing.space3}px`,
   borderRadius: theme.sizing.space1,
   backgroundColor: 'transparent',
-  border: `${GOOGLE_BORDER_WIDTH}px solid ${GOOGLE_BLUE}`,
+  border: `${FIELD_BORDER_WIDTH}px solid ${GOOGLE_BLUE}`,
   color: GOOGLE_BLUE,
   ...theme.typography.headingSm,
   fontWeight: 500,
   textTransform: 'none',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.foreground.wildSand,
-    border: `${GOOGLE_BORDER_WIDTH}px solid ${GOOGLE_BLUE}`,
+    border: `${FIELD_BORDER_WIDTH}px solid ${GOOGLE_BLUE}`,
   },
 }));
 
@@ -189,26 +201,36 @@ export const OrDivider = styled(Typography)(({ theme }) => ({
 // Figma: 38x46, rx 7, on a 48px pitch. The outline recedes once a digit is
 // present so the digit itself carries the emphasis.
 export const CodeBox = styled(InputBase, {
-  shouldForwardProp: (prop) => prop !== 'isFilled',
-})<{ isFilled: boolean }>(({ theme, isFilled }) => ({
-  width: codeBoxWidth,
-  height: codeBoxHeight,
-  borderRadius: codeBoxRadius,
-  backgroundColor: theme.palette.designSystem.surface.white,
-  border: `${theme.borders.borderWidth}px solid ${
-    isFilled
-      ? theme.palette.designSystem.foreground.codeStrokeFilled
-      : theme.palette.designSystem.foreground.codeStroke
-  }`,
-  boxSizing: 'border-box',
-  '& input': {
-    padding: 0,
-    textAlign: 'center',
-    ...theme.typography.headingMd,
-    fontWeight: 700,
-    color: theme.palette.designSystem.foreground.slateNavy,
-  },
-}));
+  shouldForwardProp: (prop) => prop !== 'isFilled' && prop !== 'hasError',
+})<{ isFilled: boolean; hasError?: boolean }>(({
+  theme,
+  isFilled,
+  hasError,
+}) => {
+  const palette = theme.palette.designSystem;
+  let strokeColor = palette.foreground.codeStroke;
+  if (isFilled) strokeColor = palette.foreground.codeStrokeFilled;
+  // central_v2 draws its error outline at 2px so it reads through the
+  // filled state's lighter stroke; the colour is ours rather than its
+  // hardcoded #F60E44.
+  if (hasError) strokeColor = palette.status.errorStroke;
+
+  return {
+    width: codeBoxWidth,
+    height: codeBoxHeight,
+    borderRadius: codeBoxRadius,
+    backgroundColor: theme.palette.designSystem.surface.white,
+    border: `${FIELD_BORDER_WIDTH}px solid ${strokeColor}`,
+    boxSizing: 'border-box',
+    '& input': {
+      padding: 0,
+      textAlign: 'center',
+      ...theme.typography.headingMd,
+      fontWeight: 700,
+      color: theme.palette.designSystem.foreground.slateNavy,
+    },
+  };
+});
 
 export const CodeRow = styled(Box)(({ theme }) => ({
   display: 'flex',

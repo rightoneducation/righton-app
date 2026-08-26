@@ -10,6 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import googleIcon from '../images/googleicon.svg';
+import checkEmailApproval from '../lib/mocks/approvalCheck';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
 import { SignUpField as Field } from '../lib/context/SignUpContext';
@@ -42,6 +43,34 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
 
   // Ported from central_v2's SignUp: the mouse handlers suppress the default
   // so pressing the reveal control cannot steal focus from the field.
+  /*
+   * Only vetted teachers may create a profile, so the address is checked
+   * before the wizard will continue. Local rather than in SignUpContext:
+   * re-checking on a return to this step is correct, not a bug.
+   */
+  type ApprovalStatus = 'idle' | 'checking' | 'approved' | 'rejected';
+  const [approval, setApproval] = React.useState<ApprovalStatus>('idle');
+  const latestChecked = React.useRef('');
+
+  const runApprovalCheck = async (value: string) => {
+    const email = value.trim();
+    // Nothing to check against yet — leave the row quiet.
+    if (!email.includes('@')) {
+      latestChecked.current = '';
+      setApproval('idle');
+      return;
+    }
+    if (email === latestChecked.current) return;
+
+    latestChecked.current = email;
+    setApproval('checking');
+    const result = await checkEmailApproval(email);
+    // A slow answer for a since-corrected address must not overwrite the
+    // newer one; without this the stale verdict wins whenever it lands last.
+    if (latestChecked.current !== email) return;
+    setApproval(result.isApproved ? 'approved' : 'rejected');
+  };
+
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setIsShowPassword((show) => !show);
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
@@ -102,11 +131,38 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
 
           <SignUpField
             type="email"
+            isActive={approval === 'checking'}
             placeholder={t('signup.email')}
             inputProps={{ 'aria-label': t('signup.email') }}
             value={state.email}
-            onChange={(event) => setField('email')(event.target.value)}
+            onChange={(event) => {
+              setField('email')(event.target.value);
+              // A verdict for the old address is meaningless once it changes.
+              if (approval !== 'idle') setApproval('idle');
+            }}
+            onBlur={(event) => runApprovalCheck(event.target.value)}
           />
+
+          {/* In flow rather than overlaid, so the password field reflows down
+              as the frames draw it. Copy and colour are the frames' own — the
+              outline carries any error, the message stays accentBlue. */}
+          {approval !== 'idle' && approval !== 'approved' && (
+            <Typography
+              variant="rubikLabel"
+              role="status"
+              sx={{
+                fontWeight: 600,
+                color: 'designSystem.foreground.accentBlue',
+                textAlign: 'center',
+              }}
+            >
+              {t(
+                approval === 'checking'
+                  ? 'signup.checkingEmail'
+                  : 'signup.emailNotApproved',
+              )}
+            </Typography>
+          )}
           <SignUpField
             type={isShowPassword ? 'text' : 'password'}
             placeholder={t('signup.password')}
