@@ -14,6 +14,16 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const userProfileLocalStorage = 'righton_userprofile';
 
+// JSON.stringify on an Error yields "{}" (its props are non-enumerable), which is
+// how these paths ended up reporting 'upload failed: {}'. Keep the real message and
+// the exception name, and add context in front of it.
+const withContext = (context: string, error: any): Error => {
+  const detail = error?.message ?? String(error ?? '');
+  const err = new Error(detail.length > 0 ? `${context}: ${detail}` : context);
+  err.name = error?.name ?? 'Error';
+  return err;
+};
+
 export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient{
   protected env: Environment;
   protected authAPIClient: IAuthAPIClient;
@@ -40,12 +50,12 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   
   public initGames = async () => {
     let games = [];
-    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, [], null, true);
+    const response = await this.gameTemplateAPIClient.listGameTemplatesByDate(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, [], null, true);
     if (response){
       games.push(...response.gameTemplates);
       while (games.length < 12) {
         if (!response.nextToken) break;
-        const nextResponse = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, response.nextToken, SortDirection.DESC, null, [], null, true);
+        const nextResponse = await this.gameTemplateAPIClient.listGameTemplatesByDate(PublicPrivateType.PUBLIC, 12, response.nextToken, SortDirection.DESC, null, [], null, true);
         if (nextResponse && nextResponse.gameTemplates) {
           games.push(...nextResponse.gameTemplates);
           response.nextToken = nextResponse.nextToken;
@@ -60,12 +70,12 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
   public initQuestions = async () => {
     let questions = [];
-    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null);
+    const response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null);
     if (response) {
       questions.push(...response.questionTemplates);
       while (questions.length < 24) {
         if (!response.nextToken) break;
-        const nextResponse = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, response.nextToken, SortDirection.DESC, null, [], null);
+        const nextResponse = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(PublicPrivateType.PUBLIC, 24, response.nextToken, SortDirection.DESC, null, [], null);
         if (nextResponse && nextResponse.questionTemplates) {
           questions.push(...nextResponse.questionTemplates);
           response.nextToken = nextResponse.nextToken;
@@ -304,7 +314,8 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
      }
       return userProfile;
     } catch (error: any) {
-      throw new Error(error);
+      // rethrow as-is: re-wrapping discards `name` (e.g. UserUnAuthenticatedException)
+      throw error;
     }
   };
 
@@ -329,7 +340,18 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
       return userProfile;
     } catch (error: any) {
-      throw new Error(error);
+      // rethrow as-is: re-wrapping discards `name` (e.g. UserUnAuthenticatedException)
+      throw error;
+    }
+  };
+
+  // Best-effort teardown of a half-created signup. Never masks the original
+  // failure -- the caller always sees why signup actually failed.
+  private cleanupPartialSignUp = async (user: IUserProfile) => {
+    try {
+      await this.authAPIClient.awsUserCleaner(user);
+    } catch (cleanupError: any) {
+      console.error('userCleaner failed after signup error:', cleanupError);
     }
   };
 
@@ -343,29 +365,46 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     try {
       await this.authAPIClient.awsConfirmSignUp(user.email, confirmationCode);
     } catch (error: any) {
-      throw new Error(error);
+      // rethrow as-is: re-wrapping discards `name` (e.g. CodeMismatchException)
+      throw error;
     }
     try {
       await this.authAPIClient.awsSignIn(user.email, user.password ?? '');
       const currentUser = await getCurrentUser();
+      const dynamoId = uuidv4();
+      // record identifiers BEFORE any fallible work, so a later failure still
+      // leaves the cleaner something it can actually delete
+      updatedUser = { ...updatedUser, id: dynamoId, dynamoId: dynamoId, cognitoId: currentUser.userId };
       const images = await Promise.all([
         this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
         this.authAPIClient.awsUploadImagePrivate(backImage) as any
       ]);
-      const dynamoId = uuidv4();
-      createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      const frontIdPath = images[0]?.path;
+      const backIdPath = images[1]?.path;
+      // frontIdPath/backIdPath are nullable in the schema, so a resolved-but-pathless
+      // upload would otherwise write a half-built account with no ID images
+      if (!frontIdPath || !backIdPath) {
+        throw new Error('Your Teacher ID images could not be uploaded. Please try again.');
+      }
+      updatedUser = { ...updatedUser, frontIdPath, backIdPath };
+      createUserInput = { ...createUserInput, id: dynamoId, frontIdPath, backIdPath, cognitoId: currentUser.userId, dynamoId: dynamoId };
 
       const randomIndex = Math.floor(Math.random() * 5) + 1;
       
-      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg`};
-      await this.userAPIClient.createUser(updatedUser);
+      updatedUser = { ...createUserInput, profilePicPath: `defaultProfilePic${randomIndex}.jpg`};
+      // createdAt/updatedAt are stamped server-side and are not fields on
+      // CreateUserInput, so they only exist on the mutation response - merge it
+      // back in or the profile in state has no account-created date
+      const createdUser = await this.userAPIClient.createUser(updatedUser);
+      if (createdUser)
+        updatedUser = { ...updatedUser, ...createdUser };
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
 
       return { updatedUser, images };
     } catch (error: any) {
-      this.authAPIClient.awsUserCleaner(updatedUser);
-      throw new Error (error);
+      await this.cleanupPartialSignUp(updatedUser);
+      throw error;
     }
   };
 
@@ -382,26 +421,35 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     let lastName = createUserInput.lastName;
     try {
       const currentUser = await getCurrentUser();
-      updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
+      const dynamoId = uuidv4();
+      updatedUser = { ...updatedUser, id: dynamoId, dynamoId: dynamoId, cognitoId: currentUser.userId };
       const images = await Promise.all([
         this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
         this.authAPIClient.awsUploadImagePrivate(backImage) as any
       ]);
-      const dynamoId = uuidv4();
-      
-      createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      const frontIdPath = images[0]?.path;
+      const backIdPath = images[1]?.path;
+      if (!frontIdPath || !backIdPath) {
+        throw new Error('Your Teacher ID images could not be uploaded. Please try again.');
+      }
+      updatedUser = { ...updatedUser, frontIdPath, backIdPath };
+
+      createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath, backIdPath, cognitoId: currentUser.userId, dynamoId: dynamoId };
       const randomIndex = Math.floor(Math.random() * 5) + 1;
 
-      updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg` };
-      await this.userAPIClient.createUser(updatedUser);
+      updatedUser = { ...createUserInput, profilePicPath: `defaultProfilePic${randomIndex}.jpg` };
+      // see signUpConfirmAndBuildBackendUser: createdAt only comes back on the response
+      const createdUser = await this.userAPIClient.createUser(updatedUser);
+      if (createdUser)
+        updatedUser = { ...updatedUser, ...createdUser };
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
       //TODO: set user status to LOGGED_IN
       return { updatedUser, images };
 
     } catch (error: any) {
-      this.authAPIClient.awsUserCleaner(updatedUser);
-      throw new Error (JSON.stringify(error));
+      await this.cleanupPartialSignUp(updatedUser);
+      throw error;
     }
   };
 
@@ -418,29 +466,17 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         await this.authAPIClient.updateCognitoUsername(updatedUser.userName)
       }
       catch (error: any) {
-        throw new Error (JSON.stringify(error));
+        throw withContext('Could not update username', error);
       }
     }
     
-    if (frontImage && backImage) {
-      try {
-        const upadtingImages = await Promise.all([
-          this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
-          this.authAPIClient.awsUploadImagePrivate(backImage) as any
-        ]);
-        updatedUser = {...updatedUser, frontIdPath: upadtingImages[0].path, backIdPath: upadtingImages[1].path}
-      }
-      catch (error: any) {
-        throw new Error (JSON.stringify(error));
-      }
-    }
     if(frontImage || backImage){
       if (frontImage) {
         try {
           const uploadedFront = await this.authAPIClient.awsUploadImagePrivate(frontImage) as any;
           updatedUser = { ...updatedUser, frontIdPath: uploadedFront.path };
         } catch (error: any) {
-          throw new Error(`Front image upload failed: ${JSON.stringify(error)}`);
+          throw withContext('Front image upload failed', error);
         }
       }
       if (backImage) {
@@ -448,12 +484,16 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
           const uploadedBack = await this.authAPIClient.awsUploadImagePrivate(backImage) as any;
           updatedUser = { ...updatedUser, backIdPath: uploadedBack.path };
         } catch (error: any) {
-          throw new Error(`Back image upload failed: ${JSON.stringify(error)}`);
+          throw withContext('Back image upload failed', error);
         }
       }
     }
 
-    await this.userAPIClient.updateUser(updatedUser);
+    // merge the response back in so server-side fields (createdAt/updatedAt) survive
+    // the round trip through parseAWSUserfromAuthUser, which cannot carry them
+    const savedUser = await this.userAPIClient.updateUser(updatedUser);
+    if (savedUser)
+      updatedUser = { ...updatedUser, ...savedUser };
     this.setLocalUserProfile(updatedUser);
     return { updatedUser };
   };
@@ -468,10 +508,13 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         const uploadedImage = await this.authAPIClient.awsUploadImagePrivate(newProfilePic) as any;
         updatedUser = { ...updatedUser, profilePicPath: uploadedImage.path };
       } catch (error: any) {
-        throw new Error(`Profile image upload failed: ${JSON.stringify(error)}`);
+        throw withContext('Profile image upload failed', error);
       }
     }
-    await this.userAPIClient.updateUser(updatedUser);
+    // see userProfileInformationUpdate: keeps createdAt/updatedAt on the profile
+    const savedUser = await this.userAPIClient.updateUser(updatedUser);
+    if (savedUser)
+      updatedUser = { ...updatedUser, ...savedUser };
     this.setLocalUserProfile(updatedUser);
     return { updatedUser };
   };

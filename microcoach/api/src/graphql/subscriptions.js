@@ -128,6 +128,11 @@ export const onCreateClassroom = /* GraphQL */ `
           }
           prerequisiteGapCodes
           impactedObjectiveCodes
+          wrongAnswers {
+            questionNumber
+            letter
+            __typename
+          }
           activities {
             items {
               id
@@ -329,6 +334,11 @@ export const onUpdateClassroom = /* GraphQL */ `
           }
           prerequisiteGapCodes
           impactedObjectiveCodes
+          wrongAnswers {
+            questionNumber
+            letter
+            __typename
+          }
           activities {
             items {
               id
@@ -530,6 +540,11 @@ export const onDeleteClassroom = /* GraphQL */ `
           }
           prerequisiteGapCodes
           impactedObjectiveCodes
+          wrongAnswers {
+            questionNumber
+            letter
+            __typename
+          }
           activities {
             items {
               id
@@ -638,6 +653,13 @@ export const onCreateSession = /* GraphQL */ `
             pointValue
             ccssStandard
             classPercentCorrect
+            answerChoices {
+              letter
+              text
+              isCorrect
+              __typename
+            }
+            docxQuestion
             __typename
           }
           studentResponses {
@@ -687,6 +709,11 @@ export const onCreateSession = /* GraphQL */ `
           }
           prerequisiteGapCodes
           impactedObjectiveCodes
+          wrongAnswers {
+            questionNumber
+            letter
+            __typename
+          }
           activities {
             items {
               id
@@ -765,6 +792,13 @@ export const onUpdateSession = /* GraphQL */ `
             pointValue
             ccssStandard
             classPercentCorrect
+            answerChoices {
+              letter
+              text
+              isCorrect
+              __typename
+            }
+            docxQuestion
             __typename
           }
           studentResponses {
@@ -814,6 +848,11 @@ export const onUpdateSession = /* GraphQL */ `
           }
           prerequisiteGapCodes
           impactedObjectiveCodes
+          wrongAnswers {
+            questionNumber
+            letter
+            __typename
+          }
           activities {
             items {
               id
@@ -892,6 +931,13 @@ export const onDeleteSession = /* GraphQL */ `
             pointValue
             ccssStandard
             classPercentCorrect
+            answerChoices {
+              letter
+              text
+              isCorrect
+              __typename
+            }
+            docxQuestion
             __typename
           }
           studentResponses {
@@ -941,6 +987,11 @@ export const onDeleteSession = /* GraphQL */ `
           }
           prerequisiteGapCodes
           impactedObjectiveCodes
+          wrongAnswers {
+            questionNumber
+            letter
+            __typename
+          }
           activities {
             items {
               id
@@ -1063,6 +1114,13 @@ export const onCreateAssessment = /* GraphQL */ `
         pointValue
         ccssStandard
         classPercentCorrect
+        answerChoices {
+          letter
+          text
+          isCorrect
+          __typename
+        }
+        docxQuestion
         __typename
       }
       studentResponses {
@@ -1119,6 +1177,13 @@ export const onUpdateAssessment = /* GraphQL */ `
         pointValue
         ccssStandard
         classPercentCorrect
+        answerChoices {
+          letter
+          text
+          isCorrect
+          __typename
+        }
+        docxQuestion
         __typename
       }
       studentResponses {
@@ -1175,6 +1240,13 @@ export const onDeleteAssessment = /* GraphQL */ `
         pointValue
         ccssStandard
         classPercentCorrect
+        answerChoices {
+          letter
+          text
+          isCorrect
+          __typename
+        }
+        docxQuestion
         __typename
       }
       studentResponses {
@@ -1306,6 +1378,11 @@ export const onCreateMisconception = /* GraphQL */ `
       }
       prerequisiteGapCodes
       impactedObjectiveCodes
+      wrongAnswers {
+        questionNumber
+        letter
+        __typename
+      }
       activities {
         items {
           id
@@ -1393,6 +1470,11 @@ export const onUpdateMisconception = /* GraphQL */ `
       }
       prerequisiteGapCodes
       impactedObjectiveCodes
+      wrongAnswers {
+        questionNumber
+        letter
+        __typename
+      }
       activities {
         items {
           id
@@ -1480,6 +1562,11 @@ export const onDeleteMisconception = /* GraphQL */ `
       }
       prerequisiteGapCodes
       impactedObjectiveCodes
+      wrongAnswers {
+        questionNumber
+        letter
+        __typename
+      }
       activities {
         items {
           id

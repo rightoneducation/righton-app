@@ -16,15 +16,16 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "cleanup": "ts-node src/seed/cleanup.ts",
-    "ingest": "ts-node src/seed/ingest-ppq.ts",
-    "upload": "ts-node src/seed/upload.ts",
-    "verify": "ts-node src/seed/verify.ts",
-    "generate": "ts-node src/seed/generate-next-steps.ts",
-    "validate": "ts-node src/seed/validate-next-steps.ts",
-    "post-analyze": "APPSYNC_SECRET_NAME=microcoach ts-node src/seed/post-analyze.ts",
+    "cleanup": "ts-node src/cli/cleanup.ts",
+    "ingest": "ts-node src/cli/ingest.ts",
+    "upload": "ts-node src/cli/upload.ts",
+    "verify": "ts-node src/cli/verify.ts",
+    "generate": "ts-node src/cli/generate.ts",
+    "validate": "ts-node src/cli/validate.ts",
+    "post-analyze": "APPSYNC_SECRET_NAME=microcoach ts-node src/cli/post-analyze.ts",
     "sync-prompt-config": "node scripts/sync-prompt-config.mjs",
-    "test": "jest"
+    "test": "jest",
+    "eval": "ts-node src/eval/scripts/runEval.ts"
   },
   "files": [
     "lib"

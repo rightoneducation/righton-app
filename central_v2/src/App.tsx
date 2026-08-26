@@ -22,7 +22,7 @@ function App() {
   );
 
   function RedirectToCentralIfMissing() {
-    window.location.href = 'http://central.rightoneducation.com/';
+    window.location.href = 'http://dev-central.rightoneducation.com/';
     return null;
   }
 
@@ -103,6 +103,10 @@ function App() {
             <Route
               path="/password/reset"
               element={<AppSwitch currentScreen={ScreenType.PASSWORDRESET} />}
+            />
+            <Route
+              path="/browse/:gameQuestion"
+              element={<AppSwitch currentScreen={ScreenType.BROWSE} />}
             />
           </>
         )}

@@ -34,6 +34,7 @@ interface UseCentralDataManagerProps {
 interface UseCentralDataManagerReturnProps {
   setIsTabsOpen: (isOpen: boolean) => void;
   handleLibraryInit: (isInit: boolean) => void;
+  handleExploreInit: (isInit: boolean) => void;
   fetchElement: (
     type: GameQuestionType,
     id: string,
@@ -119,6 +120,10 @@ export default function useCentralDataManager({
 
   const handleLibraryInit = (isInit: boolean) => {
     centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: isInit });
+  };
+
+  const handleExploreInit = (isInit: boolean) => {
+    centralDataDispatch({ type: 'SET_IS_EXPLORE_INIT', payload: isInit });
   };
 
   const handleChooseGrades = (grades: GradeTarget[]) => {
@@ -952,6 +957,7 @@ export default function useCentralDataManager({
     return selectedQuestion;
   }
 
+
   const fetchElements = async (
     libraryTab?: LibraryTabEnum,
     searchTerms?: string,
@@ -1074,29 +1080,45 @@ export default function useCentralDataManager({
         break;
       case FetchType.EXPLORE_GAMES:
       default:
-        apiClients?.centralDataManager?.initGames().then((response) => {
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-          centralDataDispatch({
-            type: 'SET_IS_LOADING_INFINITE_SCROLL',
-            payload: false,
+        apiClients.gameTemplate
+          .listFeaturedGameTemplates()
+          .then((featuredGames) => {
+            centralDataDispatch({
+              type: 'SET_RECOMMENDED_GAMES',
+              payload: featuredGames,
+            });
           });
-          centralDataDispatch({
-            type: 'SET_RECOMMENDED_GAMES',
-            payload: response.games,
+        apiClients?.centralDataManager
+          ?.initGames()
+          .then((response) => {
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({
+              type: 'SET_IS_LOADING_INFINITE_SCROLL',
+              payload: false,
+            });
+            centralDataDispatch({
+              type: 'SET_MOST_POPULAR_GAMES',
+              payload: response.games,
+            });
+            centralDataDispatch({
+              type: 'SET_PUBLIC_GAMES',
+              payload: response.games,
+            });
+            centralDataDispatch({
+              type: 'SET_NEXT_TOKEN',
+              payload: response.nextToken,
+            });
+          })
+          .catch((error) => {
+            // without this the flag stays true on any fetch failure and every
+            // isLoading consumer is stuck loading until a reload
+            console.error('Failed to load explore games', error);
+            centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            centralDataDispatch({
+              type: 'SET_IS_LOADING_INFINITE_SCROLL',
+              payload: false,
+            });
           });
-          centralDataDispatch({
-            type: 'SET_MOST_POPULAR_GAMES',
-            payload: response.games,
-          });
-          centralDataDispatch({
-            type: 'SET_PUBLIC_GAMES',
-            payload: response.games,
-          });
-          centralDataDispatch({
-            type: 'SET_NEXT_TOKEN',
-            payload: response.nextToken,
-          });
-        });
         break;
     }
   };
@@ -1265,6 +1287,7 @@ export default function useCentralDataManager({
   return {
     setIsTabsOpen,
     handleLibraryInit,
+    handleExploreInit,
     fetchElement,
     viewQuestion,
     fetchElements,

@@ -1,0 +1,2245 @@
+{
+  "knowledgeGraphQueries": [
+    {
+      "ccssRequested": "6.NS.A.1",
+      "normalizedCodes": "6.NS.A.1",
+      "graphResponse": {
+        "data": {
+          "standardsFrameworkItems": [
+            {
+              "identifier": "7453eac8-c6af-5146-a3ad-29f8ab0c9c6b",
+              "statementCode": "6.NS.A.1",
+              "description": "Interpret and compute quotients of fractions, and solve word problems involving division of fractions by fractions, e.g., by using visual fraction models and equations to represent the problem. *For example, create a story context for $(\\frac{2}{3}) \\div (\\frac{3}{4})$ and use a visual fraction model to show the quotient; use the relationship between multiplication and division to explain that $(\\frac{2}{3}) \\div (\\frac{3}{4}) = \\frac{8}{9}$ because $\\frac{3}{4}$ of $\\frac{8}{9}$ is $\\frac{2}{3}$. (In general, $(\\frac{a}{b}) \\div (\\frac{c}{d}) = \\frac{ad}{bc}$.) How much chocolate will each person get if 3 people share $\\frac{1}{2}$ lb of chocolate equally? How many $\\frac{3}{4}$-cup servings are in $\\frac{2}{3}$ of a cup of yogurt? How wide is a rectangular strip of land with length $\\frac{3}{4}$ mi and area $\\frac{1}{2}$ square mi?*",
+              "standardsFrameworkItemsbuildsTowards": [
+                {
+                  "identifier": "500edab4-e918-5517-a755-0d9f6b57650c",
+                  "statementCode": "3.OA.B.6",
+                  "description": "Understand division as an unknown-factor problem. *For example, find $32 \\div 8$ by finding the number that makes 32 when multiplied by 8.*"
+                },
+                {
+                  "identifier": "fca94116-321f-599b-8b92-1cdef8844d4d",
+                  "statementCode": "5.NF.B.7",
+                  "description": "Apply and extend previous understandings of division to divide unit fractions by whole numbers and whole numbers by unit fractions."
+                }
+              ],
+              "buildsTowardsStandardsFrameworkItems": [
+                {
+                  "identifier": "9dfa87d0-f5fb-5433-9a24-08f90e88d139",
+                  "statementCode": "6.EE.B.7",
+                  "description": "Solve real-world and mathematical problems by writing and solving equations of the form $x + p = q$ and $px = q$ for cases in which $p$, $q$ and $x$ are all nonnegative rational numbers."
+                },
+                {
+                  "identifier": "56bdbf75-4d72-5b24-bc08-9434a6bec004",
+                  "statementCode": "7.NS.A.2.c",
+                  "description": "Apply properties of operations as strategies to multiply and divide rational numbers."
+                },
+                {
+                  "identifier": "9f4f2288-f6cb-5708-a703-fd4aec422541",
+                  "statementCode": "7.SP.B.3",
+                  "description": "Informally assess the degree of visual overlap of two numerical data distributions with similar variabilities, measuring the difference between the centers by expressing it as a multiple of a measure of variability. *For example, the mean height of players on the basketball team is 10 cm greater than the mean height of players on the soccer team, about twice the variability (mean absolute deviation) on either team; on a dot plot, the separation between the two distributions of heights is noticeable.*"
+                }
+              ],
+              "standardsFrameworkItemshasChild": [
+                {
+                  "identifier": "2fe09087-e235-56f3-985f-bb1f83845d2a",
+                  "statementCode": "6.NS.A",
+                  "description": "Apply and extend previous understandings of multiplication and division to divide fractions by fractions."
+                }
+              ],
+              "standardsFrameworkItemsrelatesTo": [],
+              "learningComponentssupports": [
+                {
+                  "identifier": "5f4d46ea-edac-5b5f-8fdc-958f76e8f4cd",
+                  "description": "Solve word problems involving the division of fractions by fractions by using visual fraction models to represent the problem"
+                },
+                {
+                  "identifier": "63c4ca02-f441-59d8-af9b-681477d17f16",
+                  "description": "Interpret quotients of fractions"
+                },
+                {
+                  "identifier": "b15981ec-6234-523c-999c-93ce61149102",
+                  "description": "Solve word problems involving the division of fractions by fractions by using equations to represent the problem"
+                },
+                {
+                  "identifier": "bc5dfb39-c4f5-5c20-acd5-13e303f5bace",
+                  "description": "Compute quotients of fractions"
+                },
+                {
+                  "identifier": "133abb93-2720-50fc-a417-2fb6d67d32c5",
+                  "description": "Solve word problems involving the division of fractions by fractions"
+                }
+              ],
+              "factorsrelevantToStandard": [
+                {
+                  "identifier": "dead609d-2f60-5c92-aaba-d3a30d97b976",
+                  "name": "Math Communication",
+                  "description": "Language and literacy skills support many aspects of math problem solving.",
+                  "category": "Mathematics",
+                  "gradeLevel": [
+                    "3",
+                    "4",
+                    "5",
+                    "6"
+                  ],
+                  "academicSubject": "Mathematics",
+                  "strategiestargetsFactor": [
+                    {
+                      "identifier": "fe413171-e6d2-53e4-8db4-a8655ae58a67",
+                      "name": "Building Empathy",
+                      "description": "Developing empathy in educators and in learners is an iterative process that requires taking the time to understand and honor others' perspectives.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "3827f697-8382-516b-9561-151b2ec8d495",
+                      "name": "Communication Boards",
+                      "description": "Communication boards are displays of graphics (e.g., pictures, symbols, illustrations) and/or words where learners can gesture or point to the displays to extend their expressive language potential.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "4b2c9503-131a-5c53-9737-e2d9cb678017",
+                      "name": "Creating Inclusive Classrooms",
+                      "description": "When classrooms are intentionally designed to promote inclusion, belonging, and accessibility, they positively influence key learner factors, including Attention, Self-Regulation, Learner Mindset, and Sense of Belonging.",
+                      "category": "Physical Space",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "76fa6680-cdca-57b5-8b29-574113578b26",
+                      "name": "Creating Visual Representations",
+                      "description": "Students activate more cognitive processes by exploring and representing their understandings in visual form.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "abe904aa-5564-5c89-b5f7-f93ebb3594a2",
+                      "name": "Error Analysis",
+                      "description": "Analyzing incorrect worked examples is especially beneficial for helping students develop a conceptual understanding of mathematical processes.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "e7740390-aaee-5e36-abf9-4c60f418434d",
+                      "name": "Gallery Walk",
+                      "description": "As students walk through stations working in small groups, the social and physical nature of the learning supports deeper understanding.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "37539c41-a3ec-54cd-adbf-a2454c6644c4",
+                      "name": "Math Centers",
+                      "description": "Math centers support learner interests and promote the development of more complex math skills and social interactions.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "7d9a2a45-f6e7-5afc-ae37-6ce562c8966b",
+                      "name": "Model Assignment or Skill",
+                      "description": "By talking through their thinking at each step of a process, teachers can model what learning looks like.",
+                      "category": "Teacher Modeling & Support",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "eefd920b-0c65-579e-ab4e-4efa81c0c0c8",
+                      "name": "Multiple Representations: Visual Representations",
+                      "description": "Visual representations help students understand what a number represents as well as recognize relationships between numbers.",
+                      "category": "Visual Learning Tools",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "5d81d7a4-9131-58c0-ba9e-c94c154d25a3",
+                      "name": "Project-based Learning",
+                      "description": "Project-based learning (PBL) actively engages learners in authentic tasks designed to create products that answer a given question or solve a problem.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "cc5bf617-47fc-5076-b498-8c6608200333",
+                      "name": "Real-world Math",
+                      "description": "When teachers connect math to the students' world, students see how math is relevant and applicable to their daily lives.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "4638222f-5e56-585f-afe4-1badcfc652d9",
+                      "name": "Reflect on Learning",
+                      "description": "Providing space and time for students to reflect is critical for moving what they have learned into Long-term Memory.",
+                      "category": "Metacognitive Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "ff1dd900-8c8c-57d0-84eb-050bb9224dac",
+                      "name": "Rich Resources: Audio & Braille",
+                      "description": "Math games and manipulatives for vision differences support math development for learners with visual needs.",
+                      "category": "Physical Space",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c48f0c44-ea4d-5145-9ff8-5d577ed72c0f",
+                      "name": "Self-monitoring",
+                      "description": "When students monitor their comprehension, behavior, or use of strategies, they build their Metacognition.",
+                      "category": "Metacognitive Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "904f98ae-bd60-5a0f-9a60-56ef560bd5c0",
+                      "name": "Think-Pair-Share",
+                      "description": "Students deepen their math understanding as they use and hear others use specific math language in informal ways.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "528d1c1b-373f-582b-ad30-6a272bb41167",
+                      "name": "Accessible Vocabulary & Syntax",
+                      "description": "Teachers support language development by using and providing vocabulary and syntax that is appropriately leveled (e.g., using simple sentences when introducing complex concepts).",
+                      "category": "Teacher Modeling & Support",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "82f9d977-ce8c-547b-b30d-44a1e8d6d4ea",
+                      "name": "Check-ins",
+                      "description": "Checking in with learners, or taking the time to talk with individual learners about their experiences or goals, is important for fostering a positive classroom environment.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "bf620132-a9aa-56dc-ae10-01438076c35f",
+                      "name": "Cognitively Demanding Tasks",
+                      "description": "Providing math tasks with high cognitive demand conveys high expectations for all students by challenging them to engage in higher-order thinking.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "0de41380-ed04-5714-b9cf-e9668ddff3ca",
+                      "name": "Collaborative Problem Solving",
+                      "description": "As students solve problems in a group, they learn new strategies and practice communicating their mathematical thinking.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "675717c5-f216-5b3b-9bd7-2268be757ce2",
+                      "name": "Empathy Interviews",
+                      "description": "A first step to supporting learners is truly understanding who they are.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "b1e13b41-f1cf-5555-8dd1-2d845f75997f",
+                      "name": "Explaining Their Thinking",
+                      "description": "When students explain their thinking process aloud with guidance in response to questions or prompts, they recognize the strategies they use and solidify their understanding.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "99e76371-5007-53d0-8806-e4f4f9ae9a28",
+                      "name": "Gestures",
+                      "description": "Adding motions to complement learning activates more cognitive processes for recall and understanding.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "cd79f795-e635-5d9e-b8d9-bd9169446be0",
+                      "name": "Guided Inquiry",
+                      "description": "In guided inquiry, teachers help students use their own language for constructing knowledge by active listening and questioning.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "24030898-373b-5563-921a-1f95cdf3f583",
+                      "name": "Guided Practice",
+                      "description": "Spending time with new content helps move concepts and ideas into Long-term Memory.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "e85c2fc7-24cd-568f-b6f9-1024d20c0a4c",
+                      "name": "Incorporate Students' Cultural Practices",
+                      "description": "Learning about students' cultures and connecting them to instructional practices helps foster a sense of belonging and mitigate Stereotype Threat.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "65cfb6b3-2d04-5d50-906d-03d58900d4b4",
+                      "name": "Jigsaw",
+                      "description": "As students work with and process information by discussing, organizing, and sharing it together, they deepen their understanding.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "299a5801-15b9-5a70-98c9-95313bd77a6c",
+                      "name": "Math Songs",
+                      "description": "Rhyming, alliteration, and other sound devices reinforce math skills development by activating the mental processes that promote memory.",
+                      "category": "External Memory Aids",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "0b79ea02-8995-51ea-9a27-d9b7a6593583",
+                      "name": "Math Talks",
+                      "description": "When students have meaningful conversations about math and use math vocabulary, they develop the thinking, questioning, and explanation skills needed to master mathematical concepts.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "6e1ad7b6-6e36-5701-9d4f-c19944d629f9",
+                      "name": "Model Positive Connections to Math",
+                      "description": "Teachers sharing math-to-self, math-to-math, and math-to-world connections models this schema building.",
+                      "category": "Teacher Modeling & Support",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "95763327-7567-58be-a232-7433feacb941",
+                      "name": "Multimodal Instruction",
+                      "description": "Instruction in multiple formats allows students to activate different cognitive skills to understand and remember the steps they are to take in their math work.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "db62831f-91eb-5d02-822c-5843649ffb22",
+                      "name": "Peer Teaching",
+                      "description": "Having students teach their knowledge, skills, and understanding to their classmates strengthens learning.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c52d07ac-56c9-567f-805c-c8776b8727a1",
+                      "name": "Pre-Assessment",
+                      "description": "Pre-assessments are tools or activities used before instruction begins to help educators understand what students already know, understand, or can do—and where they may need support.",
+                      "category": "Metacognitive Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "778f7461-2f4c-5283-a07d-01bb802e73a9",
+                      "name": "Rich Resources: Children's Literature",
+                      "description": "Children's literature can be a welcoming way to help students learn math vocabulary and concepts.",
+                      "category": "Physical Space",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "7ab0cf4b-19d7-5dda-b2df-67a611958cf4",
+                      "name": "Sentence Frames",
+                      "description": "Sentence frames or stems can serve as language support to enrich students' participation in academic discussions.",
+                      "category": "Visual Learning Tools",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "e8fe87d6-36f1-5b76-9636-3919c80d6ea0",
+                      "name": "Strengths-based Approach",
+                      "description": "A strengths-based approach is one where educators intentionally identify, communicate, and harness students' assets, across many aspects of the whole child, in order to empower them to flourish.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "6002cbff-9565-500b-8d68-8d9af356a32b",
+                      "name": "Text-to-speech Software",
+                      "description": "Transforming written text into audio activates different parts of the brain to support learning.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "a8b6e978-7fc1-51e7-b199-419df237f73c",
+                      "name": "Translanguaging",
+                      "description": "Translanguaging is a flexible classroom practice enabling students to listen, speak, read, and write across their multiple languages or dialects, even if the teacher does not have formal knowledge of these additional languages.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "d5faab43-0806-5739-8101-e0b14ce6587a",
+                      "name": "Visual Reading Aids",
+                      "description": "Visual supports, like text magnification, colored overlays, and guided reading strip, help students focus and properly track as they read.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "5f76c876-77f1-5dd4-987b-02735352b259",
+                      "name": "Wait Time",
+                      "description": "Wait time, or think time, of three or more seconds after posing a question increases how many students volunteer and the length and accuracy of their responses.",
+                      "category": "Teacher Modeling & Support",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "d896c4cc-ce4f-5fea-a15d-f050bfe471c5",
+                      "name": "Writing to Learn Math",
+                      "description": "Writing that encourages students to articulate their understanding of math concepts or explain math ideas helps deepen students' mathematical understanding.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "ec186033-a7ed-5479-8c08-56696b1cab28",
+                      "name": "Concrete-Representational-Abstract (CRA)",
+                      "description": "CRA is a sequential instructional approach during which students move from working with concrete materials to creating representational drawings to using abstract symbols.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "1f8cbcb4-ed83-5813-9793-25e785037ef0",
+                      "name": "Direct Instruction: Math Vocabulary",
+                      "description": "Knowing the language of math is critical because students must use this language to understand math concepts and determine calculations needed.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c47e0683-ccf3-50b1-8aa3-db45a6227a61",
+                      "name": "Flexible Grouping",
+                      "description": "Flexible grouping is a classroom practice that temporarily places students together in given groups to work together, with the purpose of achieving a given learning goal or activity.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "581e50bb-03ad-50d1-90dd-7779b4b2dd6c",
+                      "name": "Multiple Methods of Assessment",
+                      "description": "Using multiple methods of assessment can help educators gain a comprehensive understanding of learner progress across a wide range of skills and content.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "889f5624-e6a5-5379-b525-241a5e715f49",
+                      "name": "Music & Dance",
+                      "description": "Connecting information to music and dance can support Short-term and Long-term Memory by engaging auditory processes, Emotions, and physical activity.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "27da28ae-b541-5ebd-be2a-1325f05467eb",
+                      "name": "Reciprocal Teaching",
+                      "description": "Students deepen their understanding and gain confidence in their learning when they explain to and receive feedback from others.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "7217f0d8-504c-51c7-9220-22a240cc8125",
+                      "name": "Rich Resources: Diversity",
+                      "description": "Selecting culturally responsive materials, including multicultural and diverse resources, is critical for supporting all students.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "1b238926-e798-5db5-b0ad-8b58d9f01793",
+                      "name": "Student-generated Problems",
+                      "description": "When students create their own number and word problems, they connect math concepts to their background knowledge and lived experiences.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c46ff52e-a065-54c0-bee5-ad17304b68b2",
+                      "name": "Videos",
+                      "description": "Providing visuals to introduce, support, or review instruction activates more cognitive processes to support learning.",
+                      "category": "Visual Learning Tools",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "397cf061-d063-5383-907d-8e82e7e847d3",
+                      "name": "Word Walls",
+                      "description": "A word wall helps build the Math Communication and vocabulary skills that are necessary for problem solving.",
+                      "category": "External Memory Aids",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "8996193a-28d1-5b2c-9c67-3c3211860949",
+                      "name": "Worked Examples",
+                      "description": "Analyzing and discussing solved problems helps students develop a deeper understanding of abstract mathematical processes.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    }
+                  ],
+                  "learnerModelshasFactor": [
+                    {
+                      "identifier": "d662cb2a-9e97-5533-9ea0-3ec365e97f2f",
+                      "name": "Building Math 3-6",
+                      "description": "The goals for students’ math skills in Grades 3-6 include thinking mathematically—that is, connecting mathematical concepts to each other and modeling the world with math. Understanding the Learner Factors and strategies that impact math skills and how they connect to each other can help you build tools and lessons that support all learners.",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    }
+                  ],
+                  "interactsWithFactorFactors": [
+                    {
+                      "identifier": "f6f98815-c0fa-504d-a926-c540fed7439f",
+                      "name": "Safety",
+                      "description": "Safety is being and feeling physically and psychologically secure at home, at school, and within our neighborhood and larger community."
+                    },
+                    {
+                      "identifier": "1de4bcf2-4474-5e86-a450-61b98fb580ae",
+                      "name": "Hearing",
+                      "description": "We typically learn to understand many early math concepts through what we hear, but also what we can touch, see, and manipulate."
+                    },
+                    {
+                      "identifier": "f1fd8ad3-977e-56ca-898b-3f0919494d7c",
+                      "name": "Math Learning Environment",
+                      "description": "A student's Math Learning Environment encompasses the opportunities provided by their home, school, and community that contribute to their development of math knowledge and skills."
+                    },
+                    {
+                      "identifier": "17f9781d-ad2c-5623-9a19-cda6c506f8fd",
+                      "name": "Socioeconomic Status",
+                      "description": "Socioeconomic Status (SES) refers to a combination of factors, including a family's education and income compared to other families."
+                    },
+                    {
+                      "identifier": "72d265c7-980e-5689-8a81-d6eee4cfd058",
+                      "name": "Arithmetic Fact Retrieval",
+                      "description": "Arithmetic Fact Retrieval requires efficiently, accurately, and flexibly drawing basic number combinations from Long-term Memory to use in performing more complex calculations."
+                    },
+                    {
+                      "identifier": "4a789cf3-d3e1-5c87-bf8b-2c494faf0df4",
+                      "name": "Geometric Reasoning",
+                      "description": "Geometric Reasoning involves using abstract thinking to define, analyze, and make arguments about shapes and spatial relationships."
+                    },
+                    {
+                      "identifier": "3953e7ff-13be-5a88-bd66-e011efa546a5",
+                      "name": "Algebraic Thinking",
+                      "description": "Algebraic Thinking is the ability to generalize, represent, justify, and reason with abstract mathematical structures and relationships."
+                    },
+                    {
+                      "identifier": "2ab3934d-8498-5437-8c7e-34777b3054b0",
+                      "name": "Mathematical Flexibility",
+                      "description": "Mathematical Flexibility is the ability to maintain and shift among multiple representations of numbers and between problem-solving strategies in an adaptive manner."
+                    },
+                    {
+                      "identifier": "17ea3bd9-e4de-5830-ae3d-58de0ecc7b47",
+                      "name": "Proportional Reasoning",
+                      "description": "Proportional Reasoning involves an understanding of ratio and the relationships between ratios."
+                    },
+                    {
+                      "identifier": "d4e3a57a-0ac1-5ce8-88c0-6e80f4343863",
+                      "name": "Number Sense",
+                      "description": "Number Sense includes both the conceptual understanding of whole and rational numbers and their magnitude, and the ability to represent and operate with these numbers."
+                    },
+                    {
+                      "identifier": "d08139e4-f88c-51e2-aafc-ce96200cde11",
+                      "name": "Operations",
+                      "description": "Students typically begin by thinking about Operations as telling them which procedural calculations, or computations, to do (such as finding the sum or difference of two numbers)."
+                    },
+                    {
+                      "identifier": "d3bb756e-abfc-57f8-b604-2e06b210f783",
+                      "name": "Statistical Reasoning",
+                      "description": "Statistical Reasoning involves thinking about and understanding uncertainty and building mental models to capture key aspects of real world phenomena."
+                    },
+                    {
+                      "identifier": "acab0f2e-ea6b-5b8b-b759-71856f1a3a1b",
+                      "name": "Emotion",
+                      "description": "Emotions are complex psychological states stemming from our positive and negative experiences."
+                    },
+                    {
+                      "identifier": "db72ba74-cc65-59aa-8c46-59c74f74c32a",
+                      "name": "Social Awareness & Relationship Skills",
+                      "description": "Learning is powerful when it is social––when we learn with and from each other."
+                    },
+                    {
+                      "identifier": "00e66ca0-0f3a-5993-b399-f5d3859e3d7d",
+                      "name": "Motivation",
+                      "description": "Motivation is the desire and energy that guides behavior."
+                    },
+                    {
+                      "identifier": "9501e48b-c985-501f-84ad-98c3f271e322",
+                      "name": "Working Memory",
+                      "description": "."
+                    },
+                    {
+                      "identifier": "7cc87a78-9a56-51e0-8cdc-2a7687b70dcc",
+                      "name": "Long-term Memory",
+                      "description": "Long-term Memory can store information indefinitely."
+                    },
+                    {
+                      "identifier": "e9898b4b-2f03-5de4-9d05-d54885ec5235",
+                      "name": "Metacognition",
+                      "description": "Metacognition refers to the ability to think about our own thinking and to pay attention to and control our cognitive processes."
+                    },
+                    {
+                      "identifier": "711561e2-e27b-5c75-832a-929d9dd58c6a",
+                      "name": "Short-term Memory",
+                      "description": "."
+                    }
+                  ]
+                },
+                {
+                  "identifier": "d4e3a57a-0ac1-5ce8-88c0-6e80f4343863",
+                  "name": "Number Sense",
+                  "description": "Number Sense includes both the conceptual understanding of whole and rational numbers and their magnitude, and the ability to represent and operate with these numbers.",
+                  "category": "Mathematics",
+                  "gradeLevel": [
+                    "3",
+                    "4",
+                    "5",
+                    "6"
+                  ],
+                  "academicSubject": "Mathematics",
+                  "strategiestargetsFactor": [
+                    {
+                      "identifier": "76fa6680-cdca-57b5-8b29-574113578b26",
+                      "name": "Creating Visual Representations",
+                      "description": "Students activate more cognitive processes by exploring and representing their understandings in visual form.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "abe904aa-5564-5c89-b5f7-f93ebb3594a2",
+                      "name": "Error Analysis",
+                      "description": "Analyzing incorrect worked examples is especially beneficial for helping students develop a conceptual understanding of mathematical processes.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "407a8d5b-04e4-5900-b56a-8d7beb537dfa",
+                      "name": "Individual Deliberate Practice",
+                      "description": "Practicing until achieving several error-free attempts is critical for retention.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "37539c41-a3ec-54cd-adbf-a2454c6644c4",
+                      "name": "Math Centers",
+                      "description": "Math centers support learner interests and promote the development of more complex math skills and social interactions.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "7d9a2a45-f6e7-5afc-ae37-6ce562c8966b",
+                      "name": "Model Assignment or Skill",
+                      "description": "By talking through their thinking at each step of a process, teachers can model what learning looks like.",
+                      "category": "Teacher Modeling & Support",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "6bacbea1-8bb2-5b3b-9b84-c13ff790bcff",
+                      "name": "Multiple Representations: Manipulatives",
+                      "description": "Providing physical and virtual representations of numbers and math concepts helps activate mental processes.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "eefd920b-0c65-579e-ab4e-4efa81c0c0c8",
+                      "name": "Multiple Representations: Visual Representations",
+                      "description": "Visual representations help students understand what a number represents as well as recognize relationships between numbers.",
+                      "category": "Visual Learning Tools",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "5d81d7a4-9131-58c0-ba9e-c94c154d25a3",
+                      "name": "Project-based Learning",
+                      "description": "Project-based learning (PBL) actively engages learners in authentic tasks designed to create products that answer a given question or solve a problem.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "cc5bf617-47fc-5076-b498-8c6608200333",
+                      "name": "Real-world Math",
+                      "description": "When teachers connect math to the students' world, students see how math is relevant and applicable to their daily lives.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "ff1dd900-8c8c-57d0-84eb-050bb9224dac",
+                      "name": "Rich Resources: Audio & Braille",
+                      "description": "Math games and manipulatives for vision differences support math development for learners with visual needs.",
+                      "category": "Physical Space",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "157d81c0-2f46-5c9c-9738-96a64ceb005a",
+                      "name": "Untimed Tests",
+                      "description": "Untimed tests provide students the opportunity to flexibly and productively work with numbers, further developing their problem-solving abilities.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "bf620132-a9aa-56dc-ae10-01438076c35f",
+                      "name": "Cognitively Demanding Tasks",
+                      "description": "Providing math tasks with high cognitive demand conveys high expectations for all students by challenging them to engage in higher-order thinking.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "8c0ab3eb-4ca6-50f9-aaa8-9507f854a78d",
+                      "name": "Cumulative Review",
+                      "description": "Continual use of foundational skills with different problems reinforces a conceptual understanding of math skills.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "5cbef51b-b971-559d-8681-a5b9afa31505",
+                      "name": "Daily Review",
+                      "description": "Daily review strengthens previous learning and can lead to fluent recall.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "4317f45c-3dbe-53ce-9354-46eeffbafafd",
+                      "name": "Direct Instruction: Problem Structures",
+                      "description": "Teaching students to recognize common problem structures helps them transfer solution methods from familiar to unfamiliar problems.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "1c5176d4-ea43-5c25-94bf-d9b7d99a08ee",
+                      "name": "Direct Instruction: Problem-solving Strategies",
+                      "description": "Discussing strategies for solving mathematics problems after initially letting students attempt to problem solve on their own helps them understand how to organize their mathematical thinking and intentionally tackle problems.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "cd79f795-e635-5d9e-b8d9-bd9169446be0",
+                      "name": "Guided Inquiry",
+                      "description": "In guided inquiry, teachers help students use their own language for constructing knowledge by active listening and questioning.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "24030898-373b-5563-921a-1f95cdf3f583",
+                      "name": "Guided Practice",
+                      "description": "Spending time with new content helps move concepts and ideas into Long-term Memory.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "e85c2fc7-24cd-568f-b6f9-1024d20c0a4c",
+                      "name": "Incorporate Students' Cultural Practices",
+                      "description": "Learning about students' cultures and connecting them to instructional practices helps foster a sense of belonging and mitigate Stereotype Threat.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "299a5801-15b9-5a70-98c9-95313bd77a6c",
+                      "name": "Math Songs",
+                      "description": "Rhyming, alliteration, and other sound devices reinforce math skills development by activating the mental processes that promote memory.",
+                      "category": "External Memory Aids",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "0b79ea02-8995-51ea-9a27-d9b7a6593583",
+                      "name": "Math Talks",
+                      "description": "When students have meaningful conversations about math and use math vocabulary, they develop the thinking, questioning, and explanation skills needed to master mathematical concepts.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "db62831f-91eb-5d02-822c-5843649ffb22",
+                      "name": "Peer Teaching",
+                      "description": "Having students teach their knowledge, skills, and understanding to their classmates strengthens learning.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c52d07ac-56c9-567f-805c-c8776b8727a1",
+                      "name": "Pre-Assessment",
+                      "description": "Pre-assessments are tools or activities used before instruction begins to help educators understand what students already know, understand, or can do—and where they may need support.",
+                      "category": "Metacognitive Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "778f7461-2f4c-5283-a07d-01bb802e73a9",
+                      "name": "Rich Resources: Children's Literature",
+                      "description": "Children's literature can be a welcoming way to help students learn math vocabulary and concepts.",
+                      "category": "Physical Space",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "e8fe87d6-36f1-5b76-9636-3919c80d6ea0",
+                      "name": "Strengths-based Approach",
+                      "description": "A strengths-based approach is one where educators intentionally identify, communicate, and harness students' assets, across many aspects of the whole child, in order to empower them to flourish.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "a8b6e978-7fc1-51e7-b199-419df237f73c",
+                      "name": "Translanguaging",
+                      "description": "Translanguaging is a flexible classroom practice enabling students to listen, speak, read, and write across their multiple languages or dialects, even if the teacher does not have formal knowledge of these additional languages.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "d896c4cc-ce4f-5fea-a15d-f050bfe471c5",
+                      "name": "Writing to Learn Math",
+                      "description": "Writing that encourages students to articulate their understanding of math concepts or explain math ideas helps deepen students' mathematical understanding.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "ec186033-a7ed-5479-8c08-56696b1cab28",
+                      "name": "Concrete-Representational-Abstract (CRA)",
+                      "description": "CRA is a sequential instructional approach during which students move from working with concrete materials to creating representational drawings to using abstract symbols.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "1f8cbcb4-ed83-5813-9793-25e785037ef0",
+                      "name": "Direct Instruction: Math Vocabulary",
+                      "description": "Knowing the language of math is critical because students must use this language to understand math concepts and determine calculations needed.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c30f53f2-1bf4-5ce1-b6f7-e3bc3a45797f",
+                      "name": "Direct Instruction: Patterning",
+                      "description": "Thinking of and about patterns encourages learners to look for and understand the rules and relationships that are critical components of mathematical reasoning.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c47e0683-ccf3-50b1-8aa3-db45a6227a61",
+                      "name": "Flexible Grouping",
+                      "description": "Flexible grouping is a classroom practice that temporarily places students together in given groups to work together, with the purpose of achieving a given learning goal or activity.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "4ed0f3f2-d03c-5f92-aa81-a3da1bd70ff9",
+                      "name": "Math Games",
+                      "description": "Math games allow students to practice many math skills in a fun, applied context.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "4fe761cb-65f1-52fd-95ea-a0df98349233",
+                      "name": "Multiple Representations: Number Line",
+                      "description": "Easy access to seeing the relationships between numbers promotes Number Sense as students see these connections repeatedly.",
+                      "category": "External Memory Aids",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "1b238926-e798-5db5-b0ad-8b58d9f01793",
+                      "name": "Student-generated Problems",
+                      "description": "When students create their own number and word problems, they connect math concepts to their background knowledge and lived experiences.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "8996193a-28d1-5b2c-9c67-3c3211860949",
+                      "name": "Worked Examples",
+                      "description": "Analyzing and discussing solved problems helps students develop a deeper understanding of abstract mathematical processes.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    }
+                  ],
+                  "learnerModelshasFactor": [
+                    {
+                      "identifier": "d662cb2a-9e97-5533-9ea0-3ec365e97f2f",
+                      "name": "Building Math 3-6",
+                      "description": "The goals for students’ math skills in Grades 3-6 include thinking mathematically—that is, connecting mathematical concepts to each other and modeling the world with math. Understanding the Learner Factors and strategies that impact math skills and how they connect to each other can help you build tools and lessons that support all learners.",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    }
+                  ],
+                  "interactsWithFactorFactors": [
+                    {
+                      "identifier": "1de4bcf2-4474-5e86-a450-61b98fb580ae",
+                      "name": "Hearing",
+                      "description": "We typically learn to understand many early math concepts through what we hear, but also what we can touch, see, and manipulate."
+                    },
+                    {
+                      "identifier": "72d265c7-980e-5689-8a81-d6eee4cfd058",
+                      "name": "Arithmetic Fact Retrieval",
+                      "description": "Arithmetic Fact Retrieval requires efficiently, accurately, and flexibly drawing basic number combinations from Long-term Memory to use in performing more complex calculations."
+                    },
+                    {
+                      "identifier": "3953e7ff-13be-5a88-bd66-e011efa546a5",
+                      "name": "Algebraic Thinking",
+                      "description": "Algebraic Thinking is the ability to generalize, represent, justify, and reason with abstract mathematical structures and relationships."
+                    },
+                    {
+                      "identifier": "dead609d-2f60-5c92-aaba-d3a30d97b976",
+                      "name": "Math Communication",
+                      "description": "Language and literacy skills support many aspects of math problem solving."
+                    },
+                    {
+                      "identifier": "17ea3bd9-e4de-5830-ae3d-58de0ecc7b47",
+                      "name": "Proportional Reasoning",
+                      "description": "Proportional Reasoning involves an understanding of ratio and the relationships between ratios."
+                    },
+                    {
+                      "identifier": "d08139e4-f88c-51e2-aafc-ce96200cde11",
+                      "name": "Operations",
+                      "description": "Students typically begin by thinking about Operations as telling them which procedural calculations, or computations, to do (such as finding the sum or difference of two numbers)."
+                    },
+                    {
+                      "identifier": "9501e48b-c985-501f-84ad-98c3f271e322",
+                      "name": "Working Memory",
+                      "description": "."
+                    },
+                    {
+                      "identifier": "97b7c622-1540-58d9-bed2-954ddc5b0eda",
+                      "name": "Attention",
+                      "description": "Attention is the ability to focus on a specific task without being distracted."
+                    },
+                    {
+                      "identifier": "ddff87e7-42c6-5e9b-8533-bdb5017a6f27",
+                      "name": "Cognitive Flexibility",
+                      "description": "Cognitive Flexibility, a component of executive functioning, is the ability to effectively adapt our behavior as we face changing environmental and task demands."
+                    },
+                    {
+                      "identifier": "f026dd91-b5c5-5820-a370-ba6121b002d7",
+                      "name": "Inhibition",
+                      "description": "Inhibition, a component of executive functioning, is the ability to suppress Attention to irrelevant input and to focus on pertinent stimuli or information."
+                    },
+                    {
+                      "identifier": "9c7881af-10ba-5218-a4af-dd712e7fcdb2",
+                      "name": "Spatial Skills",
+                      "description": "We use our Spatial Skills to mentally manipulate objects and numbers."
+                    },
+                    {
+                      "identifier": "042a4260-f3e0-5084-81f1-6d7d58317611",
+                      "name": "Visual Processing",
+                      "description": "Visual Processing is seeing at the cognitive level: taking the input that comes through our Vision and working to understand what we see."
+                    }
+                  ]
+                },
+                {
+                  "identifier": "d08139e4-f88c-51e2-aafc-ce96200cde11",
+                  "name": "Operations",
+                  "description": "Students typically begin by thinking about Operations as telling them which procedural calculations, or computations, to do (such as finding the sum or difference of two numbers).",
+                  "category": "Mathematics",
+                  "gradeLevel": [
+                    "3",
+                    "4",
+                    "5",
+                    "6"
+                  ],
+                  "academicSubject": "Mathematics",
+                  "strategiestargetsFactor": [
+                    {
+                      "identifier": "76fa6680-cdca-57b5-8b29-574113578b26",
+                      "name": "Creating Visual Representations",
+                      "description": "Students activate more cognitive processes by exploring and representing their understandings in visual form.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "abe904aa-5564-5c89-b5f7-f93ebb3594a2",
+                      "name": "Error Analysis",
+                      "description": "Analyzing incorrect worked examples is especially beneficial for helping students develop a conceptual understanding of mathematical processes.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "45aa21d0-17f9-5fbc-a3ed-446406f577f9",
+                      "name": "Growth Mindset Feedback",
+                      "description": "Attributing results to controllable aspects (strategy and effort) fosters students' beliefs in self.",
+                      "category": "Teacher Modeling & Support",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "407a8d5b-04e4-5900-b56a-8d7beb537dfa",
+                      "name": "Individual Deliberate Practice",
+                      "description": "Practicing until achieving several error-free attempts is critical for retention.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "37539c41-a3ec-54cd-adbf-a2454c6644c4",
+                      "name": "Math Centers",
+                      "description": "Math centers support learner interests and promote the development of more complex math skills and social interactions.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "7d9a2a45-f6e7-5afc-ae37-6ce562c8966b",
+                      "name": "Model Assignment or Skill",
+                      "description": "By talking through their thinking at each step of a process, teachers can model what learning looks like.",
+                      "category": "Teacher Modeling & Support",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "6bacbea1-8bb2-5b3b-9b84-c13ff790bcff",
+                      "name": "Multiple Representations: Manipulatives",
+                      "description": "Providing physical and virtual representations of numbers and math concepts helps activate mental processes.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "eefd920b-0c65-579e-ab4e-4efa81c0c0c8",
+                      "name": "Multiple Representations: Visual Representations",
+                      "description": "Visual representations help students understand what a number represents as well as recognize relationships between numbers.",
+                      "category": "Visual Learning Tools",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "5d81d7a4-9131-58c0-ba9e-c94c154d25a3",
+                      "name": "Project-based Learning",
+                      "description": "Project-based learning (PBL) actively engages learners in authentic tasks designed to create products that answer a given question or solve a problem.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "cc5bf617-47fc-5076-b498-8c6608200333",
+                      "name": "Real-world Math",
+                      "description": "When teachers connect math to the students' world, students see how math is relevant and applicable to their daily lives.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "ff1dd900-8c8c-57d0-84eb-050bb9224dac",
+                      "name": "Rich Resources: Audio & Braille",
+                      "description": "Math games and manipulatives for vision differences support math development for learners with visual needs.",
+                      "category": "Physical Space",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c48f0c44-ea4d-5145-9ff8-5d577ed72c0f",
+                      "name": "Self-monitoring",
+                      "description": "When students monitor their comprehension, behavior, or use of strategies, they build their Metacognition.",
+                      "category": "Metacognitive Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "904f98ae-bd60-5a0f-9a60-56ef560bd5c0",
+                      "name": "Think-Pair-Share",
+                      "description": "Students deepen their math understanding as they use and hear others use specific math language in informal ways.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "157d81c0-2f46-5c9c-9738-96a64ceb005a",
+                      "name": "Untimed Tests",
+                      "description": "Untimed tests provide students the opportunity to flexibly and productively work with numbers, further developing their problem-solving abilities.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "bf620132-a9aa-56dc-ae10-01438076c35f",
+                      "name": "Cognitively Demanding Tasks",
+                      "description": "Providing math tasks with high cognitive demand conveys high expectations for all students by challenging them to engage in higher-order thinking.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "0de41380-ed04-5714-b9cf-e9668ddff3ca",
+                      "name": "Collaborative Problem Solving",
+                      "description": "As students solve problems in a group, they learn new strategies and practice communicating their mathematical thinking.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "8c0ab3eb-4ca6-50f9-aaa8-9507f854a78d",
+                      "name": "Cumulative Review",
+                      "description": "Continual use of foundational skills with different problems reinforces a conceptual understanding of math skills.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "5af4c113-b519-54b1-a59a-9501b168735e",
+                      "name": "Daily Math Facts Practice",
+                      "description": "10 minutes in each math session devoted to building fluent retrieval of basic math facts sets the foundation for learning new concepts.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "5cbef51b-b971-559d-8681-a5b9afa31505",
+                      "name": "Daily Review",
+                      "description": "Daily review strengthens previous learning and can lead to fluent recall.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "4317f45c-3dbe-53ce-9354-46eeffbafafd",
+                      "name": "Direct Instruction: Problem Structures",
+                      "description": "Teaching students to recognize common problem structures helps them transfer solution methods from familiar to unfamiliar problems.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "1c5176d4-ea43-5c25-94bf-d9b7d99a08ee",
+                      "name": "Direct Instruction: Problem-solving Strategies",
+                      "description": "Discussing strategies for solving mathematics problems after initially letting students attempt to problem solve on their own helps them understand how to organize their mathematical thinking and intentionally tackle problems.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "b1e13b41-f1cf-5555-8dd1-2d845f75997f",
+                      "name": "Explaining Their Thinking",
+                      "description": "When students explain their thinking process aloud with guidance in response to questions or prompts, they recognize the strategies they use and solidify their understanding.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "99e76371-5007-53d0-8806-e4f4f9ae9a28",
+                      "name": "Gestures",
+                      "description": "Adding motions to complement learning activates more cognitive processes for recall and understanding.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "cd79f795-e635-5d9e-b8d9-bd9169446be0",
+                      "name": "Guided Inquiry",
+                      "description": "In guided inquiry, teachers help students use their own language for constructing knowledge by active listening and questioning.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "24030898-373b-5563-921a-1f95cdf3f583",
+                      "name": "Guided Practice",
+                      "description": "Spending time with new content helps move concepts and ideas into Long-term Memory.",
+                      "category": "Repetition",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "65cfb6b3-2d04-5d50-906d-03d58900d4b4",
+                      "name": "Jigsaw",
+                      "description": "As students work with and process information by discussing, organizing, and sharing it together, they deepen their understanding.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "299a5801-15b9-5a70-98c9-95313bd77a6c",
+                      "name": "Math Songs",
+                      "description": "Rhyming, alliteration, and other sound devices reinforce math skills development by activating the mental processes that promote memory.",
+                      "category": "External Memory Aids",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "0b79ea02-8995-51ea-9a27-d9b7a6593583",
+                      "name": "Math Talks",
+                      "description": "When students have meaningful conversations about math and use math vocabulary, they develop the thinking, questioning, and explanation skills needed to master mathematical concepts.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "322b517b-2861-59b5-bed3-d546be48a3e1",
+                      "name": "Mnemonic Device",
+                      "description": "A mnemonic device is a creative way to support memory for new information using connections to current knowledge, for example by creating visuals, acronyms, or rhymes.",
+                      "category": "External Memory Aids",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "95763327-7567-58be-a232-7433feacb941",
+                      "name": "Multimodal Instruction",
+                      "description": "Instruction in multiple formats allows students to activate different cognitive skills to understand and remember the steps they are to take in their math work.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "db62831f-91eb-5d02-822c-5843649ffb22",
+                      "name": "Peer Teaching",
+                      "description": "Having students teach their knowledge, skills, and understanding to their classmates strengthens learning.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c52d07ac-56c9-567f-805c-c8776b8727a1",
+                      "name": "Pre-Assessment",
+                      "description": "Pre-assessments are tools or activities used before instruction begins to help educators understand what students already know, understand, or can do—and where they may need support.",
+                      "category": "Metacognitive Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "778f7461-2f4c-5283-a07d-01bb802e73a9",
+                      "name": "Rich Resources: Children's Literature",
+                      "description": "Children's literature can be a welcoming way to help students learn math vocabulary and concepts.",
+                      "category": "Physical Space",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "e9018002-6e46-532b-8ea2-092f2ee60d91",
+                      "name": "Self-instructions",
+                      "description": "When students engage in a dialogue with themselves, they are able to orient, organize, and focus their thinking.",
+                      "category": "Metacognitive Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "e8fe87d6-36f1-5b76-9636-3919c80d6ea0",
+                      "name": "Strengths-based Approach",
+                      "description": "A strengths-based approach is one where educators intentionally identify, communicate, and harness students' assets, across many aspects of the whole child, in order to empower them to flourish.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "a8b6e978-7fc1-51e7-b199-419df237f73c",
+                      "name": "Translanguaging",
+                      "description": "Translanguaging is a flexible classroom practice enabling students to listen, speak, read, and write across their multiple languages or dialects, even if the teacher does not have formal knowledge of these additional languages.",
+                      "category": "Culturally Responsive",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "d896c4cc-ce4f-5fea-a15d-f050bfe471c5",
+                      "name": "Writing to Learn Math",
+                      "description": "Writing that encourages students to articulate their understanding of math concepts or explain math ideas helps deepen students' mathematical understanding.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "ec186033-a7ed-5479-8c08-56696b1cab28",
+                      "name": "Concrete-Representational-Abstract (CRA)",
+                      "description": "CRA is a sequential instructional approach during which students move from working with concrete materials to creating representational drawings to using abstract symbols.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "1f8cbcb4-ed83-5813-9793-25e785037ef0",
+                      "name": "Direct Instruction: Math Vocabulary",
+                      "description": "Knowing the language of math is critical because students must use this language to understand math concepts and determine calculations needed.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c30f53f2-1bf4-5ce1-b6f7-e3bc3a45797f",
+                      "name": "Direct Instruction: Patterning",
+                      "description": "Thinking of and about patterns encourages learners to look for and understand the rules and relationships that are critical components of mathematical reasoning.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c47e0683-ccf3-50b1-8aa3-db45a6227a61",
+                      "name": "Flexible Grouping",
+                      "description": "Flexible grouping is a classroom practice that temporarily places students together in given groups to work together, with the purpose of achieving a given learning goal or activity.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "aa3b2699-6439-5e3b-b8da-e622b870ff2d",
+                      "name": "Foster Growth Mindset",
+                      "description": "Teachers can help students understand that learning involves effort, mistakes, and reflection by teaching them about their malleable brain and modeling their own learning process.",
+                      "category": "Teacher Modeling & Support",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "4ed0f3f2-d03c-5f92-aa81-a3da1bd70ff9",
+                      "name": "Math Games",
+                      "description": "Math games allow students to practice many math skills in a fun, applied context.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "581e50bb-03ad-50d1-90dd-7779b4b2dd6c",
+                      "name": "Multiple Methods of Assessment",
+                      "description": "Using multiple methods of assessment can help educators gain a comprehensive understanding of learner progress across a wide range of skills and content.",
+                      "category": "Instructional Approaches",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "4fe761cb-65f1-52fd-95ea-a0df98349233",
+                      "name": "Multiple Representations: Number Line",
+                      "description": "Easy access to seeing the relationships between numbers promotes Number Sense as students see these connections repeatedly.",
+                      "category": "External Memory Aids",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "889f5624-e6a5-5379-b525-241a5e715f49",
+                      "name": "Music & Dance",
+                      "description": "Connecting information to music and dance can support Short-term and Long-term Memory by engaging auditory processes, Emotions, and physical activity.",
+                      "category": "Multisensory Supports",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "27da28ae-b541-5ebd-be2a-1325f05467eb",
+                      "name": "Reciprocal Teaching",
+                      "description": "Students deepen their understanding and gain confidence in their learning when they explain to and receive feedback from others.",
+                      "category": "Cooperative Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "1b238926-e798-5db5-b0ad-8b58d9f01793",
+                      "name": "Student-generated Problems",
+                      "description": "When students create their own number and word problems, they connect math concepts to their background knowledge and lived experiences.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "c46ff52e-a065-54c0-bee5-ad17304b68b2",
+                      "name": "Videos",
+                      "description": "Providing visuals to introduce, support, or review instruction activates more cognitive processes to support learning.",
+                      "category": "Visual Learning Tools",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    },
+                    {
+                      "identifier": "8996193a-28d1-5b2c-9c67-3c3211860949",
+                      "name": "Worked Examples",
+                      "description": "Analyzing and discussing solved problems helps students develop a deeper understanding of abstract mathematical processes.",
+                      "category": "Active Learning",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    }
+                  ],
+                  "learnerModelshasFactor": [
+                    {
+                      "identifier": "d662cb2a-9e97-5533-9ea0-3ec365e97f2f",
+                      "name": "Building Math 3-6",
+                      "description": "The goals for students’ math skills in Grades 3-6 include thinking mathematically—that is, connecting mathematical concepts to each other and modeling the world with math. Understanding the Learner Factors and strategies that impact math skills and how they connect to each other can help you build tools and lessons that support all learners.",
+                      "gradeLevel": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ],
+                      "academicSubject": "Mathematics"
+                    }
+                  ],
+                  "interactsWithFactorFactors": [
+                    {
+                      "identifier": "1de4bcf2-4474-5e86-a450-61b98fb580ae",
+                      "name": "Hearing",
+                      "description": "We typically learn to understand many early math concepts through what we hear, but also what we can touch, see, and manipulate."
+                    },
+                    {
+                      "identifier": "4ff2a60d-0942-54de-8880-f6afcfbddea2",
+                      "name": "Physical Well-being",
+                      "description": "The benefits of physical health go beyond our bodies—our cognitive skills also improve with physical fitness."
+                    },
+                    {
+                      "identifier": "72d265c7-980e-5689-8a81-d6eee4cfd058",
+                      "name": "Arithmetic Fact Retrieval",
+                      "description": "Arithmetic Fact Retrieval requires efficiently, accurately, and flexibly drawing basic number combinations from Long-term Memory to use in performing more complex calculations."
+                    },
+                    {
+                      "identifier": "3953e7ff-13be-5a88-bd66-e011efa546a5",
+                      "name": "Algebraic Thinking",
+                      "description": "Algebraic Thinking is the ability to generalize, represent, justify, and reason with abstract mathematical structures and relationships."
+                    },
+                    {
+                      "identifier": "2ab3934d-8498-5437-8c7e-34777b3054b0",
+                      "name": "Mathematical Flexibility",
+                      "description": "Mathematical Flexibility is the ability to maintain and shift among multiple representations of numbers and between problem-solving strategies in an adaptive manner."
+                    },
+                    {
+                      "identifier": "dead609d-2f60-5c92-aaba-d3a30d97b976",
+                      "name": "Math Communication",
+                      "description": "Language and literacy skills support many aspects of math problem solving."
+                    },
+                    {
+                      "identifier": "17ea3bd9-e4de-5830-ae3d-58de0ecc7b47",
+                      "name": "Proportional Reasoning",
+                      "description": "Proportional Reasoning involves an understanding of ratio and the relationships between ratios."
+                    },
+                    {
+                      "identifier": "d4e3a57a-0ac1-5ce8-88c0-6e80f4343863",
+                      "name": "Number Sense",
+                      "description": "Number Sense includes both the conceptual understanding of whole and rational numbers and their magnitude, and the ability to represent and operate with these numbers."
+                    },
+                    {
+                      "identifier": "b5bd70a6-3f4e-5ca0-9f37-d1e9c58a1c92",
+                      "name": "Measurement",
+                      "description": "Measurement involves identifying an abstract spatial or temporal component of an entity (e.g., length) and comparing it to a measure unit that has the same attribute (e.g., an inch, a minute) so that the component can be assigned a numerical value, readily reasoned with, and used in calculation."
+                    },
+                    {
+                      "identifier": "acab0f2e-ea6b-5b8b-b759-71856f1a3a1b",
+                      "name": "Emotion",
+                      "description": "Emotions are complex psychological states stemming from our positive and negative experiences."
+                    },
+                    {
+                      "identifier": "40a70472-3abe-5c0e-92fd-17bf21693b81",
+                      "name": "Math Mindset",
+                      "description": "Math Mindset includes learners' self-concept and self-efficacy beliefs as well as their mindset toward failure, all of which shape their willingness to get involved with mathematics."
+                    },
+                    {
+                      "identifier": "b3e755e8-0db3-5ce0-9fae-78326b686fa4",
+                      "name": "Stereotype Threat",
+                      "description": "In our society, there are many stereotypes that exist about the academic abilities of learners based on characteristics such as their race, gender, disability, and socioeconomic status."
+                    },
+                    {
+                      "identifier": "86e47322-0c1d-56da-b960-b961647cf60c",
+                      "name": "Sensory Integration",
+                      "description": "We are constantly taking in information––particularly sights, smells, and sounds–– and our Sensory Integration skills help us make sense of it all."
+                    },
+                    {
+                      "identifier": "97b7c622-1540-58d9-bed2-954ddc5b0eda",
+                      "name": "Attention",
+                      "description": "Attention is the ability to focus on a specific task without being distracted."
+                    },
+                    {
+                      "identifier": "7cc87a78-9a56-51e0-8cdc-2a7687b70dcc",
+                      "name": "Long-term Memory",
+                      "description": "Long-term Memory can store information indefinitely."
+                    },
+                    {
+                      "identifier": "e9898b4b-2f03-5de4-9d05-d54885ec5235",
+                      "name": "Metacognition",
+                      "description": "Metacognition refers to the ability to think about our own thinking and to pay attention to and control our cognitive processes."
+                    },
+                    {
+                      "identifier": "ddff87e7-42c6-5e9b-8533-bdb5017a6f27",
+                      "name": "Cognitive Flexibility",
+                      "description": "Cognitive Flexibility, a component of executive functioning, is the ability to effectively adapt our behavior as we face changing environmental and task demands."
+                    },
+                    {
+                      "identifier": "ddff87e7-42c6-5e9b-8533-bdb5017a6f27",
+                      "name": "Cognitive Flexibility",
+                      "description": "Cognitive Flexibility, a component of executive functioning, is the ability to effectively adapt our behavior as we face changing environmental and task demands."
+                    },
+                    {
+                      "identifier": "f026dd91-b5c5-5820-a370-ba6121b002d7",
+                      "name": "Inhibition",
+                      "description": "Inhibition, a component of executive functioning, is the ability to suppress Attention to irrelevant input and to focus on pertinent stimuli or information."
+                    },
+                    {
+                      "identifier": "711561e2-e27b-5c75-832a-929d9dd58c6a",
+                      "name": "Short-term Memory",
+                      "description": "."
+                    },
+                    {
+                      "identifier": "42839de0-a0b6-5049-aa73-85a5be07a0e6",
+                      "name": "Reasoning",
+                      "description": "Reasoning is the ability to think abstractly, draw inferences, identify patterns and relationships, and apply logic in order to flexibly solve novel problems."
+                    },
+                    {
+                      "identifier": "9c7881af-10ba-5218-a4af-dd712e7fcdb2",
+                      "name": "Spatial Skills",
+                      "description": "We use our Spatial Skills to mentally manipulate objects and numbers."
+                    },
+                    {
+                      "identifier": "042a4260-f3e0-5084-81f1-6d7d58317611",
+                      "name": "Visual Processing",
+                      "description": "Visual Processing is seeing at the cognitive level: taking the input that comes through our Vision and working to understand what we see."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "normalizedResult": {
+        "standardCount": 1,
+        "standards": [
+          {
+            "code": "6.NS.A.1",
+            "prerequisiteCount": 2,
+            "prerequisiteStandards": [
+              {
+                "code": "3.OA.B.6",
+                "description": "Understand division as an unknown-factor problem. *For example, find $32 \\div 8$ by finding the number that makes 32 when multiplied by 8.*"
+              },
+              {
+                "code": "5.NF.B.7",
+                "description": "Apply and extend previous understandings of division to divide unit fractions by whole numbers and whole numbers by unit fractions."
+              }
+            ],
+            "futureDependentCount": 3,
+            "futureDependentStandards": [
+              {
+                "code": "6.EE.B.7",
+                "description": "Solve real-world and mathematical problems by writing and solving equations of the form $x + p = q$ and $px = q$ for cases in which $p$, $q$ and $x$ are all nonnegative rational numbers."
+              },
+              {
+                "code": "7.NS.A.2.c",
+                "description": "Apply properties of operations as strategies to multiply and divide rational numbers."
+              },
+              {
+                "code": "7.SP.B.3",
+                "description": "Informally assess the degree of visual overlap of two numerical data distributions with similar variabilities, measuring the difference between the centers by expressing it as a multiple of a measure of variability. *For example, the mean height of players on the basketball team is 10 cm greater than the mean height of players on the soccer team, about twice the variability (mean absolute deviation) on either team; on a dot plot, the separation between the two distributions of heights is noticeable.*"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { uploadData, UploadDataWithPathOutput } from 'aws-amplify/storage';
-import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
+import { BaseAPIClient, PublicPrivateType, GradeTarget, FEATURED_GROUP } from "../BaseAPIClient";
 import { GameTemplateType, gameTemplateRuntimeMap, IGameTemplateAPIClient } from "./interfaces/IGameTemplateAPIClient";
+import { publicGameTemplatesByFeatured } from "../../graphql";
 import { IGameTemplate } from "../../Models";
 import { GameTemplateParser } from "../../Parsers/GameTemplateParser";
 import { AWSGameTemplate } from "../../Models";
@@ -129,6 +130,34 @@ export class GameTemplateAPIClient
     return (!isNullOrUndefined(result));
   }
 
+  /**
+   * Curated carousel games, in a single request.
+   *
+   * Deliberately does NOT go through executeQuery: that helper always injects a
+   * `filter` and passes `type` as the partition key. Both are wrong here -- this
+   * index is keyed on featuredGroup, and a filter is what makes AppSync list
+   * queries unreliable (filter is applied AFTER limit, so results can silently
+   * under-return). This is a plain key-condition query over a sparse index, so
+   * it returns exactly the featured rows already ordered by featuredOrder.
+   */
+  async listFeaturedGameTemplates(): Promise<IGameTemplate[]> {
+    try {
+      const result = await this.callGraphQL<any>(
+        publicGameTemplatesByFeatured,
+        { featuredGroup: FEATURED_GROUP, sortDirection: 'ASC' } as unknown as GraphQLOptions
+      ) as { data: any };
+      const items = result?.data?.publicGameTemplatesByFeatured?.items;
+      if (isNullOrUndefined(items))
+        return [];
+      return (items as AWSGameTemplate[])
+        .filter((item) => !isNullOrUndefined(item))
+        .map((item) => GameTemplateParser.gameTemplateFromAWSGameTemplate(item, PublicPrivateType.PUBLIC));
+    } catch (e) {
+      console.error('Failed to load featured game templates', e);
+      return [];
+    }
+  }
+
   async listGameTemplates<T extends PublicPrivateType>(
     type: T,
     limit: number, 
@@ -153,12 +182,13 @@ export class GameTemplateAPIClient
     sortDirection: string | null, 
     filterString: string | null,
     gradeTargets: GradeTarget[],
-    favIds: string[] | null
+    favIds: string[] | null,
+    isExploreGames?: boolean
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}GameTemplate`;
     const queryName = `${type.toLowerCase()}GameTemplatesByDate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets, favIds);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets, favIds, isExploreGames);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 

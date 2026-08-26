@@ -3,5 +3,8 @@
   "workspaces": [
     "api",
     "prototype"
-  ]
+  ],
+  "scripts": {
+    "eval:prompt": "node api/src/eval/print-prompt.mjs"
+  }
 }

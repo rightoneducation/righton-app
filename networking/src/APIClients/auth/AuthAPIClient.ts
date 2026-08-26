@@ -88,7 +88,9 @@ export class AuthAPIClient
     const input = JSON.stringify({user: user, authSession: authSession});
     const variables = { input };
     const client = generateClient({});
-    client.graphql({query: userCleaner, variables, authMode: authMode });
+    // must be awaited: the caller throws immediately after, and a dropped
+    // promise here means the partial account is never cleaned up
+    await client.graphql({query: userCleaner, variables, authMode: authMode });
   }
   
   async updateCognitoUsername(newUsername: string): Promise<void> {
@@ -133,6 +135,18 @@ export class AuthAPIClient
     }
   }
 
+  // Cognito errors arrive either as plain messages or as our own "CODE|message"
+  // format from the pre-signup trigger. Preserve the real text either way, and keep
+  // `name` (e.g. CodeMismatchException) so callers can branch on a code, not prose.
+  private static normalizeAuthError(e: any): Error {
+    const raw = typeof e?.message === 'string' ? e.message : String(e ?? '');
+    const parts = raw.split('|');
+    const text = (parts.length > 1 ? parts.slice(1).join('|') : parts[0]).trim();
+    const err = new Error(text.length > 0 ? text : 'Something went wrong. Please try again.');
+    err.name = typeof e?.name === 'string' && e.name.length > 0 ? e.name : 'Error';
+    return err;
+  }
+
   async awsSignUp(username: string, email: string, password: string) {
     try {
       await signUp({
@@ -145,11 +159,8 @@ export class AuthAPIClient
           },
         }
       });
-    }catch (e: any) {
-      // aws sets some generic error messages, so we add our own code in
-      console.log(e);
-      const [ _, msg ] = e.message.split('|', 2); 
-      throw new Error(`${msg}`);
+    } catch (e: any) {
+      throw AuthAPIClient.normalizeAuthError(e);
     }
   }
 
@@ -158,11 +169,9 @@ export class AuthAPIClient
   async awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput> {
     try {
     const response = await confirmSignUp({username: email, confirmationCode: code});
-    console.log('here');
-    console.log(response);
     return response;
     } catch (e: any) {
-      throw new Error (e);
+      throw AuthAPIClient.normalizeAuthError(e);
     }
   }
 
@@ -171,8 +180,7 @@ export class AuthAPIClient
     try{
       user = await signIn({username: username, password: password}); 
     } catch (e: any) {
-      console.log("E: ", e)
-      throw new Error (e);
+      throw AuthAPIClient.normalizeAuthError(e);
     }
     return user;
   }

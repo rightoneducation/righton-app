@@ -1,29 +1,48 @@
 import { loadSecret } from './util/loadsecrets.mjs';
 import { createAndSignRequest } from './util/request.mjs';
 import { normalizeCCSSCode } from './util/normalizeCCSS.mjs';
+import { normalizeStandard } from './util/normalizeStandard.mjs';
+
+
+function countUnits(standards) {
+  const sum = (fn) => standards.reduce((n, s) => n + fn(s), 0);
+  return {
+    standards: standards.length,
+    prerequisites: sum((s) => s.prerequisiteStandards.length),
+    downstream: sum((s) => s.futureDependentStandards.length),
+    children: sum((s) => s.childStandards.length),
+    related: sum((s) => s.relatedStandards.length),
+    learningComponents: sum((s) => s.learningComponents.length),
+    lvnFactors: sum((s) => s.lvnFactors.length),
+    lvnStrategies: sum((s) => s.lvnFactors.reduce((n, f) => n + f.strategies.length, 0)),
+  };
+}
 
 export const handler = async (event) => {
-    const endpointSecretName = process.env.ENDPOINT_SECRET_NAME;
-    if (!endpointSecretName) throw new Error('SECRET_NAME environment variable is required');
-    const apiSecretName = process.env.API_SECRET_NAME;
-    if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
+  const startedAt = Date.now();
 
-    const ccss = event?.arguments?.input?.ccss ?? event?.input?.ccss ?? '';
-    if (!ccss) throw new Error('ccss is required');
+  const input = event?.arguments?.input ?? event?.input ?? {};
+  const ccss = input.ccss ?? '';
+  // Added so graph queries can be joined to the session that produced them
+  // instead of being matched by CCSS code plus timestamp proximity.
+  const sessionId = input.sessionId ?? null;
+  const wantTrace = input.trace === true;
 
-    const apiSecret = await loadSecret(apiSecretName);
-    const apiKey = JSON.parse(apiSecret)['API'];
-    const endpointSecret = await loadSecret(endpointSecretName);
-    const graphqlEndpoint = JSON.parse(endpointSecret)['ext-endpoint'];
+  const endpointSecretName = process.env.ENDPOINT_SECRET_NAME;
+  if (!endpointSecretName) throw new Error('ENDPOINT_SECRET_NAME environment variable is required');
+  const apiSecretName = process.env.API_SECRET_NAME;
+  if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
+  if (!ccss) throw new Error('ccss is required');
 
-    const possibleCodes = normalizeCCSSCode(ccss) ?? [ccss];
-  
-    // Build OR condition for all possible code formats
-    const whereConditions = possibleCodes
-      .map(code => `{ statementCode: "${code}" }`)
-      .join(', ');
-    
-      const learningScienceDataQuery = `
+  const apiSecret = await loadSecret(apiSecretName);
+  const apiKey = JSON.parse(apiSecret)['API'];
+  const endpointSecret = await loadSecret(endpointSecretName);
+  const graphqlEndpoint = JSON.parse(endpointSecret)['ext-endpoint'];
+
+  const possibleCodes = normalizeCCSSCode(ccss);
+  const whereConditions = possibleCodes.map((code) => `{ statementCode: "${code}" }`).join(', ');
+
+  const learningScienceDataQuery = `
   {
     standardsFrameworkItems(
       where: {
@@ -92,148 +111,97 @@ export const handler = async (event) => {
     }
   }
   `;
-  
-    try {
-      const variables = { 
-        ccss
-      };
-      console.log('[Ext-MCPServerFunctions] getLearningComponentsByCCSS starting request', {
-        timestamp: new Date().toISOString(),
-        ccss,
-        normalizedCodes: normalizeCCSSCode(ccss),
-        url: graphqlEndpoint || 'NOT PROVIDED'
-      });
-      
-      const { url: requestUrl, options } = await createAndSignRequest(learningScienceDataQuery, variables, apiKey, graphqlEndpoint);
-      if (!requestUrl || !options) throw new Error('createAndSignRequest did not return url/options');
-      
-      console.log(' Making fetch request', {
-        timestamp: new Date().toISOString(),
-        url: requestUrl,
-        method: options.method,
-        hasAPIKeyHeader: !!options.headers['x-api-key'],
-        headerCount: Object.keys(options.headers).length
-      });
-      
-      const response = await fetch(requestUrl, options);
-      
-      console.log('[Ext-MCPServerFunctions] Fetch response received', {
-        timestamp: new Date().toISOString(),
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok,
-        headers: Object.fromEntries(response.headers.entries())
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('[Ext-MCPServerFunctions] HTTP error response', {
-          timestamp: new Date().toISOString(),
-          status: response.status,
-          statusText: response.statusText,
-          errorBody: errorText.substring(0, 1000)
-        });
-        throw new Error(`HTTP error! status: ${response.status}, body: ${errorText.substring(0, 500)}`);
-      }
-      
-      const data = await response.json();
 
-      console.log('[Ext-MCPServerFunctions] GraphQL response parsed', {
-        timestamp: new Date().toISOString(),
-        hasData: !!data?.data,
-        hasErrors: !!data?.errors,
-        errors: data?.errors,
-        dataKeys: data ? Object.keys(data) : [],
-        responsePreview: JSON.stringify(data).substring(0, 500)
-      });
+  const requestContext = { ccss, sessionId, normalizedCodes: possibleCodes };
 
-      console.log('[LVN] Raw GraphQL response:', JSON.stringify(data, null, 2));
+  try {
+    console.log('[GetLearningScience] starting request', {
+      timestamp: new Date().toISOString(),
+      ...requestContext,
+      url: graphqlEndpoint || 'NOT PROVIDED',
+    });
 
-      if (data?.errors) {
-        console.error('GraphQL errors in response', {
-          timestamp: new Date().toISOString(),
-          errors: data.errors,
-          errorCount: Array.isArray(data.errors) ? data.errors.length : 0
-        });
-      }
+    const { url: requestUrl, options } = await createAndSignRequest(
+      learningScienceDataQuery,
+      { ccss },
+      apiKey,
+      graphqlEndpoint,
+    );
+    if (!requestUrl || !options) throw new Error('createAndSignRequest did not return url/options');
 
-      // Normalize field names before returning.
-      // Field name semantics:
-      //   standardsFrameworkItemsbuildsTowards  = "these items build towards THIS standard"
-      //                                         → they come BEFORE this standard = prerequisites
-      //   buildsTowardsStandardsFrameworkItems  = "THIS standard builds towards these items"
-      //                                         → they come AFTER this standard = future/downstream
-      const rawItems = data?.data?.standardsFrameworkItems ?? [];
-      const normalized = {
-        standards: rawItems.map((item) => ({
-          code: item.statementCode,
-          description: item.description,
-          // Topics students must master first — items that build toward this standard
-          prerequisiteStandards: (item.standardsFrameworkItemsbuildsTowards ?? []).map((r) => ({
-            code: r.statementCode,
-            description: r.description,
-          })),
-          // Topics that depend on this standard — items this standard builds toward
-          futureDependentStandards: (item.buildsTowardsStandardsFrameworkItems ?? []).map((r) => ({
-            code: r.statementCode,
-            description: r.description,
-          })),
-          learningComponents: (item.learningComponentssupports ?? []).map((c) => ({
-            description: c.description,
-          })),
-          // LVN: research-backed factors linked to this standard via relevantToStandard
-          lvnFactors: (item.factorsrelevantToStandard ?? []).map((f) => ({
-            id: f.identifier,
-            name: f.name,
-            description: f.description,
-            category: f.category,
-            content: f.content ?? null,
-            gradeLevel: f.gradeLevel ?? [],
-            academicSubject: f.academicSubject ?? null,
-            citations: f.citations ?? [],
-            strategies: (f.strategiestargetsFactor ?? []).map((s) => ({
-              id: s.identifier,
-              name: s.name,
-              description: s.description,
-              category: s.category ?? null,
-              content: s.content ?? null,
-              citations: s.citations ?? [],
-            })),
-            learnerModels: (f.learnerModelshasFactor ?? []).map((m) => ({
-              id: m.identifier,
-              name: m.name,
-              gradeLevel: m.gradeLevel ?? [],
-              academicSubject: m.academicSubject ?? null,
-            })),
-            interactsWith: (f.interactsWithFactorFactors ?? []).map((i) => ({
-              id: i.identifier,
-              name: i.name,
-              category: i.category ?? null,
-            })),
-          })),
-        })),
-      };
+    const response = await fetch(requestUrl, options);
 
-      console.log('[GetLearningScience] Normalized result:', JSON.stringify({
-        standardCount: normalized.standards.length,
-        standards: normalized.standards.map(s => ({
-          code: s.code,
-          prerequisiteCount: s.prerequisiteStandards.length,
-          prerequisiteStandards: s.prerequisiteStandards,
-          futureDependentCount: s.futureDependentStandards.length,
-          futureDependentStandards: s.futureDependentStandards,
-        })),
-      }, null, 2));
-
-      return JSON.stringify(normalized);
-    } catch (error) {
-      console.error('Error making GraphQL request', {
-        timestamp: new Date().toISOString(),
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        ccss,
-        url: graphqlEndpoint || 'NOT PROVIDED'
-      });
-      return JSON.stringify({ data: null, errors: [{ message: error instanceof Error ? error.message : String(error) }] });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, body: ${errorText.substring(0, 500)}`);
     }
-}
+
+    const data = await response.json();
+
+    if (data?.errors) {
+      throw new Error(`GraphQL errors: ${JSON.stringify(data.errors).substring(0, 500)}`);
+    }
+
+    const rawItems = data?.data?.standardsFrameworkItems ?? [];
+    const standards = rawItems.map(normalizeStandard);
+    const units = countUnits(standards);
+
+    // An empty result is not an error, but it must be visible: six sessions in
+    // May 2026 generated with no learning-science context and nothing recorded it.
+    const matched = standards.length > 0;
+    if (!matched) {
+      console.warn('[GetLearningScience] NO MATCH — graph returned zero standards', {
+        timestamp: new Date().toISOString(),
+        ...requestContext,
+      });
+    }
+
+    console.log('[GetLearningScience] result', {
+      timestamp: new Date().toISOString(),
+      ...requestContext,
+      matched,
+      units,
+      codes: standards.map((s) => s.code),
+      elapsedMs: Date.now() - startedAt,
+    });
+
+    const result = { ok: true, matched, standards };
+    if (wantTrace) {
+      result._trace = {
+        ccss,
+        sessionId,
+        normalizedCodes: possibleCodes,
+        endpointHost: (() => {
+          try { return new URL(graphqlEndpoint).host; } catch { return null; }
+        })(),
+        httpStatus: response.status,
+        matched,
+        units,
+        elapsedMs: Date.now() - startedAt,
+        query: learningScienceDataQuery,
+      };
+    }
+    return JSON.stringify(result);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('[GetLearningScience] request failed', {
+      timestamp: new Date().toISOString(),
+      ...requestContext,
+      error: message,
+      stack: error instanceof Error ? error.stack : undefined,
+      url: graphqlEndpoint || 'NOT PROVIDED',
+      elapsedMs: Date.now() - startedAt,
+    });
+
+    // `standards: []` is kept for backward compatibility with existing callers,
+    // but `ok: false` lets an orchestrator distinguish "the graph has nothing for
+    // this standard" from "the call failed" — a distinction that was previously
+    // impossible and hid a 404, three unresolved secrets and two 403s in May 2026.
+    return JSON.stringify({
+      ok: false,
+      matched: false,
+      standards: [],
+      error: { message, ccss, sessionId },
+    });
+  }
+};

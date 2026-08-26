@@ -174,6 +174,13 @@ type PublicGameTemplate @model
   questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
+  # Curated carousel membership. Deliberately has NO @default so the index stays
+  # sparse: DynamoDB only writes an item into a GSI when it has every key attribute,
+  # so games without featuredGroup/featuredOrder are absent from the index entirely.
+  # That makes publicGameTemplatesByFeatured a key-condition query over ~7 rows --
+  # no filter, no over-scan, nothing to paginate past.
+  featuredGroup: String @index(name: "publicGameTemplatesByFeatured", queryField: "publicGameTemplatesByFeatured", sortKeyFields: ["featuredOrder"])
+  featuredOrder: Int
   type: String @default(value: "PublicGameTemplate") @index(name: "publicGameTemplatesByDate", queryField: "publicGameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "publicGameTemplatesByGrade", queryField: "publicGameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "publicGameTemplatesByPublicQuestionTemplatesCount", queryField: "publicGameTemplatesByPublicQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
 }
 

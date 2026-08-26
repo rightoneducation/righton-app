@@ -1,0 +1,23 @@
+{
+  "versionGroups": [
+    {
+      "label": "Shared React runtime — every workspace must agree. @righton/networking declares these as peerDependencies and ships React components, so a range split can resolve to two physical copies, which breaks hooks and MUI/styled-components context at runtime. Type-checking and building cannot detect this.",
+      "dependencies": [
+        "react",
+        "react-dom",
+        "@mui/material",
+        "@emotion/react",
+        "@emotion/styled",
+        "styled-components"
+      ],
+      "dependencyTypes": ["prod", "dev", "peer"],
+      "packages": ["**"]
+    },
+    {
+      "label": "Everything else — drift tolerated pending a separate dependency modernization pass (storybook 7→8, host_v2 typescript 4→5, play swiper 9→11, prettier 2→3).",
+      "dependencies": ["**"],
+      "packages": ["**"],
+      "isIgnored": true
+    }
+  ]
+}

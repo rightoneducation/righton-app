@@ -44,7 +44,7 @@ export default function SkeletonGameCard({
     <Fade
       in
       timeout={800}
-      style={{ transformOrigin: '0 0 0', transitionDelay: `${150 * index}ms` }}
+      style={{ transformOrigin: '0 0 0', transitionDelay: `${150}ms` }}
     >
       <GameCard
         sx={{

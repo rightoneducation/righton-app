@@ -65,6 +65,7 @@ import {
   buildGameQuestionPromises,
   createGameImagePath,
 } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
+import { resolveDraftQuestionsList } from '../lib/helperfunctions/createGame/questionOrder';
 import {
   checkDQsAreValid,
   buildRemoveQuestionTemplatePromises,
@@ -389,10 +390,15 @@ export default function CreateGame({
               questionTemplatesCount: newQuestionTemplateCount,
             },
           };
+          // ensures new question templates are in correct order
+          const resolvedDraftQuestionsList = resolveDraftQuestionsList(
+            draftQuestionsList,
+            newQuestionTemplateIds,
+          );
           const updatedGame = buildEditedGameTemplate(
             updatedDraftGame,
             userId,
-            draftQuestionsList,
+            resolvedDraftQuestionsList,
             gameImgUrl,
             newCCSSDescription
           );

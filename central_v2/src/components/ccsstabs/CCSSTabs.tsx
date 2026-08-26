@@ -16,7 +16,17 @@ import {
   CCSSPillContainer,
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
 import { CCSSType } from '../../lib/CCSSModels';
+import { CCSS_GRADE_KEYS } from '../../lib/gradeOptions';
 import CCSSIndicatorPill from './CCSSIndicatorPill';
+
+/**
+ * The grades an author may TAG. ccssDictionary itself stays whole -- the other
+ * lookups below resolve domains/clusters for an already-chosen grade, including
+ * when editing a legacy K-3 question, and gating those would break that view.
+ */
+const SUPPORTED_CCSS_GRADES = ccssDictionary.filter((ccssGrade) =>
+  CCSS_GRADE_KEYS.includes(ccssGrade.key),
+);
 
 interface TabContainerProps {
   screenSize: ScreenSize;
@@ -102,10 +112,9 @@ export default function CCSSTabs({
       }
       case CCSSType.GRADE:
       default: {
-        const testObj = ccssDictionary.find(
+        const testObj = SUPPORTED_CCSS_GRADES.find(
           (ccssGrade) => ccssGrade.key === value,
         );
-        console.log(testObj);
         return !(!testObj || testObj === undefined);
       }
     }
@@ -347,7 +356,7 @@ export default function CCSSTabs({
             rowSpacing={2}
             columnSpacing={screenSize === ScreenSize.SMALL ? 2 : 0}
           >
-            {ccssDictionary.map((ccssGrade) => (
+            {SUPPORTED_CCSS_GRADES.map((ccssGrade) => (
               <CCSSIndicatorPill
                 key={ccssGrade.key}
                 description={ccssGrade.desc}

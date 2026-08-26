@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@600&family=Poppins:wght@300;400;500;600&family=Rubik:wght@300;400;500;600;700&display=swap');
+
+/* No `font-family` on body here on purpose: with StyledEngineProvider
+   injectFirst, MUI's CssBaseline injects before this file, so a rule here would
+   win the cascade and override theme.typography.fontFamily. Fonts are owned by
+   src/lib/Theme.tsx. */
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

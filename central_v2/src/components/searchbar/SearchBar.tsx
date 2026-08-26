@@ -17,6 +17,8 @@ interface SearchBarProps {
     field: SortType;
     direction: SortDirection;
   }) => void;
+  /** forwarded to SortSearchMenu; see its initialSort doc comment */
+  initialSort?: { field: SortType; direction: SortDirection };
 }
 interface SearchBarProps2 {
   screenSize?: ScreenSize;
@@ -82,6 +84,7 @@ function SearchBar({
   handleSearchChange,
   handleChooseGrades,
   handleSortChange,
+  initialSort,
 }: SearchBarProps) {
   const theme = useTheme();
   const [searchBarText, setSearchBarText] = useState(searchTerms);
@@ -127,6 +130,7 @@ function SearchBar({
         <SortSearchMenu
           screenSize={screenSize ?? ScreenSize.SMALL}
           handleSortChange={handleSortChange}
+          initialSort={initialSort}
         />
       }
     </SearchAndFilterContainer>

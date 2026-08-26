@@ -1,0 +1,126 @@
+name: CI
+
+# Runs on pull requests into dev (the default branch). Deploys are NOT handled here —
+# this workflow only proves a change builds and passes checks before it can be merged.
+on:
+  pull_request:
+    branches: [dev]
+    paths:
+      - 'central_v2/**'
+      - 'networking/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - '.syncpackrc.json'
+      - '.nvmrc'
+      - '.github/workflows/ci.yml'
+  # Lets you trigger a run by hand from the Actions tab while iterating on this file.
+  workflow_dispatch:
+
+# A second push to the same PR cancels the first run instead of burning a runner
+# on code nobody is waiting for.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # networking is a workspace whose package entry points (main/module/types) all
+  # point into lib/, and lib/ is gitignored. A fresh checkout therefore has nothing
+  # for central_v2's 76 `@righton/networking` imports to resolve against.
+  #
+  # Building it once here and publishing lib/ as an artifact means every app job
+  # consumes identical bytes, instead of each app rebuilding it (play and host_v2
+  # will hang off this same artifact when they're added).
+  # ---------------------------------------------------------------------------
+  build-networking:
+    name: Build networking
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc # single source of truth, set in Phase 0
+          cache: yarn
+
+      # ALWAYS install from the repo root. The four workspaces share one hoisted
+      # node_modules, which is what guarantees a single physical copy of React and
+      # MUI — networking declares those as peerDependencies and ships React
+      # components. A per-workspace install duplicates them and breaks hooks at
+      # runtime with a build that compiles perfectly cleanly.
+      # The root postinstall hook runs check:install-location here automatically.
+      - name: Install (root)
+        run: yarn install --frozen-lockfile
+
+      # syncpack (version policy for the 6 shared runtime packages)
+      # + manypkg (structural rules) + the install-location guard.
+      - name: Verify dependency invariants
+        run: yarn verify
+
+      # The real aws-exports.js is gitignored and environment-specific. CI only needs
+      # the app to COMPILE, and Amplify.configure() runs at runtime, so a valid-shaped
+      # stub is sufficient here. The deploy pipeline runs `amplify pull` for real config.
+      - name: Stub Amplify config
+        run: cp networking/src/aws-exports.example.js networking/src/aws-exports.js
+
+      - name: Build networking
+        run: yarn --cwd networking build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: networking-lib
+          path: networking/lib
+          retention-days: 7
+
+  # ---------------------------------------------------------------------------
+  # central_v2. Runs on a fresh runner, so it re-checks-out and re-installs —
+  # only networking/lib carries over from the job above.
+  # ---------------------------------------------------------------------------
+  build-central:
+    name: Build central_v2
+    needs: build-networking # without this, the jobs race and lib/ won't exist yet
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install (root)
+        run: yarn install --frozen-lockfile
+
+      # The exact bytes built above — not a rebuild.
+      - uses: actions/download-artifact@v4
+        with:
+          name: networking-lib
+          path: networking/lib
+
+      - name: Stub Amplify config
+        run: cp networking/src/aws-exports.example.js networking/src/aws-exports.js
+
+      # tsc resolves paths relative to the tsconfig file, so this works from root.
+      - name: Type-check
+        run: node node_modules/typescript/bin/tsc -p central_v2/tsconfig.json --noEmit
+
+      # eslint is the opposite: central_v2's config lives in its package.json with
+      # parserOptions.project as a RELATIVE path, resolved against the working
+      # directory. Running eslint from the root produces 151 bogus parsing errors.
+      # --max-warnings is the current baseline (0 errors, 690 warnings): it locks in
+      # "no new problems" and ratchets down over time. Never raise it.
+      - name: Lint
+        run: yarn --cwd central_v2 lint --max-warnings 690
+
+      # GitHub Actions sets CI=true, which makes react-scripts promote all 690 lint
+      # warnings to build errors. CI=false is a deliberate, temporary escape hatch —
+      # delete it once the warning baseline reaches zero.
+      - name: Build
+        run: CI=false yarn --cwd central_v2 build
+
+      # For inspection only. NOT deployable — built against the stub config above.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: central-build-${{ github.sha }}
+          path: central_v2/build
+          retention-days: 14

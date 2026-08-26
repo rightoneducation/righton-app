@@ -1,0 +1,114 @@
+{
+  "header": {
+    "brand": "RightOn MicroCoach",
+    "brandShort": "MicroCoach",
+    "signup": "Sign Up",
+    "login": "Login",
+    "classSwitcher": "Select a class"
+  },
+  "common": {
+    "needHelp": "Need help"
+  },
+  "flowNav": {
+    "understandAct": "Understand & Act",
+    "prepare": "Prepare",
+    "reflect": "Reflect",
+    "myPlan": "My Plan",
+    "myActivities": "My Activities",
+    "myLessonPlan": "My Lesson Plan"
+  },
+  "activityDetail": {
+    "back": "Back to activity choices",
+    "beforeClass": "Before class",
+    "activity": "Activity",
+    "facilitation": "Facilitation",
+    "discussion": "Discussion",
+    "teacherView": "Teacher",
+    "studentView": "Student",
+    "exportPdf": "Export PDF",
+    "next": "Next: {{phase}}",
+    "saveToPlan": "Save to Lesson Plan",
+    "noContent": "This step isn't available for this activity yet.",
+    "printSubtitle": "Prepared for: {{misconception}}",
+    "exporting": "Preparing PDF…",
+    "page": "Page"
+  },
+  "chooseActivity": {
+    "back": "Back to misconceptions",
+    "addressing": "Addressing misconception: {{title}}",
+    "title": "Choose your next instructional move",
+    "subheading": "Select the activity that best fits your class",
+    "subtitleLabel": "Subtitle",
+    "descriptionLabel": "Description",
+    "selectActivity": "Select activity",
+    "selectedActivity": "Selected activity",
+    "howToRun": "How to run it"
+  },
+  "myPlan": {
+    "back": "Back to choosing activity",
+    "title": "Your saved activity",
+    "subheading": "Activities saved for Algebra 1 - Period 2. Open an activity to prepare, then mark it done after class.",
+    "changeActivity": "Change activity",
+    "completed": "Completed",
+    "openDetails": "Open activity details",
+    "markAsDone": "Mark as done",
+    "remove": "Remove",
+    "empty": "No activities saved yet. Choose one from a misconception's next steps."
+  },
+  "misconceptionModal": {
+    "close": "Close",
+    "studentWork": "Student work",
+    "skillContext": "Skill context",
+    "errorsByFrequency": "Errors in order of frequency",
+    "studentCount": "{{count}} students:",
+    "chooseActivity": "Choose activity",
+    "noStudentWork": "Student work for this misconception isn't available yet.",
+    "noSkillContext": "Skill context for this misconception isn't available yet."
+  },
+  "review": {
+    "banner": "Your class results are in — see what your students misunderstood and next steps you can take",
+    "dismissBanner": "Dismiss",
+    "title": "Understand Your Students' Thinking",
+    "subtitle": "Insights and misconception patterns from your classroom data",
+    "worksAnalyzed": "{{count}} student works analyzed",
+    "viewDetails": "View details",
+    "strongUnderstanding": "{{count}} Students showed strong understanding"
+  },
+  "hero": {
+    "title": "See how your whole class is thinking.",
+    "body": "MicroCoach identifies misconception patterns across your class and suggests next steps, in minutes.",
+    "getstarted": "Get started"
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "step1": {
+      "label": "Step 1",
+      "title": "Upload your files",
+      "body": "Upload your answer key and student responses from any quiz or assessment"
+    },
+    "step2": {
+      "label": "Step 2",
+      "title": "See what your class misunderstood",
+      "body": "MicroCoach analyzes every response and groups students by what they misunderstood, not just what they got wrong"
+    },
+    "step3": {
+      "label": "Step 3",
+      "title": "Plan your next move",
+      "body": "For each misconception, MicroCoach suggests targeted next steps. Pick what fits your class and get back to teaching"
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © 2026 RightOn Education. All rights reserved.",
+    "privacypolicy": "Privacy Policy"
+  },
+  "home": {
+    "banner": "Your class results are in — review misconception patterns and recommended activities",
+    "dismissBanner": "Dismiss",
+    "title": "Welcome back to MicroCoach",
+    "subtitle": "Review misconception patterns in your students’ thinking\nto identify opportunities to strengthen understanding.",
+    "classPrompt": "Which class are you working with today?",
+    "moreClasses": "More",
+    "weekLabel": "Week",
+    "cta": "Review misconception patterns"
+  }
+}

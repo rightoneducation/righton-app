@@ -18,6 +18,7 @@ import {
   LIST_CONTEXT_DATA,
   STUDENT_RESPONSES_BY_ASSESSMENT,
   UPDATE_SESSION,
+  UPDATE_MISCONCEPTION,
   UPDATE_CLASSROOM_WEEK,
 } from './util/graphql.mjs';
 
@@ -111,6 +112,54 @@ function computeWrongAnswerDist(studentResponses) {
   return dist;
 }
 
+/**
+ * PARITY: mirrors computeMisconceptionReach in src/seed/generate-next-steps.ts.
+ *
+ * How many distinct students exhibited a misconception, counted from the response
+ * rows rather than estimated by a model. `wrongAnswers` is the ingest-time
+ * attribution — the specific answer options the source document's answer key ties
+ * to this misconception. Counting distinct students matters because someone wrong
+ * on two linked questions is still one student.
+ *
+ * Returns nulls when there is no attribution to work from, which is different from
+ * a count of zero (attribution existed, nobody chose those options).
+ */
+function computeMisconceptionReach(wrongAnswers, studentResponses) {
+  if (!wrongAnswers?.length) {
+    return { studentCount: null, studentPercent: null, linkStatus: 'unlinked' };
+  }
+
+  const targets = new Set(
+    wrongAnswers.map((w) => `${w.questionNumber}:${String(w.letter).trim().toUpperCase()}`)
+  );
+
+  const affected = new Set();
+  const respondents = new Set();
+
+  for (const sr of studentResponses) {
+    const sid = sr.studentId ?? sr.student;
+    if (sid == null) continue;
+    respondents.add(sid);
+    for (const qr of (sr.questionResponses ?? [])) {
+      if (qr.response == null) continue;
+      // A double-marked response ("BC") counts as having chosen both options.
+      const chosen = String(qr.response).trim().toUpperCase();
+      for (const letter of chosen) {
+        if (targets.has(`${qr.questionNumber}:${letter}`)) { affected.add(sid); break; }
+      }
+    }
+  }
+
+  // Denominator is every student with a response row, matching the convention the
+  // stored `classPercentCorrect` already uses — not per-question respondents.
+  const total = respondents.size;
+  return {
+    studentCount: affected.size,
+    studentPercent: total ? Math.round((affected.size / total) * 1000) / 1000 : null,
+    linkStatus: 'linked',
+  };
+}
+
 function getStudentPerformanceData(studentResponses, questionNumbers, studentNameMap) {
   if (!questionNumbers.length) return [];
   const qSet = new Set(questionNumbers);
@@ -189,7 +238,7 @@ function injectStudentsIntoGroups(activity, studentData) {
   };
 }
 
-function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learningScienceData, misconceptionExtras = []) {
+function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learningScienceData, misconceptionExtras = [], studentResponses = []) {
   const questionErrorRates = (ppqQuestions ?? [])
     .filter((q) => q.questionNumber != null && q.classPercentCorrect != null)
     .sort((a, b) => a.questionNumber - b.questionNumber)
@@ -224,10 +273,25 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
       ? m.impactedObjectiveCodes.map((code) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
       : (frameworkItem?.futureDependentStandards ?? []).map((r) => ({ standard: r.code, description: r.description }));
 
+    const reach = computeMisconceptionReach(m.wrongAnswers, studentResponses);
+
     return {
       id: `nextstep-ai-${i + 1}`,
+      // Positional `id` stays for UI compatibility; `sourceMisconceptionId` is the
+      // stable join key back to the ingested misconception, so output can be paired
+      // across runs whose titles the model reworded.
+      sourceMisconceptionId: m.sourceMisconceptionId ?? null,
       title: m.title,
+      // The model's own estimate. Deliberately kept alongside the computed count
+      // rather than overwritten by it — the gap between the two is a calibration
+      // signal worth scoring.
       frequency: m.frequency,
+      // Counted from the response rows via the ingest-time option attribution.
+      // null (not 0) when there was no attribution to count from.
+      studentCount: reach.studentCount,
+      studentPercent: reach.studentPercent,
+      wrongAnswers: m.wrongAnswers ?? [],
+      linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
       occurrence: m.occurrence,
       example: m.example ?? null,
@@ -326,18 +390,36 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   }
 
   // Learning science data
+  //
+  // PARITY: mirrors src/seed/generate-next-steps.ts. This previously swallowed
+  // every failure with `.catch(() => ({ standards: [] }))`, which is how a 404,
+  // three unresolved endpoint secrets and two 403s in May 2026 were recorded
+  // downstream as sessions that merely "had no learning science context".
+  // A failed call and an empty result must stay distinguishable.
   console.log(`  Learning science (${allCcss.join(', ')})...`);
   const lsResults = await Promise.all(
-    allCcss.map((ccss) =>
-      invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, { input: { ccss } })
-        .then((r) => parseJson(r))
-        .catch(() => ({ standards: [] }))
-    )
+    allCcss.map(async (ccss) => {
+      const raw = await invokeLambda(`microcoachGetLearningScience-${AMPLIFY_ENV}`, {
+        input: { ccss, sessionId: currentStub.id },
+      });
+      const parsed = parseJson(raw);
+      if (parsed?.ok === false) {
+        throw new Error(
+          `Knowledge graph call failed for ${ccss}: ${parsed?.error?.message ?? 'unknown error'}`
+        );
+      }
+      return { ccss, parsed };
+    })
   );
+
+  const unmatchedCcss = lsResults.filter((r) => !(r.parsed?.standards?.length > 0)).map((r) => r.ccss);
   const learningScienceData = {
-    standards: lsResults.flatMap((r) => r?.standards ?? []),
+    standards: lsResults.flatMap((r) => r.parsed?.standards ?? []),
   };
   console.log(`  ✓ ${learningScienceData.standards.length} standards`);
+  if (unmatchedCcss.length) {
+    console.warn(`  ⚠ [LS] no graph match for: ${unmatchedCcss.join(', ')}`);
+  }
   console.log(`  [LS] standards returned: ${learningScienceData.standards.length}`);
   for (const s of learningScienceData.standards) {
     console.log(`  [LS]   ${s.code}: ${s.prerequisiteStandards?.length ?? 0} prereqs, ${s.futureDependentStandards?.length ?? 0} future`);
@@ -418,7 +500,10 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   console.log(`  ✓ ${nextStepExamples.length} examples`);
 
   // Generate next step activities
-  const classroomContext = { grade: classroom.grade, subject: classroom.subject, cohortSize: classroom.cohortSize };
+  // PARITY with src/seed/generate-next-steps.ts: `grade` is deliberately excluded.
+  // The CCSS codes carry grade already, and the classroom field was unvalidated
+  // free text that produced contradictory prompts.
+  const classroomContext = { subject: classroom.subject, cohortSize: classroom.cohortSize };
   const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
 
   // Planning call — one cheap LLM call assigns diverse structures across all
@@ -435,7 +520,14 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
         classroomContext: JSON.stringify(classroomContext),
       },
     });
-    structurePlan = parseJson(raw) ?? [];
+    // PARITY: the planner now returns an envelope carrying `_trace`. Accept the old
+    // bare-array shape too, since the deployed Lambda may still be on that contract.
+    const parsed = parseJson(raw);
+    const plannerResult = Array.isArray(parsed) ? { ok: true, assignments: parsed } : (parsed ?? { ok: false, assignments: [] });
+    structurePlan = plannerResult.assignments ?? [];
+    if (plannerResult.ok === false) {
+      console.warn(`  ⚠ Structure planning failed (${plannerResult.error ?? 'unknown'}), generating without suggestions`);
+    }
     console.log(`  ✓ ${structurePlan.length} assignments`);
   } catch (err) {
     console.warn(`  ⚠ Structure planning failed, generating without suggestions: ${err}`);
@@ -496,7 +588,7 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
   );
 
   // Build + save
-  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras);
+  const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, learningScienceData, misconceptionExtras, studentResponses);
   console.log(`  Saving ${nextSteps.length} next steps to session ${currentStub.id}...`);
   await gql(UPDATE_SESSION, {
     input: {
@@ -507,6 +599,23 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
     },
   });
   console.log('  ✓ Session updated');
+
+  // PARITY: mirrors the write-back in src/cli/generate.ts.
+  //
+  // These columns have existed since the model was defined and were never populated,
+  // which is why the UI's intervention cards have always read zero.
+  // `sourceMisconceptionId` is the join key; a next step the model reported as
+  // genuinely new has none and is skipped rather than guessed at.
+  const withCounts = nextSteps.filter((n) => n.sourceMisconceptionId && n.studentCount != null);
+  if (withCounts.length) {
+    console.log(`  Updating student counts on ${withCounts.length} misconception(s)...`);
+    for (const n of withCounts) {
+      await gql(UPDATE_MISCONCEPTION, {
+        input: { id: n.sourceMisconceptionId, studentCount: n.studentCount, studentPercent: n.studentPercent },
+      });
+    }
+    console.log('  ✓');
+  }
 
   console.log(`  Setting currentWeek to ${currentStub.weekNumber}...`);
   await gql(UPDATE_CLASSROOM_WEEK, { input: { id: classroom.id, currentWeek: currentStub.weekNumber } });

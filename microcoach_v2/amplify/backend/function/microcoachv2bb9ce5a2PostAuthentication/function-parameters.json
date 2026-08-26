@@ -1,0 +1,16 @@
+{
+  "trigger": true,
+  "modules": [
+    "custom"
+  ],
+  "parentResource": "microcoachv2bb9ce5a2",
+  "functionName": "microcoachv2bb9ce5a2PostAuthentication",
+  "resourceName": "microcoachv2bb9ce5a2PostAuthentication",
+  "parentStack": "auth",
+  "triggerEnvs": "[]",
+  "triggerDir": "/snapshot/repo/build/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/PostAuthentication",
+  "triggerTemplate": "PostAuthentication.json.ejs",
+  "triggerEventPath": "PostAuthentication.event.json",
+  "roleName": "microcoachv2bb9ce5a2PostAuthentication",
+  "skipEdit": true
+}

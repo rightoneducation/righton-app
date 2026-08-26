@@ -126,6 +126,11 @@ export const getClassroom = /* GraphQL */ `
           }
           prerequisiteGapCodes
           impactedObjectiveCodes
+          wrongAnswers {
+            questionNumber
+            letter
+            __typename
+          }
           activities {
             items {
               id
@@ -288,6 +293,11 @@ export const listClassrooms = /* GraphQL */ `
             }
             prerequisiteGapCodes
             impactedObjectiveCodes
+            wrongAnswers {
+              questionNumber
+              letter
+              __typename
+            }
             activities {
               nextToken
               __typename
@@ -378,6 +388,13 @@ export const getSession = /* GraphQL */ `
             pointValue
             ccssStandard
             classPercentCorrect
+            answerChoices {
+              letter
+              text
+              isCorrect
+              __typename
+            }
+            docxQuestion
             __typename
           }
           studentResponses {
@@ -427,6 +444,11 @@ export const getSession = /* GraphQL */ `
           }
           prerequisiteGapCodes
           impactedObjectiveCodes
+          wrongAnswers {
+            questionNumber
+            letter
+            __typename
+          }
           activities {
             items {
               id
@@ -510,6 +532,7 @@ export const listSessions = /* GraphQL */ `
               pointValue
               ccssStandard
               classPercentCorrect
+              docxQuestion
               __typename
             }
             studentResponses {
@@ -549,6 +572,11 @@ export const listSessions = /* GraphQL */ `
             }
             prerequisiteGapCodes
             impactedObjectiveCodes
+            wrongAnswers {
+              questionNumber
+              letter
+              __typename
+            }
             activities {
               nextToken
               __typename
@@ -641,6 +669,13 @@ export const getAssessment = /* GraphQL */ `
         pointValue
         ccssStandard
         classPercentCorrect
+        answerChoices {
+          letter
+          text
+          isCorrect
+          __typename
+        }
+        docxQuestion
         __typename
       }
       studentResponses {
@@ -700,6 +735,13 @@ export const listAssessments = /* GraphQL */ `
           pointValue
           ccssStandard
           classPercentCorrect
+          answerChoices {
+            letter
+            text
+            isCorrect
+            __typename
+          }
+          docxQuestion
           __typename
         }
         studentResponses {
@@ -816,6 +858,11 @@ export const getMisconception = /* GraphQL */ `
       }
       prerequisiteGapCodes
       impactedObjectiveCodes
+      wrongAnswers {
+        questionNumber
+        letter
+        __typename
+      }
       activities {
         items {
           id
@@ -906,6 +953,11 @@ export const listMisconceptions = /* GraphQL */ `
         }
         prerequisiteGapCodes
         impactedObjectiveCodes
+        wrongAnswers {
+          questionNumber
+          letter
+          __typename
+        }
         activities {
           items {
             id
@@ -1414,6 +1466,11 @@ export const classroomsByClassroomName = /* GraphQL */ `
             }
             prerequisiteGapCodes
             impactedObjectiveCodes
+            wrongAnswers {
+              questionNumber
+              letter
+              __typename
+            }
             activities {
               nextToken
               __typename
@@ -1517,6 +1574,7 @@ export const sessionsByClassroomId = /* GraphQL */ `
               pointValue
               ccssStandard
               classPercentCorrect
+              docxQuestion
               __typename
             }
             studentResponses {
@@ -1556,6 +1614,11 @@ export const sessionsByClassroomId = /* GraphQL */ `
             }
             prerequisiteGapCodes
             impactedObjectiveCodes
+            wrongAnswers {
+              questionNumber
+              letter
+              __typename
+            }
             activities {
               nextToken
               __typename
@@ -1617,6 +1680,13 @@ export const assessmentsByClassroomId = /* GraphQL */ `
           pointValue
           ccssStandard
           classPercentCorrect
+          answerChoices {
+            letter
+            text
+            isCorrect
+            __typename
+          }
+          docxQuestion
           __typename
         }
         studentResponses {
@@ -1687,6 +1757,13 @@ export const assessmentsBySessionId = /* GraphQL */ `
           pointValue
           ccssStandard
           classPercentCorrect
+          answerChoices {
+            letter
+            text
+            isCorrect
+            __typename
+          }
+          docxQuestion
           __typename
         }
         studentResponses {
@@ -1836,6 +1913,11 @@ export const misconceptionsByClassroomId = /* GraphQL */ `
         }
         prerequisiteGapCodes
         impactedObjectiveCodes
+        wrongAnswers {
+          questionNumber
+          letter
+          __typename
+        }
         activities {
           items {
             id
@@ -1914,6 +1996,11 @@ export const misconceptionsBySessionId = /* GraphQL */ `
         }
         prerequisiteGapCodes
         impactedObjectiveCodes
+        wrongAnswers {
+          questionNumber
+          letter
+          __typename
+        }
         activities {
           items {
             id

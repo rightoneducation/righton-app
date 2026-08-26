@@ -181,9 +181,7 @@ export default function Login({ handleLogOut }: LoginProps) {
 
       if (
         error instanceof Error &&
-        error.message.includes(
-          'UserUnAuthenticatedException: User needs to be authenticated to call this API',
-        )
+        error.name === 'UserUnAuthenticatedException'
       ) {
         const response = await apiClients.user.deleteUnverifiedUser(userName);
         setIsNotVerifiedModalOpen(true);

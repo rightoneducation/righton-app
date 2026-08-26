@@ -194,6 +194,10 @@ export default function Header({
     centralDataDispatch({ type: 'SET_SEARCHED_QUESTIONS', payload: [] });
     centralDataDispatch({ type: 'SET_SEARCHED_GAMES', payload: [] });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+    // re-arm the explore init latch: it is only ever set false (ExploreGames/
+    // ExploreQuestions), so without this the second page to mount never fetches.
+    // Mirrors Login.tsx:171 / AppSwitch.tsx:82 for isLibraryInit.
+    centralDataDispatch({ type: 'SET_IS_EXPLORE_INIT', payload: true });
     switch (screen) {
       case ScreenType.QUESTIONS:
         navigate('/questions');

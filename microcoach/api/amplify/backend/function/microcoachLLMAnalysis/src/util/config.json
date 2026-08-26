@@ -1,13 +1,13 @@
 {
   "writingStyle": {
     "description": "Language quality guidance injected into all LLM prompts",
-    "titles": "3-6 words. Plain noun phrase that names the specific error. No parentheticals or clarifications inside parentheses. Write the error directly: 'Did Not Flip the Second Fraction' — never 'Did Not Flip the Second Fraction (no reciprocal)'.",
-    "descriptions": "2-3 sentences maximum. Keep it concrete and specific. Do NOT start every sentence with 'Students' — vary the subject. Good openers: the error itself ('Slope and intercept get swapped...'), a conditional ('When reading y = mx + b, the two numbers...'), or the consequence ('The result is...'). One idea per sentence. No hedging words (often, typically, usually, tend to). Do not restate the same idea in different words. Write for a classroom teacher, not a researcher.",
-    "instructionalMoves": "Write in short, scannable chunks. Use plain conversational language — imagine a teacher reading this quickly between classes. Break steps into separate sentences. Avoid dense paragraphs. No academic or clinical language. Active voice. Each instruction should be one action: 'Show students two worked examples side by side.' not 'Teachers should consider presenting students with two worked examples simultaneously for comparison purposes.'",
+    "titles": "3-6 words. Plain noun phrase that names the specific error. No parentheticals or clarifications inside parentheses. Write the error directly: 'Did Not Flip the Second Fraction' \u2014 never 'Did Not Flip the Second Fraction (no reciprocal)'.",
+    "descriptions": "2-3 sentences maximum. Keep it concrete and specific. Do NOT start every sentence with 'Students' \u2014 vary the subject. Good openers: the error itself ('Slope and intercept get swapped...'), a conditional ('When reading y = mx + b, the two numbers...'), or the consequence ('The result is...'). One idea per sentence. No hedging words (often, typically, usually, tend to). Do not restate the same idea in different words. Write for a classroom teacher, not a researcher.",
+    "instructionalMoves": "Write in short, scannable chunks. Use plain conversational language \u2014 imagine a teacher reading this quickly between classes. Break steps into separate sentences. Avoid dense paragraphs. No academic or clinical language. Active voice. Each instruction should be one action: 'Show students two worked examples side by side.' not 'Teachers should consider presenting students with two worked examples simultaneously for comparison purposes.'",
     "successIndicators": "Start each with an action verb. Describe observable student behavior only. 10 words max per indicator."
   },
   "analysis": {
-    "description": "microcoachLLMAnalysis — identifies misconceptions from PPQ assessment data",
+    "description": "microcoachLLMAnalysis \u2014 identifies misconceptions from PPQ assessment data",
     "model": "gpt-5-mini",
     "keyFindingsCount": {
       "min": 3,
@@ -59,6 +59,27 @@
         "conceptualSeverityBoost": "raise toward 1.0 when highConfWrongPct >= highConfWrongThreshold",
         "prevalenceAdjustment": "discount correct rate when avgConfidenceCorrect < lowAvgConfidenceCorrectThreshold"
       }
+    },
+    "validator": {
+      "description": "Post-analysis accuracy pass. Has write access to the fields listed in fieldsToReview, so its rules must be explicit \u2014 an empty rules list means an unconstrained model rewriting scored content.",
+      "model": "o3-mini",
+      "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON array.",
+      "fieldsToReview": [
+        "description \u2014 the misconception statement itself",
+        "example.incorrect and example.correct \u2014 the representative student error and its correct form",
+        "evidence.mostCommonError \u2014 the error pattern cited from the assessment data",
+        "correctAnswerSolution \u2014 the step-by-step worked solution",
+        "wrongAnswerExplanations \u2014 the per-answer explanations"
+      ],
+      "rules": [
+        "Correct mathematical errors only. Do not rewrite for style, tone or length.",
+        "Preserve the misconception's meaning. If the maths is sound, return the field unchanged.",
+        "example.incorrect must remain a plausible student error, not a corrected expression.",
+        "example.correct must be the right form of the same expression, with minimal annotation.",
+        "correctAnswerSolution steps must each be individually valid and lead to the stated answer.",
+        "Use LaTeX for all mathematical expressions ($...$ inline, $$...$$ display). Never Unicode maths symbols.",
+        "Omit a field from your response entirely if it needs no change."
+      ]
     }
   }
 }

@@ -1,0 +1,114 @@
+{
+  "header": {
+    "brand": "RightOn MicroCoach",
+    "brandShort": "MicroCoach",
+    "signup": "Registrarse",
+    "login": "Iniciar sesión",
+    "classSwitcher": "Seleccione una clase"
+  },
+  "common": {
+    "needHelp": "¿Necesita ayuda?"
+  },
+  "flowNav": {
+    "understandAct": "Comprender y actuar",
+    "prepare": "Preparar",
+    "reflect": "Reflexionar",
+    "myPlan": "Mi plan",
+    "myActivities": "Mis actividades",
+    "myLessonPlan": "Mi plan de clase"
+  },
+  "activityDetail": {
+    "back": "Volver a las opciones de actividad",
+    "beforeClass": "Antes de clase",
+    "activity": "Actividad",
+    "facilitation": "Facilitación",
+    "discussion": "Discusión",
+    "teacherView": "Docente",
+    "studentView": "Estudiante",
+    "exportPdf": "Exportar PDF",
+    "next": "Siguiente: {{phase}}",
+    "saveToPlan": "Guardar en el plan de clase",
+    "noContent": "Este paso aún no está disponible para esta actividad.",
+    "printSubtitle": "Preparado para: {{misconception}}",
+    "exporting": "Preparando PDF…",
+    "page": "Página"
+  },
+  "chooseActivity": {
+    "back": "Volver a los conceptos erróneos",
+    "addressing": "Abordando el concepto erróneo: {{title}}",
+    "title": "Elija su próxima acción instructiva",
+    "subheading": "Seleccione la actividad que mejor se adapte a su clase",
+    "subtitleLabel": "Subtítulo",
+    "descriptionLabel": "Descripción",
+    "selectActivity": "Elegir actividad",
+    "selectedActivity": "Actividad elegida",
+    "howToRun": "Cómo realizarla"
+  },
+  "myPlan": {
+    "back": "Volver a elegir actividad",
+    "title": "Su actividad guardada",
+    "subheading": "Actividades guardadas para Álgebra 1 - Período 2. Abra una actividad para prepararla y márquela como hecha después de la clase.",
+    "changeActivity": "Cambiar actividad",
+    "completed": "Completadas",
+    "openDetails": "Abrir detalles de la actividad",
+    "markAsDone": "Marcar como hecha",
+    "remove": "Quitar",
+    "empty": "Aún no hay actividades guardadas. Elija una en los próximos pasos de un concepto erróneo."
+  },
+  "misconceptionModal": {
+    "close": "Cerrar",
+    "studentWork": "Trabajo de los estudiantes",
+    "skillContext": "Contexto de la destreza",
+    "errorsByFrequency": "Errores por orden de frecuencia",
+    "studentCount": "{{count}} estudiantes:",
+    "chooseActivity": "Elegir actividad",
+    "noStudentWork": "El trabajo de los estudiantes para este concepto erróneo aún no está disponible.",
+    "noSkillContext": "El contexto de la destreza para este concepto erróneo aún no está disponible."
+  },
+  "review": {
+    "banner": "Los resultados de su clase están listos: vea qué entendieron mal sus estudiantes y los próximos pasos que puede tomar",
+    "dismissBanner": "Descartar",
+    "title": "Comprenda el pensamiento de sus estudiantes",
+    "subtitle": "Perspectivas y patrones de conceptos erróneos de los datos de su clase",
+    "worksAnalyzed": "{{count}} trabajos de estudiantes analizados",
+    "viewDetails": "Ver detalles",
+    "strongUnderstanding": "{{count}} estudiantes mostraron una comprensión sólida"
+  },
+  "hero": {
+    "title": "Vea cómo piensa toda su clase.",
+    "body": "MicroCoach identifica patrones de conceptos erróneos en su clase y sugiere próximos pasos, en minutos.",
+    "getstarted": "Empezar"
+  },
+  "howItWorks": {
+    "title": "Cómo funciona",
+    "step1": {
+      "label": "Paso 1",
+      "title": "Suba sus archivos",
+      "body": "Suba su clave de respuestas y las respuestas de los estudiantes de cualquier prueba o evaluación"
+    },
+    "step2": {
+      "label": "Paso 2",
+      "title": "Vea qué entendió mal su clase",
+      "body": "MicroCoach analiza cada respuesta y agrupa a los estudiantes según lo que entendieron mal, no solo según lo que respondieron incorrectamente"
+    },
+    "step3": {
+      "label": "Paso 3",
+      "title": "Planifique su siguiente paso",
+      "body": "Para cada concepto erróneo, MicroCoach sugiere próximos pasos específicos. Elija lo que mejor se adapte a su clase y vuelva a enseñar"
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © 2026 RightOn Education. Todos los derechos reservados.",
+    "privacypolicy": "Política de Privacidad"
+  },
+  "home": {
+    "banner": "Los resultados de tu clase están listos: revisa los patrones de conceptos erróneos y las actividades recomendadas",
+    "dismissBanner": "Descartar",
+    "title": "Bienvenido de nuevo a MicroCoach",
+    "subtitle": "Revisa los patrones de conceptos erróneos en el pensamiento de tus estudiantes\npara identificar oportunidades de fortalecer la comprensión.",
+    "classPrompt": "¿Con qué clase trabajas hoy?",
+    "moreClasses": "Más",
+    "weekLabel": "Semana",
+    "cta": "Revisar patrones de conceptos erróneos"
+  }
+}
