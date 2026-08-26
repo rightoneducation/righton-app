@@ -4,11 +4,13 @@ import {
   LibraryTabEnum,
   ScreenSize,
 } from '../CentralModels';
+import { gradeRank } from '../gradeOptions';
 
 // Favorites are a small client-side set (fetched by id in getFav) and are
 // re-sorted here rather than via an API query. Date sorts use updatedAt; grade
-// sorts fall back to a string compare of the grade field (game.grade /
-// question.gradeFilter) - best-effort ordering, never hides items.
+// sorts rank the grade field (game.grade / question.gradeFilter) against the
+// canonical ascending order. Legacy K-3 and blank grades rank last rather than
+// first, which a bare indexOf would do. Best-effort ordering, never hides items.
 const sortFavorites = <T extends { updatedAt?: Date | null }>(
   items: T[],
   sortField: SortType,
@@ -19,7 +21,7 @@ const sortFavorites = <T extends { updatedAt?: Date | null }>(
   const dir = sortDirection === SortDirection.ASC ? 1 : -1;
   return [...items].sort((a, b) => {
     if (sortField === gradeSortField) {
-      return dir * gradeOf(a).localeCompare(gradeOf(b));
+      return dir * (gradeRank(gradeOf(a)) - gradeRank(gradeOf(b)));
     }
     return (
       dir *

@@ -4,9 +4,9 @@ import {
   IGameTemplate,
   IQuestionTemplate,
   GalleryType,
-  GradeTarget,
 } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
+import { GRADE_SORT_ORDER } from '../../lib/gradeOptions';
 import {
   SearchedText,
   GradesText,
@@ -25,28 +25,12 @@ interface GalleryHeaderTextProps<T> {
   elementLabel?: string;
 }
 
-/**
- * Canonical order. A plain .sort() is lexicographic, which puts K after 8 and
- * HS, so ['K','6','HS'] would read "6, HS, and K".
- */
-const GRADE_ORDER: string[] = [
-  GradeTarget.KINDERGARTEN,
-  GradeTarget.GRADEONE,
-  GradeTarget.GRADETWO,
-  GradeTarget.GRADETHREE,
-  GradeTarget.GRADEFOUR,
-  GradeTarget.GRADEFIVE,
-  GradeTarget.GRADESIX,
-  GradeTarget.GRADESEVEN,
-  GradeTarget.GRADEEIGHT,
-  GradeTarget.HIGHSCHOOL,
-];
-
 function formatGrades(grades: string[]): string {
   // copy first -- the caller passes React state straight in, and Array.sort
   // orders in place
+  const order = GRADE_SORT_ORDER as string[];
   const gradesSorted = [...grades].sort(
-    (a, b) => GRADE_ORDER.indexOf(a) - GRADE_ORDER.indexOf(b),
+    (a, b) => order.indexOf(a) - order.indexOf(b),
   );
   if (gradesSorted.length === 0) return '';
   if (gradesSorted.length === 1) return gradesSorted[0];

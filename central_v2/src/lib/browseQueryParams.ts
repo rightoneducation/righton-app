@@ -1,4 +1,5 @@
 import { GradeTarget, SortType, SortDirection } from '@righton/networking';
+import { SUPPORTED_GRADE_VALUES } from './gradeOptions';
 import { GameQuestionType } from './CentralModels';
 
 /**
@@ -87,9 +88,12 @@ export const gameSideField = (field: SortType): SortType => {
  * Server-side only: Browse pages by cursor, so sorting a page client-side would
  * restart the ordering on every page rather than running across the result set.
  *
- * Caveat: `grade` is a String sort key, so DynamoDB orders it lexicographically.
- * Numeric grades come out correctly (6, 7, 8), but K sorts after 8 and HS. A
- * true fix needs a sortable grade column on the schema plus a backfill.
+ * `grade` is a String sort key, so DynamoDB orders it lexicographically. That
+ * happens to be the correct ascending order for every SELECTABLE grade --
+ * '4' < '5' < ... < '8' < 'HS' -- so no sortable grade column is needed. The
+ * one residual: legacy K-3 content is still returned (the filter no longer
+ * offers those grades, but nothing hides the rows), and 'K' sorts after 'HS'.
+ * Correcting that on the client is ruled out by the cursor paging above.
  */
 export const effectiveBrowseSort = (
   query: BrowseQuery,
@@ -105,7 +109,9 @@ export const effectiveBrowseSort = (
   };
 };
 
-const GRADE_VALUES = Object.values(GradeTarget) as string[];
+// narrowed to the grades the filter can produce, so a hand-edited ?grades=K is
+// dropped rather than becoming a filter state the menu cannot display or clear
+const GRADE_VALUES = SUPPORTED_GRADE_VALUES;
 
 export const decodeBrowseQuery = (
   params: URLSearchParams,
