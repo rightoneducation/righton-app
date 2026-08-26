@@ -345,7 +345,23 @@ export interface ISession {
   sidebarItems: ISidebarItem[];
 }
 
+export interface IImplementedActivity {
+  id: string;
+  title: string;
+  skillCode: string;
+  misconceptionTitle: string;
+  /** Percentages the frame states outright; nothing here is derived. */
+  masteryBefore: number;
+  masteryAfter: number;
+  studentsImproved: number;
+}
+
+export interface IReflect {
+  implementedActivities: IImplementedActivity[];
+}
+
 export interface IPipelineOutput {
   session: ISession;
   misconceptions: IMisconception[];
+  reflect: IReflect;
 }

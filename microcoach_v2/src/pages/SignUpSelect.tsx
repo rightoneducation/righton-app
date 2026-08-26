@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
 import { UserRole } from '../api';
 import AppContentRow from '../components/AppContentRow';
 import { UserStatusType } from '../lib/MicroCoachModels';
@@ -16,6 +17,7 @@ import { useMicroCoachDataDispatch } from '../hooks/context/useMicroCoachDataCon
 import {
   ClassChip,
   ClassChipGrid,
+  ClassSelect,
   SignUpColumn,
   SignUpCtaWide,
   SignUpHeading,
@@ -35,6 +37,8 @@ export default function SignUpSelect({ screenSize }: ScreenSizeProps) {
   const isReady = useAllReady(useI18nReady());
 
   const classes = namedClasses(state);
+  // The two roles share every screen but this one's tail.
+  const isAdmin = state.role === 'ADMIN';
   const teacherName = `${state.firstName} ${state.lastName}`.trim();
   const [selectedClass, setSelectedClass] = React.useState<string | null>(
     classes[0] ?? null,
@@ -91,32 +95,49 @@ export default function SignUpSelect({ screenSize }: ScreenSizeProps) {
           </Typography>
         </TeacherSelectField>
 
-        <ClassChipGrid screenSize={screenSize}>
-          {classes.map((name) => (
-            <ClassChip
-              key={name}
-              disableElevation
-              isSelected={name === selectedClass}
-              aria-pressed={name === selectedClass}
-              onClick={() => setSelectedClass(name)}
-            >
-              {name}
+        {isAdmin ? (
+          <ClassSelect
+            value={selectedClass ?? ''}
+            onChange={(event) => setSelectedClass(event.target.value)}
+            inputProps={{ 'aria-label': t('signup.classPlaceholder') }}
+          >
+            {classes.map((name) => (
+              <MenuItem key={name} value={name}>
+                {name}
+              </MenuItem>
+            ))}
+          </ClassSelect>
+        ) : (
+          <ClassChipGrid screenSize={screenSize}>
+            {classes.map((name) => (
+              <ClassChip
+                key={name}
+                disableElevation
+                isSelected={name === selectedClass}
+                aria-pressed={name === selectedClass}
+                onClick={() => setSelectedClass(name)}
+              >
+                {name}
+              </ClassChip>
+            ))}
+            {/* Figma draws a trailing "More" chip in the disabled treatment —
+                there is nothing behind it, so it stays inert here too. */}
+            <ClassChip disableElevation isMore disabled>
+              {t('signup.more')}
             </ClassChip>
-          ))}
-          {/* Figma draws a trailing "More" chip in the disabled treatment —
-              there is nothing behind it, so it stays inert here too. */}
-          <ClassChip disableElevation isMore disabled>
-            {t('signup.more')}
-          </ClassChip>
-        </ClassChipGrid>
+          </ClassChipGrid>
+        )}
 
-        <Stack sx={{ mt: `${theme.sizing.space11}px`, alignItems: 'center' }}>
+        <Stack sx={{ mt: `${theme.sizing.space12}px`, alignItems: 'center' }}>
+          {/* Figma: 384 wide for the admin's longer label, 303 for the
+              teacher's. */}
           <SignUpCtaWide
             disableElevation
             disabled={!selectedClass}
             onClick={handleUpload}
+            sx={{ maxWidth: isAdmin ? 384 : 303 }}
           >
-            {t('signup.upload')}
+            {t(isAdmin ? 'signup.viewData' : 'signup.upload')}
           </SignUpCtaWide>
         </Stack>
       </SignUpColumn>

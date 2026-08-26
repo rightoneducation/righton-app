@@ -67,7 +67,7 @@ export default function SignUpRole({ screenSize }: ScreenSizeProps) {
         <SignUpSubheading>{t('signup.rolePrompt')}</SignUpSubheading>
 
         <Stack
-          spacing={`${theme.sizing.space3}px`}
+          spacing={`${theme.sizing.space4}px`}
           sx={{ width: '100%', alignItems: 'center' }}
         >
           {ROLES.map((option) => (
@@ -102,14 +102,14 @@ export default function SignUpRole({ screenSize }: ScreenSizeProps) {
           ))}
         </Stack>
 
-        {/* Admin is selectable so the choice reads as real, but only the
-            teacher path is built — the CTA stays in its disabled treatment,
-            which is exactly what the default frame draws. */}
+        {/* Both roles run the same wizard; they diverge only on the final
+            screen, where an admin picks a class from a dropdown and lands on
+            cross-teacher data rather than an upload. */}
         <SignUpCta
           disableElevation
-          disabled={role !== 'TEACHER'}
+          disabled={!role}
           onClick={() => navigate('/signup/register')}
-          sx={{ mt: `${theme.sizing.space11}px` }}
+          sx={{ mt: `${theme.sizing.space12}px` }}
         >
           {t('signup.continue')}
         </SignUpCta>

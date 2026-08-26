@@ -16,11 +16,18 @@ import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 
-export type HeaderVariant = 'public' | 'app';
+/**
+ * `signup` is the wizard's own chrome: the frames draw the brand alone on
+ * every step but the last, since offering a Sign Up link to someone already
+ * signing up makes no sense. Its final step still shows an identity, but that
+ * comes from the LOGGEDIN branch rather than the variant.
+ */
+export type HeaderVariant = 'public' | 'signup' | 'app';
 
 interface HeaderProps {
   screenSize: ScreenSize;
   variant?: HeaderVariant;
+  onLogOut?: () => void;
 }
 
 // styled() erases MUI's polymorphic `component` prop, so re-declare it here to
@@ -81,11 +88,28 @@ const PublicIdentityPill = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
+// Figma (profile): 108x41 rx 20.5 — a transparent pill on a white hairline,
+// sitting left of the identity.
+const LogOutButton = styled(Button)(({ theme }) => ({
+  minHeight: 41,
+  padding: `0 ${theme.sizing.space3}px`,
+  borderRadius: 20.5,
+  backgroundColor: 'transparent',
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.surface.white}`,
+  color: theme.palette.designSystem.surface.white,
+  ...theme.typography.buttonLabel,
+  textTransform: 'none',
+  whiteSpace: 'nowrap',
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+  },
+}));
+
 const appPillFill = 'rgba(255, 251, 246, 0.1)';
 const appPillStroke = 'rgba(255, 251, 246, 0.3)';
 const appPillRadius = 22;
 
-const IdentityPill = styled(Box)(({ theme }) => ({
+const IdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
   display: 'block',
   maxWidth: 362,
   padding: `${theme.sizing.space1}px ${theme.sizing.space4}px`,
@@ -131,6 +155,7 @@ const authSkeletonSx = { bgcolor: 'rgba(255, 255, 255, 0.18)' };
 export default function Header({
   screenSize,
   variant = 'public',
+  onLogOut,
 }: HeaderProps) {
   const { t } = useTranslation();
   const { userStatus, userProfile } = useMicroCoachDataState();
@@ -146,9 +171,14 @@ export default function Header({
 
   const isCompactBrand = variant === 'app' && screenSize === ScreenSize.SMALL;
 
-  const brandVariant =
-    // eslint-disable-next-line no-nested-ternary
-    isCompactBrand ? 'smallTitle' : variant === 'app' ? 'appTitle' : 'navTitle';
+  const brandVariant = (() => {
+    if (isCompactBrand) return 'smallTitle';
+    // Every sign-up frame sets the brand at Rubik 32/600, the same as the app
+    // header. `public` stays on navTitle: no landing frame survives to check
+    // it against, so changing it there would be a guess.
+    if (variant === 'app' || variant === 'signup') return 'appTitle';
+    return 'navTitle';
+  })();
 
   return (
     <HeaderBar component="header">
@@ -159,7 +189,7 @@ export default function Header({
           alignItems: 'center',
           // The 393 frame centres the brand; 744 and 1920 left-align it.
           justifyContent:
-            screenSize === ScreenSize.SMALL && variant === 'public'
+            screenSize === ScreenSize.SMALL && variant !== 'app'
               ? 'center'
               : 'space-between',
           gap: 2,
@@ -196,12 +226,23 @@ export default function Header({
             ) : (
               <>
                 {screenSize === ScreenSize.LARGE && (
-                  <IdentityPill>
-                    <Box component="span" sx={{ fontWeight: 500 }}>
-                      {teacherName}
-                    </Box>
-                    {` • ${teacherEmail}`}
-                  </IdentityPill>
+                  <>
+                    <LogOutButton disableElevation onClick={onLogOut}>
+                      {t('profile.logOut')}
+                    </LogOutButton>
+                    {/* The frame gives no separate control for reaching the
+                        profile, so the identity itself is the way in. */}
+                    <IdentityPill
+                      component={RouterLink}
+                      to="/profile"
+                      sx={{ textDecoration: 'none' }}
+                    >
+                      <Box component="span" sx={{ fontWeight: 500 }}>
+                        {teacherName}
+                      </Box>
+                      {` • ${teacherEmail}`}
+                    </IdentityPill>
+                  </>
                 )}
                 <ClassSelect
                   screenSize={screenSize}
@@ -229,7 +270,7 @@ export default function Header({
           This is the only part of the page that depends on who the user is, so
           it carries its own skeleton rather than the page waiting on auth.
         */}
-        {variant === 'public' &&
+        {variant !== 'app' &&
           screenSize === ScreenSize.LARGE &&
           userStatus === UserStatusType.LOGGEDIN && (
             // Figma (sign-up Page6): once the wizard commits a profile the

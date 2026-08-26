@@ -1307,5 +1307,27 @@
     "Wireframe11's rows are plan state, not pipeline output, so they live under `savedPlan`. Their activity titles (Slope Forecasting Challenge, Slope Swap Error Analysis) appear nowhere else, and the completed row's misconception (\"Incorrect Slope Conversion\") is not one of this week's three — hence the denormalized snapshot and null activityId.",
     "The Wireframe2/Wireframe3 background is a later iteration of Wireframe1 showing misconceptions and next steps on one page; its two activity cards carry the same title twice (placeholder). No unique data extracted from it.",
     "Prevalence and grouping are enums with counts behind them: W1/W4/W5 show \"Some students\" and \"whole class\"; W11 shows \"Few students\" and \"Split class\"."
-  ]
+  ],
+  "reflect": {
+    "implementedActivities": [
+      {
+        "id": "reflect-treat-wrong-half-plane",
+        "title": "Treat the Wrong Half-Plane",
+        "skillCode": "HSA-REI.D.12",
+        "misconceptionTitle": "Slope Misidentification in Inequalities",
+        "masteryBefore": 37,
+        "masteryAfter": 89,
+        "studentsImproved": 14
+      },
+      {
+        "id": "reflect-analyze-wrong-shadings",
+        "title": "Analyze Wrong Shadings from Incorrect Reasoning",
+        "skillCode": "HSA-REI.D.12",
+        "misconceptionTitle": "Slope Misidentification in Inequalities",
+        "masteryBefore": 37,
+        "masteryAfter": 89,
+        "studentsImproved": 14
+      }
+    ]
+  }
 }

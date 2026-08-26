@@ -34,18 +34,24 @@ interface AppContainerProps {
   children: ReactNode;
   headerVariant?: HeaderVariant;
   showFooter?: boolean;
+  onLogOut?: () => void;
 }
 
 export default function AppContainer({
   children,
   headerVariant = 'public',
   showFooter = true,
+  onLogOut,
 }: AppContainerProps) {
   const screenSize = useScreenSize();
 
   return (
     <ScreenContainer>
-      <Header screenSize={screenSize} variant={headerVariant} />
+      <Header
+        screenSize={screenSize}
+        variant={headerVariant}
+        onLogOut={onLogOut}
+      />
       <BodyContainer component="main">{children}</BodyContainer>
       {headerVariant === 'app' && <NeedHelpButton />}
       {showFooter && <Footer screenSize={screenSize} />}

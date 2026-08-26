@@ -47,7 +47,7 @@ export default function SignUpClasses({ screenSize }: ScreenSizeProps) {
         <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
         <SignUpSubheading>{t('signup.classesTitle')}</SignUpSubheading>
 
-        <Stack spacing={`${theme.sizing.space3}px`} sx={{ width: '100%' }}>
+        <Stack spacing={`${theme.sizing.space4}px`} sx={{ width: '100%' }}>
           {state.classes.map((name, index) => (
             <Stack
               // Positional: the rows are an ordered list of free text, so the
@@ -100,7 +100,7 @@ export default function SignUpClasses({ screenSize }: ScreenSizeProps) {
           disableElevation
           disabled={!canContinue}
           onClick={() => navigate('/signup/select')}
-          sx={{ mt: `${theme.sizing.space11}px` }}
+          sx={{ mt: `${theme.sizing.space12}px` }}
         >
           {t('signup.continue')}
         </SignUpCta>

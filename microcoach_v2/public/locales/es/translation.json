@@ -57,7 +57,16 @@
     "openDetails": "Abrir detalles de la actividad",
     "markAsDone": "Marcar como hecha",
     "remove": "Quitar",
-    "empty": "Aún no hay actividades guardadas. Elija una en los próximos pasos de un concepto erróneo."
+    "empty": "Aún no hay actividades guardadas. Elija una en los próximos pasos de un concepto erróneo.",
+    "statActivities": "Actividades realizadas",
+    "statActivitiesValue": "{{count}} completadas",
+    "statUpload": "Subir archivos RTD",
+    "statUploadValue": "Su siguiente acción",
+    "statProgress": "Ver progreso",
+    "statProgressValue": "Se activa tras la carga",
+    "promptTitle": "Suba archivos RTD para seguir el progreso",
+    "promptBody": "Ha marcado actividades como completadas. Suba los archivos RTD para que MicroCoach analice los resultados y detecte brechas de aprendizaje.",
+    "promptCta": "Subir archivos RTD"
   },
   "misconceptionModal": {
     "close": "Cerrar",
@@ -150,6 +159,75 @@
     "hidePassword": "Ocultar contraseña",
     "codeError": "Ese código no es correcto. Revise su correo e inténtelo de nuevo.",
     "checkingEmail": "Verificando el correo con la lista de administradores de su distrito…",
-    "emailNotApproved": "Este correo no está en nuestra lista de correos de administrador aprobados para su distrito. Comuníquese con su escuela para agregarlo, o regístrese como Docente."
+    "emailNotApproved": "Este correo no está en nuestra lista de correos de administrador aprobados para su distrito. Comuníquese con su escuela para agregarlo, o regístrese como Docente.",
+    "viewData": "Ver datos de las aulas por docente"
+  },
+  "login": {
+    "welcome": "Bienvenido de nuevo a MicroCoach",
+    "subtitle": "Inicie sesión en una cuenta existente",
+    "forgot": "¿Olvidó su contraseña?",
+    "noAccount": "¿No tiene una cuenta?"
+  },
+  "reset": {
+    "rulesTitle": "La contraseña debe:",
+    "ruleLength": "Tener al menos 8 caracteres",
+    "ruleLetter": "Incluir al menos una letra",
+    "ruleNumber": "Incluir al menos un número",
+    "newPassword": "Contraseña nueva",
+    "confirmPassword": "Confirmar contraseña...",
+    "reset": "Restablecer"
+  },
+  "profile": {
+    "title": "Configuración de la cuenta",
+    "sectionTitle": "Información del perfil",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo",
+    "emailNote": "(Nota: el correo no se puede editar)",
+    "password": "Contraseña",
+    "editPicture": "Editar foto",
+    "editInformation": "Editar información",
+    "save": "Guardar",
+    "changePassword": "Cambiar contraseña",
+    "accountCreated": "Cuenta creada",
+    "uploadsMade": "Cargas realizadas:",
+    "logOut": "Cerrar sesión"
+  },
+  "upload": {
+    "setupTitle": "Paso 1: Configure su clase",
+    "teacher": "Docente",
+    "class": "Clase",
+    "week": "Semana",
+    "uploadTitle": "Paso 2: Suba los archivos",
+    "uploadSubtitle": "Suba ambos archivos para continuar",
+    "exemplar": "Ejemplar RTD",
+    "exemplarNote": "· Pasos de solución y justificación de distractores",
+    "responses": "Respuestas RTD",
+    "responsesNote": "· Trabajo calificado de toda la clase",
+    "dropHint": "Suba un archivo o arrástrelo aquí",
+    "formatDocx": "formato .docx · hasta 5 MB",
+    "formatXlsx": "formato .xlsx · hasta 5 MB",
+    "uploadFile": "Subir archivo",
+    "replaceFile": "Reemplazar archivo",
+    "completed": "Completado",
+    "error": "Error",
+    "errorFormat": "Formato no admitido · Suba un archivo .docx",
+    "bothToContinue": "Suba ambos archivos para continuar",
+    "backHome": "Volver al inicio",
+    "continue": "Continuar",
+    "reviewTitle": "Revisar y enviar",
+    "reviewBody": "Confirme que subió los archivos correctos de Ejemplar y Respuestas RTD para la clase y la semana previstas. Una vez enviados, MicroCoach comenzará a analizarlos.",
+    "uploaded": "SUBIDOS",
+    "ppqExemplar": "Ejemplar PPQ",
+    "ppqResponses": "Respuestas PPQ",
+    "backToUpload": "Volver a subir",
+    "submit": "Enviar archivos para análisis"
+  },
+  "reflect": {
+    "title": "Próximos pasos que implementó",
+    "addresses": "Aborda:",
+    "mastery": "Mejora del dominio de la clase",
+    "improved": "estudiantes mejoraron",
+    "viewDetails": "Ver detalles"
   }
 }

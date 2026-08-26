@@ -10,6 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import googleIcon from '../images/googleicon.svg';
+import errorIcon from '../images/errorIcon.svg';
 import checkEmailApproval from '../lib/mocks/approvalCheck';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
@@ -22,6 +23,7 @@ import {
   FieldRow,
   GoogleButton,
   GoogleMark,
+  FieldErrorIcon,
   OrDivider,
   SignUpColumn,
   SignUpCta,
@@ -32,6 +34,7 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMisconceptions } from '../hooks/useMisconceptions';
 
 export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
@@ -39,6 +42,7 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
   const navigate = useNavigate();
   const state = useSignUpState();
   const dispatch = useSignUpDispatch();
+  const { session } = useMisconceptions();
   const isReady = useAllReady(useI18nReady());
 
   // Ported from central_v2's SignUp: the mouse handlers suppress the default
@@ -71,6 +75,7 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
     setApproval(result.isApproved ? 'approved' : 'rejected');
   };
 
+  const [isFormErrored, setIsFormErrored] = React.useState(false);
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setIsShowPassword((show) => !show);
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
@@ -84,12 +89,70 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
   const setField = (field: Field) => (value: string) =>
     dispatch({ type: 'SET_FIELD', payload: { field, value } });
 
-  const canContinue = Boolean(
+  /*
+   * Decorative on purpose: `aria-invalid` on the input is what assistive tech
+   * announces, so an icon repeating it would only add noise. It is there to
+   * make the failing field findable at a glance.
+   */
+  const errorAdornment = (show: boolean) =>
+    show ? (
+      <InputAdornment position="end">
+        <FieldErrorIcon src={errorIcon} alt="" />
+      </InputAdornment>
+    ) : undefined;
+
+  /*
+   * Ported from central_v2's SignUp: Continue always works, and a click on an
+   * incomplete form reddens whatever is missing instead of the button going
+   * dead. `showFieldErrors` is the load-bearing part — pairing the latch with
+   * current validity means the red clears as the teacher types the fix, rather
+   * than persisting until they click a second time.
+   */
+  const isFormValid = Boolean(
     state.firstName.trim() &&
     state.lastName.trim() &&
     state.email.trim() &&
-    state.password,
+    state.password &&
+    approval === 'approved',
   );
+  const showFieldErrors = isFormErrored && !isFormValid;
+
+  /*
+   * SET_VERIFIED is not cosmetic: both downstream steps guard on it, so
+   * navigating without it bounces straight back to the start of the wizard.
+   * Nothing else is seeded for a teacher — whatever names they typed carry
+   * through, and the prototype invents no identity of its own.
+   *
+   * The two roles skip different amounts of the wizard. A teacher lands on
+   * step 3 and still names their own classes; an admin goes straight to the
+   * final screen, because an admin browses classes that already exist rather
+   * than authoring any. That means the roster has to arrive with the sign-in
+   * — the way a real callback would return it — or the final screen has an
+   * empty dropdown and a CTA that can never enable.
+   */
+  const handleGoogle = () => {
+    dispatch({ type: 'SET_VERIFIED' });
+
+    if (state.role === 'ADMIN') {
+      dispatch({
+        type: 'SET_CLASSES',
+        payload: session.classes.map((classOption) => classOption.name),
+      });
+      navigate('/signup/select');
+      return;
+    }
+
+    navigate('/signup/classes');
+  };
+
+  const handleContinue = () => {
+    if (!isFormValid) {
+      setIsFormErrored(true);
+      return;
+    }
+    setIsFormErrored(false);
+    navigate('/signup/verify');
+  };
 
   return (
     <AppContentRow
@@ -101,12 +164,12 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
         <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
         <SignUpSubheading>{t('signup.registerTitle')}</SignUpSubheading>
 
-        {/* Mocked: the prototype has no federated sign-in, so this advances
-            the wizard exactly as the form does. */}
-        <GoogleButton
-          disableElevation
-          onClick={() => navigate('/signup/verify')}
-        >
+        {/* Stubbed: the real popup is out of our system entirely, as the flow
+            diagram marks it. Skipping it lands on step 3, not step 2 — Google
+            has already proven the address, so the OTP screen has nothing left
+            to do, and the diagram's step 2 is shown complete on a screen the
+            teacher never sees. */}
+        <GoogleButton disableElevation onClick={handleGoogle}>
           <GoogleMark src={googleIcon} alt="" aria-hidden />
           {t('signup.google')}
         </GoogleButton>
@@ -116,14 +179,28 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
         <Stack spacing={`${theme.sizing.space2}px`} sx={{ width: '100%' }}>
           <FieldRow screenSize={screenSize}>
             <SignUpField
+              isError={showFieldErrors && !state.firstName.trim()}
+              endAdornment={errorAdornment(
+                showFieldErrors && !state.firstName.trim(),
+              )}
               placeholder={t('signup.firstName')}
-              inputProps={{ 'aria-label': t('signup.firstName') }}
+              inputProps={{
+                'aria-label': t('signup.firstName'),
+                'aria-invalid': showFieldErrors && !state.firstName.trim(),
+              }}
               value={state.firstName}
               onChange={(event) => setField('firstName')(event.target.value)}
             />
             <SignUpField
+              isError={showFieldErrors && !state.lastName.trim()}
+              endAdornment={errorAdornment(
+                showFieldErrors && !state.lastName.trim(),
+              )}
               placeholder={t('signup.lastName')}
-              inputProps={{ 'aria-label': t('signup.lastName') }}
+              inputProps={{
+                'aria-label': t('signup.lastName'),
+                'aria-invalid': showFieldErrors && !state.lastName.trim(),
+              }}
               value={state.lastName}
               onChange={(event) => setField('lastName')(event.target.value)}
             />
@@ -132,8 +209,23 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
           <SignUpField
             type="email"
             isActive={approval === 'checking'}
+            // Red for an empty address and for one the vetted list refused —
+            // the message underneath already tells the two apart.
+            isError={
+              showFieldErrors &&
+              (!state.email.trim() || approval !== 'approved')
+            }
+            endAdornment={errorAdornment(
+              showFieldErrors &&
+                (!state.email.trim() || approval !== 'approved'),
+            )}
             placeholder={t('signup.email')}
-            inputProps={{ 'aria-label': t('signup.email') }}
+            inputProps={{
+              'aria-label': t('signup.email'),
+              'aria-invalid':
+                showFieldErrors &&
+                (!state.email.trim() || approval !== 'approved'),
+            }}
             value={state.email}
             onChange={(event) => {
               setField('email')(event.target.value);
@@ -165,12 +257,19 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
           )}
           <SignUpField
             type={isShowPassword ? 'text' : 'password'}
+            isError={showFieldErrors && !state.password}
             placeholder={t('signup.password')}
-            inputProps={{ 'aria-label': t('signup.password') }}
+            inputProps={{
+              'aria-label': t('signup.password'),
+              'aria-invalid': showFieldErrors && !state.password,
+            }}
             value={state.password}
             onChange={(event) => setField('password')(event.target.value)}
             endAdornment={
               <InputAdornment position="end">
+                {showFieldErrors && !state.password && (
+                  <FieldErrorIcon src={errorIcon} alt="" />
+                )}
                 <IconButton
                   size="small"
                   edge="end"
@@ -215,10 +314,13 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
           </SignUpPill>
         </Box>
 
+        {/* Figma: 40 between the login row and Continue, where every other
+            gap on this screen is 24. Additive on top of the column's gap
+            rather than a negative margin. */}
         <SignUpCta
           disableElevation
-          disabled={!canContinue}
-          onClick={() => navigate('/signup/verify')}
+          onClick={handleContinue}
+          sx={{ mt: `${theme.sizing.space3}px` }}
         >
           {t('signup.continue')}
         </SignUpCta>

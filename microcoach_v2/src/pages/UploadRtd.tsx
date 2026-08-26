@@ -1,0 +1,278 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import AppContentRow from '../components/AppContentRow';
+import { ScreenSize } from '../lib/MicroCoachModels';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { useMisconceptions } from '../hooks/useMisconceptions';
+import {
+  useUploadState,
+  useUploadDispatch,
+} from '../hooks/context/useUploadContext';
+import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
+import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
+import {
+  Dropzone,
+  DropzoneRow,
+  FormatHint,
+  SetupRow,
+  SetupValue,
+  UploadCard,
+  UploadPill,
+  UploadedFileRow,
+  ScreenSizeProps,
+} from '../lib/styledcomponents/UploadStyledComponents';
+import { useAllReady, useI18nReady } from '../hooks/readiness';
+
+/**
+ * RTD upload — one screen in four states, exactly as the frames draw it:
+ * both empty, one errored, one done, both done. Only the dropzone changes,
+ * so the states are props rather than separate screens.
+ *
+ * Mocked like the rest of the prototype: there is no real file handling, so
+ * "Upload file" marks a slot complete and "Replace file" clears it. The error
+ * state is reachable through the second slot so it can be demonstrated.
+ */
+export default function UploadRtd({ screenSize }: ScreenSizeProps) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const { session } = useMisconceptions();
+  const { userProfile } = useMicroCoachDataState();
+  const upload = useUploadState();
+  const dispatch = useUploadDispatch();
+  const isReady = useAllReady(useI18nReady());
+
+  if (!isReady) return null;
+
+  const teacherName = userProfile?.teacherName ?? session.teacher.displayName;
+  const teacherEmail = userProfile?.email ?? session.teacher.email;
+  const className =
+    session.classes.find((option) => option.id === session.selectedClassId)
+      ?.name ?? session.classes[0]?.name;
+
+  const slots = [
+    {
+      key: 'exemplar' as const,
+      title: t('upload.exemplar'),
+      note: t('upload.exemplarNote'),
+      format: t('upload.formatDocx'),
+      file: upload.exemplar,
+    },
+    {
+      key: 'responses' as const,
+      title: t('upload.responses'),
+      note: t('upload.responsesNote'),
+      format: t('upload.formatXlsx'),
+      file: upload.responses,
+    },
+  ];
+
+  const bothComplete = slots.every((slot) => slot.file?.status === 'COMPLETE');
+
+  return (
+    <AppContentRow
+      screenSize={screenSize}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: `${theme.sizing.space6}px`,
+        pt: `${theme.sizing.space8}px`,
+        pb: `${theme.sizing.space12}px`,
+      }}
+    >
+      <Typography
+        variant="appTitle"
+        sx={{ color: 'designSystem.surface.atlanticNavy' }}
+      >
+        {t('upload.setupTitle')}
+      </Typography>
+
+      <UploadCard>
+        <SetupRow screenSize={screenSize}>
+          {[
+            {
+              label: t('upload.teacher'),
+              value: `${teacherName} · ${teacherEmail}`,
+            },
+            { label: t('upload.class'), value: className },
+            { label: t('upload.week'), value: session.selectedWeek },
+          ].map((field) => (
+            <Box key={field.label}>
+              <Typography
+                variant="smallTitle"
+                sx={{
+                  display: 'block',
+                  mb: `${theme.sizing.space1}px`,
+                  color: 'designSystem.surface.atlanticNavy',
+                }}
+              >
+                {field.label}
+              </Typography>
+              <SetupValue>{field.value}</SetupValue>
+            </Box>
+          ))}
+        </SetupRow>
+      </UploadCard>
+
+      <Box>
+        <Typography
+          variant="appTitle"
+          sx={{ display: 'block', color: 'designSystem.surface.atlanticNavy' }}
+        >
+          {t('upload.uploadTitle')}
+        </Typography>
+        <Typography
+          variant="uploadLabel"
+          sx={{ color: 'designSystem.surface.atlanticNavy' }}
+        >
+          {t('upload.uploadSubtitle')}
+        </Typography>
+      </Box>
+
+      <DropzoneRow screenSize={screenSize}>
+        {slots.map((slot) => {
+          const { file } = slot;
+          const isErrored = file?.status === 'ERROR';
+
+          return (
+            <UploadCard key={slot.key}>
+              <Typography
+                variant="smallTitle"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              >
+                {slot.title}
+                <Box
+                  component="span"
+                  sx={{ fontWeight: 300, ml: `${theme.sizing.space1}px` }}
+                >
+                  {slot.note}
+                </Box>
+              </Typography>
+
+              {file ? (
+                <UploadedFileRow isError={isErrored}>
+                  <Typography
+                    variant="statusLabel"
+                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                  >
+                    {file.name}
+                  </Typography>
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    {isErrored ? (
+                      <ErrorIcon
+                        fontSize="small"
+                        sx={{ color: 'designSystem.status.errorIcon' }}
+                      />
+                    ) : (
+                      <CheckCircleIcon
+                        fontSize="small"
+                        sx={{ color: 'designSystem.status.success' }}
+                      />
+                    )}
+                    <Typography
+                      variant="rubikSubBold"
+                      sx={{
+                        fontWeight: 400,
+                        color: 'designSystem.surface.atlanticNavy',
+                      }}
+                    >
+                      {t(isErrored ? 'upload.error' : 'upload.completed')}
+                    </Typography>
+                  </Stack>
+                </UploadedFileRow>
+              ) : (
+                <Dropzone>
+                  <PromptIconTile>
+                    <UploadFileIcon />
+                  </PromptIconTile>
+                  <Typography
+                    variant="mediumLabel"
+                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                  >
+                    {t('upload.dropHint')}
+                  </Typography>
+                  <FormatHint>{slot.format}</FormatHint>
+                </Dropzone>
+              )}
+
+              {isErrored && (
+                <Typography
+                  variant="rubikSubBold"
+                  role="alert"
+                  sx={{
+                    fontWeight: 400,
+                    color: 'designSystem.foreground.accentBlue',
+                  }}
+                >
+                  {t('upload.errorFormat')}
+                </Typography>
+              )}
+
+              <UploadPill
+                disableElevation
+                sx={{ alignSelf: 'center' }}
+                onClick={() =>
+                  dispatch(
+                    file
+                      ? { type: 'CLEAR_FILE', payload: slot.key }
+                      : { type: 'COMPLETE_FILE', payload: slot.key },
+                  )
+                }
+              >
+                {t(file ? 'upload.replaceFile' : 'upload.uploadFile')}
+              </UploadPill>
+            </UploadCard>
+          );
+        })}
+      </DropzoneRow>
+
+      {!bothComplete && (
+        <Typography
+          variant="uploadLabel"
+          sx={{
+            fontWeight: 300,
+            textAlign: 'center',
+            color: 'designSystem.surface.atlanticNavy',
+          }}
+        >
+          {t('upload.bothToContinue')}
+        </Typography>
+      )}
+
+      <Stack
+        direction={screenSize === ScreenSize.LARGE ? 'row' : 'column'}
+        spacing={`${theme.sizing.space3}px`}
+        sx={{ alignItems: 'center', justifyContent: 'center' }}
+      >
+        <SignUpCta
+          disableElevation
+          onClick={() => navigate('/dashboard')}
+          sx={{
+            backgroundColor: 'designSystem.surface.skyBlue',
+            color: 'designSystem.background.navyBlue',
+            '&:hover': { backgroundColor: 'designSystem.foreground.lightBlue' },
+          }}
+        >
+          {t('upload.backHome')}
+        </SignUpCta>
+        {/* Figma only draws Continue once both slots read Completed. */}
+        {bothComplete && (
+          <SignUpCta
+            disableElevation
+            onClick={() => navigate('/upload-rtd/review')}
+          >
+            {t('upload.continue')}
+          </SignUpCta>
+        )}
+      </Stack>
+    </AppContentRow>
+  );
+}

@@ -11,6 +11,7 @@ import { useAPIClients } from './hooks/useAPIClients';
 import { APIClientsContext } from './lib/context/APIClientsContext';
 import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
 import { SignUpProvider } from './lib/context/SignUpContext';
+import { UploadProvider } from './lib/context/UploadContext';
 import { useAPIClientsContext } from './hooks/context/useAPIClientsContext';
 import { useAuthResolver } from './hooks/useMicroCoachDataActions';
 import AppSwitch from './switches/AppSwitch';
@@ -92,6 +93,22 @@ const router = createBrowserRouter([
         element: <AppSwitch currentScreen={ScreenType.ACTIVITY_DETAIL} />,
       },
       {
+        path: 'upload-rtd',
+        element: <AppSwitch currentScreen={ScreenType.UPLOAD_RTD} />,
+      },
+      {
+        path: 'upload-rtd/review',
+        element: <AppSwitch currentScreen={ScreenType.UPLOAD_RTD_REVIEW} />,
+      },
+      {
+        path: 'reflect',
+        element: <AppSwitch currentScreen={ScreenType.REFLECT} />,
+      },
+      {
+        path: 'profile',
+        element: <AppSwitch currentScreen={ScreenType.PROFILE} />,
+      },
+      {
         path: 'myplan',
         element: <AppSwitch currentScreen={ScreenType.MY_PLAN} />,
       },
@@ -119,7 +136,9 @@ function App() {
                 {/* Inside the data provider: the wizard's last step commits
                     its result into that reducer. */}
                 <SignUpProvider>
-                  <RouterProvider router={router} />
+                  <UploadProvider>
+                    <RouterProvider router={router} />
+                  </UploadProvider>
                 </SignUpProvider>
               </MicroCoachDataProvider>
             </APIClientsContext.Provider>

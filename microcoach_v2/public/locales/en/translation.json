@@ -57,7 +57,16 @@
     "openDetails": "Open activity details",
     "markAsDone": "Mark as done",
     "remove": "Remove",
-    "empty": "No activities saved yet. Choose one from a misconception's next steps."
+    "empty": "No activities saved yet. Choose one from a misconception's next steps.",
+    "statActivities": "Activities run",
+    "statActivitiesValue": "{{count}} completed",
+    "statUpload": "Upload RTD files",
+    "statUploadValue": "Your next action",
+    "statProgress": "View progress",
+    "statProgressValue": "Unlocks after upload",
+    "promptTitle": "Upload RTD files to track progress",
+    "promptBody": "You’ve marked activities as complete. Upload RTD files now so MicroCoach can analyze student results and surface learning gaps.",
+    "promptCta": "Upload RTD Files"
   },
   "misconceptionModal": {
     "close": "Close",
@@ -150,6 +159,75 @@
     "hidePassword": "Hide password",
     "codeError": "That code isn't right. Check your email and try again.",
     "checkingEmail": "Checking email against your district's admin list…",
-    "emailNotApproved": "This email isn't on our list of approved admin emails for your district. Contact your school to get added, or sign up as a Teacher instead."
+    "emailNotApproved": "This email isn't on our list of approved admin emails for your district. Contact your school to get added, or sign up as a Teacher instead.",
+    "viewData": "View classroom data across teachers"
+  },
+  "login": {
+    "welcome": "Welcome back to MicroCoach",
+    "subtitle": "Sign in to an existing account",
+    "forgot": "Forgot your password?",
+    "noAccount": "Don’t have an account?"
+  },
+  "reset": {
+    "rulesTitle": "Passwords must:",
+    "ruleLength": "Be at least 8 characters in length",
+    "ruleLetter": "Include at least one letter",
+    "ruleNumber": "Include at least one number",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm Password...",
+    "reset": "Reset"
+  },
+  "profile": {
+    "title": "Account Settings",
+    "sectionTitle": "Profile Information",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "emailNote": "(Note: email cannot be edited)",
+    "password": "Password",
+    "editPicture": "Edit Picture",
+    "editInformation": "Edit Information",
+    "save": "Save",
+    "changePassword": "Change Password",
+    "accountCreated": "Account Created",
+    "uploadsMade": "Uploads Made:",
+    "logOut": "Log out"
+  },
+  "upload": {
+    "setupTitle": "Step 1: Set up your class",
+    "teacher": "Teacher",
+    "class": "Class",
+    "week": "Week",
+    "uploadTitle": "Step 2: Upload files",
+    "uploadSubtitle": "Upload both files below to continue",
+    "exemplar": "RTD Exemplar",
+    "exemplarNote": "· Solution steps & distractor rationale",
+    "responses": "RTD Responses",
+    "responsesNote": "· Graded student work for full class",
+    "dropHint": "Upload a file or drag and drop it here",
+    "formatDocx": ".docx format · up to 5MB",
+    "formatXlsx": ".xlsx format · up to 5MB",
+    "uploadFile": "Upload file",
+    "replaceFile": "Replace file",
+    "completed": "Completed",
+    "error": "Error",
+    "errorFormat": "Unsupported file format · Please upload a .docx file",
+    "bothToContinue": "Upload both files to continue",
+    "backHome": "Back to homepage",
+    "continue": "Continue",
+    "reviewTitle": "Review and submit",
+    "reviewBody": "Please confirm you’ve uploaded the correct RTD Exemplar and Responses files for the intended class and week. Once submitted, MicroCoach will begin analyzing your files.",
+    "uploaded": "UPLOADED",
+    "ppqExemplar": "PPQ Exemplar",
+    "ppqResponses": "PPQ Responses",
+    "backToUpload": "Back to upload",
+    "submit": "Submit files for analysis"
+  },
+  "reflect": {
+    "title": "Next Steps You Implemented",
+    "addresses": "Addresses:",
+    "mastery": "Class mastery improvement",
+    "improved": "students showed improvement",
+    "viewDetails": "View details"
   }
 }

@@ -48,6 +48,7 @@ export type SignUpAction =
   | { type: 'SET_CODE'; payload: string[] }
   | { type: 'SET_VERIFIED' }
   | { type: 'ADD_CLASS' }
+  | { type: 'SET_CLASSES'; payload: string[] }
   | { type: 'SET_CLASS'; payload: { index: number; value: string } }
   | { type: 'REMOVE_CLASS'; payload: number }
   | { type: 'RESET' };
@@ -67,6 +68,10 @@ export function signUpReducer(
       return { ...state, isVerified: true };
     case 'ADD_CLASS':
       return { ...state, classes: [...state.classes, ''] };
+    // Replaces the whole list at once. Used when a federated sign-in returns
+    // a roster rather than the teacher typing one row at a time.
+    case 'SET_CLASSES':
+      return { ...state, classes: action.payload };
     case 'SET_CLASS':
       return {
         ...state,

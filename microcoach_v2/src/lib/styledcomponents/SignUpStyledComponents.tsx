@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonBase from '@mui/material/ButtonBase';
 import InputBase from '@mui/material/InputBase';
+import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
@@ -116,22 +117,40 @@ export const RoleIconTile = styled(Box)(({ theme }) => ({
  * unstyled back out again.
  */
 export const SignUpField = styled(InputBase, {
-  shouldForwardProp: (prop) => prop !== 'isActive',
-})<{ isActive?: boolean }>(({ theme, isActive }) => ({
+  shouldForwardProp: (prop) =>
+    prop !== 'isActive' &&
+    prop !== 'isError' &&
+    prop !== 'isFilled' &&
+    prop !== 'isLocked',
+})<{
+  isActive?: boolean;
+  isError?: boolean;
+  /** Profile: a field that already holds a value reads sky blue, not white. */
+  isFilled?: boolean;
+  /** Profile: the email is explicitly uneditable. */
+  isLocked?: boolean;
+}>(({ theme, isActive, isError, isFilled, isLocked }) => ({
   width: '100%',
   height: fieldHeight,
   padding: `0 ${theme.sizing.space2}px`,
   borderRadius: fieldRadius,
   // Figma (SignUpError1): the field being checked fills sky blue behind a
   // selectedNavy outline, so the row reads as busy rather than merely typed in.
-  backgroundColor: isActive
-    ? theme.palette.designSystem.surface.skyBlue
-    : theme.palette.designSystem.surface.white,
-  border: `${FIELD_BORDER_WIDTH}px solid ${
-    isActive
-      ? theme.palette.designSystem.foreground.fadedSelectedNavy
-      : theme.palette.designSystem.foreground.fadedDarkBlue
-  }`,
+  backgroundColor:
+    isActive || isFilled
+      ? theme.palette.designSystem.surface.skyBlue
+      : theme.palette.designSystem.surface.white,
+  // isError outranks isActive: a field still being checked that is already
+  // invalid should read as invalid.
+  border: `${FIELD_BORDER_WIDTH}px solid ${(() => {
+    if (isError) return theme.palette.designSystem.status.errorStroke;
+    // Locked reads as inert rather than merely unfocused, so it borrows the
+    // recessive grey the filled verification box uses.
+    if (isLocked) return theme.palette.designSystem.foreground.codeStrokeFilled;
+    if (isActive || isFilled)
+      return theme.palette.designSystem.foreground.selectedNavy;
+    return theme.palette.designSystem.foreground.fadedDarkBlue;
+  })()}`,
   boxSizing: 'border-box',
   '& input': {
     padding: 0,
@@ -139,12 +158,27 @@ export const SignUpField = styled(InputBase, {
     color: theme.palette.designSystem.surface.atlanticNavy,
   },
   '& input::placeholder': {
-    color: theme.palette.designSystem.surface.placeholderGrey,
+    // central_v2 reddens the placeholder alongside the outline, so an empty
+    // required field says which one it is without a separate message.
+    color: isError
+      ? theme.palette.designSystem.status.errorStroke
+      : theme.palette.designSystem.surface.placeholderGrey,
     // Figma draws placeholders at 50%. Set explicitly rather than left to the
     // browser, whose own default differs (Firefox uses 0.54).
-    opacity: 0.5,
+    opacity: isError ? 1 : 0.5,
   },
 }));
+
+/**
+ * The error marker central_v2 puts at the end of an invalid field
+ * (central_v2/src/images/errorIcon.svg). Its red is a gradient baked into the
+ * asset, so it needs no token and cannot drift from the outline colour.
+ */
+export const FieldErrorIcon = styled('img')({
+  width: 21,
+  height: 20,
+  flexShrink: 0,
+});
 
 /** The paired first/last name row, which stacks below LARGE. */
 export const FieldRow = styled(Box, {
@@ -286,6 +320,13 @@ export const SignUpPill = styled(Button)(({ theme }) => ({
   },
 }));
 
+// Figma (login): 132x36, the same pill in fadedNavyBlue — a secondary action
+// sitting below the primary one, so it recedes rather than competing.
+export const SignUpPillMuted = styled(SignUpPill)(({ theme }) => ({
+  minWidth: 132,
+  backgroundColor: theme.palette.designSystem.foreground.fadedNavyBlue,
+}));
+
 // Figma: 181x31, rx 15.5 — a pill, so the radius tracks the height.
 export const AddClassChip = styled(Button)(({ theme }) => ({
   alignSelf: 'flex-start',
@@ -303,6 +344,42 @@ export const AddClassChip = styled(Button)(({ theme }) => ({
   },
 }));
 
+/**
+ * The password rules, shown beside the fields while one is focused. Figma:
+ * 244x148 rx 8 in accentBlue with white copy — an inline panel rather than
+ * the hover tooltip central_v2 uses for the same content.
+ */
+export const PasswordRulesPanel = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space0,
+  width: '100%',
+  maxWidth: 244,
+  padding: theme.sizing.space3,
+  borderRadius: theme.sizing.space1,
+  backgroundColor: theme.palette.designSystem.foreground.accentBlue,
+  color: theme.palette.designSystem.surface.white,
+  boxSizing: 'border-box',
+}));
+
+// Figma: 160x32 rx 8 in darkBlue — squarer and smaller than the pills, so it
+// gets its own part rather than bending SignUpPill.
+export const ResetButton = styled(Button)(({ theme }) => ({
+  minWidth: 160,
+  minHeight: 32,
+  padding: `0 ${theme.sizing.space3}px`,
+  borderRadius: theme.sizing.space1,
+  backgroundColor: theme.palette.designSystem.surface.darkBlue,
+  color: theme.palette.designSystem.surface.white,
+  ...theme.typography.headingMd,
+  fontWeight: 700,
+  textTransform: 'none',
+  whiteSpace: 'nowrap',
+  '&:hover': {
+    backgroundColor: theme.palette.designSystem.background.navyBlue,
+  },
+}));
+
 // Figma: 600x40, rx 8 — wider than the wizard fields and filled sky blue.
 export const TeacherSelectField = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -316,6 +393,31 @@ export const TeacherSelectField = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
+/**
+ * Admin picks a class from a dropdown rather than the teacher's chip grid —
+ * an admin sees classes across every teacher, which chips do not scale to.
+ * Figma: 600x40 rx 8, same box as the teacher select above it but filled
+ * white, with a navy chevron.
+ */
+export const ClassSelect = styled(Select<string>)(({ theme }) => ({
+  width: '100%',
+  height: fieldHeight,
+  borderRadius: fieldRadius,
+  backgroundColor: theme.palette.designSystem.surface.white,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+  ...theme.typography.headingSm,
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderWidth: FIELD_BORDER_WIDTH,
+    borderColor: theme.palette.designSystem.foreground.fadedSelectedNavy,
+  },
+  '&:hover .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.palette.designSystem.foreground.fadedSelectedNavy,
+  },
+  '& .MuiSelect-icon': {
+    color: theme.palette.designSystem.background.navyBlue,
+  },
+}));
+
 /** Figma lays the class chips 3-up; below LARGE they fall to two per row. */
 export const ClassChipGrid = styled(Box, {
   shouldForwardProp: noScreenSize,
@@ -323,7 +425,8 @@ export const ClassChipGrid = styled(Box, {
   display: 'grid',
   gridTemplateColumns:
     screenSize === ScreenSize.LARGE ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)',
-  gap: theme.sizing.space5,
+  // Figma: 20 between rows (552→622) and between columns.
+  gap: theme.sizing.space4,
   width: '100%',
 }));
 

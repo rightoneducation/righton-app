@@ -29,6 +29,10 @@ export enum ScreenType {
   CHOOSE_ACTIVITY,
   MY_PLAN,
   ACTIVITY_DETAIL,
+  PROFILE,
+  UPLOAD_RTD,
+  UPLOAD_RTD_REVIEW,
+  REFLECT,
 }
 
 // Resolved once from useMediaQuery at the top of a page and drilled down, so

@@ -53,6 +53,7 @@ function ActivityDetailView({
   const handleTabSelect = (tabId: FlowTabId) => {
     if (tabId === 'prepare') navigate('/myplan');
     if (tabId === 'understand-act') navigate('/review');
+    if (tabId === 'reflect') navigate('/reflect');
   };
 
   const [isExporting, setIsExporting] = React.useState(false);
