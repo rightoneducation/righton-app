@@ -20,8 +20,11 @@ export interface ApprovalResult {
  */
 const STUB_LATENCY_MS = 900;
 
-/** Stands in for the vetted list until the real one is queried. */
-const APPROVED_DOMAINS = ['justiceschools.org', 'righton.education'];
+/**
+ * Stands in for the vetted list until the real one is queried.
+ * `teacher@school.com` is the address to demo with.
+ */
+const APPROVED_DOMAINS = ['school.com'];
 
 export default function checkEmailApproval(
   email: string,

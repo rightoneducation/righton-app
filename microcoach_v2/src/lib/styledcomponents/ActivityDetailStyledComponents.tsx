@@ -101,7 +101,8 @@ export const PhaseFooterAction = styled(Button, {
   border:
     tone === 'solid'
       ? 'none'
-      : `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
+      : // Every activity frame outlines the quiet actions at 50%, not full.
+        `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.foreground.fadedDeepNavy}`,
   color:
     tone === 'solid'
       ? theme.palette.designSystem.surface.white

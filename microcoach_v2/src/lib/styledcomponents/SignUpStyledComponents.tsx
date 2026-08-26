@@ -129,8 +129,8 @@ export const SignUpField = styled(InputBase, {
     : theme.palette.designSystem.surface.white,
   border: `${FIELD_BORDER_WIDTH}px solid ${
     isActive
-      ? theme.palette.designSystem.foreground.selectedNavy
-      : theme.palette.designSystem.surface.darkBlue
+      ? theme.palette.designSystem.foreground.fadedSelectedNavy
+      : theme.palette.designSystem.foreground.fadedDarkBlue
   }`,
   boxSizing: 'border-box',
   '& input': {
@@ -140,7 +140,9 @@ export const SignUpField = styled(InputBase, {
   },
   '& input::placeholder': {
     color: theme.palette.designSystem.surface.placeholderGrey,
-    opacity: 1,
+    // Figma draws placeholders at 50%. Set explicitly rather than left to the
+    // browser, whose own default differs (Firefox uses 0.54).
+    opacity: 0.5,
   },
 }));
 
@@ -259,7 +261,7 @@ export const SignUpCta = styled(Button)(({ theme }) => ({
   '&.Mui-disabled': {
     backgroundColor: theme.palette.designSystem.surface.neutralGray,
     border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.foreground.disabledStroke}`,
-    color: theme.palette.designSystem.foreground.selectedNavy,
+    color: theme.palette.designSystem.foreground.fadedSelectedNavy,
   },
 }));
 
@@ -310,7 +312,7 @@ export const TeacherSelectField = styled(Box)(({ theme }) => ({
   padding: `0 ${theme.sizing.space2}px`,
   borderRadius: fieldRadius,
   backgroundColor: theme.palette.designSystem.surface.skyBlue,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.foreground.selectedNavy}`,
+  border: `${FIELD_BORDER_WIDTH}px solid ${theme.palette.designSystem.foreground.fadedSelectedNavy}`,
   boxSizing: 'border-box',
 }));
 

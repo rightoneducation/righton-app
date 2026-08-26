@@ -11,6 +11,8 @@ const designSystemColors = {
     cream: '#FFFBF6',
     navyBlue: '#1B3467',
     greyOverlay: '#B2B0AC',
+    // cream at 50% — the identity pill's outline on the public header.
+    fadedCream: '#FFFBF680',
   },
   foreground: {
     base: '#FFFFFF',
@@ -41,6 +43,16 @@ const designSystemColors = {
     // filled state deliberately recedes so the digit carries the emphasis.
     codeStroke: '#4E628C',
     codeStrokeFilled: '#CCCCCC',
+    // The sign-up frames outline every field at 70% rather than full strength,
+    // so the border sits back from the text. Alpha baked into 8-digit hex the
+    // way fadedAtlanticNavy is, so it stays one value per appearance.
+    fadedDarkBlue: '#02215FB3',
+    // selectedNavy at 70% — the active field outline, the teacher select, and
+    // the label on a disabled CTA.
+    fadedSelectedNavy: '#1B2A6BB3',
+    // background.navyBlue at 50% — the outline on a quiet footer action, in
+    // every activity frame.
+    fadedDeepNavy: '#1B346780',
   },
   surface: {
     atlanticNavy: '#1B376F',

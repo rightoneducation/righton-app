@@ -81,9 +81,11 @@ export default function SignUpSelect({ screenSize }: ScreenSizeProps) {
         <SignUpSubheading>{t('signup.selectTitle')}</SignUpSubheading>
 
         <TeacherSelectField>
+          {/* Figma sets this at the same 50% it uses for placeholders — the
+              name reads as a chosen value in a select, not as body copy. */}
           <Typography
             variant="headingSm"
-            sx={{ color: 'designSystem.surface.placeholderGrey' }}
+            sx={{ color: 'designSystem.surface.placeholderGrey', opacity: 0.5 }}
           >
             {teacherName}
           </Typography>

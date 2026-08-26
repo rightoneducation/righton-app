@@ -74,7 +74,7 @@ const PublicIdentityPill = styled(Box)(({ theme }) => ({
   padding: `0 ${theme.sizing.space3}px`,
   borderRadius: theme.sizing.space1,
   backgroundColor: theme.palette.designSystem.surface.darkBlue,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.cream}`,
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.fadedCream}`,
   color: theme.palette.designSystem.background.cream,
   ...theme.typography.headingSm,
   whiteSpace: 'nowrap',
