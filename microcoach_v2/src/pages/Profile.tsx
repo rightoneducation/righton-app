@@ -93,15 +93,7 @@ export default function Profile({ screenSize }: ScreenSizeProps) {
 
       <ProfileLayout screenSize={screenSize}>
         <ProfileSidebar screenSize={screenSize}>
-          <Typography
-            sx={{
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 700,
-              fontSize: '40px',
-            }}
-          >
-            {displayName}
-          </Typography>
+          <Typography variant="displayBold">{displayName}</Typography>
           <Typography variant="rubikSubBold" sx={{ fontWeight: 400 }}>
             {displayName}
           </Typography>

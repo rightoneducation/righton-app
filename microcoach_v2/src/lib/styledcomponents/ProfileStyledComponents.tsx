@@ -45,7 +45,7 @@ export const ProfileSidebar = styled(Box, {
   boxSizing: 'border-box',
 }));
 
-// Figma: 123x152, rx 28.6, a #1F81B3 plate behind a near-white 2.3px ring.
+// Figma: 123x152, rx 28.6, an avatarPlate plate behind a near-white 2.3px ring.
 export const ProfileAvatar = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -53,7 +53,7 @@ export const ProfileAvatar = styled(Box)(({ theme }) => ({
   width: 123,
   height: 152,
   borderRadius: avatarRadius,
-  backgroundColor: theme.palette.designSystem.chart.line,
+  backgroundColor: theme.palette.designSystem.surface.avatarPlate,
   border: `2px solid ${theme.palette.designSystem.background.offWhite}`,
   color: theme.palette.designSystem.surface.white,
   boxSizing: 'border-box',
@@ -101,10 +101,7 @@ export const ProfileForm = styled(Box, {
 }));
 
 export const ProfileHeading = styled(Typography)(({ theme }) => ({
-  ...theme.typography.h3,
-  fontFamily: "'Poppins', sans-serif",
-  fontWeight: 700,
-  fontSize: '40px',
+  ...theme.typography.displayBold,
   color: theme.palette.designSystem.surface.darkBlue,
   textAlign: 'center',
 }));

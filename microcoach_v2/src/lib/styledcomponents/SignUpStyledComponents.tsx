@@ -152,6 +152,9 @@ export const SignUpField = styled(InputBase, {
     return theme.palette.designSystem.foreground.fadedDarkBlue;
   })()}`,
   boxSizing: 'border-box',
+  // Figma boxes the locked field at 498x44 rx 7 rather than the 502x42 rx 9
+  // every editable field uses — a slightly squarer, slightly taller inert box.
+  ...(isLocked ? { minHeight: 44, borderRadius: 7 } : null),
   '& input': {
     padding: 0,
     ...theme.typography.placeholderLabel,

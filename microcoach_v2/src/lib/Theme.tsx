@@ -13,6 +13,16 @@ const designSystemColors = {
     greyOverlay: '#B2B0AC',
     // cream at 50% — the identity pill's outline on the public header.
     fadedCream: '#FFFBF680',
+    // cream at 10% and 30% — the app header's identity pill and class select,
+    // which sit on navy rather than on the page.
+    fadedCreamFill: '#FFFBF61A',
+    fadedCreamStroke: '#FFFBF64D',
+    // white at 8% — the hover wash on an outlined control over navy.
+    fadedWhiteHover: '#FFFFFF14',
+    // white at 18% — a skeleton over navy, where the page-level grey vanishes.
+    fadedWhiteVeil: '#FFFFFF2E',
+    // black at 50% — the modal backdrop.
+    scrim: '#00000080',
   },
   foreground: {
     base: '#FFFFFF',
@@ -50,6 +60,10 @@ const designSystemColors = {
     // selectedNavy at 70% — the active field outline, the teacher select, and
     // the label on a disabled CTA.
     fadedSelectedNavy: '#1B2A6BB3',
+    // selectedNavy at 50% — a field the teacher cannot edit, and the dropzone's
+    // dashed edge. The upload frames separate locked from interactive purely by
+    // this alpha, so the two strengths have to stay distinct tokens.
+    lockedNavy: '#1B2A6B80',
     // background.navyBlue at 50% — the outline on a quiet footer action, in
     // every activity frame.
     fadedDeepNavy: '#1B346780',
@@ -67,6 +81,9 @@ const designSystemColors = {
     green: '#3EBF8F',
     ashyGray: '#635F5F',
     placeholderGrey: '#294478',
+    // The profile avatar's plate. 18 off chart.line at its widest channel, so
+    // it earns its own value rather than reusing the graph's blue.
+    avatarPlate: '#1F81B3',
   },
   status: {
     base: '#FFFFFF',
@@ -381,6 +398,34 @@ const designSystemTypography = {
     fontSize: '14px',
     lineHeight: 'normal',
   },
+  // Profile's display name and "Account Settings" heading.
+  displayBold: {
+    fontFamily: poppins,
+    fontWeight: 700,
+    fontSize: '40px',
+    lineHeight: 'normal',
+  },
+  // The review step's body copy and its "UPLOADED" heading — headingLg is
+  // already Poppins 600/24, so these are its 400 and 500 weights.
+  bodyLg: {
+    fontFamily: poppins,
+    fontWeight: 400,
+    fontSize: '24px',
+    lineHeight: 'normal',
+  },
+  subheadingLg: {
+    fontFamily: poppins,
+    fontWeight: 500,
+    fontSize: '24px',
+    lineHeight: 'normal',
+  },
+  // submissionLabel's lighter twin, for the value beside each summary label.
+  submissionLabelLight: {
+    fontFamily: poppins,
+    fontWeight: 400,
+    fontSize: '22px',
+    lineHeight: 'normal',
+  },
   // The "FINAL:" summary closing each worked example. Rendered uppercase by
   // the component, so the copy itself stays natural-case.
   outcomeLabel: {
@@ -426,6 +471,9 @@ const sizing = {
   // In-app screens sit in a narrower column than the landing page: the Figma
   // card row is 344 x 3 with the gap tokenised to space8, so 344*3 + 48*2.
   appContentMaxWidth: 1128,
+  // Review and submit runs narrower than the rest of the flow: Figma insets it
+  // to x 502..1418, so the column is the card.
+  reviewContentMaxWidth: 916,
   // Home is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
   // The stepper and banner deliberately break out of that column.
   homeContentMaxWidth: 858,
@@ -505,6 +553,10 @@ declare module '@mui/material/styles' {
     rubikLabelSm: CSSProperties;
     stepChipLabel: CSSProperties;
     outcomeLabel: CSSProperties;
+    displayBold: CSSProperties;
+    bodyLg: CSSProperties;
+    subheadingLg: CSSProperties;
+    submissionLabelLight: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
@@ -548,6 +600,10 @@ declare module '@mui/material/styles' {
     rubikLabelSm?: CSSProperties;
     stepChipLabel?: CSSProperties;
     outcomeLabel?: CSSProperties;
+    displayBold?: CSSProperties;
+    bodyLg?: CSSProperties;
+    subheadingLg?: CSSProperties;
+    submissionLabelLight?: CSSProperties;
   }
 }
 
@@ -592,6 +648,10 @@ declare module '@mui/material/Typography' {
     rubikLabelSm: true;
     stepChipLabel: true;
     outcomeLabel: true;
+    displayBold: true;
+    bodyLg: true;
+    subheadingLg: true;
+    submissionLabelLight: true;
   }
 }
 
@@ -671,6 +731,10 @@ const Theme = createTheme({
           rubikLabelSm: 'p',
           stepChipLabel: 'p',
           outcomeLabel: 'p',
+          displayBold: 'p',
+          bodyLg: 'p',
+          subheadingLg: 'p',
+          submissionLabelLight: 'p',
         },
       },
     },
@@ -717,6 +781,10 @@ const Theme = createTheme({
     rubikLabelSm: { ...designSystemTypography.rubikLabelSm },
     stepChipLabel: { ...designSystemTypography.stepChipLabel },
     outcomeLabel: { ...designSystemTypography.outcomeLabel },
+    displayBold: { ...designSystemTypography.displayBold },
+    bodyLg: { ...designSystemTypography.bodyLg },
+    subheadingLg: { ...designSystemTypography.subheadingLg },
+    submissionLabelLight: { ...designSystemTypography.submissionLabelLight },
     h1: { ...designSystemTypography.h1 },
     h2: { ...designSystemTypography.h2 },
     h3: { ...designSystemTypography.h3 },

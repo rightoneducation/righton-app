@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import AppContentRow from '../components/AppContentRow';
+import ContentRow from '../components/ContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { useMisconceptions } from '../hooks/useMisconceptions';
@@ -14,8 +14,11 @@ import {
 } from '../hooks/context/useUploadContext';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
+  GhostAction,
+  SummaryCard,
+  SummaryCardBody,
+  SummaryCardHeader,
   SummaryRow,
-  UploadCard,
   ScreenSizeProps,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
@@ -60,8 +63,9 @@ export default function UploadRtdReview({ screenSize }: ScreenSizeProps) {
   };
 
   return (
-    <AppContentRow
+    <ContentRow
       screenSize={screenSize}
+      columnWidth={theme.sizing.reviewContentMaxWidth}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -78,57 +82,49 @@ export default function UploadRtdReview({ screenSize }: ScreenSizeProps) {
         {t('upload.reviewTitle')}
       </Typography>
       <Typography
-        variant="smallTitle"
+        variant="bodyLg"
         sx={{
           color: 'designSystem.surface.atlanticNavy',
           textAlign: 'center',
-          fontWeight: 400,
         }}
       >
         {t('upload.reviewBody')}
       </Typography>
 
-      <UploadCard sx={{ maxWidth: 1126 }}>
-        <Typography
-          variant="smallTitle"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {t('upload.uploaded')}
-        </Typography>
-        {rows.map((row) => (
-          <SummaryRow key={row.label} screenSize={screenSize}>
-            <Typography
-              variant="submissionLabel"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {row.label}
-            </Typography>
-            <Typography
-              variant="submissionLabel"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {row.value}
-            </Typography>
-          </SummaryRow>
-        ))}
-      </UploadCard>
+      <SummaryCard>
+        <SummaryCardHeader>
+          {/* Reversed out on the navy band, not navy on white. */}
+          <Typography variant="subheadingLg">{t('upload.uploaded')}</Typography>
+        </SummaryCardHeader>
+
+        <SummaryCardBody>
+          {rows.map((row) => (
+            <SummaryRow key={row.label} screenSize={screenSize}>
+              <Typography
+                variant="submissionLabel"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              >
+                {row.label}
+              </Typography>
+              <Typography
+                variant="submissionLabelLight"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              >
+                {row.value}
+              </Typography>
+            </SummaryRow>
+          ))}
+        </SummaryCardBody>
+      </SummaryCard>
 
       <Stack
         direction={screenSize === ScreenSize.LARGE ? 'row' : 'column'}
         spacing={`${theme.sizing.space3}px`}
         sx={{ alignItems: 'center' }}
       >
-        <SignUpCta
-          disableElevation
-          onClick={() => navigate('/upload-rtd')}
-          sx={{
-            backgroundColor: 'designSystem.surface.skyBlue',
-            color: 'designSystem.background.navyBlue',
-            '&:hover': { backgroundColor: 'designSystem.foreground.lightBlue' },
-          }}
-        >
+        <GhostAction disableElevation onClick={() => navigate('/upload-rtd')}>
           {t('upload.backToUpload')}
-        </SignUpCta>
+        </GhostAction>
         {/* Figma: 262 wide here rather than 240 — the label is longer. */}
         <SignUpCta
           disableElevation
@@ -138,6 +134,6 @@ export default function UploadRtdReview({ screenSize }: ScreenSizeProps) {
           {t('upload.submit')}
         </SignUpCta>
       </Stack>
-    </AppContentRow>
+    </ContentRow>
   );
 }

@@ -101,12 +101,10 @@ const LogOutButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: theme.palette.designSystem.background.fadedWhiteHover,
   },
 }));
 
-const appPillFill = 'rgba(255, 251, 246, 0.1)';
-const appPillStroke = 'rgba(255, 251, 246, 0.3)';
 const appPillRadius = 22;
 
 const IdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
@@ -115,8 +113,8 @@ const IdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
   padding: `${theme.sizing.space1}px ${theme.sizing.space4}px`,
   lineHeight: '28px',
   borderRadius: appPillRadius,
-  backgroundColor: appPillFill,
-  border: `${theme.borders.borderWidth}px solid ${appPillStroke}`,
+  backgroundColor: theme.palette.designSystem.background.fadedCreamFill,
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.fadedCreamStroke}`,
   color: theme.palette.designSystem.surface.white,
   ...theme.typography.rubikBody,
   whiteSpace: 'nowrap',
@@ -131,11 +129,11 @@ const ClassSelect = styled(Select<string>, {
   minWidth: screenSize === ScreenSize.SMALL ? 140 : 180,
   height: 44,
   borderRadius: appPillRadius,
-  backgroundColor: appPillFill,
+  backgroundColor: theme.palette.designSystem.background.fadedCreamFill,
   color: theme.palette.designSystem.surface.white,
   ...theme.typography.rubikBody,
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: appPillStroke,
+    borderColor: theme.palette.designSystem.background.fadedCreamStroke,
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
     borderColor: theme.palette.designSystem.surface.white,
@@ -150,7 +148,7 @@ const ClassSelect = styled(Select<string>, {
 
 // Skeleton inherits its colour from the surrounding text colour, which is
 // invisible against the navy bar.
-const authSkeletonSx = { bgcolor: 'rgba(255, 255, 255, 0.18)' };
+const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 
 export default function Header({
   screenSize,

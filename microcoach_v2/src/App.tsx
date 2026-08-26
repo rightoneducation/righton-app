@@ -1,5 +1,10 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  ScrollRestoration,
+} from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -33,7 +38,23 @@ Modal.setAppElement('#root');
 function RootLayout() {
   const apiClients = useAPIClientsContext();
   useAuthResolver(apiClients as APIClients);
-  return <Outlet />;
+  return (
+    <>
+      {/*
+       * Client-side navigation doesn't move the scroll position the way a real
+       * document load does, and the sticky header hides that it hasn't — you
+       * arrive on the next page already scrolled down it. This restores the
+       * browser's own behaviour: top on a forward navigation, and the position
+       * you actually left on Back/Forward.
+       *
+       * Available because the app runs a data router; getKey is deliberately
+       * left at its default (location.key). Keying on pathname instead would
+       * restore a remembered position on arrival, which is the bug, not the fix.
+       */}
+      <ScrollRestoration />
+      <Outlet />
+    </>
+  );
 }
 
 // The router knows URLs only. AppSwitch turns a ScreenType into a page wrapped

@@ -25,8 +25,11 @@ import {
   SetupRow,
   SetupValue,
   UploadCard,
+  UploadHintChip,
   UploadPill,
+  UploadedFileMain,
   UploadedFileRow,
+  GhostAction,
   ScreenSizeProps,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
@@ -98,12 +101,20 @@ export default function UploadRtd({ screenSize }: ScreenSizeProps) {
       <UploadCard>
         <SetupRow screenSize={screenSize}>
           {[
+            // Teacher and Class are outlined at 50% in the frames, Week at 70%:
+            // the first two are fixed for this upload, the third is the
+            // teacher's to change.
             {
               label: t('upload.teacher'),
               value: `${teacherName} · ${teacherEmail}`,
+              isLocked: true,
             },
-            { label: t('upload.class'), value: className },
-            { label: t('upload.week'), value: session.selectedWeek },
+            { label: t('upload.class'), value: className, isLocked: true },
+            {
+              label: t('upload.week'),
+              value: session.selectedWeek,
+              isLocked: false,
+            },
           ].map((field) => (
             <Box key={field.label}>
               <Typography
@@ -116,7 +127,7 @@ export default function UploadRtd({ screenSize }: ScreenSizeProps) {
               >
                 {field.label}
               </Typography>
-              <SetupValue>{field.value}</SetupValue>
+              <SetupValue isLocked={field.isLocked}>{field.value}</SetupValue>
             </Box>
           ))}
         </SetupRow>
@@ -159,34 +170,44 @@ export default function UploadRtd({ screenSize }: ScreenSizeProps) {
 
               {file ? (
                 <UploadedFileRow isError={isErrored}>
-                  <Typography
-                    variant="statusLabel"
-                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                  >
-                    {file.name}
-                  </Typography>
-                  <Stack direction="row" alignItems="center" spacing={1}>
-                    {isErrored ? (
-                      <ErrorIcon
-                        fontSize="small"
-                        sx={{ color: 'designSystem.status.errorIcon' }}
-                      />
-                    ) : (
-                      <CheckCircleIcon
-                        fontSize="small"
-                        sx={{ color: 'designSystem.status.success' }}
-                      />
-                    )}
+                  <UploadedFileMain>
                     <Typography
-                      variant="rubikSubBold"
-                      sx={{
-                        fontWeight: 400,
-                        color: 'designSystem.surface.atlanticNavy',
-                      }}
+                      variant="statusLabel"
+                      sx={{ color: 'designSystem.surface.atlanticNavy' }}
                     >
-                      {t(isErrored ? 'upload.error' : 'upload.completed')}
+                      {file.name}
                     </Typography>
-                  </Stack>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      {isErrored ? (
+                        <ErrorIcon
+                          fontSize="small"
+                          sx={{ color: 'designSystem.status.errorIcon' }}
+                        />
+                      ) : (
+                        <CheckCircleIcon
+                          fontSize="small"
+                          sx={{ color: 'designSystem.status.success' }}
+                        />
+                      )}
+                      <Typography
+                        variant="xsLabel"
+                        sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                      >
+                        {t(isErrored ? 'upload.error' : 'upload.completed')}
+                      </Typography>
+                    </Stack>
+                  </UploadedFileMain>
+                  {/* Figma keeps this inside the row's border, which is why the
+                      errored box is 67.5 tall against the completed 47.5. */}
+                  {isErrored && (
+                    <Typography
+                      variant="xsLabel"
+                      role="alert"
+                      sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                    >
+                      {t('upload.errorFormat')}
+                    </Typography>
+                  )}
                 </UploadedFileRow>
               ) : (
                 <Dropzone>
@@ -201,19 +222,6 @@ export default function UploadRtd({ screenSize }: ScreenSizeProps) {
                   </Typography>
                   <FormatHint>{slot.format}</FormatHint>
                 </Dropzone>
-              )}
-
-              {isErrored && (
-                <Typography
-                  variant="rubikSubBold"
-                  role="alert"
-                  sx={{
-                    fontWeight: 400,
-                    color: 'designSystem.foreground.accentBlue',
-                  }}
-                >
-                  {t('upload.errorFormat')}
-                </Typography>
               )}
 
               <UploadPill
@@ -235,16 +243,7 @@ export default function UploadRtd({ screenSize }: ScreenSizeProps) {
       </DropzoneRow>
 
       {!bothComplete && (
-        <Typography
-          variant="uploadLabel"
-          sx={{
-            fontWeight: 300,
-            textAlign: 'center',
-            color: 'designSystem.surface.atlanticNavy',
-          }}
-        >
-          {t('upload.bothToContinue')}
-        </Typography>
+        <UploadHintChip>{t('upload.bothToContinue')}</UploadHintChip>
       )}
 
       <Stack
@@ -252,26 +251,21 @@ export default function UploadRtd({ screenSize }: ScreenSizeProps) {
         spacing={`${theme.sizing.space3}px`}
         sx={{ alignItems: 'center', justifyContent: 'center' }}
       >
+        {/* Figma draws no fill behind this — it is a link, not a second CTA
+            competing with Continue. */}
+        <GhostAction disableElevation onClick={() => navigate('/dashboard')}>
+          {t('upload.backHome')}
+        </GhostAction>
+        {/* Present from the start in its disabled treatment: the frame shows
+            it greyed before either file lands, which is what tells the
+            teacher the step exists. */}
         <SignUpCta
           disableElevation
-          onClick={() => navigate('/dashboard')}
-          sx={{
-            backgroundColor: 'designSystem.surface.skyBlue',
-            color: 'designSystem.background.navyBlue',
-            '&:hover': { backgroundColor: 'designSystem.foreground.lightBlue' },
-          }}
+          disabled={!bothComplete}
+          onClick={() => navigate('/upload-rtd/review')}
         >
-          {t('upload.backHome')}
+          {t('upload.continue')}
         </SignUpCta>
-        {/* Figma only draws Continue once both slots read Completed. */}
-        {bothComplete && (
-          <SignUpCta
-            disableElevation
-            onClick={() => navigate('/upload-rtd/review')}
-          >
-            {t('upload.continue')}
-          </SignUpCta>
-        )}
       </Stack>
     </AppContentRow>
   );
