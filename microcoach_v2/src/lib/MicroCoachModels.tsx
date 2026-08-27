@@ -24,6 +24,10 @@ export enum ScreenType {
   SIGNUP_SELECT,
   AUTH,
   PASSWORDRESET,
+  // The same reset flow reached from Account Settings instead of Login. A
+  // separate screen rather than a flag on PASSWORDRESET: the two differ in
+  // chrome and in auth posture, which is exactly what AppSwitch's sets model.
+  CHANGE_PASSWORD,
   DASHBOARD,
   REVIEW,
   CHOOSE_ACTIVITY,

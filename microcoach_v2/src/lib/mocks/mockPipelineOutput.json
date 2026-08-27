@@ -9,7 +9,9 @@
     "teacher": {
       "displayName": "James Anderson",
       "shortName": "James",
-      "email": "james.anderson@camd..."
+      "email": "james.anderson@camden-prep.org",
+      "accountCreated": "2023-11-18T00:00:00Z",
+      "uploadsMade": 16
     },
     "selectedClassId": "class-justice",
     "classes": [

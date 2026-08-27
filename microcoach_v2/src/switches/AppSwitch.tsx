@@ -1,11 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APIClients } from '../api';
-import { ScreenType, UserStatusType } from '../lib/MicroCoachModels';
+import { ScreenType } from '../lib/MicroCoachModels';
 import { useAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { useLogOut } from '../hooks/useMicroCoachDataActions';
 import { useScreenSize } from '../hooks/useScreenSize';
-import { useMicroCoachDataDispatch } from '../hooks/context/useMicroCoachDataContext';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
 import TemplateDebugMenu from '../components/TemplateDebugMenu';
@@ -61,6 +60,7 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.MY_PLAN,
   ScreenType.ACTIVITY_DETAIL,
   ScreenType.PROFILE,
+  ScreenType.CHANGE_PASSWORD,
   ScreenType.UPLOAD_RTD,
   ScreenType.UPLOAD_RTD_REVIEW,
   ScreenType.REFLECT,
@@ -77,8 +77,20 @@ const SIGNUP_SCREENS = new Set<ScreenType>([
   ScreenType.SIGNUP_SELECT,
 ]);
 
+/*
+ * The profile frame draws the app header differently from every other in-app
+ * frame: identity as avatar-and-name, and no class switcher. CHANGE_PASSWORD
+ * has no frame of its own, but it is entered from the profile — flipping the
+ * pill and re-adding the switcher mid-flow would read as a glitch.
+ */
+const PROFILE_CHROME_SCREENS = new Set<ScreenType>([
+  ScreenType.PROFILE,
+  ScreenType.CHANGE_PASSWORD,
+]);
+
 const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
+  ScreenType.CHANGE_PASSWORD,
   ScreenType.UPLOAD_RTD,
   ScreenType.UPLOAD_RTD_REVIEW,
   ScreenType.REFLECT,
@@ -97,18 +109,21 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   const apiClients = useAPIClientsContext();
   const screenSize = useScreenSize();
   const { handleLogOut } = useLogOut(apiClients as APIClients);
-  const dispatch = useMicroCoachDataDispatch();
   const navigate = useNavigate();
 
   /*
-   * Signing out clears the profile as well as the status — the header reads
-   * the profile for its identity, so leaving it behind would show the old
-   * user's name on the login screen.
+   * This used to clear the reducer by hand and never call handleLogOut, so the
+   * Cognito session outlived the click and the next load re-authenticated
+   * straight back in. handleLogOut does the local reset too — status, profile
+   * and all — so the only thing left to add is the destination: the header's
+   * control belongs to someone signing out deliberately, who wants the sign-in
+   * screen rather than the marketing page handleLogOut lands its forced-logout
+   * callers on. `replace` so Back cannot return to a screen that is now
+   * unauthenticated.
    */
-  const handleHeaderLogOut = () => {
-    dispatch({ type: 'CLEAR_USER_PROFILE' });
-    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-    navigate('/login');
+  const handleHeaderLogOut = async () => {
+    await handleLogOut();
+    navigate('/login', { replace: true });
   };
 
   let screenComponent;
@@ -136,6 +151,11 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       break;
     case ScreenType.PASSWORDRESET:
       screenComponent = <ResetPassword screenSize={screenSize} />;
+      break;
+    case ScreenType.CHANGE_PASSWORD:
+      // Same flow, entered by someone already signed in: it returns to the
+      // profile rather than the login screen, and drops the wizard framing.
+      screenComponent = <ResetPassword screenSize={screenSize} isInSession />;
       break;
     case ScreenType.DASHBOARD:
       screenComponent = <Dashboard screenSize={screenSize} />;
@@ -173,7 +193,8 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   const isSignUp = SIGNUP_SCREENS.has(currentScreen);
 
   let headerVariant: HeaderVariant = 'public';
-  if (usesAppChrome) headerVariant = 'app';
+  if (PROFILE_CHROME_SCREENS.has(currentScreen)) headerVariant = 'profile';
+  else if (usesAppChrome) headerVariant = 'app';
   else if (isSignUp) headerVariant = 'signup';
 
   return (

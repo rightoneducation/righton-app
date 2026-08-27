@@ -169,6 +169,7 @@
     "noAccount": "Don’t have an account?"
   },
   "reset": {
+    "title": "Change Password",
     "rulesTitle": "Passwords must:",
     "ruleLength": "Be at least 8 characters in length",
     "ruleLetter": "Include at least one letter",
@@ -191,7 +192,8 @@
     "changePassword": "Change Password",
     "accountCreated": "Account Created",
     "uploadsMade": "Uploads Made:",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "nameRequired": "Enter both a first and last name."
   },
   "upload": {
     "setupTitle": "Step 1: Set up your class",

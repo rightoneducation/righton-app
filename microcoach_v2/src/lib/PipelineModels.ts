@@ -312,6 +312,9 @@ export interface ISessionTeacher {
   displayName: string;
   shortName: string;
   email: string;
+  /** ISO date. Account Settings reads this until a real profile carries one. */
+  accountCreated: string;
+  uploadsMade: number;
 }
 
 export interface ISessionClass {

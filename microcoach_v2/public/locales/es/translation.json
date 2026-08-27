@@ -169,6 +169,7 @@
     "noAccount": "¿No tiene una cuenta?"
   },
   "reset": {
+    "title": "Cambiar contraseña",
     "rulesTitle": "La contraseña debe:",
     "ruleLength": "Tener al menos 8 caracteres",
     "ruleLetter": "Incluir al menos una letra",
@@ -191,7 +192,8 @@
     "changePassword": "Cambiar contraseña",
     "accountCreated": "Cuenta creada",
     "uploadsMade": "Cargas realizadas:",
-    "logOut": "Cerrar sesión"
+    "logOut": "Cerrar sesión",
+    "nameRequired": "Introduce un nombre y un apellido."
   },
   "upload": {
     "setupTitle": "Paso 1: Configure su clase",

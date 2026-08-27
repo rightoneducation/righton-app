@@ -37,11 +37,29 @@ import { useAllReady, useI18nReady } from '../hooks/readiness';
 
 const RULE_KEYS = ['reset.ruleLength', 'reset.ruleLetter', 'reset.ruleNumber'];
 
-export default function ResetPassword({ screenSize }: ScreenSizeProps) {
+interface ResetPasswordProps extends ScreenSizeProps {
+  /**
+   * Reached from Account Settings rather than from Login. The steps are the
+   * same either way — the frames draw only the one flow — but the wizard
+   * framing and the exit are not: someone already signed in is not part-way
+   * through sign-up, and sending them to /login afterwards would strand them
+   * on a login screen they are already past.
+   */
+  isInSession?: boolean;
+}
+
+export default function ResetPassword({
+  screenSize,
+  isInSession = false,
+}: ResetPasswordProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isReady = useAllReady(useI18nReady());
+
+  const returnTo = isInSession ? '/profile' : '/login';
+  // replace: the flow is finished, so Back should not re-enter it.
+  const leaveFlow = () => navigate(returnTo, { replace: true });
 
   const [step, setStep] = React.useState<'verify' | 'password'>('verify');
   const [code, setCode] = React.useState<string[]>(Array(CODE_LENGTH).fill(''));
@@ -58,9 +76,15 @@ export default function ResetPassword({ screenSize }: ScreenSizeProps) {
       sx={{ pt: `${theme.sizing.space8}px`, pb: `${theme.sizing.space12}px` }}
     >
       <SignUpColumn screenSize={screenSize}>
-        <SignUpStepper current={2} />
-        <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
-        <SignUpSubheading>{t('signup.verifyTitle')}</SignUpSubheading>
+        {/* Wizard furniture: the stepper and the "Step 2" subheading only make
+            sense to someone actually in sign-up. */}
+        {!isInSession && <SignUpStepper current={2} />}
+        <SignUpHeading>
+          {t(isInSession ? 'reset.title' : 'signup.welcome')}
+        </SignUpHeading>
+        {!isInSession && (
+          <SignUpSubheading>{t('signup.verifyTitle')}</SignUpSubheading>
+        )}
 
         <Typography
           variant="rubikBody"
@@ -143,7 +167,7 @@ export default function ResetPassword({ screenSize }: ScreenSizeProps) {
                 </Stack>
               </PasswordRulesPanel>
 
-              <ResetButton disableElevation onClick={() => navigate('/login')}>
+              <ResetButton disableElevation onClick={leaveFlow}>
                 {t('reset.reset')}
               </ResetButton>
             </Box>
@@ -152,7 +176,7 @@ export default function ResetPassword({ screenSize }: ScreenSizeProps) {
 
         <SignUpCta
           disableElevation
-          onClick={step === 'verify' ? goToPassword : () => navigate('/login')}
+          onClick={step === 'verify' ? goToPassword : leaveFlow}
         >
           {t('signup.continue')}
         </SignUpCta>

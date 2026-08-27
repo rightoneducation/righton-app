@@ -130,6 +130,10 @@ const router = createBrowserRouter([
         element: <AppSwitch currentScreen={ScreenType.PROFILE} />,
       },
       {
+        path: 'profile/password',
+        element: <AppSwitch currentScreen={ScreenType.CHANGE_PASSWORD} />,
+      },
+      {
         path: 'myplan',
         element: <AppSwitch currentScreen={ScreenType.MY_PLAN} />,
       },
