@@ -1,8 +1,8 @@
 ---
-name: Host 1.2 Bug Report Template
-about: Bug Report Template
-title: 'Bug Report #[Add number] - [Add Descriptive Title] - [Assign Priority of P0-P4]'
-labels: host_v2, play_v2
+name: MicroCoach Bug Report Template
+about: Create a report for an issue in MicroCoach
+title: "[MicroCoach] - [Add Descriptive Title] - [Assign Priority of P1-P4]"
+labels: ''
 assignees: drewjhart
 type: Bug
 
