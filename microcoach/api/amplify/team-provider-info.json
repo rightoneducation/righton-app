@@ -51,7 +51,8 @@
         "microcoachTeacherUploadGen": {
           "deploymentBucketName": "amplify-microcoach-dev-103045-deployment",
           "s3Key": "amplify-builds/microcoachTeacherUploadGen-2f3851733751646c7134-build.zip"
-        }
+        },
+        "microcoachEvalScore": {}
       },
       "api": {
         "microcoach": {}
