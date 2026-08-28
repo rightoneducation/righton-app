@@ -2,7 +2,7 @@
 name: MicroCoach Bug Report Template
 about: Create a report for an issue in MicroCoach
 title: "[MicroCoach] - [Add Descriptive Title] - [Assign Priority of P1-P4]"
-labels: ''
+labels: microcoach
 assignees: drewjhart
 type: Bug
 

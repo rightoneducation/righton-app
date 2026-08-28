@@ -2,7 +2,7 @@
 name: Host Bug Report Template
 about: Bug Report Template
 title: "[Host] - [Add Descriptive Title] - [Assign Priority of P0-P4]"
-labels: host_v2
+labels: host
 assignees: drewjhart
 type: Bug
 

@@ -2,7 +2,7 @@
 name: Play Bug Report Template
 about: Bug Report Template
 title: "[Play] - [Add Descriptive Title] - [Assign Priority of P1-P4]"
-labels: play_v2
+labels: play
 assignees: drewjhart
 type: Bug
 
