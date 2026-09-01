@@ -1,7 +1,7 @@
 ---
 name: Central Bug Report Template
 about: Create a bug report for an issue in Central
-title: "[Host] - [Add Descriptive Title] - [Assign Priority of P1-P4]"
+title: "[Central] - [Add Descriptive Title] - [Assign Priority of P1-P4]"
 labels: central
 assignees: drewjhart
 type: Bug
