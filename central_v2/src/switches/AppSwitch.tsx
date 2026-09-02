@@ -229,6 +229,7 @@ function AppSwitch({ currentScreen }: AppSwitchProps) {
             screenSize={screenSize}
             fetchElement={fetchElement}
             fetchElements={fetchElements}
+            handleLibraryInit={handleLibraryInit}
           />
         </AuthGuard>
       );

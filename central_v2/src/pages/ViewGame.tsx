@@ -35,12 +35,14 @@ interface ViewGameProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: () => void;
+  handleLibraryInit: (isInit: boolean) => void;
 }
 
 export default function ViewGame({
   screenSize,
   fetchElement,
   fetchElements,
+  handleLibraryInit,
 }: ViewGameProps) {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -114,12 +116,12 @@ export default function ViewGame({
           ) ?? [];
         const { game } = centralData.selectedGame;
         if (gameQuestions.length > 0 && game && game.publicPrivateType) {
-          const gameQuestionPromises = gameQuestions.map(async (questionId) => {
+          const gameQuestionPromises = gameQuestions.map((questionId) =>
             apiClients.gameQuestions.deleteGameQuestions(
               game.publicPrivateType,
               questionId,
-            );
-          });
+            ),
+          );
           await Promise.all(gameQuestionPromises);
         }
         await apiClients.gameTemplate.deleteGameTemplate(
@@ -133,7 +135,11 @@ export default function ViewGame({
     setIsDeleteModalOpen(false);
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
     fetchElements();
-    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: null });
+    // The library buckets (draft/private) are not written by the explore fetch above,
+    // and nothing else re-arms this latch, so My Library would keep rendering the
+    // deleted game until a reload or a Games<->Questions toggle.
+    handleLibraryInit(true);
+    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     navigate('/');
   };
 
