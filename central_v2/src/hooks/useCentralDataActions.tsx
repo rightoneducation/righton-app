@@ -1237,12 +1237,12 @@ export default function useCentralDataManager({
         return;
       }
     }
-    centralDataDispatch({
-      type: 'SET_USER_STATUS',
-      payload: UserStatusType.LOADING,
-    });
-    await apiClients.centralDataManager?.signOut();
-    apiClients.centralDataManager?.clearLocalUserProfile();
+    // A restore that could not be completed is NOT a logout. signOut() deletes the
+    // Cognito tokens and revokes the refresh token server-side, so calling it here
+    // turned any transient failure -- a flaky network during the profile round trip,
+    // a moment offline -- into a permanent sign-out. Report LOGGEDOUT and leave
+    // storage alone so the next load can recover; destroying tokens belongs only in
+    // handleLogOut, on an explicit user action.
     centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
     centralDataDispatch({
       type: 'SET_USER_STATUS',
