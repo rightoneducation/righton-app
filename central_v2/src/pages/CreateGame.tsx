@@ -1355,6 +1355,7 @@ export default function CreateGame({
             draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
             screenSize={screenSize}
             isClone={isClone}
+            isEdit={isEdit}
             isCloneImageChanged={
               draftQuestionsList[selectedQuestionIndex]
                 .isCloneQuestionImageChanged
@@ -1372,6 +1373,7 @@ export default function CreateGame({
       <CreateGameImageUploadModal
         draftGame={draftGame}
         isClone={isClone}
+        isEdit={isEdit}
         isCloneImageChanged={draftGame.isCloneGameImageChanged}
         screenSize={screenSize}
         isModalOpen={draftGame.isGameImageUploadVisible}

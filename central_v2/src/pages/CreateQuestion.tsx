@@ -1002,6 +1002,7 @@ export default function CreateQuestion({
       <ImageUploadModal
         draftQuestion={draftQuestion}
         isClone={isClone}
+        isEdit={isEdit}
         isCloneImageChanged={isCloneImageChanged}
         screenSize={screenSize}
         isModalOpen={isImageUploadVisible}
