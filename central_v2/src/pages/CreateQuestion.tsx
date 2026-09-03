@@ -299,18 +299,31 @@ export default function CreateQuestion({
         StorageKey,
         JSON.stringify(draftQuestionInput),
       );
+      // Completeness is settled here rather than per keystroke, so the card dims
+      // once typing stops instead of on the first character of the title.
+      const settled = updateDQwithTitle(
+        draftQuestionInput,
+        draftQuestionInput.questionCard.title,
+      );
+      if (
+        settled.questionCard.isCardComplete !==
+        draftQuestionInput.questionCard.isCardComplete
+      ) {
+        setDraftQuestion(settled);
+        if (settled.questionCard.isCardComplete)
+          setHighlightCard(CreateQuestionHighlightCard.CORRECTANSWER);
+      }
     }, 1000),
     [],
   );
 
   const handleTitleChange = (title: string) => {
-    const { isFirstEdit } = draftQuestion.questionCard;
-    const newDraftQuestion = updateDQwithTitle(draftQuestion, title);
+    // Title only -- completeness and the highlight advance are settled by
+    // handleDebouncedQuestionChange once the user stops typing.
+    const newDraftQuestion = updateDQwithTitle(draftQuestion, title, false);
     setDraftQuestion(newDraftQuestion);
     handleDebouncedQuestionChange(newDraftQuestion);
     if (isDraftCardErrored) setIsDraftCardErrored(false);
-    if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
-      setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
   };
 
   const handleCCSSSubmit = (ccssString: string) => {
@@ -1002,6 +1015,7 @@ export default function CreateQuestion({
       <ImageUploadModal
         draftQuestion={draftQuestion}
         isClone={isClone}
+        isEdit={isEdit}
         isCloneImageChanged={isCloneImageChanged}
         screenSize={screenSize}
         isModalOpen={isImageUploadVisible}
