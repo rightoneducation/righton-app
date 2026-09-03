@@ -37,8 +37,6 @@ export default function AuthGuard({
   const isAuthPage = Boolean(useMatch('/auth'));
   const isLoginPage = Boolean(useMatch('/login'));
   const isSignupPage = Boolean(useMatch('/signup'));
-  const isConfirmationPage = Boolean(useMatch('/confirmation'));
-  const isGoogleSignupPage = Boolean(useMatch('/googlesignup'));
 
   // Google OAuth failure (e.g. duplicate account) comes back as ?error_description
   const errorDescription = search.get('error_description');
@@ -52,8 +50,10 @@ export default function AuthGuard({
   }
 
   switch (microCoachData.userStatus) {
+    // /googlesignup and /confirmation were retired with the old auth pages;
+    // the wizard handles both of those states in-flow now.
     case UserStatusType.GOOGLE_SIGNUP:
-      return isGoogleSignupPage ? children : <Navigate to="/googlesignup" replace />;
+      return <Navigate to="/signup" replace />;
     case UserStatusType.GOOGLE_SIGNIN:
       dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
       return <Navigate to="/" replace />;
@@ -70,13 +70,17 @@ export default function AuthGuard({
       if (!requiresAuth) return children;
       return isLandingPage ? <LandingSkeleton screenSize={screenSize} /> : null;
     case UserStatusType.NONVERIFIED:
-      return isSignupPage || isConfirmationPage ? children : <Navigate to="/confirmation" replace />;
+      return isSignupPage ? children : <Navigate to="/signup/verify" replace />;
     case UserStatusType.LOGGEDOUT:
       // No protected app screens yet; allow auth pages + landing through.
       return children;
     case UserStatusType.LOGGEDIN:
     default:
       // Signed in → keep users off the auth pages.
-      return isAuthPage || isLoginPage || isSignupPage ? <Navigate to="/" replace /> : children;
+      return isAuthPage || isLoginPage || isSignupPage ? (
+        <Navigate to="/" replace />
+      ) : (
+        children
+      );
   }
 }

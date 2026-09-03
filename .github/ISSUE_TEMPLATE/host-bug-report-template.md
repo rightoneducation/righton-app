@@ -1,8 +1,8 @@
 ---
-name: Play 1.2 Bug Report Template
+name: Host Bug Report Template
 about: Bug Report Template
-title: ''
-labels: play_v2
+title: "[Host] - [Add Descriptive Title] - [Assign Priority of P0-P4]"
+labels: host
 assignees: drewjhart
 type: Bug
 

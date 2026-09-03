@@ -4,9 +4,13 @@ import {
   IActivityContent,
   IActivityPhases,
   IExampleStep,
+  IStepAnnotation,
+  IRepresentation,
   IPhaseStep,
 } from '../PipelineModels';
 import { pdfColors, pdfStyles } from './pdfTheme';
+import { withWorkMark } from '../activityMarks';
+import GraphFigure from './GraphFigure';
 
 /** One numbered row — shared by the checklist, facilitation and discussion. */
 export function NumberedStep({ step }: { step: IPhaseStep }) {
@@ -21,14 +25,33 @@ export function NumberedStep({ step }: { step: IPhaseStep }) {
   );
 }
 
+/**
+ * Copy the step renderers need. Passed down rather than read from i18n: the
+ * PDF renderer runs outside React context, so the caller supplies closures
+ * over its own `t`.
+ */
+export interface StepLabels {
+  stepNumber: (value: number) => string;
+  stepAnnotation: (annotation: IStepAnnotation) => string;
+}
+
 function Step({
   step,
   showErrors,
+  labels,
 }: {
   step: IExampleStep;
   showErrors: boolean;
+  labels: StepLabels;
 }) {
-  const isError = showErrors && step.isError;
+  const isError = showErrors && step.annotation?.kind === 'ERROR';
+  // Matches the screen: the annotation runs on inline in the step's own
+  // colour, and the whole thing disappears in the student view.
+  const annotation =
+    showErrors && step.annotation
+      ? labels.stepAnnotation(step.annotation)
+      : null;
+
   return (
     <View
       style={[
@@ -37,14 +60,11 @@ function Step({
       ]}
       wrap={false}
     >
-      <Text style={pdfStyles.stepChip}>{`Step ${step.step}`}</Text>
+      <Text style={pdfStyles.stepChip}>{labels.stepNumber(step.step)}</Text>
       <View style={pdfStyles.col}>
-        <Text style={pdfStyles.body}>{step.text}</Text>
-        {isError && step.errorNote ? (
-          <Text style={[pdfStyles.small, { color: pdfColors.errorStroke }]}>
-            {step.errorNote}
-          </Text>
-        ) : null}
+        <Text style={pdfStyles.body}>
+          {annotation ? `${step.text} ${annotation}` : step.text}
+        </Text>
       </View>
     </View>
   );
@@ -74,7 +94,7 @@ export function BeforeClassSection({
           <Text style={[pdfStyles.body, { marginTop: 4, marginBottom: 8 }]}>
             {beforeClass.groupFormation.guidance}
           </Text>
-          <View style={pdfStyles.row}>
+          <View style={pdfStyles.rowStretch}>
             {beforeClass.groupFormation.groups.map((group) => (
               <View key={group.label} style={[pdfStyles.panel, pdfStyles.col]}>
                 <Text style={pdfStyles.label}>{group.label}</Text>
@@ -103,11 +123,59 @@ export function BeforeClassSection({
   );
 }
 
+/**
+ * Picks the right body for a representation card. The graph draws as a real
+ * figure and the table as a real grid, so the export matches the screen rather
+ * than flattening both to a line of text.
+ */
+function RepresentationFigure({ item }: { item: IRepresentation }) {
+  if (item.line && item.axisRange) {
+    return <GraphFigure item={item} />;
+  }
+
+  if (item.rows && item.columns) {
+    const { columns, rows } = item;
+
+    return (
+      <View style={pdfStyles.repTable}>
+        <View style={[pdfStyles.repRow, { backgroundColor: pdfColors.sky }]}>
+          {columns.map((column) => (
+            <Text key={column} style={pdfStyles.repHeadCell}>
+              {column}
+            </Text>
+          ))}
+        </View>
+        {rows.map((row) => (
+          <View key={row.join(',')} style={pdfStyles.repRow}>
+            {row.map((cell, index) => (
+              <Text
+                key={`${row.join(',')}-${columns[index]}`}
+                style={pdfStyles.repCell}
+              >
+                {String(cell)}
+              </Text>
+            ))}
+          </View>
+        ))}
+      </View>
+    );
+  }
+
+  return (
+    <>
+      <Text style={pdfStyles.body}>{item.value ?? item.lineLabel ?? ''}</Text>
+      {item.detail ? <Text style={pdfStyles.small}>{item.detail}</Text> : null}
+    </>
+  );
+}
+
 /** Mirrors ActivityPhase's switch — same closed set, PDF primitives. */
 export function ActivitySection({
   content,
+  labels,
 }: {
   content: IActivityContent | null;
+  labels: StepLabels;
 }) {
   if (!content) return null;
 
@@ -123,7 +191,7 @@ export function ActivitySection({
                 {example.prompt}
               </Text>
               {example.steps.map((step) => (
-                <Step key={step.step} step={step} showErrors />
+                <Step key={step.step} step={step} showErrors labels={labels} />
               ))}
               <Text style={[pdfStyles.small, { marginTop: 6 }]}>
                 {`${example.finalOutcomeLabel} ${example.finalOutcome}`}
@@ -160,23 +228,10 @@ export function ActivitySection({
                   {content.suggestedExample.studentWorkLabel}
                 </Text>
                 {content.suggestedExample.studentWork.map((line) => (
-                  <Text
-                    key={line.text}
-                    style={[
-                      pdfStyles.stepRow,
-                      pdfStyles.body,
-                      {
-                        backgroundColor:
-                          // eslint-disable-next-line no-nested-ternary
-                          line.status === 'INCORRECT'
-                            ? pdfColors.errorFill
-                            : line.status === 'CORRECT'
-                              ? pdfColors.successFill
-                              : 'transparent',
-                      },
-                    ]}
-                  >
-                    {line.text}
+                  <Text key={line.text} style={pdfStyles.body}>
+                    {line.showMark === false
+                      ? line.text
+                      : withWorkMark(line.text, line.status)}
                   </Text>
                 ))}
               </View>
@@ -223,22 +278,31 @@ export function ActivitySection({
                 <View key={column.label} style={pdfStyles.col}>
                   <View style={[pdfStyles.row, { marginBottom: 4 }]}>
                     <Text
+                      style={[pdfStyles.label, { color: pdfColors.deepNavy }]}
+                    >
+                      {column.label}
+                    </Text>
+                    <Text
                       style={[
                         pdfStyles.badge,
                         {
                           backgroundColor: column.isCorrect
-                            ? pdfColors.understood
-                            : pdfColors.needsSupport,
-                          color: pdfColors.deepNavy,
+                            ? pdfColors.successFill
+                            : pdfColors.errorFill,
+                          color: pdfColors.navy,
                         },
                       ]}
                     >
-                      {column.label}
+                      {column.verdict}
                     </Text>
-                    <Text style={pdfStyles.stepChip}>{column.verdict}</Text>
                   </View>
                   {column.steps.map((step) => (
-                    <Step key={step.step} step={step} showErrors />
+                    <Step
+                      key={step.step}
+                      step={step}
+                      showErrors
+                      labels={labels}
+                    />
                   ))}
                   <Text style={[pdfStyles.small, { marginTop: 4 }]}>
                     {column.annotation}
@@ -269,7 +333,7 @@ export function ActivitySection({
             <Text style={pdfStyles.label}>{content.studentTaskLabel}</Text>
             <Text style={pdfStyles.body}>{content.studentTask}</Text>
           </View>
-          <View style={[pdfStyles.row, { flexWrap: 'wrap' }]}>
+          <View style={[pdfStyles.rowStretch, { flexWrap: 'wrap' }]}>
             {content.representations.map((item) => (
               <View
                 key={item.kind}
@@ -286,19 +350,7 @@ export function ActivitySection({
                 <Text style={pdfStyles.label}>
                   {`${item.label} — ${item.matchLabel}`}
                 </Text>
-                <Text style={pdfStyles.body}>
-                  {item.value ?? item.lineLabel ?? ''}
-                </Text>
-                {item.detail ? (
-                  <Text style={pdfStyles.small}>{item.detail}</Text>
-                ) : null}
-                {item.rows
-                  ? item.rows.map((row) => (
-                      <Text key={row.join(',')} style={pdfStyles.small}>
-                        {row.join('     ')}
-                      </Text>
-                    ))
-                  : null}
+                <RepresentationFigure item={item} />
               </View>
             ))}
           </View>

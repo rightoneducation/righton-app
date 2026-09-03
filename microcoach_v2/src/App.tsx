@@ -1,5 +1,10 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  ScrollRestoration,
+} from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -10,6 +15,8 @@ import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { APIClientsContext } from './lib/context/APIClientsContext';
 import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
+import { SignUpProvider } from './lib/context/SignUpContext';
+import { UploadProvider } from './lib/context/UploadContext';
 import { useAPIClientsContext } from './hooks/context/useAPIClientsContext';
 import { useAuthResolver } from './hooks/useMicroCoachDataActions';
 import AppSwitch from './switches/AppSwitch';
@@ -31,7 +38,23 @@ Modal.setAppElement('#root');
 function RootLayout() {
   const apiClients = useAPIClientsContext();
   useAuthResolver(apiClients as APIClients);
-  return <Outlet />;
+  return (
+    <>
+      {/*
+       * Client-side navigation doesn't move the scroll position the way a real
+       * document load does, and the sticky header hides that it hasn't — you
+       * arrive on the next page already scrolled down it. This restores the
+       * browser's own behaviour: top on a forward navigation, and the position
+       * you actually left on Back/Forward.
+       *
+       * Available because the app runs a data router; getKey is deliberately
+       * left at its default (location.key). Keying on pathname instead would
+       * restore a remembered position on arrival, which is the bug, not the fix.
+       */}
+      <ScrollRestoration />
+      <Outlet />
+    </>
+  );
 }
 
 // The router knows URLs only. AppSwitch turns a ScreenType into a page wrapped
@@ -51,15 +74,23 @@ const router = createBrowserRouter([
       },
       {
         path: 'signup',
-        element: <AppSwitch currentScreen={ScreenType.SIGNUP} />,
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_ROLE} />,
       },
       {
-        path: 'confirmation',
-        element: <AppSwitch currentScreen={ScreenType.CONFIRMATION} />,
+        path: 'signup/register',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_REGISTER} />,
       },
       {
-        path: 'googlesignup',
-        element: <AppSwitch currentScreen={ScreenType.GOOGLESIGNUP} />,
+        path: 'signup/verify',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_VERIFY} />,
+      },
+      {
+        path: 'signup/classes',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_CLASSES} />,
+      },
+      {
+        path: 'signup/select',
+        element: <AppSwitch currentScreen={ScreenType.SIGNUP_SELECT} />,
       },
       { path: 'auth', element: <AppSwitch currentScreen={ScreenType.AUTH} /> },
       {
@@ -81,6 +112,26 @@ const router = createBrowserRouter([
       {
         path: 'activity/:activityId',
         element: <AppSwitch currentScreen={ScreenType.ACTIVITY_DETAIL} />,
+      },
+      {
+        path: 'upload-rtd',
+        element: <AppSwitch currentScreen={ScreenType.UPLOAD_RTD} />,
+      },
+      {
+        path: 'upload-rtd/review',
+        element: <AppSwitch currentScreen={ScreenType.UPLOAD_RTD_REVIEW} />,
+      },
+      {
+        path: 'reflect',
+        element: <AppSwitch currentScreen={ScreenType.REFLECT} />,
+      },
+      {
+        path: 'profile',
+        element: <AppSwitch currentScreen={ScreenType.PROFILE} />,
+      },
+      {
+        path: 'profile/password',
+        element: <AppSwitch currentScreen={ScreenType.CHANGE_PASSWORD} />,
       },
       {
         path: 'myplan',
@@ -107,7 +158,13 @@ function App() {
           {apiClients && (
             <APIClientsContext.Provider value={apiClients}>
               <MicroCoachDataProvider>
-                <RouterProvider router={router} />
+                {/* Inside the data provider: the wizard's last step commits
+                    its result into that reducer. */}
+                <SignUpProvider>
+                  <UploadProvider>
+                    <RouterProvider router={router} />
+                  </UploadProvider>
+                </SignUpProvider>
               </MicroCoachDataProvider>
             </APIClientsContext.Provider>
           )}

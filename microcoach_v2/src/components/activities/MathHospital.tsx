@@ -1,11 +1,16 @@
 import React from 'react';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { IMathHospitalContent } from '../../lib/PipelineModels';
 import {
   ContentPanel,
   TonedPanel,
+  PromptBand,
+  PromptIconTile,
   NumberBadge,
 } from '../../lib/styledcomponents/ActivityDetailStyledComponents';
 
@@ -17,21 +22,26 @@ export default function MathHospital({ content }: Props) {
   const theme = useTheme();
 
   return (
-    <Stack spacing={`${theme.sizing.space4}px`}>
-      <TonedPanel tone="sky">
-        <Typography
-          variant="headingMd"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.problem}
-        </Typography>
-        <Typography
-          variant="rubikBody"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.problemChecklist}
-        </Typography>
-      </TonedPanel>
+    <Stack spacing={`${theme.sizing.space5}px`}>
+      <PromptBand tone="sky">
+        <PromptIconTile>
+          <LocalHospitalOutlinedIcon />
+        </PromptIconTile>
+        <Box sx={{ minWidth: 0 }}>
+          <Typography
+            variant="headingMd"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+          >
+            {content.problem}
+          </Typography>
+          <Typography
+            variant="rubikBody"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+          >
+            {content.problemChecklist}
+          </Typography>
+        </Box>
+      </PromptBand>
 
       {content.steps.map((step) => (
         <ContentPanel key={step.step}>
@@ -47,8 +57,8 @@ export default function MathHospital({ content }: Props) {
 
           <TonedPanel tone="grey">
             <Typography
-              variant="rubikSubBold"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              variant="headingSm"
+              sx={{ color: 'designSystem.background.navyBlue' }}
             >
               {step.askLabel}
             </Typography>
@@ -60,10 +70,10 @@ export default function MathHospital({ content }: Props) {
             </Typography>
           </TonedPanel>
 
-          <TonedPanel tone="sky">
+          <TonedPanel tone="periwinkle">
             <Typography
-              variant="rubikSubBold"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              variant="headingSm"
+              sx={{ color: 'designSystem.background.navyBlue' }}
             >
               {step.responseLabel}
             </Typography>
@@ -77,14 +87,17 @@ export default function MathHospital({ content }: Props) {
         </ContentPanel>
       ))}
 
-      <TonedPanel tone="grey">
+      <PromptBand tone="grey">
+        <InfoOutlinedIcon
+          sx={{ color: 'designSystem.surface.atlanticNavy', flexShrink: 0 }}
+        />
         <Typography
-          variant="smallBodyText"
+          variant="rubikBody"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
         >
           {content.footnote}
         </Typography>
-      </TonedPanel>
+      </PromptBand>
     </Stack>
   );
 }

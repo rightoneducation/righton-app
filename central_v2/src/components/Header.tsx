@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import {
   Box,
@@ -183,6 +183,21 @@ export default function Header({
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const isScreenLgst = useMediaQuery('(min-width:1300px)');
   const profilePicPath = centralData.userProfile?.profilePicPath;
+
+  // /browse/:gameQuestion carries the games-vs-questions selection that
+  // currentScreen (ScreenType.BROWSE) can't express. Same param read as
+  // AppSwitch.tsx:47, incl. the same "anything not 'question' is a game"
+  // default, so the header highlight can't disagree with what's rendered.
+  const browseMatch = useMatch('/browse/:gameQuestion');
+  const isBrowseScreen = currentScreen === ScreenType.BROWSE;
+  const isBrowseQuestions = browseMatch?.params.gameQuestion === 'question';
+  const isGamesActive =
+    currentScreen === ScreenType.GAMES ||
+    currentScreen === ScreenType.VIEWGAME ||
+    (isBrowseScreen && !isBrowseQuestions);
+  const isQuestionsActive =
+    currentScreen === ScreenType.QUESTIONS ||
+    (isBrowseScreen && isBrowseQuestions);
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -388,25 +403,25 @@ export default function Header({
           >
             <TransparentButton
               onClick={() => handleButtonClick(ScreenType.GAMES)}
-              isActive={currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME}
+              isActive={isGamesActive}
               menuOpen={menuOpen}
             >
               <img
                 src={dice}
                 alt="Games Icon"
-                style={{ opacity: currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME ? 1 : 0.5 }}
+                style={{ opacity: isGamesActive ? 1 : 0.5 }}
               />
               Games
             </TransparentButton>
             <TransparentButton
               onClick={() => handleButtonClick(ScreenType.QUESTIONS)}
-              isActive={currentScreen === ScreenType.QUESTIONS}
+              isActive={isQuestionsActive}
               menuOpen={menuOpen}
             >
               <img
                 src={qmark}
                 alt="Questions Icon"
-                style={{ opacity: currentScreen === ScreenType.QUESTIONS ? 1 : 0.5 }}
+                style={{ opacity: isQuestionsActive ? 1 : 0.5 }}
               />
               Questions
             </TransparentButton>
@@ -461,28 +476,28 @@ export default function Header({
                 <TransparentButton
                   disableRipple
                   onClick={() => handleButtonClick(ScreenType.GAMES)}
-                  isActive={currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME}
+                  isActive={isGamesActive}
                 >
                   <img
                     src={dice}
                     alt="Games Icon"
-                    style={{ opacity: currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME ? 1 : 0.5 }}
+                    style={{ opacity: isGamesActive ? 1 : 0.5 }}
                   />
-                  <ButtonText isActive={currentScreen === ScreenType.GAMES || currentScreen === ScreenType.VIEWGAME}>
+                  <ButtonText isActive={isGamesActive}>
                     Games
                   </ButtonText>
                 </TransparentButton>
                 <TransparentButton
                   disableRipple
                   onClick={() => handleButtonClick(ScreenType.QUESTIONS)}
-                  isActive={currentScreen === ScreenType.QUESTIONS}
+                  isActive={isQuestionsActive}
                 >
                   <img
                     src={qmark}
                     alt="Questions Icon"
-                    style={{ opacity: currentScreen === ScreenType.QUESTIONS ? 1 : 0.5 }}
+                    style={{ opacity: isQuestionsActive ? 1 : 0.5 }}
                   />
-                  <ButtonText isActive={currentScreen === ScreenType.QUESTIONS}>
+                  <ButtonText isActive={isQuestionsActive}>
                     Questions
                   </ButtonText>
                 </TransparentButton>
