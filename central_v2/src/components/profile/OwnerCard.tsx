@@ -119,10 +119,6 @@ export default function OwnerCard({
             </LeftBottomGamesContainer>
           </LeftBottomGamesQuestionContainer>
         </LeftBottomContainer>
-        <LeftBottomGamesContainer>
-          <LeftBottomGamesText>Games Played</LeftBottomGamesText>
-          <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
-        </LeftBottomGamesContainer>
       </Box>
       <CentralButton
         buttonType={ButtonType.LOGOUT}
@@ -185,10 +181,6 @@ export default function OwnerCard({
             <LeftBottomGamesContainer>
               <LeftBottomGamesText>Questions Created</LeftBottomGamesText>
               <LeftBottomGamesNumber>{questionsMade}</LeftBottomGamesNumber>
-            </LeftBottomGamesContainer>
-            <LeftBottomGamesContainer>
-              <LeftBottomGamesText>Games Played</LeftBottomGamesText>
-              <LeftBottomGamesNumber>{gamesUsed}</LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
           </LeftBottomContainer>
         </TopSubContainer>
