@@ -10,6 +10,7 @@ import CompareTheThinking from '../activities/CompareTheThinking';
 import MultipleRepresentations from '../activities/MultipleRepresentations';
 import MathHospital from '../activities/MathHospital';
 import {
+  PromptBand,
   ViewToggle,
   ViewToggleOption,
 } from '../../lib/styledcomponents/ActivityDetailStyledComponents';
@@ -66,48 +67,70 @@ export default function ActivityPhase({ content }: Props) {
   const subtitle =
     'subtitle' in content ? (content.subtitle as string) : undefined;
 
-  return (
-    <Stack spacing={`${theme.sizing.space4}px`}>
-      <Stack
-        direction="row"
-        alignItems="flex-start"
-        justifyContent="space-between"
-        spacing={2}
-      >
-        <Stack spacing={`${theme.sizing.space0}px`} sx={{ minWidth: 0 }}>
+  // Make the Connections banners its header inside the sky band; every other
+  // frame leaves it plain on the card.
+  const isBanded = content.type === 'MULTIPLE_REPRESENTATIONS';
+
+  const header = (
+    <>
+      <Stack spacing={`${theme.sizing.space0}px`} sx={{ minWidth: 0 }}>
+        <Typography
+          variant="headingMd"
+          sx={{ color: 'designSystem.surface.atlanticNavy' }}
+        >
+          {content.title}
+        </Typography>
+        {subtitle && (
+          /* Compare and Make the Connections both set this at Rubik 16; only
+             the Spot the Slip frame drops to 12, so the shared 16 wins rather
+             than the subtitle changing size per template. */
           <Typography
-            variant="headingMd"
+            variant="rubikBody"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
           >
-            {content.title}
+            {subtitle}
           </Typography>
-          {subtitle && (
-            <Typography
-              variant="microLabel"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {subtitle}
-            </Typography>
-          )}
-        </Stack>
-
-        {supportsToggle && (
-          <ViewToggle>
-            <ViewToggleOption
-              isActive={isTeacherView}
-              onClick={() => setIsTeacherView(true)}
-            >
-              {t('activityDetail.teacherView')}
-            </ViewToggleOption>
-            <ViewToggleOption
-              isActive={!isTeacherView}
-              onClick={() => setIsTeacherView(false)}
-            >
-              {t('activityDetail.studentView')}
-            </ViewToggleOption>
-          </ViewToggle>
         )}
       </Stack>
+
+      {supportsToggle && (
+        <ViewToggle>
+          <ViewToggleOption
+            isActive={isTeacherView}
+            onClick={() => setIsTeacherView(true)}
+          >
+            {t('activityDetail.teacherView')}
+          </ViewToggleOption>
+          <ViewToggleOption
+            isActive={!isTeacherView}
+            onClick={() => setIsTeacherView(false)}
+          >
+            {t('activityDetail.studentView')}
+          </ViewToggleOption>
+        </ViewToggle>
+      )}
+    </>
+  );
+
+  return (
+    <Stack spacing={`${theme.sizing.space5}px`}>
+      {isBanded ? (
+        <PromptBand
+          tone="sky"
+          sx={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+        >
+          {header}
+        </PromptBand>
+      ) : (
+        <Stack
+          direction="row"
+          alignItems="flex-start"
+          justifyContent="space-between"
+          spacing={2}
+        >
+          {header}
+        </Stack>
+      )}
 
       {body}
     </Stack>

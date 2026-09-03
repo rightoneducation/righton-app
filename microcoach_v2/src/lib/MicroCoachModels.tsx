@@ -17,16 +17,26 @@ export enum UserStatusType {
 export enum ScreenType {
   LANDING,
   LOGIN,
-  SIGNUP,
-  CONFIRMATION,
-  GOOGLESIGNUP,
+  SIGNUP_ROLE,
+  SIGNUP_REGISTER,
+  SIGNUP_VERIFY,
+  SIGNUP_CLASSES,
+  SIGNUP_SELECT,
   AUTH,
   PASSWORDRESET,
+  // The same reset flow reached from Account Settings instead of Login. A
+  // separate screen rather than a flag on PASSWORDRESET: the two differ in
+  // chrome and in auth posture, which is exactly what AppSwitch's sets model.
+  CHANGE_PASSWORD,
   DASHBOARD,
   REVIEW,
   CHOOSE_ACTIVITY,
   MY_PLAN,
   ACTIVITY_DETAIL,
+  PROFILE,
+  UPLOAD_RTD,
+  UPLOAD_RTD_REVIEW,
+  REFLECT,
 }
 
 // Resolved once from useMediaQuery at the top of a page and drilled down, so

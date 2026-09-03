@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
@@ -10,7 +10,7 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import ContentRow from '../components/ContentRow';
 import LandingSkeleton from '../components/LandingSkeleton';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import {
   StepPanel,
   StepCard,
@@ -19,6 +19,8 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/LandingStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMicroCoachDataDispatch } from '../hooks/context/useMicroCoachDataContext';
+import { useSignUpDispatch } from '../hooks/context/useSignUpContext';
 import heroClassroom from '../images/heroClassroom.jpg';
 import landingPagePattern from '../images/landingPagePattern.svg';
 import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
@@ -88,7 +90,23 @@ const STEPS = [
 export default function Landing({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const dispatch = useMicroCoachDataDispatch();
+  const signUpDispatch = useSignUpDispatch();
   const isLarge = screenSize === ScreenSize.LARGE;
+
+  /*
+   * Starting over, not resuming. The wizard's last step commits a profile and
+   * flips userStatus to LOGGEDIN, and AuthGuard quite correctly keeps a
+   * signed-in user off /signup — so without clearing both, a second run of
+   * the flow bounces straight back here and the button looks dead.
+   */
+  const handleGetStarted = () => {
+    signUpDispatch({ type: 'RESET' });
+    dispatch({ type: 'CLEAR_USER_PROFILE' });
+    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    navigate('/signup');
+  };
 
   // Page-level readiness covers things the whole layout depends on — currently
   // just the copy. Images are not here: each one owns its loading state via
@@ -145,8 +163,7 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
               {t('hero.body')}
             </Typography>
             <GetStartedButton
-              component={RouterLink}
-              to="/signup"
+              onClick={handleGetStarted}
               screenSize={screenSize}
               disableElevation
               endIcon={<ArrowOutwardIcon sx={{ fontSize: 20 }} />}
