@@ -74,6 +74,7 @@ function ChooseActivityView({
 
   const handleTabSelect = (tabId: FlowTabId) => {
     if (tabId === 'prepare') navigate('/myplan');
+    if (tabId === 'reflect') navigate('/reflect');
   };
 
   const handleHowToRun = (activityId: string) => {

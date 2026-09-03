@@ -45,5 +45,5 @@ export interface ICentralDataManagerAPIClient {
     backImage?: File | null): Promise<{updatedUser: any}>;
   userProfileImageUpdate(user: IUserProfile, newProfilePic: File | null): Promise<{updatedUser: any}>;
   removeQuestionTemplateFromGameTemplate(type: PublicPrivateType, questionId: string, gameId: string): Promise<boolean>;
-  deleteQuestionTemplate:(type: PublicPrivateType, questionId: string, ) => void;
+  deleteQuestionTemplate:(type: PublicPrivateType, questionId: string, ) => Promise<boolean>;
 }

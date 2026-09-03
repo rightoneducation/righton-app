@@ -1,15 +1,20 @@
 import React from 'react';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
-import { ICompareContent } from '../../lib/PipelineModels';
+import { useTranslation } from 'react-i18next';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
+import { ICompareContent, IExampleStep } from '../../lib/PipelineModels';
 import {
+  ColumnBadge,
   ContentPanel,
-  TonedPanel,
+  PromptBand,
   StepChip,
   StepRow,
-  NumberBadge,
+  VerdictChip,
 } from '../../lib/styledcomponents/ActivityDetailStyledComponents';
 
 interface Props {
@@ -17,12 +22,33 @@ interface Props {
   isTeacherView: boolean;
 }
 
+/**
+ * This template marks a step with a bare glyph rather than the parenthesised
+ * note the worked-example template uses — the columns are narrow and the
+ * verdict chip above already names the outcome. Same annotation model, a
+ * different presentation of it.
+ */
+function stepMark(step: IExampleStep): string {
+  if (!step.annotation) return '';
+  return step.annotation.kind === 'ERROR' ? '✗' : '✓';
+}
+
 export default function CompareTheThinking({ content, isTeacherView }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   return (
     <ContentPanel>
-      <Box sx={{ textAlign: 'center' }}>
+      {/* Figma stacks two bordered boxes sharing an edge at y 733, which reads
+          as one panel split by a rule. */}
+      <Box
+        sx={{
+          textAlign: 'center',
+          pb: `${theme.sizing.space3}px`,
+          borderBottom: `${theme.borders.borderWidth}px solid`,
+          borderColor: 'designSystem.background.navyBlue',
+        }}
+      >
         <Typography
           variant="rubikBody"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
@@ -37,86 +63,121 @@ export default function CompareTheThinking({ content, isTeacherView }: Props) {
         </Typography>
       </Box>
 
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={`${theme.sizing.space11}px`}
+        // Figma: a 1px navy rule at x 822, dead centre between the columns.
+        // Stack's own divider collapses correctly when they stack at xs.
+        divider={
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{ borderColor: 'designSystem.background.navyBlue' }}
+          />
+        }
+      >
         {content.columns.map((column) => (
           <Box key={column.label} sx={{ flex: 1, minWidth: 0 }}>
             <Stack
               direction="row"
               alignItems="center"
               justifyContent="space-between"
-              spacing={1}
+              spacing={`${theme.sizing.space2}px`}
             >
-              <NumberBadge
-                sx={{
-                  backgroundColor: column.isCorrect
-                    ? 'designSystem.status.understood'
-                    : 'designSystem.status.needsSupport',
-                  color: 'designSystem.background.navyBlue',
-                }}
+              <ColumnBadge
+                isCorrect={column.isCorrect}
+                isRevealed={isTeacherView}
               >
                 {column.label}
-              </NumberBadge>
-              {/* Student view hides the verdict, the error highlight and the
-                  annotation — it is the same board without the answers. */}
+              </ColumnBadge>
               {isTeacherView && (
-                <StepChip
-                  sx={{
-                    backgroundColor: column.isCorrect
-                      ? 'designSystem.status.lightGreen'
-                      : 'designSystem.status.error',
-                  }}
-                >
+                <VerdictChip tone={column.isCorrect ? 'correct' : 'wrong'}>
                   {column.verdict}
-                </StepChip>
+                </VerdictChip>
               )}
             </Stack>
 
-            {column.steps.map((step) => (
-              <StepRow
-                key={step.step}
-                isError={isTeacherView && step.isError}
-                isCorrect={isTeacherView && column.isCorrect && step.step === 4}
-                sx={{ mt: `${theme.sizing.space1}px` }}
-              >
-                <StepChip>{`Step ${step.step}`}</StepChip>
-                <Typography
-                  variant="smallBodyText"
-                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
+            {column.steps.map((step) => {
+              const mark = isTeacherView ? stepMark(step) : '';
+
+              return (
+                <StepRow
+                  key={step.step}
+                  isError={isTeacherView && step.annotation?.kind === 'ERROR'}
+                  isCorrect={
+                    isTeacherView && step.annotation?.kind === 'CORRECT'
+                  }
+                  sx={{ mt: `${theme.sizing.space1}px` }}
                 >
-                  {step.text}
-                </Typography>
-              </StepRow>
-            ))}
+                  <StepChip>
+                    {t('activityDetail.stepNumber', { number: step.step })}
+                  </StepChip>
+                  <Typography
+                    variant="smallBodyText"
+                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                  >
+                    {`${step.text} ${mark}`.trimEnd()}
+                  </Typography>
+                </StepRow>
+              );
+            })}
 
             {isTeacherView && (
-              <Typography
-                variant="rubikBody"
-                sx={{
-                  mt: `${theme.sizing.space2}px`,
-                  color: 'designSystem.surface.atlanticNavy',
-                }}
+              <Stack
+                direction="row"
+                alignItems="flex-start"
+                spacing={`${theme.sizing.space1}px`}
+                sx={{ mt: `${theme.sizing.space2}px` }}
               >
-                {column.annotation}
-              </Typography>
+                {column.isCorrect ? (
+                  <CheckCircleIcon
+                    fontSize="small"
+                    sx={{ color: 'designSystem.status.success' }}
+                  />
+                ) : (
+                  <ErrorIcon
+                    fontSize="small"
+                    sx={{ color: 'designSystem.status.errorIcon' }}
+                  />
+                )}
+                <Typography
+                  variant="rubikBody"
+                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                >
+                  {column.annotation}
+                </Typography>
+              </Stack>
             )}
           </Box>
         ))}
       </Stack>
 
-      <TonedPanel tone="grey">
-        <Typography
-          variant="smallBodyText"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.keyTakeaway.label}
-        </Typography>
-        <Typography
-          variant="rubikBody"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.keyTakeaway.text}
-        </Typography>
-      </TonedPanel>
+      {/* The student frame closes on the takeaway with its blank still open;
+          the teacher frame shows the per-column reasoning instead. */}
+      {!isTeacherView && (
+        <PromptBand tone="grey">
+          <Box sx={{ minWidth: 0 }}>
+            <Typography
+              variant="rubikBody"
+              sx={{
+                display: 'block',
+                color: 'designSystem.surface.atlanticNavy',
+              }}
+            >
+              {content.keyTakeaway.label}
+            </Typography>
+            <Typography
+              variant="rubikBody"
+              sx={{
+                display: 'block',
+                color: 'designSystem.surface.atlanticNavy',
+              }}
+            >
+              {content.keyTakeaway.text}
+            </Typography>
+          </Box>
+        </PromptBand>
+      )}
     </ContentPanel>
   );
 }

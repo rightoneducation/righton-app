@@ -10,52 +10,68 @@ import {
 import {
   ContentPanel,
   TonedPanel,
-  StepChip,
+  VerdictChip,
   NumberBadge,
+  RepTable,
+  RepHeadCell,
+  RepBodyCell,
 } from '../../lib/styledcomponents/ActivityDetailStyledComponents';
+import RepresentationGraph from './RepresentationGraph';
 
 interface Props {
   content: IRepresentationsContent;
 }
 
 function RepresentationBody({ item }: { item: IRepresentation }) {
+  if (item.line && item.axisRange) {
+    return <RepresentationGraph item={item} />;
+  }
+
   if (item.rows && item.columns) {
+    const { columns, rows } = item;
+
     return (
-      <Box>
-        <Stack direction="row" justifyContent="space-around">
-          {item.columns.map((column) => (
-            <Typography
-              key={column}
-              variant="rubikSubBold"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {column}
-            </Typography>
-          ))}
-        </Stack>
-        {item.rows.map((row) => (
-          <Stack
-            key={row.join(',')}
-            direction="row"
-            justifyContent="space-around"
-          >
-            {row.map((cell) => (
-              <Typography
-                key={`${row.join(',')}-${cell}`}
-                variant="rubikBody"
-                sx={{ color: 'designSystem.surface.atlanticNavy' }}
-              >
-                {cell}
-              </Typography>
+      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+        <RepTable>
+          <thead>
+            <tr>
+              {columns.map((column) => (
+                <RepHeadCell key={column} scope="col">
+                  {column}
+                </RepHeadCell>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.join(',')}>
+                {row.map((cell, index) => (
+                  <RepBodyCell key={`${row.join(',')}-${columns[index]}`}>
+                    {cell}
+                  </RepBodyCell>
+                ))}
+              </tr>
             ))}
-          </Stack>
-        ))}
+          </tbody>
+        </RepTable>
       </Box>
     );
   }
 
+  // Shared by the Equation and Verbal cards — both carry `value`. The grid
+  // stretches sibling cards to a common height, so claiming the leftover space
+  // is what lets the content sit centred rather than at the top.
   return (
-    <Box sx={{ textAlign: 'center' }}>
+    <Box
+      sx={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+      }}
+    >
       <Typography
         variant="headingMd"
         sx={{ color: 'designSystem.surface.atlanticNavy' }}
@@ -87,10 +103,10 @@ export default function MultipleRepresentations({ content }: Props) {
 
   return (
     <Stack spacing={`${theme.sizing.space4}px`}>
-      <TonedPanel tone="grey">
+      <TonedPanel tone="greyDeep">
         <Typography
-          variant="rubikSubBold"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
+          variant="rubikLabelSm"
+          sx={{ color: 'designSystem.foreground.slateGrey' }}
         >
           {content.studentTaskLabel}
         </Typography>
@@ -114,8 +130,8 @@ export default function MultipleRepresentations({ content }: Props) {
             key={item.kind}
             sx={{
               backgroundColor: item.matches
-                ? 'designSystem.status.lightGreen'
-                : 'designSystem.surface.white',
+                ? 'designSystem.status.successTint'
+                : 'designSystem.background.offWhite',
             }}
           >
             <Stack
@@ -125,23 +141,14 @@ export default function MultipleRepresentations({ content }: Props) {
               spacing={1}
             >
               <Typography
-                variant="rubikSubBold"
-                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                variant="rubikLabel"
+                sx={{ color: 'designSystem.background.navyBlue' }}
               >
                 {item.label}
               </Typography>
-              <StepChip
-                sx={{
-                  backgroundColor: item.matches
-                    ? 'designSystem.status.understood'
-                    : 'designSystem.foreground.accentBlue',
-                  color: item.matches
-                    ? 'designSystem.background.navyBlue'
-                    : 'designSystem.surface.white',
-                }}
-              >
+              <VerdictChip tone={item.matches ? 'match' : 'noMatch'}>
                 {item.matchLabel}
-              </StepChip>
+              </VerdictChip>
             </Stack>
             <RepresentationBody item={item} />
           </ContentPanel>
@@ -149,7 +156,7 @@ export default function MultipleRepresentations({ content }: Props) {
       </Box>
 
       <Typography
-        variant="headingSm"
+        variant="headingMdBold"
         sx={{ color: 'designSystem.surface.atlanticNavy' }}
       >
         {content.teachingNotesLabel}
@@ -159,7 +166,7 @@ export default function MultipleRepresentations({ content }: Props) {
           <NumberBadge>{note.order}</NumberBadge>
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Typography
-              variant="rubikSubBold"
+              variant="rubikLabel"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
             >
               {note.title}

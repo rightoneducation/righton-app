@@ -81,7 +81,6 @@ export default function ExploreQuestions({
   const navigate = useNavigate();
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // mirrors the isLibraryInit lifecycle in LibraryTabs -- see ExploreGames
@@ -190,11 +189,7 @@ export default function ExploreQuestions({
   };
 
   const handleEditButtonClick = () => {
-    if (selectedQuestion?.publicPrivateType === PublicPrivateType.PUBLIC) {
-      setIsEditModalOpen(true);
-    } else {
-      handleEditQuestion();
-    }
+    handleEditQuestion();
   };
 
   const handleDeleteQuestion = async () => {
@@ -232,21 +227,14 @@ export default function ExploreQuestions({
   };
 
   const handleCloseModal = () => {
-    setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
   };
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <ModalBackground
-        isModalOpen={isEditModalOpen}
+        isModalOpen={isDeleteModalOpen}
         handleCloseModal={handleCloseModal}
-      />
-      <EditModal
-        isModalOpen={isEditModalOpen}
-        gameQuestion={GameQuestionType.QUESTION}
-        setIsModalOpen={setIsEditModalOpen}
-        handleProceedToEdit={handleEditQuestion}
       />
       <EditModal
         isModalOpen={isDeleteModalOpen}

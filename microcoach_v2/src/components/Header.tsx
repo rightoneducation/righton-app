@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Link, { LinkProps } from '@mui/material/Link';
@@ -11,16 +11,31 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import LogoutIcon from '@mui/icons-material/Logout';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { useMisconceptions } from '../hooks/useMisconceptions';
+import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
 
-export type HeaderVariant = 'public' | 'app';
+/**
+ * `profile` is the app chrome as the profile frame draws it: the identity
+ * presented as an avatar and a name rather than name-and-email, and no class
+ * switcher. Every other in-app frame (newexports/Wireframe2,3,5) draws the
+ * 362-wide name-and-email pill beside the 180-wide class select, so this is a
+ * second app variant rather than a change to the first.
+ *
+ * `signup` is the wizard's own chrome: the frames draw the brand alone on
+ * every step but the last, since offering a Sign Up link to someone already
+ * signing up makes no sense. Its final step still shows an identity, but that
+ * comes from the LOGGEDIN branch rather than the variant.
+ */
+export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile';
 
 interface HeaderProps {
   screenSize: ScreenSize;
   variant?: HeaderVariant;
+  onLogOut?: () => void;
 }
 
 // styled() erases MUI's polymorphic `component` prop, so re-declare it here to
@@ -64,25 +79,103 @@ const NavLink = styled(Link)<LinkProps & RouterExtras>(({ theme }) => ({
   '&:hover': { textDecoration: 'underline' },
 }));
 
-const appPillFill = 'rgba(255, 251, 246, 0.1)';
-const appPillStroke = 'rgba(255, 251, 246, 0.3)';
+// Figma (teacher sign-up, Page6): 215x36 rx 8, solid darkBlue on a cream
+// hairline. Squarer than the app header's IdentityPill, which is a 22-radius
+// lozenge — the two headers present identity differently.
+const PublicIdentityPill = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  minHeight: 36,
+  padding: `0 ${theme.sizing.space3}px`,
+  borderRadius: theme.sizing.space1,
+  backgroundColor: theme.palette.designSystem.surface.darkBlue,
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.fadedCream}`,
+  color: theme.palette.designSystem.background.cream,
+  ...theme.typography.headingSm,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+}));
+
+// Figma (profile): 108x41 rx 20.5 — a transparent pill on a white hairline,
+// sitting left of the identity.
+const LogOutButton = styled(Button)(({ theme }) => ({
+  minHeight: 41,
+  padding: `0 ${theme.sizing.space3}px`,
+  borderRadius: 20.5,
+  backgroundColor: 'transparent',
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.surface.white}`,
+  color: theme.palette.designSystem.surface.white,
+  ...theme.typography.buttonLabel,
+  textTransform: 'none',
+  whiteSpace: 'nowrap',
+  '&:hover': {
+    backgroundColor: theme.palette.designSystem.background.fadedWhiteHover,
+  },
+}));
+
 const appPillRadius = 22;
 
-const IdentityPill = styled(Box)(({ theme }) => ({
+// Both app variants draw the same lozenge — cream at 10% on cream at 30% — and
+// differ only in what they put inside it.
+const identityPillBase = (theme: Theme) => ({
+  borderRadius: appPillRadius,
+  backgroundColor: theme.palette.designSystem.background.fadedCreamFill,
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.fadedCreamStroke}`,
+  color: theme.palette.designSystem.surface.white,
+  whiteSpace: 'nowrap' as const,
+  boxSizing: 'border-box' as const,
+});
+
+// Figma (Wireframe2,3,5): 362x44, holding name and email.
+const IdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
+  ...identityPillBase(theme),
   display: 'block',
   maxWidth: 362,
   padding: `${theme.sizing.space1}px ${theme.sizing.space4}px`,
   lineHeight: '28px',
-  borderRadius: appPillRadius,
-  backgroundColor: appPillFill,
-  border: `${theme.borders.borderWidth}px solid ${appPillStroke}`,
-  color: theme.palette.designSystem.surface.white,
   ...theme.typography.rubikBody,
-  whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+}));
+
+/*
+ * Figma (profile): 180x44, holding the avatar and the name alone.
+ *
+ * 180 is a floor rather than the width: the frame measured it against "Mr.
+ * Anderson", and the name this actually renders is the full display name, which
+ * does not fit. Growing beats ellipsising a name at this length.
+ */
+const AvatarIdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
+  ...identityPillBase(theme),
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.sizing.space2,
+  minWidth: 180,
+  minHeight: 44,
+  padding: `0 ${theme.sizing.space3 + 2}px`,
+  ...theme.typography.buttonLabel,
+  textDecoration: 'none',
+}));
+
+// Figma: 28.7x35.4, rx 6.7 — the sidebar plate at header scale, and clipping
+// the same art, so it takes the same treatment.
+const HeaderAvatar = styled(Box)(({ theme }) => ({
+  width: 29,
+  height: 35,
+  flexShrink: 0,
+  overflow: 'hidden',
+  borderRadius: 7,
+  backgroundColor: theme.palette.designSystem.surface.avatarPlate,
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.offWhite}`,
   boxSizing: 'border-box',
 }));
+
+const HeaderAvatarImage = styled('img')({
+  display: 'block',
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+});
 
 const ClassSelect = styled(Select<string>, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
@@ -90,11 +183,11 @@ const ClassSelect = styled(Select<string>, {
   minWidth: screenSize === ScreenSize.SMALL ? 140 : 180,
   height: 44,
   borderRadius: appPillRadius,
-  backgroundColor: appPillFill,
+  backgroundColor: theme.palette.designSystem.background.fadedCreamFill,
   color: theme.palette.designSystem.surface.white,
   ...theme.typography.rubikBody,
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: appPillStroke,
+    borderColor: theme.palette.designSystem.background.fadedCreamStroke,
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
     borderColor: theme.palette.designSystem.surface.white,
@@ -109,11 +202,12 @@ const ClassSelect = styled(Select<string>, {
 
 // Skeleton inherits its colour from the surrounding text colour, which is
 // invisible against the navy bar.
-const authSkeletonSx = { bgcolor: 'rgba(255, 255, 255, 0.18)' };
+const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 
 export default function Header({
   screenSize,
   variant = 'public',
+  onLogOut,
 }: HeaderProps) {
   const { t } = useTranslation();
   const { userStatus, userProfile } = useMicroCoachDataState();
@@ -127,11 +221,20 @@ export default function Header({
   const teacherName = userProfile?.teacherName ?? session.teacher.displayName;
   const teacherEmail = userProfile?.email ?? session.teacher.email;
 
-  const isCompactBrand = variant === 'app' && screenSize === ScreenSize.SMALL;
+  // Both app variants share the nav block; only its contents differ.
+  const isProfileChrome = variant === 'profile';
+  const usesAppNav = variant === 'app' || isProfileChrome;
 
-  const brandVariant =
-    // eslint-disable-next-line no-nested-ternary
-    isCompactBrand ? 'smallTitle' : variant === 'app' ? 'appTitle' : 'navTitle';
+  const isCompactBrand = usesAppNav && screenSize === ScreenSize.SMALL;
+
+  const brandVariant = (() => {
+    if (isCompactBrand) return 'smallTitle';
+    // Every sign-up frame sets the brand at Rubik 32/600, the same as the app
+    // header. `public` stays on navTitle: no landing frame survives to check
+    // it against, so changing it there would be a guess.
+    if (usesAppNav || variant === 'signup') return 'appTitle';
+    return 'navTitle';
+  })();
 
   return (
     <HeaderBar component="header">
@@ -142,7 +245,7 @@ export default function Header({
           alignItems: 'center',
           // The 393 frame centres the brand; 744 and 1920 left-align it.
           justifyContent:
-            screenSize === ScreenSize.SMALL && variant === 'public'
+            screenSize === ScreenSize.SMALL && !usesAppNav
               ? 'center'
               : 'space-between',
           gap: 2,
@@ -161,7 +264,7 @@ export default function Header({
           {isCompactBrand ? t('header.brandShort') : t('header.brand')}
         </Typography>
 
-        {variant === 'app' && (
+        {usesAppNav && (
           <Stack
             direction="row"
             alignItems="center"
@@ -179,26 +282,57 @@ export default function Header({
             ) : (
               <>
                 {screenSize === ScreenSize.LARGE && (
-                  <IdentityPill>
-                    <Box component="span" sx={{ fontWeight: 500 }}>
-                      {teacherName}
-                    </Box>
-                    {` • ${teacherEmail}`}
-                  </IdentityPill>
+                  <>
+                    <LogOutButton
+                      disableElevation
+                      onClick={onLogOut}
+                      startIcon={<LogoutIcon fontSize="small" />}
+                    >
+                      {t('profile.logOut')}
+                    </LogOutButton>
+                    {/* The frame gives no separate control for reaching the
+                        profile, so the identity itself is the way in. */}
+                    {isProfileChrome ? (
+                      <AvatarIdentityPill component={RouterLink} to="/profile">
+                        <HeaderAvatar>
+                          <HeaderAvatarImage
+                            src={avatarIcons[DEFAULT_AVATAR_INDEX]}
+                            alt=""
+                          />
+                        </HeaderAvatar>
+                        {teacherName}
+                      </AvatarIdentityPill>
+                    ) : (
+                      <IdentityPill
+                        component={RouterLink}
+                        to="/profile"
+                        sx={{ textDecoration: 'none' }}
+                      >
+                        <Box component="span" sx={{ fontWeight: 500 }}>
+                          {teacherName}
+                        </Box>
+                        {` • ${teacherEmail}`}
+                      </IdentityPill>
+                    )}
+                  </>
                 )}
-                <ClassSelect
-                  screenSize={screenSize}
-                  value={selectedClassId}
-                  IconComponent={KeyboardArrowDownIcon}
-                  onChange={(event) => setSelectedClassId(event.target.value)}
-                  inputProps={{ 'aria-label': t('header.classSwitcher') }}
-                >
-                  {session.classes.map((classOption) => (
-                    <MenuItem key={classOption.id} value={classOption.id}>
-                      {classOption.name}
-                    </MenuItem>
-                  ))}
-                </ClassSelect>
+                {/* The profile frame carries no class switcher; every other
+                    in-app frame does. */}
+                {!isProfileChrome && (
+                  <ClassSelect
+                    screenSize={screenSize}
+                    value={selectedClassId}
+                    IconComponent={KeyboardArrowDownIcon}
+                    onChange={(event) => setSelectedClassId(event.target.value)}
+                    inputProps={{ 'aria-label': t('header.classSwitcher') }}
+                  >
+                    {session.classes.map((classOption) => (
+                      <MenuItem key={classOption.id} value={classOption.id}>
+                        {classOption.name}
+                      </MenuItem>
+                    ))}
+                  </ClassSelect>
+                )}
               </>
             )}
           </Stack>
@@ -212,46 +346,58 @@ export default function Header({
           This is the only part of the page that depends on who the user is, so
           it carries its own skeleton rather than the page waiting on auth.
         */}
-        {variant === 'public' && screenSize === ScreenSize.LARGE && (
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={4}
-            sx={{ justifyContent: 'flex-end' }}
-          >
-            {isResolvingAuth ? (
-              <>
-                <Skeleton
-                  animation="wave"
-                  variant="rounded"
-                  width={132}
-                  height={54}
-                  sx={{ ...authSkeletonSx, borderRadius: '27px' }}
-                />
-                <Skeleton
-                  animation="wave"
-                  variant="rounded"
-                  width={132}
-                  height={54}
-                  sx={{ ...authSkeletonSx, borderRadius: '27px' }}
-                />
-              </>
-            ) : (
-              <>
-                <NavLink component={RouterLink} to="/signup">
-                  {t('header.signup')}
-                </NavLink>
-                <LoginButton
-                  component={RouterLink}
-                  to="/login"
-                  disableElevation
-                >
-                  {t('header.login')}
-                </LoginButton>
-              </>
-            )}
-          </Stack>
-        )}
+        {!usesAppNav &&
+          screenSize === ScreenSize.LARGE &&
+          userStatus === UserStatusType.LOGGEDIN && (
+            // Figma (sign-up Page6): once the wizard commits a profile the
+            // public header presents identity instead of the auth links.
+            <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+              <PublicIdentityPill>{teacherName}</PublicIdentityPill>
+            </Stack>
+          )}
+
+        {variant === 'public' &&
+          screenSize === ScreenSize.LARGE &&
+          userStatus !== UserStatusType.LOGGEDIN && (
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={4}
+              sx={{ justifyContent: 'flex-end' }}
+            >
+              {isResolvingAuth ? (
+                <>
+                  <Skeleton
+                    animation="wave"
+                    variant="rounded"
+                    width={132}
+                    height={54}
+                    sx={{ ...authSkeletonSx, borderRadius: '27px' }}
+                  />
+                  <Skeleton
+                    animation="wave"
+                    variant="rounded"
+                    width={132}
+                    height={54}
+                    sx={{ ...authSkeletonSx, borderRadius: '27px' }}
+                  />
+                </>
+              ) : (
+                <>
+                  <NavLink component={RouterLink} to="/signup">
+                    {t('header.signup')}
+                  </NavLink>
+                  <LoginButton
+                    component={RouterLink}
+                    to="/login"
+                    disableElevation
+                  >
+                    {t('header.login')}
+                  </LoginButton>
+                </>
+              )}
+            </Stack>
+          )}
       </ContentRow>
     </HeaderBar>
   );

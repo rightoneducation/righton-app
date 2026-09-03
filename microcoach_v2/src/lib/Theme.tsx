@@ -11,6 +11,18 @@ const designSystemColors = {
     cream: '#FFFBF6',
     navyBlue: '#1B3467',
     greyOverlay: '#B2B0AC',
+    // cream at 50% — the identity pill's outline on the public header.
+    fadedCream: '#FFFBF680',
+    // cream at 10% and 30% — the app header's identity pill and class select,
+    // which sit on navy rather than on the page.
+    fadedCreamFill: '#FFFBF61A',
+    fadedCreamStroke: '#FFFBF64D',
+    // white at 8% — the hover wash on an outlined control over navy.
+    fadedWhiteHover: '#FFFFFF14',
+    // white at 18% — a skeleton over navy, where the page-level grey vanishes.
+    fadedWhiteVeil: '#FFFFFF2E',
+    // black at 50% — the modal backdrop.
+    scrim: '#00000080',
   },
   foreground: {
     base: '#FFFFFF',
@@ -31,6 +43,30 @@ const designSystemColors = {
     disabledStroke: '#AAAAAA',
     mutedGrey: '#8F8F8F',
     selectedNavy: '#1B2A6B',
+    // Muted label grey above a field or panel ("Student task"). Darker and
+    // cooler than mutedGrey, which is too light to sit on a grey fill.
+    slateGrey: '#6B7280',
+    // Sign-up flow: the "or" divider between the Google button and the form,
+    // and the digit inside a filled verification box.
+    slateNavy: '#384466',
+    // The verification box outline, before and after a digit is typed — the
+    // filled state deliberately recedes so the digit carries the emphasis.
+    codeStroke: '#4E628C',
+    codeStrokeFilled: '#CCCCCC',
+    // The sign-up frames outline every field at 70% rather than full strength,
+    // so the border sits back from the text. Alpha baked into 8-digit hex the
+    // way fadedAtlanticNavy is, so it stays one value per appearance.
+    fadedDarkBlue: '#02215FB3',
+    // selectedNavy at 70% — the active field outline, the teacher select, and
+    // the label on a disabled CTA.
+    fadedSelectedNavy: '#1B2A6BB3',
+    // selectedNavy at 50% — a field the teacher cannot edit, and the dropzone's
+    // dashed edge. The upload frames separate locked from interactive purely by
+    // this alpha, so the two strengths have to stay distinct tokens.
+    lockedNavy: '#1B2A6B80',
+    // background.navyBlue at 50% — the outline on a quiet footer action, in
+    // every activity frame.
+    fadedDeepNavy: '#1B346780',
   },
   surface: {
     atlanticNavy: '#1B376F',
@@ -45,6 +81,9 @@ const designSystemColors = {
     green: '#3EBF8F',
     ashyGray: '#635F5F',
     placeholderGrey: '#294478',
+    // The profile avatar's plate. 18 off chart.line at its widest channel, so
+    // it earns its own value rather than reusing the graph's blue.
+    avatarPlate: '#1F81B3',
   },
   status: {
     base: '#FFFFFF',
@@ -60,6 +99,27 @@ const designSystemColors = {
     needsSupport: '#F49F82',
     understood: '#BDE9CA',
     prerequisite: '#CC5500',
+    // The error family used across the activity templates. Figma draws the
+    // worked-example row and the compare column as #D0254D at 30% but paints
+    // the verdict chip as the flat #F1BECA — which is that exact composite
+    // over white. One solid token covers all three: every surface it lands on
+    // is white, and a 6-digit value also survives the PDF renderer, whose
+    // colour parser has no alpha. Distinct from status.error, the pale wash
+    // used for form-level errors.
+    errorTint: '#F1BECA',
+    // The ✗ marker beside an incorrect observation.
+    errorIcon: '#E68A9F',
+    // status.lightGreen at 50% over white — the "Matches" representation card.
+    successTint: '#F6FFF1',
+  },
+  // The plotted graph inside a representation card. Charts are their own
+  // surface with their own legibility needs — same reason `gradients` is
+  // namespaced rather than folded into `foreground`.
+  chart: {
+    axis: '#333333',
+    gridLabel: '#BBBBBB',
+    line: '#1A6FB5',
+    annotation: '#E07B00',
   },
   gradients: {
     uploadIcons:
@@ -307,6 +367,74 @@ const designSystemTypography = {
     fontSize: '14px',
     lineHeight: 'normal',
   },
+  // headingMd at 700 — the worked-example panel headings ("Example 1") sit one
+  // weight above the surrounding headingMd section titles.
+  headingMdBold: {
+    fontFamily: poppins,
+    fontWeight: 700,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
+  // The "Step N" pill. Sits between smallBodyText (14) and microLabel (12);
+  // named here because StepChip previously inlined the family/size/weight,
+  // the one place in the styled layer that bypassed the type scale.
+  stepChipLabel: {
+    fontFamily: rubik,
+    fontWeight: 400,
+    fontSize: '13px',
+    lineHeight: 'normal',
+  },
+  // Rubik 500 without the tracking the buttonLabel pair carries: panel and
+  // card labels ("Equation", "Ask students", a teaching-note heading).
+  rubikLabel: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '16px',
+    lineHeight: 'normal',
+  },
+  rubikLabelSm: {
+    fontFamily: rubik,
+    fontWeight: 500,
+    fontSize: '14px',
+    lineHeight: 'normal',
+  },
+  // Profile's display name and "Account Settings" heading.
+  displayBold: {
+    fontFamily: poppins,
+    fontWeight: 700,
+    fontSize: '40px',
+    lineHeight: 'normal',
+  },
+  // The review step's body copy and its "UPLOADED" heading — headingLg is
+  // already Poppins 600/24, so these are its 400 and 500 weights.
+  bodyLg: {
+    fontFamily: poppins,
+    fontWeight: 400,
+    fontSize: '24px',
+    lineHeight: 'normal',
+  },
+  subheadingLg: {
+    fontFamily: poppins,
+    fontWeight: 500,
+    fontSize: '24px',
+    lineHeight: 'normal',
+  },
+  // submissionLabel's lighter twin, for the value beside each summary label.
+  submissionLabelLight: {
+    fontFamily: poppins,
+    fontWeight: 400,
+    fontSize: '22px',
+    lineHeight: 'normal',
+  },
+  // The "FINAL:" summary closing each worked example. Rendered uppercase by
+  // the component, so the copy itself stays natural-case.
+  outcomeLabel: {
+    fontFamily: poppins,
+    fontWeight: 700,
+    fontSize: '12px',
+    lineHeight: 'normal',
+    letterSpacing: '0.5px',
+  },
 };
 
 // Breakpoints match central_v2 so ScreenSize bands line up across the apps:
@@ -343,6 +471,9 @@ const sizing = {
   // In-app screens sit in a narrower column than the landing page: the Figma
   // card row is 344 x 3 with the gap tokenised to space8, so 344*3 + 48*2.
   appContentMaxWidth: 1128,
+  // Review and submit runs narrower than the rest of the flow: Figma insets it
+  // to x 502..1418, so the column is the card.
+  reviewContentMaxWidth: 916,
   // Home is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
   // The stepper and banner deliberately break out of that column.
   homeContentMaxWidth: 858,
@@ -417,6 +548,15 @@ declare module '@mui/material/styles' {
     headingLg: CSSProperties;
     statusLabel: CSSProperties;
     smallBodyText: CSSProperties;
+    headingMdBold: CSSProperties;
+    rubikLabel: CSSProperties;
+    rubikLabelSm: CSSProperties;
+    stepChipLabel: CSSProperties;
+    outcomeLabel: CSSProperties;
+    displayBold: CSSProperties;
+    bodyLg: CSSProperties;
+    subheadingLg: CSSProperties;
+    submissionLabelLight: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
@@ -455,6 +595,15 @@ declare module '@mui/material/styles' {
     headingLg?: CSSProperties;
     statusLabel?: CSSProperties;
     smallBodyText?: CSSProperties;
+    headingMdBold?: CSSProperties;
+    rubikLabel?: CSSProperties;
+    rubikLabelSm?: CSSProperties;
+    stepChipLabel?: CSSProperties;
+    outcomeLabel?: CSSProperties;
+    displayBold?: CSSProperties;
+    bodyLg?: CSSProperties;
+    subheadingLg?: CSSProperties;
+    submissionLabelLight?: CSSProperties;
   }
 }
 
@@ -494,6 +643,15 @@ declare module '@mui/material/Typography' {
     headingLg: true;
     statusLabel: true;
     smallBodyText: true;
+    headingMdBold: true;
+    rubikLabel: true;
+    rubikLabelSm: true;
+    stepChipLabel: true;
+    outcomeLabel: true;
+    displayBold: true;
+    bodyLg: true;
+    subheadingLg: true;
+    submissionLabelLight: true;
   }
 }
 
@@ -568,6 +726,15 @@ const Theme = createTheme({
           headingLg: 'p',
           statusLabel: 'p',
           smallBodyText: 'p',
+          headingMdBold: 'p',
+          rubikLabel: 'p',
+          rubikLabelSm: 'p',
+          stepChipLabel: 'p',
+          outcomeLabel: 'p',
+          displayBold: 'p',
+          bodyLg: 'p',
+          subheadingLg: 'p',
+          submissionLabelLight: 'p',
         },
       },
     },
@@ -609,6 +776,15 @@ const Theme = createTheme({
     headingLg: { ...designSystemTypography.headingLg },
     statusLabel: { ...designSystemTypography.statusLabel },
     smallBodyText: { ...designSystemTypography.smallBodyText },
+    headingMdBold: { ...designSystemTypography.headingMdBold },
+    rubikLabel: { ...designSystemTypography.rubikLabel },
+    rubikLabelSm: { ...designSystemTypography.rubikLabelSm },
+    stepChipLabel: { ...designSystemTypography.stepChipLabel },
+    outcomeLabel: { ...designSystemTypography.outcomeLabel },
+    displayBold: { ...designSystemTypography.displayBold },
+    bodyLg: { ...designSystemTypography.bodyLg },
+    subheadingLg: { ...designSystemTypography.subheadingLg },
+    submissionLabelLight: { ...designSystemTypography.submissionLabelLight },
     h1: { ...designSystemTypography.h1 },
     h2: { ...designSystemTypography.h2 },
     h3: { ...designSystemTypography.h3 },
