@@ -11,10 +11,7 @@ import ProfileSkeleton from '../components/ProfileSkeleton';
 import { UserRole } from '../api';
 import errorIcon from '../images/errorIcon.svg';
 import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
-import {
-  useMicroCoachDataDispatch,
-  useMicroCoachDataState,
-} from '../hooks/context/useMicroCoachDataContext';
+import { UserProps } from '../hooks/useUserState';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 import {
   EditPictureChip,
@@ -49,11 +46,10 @@ const NAME_ERROR_ID = 'profile-name-error';
  * uniqueness check and password modal are all out of scope here — the frame
  * has none of them, and editing is scoped to the two name fields.
  */
-export default function Profile({ screenSize }: ScreenSizeProps) {
+export default function Profile({ screenSize, user }: ScreenSizeProps & UserProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { userProfile } = useMicroCoachDataState();
-  const dispatch = useMicroCoachDataDispatch();
+  const { userProfile, updateUserProfile } = user;
   const { session } = useMisconceptions();
   const isReady = useAllReady(useI18nReady());
 
@@ -94,14 +90,10 @@ export default function Profile({ screenSize }: ScreenSizeProps) {
       setShowFieldErrors(true);
       return;
     }
-    dispatch({
-      type: 'SET_USER_PROFILE',
-      payload: {
-        ...userProfile,
-        email: userProfile?.email ?? session.teacher.email,
-        role: userProfile?.role ?? UserRole.MEMBER,
-        teacherName: `${draft.first.trim()} ${draft.last.trim()}`,
-      },
+    updateUserProfile({
+      email: userProfile?.email ?? session.teacher.email,
+      role: userProfile?.role ?? UserRole.MEMBER,
+      teacherName: `${draft.first.trim()} ${draft.last.trim()}`,
     });
     setShowFieldErrors(false);
     setIsEditing(false);

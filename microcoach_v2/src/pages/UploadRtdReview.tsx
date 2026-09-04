@@ -6,12 +6,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ContentRow from '../components/ContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { UploadStepProps } from '../lib/UploadModels';
 import { useMisconceptions } from '../hooks/useMisconceptions';
-import {
-  useUploadDispatch,
-  useUploadState,
-} from '../hooks/context/useUploadContext';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
   GhostAction,
@@ -19,19 +15,17 @@ import {
   SummaryCardBody,
   SummaryCardHeader,
   SummaryRow,
-  ScreenSizeProps,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
 /** The confirmation step: what is about to be submitted, and for whom. */
-export default function UploadRtdReview({ screenSize }: ScreenSizeProps) {
+export default function UploadRtdReview({ screenSize, upload, actions, user }: UploadStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const { session } = useMisconceptions();
-  const { userProfile } = useMicroCoachDataState();
-  const upload = useUploadState();
-  const dispatch = useUploadDispatch();
+  const { userProfile } = user;
+
   const isReady = useAllReady(useI18nReady());
 
   // Reached without both files — send them back rather than confirm nothing.
@@ -58,7 +52,7 @@ export default function UploadRtdReview({ screenSize }: ScreenSizeProps) {
   ];
 
   const handleSubmit = () => {
-    dispatch({ type: 'SUBMIT' });
+    actions.submit();
     navigate('/reflect');
   };
 

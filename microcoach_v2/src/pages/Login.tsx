@@ -12,8 +12,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { UserRole } from '../api';
 import AppContentRow from '../components/AppContentRow';
-import { UserStatusType } from '../lib/MicroCoachModels';
-import { useMicroCoachDataDispatch } from '../hooks/context/useMicroCoachDataContext';
+import { UserProps } from '../hooks/useUserState';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 import {
   GoogleButton,
@@ -31,11 +30,11 @@ import {
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import googleIcon from '../images/googleicon.svg';
 
-export default function Login({ screenSize }: ScreenSizeProps) {
+export default function Login({ screenSize, user }: ScreenSizeProps & UserProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const dispatch = useMicroCoachDataDispatch();
+  const { signIn } = user;
   const { session } = useMisconceptions();
   const isReady = useAllReady(useI18nReady());
 
@@ -63,19 +62,15 @@ export default function Login({ screenSize }: ScreenSizeProps) {
    * alternative would be leaving one of them inert, which reads as broken.
    */
   const handleSignIn = () => {
-    dispatch({
-      type: 'SET_USER_PROFILE',
-      payload: {
-        email: email.trim() || session.teacher.email,
-        teacherName: session.teacher.displayName,
-        role: roleForEmail(email),
-        classes: session.classes.map((option) => ({
-          id: option.id,
-          name: option.name,
-        })),
-      },
+    signIn({
+      email: email.trim() || session.teacher.email,
+      teacherName: session.teacher.displayName,
+      role: roleForEmail(email),
+      classes: session.classes.map((option) => ({
+        id: option.id,
+        name: option.name,
+      })),
     });
-    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
     navigate('/dashboard');
   };
 

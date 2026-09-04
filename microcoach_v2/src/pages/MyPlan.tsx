@@ -16,6 +16,7 @@ import PlanItemRow from '../components/PlanItemRow';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ScreenSize } from '../lib/MicroCoachModels';
+import { PlanProps } from '../hooks/usePlanItems';
 import { IPlanItem } from '../lib/PipelineModels';
 import {
   PlanBackButton,
@@ -25,19 +26,14 @@ import {
   UploadStatRow,
 } from '../lib/styledcomponents/MyPlanStyledComponents';
 import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
-import {
-  useMicroCoachDataState,
-  useMicroCoachDataDispatch,
-} from '../hooks/context/useMicroCoachDataContext';
 
-export default function MyPlan({ screenSize }: ScreenSizeProps) {
+export default function MyPlan({ screenSize, plan }: ScreenSizeProps & PlanProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  const { planItems } = useMicroCoachDataState();
-  const dispatch = useMicroCoachDataDispatch();
+  const { planItems, markPlanItemDone, removePlanItem } = plan;
 
   const saved = planItems.filter((item) => item.status === 'SAVED');
   const completed = planItems.filter((item) => item.status === 'COMPLETED');
@@ -128,10 +124,10 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
               item={item}
               onOpenDetails={handleOpenDetails}
               onMarkDone={(id) =>
-                dispatch({ type: 'MARK_PLAN_ITEM_DONE', payload: id })
+                markPlanItemDone(id)
               }
               onRemove={(id) =>
-                dispatch({ type: 'REMOVE_PLAN_ITEM', payload: id })
+                removePlanItem(id)
               }
             />
           ))

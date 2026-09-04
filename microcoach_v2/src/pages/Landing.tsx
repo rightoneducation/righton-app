@@ -10,7 +10,7 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import ContentRow from '../components/ContentRow';
 import LandingSkeleton from '../components/LandingSkeleton';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
-import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
+import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   StepPanel,
   StepCard,
@@ -19,8 +19,7 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/LandingStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { useMicroCoachDataDispatch } from '../hooks/context/useMicroCoachDataContext';
-import { useSignUpDispatch } from '../hooks/context/useSignUpContext';
+import { UserProps } from '../hooks/useUserState';
 import heroClassroom from '../images/heroClassroom.jpg';
 import landingPagePattern from '../images/landingPagePattern.svg';
 import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
@@ -87,24 +86,22 @@ const STEPS = [
   { key: 'step3', image: stepCard3 },
 ] as const;
 
-export default function Landing({ screenSize }: ScreenSizeProps) {
+export default function Landing({ screenSize, user }: ScreenSizeProps & UserProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const dispatch = useMicroCoachDataDispatch();
-  const signUpDispatch = useSignUpDispatch();
+  const { signOut } = user;
   const isLarge = screenSize === ScreenSize.LARGE;
 
   /*
    * Starting over, not resuming. The wizard's last step commits a profile and
    * flips userStatus to LOGGEDIN, and AuthGuard quite correctly keeps a
-   * signed-in user off /signup — so without clearing both, a second run of
-   * the flow bounces straight back here and the button looks dead.
+   * signed-in user off /signup — so without signing out, a second run of the
+   * flow bounces straight back here and the button looks dead. The wizard's own
+   * state needs no reset: it is local to SignUpWizard, which unmounts on exit.
    */
   const handleGetStarted = () => {
-    signUpDispatch({ type: 'RESET' });
-    dispatch({ type: 'CLEAR_USER_PROFILE' });
-    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    signOut();
     navigate('/signup');
   };
 

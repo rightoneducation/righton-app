@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
 import VerificationCodeInput from '../components/VerificationCodeInput';
-import { CODE_LENGTH } from '../lib/context/SignUpContext';
+import { CODE_LENGTH } from '../lib/SignUpModels';
 import {
   FieldRow,
   PasswordRulesPanel,

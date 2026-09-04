@@ -7,12 +7,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ApartmentIcon from '@mui/icons-material/Apartment';
-import AppContentRow from '../components/AppContentRow';
-import { SignUpRole as Role } from '../lib/context/SignUpContext';
 import {
-  useSignUpDispatch,
-  useSignUpState,
-} from '../hooks/context/useSignUpContext';
+  SignUpStepProps,
+  SignUpRole as Role,
+} from '../lib/SignUpModels';
+import AppContentRow from '../components/AppContentRow';
 import {
   RoleCard,
   RoleIconTile,
@@ -20,7 +19,6 @@ import {
   SignUpCta,
   SignUpHeading,
   SignUpSubheading,
-  ScreenSizeProps,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
@@ -44,12 +42,11 @@ const ROLES: {
   },
 ];
 
-export default function SignUpRole({ screenSize }: ScreenSizeProps) {
+export default function SignUpRole({ screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { role } = useSignUpState();
-  const dispatch = useSignUpDispatch();
+  const { role } = state;
   const isReady = useAllReady(useI18nReady());
 
   if (!isReady) return null;
@@ -75,7 +72,7 @@ export default function SignUpRole({ screenSize }: ScreenSizeProps) {
               key={option.id}
               isSelected={role === option.id}
               aria-pressed={role === option.id}
-              onClick={() => dispatch({ type: 'SET_ROLE', payload: option.id })}
+              onClick={() => actions.setRole(option.id)}
             >
               <RoleIconTile>{option.icon}</RoleIconTile>
               <Box sx={{ minWidth: 0 }}>

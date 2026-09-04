@@ -9,16 +9,15 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {
+  SignUpStepProps,
+  SignUpField as Field,
+} from '../lib/SignUpModels';
 import googleIcon from '../images/googleicon.svg';
 import errorIcon from '../images/errorIcon.svg';
 import checkEmailApproval from '../lib/mocks/approvalCheck';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
-import { SignUpField as Field } from '../lib/context/SignUpContext';
-import {
-  useSignUpDispatch,
-  useSignUpState,
-} from '../hooks/context/useSignUpContext';
 import {
   FieldRow,
   GoogleButton,
@@ -31,17 +30,15 @@ import {
   SignUpHeading,
   SignUpPill,
   SignUpSubheading,
-  ScreenSizeProps,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 
-export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
+export default function SignUpRegister({ screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const state = useSignUpState();
-  const dispatch = useSignUpDispatch();
+
   const { session } = useMisconceptions();
   const isReady = useAllReady(useI18nReady());
 
@@ -87,7 +84,7 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
   if (!isReady) return null;
 
   const setField = (field: Field) => (value: string) =>
-    dispatch({ type: 'SET_FIELD', payload: { field, value } });
+    actions.setField(field, value);
 
   /*
    * Decorative on purpose: `aria-invalid` on the input is what assistive tech
@@ -131,13 +128,10 @@ export default function SignUpRegister({ screenSize }: ScreenSizeProps) {
    * empty dropdown and a CTA that can never enable.
    */
   const handleGoogle = () => {
-    dispatch({ type: 'SET_VERIFIED' });
+    actions.setVerified();
 
     if (state.role === 'ADMIN') {
-      dispatch({
-        type: 'SET_CLASSES',
-        payload: session.classes.map((classOption) => classOption.name),
-      });
+      actions.setClasses(session.classes.map((classOption) => classOption.name));
       navigate('/signup/select');
       return;
     }

@@ -10,12 +10,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import AppContentRow from '../components/AppContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { UploadStepProps } from '../lib/UploadModels';
 import { useMisconceptions } from '../hooks/useMisconceptions';
-import {
-  useUploadState,
-  useUploadDispatch,
-} from '../hooks/context/useUploadContext';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
@@ -30,7 +26,6 @@ import {
   UploadedFileMain,
   UploadedFileRow,
   GhostAction,
-  ScreenSizeProps,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
@@ -43,14 +38,13 @@ import { useAllReady, useI18nReady } from '../hooks/readiness';
  * "Upload file" marks a slot complete and "Replace file" clears it. The error
  * state is reachable through the second slot so it can be demonstrated.
  */
-export default function UploadRtd({ screenSize }: ScreenSizeProps) {
+export default function UploadRtd({ screenSize, upload, actions, user }: UploadStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const { session } = useMisconceptions();
-  const { userProfile } = useMicroCoachDataState();
-  const upload = useUploadState();
-  const dispatch = useUploadDispatch();
+  const { userProfile } = user;
+
   const isReady = useAllReady(useI18nReady());
 
   if (!isReady) return null;
@@ -228,11 +222,9 @@ export default function UploadRtd({ screenSize }: ScreenSizeProps) {
                 disableElevation
                 sx={{ alignSelf: 'center' }}
                 onClick={() =>
-                  dispatch(
-                    file
-                      ? { type: 'CLEAR_FILE', payload: slot.key }
-                      : { type: 'COMPLETE_FILE', payload: slot.key },
-                  )
+                  (file
+                    ? actions.clearFile(slot.key)
+                    : actions.completeFile(slot.key))
                 }
               >
                 {t(file ? 'upload.replaceFile' : 'upload.uploadFile')}

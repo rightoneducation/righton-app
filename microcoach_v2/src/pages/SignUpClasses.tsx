@@ -6,13 +6,9 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import { SignUpStepProps, namedClasses } from '../lib/SignUpModels';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
-import { namedClasses } from '../lib/context/SignUpContext';
-import {
-  useSignUpDispatch,
-  useSignUpState,
-} from '../hooks/context/useSignUpContext';
 import {
   AddClassChip,
   SignUpColumn,
@@ -20,16 +16,14 @@ import {
   SignUpField,
   SignUpHeading,
   SignUpSubheading,
-  ScreenSizeProps,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
-export default function SignUpClasses({ screenSize }: ScreenSizeProps) {
+export default function SignUpClasses({ screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const state = useSignUpState();
-  const dispatch = useSignUpDispatch();
+
   const isReady = useAllReady(useI18nReady());
 
   if (!state.isVerified) return <Navigate to="/signup" replace />;
@@ -63,10 +57,7 @@ export default function SignUpClasses({ screenSize }: ScreenSizeProps) {
                 inputProps={{ 'aria-label': t('signup.classPlaceholder') }}
                 value={name}
                 onChange={(event) =>
-                  dispatch({
-                    type: 'SET_CLASS',
-                    payload: { index, value: event.target.value },
-                  })
+                  actions.setClass(index, event.target.value)
                 }
               />
               {/* The frame never draws a second row, so it cannot show how one
@@ -77,7 +68,7 @@ export default function SignUpClasses({ screenSize }: ScreenSizeProps) {
                   size="small"
                   aria-label={t('signup.removeClass')}
                   onClick={() =>
-                    dispatch({ type: 'REMOVE_CLASS', payload: index })
+                    actions.removeClass(index)
                   }
                   sx={{ color: 'designSystem.surface.ashyGray' }}
                 >
@@ -91,7 +82,7 @@ export default function SignUpClasses({ screenSize }: ScreenSizeProps) {
         <AddClassChip
           disableElevation
           startIcon={<AddIcon sx={{ fontSize: 16 }} />}
-          onClick={() => dispatch({ type: 'ADD_CLASS' })}
+          onClick={() => actions.addClass()}
         >
           {t('signup.addClass')}
         </AddClassChip>
