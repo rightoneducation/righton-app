@@ -1,0 +1,14 @@
+[
+  {
+    "Action": ["secretsmanager:GetSecretValue"],
+    "Resource": ["*"]
+  },
+  {
+    "Action": ["lambda:InvokeFunction"],
+    "Resource": ["arn:aws:lambda:*:*:function:microcoach*"]
+  },
+  {
+    "Action": ["ses:SendEmail"],
+    "Resource": ["*"]
+  }
+]
