@@ -1,0 +1,10 @@
+[
+  {
+    "Action": [
+      "secretsmanager:GetSecretValue"
+    ],
+    "Resource": [
+      "arn:aws:secretsmanager:us-east-1:*:secret:*"
+    ]
+  }
+]

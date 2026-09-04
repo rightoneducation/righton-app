@@ -1,6 +1,8 @@
 {
   "version": "1",
   "cognitoConfig": {
+    "identityPoolName": "microcoachv2bb9ce5a2_identitypool_0e6d8157",
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "microcbb9ce5a2",
     "userPoolName": "microcoachv2bb9ce5a2_userpool_bb9ce5a2",
     "autoVerifiedAttributes": [
@@ -33,7 +35,7 @@
     "userpoolClientSetAttributes": false,
     "sharedId": "bb9ce5a2",
     "resourceName": "microcoachv2bb9ce5a2",
-    "authSelections": "userPoolOnly",
+    "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
     "usernameAttributes": [
       "email"
@@ -86,7 +88,9 @@
     "parentStack": {
       "Ref": "AWS::StackId"
     },
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostAuthentication\",\n    \"lambdaFunctionName\": \"microcoachv2bb9ce5a2PostAuthentication\"\n  }\n]",
+    "authTriggerConnections": [
+      "{\"triggerType\":\"PostAuthentication\",\"lambdaFunctionName\":\"microcoachv2bb9ce5a2PostAuthentication\"}"
+    ],
     "permissions": []
   }
 }
