@@ -520,7 +520,7 @@ export function HowItWorks() { // eslint-disable-line
             </PhoneCard>
           </PhoneContainer>
 
-          {/* View User guide button */}
+          {/* View User guide button
           <Box
             component="button"
             sx={{
@@ -543,7 +543,7 @@ export function HowItWorks() { // eslint-disable-line
             }}
           >
             View User Guide
-          </Box>
+          </Box> */}
         </PhoneAndDownloadContainer>
 
         {/* Wrapper of teacher tutorial and video container. */}
