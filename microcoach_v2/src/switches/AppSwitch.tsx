@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { APIClients } from '../api';
 import { ScreenType } from '../lib/MicroCoachModels';
-import { useAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { useLogOut } from '../hooks/useMicroCoachDataActions';
+import { useAppOutletContext } from '../hooks/useAppOutletContext';
+import { useLogOut } from '../hooks/useAuthActions';
 import { useScreenSize } from '../hooks/useScreenSize';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
@@ -11,11 +10,7 @@ import TemplateDebugMenu from '../components/TemplateDebugMenu';
 import AuthGuard from '../containers/AuthGuard';
 import Landing from '../pages/Landing';
 import Login from '../pages/Login';
-import SignUpRole from '../pages/SignUpRole';
-import SignUpRegister from '../pages/SignUpRegister';
-import SignUpVerify from '../pages/SignUpVerify';
-import SignUpClasses from '../pages/SignUpClasses';
-import SignUpSelect from '../pages/SignUpSelect';
+import SignUpWizard from '../containers/SignUpWizard';
 import ResetPassword from '../pages/ResetPassword';
 import AuthCallback from '../pages/AuthCallback';
 import Dashboard from '../pages/Dashboard';
@@ -24,8 +19,7 @@ import ChooseActivity from '../pages/ChooseActivity';
 import MyPlan from '../pages/MyPlan';
 import ActivityDetail from '../pages/ActivityDetail';
 import Profile from '../pages/Profile';
-import UploadRtd from '../pages/UploadRtd';
-import UploadRtdReview from '../pages/UploadRtdReview';
+import UploadFlow from '../containers/UploadFlow';
 import Reflect from '../pages/Reflect';
 
 /**
@@ -46,11 +40,7 @@ import Reflect from '../pages/Reflect';
 const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.LANDING,
   ScreenType.LOGIN,
-  ScreenType.SIGNUP_ROLE,
-  ScreenType.SIGNUP_REGISTER,
-  ScreenType.SIGNUP_VERIFY,
-  ScreenType.SIGNUP_CLASSES,
-  ScreenType.SIGNUP_SELECT,
+  ScreenType.SIGNUP,
   ScreenType.PASSWORDRESET,
   // TODO(auth): move UNDERSTAND behind the guard once sign-in is wired; also
   // needs AuthGuard's LOGGEDOUT case to redirect.
@@ -62,7 +52,6 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
   ScreenType.UPLOAD_RTD,
-  ScreenType.UPLOAD_RTD_REVIEW,
   ScreenType.REFLECT,
 ]);
 
@@ -70,11 +59,7 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
 const SIGNUP_SCREENS = new Set<ScreenType>([
   ScreenType.LOGIN,
   ScreenType.PASSWORDRESET,
-  ScreenType.SIGNUP_ROLE,
-  ScreenType.SIGNUP_REGISTER,
-  ScreenType.SIGNUP_VERIFY,
-  ScreenType.SIGNUP_CLASSES,
-  ScreenType.SIGNUP_SELECT,
+  ScreenType.SIGNUP,
 ]);
 
 /*
@@ -92,7 +77,6 @@ const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
   ScreenType.UPLOAD_RTD,
-  ScreenType.UPLOAD_RTD_REVIEW,
   ScreenType.REFLECT,
   ScreenType.DASHBOARD,
   ScreenType.REVIEW,
@@ -106,9 +90,9 @@ interface AppSwitchProps {
 }
 
 export default function AppSwitch({ currentScreen }: AppSwitchProps) {
-  const apiClients = useAPIClientsContext();
+  const { apiClients, user, plan } = useAppOutletContext();
   const screenSize = useScreenSize();
-  const { handleLogOut } = useLogOut(apiClients as APIClients);
+  const { handleLogOut } = useLogOut(apiClients, user);
   const navigate = useNavigate();
 
   /*
@@ -129,22 +113,10 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   let screenComponent;
   switch (currentScreen) {
     case ScreenType.LOGIN:
-      screenComponent = <Login screenSize={screenSize} />;
+      screenComponent = <Login screenSize={screenSize} user={user} />;
       break;
-    case ScreenType.SIGNUP_ROLE:
-      screenComponent = <SignUpRole screenSize={screenSize} />;
-      break;
-    case ScreenType.SIGNUP_REGISTER:
-      screenComponent = <SignUpRegister screenSize={screenSize} />;
-      break;
-    case ScreenType.SIGNUP_VERIFY:
-      screenComponent = <SignUpVerify screenSize={screenSize} />;
-      break;
-    case ScreenType.SIGNUP_CLASSES:
-      screenComponent = <SignUpClasses screenSize={screenSize} />;
-      break;
-    case ScreenType.SIGNUP_SELECT:
-      screenComponent = <SignUpSelect screenSize={screenSize} />;
+    case ScreenType.SIGNUP:
+      screenComponent = <SignUpWizard screenSize={screenSize} user={user} />;
       break;
     case ScreenType.AUTH:
       screenComponent = <AuthCallback />;
@@ -164,29 +136,26 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <Review screenSize={screenSize} />;
       break;
     case ScreenType.CHOOSE_ACTIVITY:
-      screenComponent = <ChooseActivity screenSize={screenSize} />;
+      screenComponent = <ChooseActivity screenSize={screenSize} plan={plan} />;
       break;
     case ScreenType.ACTIVITY_DETAIL:
       screenComponent = <ActivityDetail screenSize={screenSize} />;
       break;
     case ScreenType.UPLOAD_RTD:
-      screenComponent = <UploadRtd screenSize={screenSize} />;
-      break;
-    case ScreenType.UPLOAD_RTD_REVIEW:
-      screenComponent = <UploadRtdReview screenSize={screenSize} />;
+      screenComponent = <UploadFlow screenSize={screenSize} user={user} />;
       break;
     case ScreenType.REFLECT:
       screenComponent = <Reflect screenSize={screenSize} />;
       break;
     case ScreenType.PROFILE:
-      screenComponent = <Profile screenSize={screenSize} />;
+      screenComponent = <Profile screenSize={screenSize} user={user} />;
       break;
     case ScreenType.MY_PLAN:
-      screenComponent = <MyPlan screenSize={screenSize} />;
+      screenComponent = <MyPlan screenSize={screenSize} plan={plan} />;
       break;
     case ScreenType.LANDING:
     default:
-      screenComponent = <Landing screenSize={screenSize} />;
+      screenComponent = <Landing screenSize={screenSize} user={user} />;
   }
 
   const usesAppChrome = APP_CHROME_SCREENS.has(currentScreen);
@@ -200,12 +169,14 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   return (
     <AppContainer
       headerVariant={headerVariant}
+      user={user}
       onLogOut={handleHeaderLogOut}
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
     >
       <AuthGuard
         handleLogOut={handleLogOut}
+        user={user}
         screenSize={screenSize}
         requiresAuth={!PUBLIC_SCREENS.has(currentScreen)}
       >

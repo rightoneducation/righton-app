@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   createBrowserRouter,
+  createRoutesFromElements,
+  Route,
   RouterProvider,
   Outlet,
   ScrollRestoration,
@@ -13,12 +15,9 @@ import { APIClients, AppType, Environment } from './api';
 import Theme from './lib/Theme';
 import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
-import { APIClientsContext } from './lib/context/APIClientsContext';
-import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
-import { SignUpProvider } from './lib/context/SignUpContext';
-import { UploadProvider } from './lib/context/UploadContext';
-import { useAPIClientsContext } from './hooks/context/useAPIClientsContext';
-import { useAuthResolver } from './hooks/useMicroCoachDataActions';
+import { useAuthResolver } from './hooks/useAuthActions';
+import { useUserState } from './hooks/useUserState';
+import { usePlanItems } from './hooks/usePlanItems';
 import AppSwitch from './switches/AppSwitch';
 
 /**
@@ -26,18 +25,27 @@ import AppSwitch from './switches/AppSwitch';
  * route changes, so the auth resolver's mount effect fires exactly once per
  * session rather than re-flashing the loading state on every navigation.
  *
- * It has to live here rather than in MicroCoachDataProvider: the resolver needs
- * both the reducer's dispatch (so it must be *under* that provider) and
- * useNavigate (so it must be *inside* the router).
+ * It also owns the signed-in user state. That has to live here rather than in
+ * App: the router is memoised on `apiClients` (play's pattern), so anything
+ * built into the route elements is captured once — user state changing in App
+ * would either go stale or force a new router, and a new router remounts the
+ * tree and drops ScrollRestoration's history. Here it sits *inside* the router,
+ * where the resolver can also reach useNavigate, and reaches the screens through
+ * the Outlet.
  */
 // react-modal needs to know the app root so it can mark it aria-hidden while a
 // modal is open. Without this it warns and leaves the background readable by
 // screen readers — the other apps in the monorepo skip it.
 Modal.setAppElement('#root');
 
-function RootLayout() {
-  const apiClients = useAPIClientsContext();
-  useAuthResolver(apiClients as APIClients);
+function RootLayout({ apiClients }: { apiClients: APIClients }) {
+  const user = useUserState();
+  const plan = usePlanItems();
+  useAuthResolver(apiClients, user);
+  const outletContext = useMemo(
+    () => ({ apiClients, user, plan }),
+    [apiClients, user, plan],
+  );
   return (
     <>
       {/*
@@ -52,97 +60,85 @@ function RootLayout() {
        * restore a remembered position on arrival, which is the bug, not the fix.
        */}
       <ScrollRestoration />
-      <Outlet />
+      <Outlet context={outletContext} />
     </>
   );
 }
 
-// The router knows URLs only. AppSwitch turns a ScreenType into a page wrapped
-// in AuthGuard and AppContainer (central_v2's arrangement).
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <RootLayout />,
-    children: [
-      {
-        index: true,
-        element: <AppSwitch currentScreen={ScreenType.LANDING} />,
-      },
-      {
-        path: 'login',
-        element: <AppSwitch currentScreen={ScreenType.LOGIN} />,
-      },
-      {
-        path: 'signup',
-        element: <AppSwitch currentScreen={ScreenType.SIGNUP_ROLE} />,
-      },
-      {
-        path: 'signup/register',
-        element: <AppSwitch currentScreen={ScreenType.SIGNUP_REGISTER} />,
-      },
-      {
-        path: 'signup/verify',
-        element: <AppSwitch currentScreen={ScreenType.SIGNUP_VERIFY} />,
-      },
-      {
-        path: 'signup/classes',
-        element: <AppSwitch currentScreen={ScreenType.SIGNUP_CLASSES} />,
-      },
-      {
-        path: 'signup/select',
-        element: <AppSwitch currentScreen={ScreenType.SIGNUP_SELECT} />,
-      },
-      { path: 'auth', element: <AppSwitch currentScreen={ScreenType.AUTH} /> },
-      {
-        path: 'password/reset',
-        element: <AppSwitch currentScreen={ScreenType.PASSWORDRESET} />,
-      },
-      {
-        path: 'dashboard',
-        element: <AppSwitch currentScreen={ScreenType.DASHBOARD} />,
-      },
-      {
-        path: 'review',
-        element: <AppSwitch currentScreen={ScreenType.REVIEW} />,
-      },
-      {
-        path: 'review/:misconceptionId/activities',
-        element: <AppSwitch currentScreen={ScreenType.CHOOSE_ACTIVITY} />,
-      },
-      {
-        path: 'activity/:activityId',
-        element: <AppSwitch currentScreen={ScreenType.ACTIVITY_DETAIL} />,
-      },
-      {
-        path: 'upload-rtd',
-        element: <AppSwitch currentScreen={ScreenType.UPLOAD_RTD} />,
-      },
-      {
-        path: 'upload-rtd/review',
-        element: <AppSwitch currentScreen={ScreenType.UPLOAD_RTD_REVIEW} />,
-      },
-      {
-        path: 'reflect',
-        element: <AppSwitch currentScreen={ScreenType.REFLECT} />,
-      },
-      {
-        path: 'profile',
-        element: <AppSwitch currentScreen={ScreenType.PROFILE} />,
-      },
-      {
-        path: 'profile/password',
-        element: <AppSwitch currentScreen={ScreenType.CHANGE_PASSWORD} />,
-      },
-      {
-        path: 'myplan',
-        element: <AppSwitch currentScreen={ScreenType.MY_PLAN} />,
-      },
-    ],
-  },
-]);
-
 function App() {
   const { apiClients } = useAPIClients(Environment.Staging, AppType.MICROCOACH);
+
+  /*
+   * Memoised on apiClients, like play's App: createBrowserRouter must not be
+   * re-run on unrelated renders — a new router instance swaps history and
+   * remounts the whole tree. The router knows URLs only; AppSwitch turns a
+   * ScreenType into a page wrapped in AuthGuard and AppContainer.
+   */
+  const router = useMemo(() => {
+    if (!apiClients) return null;
+    return createBrowserRouter(
+      createRoutesFromElements(
+        <Route path="/" element={<RootLayout apiClients={apiClients} />}>
+            <Route
+              index
+              element={<AppSwitch currentScreen={ScreenType.LANDING} />}
+            />
+            <Route
+              path="login"
+              element={<AppSwitch currentScreen={ScreenType.LOGIN} />}
+            />
+            <Route
+              path="signup/*"
+              element={<AppSwitch currentScreen={ScreenType.SIGNUP} />}
+            />
+            <Route
+              path="auth"
+              element={<AppSwitch currentScreen={ScreenType.AUTH} />}
+            />
+            <Route
+              path="password/reset"
+              element={<AppSwitch currentScreen={ScreenType.PASSWORDRESET} />}
+            />
+            <Route
+              path="dashboard"
+              element={<AppSwitch currentScreen={ScreenType.DASHBOARD} />}
+            />
+            <Route
+              path="review"
+              element={<AppSwitch currentScreen={ScreenType.REVIEW} />}
+            />
+            <Route
+              path="review/:misconceptionId/activities"
+              element={<AppSwitch currentScreen={ScreenType.CHOOSE_ACTIVITY} />}
+            />
+            <Route
+              path="activity/:activityId"
+              element={<AppSwitch currentScreen={ScreenType.ACTIVITY_DETAIL} />}
+            />
+            <Route
+              path="upload-rtd/*"
+              element={<AppSwitch currentScreen={ScreenType.UPLOAD_RTD} />}
+            />
+            <Route
+              path="reflect"
+              element={<AppSwitch currentScreen={ScreenType.REFLECT} />}
+            />
+            <Route
+              path="profile"
+              element={<AppSwitch currentScreen={ScreenType.PROFILE} />}
+            />
+            <Route
+              path="profile/password"
+              element={<AppSwitch currentScreen={ScreenType.CHANGE_PASSWORD} />}
+            />
+            <Route
+              path="myplan"
+              element={<AppSwitch currentScreen={ScreenType.MY_PLAN} />}
+            />
+        </Route>,
+      ),
+    );
+  }, [apiClients]);
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
@@ -155,18 +151,8 @@ function App() {
             does no I/O, so the null branch lasts a single frame; rendering
             nothing there beats a spinner that flashes for one paint.
           */}
-          {apiClients && (
-            <APIClientsContext.Provider value={apiClients}>
-              <MicroCoachDataProvider>
-                {/* Inside the data provider: the wizard's last step commits
-                    its result into that reducer. */}
-                <SignUpProvider>
-                  <UploadProvider>
-                    <RouterProvider router={router} />
-                  </UploadProvider>
-                </SignUpProvider>
-              </MicroCoachDataProvider>
-            </APIClientsContext.Provider>
+          {router && (
+            <RouterProvider router={router} />
           )}
         </ThemeProvider>
       </StyledEngineProvider>

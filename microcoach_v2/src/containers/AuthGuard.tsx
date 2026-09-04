@@ -1,14 +1,12 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { Navigate, useMatch, useSearchParams } from 'react-router-dom';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
-import {
-  useMicroCoachDataState,
-  useMicroCoachDataDispatch,
-} from '../hooks/context/useMicroCoachDataContext';
+import { IUserState } from '../hooks/useUserState';
 import LandingSkeleton from '../components/LandingSkeleton';
 
 interface AuthGuardProps {
   children: ReactElement;
+  user: IUserState;
   handleLogOut: () => void;
   screenSize: ScreenSize;
   /**
@@ -25,12 +23,12 @@ interface AuthGuardProps {
 // inside AppContainer, so anything returned here replaces the body only.
 export default function AuthGuard({
   children,
+  user,
   handleLogOut,
   screenSize,
   requiresAuth,
 }: AuthGuardProps) {
-  const microCoachData = useMicroCoachDataState();
-  const dispatch = useMicroCoachDataDispatch();
+  const { userStatus, setUserStatus, setUserErrorString } = user;
   const [search] = useSearchParams();
 
   const isLandingPage = Boolean(useMatch('/'));
@@ -40,27 +38,40 @@ export default function AuthGuard({
 
   // Google OAuth failure (e.g. duplicate account) comes back as ?error_description
   const errorDescription = search.get('error_description');
-  if (errorDescription) {
-    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-    dispatch({
-      type: 'SET_USER_ERROR_STRING',
-      payload: errorDescription.split('|', 2)[1] ?? errorDescription,
-    });
-    return <Navigate to="/signup" replace />;
-  }
 
-  switch (microCoachData.userStatus) {
+  // These three transitions used to run during render, which writes to the
+  // provider while a child is rendering — React warns, and with plain state it
+  // would also render one frame against the stale status. Effects instead; the
+  // redirects below still render immediately.
+  useEffect(() => {
+    if (!errorDescription) return;
+    setUserStatus(UserStatusType.LOGGEDOUT);
+    setUserErrorString(errorDescription.split('|', 2)[1] ?? errorDescription);
+  }, [errorDescription, setUserStatus, setUserErrorString]);
+
+  useEffect(() => {
+    // GOOGLE_SIGNIN is a transient hand-off state — settle it to LOGGEDIN.
+    if (userStatus === UserStatusType.GOOGLE_SIGNIN) {
+      setUserStatus(UserStatusType.LOGGEDIN);
+    }
+  }, [userStatus, setUserStatus]);
+
+  useEffect(() => {
+    if (userStatus === UserStatusType.INCOMPLETE) handleLogOut();
+  }, [userStatus, handleLogOut]);
+
+  if (errorDescription) return <Navigate to="/signup" replace />;
+
+  switch (userStatus) {
     // /googlesignup and /confirmation were retired with the old auth pages;
     // the wizard handles both of those states in-flow now.
     case UserStatusType.GOOGLE_SIGNUP:
       return <Navigate to="/signup" replace />;
     case UserStatusType.GOOGLE_SIGNIN:
-      dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
       return <Navigate to="/" replace />;
     case UserStatusType.GOOGLE_ERROR:
       return <Navigate to="/signup" replace />;
     case UserStatusType.INCOMPLETE:
-      handleLogOut();
       return <Navigate to="/" replace />;
     case UserStatusType.LOADING:
       // Public screens render straight away — nothing on them depends on the

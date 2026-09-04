@@ -1,4 +1,3 @@
-import { IUserProfile } from '../api';
 import { IPlanItem } from './PipelineModels';
 
 // Auth lifecycle states, mirroring central_v2's UserStatusType.
@@ -17,11 +16,9 @@ export enum UserStatusType {
 export enum ScreenType {
   LANDING,
   LOGIN,
-  SIGNUP_ROLE,
-  SIGNUP_REGISTER,
-  SIGNUP_VERIFY,
-  SIGNUP_CLASSES,
-  SIGNUP_SELECT,
+  // One entry for the whole wizard: the five steps are one route (`signup/*`)
+  // owned by SignUpWizard, which keeps their shared state local.
+  SIGNUP,
   AUTH,
   PASSWORDRESET,
   // The same reset flow reached from Account Settings instead of Login. A
@@ -34,8 +31,8 @@ export enum ScreenType {
   MY_PLAN,
   ACTIVITY_DETAIL,
   PROFILE,
+  // Likewise `upload-rtd/*` — both steps are UploadFlow.
   UPLOAD_RTD,
-  UPLOAD_RTD_REVIEW,
   REFLECT,
 }
 
@@ -53,9 +50,7 @@ export enum ScreenSize {
 export const GOOGLE_OAUTH_CLIENT_ID =
   'REPLACE_WITH_MICROCOACH_GOOGLE_CLIENT_ID';
 
+// App data only — signed-in user state lives in RootLayout (see App.tsx).
 export interface IMicroCoachDataState {
-  userStatus: UserStatusType;
-  userProfile: IUserProfile | null;
-  userErrorString: string;
   planItems: IPlanItem[];
 }

@@ -11,6 +11,7 @@ import FlowNav, { FlowTabId } from '../components/FlowNav';
 import ActivityCard from '../components/ActivityCard';
 import ChooseActivitySkeleton from '../components/ChooseActivitySkeleton';
 import { ScreenSize } from '../lib/MicroCoachModels';
+import { PlanProps } from '../hooks/usePlanItems';
 import {
   BackButton,
   ContextBanner,
@@ -24,26 +25,22 @@ import {
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 import { IActivity, IMisconception } from '../lib/PipelineModels';
-import {
-  useMicroCoachDataState,
-  useMicroCoachDataDispatch,
-} from '../hooks/context/useMicroCoachDataContext';
 
-interface ChooseActivityViewProps extends ScreenSizeProps {
+interface ChooseActivityViewProps extends ScreenSizeProps, PlanProps {
   misconception: IMisconception;
 }
 
 function ChooseActivityView({
   misconception,
   screenSize,
+  plan,
 }: ChooseActivityViewProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  const { planItems } = useMicroCoachDataState();
-  const dispatch = useMicroCoachDataDispatch();
+  const { planItems, saveActivity } = plan;
 
   // Selection lives in the plan, so choosing here is what populates My Plan.
   const selectedActivityId =
@@ -53,22 +50,19 @@ function ChooseActivityView({
     )?.activityId ?? null;
 
   const handleSelect = (activity: IActivity) => {
-    dispatch({
-      type: 'SAVE_ACTIVITY',
-      payload: {
-        id: `plan-${misconception.id}-${activity.id}`,
-        status: 'SAVED',
-        activityId: activity.id,
-        activityTitle: activity.routine.name,
-        skillCode: misconception.skillContext?.focusSkill.code ?? '',
-        misconceptionId: misconception.id,
-        misconceptionTitle: misconception.titleCased,
-        prevalence: {
-          level: misconception.prevalence.level,
-          label: misconception.prevalence.label,
-        },
-        grouping: activity.grouping ?? { level: 'WHOLE_CLASS', label: '' },
+    saveActivity({
+      id: `plan-${misconception.id}-${activity.id}`,
+      status: 'SAVED',
+      activityId: activity.id,
+      activityTitle: activity.routine.name,
+      skillCode: misconception.skillContext?.focusSkill.code ?? '',
+      misconceptionId: misconception.id,
+      misconceptionTitle: misconception.titleCased,
+      prevalence: {
+        level: misconception.prevalence.level,
+        label: misconception.prevalence.label,
       },
+      grouping: activity.grouping ?? { level: 'WHOLE_CLASS', label: '' },
     });
   };
 
@@ -173,7 +167,7 @@ function ChooseActivityView({
   );
 }
 
-export default function ChooseActivity({ screenSize }: ScreenSizeProps) {
+export default function ChooseActivity({ screenSize, plan }: ScreenSizeProps & PlanProps) {
   const { misconceptionId } = useParams();
   const { misconceptions, isReady: dataReady } = useMisconceptions();
   const isReady = useAllReady(useI18nReady(), dataReady);
@@ -190,6 +184,10 @@ export default function ChooseActivity({ screenSize }: ScreenSizeProps) {
   }
 
   return (
-    <ChooseActivityView misconception={misconception} screenSize={screenSize} />
+    <ChooseActivityView
+      misconception={misconception}
+      screenSize={screenSize}
+      plan={plan}
+    />
   );
 }

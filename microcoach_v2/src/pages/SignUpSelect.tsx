@@ -5,15 +5,9 @@ import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
+import { SignUpStepProps, namedClasses } from '../lib/SignUpModels';
 import { UserRole } from '../api';
 import AppContentRow from '../components/AppContentRow';
-import { UserStatusType } from '../lib/MicroCoachModels';
-import { namedClasses } from '../lib/context/SignUpContext';
-import {
-  useSignUpDispatch,
-  useSignUpState,
-} from '../hooks/context/useSignUpContext';
-import { useMicroCoachDataDispatch } from '../hooks/context/useMicroCoachDataContext';
 import {
   ClassChip,
   ClassChipGrid,
@@ -23,17 +17,14 @@ import {
   SignUpHeading,
   SignUpSubheading,
   TeacherSelectField,
-  ScreenSizeProps,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
-export default function SignUpSelect({ screenSize }: ScreenSizeProps) {
+export default function SignUpSelect({ screenSize, state, user }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const state = useSignUpState();
-  const signUpDispatch = useSignUpDispatch();
-  const dispatch = useMicroCoachDataDispatch();
+  const { signIn } = user;
   const isReady = useAllReady(useI18nReady());
 
   const classes = namedClasses(state);
@@ -53,16 +44,12 @@ export default function SignUpSelect({ screenSize }: ScreenSizeProps) {
   React.useEffect(() => {
     if (!state.isVerified) return;
 
-    dispatch({
-      type: 'SET_USER_PROFILE',
-      payload: {
-        email: state.email,
-        teacherName,
-        role: state.role === 'ADMIN' ? UserRole.ADMIN : UserRole.MEMBER,
-        classes: classes.map((name) => ({ id: name, name })),
-      },
+    signIn({
+      email: state.email,
+      teacherName,
+      role: state.role === 'ADMIN' ? UserRole.ADMIN : UserRole.MEMBER,
+      classes: classes.map((name) => ({ id: name, name })),
     });
-    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.isVerified]);
 
@@ -71,7 +58,7 @@ export default function SignUpSelect({ screenSize }: ScreenSizeProps) {
 
   const handleUpload = () => {
     // The upload screen is a later flow; the prototype hands off to the app.
-    signUpDispatch({ type: 'RESET' });
+    // No reset needed: leaving /signup unmounts the wizard and its state.
     navigate('/dashboard');
   };
 

@@ -5,29 +5,23 @@ import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { SignUpStepProps, CODE_LENGTH } from '../lib/SignUpModels';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
 import VerificationCodeInput from '../components/VerificationCodeInput';
-import { CODE_LENGTH } from '../lib/context/SignUpContext';
-import {
-  useSignUpDispatch,
-  useSignUpState,
-} from '../hooks/context/useSignUpContext';
 import {
   SignUpColumn,
   SignUpHeading,
   SignUpPill,
   SignUpSubheading,
-  ScreenSizeProps,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
-export default function SignUpVerify({ screenSize }: ScreenSizeProps) {
+export default function SignUpVerify({ screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const state = useSignUpState();
-  const dispatch = useSignUpDispatch();
+
   const isReady = useAllReady(useI18nReady());
 
   const [didResend, setDidResend] = React.useState(false);
@@ -44,7 +38,7 @@ export default function SignUpVerify({ screenSize }: ScreenSizeProps) {
       return;
     }
     // Mocked: any six digits pass.
-    dispatch({ type: 'SET_VERIFIED' });
+    actions.setVerified();
     navigate('/signup/classes');
   };
 
@@ -73,7 +67,7 @@ export default function SignUpVerify({ screenSize }: ScreenSizeProps) {
           code={state.code}
           hasError={hasError}
           onCodeChange={(code) => {
-            dispatch({ type: 'SET_CODE', payload: code });
+            actions.setCode(code);
             // Clear the error the moment they start correcting it, rather
             // than leaving the boxes red while they retype.
             setHasError(false);

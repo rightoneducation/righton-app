@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APIClients } from '../api';
 import { UserStatusType } from '../lib/MicroCoachModels';
-import { useMicroCoachDataDispatch } from './context/useMicroCoachDataContext';
+import { IUserState } from './useUserState';
 
 // On-load auth resolver + logout, adapted from central_v2's useCentralDataActions.
 // Google vs Cognito is distinguished by the idToken `identities` claim; Google
@@ -13,31 +13,36 @@ import { useMicroCoachDataDispatch } from './context/useMicroCoachDataContext';
 // any screen can call it without re-triggering auth resolution. (central_v2
 // keeps both in one hook called from AppSwitch, which re-fires the effect on
 // every route change and re-flashes its loading state.)
+//
+// Auth only — app data actions live in useMicroCoachDataActions.
+//
+// Both take the user handle as an argument rather than reading it from a
+// context, matching how they already take apiClients. RootLayout owns the
+// state; see App.tsx.
 
-export function useLogOut(apiClients: APIClients) {
-  const dispatch = useMicroCoachDataDispatch();
+export function useLogOut(apiClients: APIClients, user: IUserState) {
+  const { signOut, setUserStatus } = user;
   const navigate = useNavigate();
 
   const handleLogOut = async () => {
-    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
-    await apiClients.microcoachDataManager.signOut();
-    dispatch({ type: 'CLEAR_USER_PROFILE' });
-    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    setUserStatus(UserStatusType.LOADING);
+    await apiClients.user.signOut();
+    signOut();
     navigate('/');
   };
 
   return { handleLogOut };
 }
 
-export function useAuthResolver(apiClients: APIClients) {
-  const dispatch = useMicroCoachDataDispatch();
-  const { handleLogOut } = useLogOut(apiClients);
+export function useAuthResolver(apiClients: APIClients, user: IUserState) {
+  const { signIn, setUserStatus, advanceGoogleSignUp } = user;
+  const { handleLogOut } = useLogOut(apiClients, user);
 
   const validateUser = async () => {
     try {
       const isAuthed = await apiClients.auth.verifyAuth();
       if (!isAuthed) {
-        dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+        setUserStatus(UserStatusType.LOGGEDOUT);
         return;
       }
       const session = await apiClients.auth.getCurrentSession();
@@ -52,30 +57,27 @@ export function useAuthResolver(apiClients: APIClients) {
       const isGoogle = Array.isArray(identities)
         && identities.some((i) => i.providerName === 'Google');
 
-      const profile = await apiClients.microcoachDataManager.getUser(cognitoId);
+      const profile = await apiClients.user.getUserByCognitoId(cognitoId);
       if (profile) {
-        dispatch({ type: 'SET_USER_PROFILE', payload: profile });
-        dispatch({
-          type: 'SET_USER_STATUS',
-          payload: isGoogle ? UserStatusType.GOOGLE_SIGNIN : UserStatusType.LOGGEDIN,
-        });
+        signIn(
+          profile,
+          isGoogle ? UserStatusType.GOOGLE_SIGNIN : UserStatusType.LOGGEDIN,
+        );
+        apiClients.user.setLocalUserProfile(profile);
       } else if (isGoogle) {
         const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
-        dispatch({
-          type: 'SET_ADVANCE_GOOGLE_SIGNUP',
-          payload: { firstName, lastName, userStatus: UserStatusType.GOOGLE_SIGNUP },
-        });
+        advanceGoogleSignUp(firstName, lastName);
       } else {
-        dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.NONVERIFIED });
+        setUserStatus(UserStatusType.NONVERIFIED);
       }
     } catch (e) {
       console.error('validateUser failed', e);
-      dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+      setUserStatus(UserStatusType.LOGGEDOUT);
     }
   };
 
   useEffect(() => {
-    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
+    setUserStatus(UserStatusType.LOADING);
     validateUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
