@@ -49,3 +49,7 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+# pipeline CLI (mirrors microcoach/.gitignore "Data/" + api/.gitignore "src/eval/runs/")
+Data/
+seed/eval/runs/

@@ -41,7 +41,7 @@ async function invokeLLMVerify(misconception: any, activity: any): Promise<LlmCh
 
 const configPath = path.resolve(
   __dirname,
-  '../../amplify/backend/function/microcoachNextStepOption/src/util/config.json'
+  '../../amplify/backend/function/microcoachv2NextStepOption/src/util/config.json'
 );
 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 const nso = config?.nextStepOption ?? {};

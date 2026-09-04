@@ -51,9 +51,10 @@
     "seed:verify": "ts-node --project seed/tsconfig.json seed/cli/verify.ts",
     "seed:generate": "ts-node --project seed/tsconfig.json seed/cli/generate.ts",
     "seed:validate": "ts-node --project seed/tsconfig.json seed/cli/validate.ts",
-    "seed:post-analyze": "ts-node --project seed/tsconfig.json seed/cli/post-analyze.ts",
+    "seed:post-analyze": "APPSYNC_SECRET_NAME=microcoach ts-node --project seed/tsconfig.json seed/cli/post-analyze.ts",
     "sync-prompt-config": "node scripts/sync-prompt-config.mjs",
-    "seed:eval": "ts-node --project seed/tsconfig.json seed/eval/scripts/runEval.ts"
+    "seed:eval": "ts-node --project seed/tsconfig.json seed/eval/scripts/runEval.ts",
+    "eval:prompt": "node seed/eval/scripts/util/print-prompt.mjs"
   },
   "prettier": {
     "singleQuote": true

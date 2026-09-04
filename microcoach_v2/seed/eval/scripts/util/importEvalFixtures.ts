@@ -25,7 +25,7 @@ const SESSION_DIR = path.resolve(__dirname, '../../fixtures');
 // one rather than a copy means fixture replay can never drift from production.
 const NORMALIZER_PATH = path.resolve(
   __dirname,
-  '../../../../amplify/backend/function/microcoachGetLearningScience/src/util/normalizeStandard.mjs',
+  '../../../../amplify/backend/function/microcoachv2GetLearningScience/src/util/normalizeStandard.mjs',
 );
 
 let cachedNormalize: ((item: any) => any) | null = null;

@@ -13,8 +13,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { normalizeStandard } from '../../../../amplify/backend/function/microcoachGetLearningScience/src/util/normalizeStandard.mjs';
-import { formatLearningScience } from '../../../../amplify/backend/function/microcoachLLMAnalysis/src/util/formatLearningScience.mjs';
+import { normalizeStandard } from '../../../../amplify/backend/function/microcoachv2GetLearningScience/src/util/normalizeStandard.mjs';
+import { formatLearningScience } from '../../../../amplify/backend/function/microcoachv2LLMAnalysis/src/util/formatLearningScience.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SESSION_DIR = path.resolve(__dirname, '../../fixtures');

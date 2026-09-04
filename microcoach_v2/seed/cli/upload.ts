@@ -40,7 +40,7 @@ import { createGqlClient, GqlFn } from './util/appsync-config';
 // import()` into `require()`, which cannot load ESM — hence the `new Function`.
 const PARSER_PATH = path.resolve(
   __dirname,
-  '../../amplify/backend/function/microcoachIngestPPQ/src/util/parsePpqTable.mjs',
+  '../../amplify/backend/function/microcoachv2IngestPPQ/src/util/parsePpqTable.mjs',
 );
 const esmImport = new Function('p', 'return import(p)') as (p: string) => Promise<any>;
 
