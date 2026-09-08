@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { SignUpStepProps, CODE_LENGTH } from '../lib/SignUpModels';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
@@ -26,6 +27,9 @@ export default function SignUpVerify({ apiClients, screenSize, state, actions }:
 
   const [didResend, setDidResend] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
+  // Confirming is four round trips (confirm, sign-in, session, row creation),
+  // so the pill needs to show that something is happening.
+  const [isVerifying, setIsVerifying] = React.useState(false);
 
   if (!state.role) return <Navigate to="/signup" replace />;
   if (!isReady) return null;
@@ -38,15 +42,25 @@ export default function SignUpVerify({ apiClients, screenSize, state, actions }:
       return;
     }
     console.log('verify');
+    setIsVerifying(true);
     try {
       await apiClients.user.signUpConfirmAndBuildBackendUser(
         state,
         state.code.join('')
       );
+      // Record the verification before moving on: /signup/classes gates on
+      // state.isVerified, so navigating without this bounces straight back to
+      // /signup. The Google path already does the same in handleGoogle.
+      actions.setVerified();
       navigate('/signup/classes');
-    } catch {
-      console.error('Verification error');
+    } catch (error) {
+      // The try above covers four operations — confirm, sign-in, session fetch
+      // and the backend row creation — so the failure is often not the code the
+      // user typed. Log the error itself or the message names the wrong step.
+      console.error('Verification error', error);
       setHasError(true);
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -125,8 +139,26 @@ export default function SignUpVerify({ apiClients, screenSize, state, actions }:
           )}
         </Stack>
 
-        <SignUpPill disableElevation onClick={handleVerify}>
-          {t('signup.verify')}
+        {/* The spinner replaces the label rather than sitting beside it: the
+            pill's minWidth/minHeight hold its size, so nothing in the column
+            shifts. `disabled` also blocks the double-submit that would fire a
+            second confirmSignUp and fail once the first one lands. Colour is
+            set explicitly because SignUpPill has no Mui-disabled rule, so
+            MUI's default greys out anything inheriting `color`. */}
+        <SignUpPill
+          disableElevation
+          disabled={isVerifying}
+          onClick={handleVerify}
+        >
+          {isVerifying ? (
+            <CircularProgress
+              size={20}
+              aria-label={t('signup.verify')}
+              sx={{ color: 'designSystem.surface.white' }}
+            />
+          ) : (
+            t('signup.verify')
+          )}
         </SignUpPill>
       </SignUpColumn>
     </AppContentRow>
