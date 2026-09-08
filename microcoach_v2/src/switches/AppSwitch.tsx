@@ -116,7 +116,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <Login screenSize={screenSize} user={user} />;
       break;
     case ScreenType.SIGNUP:
-      screenComponent = <SignUpWizard screenSize={screenSize} user={user} />;
+      screenComponent = <SignUpWizard apiClients={apiClients} screenSize={screenSize} user={user} />;
       break;
     case ScreenType.AUTH:
       screenComponent = <AuthCallback />;

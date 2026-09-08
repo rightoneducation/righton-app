@@ -7,6 +7,7 @@ import {
   SignUpStepProps,
   initialSignUpState,
 } from '../lib/SignUpModels';
+import { IAPIClients } from '../api';
 import { IUserState } from '../hooks/useUserState';
 import SignUpRole from '../pages/SignUpRole';
 import SignUpRegister from '../pages/SignUpRegister';
@@ -28,11 +29,16 @@ import SignUpSelect from '../pages/SignUpSelect';
  */
 
 interface SignUpWizardProps {
+  apiClients: IAPIClients,
   screenSize: ScreenSize;
   user: IUserState;
 }
 
-export default function SignUpWizard({ screenSize, user }: SignUpWizardProps) {
+export default function SignUpWizard({ 
+  apiClients, 
+  screenSize, 
+  user 
+}: SignUpWizardProps) {
   const [state, setState] = useState<ISignUpState>(initialSignUpState);
   const step = useParams()['*'] ?? '';
 

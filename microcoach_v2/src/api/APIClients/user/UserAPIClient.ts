@@ -1,6 +1,24 @@
-import { generateClient } from 'aws-amplify/api';
-import { IAuthAPIClient } from '../auth/interfaces/IAuthAPIClient';
-import { IUserProfile, UserRole } from '../../Models/IUser';
+import { BaseAPIClient, GraphQLOptions } from '../base/BaseAPIClient';
+import { IUserAPIClient } from './interfaces/IUserAPIClient';
+import { IUser, UserRole } from '../../Models/IUser';
+import { UserParser } from '../../Parsers/UserParser';
+import {
+  CreateUserInput,
+  CreateUserMutation,
+  CreateUserMutationVariables,
+  UpdateUserInput,
+  UpdateUserMutation,
+  UpdateUserMutationVariables,
+  GetUserQuery,
+  GetUserQueryVariables,
+  UsersByCognitoIdQuery,
+  UsersByCognitoIdQueryVariables,
+  UsersByEmailQuery,
+  UsersByEmailQueryVariables,
+  UsersByRoleQuery,
+  UsersByRoleQueryVariables,
+  UserRole as AWSUserRole,
+} from '../../../AWSAPI';
 import { createUser, updateUser } from '../../../graphql/mutations';
 import {
   getUser,
@@ -14,54 +32,92 @@ export const userProfileLocalStorage = 'microcoach_userprofile';
 // CRUD + GSI queries for the `User` model, plus the Cognito auth flows that
 // resolve into it (login / signup / signout) and the localStorage profile cache.
 // Calls are userPool-authed (the User model uses Cognito owner/group auth).
-// Loose `any` typing matches the existing ported APIClient style in this package.
-export class UserAPIClient {
-  private client: any;
+//
+// Every read funnels its payload through `UserParser` rather than returning the
+// AWS shape as an `IUser`: the two differ in `role` (nominally distinct enums)
+// and in the nullability of `teacherName` / `classes`.
+//
+// `BaseAPIClient.callGraphQL` forwards its `options` argument straight through
+// as the operation's `variables`, but declares it as `GraphQLOptions`, which
+// only names `input` / `variables` / `authMode`. Query variables therefore need
+// the `as unknown as GraphQLOptions` cast below — same idiom as networking's
+// UserAPIClient. Fixing the declaration is a BaseAPIClient change that would
+// touch every client in the package.
+export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
 
-  private auth: IAuthAPIClient;
-
-  constructor(authClient: IAuthAPIClient) {
-    this.client = generateClient({});
-    this.auth = authClient;
+  async createUser(input: CreateUserInput): Promise<IUser | null> {
+    const variables: CreateUserMutationVariables = { input };
+    const res = await this.callGraphQL<CreateUserMutation>(
+      createUser,
+      variables as unknown as GraphQLOptions,
+    );
+    if (res?.data?.createUser)
+      return UserParser.parseIUserfromAWSUser(res.data.createUser);
+    return null;
   }
 
-  private async call<T = any>(query: any, variables?: Record<string, unknown>): Promise<T> {
-    return this.client.graphql({ query, variables, authMode: 'userPool' });
+  async updateUser(input: UpdateUserInput): Promise<IUser | null> {
+    const variables: UpdateUserMutationVariables = { input };
+    const res = await this.callGraphQL<UpdateUserMutation>(
+      updateUser,
+      variables as unknown as GraphQLOptions,
+    );
+    if (res?.data?.updateUser)
+      return UserParser.parseIUserfromAWSUser(res.data.updateUser);
+    return null;
   }
 
-  // ── User model CRUD ────────────────────────────────────────────────────────
-
-  async createUser(input: Partial<IUserProfile>): Promise<IUserProfile> {
-    const res = await this.call(createUser, { input });
-    return res.data?.createUser;
-  }
-
-  async updateUser(input: Partial<IUserProfile> & { id: string }): Promise<IUserProfile> {
-    const res = await this.call(updateUser, { input });
-    return res.data?.updateUser;
-  }
-
-  async getUser(id: string): Promise<IUserProfile | null> {
-    const res = await this.call(getUser, { id });
-    return res.data?.getUser ?? null;
+  async getUser(id: string): Promise<IUser | null> {
+    if (!id) return null;
+    const variables: GetUserQueryVariables = { id };
+    const res = await this.callGraphQL<GetUserQuery>(
+      getUser,
+      variables as unknown as GraphQLOptions,
+    );
+    if (res?.data?.getUser)
+      return UserParser.parseIUserfromAWSUser(res.data.getUser);
+    return null;
   }
 
   // Resolves the backend User row from a Cognito identity — the lookup every
   // auth flow funnels through. Pure: callers decide whether to cache the hit.
-  async getUserByCognitoId(cognitoId: string): Promise<IUserProfile | null> {
-    const res = await this.call(usersByCognitoId, { cognitoId });
-    return res.data?.usersByCognitoId?.items?.[0] ?? null;
+  async getUserByCognitoId(cognitoId: string): Promise<IUser | null> {
+    if (!cognitoId) return null;
+    const variables: UsersByCognitoIdQueryVariables = { cognitoId };
+    const res = await this.callGraphQL<UsersByCognitoIdQuery>(
+      usersByCognitoId,
+      variables as unknown as GraphQLOptions,
+    );
+    const hit = res?.data?.usersByCognitoId?.items?.[0];
+    return hit ? UserParser.parseIUserfromAWSUser(hit) : null;
   }
 
-  async getUserByEmail(email: string): Promise<IUserProfile | null> {
-    const res = await this.call(usersByEmail, { email });
-    return res.data?.usersByEmail?.items?.[0] ?? null;
+  async getUserByEmail(email: string): Promise<IUser | null> {
+    if (!email) return null;
+    const variables: UsersByEmailQueryVariables = { email };
+    const res = await this.callGraphQL<UsersByEmailQuery>(
+      usersByEmail,
+      variables as unknown as GraphQLOptions,
+    );
+    const hit = res?.data?.usersByEmail?.items?.[0];
+    return hit ? UserParser.parseIUserfromAWSUser(hit) : null;
   }
 
-  // Admin listing — "all admins" or "all members" via the byRole GSI.
-  async listUsersByRole(role: UserRole): Promise<IUserProfile[]> {
-    const res = await this.call(usersByRole, { role });
-    return res.data?.usersByRole?.items ?? [];
+  // Admin listing — "all admins" or "all members" via the byRole GSI. Single
+  // page: the roster is small enough that paging on `nextToken` can wait until
+  // it isn't.
+  async listUsersByRole(role: UserRole): Promise<IUser[]> {
+    const variables: UsersByRoleQueryVariables = {
+      role: UserParser.parseAWSRolefromUserRole(role),
+    };
+    const res = await this.callGraphQL<UsersByRoleQuery>(
+      usersByRole,
+      variables as unknown as GraphQLOptions,
+    );
+    const items = res?.data?.usersByRole?.items ?? [];
+    return items
+      .filter((item): item is NonNullable<typeof item> => item != null)
+      .map((item) => UserParser.parseIUserfromAWSUser(item));
   }
 
   // ── localStorage profile copy ────────────────────────────────────────────
@@ -69,12 +125,12 @@ export class UserAPIClient {
   // on-load resolver). Nothing reads it back yet — `getLocalUserProfile` is the
   // deliberate seam for repopulating app state later, so don't prune it as dead
   // code. Intentionally no refresh-on-read: that would cost an extra round trip.
-  getLocalUserProfile(): IUserProfile | null {
+  getLocalUserProfile(): IUser | null {
     const raw = localStorage.getItem(userProfileLocalStorage);
-    return raw ? (JSON.parse(raw) as IUserProfile) : null;
+    return raw ? (JSON.parse(raw) as IUser) : null;
   }
 
-  setLocalUserProfile(profile: IUserProfile): void {
+  setLocalUserProfile(profile: IUser): void {
     localStorage.setItem(userProfileLocalStorage, JSON.stringify(profile));
   }
 
@@ -82,11 +138,34 @@ export class UserAPIClient {
     localStorage.removeItem(userProfileLocalStorage);
   }
 
+  // Builds the create mutation's input field by field rather than spreading an
+  // `IUser`: the profile carries a transient `password` that isn't on the User
+  // model, and AppSync rejects unknown input fields.
+  //
+  // `role` is fixed at MEMBER and never read off the profile — promotion to
+  // ADMIN is an admin-side action, not something the signup form gets to post.
+  private static buildCreateUserInput(
+    cognitoId: string,
+    email: string,
+    profile: IUser,
+  ): CreateUserInput {
+    return {
+      cognitoId,
+      email,
+      teacherName: profile.teacherName,
+      role: AWSUserRole.MEMBER,
+      classes: (profile.classes ?? []).map((cls) => ({
+        id: cls.id,
+        name: cls.name,
+      })),
+    };
+  }
+
   // ── Email / password login ───────────────────────────────────────────────
   async loginAndRetrieveUserProfile(
     email: string,
     password: string,
-  ): Promise<IUserProfile | null> {
+  ): Promise<IUser | null> {
     await this.auth.awsSignIn(email, password);
     const session = await this.auth.getCurrentSession();
     const cognitoId = session.userSub;
@@ -100,43 +179,40 @@ export class UserAPIClient {
   }
 
   // ── Sign up (step 1: send confirmation code) ─────────────────────────────
-  async signUpSendConfirmationCode(profile: IUserProfile): Promise<void> {
+  async signUpSendConfirmationCode(profile: IUser): Promise<void> {
     await this.auth.awsSignUp(profile.email, profile.email, profile.password ?? '');
   }
 
   // ── Sign up (step 2: confirm code, sign in, create backend User row) ─────
   async signUpConfirmAndBuildBackendUser(
-    profile: IUserProfile,
+    profile: IUser,
     confirmationCode: string,
-  ): Promise<IUserProfile> {
+  ): Promise<IUser> {
     await this.auth.awsConfirmSignUp(profile.email, confirmationCode);
     await this.auth.awsSignIn(profile.email, profile.password ?? '');
     const session = await this.auth.getCurrentSession();
     const cognitoId = session.userSub ?? '';
-    const created = await this.createUser({
-      cognitoId,
-      email: profile.email,
-      teacherName: profile.teacherName,
-      role: UserRole.MEMBER,
-      classes: profile.classes ?? [],
-    });
+    const created = await this.createUser(
+      UserAPIClient.buildCreateUserInput(cognitoId, profile.email, profile),
+    );
+    // The Cognito user exists by now, so a null here means the row didn't land:
+    // signed in with no profile to render. Fail loudly rather than hand the
+    // caller a null it has declared it won't get.
+    if (!created) throw new Error('signUp: createUser returned no user');
     this.setLocalUserProfile(created);
     this.auth.isUserAuth = true;
     return created;
   }
 
   // ── Google sign up (post-federation: build the backend User row) ─────────
-  async signUpGoogleBuildBackendUser(profile: IUserProfile): Promise<IUserProfile> {
+  async signUpGoogleBuildBackendUser(profile: IUser): Promise<IUser> {
     const session = await this.auth.getCurrentSession();
     const cognitoId = session.userSub ?? '';
     const email = (await this.auth.getUserEmail()) ?? profile.email;
-    const created = await this.createUser({
-      cognitoId,
-      email,
-      teacherName: profile.teacherName,
-      role: UserRole.MEMBER,
-      classes: profile.classes ?? [],
-    });
+    const created = await this.createUser(
+      UserAPIClient.buildCreateUserInput(cognitoId, email, profile),
+    );
+    if (!created) throw new Error('googleSignUp: createUser returned no user');
     this.setLocalUserProfile(created);
     this.auth.isUserAuth = true;
     return created;
