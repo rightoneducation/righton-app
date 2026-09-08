@@ -34,6 +34,19 @@ export default function AuthGuard({
   const isLandingPage = Boolean(useMatch('/'));
   const isAuthPage = Boolean(useMatch('/auth'));
   const isLoginPage = Boolean(useMatch('/login'));
+  /*
+   * Exact match on purpose: `/signup` is the wizard's entry, not the whole
+   * flow. Every redirect below must target a location that satisfies its own
+   * condition — a guard that sends you somewhere it will then reject renders
+   * <Navigate> forever and the page comes up blank. The corollary is that
+   * nothing here may redirect to a wizard-internal URL (`/signup/verify` and
+   * friends); the steps own those, and each one already returns to `/signup`
+   * when the state it needs was never collected.
+   *
+   * Widening this to '/signup/*' would also break the last step: SignUpSelect
+   * signs the user in from a mount effect, so LOGGEDIN's keep-out below would
+   * fire while they are still on /signup/select.
+   */
   const isSignupPage = Boolean(useMatch('/signup'));
 
   // Google OAuth failure (e.g. duplicate account) comes back as ?error_description
@@ -80,8 +93,6 @@ export default function AuthGuard({
       // centred cards where a blank beat beats a wrong-shaped skeleton.
       if (!requiresAuth) return children;
       return isLandingPage ? <LandingSkeleton screenSize={screenSize} /> : null;
-    case UserStatusType.NONVERIFIED:
-      return isSignupPage ? children : <Navigate to="/signup/verify" replace />;
     case UserStatusType.LOGGEDOUT:
       // No protected app screens yet; allow auth pages + landing through.
       return children;
