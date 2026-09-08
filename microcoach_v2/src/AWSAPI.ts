@@ -2,38 +2,34 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateUserInput = {
+export type CreateMicroCoachUserInput = {
   id?: string | null,
   cognitoId: string,
   email: string,
   teacherName?: string | null,
-  classes?: Array< ClassInput | null > | null,
+  classes?: Array< string | null > | null,
   role: UserRole,
   createdAt?: string | null,
   updatedAt?: string | null,
 };
 
-export type ClassInput = {
-  id: string,
-  name: string,
-};
-
 export enum UserRole {
   ADMIN = "ADMIN",
-  MEMBER = "MEMBER",
+  TEACHER = "TEACHER",
 }
 
 
-export type ModelUserConditionInput = {
+export type ModelMicroCoachUserConditionInput = {
   cognitoId?: ModelStringInput | null,
   email?: ModelStringInput | null,
   teacherName?: ModelStringInput | null,
+  classes?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
-  and?: Array< ModelUserConditionInput | null > | null,
-  or?: Array< ModelUserConditionInput | null > | null,
-  not?: ModelUserConditionInput | null,
+  and?: Array< ModelMicroCoachUserConditionInput | null > | null,
+  or?: Array< ModelMicroCoachUserConditionInput | null > | null,
+  not?: ModelMicroCoachUserConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -81,50 +77,45 @@ export type ModelUserRoleInput = {
   ne?: UserRole | null,
 };
 
-export type User = {
-  __typename: "User",
+export type MicroCoachUser = {
+  __typename: "MicroCoachUser",
   id: string,
   cognitoId: string,
   email: string,
   teacherName?: string | null,
-  classes?:  Array<Class | null > | null,
+  classes?: Array< string | null > | null,
   role: UserRole,
   createdAt: string,
   updatedAt: string,
 };
 
-export type Class = {
-  __typename: "Class",
-  id: string,
-  name: string,
-};
-
-export type UpdateUserInput = {
+export type UpdateMicroCoachUserInput = {
   id: string,
   cognitoId?: string | null,
   email?: string | null,
   teacherName?: string | null,
-  classes?: Array< ClassInput | null > | null,
+  classes?: Array< string | null > | null,
   role?: UserRole | null,
   createdAt?: string | null,
   updatedAt?: string | null,
 };
 
-export type DeleteUserInput = {
+export type DeleteMicroCoachUserInput = {
   id: string,
 };
 
-export type ModelUserFilterInput = {
+export type ModelMicroCoachUserFilterInput = {
   id?: ModelIDInput | null,
   cognitoId?: ModelStringInput | null,
   email?: ModelStringInput | null,
   teacherName?: ModelStringInput | null,
+  classes?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
-  and?: Array< ModelUserFilterInput | null > | null,
-  or?: Array< ModelUserFilterInput | null > | null,
-  not?: ModelUserFilterInput | null,
+  and?: Array< ModelMicroCoachUserFilterInput | null > | null,
+  or?: Array< ModelMicroCoachUserFilterInput | null > | null,
+  not?: ModelMicroCoachUserFilterInput | null,
 };
 
 export type ModelIDInput = {
@@ -143,9 +134,9 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelUserConnection = {
-  __typename: "ModelUserConnection",
-  items:  Array<User | null >,
+export type ModelMicroCoachUserConnection = {
+  __typename: "ModelMicroCoachUserConnection",
+  items:  Array<MicroCoachUser | null >,
   nextToken?: string | null,
 };
 
@@ -155,15 +146,16 @@ export enum ModelSortDirection {
 }
 
 
-export type ModelSubscriptionUserFilterInput = {
+export type ModelSubscriptionMicroCoachUserFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   email?: ModelSubscriptionStringInput | null,
   teacherName?: ModelSubscriptionStringInput | null,
+  classes?: ModelSubscriptionStringInput | null,
   role?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUserFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUserFilterInput | null > | null,
+  and?: Array< ModelSubscriptionMicroCoachUserFilterInput | null > | null,
+  or?: Array< ModelSubscriptionMicroCoachUserFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -196,117 +188,97 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type CreateUserMutationVariables = {
-  input: CreateUserInput,
-  condition?: ModelUserConditionInput | null,
+export type CreateMicroCoachUserMutationVariables = {
+  input: CreateMicroCoachUserInput,
+  condition?: ModelMicroCoachUserConditionInput | null,
 };
 
-export type CreateUserMutation = {
-  createUser?:  {
-    __typename: "User",
+export type CreateMicroCoachUserMutation = {
+  createMicroCoachUser?:  {
+    __typename: "MicroCoachUser",
     id: string,
     cognitoId: string,
     email: string,
     teacherName?: string | null,
-    classes?:  Array< {
-      __typename: "Class",
-      id: string,
-      name: string,
-    } | null > | null,
+    classes?: Array< string | null > | null,
     role: UserRole,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateUserMutationVariables = {
-  input: UpdateUserInput,
-  condition?: ModelUserConditionInput | null,
+export type UpdateMicroCoachUserMutationVariables = {
+  input: UpdateMicroCoachUserInput,
+  condition?: ModelMicroCoachUserConditionInput | null,
 };
 
-export type UpdateUserMutation = {
-  updateUser?:  {
-    __typename: "User",
+export type UpdateMicroCoachUserMutation = {
+  updateMicroCoachUser?:  {
+    __typename: "MicroCoachUser",
     id: string,
     cognitoId: string,
     email: string,
     teacherName?: string | null,
-    classes?:  Array< {
-      __typename: "Class",
-      id: string,
-      name: string,
-    } | null > | null,
+    classes?: Array< string | null > | null,
     role: UserRole,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteUserMutationVariables = {
-  input: DeleteUserInput,
-  condition?: ModelUserConditionInput | null,
+export type DeleteMicroCoachUserMutationVariables = {
+  input: DeleteMicroCoachUserInput,
+  condition?: ModelMicroCoachUserConditionInput | null,
 };
 
-export type DeleteUserMutation = {
-  deleteUser?:  {
-    __typename: "User",
+export type DeleteMicroCoachUserMutation = {
+  deleteMicroCoachUser?:  {
+    __typename: "MicroCoachUser",
     id: string,
     cognitoId: string,
     email: string,
     teacherName?: string | null,
-    classes?:  Array< {
-      __typename: "Class",
-      id: string,
-      name: string,
-    } | null > | null,
+    classes?: Array< string | null > | null,
     role: UserRole,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type GetUserQueryVariables = {
+export type GetMicroCoachUserQueryVariables = {
   id: string,
 };
 
-export type GetUserQuery = {
-  getUser?:  {
-    __typename: "User",
+export type GetMicroCoachUserQuery = {
+  getMicroCoachUser?:  {
+    __typename: "MicroCoachUser",
     id: string,
     cognitoId: string,
     email: string,
     teacherName?: string | null,
-    classes?:  Array< {
-      __typename: "Class",
-      id: string,
-      name: string,
-    } | null > | null,
+    classes?: Array< string | null > | null,
     role: UserRole,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListUsersQueryVariables = {
-  filter?: ModelUserFilterInput | null,
+export type ListMicroCoachUsersQueryVariables = {
+  filter?: ModelMicroCoachUserFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListUsersQuery = {
-  listUsers?:  {
-    __typename: "ModelUserConnection",
+export type ListMicroCoachUsersQuery = {
+  listMicroCoachUsers?:  {
+    __typename: "ModelMicroCoachUserConnection",
     items:  Array< {
-      __typename: "User",
+      __typename: "MicroCoachUser",
       id: string,
       cognitoId: string,
       email: string,
       teacherName?: string | null,
-      classes?:  Array< {
-        __typename: "Class",
-        id: string,
-        name: string,
-      } | null > | null,
+      classes?: Array< string | null > | null,
       role: UserRole,
       createdAt: string,
       updatedAt: string,
@@ -315,28 +287,24 @@ export type ListUsersQuery = {
   } | null,
 };
 
-export type UsersByCognitoIdQueryVariables = {
+export type MicroCoachUsersByCognitoIdQueryVariables = {
   cognitoId: string,
   sortDirection?: ModelSortDirection | null,
-  filter?: ModelUserFilterInput | null,
+  filter?: ModelMicroCoachUserFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type UsersByCognitoIdQuery = {
-  usersByCognitoId?:  {
-    __typename: "ModelUserConnection",
+export type MicroCoachUsersByCognitoIdQuery = {
+  microCoachUsersByCognitoId?:  {
+    __typename: "ModelMicroCoachUserConnection",
     items:  Array< {
-      __typename: "User",
+      __typename: "MicroCoachUser",
       id: string,
       cognitoId: string,
       email: string,
       teacherName?: string | null,
-      classes?:  Array< {
-        __typename: "Class",
-        id: string,
-        name: string,
-      } | null > | null,
+      classes?: Array< string | null > | null,
       role: UserRole,
       createdAt: string,
       updatedAt: string,
@@ -345,28 +313,24 @@ export type UsersByCognitoIdQuery = {
   } | null,
 };
 
-export type UsersByEmailQueryVariables = {
+export type MicroCoachUsersByEmailQueryVariables = {
   email: string,
   sortDirection?: ModelSortDirection | null,
-  filter?: ModelUserFilterInput | null,
+  filter?: ModelMicroCoachUserFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type UsersByEmailQuery = {
-  usersByEmail?:  {
-    __typename: "ModelUserConnection",
+export type MicroCoachUsersByEmailQuery = {
+  microCoachUsersByEmail?:  {
+    __typename: "ModelMicroCoachUserConnection",
     items:  Array< {
-      __typename: "User",
+      __typename: "MicroCoachUser",
       id: string,
       cognitoId: string,
       email: string,
       teacherName?: string | null,
-      classes?:  Array< {
-        __typename: "Class",
-        id: string,
-        name: string,
-      } | null > | null,
+      classes?: Array< string | null > | null,
       role: UserRole,
       createdAt: string,
       updatedAt: string,
@@ -375,28 +339,24 @@ export type UsersByEmailQuery = {
   } | null,
 };
 
-export type UsersByRoleQueryVariables = {
+export type MicroCoachUsersByRoleQueryVariables = {
   role: UserRole,
   sortDirection?: ModelSortDirection | null,
-  filter?: ModelUserFilterInput | null,
+  filter?: ModelMicroCoachUserFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type UsersByRoleQuery = {
-  usersByRole?:  {
-    __typename: "ModelUserConnection",
+export type MicroCoachUsersByRoleQuery = {
+  microCoachUsersByRole?:  {
+    __typename: "ModelMicroCoachUserConnection",
     items:  Array< {
-      __typename: "User",
+      __typename: "MicroCoachUser",
       id: string,
       cognitoId: string,
       email: string,
       teacherName?: string | null,
-      classes?:  Array< {
-        __typename: "Class",
-        id: string,
-        name: string,
-      } | null > | null,
+      classes?: Array< string | null > | null,
       role: UserRole,
       createdAt: string,
       updatedAt: string,
@@ -405,69 +365,57 @@ export type UsersByRoleQuery = {
   } | null,
 };
 
-export type OnCreateUserSubscriptionVariables = {
-  filter?: ModelSubscriptionUserFilterInput | null,
+export type OnCreateMicroCoachUserSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachUserFilterInput | null,
   cognitoId?: string | null,
 };
 
-export type OnCreateUserSubscription = {
-  onCreateUser?:  {
-    __typename: "User",
+export type OnCreateMicroCoachUserSubscription = {
+  onCreateMicroCoachUser?:  {
+    __typename: "MicroCoachUser",
     id: string,
     cognitoId: string,
     email: string,
     teacherName?: string | null,
-    classes?:  Array< {
-      __typename: "Class",
-      id: string,
-      name: string,
-    } | null > | null,
+    classes?: Array< string | null > | null,
     role: UserRole,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateUserSubscriptionVariables = {
-  filter?: ModelSubscriptionUserFilterInput | null,
+export type OnUpdateMicroCoachUserSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachUserFilterInput | null,
   cognitoId?: string | null,
 };
 
-export type OnUpdateUserSubscription = {
-  onUpdateUser?:  {
-    __typename: "User",
+export type OnUpdateMicroCoachUserSubscription = {
+  onUpdateMicroCoachUser?:  {
+    __typename: "MicroCoachUser",
     id: string,
     cognitoId: string,
     email: string,
     teacherName?: string | null,
-    classes?:  Array< {
-      __typename: "Class",
-      id: string,
-      name: string,
-    } | null > | null,
+    classes?: Array< string | null > | null,
     role: UserRole,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteUserSubscriptionVariables = {
-  filter?: ModelSubscriptionUserFilterInput | null,
+export type OnDeleteMicroCoachUserSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachUserFilterInput | null,
   cognitoId?: string | null,
 };
 
-export type OnDeleteUserSubscription = {
-  onDeleteUser?:  {
-    __typename: "User",
+export type OnDeleteMicroCoachUserSubscription = {
+  onDeleteMicroCoachUser?:  {
+    __typename: "MicroCoachUser",
     id: string,
     cognitoId: string,
     email: string,
     teacherName?: string | null,
-    classes?:  Array< {
-      __typename: "Class",
-      id: string,
-      name: string,
-    } | null > | null,
+    classes?: Array< string | null > | null,
     role: UserRole,
     createdAt: string,
     updatedAt: string,

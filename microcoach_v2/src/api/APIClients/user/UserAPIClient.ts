@@ -3,28 +3,28 @@ import { IUserAPIClient } from './interfaces/IUserAPIClient';
 import { IUser, UserRole } from '../../Models/IUser';
 import { UserParser } from '../../Parsers/UserParser';
 import {
-  CreateUserInput,
-  CreateUserMutation,
-  CreateUserMutationVariables,
-  UpdateUserInput,
-  UpdateUserMutation,
-  UpdateUserMutationVariables,
-  GetUserQuery,
-  GetUserQueryVariables,
-  UsersByCognitoIdQuery,
-  UsersByCognitoIdQueryVariables,
-  UsersByEmailQuery,
-  UsersByEmailQueryVariables,
-  UsersByRoleQuery,
-  UsersByRoleQueryVariables,
+  CreateMicroCoachUserInput,
+  CreateMicroCoachUserMutation,
+  CreateMicroCoachUserMutationVariables,
+  UpdateMicroCoachUserInput,
+  UpdateMicroCoachUserMutation,
+  UpdateMicroCoachUserMutationVariables,
+  GetMicroCoachUserQuery,
+  GetMicroCoachUserQueryVariables,
+  MicroCoachUsersByCognitoIdQuery,
+  MicroCoachUsersByCognitoIdQueryVariables,
+  MicroCoachUsersByEmailQuery,
+  MicroCoachUsersByEmailQueryVariables,
+  MicroCoachUsersByRoleQuery,
+  MicroCoachUsersByRoleQueryVariables,
   UserRole as AWSUserRole,
 } from '../../../AWSAPI';
-import { createUser, updateUser } from '../../../graphql/mutations';
+import { createMicroCoachUser, updateMicroCoachUser } from '../../../graphql/mutations';
 import {
-  getUser,
-  usersByCognitoId,
-  usersByEmail,
-  usersByRole,
+  getMicroCoachUser,
+  microCoachUsersByCognitoId,
+  microCoachUsersByEmail,
+  microCoachUsersByRole,
 } from '../../../graphql/queries';
 
 export const userProfileLocalStorage = 'microcoach_userprofile';
@@ -45,37 +45,37 @@ export const userProfileLocalStorage = 'microcoach_userprofile';
 // touch every client in the package.
 export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
 
-  async createUser(input: CreateUserInput): Promise<IUser | null> {
-    const variables: CreateUserMutationVariables = { input };
-    const res = await this.callGraphQL<CreateUserMutation>(
-      createUser,
+  async createUser(input: CreateMicroCoachUserInput): Promise<IUser | null> {
+    const variables: CreateMicroCoachUserMutationVariables = { input };
+    const res = await this.callGraphQL<CreateMicroCoachUserMutation>(
+      createMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.createUser)
-      return UserParser.parseIUserfromAWSUser(res.data.createUser);
+    if (res?.data?.createMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.createMicroCoachUser);
     return null;
   }
 
-  async updateUser(input: UpdateUserInput): Promise<IUser | null> {
-    const variables: UpdateUserMutationVariables = { input };
-    const res = await this.callGraphQL<UpdateUserMutation>(
-      updateUser,
+  async updateUser(input: UpdateMicroCoachUserInput): Promise<IUser | null> {
+    const variables: UpdateMicroCoachUserMutationVariables = { input };
+    const res = await this.callGraphQL<UpdateMicroCoachUserMutation>(
+      updateMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.updateUser)
-      return UserParser.parseIUserfromAWSUser(res.data.updateUser);
+    if (res?.data?.updateMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.updateMicroCoachUser);
     return null;
   }
 
   async getUser(id: string): Promise<IUser | null> {
     if (!id) return null;
-    const variables: GetUserQueryVariables = { id };
-    const res = await this.callGraphQL<GetUserQuery>(
-      getUser,
+    const variables: GetMicroCoachUserQueryVariables = { id };
+    const res = await this.callGraphQL<GetMicroCoachUserQuery>(
+      getMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.getUser)
-      return UserParser.parseIUserfromAWSUser(res.data.getUser);
+    if (res?.data?.getMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.getMicroCoachUser);
     return null;
   }
 
@@ -83,23 +83,23 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
   // auth flow funnels through. Pure: callers decide whether to cache the hit.
   async getUserByCognitoId(cognitoId: string): Promise<IUser | null> {
     if (!cognitoId) return null;
-    const variables: UsersByCognitoIdQueryVariables = { cognitoId };
-    const res = await this.callGraphQL<UsersByCognitoIdQuery>(
-      usersByCognitoId,
+    const variables: MicroCoachUsersByCognitoIdQueryVariables = { cognitoId };
+    const res = await this.callGraphQL<MicroCoachUsersByCognitoIdQuery>(
+      microCoachUsersByCognitoId,
       variables as unknown as GraphQLOptions,
     );
-    const hit = res?.data?.usersByCognitoId?.items?.[0];
+    const hit = res?.data?.microCoachUsersByCognitoId?.items?.[0];
     return hit ? UserParser.parseIUserfromAWSUser(hit) : null;
   }
 
   async getUserByEmail(email: string): Promise<IUser | null> {
     if (!email) return null;
-    const variables: UsersByEmailQueryVariables = { email };
-    const res = await this.callGraphQL<UsersByEmailQuery>(
-      usersByEmail,
+    const variables: MicroCoachUsersByEmailQueryVariables = { email };
+    const res = await this.callGraphQL<MicroCoachUsersByEmailQuery>(
+      microCoachUsersByEmail,
       variables as unknown as GraphQLOptions,
     );
-    const hit = res?.data?.usersByEmail?.items?.[0];
+    const hit = res?.data?.microCoachUsersByEmail?.items?.[0];
     return hit ? UserParser.parseIUserfromAWSUser(hit) : null;
   }
 
@@ -107,14 +107,14 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
   // page: the roster is small enough that paging on `nextToken` can wait until
   // it isn't.
   async listUsersByRole(role: UserRole): Promise<IUser[]> {
-    const variables: UsersByRoleQueryVariables = {
+    const variables: MicroCoachUsersByRoleQueryVariables = {
       role: UserParser.parseAWSRolefromUserRole(role),
     };
-    const res = await this.callGraphQL<UsersByRoleQuery>(
-      usersByRole,
+    const res = await this.callGraphQL<MicroCoachUsersByRoleQuery>(
+      microCoachUsersByRole,
       variables as unknown as GraphQLOptions,
     );
-    const items = res?.data?.usersByRole?.items ?? [];
+    const items = res?.data?.microCoachUsersByRole?.items ?? [];
     return items
       .filter((item): item is NonNullable<typeof item> => item != null)
       .map((item) => UserParser.parseIUserfromAWSUser(item));
@@ -142,22 +142,19 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
   // `IUser`: the profile carries a transient `password` that isn't on the User
   // model, and AppSync rejects unknown input fields.
   //
-  // `role` is fixed at MEMBER and never read off the profile — promotion to
+  // `role` is fixed at TEACHER and never read off the profile — promotion to
   // ADMIN is an admin-side action, not something the signup form gets to post.
   private static buildCreateUserInput(
     cognitoId: string,
     email: string,
     profile: IUser,
-  ): CreateUserInput {
+  ): CreateMicroCoachUserInput {
     return {
       cognitoId,
       email,
       teacherName: profile.teacherName,
-      role: AWSUserRole.MEMBER,
-      classes: (profile.classes ?? []).map((cls) => ({
-        id: cls.id,
-        name: cls.name,
-      })),
+      role: AWSUserRole.TEACHER,
+      classes: profile.classes ?? [],
     };
   }
 
@@ -180,7 +177,11 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
 
   // ── Sign up (step 1: send confirmation code) ─────────────────────────────
   async signUpSendConfirmationCode(profile: IUser): Promise<void> {
-    await this.auth.awsSignUp(profile.email, profile.email, profile.password ?? '');
+    console.log(profile);
+    console.log(profile.email);
+    console.log(profile.password);
+    const res = await this.auth.awsSignUp(profile.email, profile.email, profile.password ?? '');
+    console.log(res);
   }
 
   // ── Sign up (step 2: confirm code, sign in, create backend User row) ─────
@@ -188,7 +189,9 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     profile: IUser,
     confirmationCode: string,
   ): Promise<IUser> {
-    await this.auth.awsConfirmSignUp(profile.email, confirmationCode);
+    const res = await this.auth.awsConfirmSignUp(profile.email, confirmationCode);
+    console.log(res);
+    console.log('confirm^')
     await this.auth.awsSignIn(profile.email, profile.password ?? '');
     const session = await this.auth.getCurrentSession();
     const cognitoId = session.userSub ?? '';

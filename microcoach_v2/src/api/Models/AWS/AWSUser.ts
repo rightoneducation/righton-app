@@ -8,22 +8,17 @@ import { UserRole as AWSUserRole } from '../../../AWSAPI'
 // distinct, so a single parser needs a shape all of them assign to. `__typename`
 // is optional here for the same reason — the operation types require it.
 //
-// `classes` is a real `[Class]` list on the model (schema.graphql), not a JSON
-// blob, and there is no `password` field: the password is transient signup form
-// state that never round-trips through the API.
-export type AWSClass = {
-  __typename?: 'Class'
-  id: string
-  name: string
-}
-
+// `classes` is a list of bare class names (schema.graphql: `classes: [String]`),
+// not a JSON blob and no longer a list of `Class` objects. There is no
+// `password` field: the password is transient signup form state that never
+// round-trips through the API.
 export type AWSUser = {
-  __typename?: 'User'
+  __typename?: 'MicroCoachUser'
   id: string
   cognitoId: string
   email: string
   teacherName?: string | null
-  classes?: Array<AWSClass | null> | null
+  classes?: Array<string | null> | null
   role: AWSUserRole
   createdAt: string
   updatedAt: string

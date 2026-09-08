@@ -2,21 +2,17 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
+export const createMicroCoachUser = /* GraphQL */ `
+  mutation CreateMicroCoachUser(
+    $input: CreateMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
   ) {
-    createUser(input: $input, condition: $condition) {
+    createMicroCoachUser(input: $input, condition: $condition) {
       id
       cognitoId
       email
       teacherName
-      classes {
-        id
-        name
-        __typename
-      }
+      classes
       role
       createdAt
       updatedAt
@@ -24,21 +20,17 @@ export const createUser = /* GraphQL */ `
     }
   }
 `;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
+export const updateMicroCoachUser = /* GraphQL */ `
+  mutation UpdateMicroCoachUser(
+    $input: UpdateMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
   ) {
-    updateUser(input: $input, condition: $condition) {
+    updateMicroCoachUser(input: $input, condition: $condition) {
       id
       cognitoId
       email
       teacherName
-      classes {
-        id
-        name
-        __typename
-      }
+      classes
       role
       createdAt
       updatedAt
@@ -46,21 +38,17 @@ export const updateUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
+export const deleteMicroCoachUser = /* GraphQL */ `
+  mutation DeleteMicroCoachUser(
+    $input: DeleteMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
   ) {
-    deleteUser(input: $input, condition: $condition) {
+    deleteMicroCoachUser(input: $input, condition: $condition) {
       id
       cognitoId
       email
       teacherName
-      classes {
-        id
-        name
-        __typename
-      }
+      classes
       role
       createdAt
       updatedAt

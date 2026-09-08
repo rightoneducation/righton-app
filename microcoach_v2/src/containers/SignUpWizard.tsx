@@ -61,7 +61,7 @@ export default function SignUpWizard({
       })),
   };
 
-  const stepProps: SignUpStepProps = { screenSize, state, actions, user };
+  const stepProps: SignUpStepProps = { apiClients, screenSize, state, actions, user };
 
   switch (step) {
     case 'register':

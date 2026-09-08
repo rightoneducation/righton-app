@@ -7,10 +7,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ApartmentIcon from '@mui/icons-material/Apartment';
-import {
-  SignUpStepProps,
-  SignUpRole as Role,
-} from '../lib/SignUpModels';
+import { SignUpStepProps } from '../lib/SignUpModels';
+import { UserRole as Role } from '../api';
 import AppContentRow from '../components/AppContentRow';
 import {
   RoleCard,
@@ -29,13 +27,13 @@ const ROLES: {
   icon: React.ReactNode;
 }[] = [
   {
-    id: 'TEACHER',
+    id: Role.TEACHER,
     titleKey: 'signup.roleTeacher',
     bodyKey: 'signup.roleTeacherBody',
     icon: <PersonOutlineIcon />,
   },
   {
-    id: 'ADMIN',
+    id: Role.ADMIN,
     titleKey: 'signup.roleAdmin',
     bodyKey: 'signup.roleAdminBody',
     icon: <ApartmentIcon />,

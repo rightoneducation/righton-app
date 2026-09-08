@@ -1,6 +1,6 @@
 export enum UserRole {
   ADMIN = 'ADMIN',
-  MEMBER = 'MEMBER',
+  TEACHER = 'TEACHER',
 }
 
 export interface IClass {
@@ -13,8 +13,8 @@ export interface IUser {
   cognitoId?: string;
   email: string;
   teacherName?: string;
-  classes?: IClass[];
-  role: UserRole;
+  classes?: string[];
+  role?: UserRole | null;
   createdAt?: string;
   updatedAt?: string;
   // transient — only used by signup forms/orchestration, never persisted to the User table

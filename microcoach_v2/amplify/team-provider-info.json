@@ -60,7 +60,7 @@
         },
         "microcoachv2RegenEvaluator": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2RegenEvaluator-424647776c6c7656514b-build.zip"
+          "s3Key": "amplify-builds/microcoachv2RegenEvaluator-70466446684173713965-build.zip"
         },
         "microcoachv2TeacherUpload": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",

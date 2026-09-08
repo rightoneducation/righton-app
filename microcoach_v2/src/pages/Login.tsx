@@ -48,13 +48,13 @@ export default function Login({ screenSize, user }: ScreenSizeProps & UserProps)
    * Stands in for the role the API will return on a real sign-in. Two test
    * accounts on the domain approvalCheck.ts already approves, so the same
    * credentials work through sign-up too:
-   *   teacher@school.com -> MEMBER
+   *   teacher@school.com -> TEACHER
    *   admin@school.com   -> ADMIN
    */
   const roleForEmail = (value: string) =>
     value.trim().toLowerCase().startsWith('admin@')
       ? UserRole.ADMIN
-      : UserRole.MEMBER;
+      : UserRole.TEACHER;
 
   /*
    * Mocked, like the rest of the prototype: no credentials are checked. The
@@ -66,10 +66,7 @@ export default function Login({ screenSize, user }: ScreenSizeProps & UserProps)
       email: email.trim() || session.teacher.email,
       teacherName: session.teacher.displayName,
       role: roleForEmail(email),
-      classes: session.classes.map((option) => ({
-        id: option.id,
-        name: option.name,
-      })),
+      classes: session.classes.map((option) => option.name),
     });
     navigate('/dashboard');
   };

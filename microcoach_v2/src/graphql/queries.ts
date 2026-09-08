@@ -2,18 +2,14 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getUser = /* GraphQL */ `
-  query GetUser($id: ID!) {
-    getUser(id: $id) {
+export const getMicroCoachUser = /* GraphQL */ `
+  query GetMicroCoachUser($id: ID!) {
+    getMicroCoachUser(id: $id) {
       id
       cognitoId
       email
       teacherName
-      classes {
-        id
-        name
-        __typename
-      }
+      classes
       role
       createdAt
       updatedAt
@@ -21,23 +17,19 @@ export const getUser = /* GraphQL */ `
     }
   }
 `;
-export const listUsers = /* GraphQL */ `
-  query ListUsers(
-    $filter: ModelUserFilterInput
+export const listMicroCoachUsers = /* GraphQL */ `
+  query ListMicroCoachUsers(
+    $filter: ModelMicroCoachUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         cognitoId
         email
         teacherName
-        classes {
-          id
-          name
-          __typename
-        }
+        classes
         role
         createdAt
         updatedAt
@@ -48,15 +40,15 @@ export const listUsers = /* GraphQL */ `
     }
   }
 `;
-export const usersByCognitoId = /* GraphQL */ `
-  query UsersByCognitoId(
+export const microCoachUsersByCognitoId = /* GraphQL */ `
+  query MicroCoachUsersByCognitoId(
     $cognitoId: String!
     $sortDirection: ModelSortDirection
-    $filter: ModelUserFilterInput
+    $filter: ModelMicroCoachUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    usersByCognitoId(
+    microCoachUsersByCognitoId(
       cognitoId: $cognitoId
       sortDirection: $sortDirection
       filter: $filter
@@ -68,11 +60,7 @@ export const usersByCognitoId = /* GraphQL */ `
         cognitoId
         email
         teacherName
-        classes {
-          id
-          name
-          __typename
-        }
+        classes
         role
         createdAt
         updatedAt
@@ -83,15 +71,15 @@ export const usersByCognitoId = /* GraphQL */ `
     }
   }
 `;
-export const usersByEmail = /* GraphQL */ `
-  query UsersByEmail(
+export const microCoachUsersByEmail = /* GraphQL */ `
+  query MicroCoachUsersByEmail(
     $email: String!
     $sortDirection: ModelSortDirection
-    $filter: ModelUserFilterInput
+    $filter: ModelMicroCoachUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    usersByEmail(
+    microCoachUsersByEmail(
       email: $email
       sortDirection: $sortDirection
       filter: $filter
@@ -103,11 +91,7 @@ export const usersByEmail = /* GraphQL */ `
         cognitoId
         email
         teacherName
-        classes {
-          id
-          name
-          __typename
-        }
+        classes
         role
         createdAt
         updatedAt
@@ -118,15 +102,15 @@ export const usersByEmail = /* GraphQL */ `
     }
   }
 `;
-export const usersByRole = /* GraphQL */ `
-  query UsersByRole(
+export const microCoachUsersByRole = /* GraphQL */ `
+  query MicroCoachUsersByRole(
     $role: UserRole!
     $sortDirection: ModelSortDirection
-    $filter: ModelUserFilterInput
+    $filter: ModelMicroCoachUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    usersByRole(
+    microCoachUsersByRole(
       role: $role
       sortDirection: $sortDirection
       filter: $filter
@@ -138,11 +122,7 @@ export const usersByRole = /* GraphQL */ `
         cognitoId
         email
         teacherName
-        classes {
-          id
-          name
-          __typename
-        }
+        classes
         role
         createdAt
         updatedAt

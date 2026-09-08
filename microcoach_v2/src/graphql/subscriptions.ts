@@ -2,21 +2,17 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onCreateMicroCoachUser = /* GraphQL */ `
+  subscription OnCreateMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
     $cognitoId: String
   ) {
-    onCreateUser(filter: $filter, cognitoId: $cognitoId) {
+    onCreateMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
       id
       cognitoId
       email
       teacherName
-      classes {
-        id
-        name
-        __typename
-      }
+      classes
       role
       createdAt
       updatedAt
@@ -24,21 +20,17 @@ export const onCreateUser = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onUpdateMicroCoachUser = /* GraphQL */ `
+  subscription OnUpdateMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
     $cognitoId: String
   ) {
-    onUpdateUser(filter: $filter, cognitoId: $cognitoId) {
+    onUpdateMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
       id
       cognitoId
       email
       teacherName
-      classes {
-        id
-        name
-        __typename
-      }
+      classes
       role
       createdAt
       updatedAt
@@ -46,21 +38,17 @@ export const onUpdateUser = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onDeleteMicroCoachUser = /* GraphQL */ `
+  subscription OnDeleteMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
     $cognitoId: String
   ) {
-    onDeleteUser(filter: $filter, cognitoId: $cognitoId) {
+    onDeleteMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
       id
       cognitoId
       email
       teacherName
-      classes {
-        id
-        name
-        __typename
-      }
+      classes
       role
       createdAt
       updatedAt

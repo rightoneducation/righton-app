@@ -34,7 +34,7 @@ import {
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 
-export default function SignUpRegister({ screenSize, state, actions }: SignUpStepProps) {
+export default function SignUpRegister({ apiClients, screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -105,13 +105,20 @@ export default function SignUpRegister({ screenSize, state, actions }: SignUpSte
     navigate('/signup/classes');
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!isFormValid) {
       setIsFormErrored(true);
       return;
     }
     setIsFormErrored(false);
-    navigate('/signup/verify');
+    try{
+      await apiClients.user.signUpSendConfirmationCode(
+        state
+      );
+      navigate('/signup/verify');
+    } catch {
+      console.error('Sign Up Error');
+    }
   };
 
   return (

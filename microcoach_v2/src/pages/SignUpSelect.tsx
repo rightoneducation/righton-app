@@ -47,8 +47,8 @@ export default function SignUpSelect({ screenSize, state, user }: SignUpStepProp
     signIn({
       email: state.email,
       teacherName,
-      role: state.role === 'ADMIN' ? UserRole.ADMIN : UserRole.MEMBER,
-      classes: classes.map((name) => ({ id: name, name })),
+      role: state.role === 'ADMIN' ? UserRole.ADMIN : UserRole.TEACHER,
+      classes,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.isVerified]);

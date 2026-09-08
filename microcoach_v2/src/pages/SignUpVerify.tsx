@@ -17,7 +17,7 @@ import {
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
-export default function SignUpVerify({ screenSize, state, actions }: SignUpStepProps) {
+export default function SignUpVerify({ apiClients, screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -32,14 +32,22 @@ export default function SignUpVerify({ screenSize, state, actions }: SignUpStepP
 
   const isComplete = state.code.filter(Boolean).length === CODE_LENGTH;
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     if (!isComplete) {
       setHasError(true);
       return;
     }
-    // Mocked: any six digits pass.
-    actions.setVerified();
-    navigate('/signup/classes');
+    console.log('verify');
+    try {
+      await apiClients.user.signUpConfirmAndBuildBackendUser(
+        state,
+        state.code.join('')
+      );
+      navigate('/signup/classes');
+    } catch {
+      console.error('Verification error');
+      setHasError(true);
+    }
   };
 
   return (
