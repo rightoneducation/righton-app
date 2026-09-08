@@ -52,13 +52,42 @@ export const pdfColors = {
   needsSupport: designSystemColors.status.needsSupport,
   understood: designSystemColors.status.understood,
   prerequisite: designSystemColors.status.prerequisite,
-  errorFill: designSystemColors.status.error,
+  errorFill: designSystemColors.status.errorTint,
   errorStroke: designSystemColors.status.errorStroke,
+  errorIcon: designSystemColors.status.errorIcon,
+  successTint: designSystemColors.status.successTint,
+  slateGrey: designSystemColors.foreground.slateGrey,
+  periwinkle: designSystemColors.foreground.periwinkle,
   successFill: designSystemColors.status.lightGreen,
   muted: designSystemColors.surface.ashyGray,
 };
 
 export const pdfStyles = StyleSheet.create({
+  // Representation table — mirrors the screen's bordered grid with a tinted
+  // header, rather than flattening the rows to space-separated text.
+  repTable: { width: '100%', marginTop: 4 },
+  repRow: { flexDirection: 'row' },
+  repHeadCell: {
+    flex: 1,
+    borderWidth: 0.5,
+    borderColor: pdfColors.neutralGrey,
+    padding: 4,
+    fontFamily: 'Rubik',
+    fontWeight: 700,
+    fontSize: 9,
+    textAlign: 'center',
+    color: pdfColors.navy,
+  },
+  repCell: {
+    flex: 1,
+    borderWidth: 0.5,
+    borderColor: pdfColors.neutralGrey,
+    padding: 4,
+    fontFamily: 'Rubik',
+    fontSize: 9,
+    textAlign: 'center',
+    color: pdfColors.navy,
+  },
   page: {
     paddingTop: 40,
     paddingBottom: 48,
@@ -94,6 +123,10 @@ export const pdfStyles = StyleSheet.create({
   },
   tonedPanel: { borderRadius: 8, padding: 10, marginBottom: 8 },
   row: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
+  // Same row, but for children that are bordered boxes rather than loose text:
+  // stretch makes side-by-side panels share the height of the tallest one.
+  // The plain `row` keeps flex-start so badges and chips still hug their text.
+  rowStretch: { flexDirection: 'row', alignItems: 'stretch', gap: 8 },
   col: { flex: 1, minWidth: 0 },
   stepRow: {
     flexDirection: 'row',

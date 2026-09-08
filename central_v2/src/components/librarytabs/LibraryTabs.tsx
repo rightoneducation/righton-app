@@ -112,14 +112,20 @@ export default function LibraryTabs({
   };
 
   useEffect(() => {
-    if (centralData.isLibraryInit) {
-      centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
-      centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
-      centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-      centralDataDispatch({ type: 'SET_OPEN_TAB', payload: openTab });
-      fetchElements(openTab, '', null, true);
-    }
-  }, [centralData.isLibraryInit]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!centralData.isLibraryInit) return;
+    // The Public tab scopes to the signed-in user through a GSI partition key, and
+    // an empty userId is silently dropped rather than rejected -- the query then
+    // returns every public game. dynamoId only lands once validateUser's round trip
+    // completes, which this effect can beat on a slow connection. Bail without
+    // clearing isLibraryInit so the effect re-runs when the profile arrives.
+    if (!centralData.userProfile?.dynamoId) return;
+    centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
+    centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
+    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+    centralDataDispatch({ type: 'SET_OPEN_TAB', payload: openTab });
+    fetchElements(openTab, '', null, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [centralData.isLibraryInit, centralData.userProfile?.dynamoId]);
 
   const handleChange = (
     event: React.SyntheticEvent,

@@ -24,7 +24,7 @@ import {
 
 // Skeleton derives its colour from inherited text colour; on the blue step
 // panel the default all but disappears.
-const onPanelSx = { bgcolor: 'rgba(255, 255, 255, 0.18)' };
+const onPanelSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 
 function TextLines({
   count,

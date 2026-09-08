@@ -1,0 +1,14 @@
+{
+  "resourceName": "microcoachdocs",
+  "policyUUID": "615d243c",
+  "bucketName": "microcoachdocs",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

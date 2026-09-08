@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
@@ -19,6 +19,7 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/LandingStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { UserProps } from '../hooks/useUserState';
 import heroClassroom from '../images/heroClassroom.jpg';
 import landingPagePattern from '../images/landingPagePattern.svg';
 import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
@@ -85,10 +86,24 @@ const STEPS = [
   { key: 'step3', image: stepCard3 },
 ] as const;
 
-export default function Landing({ screenSize }: ScreenSizeProps) {
+export default function Landing({ screenSize, user }: ScreenSizeProps & UserProps) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { signOut } = user;
   const isLarge = screenSize === ScreenSize.LARGE;
+
+  /*
+   * Starting over, not resuming. The wizard's last step commits a profile and
+   * flips userStatus to LOGGEDIN, and AuthGuard quite correctly keeps a
+   * signed-in user off /signup — so without signing out, a second run of the
+   * flow bounces straight back here and the button looks dead. The wizard's own
+   * state needs no reset: it is local to SignUpWizard, which unmounts on exit.
+   */
+  const handleGetStarted = () => {
+    signOut();
+    navigate('/signup');
+  };
 
   // Page-level readiness covers things the whole layout depends on — currently
   // just the copy. Images are not here: each one owns its loading state via
@@ -145,8 +160,7 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
               {t('hero.body')}
             </Typography>
             <GetStartedButton
-              component={RouterLink}
-              to="/signup"
+              onClick={handleGetStarted}
               screenSize={screenSize}
               disableElevation
               endIcon={<ArrowOutwardIcon sx={{ fontSize: 20 }} />}

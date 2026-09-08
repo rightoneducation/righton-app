@@ -5,6 +5,7 @@ import Header, { HeaderVariant } from '../components/Header';
 import Footer from '../components/Footer';
 import NeedHelpButton from '../components/NeedHelpButton';
 import { useScreenSize } from '../hooks/useScreenSize';
+import { IUserState } from '../hooks/useUserState';
 
 /**
  * Owns the persistent page chrome. Mirrors central_v2's AppContainer, with a
@@ -32,20 +33,30 @@ const BodyContainer = styled(Box)({
 
 interface AppContainerProps {
   children: ReactNode;
+  // Passed straight through to Header — the one hop this container adds.
+  user: IUserState;
   headerVariant?: HeaderVariant;
   showFooter?: boolean;
+  onLogOut?: () => void;
 }
 
 export default function AppContainer({
   children,
+  user,
   headerVariant = 'public',
   showFooter = true,
+  onLogOut,
 }: AppContainerProps) {
   const screenSize = useScreenSize();
 
   return (
     <ScreenContainer>
-      <Header screenSize={screenSize} variant={headerVariant} />
+      <Header
+        screenSize={screenSize}
+        user={user}
+        variant={headerVariant}
+        onLogOut={onLogOut}
+      />
       <BodyContainer component="main">{children}</BodyContainer>
       {headerVariant === 'app' && <NeedHelpButton />}
       {showFooter && <Footer screenSize={screenSize} />}

@@ -437,6 +437,19 @@ export default function CreateGame({
   };
 
   const handleSaveGame = async () => {
+    // A public<->private switch recreates the game in the other table and
+    // deletes the original (handlePublicPrivateSave): Public/Private/Draft are
+    // separate @model tables, so there is no cross-type update mutation.
+    // The create input accepts an id, so reuse the original instead of minting
+    // a new one -- that keeps favoriteGameTemplateIds and existing /games links
+    // pointing at the game, and carries its play count across.
+    // isEdit && !isClone is the exact discriminator: brand-new games aren't
+    // edits, and clones must get a fresh id and a zero count.
+    const isTypeSwitch = isEdit && !isClone;
+    const preservedTimesPlayed = isTypeSwitch
+      ? (draftGame.gameTemplate.timesPlayed ?? 0)
+      : 0;
+    const preservedId = isTypeSwitch ? selectedGameId || undefined : undefined;
     try {
       setDraftGame((prev) => ({
         ...prev,
@@ -490,7 +503,9 @@ export default function CreateGame({
               userId,
               draftQuestionsList,
               gameImgUrl,
-              questionTemplateCCSS
+              questionTemplateCCSS,
+              preservedTimesPlayed,
+              preservedId,
             );
             const gameTemplateResponse =
               await apiClients.gameTemplate.createGameTemplate(
@@ -538,6 +553,9 @@ export default function CreateGame({
               userId,
               draftQuestionsList,
               gameImgUrl,
+              undefined,
+              preservedTimesPlayed,
+              preservedId,
             );
 
             await apiClients.gameTemplate.createGameTemplate(
@@ -1355,6 +1373,7 @@ export default function CreateGame({
             draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
             screenSize={screenSize}
             isClone={isClone}
+            isEdit={isEdit}
             isCloneImageChanged={
               draftQuestionsList[selectedQuestionIndex]
                 .isCloneQuestionImageChanged
@@ -1372,6 +1391,7 @@ export default function CreateGame({
       <CreateGameImageUploadModal
         draftGame={draftGame}
         isClone={isClone}
+        isEdit={isEdit}
         isCloneImageChanged={draftGame.isCloneGameImageChanged}
         screenSize={screenSize}
         isModalOpen={draftGame.isGameImageUploadVisible}

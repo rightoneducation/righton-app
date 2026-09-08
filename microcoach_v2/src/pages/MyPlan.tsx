@@ -7,36 +7,40 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import InsightsIcon from '@mui/icons-material/Insights';
 import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
 import PlanItemRow from '../components/PlanItemRow';
+import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
+import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ScreenSize } from '../lib/MicroCoachModels';
+import { PlanProps } from '../hooks/usePlanItems';
 import { IPlanItem } from '../lib/PipelineModels';
 import {
   PlanBackButton,
   ChangeActivityButton,
   CompletedPanel,
+  UploadPromptCard,
+  UploadStatRow,
 } from '../lib/styledcomponents/MyPlanStyledComponents';
 import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
-import {
-  useMicroCoachDataState,
-  useMicroCoachDataDispatch,
-} from '../hooks/context/useMicroCoachDataContext';
 
-export default function MyPlan({ screenSize }: ScreenSizeProps) {
+export default function MyPlan({ screenSize, plan }: ScreenSizeProps & PlanProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  const { planItems } = useMicroCoachDataState();
-  const dispatch = useMicroCoachDataDispatch();
+  const { planItems, markPlanItemDone, removePlanItem } = plan;
 
   const saved = planItems.filter((item) => item.status === 'SAVED');
   const completed = planItems.filter((item) => item.status === 'COMPLETED');
 
   const handleTabSelect = (tabId: FlowTabId) => {
     if (tabId === 'understand-act') navigate('/review');
+    if (tabId === 'reflect') navigate('/reflect');
   };
 
   const handleOpenDetails = (item: IPlanItem) => {
@@ -120,10 +124,10 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
               item={item}
               onOpenDetails={handleOpenDetails}
               onMarkDone={(id) =>
-                dispatch({ type: 'MARK_PLAN_ITEM_DONE', payload: id })
+                markPlanItemDone(id)
               }
               onRemove={(id) =>
-                dispatch({ type: 'REMOVE_PLAN_ITEM', payload: id })
+                removePlanItem(id)
               }
             />
           ))
@@ -150,6 +154,80 @@ export default function MyPlan({ screenSize }: ScreenSizeProps) {
               />
             ))}
           </CompletedPanel>
+
+          {/* The frame shows this only alongside completed work — its copy
+              opens "You've marked activities as complete", so it has nothing
+              to say before then. */}
+          <UploadPromptCard sx={{ mt: `${theme.sizing.space6}px` }}>
+            <UploadStatRow screenSize={screenSize}>
+              {[
+                {
+                  label: t('myPlan.statActivities'),
+                  value: t('myPlan.statActivitiesValue', {
+                    count: completed.length,
+                  }),
+                  icon: <TaskAltIcon />,
+                },
+                {
+                  label: t('myPlan.statUpload'),
+                  value: t('myPlan.statUploadValue'),
+                  icon: <UploadFileIcon />,
+                },
+                {
+                  label: t('myPlan.statProgress'),
+                  value: t('myPlan.statProgressValue'),
+                  icon: <InsightsIcon />,
+                },
+              ].map((stat) => (
+                <Stack
+                  key={stat.label}
+                  alignItems="center"
+                  spacing={`${theme.sizing.space2}px`}
+                >
+                  <PromptIconTile>{stat.icon}</PromptIconTile>
+                  <Typography
+                    variant="headingMd"
+                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                  >
+                    {stat.label}
+                  </Typography>
+                  <Typography
+                    variant="rubikBody"
+                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                  >
+                    {stat.value}
+                  </Typography>
+                </Stack>
+              ))}
+            </UploadStatRow>
+
+            <Typography
+              variant="navTitle"
+              sx={{
+                color: 'designSystem.surface.atlanticNavy',
+                textAlign: 'center',
+              }}
+            >
+              {t('myPlan.promptTitle')}
+            </Typography>
+            <Typography
+              variant="rubikBody"
+              sx={{
+                color: 'designSystem.surface.atlanticNavy',
+                textAlign: 'center',
+              }}
+            >
+              {t('myPlan.promptBody')}
+            </Typography>
+
+            <SignUpCta
+              disableElevation
+              onClick={() => navigate('/upload-rtd')}
+              sx={{ backgroundColor: 'designSystem.surface.atlanticNavy' }}
+            >
+              {t('myPlan.promptCta')}
+            </SignUpCta>
+          </UploadPromptCard>
         </>
       )}
     </AppContentRow>

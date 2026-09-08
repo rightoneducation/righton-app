@@ -62,7 +62,7 @@ export default function MisconceptionDetailModal({
       contentLabel={misconception?.titleCased ?? ''}
       style={{
         overlay: {
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: theme.palette.designSystem.background.scrim,
           zIndex: theme.zIndex.modal,
           display: 'flex',
           // Pinned below the top of the screen rather than centred, so the

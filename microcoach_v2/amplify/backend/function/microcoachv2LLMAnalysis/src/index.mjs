@@ -1,0 +1,631 @@
+import { loadSecret } from './util/loadsecrets.mjs';
+import { formatLearningScience } from './util/formatLearningScience.mjs';
+import { OpenAI } from 'openai';
+import { zodResponseFormat } from 'openai/helpers/zod';
+import { z } from 'zod';
+import config from './util/config.json' assert { type: 'json' };
+
+const ac = config?.analysis ?? {};
+const vc = ac.validator ?? {};
+const ws = config?.writingStyle ?? {};
+const MODEL                  = ac.model ?? 'gpt-4o';
+const VALIDATOR_MODEL        = vc.model ?? 'o3-mini';
+const VALIDATOR_SYSTEM_PROMPT = vc.systemPrompt ?? 'You are a math accuracy reviewer. Output only valid JSON array.';
+const VALIDATOR_FIELDS       = vc.fieldsToReview ?? [];
+const VALIDATOR_RULES        = vc.rules ?? [];
+const KEY_FINDINGS_MIN       = ac.keyFindingsCount?.min ?? 3;
+const KEY_FINDINGS_MAX       = ac.keyFindingsCount?.max ?? 5;
+const SUCCESS_IND_MIN        = ac.successIndicatorsPerMisconception?.min ?? 2;
+const SUCCESS_IND_MAX        = ac.successIndicatorsPerMisconception?.max ?? 4;
+const FREQUENCY_MANY_PCT     = ac.frequencyThresholds?.manyPercent ?? 60;
+const FREQUENCY_SOME_PCT     = ac.frequencyThresholds?.somePercent ?? 20;
+const PREVALENCE_WEIGHT      = ac.misconceptionScoring?.prevalenceWeight ?? 0.40;
+const CONCEPTUAL_WEIGHT      = ac.misconceptionScoring?.conceptualSeverityWeight ?? 0.30;
+const PREREQ_WEIGHT          = ac.misconceptionScoring?.prerequisiteLeverageWeight ?? 0.15;
+const FORWARD_WEIGHT         = ac.misconceptionScoring?.forwardImpactWeight ?? 0.15;
+const MIN_PREVALENCE         = ac.coreSelection?.minimumPrevalencePercent ?? 20;
+const ALT_CONCEPTUAL         = ac.coreSelection?.alternativeQualifier?.minConceptualSeverity ?? 0.8;
+const ALT_FORWARD            = ac.coreSelection?.alternativeQualifier?.minForwardImpact ?? 0.7;
+const MAX_MISCONCEPTIONS     = ac.coreSelection?.maxMisconceptions ?? 4;
+
+// ── Schema ────────────────────────────────────────────────────────────────────
+// Returns identified misconceptions (with evidence + metadata) but NO activities.
+// Activities are generated separately by microcoachLLMGeneration, one per misconception.
+
+const MisconceptionEvidence = z.object({
+  source: z.string().optional().describe('Which questions surface this — e.g. "PPQ Q3, Q5"'),
+  mostCommonError: z.string().optional().describe('The most frequent wrong answer or error pattern'),
+  sampleStudentWork: z.array(z.string()).optional().describe('1-3 brief descriptions of example student errors'),
+  aiThinkingPattern: z.string().optional().describe('The underlying cognitive pattern driving the error'),
+});
+
+const Misconception = z.object({
+  ccssStandard: z.string().describe('The CCSS standard this misconception falls under'),
+  title: z.string().describe('Short name for the misconception'),
+  description: z.string().describe('Full explanation of the misconception and why students hold it'),
+  aiReasoning: z.string().optional().describe('How the assessment data supports identifying this misconception'),
+  sourceMisconceptionId: z.string().optional().describe('The `id` of the misconception in currentSession.misconceptions that this was derived from. Omit only when this misconception is genuinely new and has no counterpart in that list.'),
+  frequency: z.enum(['many', 'some', 'few']).describe(`"many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%`),
+  isCore: z.boolean().describe('true for the single highest-priority misconception only; false for all others'),
+  occurrence: z.enum(['first', 'recurring']).describe('"recurring" only if this pattern appeared in session history'),
+  example: z.object({ incorrect: z.string(), correct: z.string() }).optional().describe('A representative student error: "incorrect" shows a typical wrong expression/answer, "correct" shows the right form. Use LaTeX for all math expressions (e.g. $\\frac{2}{3} \\div \\frac{3}{4}$, $-6x + 12$). Always wrap math in $...$ delimiters.'),
+  successIndicators: z.array(z.string()).optional().describe('Observable behaviors showing the student has overcome this misconception'),
+  evidence: MisconceptionEvidence.optional(),
+  prerequisiteGapCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `prerequisiteStandards` list (earlier-grade topics students must know first). Must be lower grade level than ccssStandard. Only include codes where a gap in that earlier skill would specifically cause this misconception."),
+  impactedObjectiveCodes: z.array(z.string()).optional().describe("CCSS codes selected from the standard's `futureDependentStandards` list (later-grade topics that build on this standard). Must be higher grade level than ccssStandard. Only include codes that this specific misconception would specifically threaten."),
+});
+
+const AnalysisResponse = z.object({
+  synthesis: z.string().describe('Overall interpretation of the current session connected to learning science'),
+  keyFindings: z.array(z.string()).optional().describe('3-5 bullet-point findings from the current session'),
+  trends: z.array(z.string()).optional().describe('Longitudinal observations vs. session history — recurring, improving, or newly emerging patterns'),
+  misconceptions: z.array(Misconception).describe('Identified misconceptions ordered by priority, grounded in the assessment data'),
+});
+
+// ── Handler ───────────────────────────────────────────────────────────────────
+
+export const handler = async (event) => {
+  const apiSecretName = process.env.API_SECRET_NAME;
+  if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
+
+  const rawClassroomData      = event?.arguments?.input?.classroomData      ?? event?.input?.classroomData;
+  const rawLearningScienceData = event?.arguments?.input?.learningScienceData ?? event?.input?.learningScienceData;
+
+  // Eval instrumentation. Additive and inert unless explicitly requested.
+  const wantTrace     = (event?.arguments?.input?.trace ?? event?.input?.trace) === true;
+  const traceSubCalls = [];
+  const recordSubCall = (label, model, completion, extra = {}) => {
+    if (!wantTrace) return;
+    traceSubCalls.push({ label, model, usage: completion?.usage ?? null, ...extra });
+  };
+
+  if (rawClassroomData == null)       throw new Error('classroomData is required');
+  if (rawLearningScienceData == null) throw new Error('learningScienceData is required');
+
+  const learningScienceData = typeof rawLearningScienceData === 'string'
+    ? JSON.parse(rawLearningScienceData)
+    : rawLearningScienceData;
+  const learningScienceSection = formatLearningScience(learningScienceData);
+
+  const { classroom, currentSession, sessionHistory, ppq, wrongAnswerDist } =
+    typeof rawClassroomData === 'string' ? JSON.parse(rawClassroomData) : rawClassroomData;
+
+  // ── Trim payload ─────────────────────────────────────────────────────────
+  // Strip individual student responses — the LLM works from aggregated
+  // question stats (classPercentCorrect per question + answer key).
+  // Wrong-answer distributions will be added at upload time in a future pass.
+  const trimAssessment = (a) => a ? ({
+    assessmentCode: a.assessmentCode,
+    type: a.type,
+    ccssStandards: a.ccssStandards,
+    classPercentCorrect: a.classPercentCorrect,
+    questions: a.questions,
+    ...(a.confidenceStats != null && { confidenceStats: a.confidenceStats }),
+  }) : null;
+
+  /**
+   * Renders the answer options with, per option, its text, how many students chose
+   * it, and which ingested misconception it was attributed to at ingest time.
+   *
+   * Option text only exists when a session has been enriched from its source
+   * document. Without it this degrades to bare letters and counts — which is what
+   * every run before this change had, and why the model used to invent values like
+   * "8/6" for what were really option letters.
+   *
+   * `dist` is `{ [questionNumber]: { [answer]: studentCount } }`.
+   */
+  const formatAnswerOptions = (questions, dist, misconceptions) => {
+    if (!Array.isArray(questions) || !questions.length) {
+      return 'No question data available for this assessment.';
+    }
+
+    // (questionNumber, letter) -> misconception title, from the ingest-time linkage
+    const attribution = new Map();
+    for (const m of misconceptions ?? []) {
+      for (const w of m.wrongAnswers ?? []) {
+        attribution.set(`${w.questionNumber}:${String(w.letter).toUpperCase()}`, m.title);
+      }
+    }
+
+    const countFor = (qNum, letter) => {
+      const answers = dist?.[qNum] ?? {};
+      // A double-marked response like "BC" counts toward both letters.
+      return Object.entries(answers)
+        .filter(([ans]) => String(ans).toUpperCase().includes(letter))
+        .reduce((n, [, c]) => n + c, 0);
+    };
+
+    return [...questions]
+      .sort((a, b) => (a.questionNumber ?? 0) - (b.questionNumber ?? 0))
+      .map((q) => {
+        const pct = q.classPercentCorrect != null
+          ? `${Math.round(q.classPercentCorrect * 100)}% correct`
+          : 'percent correct unknown';
+        const header = `Q${q.questionNumber} (correct: ${q.correctAnswer || '?'}, ${pct})`;
+
+        if (!Array.isArray(q.answerChoices) || !q.answerChoices.length) {
+          const answers = dist?.[q.questionNumber] ?? {};
+          const chosen = Object.entries(answers)
+            .sort((a, b) => b[1] - a[1])
+            .map(([ans, n]) => `${ans} — ${n} student${n === 1 ? '' : 's'}`)
+            .join('; ');
+          return `${header}\n  wrong answers chosen: ${chosen || 'none recorded'}`;
+        }
+
+        const rows = q.answerChoices.map((opt) => {
+          const letter = String(opt.letter).toUpperCase();
+          if (opt.isCorrect) return `  ${letter}. ${opt.text}  [correct answer]`;
+          const n = countFor(q.questionNumber, letter);
+          const who = attribution.get(`${q.questionNumber}:${letter}`);
+          return `  ${letter}. ${opt.text}  — ${n} student${n === 1 ? '' : 's'}` +
+                 (who ? `, attributed to "${who}"` : '');
+        });
+        return `${header}\n${rows.join('\n')}`;
+      })
+      .join('\n\n');
+  };
+
+  const trimSession = (s) => s ? ({
+    sessionLabel: s.sessionLabel,
+    weekNumber: s.weekNumber,
+    topic: s.topic,
+    ccssStandards: s.ccssStandards,
+    assessments: s.assessments?.items?.map(trimAssessment),
+    misconceptions: s.misconceptions?.items?.map((m) => ({
+      // `id` is the join key between an ingested misconception and the analysis
+      // output derived from it. Without it the only link is the title string,
+      // which the model rewords freely between runs.
+      id: m.id,
+      title: m.title,
+      ccssStandard: m.ccssStandard,
+      severity: m.severity,
+      occurrence: m.occurrence,
+      studentCount: m.studentCount,
+      studentPercent: m.studentPercent,
+      // The ingest-time option attribution. Carried so the prompt can show which
+      // wrong answers belong to which misconception, and so the count computed
+      // downstream is traceable to something the model was actually shown.
+      wrongAnswers: m.wrongAnswers,
+    })),
+  }) : null;
+
+  const payload = {
+    // `grade` is deliberately omitted. It came from a free-text UI field with no
+    // validation against the session's standards, and produced contradictory
+    // prompts (a grade-6 tag alongside high-school algebra standards). The CCSS
+    // codes already encode grade, so the model reads it from the standard itself.
+    classroom: {
+      classroomName: classroom?.classroomName,
+      subject: classroom?.subject,
+      cohortSize: classroom?.cohortSize,
+    },
+    currentSession: trimSession(currentSession),
+    sessionHistory: Array.isArray(sessionHistory) ? sessionHistory.map(trimSession) : [],
+    ppq: trimAssessment(ppq),
+    wrongAnswerDist: wrongAnswerDist ?? {},
+  };
+
+  const apiSecret = await loadSecret(apiSecretName);
+  const { openai_api, OPENAI_API_KEY, API } = JSON.parse(apiSecret);
+  const apiKey = openai_api ?? OPENAI_API_KEY ?? API;
+  if (!apiKey) throw new Error('Secret must contain openai_api, OPENAI_API_KEY, or API');
+
+  const openai = new OpenAI({ apiKey });
+
+  const userContent = `
+You are an expert K-12 math instructional coach analyzing classroom assessment data.
+
+## Writing Style Requirements
+Apply these rules to every string you generate:
+- **Titles**: ${ws.titles ?? 'Short noun phrase. No parentheticals.'}
+- **Descriptions**: ${ws.descriptions ?? 'Short sentences. Plain language. No run-ons.'}
+- **Success indicators**: ${ws.successIndicators ?? 'Start with action verb. Observable behavior only.'}
+
+## Math Formatting Requirements
+Always use LaTeX for mathematical expressions. Never use Unicode math symbols or caret/underscore ASCII notation outside of LaTeX delimiters. Wrap ALL math in LaTeX delimiters:
+- Inline math: $...$ (e.g. $\frac{2}{3} \div \frac{3}{4}$, $-6x + 12$, $x^2$)
+- Display/block math (standalone equations): $$...$$ on its own line
+Specific rules:
+- Exponents: $x^2$, $x^3$, $10^4$ (never x², x³ outside delimiters)
+- Subscripts: $x_1$, $x_2$, $x_n$ (never x₁, x₂ outside delimiters)
+- Fractions: $\frac{a}{b}$ (never a/b or a÷b for fractions)
+- Multiplication: $a \times b$ (never × outside delimiters or *)
+- Division: $a \div b$ (never ÷ outside delimiters)
+- Square root: $\sqrt{x}$ (never √x outside delimiters)
+- Inequalities: $\leq$, $\geq$, $\neq$ (never ≤ ≥ ≠ outside delimiters)
+- Approximately equal: $\approx$ (never ≈ outside delimiters)
+- Negative numbers: $-6$ (standard minus inside delimiters)
+- Pi: $\pi$ (never π outside delimiters)
+- Angle/theta: $\angle ABC$, $\theta$ (never ∠ABC, θ outside delimiters)
+- Absolute value: $|x|$ (inside delimiters)
+Plain prose text should remain as normal English — only wrap actual math expressions in delimiters. Example: "Students who multiply $\frac{2}{3}$ by the reciprocal will get $\frac{8}{9}$, but a common error is to get $\frac{4}{9}$."
+
+## Learning Science Data
+${learningScienceSection}
+
+## Classroom
+${JSON.stringify(payload.classroom, null, 2)}
+
+## Current Session (primary focus)
+${JSON.stringify(payload.currentSession, null, 2)}
+
+## Current PPQ Assessment
+${JSON.stringify(payload.ppq, null, 2)}
+
+## Answer Options and What Students Chose
+Every option on every question, how many students chose it, and — where the source
+document recorded it — which misconception that option was attributed to at ingest.
+Treat these attributions as given: they come from the printed answer key, not from
+inference. Ground your evidence and examples in this table rather than inventing
+plausible-looking values.
+${formatAnswerOptions(payload.ppq?.questions, payload.wrongAnswerDist, payload.currentSession?.misconceptions)}
+
+## Session History (prior sessions, oldest first)
+${payload.sessionHistory.length ? JSON.stringify(payload.sessionHistory, null, 2) : 'No prior sessions.'}
+
+---
+
+## Tasks
+
+**1. Synthesize** — Write a concise analysis of the current session connected to the learning science \
+progressions and components above.
+
+**2. Key Findings** — List ${KEY_FINDINGS_MIN}-${KEY_FINDINGS_MAX} bullet points about what the current session data reveals (lowest-scoring \
+questions, patterns in errors, notable student performance).
+
+**3. Trends** — If session history exists, compare to prior sessions: which misconceptions are recurring, \
+which have improved, which are newly emerging.
+
+**4. Misconceptions** — Identify ALL significant misconceptions evidenced by the assessment data:
+- Ground each misconception in specific question numbers and performance rates
+- evidence.source: cite specific question numbers (e.g. "PPQ Q3, Q5")
+- sourceMisconceptionId: set this to the \`id\` of the entry in \`currentSession.misconceptions\` that this misconception is derived from, even if you have reworded its title or broadened its description. Omit the field ONLY when the misconception has no counterpart in that list. Never invent an id.
+- successIndicators: ${SUCCESS_IND_MIN}-${SUCCESS_IND_MAX} specific, observable student behaviors that demonstrate mastery
+
+**Core Selection** — Set \`isCore: true\` on the single highest-leverage misconception using this weighted model:
+
+Composite Score = (Prevalence × ${PREVALENCE_WEIGHT}) + (Conceptual Severity × ${CONCEPTUAL_WEIGHT}) + (Prerequisite Leverage × ${PREREQ_WEIGHT}) + (Forward Impact × ${FORWARD_WEIGHT})
+
+Scoring guidance for each dimension (normalize each to 0–1):
+- **Prevalence** (${PREVALENCE_WEIGHT * 100}% weight): % of students affected. The most influential factor but not the only one.
+- **Conceptual Severity** (${CONCEPTUAL_WEIGHT * 100}% weight): 1.0 = structural conceptual misunderstanding (student has the wrong mental model of the math); 0.6 = mixed conceptual and procedural; 0.3 = procedural slip or execution error only. Conceptual errors should outrank procedural ones even at slightly lower prevalence.
+- **Prerequisite Leverage** (${PREREQ_WEIGHT * 100}% weight): Does this misconception reveal a missing foundational skill? Does fixing it unblock multiple downstream standards? Higher if yes.
+- **Forward Impact** (${FORWARD_WEIGHT * 100}% weight): Will this error severely interfere with upcoming must-master content or cascade across the next 2–3 standards? Higher if yes.
+
+**Core eligibility**: The top-ranked misconception must meet AT LEAST ONE of:
+- Prevalence ≥ ${MIN_PREVALENCE}% of students
+- OR: Conceptual Severity ≥ ${ALT_CONCEPTUAL} AND Forward Impact ≥ ${ALT_FORWARD}
+
+**Tiebreakers**: Prefer conceptual over procedural errors; prefer broader downstream impact.
+
+**Filter**: Exclude patterns affecting fewer than ${MIN_PREVALENCE}% of students UNLESS they meet the alternative qualifier above. Exclude patterns that are clearly one-time careless mistakes with no repeatable reasoning error.
+
+## Confidence Signal Interpretation
+PPQ confidence ratings (1–5 per student per question) are available when the PPQ assessment includes a \`confidenceStats\` array. Use them as modifiers to the existing scoring dimensions — not as a separate dimension.
+
+Per-question confidence aggregates provided (when present):
+- avgConfidenceCorrect: avg confidence of students who answered correctly
+- avgConfidenceIncorrect: avg confidence of students who answered incorrectly
+- highConfWrongPct: fraction of students with confidence ≥4 who answered wrong
+
+How to apply them:
+
+**Adjusting Conceptual Severity:**
+- highConfWrongPct ≥ 0.25 on a question: students believe they understand but have the wrong mental model → strong structural misconception signal → raise conceptualSeverity toward 1.0
+- highConfWrongPct < 0.10 with high error rate: students know they don't know → likely procedural/execution gap → conceptualSeverity stays lower (0.3–0.5)
+
+**Adjusting effective Prevalence:**
+- Low avgConfidenceCorrect (< 2.5) on a question: correct answers are likely guesses, not mastery. Discount that question's correct rate when estimating true prevalence of the gap.
+- This means a 60% correct rate with avgConfidenceCorrect = 2.0 may represent a weaker foundation than a 50% correct rate with avgConfidenceCorrect = 4.2.
+
+**Tiebreakers with confidence:**
+When two misconceptions have similar composite scores, prefer the one with higher highConfWrongPct — it represents students who think they are right but aren't, making it both harder to self-correct and more instructionally urgent.
+
+**Secondary misconceptions**: Must exceed the minimum threshold, must be meaningfully distinct from the core (not a minor variant of it), and must represent a separate reasoning error. Set \`isCore: false\` on all secondary misconceptions. Cap total at ${MAX_MISCONCEPTIONS} misconceptions.
+
+- frequency: "many" if >${FREQUENCY_MANY_PCT}% of class affected, "some" if ${FREQUENCY_SOME_PCT}–${FREQUENCY_MANY_PCT}%, "few" if <${FREQUENCY_SOME_PCT}%
+- example: provide a concrete, representative student error. "incorrect" is a typical wrong expression or answer students write; "correct" is the right form with minimal annotation (e.g. "−6x + 12" not a full solution). Apply the Math Formatting Requirements above.
+- occurrence: "recurring" ONLY if the same pattern appears in session history misconceptions; otherwise "first"
+- prerequisiteGapCodes: Look at the standard's 'prerequisiteStandards' list in the learning science data — these are EARLIER-GRADE topics (lower grade level than ccssStandard). Select ONLY codes where a gap in that earlier skill would DIRECTLY cause this specific error pattern. Ask yourself: "Would a student who hasn't mastered this prerequisite make exactly this mistake?" Only include codes that clearly pass this test.
+- impactedObjectiveCodes: Look at the standard's 'futureDependentStandards' list in the learning science data — these are LATER-GRADE topics (higher grade level than ccssStandard). Select ONLY codes that this specific misconception would DIRECTLY threaten. Ask yourself: "Would a student carrying this misunderstanding specifically struggle with this future topic?" Only include codes that clearly pass this test.
+
+Return JSON matching the schema.
+`.trim();
+
+  // ── Distractor expansion helpers ─────────────────────────────────────────
+  const parseQuestionNumbers = (source = '') => {
+    const nums = new Set();
+    for (const m of source.matchAll(/Q(\d+)/gi)) nums.add(parseInt(m[1], 10));
+    return [...nums].sort((a, b) => a - b);
+  };
+
+  const enrichMisconception = async (misconception, ppqQuestions = []) => {
+    const qNums = parseQuestionNumbers(misconception.evidence?.source ?? '');
+    const relevantQs = ppqQuestions.filter((q) => qNums.includes(q.questionNumber));
+    const correctLines = relevantQs
+      .map((q) => `Q${q.questionNumber}: correct answer = ${q.correctAnswer}`)
+      .join('\n');
+
+    // Prefer the misconception's own ingest-time option attribution over
+    // re-deriving questions from `evidence.source` free text.
+    const linked = (misconception.wrongAnswers ?? []).map(
+      (w) => ({ questionNumber: w.questionNumber, letter: String(w.letter).toUpperCase() })
+    );
+
+    // Collect the wrong answers to explain, with their real option text where the
+    // session has been enriched from its source document.
+    let wrongAnswerLines = [];
+    const optionText = (qNum, letter) => {
+      const q = ppqQuestions.find((x) => x.questionNumber === qNum);
+      return q?.answerChoices?.find((o) => String(o.letter).toUpperCase() === letter)?.text ?? null;
+    };
+    const countFor = (qNum, letter) =>
+      Object.entries(wrongAnswerDist?.[qNum] ?? {})
+        .filter(([ans]) => String(ans).toUpperCase().includes(letter))
+        .reduce((n, [, c]) => n + c, 0);
+
+    if (linked.length) {
+      wrongAnswerLines = linked.map(({ questionNumber, letter }) => {
+        const text = optionText(questionNumber, letter);
+        const n = countFor(questionNumber, letter);
+        return `Q${questionNumber} option ${letter}${text ? `: "${text}"` : ''} — chosen by ${n} student${n === 1 ? '' : 's'}`;
+      });
+    } else if (wrongAnswerDist && qNums.length) {
+      const combined = {};
+      for (const qn of qNums) {
+        for (const [ans, count] of Object.entries(wrongAnswerDist[qn] ?? {})) {
+          combined[`${qn}:${ans}`] = count;
+        }
+      }
+      wrongAnswerLines = Object.entries(combined)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4)
+        .map(([key, n]) => {
+          const [qn, ans] = key.split(':');
+          const text = optionText(Number(qn), String(ans).toUpperCase());
+          return `Q${qn} option ${ans}${text ? `: "${text}"` : ''} — chosen by ${n} student${n === 1 ? '' : 's'}`;
+        });
+    }
+
+    // The old version of this block told the model that if the raw value was a
+    // letter it should "infer the likely mathematical expression" — with no option
+    // text anywhere in the pipeline, that meant inventing one, and real runs
+    // produced four mutually inconsistent answer domains in a single call. When
+    // option text is present, use it verbatim; when it is absent, say so rather
+    // than asking for a guess.
+    const wrongAnswerBlock = wrongAnswerLines.length
+      ? `Students chose these wrong answers:\n${wrongAnswerLines.join('\n')}\n\nFor each one, explain the likely thinking pattern or conceptual error. Set the "answer" field to the option text shown above, quoted as given. Where no option text is shown, use the option letter itself — do not invent a mathematical expression.`
+      : `No wrong answer data is available. Omit the "wrongAnswerExplanations" array (return []).`;
+
+    const prompt = `You are a math education expert analyzing a student misconception.
+
+Misconception: "${misconception.title}"
+${misconception.description ? `Description: ${misconception.description}\n` : ''}
+CCSS Standard: ${misconception.ccssStandard ?? 'unknown'}
+${correctLines ? `Relevant questions and correct answers:\n${correctLines}` : ''}
+
+## Task 1 — Correct answer solution
+Write a worked solution showing how to arrive at the correct answer for this type of problem. Use 2–4 concise steps. Each step should be a plain string. Use LaTeX for all math expressions ($...$ for inline). If multiple question numbers are relevant and they share the same solution path, write one unified solution.
+
+## Task 2 — Wrong answer explanations
+${wrongAnswerBlock}
+
+Return a JSON object with exactly these keys:
+{
+  "correctAnswerSolution": ["step 1 text", "step 2 text", ...],
+  "wrongAnswerExplanations": [{ "answer": "...", "explanation": "..." }, ...]
+}`;
+
+    try {
+      const result = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        response_format: { type: 'json_object' },
+        max_tokens: 900,
+        temperature: 0.3,
+      });
+      const content = result.choices[0]?.message?.content ?? '{}';
+      const parsed = JSON.parse(content);
+      recordSubCall('enrich-misconception', 'gpt-4o-mini', result, { fellBack: false });
+      return {
+        wrongAnswerExplanations: Array.isArray(parsed.wrongAnswerExplanations) ? parsed.wrongAnswerExplanations : [],
+        correctAnswerSolution: Array.isArray(parsed.correctAnswerSolution) ? parsed.correctAnswerSolution : [],
+      };
+    } catch (err) {
+      console.warn('[microcoachLLMAnalysis] enrichMisconception failed:', err?.message);
+      recordSubCall('enrich-misconception', 'gpt-4o-mini', null, {
+        fellBack: true, reason: err?.message ?? 'error',
+      });
+      return { wrongAnswerExplanations: [], correctAnswerSolution: [] };
+    }
+  };
+
+  const validateMathContent = async (misconceptions) => {
+    const payload = misconceptions.map((m, i) => ({
+      index: i,
+      ccssStandard: m.ccssStandard,
+      description: m.description,
+      exampleIncorrect: m.example?.incorrect,
+      exampleCorrect: m.example?.correct,
+      mostCommonError: m.evidence?.mostCommonError,
+      correctAnswerSolution: m.correctAnswerSolution,
+      wrongAnswerExplanations: m.wrongAnswerExplanations,
+    }));
+
+    const fieldsBlock = VALIDATOR_FIELDS.length
+      ? VALIDATOR_FIELDS.map((f, i) => `${i + 1}. ${f}`).join('\n')
+      : '';
+    const rulesBlock = VALIDATOR_RULES.length
+      ? VALIDATOR_RULES.map((r) => `- ${r}`).join('\n')
+      : '';
+
+    const validatorPrompt = [
+      'You are a K-12 math accuracy reviewer. You will receive a list of misconception descriptions',
+      'and associated mathematical content. Your job is to identify and correct any mathematical errors.',
+      '',
+      ...(fieldsBlock ? ['For each item, review:', fieldsBlock, ''] : []),
+      ...(rulesBlock ? ['Rules:', rulesBlock, ''] : []),
+      'Use LaTeX for all mathematical expressions ($...$ for inline, $$...$$ for display). Never use Unicode math symbols or plain ASCII math notation.',
+      '',
+      'Input:',
+      JSON.stringify(payload, null, 2),
+    ].join('\n');
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: VALIDATOR_MODEL,
+        messages: [
+          { role: 'system', content: VALIDATOR_SYSTEM_PROMPT },
+          { role: 'user', content: validatorPrompt },
+        ],
+      });
+      const raw = completion.choices[0]?.message?.content ?? '[]';
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) throw new Error('Validator returned non-array');
+      recordSubCall('validate-math-content', VALIDATOR_MODEL, completion, { fellBack: false });
+      return parsed;
+    } catch (err) {
+      console.warn('[microcoachLLMAnalysis] validateMathContent failed:', err?.message);
+      recordSubCall('validate-math-content', VALIDATOR_MODEL, null, {
+        fellBack: true, reason: err?.message ?? 'error',
+      });
+      return [];
+    }
+  };
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: MODEL,
+      messages: [
+        { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
+        { role: 'user', content: userContent },
+      ],
+      response_format: zodResponseFormat(AnalysisResponse, 'analysisResponse'),
+    });
+
+    const raw = completion.choices[0]?.message?.content;
+    if (!raw) throw new Error('Empty completion content');
+
+    recordSubCall('analysis-main', MODEL, completion, { fellBack: false });
+
+    const structured = AnalysisResponse.parse(JSON.parse(raw));
+
+    // Carry the ingest-time option attribution onto each analysis misconception via
+    // the id it claims to derive from. The analysis model never invents this link —
+    // it only says which ingested misconception it reworded, and the options come
+    // along. A misconception the model marked as genuinely new has no attribution,
+    // and correctly gets an empty list.
+    const ingestLinks = new Map(
+      (payload.currentSession?.misconceptions ?? [])
+        .filter((m) => m.id)
+        .map((m) => [m.id, m.wrongAnswers ?? []])
+    );
+    let linkedCount = 0;
+    structured.misconceptions = structured.misconceptions.map((m) => {
+      const wrongAnswers = ingestLinks.get(m.sourceMisconceptionId) ?? [];
+      if (wrongAnswers.length) linkedCount += 1;
+      return { ...m, wrongAnswers };
+    });
+    console.log(
+      `[microcoachLLMAnalysis] option attribution carried to ${linkedCount}/${structured.misconceptions.length} misconceptions ` +
+      `(${ingestLinks.size} ingested available)`
+    );
+
+    // Secondary pass: enrich each misconception with solution steps + distractor expansions
+    const ppqQs = payload.ppq?.questions ?? [];
+    const enrichments = await Promise.all(
+      structured.misconceptions.map((m) => enrichMisconception(m, ppqQs))
+    );
+    structured.misconceptions = structured.misconceptions.map((m, i) => ({
+      ...m,
+      wrongAnswerExplanations: enrichments[i]?.wrongAnswerExplanations ?? [],
+      correctAnswerSolution: enrichments[i]?.correctAnswerSolution ?? [],
+    }));
+
+    // Third pass: validate and correct math-critical fields
+    const rawValidatedItems = await validateMathContent(structured.misconceptions);
+    // The merge below is positional, so a short or reordered validator response would
+    // graft one misconception's corrected math onto another. Only trust an exact-length
+    // reply; anything else is discarded and the originals stand.
+    const validatedItems =
+      rawValidatedItems.length === structured.misconceptions.length ? rawValidatedItems : [];
+    if (rawValidatedItems.length && !validatedItems.length) {
+      console.warn(
+        `[microcoachLLMAnalysis] validator returned ${rawValidatedItems.length} items for ` +
+        `${structured.misconceptions.length} misconceptions — corrections discarded`
+      );
+    }
+    let correctionCount = 0;
+    structured.misconceptions = structured.misconceptions.map((m, i) => {
+      const v = validatedItems[i];
+      if (!v) return m;
+      // Only reconstruct `example` / `evidence` when there is something to put in
+      // them. Building them unconditionally gave misconceptions that legitimately
+      // had neither an `example: {}` / `evidence: {}`, which serialises as an empty
+      // object and reads downstream as "present but blank" rather than "absent".
+      const nextExample =
+        (v.exampleIncorrect ?? m.example?.incorrect) != null ||
+        (v.exampleCorrect ?? m.example?.correct) != null
+          ? {
+              incorrect: v.exampleIncorrect ?? m.example?.incorrect,
+              correct: v.exampleCorrect ?? m.example?.correct,
+            }
+          : m.example;
+
+      const nextMostCommonError = v.mostCommonError ?? m.evidence?.mostCommonError;
+      const nextEvidence =
+        m.evidence != null || nextMostCommonError != null
+          ? { ...m.evidence, mostCommonError: nextMostCommonError }
+          : m.evidence;
+
+      const corrected = {
+        ...m,
+        description: v.description ?? m.description,
+        example: nextExample,
+        evidence: nextEvidence,
+        correctAnswerSolution: v.correctAnswerSolution ?? m.correctAnswerSolution,
+        wrongAnswerExplanations: v.wrongAnswerExplanations ?? m.wrongAnswerExplanations,
+      };
+      const changed =
+        corrected.description !== m.description ||
+        corrected.example?.incorrect !== m.example?.incorrect ||
+        corrected.example?.correct !== m.example?.correct ||
+        corrected.evidence?.mostCommonError !== m.evidence?.mostCommonError;
+      if (changed) correctionCount++;
+      return corrected;
+    });
+    if (correctionCount > 0) {
+      console.log(`[microcoachLLMAnalysis] validator corrected ${correctionCount} misconception(s)`);
+    }
+
+    if (wantTrace) {
+      const stds = learningScienceData?.standards ?? [];
+      return JSON.stringify({
+        ...structured,
+        _trace: {
+          resolvedPrompt: userContent,
+          model: MODEL,
+          graphStandardCodes: stds.map((s) => s.code),
+          graphUnits: {
+            standards: stds.length,
+            learningComponents: stds.reduce((n, s) => n + (s.learningComponents?.length ?? 0), 0),
+            prerequisites: stds.reduce((n, s) => n + (s.prerequisiteStandards?.length ?? 0), 0),
+            downstream: stds.reduce((n, s) => n + (s.futureDependentStandards?.length ?? 0), 0),
+            lvnFactors: stds.reduce((n, s) => n + (s.lvnFactors?.length ?? 0), 0),
+          },
+          learningScienceSectionChars: learningScienceSection.length,
+          emittedStandardCodes: structured.misconceptions?.map((m) => m.ccssStandard) ?? [],
+          subCalls: traceSubCalls,
+        },
+      });
+    }
+    return JSON.stringify(structured);
+  } catch (error) {
+    console.error('[microcoachLLMAnalysis] Error', {
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    throw error;
+  }
+};

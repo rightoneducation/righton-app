@@ -12,8 +12,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your RightOn! verification code",
+    "emailVerificationMessage": "Your verification code is:<h1>{####}</h1>Mistakes are where thinking happens!<br /><br />Team RightOn",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -68,7 +68,7 @@
         ]
       }
     ],
-    "userPoolGroups": false,
+    "userPoolGroups": true,
     "adminQueries": false,
     "triggers": {
       "PostAuthentication": [
@@ -80,13 +80,13 @@
     "authProvidersUserPool": [
       "Google"
     ],
-    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
-    "authProviders": [],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\",\"given_name\":\"given_name\",\"family_name\":\"family_name\"}}]",
     "parentStack": {
       "Ref": "AWS::StackId"
     },
     "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostAuthentication\",\n    \"lambdaFunctionName\": \"microcoachv2bb9ce5a2PostAuthentication\"\n  }\n]",
-    "permissions": []
+    "permissions": [],
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
+    "authProviders": []
   }
 }

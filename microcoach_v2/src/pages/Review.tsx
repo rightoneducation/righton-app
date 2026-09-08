@@ -54,6 +54,7 @@ export default function Review({ screenSize }: ScreenSizeProps) {
 
   const handleTabSelect = (tabId: FlowTabId) => {
     if (tabId === 'prepare') navigate('/myplan');
+    if (tabId === 'reflect') navigate('/reflect');
   };
 
   const handleAction = () => {

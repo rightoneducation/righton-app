@@ -27,7 +27,6 @@ import {
   useCentralDataState,
   useCentralDataDispatch,
 } from '../hooks/context/useCentralDataContext';
-import EditModal from '../components/modal/EditModal';
 import DeleteModal from '../components/modal/DeleteModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import EditToolTip from '../components/tooltips/EditToolTip';
@@ -36,12 +35,14 @@ interface ViewGameProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: () => void;
+  handleLibraryInit: (isInit: boolean) => void;
 }
 
 export default function ViewGame({
   screenSize,
   fetchElement,
   fetchElements,
+  handleLibraryInit,
 }: ViewGameProps) {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -53,7 +54,6 @@ export default function ViewGame({
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [draftGame, setDraftGame] = useState<IGameTemplate | null>(null);
   const questions = centralData.selectedGame?.game?.questionTemplates;
@@ -100,14 +100,7 @@ export default function ViewGame({
   };
 
   const handleEditGame = () => {
-    if (
-      centralData.selectedGame?.game?.publicPrivateType ===
-      PublicPrivateType.PUBLIC
-    ) {
-      setIsModalOpen(true);
-    } else {
-      handleProceedToEdit();
-    }
+    handleProceedToEdit();
   };
 
   const handleProceedToDelete = async () => {
@@ -123,12 +116,12 @@ export default function ViewGame({
           ) ?? [];
         const { game } = centralData.selectedGame;
         if (gameQuestions.length > 0 && game && game.publicPrivateType) {
-          const gameQuestionPromises = gameQuestions.map(async (questionId) => {
+          const gameQuestionPromises = gameQuestions.map((questionId) =>
             apiClients.gameQuestions.deleteGameQuestions(
               game.publicPrivateType,
               questionId,
-            );
-          });
+            ),
+          );
           await Promise.all(gameQuestionPromises);
         }
         await apiClients.gameTemplate.deleteGameTemplate(
@@ -142,7 +135,11 @@ export default function ViewGame({
     setIsDeleteModalOpen(false);
     centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: null });
     fetchElements();
-    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: null });
+    // The library buckets (draft/private) are not written by the explore fetch above,
+    // and nothing else re-arms this latch, so My Library would keep rendering the
+    // deleted game until a reload or a Games<->Questions toggle.
+    handleLibraryInit(true);
+    centralDataDispatch({ type: 'SET_SEARCH_TERMS', payload: '' });
     navigate('/');
   };
 
@@ -158,7 +155,7 @@ export default function ViewGame({
   };
 
   const handleCloseEditModal = () => {
-    setIsModalOpen(false);
+    setIsDeleteModalOpen(false);
   };
 
   // game questions index handlers
@@ -178,14 +175,8 @@ export default function ViewGame({
     <CreateGameMainContainer>
       <CreateGameBackground />
       <ModalBackground
-        isModalOpen={isModalOpen || isDeleteModalOpen}
+        isModalOpen={isDeleteModalOpen}
         handleCloseModal={handleCloseEditModal}
-      />
-      <EditModal
-        isModalOpen={isModalOpen}
-        gameQuestion={GameQuestionType.GAME}
-        setIsModalOpen={setIsModalOpen}
-        handleProceedToEdit={handleProceedToEdit}
       />
       <DeleteModal
         isModalOpen={isDeleteModalOpen}

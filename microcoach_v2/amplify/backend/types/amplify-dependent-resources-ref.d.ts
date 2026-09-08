@@ -17,11 +17,80 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "microcoachv2GetLearningScience": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2IngestPPQ": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2InitialEvaluator": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2LLMAnalysis": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2LLMVerify": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2NextStepOption": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2RegenEvaluator": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2TeacherUpload": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2TeacherUploadGen": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "microcoachv2bb9ce5a2PostAuthentication": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
       "Name": "string",
+      "Region": "string"
+    }
+  },
+  "storage": {
+    "microcoachdocs": {
+      "BucketName": "string",
       "Region": "string"
     }
   }

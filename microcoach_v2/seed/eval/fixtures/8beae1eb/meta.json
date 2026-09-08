@@ -1,0 +1,10 @@
+{
+  "sessionId": "8beae1eb-42e7-48e9-aca6-aacc3b2e6461",
+  "provenance": {
+    "outputsWrittenTo": "main",
+    "kgLogsFoundIn": [
+      "main"
+    ],
+    "runMode": "automated (TeacherUpload -> TeacherUploadGen)"
+  }
+}

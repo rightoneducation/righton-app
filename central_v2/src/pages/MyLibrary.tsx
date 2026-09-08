@@ -86,7 +86,6 @@ export default function MyLibrary({
   const [originalSelectedQuestion, setOriginalSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(
     LibraryTabEnum.PUBLIC,
@@ -170,11 +169,7 @@ export default function MyLibrary({
   };
 
   const handleEditButtonClick = () => {
-    if (selectedQuestion?.publicPrivateType === PublicPrivateType.PUBLIC) {
-      setIsEditModalOpen(true);
-    } else {
-      handleEditQuestion();
-    }
+    handleEditQuestion();
   };
 
   const handleDeleteQuestion = async () => {
@@ -212,7 +207,6 @@ export default function MyLibrary({
   };
 
   const handleCloseModal = () => {
-    setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
   };
 
@@ -220,14 +214,8 @@ export default function MyLibrary({
     <MyLibraryMainContainer>
       <MyLibraryBackground />
       <ModalBackground
-        isModalOpen={isEditModalOpen || isDeleteModalOpen}
+        isModalOpen={isDeleteModalOpen}
         handleCloseModal={handleCloseModal}
-      />
-      <EditModal
-        isModalOpen={isEditModalOpen}
-        gameQuestion={GameQuestionType.QUESTION}
-        setIsModalOpen={setIsEditModalOpen}
-        handleProceedToEdit={handleEditQuestion}
       />
       <EditModal
         isModalOpen={isDeleteModalOpen}

@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
+import { ScreenSize } from '../MicroCoachModels';
 
 const rowRadius = 16;
 const chipRadius = 13;
@@ -131,5 +132,33 @@ export const RowActionBar = styled(Box)(({ theme }) => ({
   flexWrap: 'wrap',
   alignItems: 'center',
   gap: theme.sizing.space2,
+  width: '100%',
+}));
+
+/**
+ * The upload prompt closing My Plan. Figma: 1126x328 rx 32 in sky blue — the
+ * full content column, so it reads as the page's next action rather than
+ * another item in the list.
+ */
+export const UploadPromptCard = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.sizing.space4,
+  width: '100%',
+  padding: theme.sizing.space6,
+  borderRadius: 32,
+  backgroundColor: theme.palette.designSystem.surface.skyBlue,
+  boxSizing: 'border-box',
+}));
+
+/** The three stat columns above the prompt; they stack below LARGE. */
+export const UploadStatRow = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
+  display: 'grid',
+  gridTemplateColumns:
+    screenSize === ScreenSize.LARGE ? 'repeat(3, 1fr)' : '1fr',
+  gap: theme.sizing.space6,
   width: '100%',
 }));

@@ -163,10 +163,6 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
               <OwnerTagHeader>Last Modified:</OwnerTagHeader>
               <OwnerTagBody>{displayLastModified}</OwnerTagBody>
             </OwnerTagSubContainer>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Times Played:</OwnerTagHeader>
-              <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
-            </OwnerTagSubContainer>
           </OwnerTagTextContainer>
         </>
       ) : (
@@ -197,12 +193,6 @@ export default function OwnerTag({ screenSize, isViewGame }: OwnerTagProps) {
             <OwnerTagSubContainer screenSize={screenSize}>
               <OwnerTagHeader>Created By:</OwnerTagHeader>
               <OwnerNamePill ownerName={displayCreatedName} />
-            </OwnerTagSubContainer>
-          </OwnerTagSubGridContainer>
-          <OwnerTagSubGridContainer item xs={6}>
-            <OwnerTagSubContainer screenSize={screenSize}>
-              <OwnerTagHeader>Times Played:</OwnerTagHeader>
-              <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
             </OwnerTagSubContainer>
           </OwnerTagSubGridContainer>
         </>

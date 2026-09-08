@@ -816,12 +816,22 @@ export default function useCentralDataManager({
     }
   };
 
-  const isUserProfileComplete = (profile: IUserProfile): boolean => {
-    return Object.entries(profile).every(([key, value]) => {
-      if (key === 'password') return true;
+  // Only the identity fields decide whether a session is usable. Everything else on
+  // the profile -- title, the ID-verification images, the profile picture -- is
+  // display data that UserParser coalesces to '' when absent, and requiring all of it
+  // meant a single blank optional field logged the user out on every page load.
+  const requiredProfileFields: (keyof IUserProfile)[] = [
+    'id',
+    'dynamoId',
+    'cognitoId',
+    'email',
+    'userName',
+  ];
+  const isUserProfileComplete = (profile: IUserProfile): boolean =>
+    requiredProfileFields.every((key) => {
+      const value = profile[key];
       return value !== undefined && value !== null && value !== '';
     });
-  };
 
   const fetchElement = async (
     type: GameQuestionType,
@@ -1168,13 +1178,24 @@ export default function useCentralDataManager({
     navigate('/');
   };
 
+  // A restore that cannot be completed is not a logout. Report LOGGEDOUT and leave
+  // storage intact so a reload can recover; only handleLogOut, on an explicit user
+  // action, destroys tokens.
+  const reportRestoreFailed = () => {
+    centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
+    centralDataDispatch({
+      type: 'SET_USER_STATUS',
+      payload: UserStatusType.LOGGEDOUT,
+    });
+  };
+
   const validateUser = async () => {
     const status = await apiClients.auth.verifyAuth();
     if (status) {
       const currentSession = await apiClients.auth.getCurrentSession();
       const cognitoId = currentSession?.userSub;
       if (!cognitoId) {
-        handleLogOut();
+        reportRestoreFailed();
         return;
       }
       const localProfile =
@@ -1184,7 +1205,7 @@ export default function useCentralDataManager({
           !isUserProfileComplete(localProfile) ||
           cognitoId !== localProfile.cognitoId
         ) {
-          handleLogOut();
+          reportRestoreFailed();
           return;
         }
         // if there is a local profile
@@ -1237,17 +1258,7 @@ export default function useCentralDataManager({
         return;
       }
     }
-    centralDataDispatch({
-      type: 'SET_USER_STATUS',
-      payload: UserStatusType.LOADING,
-    });
-    await apiClients.centralDataManager?.signOut();
-    apiClients.centralDataManager?.clearLocalUserProfile();
-    centralDataDispatch({ type: 'CLEAR_USER_PROFILE' });
-    centralDataDispatch({
-      type: 'SET_USER_STATUS',
-      payload: UserStatusType.LOGGEDOUT,
-    });
+    reportRestoreFailed();
   };
 
   const deleteQuestionTemplate = async (

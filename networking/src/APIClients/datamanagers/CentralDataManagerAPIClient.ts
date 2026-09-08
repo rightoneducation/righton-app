@@ -225,28 +225,22 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return false;
   };
 
-  public deleteQuestionTemplate = async (type: PublicPrivateType, questionId: string) => {
+  public deleteQuestionTemplate = async (type: PublicPrivateType, questionId: string): Promise<boolean> => {
     try {
-      // need to delete the question template from the join table first
+      // Join rows have to go first, but both paths end in the same template delete.
+      // This whole chain MUST be awaited: callers (central_v2 MyLibrary/ExploreQuestions)
+      // refetch the library on the line after `await deleteQuestionTemplate(...)`, so a
+      // floating promise here means the refetch starts two round trips ahead of the delete
+      // and reliably returns the question that was just deleted.
       const gameQuestionIds = await this.questionTemplateAPIClient.getQuestionTemplateJoinTableIds( type, questionId);
       if (gameQuestionIds && gameQuestionIds.length > 0) {
-        const deletedGameQuestions = gameQuestionIds.map(async (gameQuestionId) => {
-          await this.gameQuestionsAPIClient.deleteGameQuestions(type, gameQuestionId);
-        });
-        Promise.all(deletedGameQuestions).then(() =>{
-          // Now delete the question template itself
-          const response = this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
-          return response;
-        })
-        .catch((error) => {
-          throw new Error(`Failed to delete game questions associated with question template: ${error.message}`);
-        });
-      } else {
-        // If there are no game questions associated with the question template, delete the question template directly
-        const response = this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
-        return response;
+        await Promise.all(
+          gameQuestionIds.map((gameQuestionId) =>
+            this.gameQuestionsAPIClient.deleteGameQuestions(type, gameQuestionId),
+          ),
+        );
       }
-      return;
+      return await this.questionTemplateAPIClient.deleteQuestionTemplate(type, questionId);
     } catch (error: any) {
         throw new Error(`Failed to delete question template: ${error.message}`);
     }

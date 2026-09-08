@@ -209,6 +209,12 @@ export const buildGameTemplate = (
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
   questionTemplateCCSS?: string[],
+  // Defaults to 0 so new games and clones are unaffected. Only the
+  // public<->private recreate passes a value (see handleSaveGame).
+  timesPlayed = 0,
+  // Supplied only by the public<->private recreate so the game keeps its
+  // identity. Omitted elsewhere, letting AppSync mint a fresh uuid.
+  id?: string,
 ): GameTemplate => {
   let questionTemplatesOrder: any[] = [];
   if (draftQuestionsList.length > 0) {
@@ -251,7 +257,8 @@ export const buildGameTemplate = (
         '.',
       )[3] ?? '',
     imageUrl: gameImgUrl,
-    timesPlayed: 0,
+    timesPlayed,
+    ...(id ? { id } : {}),
   };
   return gameTemplate;
 };

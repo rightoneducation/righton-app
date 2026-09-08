@@ -20,9 +20,9 @@ const root = resolve(__dirname, '..');
 const master = JSON.parse(readFileSync(resolve(root, 'prompt-config.json'), 'utf8'));
 
 const lambdas = [
-  { name: 'microcoachLLMAnalysis',    key: 'analysis' },
-  { name: 'microcoachNextStepOption', key: 'nextStepOption' },
-  { name: 'microcoachIngestPPQ',      key: 'ingestPPQ' },
+  { name: 'microcoachv2LLMAnalysis',    key: 'analysis' },
+  { name: 'microcoachv2NextStepOption', key: 'nextStepOption' },
+  { name: 'microcoachv2IngestPPQ',      key: 'ingestPPQ' },
 ];
 
 let ok = 0;

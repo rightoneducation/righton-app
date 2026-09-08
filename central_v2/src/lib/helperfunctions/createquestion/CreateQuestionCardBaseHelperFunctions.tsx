@@ -94,8 +94,15 @@ export const updateDQwithImageURL = (
 export const updateDQwithTitle = (
   draftQuestion: CentralQuestionTemplateInput,
   inputTitle: string,
+  // Typing the title should not re-decide completeness on every keystroke -- the
+  // caller passes false while the user is still typing and true once the debounce
+  // settles. The sibling helpers (image, imageUrl, ccss) are discrete actions and
+  // always evaluate.
+  evaluateCompleteness = true,
 ): CentralQuestionTemplateInput => {
   if (
+    evaluateCompleteness &&
+    inputTitle.length > 0 &&
     (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl) &&
     draftQuestion.questionCard.ccss.length > 0 &&
     draftQuestion.questionCard.ccss !== 'CCSS'

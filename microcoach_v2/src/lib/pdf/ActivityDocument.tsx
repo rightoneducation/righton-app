@@ -4,11 +4,12 @@ import { IActivity, IMisconception } from '../PipelineModels';
 import { pdfStyles } from './pdfTheme';
 import {
   ActivitySection,
+  StepLabels,
   BeforeClassSection,
   NumberedStep,
 } from './ActivityPdfSections';
 
-export interface ActivityDocumentLabels {
+export interface ActivityDocumentLabels extends StepLabels {
   subtitle: string;
   beforeClass: string;
   activity: string;
@@ -42,7 +43,9 @@ export default function ActivityDocument({
     {
       key: 'activity',
       heading: labels.activity,
-      body: <ActivitySection content={phases?.activity ?? null} />,
+      body: (
+        <ActivitySection content={phases?.activity ?? null} labels={labels} />
+      ),
       present: Boolean(phases?.activity),
     },
     {

@@ -1,0 +1,104 @@
+{
+  "writingStyle": {
+    "description": "Language quality guidance injected into all LLM prompts",
+    "titles": "3-6 words. Plain noun phrase that names the specific error. No parentheticals or clarifications inside parentheses. Write the error directly: 'Did Not Flip the Second Fraction' — never 'Did Not Flip the Second Fraction (no reciprocal)'.",
+    "descriptions": "2-3 sentences maximum. Keep it concrete and specific. Do NOT start every sentence with 'Students' — vary the subject. Good openers: the error itself ('Slope and intercept get swapped...'), a conditional ('When reading y = mx + b, the two numbers...'), or the consequence ('The result is...'). One idea per sentence. No hedging words (often, typically, usually, tend to). Do not restate the same idea in different words. Write for a classroom teacher, not a researcher.",
+    "instructionalMoves": "Write in short, scannable chunks. Use plain conversational language — imagine a teacher reading this quickly between classes. Break steps into separate sentences. Avoid dense paragraphs. No academic or clinical language. Active voice. Each instruction should be one action: 'Show students two worked examples side by side.' not 'Teachers should consider presenting students with two worked examples simultaneously for comparison purposes.'",
+    "successIndicators": "Start each with an action verb. Describe observable student behavior only. 10 words max per indicator.",
+    "overviewBullets": "Each bullet starts with a short bolded action verb phrase (e.g. 'Think', 'Discuss', 'Present'). Follow with 1-2 sentences max. Write for a teacher skimming between classes."
+  },
+  "llmVerify": {
+    "designModel": "gpt-4o-mini",
+    "mathModel": "o3-mini"
+  },
+  "nextStepOption": {
+    "description": "microcoachNextStepOption — generates one classroom activity per format per misconception",
+    "model": "gpt-5-mini",
+    "formatsToGenerate": [
+      "small_group",
+      "whole_class"
+    ],
+    "maxDurationMinutes": 30,
+    "targetDurationMinutes": 30,
+    "disallowedTeachingMethods": [],
+    "activitySteps": {
+      "min": 4,
+      "max": 6
+    },
+    "setupSteps": {
+      "min": 2,
+      "max": 3
+    },
+    "discussionQuestions": {
+      "min": 2,
+      "max": 3
+    },
+    "studentGroups": {
+      "min": 2,
+      "max": 3
+    },
+    "allowedDurationBuckets": [
+      {
+        "label": "10–15 min",
+        "min": 10,
+        "max": 15
+      },
+      {
+        "label": "15–20 min",
+        "min": 15,
+        "max": 20
+      },
+      {
+        "label": "20–25 min",
+        "min": 20,
+        "max": 25
+      },
+      {
+        "label": "25–30 min",
+        "min": 25,
+        "max": 30
+      }
+    ],
+    "designPrinciples": [
+      "Misconception-driven: The activity must directly address the identified cognitive error — not provide generic practice on the standard.",
+      "Error-first instruction: Students must encounter and analyze incorrect reasoning before seeing the correct method.",
+      "Connection to student responses: The activity must reference or build on the specific error patterns observed in the class data (e.g. the core misconception, or a 'Favorite No' the teacher could highlight)."
+    ],
+    "incorrectWorkedExamplesCount": 3,
+    "overviewBullets": { "min": 2, "max": 4 },
+    "strategyTags": [
+      {
+        "name": "Make Structure Visible",
+        "whenToUse": "Structural conceptual misunderstanding — expose the underlying math structure explicitly"
+      },
+      {
+        "name": "Guided Error Analysis",
+        "whenToUse": "Rule confusion — examine and correct a worked example containing the target error"
+      },
+      {
+        "name": "Contrast Correct vs Incorrect",
+        "whenToUse": "Overgeneralization — compare a correct and incorrect example side-by-side"
+      },
+      {
+        "name": "Use Concrete Representation",
+        "whenToUse": "Conceptual gap — use manipulatives or visual models to ground abstract reasoning"
+      },
+      {
+        "name": "Targeted Practice",
+        "whenToUse": "Partial procedural fluency — focused repetition on the specific error pattern"
+      },
+      {
+        "name": "Peer Explanation",
+        "whenToUse": "Solidifying understanding — students articulate reasoning to each other"
+      },
+      {
+        "name": "Whole-Class Reset",
+        "whenToUse": "Whole-class misunderstanding — reteach from a different angle for the full class"
+      },
+      {
+        "name": "Small-Group Reteach",
+        "whenToUse": "Subset misconception — targeted small-group intervention"
+      }
+    ]
+  }
+}

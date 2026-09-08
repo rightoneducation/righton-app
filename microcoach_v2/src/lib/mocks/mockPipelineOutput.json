@@ -9,7 +9,9 @@
     "teacher": {
       "displayName": "James Anderson",
       "shortName": "James",
-      "email": "james.anderson@camd..."
+      "email": "james.anderson@camden-prep.org",
+      "accountCreated": "2023-11-18T00:00:00Z",
+      "uploadsMade": 16
     },
     "selectedClassId": "class-justice",
     "classes": [
@@ -468,37 +470,44 @@
                   "steps": [
                     {
                       "step": 1,
-                      "text": "Identify boundary. y = −1/2 x + 3. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "Identify boundary. y = −1/2 x + 3.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 2,
-                      "text": "y-intercept = 3. Slope = −1/2. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "y-intercept = 3. Slope = −1/2.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 3,
-                      "text": "Draw a dashed line through (0, 3) with slope −1/2. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "Draw a dashed line through (0, 3) with slope −1/2.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 4,
                       "text": "Test point (0, 0). Substitute: 0 > 3.",
-                      "isError": true,
-                      "errorNote": "Error: flipped the inequality when testing"
+                      "annotation": {
+                        "kind": "ERROR",
+                        "text": "flipped the inequality when testing"
+                      }
                     },
                     {
                       "step": 5,
                       "text": "Since 0 > 3 is false, the student concludes (0, 0) is not a solution and shades the half-plane away from (0, 0).",
-                      "isError": false,
-                      "errorNote": null
+                      "annotation": null
                     }
                   ],
-                  "finalOutcomeLabel": "FINAL:",
-                  "finalOutcome": "LINE PLOTTED CORRECTLY BUT SHADED THE OPPOSITE HALF-PLANE FROM THE TRUE SOLUTION."
+                  "finalOutcomeLabel": "Final:",
+                  "finalOutcome": "Line plotted correctly but shaded the opposite half-plane from the true solution."
                 },
                 {
                   "label": "Example 2",
@@ -506,37 +515,41 @@
                   "steps": [
                     {
                       "step": 1,
-                      "text": "Solve for y: y ≤ −2x + 6. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "Solve for y: y ≤ −2x + 6.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 2,
-                      "text": "y-intercept = 6. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "y-intercept = 6.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 3,
                       "text": "Slope = 2.",
-                      "isError": true,
-                      "errorNote": "Error: dropped the negative sign; slope should be −2"
+                      "annotation": {
+                        "kind": "ERROR",
+                        "text": "dropped the negative sign; slope should be −2"
+                      }
                     },
                     {
                       "step": 4,
                       "text": "Plot (0, 6) and use slope 2 to plot (1, 8). Draw the line and make it solid because ≤",
-                      "isError": false,
-                      "errorNote": null
+                      "annotation": null
                     },
                     {
                       "step": 5,
                       "text": "Choose a test point relative to their drawn line and shade the side that satisfies y ≤ 2x + 6. The drawn line and shading differ from the correct y ≤ −2x + 6 solution",
-                      "isError": false,
-                      "errorNote": null
+                      "annotation": null
                     }
                   ],
-                  "finalOutcomeLabel": "FINAL:",
-                  "finalOutcome": "THE SIGN MISTAKE IN SLOPE PRODUCED A DIFFERENT BOUNDARY AND A WRONG SOLUTION SET"
+                  "finalOutcomeLabel": "Final:",
+                  "finalOutcome": "The sign mistake in slope produced a different boundary and a wrong solution set"
                 }
               ]
             },
@@ -593,7 +606,7 @@
         {
           "id": "activity-my-favorite-no",
           "misconceptionId": "misconception-slope-misidentification",
-          "title": null,
+          "title": "Analyze wrong shadings from incorrect reasoning",
           "titleCased": null,
           "isSelected": false,
           "selectLabel": "Select activity",
@@ -630,22 +643,23 @@
                 "studentWork": [
                   {
                     "text": "2x + y > 4",
-                    "status": "NEUTRAL"
+                    "status": "CORRECT",
+                    "showMark": false
                   },
                   {
-                    "text": "y > −2x + 4 ✓",
+                    "text": "y > −2x + 4",
                     "status": "CORRECT"
                   },
                   {
-                    "text": "slope = −2, y-int = 4 ✓",
+                    "text": "slope = −2, y-int = 4",
                     "status": "CORRECT"
                   },
                   {
-                    "text": "dashed line ✓",
+                    "text": "dashed line",
                     "status": "CORRECT"
                   },
                   {
-                    "text": "shaded below the line ✗",
+                    "text": "shaded below the line",
                     "status": "INCORRECT"
                   }
                 ],
@@ -681,9 +695,9 @@
     {
       "id": "misconception-improper-fraction-handling",
       "rank": 2,
-      "badge": null,
+      "badge": "RECOMMENDED_FOCUS",
       "badgeVariants": [],
-      "isRecommendedFocus": false,
+      "isRecommendedFocus": true,
       "title": "Improper fraction handling in equations",
       "titleCased": "Improper Fraction Handling in Equations",
       "shortLabel": "Improper fraction handling",
@@ -698,7 +712,7 @@
         "totalAnalyzed": 28,
         "supportSummaryLabel": null,
         "understoodSummaryLabel": null,
-        "shortCountLabel": null
+        "shortCountLabel": "14 of 28 students"
       },
       "detailStatus": "CARD_ONLY",
       "studentWork": null,
@@ -707,7 +721,7 @@
         {
           "id": "activity-fraction-1",
           "misconceptionId": "misconception-improper-fraction-handling",
-          "title": null,
+          "title": "Analyze wrong shadings from incorrect reasoning",
           "titleCased": null,
           "isSelected": false,
           "selectLabel": "Select activity",
@@ -741,7 +755,6 @@
               "defaultViewMode": "Teacher",
               "studentViewHides": [
                 "verdict",
-                "isError",
                 "annotation"
               ],
               "problemLabel": "Problem",
@@ -755,22 +768,25 @@
                     {
                       "step": 1,
                       "text": "Identify boundary: y = −½x + 3",
-                      "isError": false
+                      "annotation": null
                     },
                     {
                       "step": 2,
                       "text": "slope = −½, y-int = 3",
-                      "isError": false
+                      "annotation": null
                     },
                     {
                       "step": 3,
                       "text": "Draw dashed line through (0,3)",
-                      "isError": false
+                      "annotation": null
                     },
                     {
                       "step": 4,
                       "text": "Shade above the line",
-                      "isError": true
+                      "annotation": {
+                        "kind": "ERROR",
+                        "text": null
+                      }
                     }
                   ],
                   "annotation": "Read < as \"below\" visually — never checked with a test point"
@@ -783,22 +799,25 @@
                     {
                       "step": 1,
                       "text": "Identify boundary: y = −½x + 3",
-                      "isError": false
+                      "annotation": null
                     },
                     {
                       "step": 2,
                       "text": "slope = −½, y-int = 3",
-                      "isError": false
+                      "annotation": null
                     },
                     {
                       "step": 3,
                       "text": "Draw dashed line through (0,3)",
-                      "isError": false
+                      "annotation": null
                     },
                     {
                       "step": 4,
                       "text": "Test (0,0): 0 < 3 → shade below",
-                      "isError": false
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     }
                   ],
                   "annotation": "Substituted a test point — didn't rely on the symbol direction"
@@ -833,7 +852,7 @@
         {
           "id": "activity-fraction-2",
           "misconceptionId": "misconception-improper-fraction-handling",
-          "title": null,
+          "title": "Analyze wrong shadings from incorrect reasoning",
           "titleCased": null,
           "isSelected": false,
           "selectLabel": "Select activity",
@@ -892,6 +911,10 @@
                     "xMax": 3,
                     "yMin": -1,
                     "yMax": 5
+                  },
+                  "line": {
+                    "slope": 2,
+                    "intercept": 1
                   }
                 },
                 {
@@ -959,9 +982,9 @@
     {
       "id": "misconception-inequality-type-boundary-line",
       "rank": 3,
-      "badge": null,
+      "badge": "RECOMMENDED_FOCUS",
       "badgeVariants": [],
-      "isRecommendedFocus": false,
+      "isRecommendedFocus": true,
       "title": "Mistaking inequality type from boundary line",
       "titleCased": "Mistaking Inequality Type from Boundary Line",
       "shortLabel": "Inequality type from boundary line",
@@ -976,7 +999,7 @@
         "totalAnalyzed": 28,
         "supportSummaryLabel": null,
         "understoodSummaryLabel": null,
-        "shortCountLabel": null
+        "shortCountLabel": "14 of 28 students"
       },
       "detailStatus": "CARD_ONLY",
       "studentWork": null,
@@ -985,7 +1008,7 @@
         {
           "id": "activity-boundary-1",
           "misconceptionId": "misconception-inequality-type-boundary-line",
-          "title": null,
+          "title": "Analyze wrong shadings from incorrect reasoning",
           "titleCased": null,
           "isSelected": false,
           "selectLabel": "Select activity",
@@ -1049,7 +1072,7 @@
         {
           "id": "activity-boundary-2",
           "misconceptionId": "misconception-inequality-type-boundary-line",
-          "title": null,
+          "title": "Analyze wrong shadings from incorrect reasoning",
           "titleCased": null,
           "isSelected": false,
           "selectLabel": "Select activity",
@@ -1088,37 +1111,44 @@
                   "steps": [
                     {
                       "step": 1,
-                      "text": "Identify boundary. y = −1/2 x + 3. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "Identify boundary. y = −1/2 x + 3.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 2,
-                      "text": "y-intercept = 3. Slope = −1/2. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "y-intercept = 3. Slope = −1/2.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 3,
-                      "text": "Draw a dashed line through (0, 3) with slope −1/2. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "Draw a dashed line through (0, 3) with slope −1/2.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 4,
                       "text": "Test point (0, 0). Substitute: 0 > 3.",
-                      "isError": true,
-                      "errorNote": "Error: flipped the inequality when testing"
+                      "annotation": {
+                        "kind": "ERROR",
+                        "text": "flipped the inequality when testing"
+                      }
                     },
                     {
                       "step": 5,
                       "text": "Since 0 > 3 is false, the student concludes (0, 0) is not a solution and shades the half-plane away from (0, 0).",
-                      "isError": false,
-                      "errorNote": null
+                      "annotation": null
                     }
                   ],
-                  "finalOutcomeLabel": "FINAL:",
-                  "finalOutcome": "LINE PLOTTED CORRECTLY BUT SHADED THE OPPOSITE HALF-PLANE FROM THE TRUE SOLUTION."
+                  "finalOutcomeLabel": "Final:",
+                  "finalOutcome": "Line plotted correctly but shaded the opposite half-plane from the true solution."
                 },
                 {
                   "label": "Example 2",
@@ -1126,37 +1156,41 @@
                   "steps": [
                     {
                       "step": 1,
-                      "text": "Solve for y: y ≤ −2x + 6. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "Solve for y: y ≤ −2x + 6.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 2,
-                      "text": "y-intercept = 6. (Correct)",
-                      "isError": false,
-                      "errorNote": null
+                      "text": "y-intercept = 6.",
+                      "annotation": {
+                        "kind": "CORRECT",
+                        "text": null
+                      }
                     },
                     {
                       "step": 3,
                       "text": "Slope = 2.",
-                      "isError": true,
-                      "errorNote": "Error: dropped the negative sign; slope should be −2"
+                      "annotation": {
+                        "kind": "ERROR",
+                        "text": "dropped the negative sign; slope should be −2"
+                      }
                     },
                     {
                       "step": 4,
                       "text": "Plot (0, 6) and use slope 2 to plot (1, 8). Draw the line and make it solid because ≤",
-                      "isError": false,
-                      "errorNote": null
+                      "annotation": null
                     },
                     {
                       "step": 5,
                       "text": "Choose a test point relative to their drawn line and shade the side that satisfies y ≤ 2x + 6. The drawn line and shading differ from the correct y ≤ −2x + 6 solution",
-                      "isError": false,
-                      "errorNote": null
+                      "annotation": null
                     }
                   ],
-                  "finalOutcomeLabel": "FINAL:",
-                  "finalOutcome": "THE SIGN MISTAKE IN SLOPE PRODUCED A DIFFERENT BOUNDARY AND A WRONG SOLUTION SET"
+                  "finalOutcomeLabel": "Final:",
+                  "finalOutcome": "The sign mistake in slope produced a different boundary and a wrong solution set"
                 }
               ]
             },
@@ -1275,5 +1309,27 @@
     "Wireframe11's rows are plan state, not pipeline output, so they live under `savedPlan`. Their activity titles (Slope Forecasting Challenge, Slope Swap Error Analysis) appear nowhere else, and the completed row's misconception (\"Incorrect Slope Conversion\") is not one of this week's three — hence the denormalized snapshot and null activityId.",
     "The Wireframe2/Wireframe3 background is a later iteration of Wireframe1 showing misconceptions and next steps on one page; its two activity cards carry the same title twice (placeholder). No unique data extracted from it.",
     "Prevalence and grouping are enums with counts behind them: W1/W4/W5 show \"Some students\" and \"whole class\"; W11 shows \"Few students\" and \"Split class\"."
-  ]
+  ],
+  "reflect": {
+    "implementedActivities": [
+      {
+        "id": "reflect-treat-wrong-half-plane",
+        "title": "Treat the Wrong Half-Plane",
+        "skillCode": "HSA-REI.D.12",
+        "misconceptionTitle": "Slope Misidentification in Inequalities",
+        "masteryBefore": 37,
+        "masteryAfter": 89,
+        "studentsImproved": 14
+      },
+      {
+        "id": "reflect-analyze-wrong-shadings",
+        "title": "Analyze Wrong Shadings from Incorrect Reasoning",
+        "skillCode": "HSA-REI.D.12",
+        "misconceptionTitle": "Slope Misidentification in Inequalities",
+        "masteryBefore": 37,
+        "masteryAfter": 89,
+        "studentsImproved": 14
+      }
+    ]
+  }
 }
