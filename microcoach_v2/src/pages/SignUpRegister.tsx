@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useGoogleLogin } from '@react-oauth/google';
 import {
   SignUpStepProps,
   SignUpField as Field,
@@ -73,6 +74,35 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
     event.preventDefault();
 
+  /*
+   * Ported from central_v2 (SignUp.tsx). Two Google OAuth flows run back to
+   * back: this popup, then awsSignInFederated's full-page redirect to the
+   * Cognito Hosted UI, which runs Google again with the credentials stored on
+   * the Cognito IdP. The popup's access_token is only a gate — Cognito issues
+   * the session we actually use — so it is checked but not sent anywhere.
+   *
+   * Nothing after awsSignInFederated runs: the page navigates away. The wizard's
+   * useState dies with it, which is why no setVerified()/navigate() here. The
+   * return leg lands on /auth, and validateUser resolves the session from there.
+   */
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const token = credentialResponse.access_token;
+        if (token) {
+          await apiClients.auth.awsSignInFederated();
+        } else {
+          console.error('Google sign-in token is missing');
+        }
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+      }
+    },
+    onError: () => {
+      console.error('Google Sign-In Failed');
+    },
+  });
+
   if (!state.role) return <Navigate to="/signup" replace />;
   if (!isReady) return null;
 
@@ -96,13 +126,7 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
   const showFieldErrors = isFormErrored && !isFormValid;
 
   const handleGoogle = () => {
-    actions.setVerified();
-    if (state.role === 'ADMIN') {
-      actions.setClasses(session.classes.map((classOption) => classOption.name));
-      navigate('/signup/select');
-      return;
-    }
-    navigate('/signup/classes');
+    googleLogin();
   };
 
   const handleContinue = async () => {

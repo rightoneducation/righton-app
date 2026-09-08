@@ -18,7 +18,7 @@ import {
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
-export default function SignUpVerify({ apiClients, screenSize, state, actions }: SignUpStepProps) {
+export default function SignUpVerify({ apiClients, screenSize, state, actions, user }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -44,10 +44,16 @@ export default function SignUpVerify({ apiClients, screenSize, state, actions }:
     console.log('verify');
     setIsVerifying(true);
     try {
-      await apiClients.user.signUpConfirmAndBuildBackendUser(
+      // Keep the created row: it carries the `id` the final step needs to write
+      // the classes back, and nothing else in the wizard has it. Status stays
+      // put — SignUpSelect is what presents the user as signed in.
+      const created = await apiClients.user.signUpConfirmAndBuildBackendUser(
         state,
         state.code.join('')
       );
+      // updateUserProfile, not signIn: signIn would flip status to LOGGEDIN and
+      // AuthGuard's keep-out would eject them from the rest of the wizard.
+      user.updateUserProfile(created);
       // Record the verification before moving on: /signup/classes gates on
       // state.isVerified, so navigating without this bounces straight back to
       // /signup. The Google path already does the same in handleGoogle.

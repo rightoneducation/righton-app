@@ -113,13 +113,15 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   let screenComponent;
   switch (currentScreen) {
     case ScreenType.LOGIN:
-      screenComponent = <Login screenSize={screenSize} user={user} />;
+      screenComponent = (
+        <Login apiClients={apiClients} screenSize={screenSize} user={user} />
+      );
       break;
     case ScreenType.SIGNUP:
       screenComponent = <SignUpWizard apiClients={apiClients} screenSize={screenSize} user={user} />;
       break;
     case ScreenType.AUTH:
-      screenComponent = <AuthCallback />;
+      screenComponent = <AuthCallback apiClients={apiClients} user={user} />;
       break;
     case ScreenType.PASSWORDRESET:
       screenComponent = <ResetPassword screenSize={screenSize} />;

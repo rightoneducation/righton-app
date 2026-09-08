@@ -76,10 +76,14 @@ export default function AuthGuard({
   if (errorDescription) return <Navigate to="/signup" replace />;
 
   switch (userStatus) {
-    // /googlesignup and /confirmation were retired with the old auth pages;
-    // the wizard handles both of those states in-flow now.
+    // Render in place rather than redirect, matching central_v2's
+    // `case GOOGLE_SIGNUP: break`. The screen the user is on IS the handler:
+    // Cognito lands them on /auth, and AuthCallback writes the backend row from
+    // there. Redirecting to /signup unmounted it before it could run, and the
+    // condition that sent them there (no row) was never cleared — so the Google
+    // button just looped.
     case UserStatusType.GOOGLE_SIGNUP:
-      return <Navigate to="/signup" replace />;
+      return children;
     case UserStatusType.GOOGLE_SIGNIN:
       return <Navigate to="/" replace />;
     case UserStatusType.GOOGLE_ERROR:

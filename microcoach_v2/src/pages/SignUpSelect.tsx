@@ -20,11 +20,11 @@ import {
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 
-export default function SignUpSelect({ screenSize, state, user }: SignUpStepProps) {
+export default function SignUpSelect({ apiClients, screenSize, state, user }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { signIn } = user;
+  const { signIn, userProfile } = user;
   const isReady = useAllReady(useI18nReady());
 
   const classes = namedClasses(state);
@@ -40,16 +40,45 @@ export default function SignUpSelect({ screenSize, state, user }: SignUpStepProp
    * step: this is the first screen that presents the user as signed in, and
    * it is what makes the header swap to its identity pill. Runs once — the
    * dependency list is the committed values, not the whole wizard state.
+   *
+   * It is also the only point where classes can be persisted. The row is
+   * written back at the verify step, two screens before classes exist, so it
+   * lands with the wizard's initial `['']`; this updates it with the real
+   * names. `userProfile.id` comes from that created row, stashed by
+   * SignUpVerify — the wizard's own state never carries it.
    */
   React.useEffect(() => {
     if (!state.isVerified) return;
 
-    signIn({
+    const localProfile = {
+      ...(userProfile ?? {}),
       email: state.email,
       teacherName,
       role: state.role === 'ADMIN' ? UserRole.ADMIN : UserRole.TEACHER,
       classes,
-    });
+    };
+
+    const commit = async () => {
+      const id = userProfile?.id;
+      if (!id) {
+        // No row to update (the Google path skips this screen entirely, and a
+        // failed create would have thrown at verify). Sign in locally so the
+        // screen still works rather than blocking on a write we cannot do.
+        signIn(localProfile);
+        return;
+      }
+      try {
+        const updated = await apiClients.user.updateUser({ id, classes });
+        signIn(updated ?? localProfile);
+      } catch (error) {
+        // The account exists and is usable; only the class list failed to
+        // persist. Sign in on the local shape rather than stranding them here.
+        console.error('Could not save classes to the user profile', error);
+        signIn(localProfile);
+      }
+    };
+
+    commit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.isVerified]);
 
