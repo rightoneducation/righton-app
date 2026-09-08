@@ -35,8 +35,25 @@ export function useLogOut(apiClients: APIClients, user: IUserState) {
 }
 
 export function useAuthResolver(apiClients: APIClients, user: IUserState) {
-  const { signIn, setUserStatus, advanceGoogleSignUp } = user;
-  const { handleLogOut } = useLogOut(apiClients, user);
+  const { signIn, signOut, setUserStatus, advanceGoogleSignUp } = user;
+
+  /*
+   * A restore that fails is not a logout. This drops the local profile and
+   * reports LOGGEDOUT, but deliberately leaves the Cognito tokens alone so a
+   * reload can still recover — only handleLogOut, on an explicit user action,
+   * destroys them. Ported from central_v2's reportRestoreFailed, which exists
+   * because calling handleLogOut here revokes the refresh token and turns a
+   * transient resolve failure into a permanent sign-out.
+   *
+   * Resolving to LOGGEDOUT (rather than a status of its own) is also what keeps
+   * a half-formed account from breaking routing: a Cognito session with no
+   * backend row is simply "signed out, here is signup", not a state that
+   * redirects into the middle of the signup wizard.
+   */
+  const reportRestoreFailed = () => {
+    apiClients.user.clearLocalUserProfile();
+    signOut();
+  };
 
   const validateUser = async () => {
     try {
@@ -48,7 +65,7 @@ export function useAuthResolver(apiClients: APIClients, user: IUserState) {
       const session = await apiClients.auth.getCurrentSession();
       const cognitoId = session.userSub;
       if (!cognitoId) {
-        await handleLogOut();
+        reportRestoreFailed();
         return;
       }
       const identities = (session.tokens?.idToken?.payload?.identities ?? []) as {
@@ -68,7 +85,9 @@ export function useAuthResolver(apiClients: APIClients, user: IUserState) {
         const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
         advanceGoogleSignUp(firstName, lastName);
       } else {
-        setUserStatus(UserStatusType.NONVERIFIED);
+        // Cognito session with no backend row — a signup that got part way and
+        // stopped. Nothing to restore, so treat it as signed out.
+        reportRestoreFailed();
       }
     } catch (e) {
       console.error('validateUser failed', e);

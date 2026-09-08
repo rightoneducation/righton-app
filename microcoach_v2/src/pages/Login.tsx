@@ -10,7 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { UserRole } from '../api';
+import { useGoogleLogin } from '@react-oauth/google';
+import { IAPIClients, UserRole } from '../api';
 import AppContentRow from '../components/AppContentRow';
 import { UserProps } from '../hooks/useUserState';
 import { useMisconceptions } from '../hooks/useMisconceptions';
@@ -30,7 +31,11 @@ import {
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import googleIcon from '../images/googleicon.svg';
 
-export default function Login({ screenSize, user }: ScreenSizeProps & UserProps) {
+interface LoginProps extends ScreenSizeProps, UserProps {
+  apiClients: IAPIClients;
+}
+
+export default function Login({ apiClients, screenSize, user }: LoginProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -48,13 +53,13 @@ export default function Login({ screenSize, user }: ScreenSizeProps & UserProps)
    * Stands in for the role the API will return on a real sign-in. Two test
    * accounts on the domain approvalCheck.ts already approves, so the same
    * credentials work through sign-up too:
-   *   teacher@school.com -> MEMBER
+   *   teacher@school.com -> TEACHER
    *   admin@school.com   -> ADMIN
    */
   const roleForEmail = (value: string) =>
     value.trim().toLowerCase().startsWith('admin@')
       ? UserRole.ADMIN
-      : UserRole.MEMBER;
+      : UserRole.TEACHER;
 
   /*
    * Mocked, like the rest of the prototype: no credentials are checked. The
@@ -66,12 +71,36 @@ export default function Login({ screenSize, user }: ScreenSizeProps & UserProps)
       email: email.trim() || session.teacher.email,
       teacherName: session.teacher.displayName,
       role: roleForEmail(email),
-      classes: session.classes.map((option) => ({
-        id: option.id,
-        name: option.name,
-      })),
+      classes: session.classes.map((option) => option.name),
     });
     navigate('/dashboard');
+  };
+
+  /*
+   * Same flow as the sign-up page (see SignUpRegister): the popup gates, then
+   * awsSignInFederated redirects to the Cognito Hosted UI. Nothing after it
+   * runs — the page navigates away and comes back to /auth.
+   */
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const token = credentialResponse.access_token;
+        if (token) {
+          await apiClients.auth.awsSignInFederated();
+        } else {
+          console.error('Google sign-in token is missing');
+        }
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+      }
+    },
+    onError: () => {
+      console.error('Google Sign-In Failed');
+    },
+  });
+
+  const handleGoogle = () => {
+    googleLogin();
   };
 
   if (!isReady) return null;
@@ -85,10 +114,11 @@ export default function Login({ screenSize, user }: ScreenSizeProps & UserProps)
         <SignUpHeading>{t('login.welcome')}</SignUpHeading>
         <SignUpSubheading>{t('login.subtitle')}</SignUpSubheading>
 
-        {/* Stubbed the same way sign-up's is — the real popup is outside our
-            system, so this signs in directly. It has no address to read, so
-            it lands on the default role rather than inventing one. */}
-        <GoogleButton disableElevation onClick={handleSignIn}>
+        {/* Real Google OAuth now: popup, then the Hosted-UI redirect. Sign-in
+            and sign-up share one entry point — Cognito issues the session
+            either way, and validateUser decides which it was by whether a
+            MicroCoachUser row exists for the cognitoId. */}
+        <GoogleButton disableElevation onClick={handleGoogle}>
           <GoogleMark src={googleIcon} alt="" aria-hidden />
           {t('signup.google')}
         </GoogleButton>

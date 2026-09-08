@@ -92,7 +92,7 @@ export default function Profile({ screenSize, user }: ScreenSizeProps & UserProp
     }
     updateUserProfile({
       email: userProfile?.email ?? session.teacher.email,
-      role: userProfile?.role ?? UserRole.MEMBER,
+      role: userProfile?.role ?? UserRole.TEACHER,
       teacherName: `${draft.first.trim()} ${draft.last.trim()}`,
     });
     setShowFieldErrors(false);

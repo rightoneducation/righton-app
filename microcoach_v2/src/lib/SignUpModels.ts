@@ -1,17 +1,17 @@
 import { ScreenSize } from './MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
+import { IAPIClients } from '../api';
+import {UserRole} from '../api/Models/IUser';
 
 // Wizard state, actions and step-prop shape. Kept out of SignUpWizard itself so
 // the steps can type their props without importing the container that renders
 // them (that would be an import cycle).
 
-export type SignUpRole = 'TEACHER' | 'ADMIN';
-
 /** How many verification digits the frame draws. */
 export const CODE_LENGTH = 6;
 
 export interface ISignUpState {
-  role: SignUpRole | null;
+  role: UserRole | null;
   firstName: string;
   lastName: string;
   email: string;
@@ -39,7 +39,7 @@ export const initialSignUpState: ISignUpState = {
 export type SignUpField = 'firstName' | 'lastName' | 'email' | 'password';
 
 export interface ISignUpActions {
-  setRole: (role: SignUpRole) => void;
+  setRole: (role: UserRole) => void;
   setField: (field: SignUpField, value: string) => void;
   setCode: (code: string[]) => void;
   setVerified: () => void;
@@ -51,6 +51,7 @@ export interface ISignUpActions {
 }
 
 export interface SignUpStepProps {
+  apiClients: IAPIClients;
   screenSize: ScreenSize;
   state: ISignUpState;
   actions: ISignUpActions;

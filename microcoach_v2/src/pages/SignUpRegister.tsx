@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useGoogleLogin } from '@react-oauth/google';
 import {
   SignUpStepProps,
   SignUpField as Field,
@@ -34,7 +35,7 @@ import {
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
 
-export default function SignUpRegister({ screenSize, state, actions }: SignUpStepProps) {
+export default function SignUpRegister({ apiClients, screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -42,20 +43,15 @@ export default function SignUpRegister({ screenSize, state, actions }: SignUpSte
   const { session } = useMisconceptions();
   const isReady = useAllReady(useI18nReady());
 
-  // Ported from central_v2's SignUp: the mouse handlers suppress the default
-  // so pressing the reveal control cannot steal focus from the field.
-  /*
-   * Only vetted teachers may create a profile, so the address is checked
-   * before the wizard will continue. Local rather than in SignUpContext:
-   * re-checking on a return to this step is correct, not a bug.
-   */
+  // used for Admin account creation
+  // all new accounts checked against a preveted list
+  // currently stubbed out until admin accounts resolved (defaulted state to approved)
   type ApprovalStatus = 'idle' | 'checking' | 'approved' | 'rejected';
-  const [approval, setApproval] = React.useState<ApprovalStatus>('idle');
+  const [approval, setApproval] = React.useState<ApprovalStatus>('approved');
   const latestChecked = React.useRef('');
 
   const runApprovalCheck = async (value: string) => {
     const email = value.trim();
-    // Nothing to check against yet — leave the row quiet.
     if (!email.includes('@')) {
       latestChecked.current = '';
       setApproval('idle');
@@ -78,19 +74,41 @@ export default function SignUpRegister({ screenSize, state, actions }: SignUpSte
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
     event.preventDefault();
 
-  // Reached without choosing a role — send them back rather than render a
-  // wizard with nothing behind it.
+  /*
+   * Ported from central_v2 (SignUp.tsx). Two Google OAuth flows run back to
+   * back: this popup, then awsSignInFederated's full-page redirect to the
+   * Cognito Hosted UI, which runs Google again with the credentials stored on
+   * the Cognito IdP. The popup's access_token is only a gate — Cognito issues
+   * the session we actually use — so it is checked but not sent anywhere.
+   *
+   * Nothing after awsSignInFederated runs: the page navigates away. The wizard's
+   * useState dies with it, which is why no setVerified()/navigate() here. The
+   * return leg lands on /auth, and validateUser resolves the session from there.
+   */
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const token = credentialResponse.access_token;
+        if (token) {
+          await apiClients.auth.awsSignInFederated();
+        } else {
+          console.error('Google sign-in token is missing');
+        }
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+      }
+    },
+    onError: () => {
+      console.error('Google Sign-In Failed');
+    },
+  });
+
   if (!state.role) return <Navigate to="/signup" replace />;
   if (!isReady) return null;
 
   const setField = (field: Field) => (value: string) =>
     actions.setField(field, value);
 
-  /*
-   * Decorative on purpose: `aria-invalid` on the input is what assistive tech
-   * announces, so an icon repeating it would only add noise. It is there to
-   * make the failing field findable at a glance.
-   */
   const errorAdornment = (show: boolean) =>
     show ? (
       <InputAdornment position="end">
@@ -98,13 +116,6 @@ export default function SignUpRegister({ screenSize, state, actions }: SignUpSte
       </InputAdornment>
     ) : undefined;
 
-  /*
-   * Ported from central_v2's SignUp: Continue always works, and a click on an
-   * incomplete form reddens whatever is missing instead of the button going
-   * dead. `showFieldErrors` is the load-bearing part — pairing the latch with
-   * current validity means the red clears as the teacher types the fix, rather
-   * than persisting until they click a second time.
-   */
   const isFormValid = Boolean(
     state.firstName.trim() &&
     state.lastName.trim() &&
@@ -114,38 +125,24 @@ export default function SignUpRegister({ screenSize, state, actions }: SignUpSte
   );
   const showFieldErrors = isFormErrored && !isFormValid;
 
-  /*
-   * SET_VERIFIED is not cosmetic: both downstream steps guard on it, so
-   * navigating without it bounces straight back to the start of the wizard.
-   * Nothing else is seeded for a teacher — whatever names they typed carry
-   * through, and the prototype invents no identity of its own.
-   *
-   * The two roles skip different amounts of the wizard. A teacher lands on
-   * step 3 and still names their own classes; an admin goes straight to the
-   * final screen, because an admin browses classes that already exist rather
-   * than authoring any. That means the roster has to arrive with the sign-in
-   * — the way a real callback would return it — or the final screen has an
-   * empty dropdown and a CTA that can never enable.
-   */
   const handleGoogle = () => {
-    actions.setVerified();
-
-    if (state.role === 'ADMIN') {
-      actions.setClasses(session.classes.map((classOption) => classOption.name));
-      navigate('/signup/select');
-      return;
-    }
-
-    navigate('/signup/classes');
+    googleLogin();
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!isFormValid) {
       setIsFormErrored(true);
       return;
     }
     setIsFormErrored(false);
-    navigate('/signup/verify');
+    try{
+      await apiClients.user.signUpSendConfirmationCode(
+        state
+      );
+      navigate('/signup/verify');
+    } catch {
+      console.error('Sign Up Error');
+    }
   };
 
   return (
@@ -157,12 +154,6 @@ export default function SignUpRegister({ screenSize, state, actions }: SignUpSte
         <SignUpStepper current={1} />
         <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
         <SignUpSubheading>{t('signup.registerTitle')}</SignUpSubheading>
-
-        {/* Stubbed: the real popup is out of our system entirely, as the flow
-            diagram marks it. Skipping it lands on step 3, not step 2 — Google
-            has already proven the address, so the OTP screen has nothing left
-            to do, and the diagram's step 2 is shown complete on a screen the
-            teacher never sees. */}
         <GoogleButton disableElevation onClick={handleGoogle}>
           <GoogleMark src={googleIcon} alt="" aria-hidden />
           {t('signup.google')}
@@ -224,15 +215,17 @@ export default function SignUpRegister({ screenSize, state, actions }: SignUpSte
             onChange={(event) => {
               setField('email')(event.target.value);
               // A verdict for the old address is meaningless once it changes.
-              if (approval !== 'idle') setApproval('idle');
+              // if (approval !== 'idle') setApproval('idle'); 
             }}
-            onBlur={(event) => runApprovalCheck(event.target.value)}
+            // onBlur={(event) => 
+            //   runApprovalCheck(event.target.value)
+            // }
           />
 
           {/* In flow rather than overlaid, so the password field reflows down
               as the frames draw it. Copy and colour are the frames' own — the
               outline carries any error, the message stays accentBlue. */}
-          {approval !== 'idle' && approval !== 'approved' && (
+          {approval !== 'approved' && (
             <Typography
               variant="rubikLabel"
               role="status"
@@ -307,10 +300,6 @@ export default function SignUpRegister({ screenSize, state, actions }: SignUpSte
             {t('signup.login')}
           </SignUpPill>
         </Box>
-
-        {/* Figma: 40 between the login row and Continue, where every other
-            gap on this screen is 24. Additive on top of the column's gap
-            rather than a negative margin. */}
         <SignUpCta
           disableElevation
           onClick={handleContinue}
