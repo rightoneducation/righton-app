@@ -3,7 +3,7 @@ enum UserRole {
   TEACHER
 }
 
-type User
+type MicroCoachUser
   @model
   @auth(
     rules: [
@@ -22,18 +22,18 @@ type User
   cognitoId: String! @index(name: "byCognitoId", queryField: "usersByCognitoId")
   email: String! @index(name: "byEmail", queryField: "usersByEmail")
   name: String
-  classes: [Class] @hasMany(indexName: "byUser", fields: ["id"])
+  classes: [MicroCoachClassroom] @hasMany(indexName: "byUser", fields: ["id"])
   role: UserRole! @index(name: "byRole", queryField: "usersByRole")
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
 
-type Class @model {
+type MicroCoachClassroom @model {
   id: ID!
   userId: ID! @index(name: "byUser")
 
-  sessions: [Session] @hasMany(indexName: "byClass", fields: ["id"])
-  students: [Student] @hasMany(indexName: "byClass", fields: ["id"])
+  sessions: [MicroCoachSession] @hasMany(indexName: "byClass", fields: ["id"])
+  students: [MicroCoachStudent] @hasMany(indexName: "byClass", fields: ["id"])
 
   name: String!
   grade: Int
@@ -41,7 +41,8 @@ type Class @model {
   schoolYear: String
 }
 
-type Student @model {
+# Extend later when student data becomes part of the workflow.
+type MicroCoachStudent @model {
   id: ID!
   classId: ID! @index(name: "byClass")
   name: String!
@@ -61,7 +62,7 @@ enum PublishStatus {
   PUBLISHED
 }
 
-type Session @model {
+type MicroCoachSession @model {
   id: ID!
   classId: ID! @index(name: "byClass")
   sessionLabel: String
@@ -73,11 +74,14 @@ type Session @model {
   publishStatus: PublishStatus # "DRAFT" | "PUBLISHED"
   studentWorksAnalyzed: Int
   studentsWithStrongUnderstanding: Int
+  studentsWithStrongUnderstandingIds: [ID]
+  studentIdsNeedingSupport: [ID]
 
   ppqAssessmentId: ID
   postPpqAssessmentId: ID
-  assessments: [Assessment] @hasMany(indexName: "bySession", fields: ["id"])
-  misconceptions: [Misconception]
+  assessments: [MicroCoachAssessment]
+    @hasMany(indexName: "bySession", fields: ["id"])
+  misconceptions: [MicroCoachMisconception]
     @hasMany(indexName: "bySession", fields: ["id"])
   pregeneratedNextSteps: AWSJSON
   evaluationResults: AWSJSON
@@ -89,10 +93,10 @@ type Session @model {
 enum AssessmentType {
   PPQ
   POST_PPQ
-  QUIZ
 }
 
-type Assessment @model {
+# Extend later when pipeline work is ready to hook
+type MicroCoachAssessment @model {
   id: ID!
   classId: ID! @index(name: "byClass")
   sessionId: ID! @index(name: "bySession")
@@ -119,15 +123,15 @@ enum DetailStatus {
   NOT_IN_WIREFRAMES
 }
 
-type Misconception @model {
+type MicroCoachMisconception @model {
   id: ID!
   sessionId: ID! @index(name: "bySession")
   classId: ID! @index(name: "byClass")
-  activities: [Activity] @hasMany(indexName: "byMisconception", fields: ["id"])
+  activities: [MicroCoachActivity]
+    @hasMany(indexName: "byMisconception", fields: ["id"])
 
   rank: Int!
   badge: Badge
-  isRecommendedFocus: Boolean!
   title: String!
   titleCased: String
   shortLabel: String
@@ -156,6 +160,7 @@ type Prevalence {
   shortCountLabel: String
 }
 
+# Activity types are expected to evolve as design changes.
 enum ActivityType {
   INCORRECT_WORKED_EXAMPLES
   COMPARE_THE_THINKING
@@ -181,7 +186,7 @@ enum ViewMode {
   STUDENT
 }
 
-type Activity @model {
+type MicroCoachActivity @model {
   id: ID!
   misconceptionId: ID! @index(name: "byMisconception")
   sessionId: ID! @index(name: "bySession")
@@ -216,7 +221,7 @@ enum PlanStatus {
   COMPLETED
 }
 
-type SavedPlan @model {
+type MicroCoachSavedPlan @model {
   id: ID!
   classId: ID! @index(name: "byClass")
   sessionId: ID @index(name: "bySession")
