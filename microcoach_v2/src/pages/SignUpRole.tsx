@@ -11,6 +11,7 @@ import { SignUpStepProps } from '../lib/SignUpModels';
 import { UserRole as Role } from '../api';
 import AppContentRow from '../components/AppContentRow';
 import {
+  CARD_COLUMN,
   RoleCard,
   RoleIconTile,
   SignUpColumn,
@@ -18,27 +19,8 @@ import {
   SignUpHeading,
   SignUpSubheading,
 } from '../lib/styledcomponents/SignUpStyledComponents';
+import { TooltipStyled } from '../lib/styledcomponents/TooltipStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-
-const ROLES: {
-  id: Role;
-  titleKey: string;
-  bodyKey: string;
-  icon: React.ReactNode;
-}[] = [
-  {
-    id: Role.TEACHER,
-    titleKey: 'signup.roleTeacher',
-    bodyKey: 'signup.roleTeacherBody',
-    icon: <PersonOutlineIcon />,
-  },
-  {
-    id: Role.ADMIN,
-    titleKey: 'signup.roleAdmin',
-    bodyKey: 'signup.roleAdminBody',
-    icon: <ApartmentIcon />,
-  },
-];
 
 export default function SignUpRole({ screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
@@ -65,36 +47,74 @@ export default function SignUpRole({ screenSize, state, actions }: SignUpStepPro
           spacing={`${theme.sizing.space4}px`}
           sx={{ width: '100%', alignItems: 'center' }}
         >
-          {ROLES.map((option) => (
-            <RoleCard
-              key={option.id}
-              isSelected={role === option.id}
-              aria-pressed={role === option.id}
-              onClick={() => actions.setRole(option.id)}
-            >
-              <RoleIconTile>{option.icon}</RoleIconTile>
-              <Box sx={{ minWidth: 0 }}>
-                <Typography
-                  variant="headingMd"
-                  sx={{
-                    display: 'block',
-                    color: 'designSystem.surface.atlanticNavy',
-                  }}
-                >
-                  {t(option.titleKey)}
-                </Typography>
-                <Typography
-                  variant="rubikBody"
-                  sx={{
-                    display: 'block',
-                    color: 'designSystem.surface.atlanticNavy',
-                  }}
-                >
-                  {t(option.bodyKey)}
-                </Typography>
-              </Box>
-            </RoleCard>
-          ))}
+          <RoleCard
+            isSelected={role === Role.TEACHER}
+            aria-pressed={role === Role.TEACHER}
+            onClick={() => actions.setRole(Role.TEACHER)}
+          >
+            <RoleIconTile>
+              <PersonOutlineIcon />
+            </RoleIconTile>
+            <Box sx={{ minWidth: 0 }}>
+              <Typography
+                variant="headingMd"
+                sx={{
+                  display: 'block',
+                  color: 'designSystem.surface.atlanticNavy',
+                }}
+              >
+                {t('signup.roleTeacher')}
+              </Typography>
+              <Typography
+                variant="rubikBody"
+                sx={{
+                  display: 'block',
+                  color: 'designSystem.surface.atlanticNavy',
+                }}
+              >
+                {t('signup.roleTeacherBody')}
+              </Typography>
+            </Box>
+          </RoleCard>
+          <TooltipStyled
+            title='Coming Soon!'
+            arrow
+            placement="top"
+          >
+            <Box sx={{ width: '100%', maxWidth: CARD_COLUMN, display: 'flex' }}>
+              <RoleCard
+                disabled
+                isSelected={role === Role.ADMIN}
+                aria-pressed={role === Role.ADMIN}
+                onClick={() => actions.setRole(Role.ADMIN)}
+                style={{background: 'rgba(0,0,0,0.05)'}}
+              >
+                <RoleIconTile>
+                  <ApartmentIcon />
+                </RoleIconTile>
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography
+                    variant="headingMd"
+                    sx={{
+                      display: 'block',
+                      color: 'designSystem.surface.atlanticNavy',
+                    }}
+                  >
+                    {t('signup.roleAdmin')}
+                  </Typography>
+                  <Typography
+                    variant="rubikBody"
+                    sx={{
+                      display: 'block',
+                      color: 'designSystem.surface.atlanticNavy',
+                    }}
+                  >
+                    {t('signup.roleAdminBody')}
+                  </Typography>
+                </Box>
+              </RoleCard>
+            </Box>
+          </TooltipStyled>
         </Stack>
 
         {/* Both roles run the same wizard; they diverge only on the final

@@ -11,10 +11,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useGoogleLogin } from '@react-oauth/google';
-import { IAPIClients, UserRole } from '../api';
+import {
+  fetchGoogleProfile,
+  stashGoogleProfile,
+} from '../lib/googleProfileStash';
+import { IAPIClients } from '../api';
 import AppContentRow from '../components/AppContentRow';
 import { UserProps } from '../hooks/useUserState';
-import { useMisconceptions } from '../hooks/useMisconceptions';
 import {
   GoogleButton,
   GoogleMark,
@@ -39,8 +42,7 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { signIn } = user;
-  const { session } = useMisconceptions();
+  const { signIn, userErrorString } = user;
   const isReady = useAllReady(useI18nReady());
 
   const [email, setEmail] = React.useState('');
@@ -50,42 +52,24 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
     event.preventDefault();
 
   /*
-   * Stands in for the role the API will return on a real sign-in. Two test
-   * accounts on the domain approvalCheck.ts already approves, so the same
-   * credentials work through sign-up too:
-   *   teacher@school.com -> TEACHER
-   *   admin@school.com   -> ADMIN
+   * signIn resolves the real User row and puts it in state; nothing here
+   * fabricates profile fields. Navigation waits on it — it used to fire
+   * unconditionally, so a rejected password still landed on the dashboard.
    */
-  const roleForEmail = (value: string) =>
-    value.trim().toLowerCase().startsWith('admin@')
-      ? UserRole.ADMIN
-      : UserRole.TEACHER;
-
-  /*
-   * Mocked, like the rest of the prototype: no credentials are checked. The
-   * frame draws both a Login pill and a Continue CTA, so both sign in — the
-   * alternative would be leaving one of them inert, which reads as broken.
-   */
-  const handleSignIn = () => {
-    signIn({
-      email: email.trim() || session.teacher.email,
-      teacherName: session.teacher.displayName,
-      role: roleForEmail(email),
-      classes: session.classes.map((option) => option.name),
-    });
-    navigate('/dashboard');
+  const handleSignIn = async () => {
+    const profile = await signIn({ email: email.trim(), password });
+    if (profile) navigate('/dashboard');
   };
 
-  /*
-   * Same flow as the sign-up page (see SignUpRegister): the popup gates, then
-   * awsSignInFederated redirects to the Cognito Hosted UI. Nothing after it
-   * runs — the page navigates away and comes back to /auth.
-   */
   const googleLogin = useGoogleLogin({
+    scope: 'openid email profile',
     onSuccess: async (credentialResponse) => {
       try {
         const token = credentialResponse.access_token;
         if (token) {
+          // Best-effort: a failed name lookup must not stop the sign-in.
+          const profile = await fetchGoogleProfile(token);
+          if (profile) stashGoogleProfile(profile);
           await apiClients.auth.awsSignInFederated();
         } else {
           console.error('Google sign-in token is missing');
@@ -94,8 +78,8 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
         console.error('Google sign-in error:', error);
       }
     },
-    onError: () => {
-      console.error('Google Sign-In Failed');
+    onError: (err) => {
+      console.error('Google Sign-In Failed', err);
     },
   });
 
@@ -181,6 +165,21 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
         >
           {t('login.forgot')}
         </Button>
+
+        {/* Sign-in failures used to be console-only, so a rejected password
+            looked like a dead button. */}
+        {userErrorString && (
+          <Typography
+            variant="rubikLabel"
+            role="alert"
+            sx={{
+              color: 'designSystem.foreground.accentBlue',
+              textAlign: 'center',
+            }}
+          >
+            {userErrorString}
+          </Typography>
+        )}
 
         <SignUpPill disableElevation onClick={handleSignIn}>
           {t('signup.login')}

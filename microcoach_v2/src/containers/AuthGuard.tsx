@@ -63,13 +63,6 @@ export default function AuthGuard({
   }, [errorDescription, setUserStatus, setUserErrorString]);
 
   useEffect(() => {
-    // GOOGLE_SIGNIN is a transient hand-off state — settle it to LOGGEDIN.
-    if (userStatus === UserStatusType.GOOGLE_SIGNIN) {
-      setUserStatus(UserStatusType.LOGGEDIN);
-    }
-  }, [userStatus, setUserStatus]);
-
-  useEffect(() => {
     if (userStatus === UserStatusType.INCOMPLETE) handleLogOut();
   }, [userStatus, handleLogOut]);
 
@@ -84,8 +77,11 @@ export default function AuthGuard({
     // button just looped.
     case UserStatusType.GOOGLE_SIGNUP:
       return children;
+    // Nothing assigns GOOGLE_SIGNIN any more — validateUser resolves a Google
+    // user with a row straight to LOGGEDIN. Kept as a no-op rather than a
+    // redirect: this case used to eject them from whatever page they loaded.
     case UserStatusType.GOOGLE_SIGNIN:
-      return <Navigate to="/" replace />;
+      return children;
     case UserStatusType.GOOGLE_ERROR:
       return <Navigate to="/signup" replace />;
     case UserStatusType.INCOMPLETE:

@@ -4,7 +4,8 @@
     "brandShort": "MicroCoach",
     "signup": "Registrarse",
     "login": "Iniciar sesión",
-    "classSwitcher": "Seleccione una clase"
+    "classSwitcher": "Seleccione una clase",
+    "noClasses": "Aún no hay clases"
   },
   "common": {
     "needHelp": "¿Necesita ayuda?"

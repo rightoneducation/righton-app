@@ -8,11 +8,10 @@ import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import ProfileSkeleton from '../components/ProfileSkeleton';
-import { UserRole } from '../api';
+import { IAPIClients } from '../api';
 import errorIcon from '../images/errorIcon.svg';
 import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
 import { UserProps } from '../hooks/useUserState';
-import { useMisconceptions } from '../hooks/useMisconceptions';
 import {
   EditPictureChip,
   ProfileAction,
@@ -46,24 +45,27 @@ const NAME_ERROR_ID = 'profile-name-error';
  * uniqueness check and password modal are all out of scope here — the frame
  * has none of them, and editing is scoped to the two name fields.
  */
-export default function Profile({ screenSize, user }: ScreenSizeProps & UserProps) {
+interface ProfileProps extends ScreenSizeProps, UserProps {
+  apiClients: IAPIClients;
+}
+
+export default function Profile({ apiClients, screenSize, user }: ProfileProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { userProfile, updateUserProfile } = user;
-  const { session } = useMisconceptions();
   const isReady = useAllReady(useI18nReady());
 
-  const displayName = userProfile?.teacherName ?? session.teacher.displayName;
-
   /*
-   * Split on the *first* space only. Destructuring the whole split would drop
-   * everything past the second token, so saving "Mary Jo Smith" would write
-   * back "Mary Smith".
+   * The signed-in profile only — no mock fallback, or an empty name would show
+   * the mock teacher's and then get committed as though the user typed it.
+   *
+   * The two halves are stored separately, so nothing has to be split here. The
+   * previous version split the display name on the first space, which was the
+   * only thing keeping "Mary Jo Smith" from saving back as "Mary Smith".
    */
-  const spaceIndex = displayName.indexOf(' ');
-  const first =
-    spaceIndex === -1 ? displayName : displayName.slice(0, spaceIndex);
-  const last = spaceIndex === -1 ? '' : displayName.slice(spaceIndex + 1);
+  const first = userProfile?.firstName || '';
+  const last = userProfile?.lastName || '';
+  const displayName = `${first} ${last}`.trim();
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [draft, setDraft] = React.useState({ first, last });
@@ -75,7 +77,19 @@ export default function Profile({ screenSize, user }: ScreenSizeProps & UserProp
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
     event.preventDefault();
 
-  if (!isReady) return <ProfileSkeleton screenSize={screenSize} />;
+  /*
+   * Also wait on the profile itself. PROFILE is in PUBLIC_SCREENS, so AuthGuard
+   * renders this while validateUser is still resolving — without this the page
+   * paints empty fields for a beat before the real values arrive.
+   *
+   * Note this holds the skeleton indefinitely for a signed-out visitor, because
+   * AuthGuard's LOGGEDOUT case still returns children for every screen. The
+   * real fix is that case redirecting for app screens; until then a skeleton is
+   * a better answer than a blank form that looks like your profile was wiped.
+   */
+  if (!isReady || !userProfile) {
+    return <ProfileSkeleton screenSize={screenSize} />;
+  }
 
   const startEditing = () => {
     // Re-seed from the committed profile, so a previous cancel cannot leak.
@@ -84,17 +98,34 @@ export default function Profile({ screenSize, user }: ScreenSizeProps & UserProp
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!draft.first.trim() || !draft.last.trim()) {
       // Stay in edit mode — the draft is still recoverable.
       setShowFieldErrors(true);
       return;
     }
-    updateUserProfile({
-      email: userProfile?.email ?? session.teacher.email,
-      role: userProfile?.role ?? UserRole.TEACHER,
-      teacherName: `${draft.first.trim()} ${draft.last.trim()}`,
-    });
+    const firstName = draft.first.trim();
+    const lastName = draft.last.trim();
+    const id = userProfile?.id;
+    // Only the name fields are writable: UpdateUserInput has no `classes` (it is
+    // a @hasMany relation) and role is not the user's to change.
+    if (id) {
+      try {
+        const updated = await apiClients.user.updateUser({
+          id,
+          firstName,
+          lastName,
+        });
+        updateUserProfile(updated ?? { firstName, lastName });
+      } catch (error) {
+        // The edit still applies locally; only persistence failed.
+        console.error('Could not save the profile name', error);
+        updateUserProfile({ firstName, lastName });
+      }
+    } else {
+      // No row to write to — keep the edit in state rather than dropping it.
+      updateUserProfile({ firstName, lastName });
+    }
     setShowFieldErrors(false);
     setIsEditing(false);
   };
@@ -115,20 +146,21 @@ export default function Profile({ screenSize, user }: ScreenSizeProps & UserProp
     ) : undefined;
 
   /*
-   * The account's own dates come from the profile once there is a real one
-   * behind it; until then they come from the mocked session, the same place
-   * every other value on this screen does.
+   * Straight off the row — AppSync stamps createdAt. Falls back to an em dash
+   * rather than the mock date: showing someone else's signup date as your own
+   * is worse than showing nothing.
    */
-  const accountCreated =
-    userProfile?.createdAt ?? session.teacher.accountCreated;
+  const accountCreated = userProfile?.createdAt || '';
   // timeZone is load-bearing: a date-only ISO string parses as UTC midnight,
   // which renders as the previous day in every US zone without it.
-  const accountCreatedLabel = new Intl.DateTimeFormat(i18n.language, {
-    timeZone: 'UTC',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date(accountCreated));
+  const accountCreatedLabel = accountCreated
+    ? new Intl.DateTimeFormat(i18n.language, {
+        timeZone: 'UTC',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date(accountCreated))
+    : '—';
 
   return (
     <ProfilePage screenSize={screenSize}>
@@ -167,7 +199,10 @@ export default function Profile({ screenSize, user }: ScreenSizeProps & UserProp
               {t('profile.uploadsMade')}
             </Typography>
             <Typography variant="rubikBody" sx={{ display: 'block' }}>
-              {session.teacher.uploadsMade}
+              {/* No uploads count exists on the User model yet, so this is 0
+                  rather than the mock figure — a real teacher should not be
+                  shown someone else's stat. */}
+              0
             </Typography>
           </ProfileStat>
         </ProfileSidebar>
@@ -251,7 +286,7 @@ export default function Profile({ screenSize, user }: ScreenSizeProps & UserProp
             isLocked
             readOnly
             inputProps={{ 'aria-label': t('profile.email') }}
-            value={userProfile?.email ?? session.teacher.email}
+            value={userProfile?.email || ''}
           />
 
           <ProfileAction

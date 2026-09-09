@@ -39,7 +39,7 @@ import AppSwitch from './switches/AppSwitch';
 Modal.setAppElement('#root');
 
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
-  const user = useUserState();
+  const user = useUserState(apiClients);
   const plan = usePlanItems();
   useAuthResolver(apiClients, user);
   const outletContext = useMemo(
