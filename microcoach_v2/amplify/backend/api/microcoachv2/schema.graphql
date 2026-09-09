@@ -1,25 +1,231 @@
 enum UserRole {
   ADMIN
-  TEACHER
+  MEMBER
 }
 
-type MicroCoachUser
+type User
   @model
   @auth(
     rules: [
       # each teacher owns (creates/reads/updates/deletes) their own record,
       # keyed by their Cognito sub stored in `cognitoId`
-      { allow: owner, ownerField: "cognitoId", operations: [create, read, update, delete] }
+      {
+        allow: owner
+        ownerField: "cognitoId"
+        operations: [create, read, update, delete]
+      }
       # members of the Cognito "Admins" group can read/list all users
       { allow: groups, groups: ["Admins"], operations: [read] }
     ]
   ) {
   id: ID!
-  cognitoId: String! @index(name: "byCognitoId", queryField: "microCoachUsersByCognitoId")
-  email: String! @index(name: "byEmail", queryField: "microCoachUsersByEmail")
-  teacherName: String
-  classes: [String]
-  role: UserRole! @index(name: "byRole", queryField: "microCoachUsersByRole")
+  cognitoId: String! @index(name: "byCognitoId", queryField: "usersByCognitoId")
+  email: String! @index(name: "byEmail", queryField: "usersByEmail")
+  name: String
+  classes: [Class] @hasMany(indexName: "byUser", fields: ["id"])
+  role: UserRole! @index(name: "byRole", queryField: "usersByRole")
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+}
+
+type Class @model {
+  id: ID!
+  userId: ID! @index(name: "byUser")
+
+  sessions: [Session] @hasMany(indexName: "byClass", fields: ["id"])
+  students: [Student] @hasMany(indexName: "byClass", fields: ["id"])
+
+  name: String!
+  grade: Int
+  state: String
+  schoolYear: String
+}
+
+type Student @model {
+  id: ID!
+  classId: ID! @index(name: "byClass")
+  name: String!
+  externalId: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum SessionStatus {
+  DATA_INGESTED
+  GENERATED
+  COMPLETED
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+type Session @model {
+  id: ID!
+  classId: ID! @index(name: "byClass")
+  sessionLabel: String
+  weekLabel: String
+  weekNumber: Int
+  topic: String
+  ccssStandards: [String]
+  status: SessionStatus # DATA_INGESTED | GENERATED | COMPLETED
+  publishStatus: PublishStatus # "DRAFT" | "PUBLISHED"
+  studentWorksAnalyzed: Int
+  studentsWithStrongUnderstanding: Int
+
+  ppqAssessmentId: ID
+  postPpqAssessmentId: ID
+  assessments: [Assessment] @hasMany(indexName: "bySession", fields: ["id"])
+  misconceptions: [Misconception]
+    @hasMany(indexName: "bySession", fields: ["id"])
+  pregeneratedNextSteps: AWSJSON
+  evaluationResults: AWSJSON
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum AssessmentType {
+  PPQ
+  POST_PPQ
+  QUIZ
+}
+
+type Assessment @model {
+  id: ID!
+  classId: ID! @index(name: "byClass")
+  sessionId: ID! @index(name: "bySession")
+  assessmentCode: String!
+  type: AssessmentType!
+  weekNumber: Int!
+}
+
+enum Badge {
+  RECOMMENDED_FOCUS
+  CORE
+}
+
+enum PrevalenceLevel {
+  FEW
+  SOME
+  MOST
+}
+
+enum DetailStatus {
+  COMPLETE
+  PARTIAL
+  CARD_ONLY
+  NOT_IN_WIREFRAMES
+}
+
+type Misconception @model {
+  id: ID!
+  sessionId: ID! @index(name: "bySession")
+  classId: ID! @index(name: "byClass")
+  activities: [Activity] @hasMany(indexName: "byMisconception", fields: ["id"])
+
+  rank: Int!
+  badge: Badge
+  isRecommendedFocus: Boolean!
+  title: String!
+  titleCased: String
+  shortLabel: String
+  description: String!
+  consequence: String
+
+  prevalence: Prevalence
+  detailStatus: DetailStatus!
+
+  studentWork: AWSJSON
+  skillContext: AWSJSON
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Prevalence {
+  level: PrevalenceLevel!
+  label: String!
+  studentsNeedingSupport: Int
+  studentsUnderstood: Int
+  studentsNoResponse: Int
+  totalAnalyzed: Int!
+  supportSummaryLabel: String
+  understoodSummaryLabel: String
+  shortCountLabel: String
+}
+
+enum ActivityType {
+  INCORRECT_WORKED_EXAMPLES
+  COMPARE_THE_THINKING
+  MATH_HOSPITAL
+  MULTIPLE_REPRESENTATIONS
+  FAVORITE_NO
+}
+
+enum GroupingLevel {
+  WHOLE_CLASS
+  SPLIT_CLASS
+  SMALL_GROUP
+}
+
+enum WorkStatus {
+  CORRECT
+  INCORRECT
+  NEUTRAL
+}
+
+enum ViewMode {
+  TEACHER
+  STUDENT
+}
+
+type Activity @model {
+  id: ID!
+  misconceptionId: ID! @index(name: "byMisconception")
+  sessionId: ID! @index(name: "bySession")
+  classId: ID! @index(name: "byClass")
+
+  activityType: ActivityType!
+  title: String
+  isSelected: Boolean
+  selectLabel: String
+  detailStatus: DetailStatus!
+
+  routine: AWSJSON
+  durationMinutes: Int
+  durationLabel: String
+  grouping: Grouping
+  targets: String
+  instructionalMove: String
+  strategyTag: String
+  phases: AWSJSON
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Grouping {
+  level: GroupingLevel!
+  label: String!
+}
+
+enum PlanStatus {
+  SAVED
+  COMPLETED
+}
+
+type SavedPlan @model {
+  id: ID!
+  classId: ID! @index(name: "byClass")
+  sessionId: ID @index(name: "bySession")
+  items: [Item]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Item {
+  id: ID!
+  status: PlanStatus!
 }
