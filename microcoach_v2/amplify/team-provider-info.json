@@ -36,7 +36,7 @@
         "microcoachInitialEvaluator": {},
         "microcoachv2GetLearningScience": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2GetLearningScience-2f7444416c62462f6d49-build.zip"
+          "s3Key": "amplify-builds/microcoachv2GetLearningScience-573355534f4a6c367566-build.zip"
         },
         "microcoachv2IngestPPQ": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
