@@ -8,7 +8,6 @@ import { UserRole as AWSUserRole } from '../../AWSAPI';
  * The two vocabularies deliberately differ, and the mapping lives HERE rather
  * than being pushed out into the pages:
  *
- *   schema `name`        <-> app `teacherName`
  *   schema `MEMBER`      <-> app `TEACHER`
  *
  * Keeping the app side stable means a schema rename touches this file and
@@ -24,7 +23,8 @@ export class UserParser {
       id: user.id,
       cognitoId: user.cognitoId,
       email: user.email,
-      teacherName: user.name ?? '',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
       // `classes` is a @hasMany relation, not a field on the row. Nothing reads
       // it off User today; class names would come from their own Class rows.
       classes: [],

@@ -15,7 +15,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
-import { useMisconceptions } from '../hooks/useMisconceptions';
 import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
 
 /**
@@ -215,13 +214,22 @@ export default function Header({
   const { userStatus, userProfile } = user;
   const isResolvingAuth = userStatus === UserStatusType.LOADING;
 
-  const { session } = useMisconceptions();
-  const [selectedClassId, setSelectedClassId] = React.useState(
-    session.selectedClassId,
-  );
+  /*
+   * Identity comes from the signed-in profile only. It used to fall back to the
+   * mock session, so a real user saw the mock teacher's name and email in the
+   * header. `||` rather than `??` on purpose: UserParser maps a null `name` to
+   * '', which is not nullish and would sail through `??`.
+   */
+  const teacherName = [userProfile?.firstName, userProfile?.lastName]
+    .filter(Boolean)
+    .join(' ');
+  const teacherEmail = userProfile?.email || '';
 
-  const teacherName = userProfile?.teacherName ?? session.teacher.displayName;
-  const teacherEmail = userProfile?.email ?? session.teacher.email;
+  // Classes are a @hasMany relation and nothing creates Class rows yet, so this
+  // is empty for every real user. Rendered disabled rather than hidden so the
+  // header does not reflow once they exist.
+  const classes = userProfile?.classes ?? [];
+  const [selectedClassId, setSelectedClassId] = React.useState('');
 
   // Both app variants share the nav block; only its contents differ.
   const isProfileChrome = variant === 'profile';
@@ -324,13 +332,18 @@ export default function Header({
                   <ClassSelect
                     screenSize={screenSize}
                     value={selectedClassId}
+                    displayEmpty
+                    disabled={classes.length === 0}
+                    renderValue={(value) =>
+                      (value as string) || t('header.noClasses')
+                    }
                     IconComponent={KeyboardArrowDownIcon}
                     onChange={(event) => setSelectedClassId(event.target.value)}
                     inputProps={{ 'aria-label': t('header.classSwitcher') }}
                   >
-                    {session.classes.map((classOption) => (
-                      <MenuItem key={classOption.id} value={classOption.id}>
-                        {classOption.name}
+                    {classes.map((className) => (
+                      <MenuItem key={className} value={className}>
+                        {className}
                       </MenuItem>
                     ))}
                   </ClassSelect>

@@ -41,7 +41,7 @@ export default function AuthCallback({
   user,
 }: AuthCallbackProps) {
   const theme = useTheme();
-  const { userStatus, signIn, signOut } = user;
+  const { userStatus, setSignedInUser, signOut } = user;
   // validateUser can resolve more than once (StrictMode double-invokes effects
   // in dev), and a second pass would post a second createUser for an identity
   // that now has a row.
@@ -62,12 +62,9 @@ export default function AuthCallback({
         const stash = readGoogleProfile();
         const { firstName, lastName } =
           await apiClients.auth.getFirstAndLastName();
-        const teacherName = [
-          stash?.givenName || firstName,
-          stash?.familyName || lastName,
-        ]
-          .join(' ')
-          .trim();
+        // Stored as two fields, so the stash's halves go straight through.
+        const givenName = stash?.givenName || firstName;
+        const familyName = stash?.familyName || lastName;
         // Stash first, Cognito only as a fallback. fetchUserAttributes needs
         // the `aws.cognito.signin.user.admin` scope, which this pool's app
         // clients do not grant, so calling it first just logs a 400 on every
@@ -75,9 +72,10 @@ export default function AuthCallback({
         const email = stash?.email || (await apiClients.auth.getUserEmail()) || '';
         const profile = await apiClients.user.signUpGoogleBuildBackendUser({
           email,
-          teacherName,
+          firstName: givenName,
+          lastName: familyName,
         });
-        signIn(profile, UserStatusType.LOGGEDIN);
+        setSignedInUser(profile, UserStatusType.LOGGEDIN);
       } catch (error) {
         // Log the error itself: signUpGoogleBuildBackendUser throws on a null
         // create, and the message names which step actually failed.
@@ -94,7 +92,7 @@ export default function AuthCallback({
     };
 
     buildBackendUser();
-  }, [userStatus, apiClients, signIn, signOut]);
+  }, [userStatus, apiClients, setSignedInUser, signOut]);
 
   // Same frame as the signup steps (see SignUpVerify): AppContentRow owns the
   // page padding, SignUpColumn the centring and max width. Arriving here is the

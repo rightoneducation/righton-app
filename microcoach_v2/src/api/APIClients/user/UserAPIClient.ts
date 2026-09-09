@@ -34,8 +34,8 @@ export const userProfileLocalStorage = 'microcoach_userprofile';
 // Calls are userPool-authed (the User model uses Cognito owner/group auth).
 //
 // Every read funnels its payload through `UserParser` rather than returning the
-// AWS shape as an `IUser`: the two differ in `role` (nominally distinct enums),
-// and the schema's `name` is the app's `teacherName`.
+// AWS shape as an `IUser`: the two differ in `role`, which are nominally
+// distinct enums with the same members.
 //
 // `BaseAPIClient.callGraphQL` forwards its `options` argument straight through
 // as the operation's `variables`, but declares it as `GraphQLOptions`, which
@@ -157,7 +157,8 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     return {
       cognitoId,
       email,
-      name: profile.teacherName,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
       role: AWSUserRole.MEMBER,
     };
   }

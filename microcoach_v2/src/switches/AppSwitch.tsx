@@ -165,7 +165,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <Reflect screenSize={screenSize} />;
       break;
     case ScreenType.PROFILE:
-      screenComponent = <Profile screenSize={screenSize} user={user} />;
+      screenComponent = (
+        <Profile apiClients={apiClients} screenSize={screenSize} user={user} />
+      );
       break;
     case ScreenType.MY_PLAN:
       screenComponent = <MyPlan screenSize={screenSize} plan={plan} />;

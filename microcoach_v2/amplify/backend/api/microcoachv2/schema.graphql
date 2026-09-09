@@ -21,7 +21,8 @@ type User
   id: ID!
   cognitoId: String! @index(name: "byCognitoId", queryField: "usersByCognitoId")
   email: String! @index(name: "byEmail", queryField: "usersByEmail")
-  name: String
+  firstName: String
+  lastName: String
   classes: [Class] @hasMany(indexName: "byUser", fields: ["id"])
   role: UserRole! @index(name: "byRole", queryField: "usersByRole")
   createdAt: AWSDateTime!

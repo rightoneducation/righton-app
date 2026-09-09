@@ -11,7 +11,8 @@ export const createUser = /* GraphQL */ `
       id
       cognitoId
       email
-      name
+      firstName
+      lastName
       classes {
         items {
           id
@@ -80,7 +81,8 @@ export const updateUser = /* GraphQL */ `
       id
       cognitoId
       email
-      name
+      firstName
+      lastName
       classes {
         items {
           id
@@ -149,7 +151,8 @@ export const deleteUser = /* GraphQL */ `
       id
       cognitoId
       email
-      name
+      firstName
+      lastName
       classes {
         items {
           id

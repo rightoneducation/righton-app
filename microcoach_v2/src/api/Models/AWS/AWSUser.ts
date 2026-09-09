@@ -14,14 +14,15 @@ import { UserRole as AWSUserRole } from '../../../AWSAPI'
 //    Class names live in their own Class rows keyed by `userId`.
 //  - `password`. Transient signup form state that never round-trips.
 //
-// The schema calls the display name `name`; the app calls it `teacherName`.
-// UserParser is where those meet — see the note there.
+// firstName/lastName are stored separately rather than as one display string,
+// so nothing has to concat to save and split to edit.
 export type AWSUser = {
   __typename?: 'User'
   id: string
   cognitoId: string
   email: string
-  name?: string | null
+  firstName?: string | null
+  lastName?: string | null
   role: AWSUserRole
   createdAt: string
   updatedAt: string

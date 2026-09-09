@@ -41,7 +41,11 @@ export default function UploadRtdReview({ screenSize, upload, actions, user }: U
   const rows = [
     {
       label: t('upload.teacher'),
-      value: `${userProfile?.teacherName ?? session.teacher.displayName} · ${
+      value: `${
+        [userProfile?.firstName, userProfile?.lastName]
+          .filter(Boolean)
+          .join(' ') || session.teacher.displayName
+      } · ${
         userProfile?.email ?? session.teacher.email
       }`,
     },

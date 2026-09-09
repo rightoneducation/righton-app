@@ -35,7 +35,7 @@ export function useLogOut(apiClients: APIClients, user: IUserState) {
 }
 
 export function useAuthResolver(apiClients: APIClients, user: IUserState) {
-  const { signIn, signOut, setUserStatus, advanceGoogleSignUp } = user;
+  const { setSignedInUser, signOut, setUserStatus, advanceGoogleSignUp } = user;
 
   /*
    * A restore that fails is not a logout. This drops the local profile and
@@ -76,10 +76,12 @@ export function useAuthResolver(apiClients: APIClients, user: IUserState) {
 
       const profile = await apiClients.user.getUserByCognitoId(cognitoId);
       if (profile) {
-        signIn(
-          profile,
-          isGoogle ? UserStatusType.GOOGLE_SIGNIN : UserStatusType.LOGGEDIN,
-        );
+        // Always LOGGEDIN, never GOOGLE_SIGNIN. That status is central_v2's
+        // transient marker for the moment you return from federation; for a
+        // session restore it is meaningless, and AuthGuard redirects on it —
+        // which bounced every returning Google user to / from whatever page
+        // they loaded, before the effect meant to settle it could run.
+        setSignedInUser(profile, UserStatusType.LOGGEDIN);
         apiClients.user.setLocalUserProfile(profile);
       } else if (isGoogle) {
         const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();

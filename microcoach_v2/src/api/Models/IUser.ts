@@ -12,7 +12,8 @@ export interface IUser {
   id?: string;
   cognitoId?: string;
   email: string;
-  teacherName?: string;
+  firstName?: string;
+  lastName?: string;
   classes?: string[];
   role?: UserRole | null;
   createdAt?: string;

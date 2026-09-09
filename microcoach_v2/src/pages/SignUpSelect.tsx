@@ -24,13 +24,13 @@ export default function SignUpSelect({ screenSize, state, user }: SignUpStepProp
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { signIn, userProfile } = user;
+  const { setSignedInUser, userProfile } = user;
   const isReady = useAllReady(useI18nReady());
 
   const classes = namedClasses(state);
   // The two roles share every screen but this one's tail.
   const isAdmin = state.role === 'ADMIN';
-  const teacherName = `${state.firstName} ${state.lastName}`.trim();
+  const displayName = `${state.firstName} ${state.lastName}`.trim();
   const [selectedClass, setSelectedClass] = React.useState<string | null>(
     classes[0] ?? null,
   );
@@ -49,10 +49,11 @@ export default function SignUpSelect({ screenSize, state, user }: SignUpStepProp
   React.useEffect(() => {
     if (!state.isVerified) return;
 
-    signIn({
+    setSignedInUser({
       ...(userProfile ?? {}),
       email: state.email,
-      teacherName,
+      firstName: state.firstName,
+      lastName: state.lastName,
       role: state.role === 'ADMIN' ? UserRole.ADMIN : UserRole.TEACHER,
       classes,
     });
@@ -84,7 +85,7 @@ export default function SignUpSelect({ screenSize, state, user }: SignUpStepProp
             variant="headingSm"
             sx={{ color: 'designSystem.surface.placeholderGrey', opacity: 0.5 }}
           >
-            {teacherName}
+            {displayName}
           </Typography>
         </TeacherSelectField>
 

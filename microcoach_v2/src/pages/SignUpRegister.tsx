@@ -37,14 +37,12 @@ import {
   SignUpSubheading,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { useMisconceptions } from '../hooks/useMisconceptions';
 
 export default function SignUpRegister({ apiClients, screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const { session } = useMisconceptions();
   const isReady = useAllReady(useI18nReady());
 
   // used for Admin account creation

@@ -49,7 +49,9 @@ export default function UploadRtd({ screenSize, upload, actions, user }: UploadS
 
   if (!isReady) return null;
 
-  const teacherName = userProfile?.teacherName ?? session.teacher.displayName;
+  const teacherName =
+    [userProfile?.firstName, userProfile?.lastName].filter(Boolean).join(' ') ||
+    session.teacher.displayName;
   const teacherEmail = userProfile?.email ?? session.teacher.email;
   const className =
     session.classes.find((option) => option.id === session.selectedClassId)

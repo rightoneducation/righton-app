@@ -18,7 +18,7 @@ import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
 // Figma centres the form on a 500-wide column (x 720..1220).
 const FORM_COLUMN = 500;
 // The role cards sit on their own slightly narrower column (x 770..1170).
-const CARD_COLUMN = 400;
+export const CARD_COLUMN = 400;
 const roleCardHeight = 93;
 const roleCardRadius = 32;
 const roleIconSize = 39;

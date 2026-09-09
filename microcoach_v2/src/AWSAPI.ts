@@ -6,7 +6,8 @@ export type CreateUserInput = {
   id?: string | null,
   cognitoId: string,
   email: string,
-  name?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
   role: UserRole,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -21,7 +22,8 @@ export enum UserRole {
 export type ModelUserConditionInput = {
   cognitoId?: ModelStringInput | null,
   email?: ModelStringInput | null,
-  name?: ModelStringInput | null,
+  firstName?: ModelStringInput | null,
+  lastName?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -80,7 +82,8 @@ export type User = {
   id: string,
   cognitoId: string,
   email: string,
-  name?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
   classes?: ModelClassConnection | null,
   role: UserRole,
   createdAt: string,
@@ -307,7 +310,8 @@ export type UpdateUserInput = {
   id: string,
   cognitoId?: string | null,
   email?: string | null,
-  name?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
   role?: UserRole | null,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -335,8 +339,6 @@ export type ModelClassConditionInput = {
   and?: Array< ModelClassConditionInput | null > | null,
   or?: Array< ModelClassConditionInput | null > | null,
   not?: ModelClassConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
 };
 
 export type ModelIDInput = {
@@ -507,8 +509,6 @@ export type ModelAssessmentConditionInput = {
   and?: Array< ModelAssessmentConditionInput | null > | null,
   or?: Array< ModelAssessmentConditionInput | null > | null,
   not?: ModelAssessmentConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
 };
 
 export type ModelAssessmentTypeInput = {
@@ -767,7 +767,8 @@ export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   cognitoId?: ModelStringInput | null,
   email?: ModelStringInput | null,
-  name?: ModelStringInput | null,
+  firstName?: ModelStringInput | null,
+  lastName?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -789,8 +790,6 @@ export type ModelClassFilterInput = {
   grade?: ModelIntInput | null,
   state?: ModelStringInput | null,
   schoolYear?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelClassFilterInput | null > | null,
   or?: Array< ModelClassFilterInput | null > | null,
   not?: ModelClassFilterInput | null,
@@ -838,8 +837,6 @@ export type ModelAssessmentFilterInput = {
   assessmentCode?: ModelStringInput | null,
   type?: ModelAssessmentTypeInput | null,
   weekNumber?: ModelIntInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelAssessmentFilterInput | null > | null,
   or?: Array< ModelAssessmentFilterInput | null > | null,
   not?: ModelAssessmentFilterInput | null,
@@ -917,13 +914,13 @@ export enum ModelSortDirection {
 export type ModelSubscriptionUserFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   email?: ModelSubscriptionStringInput | null,
-  name?: ModelSubscriptionStringInput | null,
+  firstName?: ModelSubscriptionStringInput | null,
+  lastName?: ModelSubscriptionStringInput | null,
   role?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserFilterInput | null > | null,
   or?: Array< ModelSubscriptionUserFilterInput | null > | null,
-  cognitoId?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -963,8 +960,6 @@ export type ModelSubscriptionClassFilterInput = {
   grade?: ModelSubscriptionIntInput | null,
   state?: ModelSubscriptionStringInput | null,
   schoolYear?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionClassFilterInput | null > | null,
   or?: Array< ModelSubscriptionClassFilterInput | null > | null,
 };
@@ -1021,8 +1016,6 @@ export type ModelSubscriptionAssessmentFilterInput = {
   assessmentCode?: ModelSubscriptionStringInput | null,
   type?: ModelSubscriptionStringInput | null,
   weekNumber?: ModelSubscriptionIntInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionAssessmentFilterInput | null > | null,
   or?: Array< ModelSubscriptionAssessmentFilterInput | null > | null,
 };
@@ -1097,7 +1090,8 @@ export type CreateUserMutation = {
     id: string,
     cognitoId: string,
     email: string,
-    name?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
     classes?:  {
       __typename: "ModelClassConnection",
       items:  Array< {
@@ -1167,7 +1161,8 @@ export type UpdateUserMutation = {
     id: string,
     cognitoId: string,
     email: string,
-    name?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
     classes?:  {
       __typename: "ModelClassConnection",
       items:  Array< {
@@ -1237,7 +1232,8 @@ export type DeleteUserMutation = {
     id: string,
     cognitoId: string,
     email: string,
-    name?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
     classes?:  {
       __typename: "ModelClassConnection",
       items:  Array< {
@@ -2377,7 +2373,8 @@ export type GetUserQuery = {
     id: string,
     cognitoId: string,
     email: string,
-    name?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
     classes?:  {
       __typename: "ModelClassConnection",
       items:  Array< {
@@ -2450,7 +2447,8 @@ export type ListUsersQuery = {
       id: string,
       cognitoId: string,
       email: string,
-      name?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
       classes?:  {
         __typename: "ModelClassConnection",
         items:  Array< {
@@ -3189,7 +3187,8 @@ export type UsersByCognitoIdQuery = {
       id: string,
       cognitoId: string,
       email: string,
-      name?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
       classes?:  {
         __typename: "ModelClassConnection",
         items:  Array< {
@@ -3237,7 +3236,8 @@ export type UsersByEmailQuery = {
       id: string,
       cognitoId: string,
       email: string,
-      name?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
       classes?:  {
         __typename: "ModelClassConnection",
         items:  Array< {
@@ -3285,7 +3285,8 @@ export type UsersByRoleQuery = {
       id: string,
       cognitoId: string,
       email: string,
-      name?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
       classes?:  {
         __typename: "ModelClassConnection",
         items:  Array< {
@@ -3895,7 +3896,8 @@ export type OnCreateUserSubscription = {
     id: string,
     cognitoId: string,
     email: string,
-    name?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
     classes?:  {
       __typename: "ModelClassConnection",
       items:  Array< {
@@ -3965,7 +3967,8 @@ export type OnUpdateUserSubscription = {
     id: string,
     cognitoId: string,
     email: string,
-    name?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
     classes?:  {
       __typename: "ModelClassConnection",
       items:  Array< {
@@ -4035,7 +4038,8 @@ export type OnDeleteUserSubscription = {
     id: string,
     cognitoId: string,
     email: string,
-    name?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
     classes?:  {
       __typename: "ModelClassConnection",
       items:  Array< {

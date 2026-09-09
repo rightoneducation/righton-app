@@ -8,7 +8,8 @@ export const getUser = /* GraphQL */ `
       id
       cognitoId
       email
-      name
+      firstName
+      lastName
       classes {
         items {
           id
@@ -79,7 +80,8 @@ export const listUsers = /* GraphQL */ `
         id
         cognitoId
         email
-        name
+        firstName
+        lastName
         classes {
           items {
             id
@@ -795,7 +797,8 @@ export const usersByCognitoId = /* GraphQL */ `
         id
         cognitoId
         email
-        name
+        firstName
+        lastName
         classes {
           items {
             id
@@ -848,7 +851,8 @@ export const usersByEmail = /* GraphQL */ `
         id
         cognitoId
         email
-        name
+        firstName
+        lastName
         classes {
           items {
             id
@@ -901,7 +905,8 @@ export const usersByRole = /* GraphQL */ `
         id
         cognitoId
         email
-        name
+        firstName
+        lastName
         classes {
           items {
             id
