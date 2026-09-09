@@ -53,3 +53,6 @@ amplifytools.xcconfig
 # pipeline CLI (mirrors microcoach/.gitignore "Data/" + api/.gitignore "src/eval/runs/")
 Data/
 seed/eval/runs/
+
+# seed CLI fixtures (local only, mirrors microcoach/.gitignore)
+Data/

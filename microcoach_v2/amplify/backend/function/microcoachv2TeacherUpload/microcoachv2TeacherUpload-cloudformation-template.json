@@ -15,6 +15,10 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "storagemicrocoachdocsBucketName": {
+      "Type": "String",
+      "Default": "storagemicrocoachdocsBucketName"
     }
   },
   "Conditions": {
@@ -70,10 +74,13 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "APPSYNC_SECRET_NAME": "microcoach",
+            "APPSYNC_SECRET_NAME": "microcoach-test",
             "API_SECRET_NAME": "microcoach",
             "NOTIFY_FROM_EMAIL": "noreply@rightoneducation.com",
-            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com"
+            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com",
+            "STORAGE_MICROCOACHDOCS_BUCKETNAME": {
+              "Ref": "storagemicrocoachdocsBucketName"
+            }
           }
         },
         "Role": {
@@ -205,7 +212,7 @@
             },
             {
               "Action": [
-                "s3:PutObject"
+                "s3:GetObject"
               ],
               "Resource": [
                 "arn:aws:s3:::microcoachdocs*/*"
@@ -221,6 +228,62 @@
         ]
       },
       "DependsOn": "LambdaExecutionRole"
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "s3:ListBucket",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "storagemicrocoachdocsBucketName"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetObject"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "storagemicrocoachdocsBucketName"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
   },
   "Outputs": {

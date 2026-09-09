@@ -71,7 +71,7 @@
               "Ref": "AWS::Region"
             },
             "API_SECRET_NAME": "openai-api",
-            "APPSYNC_SECRET_NAME": "microcoach"
+            "APPSYNC_SECRET_NAME": "microcoach-test"
           }
         },
         "Role": {

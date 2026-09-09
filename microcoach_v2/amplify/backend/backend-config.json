@@ -118,6 +118,15 @@
     },
     "microcoachv2TeacherUpload": {
       "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
+          "resourceName": "microcoachdocs"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
