@@ -3,7 +3,7 @@ enum UserRole {
   MEMBER
 }
 
-type User
+type MicroCoachUser
   @model
   @auth(
     rules: [
@@ -23,18 +23,18 @@ type User
   email: String! @index(name: "byEmail", queryField: "usersByEmail")
   firstName: String
   lastName: String
-  classes: [Class] @hasMany(indexName: "byUser", fields: ["id"])
+  classes: [MicroCoachClassroom] @hasMany(indexName: "byUser", fields: ["id"])
   role: UserRole! @index(name: "byRole", queryField: "usersByRole")
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
 
-type Class @model @auth(rules: [{ allow: private }]) {
+type MicroCoachClassroom @model @auth(rules: [{ allow: private }]) {
   id: ID!
   userId: ID! @index(name: "byUser")
 
-  sessions: [Session] @hasMany(indexName: "byClass", fields: ["id"])
-  students: [Student] @hasMany(indexName: "byClass", fields: ["id"])
+  sessions: [MicroCoachSession] @hasMany(indexName: "byClass", fields: ["id"])
+  students: [MicroCoachStudent] @hasMany(indexName: "byClass", fields: ["id"])
 
   name: String!
   grade: Int
@@ -42,7 +42,8 @@ type Class @model @auth(rules: [{ allow: private }]) {
   schoolYear: String
 }
 
-type Student @model @auth(rules: [{ allow: private }]) {
+# Extend later when student data becomes part of the workflow.
+type MicroCoachStudent @model @auth(rules: [{ allow: private }]) {
   id: ID!
   classId: ID! @index(name: "byClass")
   name: String!
@@ -62,7 +63,7 @@ enum PublishStatus {
   PUBLISHED
 }
 
-type Session @model @auth(rules: [{ allow: private }]) {
+type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   id: ID!
   classId: ID! @index(name: "byClass")
   sessionLabel: String
@@ -74,11 +75,14 @@ type Session @model @auth(rules: [{ allow: private }]) {
   publishStatus: PublishStatus # "DRAFT" | "PUBLISHED"
   studentWorksAnalyzed: Int
   studentsWithStrongUnderstanding: Int
+  studentsWithStrongUnderstandingIds: [ID]
+  studentIdsNeedingSupport: [ID]
 
   ppqAssessmentId: ID
   postPpqAssessmentId: ID
-  assessments: [Assessment] @hasMany(indexName: "bySession", fields: ["id"])
-  misconceptions: [Misconception]
+  assessments: [MicroCoachAssessment]
+    @hasMany(indexName: "bySession", fields: ["id"])
+  misconceptions: [MicroCoachMisconception]
     @hasMany(indexName: "bySession", fields: ["id"])
   pregeneratedNextSteps: AWSJSON
   evaluationResults: AWSJSON
@@ -90,10 +94,10 @@ type Session @model @auth(rules: [{ allow: private }]) {
 enum AssessmentType {
   PPQ
   POST_PPQ
-  QUIZ
 }
 
-type Assessment @model @auth(rules: [{ allow: private }]) {
+# Extend later when pipeline work is ready to hook.
+type MicroCoachAssessment @model @auth(rules: [{ allow: private }]) {
   id: ID!
   classId: ID! @index(name: "byClass")
   sessionId: ID! @index(name: "bySession")
@@ -120,15 +124,15 @@ enum DetailStatus {
   NOT_IN_WIREFRAMES
 }
 
-type Misconception @model @auth(rules: [{ allow: private }]) {
+type MicroCoachMisconception @model @auth(rules: [{ allow: private }]) {
   id: ID!
   sessionId: ID! @index(name: "bySession")
   classId: ID! @index(name: "byClass")
-  activities: [Activity] @hasMany(indexName: "byMisconception", fields: ["id"])
+  activities: [MicroCoachActivity]
+    @hasMany(indexName: "byMisconception", fields: ["id"])
 
   rank: Int!
   badge: Badge
-  isRecommendedFocus: Boolean!
   title: String!
   titleCased: String
   shortLabel: String
@@ -157,6 +161,7 @@ type Prevalence {
   shortCountLabel: String
 }
 
+# Activity types are expected to evolve as design changes.
 enum ActivityType {
   INCORRECT_WORKED_EXAMPLES
   COMPARE_THE_THINKING
@@ -182,7 +187,7 @@ enum ViewMode {
   STUDENT
 }
 
-type Activity @model @auth(rules: [{ allow: private }]) {
+type MicroCoachActivity @model @auth(rules: [{ allow: private }]) {
   id: ID!
   misconceptionId: ID! @index(name: "byMisconception")
   sessionId: ID! @index(name: "bySession")
@@ -217,7 +222,7 @@ enum PlanStatus {
   COMPLETED
 }
 
-type SavedPlan @model @auth(rules: [{ allow: private }]) {
+type MicroCoachSavedPlan @model @auth(rules: [{ allow: private }]) {
   id: ID!
   classId: ID! @index(name: "byClass")
   sessionId: ID @index(name: "bySession")
