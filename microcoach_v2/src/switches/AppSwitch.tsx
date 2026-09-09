@@ -42,6 +42,11 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.LOGIN,
   ScreenType.SIGNUP,
   ScreenType.PASSWORDRESET,
+  // /auth is the Cognito redirect target. Its whole content is "hold on while
+  // we finish", which does not depend on knowing who the user is — holding it
+  // behind the auth check just showed a blank screen for the length of
+  // validateUser before the message appeared.
+  ScreenType.AUTH,
   // TODO(auth): move UNDERSTAND behind the guard once sign-in is wired; also
   // needs AuthGuard's LOGGEDOUT case to redirect.
   ScreenType.DASHBOARD,
@@ -60,6 +65,10 @@ const SIGNUP_SCREENS = new Set<ScreenType>([
   ScreenType.LOGIN,
   ScreenType.PASSWORDRESET,
   ScreenType.SIGNUP,
+  // /auth is mid-signup: the Cognito redirect lands here while the account is
+  // being finished. Offering Sign up / Log in there points at the flow the user
+  // is already inside. Also drops the footer, matching the wizard steps.
+  ScreenType.AUTH,
 ]);
 
 /*
@@ -121,7 +130,13 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <SignUpWizard apiClients={apiClients} screenSize={screenSize} user={user} />;
       break;
     case ScreenType.AUTH:
-      screenComponent = <AuthCallback apiClients={apiClients} user={user} />;
+      screenComponent = (
+        <AuthCallback
+          apiClients={apiClients}
+          screenSize={screenSize}
+          user={user}
+        />
+      );
       break;
     case ScreenType.PASSWORDRESET:
       screenComponent = <ResetPassword screenSize={screenSize} />;

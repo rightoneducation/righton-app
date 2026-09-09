@@ -11,6 +11,10 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useGoogleLogin } from '@react-oauth/google';
 import {
+  fetchGoogleProfile,
+  stashGoogleProfile,
+} from '../lib/googleProfileStash';
+import {
   SignUpStepProps,
   SignUpField as Field,
 } from '../lib/SignUpModels';
@@ -84,12 +88,21 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
    * Nothing after awsSignInFederated runs: the page navigates away. The wizard's
    * useState dies with it, which is why no setVerified()/navigate() here. The
    * return leg lands on /auth, and validateUser resolves the session from there.
+   *
+   * Unlike central_v2 we DO use the popup's token: it reads the name straight
+   * from Google and stashes it for AuthCallback, because Cognito's IdP mapping
+   * doesn't forward given_name/family_name. See lib/googleProfileStash.
    */
   const googleLogin = useGoogleLogin({
+    scope: 'openid email profile',
     onSuccess: async (credentialResponse) => {
       try {
         const token = credentialResponse.access_token;
         if (token) {
+          // Best-effort: a failed name lookup must not stop the signup, so this
+          // never throws and the redirect runs either way.
+          const profile = await fetchGoogleProfile(token);
+          if (profile) stashGoogleProfile(profile);
           await apiClients.auth.awsSignInFederated();
         } else {
           console.error('Google sign-in token is missing');
@@ -98,8 +111,8 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
         console.error('Google sign-in error:', error);
       }
     },
-    onError: () => {
-      console.error('Google Sign-In Failed');
+    onError: (err) => {
+      console.error('Google Sign-In Failed', err);
     },
   });
 

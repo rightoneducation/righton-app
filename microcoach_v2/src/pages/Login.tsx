@@ -11,6 +11,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useGoogleLogin } from '@react-oauth/google';
+import {
+  fetchGoogleProfile,
+  stashGoogleProfile,
+} from '../lib/googleProfileStash';
 import { IAPIClients, UserRole } from '../api';
 import AppContentRow from '../components/AppContentRow';
 import { UserProps } from '../hooks/useUserState';
@@ -80,12 +84,20 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
    * Same flow as the sign-up page (see SignUpRegister): the popup gates, then
    * awsSignInFederated redirects to the Cognito Hosted UI. Nothing after it
    * runs — the page navigates away and comes back to /auth.
+   *
+   * The name is stashed here too, not just on the signup page: Cognito decides
+   * signup-vs-signin by whether a MicroCoachUser row exists, so a first-timer
+   * who starts from Login lands in the same row-creating path.
    */
   const googleLogin = useGoogleLogin({
+    scope: 'openid email profile',
     onSuccess: async (credentialResponse) => {
       try {
         const token = credentialResponse.access_token;
         if (token) {
+          // Best-effort: a failed name lookup must not stop the sign-in.
+          const profile = await fetchGoogleProfile(token);
+          if (profile) stashGoogleProfile(profile);
           await apiClients.auth.awsSignInFederated();
         } else {
           console.error('Google sign-in token is missing');
@@ -94,8 +106,8 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
         console.error('Google sign-in error:', error);
       }
     },
-    onError: () => {
-      console.error('Google Sign-In Failed');
+    onError: (err) => {
+      console.error('Google Sign-In Failed', err);
     },
   });
 

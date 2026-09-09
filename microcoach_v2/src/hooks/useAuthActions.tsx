@@ -90,7 +90,9 @@ export function useAuthResolver(apiClients: APIClients, user: IUserState) {
         reportRestoreFailed();
       }
     } catch (e) {
-      console.error('validateUser failed', e);
+      // Log name and message, not just the object: DevTools collapses it, and
+      // the error name is what identifies which call threw.
+      console.error('validateUser failed', (e as Error)?.name, (e as Error)?.message, e);
       setUserStatus(UserStatusType.LOGGEDOUT);
     }
   };
