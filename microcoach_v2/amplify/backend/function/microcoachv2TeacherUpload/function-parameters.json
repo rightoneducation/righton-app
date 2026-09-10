@@ -1,3 +1,10 @@
 {
-  "lambdaLayers": []
+  "lambdaLayers": [],
+  "permissions": {
+    "storage": {
+      "microcoachdocs": [
+        "read"
+      ]
+    }
+  }
 }

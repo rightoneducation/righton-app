@@ -179,6 +179,10 @@ export const handler = async (event) => {
         units,
         elapsedMs: Date.now() - startedAt,
         query: learningScienceDataQuery,
+        // The pre-normalization payload. `standards` above is normalized and is
+        // what callers use; eval fixtures archive the raw items instead so replay
+        // can re-normalize with whatever normalizeStandard.mjs currently does.
+        rawItems,
       };
     }
     return JSON.stringify(result);

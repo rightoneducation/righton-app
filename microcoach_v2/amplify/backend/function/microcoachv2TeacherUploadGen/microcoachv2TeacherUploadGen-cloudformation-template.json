@@ -70,7 +70,7 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "APPSYNC_SECRET_NAME": "microcoach",
+            "APPSYNC_SECRET_NAME": "microcoach-test",
             "NOTIFY_FROM_EMAIL": "noreply@rightoneducation.com",
             "NOTIFY_TO_EMAILS": "drewjhart@gmail.com",
             "FRONTEND_URL": "https://microcoach.rightoneducation.com"

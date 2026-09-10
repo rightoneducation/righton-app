@@ -12,7 +12,16 @@
       ],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
+          "additionalAuthenticationProviders": [
+            {
+              "apiKeyConfig": {
+                "apiKeyExpirationDate": "2026-10-10T00:58:14.806Z",
+                "apiKeyExpirationDays": 30,
+                "description": "pipe"
+              },
+              "authenticationType": "API_KEY"
+            }
+          ],
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
@@ -101,6 +110,16 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachv2LLMGenInstrNeed": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachv2LLMGenMisconception": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachv2LLMVerify": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -118,6 +137,15 @@
     },
     "microcoachv2TeacherUpload": {
       "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
+          "resourceName": "microcoachdocs"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
@@ -194,6 +222,38 @@
         {
           "category": "function",
           "resourceName": "microcoachv2LLMAnalysis"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMGenInstrNeed_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenInstrNeed"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMGenInstrNeed_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenInstrNeed"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMGenMisconception_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenMisconception"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMGenMisconception_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenMisconception"
         }
       ]
     },

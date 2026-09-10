@@ -235,3 +235,102 @@ type Item {
   id: ID!
   status: PlanStatus!
 }
+
+enum ContextDataType {
+  NEXT_STEP_LESSON
+  EXEMPLAR
+  STRATEGY
+  WALKTHROUGH
+  STUDENT_WORK_SAMPLE
+  LESSON_PLAN
+}
+
+# Shared knowledge library for the coaching pipeline — reference lessons,
+# strategies, exemplars. Not classroom data: no FK to Class/Session/Student.
+# Carries an apiKey rule because the seed/eval CLI reads it over the API key;
+# no other model in this schema should.
+type ContextData
+  @model
+  @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
+  id: ID!
+  type: ContextDataType!
+  title: String!
+  gradeLevel: Int
+  weekNumber: Int
+  ccssStandards: [String]
+  assessmentCode: String
+  isReference: Boolean # true for References/ folder docs (shared across classrooms)
+  nextStepLesson: NextStepLesson
+  exemplarQuestions: [ExemplarQuestion]
+  strategy: InstructionalStrategy
+  walkthroughData: WalkthroughData
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type ExemplarQuestion {
+  questionNumber: Int!
+  questionText: String!
+  ccssStandard: String!
+  correctAnswer: String!
+  pointValue: Int!
+  answerChoices: [AnswerChoice]
+  misconceptions: [ExemplarMisconception]
+  sourceNote: String
+}
+
+type AnswerChoice {
+  label: String!
+  text: String!
+}
+
+type ExemplarMisconception {
+  description: String!
+  targetAnswer: String
+}
+
+type NextStepLesson {
+  targetAssessmentCode: String!
+  targetQuestionNumbers: [Int]
+  topic: String!
+  targetProblem: String!
+  errorScenarios: [ErrorScenario]
+  phases: [LessonPhase]
+  keyTakeaways: [String]
+  independentProblems: [String]
+  exitTicket: String
+}
+
+type ErrorScenario {
+  studentLabel: String!
+  isCorrect: Boolean!
+  approach: String!
+  reasoning: [String]
+}
+
+type LessonPhase {
+  phaseName: String!
+  durationMinutes: Int
+  steps: [String]
+  teacherPrompts: [String]
+}
+
+type InstructionalStrategy {
+  name: String!
+  description: String!
+  steps: [String]
+  applicableGrades: [Int]
+  applicableStandards: [String]
+  examples: [String]
+}
+
+type WalkthroughData {
+  quarter: String
+  schools: [SchoolObservation]
+}
+
+type SchoolObservation {
+  schoolCode: String!
+  rubricScores: AWSJSON
+  notes: String
+}
