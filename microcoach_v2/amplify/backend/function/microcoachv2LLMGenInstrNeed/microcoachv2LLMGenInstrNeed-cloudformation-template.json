@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "microcoachv2IngestPPQ",
+            "microcoachv2LLMGenInstrNeed",
             {
               "Fn::Join": [
                 "",
                 [
-                  "microcoachv2IngestPPQ",
+                  "microcoachv2LLMGenInstrNeed",
                   "-",
                   {
                     "Ref": "env"
@@ -69,8 +69,7 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            },
-            "API_SECRET_NAME": "openai-api"
+            }
           }
         },
         "Role": {
@@ -79,9 +78,9 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs18.x",
         "Layers": [],
-        "Timeout": 120
+        "Timeout": 25
       }
     },
     "LambdaExecutionRole": {
@@ -90,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "microcoachv2LambdaRole88a09d6f",
+            "microcoachv2LambdaRole71582069",
             {
               "Fn::Join": [
                 "",
                 [
-                  "microcoachv2LambdaRole88a09d6f",
+                  "microcoachv2LambdaRole71582069",
                   "-",
                   {
                     "Ref": "env"
@@ -165,32 +164,6 @@
           ]
         }
       }
-    },
-    "CustomLambdaExecutionPolicy": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "custom-lambda-execution-policy",
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Action": [
-                "secretsmanager:GetSecretValue"
-              ],
-              "Resource": [
-                "arn:aws:secretsmanager:us-east-1:*:secret:*"
-              ],
-              "Effect": "Allow"
-            }
-          ]
-        },
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ]
-      },
-      "DependsOn": "LambdaExecutionRole"
     }
   },
   "Outputs": {

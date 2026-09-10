@@ -2,7 +2,8 @@ export type AmplifyDependentResourcesAttributes = {
   "api": {
     "microcoachv2": {
       "GraphQLAPIEndpointOutput": "string",
-      "GraphQLAPIIdOutput": "string"
+      "GraphQLAPIIdOutput": "string",
+      "GraphQLAPIKeyOutput": "string"
     }
   },
   "auth": {
@@ -39,6 +40,20 @@ export type AmplifyDependentResourcesAttributes = {
       "Region": "string"
     },
     "microcoachv2LLMAnalysis": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2LLMGenInstrNeed": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2LLMGenMisconception": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

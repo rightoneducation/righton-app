@@ -69,7 +69,8 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            }
+            },
+            "API_SECRET_NAME": "openai-api"
           }
         },
         "Role": {

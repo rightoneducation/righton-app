@@ -69,7 +69,8 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            }
+            },
+            "API_SECRET_NAME": "openai-api"
           }
         },
         "Role": {
@@ -164,6 +165,32 @@
           ]
         }
       }
+    },
+    "CustomLambdaExecutionPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "custom-lambda-execution-policy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "secretsmanager:GetSecretValue"
+              ],
+              "Resource": [
+                "arn:aws:secretsmanager:us-east-1:*:secret:*"
+              ],
+              "Effect": "Allow"
+            }
+          ]
+        },
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ]
+      },
+      "DependsOn": "LambdaExecutionRole"
     }
   },
   "Outputs": {
