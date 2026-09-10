@@ -2,12 +2,12 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onCreateMicroCoachUser = /* GraphQL */ `
+  subscription OnCreateMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
     $cognitoId: String
   ) {
-    onCreateUser(filter: $filter, cognitoId: $cognitoId) {
+    onCreateMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
       id
       cognitoId
       email
@@ -30,6 +30,8 @@ export const onCreateUser = /* GraphQL */ `
               publishStatus
               studentWorksAnalyzed
               studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
               pregeneratedNextSteps
@@ -72,12 +74,12 @@ export const onCreateUser = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onUpdateMicroCoachUser = /* GraphQL */ `
+  subscription OnUpdateMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
     $cognitoId: String
   ) {
-    onUpdateUser(filter: $filter, cognitoId: $cognitoId) {
+    onUpdateMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
       id
       cognitoId
       email
@@ -100,6 +102,8 @@ export const onUpdateUser = /* GraphQL */ `
               publishStatus
               studentWorksAnalyzed
               studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
               pregeneratedNextSteps
@@ -142,12 +146,12 @@ export const onUpdateUser = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onDeleteMicroCoachUser = /* GraphQL */ `
+  subscription OnDeleteMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
     $cognitoId: String
   ) {
-    onDeleteUser(filter: $filter, cognitoId: $cognitoId) {
+    onDeleteMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
       id
       cognitoId
       email
@@ -170,6 +174,8 @@ export const onDeleteUser = /* GraphQL */ `
               publishStatus
               studentWorksAnalyzed
               studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
               pregeneratedNextSteps
@@ -212,9 +218,11 @@ export const onDeleteUser = /* GraphQL */ `
     }
   }
 `;
-export const onCreateClass = /* GraphQL */ `
-  subscription OnCreateClass($filter: ModelSubscriptionClassFilterInput) {
-    onCreateClass(filter: $filter) {
+export const onCreateMicroCoachClassroom = /* GraphQL */ `
+  subscription OnCreateMicroCoachClassroom(
+    $filter: ModelSubscriptionMicroCoachClassroomFilterInput
+  ) {
+    onCreateMicroCoachClassroom(filter: $filter) {
       id
       userId
       sessions {
@@ -230,6 +238,8 @@ export const onCreateClass = /* GraphQL */ `
           publishStatus
           studentWorksAnalyzed
           studentsWithStrongUnderstanding
+          studentsWithStrongUnderstandingIds
+          studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -254,7 +264,6 @@ export const onCreateClass = /* GraphQL */ `
               classId
               rank
               badge
-              isRecommendedFocus
               title
               titleCased
               shortLabel
@@ -302,9 +311,11 @@ export const onCreateClass = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateClass = /* GraphQL */ `
-  subscription OnUpdateClass($filter: ModelSubscriptionClassFilterInput) {
-    onUpdateClass(filter: $filter) {
+export const onUpdateMicroCoachClassroom = /* GraphQL */ `
+  subscription OnUpdateMicroCoachClassroom(
+    $filter: ModelSubscriptionMicroCoachClassroomFilterInput
+  ) {
+    onUpdateMicroCoachClassroom(filter: $filter) {
       id
       userId
       sessions {
@@ -320,6 +331,8 @@ export const onUpdateClass = /* GraphQL */ `
           publishStatus
           studentWorksAnalyzed
           studentsWithStrongUnderstanding
+          studentsWithStrongUnderstandingIds
+          studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -344,7 +357,6 @@ export const onUpdateClass = /* GraphQL */ `
               classId
               rank
               badge
-              isRecommendedFocus
               title
               titleCased
               shortLabel
@@ -392,9 +404,11 @@ export const onUpdateClass = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteClass = /* GraphQL */ `
-  subscription OnDeleteClass($filter: ModelSubscriptionClassFilterInput) {
-    onDeleteClass(filter: $filter) {
+export const onDeleteMicroCoachClassroom = /* GraphQL */ `
+  subscription OnDeleteMicroCoachClassroom(
+    $filter: ModelSubscriptionMicroCoachClassroomFilterInput
+  ) {
+    onDeleteMicroCoachClassroom(filter: $filter) {
       id
       userId
       sessions {
@@ -410,6 +424,8 @@ export const onDeleteClass = /* GraphQL */ `
           publishStatus
           studentWorksAnalyzed
           studentsWithStrongUnderstanding
+          studentsWithStrongUnderstandingIds
+          studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -434,7 +450,6 @@ export const onDeleteClass = /* GraphQL */ `
               classId
               rank
               badge
-              isRecommendedFocus
               title
               titleCased
               shortLabel
@@ -482,9 +497,11 @@ export const onDeleteClass = /* GraphQL */ `
     }
   }
 `;
-export const onCreateStudent = /* GraphQL */ `
-  subscription OnCreateStudent($filter: ModelSubscriptionStudentFilterInput) {
-    onCreateStudent(filter: $filter) {
+export const onCreateMicroCoachStudent = /* GraphQL */ `
+  subscription OnCreateMicroCoachStudent(
+    $filter: ModelSubscriptionMicroCoachStudentFilterInput
+  ) {
+    onCreateMicroCoachStudent(filter: $filter) {
       id
       classId
       name
@@ -495,9 +512,11 @@ export const onCreateStudent = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateStudent = /* GraphQL */ `
-  subscription OnUpdateStudent($filter: ModelSubscriptionStudentFilterInput) {
-    onUpdateStudent(filter: $filter) {
+export const onUpdateMicroCoachStudent = /* GraphQL */ `
+  subscription OnUpdateMicroCoachStudent(
+    $filter: ModelSubscriptionMicroCoachStudentFilterInput
+  ) {
+    onUpdateMicroCoachStudent(filter: $filter) {
       id
       classId
       name
@@ -508,9 +527,11 @@ export const onUpdateStudent = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteStudent = /* GraphQL */ `
-  subscription OnDeleteStudent($filter: ModelSubscriptionStudentFilterInput) {
-    onDeleteStudent(filter: $filter) {
+export const onDeleteMicroCoachStudent = /* GraphQL */ `
+  subscription OnDeleteMicroCoachStudent(
+    $filter: ModelSubscriptionMicroCoachStudentFilterInput
+  ) {
+    onDeleteMicroCoachStudent(filter: $filter) {
       id
       classId
       name
@@ -521,9 +542,11 @@ export const onDeleteStudent = /* GraphQL */ `
     }
   }
 `;
-export const onCreateSession = /* GraphQL */ `
-  subscription OnCreateSession($filter: ModelSubscriptionSessionFilterInput) {
-    onCreateSession(filter: $filter) {
+export const onCreateMicroCoachSession = /* GraphQL */ `
+  subscription OnCreateMicroCoachSession(
+    $filter: ModelSubscriptionMicroCoachSessionFilterInput
+  ) {
+    onCreateMicroCoachSession(filter: $filter) {
       id
       classId
       sessionLabel
@@ -535,6 +558,8 @@ export const onCreateSession = /* GraphQL */ `
       publishStatus
       studentWorksAnalyzed
       studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -584,7 +609,6 @@ export const onCreateSession = /* GraphQL */ `
           }
           rank
           badge
-          isRecommendedFocus
           title
           titleCased
           shortLabel
@@ -620,9 +644,11 @@ export const onCreateSession = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateSession = /* GraphQL */ `
-  subscription OnUpdateSession($filter: ModelSubscriptionSessionFilterInput) {
-    onUpdateSession(filter: $filter) {
+export const onUpdateMicroCoachSession = /* GraphQL */ `
+  subscription OnUpdateMicroCoachSession(
+    $filter: ModelSubscriptionMicroCoachSessionFilterInput
+  ) {
+    onUpdateMicroCoachSession(filter: $filter) {
       id
       classId
       sessionLabel
@@ -634,6 +660,8 @@ export const onUpdateSession = /* GraphQL */ `
       publishStatus
       studentWorksAnalyzed
       studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -683,7 +711,6 @@ export const onUpdateSession = /* GraphQL */ `
           }
           rank
           badge
-          isRecommendedFocus
           title
           titleCased
           shortLabel
@@ -719,9 +746,11 @@ export const onUpdateSession = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteSession = /* GraphQL */ `
-  subscription OnDeleteSession($filter: ModelSubscriptionSessionFilterInput) {
-    onDeleteSession(filter: $filter) {
+export const onDeleteMicroCoachSession = /* GraphQL */ `
+  subscription OnDeleteMicroCoachSession(
+    $filter: ModelSubscriptionMicroCoachSessionFilterInput
+  ) {
+    onDeleteMicroCoachSession(filter: $filter) {
       id
       classId
       sessionLabel
@@ -733,6 +762,8 @@ export const onDeleteSession = /* GraphQL */ `
       publishStatus
       studentWorksAnalyzed
       studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -782,7 +813,6 @@ export const onDeleteSession = /* GraphQL */ `
           }
           rank
           badge
-          isRecommendedFocus
           title
           titleCased
           shortLabel
@@ -818,11 +848,11 @@ export const onDeleteSession = /* GraphQL */ `
     }
   }
 `;
-export const onCreateAssessment = /* GraphQL */ `
-  subscription OnCreateAssessment(
-    $filter: ModelSubscriptionAssessmentFilterInput
+export const onCreateMicroCoachAssessment = /* GraphQL */ `
+  subscription OnCreateMicroCoachAssessment(
+    $filter: ModelSubscriptionMicroCoachAssessmentFilterInput
   ) {
-    onCreateAssessment(filter: $filter) {
+    onCreateMicroCoachAssessment(filter: $filter) {
       id
       classId
       sessionId
@@ -835,11 +865,11 @@ export const onCreateAssessment = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateAssessment = /* GraphQL */ `
-  subscription OnUpdateAssessment(
-    $filter: ModelSubscriptionAssessmentFilterInput
+export const onUpdateMicroCoachAssessment = /* GraphQL */ `
+  subscription OnUpdateMicroCoachAssessment(
+    $filter: ModelSubscriptionMicroCoachAssessmentFilterInput
   ) {
-    onUpdateAssessment(filter: $filter) {
+    onUpdateMicroCoachAssessment(filter: $filter) {
       id
       classId
       sessionId
@@ -852,11 +882,11 @@ export const onUpdateAssessment = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteAssessment = /* GraphQL */ `
-  subscription OnDeleteAssessment(
-    $filter: ModelSubscriptionAssessmentFilterInput
+export const onDeleteMicroCoachAssessment = /* GraphQL */ `
+  subscription OnDeleteMicroCoachAssessment(
+    $filter: ModelSubscriptionMicroCoachAssessmentFilterInput
   ) {
-    onDeleteAssessment(filter: $filter) {
+    onDeleteMicroCoachAssessment(filter: $filter) {
       id
       classId
       sessionId
@@ -869,11 +899,11 @@ export const onDeleteAssessment = /* GraphQL */ `
     }
   }
 `;
-export const onCreateMisconception = /* GraphQL */ `
-  subscription OnCreateMisconception(
-    $filter: ModelSubscriptionMisconceptionFilterInput
+export const onCreateMicroCoachMisconception = /* GraphQL */ `
+  subscription OnCreateMicroCoachMisconception(
+    $filter: ModelSubscriptionMicroCoachMisconceptionFilterInput
   ) {
-    onCreateMisconception(filter: $filter) {
+    onCreateMicroCoachMisconception(filter: $filter) {
       id
       sessionId
       classId
@@ -909,7 +939,6 @@ export const onCreateMisconception = /* GraphQL */ `
       }
       rank
       badge
-      isRecommendedFocus
       title
       titleCased
       shortLabel
@@ -936,11 +965,11 @@ export const onCreateMisconception = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateMisconception = /* GraphQL */ `
-  subscription OnUpdateMisconception(
-    $filter: ModelSubscriptionMisconceptionFilterInput
+export const onUpdateMicroCoachMisconception = /* GraphQL */ `
+  subscription OnUpdateMicroCoachMisconception(
+    $filter: ModelSubscriptionMicroCoachMisconceptionFilterInput
   ) {
-    onUpdateMisconception(filter: $filter) {
+    onUpdateMicroCoachMisconception(filter: $filter) {
       id
       sessionId
       classId
@@ -976,7 +1005,6 @@ export const onUpdateMisconception = /* GraphQL */ `
       }
       rank
       badge
-      isRecommendedFocus
       title
       titleCased
       shortLabel
@@ -1003,11 +1031,11 @@ export const onUpdateMisconception = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteMisconception = /* GraphQL */ `
-  subscription OnDeleteMisconception(
-    $filter: ModelSubscriptionMisconceptionFilterInput
+export const onDeleteMicroCoachMisconception = /* GraphQL */ `
+  subscription OnDeleteMicroCoachMisconception(
+    $filter: ModelSubscriptionMicroCoachMisconceptionFilterInput
   ) {
-    onDeleteMisconception(filter: $filter) {
+    onDeleteMicroCoachMisconception(filter: $filter) {
       id
       sessionId
       classId
@@ -1043,7 +1071,6 @@ export const onDeleteMisconception = /* GraphQL */ `
       }
       rank
       badge
-      isRecommendedFocus
       title
       titleCased
       shortLabel
@@ -1070,9 +1097,11 @@ export const onDeleteMisconception = /* GraphQL */ `
     }
   }
 `;
-export const onCreateActivity = /* GraphQL */ `
-  subscription OnCreateActivity($filter: ModelSubscriptionActivityFilterInput) {
-    onCreateActivity(filter: $filter) {
+export const onCreateMicroCoachActivity = /* GraphQL */ `
+  subscription OnCreateMicroCoachActivity(
+    $filter: ModelSubscriptionMicroCoachActivityFilterInput
+  ) {
+    onCreateMicroCoachActivity(filter: $filter) {
       id
       misconceptionId
       sessionId
@@ -1100,9 +1129,11 @@ export const onCreateActivity = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateActivity = /* GraphQL */ `
-  subscription OnUpdateActivity($filter: ModelSubscriptionActivityFilterInput) {
-    onUpdateActivity(filter: $filter) {
+export const onUpdateMicroCoachActivity = /* GraphQL */ `
+  subscription OnUpdateMicroCoachActivity(
+    $filter: ModelSubscriptionMicroCoachActivityFilterInput
+  ) {
+    onUpdateMicroCoachActivity(filter: $filter) {
       id
       misconceptionId
       sessionId
@@ -1130,9 +1161,11 @@ export const onUpdateActivity = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteActivity = /* GraphQL */ `
-  subscription OnDeleteActivity($filter: ModelSubscriptionActivityFilterInput) {
-    onDeleteActivity(filter: $filter) {
+export const onDeleteMicroCoachActivity = /* GraphQL */ `
+  subscription OnDeleteMicroCoachActivity(
+    $filter: ModelSubscriptionMicroCoachActivityFilterInput
+  ) {
+    onDeleteMicroCoachActivity(filter: $filter) {
       id
       misconceptionId
       sessionId
@@ -1160,11 +1193,11 @@ export const onDeleteActivity = /* GraphQL */ `
     }
   }
 `;
-export const onCreateSavedPlan = /* GraphQL */ `
-  subscription OnCreateSavedPlan(
-    $filter: ModelSubscriptionSavedPlanFilterInput
+export const onCreateMicroCoachSavedPlan = /* GraphQL */ `
+  subscription OnCreateMicroCoachSavedPlan(
+    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
   ) {
-    onCreateSavedPlan(filter: $filter) {
+    onCreateMicroCoachSavedPlan(filter: $filter) {
       id
       classId
       sessionId
@@ -1179,11 +1212,11 @@ export const onCreateSavedPlan = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateSavedPlan = /* GraphQL */ `
-  subscription OnUpdateSavedPlan(
-    $filter: ModelSubscriptionSavedPlanFilterInput
+export const onUpdateMicroCoachSavedPlan = /* GraphQL */ `
+  subscription OnUpdateMicroCoachSavedPlan(
+    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
   ) {
-    onUpdateSavedPlan(filter: $filter) {
+    onUpdateMicroCoachSavedPlan(filter: $filter) {
       id
       classId
       sessionId
@@ -1198,17 +1231,260 @@ export const onUpdateSavedPlan = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteSavedPlan = /* GraphQL */ `
-  subscription OnDeleteSavedPlan(
-    $filter: ModelSubscriptionSavedPlanFilterInput
+export const onDeleteMicroCoachSavedPlan = /* GraphQL */ `
+  subscription OnDeleteMicroCoachSavedPlan(
+    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
   ) {
-    onDeleteSavedPlan(filter: $filter) {
+    onDeleteMicroCoachSavedPlan(filter: $filter) {
       id
       classId
       sessionId
       items {
         id
         status
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateContextData = /* GraphQL */ `
+  subscription OnCreateContextData(
+    $filter: ModelSubscriptionContextDataFilterInput
+  ) {
+    onCreateContextData(filter: $filter) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      nextStepLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateContextData = /* GraphQL */ `
+  subscription OnUpdateContextData(
+    $filter: ModelSubscriptionContextDataFilterInput
+  ) {
+    onUpdateContextData(filter: $filter) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      nextStepLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteContextData = /* GraphQL */ `
+  subscription OnDeleteContextData(
+    $filter: ModelSubscriptionContextDataFilterInput
+  ) {
+    onDeleteContextData(filter: $filter) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      nextStepLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
         __typename
       }
       createdAt

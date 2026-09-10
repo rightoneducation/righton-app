@@ -2,12 +2,12 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
+export const createMicroCoachUser = /* GraphQL */ `
+  mutation CreateMicroCoachUser(
+    $input: CreateMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
   ) {
-    createUser(input: $input, condition: $condition) {
+    createMicroCoachUser(input: $input, condition: $condition) {
       id
       cognitoId
       email
@@ -30,6 +30,8 @@ export const createUser = /* GraphQL */ `
               publishStatus
               studentWorksAnalyzed
               studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
               pregeneratedNextSteps
@@ -72,12 +74,12 @@ export const createUser = /* GraphQL */ `
     }
   }
 `;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
+export const updateMicroCoachUser = /* GraphQL */ `
+  mutation UpdateMicroCoachUser(
+    $input: UpdateMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
   ) {
-    updateUser(input: $input, condition: $condition) {
+    updateMicroCoachUser(input: $input, condition: $condition) {
       id
       cognitoId
       email
@@ -100,6 +102,8 @@ export const updateUser = /* GraphQL */ `
               publishStatus
               studentWorksAnalyzed
               studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
               pregeneratedNextSteps
@@ -142,12 +146,12 @@ export const updateUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
+export const deleteMicroCoachUser = /* GraphQL */ `
+  mutation DeleteMicroCoachUser(
+    $input: DeleteMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
   ) {
-    deleteUser(input: $input, condition: $condition) {
+    deleteMicroCoachUser(input: $input, condition: $condition) {
       id
       cognitoId
       email
@@ -170,6 +174,8 @@ export const deleteUser = /* GraphQL */ `
               publishStatus
               studentWorksAnalyzed
               studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
               pregeneratedNextSteps
@@ -212,12 +218,12 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `;
-export const createClass = /* GraphQL */ `
-  mutation CreateClass(
-    $input: CreateClassInput!
-    $condition: ModelClassConditionInput
+export const createMicroCoachClassroom = /* GraphQL */ `
+  mutation CreateMicroCoachClassroom(
+    $input: CreateMicroCoachClassroomInput!
+    $condition: ModelMicroCoachClassroomConditionInput
   ) {
-    createClass(input: $input, condition: $condition) {
+    createMicroCoachClassroom(input: $input, condition: $condition) {
       id
       userId
       sessions {
@@ -233,6 +239,8 @@ export const createClass = /* GraphQL */ `
           publishStatus
           studentWorksAnalyzed
           studentsWithStrongUnderstanding
+          studentsWithStrongUnderstandingIds
+          studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -257,7 +265,6 @@ export const createClass = /* GraphQL */ `
               classId
               rank
               badge
-              isRecommendedFocus
               title
               titleCased
               shortLabel
@@ -305,12 +312,12 @@ export const createClass = /* GraphQL */ `
     }
   }
 `;
-export const updateClass = /* GraphQL */ `
-  mutation UpdateClass(
-    $input: UpdateClassInput!
-    $condition: ModelClassConditionInput
+export const updateMicroCoachClassroom = /* GraphQL */ `
+  mutation UpdateMicroCoachClassroom(
+    $input: UpdateMicroCoachClassroomInput!
+    $condition: ModelMicroCoachClassroomConditionInput
   ) {
-    updateClass(input: $input, condition: $condition) {
+    updateMicroCoachClassroom(input: $input, condition: $condition) {
       id
       userId
       sessions {
@@ -326,6 +333,8 @@ export const updateClass = /* GraphQL */ `
           publishStatus
           studentWorksAnalyzed
           studentsWithStrongUnderstanding
+          studentsWithStrongUnderstandingIds
+          studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -350,7 +359,6 @@ export const updateClass = /* GraphQL */ `
               classId
               rank
               badge
-              isRecommendedFocus
               title
               titleCased
               shortLabel
@@ -398,12 +406,12 @@ export const updateClass = /* GraphQL */ `
     }
   }
 `;
-export const deleteClass = /* GraphQL */ `
-  mutation DeleteClass(
-    $input: DeleteClassInput!
-    $condition: ModelClassConditionInput
+export const deleteMicroCoachClassroom = /* GraphQL */ `
+  mutation DeleteMicroCoachClassroom(
+    $input: DeleteMicroCoachClassroomInput!
+    $condition: ModelMicroCoachClassroomConditionInput
   ) {
-    deleteClass(input: $input, condition: $condition) {
+    deleteMicroCoachClassroom(input: $input, condition: $condition) {
       id
       userId
       sessions {
@@ -419,6 +427,8 @@ export const deleteClass = /* GraphQL */ `
           publishStatus
           studentWorksAnalyzed
           studentsWithStrongUnderstanding
+          studentsWithStrongUnderstandingIds
+          studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -443,7 +453,6 @@ export const deleteClass = /* GraphQL */ `
               classId
               rank
               badge
-              isRecommendedFocus
               title
               titleCased
               shortLabel
@@ -491,12 +500,12 @@ export const deleteClass = /* GraphQL */ `
     }
   }
 `;
-export const createStudent = /* GraphQL */ `
-  mutation CreateStudent(
-    $input: CreateStudentInput!
-    $condition: ModelStudentConditionInput
+export const createMicroCoachStudent = /* GraphQL */ `
+  mutation CreateMicroCoachStudent(
+    $input: CreateMicroCoachStudentInput!
+    $condition: ModelMicroCoachStudentConditionInput
   ) {
-    createStudent(input: $input, condition: $condition) {
+    createMicroCoachStudent(input: $input, condition: $condition) {
       id
       classId
       name
@@ -507,12 +516,12 @@ export const createStudent = /* GraphQL */ `
     }
   }
 `;
-export const updateStudent = /* GraphQL */ `
-  mutation UpdateStudent(
-    $input: UpdateStudentInput!
-    $condition: ModelStudentConditionInput
+export const updateMicroCoachStudent = /* GraphQL */ `
+  mutation UpdateMicroCoachStudent(
+    $input: UpdateMicroCoachStudentInput!
+    $condition: ModelMicroCoachStudentConditionInput
   ) {
-    updateStudent(input: $input, condition: $condition) {
+    updateMicroCoachStudent(input: $input, condition: $condition) {
       id
       classId
       name
@@ -523,12 +532,12 @@ export const updateStudent = /* GraphQL */ `
     }
   }
 `;
-export const deleteStudent = /* GraphQL */ `
-  mutation DeleteStudent(
-    $input: DeleteStudentInput!
-    $condition: ModelStudentConditionInput
+export const deleteMicroCoachStudent = /* GraphQL */ `
+  mutation DeleteMicroCoachStudent(
+    $input: DeleteMicroCoachStudentInput!
+    $condition: ModelMicroCoachStudentConditionInput
   ) {
-    deleteStudent(input: $input, condition: $condition) {
+    deleteMicroCoachStudent(input: $input, condition: $condition) {
       id
       classId
       name
@@ -539,12 +548,12 @@ export const deleteStudent = /* GraphQL */ `
     }
   }
 `;
-export const createSession = /* GraphQL */ `
-  mutation CreateSession(
-    $input: CreateSessionInput!
-    $condition: ModelSessionConditionInput
+export const createMicroCoachSession = /* GraphQL */ `
+  mutation CreateMicroCoachSession(
+    $input: CreateMicroCoachSessionInput!
+    $condition: ModelMicroCoachSessionConditionInput
   ) {
-    createSession(input: $input, condition: $condition) {
+    createMicroCoachSession(input: $input, condition: $condition) {
       id
       classId
       sessionLabel
@@ -556,6 +565,8 @@ export const createSession = /* GraphQL */ `
       publishStatus
       studentWorksAnalyzed
       studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -605,7 +616,6 @@ export const createSession = /* GraphQL */ `
           }
           rank
           badge
-          isRecommendedFocus
           title
           titleCased
           shortLabel
@@ -641,12 +651,12 @@ export const createSession = /* GraphQL */ `
     }
   }
 `;
-export const updateSession = /* GraphQL */ `
-  mutation UpdateSession(
-    $input: UpdateSessionInput!
-    $condition: ModelSessionConditionInput
+export const updateMicroCoachSession = /* GraphQL */ `
+  mutation UpdateMicroCoachSession(
+    $input: UpdateMicroCoachSessionInput!
+    $condition: ModelMicroCoachSessionConditionInput
   ) {
-    updateSession(input: $input, condition: $condition) {
+    updateMicroCoachSession(input: $input, condition: $condition) {
       id
       classId
       sessionLabel
@@ -658,6 +668,8 @@ export const updateSession = /* GraphQL */ `
       publishStatus
       studentWorksAnalyzed
       studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -707,7 +719,6 @@ export const updateSession = /* GraphQL */ `
           }
           rank
           badge
-          isRecommendedFocus
           title
           titleCased
           shortLabel
@@ -743,12 +754,12 @@ export const updateSession = /* GraphQL */ `
     }
   }
 `;
-export const deleteSession = /* GraphQL */ `
-  mutation DeleteSession(
-    $input: DeleteSessionInput!
-    $condition: ModelSessionConditionInput
+export const deleteMicroCoachSession = /* GraphQL */ `
+  mutation DeleteMicroCoachSession(
+    $input: DeleteMicroCoachSessionInput!
+    $condition: ModelMicroCoachSessionConditionInput
   ) {
-    deleteSession(input: $input, condition: $condition) {
+    deleteMicroCoachSession(input: $input, condition: $condition) {
       id
       classId
       sessionLabel
@@ -760,6 +771,8 @@ export const deleteSession = /* GraphQL */ `
       publishStatus
       studentWorksAnalyzed
       studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -809,7 +822,6 @@ export const deleteSession = /* GraphQL */ `
           }
           rank
           badge
-          isRecommendedFocus
           title
           titleCased
           shortLabel
@@ -845,12 +857,12 @@ export const deleteSession = /* GraphQL */ `
     }
   }
 `;
-export const createAssessment = /* GraphQL */ `
-  mutation CreateAssessment(
-    $input: CreateAssessmentInput!
-    $condition: ModelAssessmentConditionInput
+export const createMicroCoachAssessment = /* GraphQL */ `
+  mutation CreateMicroCoachAssessment(
+    $input: CreateMicroCoachAssessmentInput!
+    $condition: ModelMicroCoachAssessmentConditionInput
   ) {
-    createAssessment(input: $input, condition: $condition) {
+    createMicroCoachAssessment(input: $input, condition: $condition) {
       id
       classId
       sessionId
@@ -863,12 +875,12 @@ export const createAssessment = /* GraphQL */ `
     }
   }
 `;
-export const updateAssessment = /* GraphQL */ `
-  mutation UpdateAssessment(
-    $input: UpdateAssessmentInput!
-    $condition: ModelAssessmentConditionInput
+export const updateMicroCoachAssessment = /* GraphQL */ `
+  mutation UpdateMicroCoachAssessment(
+    $input: UpdateMicroCoachAssessmentInput!
+    $condition: ModelMicroCoachAssessmentConditionInput
   ) {
-    updateAssessment(input: $input, condition: $condition) {
+    updateMicroCoachAssessment(input: $input, condition: $condition) {
       id
       classId
       sessionId
@@ -881,12 +893,12 @@ export const updateAssessment = /* GraphQL */ `
     }
   }
 `;
-export const deleteAssessment = /* GraphQL */ `
-  mutation DeleteAssessment(
-    $input: DeleteAssessmentInput!
-    $condition: ModelAssessmentConditionInput
+export const deleteMicroCoachAssessment = /* GraphQL */ `
+  mutation DeleteMicroCoachAssessment(
+    $input: DeleteMicroCoachAssessmentInput!
+    $condition: ModelMicroCoachAssessmentConditionInput
   ) {
-    deleteAssessment(input: $input, condition: $condition) {
+    deleteMicroCoachAssessment(input: $input, condition: $condition) {
       id
       classId
       sessionId
@@ -899,12 +911,12 @@ export const deleteAssessment = /* GraphQL */ `
     }
   }
 `;
-export const createMisconception = /* GraphQL */ `
-  mutation CreateMisconception(
-    $input: CreateMisconceptionInput!
-    $condition: ModelMisconceptionConditionInput
+export const createMicroCoachMisconception = /* GraphQL */ `
+  mutation CreateMicroCoachMisconception(
+    $input: CreateMicroCoachMisconceptionInput!
+    $condition: ModelMicroCoachMisconceptionConditionInput
   ) {
-    createMisconception(input: $input, condition: $condition) {
+    createMicroCoachMisconception(input: $input, condition: $condition) {
       id
       sessionId
       classId
@@ -940,7 +952,6 @@ export const createMisconception = /* GraphQL */ `
       }
       rank
       badge
-      isRecommendedFocus
       title
       titleCased
       shortLabel
@@ -967,12 +978,12 @@ export const createMisconception = /* GraphQL */ `
     }
   }
 `;
-export const updateMisconception = /* GraphQL */ `
-  mutation UpdateMisconception(
-    $input: UpdateMisconceptionInput!
-    $condition: ModelMisconceptionConditionInput
+export const updateMicroCoachMisconception = /* GraphQL */ `
+  mutation UpdateMicroCoachMisconception(
+    $input: UpdateMicroCoachMisconceptionInput!
+    $condition: ModelMicroCoachMisconceptionConditionInput
   ) {
-    updateMisconception(input: $input, condition: $condition) {
+    updateMicroCoachMisconception(input: $input, condition: $condition) {
       id
       sessionId
       classId
@@ -1008,7 +1019,6 @@ export const updateMisconception = /* GraphQL */ `
       }
       rank
       badge
-      isRecommendedFocus
       title
       titleCased
       shortLabel
@@ -1035,12 +1045,12 @@ export const updateMisconception = /* GraphQL */ `
     }
   }
 `;
-export const deleteMisconception = /* GraphQL */ `
-  mutation DeleteMisconception(
-    $input: DeleteMisconceptionInput!
-    $condition: ModelMisconceptionConditionInput
+export const deleteMicroCoachMisconception = /* GraphQL */ `
+  mutation DeleteMicroCoachMisconception(
+    $input: DeleteMicroCoachMisconceptionInput!
+    $condition: ModelMicroCoachMisconceptionConditionInput
   ) {
-    deleteMisconception(input: $input, condition: $condition) {
+    deleteMicroCoachMisconception(input: $input, condition: $condition) {
       id
       sessionId
       classId
@@ -1076,7 +1086,6 @@ export const deleteMisconception = /* GraphQL */ `
       }
       rank
       badge
-      isRecommendedFocus
       title
       titleCased
       shortLabel
@@ -1103,12 +1112,12 @@ export const deleteMisconception = /* GraphQL */ `
     }
   }
 `;
-export const createActivity = /* GraphQL */ `
-  mutation CreateActivity(
-    $input: CreateActivityInput!
-    $condition: ModelActivityConditionInput
+export const createMicroCoachActivity = /* GraphQL */ `
+  mutation CreateMicroCoachActivity(
+    $input: CreateMicroCoachActivityInput!
+    $condition: ModelMicroCoachActivityConditionInput
   ) {
-    createActivity(input: $input, condition: $condition) {
+    createMicroCoachActivity(input: $input, condition: $condition) {
       id
       misconceptionId
       sessionId
@@ -1136,12 +1145,12 @@ export const createActivity = /* GraphQL */ `
     }
   }
 `;
-export const updateActivity = /* GraphQL */ `
-  mutation UpdateActivity(
-    $input: UpdateActivityInput!
-    $condition: ModelActivityConditionInput
+export const updateMicroCoachActivity = /* GraphQL */ `
+  mutation UpdateMicroCoachActivity(
+    $input: UpdateMicroCoachActivityInput!
+    $condition: ModelMicroCoachActivityConditionInput
   ) {
-    updateActivity(input: $input, condition: $condition) {
+    updateMicroCoachActivity(input: $input, condition: $condition) {
       id
       misconceptionId
       sessionId
@@ -1169,12 +1178,12 @@ export const updateActivity = /* GraphQL */ `
     }
   }
 `;
-export const deleteActivity = /* GraphQL */ `
-  mutation DeleteActivity(
-    $input: DeleteActivityInput!
-    $condition: ModelActivityConditionInput
+export const deleteMicroCoachActivity = /* GraphQL */ `
+  mutation DeleteMicroCoachActivity(
+    $input: DeleteMicroCoachActivityInput!
+    $condition: ModelMicroCoachActivityConditionInput
   ) {
-    deleteActivity(input: $input, condition: $condition) {
+    deleteMicroCoachActivity(input: $input, condition: $condition) {
       id
       misconceptionId
       sessionId
@@ -1202,12 +1211,12 @@ export const deleteActivity = /* GraphQL */ `
     }
   }
 `;
-export const createSavedPlan = /* GraphQL */ `
-  mutation CreateSavedPlan(
-    $input: CreateSavedPlanInput!
-    $condition: ModelSavedPlanConditionInput
+export const createMicroCoachSavedPlan = /* GraphQL */ `
+  mutation CreateMicroCoachSavedPlan(
+    $input: CreateMicroCoachSavedPlanInput!
+    $condition: ModelMicroCoachSavedPlanConditionInput
   ) {
-    createSavedPlan(input: $input, condition: $condition) {
+    createMicroCoachSavedPlan(input: $input, condition: $condition) {
       id
       classId
       sessionId
@@ -1222,12 +1231,12 @@ export const createSavedPlan = /* GraphQL */ `
     }
   }
 `;
-export const updateSavedPlan = /* GraphQL */ `
-  mutation UpdateSavedPlan(
-    $input: UpdateSavedPlanInput!
-    $condition: ModelSavedPlanConditionInput
+export const updateMicroCoachSavedPlan = /* GraphQL */ `
+  mutation UpdateMicroCoachSavedPlan(
+    $input: UpdateMicroCoachSavedPlanInput!
+    $condition: ModelMicroCoachSavedPlanConditionInput
   ) {
-    updateSavedPlan(input: $input, condition: $condition) {
+    updateMicroCoachSavedPlan(input: $input, condition: $condition) {
       id
       classId
       sessionId
@@ -1242,18 +1251,264 @@ export const updateSavedPlan = /* GraphQL */ `
     }
   }
 `;
-export const deleteSavedPlan = /* GraphQL */ `
-  mutation DeleteSavedPlan(
-    $input: DeleteSavedPlanInput!
-    $condition: ModelSavedPlanConditionInput
+export const deleteMicroCoachSavedPlan = /* GraphQL */ `
+  mutation DeleteMicroCoachSavedPlan(
+    $input: DeleteMicroCoachSavedPlanInput!
+    $condition: ModelMicroCoachSavedPlanConditionInput
   ) {
-    deleteSavedPlan(input: $input, condition: $condition) {
+    deleteMicroCoachSavedPlan(input: $input, condition: $condition) {
       id
       classId
       sessionId
       items {
         id
         status
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createContextData = /* GraphQL */ `
+  mutation CreateContextData(
+    $input: CreateContextDataInput!
+    $condition: ModelContextDataConditionInput
+  ) {
+    createContextData(input: $input, condition: $condition) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      nextStepLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateContextData = /* GraphQL */ `
+  mutation UpdateContextData(
+    $input: UpdateContextDataInput!
+    $condition: ModelContextDataConditionInput
+  ) {
+    updateContextData(input: $input, condition: $condition) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      nextStepLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteContextData = /* GraphQL */ `
+  mutation DeleteContextData(
+    $input: DeleteContextDataInput!
+    $condition: ModelContextDataConditionInput
+  ) {
+    deleteContextData(input: $input, condition: $condition) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      nextStepLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
         __typename
       }
       createdAt
