@@ -25,6 +25,7 @@ needs AWS credentials and spends real model tokens. `AMPLIFY_ENV` defaults to `d
 | `--session <id\|all>` | **required** | One session, or `all`. Accepts a prefix, so `--session ef38` works. |
 | `--condition <NAME\|all>` | `NONE` | One condition, or `all`. |
 | `--live-graph` | off | Re-query Learning Commons instead of replaying the archived response. |
+| `--version <tag>` | none | Optional label recorded in the run id and manifest, for grouping runs in the preview dropdown. Purely a tag — it does **not** pin prompt config; the Lambdas import theirs statically at deploy time. |
 | `--list` | — | Show available sessions and conditions, then exit. |
 
 `--session` has no default on purpose — fanning out across every session should be

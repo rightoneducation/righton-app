@@ -78,6 +78,14 @@ function main(): void {
     conditions = [wantedCondition];
   }
 
+  // Optional version tag. Validated here rather than downstream: a tag that
+  // sanitises away to nothing would produce a malformed run directory name, and
+  // finding that out after the model calls is too late.
+  const version = arg('--version');
+  if (version !== null && version.replace(/[^a-zA-Z0-9]+/g, '') === '') {
+    throw new Error(`--version "${version}" contains no alphanumeric characters.`);
+  }
+
   const graph = has('--live-graph') ? 'live' : 'fixture';
   const total = targets.length * conditions.length;
 
@@ -85,6 +93,7 @@ function main(): void {
   console.log(`  sessions   : ${targets.join(', ')}`);
   console.log(`  conditions : ${conditions.join(', ')}`);
   console.log(`  graph      : ${graph}${graph === 'live' ? '  (re-querying Learning Commons)' : '  (replaying archive)'}`);
+  if (version !== null) console.log(`  version    : ${version}`);
   console.log(`  runs       : ${total}\n`);
 
   let done = 0;
@@ -94,11 +103,9 @@ function main(): void {
     for (const session of targets) {
       done += 1;
       console.log(`\n──────── [${done}/${total}] ${session} · ${condition} ────────`);
-      const result = spawnSync(
-        'npx',
-        ['ts-node', GENERATE, '--fixture', session, '--condition', condition, '--graph', graph],
-        { stdio: 'inherit' },
-      );
+      const args = ['ts-node', GENERATE, '--fixture', session, '--condition', condition, '--graph', graph];
+      if (version !== null) args.push('--version', version);
+      const result = spawnSync('npx', args, { stdio: 'inherit' });
       // Keep going on failure — one bad session should not cost the whole matrix.
       if (result.status !== 0) failures.push(`${session}/${condition}`);
     }

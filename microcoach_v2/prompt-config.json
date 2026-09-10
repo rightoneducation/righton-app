@@ -35,7 +35,7 @@
         "minConceptualSeverity": 0.8,
         "minForwardImpact": 0.7
       },
-      "maxMisconceptions": 4,
+      "maxMisconceptions": 3,
       "secondaryMustBeMeaningfullyDistinct": true,
       "tiebreakers": ["prefer_conceptual_over_procedural", "prefer_broader_downstream_impact"]
     },

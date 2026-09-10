@@ -13,6 +13,8 @@ export interface RunOptions {
   sessionLabel: string;
   amplifyEnv: string;
   condition?: MaskOptionEnum;
+  /** Optional `--version` tag. Groups runs for comparison; changes nothing the pipeline does. */
+  version?: string;
 }
 
 export interface CallTrace {
@@ -57,7 +59,10 @@ export class RunCapture {
     this.opts = opts;
     const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const cond = `-${slug(opts.condition ?? MaskOptionEnum.NONE)}`;
-    this.runId = `${slug(opts.classroomName)}-${slug(opts.sessionLabel)}${cond}-${stamp}`;
+    // Version sits before the timestamp so runs still sort chronologically
+    // within a version, and untagged runs keep their existing id shape.
+    const ver = opts.version ? `-${slug(opts.version)}` : '';
+    this.runId = `${slug(opts.classroomName)}-${slug(opts.sessionLabel)}${cond}${ver}-${stamp}`;
     this.dir = path.join(RUNS_ROOT, this.runId);
     fs.mkdirSync(path.join(this.dir, 'calls'), { recursive: true });
     fs.mkdirSync(path.join(this.dir, 'prompts'), { recursive: true });
@@ -129,6 +134,7 @@ export class RunCapture {
       gitSha: gitSha(),
       amplifyEnv: this.opts.amplifyEnv,
       condition: this.opts.condition ?? MaskOptionEnum.NONE,
+      version: this.opts.version ?? null,
       classroomId: this.opts.classroomId,
       classroomName: this.opts.classroomName,
       sessionId: this.opts.sessionId,

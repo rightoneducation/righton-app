@@ -56,3 +56,6 @@ seed/eval/runs/
 
 # seed CLI fixtures (local only, mirrors microcoach/.gitignore)
 Data/
+
+# preview scratchpad run data (synced by `yarn preview:sync`, ~2.6MB per run)
+public/preview-runs/

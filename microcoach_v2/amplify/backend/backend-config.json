@@ -110,6 +110,16 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachv2LLMGenInstrNeed": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachv2LLMGenMisconception": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachv2LLMVerify": {
       "build": true,
       "providerPlugin": "awscloudformation",
