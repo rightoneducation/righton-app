@@ -225,6 +225,38 @@
         }
       ]
     },
+    "AMPLIFY_function_microcoachv2LLMGenInstrNeed_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenInstrNeed"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMGenInstrNeed_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenInstrNeed"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMGenMisconception_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenMisconception"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMGenMisconception_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenMisconception"
+        }
+      ]
+    },
     "AMPLIFY_function_microcoachv2LLMVerify_deploymentBucketName": {
       "usedBy": [
         {
