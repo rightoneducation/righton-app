@@ -2,9 +2,9 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getUser = /* GraphQL */ `
-  query GetUser($id: ID!) {
-    getUser(id: $id) {
+export const getMicroCoachUser = /* GraphQL */ `
+  query GetMicroCoachUser($id: ID!) {
+    getMicroCoachUser(id: $id) {
       id
       cognitoId
       email
@@ -27,6 +27,8 @@ export const getUser = /* GraphQL */ `
               publishStatus
               studentWorksAnalyzed
               studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
               pregeneratedNextSteps
@@ -69,13 +71,13 @@ export const getUser = /* GraphQL */ `
     }
   }
 `;
-export const listUsers = /* GraphQL */ `
-  query ListUsers(
-    $filter: ModelUserFilterInput
+export const listMicroCoachUsers = /* GraphQL */ `
+  query ListMicroCoachUsers(
+    $filter: ModelMicroCoachUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         cognitoId
@@ -115,9 +117,9 @@ export const listUsers = /* GraphQL */ `
     }
   }
 `;
-export const getClass = /* GraphQL */ `
-  query GetClass($id: ID!) {
-    getClass(id: $id) {
+export const getMicroCoachClassroom = /* GraphQL */ `
+  query GetMicroCoachClassroom($id: ID!) {
+    getMicroCoachClassroom(id: $id) {
       id
       userId
       sessions {
@@ -133,6 +135,8 @@ export const getClass = /* GraphQL */ `
           publishStatus
           studentWorksAnalyzed
           studentsWithStrongUnderstanding
+          studentsWithStrongUnderstandingIds
+          studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
           assessments {
@@ -157,7 +161,6 @@ export const getClass = /* GraphQL */ `
               classId
               rank
               badge
-              isRecommendedFocus
               title
               titleCased
               shortLabel
@@ -205,13 +208,17 @@ export const getClass = /* GraphQL */ `
     }
   }
 `;
-export const listClasses = /* GraphQL */ `
-  query ListClasses(
-    $filter: ModelClassFilterInput
+export const listMicroCoachClassrooms = /* GraphQL */ `
+  query ListMicroCoachClassrooms(
+    $filter: ModelMicroCoachClassroomFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachClassrooms(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         userId
@@ -228,6 +235,8 @@ export const listClasses = /* GraphQL */ `
             publishStatus
             studentWorksAnalyzed
             studentsWithStrongUnderstanding
+            studentsWithStrongUnderstandingIds
+            studentIdsNeedingSupport
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -273,9 +282,9 @@ export const listClasses = /* GraphQL */ `
     }
   }
 `;
-export const getStudent = /* GraphQL */ `
-  query GetStudent($id: ID!) {
-    getStudent(id: $id) {
+export const getMicroCoachStudent = /* GraphQL */ `
+  query GetMicroCoachStudent($id: ID!) {
+    getMicroCoachStudent(id: $id) {
       id
       classId
       name
@@ -286,13 +295,17 @@ export const getStudent = /* GraphQL */ `
     }
   }
 `;
-export const listStudents = /* GraphQL */ `
-  query ListStudents(
-    $filter: ModelStudentFilterInput
+export const listMicroCoachStudents = /* GraphQL */ `
+  query ListMicroCoachStudents(
+    $filter: ModelMicroCoachStudentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachStudents(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         classId
@@ -307,9 +320,9 @@ export const listStudents = /* GraphQL */ `
     }
   }
 `;
-export const getSession = /* GraphQL */ `
-  query GetSession($id: ID!) {
-    getSession(id: $id) {
+export const getMicroCoachSession = /* GraphQL */ `
+  query GetMicroCoachSession($id: ID!) {
+    getMicroCoachSession(id: $id) {
       id
       classId
       sessionLabel
@@ -321,6 +334,8 @@ export const getSession = /* GraphQL */ `
       publishStatus
       studentWorksAnalyzed
       studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
       assessments {
@@ -370,7 +385,6 @@ export const getSession = /* GraphQL */ `
           }
           rank
           badge
-          isRecommendedFocus
           title
           titleCased
           shortLabel
@@ -406,13 +420,17 @@ export const getSession = /* GraphQL */ `
     }
   }
 `;
-export const listSessions = /* GraphQL */ `
-  query ListSessions(
-    $filter: ModelSessionFilterInput
+export const listMicroCoachSessions = /* GraphQL */ `
+  query ListMicroCoachSessions(
+    $filter: ModelMicroCoachSessionFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachSessions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         classId
@@ -425,6 +443,8 @@ export const listSessions = /* GraphQL */ `
         publishStatus
         studentWorksAnalyzed
         studentsWithStrongUnderstanding
+        studentsWithStrongUnderstandingIds
+        studentIdsNeedingSupport
         ppqAssessmentId
         postPpqAssessmentId
         assessments {
@@ -453,7 +473,6 @@ export const listSessions = /* GraphQL */ `
             }
             rank
             badge
-            isRecommendedFocus
             title
             titleCased
             shortLabel
@@ -492,9 +511,9 @@ export const listSessions = /* GraphQL */ `
     }
   }
 `;
-export const getAssessment = /* GraphQL */ `
-  query GetAssessment($id: ID!) {
-    getAssessment(id: $id) {
+export const getMicroCoachAssessment = /* GraphQL */ `
+  query GetMicroCoachAssessment($id: ID!) {
+    getMicroCoachAssessment(id: $id) {
       id
       classId
       sessionId
@@ -507,13 +526,17 @@ export const getAssessment = /* GraphQL */ `
     }
   }
 `;
-export const listAssessments = /* GraphQL */ `
-  query ListAssessments(
-    $filter: ModelAssessmentFilterInput
+export const listMicroCoachAssessments = /* GraphQL */ `
+  query ListMicroCoachAssessments(
+    $filter: ModelMicroCoachAssessmentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listAssessments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachAssessments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         classId
@@ -530,9 +553,9 @@ export const listAssessments = /* GraphQL */ `
     }
   }
 `;
-export const getMisconception = /* GraphQL */ `
-  query GetMisconception($id: ID!) {
-    getMisconception(id: $id) {
+export const getMicroCoachMisconception = /* GraphQL */ `
+  query GetMicroCoachMisconception($id: ID!) {
+    getMicroCoachMisconception(id: $id) {
       id
       sessionId
       classId
@@ -568,7 +591,6 @@ export const getMisconception = /* GraphQL */ `
       }
       rank
       badge
-      isRecommendedFocus
       title
       titleCased
       shortLabel
@@ -595,13 +617,17 @@ export const getMisconception = /* GraphQL */ `
     }
   }
 `;
-export const listMisconceptions = /* GraphQL */ `
-  query ListMisconceptions(
-    $filter: ModelMisconceptionFilterInput
+export const listMicroCoachMisconceptions = /* GraphQL */ `
+  query ListMicroCoachMisconceptions(
+    $filter: ModelMicroCoachMisconceptionFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listMisconceptions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachMisconceptions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         sessionId
@@ -638,7 +664,6 @@ export const listMisconceptions = /* GraphQL */ `
         }
         rank
         badge
-        isRecommendedFocus
         title
         titleCased
         shortLabel
@@ -668,9 +693,9 @@ export const listMisconceptions = /* GraphQL */ `
     }
   }
 `;
-export const getActivity = /* GraphQL */ `
-  query GetActivity($id: ID!) {
-    getActivity(id: $id) {
+export const getMicroCoachActivity = /* GraphQL */ `
+  query GetMicroCoachActivity($id: ID!) {
+    getMicroCoachActivity(id: $id) {
       id
       misconceptionId
       sessionId
@@ -698,13 +723,17 @@ export const getActivity = /* GraphQL */ `
     }
   }
 `;
-export const listActivities = /* GraphQL */ `
-  query ListActivities(
-    $filter: ModelActivityFilterInput
+export const listMicroCoachActivities = /* GraphQL */ `
+  query ListMicroCoachActivities(
+    $filter: ModelMicroCoachActivityFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listActivities(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachActivities(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         misconceptionId
@@ -736,9 +765,9 @@ export const listActivities = /* GraphQL */ `
     }
   }
 `;
-export const getSavedPlan = /* GraphQL */ `
-  query GetSavedPlan($id: ID!) {
-    getSavedPlan(id: $id) {
+export const getMicroCoachSavedPlan = /* GraphQL */ `
+  query GetMicroCoachSavedPlan($id: ID!) {
+    getMicroCoachSavedPlan(id: $id) {
       id
       classId
       sessionId
@@ -753,13 +782,17 @@ export const getSavedPlan = /* GraphQL */ `
     }
   }
 `;
-export const listSavedPlans = /* GraphQL */ `
-  query ListSavedPlans(
-    $filter: ModelSavedPlanFilterInput
+export const listMicroCoachSavedPlans = /* GraphQL */ `
+  query ListMicroCoachSavedPlans(
+    $filter: ModelMicroCoachSavedPlanFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listSavedPlans(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMicroCoachSavedPlans(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         classId
@@ -782,7 +815,7 @@ export const usersByCognitoId = /* GraphQL */ `
   query UsersByCognitoId(
     $cognitoId: String!
     $sortDirection: ModelSortDirection
-    $filter: ModelUserFilterInput
+    $filter: ModelMicroCoachUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
@@ -836,7 +869,7 @@ export const usersByEmail = /* GraphQL */ `
   query UsersByEmail(
     $email: String!
     $sortDirection: ModelSortDirection
-    $filter: ModelUserFilterInput
+    $filter: ModelMicroCoachUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
@@ -890,7 +923,7 @@ export const usersByRole = /* GraphQL */ `
   query UsersByRole(
     $role: UserRole!
     $sortDirection: ModelSortDirection
-    $filter: ModelUserFilterInput
+    $filter: ModelMicroCoachUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
@@ -940,15 +973,15 @@ export const usersByRole = /* GraphQL */ `
     }
   }
 `;
-export const classesByUserId = /* GraphQL */ `
-  query ClassesByUserId(
+export const microCoachClassroomsByUserId = /* GraphQL */ `
+  query MicroCoachClassroomsByUserId(
     $userId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelClassFilterInput
+    $filter: ModelMicroCoachClassroomFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    classesByUserId(
+    microCoachClassroomsByUserId(
       userId: $userId
       sortDirection: $sortDirection
       filter: $filter
@@ -971,6 +1004,8 @@ export const classesByUserId = /* GraphQL */ `
             publishStatus
             studentWorksAnalyzed
             studentsWithStrongUnderstanding
+            studentsWithStrongUnderstandingIds
+            studentIdsNeedingSupport
             ppqAssessmentId
             postPpqAssessmentId
             assessments {
@@ -1016,15 +1051,15 @@ export const classesByUserId = /* GraphQL */ `
     }
   }
 `;
-export const studentsByClassId = /* GraphQL */ `
-  query StudentsByClassId(
+export const microCoachStudentsByClassId = /* GraphQL */ `
+  query MicroCoachStudentsByClassId(
     $classId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelStudentFilterInput
+    $filter: ModelMicroCoachStudentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    studentsByClassId(
+    microCoachStudentsByClassId(
       classId: $classId
       sortDirection: $sortDirection
       filter: $filter
@@ -1045,15 +1080,15 @@ export const studentsByClassId = /* GraphQL */ `
     }
   }
 `;
-export const sessionsByClassId = /* GraphQL */ `
-  query SessionsByClassId(
+export const microCoachSessionsByClassId = /* GraphQL */ `
+  query MicroCoachSessionsByClassId(
     $classId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelSessionFilterInput
+    $filter: ModelMicroCoachSessionFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    sessionsByClassId(
+    microCoachSessionsByClassId(
       classId: $classId
       sortDirection: $sortDirection
       filter: $filter
@@ -1072,6 +1107,8 @@ export const sessionsByClassId = /* GraphQL */ `
         publishStatus
         studentWorksAnalyzed
         studentsWithStrongUnderstanding
+        studentsWithStrongUnderstandingIds
+        studentIdsNeedingSupport
         ppqAssessmentId
         postPpqAssessmentId
         assessments {
@@ -1100,7 +1137,6 @@ export const sessionsByClassId = /* GraphQL */ `
             }
             rank
             badge
-            isRecommendedFocus
             title
             titleCased
             shortLabel
@@ -1139,15 +1175,15 @@ export const sessionsByClassId = /* GraphQL */ `
     }
   }
 `;
-export const assessmentsByClassId = /* GraphQL */ `
-  query AssessmentsByClassId(
+export const microCoachAssessmentsByClassId = /* GraphQL */ `
+  query MicroCoachAssessmentsByClassId(
     $classId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelAssessmentFilterInput
+    $filter: ModelMicroCoachAssessmentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    assessmentsByClassId(
+    microCoachAssessmentsByClassId(
       classId: $classId
       sortDirection: $sortDirection
       filter: $filter
@@ -1170,15 +1206,15 @@ export const assessmentsByClassId = /* GraphQL */ `
     }
   }
 `;
-export const assessmentsBySessionId = /* GraphQL */ `
-  query AssessmentsBySessionId(
+export const microCoachAssessmentsBySessionId = /* GraphQL */ `
+  query MicroCoachAssessmentsBySessionId(
     $sessionId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelAssessmentFilterInput
+    $filter: ModelMicroCoachAssessmentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    assessmentsBySessionId(
+    microCoachAssessmentsBySessionId(
       sessionId: $sessionId
       sortDirection: $sortDirection
       filter: $filter
@@ -1201,15 +1237,15 @@ export const assessmentsBySessionId = /* GraphQL */ `
     }
   }
 `;
-export const misconceptionsBySessionId = /* GraphQL */ `
-  query MisconceptionsBySessionId(
+export const microCoachMisconceptionsBySessionId = /* GraphQL */ `
+  query MicroCoachMisconceptionsBySessionId(
     $sessionId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelMisconceptionFilterInput
+    $filter: ModelMicroCoachMisconceptionFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    misconceptionsBySessionId(
+    microCoachMisconceptionsBySessionId(
       sessionId: $sessionId
       sortDirection: $sortDirection
       filter: $filter
@@ -1252,7 +1288,6 @@ export const misconceptionsBySessionId = /* GraphQL */ `
         }
         rank
         badge
-        isRecommendedFocus
         title
         titleCased
         shortLabel
@@ -1282,15 +1317,15 @@ export const misconceptionsBySessionId = /* GraphQL */ `
     }
   }
 `;
-export const misconceptionsByClassId = /* GraphQL */ `
-  query MisconceptionsByClassId(
+export const microCoachMisconceptionsByClassId = /* GraphQL */ `
+  query MicroCoachMisconceptionsByClassId(
     $classId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelMisconceptionFilterInput
+    $filter: ModelMicroCoachMisconceptionFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    misconceptionsByClassId(
+    microCoachMisconceptionsByClassId(
       classId: $classId
       sortDirection: $sortDirection
       filter: $filter
@@ -1333,7 +1368,6 @@ export const misconceptionsByClassId = /* GraphQL */ `
         }
         rank
         badge
-        isRecommendedFocus
         title
         titleCased
         shortLabel
@@ -1363,15 +1397,15 @@ export const misconceptionsByClassId = /* GraphQL */ `
     }
   }
 `;
-export const activitiesByMisconceptionId = /* GraphQL */ `
-  query ActivitiesByMisconceptionId(
+export const microCoachActivitiesByMisconceptionId = /* GraphQL */ `
+  query MicroCoachActivitiesByMisconceptionId(
     $misconceptionId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelActivityFilterInput
+    $filter: ModelMicroCoachActivityFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    activitiesByMisconceptionId(
+    microCoachActivitiesByMisconceptionId(
       misconceptionId: $misconceptionId
       sortDirection: $sortDirection
       filter: $filter
@@ -1409,15 +1443,15 @@ export const activitiesByMisconceptionId = /* GraphQL */ `
     }
   }
 `;
-export const activitiesBySessionId = /* GraphQL */ `
-  query ActivitiesBySessionId(
+export const microCoachActivitiesBySessionId = /* GraphQL */ `
+  query MicroCoachActivitiesBySessionId(
     $sessionId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelActivityFilterInput
+    $filter: ModelMicroCoachActivityFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    activitiesBySessionId(
+    microCoachActivitiesBySessionId(
       sessionId: $sessionId
       sortDirection: $sortDirection
       filter: $filter
@@ -1455,15 +1489,15 @@ export const activitiesBySessionId = /* GraphQL */ `
     }
   }
 `;
-export const activitiesByClassId = /* GraphQL */ `
-  query ActivitiesByClassId(
+export const microCoachActivitiesByClassId = /* GraphQL */ `
+  query MicroCoachActivitiesByClassId(
     $classId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelActivityFilterInput
+    $filter: ModelMicroCoachActivityFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    activitiesByClassId(
+    microCoachActivitiesByClassId(
       classId: $classId
       sortDirection: $sortDirection
       filter: $filter
@@ -1501,15 +1535,15 @@ export const activitiesByClassId = /* GraphQL */ `
     }
   }
 `;
-export const savedPlansByClassId = /* GraphQL */ `
-  query SavedPlansByClassId(
+export const microCoachSavedPlansByClassId = /* GraphQL */ `
+  query MicroCoachSavedPlansByClassId(
     $classId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelSavedPlanFilterInput
+    $filter: ModelMicroCoachSavedPlanFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    savedPlansByClassId(
+    microCoachSavedPlansByClassId(
       classId: $classId
       sortDirection: $sortDirection
       filter: $filter
@@ -1534,15 +1568,15 @@ export const savedPlansByClassId = /* GraphQL */ `
     }
   }
 `;
-export const savedPlansBySessionId = /* GraphQL */ `
-  query SavedPlansBySessionId(
+export const microCoachSavedPlansBySessionId = /* GraphQL */ `
+  query MicroCoachSavedPlansBySessionId(
     $sessionId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelSavedPlanFilterInput
+    $filter: ModelMicroCoachSavedPlanFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    savedPlansBySessionId(
+    microCoachSavedPlansBySessionId(
       sessionId: $sessionId
       sortDirection: $sortDirection
       filter: $filter
@@ -1556,6 +1590,172 @@ export const savedPlansBySessionId = /* GraphQL */ `
         items {
           id
           status
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getContextData = /* GraphQL */ `
+  query GetContextData($id: ID!) {
+    getContextData(id: $id) {
+      id
+      type
+      title
+      gradeLevel
+      weekNumber
+      ccssStandards
+      assessmentCode
+      isReference
+      nextStepLesson {
+        targetAssessmentCode
+        targetQuestionNumbers
+        topic
+        targetProblem
+        errorScenarios {
+          studentLabel
+          isCorrect
+          approach
+          reasoning
+          __typename
+        }
+        phases {
+          phaseName
+          durationMinutes
+          steps
+          teacherPrompts
+          __typename
+        }
+        keyTakeaways
+        independentProblems
+        exitTicket
+        __typename
+      }
+      exemplarQuestions {
+        questionNumber
+        questionText
+        ccssStandard
+        correctAnswer
+        pointValue
+        answerChoices {
+          label
+          text
+          __typename
+        }
+        misconceptions {
+          description
+          targetAnswer
+          __typename
+        }
+        sourceNote
+        __typename
+      }
+      strategy {
+        name
+        description
+        steps
+        applicableGrades
+        applicableStandards
+        examples
+        __typename
+      }
+      walkthroughData {
+        quarter
+        schools {
+          schoolCode
+          rubricScores
+          notes
+          __typename
+        }
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listContextData = /* GraphQL */ `
+  query ListContextData(
+    $filter: ModelContextDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listContextData(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        title
+        gradeLevel
+        weekNumber
+        ccssStandards
+        assessmentCode
+        isReference
+        nextStepLesson {
+          targetAssessmentCode
+          targetQuestionNumbers
+          topic
+          targetProblem
+          errorScenarios {
+            studentLabel
+            isCorrect
+            approach
+            reasoning
+            __typename
+          }
+          phases {
+            phaseName
+            durationMinutes
+            steps
+            teacherPrompts
+            __typename
+          }
+          keyTakeaways
+          independentProblems
+          exitTicket
+          __typename
+        }
+        exemplarQuestions {
+          questionNumber
+          questionText
+          ccssStandard
+          correctAnswer
+          pointValue
+          answerChoices {
+            label
+            text
+            __typename
+          }
+          misconceptions {
+            description
+            targetAnswer
+            __typename
+          }
+          sourceNote
+          __typename
+        }
+        strategy {
+          name
+          description
+          steps
+          applicableGrades
+          applicableStandards
+          examples
+          __typename
+        }
+        walkthroughData {
+          quarter
+          schools {
+            schoolCode
+            rubricScores
+            notes
+            __typename
+          }
           __typename
         }
         createdAt

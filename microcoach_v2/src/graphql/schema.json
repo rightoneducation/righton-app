@@ -15,7 +15,7 @@
         "name" : "Query",
         "description" : null,
         "fields" : [ {
-          "name" : "getUser",
+          "name" : "getMicroCoachUser",
           "description" : null,
           "args" : [ {
             "name" : "id",
@@ -33,20 +33,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "User",
+            "name" : "MicroCoachUser",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listUsers",
+          "name" : "listMicroCoachUsers",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserFilterInput",
+              "name" : "ModelMicroCoachUserFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -71,13 +71,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelUserConnection",
+            "name" : "ModelMicroCoachUserConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "getClass",
+          "name" : "getMicroCoachClassroom",
           "description" : null,
           "args" : [ {
             "name" : "id",
@@ -95,20 +95,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Class",
+            "name" : "MicroCoachClassroom",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listClasses",
+          "name" : "listMicroCoachClassrooms",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassFilterInput",
+              "name" : "ModelMicroCoachClassroomFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -133,13 +133,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelClassConnection",
+            "name" : "ModelMicroCoachClassroomConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "getStudent",
+          "name" : "getMicroCoachStudent",
           "description" : null,
           "args" : [ {
             "name" : "id",
@@ -157,20 +157,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Student",
+            "name" : "MicroCoachStudent",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listStudents",
+          "name" : "listMicroCoachStudents",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentFilterInput",
+              "name" : "ModelMicroCoachStudentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -195,13 +195,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelStudentConnection",
+            "name" : "ModelMicroCoachStudentConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "getSession",
+          "name" : "getMicroCoachSession",
           "description" : null,
           "args" : [ {
             "name" : "id",
@@ -219,20 +219,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Session",
+            "name" : "MicroCoachSession",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listSessions",
+          "name" : "listMicroCoachSessions",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionFilterInput",
+              "name" : "ModelMicroCoachSessionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -257,13 +257,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelSessionConnection",
+            "name" : "ModelMicroCoachSessionConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "getAssessment",
+          "name" : "getMicroCoachAssessment",
           "description" : null,
           "args" : [ {
             "name" : "id",
@@ -281,20 +281,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Assessment",
+            "name" : "MicroCoachAssessment",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listAssessments",
+          "name" : "listMicroCoachAssessments",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentFilterInput",
+              "name" : "ModelMicroCoachAssessmentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -319,13 +319,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelAssessmentConnection",
+            "name" : "ModelMicroCoachAssessmentConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "getMisconception",
+          "name" : "getMicroCoachMisconception",
           "description" : null,
           "args" : [ {
             "name" : "id",
@@ -343,20 +343,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Misconception",
+            "name" : "MicroCoachMisconception",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listMisconceptions",
+          "name" : "listMicroCoachMisconceptions",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionFilterInput",
+              "name" : "ModelMicroCoachMisconceptionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -381,13 +381,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelMisconceptionConnection",
+            "name" : "ModelMicroCoachMisconceptionConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "getActivity",
+          "name" : "getMicroCoachActivity",
           "description" : null,
           "args" : [ {
             "name" : "id",
@@ -405,20 +405,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Activity",
+            "name" : "MicroCoachActivity",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listActivities",
+          "name" : "listMicroCoachActivities",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityFilterInput",
+              "name" : "ModelMicroCoachActivityFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -443,13 +443,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelActivityConnection",
+            "name" : "ModelMicroCoachActivityConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "getSavedPlan",
+          "name" : "getMicroCoachSavedPlan",
           "description" : null,
           "args" : [ {
             "name" : "id",
@@ -467,20 +467,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "SavedPlan",
+            "name" : "MicroCoachSavedPlan",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listSavedPlans",
+          "name" : "listMicroCoachSavedPlans",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanFilterInput",
+              "name" : "ModelMicroCoachSavedPlanFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -505,7 +505,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelSavedPlanConnection",
+            "name" : "ModelMicroCoachSavedPlanConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -540,7 +540,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserFilterInput",
+              "name" : "ModelMicroCoachUserFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -565,7 +565,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelUserConnection",
+            "name" : "ModelMicroCoachUserConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -600,7 +600,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserFilterInput",
+              "name" : "ModelMicroCoachUserFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -625,7 +625,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelUserConnection",
+            "name" : "ModelMicroCoachUserConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -660,7 +660,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserFilterInput",
+              "name" : "ModelMicroCoachUserFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -685,13 +685,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelUserConnection",
+            "name" : "ModelMicroCoachUserConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "classesByUserId",
+          "name" : "microCoachClassroomsByUserId",
           "description" : null,
           "args" : [ {
             "name" : "userId",
@@ -720,7 +720,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassFilterInput",
+              "name" : "ModelMicroCoachClassroomFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -745,13 +745,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelClassConnection",
+            "name" : "ModelMicroCoachClassroomConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "studentsByClassId",
+          "name" : "microCoachStudentsByClassId",
           "description" : null,
           "args" : [ {
             "name" : "classId",
@@ -780,7 +780,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentFilterInput",
+              "name" : "ModelMicroCoachStudentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -805,13 +805,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelStudentConnection",
+            "name" : "ModelMicroCoachStudentConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "sessionsByClassId",
+          "name" : "microCoachSessionsByClassId",
           "description" : null,
           "args" : [ {
             "name" : "classId",
@@ -840,7 +840,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionFilterInput",
+              "name" : "ModelMicroCoachSessionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -865,13 +865,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelSessionConnection",
+            "name" : "ModelMicroCoachSessionConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "assessmentsByClassId",
+          "name" : "microCoachAssessmentsByClassId",
           "description" : null,
           "args" : [ {
             "name" : "classId",
@@ -900,7 +900,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentFilterInput",
+              "name" : "ModelMicroCoachAssessmentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -925,13 +925,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelAssessmentConnection",
+            "name" : "ModelMicroCoachAssessmentConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "assessmentsBySessionId",
+          "name" : "microCoachAssessmentsBySessionId",
           "description" : null,
           "args" : [ {
             "name" : "sessionId",
@@ -960,7 +960,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentFilterInput",
+              "name" : "ModelMicroCoachAssessmentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -985,13 +985,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelAssessmentConnection",
+            "name" : "ModelMicroCoachAssessmentConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "misconceptionsBySessionId",
+          "name" : "microCoachMisconceptionsBySessionId",
           "description" : null,
           "args" : [ {
             "name" : "sessionId",
@@ -1020,7 +1020,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionFilterInput",
+              "name" : "ModelMicroCoachMisconceptionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1045,13 +1045,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelMisconceptionConnection",
+            "name" : "ModelMicroCoachMisconceptionConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "misconceptionsByClassId",
+          "name" : "microCoachMisconceptionsByClassId",
           "description" : null,
           "args" : [ {
             "name" : "classId",
@@ -1080,7 +1080,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionFilterInput",
+              "name" : "ModelMicroCoachMisconceptionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1105,13 +1105,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelMisconceptionConnection",
+            "name" : "ModelMicroCoachMisconceptionConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "activitiesByMisconceptionId",
+          "name" : "microCoachActivitiesByMisconceptionId",
           "description" : null,
           "args" : [ {
             "name" : "misconceptionId",
@@ -1140,7 +1140,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityFilterInput",
+              "name" : "ModelMicroCoachActivityFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1165,13 +1165,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelActivityConnection",
+            "name" : "ModelMicroCoachActivityConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "activitiesBySessionId",
+          "name" : "microCoachActivitiesBySessionId",
           "description" : null,
           "args" : [ {
             "name" : "sessionId",
@@ -1200,7 +1200,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityFilterInput",
+              "name" : "ModelMicroCoachActivityFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1225,13 +1225,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelActivityConnection",
+            "name" : "ModelMicroCoachActivityConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "activitiesByClassId",
+          "name" : "microCoachActivitiesByClassId",
           "description" : null,
           "args" : [ {
             "name" : "classId",
@@ -1260,7 +1260,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityFilterInput",
+              "name" : "ModelMicroCoachActivityFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1285,13 +1285,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelActivityConnection",
+            "name" : "ModelMicroCoachActivityConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "savedPlansByClassId",
+          "name" : "microCoachSavedPlansByClassId",
           "description" : null,
           "args" : [ {
             "name" : "classId",
@@ -1320,7 +1320,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanFilterInput",
+              "name" : "ModelMicroCoachSavedPlanFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1345,13 +1345,13 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelSavedPlanConnection",
+            "name" : "ModelMicroCoachSavedPlanConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "savedPlansBySessionId",
+          "name" : "microCoachSavedPlansBySessionId",
           "description" : null,
           "args" : [ {
             "name" : "sessionId",
@@ -1380,7 +1380,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanFilterInput",
+              "name" : "ModelMicroCoachSavedPlanFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1405,7 +1405,69 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelSavedPlanConnection",
+            "name" : "ModelMicroCoachSavedPlanConnection",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "getContextData",
+          "description" : null,
+          "args" : [ {
+            "name" : "id",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "ID",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "ContextData",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "listContextData",
+          "description" : null,
+          "args" : [ {
+            "name" : "filter",
+            "description" : null,
+            "type" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelContextDataFilterInput",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "limit",
+            "description" : null,
+            "type" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "nextToken",
+            "description" : null,
+            "type" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "ModelContextDataConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -1417,7 +1479,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "User",
+        "name" : "MicroCoachUser",
         "description" : null,
         "fields" : [ {
           "name" : "id",
@@ -1494,7 +1556,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassFilterInput",
+              "name" : "ModelMicroCoachClassroomFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1528,7 +1590,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelClassConnection",
+            "name" : "ModelMicroCoachClassroomConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -1603,7 +1665,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "ModelClassConnection",
+        "name" : "ModelMicroCoachClassroomConnection",
         "description" : null,
         "fields" : [ {
           "name" : "items",
@@ -1617,7 +1679,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "OBJECT",
-                "name" : "Class",
+                "name" : "MicroCoachClassroom",
                 "ofType" : null
               }
             }
@@ -1642,7 +1704,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "Class",
+        "name" : "MicroCoachClassroom",
         "description" : null,
         "fields" : [ {
           "name" : "id",
@@ -1682,7 +1744,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionFilterInput",
+              "name" : "ModelMicroCoachSessionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1716,7 +1778,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelSessionConnection",
+            "name" : "ModelMicroCoachSessionConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -1729,7 +1791,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentFilterInput",
+              "name" : "ModelMicroCoachStudentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -1763,7 +1825,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelStudentConnection",
+            "name" : "ModelMicroCoachStudentConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -1853,7 +1915,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "ModelSessionConnection",
+        "name" : "ModelMicroCoachSessionConnection",
         "description" : null,
         "fields" : [ {
           "name" : "items",
@@ -1867,7 +1929,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "OBJECT",
-                "name" : "Session",
+                "name" : "MicroCoachSession",
                 "ofType" : null
               }
             }
@@ -1892,7 +1954,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "Session",
+        "name" : "MicroCoachSession",
         "description" : null,
         "fields" : [ {
           "name" : "id",
@@ -2028,6 +2090,36 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "studentsWithStrongUnderstandingIds",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "studentIdsNeedingSupport",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "ppqAssessmentId",
           "description" : null,
           "args" : [ ],
@@ -2057,7 +2149,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentFilterInput",
+              "name" : "ModelMicroCoachAssessmentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -2091,7 +2183,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelAssessmentConnection",
+            "name" : "ModelMicroCoachAssessmentConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -2104,7 +2196,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionFilterInput",
+              "name" : "ModelMicroCoachMisconceptionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -2138,7 +2230,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelMisconceptionConnection",
+            "name" : "ModelMicroCoachMisconceptionConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -2254,7 +2346,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "ModelAssessmentConnection",
+        "name" : "ModelMicroCoachAssessmentConnection",
         "description" : null,
         "fields" : [ {
           "name" : "items",
@@ -2268,7 +2360,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "OBJECT",
-                "name" : "Assessment",
+                "name" : "MicroCoachAssessment",
                 "ofType" : null
               }
             }
@@ -2293,7 +2385,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "Assessment",
+        "name" : "MicroCoachAssessment",
         "description" : null,
         "fields" : [ {
           "name" : "id",
@@ -2437,11 +2529,6 @@
           "description" : null,
           "isDeprecated" : false,
           "deprecationReason" : null
-        }, {
-          "name" : "QUIZ",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
         } ],
         "possibleTypes" : null
       }, {
@@ -2455,7 +2542,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelAssessmentFilterInput",
+        "name" : "ModelMicroCoachAssessmentFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -2520,7 +2607,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentFilterInput",
+              "name" : "ModelMicroCoachAssessmentFilterInput",
               "ofType" : null
             }
           },
@@ -2533,7 +2620,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentFilterInput",
+              "name" : "ModelMicroCoachAssessmentFilterInput",
               "ofType" : null
             }
           },
@@ -2543,7 +2630,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelAssessmentFilterInput",
+            "name" : "ModelMicroCoachAssessmentFilterInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -3097,7 +3184,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "ModelMisconceptionConnection",
+        "name" : "ModelMicroCoachMisconceptionConnection",
         "description" : null,
         "fields" : [ {
           "name" : "items",
@@ -3111,7 +3198,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "OBJECT",
-                "name" : "Misconception",
+                "name" : "MicroCoachMisconception",
                 "ofType" : null
               }
             }
@@ -3136,7 +3223,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "Misconception",
+        "name" : "MicroCoachMisconception",
         "description" : null,
         "fields" : [ {
           "name" : "id",
@@ -3191,7 +3278,7 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityFilterInput",
+              "name" : "ModelMicroCoachActivityFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -3225,7 +3312,7 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "ModelActivityConnection",
+            "name" : "ModelMicroCoachActivityConnection",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -3253,21 +3340,6 @@
             "kind" : "ENUM",
             "name" : "Badge",
             "ofType" : null
-          },
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "isRecommendedFocus",
-          "description" : null,
-          "args" : [ ],
-          "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "Boolean",
-              "ofType" : null
-            }
           },
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -3419,7 +3491,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "ModelActivityConnection",
+        "name" : "ModelMicroCoachActivityConnection",
         "description" : null,
         "fields" : [ {
           "name" : "items",
@@ -3433,7 +3505,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "OBJECT",
-                "name" : "Activity",
+                "name" : "MicroCoachActivity",
                 "ofType" : null
               }
             }
@@ -3458,7 +3530,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "Activity",
+        "name" : "MicroCoachActivity",
         "description" : null,
         "fields" : [ {
           "name" : "id",
@@ -3843,7 +3915,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelActivityFilterInput",
+        "name" : "ModelMicroCoachActivityFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -4016,7 +4088,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityFilterInput",
+              "name" : "ModelMicroCoachActivityFilterInput",
               "ofType" : null
             }
           },
@@ -4029,7 +4101,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityFilterInput",
+              "name" : "ModelMicroCoachActivityFilterInput",
               "ofType" : null
             }
           },
@@ -4039,7 +4111,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelActivityFilterInput",
+            "name" : "ModelMicroCoachActivityFilterInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -4311,7 +4383,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelMisconceptionFilterInput",
+        "name" : "ModelMicroCoachMisconceptionFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -4356,15 +4428,6 @@
           "type" : {
             "kind" : "INPUT_OBJECT",
             "name" : "ModelBadgeInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "isRecommendedFocus",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelBooleanInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -4466,7 +4529,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionFilterInput",
+              "name" : "ModelMicroCoachMisconceptionFilterInput",
               "ofType" : null
             }
           },
@@ -4479,7 +4542,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionFilterInput",
+              "name" : "ModelMicroCoachMisconceptionFilterInput",
               "ofType" : null
             }
           },
@@ -4489,7 +4552,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelMisconceptionFilterInput",
+            "name" : "ModelMicroCoachMisconceptionFilterInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -4526,7 +4589,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSessionFilterInput",
+        "name" : "ModelMicroCoachSessionFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -4629,6 +4692,24 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "studentsWithStrongUnderstandingIds",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "studentIdsNeedingSupport",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "ppqAssessmentId",
           "description" : null,
           "type" : {
@@ -4690,7 +4771,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionFilterInput",
+              "name" : "ModelMicroCoachSessionFilterInput",
               "ofType" : null
             }
           },
@@ -4703,7 +4784,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionFilterInput",
+              "name" : "ModelMicroCoachSessionFilterInput",
               "ofType" : null
             }
           },
@@ -4713,7 +4794,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelSessionFilterInput",
+            "name" : "ModelMicroCoachSessionFilterInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -4777,7 +4858,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "ModelStudentConnection",
+        "name" : "ModelMicroCoachStudentConnection",
         "description" : null,
         "fields" : [ {
           "name" : "items",
@@ -4791,7 +4872,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "OBJECT",
-                "name" : "Student",
+                "name" : "MicroCoachStudent",
                 "ofType" : null
               }
             }
@@ -4816,7 +4897,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "Student",
+        "name" : "MicroCoachStudent",
         "description" : null,
         "fields" : [ {
           "name" : "id",
@@ -4911,7 +4992,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelStudentFilterInput",
+        "name" : "ModelMicroCoachStudentFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -4976,7 +5057,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentFilterInput",
+              "name" : "ModelMicroCoachStudentFilterInput",
               "ofType" : null
             }
           },
@@ -4989,7 +5070,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentFilterInput",
+              "name" : "ModelMicroCoachStudentFilterInput",
               "ofType" : null
             }
           },
@@ -4999,7 +5080,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelStudentFilterInput",
+            "name" : "ModelMicroCoachStudentFilterInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -5009,7 +5090,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelClassFilterInput",
+        "name" : "ModelMicroCoachClassroomFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -5074,7 +5155,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassFilterInput",
+              "name" : "ModelMicroCoachClassroomFilterInput",
               "ofType" : null
             }
           },
@@ -5087,7 +5168,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassFilterInput",
+              "name" : "ModelMicroCoachClassroomFilterInput",
               "ofType" : null
             }
           },
@@ -5097,7 +5178,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelClassFilterInput",
+            "name" : "ModelMicroCoachClassroomFilterInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -5126,7 +5207,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "ModelUserConnection",
+        "name" : "ModelMicroCoachUserConnection",
         "description" : null,
         "fields" : [ {
           "name" : "items",
@@ -5140,7 +5221,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "OBJECT",
-                "name" : "User",
+                "name" : "MicroCoachUser",
                 "ofType" : null
               }
             }
@@ -5165,7 +5246,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelUserFilterInput",
+        "name" : "ModelMicroCoachUserFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -5248,7 +5329,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserFilterInput",
+              "name" : "ModelMicroCoachUserFilterInput",
               "ofType" : null
             }
           },
@@ -5261,7 +5342,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserFilterInput",
+              "name" : "ModelMicroCoachUserFilterInput",
               "ofType" : null
             }
           },
@@ -5271,7 +5352,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelUserFilterInput",
+            "name" : "ModelMicroCoachUserFilterInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -5308,7 +5389,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "SavedPlan",
+        "name" : "MicroCoachSavedPlan",
         "description" : null,
         "fields" : [ {
           "name" : "id",
@@ -5461,7 +5542,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "ModelSavedPlanConnection",
+        "name" : "ModelMicroCoachSavedPlanConnection",
         "description" : null,
         "fields" : [ {
           "name" : "items",
@@ -5475,7 +5556,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "OBJECT",
-                "name" : "SavedPlan",
+                "name" : "MicroCoachSavedPlan",
                 "ofType" : null
               }
             }
@@ -5500,7 +5581,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSavedPlanFilterInput",
+        "name" : "ModelMicroCoachSavedPlanFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -5556,7 +5637,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanFilterInput",
+              "name" : "ModelMicroCoachSavedPlanFilterInput",
               "ofType" : null
             }
           },
@@ -5569,7 +5650,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanFilterInput",
+              "name" : "ModelMicroCoachSavedPlanFilterInput",
               "ofType" : null
             }
           },
@@ -5579,7 +5660,1090 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelSavedPlanFilterInput",
+            "name" : "ModelMicroCoachSavedPlanFilterInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "ContextData",
+        "description" : null,
+        "fields" : [ {
+          "name" : "id",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "type",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "ENUM",
+              "name" : "ContextDataType",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "title",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "gradeLevel",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "weekNumber",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "ccssStandards",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "assessmentCode",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "isReference",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "nextStepLesson",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "NextStepLesson",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "exemplarQuestions",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "OBJECT",
+              "name" : "ExemplarQuestion",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "strategy",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "InstructionalStrategy",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "walkthroughData",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "WalkthroughData",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "createdAt",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "AWSDateTime",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "updatedAt",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "AWSDateTime",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "ENUM",
+        "name" : "ContextDataType",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : null,
+        "interfaces" : null,
+        "enumValues" : [ {
+          "name" : "NEXT_STEP_LESSON",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "EXEMPLAR",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "STRATEGY",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "WALKTHROUGH",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "STUDENT_WORK_SAMPLE",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "LESSON_PLAN",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "NextStepLesson",
+        "description" : null,
+        "fields" : [ {
+          "name" : "targetAssessmentCode",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "targetQuestionNumbers",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "topic",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "targetProblem",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "errorScenarios",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "OBJECT",
+              "name" : "ErrorScenario",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "phases",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "OBJECT",
+              "name" : "LessonPhase",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "keyTakeaways",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "independentProblems",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "exitTicket",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "ErrorScenario",
+        "description" : null,
+        "fields" : [ {
+          "name" : "studentLabel",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "isCorrect",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Boolean",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "approach",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "reasoning",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "LessonPhase",
+        "description" : null,
+        "fields" : [ {
+          "name" : "phaseName",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "durationMinutes",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "steps",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "teacherPrompts",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "ExemplarQuestion",
+        "description" : null,
+        "fields" : [ {
+          "name" : "questionNumber",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "questionText",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "ccssStandard",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "correctAnswer",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "pointValue",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "answerChoices",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "OBJECT",
+              "name" : "AnswerChoice",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "misconceptions",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "OBJECT",
+              "name" : "ExemplarMisconception",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "sourceNote",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "AnswerChoice",
+        "description" : null,
+        "fields" : [ {
+          "name" : "label",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "text",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "ExemplarMisconception",
+        "description" : null,
+        "fields" : [ {
+          "name" : "description",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "targetAnswer",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "InstructionalStrategy",
+        "description" : null,
+        "fields" : [ {
+          "name" : "name",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "description",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "steps",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "applicableGrades",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "applicableStandards",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "examples",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "WalkthroughData",
+        "description" : null,
+        "fields" : [ {
+          "name" : "quarter",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "schools",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "OBJECT",
+              "name" : "SchoolObservation",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "SchoolObservation",
+        "description" : null,
+        "fields" : [ {
+          "name" : "schoolCode",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "rubricScores",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSJSON",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "notes",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "OBJECT",
+        "name" : "ModelContextDataConnection",
+        "description" : null,
+        "fields" : [ {
+          "name" : "items",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "LIST",
+              "name" : null,
+              "ofType" : {
+                "kind" : "OBJECT",
+                "name" : "ContextData",
+                "ofType" : null
+              }
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "nextToken",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "ModelContextDataFilterInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "id",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "type",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelContextDataTypeInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "title",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "gradeLevel",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIntInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "weekNumber",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIntInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "ccssStandards",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "assessmentCode",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "isReference",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelBooleanInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "createdAt",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "updatedAt",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "and",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelContextDataFilterInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "or",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelContextDataFilterInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "not",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelContextDataFilterInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "ModelContextDataTypeInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "eq",
+          "description" : null,
+          "type" : {
+            "kind" : "ENUM",
+            "name" : "ContextDataType",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "ne",
+          "description" : null,
+          "type" : {
+            "kind" : "ENUM",
+            "name" : "ContextDataType",
             "ofType" : null
           },
           "defaultValue" : null
@@ -5592,7 +6756,7 @@
         "name" : "Mutation",
         "description" : null,
         "fields" : [ {
-          "name" : "createUser",
+          "name" : "createMicroCoachUser",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5602,7 +6766,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "CreateUserInput",
+                "name" : "CreateMicroCoachUserInput",
                 "ofType" : null
               }
             },
@@ -5612,20 +6776,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserConditionInput",
+              "name" : "ModelMicroCoachUserConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "User",
+            "name" : "MicroCoachUser",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "updateUser",
+          "name" : "updateMicroCoachUser",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5635,7 +6799,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "UpdateUserInput",
+                "name" : "UpdateMicroCoachUserInput",
                 "ofType" : null
               }
             },
@@ -5645,20 +6809,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserConditionInput",
+              "name" : "ModelMicroCoachUserConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "User",
+            "name" : "MicroCoachUser",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "deleteUser",
+          "name" : "deleteMicroCoachUser",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5668,7 +6832,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "DeleteUserInput",
+                "name" : "DeleteMicroCoachUserInput",
                 "ofType" : null
               }
             },
@@ -5678,20 +6842,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserConditionInput",
+              "name" : "ModelMicroCoachUserConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "User",
+            "name" : "MicroCoachUser",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "createClass",
+          "name" : "createMicroCoachClassroom",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5701,7 +6865,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "CreateClassInput",
+                "name" : "CreateMicroCoachClassroomInput",
                 "ofType" : null
               }
             },
@@ -5711,20 +6875,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassConditionInput",
+              "name" : "ModelMicroCoachClassroomConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Class",
+            "name" : "MicroCoachClassroom",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "updateClass",
+          "name" : "updateMicroCoachClassroom",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5734,7 +6898,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "UpdateClassInput",
+                "name" : "UpdateMicroCoachClassroomInput",
                 "ofType" : null
               }
             },
@@ -5744,20 +6908,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassConditionInput",
+              "name" : "ModelMicroCoachClassroomConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Class",
+            "name" : "MicroCoachClassroom",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "deleteClass",
+          "name" : "deleteMicroCoachClassroom",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5767,7 +6931,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "DeleteClassInput",
+                "name" : "DeleteMicroCoachClassroomInput",
                 "ofType" : null
               }
             },
@@ -5777,20 +6941,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassConditionInput",
+              "name" : "ModelMicroCoachClassroomConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Class",
+            "name" : "MicroCoachClassroom",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "createStudent",
+          "name" : "createMicroCoachStudent",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5800,7 +6964,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "CreateStudentInput",
+                "name" : "CreateMicroCoachStudentInput",
                 "ofType" : null
               }
             },
@@ -5810,20 +6974,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentConditionInput",
+              "name" : "ModelMicroCoachStudentConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Student",
+            "name" : "MicroCoachStudent",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "updateStudent",
+          "name" : "updateMicroCoachStudent",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5833,7 +6997,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "UpdateStudentInput",
+                "name" : "UpdateMicroCoachStudentInput",
                 "ofType" : null
               }
             },
@@ -5843,20 +7007,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentConditionInput",
+              "name" : "ModelMicroCoachStudentConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Student",
+            "name" : "MicroCoachStudent",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "deleteStudent",
+          "name" : "deleteMicroCoachStudent",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5866,7 +7030,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "DeleteStudentInput",
+                "name" : "DeleteMicroCoachStudentInput",
                 "ofType" : null
               }
             },
@@ -5876,20 +7040,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentConditionInput",
+              "name" : "ModelMicroCoachStudentConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Student",
+            "name" : "MicroCoachStudent",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "createSession",
+          "name" : "createMicroCoachSession",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5899,7 +7063,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "CreateSessionInput",
+                "name" : "CreateMicroCoachSessionInput",
                 "ofType" : null
               }
             },
@@ -5909,20 +7073,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionConditionInput",
+              "name" : "ModelMicroCoachSessionConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Session",
+            "name" : "MicroCoachSession",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "updateSession",
+          "name" : "updateMicroCoachSession",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5932,7 +7096,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "UpdateSessionInput",
+                "name" : "UpdateMicroCoachSessionInput",
                 "ofType" : null
               }
             },
@@ -5942,20 +7106,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionConditionInput",
+              "name" : "ModelMicroCoachSessionConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Session",
+            "name" : "MicroCoachSession",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "deleteSession",
+          "name" : "deleteMicroCoachSession",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5965,7 +7129,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "DeleteSessionInput",
+                "name" : "DeleteMicroCoachSessionInput",
                 "ofType" : null
               }
             },
@@ -5975,20 +7139,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionConditionInput",
+              "name" : "ModelMicroCoachSessionConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Session",
+            "name" : "MicroCoachSession",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "createAssessment",
+          "name" : "createMicroCoachAssessment",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -5998,7 +7162,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "CreateAssessmentInput",
+                "name" : "CreateMicroCoachAssessmentInput",
                 "ofType" : null
               }
             },
@@ -6008,20 +7172,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentConditionInput",
+              "name" : "ModelMicroCoachAssessmentConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Assessment",
+            "name" : "MicroCoachAssessment",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "updateAssessment",
+          "name" : "updateMicroCoachAssessment",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6031,7 +7195,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "UpdateAssessmentInput",
+                "name" : "UpdateMicroCoachAssessmentInput",
                 "ofType" : null
               }
             },
@@ -6041,20 +7205,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentConditionInput",
+              "name" : "ModelMicroCoachAssessmentConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Assessment",
+            "name" : "MicroCoachAssessment",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "deleteAssessment",
+          "name" : "deleteMicroCoachAssessment",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6064,7 +7228,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "DeleteAssessmentInput",
+                "name" : "DeleteMicroCoachAssessmentInput",
                 "ofType" : null
               }
             },
@@ -6074,20 +7238,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentConditionInput",
+              "name" : "ModelMicroCoachAssessmentConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Assessment",
+            "name" : "MicroCoachAssessment",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "createMisconception",
+          "name" : "createMicroCoachMisconception",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6097,7 +7261,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "CreateMisconceptionInput",
+                "name" : "CreateMicroCoachMisconceptionInput",
                 "ofType" : null
               }
             },
@@ -6107,20 +7271,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionConditionInput",
+              "name" : "ModelMicroCoachMisconceptionConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Misconception",
+            "name" : "MicroCoachMisconception",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "updateMisconception",
+          "name" : "updateMicroCoachMisconception",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6130,7 +7294,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "UpdateMisconceptionInput",
+                "name" : "UpdateMicroCoachMisconceptionInput",
                 "ofType" : null
               }
             },
@@ -6140,20 +7304,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionConditionInput",
+              "name" : "ModelMicroCoachMisconceptionConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Misconception",
+            "name" : "MicroCoachMisconception",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "deleteMisconception",
+          "name" : "deleteMicroCoachMisconception",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6163,7 +7327,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "DeleteMisconceptionInput",
+                "name" : "DeleteMicroCoachMisconceptionInput",
                 "ofType" : null
               }
             },
@@ -6173,20 +7337,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionConditionInput",
+              "name" : "ModelMicroCoachMisconceptionConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Misconception",
+            "name" : "MicroCoachMisconception",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "createActivity",
+          "name" : "createMicroCoachActivity",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6196,7 +7360,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "CreateActivityInput",
+                "name" : "CreateMicroCoachActivityInput",
                 "ofType" : null
               }
             },
@@ -6206,20 +7370,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityConditionInput",
+              "name" : "ModelMicroCoachActivityConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Activity",
+            "name" : "MicroCoachActivity",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "updateActivity",
+          "name" : "updateMicroCoachActivity",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6229,7 +7393,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "UpdateActivityInput",
+                "name" : "UpdateMicroCoachActivityInput",
                 "ofType" : null
               }
             },
@@ -6239,20 +7403,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityConditionInput",
+              "name" : "ModelMicroCoachActivityConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Activity",
+            "name" : "MicroCoachActivity",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "deleteActivity",
+          "name" : "deleteMicroCoachActivity",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6262,7 +7426,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "DeleteActivityInput",
+                "name" : "DeleteMicroCoachActivityInput",
                 "ofType" : null
               }
             },
@@ -6272,20 +7436,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityConditionInput",
+              "name" : "ModelMicroCoachActivityConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Activity",
+            "name" : "MicroCoachActivity",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "createSavedPlan",
+          "name" : "createMicroCoachSavedPlan",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6295,7 +7459,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "CreateSavedPlanInput",
+                "name" : "CreateMicroCoachSavedPlanInput",
                 "ofType" : null
               }
             },
@@ -6305,20 +7469,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanConditionInput",
+              "name" : "ModelMicroCoachSavedPlanConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "SavedPlan",
+            "name" : "MicroCoachSavedPlan",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "updateSavedPlan",
+          "name" : "updateMicroCoachSavedPlan",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6328,7 +7492,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "UpdateSavedPlanInput",
+                "name" : "UpdateMicroCoachSavedPlanInput",
                 "ofType" : null
               }
             },
@@ -6338,20 +7502,20 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanConditionInput",
+              "name" : "ModelMicroCoachSavedPlanConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "SavedPlan",
+            "name" : "MicroCoachSavedPlan",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "deleteSavedPlan",
+          "name" : "deleteMicroCoachSavedPlan",
           "description" : null,
           "args" : [ {
             "name" : "input",
@@ -6361,7 +7525,7 @@
               "name" : null,
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
-                "name" : "DeleteSavedPlanInput",
+                "name" : "DeleteMicroCoachSavedPlanInput",
                 "ofType" : null
               }
             },
@@ -6371,14 +7535,113 @@
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanConditionInput",
+              "name" : "ModelMicroCoachSavedPlanConditionInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "SavedPlan",
+            "name" : "MicroCoachSavedPlan",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "createContextData",
+          "description" : null,
+          "args" : [ {
+            "name" : "input",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "INPUT_OBJECT",
+                "name" : "CreateContextDataInput",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "condition",
+            "description" : null,
+            "type" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelContextDataConditionInput",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "ContextData",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "updateContextData",
+          "description" : null,
+          "args" : [ {
+            "name" : "input",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "INPUT_OBJECT",
+                "name" : "UpdateContextDataInput",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "condition",
+            "description" : null,
+            "type" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelContextDataConditionInput",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "ContextData",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "deleteContextData",
+          "description" : null,
+          "args" : [ {
+            "name" : "input",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "INPUT_OBJECT",
+                "name" : "DeleteContextDataInput",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "condition",
+            "description" : null,
+            "type" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelContextDataConditionInput",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "ContextData",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -6390,7 +7653,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateUserInput",
+        "name" : "CreateMicroCoachUserInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -6483,7 +7746,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelUserConditionInput",
+        "name" : "ModelMicroCoachUserConditionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -6557,7 +7820,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserConditionInput",
+              "name" : "ModelMicroCoachUserConditionInput",
               "ofType" : null
             }
           },
@@ -6570,7 +7833,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelUserConditionInput",
+              "name" : "ModelMicroCoachUserConditionInput",
               "ofType" : null
             }
           },
@@ -6580,7 +7843,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelUserConditionInput",
+            "name" : "ModelMicroCoachUserConditionInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -6590,7 +7853,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "UpdateUserInput",
+        "name" : "UpdateMicroCoachUserInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -6675,7 +7938,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "DeleteUserInput",
+        "name" : "DeleteMicroCoachUserInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -6697,7 +7960,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateClassInput",
+        "name" : "CreateMicroCoachClassroomInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -6768,7 +8031,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelClassConditionInput",
+        "name" : "ModelMicroCoachClassroomConditionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -6824,7 +8087,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassConditionInput",
+              "name" : "ModelMicroCoachClassroomConditionInput",
               "ofType" : null
             }
           },
@@ -6837,7 +8100,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelClassConditionInput",
+              "name" : "ModelMicroCoachClassroomConditionInput",
               "ofType" : null
             }
           },
@@ -6847,7 +8110,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelClassConditionInput",
+            "name" : "ModelMicroCoachClassroomConditionInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -6857,7 +8120,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "UpdateClassInput",
+        "name" : "UpdateMicroCoachClassroomInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -6924,7 +8187,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "DeleteClassInput",
+        "name" : "DeleteMicroCoachClassroomInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -6946,7 +8209,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateStudentInput",
+        "name" : "CreateMicroCoachStudentInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7017,7 +8280,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelStudentConditionInput",
+        "name" : "ModelMicroCoachStudentConditionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7073,7 +8336,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentConditionInput",
+              "name" : "ModelMicroCoachStudentConditionInput",
               "ofType" : null
             }
           },
@@ -7086,7 +8349,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelStudentConditionInput",
+              "name" : "ModelMicroCoachStudentConditionInput",
               "ofType" : null
             }
           },
@@ -7096,7 +8359,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelStudentConditionInput",
+            "name" : "ModelMicroCoachStudentConditionInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -7106,7 +8369,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "UpdateStudentInput",
+        "name" : "UpdateMicroCoachStudentInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7173,7 +8436,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "DeleteStudentInput",
+        "name" : "DeleteMicroCoachStudentInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7195,7 +8458,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateSessionInput",
+        "name" : "CreateMicroCoachSessionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7306,6 +8569,32 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "studentsWithStrongUnderstandingIds",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "studentIdsNeedingSupport",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
           "name" : "ppqAssessmentId",
           "description" : null,
           "type" : {
@@ -7365,7 +8654,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSessionConditionInput",
+        "name" : "ModelMicroCoachSessionConditionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7459,6 +8748,24 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "studentsWithStrongUnderstandingIds",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "studentIdsNeedingSupport",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "ppqAssessmentId",
           "description" : null,
           "type" : {
@@ -7520,7 +8827,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionConditionInput",
+              "name" : "ModelMicroCoachSessionConditionInput",
               "ofType" : null
             }
           },
@@ -7533,7 +8840,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSessionConditionInput",
+              "name" : "ModelMicroCoachSessionConditionInput",
               "ofType" : null
             }
           },
@@ -7543,7 +8850,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelSessionConditionInput",
+            "name" : "ModelMicroCoachSessionConditionInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -7553,7 +8860,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "UpdateSessionInput",
+        "name" : "UpdateMicroCoachSessionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7664,6 +8971,32 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "studentsWithStrongUnderstandingIds",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "studentIdsNeedingSupport",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
           "name" : "ppqAssessmentId",
           "description" : null,
           "type" : {
@@ -7723,7 +9056,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "DeleteSessionInput",
+        "name" : "DeleteMicroCoachSessionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7745,7 +9078,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateAssessmentInput",
+        "name" : "CreateMicroCoachAssessmentInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7828,7 +9161,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelAssessmentConditionInput",
+        "name" : "ModelMicroCoachAssessmentConditionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7884,7 +9217,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentConditionInput",
+              "name" : "ModelMicroCoachAssessmentConditionInput",
               "ofType" : null
             }
           },
@@ -7897,7 +9230,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelAssessmentConditionInput",
+              "name" : "ModelMicroCoachAssessmentConditionInput",
               "ofType" : null
             }
           },
@@ -7907,7 +9240,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelAssessmentConditionInput",
+            "name" : "ModelMicroCoachAssessmentConditionInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -7917,7 +9250,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "UpdateAssessmentInput",
+        "name" : "UpdateMicroCoachAssessmentInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -7984,7 +9317,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "DeleteAssessmentInput",
+        "name" : "DeleteMicroCoachAssessmentInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -8006,7 +9339,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateMisconceptionInput",
+        "name" : "CreateMicroCoachMisconceptionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -8064,19 +9397,6 @@
             "kind" : "ENUM",
             "name" : "Badge",
             "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "isRecommendedFocus",
-          "description" : null,
-          "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "Boolean",
-              "ofType" : null
-            }
           },
           "defaultValue" : null
         }, {
@@ -8298,7 +9618,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelMisconceptionConditionInput",
+        "name" : "ModelMicroCoachMisconceptionConditionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -8334,15 +9654,6 @@
           "type" : {
             "kind" : "INPUT_OBJECT",
             "name" : "ModelBadgeInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "isRecommendedFocus",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelBooleanInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -8444,7 +9755,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionConditionInput",
+              "name" : "ModelMicroCoachMisconceptionConditionInput",
               "ofType" : null
             }
           },
@@ -8457,7 +9768,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelMisconceptionConditionInput",
+              "name" : "ModelMicroCoachMisconceptionConditionInput",
               "ofType" : null
             }
           },
@@ -8467,7 +9778,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelMisconceptionConditionInput",
+            "name" : "ModelMicroCoachMisconceptionConditionInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -8477,7 +9788,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "UpdateMisconceptionInput",
+        "name" : "UpdateMicroCoachMisconceptionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -8526,15 +9837,6 @@
           "type" : {
             "kind" : "ENUM",
             "name" : "Badge",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "isRecommendedFocus",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "Boolean",
             "ofType" : null
           },
           "defaultValue" : null
@@ -8643,7 +9945,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "DeleteMisconceptionInput",
+        "name" : "DeleteMicroCoachMisconceptionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -8665,7 +9967,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateActivityInput",
+        "name" : "CreateMicroCoachActivityInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -8900,7 +10202,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelActivityConditionInput",
+        "name" : "ModelMicroCoachActivityConditionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -9064,7 +10366,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityConditionInput",
+              "name" : "ModelMicroCoachActivityConditionInput",
               "ofType" : null
             }
           },
@@ -9077,7 +10379,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelActivityConditionInput",
+              "name" : "ModelMicroCoachActivityConditionInput",
               "ofType" : null
             }
           },
@@ -9087,7 +10389,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelActivityConditionInput",
+            "name" : "ModelMicroCoachActivityConditionInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -9097,7 +10399,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "UpdateActivityInput",
+        "name" : "UpdateMicroCoachActivityInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -9281,7 +10583,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "DeleteActivityInput",
+        "name" : "DeleteMicroCoachActivityInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -9303,7 +10605,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateSavedPlanInput",
+        "name" : "CreateMicroCoachSavedPlanInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -9409,7 +10711,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSavedPlanConditionInput",
+        "name" : "ModelMicroCoachSavedPlanConditionInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -9456,7 +10758,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanConditionInput",
+              "name" : "ModelMicroCoachSavedPlanConditionInput",
               "ofType" : null
             }
           },
@@ -9469,7 +10771,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSavedPlanConditionInput",
+              "name" : "ModelMicroCoachSavedPlanConditionInput",
               "ofType" : null
             }
           },
@@ -9479,7 +10781,7 @@
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
-            "name" : "ModelSavedPlanConditionInput",
+            "name" : "ModelMicroCoachSavedPlanConditionInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -9489,7 +10791,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "UpdateSavedPlanInput",
+        "name" : "UpdateMicroCoachSavedPlanInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -9560,7 +10862,1025 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "DeleteSavedPlanInput",
+        "name" : "DeleteMicroCoachSavedPlanInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "id",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "CreateContextDataInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "id",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "ID",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "type",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "ENUM",
+              "name" : "ContextDataType",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "title",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "gradeLevel",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "weekNumber",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "ccssStandards",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "assessmentCode",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "isReference",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "nextStepLesson",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "NextStepLessonInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "exemplarQuestions",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ExemplarQuestionInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "strategy",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "InstructionalStrategyInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "walkthroughData",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "WalkthroughDataInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "createdAt",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSDateTime",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "updatedAt",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSDateTime",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "NextStepLessonInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "targetAssessmentCode",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "targetQuestionNumbers",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "topic",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "targetProblem",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "errorScenarios",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ErrorScenarioInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "phases",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "LessonPhaseInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "keyTakeaways",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "independentProblems",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "exitTicket",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "ErrorScenarioInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "studentLabel",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "isCorrect",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Boolean",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "approach",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "reasoning",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "LessonPhaseInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "phaseName",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "durationMinutes",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "steps",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "teacherPrompts",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "ExemplarQuestionInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "questionNumber",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "questionText",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "ccssStandard",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "correctAnswer",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "pointValue",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "answerChoices",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "AnswerChoiceInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "misconceptions",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ExemplarMisconceptionInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "sourceNote",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "AnswerChoiceInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "label",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "text",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "ExemplarMisconceptionInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "description",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "targetAnswer",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "InstructionalStrategyInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "name",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "description",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "steps",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "applicableGrades",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "applicableStandards",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "examples",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "WalkthroughDataInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "quarter",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "schools",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "SchoolObservationInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "SchoolObservationInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "schoolCode",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "rubricScores",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSJSON",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "notes",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "ModelContextDataConditionInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "type",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelContextDataTypeInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "title",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "gradeLevel",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIntInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "weekNumber",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIntInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "ccssStandards",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "assessmentCode",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "isReference",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelBooleanInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "createdAt",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "updatedAt",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "and",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelContextDataConditionInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "or",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelContextDataConditionInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "not",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelContextDataConditionInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "UpdateContextDataInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "id",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "type",
+          "description" : null,
+          "type" : {
+            "kind" : "ENUM",
+            "name" : "ContextDataType",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "title",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "gradeLevel",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "weekNumber",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "ccssStandards",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "assessmentCode",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "isReference",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "nextStepLesson",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "NextStepLessonInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "exemplarQuestions",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ExemplarQuestionInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "strategy",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "InstructionalStrategyInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "walkthroughData",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "WalkthroughDataInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "createdAt",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSDateTime",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "updatedAt",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSDateTime",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "DeleteContextDataInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -9585,14 +11905,14 @@
         "name" : "Subscription",
         "description" : null,
         "fields" : [ {
-          "name" : "onCreateUser",
+          "name" : "onCreateMicroCoachUser",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionUserFilterInput",
+              "name" : "ModelSubscriptionMicroCoachUserFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -9608,20 +11928,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "User",
+            "name" : "MicroCoachUser",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onUpdateUser",
+          "name" : "onUpdateMicroCoachUser",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionUserFilterInput",
+              "name" : "ModelSubscriptionMicroCoachUserFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -9637,20 +11957,20 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "User",
+            "name" : "MicroCoachUser",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onDeleteUser",
+          "name" : "onDeleteMicroCoachUser",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionUserFilterInput",
+              "name" : "ModelSubscriptionMicroCoachUserFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
@@ -9666,427 +11986,487 @@
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "User",
+            "name" : "MicroCoachUser",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onCreateClass",
+          "name" : "onCreateMicroCoachClassroom",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionClassFilterInput",
+              "name" : "ModelSubscriptionMicroCoachClassroomFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Class",
+            "name" : "MicroCoachClassroom",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onUpdateClass",
+          "name" : "onUpdateMicroCoachClassroom",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionClassFilterInput",
+              "name" : "ModelSubscriptionMicroCoachClassroomFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Class",
+            "name" : "MicroCoachClassroom",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onDeleteClass",
+          "name" : "onDeleteMicroCoachClassroom",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionClassFilterInput",
+              "name" : "ModelSubscriptionMicroCoachClassroomFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Class",
+            "name" : "MicroCoachClassroom",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onCreateStudent",
+          "name" : "onCreateMicroCoachStudent",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionStudentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachStudentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Student",
+            "name" : "MicroCoachStudent",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onUpdateStudent",
+          "name" : "onUpdateMicroCoachStudent",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionStudentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachStudentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Student",
+            "name" : "MicroCoachStudent",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onDeleteStudent",
+          "name" : "onDeleteMicroCoachStudent",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionStudentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachStudentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Student",
+            "name" : "MicroCoachStudent",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onCreateSession",
+          "name" : "onCreateMicroCoachSession",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSessionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSessionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Session",
+            "name" : "MicroCoachSession",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onUpdateSession",
+          "name" : "onUpdateMicroCoachSession",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSessionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSessionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Session",
+            "name" : "MicroCoachSession",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onDeleteSession",
+          "name" : "onDeleteMicroCoachSession",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSessionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSessionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Session",
+            "name" : "MicroCoachSession",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onCreateAssessment",
+          "name" : "onCreateMicroCoachAssessment",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionAssessmentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachAssessmentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Assessment",
+            "name" : "MicroCoachAssessment",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onUpdateAssessment",
+          "name" : "onUpdateMicroCoachAssessment",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionAssessmentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachAssessmentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Assessment",
+            "name" : "MicroCoachAssessment",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onDeleteAssessment",
+          "name" : "onDeleteMicroCoachAssessment",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionAssessmentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachAssessmentFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Assessment",
+            "name" : "MicroCoachAssessment",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onCreateMisconception",
+          "name" : "onCreateMicroCoachMisconception",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionMisconceptionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachMisconceptionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Misconception",
+            "name" : "MicroCoachMisconception",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onUpdateMisconception",
+          "name" : "onUpdateMicroCoachMisconception",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionMisconceptionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachMisconceptionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Misconception",
+            "name" : "MicroCoachMisconception",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onDeleteMisconception",
+          "name" : "onDeleteMicroCoachMisconception",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionMisconceptionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachMisconceptionFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Misconception",
+            "name" : "MicroCoachMisconception",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onCreateActivity",
+          "name" : "onCreateMicroCoachActivity",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionActivityFilterInput",
+              "name" : "ModelSubscriptionMicroCoachActivityFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Activity",
+            "name" : "MicroCoachActivity",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onUpdateActivity",
+          "name" : "onUpdateMicroCoachActivity",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionActivityFilterInput",
+              "name" : "ModelSubscriptionMicroCoachActivityFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Activity",
+            "name" : "MicroCoachActivity",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onDeleteActivity",
+          "name" : "onDeleteMicroCoachActivity",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionActivityFilterInput",
+              "name" : "ModelSubscriptionMicroCoachActivityFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "Activity",
+            "name" : "MicroCoachActivity",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onCreateSavedPlan",
+          "name" : "onCreateMicroCoachSavedPlan",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSavedPlanFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSavedPlanFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "SavedPlan",
+            "name" : "MicroCoachSavedPlan",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onUpdateSavedPlan",
+          "name" : "onUpdateMicroCoachSavedPlan",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSavedPlanFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSavedPlanFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "SavedPlan",
+            "name" : "MicroCoachSavedPlan",
             "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "onDeleteSavedPlan",
+          "name" : "onDeleteMicroCoachSavedPlan",
           "description" : null,
           "args" : [ {
             "name" : "filter",
             "description" : null,
             "type" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSavedPlanFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSavedPlanFilterInput",
               "ofType" : null
             },
             "defaultValue" : null
           } ],
           "type" : {
             "kind" : "OBJECT",
-            "name" : "SavedPlan",
+            "name" : "MicroCoachSavedPlan",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "onCreateContextData",
+          "description" : null,
+          "args" : [ {
+            "name" : "filter",
+            "description" : null,
+            "type" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelSubscriptionContextDataFilterInput",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "ContextData",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "onUpdateContextData",
+          "description" : null,
+          "args" : [ {
+            "name" : "filter",
+            "description" : null,
+            "type" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelSubscriptionContextDataFilterInput",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "ContextData",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "onDeleteContextData",
+          "description" : null,
+          "args" : [ {
+            "name" : "filter",
+            "description" : null,
+            "type" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelSubscriptionContextDataFilterInput",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "ContextData",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -10098,7 +12478,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionUserFilterInput",
+        "name" : "ModelSubscriptionMicroCoachUserFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -10172,7 +12552,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionUserFilterInput",
+              "name" : "ModelSubscriptionMicroCoachUserFilterInput",
               "ofType" : null
             }
           },
@@ -10185,7 +12565,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionUserFilterInput",
+              "name" : "ModelSubscriptionMicroCoachUserFilterInput",
               "ofType" : null
             }
           },
@@ -10454,7 +12834,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionClassFilterInput",
+        "name" : "ModelSubscriptionMicroCoachClassroomFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -10519,7 +12899,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionClassFilterInput",
+              "name" : "ModelSubscriptionMicroCoachClassroomFilterInput",
               "ofType" : null
             }
           },
@@ -10532,7 +12912,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionClassFilterInput",
+              "name" : "ModelSubscriptionMicroCoachClassroomFilterInput",
               "ofType" : null
             }
           },
@@ -10645,7 +13025,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionStudentFilterInput",
+        "name" : "ModelSubscriptionMicroCoachStudentFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -10710,7 +13090,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionStudentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachStudentFilterInput",
               "ofType" : null
             }
           },
@@ -10723,7 +13103,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionStudentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachStudentFilterInput",
               "ofType" : null
             }
           },
@@ -10734,7 +13114,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionSessionFilterInput",
+        "name" : "ModelSubscriptionMicroCoachSessionFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -10837,6 +13217,24 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "studentsWithStrongUnderstandingIds",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "studentIdsNeedingSupport",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "ppqAssessmentId",
           "description" : null,
           "type" : {
@@ -10898,7 +13296,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSessionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSessionFilterInput",
               "ofType" : null
             }
           },
@@ -10911,7 +13309,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSessionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSessionFilterInput",
               "ofType" : null
             }
           },
@@ -10922,7 +13320,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionAssessmentFilterInput",
+        "name" : "ModelSubscriptionMicroCoachAssessmentFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -10987,7 +13385,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionAssessmentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachAssessmentFilterInput",
               "ofType" : null
             }
           },
@@ -11000,7 +13398,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionAssessmentFilterInput",
+              "name" : "ModelSubscriptionMicroCoachAssessmentFilterInput",
               "ofType" : null
             }
           },
@@ -11011,7 +13409,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionMisconceptionFilterInput",
+        "name" : "ModelSubscriptionMicroCoachMisconceptionFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -11056,15 +13454,6 @@
           "type" : {
             "kind" : "INPUT_OBJECT",
             "name" : "ModelSubscriptionStringInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "isRecommendedFocus",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelSubscriptionBooleanInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -11166,7 +13555,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionMisconceptionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachMisconceptionFilterInput",
               "ofType" : null
             }
           },
@@ -11179,7 +13568,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionMisconceptionFilterInput",
+              "name" : "ModelSubscriptionMicroCoachMisconceptionFilterInput",
               "ofType" : null
             }
           },
@@ -11190,34 +13579,7 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionBooleanInput",
-        "description" : null,
-        "fields" : null,
-        "inputFields" : [ {
-          "name" : "ne",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "Boolean",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "eq",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "Boolean",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        } ],
-        "interfaces" : null,
-        "enumValues" : null,
-        "possibleTypes" : null
-      }, {
-        "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionActivityFilterInput",
+        "name" : "ModelSubscriptionMicroCoachActivityFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -11390,7 +13752,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionActivityFilterInput",
+              "name" : "ModelSubscriptionMicroCoachActivityFilterInput",
               "ofType" : null
             }
           },
@@ -11403,7 +13765,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionActivityFilterInput",
+              "name" : "ModelSubscriptionMicroCoachActivityFilterInput",
               "ofType" : null
             }
           },
@@ -11414,7 +13776,34 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "ModelSubscriptionSavedPlanFilterInput",
+        "name" : "ModelSubscriptionBooleanInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "ne",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "eq",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "ModelSubscriptionMicroCoachSavedPlanFilterInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -11470,7 +13859,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSavedPlanFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSavedPlanFilterInput",
               "ofType" : null
             }
           },
@@ -11483,7 +13872,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "INPUT_OBJECT",
-              "name" : "ModelSubscriptionSavedPlanFilterInput",
+              "name" : "ModelSubscriptionMicroCoachSavedPlanFilterInput",
               "ofType" : null
             }
           },
@@ -11491,6 +13880,174 @@
         } ],
         "interfaces" : null,
         "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "ModelSubscriptionContextDataFilterInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "id",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "type",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "title",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "gradeLevel",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionIntInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "weekNumber",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionIntInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "ccssStandards",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "assessmentCode",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "isReference",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionBooleanInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "createdAt",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "updatedAt",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelSubscriptionStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "and",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelSubscriptionContextDataFilterInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "or",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelSubscriptionContextDataFilterInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "ENUM",
+        "name" : "WorkStatus",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : null,
+        "interfaces" : null,
+        "enumValues" : [ {
+          "name" : "CORRECT",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "INCORRECT",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "NEUTRAL",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "possibleTypes" : null
+      }, {
+        "kind" : "ENUM",
+        "name" : "ViewMode",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : null,
+        "interfaces" : null,
+        "enumValues" : [ {
+          "name" : "TEACHER",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "STUDENT",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
@@ -11696,49 +14253,6 @@
         } ],
         "interfaces" : null,
         "enumValues" : null,
-        "possibleTypes" : null
-      }, {
-        "kind" : "ENUM",
-        "name" : "WorkStatus",
-        "description" : null,
-        "fields" : null,
-        "inputFields" : null,
-        "interfaces" : null,
-        "enumValues" : [ {
-          "name" : "CORRECT",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "INCORRECT",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "NEUTRAL",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        } ],
-        "possibleTypes" : null
-      }, {
-        "kind" : "ENUM",
-        "name" : "ViewMode",
-        "description" : null,
-        "fields" : null,
-        "inputFields" : null,
-        "interfaces" : null,
-        "enumValues" : [ {
-          "name" : "TEACHER",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "STUDENT",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        } ],
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
